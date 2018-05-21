@@ -25,7 +25,7 @@ namespace gpk
 			int32_t																				coordTableY										= text0[iChar] / characterCellsX;
 			const ::gpk::SCoord2<int32_t>														coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SCoord2<int32_t>														dstOffset1										= {sizeCharCell.x * iChar, dstOffsetY};
-			const ::gpk::SRectangle2D<int32_t>													srcRect0										= ::gpk::SRectangle2D<int32_t>{coordCharTable, sizeCharCell};
+			const ::gpk::SRectangle2D<int32_t>													srcRect0										= {coordCharTable, sizeCharCell};
 			error_if(errored(::gpk::grid_copy_alpha(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, srcRect0, {0xFF, 0x00, 0xFF, 0xFF})), "I believe this never fails.");
 			//error_if(errored(::gpk::grid_copy(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)), "I believe this never fails.");
 		}
@@ -41,7 +41,7 @@ namespace gpk
 			const int32_t																	coordTableY										= text0[iChar] / characterCellsX;
 			const ::gpk::SCoord2<int32_t>													coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SCoord2<int32_t>													dstOffset1										= {sizeCharCell.x * iChar, dstOffsetY};
-			const ::gpk::SRectangle2D<int32_t>												srcRect0										= ::gpk::SRectangle2D<int32_t>{{coordCharTable.x, (int32_t)sizeCharCell.y * coordCharTable.y}, sizeCharCell};
+			const ::gpk::SRectangle2D<int32_t>												srcRect0										= {coordCharTable, sizeCharCell};
 			//error_if(errored(::gpk::grid_copy_alpha_bit(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
 			dstCoords.clear();
 			error_if(errored(::gpk::grid_raster_alpha_bit(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)), "I believe this never fails.");
