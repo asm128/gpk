@@ -10,6 +10,13 @@
 
 namespace gpk
 {
+	struct SRenderTarget {
+							::gpk::STexture<::gpk::SColorBGRA>					Color								= {};
+							::gpk::STexture<uint32_t>							DepthStencil						= {};
+
+	};
+							::gpk::error_t									clearTarget							(::gpk::SRenderTarget& targetToClear);
+
 	struct SFramework {
 		typedef				::gpk::STexture<::gpk::SColorBGRA>					TOffscreen;
 
@@ -18,8 +25,7 @@ namespace gpk
 							::gpk::SInput										Input										= {};
 							::gpk::STimer										Timer										= {};
 							::gpk::SFrameInfo									FrameInfo									= {};
-							::gpk::STexture<::gpk::SColorBGRA>					Offscreen									= {};
-							::gpk::STexture<uint32_t>							OffscreenDepthStencil						= {};
+							::gpk::SRenderTarget								MainDisplayOffscreen						= {};
 
 																				SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues) {}
 	}; // struct

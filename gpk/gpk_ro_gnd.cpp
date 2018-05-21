@@ -315,3 +315,46 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 	}
 	return 0;
 }
+
+			::gpk::error_t										gpk::blendGNDNormals								(const ::gpk::grid_view<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::array_view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid_view<::gpk::STileMapping>& tileMappingView, ::gpk::array_view<::gpk::SModelNodeGND> & gndModelNodes)																						{
+	for(uint32_t y = 0; y < tileGeometryView.metrics().y - 1; ++y) {
+		const ::gpk::array_view<const ::gpk::STileGeometryGND>				rowTileGeometry										= tileGeometryView	[y];
+		const ::gpk::array_view<const ::gpk::STileMapping	   >			rowTileMapping										= tileMappingView	[y];
+		const ::gpk::array_view<const ::gpk::STileGeometryGND>				rowNextTileGeometry									= tileGeometryView	[y + 1];
+		const ::gpk::array_view<const ::gpk::STileMapping	   >			rowNextTileMapping									= tileMappingView	[y + 1];
+		for(uint32_t x = 0; x < tileGeometryView.metrics().x - 1; ++x) {
+			const ::gpk::STileGeometryGND										& tileGeometry0										= rowTileGeometry		[x];
+			const ::gpk::STileGeometryGND										& tileGeometry1										= rowTileGeometry		[x + 1];
+			const ::gpk::STileGeometryGND										& tileGeometry2										= rowNextTileGeometry	[x];
+			const ::gpk::STileGeometryGND										& tileGeometry3										= rowNextTileGeometry	[x + 1];
+
+			const ::gpk::STileMapping											& tileMapping0										= rowTileMapping	[x + 0];
+			const ::gpk::STileMapping											& tileMapping1										= rowTileMapping	[x + 1];
+			const ::gpk::STileMapping											& tileMapping2										= rowNextTileMapping[x + 0];
+			const ::gpk::STileMapping											& tileMapping3										= rowNextTileMapping[x + 1];
+
+			const bool															processTile0										= (tileGeometry0.SkinMapping.SkinIndexTop != -1);// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile1										= (tileGeometry1.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexFront == -1;// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile2										= (tileGeometry2.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexRight == -1;// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile3										= (tileGeometry3.SkinMapping.SkinIndexTop != -1) && (tileGeometry0.SkinMapping.SkinIndexFront == -1 && tileGeometry0.SkinMapping.SkinIndexRight == -1);// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry3.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const int32_t														texIndex0											= processTile0 ? lstTileSkinData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex : -1;
+			const int32_t														texIndex1											= processTile1 ? lstTileSkinData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex : -1;
+			const int32_t														texIndex2											= processTile2 ? lstTileSkinData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex : -1;
+			const int32_t														texIndex3											= processTile3 ? lstTileSkinData[tileGeometry3.SkinMapping.SkinIndexTop].TextureIndex : -1;
+			::gpk::SCoord3<float>												normal												= {};
+			uint32_t															divisor												= 0;
+			if(processTile0) { ++divisor; ::gpk::SModelNodeGND & gndNode0 = gndModelNodes[texIndex0]; normal += gndNode0.Normals[tileMapping0.VerticesTop[3]]; }
+			if(processTile1) { ++divisor; ::gpk::SModelNodeGND & gndNode1 = gndModelNodes[texIndex1]; normal += gndNode1.Normals[tileMapping1.VerticesTop[2]]; }
+			if(processTile2) { ++divisor; ::gpk::SModelNodeGND & gndNode2 = gndModelNodes[texIndex2]; normal += gndNode2.Normals[tileMapping2.VerticesTop[1]]; }
+			if(processTile3) { ++divisor; ::gpk::SModelNodeGND & gndNode3 = gndModelNodes[texIndex3]; normal += gndNode3.Normals[tileMapping3.VerticesTop[0]]; }
+			if(divisor) {
+				(normal /= divisor).Normalize();
+				if(processTile0) { ::gpk::SModelNodeGND	& gndNode0 = gndModelNodes[texIndex0]; gndNode0.Normals[tileMapping0.VerticesTop[3]] = normal; }
+				if(processTile1) { ::gpk::SModelNodeGND	& gndNode1 = gndModelNodes[texIndex1]; gndNode1.Normals[tileMapping1.VerticesTop[2]] = normal; }
+				if(processTile2) { ::gpk::SModelNodeGND	& gndNode2 = gndModelNodes[texIndex2]; gndNode2.Normals[tileMapping2.VerticesTop[1]] = normal; }
+				if(processTile3) { ::gpk::SModelNodeGND	& gndNode3 = gndModelNodes[texIndex3]; gndNode3.Normals[tileMapping3.VerticesTop[0]] = normal; }
+			}
+		}
+	}
+	return 0;
+}

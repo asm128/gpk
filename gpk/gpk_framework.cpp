@@ -18,7 +18,7 @@
 	::gpk::SDisplay																& mainWindow								= framework.MainDisplay;
 	ree_if(errored(::gpk::displayUpdate(mainWindow)), "Not sure why this would fail.");
 	rvi_if(1, 0 == mainWindow.PlatformDetail.WindowHandle, "Application exiting because the main window was closed.");
-	::gpk::SFramework::TOffscreen												& offscreen									= framework.Offscreen;
+	::gpk::SFramework::TOffscreen												& offscreen									= framework.MainDisplayOffscreen.Color;
 	error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen.View)), "Unknown error.");
 #if defined(GPK_WINDOWS)
 	Sleep(1);
@@ -28,3 +28,10 @@
 	return 0;
 }
 
+					::gpk::error_t										gpk::clearTarget							(::gpk::SRenderTarget& targetToClear)	{ 
+	::gpk::SFramework::TOffscreen												& offscreen									= targetToClear.Color;
+	::gpk::STexture<uint32_t>													& offscreenDepth							= targetToClear.DepthStencil;
+	::memset(offscreenDepth	.Texels.begin(), -1, sizeof(uint32_t)								* offscreenDepth	.Texels.size());	// Clear target.
+	::memset(offscreen		.Texels.begin(), 0, sizeof(::gpk::SFramework::TOffscreen::TTexel)	* offscreen			.Texels.size());	// Clear target.
+	return 0;					
+}

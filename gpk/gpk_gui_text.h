@@ -25,7 +25,7 @@ namespace gpk
 			int32_t																				coordTableY										= text0[iChar] / characterCellsX;
 			const ::gpk::SCoord2<int32_t>														coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SCoord2<int32_t>														dstOffset1										= {sizeCharCell.x * iChar, dstOffsetY};
-			const ::gpk::SRectangle2D<int32_t>													srcRect0										= ::gpk::SRectangle2D<int32_t>{{coordCharTable.x, (int32_t)viewTextureFont.metrics().y - sizeCharCell.y - coordCharTable.y}, sizeCharCell};
+			const ::gpk::SRectangle2D<int32_t>													srcRect0										= ::gpk::SRectangle2D<int32_t>{coordCharTable, sizeCharCell};
 			error_if(errored(::gpk::grid_copy_alpha(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, srcRect0, {0xFF, 0x00, 0xFF, 0xFF})), "I believe this never fails.");
 			//error_if(errored(::gpk::grid_copy(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)), "I believe this never fails.");
 		}
@@ -41,7 +41,7 @@ namespace gpk
 			const int32_t																	coordTableY										= text0[iChar] / characterCellsX;
 			const ::gpk::SCoord2<int32_t>													coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SCoord2<int32_t>													dstOffset1										= {sizeCharCell.x * iChar, dstOffsetY};
-			const ::gpk::SRectangle2D<int32_t>												srcRect0										= ::gpk::SRectangle2D<int32_t>{{coordCharTable.x, (int32_t)viewMetrics.y - sizeCharCell.y - coordCharTable.y}, sizeCharCell};
+			const ::gpk::SRectangle2D<int32_t>												srcRect0										= ::gpk::SRectangle2D<int32_t>{{coordCharTable.x, (int32_t)sizeCharCell.y * coordCharTable.y}, sizeCharCell};
 			//error_if(errored(::gpk::grid_copy_alpha_bit(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
 			dstCoords.clear();
 			error_if(errored(::gpk::grid_raster_alpha_bit(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)), "I believe this never fails.");
@@ -54,14 +54,14 @@ namespace gpk
 	template<typename _tColor>
 	static				::gpk::error_t												textLineDrawAlignedFixedSizeRGBA			(::gpk::grid_view<_tColor>& targetView, const ::gpk::grid_view<_tColor>& fontAtlas, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0 )	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::SCoord2<int32_t>														dstTextOffset								= {(int32_t)targetSize.x / 2 - (int32_t)::gpk::textLineCalcSize(sizeCharCell, text0) / 2, };
-		uint32_t																			dstOffsetY									= (int32_t)(targetSize.y - lineOffset * sizeCharCell.y - sizeCharCell.y);
+		uint32_t																			dstOffsetY									= (int32_t)(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	template<typename _tColor>
 	static				::gpk::error_t												textLineDrawAlignedFixedSizeLit					(::gpk::grid_view<_tColor>& targetView, const ::gpk::bit_view<uint32_t>& fontAtlas, const ::gpk::SCoord2<uint32_t> & viewMetrics, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::SCoord2<int32_t>														dstTextOffset								= {(int32_t)targetSize.x / 2 - (int32_t)::gpk::textLineCalcSize(sizeCharCell, text0) / 2, };
-		uint32_t																			dstOffsetY									= (int32_t)(targetSize.y - lineOffset * sizeCharCell.y - sizeCharCell.y);
+		uint32_t																			dstOffsetY									= (int32_t)(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);
 	}
 } // namespace

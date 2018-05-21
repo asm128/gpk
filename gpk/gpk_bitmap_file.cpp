@@ -4,8 +4,8 @@
 
 #pragma pack(push, 1)
 
-					::gpk::error_t																	LoadBitmapFromBMPFile						(const char* szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
-	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
+static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::view_const_string& szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
+	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName);
 
 	BITMAP																									bm											= {};
@@ -19,12 +19,25 @@
 	for(uint32_t x = 0; x < out_ImageView.metrics().x; ++x) {
 		const COLORREF																							colpix										= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
 		const ::gpk::SColorBGRA																					toWrite										= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
-		out_ImageView[y][x]																					= toWrite;
+		out_ImageView[out_ImageView.metrics().y - 1 - y][x]													= toWrite;
 		if(toWrite == alphaKey && out_alphaFound)
 			*out_alphaFound																						= true;
 	}
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC	(hMemDC);
+
+
+	const uint32_t																							lenFilename									= (uint32_t)strlen(szFileName.begin());
+	::gpk::array_pod<char>																					filename;
+	filename.resize(lenFilename + 1);
+	memset(&filename[0], 0, filename.size());
+	memcpy(&filename[0], &szFileName[0], lenFilename);
+	if('p' == filename[lenFilename - 2])
+		memcpy(&filename[lenFilename - 4], "bmg", 3);
+	else
+		memcpy(&filename[lenFilename - 3], "bmg", 3);
+
+	::gpk::bmgFileWrite(::gpk::view_const_string(filename.begin(), lenFilename), out_ImageView);
 	//if((bm.bmBitsPixel * bm.bmPlanes) <= 8) { // If the DIBSection is 256 color or less, it has a color table
 	//	HDC																										hMemDC;
 	//	HBITMAP																									hOldBitmap;
@@ -64,7 +77,7 @@
 					::gpk::error_t																	gpk::bmpFileLoad							(const ::gpk::view_const_string	& filename	, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{ // 
 #if defined(GPK_WINDOWS)
 	bool																									isAlpha										= false;
-	return ::LoadBitmapFromBMPFile(filename.begin(), out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
+	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
 #else
 	FILE																									* source									= 0; 
 
@@ -304,4 +317,17 @@ struct SHeaderInfoBMP {
 	}
 	fclose(source);
 	return 0; 
+}
+
+					::gpk::error_t																	gpk::bmpOrBmgLoad							(::gpk::view_string bmpFileName, ::gpk::STexture<::gpk::SColorBGRA>& loaded)		{
+	::gpk::view_const_string																				bmpFileNameC								= {bmpFileName.begin(), bmpFileName.size()};
+	if(errored(::gpk::bmpFileLoad(bmpFileNameC, loaded))) {
+		error_printf("Failed to load bitmap from file: %s.", bmpFileNameC.begin());
+		if('p' == bmpFileName[bmpFileName.size() - 2])
+			bmpFileName[bmpFileName.size() - 2]										= 'g';
+		else
+			bmpFileName[bmpFileName.size() - 1]										= 'g';
+		gpk_necall(::gpk::bmgFileLoad(bmpFileNameC, loaded), "Failed to load bitmap from file: %s.", bmpFileNameC.begin());
+	}
+	return 0;
 }

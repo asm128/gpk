@@ -122,6 +122,9 @@ namespace gpk
 	, ::gpk::SModelNodeGND							& generated
 	, ::gpk::grid_view<::gpk::STileMapping>			& out_mapping
 	);
+
+				::gpk::error_t											blendGNDNormals							(const ::gpk::grid_view<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::array_view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid_view<::gpk::STileMapping>& tileMappingView, ::gpk::array_view<::gpk::SModelNodeGND> & gndModelNodes);
+
 #pragma pack(pop)
 } // namespace
 
