@@ -71,8 +71,6 @@ namespace gpk
 				::gpk::array_pod<STileGeometryGND	>				lstTileGeometryData;
 	};
 
-
-
 	//709655609
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::array_view<ubyte_t>	& input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
@@ -113,7 +111,7 @@ namespace gpk
 		, TILE_FACE_FACING_LEFT
 		};
 
-			::gpk::error_t										gndGenerateFaceGeometry
+			::gpk::error_t												gndGenerateFaceGeometry
 	( const ::gpk::array_pod<STileSkinGND		>	lstTileTextureData
 	, const ::gpk::array_pod<STileGeometryGND	>	lstTileGeometryData
 	, const ::gpk::STiledTerrainMetricsGND			tileMapMetrics
