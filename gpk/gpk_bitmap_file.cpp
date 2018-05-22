@@ -19,13 +19,12 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	for(uint32_t x = 0; x < out_ImageView.metrics().x; ++x) {
 		const COLORREF																							colpix										= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
 		const ::gpk::SColorBGRA																					toWrite										= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
-		out_ImageView[out_ImageView.metrics().y - 1 - y][x]													= toWrite;
+		out_ImageView[y][x]																					= toWrite;
 		if(toWrite == alphaKey && out_alphaFound)
 			*out_alphaFound																						= true;
 	}
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC	(hMemDC);
-
 
 	const uint32_t																							lenFilename									= (uint32_t)strlen(szFileName.begin());
 	::gpk::array_pod<char>																					filename;

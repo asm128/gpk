@@ -141,6 +141,12 @@
     <ClInclude Include="gpk_grid_static.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_runtime_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_display.cpp">
@@ -180,6 +186,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_runtime_module.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

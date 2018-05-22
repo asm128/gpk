@@ -49,12 +49,14 @@
     <ClInclude Include="gpk_layered_view.h" />
     <ClInclude Include="gpk_math.h" />
     <ClInclude Include="gpk_matrix.h" />
+    <ClInclude Include="gpk_module.h" />
     <ClInclude Include="gpk_particle.h" />
     <ClInclude Include="gpk_ptr.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
     <ClInclude Include="gpk_ro_rsw.h" />
     <ClInclude Include="gpk_runtime.h" />
+    <ClInclude Include="gpk_runtime_module.h" />
     <ClInclude Include="gpk_scene.h" />
     <ClInclude Include="gpk_stream_view.h" />
     <ClInclude Include="gpk_texture.h" />
@@ -74,6 +76,7 @@
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
+    <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

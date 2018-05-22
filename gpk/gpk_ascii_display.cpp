@@ -5,7 +5,7 @@
 
 #include <vector>
 
-					::gpk::error_t						gpk::asciiDisplayTitleSet						(const ::gpk::array_view<const char>& title)															{ return (0 == SetConsoleTitle(title.begin() ? title.begin() : "")) ? -1 : 0; }
+					::gpk::error_t						gpk::asciiDisplayTitleSet						(const view_const_string& title)															{ return (0 == SetConsoleTitle(title.begin() ? title.begin() : "")) ? -1 : 0; }
 
 struct SWindowsConsoleInfo {
 						::CONSOLE_FONT_INFOEX				InfoFontOriginal								= {sizeof(::CONSOLE_FONT_INFOEX)};

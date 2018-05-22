@@ -1,5 +1,6 @@
 #include "gpk_log.h"
 #include "gpk_eval.h"
+#include <cstring>
 
 #include <exception>	// for ::std::exception
 
@@ -46,7 +47,7 @@ namespace gpk
 	};
 
 	// array_view common typedefs
-	typedef				::gpk::array_view<char_t			>	view_string			;
+	//typedef				::gpk::array_view<char_t			>	view_string			;
 	typedef				::gpk::array_view<ubyte_t			>	view_ubyte			;
 	typedef				::gpk::array_view<byte_t			>	view_byte			;
 	typedef				::gpk::array_view<float				>	view_float32		;
@@ -61,7 +62,7 @@ namespace gpk
 	typedef				::gpk::array_view<int64_t			>	view_int64			;
 
 	// array_view<const> common typedefs
-	typedef				::gpk::array_view<const char_t		>	view_const_string	;
+	//typedef				::gpk::array_view<const char_t		>	view_const_string	;
 	typedef				::gpk::array_view<const ubyte_t		>	view_const_ubyte	;
 	typedef				::gpk::array_view<const byte_t		>	view_const_byte		;
 	typedef				::gpk::array_view<const float		>	view_const_float32	;
@@ -74,6 +75,18 @@ namespace gpk
 	typedef				::gpk::array_view<const int16_t		>	view_const_int16	;
 	typedef				::gpk::array_view<const int32_t		>	view_const_int32	;
 	typedef				::gpk::array_view<const int64_t		>	view_const_int64	;
+
+	struct view_const_string : public array_view<const char_t> {
+																	view_const_string					(const char* inputString, uint32_t length)					: array_view(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
+		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength], uint32_t length)	: array_view(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
+		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])					: array_view(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+	};
+
+	struct view_string : public array_view<char_t> {
+																	view_string							(char* inputString, uint32_t length)						: array_view(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)		: array_view(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])						: array_view(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+	};
 
 }
 

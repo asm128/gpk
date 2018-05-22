@@ -20,7 +20,7 @@ namespace gpk
 	struct SFramework {
 		typedef				::gpk::STexture<::gpk::SColorBGRA>					TOffscreen;
 
-							::gpk::SRuntimeValues								RuntimeValues								= {};
+							::gpk::SRuntimeValues								& RuntimeValues								;
 							::gpk::SDisplay										MainDisplay									= {};
 							::gpk::SInput										Input										= {};
 							::gpk::STimer										Timer										= {};
