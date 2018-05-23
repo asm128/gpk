@@ -41,7 +41,7 @@ namespace gpk
 							bool													MinOrMaxed									: 1;
 							bool													Closed										: 1;
 
-																					SDisplay									()
+																					SDisplay									()		noexcept
 			: Resized		(false)
 			, Repaint		(false)
 			, NoDraw		(false)

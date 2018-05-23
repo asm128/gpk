@@ -13,7 +13,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 ::gpk::error_t			update	(::gme::SApplication & app, bool exitSignal)	{ 
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal															, "Exit requested by runtime.");
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
-	
 	return 0; 
 }
 

@@ -17,9 +17,13 @@
 	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SDisplay																& mainWindow								= framework.MainDisplay;
 	ree_if(errored(::gpk::displayUpdate(mainWindow)), "Not sure why this would fail.");
-	rvi_if(1, 0 == mainWindow.PlatformDetail.WindowHandle, "Application exiting because the main window was closed.");
+	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
 	::gpk::SFramework::TOffscreen												& offscreen									= framework.MainDisplayOffscreen.Color;
-	error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen.View)), "Unknown error.");
+#if defined(GPK_WINDOWS)
+	if(mainWindow.PlatformDetail.WindowHandle)
+#endif
+		error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen.View)), "Unknown error.");
+
 #if defined(GPK_WINDOWS)
 	Sleep(1);
 #elif defined(GPK_ANDROID)

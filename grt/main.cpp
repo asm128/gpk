@@ -14,13 +14,18 @@ struct SRuntimeState {
 static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)	{
 	globalRuntimeValues;
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
-	SRuntimeState												runtimeState						= {};
+	SRuntimeState													runtimeState					= {};
 	{
 		::gpk::view_const_string										fileName						= "gme";
+		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argc > 1) 
+			fileName													= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argv[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argv[1])};
+		char															mainModuleName	[512]			= {};
+		sprintf_s(mainModuleName, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule											mainModule						= {};
-		::gpk::loadRuntimeModule(mainModule, fileName);
+		gpk_necall(::gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
+		info_printf("Created main module. %s.", mainModuleName);
 		void															* applicationInstance			= {};
-		gpk_necall(mainModule.Create(&applicationInstance, &globalRuntimeValues), "Failed to create main module. %s.");
+		gpk_necall(mainModule.Create(&applicationInstance, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
 		info_printf("Initializing application instance.");
 		if errored(mainModule.Setup(applicationInstance)) {
 			error_printf("Setup() Failed!");			
@@ -44,10 +49,10 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 
 #if defined(GPK_WINDOWS)
 		int WINAPI											WinMain
-	( HINSTANCE		hInstance			
-	, HINSTANCE		hPrevInstance		
-	, LPSTR			lpCmdLine			
-	, INT			nShowCmd			
+	( _In_		HINSTANCE		hInstance			
+	, _In_opt_	HINSTANCE		hPrevInstance		
+	, _In_		LPSTR			lpCmdLine			
+	, _In_		INT				nShowCmd			
 	)
 {
 	::gpk::SRuntimeValues											runtimeValues					= {};
