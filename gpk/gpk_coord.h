@@ -1,6 +1,7 @@
 #include "gpk_math.h"
 #include "gpk_bit.h"
 #include "gpk_eval.h"
+#include "gpk_log.h"
 
 #ifndef GPK_COORD_H_928374982364923322
 #define GPK_COORD_H_928374982364923322
