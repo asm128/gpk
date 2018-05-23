@@ -1,0 +1,10 @@
+LIBRARY
+EXPORTS
+	gpk_moduleVersion	
+	gpk_moduleCreate	
+	gpk_moduleDelete	
+	gpk_moduleSetup		
+	gpk_moduleCleanup	
+	gpk_moduleRender	
+	gpk_moduleUpdate	
+	gpk_moduleTitle		

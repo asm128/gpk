@@ -79,6 +79,9 @@
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="gpk_module_exports.def" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{39953D8D-A830-46BD-917E-1A96C8BDADC6}</ProjectGuid>

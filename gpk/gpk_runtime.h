@@ -18,15 +18,21 @@ namespace gpk
 	};
 #endif
 
+	struct SStandardEntryPointArgs {
+				int																argc								;
+				char															**argv								;
+				char															**envp								;
+	};
 	struct SRuntimeValuesDetail {	
 #if defined(GPK_ANDROID)
 				ANativeActivity													* Activity							= nullptr;
 				void															* SavedState						= nullptr;
 				size_t															SavedStateSize						= 0;
 #elif defined(GPK_WINDOWS)
-				SWindowsEntryPointArgs											EntryPointArgs						;
+				SWindowsEntryPointArgs											EntryPointArgsWin					;
+				SStandardEntryPointArgs											EntryPointArgsStd					;
 #else
-#	error "Not implemented."
+				SStandardEntryPointArgs											EntryPointArgsStd					;
 #endif
 	};
 
