@@ -16,7 +16,7 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
 	SRuntimeState												runtimeState						= {};
 	{
-		::gpk::view_const_string										fileName						= "Tutorial0.1";
+		::gpk::view_const_string										fileName						= "gme";
 		::gpk::SRuntimeModule											mainModule						= {};
 		::gpk::loadRuntimeModule(mainModule, fileName);
 		void															* applicationInstance			= {};

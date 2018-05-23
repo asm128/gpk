@@ -1,5 +1,5 @@
 /// Copyright 2016-2018 - asm128
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #endif
@@ -17,12 +17,31 @@ namespace gpk
 				int																nShowCmd							;
 	};
 #endif
+	enum APPLICATION_STATE : uint8_t
+		{	APPLICATION_STATE_NORMAL							= 0
+		,	APPLICATION_STATE_EXIT								= 1
+		,	APPLICATION_STATE_BUSY								= 2
+		,	APPLICATION_STATE_STAY								= 3
+		};
+
+	enum RUNTIME_CALLBACK_ID : uint8_t
+		{	RUNTIME_CALLBACK_ID_NONE							= 0
+		,	RUNTIME_CALLBACK_ID_TITLE							= 0x01
+		,	RUNTIME_CALLBACK_ID_VERSION							= 0x02
+		,	RUNTIME_CALLBACK_ID_CREATE							= 0x04
+		,	RUNTIME_CALLBACK_ID_DELETE							= 0x08
+		,	RUNTIME_CALLBACK_ID_SETUP							= 0x10
+		,	RUNTIME_CALLBACK_ID_CLEANUP							= 0x20
+		,	RUNTIME_CALLBACK_ID_RENDER							= 0x40
+		,	RUNTIME_CALLBACK_ID_UPDATE							= 0x80
+		};
 
 	struct SStandardEntryPointArgs {
 				int																argc								;
 				char															**argv								;
 				char															**envp								;
 	};
+
 	struct SRuntimeValuesDetail {	
 #if defined(GPK_ANDROID)
 				ANativeActivity													* Activity							= nullptr;

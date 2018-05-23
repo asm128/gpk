@@ -17,6 +17,7 @@ GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void*	 customApplication, bool re
 
 namespace gpk 
 {
+#pragma pack(push, 1)
 	struct SRuntimeModule : public SModuleBase {
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleTitle	)				Title						= 0;
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleVersion	)				Version						= 0;
@@ -27,6 +28,7 @@ namespace gpk
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleRender	)				Render						= 0;
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleUpdate	)				Update						= 0;
 	};
+#pragma pack(pop)
 
 	::gpk::error_t												loadRuntimeModule			(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
 
