@@ -22,7 +22,7 @@ namespace gpk
 
 							::gpk::SRuntimeValues								& RuntimeValues								;
 							::gpk::SDisplay										MainDisplay									= {};
-							::gpk::SInput										Input										= {};
+							::gpk::ptr_obj<::gpk::SInput>						Input										= {};
 							::gpk::STimer										Timer										= {};
 							::gpk::SFrameInfo									FrameInfo									= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget>				MainDisplayOffscreen						= {};
@@ -31,7 +31,7 @@ namespace gpk
 	}; // struct
 
 						::gpk::error_t										updateFramework								(::gpk::SFramework& framework);
-						::gpk::error_t										mainWindowCreate							(::gpk::SDisplay& mainWindow, HINSTANCE hInstance);
+						::gpk::error_t										mainWindowCreate							(::gpk::SDisplay& mainWindow, SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928

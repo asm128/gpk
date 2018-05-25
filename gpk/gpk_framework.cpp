@@ -6,11 +6,19 @@
 #	include <Windows.h>
 #endif
 
+struct SDisplayInput {
+					::gpk::SDisplay										& Display;
+					::gpk::ptr_obj<::gpk::SInput>						Input;
+};
 
 					::gpk::error_t										gpk::updateFramework						(::gpk::SFramework& framework)													{
-	framework.Input.KeyboardPrevious											= framework.Input.KeyboardCurrent;
-	framework.Input.MousePrevious												= framework.Input.MouseCurrent;
-	framework.Input.MouseCurrent.Deltas											= {};
+	if(0 == framework.Input)
+		framework.Input.create();
+
+	SInput																		& input										= *framework.Input;
+	input.KeyboardPrevious													= input.KeyboardCurrent;
+	input.MousePrevious														= input.MouseCurrent;
+	input.MouseCurrent.Deltas												= {};
 	::gpk::SFrameInfo															& frameInfo									= framework.FrameInfo;
 	::gpk::STimer																& timer										= framework.Timer;
 	timer		.Frame();
@@ -52,30 +60,32 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	//::SApplication																				& applicationInstance						= *g_ApplicationInstance;
 	static	const int																			adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
-	::gpk::SDisplay																				* actualMainDisplay								= (::gpk::SDisplay*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
-
-	::gpk::SDisplay																				& mainDisplay								= *actualMainDisplay;
+	::SDisplayInput																				* actualMainDisplay								= (::SDisplayInput*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
+	::gpk::SDisplay																				dummyDisplay;
+	::gpk::SDisplay																				& mainDisplay								= (actualMainDisplay) ? actualMainDisplay->Display : dummyDisplay;
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainDisplay.PlatformDetail;
-	//::gpk::SInput																				& input										= applicationInstance.Framework.Input;
-	//int32_t																						zDelta										= {};
+	::gpk::SInput																				dummyInput									= {};
+	::gpk::SInput																				& input										= (actualMainDisplay && actualMainDisplay->Input) ? *actualMainDisplay->Input : dummyInput;
+
+	int32_t																						zDelta										= {};
 	switch(uMsg) {
 	default: break;		
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
-	//case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam]  =  1; return 0;
-	//case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam] &= ~1; return 0;
-	//case WM_MOUSEWHEEL		:
-	//	zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
-	//	input.MouseCurrent.Deltas.z																= zDelta;
-	//	return 0;
-	//case WM_MOUSEMOVE		: {
-	//	//int32_t																						xPos										= GET_X_LPARAM(lParam); 
-	//	//int32_t																						yPos										= GET_Y_LPARAM(lParam); 
-	//	//input.MouseCurrent.Position.x															= ::gpk::clamp(xPos, 0, (int32_t)mainDisplay.Size.x);
-	//	//input.MouseCurrent.Position.y															= ::gpk::clamp(yPos, 0, (int32_t)mainDisplay.Size.y);
-	//	input.MouseCurrent.Deltas.x																= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
-	//	input.MouseCurrent.Deltas.y																= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
-	//	return 0;
-	//}
+	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam]  =  1; return 0;
+	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam] &= ~1; return 0;
+	case WM_MOUSEWHEEL		:
+		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
+		input.MouseCurrent.Deltas.z																= zDelta;
+		return 0;
+	case WM_MOUSEMOVE		: {
+		int32_t																						xPos										= GET_X_LPARAM(lParam); 
+		int32_t																						yPos										= GET_Y_LPARAM(lParam); 
+		input.MouseCurrent.Position.x															= ::gpk::clamp(xPos, 0, (int32_t)mainDisplay.Size.x);
+		input.MouseCurrent.Position.y															= ::gpk::clamp(yPos, 0, (int32_t)mainDisplay.Size.y);
+		input.MouseCurrent.Deltas.x																= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
+		input.MouseCurrent.Deltas.y																= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
+		return 0;
+	}
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
 		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top}; 
 		return 0;
@@ -118,6 +128,7 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		::PostQuitMessage(0); 
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
+		::SetWindowLongPtrA(mainDisplay.PlatformDetail.WindowHandle, GWLP_USERDATA, 0);
 		return 0;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -134,8 +145,9 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 }
 #endif
 
-					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, HINSTANCE hInstance)													{ 
+					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{ 
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
+	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
 	mainWindow.Size																			= {::BMP_SCREEN_WIDTH, ::BMP_SCREEN_HEIGHT};
@@ -149,7 +161,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 		, finalClientRect.bottom	- finalClientRect.top
 		, 0, 0, displayDetail.WindowClass.hInstance, 0
 		);
-	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)&mainWindow);
+	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)new SDisplayInput{mainWindow, displayInput});
 	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	::UpdateWindow	(displayDetail.WindowHandle);
 	return 0;
