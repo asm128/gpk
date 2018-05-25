@@ -27,6 +27,8 @@ namespace gpk
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleCleanup	)				Cleanup						= 0;
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleRender	)				Render						= 0;
 		GPK_MODULE_FUNCTION_NAME(gpk_moduleUpdate	)				Update						= 0;
+
+		void														* Application;
 	};
 #pragma pack(pop)
 

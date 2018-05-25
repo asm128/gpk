@@ -43,7 +43,8 @@ namespace gpk
 							::gpk::array_pod<const char*>				Texts;
 
 	public:
-																		CLabelManager				()																					{ Characters.push_sequence("", 1U, Empty); }
+																		CLabelManager				()																					{ Characters.push_sequence("", 0U, Empty); }
+
 							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::array_view<const char>& out_view)		{
 			if(0 == textLen || 0 == text || 0 == text[0]) {
 				out_view														= Empty;

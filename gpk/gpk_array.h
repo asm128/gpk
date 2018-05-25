@@ -11,11 +11,12 @@ namespace gpk
 	template <typename... _Args>	void			clear					(_Args&&... args)						{ const int32_t results[] = {args.clear()..., 0}; }
 	template <typename... _Args>	::gpk::error_t	resize					(uint32_t newSize, _Args&&... args)		{ 
 		const uint32_t										oldSizes	[]			= {args.size	()			..., 0}; 
-		const int32_t										results		[]			= {args.resize	(newSize)	..., 0}; 
+		const ::gpk::error_t								results		[]			= {args.resize	(newSize)	..., 0}; 
 		for(uint32_t i=0; i < ::gpk::size(results); ++i)
 			if(errored(results[i])) {
-				error_printf("Failed to set size: %i. Out of memory?", (int32_t)newSize);
-				const int32_t dummy	[] = {args.resize(oldSizes[0])..., 0}; 
+				error_printf("Failed to set container size: %i. Out of memory?", (int32_t)newSize);
+				int32_t												j						= 0;
+				const int32_t dummy	[] = {args.resize(oldSizes[j++])..., 0}; 
 				dummy;
 				return -1;
 			}
@@ -55,7 +56,7 @@ namespace gpk
 
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
 		inline constexpr								array_pod									()																			noexcept	= default;
-		inline											array_pod									(uint32_t initialSize)																	{ resize(initialSize);		}
+		inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), ::std::exception(), "Failed to resize array! Why?");		}
 														array_pod									(::std::initializer_list<_tPOD> init)													{ 
 			throw_if(errored(resize((uint32_t)init.size())), ::std::exception(), "Failed to resize array! Why?");
 			memcpy(Data, init.begin(), Count * sizeof(_tPOD));
@@ -130,8 +131,8 @@ namespace gpk
 			} // 
 		}
 							array_pod<_tPOD>&			operator =									(const array_view<_tPOD>& other)														{
-			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to assign array.");
-			memcpy(Data, other, other.Count * sizeof(_tPOD));
+			throw_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
+			memcpy(Data, other.begin(), Count * sizeof(_tPOD));
 			//for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
 			//	operator[](iElement)							= other[iElement];
 			return *this;

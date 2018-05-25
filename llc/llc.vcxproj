@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_auto_handler.h" />
+    <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_error.h" />
     <ClInclude Include="gpk_eval.h" />

@@ -4,6 +4,7 @@
 #include "gpk_timer.h"
 #include "gpk_frameinfo.h"
 #include "gpk_texture.h"
+#include "gpk_ptr.h"
 
 #ifndef GPK_FRAMEWORK_H_20987347928
 #define GPK_FRAMEWORK_H_20987347928
@@ -13,7 +14,6 @@ namespace gpk
 	struct SRenderTarget {
 							::gpk::STexture<::gpk::SColorBGRA>					Color								= {};
 							::gpk::STexture<uint32_t>							DepthStencil						= {};
-
 	};
 							::gpk::error_t									clearTarget							(::gpk::SRenderTarget& targetToClear);
 
@@ -25,7 +25,7 @@ namespace gpk
 							::gpk::SInput										Input										= {};
 							::gpk::STimer										Timer										= {};
 							::gpk::SFrameInfo									FrameInfo									= {};
-							::gpk::SRenderTarget								MainDisplayOffscreen						= {};
+							::gpk::ptr_obj<::gpk::SRenderTarget>				MainDisplayOffscreen						= {};
 
 																				SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues) {}
 	}; // struct

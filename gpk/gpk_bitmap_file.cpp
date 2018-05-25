@@ -6,7 +6,7 @@
 
 static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::view_const_string& szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
 	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
-	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName);
+	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName.begin());
 
 	BITMAP																									bm											= {};
 	GetObject(phBitmap, sizeof(BITMAP), &bm);		// Get the color depth of the DIBSection

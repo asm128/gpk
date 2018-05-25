@@ -26,7 +26,6 @@
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_display.h" />
     <ClInclude Include="gpk_ascii_target.h" />
-    <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_bit_view.h" />

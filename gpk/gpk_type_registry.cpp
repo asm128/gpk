@@ -1,6 +1,6 @@
 #include "gpk_type_registry.h"
 
-		::gpk::STypeRegistry&				typeRegistrySingleton				()			{
+		::gpk::STypeRegistry&				gpk::typeRegistrySingleton				()		noexcept	{
 	static ::gpk::STypeRegistry						singletonTypeRegistry;
 	return singletonTypeRegistry;	
 }

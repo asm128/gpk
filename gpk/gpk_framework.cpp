@@ -18,11 +18,11 @@
 	::gpk::SDisplay																& mainWindow								= framework.MainDisplay;
 	ree_if(errored(::gpk::displayUpdate(mainWindow)), "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
-	::gpk::SFramework::TOffscreen												& offscreen									= framework.MainDisplayOffscreen.Color;
+	::gpk::ptr_obj<::gpk::SRenderTarget>										offscreen									= framework.MainDisplayOffscreen;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle)
 #endif
-		error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen.View)), "Unknown error.");
+		error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
 
 #if defined(GPK_WINDOWS)
 	Sleep(1);
