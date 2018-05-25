@@ -31,6 +31,7 @@ namespace gpk
 	}; // struct
 
 						::gpk::error_t										updateFramework								(::gpk::SFramework& framework);
+						::gpk::error_t										mainWindowCreate							(::gpk::SDisplay& mainWindow, HINSTANCE hInstance);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928
