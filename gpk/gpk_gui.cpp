@@ -52,36 +52,8 @@
 	gpk_necall(children.push_back(iControl), "Out of memory?");
 	return 0;
 }
-			::gpk::error_t								actualControlPaint							(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
-	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
-	target;
-	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
-	const ::gpk::SControl										& control									= gui.Controls[iControl];
-	//::gpk::SRectangle2D<int32_t>
-	//	{ controlMetrics.Total.Global.Offset	+ ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}
-	//	, controlMetrics.Total.Global.Size		- ::gpk::SCoord2<int32_t>{control.Border.Left + control.Border.Right, control.Border.Top + control.Border.Bottom}
-	//	});
-	::gpk::drawRectangle(target, {0xff, 0xff, 0xff, 0xff}, controlMetrics.Total.Global);
-	::gpk::drawRectangle(target, {0x7f, 0x7f, 0x7f, 0xff}, controlMetrics.Client.Global);
-	::gpk::drawRectangle(target, {0xff, 0x00, 0xFF, 0xff}, ::gpk::SRectangle2D<int32_t>
-		{ controlMetrics.Total.Global.Offset	
-		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}
-		});
-	::gpk::drawRectangle(target, {0x00, 0xFF, 0x00, 0xff}, ::gpk::SRectangle2D<int32_t>
-		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}
-		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}
-		});
-	::gpk::drawRectangle(target, {0xff, 0xFF, 0x00, 0xff}, ::gpk::SRectangle2D<int32_t>
-		{ controlMetrics.Total.Global.Offset	
-		, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}
-		});
-	::gpk::drawRectangle(target, {0x00, 0x00, 0xff, 0xff}, ::gpk::SRectangle2D<int32_t>
-		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}
-		, ::gpk::SCoord2<int32_t>{control.Border.Bottom, controlMetrics.Total.Global.Size.y}
-		});
-	return 0;
-}
-			::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+	
+static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
@@ -116,15 +88,42 @@
 	return 0;
 }
 
+static		::gpk::error_t								actualControlPaint							(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
+	::controlUpdateMetrics(gui, iControl, target);
+	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
+	const ::gpk::SControl										& control									= gui.Controls[iControl];
+	//::gpk::SRectangle2D<int32_t>
+	//	{ controlMetrics.Total.Global.Offset	+ ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}
+	//	, controlMetrics.Total.Global.Size		- ::gpk::SCoord2<int32_t>{control.Border.Left + control.Border.Right, control.Border.Top + control.Border.Bottom}
+	//	});
+	::gpk::drawRectangle(target, {0xff, 0xff, 0xff, 0xff}, controlMetrics.Total.Global);
+	::gpk::drawRectangle(target, {0x7f, 0x7f, 0x7f, 0xff}, controlMetrics.Client.Global);
+	::gpk::drawRectangle(target, {0xff, 0x00, 0xFF, 0xff}, ::gpk::SRectangle2D<int32_t>
+		{ controlMetrics.Total.Global.Offset	
+		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}
+		});
+	::gpk::drawRectangle(target, {0x00, 0xFF, 0x00, 0xff}, ::gpk::SRectangle2D<int32_t>
+		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}
+		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}
+		});
+	::gpk::drawRectangle(target, {0x00, 0x00, 0xFF, 0xff}, ::gpk::SRectangle2D<int32_t>
+		{ controlMetrics.Total.Global.Offset	
+		, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}
+		});
+	::gpk::drawRectangle(target, {0x00, 0x00, 0xff, 0xff}, ::gpk::SRectangle2D<int32_t>
+		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}
+		, ::gpk::SCoord2<int32_t>{control.Border.Bottom, controlMetrics.Total.Global.Size.y}
+		});
+	return 0;
+}
 			::gpk::error_t								gpk::controlPaintHierarchy					(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
-	::controlUpdateMetrics(gui, iControl, target);
 	::actualControlPaint(gui, iControl, target);
 	::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
-		::controlUpdateMetrics(gui, children[iChild], target);
 		::actualControlPaint(gui, children[iChild], target);
 	}
 	return 0;
