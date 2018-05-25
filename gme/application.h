@@ -1,4 +1,7 @@
 #include "gpk_framework.h"
+#include "gpk_gui.h"
+
+#include <mutex>
 
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
@@ -6,10 +9,17 @@
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SApplication {
-		::gpk::SFramework				Framework;
-	
-										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
+		::gpk::SFramework						Framework;
+		::gpk::SGUI								GUI;
+		::gpk::ptr_obj<::gpk::SRenderTarget>	Offscreen;
+
+		::std::mutex							LockRender;
+
+												SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
+
+	typedef ::std::lock_guard<::std::mutex>		mutex_guard;
+
 } // namespace
 
 #endif // APPLICATION_H_2078934982734

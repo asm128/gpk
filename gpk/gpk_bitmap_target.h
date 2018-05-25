@@ -94,10 +94,14 @@ namespace gpk
 		int32_t																		xStop										= ::gpk::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)bitmapTarget.metrics().x);
 		if(yStart >= yStop || xStart >= xStop)
 			return 0;
+		//for(int32_t y = yStart; y < yStop; ++y)  
+		//for(int32_t x = xStart; x < xStop; ++x) 	
+		//	bitmapTarget[y][x]													= value;
+
 		for(int32_t x = xStart; x < xStop; ++x) 	
 			bitmapTarget[yStart][x]													= value;
 		for(int32_t y = yStart + 1; y < yStop; ++y)
-			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * xStop - xStart);
+			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * (xStop - xStart));
 		return 0;
 	}
 

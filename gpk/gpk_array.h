@@ -20,7 +20,7 @@ namespace gpk
 				dummy;
 				return -1;
 			}
-		return 0; 
+		return newSize; 
 	}
 
 	// Base for arrays that keeps track of its actual size.
