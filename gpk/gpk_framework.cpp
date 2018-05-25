@@ -2,36 +2,38 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_framework.h"
+#include "gpk_safe.h"
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #endif
 
 struct SDisplayInput {
-					::gpk::SDisplay										& Display;
-					::gpk::ptr_obj<::gpk::SInput>						Input;
+						::gpk::SDisplay														& Display;
+						::gpk::ptr_obj<::gpk::SInput>										Input;
 };
 
-					::gpk::error_t										gpk::updateFramework						(::gpk::SFramework& framework)													{
+					::gpk::error_t														gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.Input)
 		framework.Input.create();
 
-	SInput																		& input										= *framework.Input;
-	input.KeyboardPrevious													= input.KeyboardCurrent;
-	input.MousePrevious														= input.MouseCurrent;
-	input.MouseCurrent.Deltas												= {};
-	::gpk::SFrameInfo															& frameInfo									= framework.FrameInfo;
-	::gpk::STimer																& timer										= framework.Timer;
+	SInput																						& input										= *framework.Input;
+	input.KeyboardPrevious																	= input.KeyboardCurrent;
+	input.MousePrevious																		= input.MouseCurrent;
+	input.MouseCurrent.Deltas																= {};
+	::gpk::SFrameInfo																			& frameInfo									= framework.FrameInfo;
+	::gpk::STimer																				& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, 200000ULL));
-	::gpk::SDisplay																& mainWindow								= framework.MainDisplay;
+	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
 	ree_if(errored(::gpk::displayUpdate(mainWindow)), "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
-	::gpk::ptr_obj<::gpk::SRenderTarget>										offscreen									= framework.MainDisplayOffscreen;
+	::gpk::ptr_obj<::gpk::SRenderTarget>														offscreen									= framework.MainDisplayOffscreen;
 #if defined(GPK_WINDOWS)
-	if(mainWindow.PlatformDetail.WindowHandle)
+	if(mainWindow.PlatformDetail.WindowHandle) {
 #endif
-		error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
-
+		if(offscreen && offscreen->Color.Texels.size())
+			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
+	}
 #if defined(GPK_WINDOWS)
 	Sleep(1);
 #elif defined(GPK_ANDROID)
@@ -40,9 +42,9 @@ struct SDisplayInput {
 	return 0;
 }
 
-					::gpk::error_t										gpk::clearTarget							(::gpk::SRenderTarget& targetToClear)	{ 
-	::gpk::SFramework::TOffscreen												& offscreen									= targetToClear.Color;
-	::gpk::STexture<uint32_t>													& offscreenDepth							= targetToClear.DepthStencil;
+					::gpk::error_t														gpk::clearTarget							(::gpk::SRenderTarget& targetToClear)	{ 
+	::gpk::SFramework::TOffscreen																& offscreen									= targetToClear.Color;
+	::gpk::STexture<uint32_t>																	& offscreenDepth							= targetToClear.DepthStencil;
 	::memset(offscreenDepth	.Texels.begin(), -1, sizeof(uint32_t)								* offscreenDepth	.Texels.size());	// Clear target.
 	::memset(offscreen		.Texels.begin(), 0, sizeof(::gpk::SFramework::TOffscreen::TTexel)	* offscreen			.Texels.size());	// Clear target.
 	return 0;					
@@ -60,7 +62,7 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	//::SApplication																				& applicationInstance						= *g_ApplicationInstance;
 	static	const int																			adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
-	::SDisplayInput																				* actualMainDisplay								= (::SDisplayInput*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
+	::SDisplayInput																				* actualMainDisplay							= (::SDisplayInput*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
 	::gpk::SDisplay																				dummyDisplay;
 	::gpk::SDisplay																				& mainDisplay								= (actualMainDisplay) ? actualMainDisplay->Display : dummyDisplay;
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainDisplay.PlatformDetail;
@@ -125,10 +127,11 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		break;
 	case WM_PAINT			: break;
 	case WM_DESTROY			: 
-		::PostQuitMessage(0); 
+		::SDisplayInput																				* oldInput							= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
-		::SetWindowLongPtrA(mainDisplay.PlatformDetail.WindowHandle, GWLP_USERDATA, 0);
+		safe_delete(oldInput);
+		::PostQuitMessage(0); 
 		return 0;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -145,6 +148,11 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 }
 #endif
 
+					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{ 
+	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle); 
+	::gpk::displayUpdate(mainWindow);
+	return 0;
+}
 					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{ 
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;

@@ -162,6 +162,9 @@
     <ClInclude Include="gpk_ptr.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_safe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_display.cpp">

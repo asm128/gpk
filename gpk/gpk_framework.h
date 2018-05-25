@@ -32,6 +32,7 @@ namespace gpk
 
 						::gpk::error_t										updateFramework								(::gpk::SFramework& framework);
 						::gpk::error_t										mainWindowCreate							(::gpk::SDisplay& mainWindow, SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
+						::gpk::error_t										mainWindowDestroy							(::gpk::SDisplay& mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928
