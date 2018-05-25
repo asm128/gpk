@@ -58,12 +58,12 @@ static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32
 	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	const ::gpk::SControl										& control									= gui.Controls[iControl];
-	::gpk::SCoord2<uint32_t>									targetSize									= target.metrics();
+	::gpk::SCoord2<int32_t>										targetSize									= target.metrics().Cast<int32_t>();
 	::gpk::SCoord2<double>										scale										= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	const bool													isValidParent								= gui.Controls.size() > (uint32_t)control.IndexParent && false == gui.ControlStates[control.IndexParent].Unused;
 	if(isValidParent) {
 		::controlUpdateMetrics(gui, control.IndexParent, target);
-		targetSize												= gui.ControlMetrics[control.IndexParent].Client.Global.Size.Cast<uint32_t>();
+		targetSize												= gui.ControlMetrics[control.IndexParent].Client.Global.Size;
 	}
 	if(false == controlState.Outdated) 
 		return 0;
@@ -74,7 +74,18 @@ static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32
 			, control.Area.Size.y - (control.Margin.Top		+ control.Border.Top	+ control.Margin.Bottom	+ control.Border.Bottom)
 			}
 		};
-	controlMetrics.Total	.Local							= control.Area;
+	::gpk::SCoord2<int32_t>										finalPostion	= control.Area.Offset;
+	::gpk::SCoord2<int32_t>										finalSize		= control.Area.Size;
+
+	controlMetrics.Total	.Local							= {finalPostion, finalSize};
+		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - finalSize.x / 2; }
+	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_RIGHT	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x - finalSize.x; }
+	else															{}
+
+		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_VCENTER	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y / 2 - finalSize.y / 2; }
+	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_BOTTOM	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y - finalSize.y; }
+	else															{}
+
 	controlMetrics.Total	.Global							= controlMetrics.Total	.Local;
 	controlMetrics.Client	.Global							= controlMetrics.Client	.Local;
 	controlMetrics.Client	.Global.Offset					+= controlMetrics.Total.Local.Offset;

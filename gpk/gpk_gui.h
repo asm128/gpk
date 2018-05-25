@@ -33,6 +33,7 @@ namespace gpk
 		::gpk::SRectangle2D<int32_t>						Area								;
 		::gpk::SRectLimits<int32_t>							Border								;
 		::gpk::SRectLimits<int32_t>							Margin								;
+		::gpk::ALIGN										Align								;
 		int32_t												IndexParent							;
 	};
 
