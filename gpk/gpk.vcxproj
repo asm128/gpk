@@ -46,6 +46,8 @@
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_text.h" />
     <ClInclude Include="gpk_input.h" />
+    <ClInclude Include="gpk_label.h" />
+    <ClInclude Include="gpk_label_manager.h" />
     <ClInclude Include="gpk_layered_view.h" />
     <ClInclude Include="gpk_math.h" />
     <ClInclude Include="gpk_matrix.h" />
@@ -62,6 +64,7 @@
     <ClInclude Include="gpk_texture.h" />
     <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_truetype.h" />
+    <ClInclude Include="gpk_type_registry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_display.cpp" />
@@ -73,11 +76,13 @@
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_text.cpp" />
+    <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
+    <ClCompile Include="gpk_type_registry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_module_exports.def" />

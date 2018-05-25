@@ -1,6 +1,7 @@
 #include "gpk_array_view.h"
 #include "gpk_memory.h"
 #include <memory.h>
+#include <new>
 
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
