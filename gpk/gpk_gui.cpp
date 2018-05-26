@@ -9,7 +9,8 @@
 		, gui.ControlMetrics
 		, gui.ControlChildren
 		) - 1, "Failed to resize! Out of memory?");
-	gui.ControlStates[iControl].Outdated					= true;
+	gui.ControlStates	[iControl].Outdated					= true;
+	gui.Controls		[iControl].IndexParent				= -1;
 	return iControl; 
 }
 
@@ -135,7 +136,7 @@ static		::gpk::error_t								actualControlPaint							(::gpk::SGUI& gui, int32_
 	::actualControlPaint(gui, iControl, target);
 	::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
-		::actualControlPaint(gui, children[iChild], target);
+		::gpk::controlPaintHierarchy(gui, children[iChild], target);
 	}
 	return 0;
 }

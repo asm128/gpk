@@ -14,12 +14,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.GUI.Controls[controlTestRoot].Area			= {{4, 4}, {320, 240}};
 	app.GUI.Controls[controlTestRoot].Border		= {2, 2, 2, 2};
 	app.GUI.Controls[controlTestRoot].Margin		= {1, 1, 1, 1};
+	app.GUI.Controls[controlTestRoot].Align			= ::gpk::ALIGN_CENTER;
 	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
 
 	for(uint32_t iChild = 0; iChild < 18; ++iChild) {
 		int32_t												controlTestChild0		= ::gpk::controlCreate(app.GUI);
-		app.GUI.Controls[controlTestChild0].Area		= {{0, 0}, {(int32_t)(32 / (1 + iChild / 9)), (int32_t)(32 / (1 + iChild / 9))}};
-		app.GUI.Controls[controlTestChild0].Border		= {2, 2, 2, 2};
+		app.GUI.Controls[controlTestChild0].Area		= {{2, 2}, {(int32_t)(64 / (1 + iChild / 3)), (int32_t)(64  / (1 + iChild / 3))}}; // {32, 32}};//
+		app.GUI.Controls[controlTestChild0].Border		= {1, 1, 1, 1};
 		app.GUI.Controls[controlTestChild0].Margin		= {1, 1, 1, 1};
 		switch(iChild % 9) {
 		case 0: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_TOP_LEFT			; break;
@@ -27,7 +28,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		case 2: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_TOP_RIGHT			; break;
 		case 3: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_CENTER_LEFT		; break;
 		case 4: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_CENTER				; break;
-		case 5: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_BOTTOM_RIGHT		; break;
+		case 5: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_CENTER_RIGHT		; break;
 		case 6: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_BOTTOM_LEFT		; break;
 		case 7: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_CENTER_BOTTOM		; break;
 		case 8: app.GUI.Controls[controlTestChild0].Align = ::gpk::ALIGN_BOTTOM_RIGHT		; break;
