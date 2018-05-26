@@ -75,16 +75,16 @@ static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32
 			, control.Area.Size.y - (control.Margin.Top		+ control.Border.Top	+ control.Margin.Bottom	+ control.Border.Bottom)
 			}
 		};
-	::gpk::SCoord2<int32_t>										finalPostion	= control.Area.Offset;
+	::gpk::SCoord2<int32_t>										finalPosition	= control.Area.Offset;
 	::gpk::SCoord2<int32_t>										finalSize		= control.Area.Size;
 
-	controlMetrics.Total	.Local							= {finalPostion, finalSize};
-		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - finalSize.x / 2; }
-	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_RIGHT	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x - finalSize.x; }
+	controlMetrics.Total	.Local							= {finalPosition, finalSize};
+		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - finalSize.x / 2 + finalPosition.x; }
+	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_RIGHT	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x - (finalSize.x + finalPosition.x); }
 	else															{}
 
-		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_VCENTER	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y / 2 - finalSize.y / 2; }
-	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_BOTTOM	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y - finalSize.y; }
+		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_VCENTER	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y / 2 - finalSize.y / 2 + finalPosition.y; }
+	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_BOTTOM	))	{ controlMetrics.Total.Local.Offset.y = targetSize.y - (finalSize.y + finalPosition.y); }
 	else															{}
 
 	controlMetrics.Total	.Global							= controlMetrics.Total	.Local;
