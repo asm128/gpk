@@ -26,7 +26,7 @@ static	void												threadRender					(void* pRuntimeState)							{
 	int32_t														result								= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
 		runtimeModule->Render(runtimeModule->Application);
-		::Sleep(1);
+		//::Sleep(1);
 	}
 	info_printf("Render thread done.");
 }

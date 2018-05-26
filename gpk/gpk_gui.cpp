@@ -7,10 +7,16 @@
 		, gui.Controls
 		, gui.ControlStates
 		, gui.ControlMetrics
+		, gui.ControlText
 		, gui.ControlChildren
 		) - 1, "Failed to resize! Out of memory?");
+	gui.ControlStates	[iControl]							= {};
 	gui.ControlStates	[iControl].Outdated					= true;
 	gui.Controls		[iControl].IndexParent				= -1;
+	gui.Controls		[iControl].Align					= ::gpk::ALIGN_TOP_LEFT;
+	gui.Controls		[iControl].Border					= 
+	gui.Controls		[iControl].Margin					= {};
+	gui.Controls		[iControl].Area						= {{0, 0}, {16, 16}};
 	return iControl; 
 }
 

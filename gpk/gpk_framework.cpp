@@ -34,11 +34,6 @@ struct SDisplayInput {
 		if(offscreen && offscreen->Color.Texels.size())
 			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
 	}
-#if defined(GPK_WINDOWS)
-	Sleep(1);
-#elif defined(GPK_ANDROID)
-	Sleep_Para_Android(1);
-#endif
 	return 0;
 }
 

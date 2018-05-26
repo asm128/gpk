@@ -19,6 +19,7 @@ namespace gpk
 		::gpk::SControlRectangle							Total;
 		::gpk::SControlRectangle							Client;
 	};
+
 	struct SControlState {
 		bool												Hover									: 1;
 		bool												Pressed									: 1;
@@ -43,10 +44,16 @@ namespace gpk
 		float												ZoomLevel							= 1.0;
 	};
 
+	struct SControlText {
+		::std::string										Text								;
+		::gpk::ALIGN										Align								;
+	};
+
 	struct SGUI {
 		::gpk::array_pod<SControl>							Controls							= {};
 		::gpk::array_pod<SControlState>						ControlStates						= {};
 		::gpk::array_pod<SControlMetrics>					ControlMetrics						= {};
+		::gpk::array_obj<SControlText>						ControlText							= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>>			ControlChildren						= {};
 		::gpk::SGUIZoom										Zoom								= {};
 	};
