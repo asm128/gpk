@@ -121,7 +121,7 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : gui.Colors[control.ColorClient			];
 	//colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTGRAY		} : ::gpk::SColorBGRA{::gpk::DARKGRAY	} : gui.Colors[control.ColorBack			];
 	//colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
-	if(true) { // 3d borders
+	if(false) { // 3d borders
 		colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 1.0;
 		colors[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2; 
 		colors[::gpk::GUI_CONTROL_COLOR_BORDER_TOP		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2;
@@ -144,43 +144,41 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}, ::gpk::SCoord2<int32_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
 	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}};
 
-	if(true) { // 3d corners
-		for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iElement)
-			if(iElement != ::gpk::GUI_CONTROL_COLOR_CLIENT)
-				::gpk::drawRectangle(target, colors[iElement], finalRects[iElement]);
-		{
-			::gpk::SCoord2<int32_t>										startOffset									= controlMetrics.Total.Global.Offset;
-			::gpk::STriangle2D<int32_t>									triangles [8]								= {};
-			triangles[0]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, 0}	};
-			triangles[1]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}	};
+	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iElement)
+		if(iElement != ::gpk::GUI_CONTROL_COLOR_CLIENT)
+			::gpk::drawRectangle(target, colors[iElement], finalRects[iElement]);
 
-			int32_t														startOffsetX								= startOffset.x + controlMetrics.Total.Global.Size.x - control.Border.Right;
-			startOffset												= {startOffsetX, controlMetrics.Total.Global.Offset.y};
-			triangles[2]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}	};
-			triangles[3]											= {startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Top}	};
+	// --- Draw control corners
+	::gpk::SCoord2<int32_t>										startOffset									= controlMetrics.Total.Global.Offset;
+	::gpk::STriangle2D<int32_t>									triangles [8]								= {};
+	triangles[0]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, 0}	};
+	triangles[1]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}	};
 
-			int32_t														startOffsetY								= startOffset.y + controlMetrics.Total.Global.Size.y - control.Border.Bottom;
-			startOffset												= {controlMetrics.Total.Global.Offset.x, startOffsetY};
-			triangles[4]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, 0}	};
-			triangles[5]											= {startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Top}	};
+	int32_t														startOffsetX								= startOffset.x + controlMetrics.Total.Global.Size.x - control.Border.Right;
+	startOffset												= {startOffsetX, controlMetrics.Total.Global.Offset.y};
+	triangles[2]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}	};
+	triangles[3]											= {startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Top}	};
 
-			startOffset												= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom};
-			triangles[6]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}	};
-			triangles[7]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}	};
-			int32_t														colorIndices [8]							=
-				{ ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
-				, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
-				};
-			for(uint32_t iTri = 0; iTri < 8; ++iTri)
-				::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
-		}
-	}
+	int32_t														startOffsetY								= startOffset.y + controlMetrics.Total.Global.Size.y - control.Border.Bottom;
+	startOffset												= {controlMetrics.Total.Global.Offset.x, startOffsetY};
+	triangles[4]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Left, 0}	};
+	triangles[5]											= {startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Top}	};
+
+	startOffset												= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom};
+	triangles[6]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}	};
+	triangles[7]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}	};
+	int32_t														colorIndices [8]							=
+		{ ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
+		, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
+		};
+	for(uint32_t iTri = 0; iTri < 8; ++iTri)
+		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
 	return 0;
 }
 			::gpk::error_t								gpk::controlPaintHierarchy					(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
@@ -218,9 +216,9 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 	if (controlState.Execute)
 		controlState.Execute									= false;
 	//--------------------
-	::gpk::error_t controlHovered = -1;
+	::gpk::error_t												controlHovered							= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.ControlMetrics[iControl].Total.Global)) {
-		controlHovered = ::updateGUIControlHovered(controlState, input) ? iControl : -1;
+		controlHovered											= ::updateGUIControlHovered(controlState, input) ? iControl : -1;
 	}
 	else {
 		if (controlState.Hover) 
@@ -235,6 +233,7 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 			::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.size() > (uint32_t)controlPressed) {
 				controlState.Hover										= false;
+				controlHovered											= controlPressed;
 			}
 		}
 	}
@@ -255,8 +254,15 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 		if(gui.Controls.size() > (uint32_t)controlPressed)
 			controlHovered											= controlPressed;
 	}
-	if(controlHovered == -1)
+	if(controlHovered == -1) 
 		return gui.Controls.size();
+	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
+		if(iControl != (uint32_t)controlHovered)
+			gui.ControlStates[iControl].Hover						= false;
+		else {
+			info_printf("Hovered: %u.", iControl);
+		}
+	}
 	return controlHovered;
 }
 
