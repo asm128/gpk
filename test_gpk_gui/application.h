@@ -10,9 +10,12 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 {
 	struct SApplication {
 		::gpk::SFramework						Framework;
-		::gpk::SGUI								GUI;
-		::gpk::ptr_obj<::gpk::SRenderTarget>	Offscreen;
+		::gpk::SGUI								GUI									= {};
+		::gpk::STexture<::gpk::SColorBGRA>		TextureFont							= {};
+		::gpk::STextureMonochrome<uint32_t>		TextureFontMonochrome				= {};
+		::gpk::ptr_obj<::gpk::SRenderTarget>	Offscreen							= {};
 
+		::std::mutex							LockGUI;
 		::std::mutex							LockRender;
 
 												SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}

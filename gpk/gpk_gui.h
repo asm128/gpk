@@ -74,6 +74,15 @@ namespace gpk
 	::gpk::error_t										controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t										controlPaintHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
 
+	enum GUI_CONTROL_COLOR 
+		{ GUI_CONTROL_COLOR_BACKGROUND		= 0
+		, GUI_CONTROL_COLOR_CLIENT
+		, GUI_CONTROL_COLOR_BORDER_LEFT
+		, GUI_CONTROL_COLOR_BORDER_TOP
+		, GUI_CONTROL_COLOR_BORDER_RIGHT
+		, GUI_CONTROL_COLOR_BORDER_BOTTOM
+		, GUI_CONTROL_COLOR_COUNT
+		};
 #pragma pack(pop)
 } // namespace
 
