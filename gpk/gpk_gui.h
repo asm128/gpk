@@ -32,10 +32,13 @@ namespace gpk
 
 	struct SControl {
 		::gpk::SRectangle2D<int32_t>						Area								;
-		::gpk::SRectLimits<int32_t>							Border								;
-		::gpk::SRectLimits<int32_t>							Margin								;
-		::gpk::ALIGN										Align								;
+		::gpk::SRectLimits<uint16_t>						Border								;
+		::gpk::SRectLimits<uint16_t>						Margin								;
+		::gpk::SRectLimits<uint16_t>						ColorBorder							;
+		uint16_t											ColorBack							;
+		uint16_t											ColorClient							;
 		int32_t												IndexParent							;
+		::gpk::ALIGN										Align								;
 	};
 
 	struct SGUIZoom {
@@ -47,16 +50,23 @@ namespace gpk
 	struct SControlText {
 		::std::string										Text								;
 		::gpk::ALIGN										Align								;
+		int8_t												Padding								;
+		int16_t												ColorIndex							;
 	};
 
 	struct SGUI {
-		::gpk::array_pod<SControl>							Controls							= {};
-		::gpk::array_pod<SControlState>						ControlStates						= {};
-		::gpk::array_pod<SControlMetrics>					ControlMetrics						= {};
-		::gpk::array_obj<SControlText>						ControlText							= {};
+		::gpk::SCoord2<float>								CursorPos							= {};
+		::gpk::array_pod<::gpk::SControl>					Controls							= {};
+		::gpk::array_pod<::gpk::SControlState>				ControlStates						= {};
+		::gpk::array_pod<::gpk::SControlMetrics>			ControlMetrics						= {};
+		::gpk::array_obj<::gpk::SControlText>				ControlText							= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>>			ControlChildren						= {};
+		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= {};
 		::gpk::SGUIZoom										Zoom								= {};
+		
 	};
+
+	::gpk::error_t										guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
 
 	::gpk::error_t										controlCreate						(::gpk::SGUI& gui);
 	::gpk::error_t										controlDelete						(::gpk::SGUI& gui, int32_t iControl);

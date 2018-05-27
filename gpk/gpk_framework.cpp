@@ -70,6 +70,8 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
 	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam]  =  1; return 0;
 	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam] &= ~1; return 0;
+	case WM_LBUTTONDOWN		: if(0 > ::gpk::size(input.MousePrevious.ButtonState)) break; input.MousePrevious.ButtonState[0] = input.MouseCurrent.ButtonState[0]; input.MouseCurrent.ButtonState[0]  =  1; return 0;
+	case WM_LBUTTONUP		: if(0 > ::gpk::size(input.MousePrevious.ButtonState)) break; input.MousePrevious.ButtonState[0] = input.MouseCurrent.ButtonState[0]; input.MouseCurrent.ButtonState[0] &= ~1; return 0;
 	case WM_MOUSEWHEEL		:
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;

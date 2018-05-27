@@ -12,10 +12,9 @@
 		) - 1, "Failed to resize! Out of memory?");
 	gui.ControlStates	[iControl]							= {};
 	gui.ControlStates	[iControl].Outdated					= true;
+	gui.Controls		[iControl]							= {};
 	gui.Controls		[iControl].IndexParent				= -1;
 	gui.Controls		[iControl].Align					= ::gpk::ALIGN_TOP_LEFT;
-	gui.Controls		[iControl].Border					= 
-	gui.Controls		[iControl].Margin					= {};
 	gui.Controls		[iControl].Area						= {{0, 0}, {16, 16}};
 	return iControl; 
 }
@@ -59,8 +58,8 @@
 	gpk_necall(children.push_back(iControl), "Out of memory?");
 	return 0;
 }
-	
-static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+
+	static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
@@ -109,27 +108,32 @@ static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32
 static		::gpk::error_t								actualControlPaint							(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::controlUpdateMetrics(gui, iControl, target);
+	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
 	const ::gpk::SControl										& control									= gui.Controls[iControl];
 	//::gpk::SRectangle2D<int32_t>
 	//	{ controlMetrics.Total.Global.Offset	+ ::gpk::SCoord2<int32_t>{control.Border.Left, control.Border.Top}
 	//	, controlMetrics.Total.Global.Size		- ::gpk::SCoord2<int32_t>{control.Border.Left + control.Border.Right, control.Border.Top + control.Border.Bottom}
 	//	});
-	::gpk::drawRectangle(target, {0xff, 0xff, 0xff, 0xff}, controlMetrics.Total.Global);
-	::gpk::drawRectangle(target, {0x7f, 0x7f, 0x7f, 0xff}, controlMetrics.Client.Global);
-	::gpk::drawRectangle(target, {0xff, 0x00, 0xFF, 0xff}, ::gpk::SRectangle2D<int32_t>
+	::gpk::SColorBGRA											color										;
+	color = (control.ColorBack			>= gui.Colors.size() || controlState.Hover) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorBack		]; ::gpk::drawRectangle(target, color, controlMetrics.Total.Global);
+	color = (control.ColorClient		>= gui.Colors.size() || controlState.Hover) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorClient		]; ::gpk::drawRectangle(target, color, controlMetrics.Client.Global);
+	color = (control.ColorBorder.Top	>= gui.Colors.size() || controlState.Hover) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorBorder.Top	]; ::gpk::drawRectangle(target, color, ::gpk::SRectangle2D<int32_t>
 		{ controlMetrics.Total.Global.Offset	
 		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}
 		});
-	::gpk::drawRectangle(target, {0x00, 0xFF, 0x00, 0xff}, ::gpk::SRectangle2D<int32_t>
+	
+	color = (control.ColorBorder.Bottom	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorBorder.Bottom	]; ::gpk::drawRectangle(target, color, ::gpk::SRectangle2D<int32_t>
 		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}
 		, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}
 		});
-	::gpk::drawRectangle(target, {0x00, 0x00, 0xFF, 0xff}, ::gpk::SRectangle2D<int32_t>
+	
+	color = (control.ColorBorder.Left	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorBorder.Left	]; ::gpk::drawRectangle(target, color, ::gpk::SRectangle2D<int32_t>
 		{ controlMetrics.Total.Global.Offset	
 		, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}
 		});
-	::gpk::drawRectangle(target, {0x00, 0x00, 0xff, 0xff}, ::gpk::SRectangle2D<int32_t>
+	
+	color = (control.ColorBorder.Right	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::WHITE} : gui.Colors[control.ColorBorder.Right	]; ::gpk::drawRectangle(target, color, ::gpk::SRectangle2D<int32_t>
 		{ controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}
 		, ::gpk::SCoord2<int32_t>{control.Border.Bottom, controlMetrics.Total.Global.Size.y}
 		});
@@ -146,3 +150,79 @@ static		::gpk::error_t								actualControlPaint							(::gpk::SGUI& gui, int32_
 	}
 	return 0;
 }
+
+
+
+
+static		::gpk::error_t								updateGUIControlHovered						(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)	noexcept	{ 
+	if(controlFlags.Hover) {
+		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed) 
+			controlFlags.Pressed									= true;
+		else if(inputSystem.ButtonUp(0) && controlFlags.Pressed) {
+			controlFlags.Execute									= true;
+			controlFlags.Pressed									= false;
+		}
+	}
+	else 
+		controlFlags.Hover										= true;
+	return controlFlags.Hover;
+}
+
+static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
+	::gpk::SControlState										& controlState							= gui.ControlStates[iControl];
+	// EXECUTE only lasts one tick.
+	if (controlState.Execute)
+		controlState.Execute									= false;
+	//--------------------
+	::gpk::error_t controlHovered = -1;
+	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.ControlMetrics[iControl].Total.Global)) {
+		controlHovered = ::updateGUIControlHovered(controlState, input) ? iControl : -1;
+	}
+	else {
+		if (controlState.Hover) 
+			controlState.Hover										= false;
+
+		if(input.ButtonUp(0) && controlState.Pressed)
+			controlState.Pressed									= false;
+	}
+	{
+		::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
+		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
+			::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, children[iChild]);
+			if(gui.Controls.size() > (uint32_t)controlPressed) {
+				controlState.Hover										= false;
+			//	return controlPressed;
+			}
+		}
+	}
+	return controlHovered;
+}
+
+			::gpk::error_t								gpk::guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input)											{
+	//if(input.MouseCurrent.Deltas == SCoord3<int32_t>{})
+	//	return 0;
+	gui.CursorPos											+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
+	::gpk::error_t												controlHovered								= -1;
+	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
+		::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+		if(controlState.Unused || controlState.Disabled)
+			continue;
+		::gpk::SControl												& control									= gui.Controls[iControl];
+		if(gui.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
+			continue;
+		::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, iControl);
+		if(gui.Controls.size() > (uint32_t)controlPressed)
+			controlHovered											= controlPressed;
+	}
+	if(controlHovered == -1)
+		return gui.Controls.size();
+	//for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
+	//	if(iControl != (uint32_t)controlHovered) {
+	//		::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+	//		controlState.Hover										= false;
+	//	}
+	//}
+	return controlHovered;
+}
+
+
