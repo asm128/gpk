@@ -30,6 +30,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlRoot.ColorBorder.Top									= ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		;
 	controlRoot.ColorBorder.Right								= ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT		;
 	controlRoot.ColorBorder.Bottom								= ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	;
+	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachHeightTo	= 0;
+	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= 0;
 	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
 
 	for(uint32_t iChild = 0; iChild < 810; ++iChild) {
@@ -80,12 +82,16 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gme::mutex_guard												lock					(app.LockGUI);
 		::gpk::guiProcessInput(app.GUI, *app.Framework.Input);
 	}
+	if(app.Framework.Input->MouseCurrent.Deltas.z)
+		app.GUI.Zoom.ZoomLevel	+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+ 
 	for(uint32_t iControl = 0, countControls = app.GUI.Controls.size(); iControl < countControls; ++iControl) {
 		if(app.GUI.ControlStates[iControl].Unused || app.GUI.ControlStates[iControl].Disabled)
 			continue;
 		if(app.GUI.ControlStates[iControl].Execute)
 			info_printf("Executed %u.", iControl);
 	}
+
 	return 0; 
 }
 

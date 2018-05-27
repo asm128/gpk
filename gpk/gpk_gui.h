@@ -20,14 +20,20 @@ namespace gpk
 		::gpk::SControlRectangle							Client;
 	};
 
+	struct SControlConstraints {
+		int32_t												IndexControlToAttachWidthTo				;
+		int32_t												IndexControlToAttachHeightTo			;
+	};
+
+
 	struct SControlState {
+		bool												Outdated								: 1;
 		bool												Hover									: 1;
 		bool												Pressed									: 1;
 		bool												Selected								: 1;
 		bool												Execute									: 1;
 		bool												Disabled								: 1;
 		bool												Unused									: 1;
-		bool												Outdated								: 1;
 	};
 
 	struct SControl {
@@ -56,11 +62,12 @@ namespace gpk
 
 	struct SGUI {
 		::gpk::SCoord2<float>								CursorPos							= {};
-		::gpk::array_pod<::gpk::SControl>					Controls							= {};
-		::gpk::array_pod<::gpk::SControlState>				ControlStates						= {};
-		::gpk::array_pod<::gpk::SControlMetrics>			ControlMetrics						= {};
-		::gpk::array_obj<::gpk::SControlText>				ControlText							= {};
-		::gpk::array_obj<::gpk::array_pod<int32_t>>			ControlChildren						= {};
+		::gpk::array_pod<::gpk::SControl			>		Controls							= {};
+		::gpk::array_pod<::gpk::SControlState		>		ControlStates						= {};
+		::gpk::array_pod<::gpk::SControlMetrics		>		ControlMetrics						= {};
+		::gpk::array_obj<::gpk::SControlText		>		ControlText							= {};
+		::gpk::array_pod<::gpk::SControlConstraints	>		ControlConstraints					= {};
+		::gpk::array_obj<::gpk::array_pod<int32_t>	>		ControlChildren						= {};
 		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= {};
 		::gpk::SGUIZoom										Zoom								= {};
 		

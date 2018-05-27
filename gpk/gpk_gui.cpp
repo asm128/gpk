@@ -9,13 +9,15 @@
 		, gui.ControlMetrics
 		, gui.ControlText
 		, gui.ControlChildren
+		, gui.ControlConstraints
 		) - 1, "Failed to resize! Out of memory?");
-	gui.ControlStates	[iControl]							= {};
-	gui.ControlStates	[iControl].Outdated					= true;
-	gui.Controls		[iControl]							= {};
-	gui.Controls		[iControl].IndexParent				= -1;
-	gui.Controls		[iControl].Align					= ::gpk::ALIGN_TOP_LEFT;
-	gui.Controls		[iControl].Area						= {{0, 0}, {16, 16}};
+	gui.ControlStates		[iControl]						= {};
+	gui.ControlStates		[iControl].Outdated				= true;
+	gui.Controls			[iControl]						= {};
+	gui.Controls			[iControl].IndexParent			= -1;
+	gui.Controls			[iControl].Align				= ::gpk::ALIGN_TOP_LEFT;
+	gui.Controls			[iControl].Area					= {{0, 0}, {16, 16}};
+	gui.ControlConstraints	[iControl]						= {-1, -1};
 	return iControl; 
 }
 
@@ -65,7 +67,6 @@
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	const ::gpk::SControl										& control									= gui.Controls[iControl];
 	::gpk::SCoord2<int32_t>										targetSize									= target.metrics().Cast<int32_t>();
-	::gpk::SCoord2<double>										scale										= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	const bool													isValidParent								= gui.Controls.size() > (uint32_t)control.IndexParent && false == gui.ControlStates[control.IndexParent].Unused;
 	if(isValidParent) {
 		::controlUpdateMetrics(gui, control.IndexParent, target);
@@ -73,15 +74,20 @@
 	}
 	if(false == controlState.Outdated) 
 		return 0;
+
+	::gpk::SCoord2<double>										scale										= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+	::gpk::SCoord2<int32_t>										finalPosition								= ::gpk::SCoord2<double>{control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y}.Cast<int32_t>();
+	::gpk::SCoord2<int32_t>										finalSize									= ::gpk::SCoord2<double>{control.Area.Size		.x * scale.x, control.Area.Size		.y * scale.y}.Cast<int32_t>();
 	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
+
+	if(gui.ControlConstraints[iControl].IndexControlToAttachWidthTo	 == iControl)	{ finalPosition.x = 0; finalSize.x = targetSize.x; }
+	if(gui.ControlConstraints[iControl].IndexControlToAttachHeightTo == iControl)	{ finalPosition.y = 0; finalSize.y = targetSize.y; }
 	controlMetrics.Client.Local								= 
-		{	{ control.Margin.Left + control.Border.Left, control.Margin.Top + control.Border.Top }
-		,	{ control.Area.Size.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)
-			, control.Area.Size.y - (control.Margin.Top		+ control.Border.Top	+ control.Margin.Bottom	+ control.Border.Bottom)
+		{	::gpk::SCoord2<double>{(control.Margin.Left + control.Border.Left) * scale.x, (control.Margin.Top + control.Border.Top) * scale.y}.Cast<int32_t>()
+		,	{ (int32_t)(finalSize.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)		* scale.x)
+			, (int32_t)(finalSize.y - (control.Margin.Top	+ control.Border.Top	+ control.Margin.Bottom	+ control.Border.Bottom)	* scale.y)
 			}
 		};
-	::gpk::SCoord2<int32_t>										finalPosition	= control.Area.Offset;
-	::gpk::SCoord2<int32_t>										finalSize		= control.Area.Size;
 
 	controlMetrics.Total	.Local							= {finalPosition, finalSize};
 		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - finalSize.x / 2 + finalPosition.x; }
@@ -229,7 +235,6 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 			::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.size() > (uint32_t)controlPressed) {
 				controlState.Hover										= false;
-			//	return controlPressed;
 			}
 		}
 	}
@@ -237,8 +242,6 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 }
 
 			::gpk::error_t								gpk::guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input)											{
-	//if(input.MouseCurrent.Deltas == SCoord3<int32_t>{})
-	//	return 0;
 	gui.CursorPos											+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t												controlHovered								= -1;
 	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
@@ -254,12 +257,6 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 	}
 	if(controlHovered == -1)
 		return gui.Controls.size();
-	//for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
-	//	if(iControl != (uint32_t)controlHovered) {
-	//		::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
-	//		controlState.Hover										= false;
-	//	}
-	//}
 	return controlHovered;
 }
 
