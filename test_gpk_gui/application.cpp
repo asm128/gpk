@@ -40,7 +40,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		sprintf_s(buffer, "(%u)", iChild);
 		::gpk::SControl													& control				= app.GUI.Controls		[controlTestChild0];
 		::gpk::SControlText												& controlText			= app.GUI.ControlText	[controlTestChild0];
-		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(480 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
+		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {4, 4, 4, 4};
 		controlText	.Text											= buffer; 

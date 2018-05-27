@@ -79,9 +79,9 @@
 	::gpk::SCoord2<int32_t>										finalPosition								= ::gpk::SCoord2<double>{control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y}.Cast<int32_t>();
 	::gpk::SCoord2<int32_t>										finalSize									= ::gpk::SCoord2<double>{control.Area.Size		.x * scale.x, control.Area.Size		.y * scale.y}.Cast<int32_t>();
 	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
-
-	if(gui.ControlConstraints[iControl].IndexControlToAttachWidthTo	 == iControl)	{ finalPosition.x = 0; finalSize.x = targetSize.x; }
-	if(gui.ControlConstraints[iControl].IndexControlToAttachHeightTo == iControl)	{ finalPosition.y = 0; finalSize.y = targetSize.y; }
+	const ::gpk::SControlConstraints							& controlConstraints						= gui.ControlConstraints[iControl];
+	if(controlConstraints.IndexControlToAttachWidthTo	== iControl) { finalPosition.x = 0; finalSize.x = targetSize.x; } else if(gui.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachWidthTo  && false == gui.ControlStates[controlConstraints.IndexControlToAttachWidthTo ].Unused) { finalPosition.x = 0; finalSize.x = gui.ControlMetrics[controlConstraints.IndexControlToAttachWidthTo ].Total.Global.Size.x; }
+	if(controlConstraints.IndexControlToAttachHeightTo	== iControl) { finalPosition.y = 0; finalSize.y = targetSize.y; } else if(gui.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachHeightTo && false == gui.ControlStates[controlConstraints.IndexControlToAttachHeightTo].Unused) { finalPosition.y = 0; finalSize.y = gui.ControlMetrics[controlConstraints.IndexControlToAttachHeightTo].Total.Global.Size.y; }
 	controlMetrics.Client.Local								= 
 		{	::gpk::SCoord2<double>{(control.Margin.Left + control.Border.Left) * scale.x, (control.Margin.Top + control.Border.Top) * scale.y}.Cast<int32_t>()
 		,	{ (int32_t)(finalSize.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)		* scale.x)
