@@ -19,6 +19,7 @@
 #	define GPK_WARNING_PRINTF_ENABLED	
 #	define GPK_INFO_PRINTF_ENABLED	
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
+//#	define GPK_VERBOSE_PRINTF_ENABLED
 #	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 #		define GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
 #	endif
@@ -29,6 +30,7 @@
 #	define GPK_WARNING_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_INFO_PRINTF_ENABLED		// Uncomment as needed
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
+//#	define GPK_VERBOSE_PRINTF_ENABLED
 #endif
 
 #endif // GPK_DEBUG_H_97826389432654

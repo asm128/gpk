@@ -81,6 +81,12 @@ namespace gpk
 #	define success_printf(format, ...)								do { __VA_ARGS__; } while(0)
 #endif	
 
+#if defined (GPK_VERBOSE_PRINTF_ENABLED)
+#	define verbose_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
+#else
+#	define verbose_printf(format, ...)								do { __VA_ARGS__; } while(0)
+#endif	
+
 #ifndef GPK_NULLIFY_CONDITIONAL_THROW
 #define throw_if(condition, exception, format, ...)				if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); throw(exception);	}
 #else

@@ -260,7 +260,7 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 		if(iControl != (uint32_t)controlHovered)
 			gui.ControlStates[iControl].Hover						= false;
 		else {
-			info_printf("Hovered: %u.", iControl);
+			verbose_printf("Hovered: %u.", iControl);
 		}
 	}
 	return controlHovered;
