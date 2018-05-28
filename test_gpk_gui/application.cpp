@@ -23,7 +23,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SControl													& controlRoot			= app.GUI.Controls[controlTestRoot];
 	controlRoot.Area											= {{0, 0}, {320, 240}};
 	controlRoot.Border											= {4, 4, 4, 4};
-	controlRoot.Margin											= {20, 20, 20, 2};
+	controlRoot.Margin											= {20, 20, 20, 10};
 	controlRoot.Align											= ::gpk::ALIGN_CENTER						;
 	controlRoot.ColorBack										= ::gpk::GUI_CONTROL_COLOR_BACKGROUND		;
 	controlRoot.ColorClient										= ::gpk::GUI_CONTROL_COLOR_CLIENT			;
@@ -35,15 +35,15 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= 0;
 	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
 
-	for(uint32_t iChild = 0; iChild < 10; ++iChild) {
+	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
 		int32_t															controlTestChild0		= ::gpk::controlCreate(app.GUI);
 		char															buffer [16]				= {};
-		sprintf_s(buffer, "(%u)", iChild);
+		sprintf_s(buffer, "(%u)", controlTestChild0);
 		::gpk::SControl													& control				= app.GUI.Controls		[controlTestChild0];
 		::gpk::SControlText												& controlText			= app.GUI.ControlText	[controlTestChild0];
 		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		control		.Border											= {2, 2, 2, 2};
-		control		.Margin											= {4, 4, 4, 4};
+		control		.Margin											= {1, 1, 1, 1};
 		controlText	.Text											= buffer; 
 		control.ColorBack											= ::gpk::GUI_CONTROL_COLOR_BACKGROUND		;
 		control.ColorClient											= ::gpk::GUI_CONTROL_COLOR_CLIENT			;

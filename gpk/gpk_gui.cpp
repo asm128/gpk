@@ -149,7 +149,7 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : gui.Colors[control.ColorClient			];
 	//colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTGRAY		} : ::gpk::SColorBGRA{::gpk::DARKGRAY	} : gui.Colors[control.ColorBack			];
 	//colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
-	if(false) { // 3d borders
+	if(true) { // 3d borders
 		colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 1.0;
 		colors[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2; 
 		colors[::gpk::GUI_CONTROL_COLOR_BORDER_TOP		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2;
