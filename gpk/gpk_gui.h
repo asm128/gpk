@@ -2,6 +2,7 @@
 #include "gpk_color.h"
 #include "gpk_input.h"
 #include "gpk_grid_view.h"
+#include "gpk_texture.h"
 #include <string>
 
 #ifndef GPK_GUI_H_2903874982374
@@ -69,8 +70,11 @@ namespace gpk
 		::gpk::array_pod<::gpk::SControlConstraints	>		ControlConstraints					= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>		ControlChildren						= {};
 		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= {};
+		// Font
+		::gpk::STextureMonochrome<uint32_t>					FontTexture							= {};
+		::gpk::SCoord2<uint32_t>							FontCharSize						= {9, 16};
+
 		::gpk::SGUIZoom										Zoom								= {};
-		
 	};
 
 	::gpk::error_t										guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);

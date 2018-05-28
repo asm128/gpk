@@ -1,4 +1,5 @@
 #include "application.h"
+#include "gpk_bitmap_file.h"
 
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -34,7 +35,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= 0;
 	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
 
-	for(uint32_t iChild = 0; iChild < 810; ++iChild) {
+	for(uint32_t iChild = 0; iChild < 10; ++iChild) {
 		int32_t															controlTestChild0		= ::gpk::controlCreate(app.GUI);
 		char															buffer [16]				= {};
 		sprintf_s(buffer, "(%u)", iChild);
@@ -65,6 +66,20 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			controlText	.Align											= {};
 		}
 		::gpk::controlSetParent(app.GUI, controlTestChild0, iChild / 9);
+	}
+
+	char																		bmpFileName2	[]							= "Codepage-437-24.bmp";
+	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
+	const ::gpk::SCoord2<uint32_t>												& textureFontMetrics						= app.TextureFont.View.metrics();
+	gpk_necall(app.GUI.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
+	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
+	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
+		const ::gpk::SColorBGRA														& srcColor									= app.TextureFont.View[y][x];
+		app.GUI.FontTexture.View[y * textureFontMetrics.x + x]	
+			=	0 != srcColor.r
+			||	0 != srcColor.g
+			||	0 != srcColor.b
+			;
 	}
 	return 0; 
 }
