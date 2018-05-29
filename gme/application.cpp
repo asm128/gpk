@@ -39,38 +39,38 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= 0;
 	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
 
-	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
-		int32_t															controlTestChild0		= ::gpk::controlCreate(app.GUI);
-		char															buffer [1024]				= {};
-		sprintf_s(buffer, "(%u)", controlTestChild0);
-		::gpk::SControl													& control				= app.GUI.Controls		[controlTestChild0];
-		::gpk::SControlText												& controlText			= app.GUI.ControlText	[controlTestChild0];
-		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
-		control		.Border											= {2, 2, 2, 2};
-		control		.Margin											= {1, 1, 1, 1};
-		controlText	.Text											= buffer; 
-		control.ColorBack											= ::gpk::GUI_CONTROL_AREA_BACKGROUND	;
-		control.ColorClient											= ::gpk::GUI_CONTROL_AREA_CLIENT		;
-		control.ColorBorder.Left									= ::gpk::GUI_CONTROL_AREA_BORDER_LEFT	;
-		control.ColorBorder.Top										= ::gpk::GUI_CONTROL_AREA_BORDER_TOP	;
-		control.ColorBorder.Right									= ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	;
-		control.ColorBorder.Bottom									= ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	;
-		switch(iChild % 9) {										  
-		case 0: control.Align = ::gpk::ALIGN_TOP_LEFT		; controlText.Align = ::gpk::ALIGN_BOTTOM_RIGHT		; ;break;
-		case 1: control.Align = ::gpk::ALIGN_CENTER_TOP		; controlText.Align = ::gpk::ALIGN_CENTER_BOTTOM	; ;break;
-		case 2: control.Align = ::gpk::ALIGN_TOP_RIGHT		; controlText.Align = ::gpk::ALIGN_BOTTOM_LEFT		; ;break;
-		case 3: control.Align = ::gpk::ALIGN_CENTER_LEFT	; controlText.Align = ::gpk::ALIGN_CENTER_RIGHT		; ;break;
-		case 4: control.Align = ::gpk::ALIGN_CENTER			; controlText.Align = ::gpk::ALIGN_CENTER			; ;break;
-		case 5: control.Align = ::gpk::ALIGN_CENTER_RIGHT	; controlText.Align = ::gpk::ALIGN_CENTER_LEFT		; ;break;
-		case 6: control.Align = ::gpk::ALIGN_BOTTOM_LEFT	; controlText.Align = ::gpk::ALIGN_TOP_RIGHT		; ;break;
-		case 7: control.Align = ::gpk::ALIGN_CENTER_BOTTOM	; controlText.Align = ::gpk::ALIGN_CENTER_TOP		; ;break;
-		case 8: control.Align = ::gpk::ALIGN_BOTTOM_RIGHT	; controlText.Align = ::gpk::ALIGN_TOP_LEFT			; ;break;
-		default:
-			control		.Align											=  
-			controlText	.Align											= {};
-		}
-		::gpk::controlSetParent(app.GUI, controlTestChild0, iChild / 9);
-	}
+	//for(uint32_t iChild = 0; iChild < 90; ++iChild) {
+	//	int32_t															controlTestChild0		= ::gpk::controlCreate(app.GUI);
+	//	char															buffer [1024]				= {};
+	//	sprintf_s(buffer, "(%u)", controlTestChild0);
+	//	::gpk::SControl													& control				= app.GUI.Controls		[controlTestChild0];
+	//	::gpk::SControlText												& controlText			= app.GUI.ControlText	[controlTestChild0];
+	//	control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
+	//	control		.Border											= {2, 2, 2, 2};
+	//	control		.Margin											= {1, 1, 1, 1};
+	//	controlText	.Text											= buffer; 
+	//	control.ColorBack											= ::gpk::GUI_CONTROL_AREA_BACKGROUND	;
+	//	control.ColorClient											= ::gpk::GUI_CONTROL_AREA_CLIENT		;
+	//	control.ColorBorder.Left									= ::gpk::GUI_CONTROL_AREA_BORDER_LEFT	;
+	//	control.ColorBorder.Top										= ::gpk::GUI_CONTROL_AREA_BORDER_TOP	;
+	//	control.ColorBorder.Right									= ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	;
+	//	control.ColorBorder.Bottom									= ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	;
+	//	switch(iChild % 9) {										  
+	//	case 0: control.Align = ::gpk::ALIGN_TOP_LEFT		; controlText.Align = ::gpk::ALIGN_BOTTOM_RIGHT		; ;break;
+	//	case 1: control.Align = ::gpk::ALIGN_CENTER_TOP		; controlText.Align = ::gpk::ALIGN_CENTER_BOTTOM	; ;break;
+	//	case 2: control.Align = ::gpk::ALIGN_TOP_RIGHT		; controlText.Align = ::gpk::ALIGN_BOTTOM_LEFT		; ;break;
+	//	case 3: control.Align = ::gpk::ALIGN_CENTER_LEFT	; controlText.Align = ::gpk::ALIGN_CENTER_RIGHT		; ;break;
+	//	case 4: control.Align = ::gpk::ALIGN_CENTER			; controlText.Align = ::gpk::ALIGN_CENTER			; ;break;
+	//	case 5: control.Align = ::gpk::ALIGN_CENTER_RIGHT	; controlText.Align = ::gpk::ALIGN_CENTER_LEFT		; ;break;
+	//	case 6: control.Align = ::gpk::ALIGN_BOTTOM_LEFT	; controlText.Align = ::gpk::ALIGN_TOP_RIGHT		; ;break;
+	//	case 7: control.Align = ::gpk::ALIGN_CENTER_BOTTOM	; controlText.Align = ::gpk::ALIGN_CENTER_TOP		; ;break;
+	//	case 8: control.Align = ::gpk::ALIGN_BOTTOM_RIGHT	; controlText.Align = ::gpk::ALIGN_TOP_LEFT			; ;break;
+	//	default:
+	//		control		.Align											=  
+	//		controlText	.Align											= {};
+	//	}
+	//	::gpk::controlSetParent(app.GUI, controlTestChild0, iChild / 9);
+	//}
 
 	app.IdExit													= ::gpk::controlCreate(app.GUI);
 	::gpk::SControl													& controlExit			= app.GUI.Controls[app.IdExit];
