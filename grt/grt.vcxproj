@@ -105,8 +105,11 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -123,8 +126,11 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -145,8 +151,11 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -167,8 +176,11 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; </AdditionalDependencies>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

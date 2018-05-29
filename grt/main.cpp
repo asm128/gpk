@@ -26,7 +26,7 @@ static	void												threadRender					(void* pRuntimeState)							{
 	int32_t														result								= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
 		runtimeModule->Render(runtimeModule->Application);
-		//::Sleep(1);
+		::Sleep(1);
 	}
 	info_printf("Render thread done.");
 }
@@ -73,7 +73,7 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 				break_info_if(1 == updateResult, "Application requested termination.");
 				break_error_if(errored(updateResult), "update() returned error.");
 				//error_if(mainModule.Render(applicationInstance), "Why would this ever happen?");
-				Sleep(1);
+				//Sleep(1);
 			}
 			gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
 		}

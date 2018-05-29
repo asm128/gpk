@@ -140,11 +140,11 @@ static		::gpk::error_t								controlTextDraw							(::gpk::SGUI& gui, int32_t i
 		const ::gpk::SCoord2<int32_t>								coordCharTable							= ::gpk::SCoord2<uint32_t>{coordTableX * gui.FontCharSize.x, coordTableY * gui.FontCharSize.y}.Cast<int32_t>();
 		const ::gpk::SCoord2<int32_t>								dstOffset1								= {(int32_t)(rectText.Offset.x + gui.FontCharSize.x * iChar), rectText.Offset.y};
 		const ::gpk::SRectangle2D<int32_t>							srcRect0								= {coordCharTable, gui.FontCharSize.Cast<int32_t>()};
-		error_if(errored(::gpk::grid_copy_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, fontColor, srcRect0)), "I believe this never fails.");
+		//error_if(errored(::gpk::grid_copy_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, fontColor, srcRect0)), "I believe this never fails.");
 		dstCoords.clear();
-		//error_if(errored(::gpk::grid_raster_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, srcRect0, dstCoords)), "I believe this never fails.");
-		//for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
-		//	::gpk::drawPixelLight(target, dstCoords[iCoord], fontColor, 0.05f, 0.75);
+		error_if(errored(::gpk::grid_raster_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, srcRect0, dstCoords)), "I believe this never fails.");
+		for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
+			::gpk::drawPixelLight(target, dstCoords[iCoord], fontColor, 0.05f, 0.75);
 	}
 	gui, iControl, target;
 	return 0;

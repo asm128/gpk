@@ -70,7 +70,14 @@ namespace gpk
 		::gpk::array_obj<::gpk::SControlText		>		ControlText							= {};
 		::gpk::array_pod<::gpk::SControlConstraints	>		ControlConstraints					= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>		ControlChildren						= {};
-		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= {};
+		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= 
+			{ {0x3F, 0x3F, 0x3F, 0xFF}
+			, {0x00, 0x7F, 0x7F, 0xFF}
+			, {0x00, 0x00, 0xFF, 0xFF}
+			, {0x00, 0xFF, 0x00, 0xFF}
+			, {0xFF, 0x00, 0x00, 0xFF}
+			, {0xFF, 0xFF, 0x00, 0xFF}
+			};
 		// Font
 		::gpk::STextureMonochrome<uint32_t>					FontTexture							= {};
 		::gpk::SCoord2<uint32_t>							FontCharSize						= {9, 16};

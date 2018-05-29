@@ -12,8 +12,9 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SFramework						Framework;
 		::gpk::SGUI								GUI									= {};
 		::gpk::STexture<::gpk::SColorBGRA>		TextureFont							= {};
-		::gpk::STextureMonochrome<uint32_t>		TextureFontMonochrome				= {};
 		::gpk::ptr_obj<::gpk::SRenderTarget>	Offscreen							= {};
+
+		int32_t									IdExit								= -1;
 
 		::std::mutex							LockGUI;
 		::std::mutex							LockRender;

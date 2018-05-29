@@ -4,6 +4,10 @@
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
+#if defined(GPK_WINDOWS)
+#	include <ShellScalingApi.h>	// for GetDpiForMonitor()
+#endif
+
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 
@@ -37,7 +41,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
 		int32_t															controlTestChild0		= ::gpk::controlCreate(app.GUI);
-		char															buffer [16]				= {};
+		char															buffer [1024]				= {};
 		sprintf_s(buffer, "(%u)", controlTestChild0);
 		::gpk::SControl													& control				= app.GUI.Controls		[controlTestChild0];
 		::gpk::SControlText												& controlText			= app.GUI.ControlText	[controlTestChild0];
@@ -68,6 +72,23 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::controlSetParent(app.GUI, controlTestChild0, iChild / 9);
 	}
 
+	app.IdExit													= ::gpk::controlCreate(app.GUI);
+	::gpk::SControl													& controlExit			= app.GUI.Controls[app.IdExit];
+	controlExit.Area											= {{0, 0}, {64, 20}};
+	controlExit.Border											= {1, 1, 1, 1};
+	controlExit.Margin											= {1, 1, 1, 1};
+	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
+	controlExit.ColorBack										= ::gpk::GUI_CONTROL_AREA_BACKGROUND	;
+	controlExit.ColorClient										= ::gpk::GUI_CONTROL_AREA_CLIENT		;
+	controlExit.ColorBorder.Left								= ::gpk::GUI_CONTROL_AREA_BORDER_LEFT	;
+	controlExit.ColorBorder.Top									= ::gpk::GUI_CONTROL_AREA_BORDER_TOP	;
+	controlExit.ColorBorder.Right								= ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	;
+	controlExit.ColorBorder.Bottom								= ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	;
+	::gpk::SControlText												& controlText			= app.GUI.ControlText[app.IdExit];
+	controlText.Text											= "Exit";
+	controlText.Align											= ::gpk::ALIGN_CENTER;
+	::gpk::controlSetParent(app.GUI, app.IdExit, controlTestRoot);
+	
 	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
 	const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
@@ -104,9 +125,24 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	for(uint32_t iControl = 0, countControls = app.GUI.Controls.size(); iControl < countControls; ++iControl) {
 		if(app.GUI.ControlStates[iControl].Unused || app.GUI.ControlStates[iControl].Disabled)
 			continue;
-		if(app.GUI.ControlStates[iControl].Execute)
+		if(app.GUI.ControlStates[iControl].Execute) {
 			info_printf("Executed %u.", iControl);
+			if(iControl == (uint32_t)app.IdExit)
+				return 1;
+		}
 	}
+
+	{
+		RECT																			rcWindow									= {};
+		::GetWindowRect(app.Framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
+		POINT																			point										= {rcWindow.left + 8, rcWindow.top};
+		::gpk::SCoord2<uint32_t>														dpi											= {96, 96};
+		HMONITOR																		hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		HRESULT																			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
+		if(0 == hr)
+			app.GUI.Zoom.DPI															= {dpi.x / 96.0, dpi.y / 96.0};
+	}
+
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 
