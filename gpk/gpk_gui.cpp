@@ -108,7 +108,6 @@
 		controlMetrics.Total	.Global.Offset					+= parentMetrics.Client.Global.Offset;
 		return 0;
 	}
-
 	return 0;
 }
 
@@ -119,21 +118,33 @@ static		::gpk::error_t								controlTextDraw							(::gpk::SGUI& gui, int32_t i
 	::gpk::SControlMetrics										& controlMetrics						= gui.ControlMetrics[iControl];
 	if(0 == gui.FontTexture.Texels.size() || 0 == gui.FontTexture.Pitch)
 		return 0;
-	::gpk::array_pod<::gpk::SCoord2<uint32_t>>										dstCoords;
+	::gpk::array_pod<::gpk::SCoord2<uint32_t>>					dstCoords;
 	const uint32_t												charsPerRow								= gui.FontTexture.Pitch / gui.FontCharSize.x;
 	const ::gpk::SColorBGRA										fontColor								= controlState.Hover ? ::gpk::ORANGE : ::gpk::WHITE;	
+	const ::gpk::SRectangle2D<int32_t>							& targetRect							= controlMetrics.Client.Global;
+
+	::gpk::SRectangle2D<int32_t>								rectText								= {};
+	rectText.Size											= {(int32_t)gui.FontCharSize.x * (int32_t)controlText.Text.size(), (int32_t)gui.FontCharSize.y};
+	rectText.Offset											= targetRect.Offset;
+
+		 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_HCENTER)) { rectText.Offset.x = (targetRect.Offset.x + targetRect.Size.x / 2) - rectText.Size.x / 2;	}
+	else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_RIGHT	)) { rectText.Offset.x = (targetRect.Offset.x + targetRect.Size.x) - rectText.Size.x;			}
+
+		 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_VCENTER)) { rectText.Offset.y = (targetRect.Offset.y + targetRect.Size.y / 2) - rectText.Size.y / 2;	}
+	else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_BOTTOM	)) { rectText.Offset.y = (targetRect.Offset.y + targetRect.Size.y) - rectText.Size.y;			}
+
 	for(uint32_t iChar = 0, countChars = (uint32_t)controlText.Text.size(); iChar < countChars; ++iChar) {
-		char													charToDraw								= controlText.Text[iChar];
-		const int32_t											coordTableX								= charToDraw % charsPerRow;
-		const int32_t											coordTableY								= charToDraw / charsPerRow;
-		const ::gpk::SCoord2<int32_t>							coordCharTable							= ::gpk::SCoord2<uint32_t>{coordTableX * gui.FontCharSize.x, coordTableY * gui.FontCharSize.y}.Cast<int32_t>();
-		const ::gpk::SCoord2<int32_t>							dstOffset1								= {(int32_t)(controlMetrics.Client.Global.Offset.x + gui.FontCharSize.x * iChar), controlMetrics.Client.Global.Offset.y};
-		const ::gpk::SRectangle2D<int32_t>						srcRect0								= {coordCharTable, gui.FontCharSize.Cast<int32_t>()};
-		//error_if(errored(::gpk::grid_copy_alpha_bit(bmpTarget, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
+		char														charToDraw								= controlText.Text[iChar];
+		const int32_t												coordTableX								= charToDraw % charsPerRow;
+		const int32_t												coordTableY								= charToDraw / charsPerRow;
+		const ::gpk::SCoord2<int32_t>								coordCharTable							= ::gpk::SCoord2<uint32_t>{coordTableX * gui.FontCharSize.x, coordTableY * gui.FontCharSize.y}.Cast<int32_t>();
+		const ::gpk::SCoord2<int32_t>								dstOffset1								= {(int32_t)(rectText.Offset.x + gui.FontCharSize.x * iChar), rectText.Offset.y};
+		const ::gpk::SRectangle2D<int32_t>							srcRect0								= {coordCharTable, gui.FontCharSize.Cast<int32_t>()};
+		error_if(errored(::gpk::grid_copy_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, fontColor, srcRect0)), "I believe this never fails.");
 		dstCoords.clear();
-		error_if(errored(::gpk::grid_raster_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, srcRect0, dstCoords)), "I believe this never fails.");
-		for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
-			::gpk::drawPixelLight(target, dstCoords[iCoord], fontColor, 0.05f, 0.75);
+		//error_if(errored(::gpk::grid_raster_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, srcRect0, dstCoords)), "I believe this never fails.");
+		//for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
+		//	::gpk::drawPixelLight(target, dstCoords[iCoord], fontColor, 0.05f, 0.75);
 	}
 	gui, iControl, target;
 	return 0;
@@ -144,36 +155,43 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	::controlUpdateMetrics(gui, iControl, target);
 	const ::gpk::SControlState									& controlState								= gui.ControlStates[iControl];
 	const ::gpk::SControl										& control									= gui.Controls[iControl];
-	::gpk::SColorBGRA											colors		[::gpk::GUI_CONTROL_COLOR_COUNT]; // -- Fill color table
-	colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : gui.Colors[control.ColorBack			];
-	colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : gui.Colors[control.ColorClient			];
-	//colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTGRAY		} : ::gpk::SColorBGRA{::gpk::DARKGRAY	} : gui.Colors[control.ColorBack			];
-	//colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
+	::gpk::SColorBGRA											colors		[::gpk::GUI_CONTROL_AREA_COUNT]; // -- Fill color table
+	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : gui.Colors[control.ColorBack			];
+	colors[::gpk::GUI_CONTROL_AREA_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : gui.Colors[control.ColorClient			];
+	//colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTGRAY		} : ::gpk::SColorBGRA{::gpk::DARKGRAY	} : gui.Colors[control.ColorBack			];
+	//colors[::gpk::GUI_CONTROL_AREA_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
 	if(true) { // 3d borders
-		colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_CLIENT	] * 1.0;
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2; 
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_TOP		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.6 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2;
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.4 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8; 
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.4 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 1.2 : colors[::gpk::GUI_CONTROL_COLOR_BACKGROUND] * 0.8; 
+		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * 0.6 : colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * 0.8 : colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * 1.0;
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.6 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2; 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.6 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2;
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.4 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8; 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]		= controlState.Hover ? controlState.Pressed ? colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.4 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2 : colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8; 
 	}
 	else {
-		colors[::gpk::GUI_CONTROL_COLOR_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		]		= (control.ColorBorder.Left		>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Left		]; 
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_TOP		]		= (control.ColorBorder.Top		>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Top		];
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]		= (control.ColorBorder.Right	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Right	]; 
-		colors[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]		= (control.ColorBorder.Bottom	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Bottom	]; 
+		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTORANGE	} : ::gpk::SColorBGRA{::gpk::DARKORANGE	} : gui.Colors[control.ColorClient			];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]		= (control.ColorBorder.Left		>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Left		]; 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]		= (control.ColorBorder.Top		>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Top		];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]		= (control.ColorBorder.Right	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Right	]; 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]		= (control.ColorBorder.Bottom	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Bottom	]; 
 	}
 	const ::gpk::SControlMetrics								& controlMetrics							= gui.ControlMetrics[iControl];
-	::gpk::SRectangle2D<int32_t>								finalRects	[::gpk::GUI_CONTROL_COLOR_COUNT];
-	finalRects[::gpk::GUI_CONTROL_COLOR_BACKGROUND		]	= controlMetrics.Total.Global ; 
-	finalRects[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= controlMetrics.Client.Global; 
-	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		]	= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}}; 
-	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_TOP		]	= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}}; 
-	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}, ::gpk::SCoord2<int32_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
-	finalRects[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}};
+	::gpk::SRectangle2D<int32_t>								finalRects	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
+	::gpk::SRectLimits<int32_t>									scaledBorders								= {};
 
-	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iElement)
-		if(iElement != ::gpk::GUI_CONTROL_COLOR_CLIENT)
+	scaledBorders.Left										= (int32_t)(control.Border.Left		* gui.Zoom.DPI.x * gui.Zoom.ZoomLevel);
+	scaledBorders.Top										= (int32_t)(control.Border.Top		* gui.Zoom.DPI.y * gui.Zoom.ZoomLevel);
+	scaledBorders.Right										= (int32_t)(control.Border.Right	* gui.Zoom.DPI.x * gui.Zoom.ZoomLevel);
+	scaledBorders.Bottom									= (int32_t)(control.Border.Bottom	* gui.Zoom.DPI.y * gui.Zoom.ZoomLevel);
+
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]	= controlMetrics.Total.Global ; 
+	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]	= controlMetrics.Client.Global; 
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]	= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}}; 
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]	= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}}; 
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}, ::gpk::SCoord2<int32_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]	= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}};
+
+	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_COUNT; ++iElement)
+		if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT)
 			::gpk::drawRectangle(target, colors[iElement], finalRects[iElement]);
 
 	// --- Draw control corners
@@ -196,14 +214,14 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	triangles[6]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, 0}	};
 	triangles[7]											= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}	};
 	int32_t														colorIndices [8]							=
-		{ ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_TOP		
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_LEFT		
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	
-		, ::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	
+		{ ::gpk::GUI_CONTROL_AREA_BORDER_TOP		
+		, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT		
+		, ::gpk::GUI_CONTROL_AREA_BORDER_TOP		
+		, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	
+		, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT		
+		, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	
+		, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	
+		, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	
 		};
 	for(uint32_t iTri = 0; iTri < 8; ++iTri)
 		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
@@ -211,14 +229,14 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	::controlTextDraw(gui, iControl, target);
 	return 0;
 }
-			::gpk::error_t								gpk::controlPaintHierarchy					(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+			::gpk::error_t								gpk::controlDrawHierarchy					(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	::actualControlDraw(gui, iControl, target);
 	::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
-		::gpk::controlPaintHierarchy(gui, children[iChild], target);
+		::gpk::controlDrawHierarchy(gui, children[iChild], target);
 	}
 	return 0;
 }
@@ -281,7 +299,7 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 		if(gui.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
 			continue;
 		::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, iControl);
-		if(gui.Controls.size() > (uint32_t)controlPressed)
+		if(gui.Controls.size() > (uint32_t)controlPressed && false == gui.ControlStates[iControl].Unused)
 			controlHovered											= controlPressed;
 	}
 	if(controlHovered == -1) 

@@ -62,7 +62,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target->Color		.resize(app.Framework.MainDisplay.Size);
 	target->DepthStencil.resize(app.Framework.MainDisplay.Size);
 	::gpk::clearTarget(*target);
-	::gpk::controlPaintHierarchy(app.GUI, 0, target->Color.View);
+	::gpk::controlDrawHierarchy(app.GUI, 0, target->Color.View);
 
 	{
 		::gme::mutex_guard									lock					(app.LockRender);
