@@ -26,11 +26,11 @@ namespace gpk
 							_tElement									* Element;
 							int8_t										Offset;
 
-		inline constexpr	operator									bool						()																	const				{ throw_if(Element >= End, ::std::exception(""), "Out of range."); return (*Element) & (1 << Offset); }
-		inline constexpr	bool										operator==					(const bit_view_iterator& other)								const	noexcept	{ return Element == other.Element; }
-		inline constexpr	bool										operator!=					(const bit_view_iterator& other)								const	noexcept	{ return Element != other.Element; }
+		inline constexpr	operator									bool						()																	const				{ throw_if(Element >= End, ::std::exception(""), "Out of range."); return (*Element) & (1ULL << Offset); }
+		inline constexpr	bool										operator==					(const bit_view_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) == (((1ULL << other.Offset)) & *other.Element); }
+		inline constexpr	bool										operator!=					(const bit_view_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) != (((1ULL << other.Offset)) & *other.Element); }
 
-		inline				bit_view_iterator&							operator=					(bool value)																			{ value ? *Element |= (1 << Offset) : *Element &= ~(1 << Offset); return *this; }
+		inline				bit_view_iterator&							operator=					(bool value)																			{ value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
 							bit_view_iterator&							operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				throw_if(Element >= (End	+ 1), ::std::exception(""), "Out of range"); } return *this; }
 							bit_view_iterator&							operator--					()																						{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; throw_if(Element <  (Begin	- 1), ::std::exception(""), "Out of range"); } return *this; }
 							bit_view_iterator							operator++					(int)																					{ 

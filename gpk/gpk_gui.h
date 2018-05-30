@@ -38,13 +38,28 @@ namespace gpk
 		bool												Unused									: 1;
 	};
 
+	enum GUI_CONTROL_AREA
+		{ GUI_CONTROL_AREA_BACKGROUND		= 0
+		, GUI_CONTROL_AREA_CLIENT
+		, GUI_CONTROL_AREA_BORDER_LEFT		
+		, GUI_CONTROL_AREA_BORDER_TOP
+		, GUI_CONTROL_AREA_BORDER_RIGHT
+		, GUI_CONTROL_AREA_BORDER_BOTTOM
+		, GUI_CONTROL_AREA_COUNT
+		};
+
 	struct SControl {
 		::gpk::SRectangle2D<int32_t>						Area								;
 		::gpk::SRectLimits<uint16_t>						Border								;
 		::gpk::SRectLimits<uint16_t>						Margin								;
-		::gpk::SRectLimits<uint16_t>						ColorBorder							;
-		uint16_t											ColorBack							;
-		uint16_t											ColorClient							;
+		::gpk::SRectLimits<uint16_t>						ColorBorder							= 
+			{ ::gpk::GUI_CONTROL_AREA_BORDER_LEFT	
+			, ::gpk::GUI_CONTROL_AREA_BORDER_TOP	
+			, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT	
+			, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	
+			};
+		uint16_t											ColorBack							= ::gpk::GUI_CONTROL_AREA_BACKGROUND;
+		uint16_t											ColorClient							= ::gpk::GUI_CONTROL_AREA_CLIENT	;
 		int32_t												IndexParent							;
 		::gpk::ALIGN										Align								;
 	};
@@ -93,15 +108,6 @@ namespace gpk
 	::gpk::error_t										controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t										controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
 
-	enum GUI_CONTROL_AREA
-		{ GUI_CONTROL_AREA_BACKGROUND		= 0
-		, GUI_CONTROL_AREA_CLIENT
-		, GUI_CONTROL_AREA_BORDER_LEFT		
-		, GUI_CONTROL_AREA_BORDER_TOP
-		, GUI_CONTROL_AREA_BORDER_RIGHT
-		, GUI_CONTROL_AREA_BORDER_BOTTOM
-		, GUI_CONTROL_AREA_COUNT
-		};
 #pragma pack(pop)
 } // namespace
 
