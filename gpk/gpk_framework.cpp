@@ -5,6 +5,7 @@
 #include "gpk_safe.h"
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
+#	include <ShellScalingApi.h>	// for GetDpiForMonitor()
 #endif
 
 struct SDisplayInput {
@@ -33,6 +34,17 @@ struct SDisplayInput {
 #endif
 		if(offscreen && offscreen->Color.Texels.size())
 			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
+	}
+
+	{
+		RECT																			rcWindow									= {};
+		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
+		POINT																			point										= {rcWindow.left + 8, rcWindow.top};
+		::gpk::SCoord2<uint32_t>														dpi											= {96, 96};
+		HMONITOR																		hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		HRESULT																			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
+		if(0 == hr)
+			framework.GUI.Zoom.DPI														= {dpi.x / 96.0, dpi.y / 96.0};
 	}
 	return 0;
 }

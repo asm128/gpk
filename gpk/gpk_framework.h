@@ -1,3 +1,4 @@
+#include "gpk_gui.h"
 #include "gpk_runtime.h"
 #include "gpk_display.h"
 #include "gpk_input.h"
@@ -26,6 +27,7 @@ namespace gpk
 							::gpk::STimer										Timer										= {};
 							::gpk::SFrameInfo									FrameInfo									= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget>				MainDisplayOffscreen						= {};
+							::gpk::SGUI											GUI											= {};
 
 																				SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues) {}
 	}; // struct

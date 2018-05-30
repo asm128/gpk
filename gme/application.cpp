@@ -4,47 +4,36 @@
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
-#if defined(GPK_WINDOWS)
-#	include <ShellScalingApi.h>	// for GetDpiForMonitor()
-#endif
-
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
-
 
 ::gpk::error_t												setup					(::gme::SApplication & app)						{ 
 	::gpk::SFramework												& framework				= app.Framework;
 	::gpk::SDisplay													& mainWindow			= framework.MainDisplay;
 	framework.Input.create();
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
-	int32_t															controlTestRoot			= ::gpk::controlCreate(app.GUI);
-	::gpk::SControl													& controlRoot			= app.GUI.Controls[controlTestRoot];
-	controlRoot.Area											= {{0, 0}, {320, 240}};
-	controlRoot.Border											= {4, 4, 4, 4};
-	controlRoot.Margin											= {20, 20, 20, 10};
-	controlRoot.Align											= ::gpk::ALIGN_CENTER					;
-	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachHeightTo	= 0;
-	app.GUI.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= 0;
-	::gpk::controlSetParent(app.GUI, controlTestRoot, -1);
-
-	app.IdExit													= ::gpk::controlCreate(app.GUI);
-	::gpk::SControl													& controlExit			= app.GUI.Controls[app.IdExit];
-	controlExit.Area											= {{0, 0}, {64, 20}};
-	controlExit.Border											= {1, 1, 1, 1};
+	::gpk::SGUI														& gui					= framework.GUI;
+	app.IdExit													= ::gpk::controlCreate(gui);
+	::gpk::SControl													& controlExit			= gui.Controls[app.IdExit];
+	controlExit.Area											= {{2, 2}, {64, 20}};
+	controlExit.Border											= {10, 10, 10, 10};
 	controlExit.Margin											= {1, 1, 1, 1};
-	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
-	::gpk::SControlText												& controlText			= app.GUI.ControlText[app.IdExit];
+	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT;
+	::gpk::SControlText												& controlText			= gui.ControlText[app.IdExit];
 	controlText.Text											= "Exit";
 	controlText.Align											= ::gpk::ALIGN_CENTER;
-	::gpk::controlSetParent(app.GUI, app.IdExit, controlTestRoot);
+	::gpk::SControlConstraints										& controlConstraints	= gui.ControlConstraints[app.IdExit];
+	controlConstraints.IndexControlToAttachWidthTo				= app.IdExit;
+
+	::gpk::controlSetParent(gui, app.IdExit, -1);
 	
 	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
 	const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
-	gpk_necall(app.GUI.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
+	gpk_necall(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
 	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
 		const ::gpk::SColorBGRA											& srcColor									= app.TextureFont.View[y][x];
-		app.GUI.FontTexture.View[y * textureFontMetrics.x + x]	
+		gui.FontTexture.View[y * textureFontMetrics.x + x]	
 			=	0 != srcColor.r
 			||	0 != srcColor.g
 			||	0 != srcColor.b
@@ -60,35 +49,25 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gme::mutex_guard												lock					(app.LockRender);
 		app.Framework.MainDisplayOffscreen							= app.Offscreen;
 	}
+	::gpk::SFramework												& framework				= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
-	app.GUI.Controls[0].Area									= {{0, 0}, app.Framework.MainDisplay.Size.Cast<int32_t>()};
+	::gpk::SGUI														& gui					= framework.GUI;
 	{
 		::gme::mutex_guard												lock					(app.LockGUI);
-		::gpk::guiProcessInput(app.GUI, *app.Framework.Input);
+		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z)
-		app.GUI.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+		gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
  
-	for(uint32_t iControl = 0, countControls = app.GUI.Controls.size(); iControl < countControls; ++iControl) {
-		if(app.GUI.ControlStates[iControl].Unused || app.GUI.ControlStates[iControl].Disabled)
+	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
+		if(gui.ControlStates[iControl].Unused || gui.ControlStates[iControl].Disabled)
 			continue;
-		if(app.GUI.ControlStates[iControl].Execute) {
+		if(gui.ControlStates[iControl].Execute) {
 			info_printf("Executed %u.", iControl);
 			if(iControl == (uint32_t)app.IdExit)
 				return 1;
 		}
-	}
-
-	{
-		RECT																			rcWindow									= {};
-		::GetWindowRect(app.Framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
-		POINT																			point										= {rcWindow.left + 8, rcWindow.top};
-		::gpk::SCoord2<uint32_t>														dpi											= {96, 96};
-		HMONITOR																		hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
-		HRESULT																			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr)
-			app.GUI.Zoom.DPI															= {dpi.x / 96.0, dpi.y / 96.0};
 	}
 
 	//timer.Frame();
@@ -108,10 +87,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target.create();
 	target->Color		.resize(app.Framework.MainDisplay.Size);
 	target->DepthStencil.resize(app.Framework.MainDisplay.Size);
-	::gpk::clearTarget(*target);
+	//::gpk::clearTarget(*target);
 	{
 		::gme::mutex_guard												lock					(app.LockGUI);
-		::gpk::controlDrawHierarchy(app.GUI, 0, target->Color.View);
+		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
 	}
 	{
 		::gme::mutex_guard												lock					(app.LockRender);

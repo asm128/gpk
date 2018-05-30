@@ -10,7 +10,6 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 {
 	struct SApplication {
 		::gpk::SFramework						Framework;
-		::gpk::SGUI								GUI									= {};
 		::gpk::STexture<::gpk::SColorBGRA>		TextureFont							= {};
 		::gpk::ptr_obj<::gpk::SRenderTarget>	Offscreen							= {};
 

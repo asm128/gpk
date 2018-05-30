@@ -241,9 +241,6 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	return 0;
 }
 
-
-
-
 static		::gpk::error_t								updateGUIControlHovered						(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)	noexcept	{ 
 	if(controlFlags.Hover) {
 		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed) 
