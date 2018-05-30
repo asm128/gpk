@@ -4,6 +4,24 @@
 #include "gpk_encoding.h"
 
 			::gpk::error_t								gpk::controlCreate							(::gpk::SGUI& gui)										{
+	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		if(gui.Controls.States[iControl].Unused) {
+			gui.Controls.Controls		[iControl]					= {};
+			gui.Controls.States			[iControl]					= {};
+			gui.Controls.Metrics		[iControl]					= {};	
+			gui.Controls.Text			[iControl]					= {};
+			gui.Controls.Constraints	[iControl]					= {};	
+			gui.Controls.Children		[iControl].clear();
+
+			gui.Controls.States			[iControl].Outdated			= true;
+			gui.Controls.Controls		[iControl].IndexParent		= -1;
+			gui.Controls.Controls		[iControl].Align			= ::gpk::ALIGN_TOP_LEFT;
+			gui.Controls.Controls		[iControl].Area				= {{0, 0}, {16, 16}};
+			gui.Controls.Constraints	[iControl]					= {-1, -1};
+			return iControl;
+		}
+	}
+
 	::gpk::error_t												iControl									= -1;
 	gpk_necall(iControl = ::gpk::resize( gui.Controls.Controls.size() + 1
 		, gui.Controls.Controls
@@ -331,5 +349,3 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 	}
 	return controlHovered;
 }
-
-
