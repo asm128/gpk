@@ -25,6 +25,8 @@ namespace gpk
 	struct SControlConstraints {
 		int32_t												IndexControlToAttachWidthTo				;
 		int32_t												IndexControlToAttachHeightTo			;
+		int32_t												AttachToTextWidth						;
+		int32_t												AttachToTextHeight						;
 	};
 
 
@@ -77,14 +79,18 @@ namespace gpk
 		int16_t												ColorIndex							;
 	};
 
+	struct SGUIControlTable {
+		::gpk::array_pod<::gpk::SControl			>		Controls							= {};
+		::gpk::array_pod<::gpk::SControlState		>		States								= {};
+		::gpk::array_pod<::gpk::SControlMetrics		>		Metrics								= {};
+		::gpk::array_obj<::gpk::SControlText		>		Text								= {};
+		::gpk::array_pod<::gpk::SControlConstraints	>		Constraints							= {};
+		::gpk::array_obj<::gpk::array_pod<int32_t>	>		Children							= {};
+	};
+
 	struct SGUI {
 		::gpk::SCoord2<float>								CursorPos							= {};
-		::gpk::array_pod<::gpk::SControl			>		Controls							= {};
-		::gpk::array_pod<::gpk::SControlState		>		ControlStates						= {};
-		::gpk::array_pod<::gpk::SControlMetrics		>		ControlMetrics						= {};
-		::gpk::array_obj<::gpk::SControlText		>		ControlText							= {};
-		::gpk::array_pod<::gpk::SControlConstraints	>		ControlConstraints					= {};
-		::gpk::array_obj<::gpk::array_pod<int32_t>	>		ControlChildren						= {};
+		::gpk::SGUIControlTable								Controls							= {};
 		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= 
 			{ {0x3F, 0x3F, 0x3F, 0xFF}
 			, {0x00, 0x7F, 0x7F, 0xFF}

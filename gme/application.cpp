@@ -13,32 +13,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
 	app.IdExit													= ::gpk::controlCreate(gui);
-	::gpk::SControl													& controlExit			= gui.Controls[app.IdExit];
-	controlExit.Area											= {{2, 2}, {64, 20}};
+	::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdExit];
+	controlExit.Area											= {{0, 0}, {64, 20}};
 	controlExit.Border											= {10, 10, 10, 10};
 	controlExit.Margin											= {1, 1, 1, 1};
 	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT;
-	::gpk::SControlText												& controlText			= gui.ControlText[app.IdExit];
+	::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
 	controlText.Text											= "Exit";
 	controlText.Align											= ::gpk::ALIGN_CENTER;
-	::gpk::SControlConstraints										& controlConstraints	= gui.ControlConstraints[app.IdExit];
+	::gpk::SControlConstraints										& controlConstraints	= gui.Controls.Constraints[app.IdExit];
 	controlConstraints.IndexControlToAttachWidthTo				= app.IdExit;
 
 	::gpk::controlSetParent(gui, app.IdExit, -1);
-	
-	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
-	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
-	const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
-	gpk_necall(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
-	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
-	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-		const ::gpk::SColorBGRA											& srcColor									= app.TextureFont.View[y][x];
-		gui.FontTexture.View[y * textureFontMetrics.x + x]	
-			=	0 != srcColor.r
-			||	0 != srcColor.g
-			||	0 != srcColor.b
-			;
-	}
 	return 0; 
 }
 
@@ -60,10 +46,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	if(app.Framework.Input->MouseCurrent.Deltas.z)
 		gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
  
-	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
-		if(gui.ControlStates[iControl].Unused || gui.ControlStates[iControl].Disabled)
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
+		if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
 			continue;
-		if(gui.ControlStates[iControl].Execute) {
+		if(gui.Controls.States[iControl].Execute) {
 			info_printf("Executed %u.", iControl);
 			if(iControl == (uint32_t)app.IdExit)
 				return 1;

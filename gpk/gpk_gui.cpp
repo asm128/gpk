@@ -1,59 +1,65 @@
 #include "gpk_gui.h"
 #include "gpk_bitmap_target.h"
 #include "gpk_grid_copy.h"
+#include "gpk_encoding.h"
 
 			::gpk::error_t								gpk::controlCreate							(::gpk::SGUI& gui)										{
 	::gpk::error_t												iControl									= -1;
-	gpk_necall(iControl = ::gpk::resize( gui.Controls.size() + 1
-		, gui.Controls
-		, gui.ControlStates
-		, gui.ControlMetrics
-		, gui.ControlText
-		, gui.ControlChildren
-		, gui.ControlConstraints
+	gpk_necall(iControl = ::gpk::resize( gui.Controls.Controls.size() + 1
+		, gui.Controls.Controls
+		, gui.Controls.States
+		, gui.Controls.Metrics
+		, gui.Controls.Text
+		, gui.Controls.Children
+		, gui.Controls.Constraints
 		) - 1, "Failed to resize! Out of memory?");
-	gui.ControlStates		[iControl]						= {};
-	gui.ControlStates		[iControl].Outdated				= true;
-	gui.Controls			[iControl]						= {};
-	gui.Controls			[iControl].IndexParent			= -1;
-	gui.Controls			[iControl].Align				= ::gpk::ALIGN_TOP_LEFT;
-	gui.Controls			[iControl].Area					= {{0, 0}, {16, 16}};
-	gui.ControlConstraints	[iControl]						= {-1, -1};
+	gui.Controls.Controls		[iControl]					= {};
+	gui.Controls.States			[iControl]					= {};
+	gui.Controls.Metrics		[iControl]					= {};	
+	gui.Controls.Text			[iControl]					= {};
+	gui.Controls.Constraints	[iControl]					= {};	
+	gui.Controls.Children		[iControl].clear();
+
+	gui.Controls.States			[iControl].Outdated			= true;
+	gui.Controls.Controls		[iControl].IndexParent		= -1;
+	gui.Controls.Controls		[iControl].Align			= ::gpk::ALIGN_TOP_LEFT;
+	gui.Controls.Controls		[iControl].Area				= {{0, 0}, {16, 16}};
+	gui.Controls.Constraints	[iControl]					= {-1, -1};
 	return iControl; 
 }
 
 			::gpk::error_t								gpk::controlDelete							(::gpk::SGUI& gui, int32_t iControl)					{ 
-	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
-	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
+	::gpk::SControlState										& controlState								= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	controlState.Unused										= true;
-	const uint32_t												indexParent									= (uint32_t)gui.Controls[iControl].IndexParent;
-	if(indexParent < gui.Controls.size() && false == gui.ControlStates[indexParent].Unused) {
-		::gpk::array_pod<int32_t>									& children									= gui.ControlChildren[indexParent];
+	const uint32_t												indexParent									= (uint32_t)gui.Controls.Controls[iControl].IndexParent;
+	if(indexParent < gui.Controls.Controls.size() && false == gui.Controls.States[indexParent].Unused) {
+		::gpk::array_pod<int32_t>									& children									= gui.Controls.Children[indexParent];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			if(children[iChild] == iControl) {
 				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
 				break;
 			}
 	}
-	::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
+	::gpk::array_view<int32_t>									& children									= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-		gui.ControlStates[children[iChild]].Unused				= true;
+		gui.Controls.States[children[iChild]].Unused			= true;
 	return 0; 
 }
 
 	::gpk::error_t										gpk::controlSetParent						(::gpk::SGUI& gui, int32_t iControl, int32_t iParent)	{
-	ree_if((gui.Controls.size() <= uint32_t(iControl)) || gui.ControlStates[iControl].Unused, "Invalid control id: %u.", iControl);
-	::gpk::SControl												& control									= gui.Controls[iControl];
+	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)) || gui.Controls.States[iControl].Unused, "Invalid control id: %u.", iControl);
+	::gpk::SControl												& control									= gui.Controls.Controls[iControl];
 	if(control.IndexParent == iParent)	// Exit early if there is nothing to do here.
 		return 0;
 
 	control.IndexParent										= iParent;
-	if(gui.Controls.size() <= ((uint32_t)iParent) || gui.ControlStates[iParent].Unused)
+	if(gui.Controls.Controls.size() <= ((uint32_t)iParent) || gui.Controls.States[iParent].Unused)
 		return 0;
 
 	// Set iControl to parent's children array.
-	::gpk::array_pod<int32_t>									& children									= gui.ControlChildren[iParent];
+	::gpk::array_pod<int32_t>									& children									= gui.Controls.Children[iParent];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 		if(children[iChild] == iControl)
 			return 0;
@@ -63,15 +69,15 @@
 }
 
 	static		::gpk::error_t								controlUpdateMetrics						(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
-	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
-	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
+	::gpk::SControlState										& controlState								= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
-	const ::gpk::SControl										& control									= gui.Controls[iControl];
+	const ::gpk::SControl										& control									= gui.Controls.Controls[iControl];
 	::gpk::SCoord2<int32_t>										targetSize									= target.metrics().Cast<int32_t>();
-	const bool													isValidParent								= gui.Controls.size() > (uint32_t)control.IndexParent && false == gui.ControlStates[control.IndexParent].Unused;
+	const bool													isValidParent								= gui.Controls.Controls.size() > (uint32_t)control.IndexParent && false == gui.Controls.States[control.IndexParent].Unused;
 	if(isValidParent) {
 		::controlUpdateMetrics(gui, control.IndexParent, target);
-		targetSize												= gui.ControlMetrics[control.IndexParent].Client.Global.Size;
+		targetSize												= gui.Controls.Metrics[control.IndexParent].Client.Global.Size;
 	}
 	if(false == controlState.Outdated) 
 		return 0;
@@ -79,10 +85,10 @@
 	::gpk::SCoord2<double>										scale										= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	::gpk::SCoord2<int32_t>										finalPosition								= ::gpk::SCoord2<double>{control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y}.Cast<int32_t>();
 	::gpk::SCoord2<int32_t>										finalSize									= ::gpk::SCoord2<double>{control.Area.Size		.x * scale.x, control.Area.Size		.y * scale.y}.Cast<int32_t>();
-	::gpk::SControlMetrics										& controlMetrics							= gui.ControlMetrics[iControl];
-	const ::gpk::SControlConstraints							& controlConstraints						= gui.ControlConstraints[iControl];
-	if(controlConstraints.IndexControlToAttachWidthTo	== iControl) { finalPosition.x = 0; finalSize.x = targetSize.x; } else if(gui.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachWidthTo  && false == gui.ControlStates[controlConstraints.IndexControlToAttachWidthTo ].Unused) { finalPosition.x = 0; finalSize.x = gui.ControlMetrics[controlConstraints.IndexControlToAttachWidthTo ].Total.Global.Size.x; }
-	if(controlConstraints.IndexControlToAttachHeightTo	== iControl) { finalPosition.y = 0; finalSize.y = targetSize.y; } else if(gui.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachHeightTo && false == gui.ControlStates[controlConstraints.IndexControlToAttachHeightTo].Unused) { finalPosition.y = 0; finalSize.y = gui.ControlMetrics[controlConstraints.IndexControlToAttachHeightTo].Total.Global.Size.y; }
+	::gpk::SControlMetrics										& controlMetrics							= gui.Controls.Metrics[iControl];
+	const ::gpk::SControlConstraints							& controlConstraints						= gui.Controls.Constraints[iControl];
+	if(controlConstraints.IndexControlToAttachWidthTo	== iControl) { finalPosition.x = 0; finalSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachWidthTo  && false == gui.Controls.States[controlConstraints.IndexControlToAttachWidthTo ].Unused) { finalPosition.x = 0; finalSize.x = gui.Controls.Metrics[controlConstraints.IndexControlToAttachWidthTo ].Total.Global.Size.x; }
+	if(controlConstraints.IndexControlToAttachHeightTo	== iControl) { finalPosition.y = 0; finalSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachHeightTo && false == gui.Controls.States[controlConstraints.IndexControlToAttachHeightTo].Unused) { finalPosition.y = 0; finalSize.y = gui.Controls.Metrics[controlConstraints.IndexControlToAttachHeightTo].Total.Global.Size.y; }
 	controlMetrics.Client.Local								= 
 		{	::gpk::SCoord2<double>{(control.Margin.Left + control.Border.Left) * scale.x, (control.Margin.Top + control.Border.Top) * scale.y}.Cast<int32_t>()
 		,	{ (int32_t)(finalSize.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)		* scale.x)
@@ -103,7 +109,7 @@
 	controlMetrics.Client	.Global							= controlMetrics.Client	.Local;
 	controlMetrics.Client	.Global.Offset					+= controlMetrics.Total.Local.Offset;
 	if(isValidParent) {
-		::gpk::SControlMetrics										& parentMetrics								= gui.ControlMetrics[control.IndexParent];
+		::gpk::SControlMetrics										& parentMetrics								= gui.Controls.Metrics[control.IndexParent];
 		controlMetrics.Client	.Global.Offset					+= parentMetrics.Client.Global.Offset;
 		controlMetrics.Total	.Global.Offset					+= parentMetrics.Client.Global.Offset;
 		return 0;
@@ -111,13 +117,25 @@
 	return 0;
 }
 
+static constexpr	const char							gpk_codepage_437_b64	[]				= "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";
+
+			::gpk::error_t								setupDefaultFontTexture					(::gpk::SGUI& gui)					{
+	gui.FontTexture.resize(288, 128);
+	::gpk::array_pod<ubyte_t>									decoded;
+	::gpk::base64Decode({gpk_codepage_437_b64, ::gpk::size(gpk_codepage_437_b64) - 1}, decoded);
+	memcpy(gui.FontTexture.Texels.begin(), decoded.begin(), decoded.size());
+	return 0;
+}
+
 static		::gpk::error_t								controlTextDraw							(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)						{
-	::gpk::SControlText											& controlText							= gui.ControlText[iControl];
+	::gpk::SControlText											& controlText							= gui.Controls.Text[iControl];
 	//::gpk::SControl												& control								= gui.Controls[iControl];
-	::gpk::SControlState										& controlState							= gui.ControlStates[iControl];
-	::gpk::SControlMetrics										& controlMetrics						= gui.ControlMetrics[iControl];
+	::gpk::SControlState										& controlState							= gui.Controls.States[iControl];
+	::gpk::SControlMetrics										& controlMetrics						= gui.Controls.Metrics[iControl];
+	if(0 == gui.FontTexture.Texels.size())
+		::setupDefaultFontTexture(gui);
 	if(0 == gui.FontTexture.Texels.size() || 0 == gui.FontTexture.Pitch)
-		return 0;
+		return -1;
 	::gpk::array_pod<::gpk::SCoord2<uint32_t>>					dstCoords;
 	const uint32_t												charsPerRow								= gui.FontTexture.Pitch / gui.FontCharSize.x;
 	const ::gpk::SColorBGRA										fontColor								= controlState.Hover ? ::gpk::ORANGE : ::gpk::WHITE;	
@@ -151,10 +169,10 @@ static		::gpk::error_t								controlTextDraw							(::gpk::SGUI& gui, int32_t i
 }
 
 static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
-	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
+	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::controlUpdateMetrics(gui, iControl, target);
-	const ::gpk::SControlState									& controlState								= gui.ControlStates[iControl];
-	const ::gpk::SControl										& control									= gui.Controls[iControl];
+	const ::gpk::SControlState									& controlState								= gui.Controls.States[iControl];
+	const ::gpk::SControl										& control									= gui.Controls.Controls[iControl];
 	::gpk::SColorBGRA											colors		[::gpk::GUI_CONTROL_AREA_COUNT]; // -- Fill color table
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]		= (control.ColorBack			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::MAGENTA		} : gui.Colors[control.ColorBack			];
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT			]		= (control.ColorClient			>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::DARKMAGENTA	} : gui.Colors[control.ColorClient			];
@@ -174,7 +192,7 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]		= (control.ColorBorder.Right	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Right	]; 
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]		= (control.ColorBorder.Bottom	>= gui.Colors.size()) ? ::gpk::SColorBGRA{::gpk::CYAN			} : controlState.Hover ? controlState.Pressed ? ::gpk::SColorBGRA{::gpk::LIGHTRED		} : ::gpk::SColorBGRA{::gpk::DARKRED	} : gui.Colors[control.ColorBorder.Bottom	]; 
 	}
-	const ::gpk::SControlMetrics								& controlMetrics							= gui.ControlMetrics[iControl];
+	const ::gpk::SControlMetrics								& controlMetrics							= gui.Controls.Metrics[iControl];
 	::gpk::SRectangle2D<int32_t>								finalRects	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
 	::gpk::SRectLimits<int32_t>									scaledBorders								= {};
 
@@ -229,12 +247,15 @@ static		::gpk::error_t								actualControlDraw							(::gpk::SGUI& gui, int32_t
 	::controlTextDraw(gui, iControl, target);
 	return 0;
 }
+
+
 			::gpk::error_t								gpk::controlDrawHierarchy					(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
-	ree_if((gui.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
-	::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
+	::gpk::SControlState										& controlState								= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
+
 	::actualControlDraw(gui, iControl, target);
-	::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
+	::gpk::array_view<int32_t>									& children									= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
 		::gpk::controlDrawHierarchy(gui, children[iChild], target);
 	}
@@ -256,13 +277,13 @@ static		::gpk::error_t								updateGUIControlHovered						(::gpk::SControlState
 }
 
 static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
-	::gpk::SControlState										& controlState							= gui.ControlStates[iControl];
+	::gpk::SControlState										& controlState							= gui.Controls.States[iControl];
 	// EXECUTE only lasts one tick.
 	if (controlState.Execute)
 		controlState.Execute									= false;
 	//--------------------
 	::gpk::error_t												controlHovered							= -1;
-	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.ControlMetrics[iControl].Total.Global)) {
+	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
 		controlHovered											= ::updateGUIControlHovered(controlState, input) ? iControl : -1;
 	}
 	else {
@@ -273,10 +294,10 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 			controlState.Pressed									= false;
 	}
 	{
-		::gpk::array_view<int32_t>									& children									= gui.ControlChildren[iControl];
+		::gpk::array_view<int32_t>									& children									= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
 			::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, children[iChild]);
-			if(gui.Controls.size() > (uint32_t)controlPressed) {
+			if(gui.Controls.Controls.size() > (uint32_t)controlPressed) {
 				controlState.Hover										= false;
 				controlHovered											= controlPressed;
 			}
@@ -288,22 +309,22 @@ static		::gpk::error_t								controlProcessInput							(::gpk::SGUI& gui, ::gpk
 			::gpk::error_t								gpk::guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input)											{
 	gui.CursorPos											+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t												controlHovered								= -1;
-	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
-		::gpk::SControlState										& controlState								= gui.ControlStates[iControl];
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
+		::gpk::SControlState										& controlState								= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
 			continue;
-		::gpk::SControl												& control									= gui.Controls[iControl];
-		if(gui.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
+		::gpk::SControl												& control									= gui.Controls.Controls[iControl];
+		if(gui.Controls.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
 			continue;
 		::gpk::error_t												controlPressed								= ::controlProcessInput(gui, input, iControl);
-		if(gui.Controls.size() > (uint32_t)controlPressed && false == gui.ControlStates[iControl].Unused)
+		if(gui.Controls.Controls.size() > (uint32_t)controlPressed && false == gui.Controls.States[iControl].Unused)
 			controlHovered											= controlPressed;
 	}
 	if(controlHovered == -1) 
-		return gui.Controls.size();
-	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
+		return gui.Controls.Controls.size();
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered)
-			gui.ControlStates[iControl].Hover						= false;
+			gui.Controls.States[iControl].Hover						= false;
 		else {
 			verbose_printf("Hovered: %u.", iControl);
 		}

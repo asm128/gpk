@@ -1,5 +1,6 @@
 #include "application.h"
 #include "gpk_bitmap_file.h"
+#include "gpk_encoding.h"
 
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -14,21 +15,21 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
 	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
-	::gpk::SControl													& controlRoot			= gui.Controls[controlTestRoot];
+	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
 	controlRoot.Area											= {{0, 0}, {320, 240}};
 	controlRoot.Border											= {4, 4, 4, 4};
 	controlRoot.Margin											= {20, 20, 20, 10};
 	controlRoot.Align											= ::gpk::ALIGN_CENTER					;
-	gui.ControlConstraints[controlTestRoot].IndexControlToAttachHeightTo	= controlTestRoot;
-	gui.ControlConstraints[controlTestRoot].IndexControlToAttachWidthTo		= controlTestRoot;
+	gui.Controls.Constraints[controlTestRoot].IndexControlToAttachHeightTo	= controlTestRoot;
+	gui.Controls.Constraints[controlTestRoot].IndexControlToAttachWidthTo	= controlTestRoot;
 	::gpk::controlSetParent(gui, controlTestRoot, -1);
 
 	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
 		int32_t															controlTestChild0		= ::gpk::controlCreate(gui);
 		char															buffer [1024]				= {};
 		sprintf_s(buffer, "(%u)", controlTestChild0);
-		::gpk::SControl													& control				= gui.Controls		[controlTestChild0];
-		::gpk::SControlText												& controlText			= gui.ControlText	[controlTestChild0];
+		::gpk::SControl													& control				= gui.Controls.Controls	[controlTestChild0];
+		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
 		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {1, 1, 1, 1};
@@ -51,12 +52,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 
 	app.IdExit													= ::gpk::controlCreate(gui);
-	::gpk::SControl													& controlExit			= gui.Controls[app.IdExit];
+	::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdExit];
 	controlExit.Area											= {{0, 0}, {64, 20}};
 	controlExit.Border											= {1, 1, 1, 1};
 	controlExit.Margin											= {1, 1, 1, 1};
 	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
-	::gpk::SControlText												& controlText			= gui.ControlText[app.IdExit];
+	::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
 	controlText.Text											= "Exit";
 	controlText.Align											= ::gpk::ALIGN_CENTER;
 	::gpk::controlSetParent(gui, app.IdExit, controlTestRoot);
@@ -95,10 +96,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	if(app.Framework.Input->MouseCurrent.Deltas.z)
 		gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
  
-	for(uint32_t iControl = 0, countControls = gui.Controls.size(); iControl < countControls; ++iControl) {
-		if(gui.ControlStates[iControl].Unused || gui.ControlStates[iControl].Disabled)
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
+		if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
 			continue;
-		if(gui.ControlStates[iControl].Execute) {
+		if(gui.Controls.States[iControl].Execute) {
 			info_printf("Executed %u.", iControl);
 			if(iControl == (uint32_t)app.IdExit)
 				return 1;
