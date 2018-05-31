@@ -46,8 +46,11 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 }
 
 			::gpk::error_t								gpk::base64Decode												(const ::gpk::array_view<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
-	if(int32_t mymod = in_base64.size() % 4) 
-		ree_if(mymod != 1 || (in_base64.size() && in_base64[in_base64.size() - 1] != 0), "Invalid base64 string.");
+	int32_t														lengthInput														= in_base64.size();
+	if(uint32_t mymod = in_base64.size() % 4) {
+		ree_if((mymod != 1) || (in_base64.size() && in_base64[in_base64.size() - 1] != 0), "Invalid base64 string.");
+		lengthInput												= in_base64.size() - 1;
+	}
 	rni_if(0 == in_base64.size(), "Empty base64 string.");
 	// --- Generate symbol value remap table.
 	uint8_t														base64SymbolRemap	[128]										= {};
@@ -55,10 +58,10 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 	for(uint32_t iSymbol = 0; iSymbol < 64; ++iSymbol)			
 		base64SymbolRemap[base64Symbols[iSymbol]]				= (uint8_t)iSymbol;
 
-	const uint32_t												packsNeeded														= in_base64.size() / 4;
+	const uint32_t												packsNeeded														= lengthInput / 4;
 	uint32_t													iOutputByte														= outputBytes.size();
 	gpk_necall(outputBytes.resize(outputBytes.size() + packsNeeded * 3), "Out of memory? outputBinary.size() : %u. packsNeeded : %u.", iOutputByte, packsNeeded);
-	for(uint32_t iInput64 = 0, symbolCount = in_base64.size(); iInput64 < symbolCount; iInput64 += 4) {
+	for(uint32_t iInput64 = 0, symbolCount = lengthInput; iInput64 < symbolCount; iInput64 += 4) {
 		uint8_t														inputQuad	[4]													= 
 			{ base64SymbolRemap[in_base64[iInput64 + 0] % 128]
 			, base64SymbolRemap[in_base64[iInput64 + 1] % 128]
