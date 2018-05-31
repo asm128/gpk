@@ -3,6 +3,7 @@
 #include "gpk_input.h"
 #include "gpk_grid_view.h"
 #include "gpk_texture.h"
+#include "gpk_array_static.h"
 #include <string>
 
 #ifndef GPK_GUI_H_2903874982374
@@ -42,12 +43,32 @@ namespace gpk
 
 	enum GUI_CONTROL_AREA
 		{ GUI_CONTROL_AREA_BACKGROUND		= 0
-		, GUI_CONTROL_AREA_CLIENT
+		, GUI_CONTROL_AREA_CLIENT			
 		, GUI_CONTROL_AREA_BORDER_LEFT		
 		, GUI_CONTROL_AREA_BORDER_TOP
 		, GUI_CONTROL_AREA_BORDER_RIGHT
-		, GUI_CONTROL_AREA_BORDER_BOTTOM
+		, GUI_CONTROL_AREA_BORDER_BOTTOM	
 		, GUI_CONTROL_AREA_COUNT
+		};
+
+	enum GUI_CONTROL_COLOR
+		{ GUI_CONTROL_COLOR_BACKGROUND							= 0
+		, GUI_CONTROL_COLOR_CLIENT			
+		, GUI_CONTROL_COLOR_BORDER_LEFT		
+		, GUI_CONTROL_COLOR_BORDER_TOP
+		, GUI_CONTROL_COLOR_BORDER_RIGHT
+		, GUI_CONTROL_COLOR_BORDER_BOTTOM	
+		, GUI_CONTROL_COLOR_TEXT_BACKGROUND
+		, GUI_CONTROL_COLOR_TEXT_FACE			
+		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_TOP
+		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_LEFT				
+		, GUI_CONTROL_COLOR_CORNER_RIGHT_TOP_TOP
+		, GUI_CONTROL_COLOR_CORNER_RIGHT_TOP_RIGHT
+		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_LEFT	
+		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_BOTTOM
+		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_RIGHT
+		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_BOTTOM
+		, GUI_CONTROL_COLOR_COUNT
 		};
 
 	struct SControl {
@@ -91,7 +112,7 @@ namespace gpk
 	struct SGUI {
 		::gpk::SCoord2<float>								CursorPos							= {};
 		::gpk::SGUIControlTable								Controls							= {};
-		::gpk::array_pod<::gpk::SColorBGRA>					Colors								= 
+		::gpk::array_pod<::gpk::SColorBGRA>					Palette								= 
 			{ {0x3F, 0x3F, 0x3F, 0xFF}
 			, {0x00, 0x7F, 0x7F, 0xFF}
 			, {0x00, 0x00, 0xFF, 0xFF}
@@ -99,6 +120,11 @@ namespace gpk
 			, {0xFF, 0x00, 0x00, 0xFF}
 			, {0xFF, 0xFF, 0x00, 0xFF}
 			};
+
+		::gpk::array_pod
+			<::gpk::array_static
+				<int32_t, GUI_CONTROL_COLOR_COUNT>>			ColorCombos							= 0;
+
 		// Font
 		::gpk::STextureMonochrome<uint32_t>					FontTexture							= {};
 		::gpk::SCoord2<uint32_t>							FontCharSize						= {9, 16};

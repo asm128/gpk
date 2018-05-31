@@ -46,7 +46,8 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 }
 
 			::gpk::error_t								gpk::base64Decode												(const ::gpk::array_view<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
-	ree_if(in_base64.size() % 4, "Invalid base64 string.");
+	if(int32_t mymod = in_base64.size() % 4) 
+		ree_if(mymod != 1 || (in_base64.size() && in_base64[in_base64.size() - 1] != 0), "Invalid base64 string.");
 	rni_if(0 == in_base64.size(), "Empty base64 string.");
 	// --- Generate symbol value remap table.
 	uint8_t														base64SymbolRemap	[128]										= {};
