@@ -3,25 +3,30 @@
 #include "gpk_grid_copy.h"
 #include "gpk_encoding.h"
 
+static		::gpk::error_t								controlInstanceReset						(::gpk::SGUIControlTable& gui, int32_t iControl)										{
+	gui.Metrics		[iControl]								= {};	
+	gui.Text		[iControl]								= {};
+	gui.Children	[iControl]								= ::gpk::array_view<int32_t>{};
+
+	::gpk::SControl												& control				= gui.Controls		[iControl]	= {};
+	::gpk::SControlState										& controlStates			= gui.States		[iControl]	= {};
+	::gpk::SControlConstraints									& controlConstraints	= gui.Constraints	[iControl]	= {};	
+	controlStates.Outdated									= true;
+	control.IndexParent										= -1;
+	control.Align											= ::gpk::ALIGN_TOP_LEFT;
+	control.Area											= {{0, 0}, {16, 16}};
+	controlConstraints										= {-1, -1};
+	controlConstraints.DockToControl						= {-1, -1};
+	return 0;
+}
+
 			::gpk::error_t								gpk::controlCreate							(::gpk::SGUI& gui)										{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
 		if(gui.Controls.States[iControl].Unused) {
-			gui.Controls.Controls		[iControl]					= {};
-			gui.Controls.States			[iControl]					= {};
-			gui.Controls.Metrics		[iControl]					= {};	
-			gui.Controls.Text			[iControl]					= {};
-			gui.Controls.Constraints	[iControl]					= {};	
-			gui.Controls.Children		[iControl].clear();
-
-			gui.Controls.States			[iControl].Outdated			= true;
-			gui.Controls.Controls		[iControl].IndexParent		= -1;
-			gui.Controls.Controls		[iControl].Align			= ::gpk::ALIGN_TOP_LEFT;
-			gui.Controls.Controls		[iControl].Area				= {{0, 0}, {16, 16}};
-			gui.Controls.Constraints	[iControl]					= {-1, -1};
+			::controlInstanceReset(gui.Controls, iControl);
 			return iControl;
 		}
 	}
-
 	::gpk::error_t												iControl									= -1;
 	gpk_necall(iControl = ::gpk::resize( gui.Controls.Controls.size() + 1
 		, gui.Controls.Controls
@@ -31,18 +36,7 @@
 		, gui.Controls.Children
 		, gui.Controls.Constraints
 		) - 1, "Failed to resize! Out of memory?");
-	gui.Controls.Controls		[iControl]					= {};
-	gui.Controls.States			[iControl]					= {};
-	gui.Controls.Metrics		[iControl]					= {};	
-	gui.Controls.Text			[iControl]					= {};
-	gui.Controls.Constraints	[iControl]					= {};	
-	gui.Controls.Children		[iControl].clear();
-
-	gui.Controls.States			[iControl].Outdated			= true;
-	gui.Controls.Controls		[iControl].IndexParent		= -1;
-	gui.Controls.Controls		[iControl].Align			= ::gpk::ALIGN_TOP_LEFT;
-	gui.Controls.Controls		[iControl].Area				= {{0, 0}, {16, 16}};
-	gui.Controls.Constraints	[iControl]					= {-1, -1};
+	::controlInstanceReset(gui.Controls, iControl);
 	return iControl; 
 }
 
@@ -105,8 +99,8 @@
 	::gpk::SCoord2<int32_t>										finalSize									= ::gpk::SCoord2<double>{control.Area.Size		.x * scale.x, control.Area.Size		.y * scale.y}.Cast<int32_t>();
 	::gpk::SControlMetrics										& controlMetrics							= gui.Controls.Metrics[iControl];
 	const ::gpk::SControlConstraints							& controlConstraints						= gui.Controls.Constraints[iControl];
-	if(controlConstraints.IndexControlToAttachWidthTo	== iControl) { finalPosition.x = 0; finalSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachWidthTo  && false == gui.Controls.States[controlConstraints.IndexControlToAttachWidthTo ].Unused) { finalPosition.x = 0; finalSize.x = gui.Controls.Metrics[controlConstraints.IndexControlToAttachWidthTo ].Total.Global.Size.x; }
-	if(controlConstraints.IndexControlToAttachHeightTo	== iControl) { finalPosition.y = 0; finalSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.IndexControlToAttachHeightTo && false == gui.Controls.States[controlConstraints.IndexControlToAttachHeightTo].Unused) { finalPosition.y = 0; finalSize.y = gui.Controls.Metrics[controlConstraints.IndexControlToAttachHeightTo].Total.Global.Size.y; }
+	if(controlConstraints.AttachSizeToControl.x == iControl) { finalPosition.x = 0; finalSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.x && false == gui.Controls.States[controlConstraints.AttachSizeToControl.x].Unused) { finalPosition.x = 0; finalSize.x = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
+	if(controlConstraints.AttachSizeToControl.y == iControl) { finalPosition.y = 0; finalSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.y && false == gui.Controls.States[controlConstraints.AttachSizeToControl.y].Unused) { finalPosition.y = 0; finalSize.y = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
 	controlMetrics.Client.Local								= 
 		{	::gpk::SCoord2<double>{(control.Margin.Left + control.Border.Left) * scale.x, (control.Margin.Top + control.Border.Top) * scale.y}.Cast<int32_t>()
 		,	{ (int32_t)(finalSize.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)		* scale.x)

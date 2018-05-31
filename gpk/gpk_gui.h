@@ -24,25 +24,23 @@ namespace gpk
 	};
 
 	struct SControlConstraints {
-		int32_t												IndexControlToAttachWidthTo				;
-		int32_t												IndexControlToAttachHeightTo			;
-		int32_t												AttachToTextWidth						;
-		int32_t												AttachToTextHeight						;
+		::gpk::SCoord2<int32_t>								AttachSizeToControl						;
+		::gpk::SCoord2<bool>								AttachToTextSize						;
+		::gpk::SCoord2<int32_t>								DockToControl							;
 	};
 
-
 	struct SControlState {
-		bool												Outdated								: 1;
+		bool												Disabled								: 1;
 		bool												Hover									: 1;
 		bool												Pressed									: 1;
 		bool												Selected								: 1;
 		bool												Execute									: 1;
-		bool												Disabled								: 1;
+		bool												Outdated								: 1;
 		bool												Unused									: 1;
 	};
 
 	enum GUI_CONTROL_AREA
-		{ GUI_CONTROL_AREA_BACKGROUND		= 0
+		{ GUI_CONTROL_AREA_BACKGROUND							= 0
 		, GUI_CONTROL_AREA_CLIENT			
 		, GUI_CONTROL_AREA_BORDER_LEFT		
 		, GUI_CONTROL_AREA_BORDER_TOP
@@ -53,13 +51,16 @@ namespace gpk
 
 	enum GUI_CONTROL_COLOR
 		{ GUI_CONTROL_COLOR_BACKGROUND							= 0
-		, GUI_CONTROL_COLOR_CLIENT			
 		, GUI_CONTROL_COLOR_BORDER_LEFT		
 		, GUI_CONTROL_COLOR_BORDER_TOP
 		, GUI_CONTROL_COLOR_BORDER_RIGHT
 		, GUI_CONTROL_COLOR_BORDER_BOTTOM	
 		, GUI_CONTROL_COLOR_TEXT_BACKGROUND
 		, GUI_CONTROL_COLOR_TEXT_FACE			
+		, GUI_CONTROL_COLOR_MARGIN_LEFT		
+		, GUI_CONTROL_COLOR_MARGIN_TOP
+		, GUI_CONTROL_COLOR_MARGIN_RIGHT
+		, GUI_CONTROL_COLOR_MARGIN_BOTTOM	
 		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_TOP
 		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_LEFT				
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_TOP_TOP
@@ -68,7 +69,19 @@ namespace gpk
 		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_BOTTOM
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_RIGHT
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_BOTTOM
+		, GUI_CONTROL_COLOR_CLIENT			
 		, GUI_CONTROL_COLOR_COUNT
+		};
+
+	enum GUI_CONTROL_STATE_COLORS 
+		{ GUI_CONTROL_STATE_COLORS_NORMAL						= 0
+		, GUI_CONTROL_STATE_COLORS_DISABLED
+		, GUI_CONTROL_STATE_COLORS_HOVER
+		, GUI_CONTROL_STATE_COLORS_PRESSED
+		, GUI_CONTROL_STATE_COLORS_SELECTED
+		, GUI_CONTROL_STATE_COLORS_EXECUTE
+		, GUI_CONTROL_STATE_COLORS_OUTDATED
+		, GUI_CONTROL_STATE_COLORS_COUNT
 		};
 
 	struct SControl {
@@ -83,6 +96,7 @@ namespace gpk
 			};
 		uint16_t											ColorBack							= ::gpk::GUI_CONTROL_AREA_BACKGROUND;
 		uint16_t											ColorClient							= ::gpk::GUI_CONTROL_AREA_CLIENT	;
+		int32_t												ColorTheme							;
 		int32_t												IndexParent							;
 		::gpk::ALIGN										Align								;
 	};
