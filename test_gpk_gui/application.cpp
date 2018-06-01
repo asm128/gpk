@@ -15,6 +15,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
 	gui.ThemeDefault											= 1;
+	gui.ColorModeDefault										= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
 	controlRoot.Area											= {{0, 0}, {320, 240}};
@@ -33,7 +34,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
 		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		//control		.Border											= {iChild % 5, iChild % 7, iChild % 11, iChild % 13};
-		control		.Border											= {1, 1, 1, 1};
+		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {1, 1, 1, 1};
 		controlText	.Text											= buffer; 
 		//gui.Controls.Constraints[controlTestChild0].AttachSizeToText= {0 == (iChild % 4), 0 == (iChild % 5)};
@@ -55,17 +56,30 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 		::gpk::controlSetParent(gui, controlTestChild0, iChild / 9);
 	}
-
-	app.IdExit													= ::gpk::controlCreate(gui);
-	::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdExit];
-	controlExit.Area											= {{0, 0}, {64, 20}};
-	controlExit.Border											= {1, 1, 1, 1};
-	controlExit.Margin											= {1, 1, 1, 1};
-	controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
-	::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
-	controlText.Text											= "Exit";
-	controlText.Align											= ::gpk::ALIGN_CENTER;
-	::gpk::controlSetParent(gui, app.IdExit, controlTestRoot);
+	{
+		app.IdExit													= ::gpk::controlCreate(gui);
+		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdExit];
+		controlExit.Area											= {{0, 0}, {64, 20}};
+		controlExit.Border											= {1, 1, 1, 1};
+		controlExit.Margin											= {1, 1, 1, 1};
+		controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
+		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
+		controlText.Text											= "Exit";
+		controlText.Align											= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdExit, controlTestRoot);
+	}
+	{
+		app.IdMode													= ::gpk::controlCreate(gui);
+		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdMode];
+		controlExit.Area											= {{0, 0}, {64, 20}};
+		controlExit.Border											= {1, 1, 1, 1};
+		controlExit.Margin											= {1, 1, 1, 1};
+		controlExit.Align											= ::gpk::ALIGN_BOTTOM_LEFT				;
+		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdMode];
+		controlText.Text											= "Mode";
+		controlText.Align											= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdMode, controlTestRoot);
+	}
 	
 	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
@@ -98,8 +112,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gme::mutex_guard												lock					(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z)
+	if(app.Framework.Input->MouseCurrent.Deltas.z) {
 		gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
+	}
  
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
@@ -108,6 +124,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			info_printf("Executed %u.", iControl);
 			if(iControl == (uint32_t)app.IdExit)
 				return 1;
+			else if(iControl == (uint32_t)app.IdMode) {
+				gui.Controls.Modes[7].ColorMode			= gui.Controls.Modes[7].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
+				gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[7].ColorMode;
+				for(uint32_t iChild = 0; iChild < gui.Controls.Children[7].size(); ++iChild) 
+					gui.Controls.Modes[gui.Controls.Children[7][iChild]].ColorMode = gui.Controls.Modes[7].ColorMode;
+			}
 		}
 	}
 

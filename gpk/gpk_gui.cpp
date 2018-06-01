@@ -192,18 +192,18 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	return 0;
 }
 
-	static		::gpk::error_t									controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+	static		::gpk::error_t									controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & _targetSize, bool forceUpdate)					{
 	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
-	::gpk::SCoord2<int32_t>												targetSize												= target.metrics().Cast<int32_t>();
+	::gpk::SCoord2<int32_t>												targetSize												= _targetSize.Cast<int32_t>();
 	const bool															isValidParent											= gui.Controls.Controls.size() > (uint32_t)control.IndexParent && false == gui.Controls.States[control.IndexParent].Unused;
 	if(isValidParent) {
-		::controlUpdateMetrics(gui, control.IndexParent, target);
+		::controlUpdateMetrics(gui, control.IndexParent, _targetSize, forceUpdate);
 		targetSize														= gui.Controls.Metrics[control.IndexParent].Client.Global.Size;
 	}
-	if(false == controlState.Outdated) 
+	if(false == controlState.Outdated && false == forceUpdate)
 		return 0;
 
 	::gpk::SCoord2<double>												scale													= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
@@ -255,6 +255,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 		else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_BOTTOM	)) { rectText.Offset.y = (targetRect.Offset.y + targetRect.Size.y) - rectText.Size.y;			}
 		controlMetrics.Text												= controlMetrics.Text;
 	}
+	controlState.Outdated											= false;
 	return 0;
 }
 
@@ -308,7 +309,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
-	::controlUpdateMetrics(gui, iControl, target);
+	::controlUpdateMetrics(gui, iControl, target.metrics(), false);
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
 	if(mode.Design)
 		return 0;
@@ -329,7 +330,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 
-	if(colorMode == ::gpk::GUI_COLOR_MODE_PALETTE || colorMode == ::gpk::GUI_COLOR_MODE_PALETTE_EX ||  colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
+	if(colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
 		colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
@@ -399,11 +400,33 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	return 0;
 }
 
+static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize)					{
+	::controlUpdateMetrics(gui, iControl, targetSize, true);
+	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
+	for(uint32_t iChild = 0; iChild < children.size(); ++iChild)
+		::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize);
+	return 0;
+}
+
+			::gpk::error_t										gpk::guiUpdateMetrics									(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize)										{
+	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
+		::controlUpdateMetricsTopToDown(gui, iControl, targetSize);
+	return 0;
+}
+
+			::gpk::error_t										gpk::controlUpdateMetrics								(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize)					{
+	::controlUpdateMetricsTopToDown(gui, iControl, targetSize);
+	return 0;
+}
+
 			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
+	if(gui.LastSize != target.metrics()) 
+		::controlUpdateMetricsTopToDown(gui, iControl, target.metrics());
 
+	gui.LastSize = target.metrics();
 	::actualControlDraw(gui, iControl, target);
 	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {

@@ -16,9 +16,7 @@ namespace gpk
 	enum GUI_COLOR_MODE : uint8_t
 		{ GUI_COLOR_MODE_DEFAULT		= 0
 		, GUI_COLOR_MODE_3D			
-		, GUI_COLOR_MODE_PALETTE
 		, GUI_COLOR_MODE_THEME
-		, GUI_COLOR_MODE_PALETTE_EX		
 		, GUI_COLOR_MODE_COUNT
 		};
 
@@ -147,6 +145,7 @@ namespace gpk
 	};
 
 	struct SGUI {
+		::gpk::SCoord2<uint32_t>								LastSize							= {16, 16};
 		::gpk::SCoord2<float>									CursorPos							= {};
 		::gpk::SGUIControlTable									Controls							= {};
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= 
@@ -195,12 +194,14 @@ namespace gpk
 	};
 
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
+	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize);
 
 	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);
 	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl);
 
 	::gpk::error_t											controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
+	::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 
 #pragma pack(pop)
 } // namespace

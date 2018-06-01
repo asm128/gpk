@@ -42,8 +42,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gme::mutex_guard														lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z)
+	if(app.Framework.Input->MouseCurrent.Deltas.z) {
 		gui.Zoom.ZoomLevel												+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
+	}
  
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
