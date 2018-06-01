@@ -22,7 +22,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlText.Text													= "Exit";
 	controlText.Align													= ::gpk::ALIGN_CENTER;
 	::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
-	controlConstraints.IndexControlToAttachWidthTo						= app.IdExit;
+	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	return 0; 
 }

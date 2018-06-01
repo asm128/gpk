@@ -14,14 +14,15 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	framework.Input.create();
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
+	gui.ThemeDefault											= 1;
 	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
 	controlRoot.Area											= {{0, 0}, {320, 240}};
 	controlRoot.Border											= {4, 4, 4, 4};
 	controlRoot.Margin											= {20, 20, 20, 10};
 	controlRoot.Align											= ::gpk::ALIGN_CENTER					;
-	gui.Controls.Constraints[controlTestRoot].IndexControlToAttachHeightTo	= controlTestRoot;
-	gui.Controls.Constraints[controlTestRoot].IndexControlToAttachWidthTo	= controlTestRoot;
+	gui.Controls.Constraints[controlTestRoot].AttachSizeToControl	= {controlTestRoot, controlTestRoot};
+	//gui.Controls.Modes		[controlTestRoot].Design				= true;
 	::gpk::controlSetParent(gui, controlTestRoot, -1);
 
 	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
@@ -31,9 +32,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControl													& control				= gui.Controls.Controls	[controlTestChild0];
 		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
 		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
-		control		.Border											= {2, 2, 2, 2};
+		//control		.Border											= {iChild % 5, iChild % 7, iChild % 11, iChild % 13};
+		control		.Border											= {1, 1, 1, 1};
 		control		.Margin											= {1, 1, 1, 1};
 		controlText	.Text											= buffer; 
+		//gui.Controls.Constraints[controlTestChild0].AttachSizeToText= {0 == (iChild % 4), 0 == (iChild % 5)};
+		gui.Controls.States	[controlTestChild0].Disabled			= 0 == (iChild % 9);
+		gui.Controls.Modes	[controlTestChild0].Design				= iChild % 2;
 		switch(iChild % 9) {										  
 		case 0: control.Align = ::gpk::ALIGN_TOP_LEFT		; controlText.Align = ::gpk::ALIGN_BOTTOM_RIGHT		; ;break;
 		case 1: control.Align = ::gpk::ALIGN_CENTER_TOP		; controlText.Align = ::gpk::ALIGN_CENTER_BOTTOM	; ;break;
