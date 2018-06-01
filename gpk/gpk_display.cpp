@@ -1,13 +1,20 @@
 #include "gpk_display.h"
 
+		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{ 
+	::MSG																								msg											= {};
+	::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE);
+	::TranslateMessage	(&msg);
+	::DispatchMessage	(&msg);
+	if(msg.message == WM_QUIT)
+		return 1;
+	return 0;
+}
+
 		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{ 
 	::MSG																								msg											= {};
-	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE)) {
-		::TranslateMessage	(&msg);
-		::DispatchMessage	(&msg);
-		if(msg.message == WM_QUIT)
-			break;
-	}
+	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE)) 
+		if(1 == displayUpdateTick(displayInstance))
+			return 1;
 	return 0;
 }
 

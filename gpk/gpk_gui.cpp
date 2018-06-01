@@ -11,6 +11,7 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
 
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
@@ -19,6 +20,7 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_DARKGREY		;
 																	    
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_BLACK			;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_BLACK			;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_BLACK			;
@@ -27,6 +29,7 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLUE			;
 
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
@@ -35,6 +38,7 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			;
 
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		;
@@ -43,6 +47,7 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			;
 
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		;
@@ -59,6 +64,7 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
 
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 15;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
@@ -67,6 +73,7 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 																	   
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 9;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
@@ -75,6 +82,7 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboPressed		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 11;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
@@ -83,6 +91,7 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 11;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
@@ -91,6 +100,7 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboHover		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 14;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
@@ -101,14 +111,14 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 }
 
 static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::gpk::SControlTheme>& themes)										{
-	gpk_necall(themes.resize(3), "Out of memory?");
+	gpk_necall(themes.resize(2), "Out of memory?");
 	themeSetupLite									(themes[0]);
 	themeSetupDark									(themes[1]);
 	return 0;
 }
 
-static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, int32_t iControl)										{
-	::gpk::SGUIControlTable												& controlTable											= gui.Controls;
+static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControlTable& gui, int32_t iControl)										{
+	::gpk::SGUIControlTable												& controlTable											= gui;
 	controlTable.Metrics	[iControl]								= {};	
 	controlTable.Text		[iControl]								= {};
 	controlTable.Children	[iControl]								= ::gpk::array_view<int32_t>{};
@@ -121,7 +131,6 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	control.IndexParent												= -1;
 	control.Align													= ::gpk::ALIGN_TOP_LEFT;
 	control.Area													= {{0, 0}, {16, 16}};
-	control.ColorTheme												= gui.ThemeDefault;
 	controlConstraints												= {-1, -1};
 	controlConstraints.DockToControl								= {-1, -1};
 	return 0;
@@ -133,7 +142,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
 		if(gui.Controls.States[iControl].Unused) {
-			::controlInstanceReset(gui, iControl);
+			::controlInstanceReset(gui.Controls, iControl);
 			return iControl;
 		}
 	}
@@ -147,8 +156,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 		, gui.Controls.Constraints
 		, gui.Controls.Modes
 		) - 1, "Failed to resize! Out of memory?");
-	::controlInstanceReset(gui, iControl);
-
+	::controlInstanceReset(gui.Controls, iControl);
 	return iControl; 
 }
 
@@ -277,7 +285,8 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 		::setupDefaultFontTexture(gui);
 	if(0 == gui.FontTexture.Texels.size() || 0 == gui.FontTexture.Pitch)
 		return -1;
-	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[gui.Controls.Controls[iControl].ColorTheme];
+	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
+	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
 		[ controlState.Disabled	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
@@ -315,11 +324,10 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		return 0;
 
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
-
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SColorBGRA													colors	[::gpk::GUI_CONTROL_AREA_COUNT]					= {}; // -- Fill color table
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
-	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[control.ColorTheme];
+	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
 		[ controlState.Disabled	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
@@ -419,88 +427,91 @@ static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI
 	return 0;
 }
 
-			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
+			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)	{
 	ree_if((gui.Controls.Controls.size() <= uint32_t(iControl)), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	ree_if(controlState.Unused, "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics()) 
 		::controlUpdateMetricsTopToDown(gui, iControl, target.metrics());
 
-	gui.LastSize = target.metrics();
+	gui.LastSize													= target.metrics();
 	::actualControlDraw(gui, iControl, target);
 	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
-	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
+	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) 
 		::gpk::controlDrawHierarchy(gui, children[iChild], target);
-	}
 	return 0;
 }
 
-static		::gpk::error_t									updateGUIControlHovered										(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)	noexcept	{ 
+static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)	noexcept	{ 
 	if(controlFlags.Hover) {
 		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed) 
-			controlFlags.Pressed										= true;
+			controlFlags.Pressed											= true;
 		else if(inputSystem.ButtonUp(0) && controlFlags.Pressed) {
-			controlFlags.Execute										= true;
-			controlFlags.Pressed										= false;
+			controlFlags.Execute											= true;
+			controlFlags.Pressed											= false;
 		}
 	}
 	else 
-		controlFlags.Hover										= true;
+		controlFlags.Hover												= true;
 	return controlFlags.Hover;
 }
 
-static		::gpk::error_t								controlProcessInput												(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
-	::gpk::SControlState										& controlState													= gui.Controls.States[iControl];
+static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
+	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	// EXECUTE only lasts one tick.
 	if (controlState.Execute)
-		controlState.Execute									= false;
+		controlState.Execute											= false;
 	//--------------------
-	::gpk::error_t												controlHovered													= -1;
+	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
 		if(false == gui.Controls.Modes[iControl].Design) {
-			controlHovered											= iControl;
+			controlHovered													= iControl;
 			::updateGUIControlHovered(controlState, input);
 		}
 	}
 	else {
 		if (controlState.Hover) 
-			controlState.Hover										= false;
+			controlState.Hover												= false;
 
 		if(input.ButtonUp(0) && controlState.Pressed)
-			controlState.Pressed									= false;
+			controlState.Pressed											= false;
 	}
 	{
-		::gpk::array_view<int32_t>									& children													= gui.Controls.Children[iControl];
+		::gpk::array_view<int32_t>											& children													= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
-			::gpk::error_t												controlPressed												= ::controlProcessInput(gui, input, children[iChild]);
+			::gpk::error_t														controlPressed												= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.Controls.size() > (uint32_t)controlPressed) {
-				controlState.Hover										= false;
-				controlHovered											= controlPressed;
+				controlState.Hover												= false;
+				//controlState.Pressed											= false;
+				controlHovered													= controlPressed;
 			}
 		}
 	}
 	return controlHovered;
 }
 
-			::gpk::error_t								gpk::guiProcessInput											(::gpk::SGUI& gui, ::gpk::SInput& input)											{
-	gui.CursorPos											+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
-	::gpk::error_t												controlHovered													= -1;
+			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)											{
+	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
+	::gpk::error_t														controlHovered											= -1;
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
-		::gpk::SControlState										& controlState													= gui.Controls.States[iControl];
+		::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
 			continue;
-		::gpk::SControl												& control														= gui.Controls.Controls[iControl];
+		::gpk::SControl														& control												= gui.Controls.Controls[iControl];
 		if(gui.Controls.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
 			continue;
-		::gpk::error_t												controlPressed													= ::controlProcessInput(gui, input, iControl);
+		::gpk::error_t														controlPressed											= ::controlProcessInput(gui, input, iControl);
 		if(gui.Controls.Controls.size() > (uint32_t)controlPressed && false == gui.Controls.States[iControl].Unused)
-			controlHovered											= controlPressed;
+			controlHovered													= controlPressed;
 	}
 	if(controlHovered == -1) 
 		return gui.Controls.Controls.size();
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
-		if(iControl != (uint32_t)controlHovered)
-			gui.Controls.States[iControl].Hover						= false;
+		if(iControl != (uint32_t)controlHovered) {
+			gui.Controls.States[iControl].Hover								= false;
+			//if(0 == input.MouseCurrent.ButtonState[0])
+			//	gui.Controls.States[iControl].Pressed							= false;
+		}
 		else {
 			verbose_printf("Hovered: %u.", iControl);
 		}

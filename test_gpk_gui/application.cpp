@@ -11,10 +11,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 ::gpk::error_t												setup					(::gme::SApplication & app)						{ 
 	::gpk::SFramework												& framework				= app.Framework;
 	::gpk::SDisplay													& mainWindow			= framework.MainDisplay;
-	framework.Input.create();
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
-	gui.ThemeDefault											= 1;
+	gui.ThemeDefault											= 0;
 	gui.ColorModeDefault										= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
@@ -66,7 +65,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
 		controlText.Text											= "Exit";
 		controlText.Align											= ::gpk::ALIGN_CENTER;
-		::gpk::controlSetParent(gui, app.IdExit, controlTestRoot);
+		::gpk::controlSetParent(gui, app.IdExit, 9);
 	}
 	{
 		app.IdMode													= ::gpk::controlCreate(gui);
@@ -78,7 +77,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdMode];
 		controlText.Text											= "Mode";
 		controlText.Align											= ::gpk::ALIGN_CENTER;
-		::gpk::controlSetParent(gui, app.IdMode, controlTestRoot);
+		::gpk::controlSetParent(gui, app.IdMode, 7);
+	}
+	{
+		app.IdTheme													= ::gpk::controlCreate(gui);
+		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdTheme];
+		controlExit.Area											= {{0, 0}, {64, 20}};
+		controlExit.Border											= {1, 1, 1, 1};
+		controlExit.Margin											= {1, 1, 1, 1};
+		controlExit.Align											= ::gpk::ALIGN_CENTER_BOTTOM			;
+		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdTheme];
+		controlText.Text											= "Theme";
+		controlText.Align											= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdTheme, 8);
 	}
 	
 	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
@@ -111,27 +122,32 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	{
 		::gme::mutex_guard												lock					(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
-	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
-		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
-	}
- 
-	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
-		if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
-			continue;
-		if(gui.Controls.States[iControl].Execute) {
-			info_printf("Executed %u.", iControl);
-			if(iControl == (uint32_t)app.IdExit)
-				return 1;
-			else if(iControl == (uint32_t)app.IdMode) {
-				gui.Controls.Modes[7].ColorMode			= gui.Controls.Modes[7].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
-				gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[7].ColorMode;
-				for(uint32_t iChild = 0; iChild < gui.Controls.Children[7].size(); ++iChild) 
-					gui.Controls.Modes[gui.Controls.Children[7][iChild]].ColorMode = gui.Controls.Modes[7].ColorMode;
+		for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
+			if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
+				continue;
+			if(gui.Controls.States[iControl].Execute) {
+				info_printf("Executed %u.", iControl);
+				if(iControl == (uint32_t)app.IdExit)
+					return 1;
+				else if(iControl == (uint32_t)app.IdMode) {
+					gui.Controls.Modes[7].ColorMode			= gui.Controls.Modes[7].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
+					gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[7].ColorMode;
+					for(uint32_t iChild = 0; iChild < gui.Controls.Children[7].size(); ++iChild) 
+						gui.Controls.Modes[gui.Controls.Children[7][iChild]].ColorMode = gui.Controls.Modes[7].ColorMode;
+				}
+				else if(iControl == (uint32_t)app.IdTheme) {
+					++gui.ThemeDefault; 
+					if(gui.ThemeDefault >= gui.ControlThemes.size())
+						gui.ThemeDefault					= 0;
+				}
 			}
 		}
+		if(app.Framework.Input->MouseCurrent.Deltas.z) {
+			gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
+		}
 	}
+ 
 
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);

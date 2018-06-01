@@ -26,8 +26,10 @@ struct SDisplayInput {
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
-	ree_if(errored(::gpk::displayUpdate(mainWindow)), "Not sure why this would fail.");
+	::gpk::error_t																				updateResult								= ::gpk::displayUpdateTick(mainWindow);
+	ree_if(errored(updateResult), "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
+	rvi_if(1, 1 == updateResult, "Application exiting because the WM_QUIT message was processed.");
 	::gpk::ptr_obj<::gpk::SRenderTarget>														offscreen									= framework.MainDisplayOffscreen;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
@@ -80,10 +82,11 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	switch(uMsg) {
 	default: break;		
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
-	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam]  =  1; return 0;
-	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardPrevious.KeyState[wParam] = input.KeyboardCurrent.KeyState[wParam]; input.KeyboardCurrent.KeyState[wParam] &= ~1; return 0;
-	case WM_LBUTTONDOWN		: if(0 > ::gpk::size(input.MousePrevious.ButtonState)) break; input.MousePrevious.ButtonState[0] = input.MouseCurrent.ButtonState[0]; input.MouseCurrent.ButtonState[0]  =  1; return 0;
-	case WM_LBUTTONUP		: if(0 > ::gpk::size(input.MousePrevious.ButtonState)) break; input.MousePrevious.ButtonState[0] = input.MouseCurrent.ButtonState[0]; input.MouseCurrent.ButtonState[0] &= ~1; return 0;
+	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; return 0;
+	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; return 0;
+	case WM_LBUTTONDOWN		: info_printf("Down"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
+	case WM_LBUTTONDBLCLK	: info_printf("Down"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
+	case WM_LBUTTONUP		: info_printf("Up"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; return 0;
 	case WM_MOUSEWHEEL		:
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;
@@ -154,6 +157,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	wndClassToInit.hCursor																	= LoadCursor(NULL, IDC_ARROW);
 	wndClassToInit.hbrBackground															= (::HBRUSH)(COLOR_3DFACE + 1);
 	wndClassToInit.lpszClassName															= className;
+	wndClassToInit.style																	= CS_DBLCLKS;
 }
 #endif
 
@@ -163,6 +167,8 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	return 0;
 }
 					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{ 
+	if(0 == displayInput) 
+		displayInput.create();
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
@@ -171,7 +177,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::RECT																						finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	DWORD																						windowStyle									= WS_OVERLAPPEDWINDOW; //WS_POPUP;
 	::AdjustWindowRectEx(&finalClientRect, windowStyle, FALSE, 0);
-	mainWindow.PlatformDetail.WindowHandle													= ::CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window"), windowStyle
+	mainWindow.PlatformDetail.WindowHandle													= ::CreateWindowEx(0, displayDetail.WindowClassName, TEXT("Window"), windowStyle | CS_DBLCLKS
 		, finalClientRect.left
 		, finalClientRect.top
 		, finalClientRect.right		- finalClientRect.left

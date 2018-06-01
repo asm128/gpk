@@ -52,6 +52,8 @@ namespace gpk
 
 		::gpk::error_t																displayPresentTarget						(::gpk::SDisplay& displayInstance, const ::gpk::grid_view<::gpk::SColorBGRA>& targetToPresent);
 		::gpk::error_t																displayUpdate								(::gpk::SDisplay& applicationInstance);
+		::gpk::error_t																displayUpdateTick							(::gpk::SDisplay& displayInstance);
+
 } // namespace
 
 #endif // GPK_DISPLAY_H_293874928374

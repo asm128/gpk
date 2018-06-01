@@ -15,6 +15,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 					int32_t										IdExit								= -1;
 					int32_t										IdMode								= -1;
+					int32_t										IdTheme								= -1;
 
 					::std::mutex								LockGUI;
 					::std::mutex								LockRender;
