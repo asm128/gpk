@@ -135,8 +135,14 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 	palette[15 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_15	};
 	for(uint32_t iTone = 0; iTone < 16; ++iTone)
 		for(uint32_t iShade = 0; iShade < 16; ++iShade) {
-			::gpk::SColorBGRA											 & paletteItem													= palette[iTone * 16 + iShade];
-			paletteItem												= palette[iTone * 16] - ::gpk::SColorRGBA{(uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade)};
+			if(0 == (iShade % 16))
+				continue;
+			const int32_t												toneIndex													= iTone * 16;
+			::gpk::SColorBGRA											& baseColor													= palette[toneIndex];
+			::gpk::SColorBGRA											& paletteItem												= palette[toneIndex + iShade];
+			paletteItem												= ::gpk::SColorFloat(baseColor) / 16.0 * (16.0 - iShade);//;- ::gpk::SColorBGRA{(uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade)};
+			info_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
+			info_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
 	return 0;
 }

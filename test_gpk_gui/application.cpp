@@ -58,40 +58,59 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	{
 		app.IdExit													= ::gpk::controlCreate(gui);
 		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdExit];
-		controlExit.Area											= {{0, 0}, {64, 20}};
-		controlExit.Border											= {1, 1, 1, 1};
-		controlExit.Margin											= {1, 1, 1, 1};
 		controlExit.Align											= ::gpk::ALIGN_BOTTOM_RIGHT				;
 		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdExit];
 		controlText.Text											= "Exit";
-		controlText.Align											= ::gpk::ALIGN_CENTER;
 		::gpk::controlSetParent(gui, app.IdExit, 9);
-	}
-	{
-		app.IdMode													= ::gpk::controlCreate(gui);
-		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdMode];
-		controlExit.Area											= {{0, 0}, {64, 20}};
-		controlExit.Border											= {1, 1, 1, 1};
-		controlExit.Margin											= {1, 1, 1, 1};
-		controlExit.Align											= ::gpk::ALIGN_BOTTOM_LEFT				;
-		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdMode];
-		controlText.Text											= "Mode";
-		controlText.Align											= ::gpk::ALIGN_CENTER;
-		::gpk::controlSetParent(gui, app.IdMode, 7);
 	}
 	{
 		app.IdTheme													= ::gpk::controlCreate(gui);
 		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdTheme];
-		controlExit.Area											= {{0, 0}, {64, 20}};
-		controlExit.Border											= {1, 1, 1, 1};
-		controlExit.Margin											= {1, 1, 1, 1};
 		controlExit.Align											= ::gpk::ALIGN_CENTER_BOTTOM			;
 		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdTheme];
 		controlText.Text											= "Theme";
-		controlText.Align											= ::gpk::ALIGN_CENTER;
 		::gpk::controlSetParent(gui, app.IdTheme, 8);
 	}
+	{
+		app.IdMode													= ::gpk::controlCreate(gui);
+		::gpk::SControl													& controlExit			= gui.Controls.Controls[app.IdMode];
+		controlExit.Align											= ::gpk::ALIGN_BOTTOM_LEFT				;
+		::gpk::SControlText												& controlText			= gui.Controls.Text[app.IdMode];
+		controlText.Text											= "Mode";
+		::gpk::controlSetParent(gui, app.IdMode, 7);
+	}
+	for(uint32_t iButton = app.IdExit; iButton < gui.Controls.Controls.size(); ++iButton) {
+		::gpk::SControl													& control				= gui.Controls.Controls[iButton];
+		::gpk::SControlText												& controlText			= gui.Controls.Text[iButton];
+		control.Area												= {{0, 0}, {64, 20}};
+		control.Border												= {1, 1, 1, 1};
+		control.Margin												= {1, 1, 1, 1};
+		controlText.Align											= ::gpk::ALIGN_CENTER;
+	}
 	
+	for(uint32_t iColor = 0; iColor < gui.Palette.size(); ++iColor) {
+		const int32_t													idPaletteItem			= ::gpk::controlCreate(gui);
+		::gpk::SControl													& control				= gui.Controls.Controls	[idPaletteItem];
+		control.Align												= ::gpk::ALIGN_CENTER_LEFT;
+		control.Area												= {{((int32_t)iColor % 16) * 16, ((int32_t)iColor / 16) * 16}, {16, 16}};
+		control.Area.Offset											-= {16 * 8, 16 * 8};
+		control.Border												= 
+		control.Margin												= {1, 1, 1, 1};
+		control.ColorTheme											= gui.ControlThemes.push_back({}) + 1;
+		::gpk::SControlTheme											& theme					= gui.ControlThemes[control.ColorTheme - 1];
+		for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) {
+			theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_BACKGROUND]	= iColor;
+			const uint8_t													colorL					= gui.Palette[iColor].r | gui.Palette[iColor].g | gui.Palette[iColor].b;
+			theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_TEXT_FACE]	= (colorL >= 0x7F) ? ::gpk::ASCII_COLOR_BLACK * 16 : ::gpk::ASCII_COLOR_WHITE * 16;
+		}
+
+		//::gpk::SControlText												& controlText			= gui.Controls.Text		[idPaletteItem];
+		//char															buffer [1024]				= {};
+		//sprintf_s(buffer, "(%u)", idPaletteItem);
+		//controlText.Text											= buffer;
+		::gpk::controlSetParent(gui, idPaletteItem, 6);
+	}
+
 	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
 	const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
@@ -140,6 +159,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 					if(gui.ThemeDefault >= gui.ControlThemes.size())
 						gui.ThemeDefault					= 0;
 				}
+				else if(iControl > (uint32_t)app.IdMode) {
+					gui.Controls.Controls[5].ColorTheme = iControl - app.IdMode + 2; 
+					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
+						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
+				}
 			}
 		}
 		if(app.Framework.Input->MouseCurrent.Deltas.z) {
@@ -147,8 +171,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
 		}
 	}
- 
-
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 
