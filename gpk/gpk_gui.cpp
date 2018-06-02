@@ -144,6 +144,78 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 			info_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
 			info_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
+
+	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {
+		const int32_t													indexTheme				= themes.push_back({});
+		::gpk::SControlTheme											& theme					= themes[indexTheme];
+		//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) {
+		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_BACKGROUND	]	= iColor;
+		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_CLIENT		]	= iColor;
+		//	const uint8_t													colorL					= gui.Palette[iColor].r | gui.Palette[iColor].g | gui.Palette[iColor].b;
+		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_TEXT_FACE	]	= (colorL >= 0x7F) ? ::gpk::ASCII_COLOR_BLACK * 16 : ::gpk::ASCII_COLOR_WHITE * 16;
+		//}
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED	]	= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED		]	= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED	]	= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_HOVER		]	= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
+
+		const int32_t colorBase		= iColor / 16;
+		const int32_t colorShade	= iColor % 16;
+		const int32_t colorText		= (::gpk::ASCII_COLOR_WHITE * 16); //(colorShade > 7) ? (::gpk::ASCII_COLOR_WHITE * 16) : (::gpk::ASCII_COLOR_WHITE * 16) + 15;
+
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= (colorShade > 7) ? iColor : iColor;
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= (colorShade > 7) ? iColor - 1 : iColor + 1;
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= (colorShade > 7) ? iColor - 1 : iColor + 1;
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= (colorShade > 7) ? iColor - 1 : iColor + 1;
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= (colorShade > 7) ? iColor - 3 : iColor + 3;
+//
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= (colorShade > 7) ? iColor : iColor;
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= (colorShade > 7) ? iColor - 3: iColor + 3;
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= (colorShade > 7) ? iColor - 3: iColor + 3;
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= (colorShade > 7) ? iColor - 3: iColor + 3;
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= (colorShade > 7) ? iColor - 3: iColor + 3;
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= (colorShade > 7) ? colorText + 7 : colorText + 9;
+//
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= (colorShade > 7) ? iColor : iColor;
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= (colorShade > 7) ? iColor : iColor;
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= (colorShade > 7) ? iColor : iColor;
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= (colorShade > 7) ? iColor : iColor;
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= (colorShade > 7) ? iColor : iColor;
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= (colorShade > 7) ? colorText : colorText + 8;
+//
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= (colorShade > 7) ? iColor : iColor;
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= (colorShade > 7) ? iColor - 7: iColor + 7;
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= (colorShade > 7) ? iColor - 7: iColor + 7;
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= (colorShade > 7) ? iColor - 7: iColor + 7;
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= (colorShade > 7) ? iColor - 7: iColor + 7;
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= (colorShade > 7) ? colorText + 4: colorText + 12;
+//
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= (colorShade > 7) ? iColor : iColor;
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= (colorShade > 7) ? iColor - 5: iColor + 5;
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= (colorShade > 7) ? iColor - 5: iColor + 5;
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= (colorShade > 7) ? iColor - 5: iColor + 5;
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= (colorShade > 7) ? iColor - 5: iColor + 5;
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= (colorShade > 7) ? colorText : colorText + 15;
+
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboPressed		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboHover		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+		colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+
+		for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) {
+			for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea) 
+				theme.ColorCombos[iState][iArea]	= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], palette.size() - 1);
+		}
+	}
+
 	return 0;
 }
 
@@ -340,7 +412,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 		dstCoords.clear();
 		error_if(errored(::gpk::grid_raster_alpha_bit(target, gui.FontTexture.View, dstOffset1, {charsPerRow * gui.FontCharSize.x, 8 * gui.FontCharSize.y}, srcRect0, dstCoords)), "I believe this never fails.");
 		for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
-			::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, 0.05f, 0.75);
+			::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.075f : 0.05f, controlState.Pressed ? 1.0f : 0.75);
 	}
 	gui, iControl, target;
 	return 0;
@@ -369,18 +441,18 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 
 	if(colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
-		colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM		]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]];
+		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]];
 	}
 	else { // 3d borders and ::gpk::GUI_COLOR_MODE_DEFAULT, or j		ust unrecognized stuff. This is simpler because here we define the colors ourselves.
 		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * (controlState.Pressed ? 1.0 : controlState.Hover ? 1.0 : 1.0);
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.6 : controlState.Hover ? 0.8 : 1.2); 
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.6 : controlState.Hover ? 0.8 : 1.2);
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.4 : controlState.Hover ? 1.2 : 0.8); 
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.4 : controlState.Hover ? 1.2 : 0.8); 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2); 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2);
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8); 
+		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8); 
 	}
 	const ::gpk::SControlMetrics										& controlMetrics										= gui.Controls.Metrics[iControl];
 	::gpk::SRectangle2D<int32_t>										finalRects	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
@@ -482,7 +554,7 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 		}
 	}
 	else 
-		controlFlags.Hover												= true;
+		controlFlags.Hover												= false == controlFlags.Disabled;
 	return controlFlags.Hover;
 }
 
@@ -539,8 +611,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
 			gui.Controls.States[iControl].Hover								= false;
-			//if(0 == input.MouseCurrent.ButtonState[0])
-			//	gui.Controls.States[iControl].Pressed							= false;
+			if(0 == input.MouseCurrent.ButtonState[0])
+				gui.Controls.States[iControl].Pressed							= false;
 		}
 		else {
 			verbose_printf("Hovered: %u.", iControl);

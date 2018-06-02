@@ -13,7 +13,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SDisplay													& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI														& gui					= framework.GUI;
-	gui.ThemeDefault											= 0;
+	gui.ThemeDefault											= ::gpk::ASCII_COLOR_DARKGREY * 16 + 13;
 	gui.ColorModeDefault										= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
@@ -96,14 +96,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		control.Area.Offset											-= {16 * 8, 16 * 8};
 		control.Border												= 
 		control.Margin												= {1, 1, 1, 1};
-		control.ColorTheme											= gui.ControlThemes.push_back({}) + 1;
-		::gpk::SControlTheme											& theme					= gui.ControlThemes[control.ColorTheme - 1];
-		for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) {
-			theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_BACKGROUND]	= iColor;
-			const uint8_t													colorL					= gui.Palette[iColor].r | gui.Palette[iColor].g | gui.Palette[iColor].b;
-			theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_TEXT_FACE]	= (colorL >= 0x7F) ? ::gpk::ASCII_COLOR_BLACK * 16 : ::gpk::ASCII_COLOR_WHITE * 16;
-		}
-
+		control.ColorTheme											= iColor + 3;
 		//::gpk::SControlText												& controlText			= gui.Controls.Text		[idPaletteItem];
 		//char															buffer [1024]				= {};
 		//sprintf_s(buffer, "(%u)", idPaletteItem);
@@ -149,10 +142,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				if(iControl == (uint32_t)app.IdExit)
 					return 1;
 				else if(iControl == (uint32_t)app.IdMode) {
-					gui.Controls.Modes[7].ColorMode			= gui.Controls.Modes[7].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
-					gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[7].ColorMode;
-					for(uint32_t iChild = 0; iChild < gui.Controls.Children[7].size(); ++iChild) 
-						gui.Controls.Modes[gui.Controls.Children[7][iChild]].ColorMode = gui.Controls.Modes[7].ColorMode;
+					gui.Controls.Modes[5].ColorMode			= gui.Controls.Modes[5].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
+					gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[5].ColorMode;
+					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
+						gui.Controls.Modes[gui.Controls.Children[5][iChild]].ColorMode = gui.Controls.Modes[5].ColorMode;
 				}
 				else if(iControl == (uint32_t)app.IdTheme) {
 					++gui.ThemeDefault; 
