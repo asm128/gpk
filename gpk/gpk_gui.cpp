@@ -10,50 +10,50 @@ static		::gpk::error_t										themeSetupLite											(::gpk::SControlTheme& 
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_HOVER		]	= {};
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
 
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
 																	    
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_BLACK			;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_BLACK			;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_BLACK			;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_BLACK			;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_BLACK			;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLUE			;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_BLACK			* 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_BLACK			* 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_BLACK			* 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_BLACK			* 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_BLACK			* 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLUE			* 16;
 
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			* 16;
 
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			* 16;
 
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY		;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_LIGHTGREY		;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY		* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= ::gpk::ASCII_COLOR_LIGHTGREY		* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_BLACK			* 16;
 	return 0; 
 }
 static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& theme)															{	
@@ -63,57 +63,81 @@ static		::gpk::error_t										themeSetupDark											(::gpk::SControlTheme& 
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_HOVER		]	= {};
 	::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
 
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 15;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE * 16 + 15;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE + 11;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE * 16 + 11;
 	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 																	   
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 9;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE * 16 + 9;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE + 4;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE * 16 + 4;
 	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboPressed		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 11;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE * 16 + 11;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE * 16;
 	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 11;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE * 16 + 11;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY * 16;
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE * 16;
 	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboHover		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE + 14;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND]		= ::gpk::ASCII_COLOR_WHITE * 16 + 14;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY;
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT]		= ::gpk::ASCII_COLOR_DARKGREY	* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_TOP]		= ::gpk::ASCII_COLOR_DARKGREY	* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT]		= ::gpk::ASCII_COLOR_DARKGREY	* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM]	= ::gpk::ASCII_COLOR_DARKGREY	* 16;
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]		= ::gpk::ASCII_COLOR_WHITE		* 16;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 	return 0; 
 }
 
-static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::gpk::SControlTheme>& themes)										{
-	gpk_necall(themes.resize(2), "Out of memory?");
-	themeSetupLite									(themes[0]);
-	themeSetupDark									(themes[1]);
+static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::gpk::SControlTheme>& themes, ::gpk::array_pod<::gpk::SColorBGRA>& palette)										{
+	if(themes.size() < 2)
+		gpk_necall(themes.resize(2), "Out of memory?");
+	themeSetupLite(themes[0]);
+	themeSetupDark(themes[1]);
+	if(palette.size() < 256)
+		gpk_necall(palette.resize(256), "Out of memory?");
+	palette[ 0 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	};
+	palette[ 1 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	};
+	palette[ 2 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_2	};
+	palette[ 3 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_3	};
+	palette[ 4 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_4	};
+	palette[ 5 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_5	};
+	palette[ 6 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_6	};
+	palette[ 7 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_7	};
+	palette[ 8 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_8	};
+	palette[ 9 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_9	};
+	palette[10 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_10	};
+	palette[11 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_11	};
+	palette[12 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_12	};
+	palette[13 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_13	};
+	palette[14 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_14	};
+	palette[15 * 16]												= ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_15	};
+	for(uint32_t iTone = 0; iTone < 16; ++iTone)
+		for(uint32_t iShade = 0; iShade < 16; ++iShade) {
+			::gpk::SColorBGRA											 & paletteItem													= palette[iTone * 16 + iShade];
+			paletteItem												= palette[iTone * 16] - ::gpk::SColorRGBA{(uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade)};
+		}
 	return 0;
 }
 
@@ -138,7 +162,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 
 			::gpk::error_t										gpk::controlCreate										(::gpk::SGUI& gui)										{
 	if(0 == gui.ControlThemes.size())
-		::themeSetupDefault(gui.ControlThemes);
+		::themeSetupDefault(gui.ControlThemes, gui.Palette);
 
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
 		if(gui.Controls.States[iControl].Unused) {

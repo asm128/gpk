@@ -148,41 +148,7 @@ namespace gpk
 		::gpk::SCoord2<uint32_t>								LastSize							= {16, 16};
 		::gpk::SCoord2<float>									CursorPos							= {};
 		::gpk::SGUIControlTable									Controls							= {};
-		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= 
-			{ ::gpk::SColorRGBA{ASCII_COLOR_INDEX_0		} // BLACK		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_1		} // DARKBLUE		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_2		} // DARKGREEN	
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_3		} // DARKCYAN		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_4		} // DARKRED		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_5		} // DARKMAGENTA	
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_6		} // DARKYELLOW	
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_7		} // LIGHTGREY	
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_8		} // DARKGREY		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_9		} // BLUE			
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_10	} // GREEN		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_11	} // CYAN			
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_12	} // RED			
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_13	} // MAGENTA		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_14	} // YELLOW		
-			, ::gpk::SColorRGBA{ASCII_COLOR_INDEX_15	} // WHITE		
-			, {0xEF, 0xEF, 0xEF, 0xFF}	
-			, {0xDF, 0xDF, 0xDF, 0xFF}	
-			, {0xCF, 0xCF, 0xCF, 0xFF}	
-			, {0xBF, 0xBF, 0xBF, 0xFF}	
-			, {0xAF, 0xAF, 0xAF, 0xFF}	
-			, {0x9F, 0x9F, 0x9F, 0xFF}	
-			, {0x8F, 0x8F, 0x8F, 0xFF}	
-			, {0x7F, 0x7F, 0x7F, 0xFF}	
-			, {0x6F, 0x6F, 0x6F, 0xFF}	
-			, {0x5F, 0x5F, 0x5F, 0xFF}	
-			, {0x4F, 0x4F, 0x4F, 0xFF}	
-			, {0x3F, 0x3F, 0x3F, 0xFF}	
-			, {0x2F, 0x2F, 0x2F, 0xFF}	
-			, {0x1F, 0x1F, 0x1F, 0xFF}	
-			, {0x0F, 0x0F, 0x0F, 0xFF}	
-			, {0x00, 0x00, 0x00, 0xFF}	
-			};
-
+		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
 		// Font
 		::gpk::STextureMonochrome<uint32_t>						FontTexture							= {};
