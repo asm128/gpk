@@ -4,8 +4,8 @@
 #include "gpk_encoding.h"
 
 static		::gpk::error_t										controlInvalid											(const ::gpk::SGUI& gui, int32_t iControl)				{
-	rvi_if(-1, gui.Controls.Controls.size() <= uint32_t(iControl)	, "Invalid control id: %u.", iControl);
-	rvi_if(-1, gui.Controls.States[iControl].Unused					, "Invalid control id: %u.", iControl);
+	if(gui.Controls.Controls.size() <= uint32_t(iControl)	) return -1;//rvi_if(-1, , "Invalid control id: %u.", iControl);
+	if(gui.Controls.States[iControl].Unused					) return -1;//rvi_if(-1, , "Invalid control id: %u.", iControl);
 	return 0;
 }
 
@@ -318,7 +318,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
 	::gpk::SCoord2<int32_t>												targetSize												= _targetSize.Cast<int32_t>();
-	const bool															isValidParent											= gui.Controls.Controls.size() > (uint32_t)control.IndexParent && false == gui.Controls.States[control.IndexParent].Unused;
+	const bool															isValidParent											= 0 == ::controlInvalid(gui, control.IndexParent);
 	if(isValidParent) {
 		::controlUpdateMetrics(gui, control.IndexParent, _targetSize, forceUpdate);
 		targetSize														= gui.Controls.Metrics[control.IndexParent].Client.Global.Size;
@@ -329,24 +329,27 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 	::gpk::SCoord2<double>												scale													= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	::gpk::SCoord2<int32_t>												scaledPosition											= ::gpk::SCoord2<double>{control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y}.Cast<int32_t>();
 	::gpk::SCoord2<int32_t>												scaledSize												= ::gpk::SCoord2<double>{control.Area.Size		.x * scale.x, control.Area.Size		.y * scale.y}.Cast<int32_t>();
+	::gpk::SRectLimits<int32_t>											scaledBorders											= {(int32_t)(control.Border.Left * scale.x), (int32_t)(control.Border.Top * scale.y), (int32_t)(control.Border.Right * scale.x), (int32_t)(control.Border.Bottom * scale.y)};
+	::gpk::SRectLimits<int32_t>											scaledMargins											= {(int32_t)(control.Margin.Left * scale.x), (int32_t)(control.Margin.Top * scale.y), (int32_t)(control.Margin.Right * scale.x), (int32_t)(control.Margin.Bottom * scale.y)};
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics[iControl];
 	::gpk::SRectangle2D<int32_t>										& rectText												= controlMetrics.Text;
 	::gpk::SControlText													& controlText											= gui.Controls.Text[iControl];
 	rectText.Size													= {(int32_t)gui.FontCharSize.x * (int32_t)controlText.Text.size(), (int32_t)gui.FontCharSize.y};
 	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
-	if(controlConstraints.AttachSizeToText.x) { scaledSize.x = int32_t(rectText.Size.x * scale.x); } 
-	if(controlConstraints.AttachSizeToText.y) { scaledSize.y = int32_t(rectText.Size.y * scale.y); } 
+	::gpk::SCoord2<int32_t>												ncTotalSize												= 
+		{ (scaledMargins.Left	+ scaledBorders.Left	+ scaledMargins.Right	+ scaledBorders.Right	)
+		, (scaledMargins.Top	+ scaledBorders.Top		+ scaledMargins.Bottom	+ scaledBorders.Bottom	)
+		};
+
+	if(controlConstraints.AttachSizeToText.x) { 
+		scaledSize.x = int32_t(rectText.Size.x * scale.x) + ncTotalSize.x; } 
+	if(controlConstraints.AttachSizeToText.y) { 
+		scaledSize.y = int32_t(rectText.Size.y * scale.y) + ncTotalSize.y; } 
 
 	if(controlConstraints.AttachSizeToControl.x == iControl) { scaledPosition.x = 0; scaledSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.x && false == gui.Controls.States[controlConstraints.AttachSizeToControl.x].Unused) { scaledPosition.x = 0; scaledSize.x = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
 	if(controlConstraints.AttachSizeToControl.y == iControl) { scaledPosition.y = 0; scaledSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.y && false == gui.Controls.States[controlConstraints.AttachSizeToControl.y].Unused) { scaledPosition.y = 0; scaledSize.y = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
-	controlMetrics.Client.Local								= 
-		{	::gpk::SCoord2<double>{(control.Margin.Left + control.Border.Left) * scale.x, (control.Margin.Top + control.Border.Top) * scale.y}.Cast<int32_t>()
-		,	{ (int32_t)(scaledSize.x - (control.Margin.Left	+ control.Border.Left	+ control.Margin.Right	+ control.Border.Right)		* scale.x)
-			, (int32_t)(scaledSize.y - (control.Margin.Top	+ control.Border.Top	+ control.Margin.Bottom	+ control.Border.Bottom)	* scale.y)
-			}
-		};
-
-	if(isValidParent) {}
+	
+	controlMetrics.Client.Local								=  {{scaledMargins.Left + scaledBorders.Left, scaledMargins.Top + scaledBorders.Top}, scaledSize - ncTotalSize};
 
 	controlMetrics.Total	.Local									= {scaledPosition, scaledSize};
 		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - scaledSize.x / 2 + scaledPosition.x; }
@@ -367,6 +370,10 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 		controlMetrics.Client	.Global.Offset							+= parentMetrics.Client.Global.Offset;
 		controlMetrics.Total	.Global.Offset							+= parentMetrics.Client.Global.Offset;
 	}
+
+	const ::gpk::SCoord2<int32_t>										& dockToControl											= controlConstraints.DockToControl;
+	if(dockToControl.x != -1) { gpk_necall(::controlInvalid(gui, dockToControl.x), "Invalid control id: %i.", dockToControl.x); const ::gpk::SControl & other = gui.Controls.Controls[dockToControl.x]; const ::gpk::SControlMetrics & otherMetrics = gui.Controls.Metrics[dockToControl.x]; if(gbit_true(other.Align, ::gpk::ALIGN_RIGHT	) && gbit_false(other.Align, ::gpk::ALIGN_HCENTER)) {} else { controlMetrics.Total.Global.Offset.x = otherMetrics.Total.Global.Offset.x + otherMetrics.Total.Global.Size.x; controlMetrics.Client.Global.Offset.x = controlMetrics.Total.Global.Offset.x + scaledBorders.Left + scaledMargins.Left; } }
+	if(dockToControl.y != -1) { gpk_necall(::controlInvalid(gui, dockToControl.y), "Invalid control id: %i.", dockToControl.y); const ::gpk::SControl & other = gui.Controls.Controls[dockToControl.y]; const ::gpk::SControlMetrics & otherMetrics = gui.Controls.Metrics[dockToControl.y]; if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {} else { controlMetrics.Total.Global.Offset.y = otherMetrics.Total.Global.Offset.y + otherMetrics.Total.Global.Size.y; controlMetrics.Client.Global.Offset.y = controlMetrics.Total.Global.Offset.y + scaledBorders.Top  + scaledMargins.Top ; } }
 
 	{ // calculate text rectangle
 		const ::gpk::SRectangle2D<int32_t>									& targetRect											= controlMetrics.Client.Global;
