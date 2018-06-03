@@ -93,6 +93,24 @@ namespace gpk
 				safeguard.Handle								= 0;
 			}
 		}
+														array_pod									(const array_view<const _tPOD>& other)													{
+			if(other.Count) {
+				const uint32_t										newSize										= other.Count;
+				const uint32_t										reserveSize									= calc_reserve_size(newSize);
+				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
+				throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+				::gpk::auto_gpk_free								safeguard;
+				Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
+				throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
+				throw_if(0 == other.Data	, "", "%s", "other.Data is null!");
+				memcpy(Data, other.Data, newSize * sizeof(_tPOD));
+				//for(uint32_t i = 0, count = newSize; i<count; ++i)
+				//	Data[i]											= other[i];
+				Size											= (uint32_t)reserveSize;
+				Count											= other.Count;
+				safeguard.Handle								= 0;
+			}
+		}
 														array_pod									(const array_pod<_tPOD>& other)														{
 			if(other.Count) {
 				const uint32_t										newSize										= other.Count;
@@ -131,6 +149,13 @@ namespace gpk
 			} // 
 		}
 							array_pod<_tPOD>&			operator =									(const array_view<_tPOD>& other)														{
+			throw_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
+			memcpy(Data, other.begin(), Count * sizeof(_tPOD));
+			//for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
+			//	operator[](iElement)							= other[iElement];
+			return *this;
+		}
+							array_pod<_tPOD>&			operator =									(const array_view<const _tPOD>& other)													{
 			throw_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
 			memcpy(Data, other.begin(), Count * sizeof(_tPOD));
 			//for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
