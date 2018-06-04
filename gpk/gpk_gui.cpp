@@ -348,9 +348,9 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 		};
 
 	if(controlConstraints.AttachSizeToText.x) { 
-		scaledSize.x = int32_t(rectText.Size.x * scale.x) + ncTotalSize.x; } 
+		scaledSize.x = int32_t(rectText.Size.x * scale.x + ncTotalSize.x); } 
 	if(controlConstraints.AttachSizeToText.y) { 
-		scaledSize.y = int32_t(rectText.Size.y * scale.y) + ncTotalSize.y; } 
+		scaledSize.y = int32_t(rectText.Size.y * scale.y + ncTotalSize.y); } 
 
 	if(controlConstraints.AttachSizeToControl.x == iControl) { scaledPosition.x = 0; scaledSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.x && false == gui.Controls.States[controlConstraints.AttachSizeToControl.x].Unused) { scaledPosition.x = 0; scaledSize.x = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
 	if(controlConstraints.AttachSizeToControl.y == iControl) { scaledPosition.y = 0; scaledSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.y && false == gui.Controls.States[controlConstraints.AttachSizeToControl.y].Unused) { scaledPosition.y = 0; scaledSize.y = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
