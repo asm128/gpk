@@ -45,8 +45,10 @@ struct SDisplayInput {
 		::gpk::SCoord2<uint32_t>														dpi											= {96, 96};
 		HMONITOR																		hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT																			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr)
+		if(0 == hr) {
 			framework.GUI.Zoom.DPI														= {dpi.x / 96.0, dpi.y / 96.0};
+			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics());
+		}
 	}
 	return 0;
 }

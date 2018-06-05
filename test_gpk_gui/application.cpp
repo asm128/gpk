@@ -142,18 +142,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				if(iControl == (uint32_t)app.IdExit)
 					return 1;
 				else if(iControl == (uint32_t)app.IdMode) {
-					gui.Controls.Modes[5].ColorMode			= gui.Controls.Modes[5].ColorMode == ::gpk::GUI_COLOR_MODE_3D ? ::gpk::GUI_COLOR_MODE_THEME: ::gpk::GUI_COLOR_MODE_3D; 
-					gui.Controls.Modes[iControl].ColorMode	= gui.Controls.Modes[5].ColorMode;
+					gui.Controls.Modes[5		].ColorMode					= gui.Controls.Modes[5].ColorMode == ::gpk::GUI_COLOR_MODE_THEME ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_THEME; 
+					gui.Controls.Modes[iControl	].ColorMode					= gui.Controls.Modes[5].ColorMode;
 					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
 						gui.Controls.Modes[gui.Controls.Children[5][iChild]].ColorMode = gui.Controls.Modes[5].ColorMode;
 				}
 				else if(iControl == (uint32_t)app.IdTheme) {
 					++gui.ThemeDefault; 
 					if(gui.ThemeDefault >= gui.ControlThemes.size())
-						gui.ThemeDefault					= 0;
+						gui.ThemeDefault										= 0;
 				}
 				else if(iControl > (uint32_t)app.IdMode) {
-					gui.Controls.Controls[5].ColorTheme = iControl - app.IdMode + 2; 
+					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdMode + 2; 
 					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
 						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
 				}
