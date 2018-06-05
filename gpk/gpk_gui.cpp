@@ -4,8 +4,8 @@
 #include "gpk_encoding.h"
 
 static		::gpk::error_t										controlInvalid											(const ::gpk::SGUI& gui, int32_t iControl)				{
-	if(gui.Controls.Controls.size() <= uint32_t(iControl)	) return -1;//rvi_if(-1, , "Invalid control id: %u.", iControl);
-	if(gui.Controls.States[iControl].Unused					) return -1;//rvi_if(-1, , "Invalid control id: %u.", iControl);
+	if(gui.Controls.Controls.size() <= uint32_t(iControl)	) return -1;
+	if(gui.Controls.States[iControl].Unused					) return -1;
 	return 0;
 }
 
@@ -146,7 +146,7 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 			const int32_t														toneIndex												= iTone * 16;
 			::gpk::SColorBGRA													& baseColor												= palette[toneIndex];
 			::gpk::SColorBGRA													& paletteItem											= palette[toneIndex + iShade];
-			paletteItem														= ::gpk::SColorFloat(baseColor) / 16.0 * (16.0 - iShade);//;- ::gpk::SColorBGRA{(uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade), (uint8_t)(0x10 * iShade)};
+			paletteItem														= ::gpk::SColorFloat(baseColor) / 16.0 * (16.0 - iShade);
 			info_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
 			info_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
@@ -154,12 +154,6 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {
 		const int32_t														indexTheme												= themes.push_back({});
 		::gpk::SControlTheme												& theme													= themes[indexTheme];
-		//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) {
-		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_BACKGROUND	]	= iColor;
-		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_CLIENT		]	= iColor;
-		//	const uint8_t													colorL					= gui.Palette[iColor].r | gui.Palette[iColor].g | gui.Palette[iColor].b;
-		//	theme.ColorCombos[iState][::gpk::GUI_CONTROL_COLOR_TEXT_FACE	]	= (colorL >= 0x7F) ? ::gpk::ASCII_COLOR_BLACK * 16 : ::gpk::ASCII_COLOR_WHITE * 16;
-		//}
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED	]	= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED		]	= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED	]	= {};
@@ -168,7 +162,7 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 
 		const int32_t														colorBase												= iColor / 16;
 		const int32_t														colorShade												= iColor % 16;
-		const int32_t														colorText												= (::gpk::ASCII_COLOR_WHITE * 16); //(colorShade > 7) ? (::gpk::ASCII_COLOR_WHITE * 16) : (::gpk::ASCII_COLOR_WHITE * 16) + 15;
+		const int32_t														colorText												= (::gpk::ASCII_COLOR_WHITE * 16);
 
 		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]	= (colorShade > 7) ? iColor : iColor;
 		colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
@@ -647,3 +641,16 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	}
 	return controlHovered;
 }
+
+			::gpk::error_t										gpk::guiDraw								(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)	{
+	if(gui.LastSize != target.metrics()) {
+		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
+			gui.Controls.States[iOutdated].Outdated							= true;
+		gui.LastSize													= target.metrics();
+	}
+	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
+		if(false == ::controlInvalid(gui, iControl) && ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent))
+			::gpk::controlDrawHierarchy(gui, iControl, target);
+	return 0;
+}
+
