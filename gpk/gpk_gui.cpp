@@ -147,8 +147,8 @@ static		::gpk::error_t										themeSetupDefault										(::gpk::array_pod<::g
 			::gpk::SColorBGRA													& baseColor												= palette[toneIndex];
 			::gpk::SColorBGRA													& paletteItem											= palette[toneIndex + iShade];
 			paletteItem														= ::gpk::SColorFloat(baseColor) / 16.0 * (16.0 - iShade);
-			info_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
-			info_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
+			verbose_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
+			verbose_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
 
 	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {

@@ -31,12 +31,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		sprintf_s(buffer, "(%u)", controlTestChild0);
 		::gpk::SControl													& control				= gui.Controls.Controls	[controlTestChild0];
 		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
-		control		.Area											= {{0, 0}, {(int32_t)(640 / 3 / (1 + iChild / 9)), (int32_t)(320 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
+		control		.Area											= {{0, 0}, {(int32_t)(800 / 3 / (1 + iChild / 9)), (int32_t)(600 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		//control		.Border											= {iChild % 5, iChild % 7, iChild % 11, iChild % 13};
 		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {1, 1, 1, 1};
 		controlText	.Text											= buffer; 
-		//gui.Controls.Constraints[controlTestChild0].AttachSizeToText= {0 == (iChild % 4), 0 == (iChild % 5)};
+		//= {0 == (iChild % 4), 0 == (iChild % 5)};
 		gui.Controls.States	[controlTestChild0].Disabled			= 0 == (iChild % 9);
 		gui.Controls.Modes	[controlTestChild0].Design				= iChild % 2;
 		switch(iChild % 9) {										  
@@ -54,6 +54,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			controlText	.Align											= {};
 		}
 		::gpk::controlSetParent(gui, controlTestChild0, iChild / 9);
+		if((iChild / 9) == 5)
+			gui.Controls.Constraints[controlTestChild0].AttachSizeToText	= {true, true};
 	}
 	{
 		app.IdExit													= ::gpk::controlCreate(gui);
@@ -91,9 +93,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	for(uint32_t iColor = 0; iColor < gui.Palette.size(); ++iColor) {
 		const int32_t													idPaletteItem			= ::gpk::controlCreate(gui);
 		::gpk::SControl													& control				= gui.Controls.Controls	[idPaletteItem];
-		control.Align												= ::gpk::ALIGN_CENTER_LEFT;
+		control.Align												= ::gpk::ALIGN_CENTER;
 		control.Area												= {{((int32_t)iColor % 16) * 16, ((int32_t)iColor / 16) * 16}, {16, 16}};
-		control.Area.Offset											-= {16 * 8, 16 * 8};
+		control.Area.Offset											-= {16 * 8 - 8, 16 * 8 - 8};
 		control.Border												= 
 		control.Margin												= {1, 1, 1, 1};
 		control.ColorTheme											= iColor + 3;
