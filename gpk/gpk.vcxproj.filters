@@ -215,6 +215,9 @@
     <ClCompile Include="gpk_runtime_module.cpp">
       <Filter>runtime</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_gui_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_module_exports.def">

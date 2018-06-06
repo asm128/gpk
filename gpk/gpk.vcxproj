@@ -75,6 +75,7 @@
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
+    <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_text.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
