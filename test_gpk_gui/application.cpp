@@ -106,19 +106,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::controlSetParent(gui, idPaletteItem, 6);
 	}
 
-	char															bmpFileName2	[]							= "Codepage-437-24.bmp";
-	error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
-	const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
-	gpk_necall(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
-	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
-	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-		const ::gpk::SColorBGRA											& srcColor									= app.TextureFont.View[y][x];
-		gui.FontTexture.View[y * textureFontMetrics.x + x]	
-			=	0 != srcColor.r
-			||	0 != srcColor.g
-			||	0 != srcColor.b
-			;
-	}
+	//char															bmpFileName2	[]							= "Codepage-437-24.bmp";
+	//error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
+	//const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
+	//gpk_necall(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
+	//for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
+	//for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
+	//	const ::gpk::SColorBGRA											& srcColor									= app.TextureFont.View[y][x];
+	//	gui.FontTexture.View[y * textureFontMetrics.x + x]	
+	//		=	0 != srcColor.r
+	//		||	0 != srcColor.g
+	//		||	0 != srcColor.b
+	//		;
+	//}
 	return 0; 
 }
 
