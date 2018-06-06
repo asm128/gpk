@@ -17,8 +17,8 @@ namespace gpk
 			::gpk::array_pod<int32_t>						IdSelected								= {};
 	};
 
-		::gpk::error_t									controlListInitialize		(::gpk::SGUI& gui, ::gpk::SControlList& menu);
-		::gpk::error_t									controlListPush				(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text);
+		::gpk::error_t									controlListInitialize					(::gpk::SGUI& gui, ::gpk::SControlList& menu);
+		::gpk::error_t									controlListPush							(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text);
 }
 
 #endif

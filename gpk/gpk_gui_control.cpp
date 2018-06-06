@@ -22,5 +22,14 @@
 	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlConstraints.AttachSizeToControl.y = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.x = menu.IdControls[menu.IdControls.size() - 1]; break;
 	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlConstraints.AttachSizeToControl.x = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.y = menu.IdControls[menu.IdControls.size() - 1]; break;
 	}
+	::gpk::controlUpdateMetrics(gui, idControl, gui.LastSize);
+
+	switch(menu.Orientation) {	
+	default:
+	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: gui.Controls.Controls[menu.IdControl].Area.Size.x					+= gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
+	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: gui.Controls.Controls[menu.IdControl].Area.Size.y					+= gui.Controls.Metrics[idControl].Total.Global.Size.y; break;
+	}
+	
+
 	return menu.IdControls.push_back(idControl);			
 }

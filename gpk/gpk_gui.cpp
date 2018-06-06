@@ -441,7 +441,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	::controlUpdateMetrics(gui, iControl, target.metrics(), false);
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
-	if(mode.Design)
+	if(mode.Design || gui.Controls.Constraints[iControl].Hidden)
 		return 0;
 
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
@@ -558,10 +558,12 @@ static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI
 		//::controlUpdateMetricsTopToDown(gui, iControl, target.metrics());
 		gui.LastSize													= target.metrics();
 	}
-	::actualControlDraw(gui, iControl, target);
-	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
-	for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) 
-		::gpk::controlDrawHierarchy(gui, children[iChild], target);
+	if(false == gui.Controls.Constraints[iControl].Hidden) {
+		::actualControlDraw(gui, iControl, target);
+		::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
+		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) 
+			::gpk::controlDrawHierarchy(gui, children[iChild], target);
+	}
 	return 0;
 }
 
@@ -581,6 +583,9 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 
 static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+	::gpk::SControlConstraints											& controlConstraints									= gui.Controls.Constraints[iControl];
+	if(controlConstraints.Hidden)
+		return -1;
 	// EXECUTE only lasts one tick.
 	if (controlState.Execute)
 		controlState.Execute											= false;

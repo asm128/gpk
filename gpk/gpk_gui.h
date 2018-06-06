@@ -40,6 +40,7 @@ namespace gpk
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
 		::gpk::SCoord2<int32_t>									DockToControl							;
+		bool													Hidden									;
 	};
 
 	struct SControlState {
