@@ -8,21 +8,21 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 
-::gpk::error_t												setup					(::gme::SApplication & app)						{ 
-	::gpk::SFramework												& framework				= app.Framework;
-	::gpk::SDisplay													& mainWindow			= framework.MainDisplay;
+::gpk::error_t													setup					(::gme::SApplication & app)						{ 
+	::gpk::SFramework													& framework				= app.Framework;
+	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
-	::gpk::SGUI														& gui					= framework.GUI;
-	gui.ThemeDefault											= ::gpk::ASCII_COLOR_DARKGREY * 16 + 13;
-	gui.ColorModeDefault										= ::gpk::GUI_COLOR_MODE_3D;
-	int32_t															controlTestRoot			= ::gpk::controlCreate(gui);
-	::gpk::SControl													& controlRoot			= gui.Controls.Controls[controlTestRoot];
-	controlRoot.Area											= {{0, 0}, {320, 240}};
-	controlRoot.Border											= {4, 4, 4, 4};
-	controlRoot.Margin											= {20, 20, 20, 10};
-	controlRoot.Align											= ::gpk::ALIGN_CENTER					;
+	::gpk::SGUI															& gui					= framework.GUI;
+	gui.ThemeDefault												= ::gpk::ASCII_COLOR_DARKGREY * 16 + 13;
+	gui.ColorModeDefault											= ::gpk::GUI_COLOR_MODE_3D;
+	int32_t																controlTestRoot			= ::gpk::controlCreate(gui);
+	::gpk::SControl														& controlRoot			= gui.Controls.Controls[controlTestRoot];
+	controlRoot.Area												= {{0, 0}, {320, 240}};
+	controlRoot.Border												= {4, 4, 4, 4};
+	controlRoot.Margin												= {20, 20, 20, 10};
+	controlRoot.Align												= ::gpk::ALIGN_CENTER					;
 	gui.Controls.Constraints[controlTestRoot].AttachSizeToControl	= {controlTestRoot, controlTestRoot};
-	//gui.Controls.Modes		[controlTestRoot].Design				= true;
+	//gui.Controls.Modes	[controlTestRoot].Design				= true;
 	::gpk::controlSetParent(gui, controlTestRoot, -1);
 
 	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
@@ -99,10 +99,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		control.Border												= 
 		control.Margin												= {1, 1, 1, 1};
 		control.ColorTheme											= iColor + 3;
-		//::gpk::SControlText												& controlText			= gui.Controls.Text		[idPaletteItem];
-		//char															buffer [1024]				= {};
-		//sprintf_s(buffer, "(%u)", idPaletteItem);
-		//controlText.Text											= buffer;
 		::gpk::controlSetParent(gui, idPaletteItem, 6);
 	}
 

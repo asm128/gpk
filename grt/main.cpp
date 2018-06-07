@@ -1,5 +1,4 @@
 #include "gpk_runtime_module.h"
-#include "gpk_label.h"
 #include "gpk_type_registry.h"
 #include "gpk_sync.h"
 #include "gpk_timer.h"
@@ -19,8 +18,8 @@ struct SRuntimeState {
 
 
 static	void												threadRender					(void* pRuntimeState)							{
-	::SRuntimeState												& runtimeState						= *(::SRuntimeState*)pRuntimeState;
-	::gpk::SRuntimeModule										* runtimeModule						= runtimeState.MainModule;
+	::SRuntimeState													& runtimeState					= *(::SRuntimeState*)pRuntimeState;
+	::gpk::SRuntimeModule											* runtimeModule					= runtimeState.MainModule;
 	re_if(0 == runtimeModule, "Main module is null!");
 	gpk_sync_increment(runtimeState.RenderThreadUsers);
 	int32_t														result								= 0;
@@ -118,9 +117,6 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 	runtimeValues.PlatformDetail.EntryPointArgsStd.argc				= __argc;
 	runtimeValues.PlatformDetail.EntryPointArgsStd.argv				= __argv;
 	runtimeValues.PlatformDetail.EntryPointArgsStd.envp				= _environ;
-	::gpk::label	label1		= "bleh";
-	::gpk::label	label2		= {"bleh", 3};
-	::gpk::label	label3		= {"bleh", 4};
 	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 #endif // defined(GPK_WINDOWS)
