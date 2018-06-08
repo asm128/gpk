@@ -86,9 +86,15 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
 	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; return 0;
 	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; return 0;
-	case WM_LBUTTONDOWN		: info_printf("Down"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
-	case WM_LBUTTONDBLCLK	: info_printf("Down"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
-	case WM_LBUTTONUP		: info_printf("Up"); if(0		> ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; return 0;
+	case WM_LBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
+	case WM_LBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
+	case WM_LBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; return 0;
+	case WM_RBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
+	case WM_RBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
+	case WM_RBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; return 0;
+	case WM_MBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
+	case WM_MBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
+	case WM_MBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; return 0;
 	case WM_MOUSEWHEEL		:
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;

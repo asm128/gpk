@@ -155,12 +155,14 @@ namespace gpk
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
 	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target);	
+	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);	
 
 	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);
 	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
 	::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
+	::gpk::error_t											controlHidden						(::gpk::SGUI& gui, int32_t iControl);
 
 #pragma pack(pop)
 } // namespace

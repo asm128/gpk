@@ -584,11 +584,9 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	::gpk::SControlConstraints											& controlConstraints									= gui.Controls.Constraints[iControl];
+
 	if(controlConstraints.Hidden)
 		return -1;
-	// EXECUTE only lasts one tick.
-	if (controlState.Execute)
-		controlState.Execute											= false;
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
@@ -621,19 +619,28 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)											{
 	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t														controlHovered											= -1;
-	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
+
+	::gpk::array_pod<uint32_t>											rootControlsToProcess									= {};
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
 			continue;
+		if (controlState.Execute)	// EXECUTE only lasts one tick.
+			controlState.Execute											= false;
 		::gpk::SControl														& control												= gui.Controls.Controls[iControl];
-		if(gui.Controls.Controls.size() > (uint32_t)control.IndexParent)	// Only process root parents
+		if(false == ::controlInvalid(gui, control.IndexParent))	
 			continue;
-		::gpk::error_t														controlPressed											= ::controlProcessInput(gui, input, iControl);
-		if(gui.Controls.Controls.size() > (uint32_t)controlPressed && false == gui.Controls.States[iControl].Unused)
+		rootControlsToProcess.push_back(iControl);
+	}
+
+	for(uint32_t iControl = 0, countControls = rootControlsToProcess.size(); iControl < countControls; ++iControl) {
+		::gpk::error_t														controlPressed											= ::controlProcessInput(gui, input, rootControlsToProcess[iControl]);
+		if(gui.Controls.Controls.size() > (uint32_t)controlPressed)
 			controlHovered													= controlPressed;
 	}
 	if(controlHovered == -1) 
 		return gui.Controls.Controls.size();
+
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
 			gui.Controls.States[iControl].Hover								= false;
@@ -647,7 +654,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiDraw								(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)	{
+			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)						{
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
 			gui.Controls.States[iOutdated].Outdated							= true;
@@ -659,3 +666,20 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return 0;
 }
 
+
+			::gpk::error_t										gpk::controlHidden										(::gpk::SGUI& gui, int32_t iControl)	{
+	bool																imHidden												= ::controlInvalid(gui, iControl) || gui.Controls.Constraints[iControl].Hidden;
+	if(imHidden)
+		return imHidden;
+	return (false == ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && ::gpk::controlHidden(gui, gui.Controls.Controls[iControl].IndexParent));
+}
+
+			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)						{
+	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
+		const ::gpk::SControlState													& controlState							= gui.Controls.States[iControl];
+		if(controlState.Unused || controlState.Disabled || ::gpk::controlHidden(gui, iControl))
+			continue;
+		controlIndices.push_back(iControl);
+	}
+	return 0;
+}
