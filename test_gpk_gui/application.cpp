@@ -1,6 +1,7 @@
 #include "application.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_encoding.h"
+#include "gpk_label.h"
 
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -13,7 +14,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI															& gui					= framework.GUI;
-	gui.ThemeDefault												= ::gpk::ASCII_COLOR_DARKGREY * 16 + 13;
+	gui.ThemeDefault												= ::gpk::ASCII_COLOR_DARKGREY * 16 + 12;
 	gui.ColorModeDefault											= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t																controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl														& controlRoot			= gui.Controls.Controls[controlTestRoot];
@@ -27,15 +28,16 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	for(uint32_t iChild = 0; iChild < 90; ++iChild) {
 		int32_t															controlTestChild0		= ::gpk::controlCreate(gui);
-		char															buffer [1024]				= {};
-		sprintf_s(buffer, "(%u)", controlTestChild0);
 		::gpk::SControl													& control				= gui.Controls.Controls	[controlTestChild0];
 		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
 		control		.Area											= {{0, 0}, {(int32_t)(800 / 3 / (1 + iChild / 9)), (int32_t)(600 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		//control		.Border											= {iChild % 5, iChild % 7, iChild % 11, iChild % 13};
 		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {1, 1, 1, 1};
-		controlText	.Text											= buffer; 
+
+		char															buffer [1024]				= {};
+		const int32_t													lenText						= (int32_t)sprintf_s(buffer, "(%u)", controlTestChild0);
+		controlText	.Text											= {::gpk::label(buffer).begin(), (uint32_t)lenText}; 
 		//= {0 == (iChild % 4), 0 == (iChild % 5)};
 		gui.Controls.States	[controlTestChild0].Disabled			= 0 == (iChild % 9);
 		gui.Controls.Modes	[controlTestChild0].Design				= iChild % 2;

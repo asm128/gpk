@@ -114,7 +114,7 @@ namespace gpk
 	};
 
 	struct SControlText {
-		::std::string											Text								;
+		::gpk::view_const_string								Text								;
 		::gpk::ALIGN											Align								;
 		int8_t													Padding								;
 		int16_t													ColorIndex							;

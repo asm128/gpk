@@ -12,6 +12,7 @@
 	::gpk::SControl																& control					= gui.Controls.Controls		[idControl];
 	::gpk::SControlText															& controlText				= gui.Controls.Text			[idControl];
 	::gpk::SControlConstraints													& controlConstraints		= gui.Controls.Constraints	[idControl];
+	//control				.Align												= ::gpk::ALIGN_TOP_RIGHT;
 	control				.Margin												= {4, 4, 4, 4};
 	controlText			.Text												= {text.begin(), text.size()};
 	controlText			.Align												= ::gpk::ALIGN_CENTER_LEFT;
