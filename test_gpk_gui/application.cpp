@@ -98,7 +98,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		control.Area.Offset											-= {16 * 8 - 8, 16 * 8 - 8};
 		control.Border												= 
 		control.Margin												= {1, 1, 1, 1};
-		control.ColorTheme											= iColor + 3;
+		control.ColorTheme											= iColor + 1;
 		::gpk::controlSetParent(gui, idPaletteItem, 6);
 	}
 
@@ -151,7 +151,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 						gui.ThemeDefault										= 0;
 				}
 				else if(iControl > (uint32_t)app.IdMode) {
-					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdMode + 2; 
+					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdMode; 
 					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
 						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
 				}
