@@ -33,13 +33,13 @@ namespace gpk
 	struct SControlMetrics {
 		::gpk::SControlRectangle								Total;
 		::gpk::SControlRectangle								Client;
-		::gpk::SRectangle2D<int32_t>							Text;
+		::gpk::SRectangle2D<int16_t>							Text;
 	};
 
 	struct SControlConstraints {
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
-		::gpk::SCoord2<int32_t>									DockToControl							;
+		::gpk::SRectLimits<int32_t>								DockToControl							;
 		bool													Hidden									;
 	};
 
@@ -102,15 +102,21 @@ namespace gpk
 		::gpk::SRectangle2D<int32_t>							Area								;
 		::gpk::SRectLimits<uint16_t>							Border								;
 		::gpk::SRectLimits<uint16_t>							Margin								;
+		::gpk::grid_view<::gpk::SColorBGRA>						Image								;
 		int32_t													ColorTheme							;
 		int32_t													IndexParent							;
 		::gpk::ALIGN											Align								;
 	};
 
+	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int32_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
+	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int32_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
+	constexpr	::gpk::SRectLimits	<int32_t>				controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
+	constexpr	::gpk::SCoord2		<int32_t>				controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
+
 	struct SGUIZoom {
 		::gpk::SCoord2<double>									DPI									= {1.0, 1.0};
 		::gpk::SMinMax<double>									ZoomLimits							= {0.1, 10.0};
-		float													ZoomLevel							= 1.0;
+		double													ZoomLevel							= 1.0;
 	};
 
 	struct SControlText {
@@ -118,6 +124,13 @@ namespace gpk
 		::gpk::ALIGN											Align								;
 		int8_t													Padding								;
 		int16_t													ColorIndex							;
+	};
+
+	struct SControlTheme {
+		::gpk::array_static
+			<::gpk::array_static
+				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
+			, ::gpk::GUI_CONTROL_STATE_COLORS_COUNT>			ColorCombos							= {};
 	};
 
 	struct SGUIControlTable {
@@ -128,13 +141,6 @@ namespace gpk
 		::gpk::array_pod<::gpk::SControlConstraints	>			Constraints							= {};
 		::gpk::array_obj<::gpk::SControlMode		>			Modes								= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>			Children							= {};
-	};
-
-	struct SControlTheme {
-		::gpk::array_static
-			<::gpk::array_static
-				<int32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
-			, ::gpk::GUI_CONTROL_STATE_COLORS_COUNT>			ColorCombos							= {};
 	};
 
 	struct SGUI {
@@ -153,7 +159,7 @@ namespace gpk
 	};
 
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
-	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize);
+	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target);	
 	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);	
 
@@ -163,6 +169,7 @@ namespace gpk
 	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
 	::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t											controlHidden						(::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlMetricsInvalidate			(::gpk::SGUI& gui, int32_t iControl);
 
 #pragma pack(pop)
 } // namespace

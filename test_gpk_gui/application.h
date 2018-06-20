@@ -11,6 +11,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	struct SApplication {
 					::gpk::SFramework							Framework;
 					::gpk::STexture<::gpk::SColorBGRA>			TextureFont							= {};
+					::gpk::STexture<::gpk::SColorBGRA>			VerticalAtlas;
 					::gpk::ptr_obj<::gpk::SRenderTarget>		Offscreen							= {};
 
 					int32_t										IdExit								= -1;

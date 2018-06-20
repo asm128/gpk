@@ -39,15 +39,15 @@ struct SDisplayInput {
 	}
 
 	{
-		RECT																			rcWindow									= {};
+		RECT																						rcWindow									= {};
 		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
-		POINT																			point										= {rcWindow.left + 8, rcWindow.top};
-		::gpk::SCoord2<uint32_t>														dpi											= {96, 96};
-		HMONITOR																		hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
-		HRESULT																			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr) {
-			framework.GUI.Zoom.DPI														= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics());
+		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
+		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
+		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
+		if(0 == hr && (framework.GUI.Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+			framework.GUI.Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
+			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 	}
 	return 0;
@@ -89,12 +89,12 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	case WM_LBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
 	case WM_LBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
 	case WM_LBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; return 0;
-	case WM_RBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
-	case WM_RBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
-	case WM_RBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; return 0;
-	case WM_MBUTTONDOWN		: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
-	case WM_MBUTTONDBLCLK	: info_printf("Down"); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
-	case WM_MBUTTONUP		: info_printf("Up"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; return 0;
+	case WM_RBUTTONDOWN		: info_printf("Down"); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
+	case WM_RBUTTONDBLCLK	: info_printf("Down"); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
+	case WM_RBUTTONUP		: info_printf("Up"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; return 0;
+	case WM_MBUTTONDOWN		: info_printf("Down"); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
+	case WM_MBUTTONDBLCLK	: info_printf("Down"); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
+	case WM_MBUTTONUP		: info_printf("Up"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; return 0;
 	case WM_MOUSEWHEEL		:
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;
@@ -147,7 +147,7 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		break;
 	case WM_PAINT			: break;
 	case WM_DESTROY			: 
-		::SDisplayInput																				* oldInput							= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
+		::SDisplayInput																				* oldInput									= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
 		safe_delete(oldInput);

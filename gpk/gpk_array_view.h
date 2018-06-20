@@ -92,4 +92,4 @@ namespace gpk
 
 }
 
-#endif GPK_ARRAY_VIEW_H_2398472395543
+#endif // GPK_ARRAY_VIEW_H_2398472395543

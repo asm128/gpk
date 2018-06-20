@@ -47,6 +47,7 @@ namespace gpk
 		template<typename _t>
 		constexpr inline						SCoord2<_t>				Cast					()																	const	noexcept	{ return {(_t)x, (_t)y};																								}
 		inline									TCoord2&				Scale					(double			scalar)														noexcept	{ return *this *= scalar;																								}
+		inline									TCoord2&				Scale					(double scalarx, double scalary)											noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};														}
 		inline									TCoord2&				Normalize				()																						{ const _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::gpk::sqrt_safe(sqLen) : *this;						}
 		constexpr								double					Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																						}
 		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y;																									}

@@ -247,7 +247,7 @@ struct SHeaderInfoBMP {
 	uint32_t																								elementSize									= 0;  fread(&elementSize, sizeof(uint32_t					), 1, source);
 	::gpk::SCoord2<uint32_t>																				gridMetrics									= {}; fread(&gridMetrics, sizeof(::gpk::SCoord2<uint32_t>	), 1, source);
 	gpk_necall(out_Colors.resize(gridMetrics.x * gridMetrics.y), "Out of memory");
-	ree_if(out_Colors.size() != fread(out_Colors.begin(), ::gpk::min(elementSize, (uint32_t)sizeof(::gpk::SColorBGRA)), out_Colors.size(), source), "Corrupt file?");
+	ree_if(out_Colors.size() != fread(out_Colors.begin(), ::gpk::min((size_t)elementSize, sizeof(::gpk::SColorBGRA)), out_Colors.size(), source), "Corrupt file?");
 	out_ImageView																						= {out_Colors.begin(), gridMetrics};
 	return sizeRead; 
 }
@@ -259,7 +259,7 @@ struct SHeaderInfoBMP {
 	::gpk::SCoord2<uint32_t>																				& gridMetrics								= *(::gpk::SCoord2<uint32_t>*)(source + sizeof(uint32_t));
 	::gpk::SColorBGRA																						* elementGrid								= (::gpk::SColorBGRA*)(source + sizeof(uint32_t) + sizeof(::gpk::SCoord2<uint32_t>));
 	gpk_necall(out_Colors.resize(gridMetrics.x * gridMetrics.y), "Out of memory");
-	memcpy(out_Colors.begin(), elementGrid, out_Colors.size() * ::gpk::min(elementSize, (uint32_t)sizeof(::gpk::SColorBGRA)));
+	memcpy(out_Colors.begin(), elementGrid, out_Colors.size() * ::gpk::min((size_t)elementSize, sizeof(::gpk::SColorBGRA)));
 	out_ImageView																						= {out_Colors.begin(), gridMetrics};
 	return sizeRead + out_Colors.size(); 
 }

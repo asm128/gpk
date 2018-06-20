@@ -9,8 +9,6 @@
 
 namespace gpk
 {
-	typedef					::gpk::array_pod<::gpk::SColorRGBA>				SPalette;
-
 	struct SASCIITarget {
 								::gpk::grid_view<uint8_t>						Characters									= {};
 								::gpk::grid_view<uint16_t>						Colors										= {};

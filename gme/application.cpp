@@ -46,7 +46,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
 		gui.Zoom.ZoomLevel												+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
-		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
+		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 	}
  
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {

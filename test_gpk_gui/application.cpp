@@ -2,6 +2,7 @@
 #include "gpk_bitmap_file.h"
 #include "gpk_encoding.h"
 #include "gpk_label.h"
+#include "gpk_grid_copy.h"
 
 #define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -14,7 +15,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
 	::gpk::SGUI															& gui					= framework.GUI;
-	gui.ThemeDefault												= ::gpk::ASCII_COLOR_DARKGREY * 16 + 12;
+	const int32_t iShades = 16;
+	gui.ThemeDefault												= 18 * iShades + 14;
 	gui.ColorModeDefault											= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t																controlTestRoot			= ::gpk::controlCreate(gui);
 	::gpk::SControl														& controlRoot			= gui.Controls.Controls[controlTestRoot];
@@ -30,7 +32,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		int32_t															controlTestChild0		= ::gpk::controlCreate(gui);
 		::gpk::SControl													& control				= gui.Controls.Controls	[controlTestChild0];
 		::gpk::SControlText												& controlText			= gui.Controls.Text		[controlTestChild0];
-		control		.Area											= {{0, 0}, {(int32_t)(800 / 3 / (1 + iChild / 9)), (int32_t)(600 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
+		control		.Area											= {{0, 0}, {(int16_t)(800 / 3 / (1 + iChild / 9)), (int16_t)(600 / 3 / (1 + iChild / 9))}}; // {32, 32}};//
 		//control		.Border											= {iChild % 5, iChild % 7, iChild % 11, iChild % 13};
 		control		.Border											= {2, 2, 2, 2};
 		control		.Margin											= {1, 1, 1, 1};
@@ -92,31 +94,59 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlText.Align											= ::gpk::ALIGN_CENTER;
 	}
 	
+	const int32_t iShadesHalf	= iShades / 2;
 	for(uint32_t iColor = 0; iColor < gui.Palette.size(); ++iColor) {
 		const int32_t													idPaletteItem			= ::gpk::controlCreate(gui);
 		::gpk::SControl													& control				= gui.Controls.Controls	[idPaletteItem];
-		control.Align												= ::gpk::ALIGN_CENTER;
-		control.Area												= {{((int32_t)iColor % 16) * 16, ((int32_t)iColor / 16) * 16}, {16, 16}};
-		control.Area.Offset											-= {16 * 8 - 8, 16 * 8 - 8};
+		control.Align												= ::gpk::ALIGN_TOP_RIGHT;
+		control.Area												= {{256 - ((int32_t)iColor % iShades) * 16, ((int32_t)iColor / iShades) * 16}, {16, 16}};
+		//control.Area.Offset											+= {mainWi, 0};
+		//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
 		control.Border												= 
 		control.Margin												= {1, 1, 1, 1};
 		control.ColorTheme											= iColor + 1;
-		::gpk::controlSetParent(gui, idPaletteItem, 6);
+		::gpk::controlSetParent(gui, idPaletteItem, 0);
 	}
 
 	//char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	//error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
-	//const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= app.TextureFont.View.metrics();
+	//::gpk::STexture<::gpk::SColorBGRA>								& verticalAtlas								= app.VerticalAtlas;
+	//const ::gpk::SCoord2<uint32_t>									fontCharSize								= {9, 16};
+	//verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
+	//for(uint32_t iChar = 0; iChar < 256; ++iChar) {
+	//	const uint32_t													srcOffsetY									= iChar / 32 * fontCharSize.y;
+	//	const uint32_t													dstOffsetY									= iChar * fontCharSize.y;
+	//	for(uint32_t y = 0; y < fontCharSize.y; ++y) {
+	//		for(uint32_t x = 0; x < fontCharSize.x; ++x) {
+	//			const uint32_t												srcOffsetX									= iChar % 32 * fontCharSize.x;
+	//			const uint32_t												dstOffsetX									= 0;
+	//			const ::gpk::SColorBGRA										& srcColor									= app.TextureFont.View[srcOffsetY + y][srcOffsetX + x];
+	//			verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]		= srcColor;
+	//		}
+	//	}
+	//}
+	//const ::gpk::SCoord2<uint32_t>									& textureFontMetrics						= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
 	//gpk_necall(gui.FontTexture.resize(textureFontMetrics), "Whou would we failt ro resize=");
 	//for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	//for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
-	//	const ::gpk::SColorBGRA											& srcColor									= app.TextureFont.View[y][x];
+	//	const ::gpk::SColorBGRA											& srcColor									= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
 	//	gui.FontTexture.View[y * textureFontMetrics.x + x]	
 	//		=	0 != srcColor.r
 	//		||	0 != srcColor.g
 	//		||	0 != srcColor.b
 	//		;
 	//}
+
+	//::gpk::array_pod<char_t>	encoded;
+	//::gpk::base64Encode({(const ubyte_t*)gui.FontTexture.Texels.begin(), gui.FontTexture.Texels.size() * 4}, encoded);
+	//FILE						* fp = 0;
+	//const int nul = 0;
+	//fopen_s(&fp, "codepage_437_encoded.txt", "wb");
+	//fwrite(encoded.begin(), 1, encoded.size(), fp);
+	//fwrite(&nul, 1, 1, fp);
+	//fclose(fp);
+
+
 	return 0; 
 }
 
@@ -161,7 +191,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 		if(app.Framework.Input->MouseCurrent.Deltas.z) {
 			gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
-			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size);
+			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 		}
 	}
 	//timer.Frame();
@@ -185,6 +215,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	{
 		::gme::mutex_guard												lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
+		::gpk::grid_copy(target->Color.View, app.VerticalAtlas.View);
 	}
 	{
 		::gme::mutex_guard												lock					(app.LockRender);
