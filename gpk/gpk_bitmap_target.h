@@ -101,7 +101,7 @@ namespace gpk
 		for(int32_t x = xStart; x < xStop; ++x) 	
 			bitmapTarget[yStart][x]													= value;
 		for(int32_t y = yStart + 1; y < yStop; ++y)
-			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * (xStop - xStart));
+			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * (xStop - (int64_t)xStart));
 		return 0;
 	}
 

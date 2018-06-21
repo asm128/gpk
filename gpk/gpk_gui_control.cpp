@@ -47,8 +47,8 @@
 		//::gpk::SControlMode															& controlMode							= gui.Controls.Modes		[viewport.IdControl];
 		//controlMode.Design														= true;
 		::gpk::SControl																& control								= gui.Controls.Controls	[viewport.IdControl];
-		const uint32_t																widthViewport							= (uint32_t)(targetSize.x + (control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right					));
-		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + (heightTitleBar + control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom	));
+		const uint32_t																widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right					));
+		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + ((int64_t)heightTitleBar + control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom	));
 		control.Area.Size														= {(int32_t)widthViewport, (int32_t)heightViewport};
 		control.Align															= ::gpk::ALIGN_CENTER;
 		for(uint32_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
@@ -105,8 +105,8 @@
 	const ::gpk::SCoord2<double>											targetSize								= {256.0, 256.0};
 	palette.IdControl													= ::gpk::controlCreate(gui);
 	::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControl];
-	const uint32_t															widthViewport							= (uint32_t)(targetSize.x + (control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
-	const uint32_t															heightViewport							= (uint32_t)(targetSize.y + (control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
+	const uint32_t															widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
+	const uint32_t															heightViewport							= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
 	control.Area.Size													= {(int32_t)widthViewport, (int32_t)heightViewport};
 	control.Align														= ::gpk::ALIGN_CENTER;
 	return 0;

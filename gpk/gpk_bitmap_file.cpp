@@ -273,7 +273,7 @@ struct SHeaderInfoBMP {
 	::gpk::SColorBGRA																						* elementGrid								= (::gpk::SColorBGRA*)(destination + sizeof(uint32_t) + sizeof(::gpk::SCoord2<uint32_t>));
 	elementSize																							= (uint32_t)sizeof(::gpk::SColorBGRA);
 	gridMetrics																							= in_ImageView.metrics();
-	memcpy(elementGrid, in_ImageView.begin(), in_ImageView.size() * elementSize);
+	memcpy(elementGrid, in_ImageView.begin(), in_ImageView.size() * (size_t)elementSize);
 	return sizeToWrite; 
 }
 

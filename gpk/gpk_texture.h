@@ -75,7 +75,7 @@ namespace gpk
 			return *this; 
 		}
 
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				{ gpk_necall(Texels.resize((newSizeX * newSizeY) / (sizeof(_tTexel) * 8) + 1), "cannot resize?"); View = {Texels.begin(), newSizeX * newSizeY}; Pitch = newSizeX; return 0; }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				{ gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / (sizeof(_tTexel) * 8) + 1), "cannot resize?"); View = {Texels.begin(), newSizeX * newSizeY}; Pitch = newSizeX; return 0; }
 		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)			{ return resize(newSize.x, newSize.y); }
 	}; // struct
 

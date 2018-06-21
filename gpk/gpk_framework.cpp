@@ -38,7 +38,7 @@ struct SDisplayInput {
 			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
 	}
 
-	{
+	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
 		RECT																						rcWindow									= {};
 		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
 		POINT																						point										= {rcWindow.left + 8, rcWindow.top};

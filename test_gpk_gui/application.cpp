@@ -151,7 +151,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 }
 
 ::gpk::error_t												update					(::gme::SApplication & app, bool exitSignal)	{ 
-	::gpk::STimer													timer;
+	//::gpk::STimer													timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
 		::gme::mutex_guard												lock					(app.LockRender);
@@ -190,7 +190,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			}
 		}
 		if(app.Framework.Input->MouseCurrent.Deltas.z) {
-			gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+			gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4ULL));
 			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 		}
 	}
