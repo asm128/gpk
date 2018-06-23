@@ -131,26 +131,31 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 	//	}
 	//}
 
+	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
+	for(uint32_t iMenu0 = 0, countMenus = menus.size(); iMenu0 < countMenus; ++iMenu0) {
+		::gpk::SControlList																& menu								= menus[iMenu0];
+		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
+			continue;
+		else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent 
+			continue;
 
-	//for(uint32_t iMenu0 = 0, countMenus = desktop.Menus.size() - 1; iMenu0 < countMenus; ++iMenu0) {
-	//	::gpk::SControlList																& menu								= desktop.Menus[iMenu0];
-	//	if(desktop.Menus.size() <= (uint32_t)menu.IndexParentList || desktop.Menus.size() <= (uint32_t)menu.IndexParentItem) 
-	//		continue;
-	//	const ::gpk::SControlState														& controlState						= gui.Controls.States[(uint32_t)desktop.Menus[menu.IndexParentList].IdControls[menu.IndexParentItem]]; 
-	//	::gpk::SControlConstraints														& controlListConstraints			= gui.Controls.Constraints[desktop.Menus[iItem + 1].IdControl];
-	//	if(controlState.Hover) {
-	//		controlListConstraints.Hidden												= false;
-	//		if(controlState.Execute) 
-	//			desktop.SelectedMenu													= iItem;
-	//	}
-	//	else {
-	//		const ::gpk::SControlMetrics													& controlListMetrics				= gui.Controls.Metrics[desktop.Menus[iItem + 1].IdControl];
-	//		if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), controlListMetrics.Total.Global) && controlListConstraints.Hidden == false)
-	//			controlListConstraints.Hidden												= false;
-	//		else if(desktop.SelectedMenu != (int32_t)iItem)
-	//			controlListConstraints.Hidden												= true;
-	//	}
-	//}
+		::gpk::SControlList																& parentMenu						= menus[menu.IndexParentList];
+
+		const ::gpk::SControlState														& controlState						= gui.Controls.States		[parentMenu.IdControls[menu.IndexParentItem]]; 
+		::gpk::SControlState															& controlStateMenu					= gui.Controls.States		[menu.IdControl];
+		if(controlState.Hover) {
+			controlStateMenu.Hidden													= false;
+			if(controlState.Execute) 
+				parentMenu.IdSelected													= menu.IdControl;
+		}
+		else {
+			const ::gpk::SControlMetrics													& controlListMetrics				= gui.Controls.Metrics[menu.IdControl];
+			if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), controlListMetrics.Total.Global) && controlStateMenu.Hidden == false)
+				controlStateMenu.Hidden												= false;
+			else if(parentMenu.IdSelected != menu.IdControl)
+				controlStateMenu.Hidden												= true;
+		}
+	}
 
 
 	return 0;
@@ -181,7 +186,9 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item!");
 		if(iParentListItem != -1) {
 			parentChildren[iParentListItem]											= iControlList;
-			gui.Controls.States[controlList.IdControl].Hidden						= true;
+			gui.Controls.States		[controlList.IdControl].Hidden					= true;
+			gui.Controls.Constraints[controlList.IdControl].DockToControl.Bottom	= parentControlList.IdControl;
+			::gpk::controlListArrange(gui, parentControlList);
 		}
 		else
 			gui.Controls.States[controlList.IdControl].Hidden						= false;

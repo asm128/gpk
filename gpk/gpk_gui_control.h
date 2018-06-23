@@ -17,7 +17,8 @@ namespace gpk
 			int32_t																		IndexParentItem								= -1;
 			::gpk::CONTROL_LIST_DIRECTION												Orientation									= ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL;
 			::gpk::array_pod<int32_t>													IdControls									= {};
-			::gpk::array_pod<int32_t>													IdSelected									= {};
+			::gpk::array_pod<int32_t>													IdMultiselect								= {};
+			int32_t																		IdSelected									= {};
 	};
 
 		::gpk::error_t																controlListInitialize						(::gpk::SGUI& gui, ::gpk::SControlList& menu);

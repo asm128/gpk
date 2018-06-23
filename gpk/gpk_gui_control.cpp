@@ -5,9 +5,11 @@
 			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ 
 	menu																	= {}; 
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "Failed to create menu control!"); 
-	gui.Controls.Controls	[menu.IdControl].Border								= 
-	gui.Controls.Controls	[menu.IdControl].Margin								= {};
-	gui.Controls.Modes		[menu.IdControl].Design								= true;
+	gui.Controls.Controls		[menu.IdControl].Border								= 
+	gui.Controls.Controls		[menu.IdControl].Margin								= {};
+	gui.Controls.Text			[menu.IdControl].Text								= " ";
+	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText					= {false, false};
+//	gui.Controls.Modes			[menu.IdControl].Design								= true;
 	return 0; 
 }
 
@@ -27,24 +29,29 @@
 		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: 
 			controlConstraints.AttachSizeToControl	.x = menu.IdControl; 
 			controlConstraints.AttachSizeToText		.x = false;	
-			if(menu.IdControls.size()) 
+			if(menu.IdControls.size() > iPrevItem) 
 				controlConstraints.DockToControl.Bottom		= menu.IdControls[iPrevItem]; 
 			break;
 		}
-		::gpk::controlUpdateMetricsTopToDown(gui, idControl, gui.LastSize, true);
+		//::gpk::controlUpdateMetricsTopToDown(gui, idControl, gui.LastSize, true);
 	}
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
+	if(menu.IndexParentList != -1 && menu.IndexParentItem != -1)
+		controlMenu.Area.Offset													= {};
+	::gpk::controlUpdateMetricsTopToDown(gui, menu.IdControl, gui.LastSize, true);
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text		[idControl];
-		controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int32_t)controlText.Text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x);
+		
+		
+		::gpk::controlUpdateMetricsTopToDown(gui, idControl, gui.LastSize, true);
 		switch(menu.Orientation) {	
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlMenu.Area.Size.y += gui.Controls.Metrics[idControl].Total.Global.Size.y; break;
+		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.y = ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Metrics[idControl].Total.Global.Size.y); controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
+		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlMenu.Area.Size.y += gui.Controls.Metrics[idControl].Total.Global.Size.y; controlMenu.Area.Size.x = ::gpk::max(controlMenu.Area.Size.x, (int32_t)controlText.Text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x); break; 
 		}
 	}
 	return 0;
@@ -86,6 +93,7 @@
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int32_t)text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x);
+	//controlMenu.Area.Size.y													= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Metrics[idControl].Total.Global.Size.y);
 	switch(menu.Orientation) {	
 	default:
 	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
