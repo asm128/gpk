@@ -200,28 +200,34 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 			::gpk::error_t										gpk::controlDelete										(::gpk::SGUI& gui, int32_t iControl)					{ 
 	info_printf("Deleting control id: %i.", iControl);
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	{
+	{ // Delete children first.
 		::gpk::array_pod<int32_t>											children												= gui.Controls.Children[iControl];
-		//for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-		//	info_printf("Deleting child control id: %i.", children[iChild]);
-
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			::gpk::controlDelete(gui, children[iChild]);
+			error_if(errored(::gpk::controlDelete(gui, children[iChild])), "Failed to delete control! Invalid control id? %i.", children[iChild]);
+		//	info_printf("Deleting child control id: %i.", children[iChild]);
 	}
 
+	// Remove from parent list
 	const uint32_t														indexParent												= (uint32_t)gui.Controls.Controls[iControl].IndexParent;
+#if defined(GPK_DEBUG_ENABLED)
 	int32_t																childrenRemoved = 0;
+#endif
 	if(indexParent < gui.Controls.Controls.size() && false == gui.Controls.States[indexParent].Unused) {			
 		::gpk::array_pod<int32_t>											& children												= gui.Controls.Children[indexParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
 			if(children[iChild] == iControl) {
 				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
+#if defined(GPK_DEBUG_ENABLED)
 				--iChild;
 				++childrenRemoved;
-				//break;
+#else
+				break;
+#endif
 			}
 	}
+#if defined(GPK_DEBUG_ENABLED)
 	error_if(childrenRemoved > 1, "Parent should not reference a child control more than once.");
+#endif
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	controlState.Unused												= true;
 	return 0; 
