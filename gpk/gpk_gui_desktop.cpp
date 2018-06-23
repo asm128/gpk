@@ -15,11 +15,33 @@
 	gpk_necall(::gpk::##utoken##Initialize(gui, elementToSetUp), "Unknown.");																									\
 	gpk_necall(::gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "Invalid desktop id?");
 
-			::gpk::error_t												gpk::desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(PaletteGrid	, paletteGrid	); return iPaletteGrid	; }
-			::gpk::error_t												gpk::desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(ControlList	, controlList	); return iControlList	; }
-			::gpk::error_t												gpk::desktopCreateViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(Viewport	, viewport		); return iViewport		; }
 			::gpk::error_t												gpk::desktopDeletePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ desktop.Items.PaletteGrids.Unused[iElement] = true; return ::gpk::controlDelete(gui, desktop.Items.PaletteGrids	[iElement].IdControl); }
-			::gpk::error_t												gpk::desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ desktop.Items.ControlLists.Unused[iElement] = true; return ::gpk::controlDelete(gui, desktop.Items.ControlLists	[iElement].IdControl); }
+			::gpk::error_t												gpk::desktopCreateViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(Viewport	, viewport		); return iViewport		; }
+			::gpk::error_t												gpk::desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(PaletteGrid	, paletteGrid	); return iPaletteGrid	; }
+			::gpk::error_t												gpk::desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(ControlList	, controlList	); 
+	if(iControlList >= desktop.Children.size())
+		desktop.Children.resize(iControlList + 1);
+	return iControlList; 
+}
+			::gpk::error_t												gpk::desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ 
+	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "Invalid control list.");
+	::gpk::SControlList															controlListToDelete								= desktop.Items.ControlLists[iElement];
+	::gpk::array_pod<int32_t>													childLists										= desktop.Children[iElement];
+	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
+		int32_t																		childControlListIndex							= desktop.Children[iElement][iOption];
+		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex]) 
+			gpk::desktopDeleteControlList(gui, desktop, desktop.Children[iElement][iOption]);
+		else 
+			error_if(childControlListIndex != -1, "");
+	}
+	if(desktop.Items.ControlLists.size() > (uint32_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
+		if(desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)
+			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]				= -1;
+	}
+	desktop.Items.ControlLists.Unused[iElement]								= true; 
+	return ::gpk::controlDelete(gui, desktop.Items.ControlLists	[iElement].IdControl); 
+}
+
 			::gpk::error_t												gpk::desktopDeleteViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ 
 	desktop.Items.Viewports.Unused[iElement]										= true; 
 	::gpk::SViewport															& viewport										= desktop.Items.Viewports[iElement];
@@ -65,10 +87,12 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 			::pushToFrontAndDisplace(gui, vp.IdControl, input);
 		else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
 			if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
-				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size += {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size += {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
-
+				//::gpk::SCoord2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::SCoord2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+				//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
+					gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+					gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+					::gpk::controlMetricsInvalidate(gui, vp.IdControl);
+				//}
 			}
 		}
 	}
@@ -132,4 +156,35 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 	return 0;
 }
 
+			::gpk::error_t												gpk::desktopControlListSetParent					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iControlList, int32_t iParentControlList, int32_t iParentListItem)			{
+	ree_if((desktop.Items.ControlLists.size() <= (uint32_t)iControlList) || desktop.Items.ControlLists.Unused[iControlList], "Invalid control list: %u.", iControlList);
+	::gpk::SControlList															& controlList											= desktop.Items.ControlLists[iControlList];
+	const int32_t																oldParentList											= controlList.IndexParentList;
+	const int32_t																oldParentItem											= controlList.IndexParentItem;
+	if(oldParentItem == iParentListItem && oldParentList == iParentControlList)	// Exit early if there is nothing to do here.
+		return 0;
+	controlList.IndexParentList 											= iParentControlList;
+	controlList.IndexParentItem												= iParentListItem;
+	if((desktop.Items.ControlLists.size() <= (uint32_t)iParentControlList) || desktop.Items.ControlLists.Unused[iParentControlList]) {
+		ree_if(-1 != iParentControlList, "Invalid parent control list: %i. List item: %i.", iParentControlList, iParentListItem);
+		gui.Controls.States[controlList.IdControl].Hidden						= false;
+	}
+	else { // update tree
+		::gpk::SControlList															& parentControlList										= desktop.Items.ControlLists[iParentControlList];
+		if(desktop.Children.size() > (uint32_t)oldParentList && desktop.Children[oldParentList].size() > (uint32_t)oldParentItem)
+			desktop.Children[oldParentList][oldParentItem]							= -1;
 
+		::gpk::array_pod<int32_t>													& parentChildren										= desktop.Children[iParentControlList];
+		if(parentChildren.size() < parentControlList.IdControls.size())
+			parentChildren.resize(parentControlList.IdControls.size(), -1);
+
+		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item!");
+		if(iParentListItem != -1) {
+			parentChildren[iParentListItem]											= iControlList;
+			gui.Controls.States[controlList.IdControl].Hidden						= true;
+		}
+		else
+			gui.Controls.States[controlList.IdControl].Hidden						= false;
+	}
+	return ::gpk::controlListArrange(gui, controlList);
+}

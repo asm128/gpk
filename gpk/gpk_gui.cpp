@@ -490,24 +490,18 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	return 0;
 }
 
-static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)				{
+			::gpk::error_t										gpk::controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)				{
 	gpk_necall(::controlUpdateMetrics(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
 	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0; iChild < children.size(); ++iChild)
-		gpk_necall(::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
+		gpk_necall(::gpk::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
 	return 0;
 }
 
 			::gpk::error_t										gpk::guiUpdateMetrics									(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)								{
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
 		if(::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && false == ::controlInvalid(gui, iControl))
-			gpk_necall(::controlUpdateMetricsTopToDown(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
-	return 0;
-}
-
-			::gpk::error_t										gpk::controlUpdateMetrics								(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize)								{
-	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	gpk_necall(::controlUpdateMetricsTopToDown(gui, iControl, targetSize, true), "Unknown error! Maybe the control tree got broken?");
+			gpk_necall(::gpk::controlUpdateMetricsTopToDown(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
 	return 0;
 }
 

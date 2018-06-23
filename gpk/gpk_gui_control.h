@@ -21,6 +21,7 @@ namespace gpk
 	};
 
 		::gpk::error_t																controlListInitialize						(::gpk::SGUI& gui, ::gpk::SControlList& menu);
+		::gpk::error_t																controlListArrange							(::gpk::SGUI& gui, ::gpk::SControlList& menu);
 		::gpk::error_t																controlListPush								(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text);
 
 	enum VIEWPORT_CONTROL : int8_t

@@ -104,13 +104,13 @@ namespace gpk
 		};
 
 	struct SControl {
-		::gpk::SRectangle2D<int32_t>							Area								;
-		::gpk::SRectLimits<uint16_t>							Border								;
-		::gpk::SRectLimits<uint16_t>							Margin								;
-		::gpk::grid_view<::gpk::SColorBGRA>						Image								;
-		int32_t													ColorTheme							;
-		int32_t													IndexParent							;
-		::gpk::ALIGN											Align								;
+		::gpk::SRectangle2D<int32_t>							Area								= {{0, 0}, {16, 16}};
+		::gpk::SRectLimits<uint16_t>							Border								= {1, 1, 1, 1};
+		::gpk::SRectLimits<uint16_t>							Margin								= {1, 1, 1, 1};
+		::gpk::grid_view<::gpk::SColorBGRA>						Image								= {};
+		int32_t													ColorTheme							= 0;
+		int32_t													IndexParent							= -1;
+		::gpk::ALIGN											Align								= ::gpk::ALIGN_TOP_LEFT;
 	};
 
 	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int32_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
@@ -172,7 +172,8 @@ namespace gpk
 	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target);
-	::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
+	//::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
+	::gpk::error_t											controlUpdateMetricsTopToDown		(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t											controlHidden						(::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlMetricsInvalidate			(::gpk::SGUI& gui, int32_t iControl);
 

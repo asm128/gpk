@@ -40,7 +40,7 @@ namespace gpk
 				int32_t															SelectedMenu								= -1;
 				::gpk::array_obj<::gpk::SControlList>							Menus										= {};
 				::gpk::SDesktopItems											Items										= {};
-				::gpk::array_pod<uint32_t>										Children									= {};
+				::gpk::array_obj<::gpk::array_pod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
 	};			
 
 			::gpk::error_t													desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);
@@ -50,6 +50,7 @@ namespace gpk
 			::gpk::error_t													desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement);
 			::gpk::error_t													desktopDeleteViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement);
 
+			::gpk::error_t													desktopControlListSetParent					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iControlList, int32_t iParentControlList, int32_t iParentListItem);
 			::gpk::error_t													desktopUpdate								(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input);
 
 } // namespace
