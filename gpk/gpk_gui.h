@@ -45,7 +45,6 @@ namespace gpk
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
 		::gpk::SRectLimits<int32_t>								DockToControl							;
-		bool													Hidden									;
 	};
 
 	struct SControlState {
@@ -55,6 +54,7 @@ namespace gpk
 		bool													Selected								: 1;
 		bool													Execute									: 1;
 		bool													Outdated								: 1;
+		bool													Hidden									: 1;
 		bool													Unused									: 1;
 	};
 

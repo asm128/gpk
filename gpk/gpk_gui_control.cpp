@@ -2,7 +2,15 @@
 #include "gpk_label.h"
 
 
-			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ menu = {}; gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "Failed to create menu control!"); return 0; }
+			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ 
+	menu																	= {}; 
+	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "Failed to create menu control!"); 
+	gui.Controls.Controls	[menu.IdControl].Border								= 
+	gui.Controls.Controls	[menu.IdControl].Margin								= {};
+	gui.Controls.Modes		[menu.IdControl].Design								= true;
+	return 0; 
+}
+
 			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text)				{
 	if(menu.IdControl == -1) 
 		gpk_necall(::gpk::controlListInitialize(gui, menu), "");
@@ -15,25 +23,29 @@
 	::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[idControl];
 	//control				.Align												= ::gpk::ALIGN_TOP_RIGHT;
 	//control				.Align												= ::gpk::ALIGN_BOTTOM_LEFT;
-	control				.Margin												= {4, 4, 4, 4};
+	//control				.Margin												= {4, 4, 4, 4};
 	//control				.Margin												= {2, 2, 2, 2};
+	control				.Margin												= {4, 2, 4, 2};
 	controlText			.Text												= {text.begin(), text.size()};
 	controlText			.Align												= ::gpk::ALIGN_CENTER_LEFT;
 	controlConstraints	.AttachSizeToText.y									= true; //menu.Orientation == ::gme::MENU_ORIENTATION_VERTICAL	;
 	controlConstraints	.AttachSizeToText.x									= true; //menu.Orientation == ::gme::MENU_ORIENTATION_HORIZONTAL;
 	switch(menu.Orientation) {	
 	default:
-	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlConstraints.AttachSizeToControl.y = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.Right	 = menu.IdControls[menu.IdControls.size() - 1]; break;
-	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlConstraints.AttachSizeToControl.x = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.Bottom	 = menu.IdControls[menu.IdControls.size() - 1]; break;
+	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: /*controlConstraints.AttachSizeToControl.y = menu.IdControl; */if(menu.IdControls.size()) controlConstraints.DockToControl.Right	 = menu.IdControls[menu.IdControls.size() - 1]; break;
+	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlConstraints.AttachSizeToControl.x = menu.IdControl;	if(menu.IdControls.size()) controlConstraints.DockToControl.Bottom	 = menu.IdControls[menu.IdControls.size() - 1]; break;
 	}
 	::gpk::controlUpdateMetrics(gui, idControl, gui.LastSize);
 
+	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
+	controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int32_t)text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(gui.Controls.Controls[idControl]).x);
 	switch(menu.Orientation) {	
 	default:
-	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: gui.Controls.Controls[menu.IdControl].Area.Size.x					+= gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
-	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: gui.Controls.Controls[menu.IdControl].Area.Size.y					+= gui.Controls.Metrics[idControl].Total.Global.Size.y; break;
+	case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
+	case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlMenu.Area.Size.y += gui.Controls.Metrics[idControl].Total.Global.Size.y; break;
 	}
-	return menu.IdControls.push_back(idControl);			
+	menu.IdControls.push_back(idControl);
+	return 0;
 }
 
 			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI& gui, ::gpk::SViewport& viewport)																				{

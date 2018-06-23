@@ -399,10 +399,10 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
-	if(mode.Design || gui.Controls.Constraints[iControl].Hidden)
+	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
+	if(mode.Design || controlState.Hidden)
 		return 0;
 
-	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
@@ -518,7 +518,7 @@ static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI
 			gui.Controls.States[iOutdated].Outdated							= true;
 		gui.LastSize													= target.metrics();
 	}
-	if(false == gui.Controls.Constraints[iControl].Hidden) {
+	if(false == gui.Controls.States[iControl].Hidden) {
 		gpk_necall(::actualControlDraw(gui, iControl, target), "Unknown issue!");
 		::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) 
@@ -543,9 +543,7 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 
 static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)														{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
-	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
-
-	if(controlConstraints.Hidden)
+	if(controlState.Hidden)
 		return -1;
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
@@ -629,7 +627,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 }
 
 			::gpk::error_t										gpk::controlHidden										(::gpk::SGUI& gui, int32_t iControl)	{
-	bool																imHidden												= ::controlInvalid(gui, iControl) || gui.Controls.Constraints[iControl].Hidden;
+	bool																imHidden												= ::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Hidden;
 	return imHidden ? imHidden : (false == ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && ::gpk::controlHidden(gui, gui.Controls.Controls[iControl].IndexParent));
 }
 

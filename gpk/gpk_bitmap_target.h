@@ -11,7 +11,7 @@ namespace gpk
 	template<typename _tCoord, typename _tCell>
 					::gpk::error_t											drawPixelBrightness								(::gpk::grid_view<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::SCoord2<double>														maxRange										= {range, range};
-		double																		rangeUnit										= double(1.0 / maxRange.Length());
+		double																		rangeUnit										= 1.0 / maxRange.Length();
 		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates 
 		for(int32_t x = -(int32_t)range - 1; x < blendCount; ++x) {										// as it causes a visual effect of the light being cut to a rectangle and having sharp borders.
 			if(x || y) {
