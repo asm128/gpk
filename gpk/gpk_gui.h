@@ -36,6 +36,11 @@ namespace gpk
 		::gpk::SRectangle2D<int16_t>							Text;
 	};
 
+	struct SControlAttachId {
+		int32_t													IdControl								: 31;
+		int32_t													Total									: 1;
+	};
+
 	struct SControlConstraints {
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
