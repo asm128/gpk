@@ -66,7 +66,9 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 		else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
 			if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
 				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size += {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size += {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
+
 			}
 		}
 	}
