@@ -490,7 +490,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	return 0;
 }
 
-static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)					{
+static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)				{
 	gpk_necall(::controlUpdateMetrics(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
 	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0; iChild < children.size(); ++iChild)
@@ -498,20 +498,20 @@ static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI
 	return 0;
 }
 
-			::gpk::error_t										gpk::guiUpdateMetrics									(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)										{
+			::gpk::error_t										gpk::guiUpdateMetrics									(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)								{
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
 		if(::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && false == ::controlInvalid(gui, iControl))
 			gpk_necall(::controlUpdateMetricsTopToDown(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
 	return 0;
 }
 
-			::gpk::error_t										gpk::controlUpdateMetrics								(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize)					{
+			::gpk::error_t										gpk::controlUpdateMetrics								(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize)								{
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	gpk_necall(::controlUpdateMetricsTopToDown(gui, iControl, targetSize, true), "Unknown error! Maybe the control tree got broken?");
 	return 0;
 }
 
-			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)	{
+			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)								{
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
@@ -527,7 +527,7 @@ static		::gpk::error_t										controlUpdateMetricsTopToDown							(::gpk::SGUI
 	return 0;
 }
 
-static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)	noexcept	{ 
+static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)								noexcept	{ 
 	if(controlFlags.Hover) {
 		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed) 
 			controlFlags.Pressed											= true;
@@ -538,10 +538,10 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 	}
 	else 
 		controlFlags.Hover												= false == controlFlags.Disabled;
-	return controlFlags.Hover;
+	return one_if(controlFlags.Hover);
 }
 
-static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)							{
+static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)														{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
 
@@ -576,8 +576,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)											{
-	::gpk::guiUpdateMetrics(gui, gui.LastSize, false);
+			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)																		{
+	error_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "Why would this ever happen?");
 	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t														controlHovered											= -1;
 
@@ -608,14 +608,14 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			if(0 == input.MouseCurrent.ButtonState[0])
 				gui.Controls.States[iControl].Pressed							= false;
 		}
-		else {
-			verbose_printf("Hovered: %u.", iControl);
-		}
+		//else {
+		//	verbose_printf("Hovered: %u.", iControl);
+		//}
 	}
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)						{
+			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)													{
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
 			gui.Controls.States[iOutdated].Outdated							= true;
@@ -624,7 +624,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	gpk_necall(::gpk::guiUpdateMetrics(gui, gui.LastSize, false), "Unknown issue!");;
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
 		if(false == ::controlInvalid(gui, iControl) && ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent))
-			gpk_necall(::gpk::controlDrawHierarchy(gui, iControl, target), "Unknown issue!");
+			error_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)), "Unknown issue!");
 	return 0;
 }
 
@@ -634,17 +634,17 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 }
 
 			::gpk::error_t										gpk::controlMetricsInvalidate							(::gpk::SGUI& gui, int32_t iControl)	{
-	::gpk::SControlState												& controlState							= gui.Controls.States[iControl];
+	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	controlState.Outdated											= true;
-	const ::gpk::array_view<int32_t>									& controlChildren						= gui.Controls.Children[iControl];
+	const ::gpk::array_view<int32_t>									& controlChildren										= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild) 
 		gpk_necall(::gpk::controlMetricsInvalidate(gui, controlChildren[iChild]), "Invalid child?");
 	return 0;
 }
 
-			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)						{
+			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
-		const ::gpk::SControlState													& controlState							= gui.Controls.States[iControl];
+		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled || ::gpk::controlHidden(gui, iControl))
 			continue;
 		gpk_necall(controlIndices.push_back(iControl), "Out of memory?");
