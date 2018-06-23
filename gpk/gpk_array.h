@@ -151,7 +151,7 @@ namespace gpk
 		inline				::gpk::error_t				clear										()																			noexcept	{ return Count = 0; }
 
 		// Returns the new size of the array
-		inline				::gpk::error_t				pop_back									(_tPOD* oldValue)																		{ 
+		inline				::gpk::error_t				pop_back									(_tPOD* oldValue)															noexcept	{ 
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array."); 
 			--Count;
 			safe_podcpy(oldValue, &Data[Count]); 
@@ -159,7 +159,7 @@ namespace gpk
 		}
 
 		// Returns the index of the pushed value or -1 on failure
-							::gpk::error_t				push_back									(const _tPOD& newValue)																	{ 
+							::gpk::error_t				push_back									(const _tPOD& newValue)														noexcept	{ 
 			const int32_t										indexExpected								= Count;
 			const int32_t										indexNew									= resize(Count+1, newValue)-1; 
 			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
@@ -168,8 +168,8 @@ namespace gpk
 
 		// Returns the index of the pushed value
 		template<size_t _Length>
-		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])														{ return append(newChain, _Length);		}
-							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)										{ 
+		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);		}
+							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{ 
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength; 
 			ree_if(requestedSize < Count, "Size overflow. Cannot append chain.");
@@ -183,7 +183,7 @@ namespace gpk
 		}
 
 		// Returns the new size of the array.
-							::gpk::error_t				resize										(uint32_t newSize, const _tPOD& newValue)												{ 
+							::gpk::error_t				resize										(uint32_t newSize, const _tPOD& newValue)									noexcept	{ 
 			int32_t												oldCount									= (int32_t)Count;
 			int32_t												newCount									= resize(newSize);
 			ree_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
@@ -194,7 +194,7 @@ namespace gpk
 		}
 
 		// Returns the new size of the array.
-							::gpk::error_t				resize										(uint32_t newSize)																		{ 
+							::gpk::error_t				resize										(uint32_t newSize)															noexcept	{ 
 			const uint32_t										oldCount									= Count;
 			if(newSize >= Size) {
 				_tPOD												* oldData									= Data;
@@ -225,7 +225,7 @@ namespace gpk
 		}
 
 		// returns the new size of the list or -1 on failure.
-							::gpk::error_t				insert										(uint32_t index, const _tPOD& newValue)													{ 
+							::gpk::error_t				insert										(uint32_t index, const _tPOD& newValue)										noexcept	{ 
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			if(Size < Count + 1) {
 				_tPOD												* oldData									= Data;
@@ -258,7 +258,7 @@ namespace gpk
 		}
 
 		// returns the new size of the list or -1 on failure.
-							::gpk::error_t				insert										(uint32_t index, const _tPOD* chainToInsert, uint32_t chainLength)						{
+							::gpk::error_t				insert										(uint32_t index, const _tPOD* chainToInsert, uint32_t chainLength)			noexcept	{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 
 			if(Size < Count + chainLength) {
@@ -284,10 +284,10 @@ namespace gpk
 		}
 
 		template<size_t _chainLength>
-		inline				::gpk::error_t				insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])							{ return insert(index, chainToInsert, _chainLength); }
+		inline				::gpk::error_t				insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])				noexcept	{ return insert(index, chainToInsert, _chainLength); }
 
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-							::gpk::error_t				remove_unordered							(uint32_t index)																		{ 
+							::gpk::error_t				remove_unordered							(uint32_t index)															noexcept	{ 
 			ree_if(0 == Data, "%s", "Uninitialized array pointer!");
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index]										= Data[--Count];
@@ -296,7 +296,7 @@ namespace gpk
 
 		// returns the new array size or -1 if failed.
 		template<typename _tObj>
-							::gpk::error_t				erase										(const _tObj* address)																	{ 
+							::gpk::error_t				erase										(const _tObj* address)														noexcept	{ 
 			ree_if(0 == Data, "Uninitialized array pointer!");
 			const ptrdiff_t										ptrDiff										= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t										index										= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(_tObj));
@@ -305,7 +305,7 @@ namespace gpk
 		}
 
 		// returns the new array size or -1 if failed.
-							::gpk::error_t				remove										(uint32_t index)																		{ 
+							::gpk::error_t				remove										(uint32_t index)															noexcept	{ 
 			ree_if(0 == Data, "Uninitialized array pointer!");
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			--Count;
@@ -317,14 +317,14 @@ namespace gpk
 		}
 
 		// Returns the index of the argument if found or -1 if not.
-		inline				::gpk::error_t				find										(const _tPOD& valueToLookFor)										const				{
+		inline				::gpk::error_t				find										(const _tPOD& valueToLookFor)										const	noexcept	{
 			for(uint32_t i = 0; i < Count; ++i) 
 				if(0 == ::gpk::podcmp(&Data[i], &valueToLookFor))
 					return i;
 			return -1;
 		}
 
-							::gpk::error_t				read										(const byte_t* input, uint32_t* inout_bytesRead)										{
+							::gpk::error_t				read										(const byte_t* input, uint32_t* inout_bytesRead)							noexcept	{
 			uint32_t											elementsToRead								= 0;
 			if(input) {
 				uint32_t											elementsToRead								= *(uint32_t*)input;
@@ -358,7 +358,7 @@ namespace gpk
 			return 0;
 		}
 
-							::gpk::error_t				write										(byte_t* input, uint32_t* inout_bytesWritten)						const				{
+							::gpk::error_t				write										(byte_t* input, uint32_t* inout_bytesWritten)						const	noexcept	{
 			if(0 == input) {
 				inout_bytesWritten							+= sizeof(uint32_t) + sizeof(_tPOD) * Count;	// Just return the size required to store this.
 				return 0;

@@ -15,7 +15,7 @@ namespace gpk
 	};
 	
 	template<typename _tNCO>
-						::gpk::gpk_ref<_tNCO> *				ref_acquire							(::gpk::gpk_ref<_tNCO>* gpk_reference)									{
+						::gpk::gpk_ref<_tNCO> *				ref_acquire							(::gpk::gpk_ref<_tNCO>* gpk_reference)									noexcept	{
 		if(gpk_reference)
 			gpk_sync_increment(gpk_reference->References);
 		return gpk_reference;
@@ -42,7 +42,7 @@ namespace gpk
 	};
 
 	template<typename _tOBJ>
-						_tOBJ *								ref_allocate						(::gpk::gpk_ref<_tOBJ>** gpk_reference)									{
+						_tOBJ *								ref_allocate						(::gpk::gpk_ref<_tOBJ>** gpk_reference)									noexcept	{
 		typedef	::gpk::gpk_ref<_tOBJ>								TRef;
 		TRef														* newRef							= (TRef*)::gpk::gpk_malloc(sizeof(TRef));
 		retnul_error_if(0 == newRef, "Failed to allocate reference! Out of memory?");
@@ -59,7 +59,7 @@ namespace gpk
 	};
 
 	template<typename _tOBJ, typename... _tArgs>
-						_tOBJ *								ref_create							(::gpk::gpk_ref<_tOBJ>** gpk_reference, _tArgs&&... argsConstructor)	{
+						_tOBJ *								ref_create							(::gpk::gpk_ref<_tOBJ>** gpk_reference, _tArgs&&... argsConstructor)				{
 		typedef	::gpk::gpk_ref<_tOBJ>								TRef;
 		TRef														* newRef							= 0;
 		retnul_error_if(0 == ::gpk::ref_allocate(&newRef), "Failed to allocate reference");
