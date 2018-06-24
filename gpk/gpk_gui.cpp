@@ -281,26 +281,28 @@ static		::gpk::error_t										controlUpdateMetrics									(::gpk::SGUI& gui, 
 	::gpk::SRectangle2D<int16_t>										& rectText												= controlMetrics.Text;
 	::gpk::SControlText													& controlText											= gui.Controls.Text[iControl];
 	rectText.Size													= {(int16_t)(gui.FontCharSize.x * controlText.Text.size()), (int16_t)gui.FontCharSize.y};
+	rectText.Size.InPlaceScale(scale.x, scale.y);
 	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
 	const ::gpk::SRectLimits<int32_t>									ncSizes													= ::gpk::controlNCRect(control);
+	const ::gpk::SRectLimits<int32_t>									ncSizesScaled											= {(int32_t)(ncSizes.Left * scale.x), (int32_t)(ncSizes.Top * scale.y), (int32_t)(ncSizes.Right * scale.x), (int32_t)(ncSizes.Bottom * scale.y)};
 	const ::gpk::SCoord2<int32_t>										ncTotalSize												= 
 		{ ncSizes.Left	+ ncSizes.Right		
 		, ncSizes.Top	+ ncSizes.Bottom	
 		};
+	const ::gpk::SCoord2<int32_t>										ncTotalSizeScaled										= ncTotalSize.GetScaled(scale.x, scale.y);
 
-	if(controlConstraints.AttachSizeToText.x)	scaledSize.x			= int32_t(rectText.Size.x * scale.x + ncTotalSize.x);
-	if(controlConstraints.AttachSizeToText.y)	scaledSize.y			= int32_t(rectText.Size.y * scale.y + ncTotalSize.y);
+	if(controlConstraints.AttachSizeToText.x)	scaledSize.x			= int32_t(rectText.Size.x + ncTotalSizeScaled.x);
+	if(controlConstraints.AttachSizeToText.y)	scaledSize.y			= int32_t(rectText.Size.y + ncTotalSizeScaled.y);
 
 	const bool															isValidParent											= 0 == ::controlInvalid(gui, control.IndexParent);
-	::gpk::SCoord2<int32_t>												targetSize												= isValidParent ? gui.Controls.Metrics[control.IndexParent].Client.Global.Size : _targetSize.Cast<int32_t>();
+	const ::gpk::SCoord2<int32_t>										targetSize												= isValidParent ? gui.Controls.Metrics[control.IndexParent].Client.Global.Size : _targetSize.Cast<int32_t>();
 	//if(isValidParent) 
 	//	gpk_necall(::controlUpdateMetrics(gui, control.IndexParent, _targetSize, forceUpdate), "Unknown issue!");
 
 	if(controlConstraints.AttachSizeToControl.x == iControl) { scaledPosition.x = 0; scaledSize.x = targetSize.x; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.x && false == gui.Controls.States[controlConstraints.AttachSizeToControl.x].Unused) { scaledPosition.x = 0; scaledSize.x = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
 	if(controlConstraints.AttachSizeToControl.y == iControl) { scaledPosition.y = 0; scaledSize.y = targetSize.y; } else if(gui.Controls.Controls.size() > (uint32_t)controlConstraints.AttachSizeToControl.y && false == gui.Controls.States[controlConstraints.AttachSizeToControl.y].Unused) { scaledPosition.y = 0; scaledSize.y = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
 	
-	controlMetrics.Client.Local								=  {{ncSizes.Left, ncSizes.Top}, scaledSize - ncTotalSize};
-
+	controlMetrics.Client	.Local									= {{ncSizesScaled.Left, ncSizesScaled.Top}, scaledSize - ncTotalSizeScaled};
 	controlMetrics.Total	.Local									= {scaledPosition, scaledSize};
 		 if(::gpk::bit_true(control.Align, ::gpk::ALIGN_HCENTER	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x / 2 - scaledSize.x / 2 + scaledPosition.x; }
 	else if(::gpk::bit_true(control.Align, ::gpk::ALIGN_RIGHT	))	{ controlMetrics.Total.Local.Offset.x = targetSize.x - (scaledSize.x + scaledPosition.x); }
@@ -331,11 +333,11 @@ static		::gpk::error_t										controlUpdateMetrics									(::gpk::SGUI& gui, 
 	{ // calculate text rectangle
 		const ::gpk::SRectangle2D<int32_t>									& targetRect											= controlMetrics.Client.Global;
 		rectText.Offset													= targetRect.Offset.Cast<int16_t>();
-			 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_HCENTER)) { rectText.Offset.x = (int16_t)((targetRect.Offset.x + targetRect.Size.x / 2) - rectText.Size.x / 2	); }
-		else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_RIGHT	)) { rectText.Offset.x = (int16_t)((targetRect.Offset.x + targetRect.Size.x) - rectText.Size.x			); }
+			 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_HCENTER)) { rectText.Offset.x = (int16_t)((targetRect.Offset.x + targetRect.Size.x / 2)	- rectText.Size.x / 2	); }
+		else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_RIGHT	)) { rectText.Offset.x = (int16_t)((targetRect.Offset.x + targetRect.Size.x)		- rectText.Size.x		); }
 		
-			 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_VCENTER)) { rectText.Offset.y = (int16_t)((targetRect.Offset.y + targetRect.Size.y / 2) - rectText.Size.y / 2	); }
-		else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_BOTTOM	)) { rectText.Offset.y = (int16_t)((targetRect.Offset.y + targetRect.Size.y) - rectText.Size.y			); }
+			 if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_VCENTER)) { rectText.Offset.y = (int16_t)((targetRect.Offset.y + targetRect.Size.y / 2)	- rectText.Size.y / 2	); }
+		else if (::gpk::bit_true(controlText.Align, ::gpk::ALIGN_BOTTOM	)) { rectText.Offset.y = (int16_t)((targetRect.Offset.y + targetRect.Size.y)		- rectText.Size.y		); }
 	}
 	controlState.Outdated											= false;
 	return 0;

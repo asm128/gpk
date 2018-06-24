@@ -45,14 +45,17 @@ namespace gpk
 		constexpr								TCoord2					operator-				()																	const	noexcept	{ return {x*-1, y*-1};													}
 		//
 		template<typename _t>
-		constexpr inline						SCoord2<_t>				Cast					()																	const	noexcept	{ return {(_t)x, (_t)y};																								}
-		inline									TCoord2&				Scale					(double			scalar)														noexcept	{ return *this *= scalar;																								}
-		inline									TCoord2&				Scale					(double scalarx, double scalary)											noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};														}
-		inline									TCoord2&				Normalize				()																						{ const _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::gpk::sqrt_safe(sqLen) : *this;						}
-		constexpr								double					Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																						}
-		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y;																									}
-		constexpr								double					Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;												}
-		constexpr								double					AngleWith				(const TCoord2& other)												const				{ double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;	}
+		constexpr inline						SCoord2<_t>				Cast					()																	const	noexcept	{ return {(_t)x, (_t)y};																																				}
+		inline									TCoord2&				InPlaceScale			(double			scalar)														noexcept	{ return *this *= scalar;																																				}
+		inline									TCoord2&				InPlaceScale			(double scalarx, double scalary)											noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																										}
+		inline									TCoord2&				InPlaceNormalize		()																						{ const _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::gpk::sqrt_safe	(sqLen) : *this;																	}
+		inline constexpr						TCoord2					GetScaled				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
+		inline constexpr						TCoord2					GetScaled				(double scalarx, double scalary)									const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
+		inline									TCoord2					GetNormalized			()																	const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::gpk::sqrt_safe	(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	} 
+		constexpr								double					Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																																		}
+		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y;																																					}
+		constexpr								double					Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;																								}
+		constexpr								double					AngleWith				(const TCoord2& other)												const				{ double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;													}
 												void					AddScaled				(const TCoord2& vectorToScaleAndAdd, float scale)										{
 			x																+= vectorToScaleAndAdd.x * scale;
 			y																+= vectorToScaleAndAdd.y * scale;
