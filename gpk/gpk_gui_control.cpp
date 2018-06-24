@@ -18,7 +18,7 @@
 		const uint32_t																idControl								= menu.IdControls[iItem];
 		//::gpk::SControlState														& controlState							= gui.Controls.States		[idControl];
 		::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[idControl];
-		controlConstraints	.AttachSizeToText									= {true, true}; 
+		controlConstraints.AttachSizeToText										= {true, true}; 
 		const uint32_t																iPrevItem								= iItem - 1;
 		switch(menu.Orientation) {
 		default:
@@ -38,16 +38,11 @@
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
-	if(menu.IndexParentList != -1 && menu.IndexParentItem != -1)
-		controlMenu.Area.Offset													= {};
 	::gpk::controlUpdateMetricsTopToDown(gui, menu.IdControl, gui.LastSize, true);
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text		[idControl];
-		
-		
-		::gpk::controlUpdateMetricsTopToDown(gui, idControl, gui.LastSize, true);
 		switch(menu.Orientation) {	
 		default:
 		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.y = ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Metrics[idControl].Total.Global.Size.y); controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;

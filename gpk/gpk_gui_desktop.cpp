@@ -3,12 +3,12 @@
 
 #define NEW_OR_UNUSED(ctoken, utoken)																																			\
 	uint32_t																	i##ctoken##									= 0;												\
-	while(i##ctoken## < desktop.Items.##ctoken##s.size()) {																															\
+	while(i##ctoken## < desktop.Items.##ctoken##s.size()) {																														\
 		if(desktop.Items.##ctoken##s.Unused[i##ctoken##]) 																														\
 			break;																																								\
 		++i##ctoken##;																																							\
 	}																																											\
-	if(i##ctoken## >= desktop.Items.##ctoken##s.size())																																\
+	if(i##ctoken## >= desktop.Items.##ctoken##s.size())																															\
 		gpk_necall(i##ctoken## = desktop.Items.##ctoken##s.push_back({}), "Out of memory?");																					\
 	desktop.Items.##ctoken##s.Unused[i##ctoken##]	= false;																													\
 	::gpk::S##ctoken##															& elementToSetUp							= desktop.Items.##ctoken##s[i##ctoken##]	= {};	\
@@ -23,6 +23,7 @@
 		desktop.Children.resize(iControlList + 1);
 	return iControlList; 
 }
+
 			::gpk::error_t												gpk::desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ 
 	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "Invalid control list.");
 	::gpk::SControlList															controlListToDelete								= desktop.Items.ControlLists[iElement];
@@ -35,7 +36,7 @@
 			error_if(childControlListIndex != -1, "");
 	}
 	if(desktop.Items.ControlLists.size() > (uint32_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
-		if(desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)
+		if (desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)
 			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]				= -1;
 	}
 	desktop.Items.ControlLists.Unused[iElement]								= true; 
@@ -114,6 +115,15 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 		if(controlState.Execute) {
 			info_printf("Executed %u.", iControl);
 			desktop.SelectedMenu														= -1;
+			::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
+			for(uint32_t iMenu0 = 0, countMenus = menus.size(); iMenu0 < countMenus; ++iMenu0) {
+				::gpk::SControlList																& menu								= menus[iMenu0];
+				if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
+					continue;
+				else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent 
+					continue;
+				gui.Controls.States[menu.IdControl].Hidden									= true;
+			}
 			//for(uint32_t iMenu = 0, countMenus = desktop.Menus.size(); iMenu < countMenus; ++iMenu) {
 			//	::gpk::SControlList																& menu								= desktop.ControlLists[iMenu];
 			//	for(uint32_t iOption = 0, countOptions = menu.IdControls.size(); iOption < countOptions; ++iOption) {
@@ -121,6 +131,7 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 			//			gui.Controls.Constraints[menu.IdControl].Hidden								= true;
 			//	}
 			//}
+
 		}
 	}
 
@@ -141,12 +152,12 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 
 		::gpk::SControlList																& parentMenu						= menus[menu.IndexParentList];
 
-		const ::gpk::SControlState														& controlState						= gui.Controls.States		[parentMenu.IdControls[menu.IndexParentItem]]; 
-		::gpk::SControlState															& controlStateMenu					= gui.Controls.States		[menu.IdControl];
+		const ::gpk::SControlState														& controlState						= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]]; 
+		::gpk::SControlState															& controlStateMenu					= gui.Controls.States[menu.IdControl];
 		if(controlState.Hover) {
-			controlStateMenu.Hidden													= false;
+			controlStateMenu.Hidden														= false;
 			if(controlState.Execute) 
-				parentMenu.IdSelected													= menu.IdControl;
+				parentMenu.IdSelected														= menu.IdControl;
 		}
 		else {
 			const ::gpk::SControlMetrics													& controlListMetrics				= gui.Controls.Metrics[menu.IdControl];
@@ -187,8 +198,19 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 		if(iParentListItem != -1) {
 			parentChildren[iParentListItem]											= iControlList;
 			gui.Controls.States		[controlList.IdControl].Hidden					= true;
-			gui.Controls.Constraints[controlList.IdControl].DockToControl.Bottom	= parentControlList.IdControl;
 			::gpk::controlListArrange(gui, parentControlList);
+			if(parentControlList.IndexParentItem != -1 && parentControlList.IndexParentList != -1) {
+				gui.Controls.Constraints[controlList.IdControl].DockToControl			= {-1, -1, -1, -1};
+				gui.Controls.Constraints[controlList.IdControl].DockToControl.Right		= parentControlList.IdControl;
+				if(gui.Controls.Constraints[parentControlList.IdControl].DockToControl.Bottom != -1) {
+					int32_t offsety = gui.Controls.Controls	[gui.Controls.Constraints[parentControlList.IdControl].DockToControl.Bottom].Area.Offset.y + gui.Controls.Controls[gui.Controls.Constraints[parentControlList.IdControl].DockToControl.Bottom].Area.Size.y + gui.Controls.Metrics[parentControlList.IdControls[iParentListItem]].Total.Global.Size.y * iParentListItem;
+					gui.Controls.Controls	[controlList.IdControl].Area.Offset.y			= offsety;
+				}
+				else
+					gui.Controls.Controls	[controlList.IdControl].Area.Offset.y			= gui.Controls.Controls	[parentControlList.IdControl].Area.Offset.y + gui.Controls.Controls[parentControlList.IdControls[iParentListItem]].Area.Offset.y;
+			}
+			else
+				gui.Controls.Constraints[controlList.IdControl].DockToControl.Bottom	= parentControlList.IdControl;
 		}
 		else
 			gui.Controls.States[controlList.IdControl].Hidden						= false;
