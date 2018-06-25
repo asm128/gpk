@@ -19,11 +19,11 @@
     <Filter Include="math">
       <UniqueIdentifier>{9b958f7f-8d05-4884-9725-28ac32f6bb66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view">
-      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="runtime">
       <UniqueIdentifier>{56bdc711-7e6b-4241-b705-57c96d06c106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="array_view">
+      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -136,19 +136,19 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="gpk_stream_view.h">
-      <Filter>view</Filter>
+      <Filter>array_view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_layered_view.h">
-      <Filter>view</Filter>
+      <Filter>array_view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_grid_view.h">
-      <Filter>view</Filter>
+      <Filter>array_view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_bit_view.h">
-      <Filter>view</Filter>
+      <Filter>array_view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_array_view.h">
-      <Filter>view</Filter>
+      <Filter>array_view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_runtime_module.h">
       <Filter>runtime</Filter>

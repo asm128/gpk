@@ -305,7 +305,6 @@ namespace gpk
 	template<typename _tElement>	struct SRange			{ _tElement									Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
 	template<typename _tElement>	struct SLine2D			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2D		<_tElement>, A		== other.A		&& B		== other.B						); };
 	template<typename _tElement>	struct STriangle2D		{ ::gpk::SCoord2<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle2D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
-	template<typename _tElement>	struct SRectangle2D		{ ::gpk::SCoord2<_tElement>					Offset, Size			; GPK_DEFAULT_OPERATOR_NE(SRectangle2D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
 	template<typename _tElement>	struct SCircle2D		{ double Radius; ::gpk::SCoord2<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SCircle2D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 	template<typename _tElement>	struct SSphere2D		{ double Radius; ::gpk::SCoord2<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SSphere2D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
@@ -316,6 +315,14 @@ namespace gpk
 	template<typename _tElement>	struct STriangle3D		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
 
 	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
+
+	template<typename _tElement>	struct SRectangle2D		{ 
+							::gpk::SCoord2<_tElement>					Offset, Size; 
+
+				GPK_DEFAULT_OPERATOR_NE(SRectangle2D<_tElement>, Offset	== other.Offset	&& Size == other.Size); 
+
+		inline				::gpk::SCoord2<_tElement>					Limit									()																			const	noexcept	{ return Offset + Size; } 
+	};
 
 	template<typename _tElement>
 							STriangle2D<_tElement>&						translate								(::gpk::STriangle2D<_tElement>& triangle, const ::gpk::SCoord2<_tElement>& translation)									{
@@ -403,15 +410,35 @@ namespace gpk
 					(	const ::gpk::SCoord2<uint32_t>			& targetSize
 					,	const ::gpk::SRectangle2D<_tCoord>		& rectangleToRealign
 					,	::gpk::SRectangle2D<_tCoord>			& rectangleRealigned
-					,	ALIGN							align
+					,	ALIGN									align
 					)																																					noexcept	{
 		rectangleRealigned															= rectangleToRealign;
- 			 if gbit_true(align, ALIGN_CENTER	)	rectangleRealigned.Offset.x			= (targetSize.x	>> 1) - (rectangleToRealign.Size.x >> 1) + rectangleToRealign.Offset.x;	
-		else if gbit_true(align, ALIGN_RIGHT	)	rectangleRealigned.Offset.x			= targetSize.x  - rectangleToRealign.Offset.x - rectangleToRealign.Size.x;				
-
-			 if gbit_true(align, ALIGN_VCENTER	)	rectangleRealigned.Offset.y			= (targetSize.y >> 1) - (rectangleToRealign.Size.y >> 1) + rectangleToRealign.Offset.y;	
-		else if gbit_true(align, ALIGN_BOTTOM	)	rectangleRealigned.Offset.y			= targetSize.y - rectangleToRealign.Offset.y - rectangleToRealign.Size.y;				
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (_tCoord)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
+		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (_tCoord) targetSize.x			- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }
+		else													{}
+	
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_VCENTER	))	{ rectangleRealigned.Offset.y += (_tCoord)(targetSize.y >> 1)	- (rectangleRealigned.Size.y >> 1); }
+		else if(::gpk::bit_true(align, ::gpk::ALIGN_BOTTOM	))	{ rectangleRealigned.Offset.y =  (_tCoord) targetSize.y			- (rectangleRealigned.Size.y + rectangleRealigned.Offset.y); }
+		else													{}
 		return rectangleRealigned;
+	}
+
+	template <typename _tCoord>
+				::gpk::SRectangle2D<_tCoord>&									dockRectangle		
+					(	const ::gpk::SRectangle2D<_tCoord>		& rectangleToDockTo
+					,	const ::gpk::SRectangle2D<_tCoord>		& rectangleToDock
+					,	::gpk::SRectangle2D<_tCoord>			& rectangleDocked
+					,	ALIGN									align
+					)																																					noexcept	{
+		rectangleDocked																= rectangleToDock;
+			 /*if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleDocked.Offset.x = (rectangleToDockTo.Size.x >> 1)	- (rectangleDocked.Size.x >> 1)	+ rectangleDocked.Offset.x; }
+		else*/if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleDocked.Offset.x = rectangleToDockTo.Size.x  - (rectangleDocked.Size.x		+ rectangleDocked.Offset.x); }
+		else													{ rectangleDocked.Offset.x = rectangleToDockTo.Size.x; }
+	
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_VCENTER	))	{ rectangleDocked.Offset.y = (rectangleToDockTo.Size.y >> 1)	- (rectangleDocked.Size.y >> 1)	+ rectangleDocked.Offset.y; }
+		else if(::gpk::bit_true(align, ::gpk::ALIGN_BOTTOM	))	{ rectangleDocked.Offset.y = rectangleToDockTo.Size.y			- (rectangleDocked.Size.y		+ rectangleDocked.Offset.y); }
+		else													{}
+		return rectangleDocked;
 	}
 
 	//------------------------------------------------------------------------------------------------------------
@@ -423,11 +450,11 @@ namespace gpk
 					,	::gpk::ALIGN						align
 					)																																					noexcept	{
 		coordRealigned																	= coordToRealign;
- 			 if gbit_true(align, ALIGN_CENTER	)	coordRealigned.x						= (targetSize.x	>> 1) + coordToRealign.Offset.x;	
-		else if gbit_true(align, ALIGN_RIGHT	)	coordRealigned.x						= targetSize.x - coordToRealign.Offset.x;			
+ 			 if gbit_true(align, ALIGN_CENTER	)	coordRealigned.x						+= (targetSize.x >> 1);	
+		else if gbit_true(align, ALIGN_RIGHT	)	coordRealigned.x						= targetSize.x - coordToRealign.x;			
 
-			 if gbit_true(align, ALIGN_VCENTER	)	coordRealigned.y						= (targetSize.y >> 1) + coordToRealign.Offset.y;	
-		else if gbit_true(align, ALIGN_BOTTOM	)	coordRealigned.y						= targetSize.y - coordToRealign.Offset.y;			
+			 if gbit_true(align, ALIGN_VCENTER	)	coordRealigned.y						+= (targetSize.y >> 1);	
+		else if gbit_true(align, ALIGN_BOTTOM	)	coordRealigned.y						= targetSize.y - coordToRealign.y;			
 		return coordRealigned;
 	}
 

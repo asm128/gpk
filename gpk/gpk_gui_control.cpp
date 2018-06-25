@@ -45,8 +45,14 @@
 		::gpk::SControlText															& controlText							= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {	
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: controlMenu.Area.Size.y = ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Metrics[idControl].Total.Global.Size.y); controlMenu.Area.Size.x += gui.Controls.Metrics[idControl].Total.Global.Size.x; break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: controlMenu.Area.Size.y += gui.Controls.Metrics[idControl].Total.Global.Size.y; controlMenu.Area.Size.x = ::gpk::max(controlMenu.Area.Size.x, (int32_t)controlText.Text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x); break; 
+		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: 
+			controlMenu.Area.Size.x													+= gui.Controls.Metrics[idControl].Total.Global.Size.x; 
+			controlMenu.Area.Size.y													= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Metrics[idControl].Total.Global.Size.y); 
+			break;
+		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: 
+			controlMenu.Area.Size.y													+= gui.Controls.Metrics[idControl].Total.Global.Size.y; 
+			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int32_t)controlText.Text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x); 
+			break; 
 		}
 	}
 	return 0;
