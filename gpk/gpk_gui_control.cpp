@@ -9,7 +9,7 @@
 	gui.Controls.Controls		[menu.IdControl].Margin								= {};
 	gui.Controls.Text			[menu.IdControl].Text								= " ";
 	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText					= {false, false};
-//	gui.Controls.Modes			[menu.IdControl].Design								= true;
+	gui.Controls.Modes			[menu.IdControl].Design								= true;
 	return 0; 
 }
 

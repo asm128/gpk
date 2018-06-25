@@ -75,6 +75,49 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 	return 0;
 }
 
+static		::gpk::error_t												unhideMenuHierarchy						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SControlList& menu)	{
+	if(menu.IndexParentList != -1 && false == desktop.Items.ControlLists.Unused[menu.IndexParentList]) 
+		::unhideMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
+
+	gui.Controls.States[menu.IdControl].Hidden								= false;
+	const int32_t																parentControlIndex						= gui.Controls.Controls[menu.IdControl].IndexParent;
+	if(-1 != parentControlIndex) {
+		::gpk::array_pod<int32_t> & parentChildren = gui.Controls.Children[parentControlIndex];
+		for(uint32_t iChild = 0; iChild < parentChildren.size(); ++iChild) {
+			if(parentChildren[iChild] == menu.IdControl) {
+				parentChildren.remove(iChild);
+				parentChildren.push_back(menu.IdControl);
+				::gpk::controlMetricsInvalidate(gui, parentControlIndex);
+				break;
+			}
+		}
+	}
+	return 0;
+}
+
+
+static		::gpk::error_t												selectMenuHierarchy						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SControlList& menu)	{
+	if(menu.IndexParentList != -1 && false == desktop.Items.ControlLists.Unused[menu.IndexParentList]) {
+		::selectMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
+		desktop.Items.ControlLists[menu.IndexParentList].IdSelected				= menu.IndexParentItem;
+	}
+	gui.Controls.States[menu.IdControl].Hidden = false;
+	return 0;
+}
+
+static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)	{
+	desktop.SelectedMenu														= -1;
+	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
+	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+		::gpk::SControlList																& menu								= menus[iMenu];
+		menu.IdSelected																= -1;
+		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // skip root menus
+			continue;
+		gui.Controls.States[menu.IdControl].Hidden									= true;
+	}
+	return 0;
+}
+
 			::gpk::error_t												gpk::desktopUpdate						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input)							{
 	for(uint32_t iViewport = 0; iViewport < desktop.Items.Viewports.size(); ++iViewport) {
 		if(desktop.Items.Viewports.Unused[iViewport])
@@ -113,56 +156,38 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 
 		if(controlState.Execute) {
 			info_printf("Executed %u.", iControl);
-			desktop.SelectedMenu														= -1;
-			::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
-			for(uint32_t iMenu0 = 0, countMenus = menus.size(); iMenu0 < countMenus; ++iMenu0) {
-				::gpk::SControlList																& menu								= menus[iMenu0];
-				if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
-					continue;
-				else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent 
-					continue;
-				gui.Controls.States[menu.IdControl].Hidden									= true;
-			}
-			//for(uint32_t iMenu = 0, countMenus = desktop.Menus.size(); iMenu < countMenus; ++iMenu) {
-			//	::gpk::SControlList																& menu								= desktop.ControlLists[iMenu];
-			//	for(uint32_t iOption = 0, countOptions = menu.IdControls.size(); iOption < countOptions; ++iOption) {
-			//		if(false == ::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[menu.IdControls[iOption]].Total.Global)) 
-			//			gui.Controls.Constraints[menu.IdControl].Hidden								= true;
-			//	}
-			//}
-
+			::clearMenuHierarchy(gui, desktop);
 		}
 	}
 
-	//for(uint32_t iMenu = 0, countMenus = desktop.Menus.size(); iMenu < countMenus; ++iMenu) {
-	//	::gpk::SControlList															& menu									= desktop.Menus[iMenu];
-	//	for(uint32_t iOption = 0, countOptions = menu.IdControls.size(); iOption < countOptions; ++iOption) {
-	//		iMenu
-	//	}
-	//}
+	if(input.ButtonDown(1) || input.ButtonDown(2)) 
+		::clearMenuHierarchy(gui, desktop);
 
 	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
-	for(uint32_t iMenu0 = 0, countMenus = menus.size(); iMenu0 < countMenus; ++iMenu0) {
-		::gpk::SControlList																& menu								= menus[iMenu0];
+	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+		::gpk::SControlList																& menu								= menus[iMenu];
 		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
 			continue;
 		else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent 
 			continue;
 
 		::gpk::SControlList																& parentMenu						= menus[menu.IndexParentList];
-
-		const ::gpk::SControlState														& controlState						= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]]; 
+		const ::gpk::SControlState														& parentItemState					= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]]; 
 		::gpk::SControlState															& controlStateMenu					= gui.Controls.States[menu.IdControl];
-		if(controlState.Hover) {
-			controlStateMenu.Hidden														= false;
-			if(controlState.Execute) 
-				parentMenu.IdSelected														= menu.IdControl;
+		if(parentItemState.Hover) {
+			::unhideMenuHierarchy(gui, desktop, menu);
+			if(parentItemState.Execute) {
+				//parentMenu.IdSelected														= menu.IndexParentItem;
+				::clearMenuHierarchy(gui, desktop);
+				::selectMenuHierarchy(gui, desktop, menu);
+			}
 		}
 		else {
 			const ::gpk::SControlMetrics													& controlListMetrics				= gui.Controls.Metrics[menu.IdControl];
-			if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), controlListMetrics.Total.Global) && controlStateMenu.Hidden == false)
-				controlStateMenu.Hidden												= false;
-			else if(parentMenu.IdSelected != menu.IdControl)
+			if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), controlListMetrics.Total.Global) && controlStateMenu.Hidden == false) {
+				::unhideMenuHierarchy(gui, desktop, menu);
+			}
+			else if(parentMenu.IdSelected != menu.IndexParentItem)
 				controlStateMenu.Hidden												= true;
 		}
 	}
