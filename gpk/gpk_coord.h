@@ -424,6 +424,24 @@ namespace gpk
 	}
 
 	template <typename _tCoord>
+				::gpk::SRectangle2D<_tCoord>&									realignRectangle		
+					(	const ::gpk::SCoord2<uint32_t>			& targetSize
+					,	const ::gpk::SRectangle2D<double>		& rectangleToRealign
+					,	::gpk::SRectangle2D<double>				& rectangleRealigned
+					,	ALIGN									align
+					)																																					noexcept	{
+		rectangleRealigned															= rectangleToRealign;
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (_tCoord)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
+		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (_tCoord) targetSize.x			- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }
+		else													{}
+	
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_VCENTER	))	{ rectangleRealigned.Offset.y += (_tCoord)(targetSize.y >> 1)	- (rectangleRealigned.Size.y >> 1); }
+		else if(::gpk::bit_true(align, ::gpk::ALIGN_BOTTOM	))	{ rectangleRealigned.Offset.y =  (_tCoord) targetSize.y			- (rectangleRealigned.Size.y + rectangleRealigned.Offset.y); }
+		else													{}
+		return rectangleRealigned;
+	}
+
+	template <typename _tCoord>
 				::gpk::SRectangle2D<_tCoord>&									dockRectangle		
 					(	const ::gpk::SRectangle2D<_tCoord>		& rectangleToDockTo
 					,	const ::gpk::SRectangle2D<_tCoord>		& rectangleToDock
