@@ -156,7 +156,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
 		// Font
 		::gpk::STextureMonochrome<uint32_t>						FontTexture							= {};
-		::gpk::SCoord2<uint32_t>								FontCharSize						= {9, 16};
+		::gpk::SCoord2<uint16_t>								FontCharSize						= {9, 16};
 
 		::gpk::SGUIZoom											Zoom								= {};
 		uint32_t												ThemeDefault						= 0;

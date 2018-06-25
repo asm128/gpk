@@ -119,8 +119,8 @@
 		control.Border															= {1, 1, 1, 1};
 		control.Margin															= {1, 1, 1, 1};
 
-		const uint32_t																widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right					));
-		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + ((int64_t)heightTitleBar + control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom	));
+		const uint32_t																widthViewport							= (uint32_t)(targetSize.x + ::gpk::controlNCSpacing(control).x);
+		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + ((int64_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
 		control.Area.Size														= {(int32_t)widthViewport, (int32_t)heightViewport};
 		for(uint32_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
 			gpk_necall(viewport.IdControls[iElement] = ::gpk::controlCreate(gui), "This shouldn't fail");

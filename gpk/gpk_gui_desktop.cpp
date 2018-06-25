@@ -57,7 +57,7 @@
 
 static		::gpk::error_t												displace										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<double> & mouseDeltas)	{
 	const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-	::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.GetScaled(currentScale.x, currentScale.y);
+	::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
 	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.Cast<int32_t>();
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }

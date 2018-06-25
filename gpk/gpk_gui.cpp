@@ -162,12 +162,12 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_10	+ ::gpk::ASCII_COLOR_INDEX_5}
 			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_9 	+ ::gpk::ASCII_COLOR_INDEX_6}
 			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_8 	+ ::gpk::ASCII_COLOR_INDEX_7}
-			, ::gpk::SColorBGRA{(uint32_t)0xFFFFFFFF & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
-			, ::gpk::SColorBGRA{(uint32_t)0xFFFFFFFF & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
-			, ::gpk::SColorBGRA{(uint32_t)0xFFFFFFFF & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4 )}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7 )}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8 )}
+			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
+			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
+			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
+			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4)}
+			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7)}
+			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8)}
 			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_4 + ::gpk::ASCII_COLOR_INDEX_7)}
 
 			, ::gpk::SColorBGRA{::gpk::BROWN}
@@ -274,6 +274,8 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
 	::gpk::SCoord2<double>												scale													= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+	if(fabs(1.0 - scale.x) < 0.001) scale.x = 1.0;
+	if(fabs(1.0 - scale.y) < 0.001) scale.y = 1.0;
 	::gpk::SCoord2<double>												scaledPosition											= {control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y};
 	::gpk::SCoord2<double>												scaledSize												= {control.Area.Size	.x * scale.x, control.Area.Size		.y * scale.y};
 	::gpk::SRectLimits<double>											scaledBorders											= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
@@ -349,15 +351,17 @@ static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gu
 	return 0;
 }
 
-static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<uint32_t> & targetMetrics, const ::gpk::SCoord2<uint32_t> & fontCharSize, const ::gpk::SRectangle2D<int16_t> & targetRect, const ::gpk::STextureMonochrome<uint32_t>& fontTexture, const ::gpk::view_const_string& textToRaster, ::gpk::array_pod<::gpk::SCoord2<uint32_t>> & dstCoords)												{
+static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<uint32_t> & targetMetrics, const ::gpk::SCoord2<uint16_t> & fontCharSize, const ::gpk::SRectangle2D<int16_t> & targetRect, const ::gpk::STextureMonochrome<uint32_t>& fontTexture, const ::gpk::view_const_string& textToRaster, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)												{
 	const uint32_t														charsPerRow												= fontTexture.Pitch / fontCharSize.x;
 	for(uint32_t iChar = 0, countChars = (uint32_t)textToRaster.size(); iChar < countChars; ++iChar) {
 		char																charToDraw												= textToRaster[iChar];
-		const int32_t														coordTableX												= charToDraw % charsPerRow;
-		const int32_t														coordTableY												= charToDraw / charsPerRow;
-		const ::gpk::SCoord2<int32_t>										coordCharTable											= ::gpk::SCoord2<uint32_t>{coordTableX * fontCharSize.x, coordTableY * fontCharSize.y}.Cast<int32_t>();
-		const ::gpk::SRectangle2D<int32_t>									dstRect1												= {{(int32_t)(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.Cast<int32_t>()};
+		const int32_t														coordTableX												= charToDraw % (int32_t)charsPerRow;
+		const int32_t														coordTableY												= charToDraw / (int32_t)charsPerRow;
+		const ::gpk::SCoord2<int32_t>										coordCharTable											= ::gpk::SCoord2<int32_t>{coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
 		const ::gpk::SRectangle2D<int32_t>									srcRect0												= {coordCharTable, fontCharSize.Cast<int32_t>()};
+		::gpk::SRectangle2D<int32_t>										dstRect1												= {{((int32_t)targetRect.Offset.x + (int32_t)fontCharSize.x * (int32_t)iChar), targetRect.Offset.y}, fontCharSize.Cast<int32_t>()};
+		dstRect1.Size.x													+= ::gpk::min(0, (int32_t)targetRect.Offset.x);
+		dstRect1.Size.y													+= ::gpk::min(0, (int32_t)targetRect.Offset.y);
 		error_if(errored(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {charsPerRow * fontCharSize.x, 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)), "I believe this never fails.");
 	}
 	return 0;
@@ -393,7 +397,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	::gpk::SControlText													& controlText											= gui.Controls.Text		[iControl];
-	::gpk::array_pod<::gpk::SCoord2<uint32_t>>							dstCoords;
+	::gpk::array_pod<::gpk::SCoord2<int32_t>>							dstCoords;
 	::textLineRaster(target.metrics(), gui.FontCharSize, rectText, gui.FontTexture, controlText.Text, dstCoords);
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
@@ -487,7 +491,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
 
 	if(control.Image.metrics().LengthSquared())
-		::gpk::grid_copy(target, control.Image, controlMetrics.Client.Global);
+		::gpk::grid_copy(target, control.Image, ::gpk::SRectangle2D<int32_t>{controlMetrics.Client.Global.Offset, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, controlMetrics.Client.Global.Offset.x), ::gpk::min(0, controlMetrics.Client.Global.Offset.y)}});
 
 	::controlTextDraw(gui, iControl, target);
 	return 0;
