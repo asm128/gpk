@@ -119,7 +119,6 @@ static		::gpk::error_t												unhoverMenuHierarchy						(::gpk::SGUI& gui, :
 }
 
 static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)	{
-	desktop.SelectedMenu														= -1;
 	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
 	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
 		::gpk::SControlList																& menu								= menus[iMenu];

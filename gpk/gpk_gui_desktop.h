@@ -37,7 +37,6 @@ namespace gpk
 
 	struct SDesktop {
 				int32_t															IdControl									= -1;
-				int32_t															SelectedMenu								= -1;
 				::gpk::SDesktopItems											Items										= {};
 				::gpk::array_obj<::gpk::array_pod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
 	};			
