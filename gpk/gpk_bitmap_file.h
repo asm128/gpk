@@ -27,6 +27,9 @@ namespace gpk
 	static inline		::gpk::error_t							bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::STexture	<::gpk::SColorBGRA>& out_Texture)	{ return bmgFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 
 						::gpk::error_t							bmpOrBmgLoad						(::gpk::view_string bmpFileName, ::gpk::STexture<::gpk::SColorBGRA>& loaded);
+
+						::gpk::error_t							pngFileLoad							(const ::gpk::array_view<const ubyte_t>	& source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView);
+						::gpk::error_t							pngFileLoad							(const ::gpk::view_const_string			& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView);
 }
 
 #endif // GPK_BITMAP_FILE_H_236544263544352344

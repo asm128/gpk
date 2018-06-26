@@ -18,7 +18,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 			};
 		for(uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 			::gpk::bit_view<uint8_t>									inputBits													= {&inputTriplet[iSingleIn], 8};
-			::gpk::reverse(inputBits);
+			::gpk::reverse_bits(inputBits);
 		}
 		const ::gpk::bit_view<uint8_t>								inputBits														= inputTriplet;
 		uint8_t														outputQuad		[4]												= {};
@@ -27,7 +27,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 			::gpk::bit_view<uint8_t>									outputBits														= {&outputQuad[iSingleOut], 6};
 			for(uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
 				outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
-			::gpk::reverse(outputBits);
+			::gpk::reverse_bits(outputBits);
 			if(outputQuad[iSingleOut] >= ::gpk::size(base64Symbols) - 1) { 
 				error_printf("Out of range. This could happen if the algorithm or the input character table got broken.");
 				out_base64[iOutput64++]									= -1;
@@ -75,7 +75,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 			};
 		for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
 			::gpk::bit_view<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
-			::gpk::reverse(inputBits);
+			::gpk::reverse_bits(inputBits);
 		}
 		const ::gpk::bit_view<uint8_t>								inputBits														= inputQuad;
 		uint8_t														outputTriplet		[3]											= {};
@@ -86,7 +86,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 				outputBits[iBitOut]										= inputBits[iBitIn + (iBitIn / 6) * 2];
 				++iBitIn;
 			}
-			::gpk::reverse(outputBits);
+			::gpk::reverse_bits(outputBits);
 			outputBytes[iOutputByte++]								= outputTriplet[iSingleOut];
 		}
 	}

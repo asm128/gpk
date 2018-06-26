@@ -87,7 +87,7 @@ namespace gpk
 			const uint32_t														offsetElement				= index / ELEMENT_BITS;
 			const uint32_t														offsetLocal					= index % ELEMENT_BITS;
 			const _tElement														& selectedElement			= Data[offsetElement];
-			return (selectedElement & (1ULL << offsetLocal)); 
+			return (selectedElement & (1ULL << offsetLocal)) > 0 ? true : false; 
 		}
 
 		// Methods
@@ -101,7 +101,7 @@ namespace gpk
 	};
 
 	template<typename _tField>
-	::gpk::error_t													reverse						(::gpk::bit_view<_tField>& toReverse)													{
+	::gpk::error_t													reverse_bits				(::gpk::bit_view<_tField> toReverse)													{
 		const uint32_t														countBits					= toReverse.size() / 2;
 		const uint32_t														lastBitIndex				= toReverse.size() - 1;
 		for(uint32_t iBit = 0; iBit < countBits; ++iBit) {
@@ -112,6 +112,17 @@ namespace gpk
 		}
 		return 0;
 	}
+
+	template <typename _tCell>
+						int32_t										reverse						(::gpk::array_view<_tCell> elements)														{
+		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
+			uint8_t																old							= elements[i];
+			elements[i]														= elements[elements.size() - 1 - i];
+			elements[elements.size() - 1 - i]											= old;
+		}
+		return 0;
+	}
+
 } // namespace
 
 #endif // GPK_ARRAY_VIEW_BIT_H_9276349872384

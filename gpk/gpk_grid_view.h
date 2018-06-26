@@ -23,8 +23,8 @@ namespace gpk
 		inline														grid_view					(_tElement* dataElements, const ::gpk::SCoord2<uint32_t>& gridMetrics)					: grid_view(dataElements, gridMetrics.x, gridMetrics.y)		{}
 
 		// Operators
-							::gpk::array_view<_tElement>			operator[]					(uint32_t row)																			{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(row >= Size.y, ::std::exception(""), "Invalid row."); return ::gpk::array_view<_tElement			>(&Data[row * Size.x], Size.x); }
-							::gpk::array_view<const _tElement>		operator[]					(uint32_t row)														const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(row >= Size.y, ::std::exception(""), "Invalid row."); return ::gpk::array_view<const _tElement	>(&Data[row * Size.x], Size.x); }
+							::gpk::array_view<_tElement>			operator[]					(uint32_t row)																			{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(row >= Size.y, ::std::exception(""), "Invalid row: %i.", (int32_t)row); return ::gpk::array_view<_tElement		>(&Data[row * Size.x], Size.x); }
+							::gpk::array_view<const _tElement>		operator[]					(uint32_t row)														const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(row >= Size.y, ::std::exception(""), "Invalid row: %i.", (int32_t)row); return ::gpk::array_view<const _tElement	>(&Data[row * Size.x], Size.x); }
 
 		// Methods
 		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;						}

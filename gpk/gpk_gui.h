@@ -45,12 +45,14 @@ namespace gpk
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
 		::gpk::SRectLimits<int32_t>								DockToControl							;
+		::gpk::SMinMax<::gpk::SCoord2<int32_t>>					SizeMinMax								= {{}, {0xFFFF, 0xFFFF}};
 	};
 
 	struct SControlState {
 		bool													Disabled								: 1;
 		bool													Hover									: 1;
 		bool													Pressed									: 1;
+		bool													Released								: 1;
 		bool													Selected								: 1;
 		bool													Execute									: 1;
 		bool													Outdated								: 1;

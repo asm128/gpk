@@ -79,8 +79,8 @@
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
-    <ClCompile Include="gpk_gui_text.cpp" />
     <ClCompile Include="gpk_label.cpp" />
+    <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
@@ -172,7 +172,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
@@ -193,7 +193,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
@@ -216,7 +216,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
@@ -241,7 +241,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib\</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>

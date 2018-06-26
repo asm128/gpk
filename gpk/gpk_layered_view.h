@@ -21,8 +21,8 @@ namespace gpk
 		}
 
 		// Operators
-							::gpk::grid_view<_tElement>					operator[]					(uint32_t layer)																			{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid row."); return ::gpk::grid_view<_tElement			>(&Data[layer * LayerSize], Size.x, Size.y); }
-							::gpk::grid_view<const _tElement>			operator[]					(uint32_t layer)														const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid row."); return ::gpk::grid_view<const _tElement	>(&Data[layer * LayerSize], Size.x, Size.y); }
+							::gpk::grid_view<_tElement>					operator[]					(uint32_t layer)																			{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid layer: %i.", layer); return ::gpk::grid_view<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y); }
+							::gpk::grid_view<const _tElement>			operator[]					(uint32_t layer)														const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid layer: %i.", layer); return ::gpk::grid_view<const _tElement	>(&Data[layer * LayerSize], Size.x, Size.y); }
 
 		// Methods
 		inline constexpr	const _tElement*							begin						()																		const	noexcept	{ return Data;						}

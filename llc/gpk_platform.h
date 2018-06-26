@@ -62,4 +62,11 @@
 #	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
+
+namespace gpk 
+{
+	// -- Returns 0 on little-endian machines
+	static inline int				test_endianness			()		noexcept	{ static constexpr const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
+}
+
 #endif // GPK_PLATFORM_GLOBALS_H_298365465465
