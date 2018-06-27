@@ -31,7 +31,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	app.PNGImages.resize(::gpk::size(filenames));
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
-		::gpk::pngFileLoad(filenames[iFile], app.PNGImages[iFile].Texels, app.PNGImages[iFile].View);
+		error_if(errored(::gpk::pngFileLoad(filenames[iFile], app.PNGImages[iFile].Texels, app.PNGImages[iFile].View)), "Failed to load file: %s.", filenames[iFile].begin());
 
 	return 0; 
 }
@@ -84,7 +84,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		target->Color.View[y][x]											= rand();
 
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) {
-		::gpk::SCoord2<uint32_t>	position				= {(iFile * 64) % (target->Color.View.metrics().x - 64), (iFile * 64) / (target->Color.View.metrics().x - 64) * 64};
+		::gpk::SCoord2<uint32_t>												position				= {(iFile * 64) % (target->Color.View.metrics().x - 64), (iFile * 64) / (target->Color.View.metrics().x - 64) * 64};
 		::gpk::grid_copy_blend(target->Color.View, app.PNGImages[iFile].View, position);
 	}
 

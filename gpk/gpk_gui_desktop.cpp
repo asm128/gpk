@@ -20,7 +20,7 @@
 			::gpk::error_t												gpk::desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(PaletteGrid	, paletteGrid	); return iPaletteGrid	; }
 			::gpk::error_t												gpk::desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(ControlList	, controlList	); 
 	if(iControlList >= desktop.Children.size())
-		desktop.Children.resize(iControlList + 1);
+		gpk_necall(desktop.Children.resize(iControlList + 1), "Out of memory?");
 	return iControlList; 
 }
 

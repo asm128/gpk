@@ -21,7 +21,6 @@ namespace gpk
 		};
 
 	struct SControlMode {
-		bool													Design									: 1;
 		GUI_COLOR_MODE											ColorMode								: 4;
 	};
 
@@ -57,6 +56,7 @@ namespace gpk
 		bool													Execute									: 1;
 		bool													Outdated								: 1;
 		bool													Hidden									: 1;
+		bool													Design									: 1;
 		bool													Unused									: 1;
 	};
 

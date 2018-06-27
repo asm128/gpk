@@ -427,11 +427,8 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 }
 
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::grid_view<::gpk::SColorBGRA>& target)					{
-	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
-	if(mode.Design || controlState.Hidden)
-		return 0;
-
+	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
@@ -545,8 +542,10 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 			gui.Controls.States[iOutdated].Outdated							= true;
 		gui.LastSize													= target.metrics();
 	}
-	if(false == gui.Controls.States[iControl].Hidden) {
-		gpk_necall(::actualControlDraw(gui, iControl, target), "Unknown issue!");
+	::gpk::SControlState												controlState											= gui.Controls.States[iControl];
+	if(false == controlState.Hidden) {
+		if(false == controlState.Design)
+			gpk_necall(::actualControlDraw(gui, iControl, target), "Unknown issue!");
 		::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) 
 			gpk_necall(::gpk::controlDrawHierarchy(gui, children[iChild], target), "Unknown issue!");
@@ -580,7 +579,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
-		if(false == gui.Controls.Modes[iControl].Design) {
+		if(false == controlState.Design) {
 			controlHovered													= iControl;
 			::updateGUIControlHovered(controlState, input);
 		}
@@ -634,9 +633,10 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
-			gui.Controls.States[iControl].Hover								= false;
+			::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+			controlState.Hover												= false;
 			if(0 == input.MouseCurrent.ButtonState[0])
-				gui.Controls.States[iControl].Pressed							= false;
+				controlState.Pressed											= false;
 		}
 		//else {
 		//	verbose_printf("Hovered: %u.", iControl);
