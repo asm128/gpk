@@ -50,11 +50,12 @@ namespace gpk
 	struct SControlState {
 		bool													Disabled								: 1;
 		bool													Hover									: 1;
+		bool													UnHover									: 1;
 		bool													Pressed									: 1;
 		bool													Released								: 1;
 		bool													Selected								: 1;
 		bool													Execute									: 1;
-		bool													Outdated								: 1;
+		bool													Updated									: 1;
 		bool													Hidden									: 1;
 		bool													Design									: 1;
 		bool													Unused									: 1;

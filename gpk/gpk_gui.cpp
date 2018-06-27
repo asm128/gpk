@@ -115,12 +115,11 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 	controlTable.Metrics	[iControl]								= {};
 	controlTable.Children	[iControl]								= ::gpk::array_view<int32_t>{};
 	controlTable.Modes		[iControl]								= {};	
+	controlTable.States		[iControl]								= {};
 
 	::gpk::SControl														& control				= controlTable.Controls		[iControl]	= {};
-	::gpk::SControlState												& controlStates			= controlTable.States		[iControl]	= {};
 	::gpk::SControlConstraints											& controlConstraints	= controlTable.Constraints	[iControl]	= {};	
 	::gpk::SControlText													& controlText			= controlTable.Text			[iControl]	= {};
-	controlStates.Outdated											= true;
 	control.IndexParent												= -1;
 	control.Align													= ::gpk::ALIGN_TOP_LEFT;
 	control.Area													= {{0, 0}, {16, 16}};
@@ -269,7 +268,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & _targetSize, bool forceUpdate)					{
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
-	if(false == controlState.Outdated && false == forceUpdate)
+	if(controlState.Updated && false == forceUpdate)
 		return 0;
 
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
@@ -358,7 +357,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 		::gpk::realignRectangle(targetRect.Size.Cast<uint32_t>(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
 		controlMetrics.Text.Offset										+= controlMetrics.Client.Global.Offset.Cast<int16_t>();
 	}
-	controlState.Outdated											= false;
+	controlState.Updated											= true;
 	return 0;
 }
 
@@ -539,7 +538,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
-			gui.Controls.States[iOutdated].Outdated							= true;
+			gui.Controls.States[iOutdated].Updated							= false;
 		gui.LastSize													= target.metrics();
 	}
 	::gpk::SControlState												controlState											= gui.Controls.States[iControl];
@@ -585,8 +584,10 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 		}
 	}
 	else {
-		if (controlState.Hover) 
+		if (controlState.Hover) {
 			controlState.Hover												= false;
+			controlState.UnHover											= true;
+		}
 
 		if(input.ButtonUp(0) && controlState.Pressed)
 			controlState.Pressed											= false;
@@ -615,8 +616,12 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 		::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
 			continue;
-		if (controlState.Execute)	// EXECUTE only lasts one tick.
-			controlState.Execute											= false;
+
+		// Clear events that only last one tick.
+		if (controlState.Execute	) controlState.Execute					= false;
+		if (controlState.Released	) controlState.Released					= false;
+		if (controlState.UnHover	) controlState.UnHover					= false;
+
 		::gpk::SControl														& control												= gui.Controls.Controls[iControl];
 		if(false == ::controlInvalid(gui, control.IndexParent))	
 			continue;
@@ -648,7 +653,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::grid_view<::gpk::SColorBGRA>& target)													{
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
-			gui.Controls.States[iOutdated].Outdated							= true;
+			gui.Controls.States[iOutdated].Updated							= false;
 		gui.LastSize													= target.metrics();
 	}
 	gpk_necall(::gpk::guiUpdateMetrics(gui, gui.LastSize, false), "Unknown issue!");;
@@ -665,7 +670,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 
 			::gpk::error_t										gpk::controlMetricsInvalidate							(::gpk::SGUI& gui, int32_t iControl)	{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
-	controlState.Outdated											= true;
+	controlState.Updated											= false;
 	const ::gpk::array_view<int32_t>									& controlChildren										= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild) 
 		gpk_necall(::gpk::controlMetricsInvalidate(gui, controlChildren[iChild]), "Invalid child?");
