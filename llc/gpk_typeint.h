@@ -24,6 +24,18 @@ namespace gpk
 #	define	REFCOUNT_T								intptr_t
 	typedef REFCOUNT_T								refcount_t			;
 #endif
+
+	template<class _tBase>	struct remove_cv																			{ using type = _tBase; };
+	template<class _tBase>	struct remove_cv<const					_tBase>												{ using type = _tBase; };
+	template<class _tBase>	struct remove_cv<volatile				_tBase>												{ using type = _tBase; };
+	template<class _tBase>	struct remove_cv<const volatile			_tBase>												{ using type = _tBase; };
+	template<class _tBase>	using									remove_cv_t											= typename remove_cv<_tBase>::type;
+
+	template<class _tBase>	struct remove_volatile																		{ using type = _tBase; };
+	template<class _tBase>	struct remove_volatile<const			_tBase>												{ using type = _tBase; };
+	template<class _tBase>	struct remove_volatile<volatile			_tBase>												{ using type = _tBase; };
+	template<class _tBase>	struct remove_volatile<const volatile	_tBase>												{ using type = _tBase; };
+	template<class _tBase>	using									remove_volatile_t									= typename remove_volatile<_tBase>::type;
 }
 
 #endif // GPK_TYPEINT_H_29873490827342

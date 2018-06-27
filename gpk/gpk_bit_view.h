@@ -113,16 +113,6 @@ namespace gpk
 		return 0;
 	}
 
-	template <typename _tCell>
-						int32_t										reverse						(::gpk::array_view<_tCell> elements)														{
-		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
-			uint8_t																old							= elements[i];
-			elements[i]														= elements[elements.size() - 1 - i];
-			elements[elements.size() - 1 - i]											= old;
-		}
-		return 0;
-	}
-
 } // namespace
 
 #endif // GPK_ARRAY_VIEW_BIT_H_9276349872384

@@ -30,6 +30,9 @@ namespace gpk
 
 						::gpk::error_t							pngFileLoad							(const ::gpk::array_view<const ubyte_t>	& source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView);
 						::gpk::error_t							pngFileLoad							(const ::gpk::view_const_string			& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView);
+						//::gpk::error_t							pngFileWrite						(const ::gpk::view_const_string			& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView);
+
+						::gpk::error_t							pngFileWrite						(const ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView, ::gpk::array_pod<ubyte_t>& out_Bytes);
 }
 
 #endif // GPK_BITMAP_FILE_H_236544263544352344

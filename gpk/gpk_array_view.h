@@ -91,6 +91,20 @@ namespace gpk
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])						: array_view(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
 	};
 
+
+	template <typename _tCell>
+						int32_t										reverse						(::gpk::array_view<_tCell> elements)														{
+		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
+			uint8_t																old							= elements[i];
+			elements[i]														= elements[elements.size() - 1 - i];
+			elements[elements.size() - 1 - i]											= old;
+		}
+		return 0;
+	}
+
+#define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
+#define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
+#define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
 }
 
 #endif // GPK_ARRAY_VIEW_H_2398472395543

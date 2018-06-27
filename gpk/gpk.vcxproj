@@ -54,6 +54,7 @@
     <ClInclude Include="gpk_matrix.h" />
     <ClInclude Include="gpk_module.h" />
     <ClInclude Include="gpk_particle.h" />
+    <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_ptr.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
@@ -81,6 +82,7 @@
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_png.cpp" />
+    <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
