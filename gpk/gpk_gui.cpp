@@ -265,12 +265,9 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUIControl
 	return 0;
 }
 
-static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & _targetSize, bool forceUpdate)					{
+static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & _targetSize)					{
 	gpk_necall(::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
-	if(controlState.Updated && false == forceUpdate)
-		return 0;
-
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
 	::gpk::SCoord2<double>												scale													= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	if(fabs(1.0 - scale.x) < 0.001) scale.x = 1.0;
@@ -318,15 +315,18 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 	if(dockToControl.Right	!= -1) { 
 		gpk_necall(::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right); 
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.Cast<uint32_t>(), true);
-		const ::gpk::SControl												& other			= gui.Controls.Controls	[dockToControl.Right]; 
-		const ::gpk::SControlMetrics										& otherMetrics	= gui.Controls.Metrics	[dockToControl.Right]; 
+		const ::gpk::SControl												& other									= gui.Controls.Controls	[dockToControl.Right]; 
+		const ::gpk::SControlMetrics										& otherMetrics							= gui.Controls.Metrics	[dockToControl.Right]; 
 		if(gbit_true(other.Align, ::gpk::ALIGN_RIGHT) && gbit_false(other.Align, ::gpk::ALIGN_HCENTER)) { 
 			controlMetrics.Total	.Global.Offset.x						= otherMetrics.Total.Global.Offset.x - controlMetrics.Total.Global.Size.x; 
 			controlMetrics.Client	.Global.Offset.x						= (int32_t)(controlMetrics.Total.Global.Offset.x + ncSizesScaled.Left); 
-			controlMetrics.Total	.Global.Size.x							-= otherMetrics.Total.Global.Offset.x - (otherMetrics.Total.Global.Offset.x - otherMetrics.Total.Global.Size.x);
-			controlMetrics.Client	.Global.Size.x							-= otherMetrics.Total.Global.Offset.x - (otherMetrics.Total.Global.Offset.x - otherMetrics.Total.Global.Size.x);
-			controlMetrics.Total	.Global.Offset.x						+= otherMetrics.Total.Global.Offset.x - (otherMetrics.Total.Global.Offset.x - otherMetrics.Total.Global.Size.x);
-			controlMetrics.Client	.Global.Offset.x						+= otherMetrics.Total.Global.Offset.x - (otherMetrics.Total.Global.Offset.x - otherMetrics.Total.Global.Size.x);
+			int32_t																diffToSubstract							= targetSize.x - otherMetrics.Total.Local.Offset.x;
+			if(controlConstraints.AttachSizeToControl.x == iControl) {
+				controlMetrics.Total	.Global.Size.x							-= diffToSubstract;
+				controlMetrics.Client	.Global.Size.x							-= diffToSubstract;
+				controlMetrics.Total	.Global.Offset.x						+= diffToSubstract;
+				controlMetrics.Client	.Global.Offset.x						+= diffToSubstract;
+			}
 		} 
 		else { 
 			controlMetrics.Total	.Global.Offset.x						= otherMetrics.Total.Global.Offset.x + otherMetrics.Total.Global.Size.x; 
@@ -520,7 +520,8 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 }
 
 			::gpk::error_t										gpk::controlUpdateMetricsTopToDown							(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate)				{
-	gpk_necall(::controlUpdateMetrics(gui, iControl, targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");
+	if(false == gui.Controls.States[iControl].Updated || forceUpdate)
+		gpk_necall(::controlUpdateMetrics(gui, iControl, targetSize), "Unknown error! Maybe the control tree got broken?");
 	::gpk::array_view<int32_t>											& children												= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0; iChild < children.size(); ++iChild)
 		gpk_necall(::gpk::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize, forceUpdate), "Unknown error! Maybe the control tree got broken?");

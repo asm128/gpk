@@ -6,8 +6,8 @@
 #define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
 
-static		::gpk::error_t												pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
-	int32_t																			scanLineWidth									= imageWidth;
+static		::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
+	int32_t																	scanLineWidth									= imageWidth;
 	switch(bitDepth) {
 	default	  : break;
 	case	 1: { scanLineWidth = imageWidth / 8; if(colorType == 0) break; else if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination"); }	} break; 
@@ -26,11 +26,9 @@ static		::gpk::error_t												pngScanLineSizeFromFormat						(int32_t colorT
 	return scanLineWidth;
 }
 
-static	::gpk::error_t												pngStreamInflate								(const ::gpk::array_view<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
-	int																			ret;
+static	::gpk::error_t												pngInflate											(const ::gpk::array_view<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
 	z_stream																	strm											= {};
-
-	ret																		= inflateInit(&strm);	 // allocate inflate state 
+	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
 	if (ret != Z_OK)
 		return ret;
 
@@ -704,6 +702,85 @@ static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::array
 	info_printf("Decoding passess executed: %u.", countPasses);
 	return 0;
 }
+
+static			::gpk::error_t											pngBytesPerPixel								(int32_t colorType, int32_t bitDepth) {
+	uint32_t																	bytesPerPixel								= 1;
+	switch(colorType) {
+	case 0: bytesPerPixel = (bitDepth == 16) ? 2 : 1; break;
+	case 2: bytesPerPixel = (bitDepth == 16) ? 6 : 3; break;
+	case 4: bytesPerPixel = (bitDepth == 16) ? 4 : 2; break;
+	case 6: bytesPerPixel = (bitDepth == 16) ? 8 : 4; break;
+	}
+	return bytesPerPixel;
+}
+
+static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData& pngData) {
+	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
+	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines										= pngData.Scanlines;
+	::gpk::array_view<::gpk::SCoord2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
+	imageSizes	[0]															= // 1
+		{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 8 + one_if(imageHeader.Size.x % 8)
+		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if(imageHeader.Size.y % 8)
+		};
+	imageSizes	[1]															= // 2
+		{ (imageHeader.Size.x <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.x - 4) % 8)
+		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if((imageHeader.Size.y) % 8)
+		};
+	imageSizes	[2]															= // 3
+		{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 4 + one_if(imageHeader.Size.x % 4)
+		, (imageHeader.Size.y <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.y - 4) % 8)
+		};
+	imageSizes	[3]															= // 4
+		{ (imageHeader.Size.x <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.x - 2) % 4)
+		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 4 + one_if(imageHeader.Size.y % 4)
+		};
+	imageSizes	[4]															= // 5
+		{ (imageHeader.Size.x <  2)	? 0 : (imageHeader.Size.x) / 2 + one_if(imageHeader.Size.x % 2)
+		, (imageHeader.Size.y <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.y - 2) % 4)
+		};
+	imageSizes	[5]															= // 6
+		{ (imageHeader.Size.x < 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 1) / 2, 0) + one_if(((int32_t)imageHeader.Size.x - 1) % 2)
+		, (imageHeader.Size.y < 2)	? 0 : (imageHeader.Size.y) / 2 + one_if(imageHeader.Size.y % 2)
+		};
+	imageSizes	[6]															= // Adam 7
+		{ imageHeader.Size.x
+		, imageHeader.Size.y		/ 2 
+		};
+
+	//return -1;
+	uint32_t																	totalScanlines									= 0;
+	for(uint32_t iImage = 0; iImage < 7; ++iImage) 
+		totalScanlines															+= imageSizes[iImage].y;
+	gpk_necall(scanlines.resize(totalScanlines)			, "Out of memory or corrupt file.");
+	gpk_necall(pngData.Filters.resize(scanlines.size())	, "Out of memory or corrupt file.");
+	uint32_t																	offsetByte										= 0;
+	uint32_t																	offsetScanline									= 0;
+	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
+	for(uint32_t iImage = 0; iImage < 7; ++iImage) {
+		uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
+		info_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
+		const ::gpk::SCoord2<uint32_t>												currentImageSize								= imageSizes[iImage];
+		for(uint32_t y = 0; y < currentImageSize.y; ++y) {
+			int32_t																		currentScanline									= offsetScanline + y;
+			pngData.Filters[currentScanline]										= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];
+			info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[currentScanline]);
+			gpk_necall(scanlines[currentScanline].resize(widthScanlineCurrent), "Out of memory or corrupt file.");
+			memcpy(scanlines[currentScanline].begin(), &pngData.Inflated[offsetByte + y * widthScanlineCurrent + y + 1], widthScanlineCurrent);
+		}
+
+		if(currentImageSize.y) {
+			gpk_necall(::pngScanlineDefilter({&pngData.Filters[offsetScanline], currentImageSize.y}, currentImageSize, bytesPerPixel, {&scanlines[offsetScanline], currentImageSize.y}), "Corrupt file?");
+			if(imageHeader.ColorType == 3 || imageHeader.ColorType == 0) // Decode pixel ordering for bit depths of 1, 2 and 4 bits
+				if(widthScanlineCurrent)
+					::scanlineBitDecodeOrder(imageHeader.BitDepth, {&scanlines[offsetScanline], currentImageSize.y});
+			if(widthScanlineCurrent)
+				offsetByte																+= (widthScanlineCurrent + 1) * currentImageSize.y;
+			offsetScanline															+= currentImageSize.y;
+		}
+	}
+	return 0;
+}
+
 				::gpk::error_t											gpk::pngFileLoad								(const ::gpk::array_view<const ubyte_t>& source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_View) {
 	::gpk::stream_view<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::SPNGData																pngData											;
@@ -740,79 +817,13 @@ static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::array
 		);
 	uint32_t																	maxScanLineWidth							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
 	pngData.Inflated.resize(maxScanLineWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
-	gpk_necall(::pngStreamInflate(pngData.Deflated, pngData.Inflated), "Failed to decompress!");
+	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "Failed to decompress!");
 
 	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines									= pngData.Scanlines;
-	uint32_t																	bytesPerPixel								= 1;
-	switch(imageHeader.ColorType) {
-	case 0: bytesPerPixel = (imageHeader.BitDepth == 16) ? 2 : 1; break;
-	case 2: bytesPerPixel = (imageHeader.BitDepth == 16) ? 6 : 3; break;
-	case 4: bytesPerPixel = (imageHeader.BitDepth == 16) ? 4 : 2; break;
-	case 6: bytesPerPixel = (imageHeader.BitDepth == 16) ? 8 : 4; break;
-	}
+	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
 
-	if(imageHeader.MethodInterlace) {
-		::gpk::array_view<::gpk::SCoord2<uint32_t>>									imageSizes									= pngData.Adam7Sizes;
-		imageSizes	[0]															= // 1
-			{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 8 + one_if(imageHeader.Size.x % 8)
-			, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if(imageHeader.Size.y % 8)
-			};
-		imageSizes	[1]															= // 2
-			{ (imageHeader.Size.x <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.x - 4) % 8)
-			, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if((imageHeader.Size.y) % 8)
-			};
-		imageSizes	[2]															= // 3
-			{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 4 + one_if(imageHeader.Size.x % 4)
-			, (imageHeader.Size.y <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.y - 4) % 8)
-			};
-		imageSizes	[3]															= // 4
-			{ (imageHeader.Size.x <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.x - 2) % 4)
-			, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 4 + one_if(imageHeader.Size.y % 4)
-			};
-		imageSizes	[4]															= // 5
-			{ (imageHeader.Size.x <  2)	? 0 : (imageHeader.Size.x) / 2 + one_if(imageHeader.Size.x % 2)
-			, (imageHeader.Size.y <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.y - 2) % 4)
-			};
-		imageSizes	[5]															= // 6
-			{ (imageHeader.Size.x < 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 1) / 2, 0) + one_if(((int32_t)imageHeader.Size.x - 1) % 2)
-			, (imageHeader.Size.y < 2)	? 0 : (imageHeader.Size.y) / 2 + one_if(imageHeader.Size.y % 2)
-			};
-		imageSizes	[6]															= // Adam 7
-			{ imageHeader.Size.x
-			, imageHeader.Size.y		/ 2 
-			};
-
-		//return -1;
-		uint32_t																	totalScanlines									= 0;
-		for(uint32_t iImage = 0; iImage < 7; ++iImage) 
-			totalScanlines															+= imageSizes[iImage].y;
-		gpk_necall(scanlines.resize(totalScanlines)			, "Out of memory or corrupt file.");
-		gpk_necall(pngData.Filters.resize(scanlines.size())	, "Out of memory or corrupt file.");
-		uint32_t																	offsetByte										= 0;
-		uint32_t																	offsetScanline									= 0;
-		for(uint32_t iImage = 0; iImage < 7; ++iImage) {
-			uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
-			info_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
-			const ::gpk::SCoord2<uint32_t>												currentImageSize								= imageSizes[iImage];
-			for(uint32_t y = 0; y < currentImageSize.y; ++y) {
-				int32_t																		currentScanline									= offsetScanline + y;
-				pngData.Filters[currentScanline]										= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];
-				info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[currentScanline]);
-				gpk_necall(scanlines[currentScanline].resize(widthScanlineCurrent), "Out of memory or corrupt file.");
-				memcpy(scanlines[currentScanline].begin(), &pngData.Inflated[offsetByte + y * widthScanlineCurrent + y + 1], widthScanlineCurrent);
-			}
-
-			if(currentImageSize.y) {
-				gpk_necall(::pngScanlineDefilter({&pngData.Filters[offsetScanline], currentImageSize.y}, currentImageSize, bytesPerPixel, {&scanlines[offsetScanline], currentImageSize.y}), "Corrupt file?");
-				if(imageHeader.ColorType == 3 || imageHeader.ColorType == 0) // Decode pixel ordering for bit depths of 1, 2 and 4 bits
-					if(widthScanlineCurrent)
-						::scanlineBitDecodeOrder(imageHeader.BitDepth, {&scanlines[offsetScanline], currentImageSize.y});
-				if(widthScanlineCurrent)
-					offsetByte																+= (widthScanlineCurrent + 1) * currentImageSize.y;
-				offsetScanline															+= currentImageSize.y;
-			}
-		}
-	}
+	if(imageHeader.MethodInterlace) 
+		::pngDefilterScanlinesInterlaced(pngData);
 	else {
 		pngData.Filters.clear();
 		scanlines.resize(imageHeader.Size.y);
