@@ -31,7 +31,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	app.PNGImages.resize(::gpk::size(filenames));
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
-		error_if(errored(::gpk::pngFileLoad(filenames[iFile], app.PNGImages[iFile].Texels, app.PNGImages[iFile].View)), "Failed to load file: %s.", filenames[iFile].begin());
+		error_if(errored(::gpk::pngFileLoad(filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
 
 	return 0; 
 }
@@ -80,13 +80,24 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target->Color		.resize(app.Framework.MainDisplay.Size);
 	target->DepthStencil.resize(target->Color.View.metrics());
 	for(uint32_t y = 0; y < target->Color.View.metrics().y; ++y) 
-	for(uint32_t x = 0; x < target->Color.View.metrics().x; ++x) 
+	for(uint32_t x = 0; x < target->Color.View.metrics().x; ++x) {
 		target->Color.View[y][x]											= rand();
+		target->Color.View[y][x].a											= 255;
+	}
 
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) {
 		::gpk::SCoord2<uint32_t>												position				= {(iFile * 64) % (target->Color.View.metrics().x - 64), (iFile * 64) / (target->Color.View.metrics().x - 64) * 64};
 		::gpk::grid_copy_blend(target->Color.View, app.PNGImages[iFile].View, position);
 	}
+
+	//::gpk::array_pod<ubyte_t>												bytesPNG				= 0;
+	//::gpk::pngFileWrite(target->Color.View, bytesPNG);
+	//FILE																	* fp					= 0;
+	//fopen_s(&fp, "png_test_generated.png", "wb");
+	//if(fp) {
+	//	fwrite(bytesPNG.begin(), 1, bytesPNG.size(), fp);
+	//	fclose(fp);
+	//}
 
 	//::gpk::clearTarget(*target);
 	{

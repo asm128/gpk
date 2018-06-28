@@ -28,9 +28,9 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 } // namespace
 
-
  static		const ::gpk::view_const_string			filenames	[]		=
-	 { "..\\gpk_data\\pngsuite\\basi0g01.png"
+	 { "png_test_generated.png"
+	 , "..\\gpk_data\\pngsuite\\basi0g01.png"
 	 , "..\\gpk_data\\pngsuite\\basi3p01.png"
 	 , "..\\gpk_data\\pngsuite\\basn0g01.png"
 	 , "..\\gpk_data\\pngsuite\\basn3p01.png"
