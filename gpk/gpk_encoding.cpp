@@ -1,9 +1,9 @@
 #include "gpk_encoding.h"
-#include "gpk_bit_view.h"
+#include "gpk_view_bit.h"
 
 static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-			::gpk::error_t								gpk::base64Encode												(const ::gpk::array_view<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
+			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t													iOutput64														= out_base64.size(); // append the result 
@@ -17,14 +17,14 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 			, use2 ? inputBytes[iInputByte + 2] : 0U
 			};
 		for(uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
-			::gpk::bit_view<uint8_t>									inputBits													= {&inputTriplet[iSingleIn], 8};
+			::gpk::view_bit<uint8_t>									inputBits													= {&inputTriplet[iSingleIn], 8};
 			::gpk::reverse_bits(inputBits);
 		}
-		const ::gpk::bit_view<uint8_t>								inputBits														= inputTriplet;
+		const ::gpk::view_bit<uint8_t>								inputBits														= inputTriplet;
 		uint8_t														outputQuad		[4]												= {};
 		uint32_t													iBitIn															= 0;
 		for(uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
-			::gpk::bit_view<uint8_t>									outputBits														= {&outputQuad[iSingleOut], 6};
+			::gpk::view_bit<uint8_t>									outputBits														= {&outputQuad[iSingleOut], 6};
 			for(uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
 				outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
 			::gpk::reverse_bits(outputBits);
@@ -49,7 +49,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 	return 0;
 }
 
-			::gpk::error_t								gpk::base64Decode												(const ::gpk::array_view<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
+			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_array<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
 	rni_if(0 == in_base64.size(), "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {
@@ -74,14 +74,14 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 3]) % 128]
 			};
 		for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
-			::gpk::bit_view<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
+			::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
 			::gpk::reverse_bits(inputBits);
 		}
-		const ::gpk::bit_view<uint8_t>								inputBits														= inputQuad;
+		const ::gpk::view_bit<uint8_t>								inputBits														= inputQuad;
 		uint8_t														outputTriplet		[3]											= {};
 		uint32_t													iBitIn															= 0;
 		for(uint32_t iSingleOut = 0; iSingleOut < 3; ++iSingleOut) {
-			::gpk::bit_view<ubyte_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
+			::gpk::view_bit<ubyte_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
 			for(uint32_t iBitOut = 0; iBitOut < 8; ++iBitOut) { // extract relevant bits from encoded bytes
 				outputBits[iBitOut]										= inputBits[iBitIn + (iBitIn / 6) * 2];
 				++iBitIn;

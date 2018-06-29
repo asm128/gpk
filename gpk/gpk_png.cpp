@@ -1,29 +1,28 @@
 #include "gpk_bitmap_file.h"
-#include "gpk_stream_view.h"
+#include "gpk_view_stream.h"
 #include "zlib.h"
 #include "gpk_png.h"
 
 static		::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
 	int32_t																	scanLineWidth									= imageWidth;
 	switch(bitDepth) {
-	default	  : break;
-	case	 1: { scanLineWidth = imageWidth / 8; if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination");	}	} break; 
-	case	 2: { scanLineWidth = imageWidth / 4; if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination");	}	} break; 
-	case	 4: { scanLineWidth = imageWidth / 2; if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination");	}	} break; 
-	case	 8: { scanLineWidth = imageWidth / 1; if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { scanLineWidth *= 2; } else if(colorType == 6) { scanLineWidth *= 4; }																						} break; 
-	case	16: { scanLineWidth = imageWidth * 2; if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { scanLineWidth *= 2; } else if(colorType == 6) { scanLineWidth *= 4; }																						} break; 
+	default	  : return -1; // ?? Corrupt file?
+	case	 1: { scanLineWidth /= 8;	if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination"); }	} break; 
+	case	 2: { scanLineWidth /= 4;	if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination"); }	} break; 
+	case	 4: { scanLineWidth /= 2;	if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination"); }	} break; 
+	case	 8: {						if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { scanLineWidth *= 2; } else if(colorType == 6) { scanLineWidth *= 4; }																						} break; 
+	case	16: { scanLineWidth *= 2;	if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { scanLineWidth *= 2; } else if(colorType == 6) { scanLineWidth *= 4; }																						} break; 
 	}
 
 	switch(bitDepth) {
-	default	  : break;
-	case	 1: scanLineWidth += ((imageWidth % 8) ? 1 : 0); break;
-	case	 2: scanLineWidth += ((imageWidth % 4) ? 1 : 0); break;
-	case	 4: scanLineWidth += ((imageWidth % 2) ? 1 : 0); break;
+	default	  : return scanLineWidth;
+	case	 1: return scanLineWidth + ((imageWidth % 8) ? 1 : 0); 
+	case	 2: return scanLineWidth + ((imageWidth % 4) ? 1 : 0); 
+	case	 4: return scanLineWidth + ((imageWidth % 2) ? 1 : 0); 
 	}
-	return scanLineWidth;
 }
 
-static	::gpk::error_t												pngInflate											(const ::gpk::array_view<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
+static	::gpk::error_t												pngInflate											(const ::gpk::view_array<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
 	z_stream																	strm											= {};
 	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
 	if (ret != Z_OK)
@@ -56,12 +55,12 @@ static	::gpk::error_t												pngInflate											(const ::gpk::array_view<u
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const ::gpk::color_rgb<uint8_t>>					viewPixels										= {(const ::gpk::color_rgb<uint8_t>*)scanline.begin(), scanline.size() / 3};
+		const ::gpk::view_array<const ::gpk::color_rgb<uint8_t>>					viewPixels										= {(const ::gpk::color_rgb<uint8_t>*)scanline.begin(), scanline.size() / 3};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			::gpk::SColorBGRA															& pixelOutput									= out_View[iScanline][iPixel];
 			const ::gpk::color_rgb<uint8_t>												& pixelInput									= viewPixels[iPixel];
@@ -71,7 +70,7 @@ static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::arra
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_8							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_0_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -85,13 +84,13 @@ static			::gpk::error_t											pngScanlineDecode_0_8							(const ::gpk::arra
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_2_16							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_2_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const ::gpk::color_rgb<uint16_t>>					viewPixels										= {(const ::gpk::color_rgb<uint16_t>*)scanline.begin(), scanline.size() / 6};
+		const ::gpk::view_array<const ::gpk::color_rgb<uint16_t>>					viewPixels										= {(const ::gpk::color_rgb<uint16_t>*)scanline.begin(), scanline.size() / 6};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			::gpk::color_rgb<uint16_t>													pixelInput										= viewPixels[iPixel];
 			be2le_16(pixelInput.b);
@@ -107,13 +106,13 @@ static			::gpk::error_t											pngScanlineDecode_2_16							(const ::gpk::arr
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_16							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_0_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const uint16_t>										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::view_array<const uint16_t>										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			uint16_t																	toReverse										= viewPixels[iPixel];
 			be2le_16(toReverse);
@@ -124,12 +123,12 @@ static			::gpk::error_t											pngScanlineDecode_0_16							(const ::gpk::arr
 	}
 	return 0;
 }
-static			::gpk::error_t											pngScanlineDecode_6_8							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{ 
+static			::gpk::error_t											pngScanlineDecode_6_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{ 
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const ::gpk::color_rgba<uint8_t>>					viewPixels										= {(const ::gpk::color_rgba<uint8_t>*)scanline.begin(), scanline.size() / 4};
+		const ::gpk::view_array<const ::gpk::color_rgba<uint8_t>>					viewPixels										= {(const ::gpk::color_rgba<uint8_t>*)scanline.begin(), scanline.size() / 4};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			::gpk::SColorBGRA															& pixelOutput									= out_View[iScanline][iPixel];
 			const ::gpk::color_rgba<uint8_t>											& pixelInput									= viewPixels[iPixel];
@@ -139,13 +138,13 @@ static			::gpk::error_t											pngScanlineDecode_6_8							(const ::gpk::arra
 	return 0; 
 }
 
-static			::gpk::error_t											pngScanlineDecode_6_16							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{ 
+static			::gpk::error_t											pngScanlineDecode_6_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{ 
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const ::gpk::color_rgba<uint16_t>>					viewPixels										= {(const ::gpk::color_rgba<uint16_t>*)scanline.begin(), scanline.size() / 8};
+		const ::gpk::view_array<const ::gpk::color_rgba<uint16_t>>					viewPixels										= {(const ::gpk::color_rgba<uint16_t>*)scanline.begin(), scanline.size() / 8};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			::gpk::color_rgba<uint16_t>													colorReversed									= viewPixels[iPixel];
 			be2le_16(colorReversed.b);
@@ -162,12 +161,12 @@ static			::gpk::error_t											pngScanlineDecode_6_16							(const ::gpk::arr
 	return 0; 
 }
 
-static			::gpk::error_t											pngScanlineDecode_4_8							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{ 
+static			::gpk::error_t											pngScanlineDecode_4_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{ 
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::array_view<const uint16_t>										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::view_array<const uint16_t>										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			const uint16_t																valueInput										= viewPixels[iPixel];
 			const uint8_t																valueGrayscale									= valueInput & 0xFFU;
@@ -178,13 +177,13 @@ static			::gpk::error_t											pngScanlineDecode_4_8							(const ::gpk::arra
 	return 0; 
 }
 
-static			::gpk::error_t											pngScanlineDecode_4_16							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{ 
+static			::gpk::error_t											pngScanlineDecode_4_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{ 
 	static constexpr const double												unitGreyscale									= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		::gpk::array_view<uint32_t>													viewPixels										= {(uint32_t*)scanline.begin(), scanline.size() / 4};
+		::gpk::view_array<uint32_t>													viewPixels										= {(uint32_t*)scanline.begin(), scanline.size() / 4};
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			const uint32_t																packedValues									= viewPixels[iPixel];
 			uint16_t																	valueGrayscale									= (packedValues & 0xFFFFU);
@@ -199,7 +198,7 @@ static			::gpk::error_t											pngScanlineDecode_4_16							(const ::gpk::arr
 	return 0; 
 }
 
-static			::gpk::error_t											pngScanlineDecode_3_8							(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::array_view<::gpk::color_bgr<uint8_t>>& palette, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)		{ 
+static			::gpk::error_t											pngScanlineDecode_3_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{ 
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -214,15 +213,15 @@ static			::gpk::error_t											pngScanlineDecode_3_8							(const ::gpk::arra
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_3_bits						(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::array_view<::gpk::color_bgr<uint8_t>>& palette, uint32_t bitDepth, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)	{ 
+static			::gpk::error_t											pngScanlineDecode_3_bits						(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette, uint32_t bitDepth, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)	{ 
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {	
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::bit_view<const uint8_t>										viewPixels										= ::gpk::bit_view<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
+		const ::gpk::view_bit<const uint8_t>										viewPixels										= ::gpk::view_bit<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
 		for(uint32_t iPixel = 0; iPixel < out_View.metrics().x; ++iPixel) {
 			uint8_t																		indexPalette									= 0;
-			::gpk::bit_view<uint8_t>													indexPaletteBits								= {&indexPalette, (uint32_t)8};
+			::gpk::view_bit<uint8_t>													indexPaletteBits								= {&indexPalette, (uint32_t)8};
 			for(uint32_t i=0; i < bitDepth; ++i)
 				indexPaletteBits[i]														= viewPixels[bitDepth * iPixel + i];
 
@@ -234,16 +233,16 @@ static			::gpk::error_t											pngScanlineDecode_3_bits						(const ::gpk::ar
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_bits						(const ::gpk::array_view<const ::gpk::array_pod<uint8_t>> & scanlines, uint32_t bitDepth, ::gpk::grid_view<::gpk::SColorBGRA>& out_View)	{ 
+static			::gpk::error_t											pngScanlineDecode_0_bits						(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, uint32_t bitDepth, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)	{ 
 	double																		unitGrayscale									= 1.0 / ((1 << bitDepth) - 1) * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::bit_view<const uint8_t>										viewPixels										= ::gpk::bit_view<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
+		const ::gpk::view_bit<const uint8_t>										viewPixels										= ::gpk::view_bit<const uint8_t>{scanline.begin(), out_View.metrics().x * bitDepth};
 		for(uint32_t iPixel = 0; iPixel < out_View.metrics().x; ++iPixel) {
 			uint8_t																		valueGrayscale								= 0;
-			::gpk::bit_view<uint8_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)8};
+			::gpk::view_bit<uint8_t>													valueGrayscaleBits							= {&valueGrayscale, (uint32_t)8};
 			for(uint32_t i = 0; i < bitDepth; ++i) 
 				valueGrayscaleBits[i]													= viewPixels[bitDepth * iPixel + i];
 
@@ -257,12 +256,12 @@ static			::gpk::error_t											pngScanlineDecode_0_bits						(const ::gpk::ar
 	return 0;
 }
 
-static			::gpk::error_t												pngDecode										
+static			::gpk::error_t											pngDecode										
 	( const int32_t												bitDepth	
 	, const int32_t												colorType	
-	, const ::gpk::array_view<const ::gpk::array_pod<uint8_t>>	& scanlines	
-	, const ::gpk::array_view<::gpk::color_bgr<uint8_t>>		& palette	
-	, ::gpk::grid_view<::gpk::SColorBGRA>						& out_View
+	, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>>	& scanlines	
+	, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>		& palette	
+	, ::gpk::view_grid<::gpk::SColorBGRA>						& out_View
 	) {
 	switch(colorType) {
 	default: error_printf("Invalid color type: %u.", colorType); return -1;
@@ -281,10 +280,10 @@ static			::gpk::error_t												pngDecode
 static			::gpk::error_t											pngDecodeInterlaced
 	( const int32_t												bitDepth	
 	, const int32_t												colorType	
-	, const ::gpk::array_view<const ::gpk::array_pod<uint8_t>>	& scanlines	
-	, const ::gpk::array_view<::gpk::color_bgr<uint8_t>>		& palette
-	, const ::gpk::array_view<const ::gpk::SCoord2<uint32_t>>	& imageSizes
-	, ::gpk::grid_view<::gpk::SColorBGRA>						& out_View
+	, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>>	& scanlines	
+	, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>		& palette
+	, const ::gpk::view_array<const ::gpk::SCoord2<uint32_t>>	& imageSizes
+	, ::gpk::view_grid<::gpk::SColorBGRA>						& out_View
 	) {
 	out_View;
 	::gpk::STexture<::gpk::SColorBGRA>												adam7			[7]						= {};
@@ -294,7 +293,7 @@ static			::gpk::error_t											pngDecodeInterlaced
 		adam7[iImage].resize(currentImageSize);
 		if(0 == adam7[iImage].Texels.size())
 			continue;
-		const ::gpk::array_view<const::gpk::array_pod<uint8_t>>							currentScanlineSet						= {&scanlines[offsetScanline], currentImageSize.y};
+		const ::gpk::view_array<const::gpk::array_pod<uint8_t>>							currentScanlineSet						= {&scanlines[offsetScanline], currentImageSize.y};
 		switch(colorType) {
 		case 0: // grayscale
 			 if(bitDepth == 8) 
@@ -357,10 +356,10 @@ static			::gpk::error_t											pngDecodeInterlaced
 	return 0;
 }
 
-static			::gpk::error_t											scanlineBitDecodeOrder2							(::gpk::array_view<::gpk::array_pod<uint8_t>> & scanlines)			{
+static			::gpk::error_t											scanlineBitDecodeOrder2							(::gpk::view_array<::gpk::array_pod<uint8_t>> & scanlines)			{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) 
 		for(uint32_t iByte = 0; iByte < scanlines[iScanline].size(); ++iByte) {
-			::gpk::bit_view<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
+			::gpk::view_bit<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
 			bool																		_0												= scanlineBits[0];
 			bool																		_1												= scanlineBits[1];
 			bool																		_2												= scanlineBits[2];
@@ -377,10 +376,10 @@ static			::gpk::error_t											scanlineBitDecodeOrder2							(::gpk::array_vi
 	return 0;
 }
 
-static			::gpk::error_t											scanlineBitDecodeOrder4							(::gpk::array_view<::gpk::array_pod<uint8_t>> & scanlines)			{
+static			::gpk::error_t											scanlineBitDecodeOrder4							(::gpk::view_array<::gpk::array_pod<uint8_t>> & scanlines)			{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) 
 		for(uint32_t iByte = 0; iByte < scanlines[iScanline].size(); ++iByte) {
-			::gpk::bit_view<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
+			::gpk::view_bit<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
 			bool																		_0												= scanlineBits[0];
 			bool																		_1												= scanlineBits[1];
 			bool																		_2												= scanlineBits[2];
@@ -399,7 +398,7 @@ static			::gpk::error_t											scanlineBitDecodeOrder4							(::gpk::array_vi
 
 static			::gpk::error_t											scanlineBitDecodeOrder								
 	( const int32_t										bitDepth	
-	, ::gpk::array_view<::gpk::array_pod<uint8_t>>		scanlines	
+	, ::gpk::view_array<::gpk::array_pod<uint8_t>>		scanlines	
 	) {
 	switch(bitDepth) {
 	default: return -1;
@@ -409,13 +408,13 @@ static			::gpk::error_t											scanlineBitDecodeOrder
 		for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 			::gpk::array_pod<uint8_t>													& scanline										= scanlines[iScanline];
 			for(uint32_t iByte = 0; iByte < scanline.size(); ++iByte) 
-				::gpk::reverse_bits<uint8_t>(::gpk::bit_view<uint8_t>{&scanline[iByte], 8});
+				::gpk::reverse_bits<uint8_t>(::gpk::view_bit<uint8_t>{&scanline[iByte], 8});
 		}
 	}
 	return 0;
 }
 
-static			::gpk::error_t											pngActualFileLoad								(const ::gpk::array_view<const ubyte_t>& source, ::gpk::SPNGData & pngData, ::gpk::array_pod<uint32_t> & indicesIDAT)	{
+static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_array<const ubyte_t>& source, ::gpk::SPNGData & pngData, ::gpk::array_pod<uint32_t> & indicesIDAT)	{
 	pngData.Feature															= {};
 	memset(pngData.Signature, 0, ::gpk::size(pngData.Signature));
 	::gpk::clear
@@ -427,7 +426,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::array_v
 	memset(pngData.Adam7Sizes, 0, ::gpk::size(pngData.Adam7Sizes) * sizeof(::gpk::SCoord2<uint32_t>));
 	pngData.Header															= {};
 
-	::gpk::stream_view<const ubyte_t>											png_stream										= {source.begin(), source.size()};
+	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	png_stream.read_pod(pngData.Signature);
 	while(png_stream.CursorPosition < (png_stream.size() - 7)) {
 		::gpk::SPNGChunk															chunkRead										= {};
@@ -507,9 +506,9 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::array_v
 	return 0;
 }
 
-static			::gpk::error_t											pngDefilterSub									(::gpk::array_view<ubyte_t>& scanline, uint32_t bpp)															{ for(uint32_t iByte = bpp	; iByte < scanline.size(); ++iByte) scanline[iByte] += scanline[iByte - bpp];	return 0; }
-static			::gpk::error_t											pngDefilterUp									(::gpk::array_view<ubyte_t>& scanline, const ::gpk::array_view<const ubyte_t>& scanlinePrevious)				{ for(uint32_t iByte = 0	; iByte < scanline.size(); ++iByte) scanline[iByte] += scanlinePrevious[iByte];	return 0; }
-static			::gpk::error_t											pngDefilterAverage								(::gpk::array_view<ubyte_t>& scanline, const ::gpk::array_view<const ubyte_t>& scanlinePrevious, uint32_t bpp)	{
+static			::gpk::error_t											pngDefilterSub									(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp)															{ for(uint32_t iByte = bpp	; iByte < scanline.size(); ++iByte) scanline[iByte] += scanline[iByte - bpp];	return 0; }
+static			::gpk::error_t											pngDefilterUp									(::gpk::view_array<ubyte_t>& scanline, const ::gpk::view_array<const ubyte_t>& scanlinePrevious)				{ for(uint32_t iByte = 0	; iByte < scanline.size(); ++iByte) scanline[iByte] += scanlinePrevious[iByte];	return 0; }
+static			::gpk::error_t											pngDefilterAverage								(::gpk::view_array<ubyte_t>& scanline, const ::gpk::view_array<const ubyte_t>& scanlinePrevious, uint32_t bpp)	{
 	if(scanlinePrevious.size()) {
 		for(uint32_t iByte = 0; iByte < bpp; ++iByte) 
 			scanline[iByte]															+= ((uint32_t)scanlinePrevious[iByte] / 2) & 0xFFU;
@@ -532,7 +531,7 @@ static			::gpk::error_t											paethPredictor									(int32_t left, int32_t 
 	return (pb <= pc) ? above : upperleft;
 }
 
-static			::gpk::error_t											pngDefilterPaeth								(::gpk::array_view<ubyte_t>& scanline, const ::gpk::array_view<const ubyte_t>& scanlinePrevious, uint32_t bpp) {
+static			::gpk::error_t											pngDefilterPaeth								(::gpk::view_array<ubyte_t>& scanline, const ::gpk::view_array<const ubyte_t>& scanlinePrevious, uint32_t bpp) {
 	if(scanlinePrevious.size()) {
 		for(uint32_t iByte = 0; iByte < bpp; ++iByte) 
 			scanline[iByte]															+= paethPredictor(0, scanlinePrevious[iByte], 0) & 0xFFU;
@@ -545,7 +544,7 @@ static			::gpk::error_t											pngDefilterPaeth								(::gpk::array_view<uby
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::array_view<const ubyte_t> & scanlineFilters, const ::gpk::SCoord2<uint32_t> & imageSize, uint32_t bytesPerPixel, ::gpk::array_view<::gpk::array_pod<uint8_t>> scanlines) {
+static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::view_array<const ubyte_t> & scanlineFilters, const ::gpk::SCoord2<uint32_t> & imageSize, uint32_t bytesPerPixel, ::gpk::view_array<::gpk::array_pod<uint8_t>> scanlines) {
 	::gpk::array_pod<bool>														filteredScanlines;
 	filteredScanlines.resize(scanlineFilters.size(), false);
 	if(scanlineFilters.size())
@@ -592,21 +591,21 @@ static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::array
 	return 0;
 }
 
-static			::gpk::error_t											pngBytesPerPixel								(int32_t colorType, int32_t bitDepth) {
-	uint32_t																	bytesPerPixel								= 1;
+static			::gpk::error_t											pngBytesPerPixel								(int32_t colorType, int32_t bitDepth)					{
 	switch(colorType) {
-	case 0: bytesPerPixel = (bitDepth == 16) ? 2 : 1; break;
-	case 2: bytesPerPixel = (bitDepth == 16) ? 6 : 3; break;
-	case 4: bytesPerPixel = (bitDepth == 16) ? 4 : 2; break;
-	case 6: bytesPerPixel = (bitDepth == 16) ? 8 : 4; break;
+	default: return -1;
+	case  3: return 1;
+	case  0: return (bitDepth == 16) ? 2 : 1;
+	case  2: return (bitDepth == 16) ? 6 : 3;
+	case  4: return (bitDepth == 16) ? 4 : 2;
+	case  6: return (bitDepth == 16) ? 8 : 4;
 	}
-	return bytesPerPixel;
 }
 
-static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData& pngData) {
+static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData& pngData)								{
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines										= pngData.Scanlines;
-	::gpk::array_view<::gpk::SCoord2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
+	::gpk::view_array<::gpk::SCoord2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
 	imageSizes	[0]															= // 1
 		{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 8 + one_if(imageHeader.Size.x % 8)
 		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if(imageHeader.Size.y % 8)
@@ -644,6 +643,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	uint32_t																	offsetByte										= 0;
 	uint32_t																	offsetScanline									= 0;
 	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
+	ree_if(errored(bytesPerPixel), "Invalid format! ColorType: %u. Bit Depth: %u.", bytesPerPixel);
 	for(uint32_t iImage = 0; iImage < 7; ++iImage) {
 		uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
 		info_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
@@ -669,9 +669,8 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	return 0;
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(const ::gpk::array_view<const ubyte_t>& source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_View) {
-	::gpk::stream_view<const ubyte_t>											png_stream										= {source.begin(), source.size()};
-	::gpk::SPNGData																pngData											;
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::STexture<::gpk::SColorBGRA>& out_Texture) {
+	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::array_pod<uint32_t>													indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "Failed to read png stream! Corrupt file?");
 	::gpk::array_pod<ubyte_t>													& imageDeflated									= pngData.Deflated;
@@ -709,7 +708,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 
 	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines									= pngData.Scanlines;
 	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
-
+	ree_if(errored(bytesPerPixel), "Invalid format! Color Type: %u. Bit Depth: %u.");
 	if(imageHeader.MethodInterlace) 
 		::pngDefilterScanlinesInterlaced(pngData);
 	else {
@@ -728,8 +727,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 			::scanlineBitDecodeOrder(imageHeader.BitDepth, pngData.Scanlines);
 	}
 
-	gpk_necall(out_Colors.resize(imageHeader.Size.x * imageHeader.Size.y), "Invalid image size?");
-	out_View																= {out_Colors.begin(), imageHeader.Size};
+	gpk_necall(out_Texture.resize(imageHeader.Size), "Invalid image size?");
 	if(imageHeader.MethodInterlace)
 		return ::pngDecodeInterlaced
 			( pngData.Header.BitDepth
@@ -737,7 +735,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 			, pngData.Scanlines
 			, pngData.Palette
 			, pngData.Adam7Sizes
-			, out_View
+			, out_Texture.View
 			);
 	else
 		return ::pngDecode
@@ -745,11 +743,11 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 			, pngData.Header.ColorType
 			, pngData.Scanlines
 			, pngData.Palette
-			, out_View
+			, out_Texture.View
 			);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(const ::gpk::view_const_string	& filename, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::STexture<::gpk::SColorBGRA>& out_Texture)	{
 	FILE																		* fp											= 0;
 	ree_if(0 != fopen_s(&fp, filename.begin(), "rb") || 0 == fp, "Failed to open file: %s.", filename.begin());
 	info_printf("Loading png file: %s.", filename.begin());
@@ -766,5 +764,5 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 		return -1;
 	}
 	fclose(fp);
-	return ::gpk::pngFileLoad(fileInMemory, out_Colors, out_ImageView);
+	return ::gpk::pngFileLoad(pngData, fileInMemory, out_Texture);
 }

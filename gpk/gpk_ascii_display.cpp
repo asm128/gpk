@@ -77,7 +77,7 @@ static constexpr	const ::gpk::SColorRGBA				g_DefaultPalette	[]							=
 
 					::gpk::error_t						gpk::asciiDisplayResize							(uint32_t width, uint32_t height)																		{ return ::initWindowsConsoleProperties(width, height, (const ::gpk::SColorRGBA*)g_ConsoleInfo.InfoScreenBufferCurrent.ColorTable); }
 					::gpk::error_t						gpk::asciiDisplayPaletteReset					()																										{ return ::initWindowsConsoleProperties(g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.X, g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.Y, g_DefaultPalette); }
-					::gpk::error_t						gpk::asciiDisplayPaletteSet						(const ::gpk::array_view<::gpk::SColorRGBA>& palette)													{
+					::gpk::error_t						gpk::asciiDisplayPaletteSet						(const ::gpk::view_array<::gpk::SColorRGBA>& palette)													{
 	reterr_error_if(palette.size() < 16, "Palette too small. 16 colors are required for the console palette to be valid.");
 	return ::initWindowsConsoleProperties(g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.X, g_ConsoleInfo.InfoScreenBufferCurrent.dwSize.Y, palette.begin());
 }
@@ -118,7 +118,7 @@ static constexpr	const ::gpk::SColorRGBA				g_DefaultPalette	[]							=
 	return 0;
 }
 
-					::gpk::error_t						gpk::asciiDisplayPresent						(const ::gpk::array_view<const uint8_t>& characters, const ::gpk::array_view<const uint16_t>& colors)	{ 
+					::gpk::error_t						gpk::asciiDisplayPresent						(const ::gpk::view_array<const uint8_t>& characters, const ::gpk::view_array<const uint16_t>& colors)	{ 
 	ree_if(false == ::g_ConsoleInfo.Created, "Cannot present console if the console wasn't created!");
 	const ::HANDLE												handleConsoleOut								= ::GetStdHandle(STD_OUTPUT_HANDLE);	// Get console output handle	
 	const ::CONSOLE_SCREEN_BUFFER_INFOEX						& csbiInfo										= g_ConsoleInfo.InfoScreenBufferCurrent;

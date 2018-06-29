@@ -4,7 +4,7 @@
 
 #pragma pack(push, 1)
 
-static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::view_const_string& szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
+static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::view_const_string& szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
 	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName.begin());
 
@@ -73,7 +73,7 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	return 0;
 }
 
-					::gpk::error_t																	gpk::bmpFileLoad							(const ::gpk::view_const_string	& filename	, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{ // 
+					::gpk::error_t																	gpk::bmpFileLoad							(const ::gpk::view_const_string	& filename	, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ // 
 #if defined(GPK_WINDOWS)
 	bool																									isAlpha										= false;
 	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
@@ -118,7 +118,7 @@ struct SHeaderInfoBMP {
 #pragma pack( pop )
 
 // Currently supporting only 24-bit bitmaps
-					::gpk::error_t																	gpk::bmpFileLoad							(const byte_t* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)					{
+					::gpk::error_t																	gpk::bmpFileLoad							(const byte_t* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)					{
 	SHeaderFileBMP																							& fileHeader								= *(SHeaderFileBMP*)*source;	
 	ree_if(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");	
 	SHeaderInfoBMP																							& infoHeader								= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
@@ -162,17 +162,17 @@ struct SHeaderInfoBMP {
 			}
 		break;
 	}
-	out_ImageView																						= ::gpk::grid_view<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
+	out_ImageView																						= ::gpk::view_grid<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
 	return 0;
 }
 
-					::gpk::error_t																	bmpFileLoadPaletted							(FILE* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)					{
+					::gpk::error_t																	bmpFileLoadPaletted							(FILE* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)					{
 	source, out_Colors, out_ImageView;
 	return 0;
 }
 
 // Currently supporting only 24-bit bitmaps
-					::gpk::error_t																	gpk::bmpFileLoad							(FILE* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)					{
+					::gpk::error_t																	gpk::bmpFileLoad							(FILE* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)					{
 	::SHeaderFileBMP																						fileHeader									= {};	
 	::SHeaderInfoBMP																						infoHeader									= {};
 	ree_if(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "Failed to read file! File corrupt?");
@@ -236,12 +236,12 @@ struct SHeaderInfoBMP {
 			}
 		break;
 	}
-	out_ImageView																						= ::gpk::grid_view<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
+	out_ImageView																						= ::gpk::view_grid<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
 	return 0;
 }
 
 // Currently supporting only 24-bit bitmaps
-					::gpk::error_t																	gpk::bmgFileLoad							(FILE							* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{ 
+					::gpk::error_t																	gpk::bmgFileLoad							(FILE							* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
 	ree_if(0 == source, "Invalid function usage: destionation file cannot be NULL.");
 	uint32_t																								sizeRead									= (uint32_t)(out_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	uint32_t																								elementSize									= 0;  fread(&elementSize, sizeof(uint32_t					), 1, source);
@@ -252,7 +252,7 @@ struct SHeaderInfoBMP {
 	return sizeRead; 
 }
 
-					::gpk::error_t																	gpk::bmgFileLoad							(const byte_t					* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{ 
+					::gpk::error_t																	gpk::bmgFileLoad							(const byte_t					* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
 	ree_if(0 == source, "Invalid function usage: source cannot be NULL.");
 	uint32_t																								sizeRead									= (uint32_t)(sizeof(uint32_t) + sizeof(uint32_t));
 	uint32_t																								& elementSize								= *(uint32_t*)source;
@@ -264,7 +264,7 @@ struct SHeaderInfoBMP {
 	return sizeRead + out_Colors.size(); 
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(byte_t							* destination	, const ::gpk::grid_view<::gpk::SColorBGRA>& in_ImageView)							{ 
+					::gpk::error_t																	gpk::bmgFileWrite							(byte_t							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)							{ 
 	uint32_t																								sizeToWrite									= (uint32_t)(in_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	if(0 == destination)
 		return sizeToWrite;	// count + element size + (grid size * element size)
@@ -277,7 +277,7 @@ struct SHeaderInfoBMP {
 	return sizeToWrite; 
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(FILE							* destination	, const ::gpk::grid_view<::gpk::SColorBGRA>& in_ImageView)												{ 
+					::gpk::error_t																	gpk::bmgFileWrite							(FILE							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{ 
 	ree_if(0 == destination, "Invalid function usage: destionation file cannot be NULL.");
 	uint32_t																								sizeToWrite									= (uint32_t)(in_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	const uint32_t																							elementSize									= (uint32_t)sizeof(::gpk::SColorBGRA);	ree_if(fwrite(&elementSize, sizeof(uint32_t					), 1, destination) != 1, "No space on disk?");
@@ -286,7 +286,7 @@ struct SHeaderInfoBMP {
 	return sizeToWrite; 
 }
 
-					::gpk::error_t																	gpk::bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::grid_view<::gpk::SColorBGRA>& out_ImageView)	{ 
+					::gpk::error_t																	gpk::bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
 	FILE																									* source									= 0; 
 	fopen_s(&source, filename.begin(), "rb");
 	if(0 == source) {
@@ -302,7 +302,7 @@ struct SHeaderInfoBMP {
 	return 0; 
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(const ::gpk::view_const_string	& filename		, const ::gpk::grid_view<::gpk::SColorBGRA>& in_ImageView)												{ 
+					::gpk::error_t																	gpk::bmgFileWrite							(const ::gpk::view_const_string	& filename		, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{ 
 	FILE																									* source									= 0; 
 	fopen_s(&source, filename.begin(), "wb");
 	if(0 == source) {

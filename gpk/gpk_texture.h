@@ -1,6 +1,6 @@
 #include "gpk_array.h"
-#include "gpk_grid_view.h"
-#include "gpk_bit_view.h"
+#include "gpk_view_grid.h"
+#include "gpk_view_bit.h"
 
 #ifndef GPK_TEXTURE_H_902387498237
 #define GPK_TEXTURE_H_902387498237
@@ -12,13 +12,13 @@ namespace gpk
 		typedef				_tTexel												TTexel;
 
 							::gpk::array_pod<_tTexel>							Texels										;
-							::gpk::grid_view<_tTexel>							View										;
+							::gpk::view_grid<_tTexel>							View										;
 
 		constexpr																STexture									()													= default;
-																				STexture									(const ::gpk::grid_view<_tTexel>& other)			: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																				STexture									(const ::gpk::view_grid<_tTexel>& other)			: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																				STexture									(const ::gpk::STexture<_tTexel>& other)				: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::grid_view<_tTexel>& other)			{ 
+							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)			{ 
 			Texels																	= {other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this; 
@@ -31,8 +31,8 @@ namespace gpk
 		}
 
 
-		inline				::gpk::array_view<_tTexel>							operator[]									(uint32_t index)									{ return View[index]; }
-		inline	const		::gpk::array_view<_tTexel>							operator[]									(uint32_t index)	const							{ return View[index]; }
+		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)									{ return View[index]; }
+		inline	const		::gpk::view_array<_tTexel>							operator[]									(uint32_t index)	const							{ return View[index]; }
 
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
 		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)			{ return resize(newSize.x, newSize.y); }
@@ -43,11 +43,11 @@ namespace gpk
 		typedef				_tTexel												TTexel;
 
 							::gpk::array_pod<_tTexel>							Texels										;
-							::gpk::bit_view	<_tTexel>							View										;
+							::gpk::view_bit	<_tTexel>							View										;
 							uint32_t											Pitch										= 0;
 
 		constexpr																STextureMonochrome							()													= default;
-																				STextureMonochrome							(const ::gpk::bit_view<_tTexel>& other)				{ 
+																				STextureMonochrome							(const ::gpk::view_bit<_tTexel>& other)				{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
@@ -61,7 +61,7 @@ namespace gpk
 			return *this; 
 		}
 
-							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::bit_view<_tTexel>& other)				{ 
+							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)				{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;

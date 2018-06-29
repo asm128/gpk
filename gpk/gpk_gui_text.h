@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 #include "gpk_coord.h"
-#include "gpk_grid_view.h"
-#include "gpk_bit_view.h"
+#include "gpk_view_grid.h"
+#include "gpk_view_bit.h"
 #include "gpk_grid_copy.h"
 
 #ifndef GPK_GUI_TEXT_H_928734982734
@@ -12,7 +12,7 @@ namespace gpk
 	static inline constexpr		::gpk::error_t										textLineCalcWidth								(const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
 
 	template<typename _tColor>
-	static						::gpk::error_t										textLineDrawFixedSize							(::gpk::grid_view<_tColor>& bmpTarget, const ::gpk::grid_view<_tColor>& viewTextureFont, uint32_t characterCellsX, int32_t dstOffsetY, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const ::gpk::SCoord2<int32_t> dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static						::gpk::error_t										textLineDrawFixedSize							(::gpk::view_grid<_tColor>& bmpTarget, const ::gpk::view_grid<_tColor>& viewTextureFont, uint32_t characterCellsX, int32_t dstOffsetY, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const ::gpk::SCoord2<int32_t> dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		for(int32_t iChar = 0, charCount = (int32_t)text0.size(); iChar < charCount; ++iChar) {
 			int32_t																				coordTableX										= text0[iChar] % characterCellsX;
 			int32_t																				coordTableY										= text0[iChar] / characterCellsX;
@@ -27,7 +27,7 @@ namespace gpk
 
 	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	template<typename _tColor>
-	static				::gpk::error_t												textLineDrawFixedSizeLit						(::gpk::grid_view<_tColor>& bmpTarget, const ::gpk::bit_view<uint32_t>& viewTextureFont, const ::gpk::SCoord2<uint32_t> & viewMetrics, uint32_t characterCellsX, int32_t dstOffsetY, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const ::gpk::SCoord2<int32_t> dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static				::gpk::error_t												textLineDrawFixedSizeLit						(::gpk::view_grid<_tColor>& bmpTarget, const ::gpk::view_bit<uint32_t>& viewTextureFont, const ::gpk::SCoord2<uint32_t> & viewMetrics, uint32_t characterCellsX, int32_t dstOffsetY, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const ::gpk::SCoord2<int32_t> dstTextOffset, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::array_pod<::gpk::SCoord2<int32_t>>										dstCoords;
 		for(int32_t iChar = 0, charCount = (int32_t)text0.size(); iChar < charCount; ++iChar) {
 			const int32_t																	coordTableX										= text0[iChar] % characterCellsX;
@@ -45,14 +45,14 @@ namespace gpk
 	}
 
 	template<typename _tColor>
-	static				::gpk::error_t												textLineDrawAlignedFixedSizeRGBA			(::gpk::grid_view<_tColor>& targetView, const ::gpk::grid_view<_tColor>& fontAtlas, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0 )	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static				::gpk::error_t												textLineDrawAlignedFixedSizeRGBA			(::gpk::view_grid<_tColor>& targetView, const ::gpk::view_grid<_tColor>& fontAtlas, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0 )	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::SCoord2<int32_t>														dstTextOffset								= {(int32_t)targetSize.x / 2 - (int32_t)::gpk::textLineCalcWidth(sizeCharCell, text0) / 2, };
 		uint32_t																			dstOffsetY									= (int32_t)(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSize(targetView, fontAtlas, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset);
 	}
 
 	template<typename _tColor>
-	static				::gpk::error_t												textLineDrawAlignedFixedSizeLit					(::gpk::grid_view<_tColor>& targetView, const ::gpk::bit_view<uint32_t>& fontAtlas, const ::gpk::SCoord2<uint32_t> & viewMetrics, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	static				::gpk::error_t												textLineDrawAlignedFixedSizeLit					(::gpk::view_grid<_tColor>& targetView, const ::gpk::view_bit<uint32_t>& fontAtlas, const ::gpk::SCoord2<uint32_t> & viewMetrics, uint32_t lineOffset, const ::gpk::SCoord2<uint32_t>& targetSize, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0, const _tColor& color)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		const ::gpk::SCoord2<int32_t>														dstTextOffset								= {(int32_t)targetSize.x / 2 - (int32_t)::gpk::textLineCalcWidth(sizeCharCell, text0) / 2, };
 		uint32_t																			dstOffsetY									= (int32_t)(lineOffset * sizeCharCell.y);
 		return ::gpk::textLineDrawFixedSizeLit(targetView, fontAtlas, viewMetrics, 32, dstOffsetY, sizeCharCell, text0, dstTextOffset, color);

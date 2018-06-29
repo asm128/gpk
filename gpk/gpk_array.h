@@ -1,4 +1,4 @@
-#include "gpk_array_view.h"
+#include "gpk_view_array.h"
 #include "gpk_memory.h"
 #include <memory.h>
 #include <new>
@@ -25,9 +25,9 @@ namespace gpk
 
 	// Base for arrays that keeps track of its actual size.
 	template<typename _tCell>
-	struct array_base : public array_view<_tCell> {
+	struct array_base : public view_array<_tCell> {
 	protected:
-		using				array_view<_tCell>::		Count;
+		using				view_array<_tCell>::		Count;
 							uint32_t					Size										= 0;
 
 		inline constexpr								array_base									()																			noexcept	= default;
@@ -45,7 +45,7 @@ namespace gpk
 	template<typename _tPOD>
 	struct array_pod : public array_base<_tPOD> {
 		typedef				array_base<_tPOD>			TArrayBase									;
-		typedef				array_view<_tPOD>			TArrayView									;
+		typedef				view_array<_tPOD>			TArrayView									;
 
 		using				TArrayBase::				Count										;
 		using				TArrayBase::				Data										;
@@ -67,7 +67,7 @@ namespace gpk
 		//	throw_if(errored(resize(sizeStatic)), ::std::exception(), "Failed to resize array! Why?");
 		//	memcpy(Data, init, Count * sizeof(_tPOD));
 		//}
-		//												array_pod									(const array_view<const _tPOD>& other)													{
+		//												array_pod									(const view_array<const _tPOD>& other)													{
 		//	if(other.Count) {
 		//		const uint32_t										newSize										= other.Count;
 		//		const uint32_t										reserveSize									= calc_reserve_size(newSize);
@@ -93,8 +93,8 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}
-														array_pod									(const array_pod<_tPOD>& other)															: array_pod((const array_view<_tPOD>&) other) {}
-														array_pod									(const array_view<_tPOD>& other)														{
+														array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<_tPOD>&) other) {}
+														array_pod									(const view_array<_tPOD>& other)														{
 			if(other.size()) {
 				const uint32_t										newSize										= other.size();
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
@@ -131,8 +131,8 @@ namespace gpk
 				safeguard.Handle								= 0;
 			} // 
 		}
-							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const array_view<_tPOD>&) other); }
-							array_pod<_tPOD>&			operator =									(const array_view<_tPOD>& other)														{
+							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view_array<_tPOD>&) other); }
+							array_pod<_tPOD>&			operator =									(const view_array<_tPOD>& other)														{
 			throw_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
 			if(Count)
 				memcpy(Data, other.begin(), Count * sizeof(_tPOD));
@@ -269,7 +269,7 @@ namespace gpk
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(nullptr == newData, "Failed to allocate array for inserting new value.");
-				::gpk::array_view<_tPOD>							viewSafe									= {newData, newSize};
+				::gpk::view_array<_tPOD>							viewSafe									= {newData, newSize};
 				for(uint32_t i = 0					, maxCount = ::gpk::min(index, Count)				; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
 				for(uint32_t i = 0					, maxCount = ::gpk::min(chainLength, newSize-index)	; i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
 				for(uint32_t i = index + chainLength, maxCount = ::gpk::min(index + 1, Count)			; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
@@ -337,7 +337,7 @@ namespace gpk
 				return 0;
 			}
 
-			::gpk::array_view<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
+			::gpk::view_array<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
 			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read elements.");
 			if(0 == input) {
 				for(uint32_t i = 0; i < Count; ++i) 
@@ -368,7 +368,7 @@ namespace gpk
 			input											+= sizeof(uint32_t);
 			*inout_bytesWritten								+= sizeof(uint32_t);
 
-			::gpk::array_view<_tPOD>							newStorage									= {input, Count};
+			::gpk::view_array<_tPOD>							newStorage									= {input, Count};
 			for(uint32_t i = 0; i < Count; ++i) {
 				::gpk::podcpy(&newStorage[i], &Data[i]);
 				input											+= sizeof(_tPOD);
@@ -498,7 +498,7 @@ namespace gpk
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData								= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
-				::gpk::array_view<_tObj>							viewSafe								= {newData, Count+1};
+				::gpk::view_array<_tObj>							viewSafe								= {newData, Count+1};
 				for(uint32_t i = 0, maxCount = ::gpk::min(index + 1, Count); i < maxCount; ++i) {
 					new (&viewSafe[i]) _tObj(oldData[i]);
 					oldData[i].~_tObj();

@@ -8,7 +8,7 @@ namespace gpk
 
 	template <typename _tElement>
 	struct SRecyclableElementContainer {
-							::gpk::bit_view<uint32_t>							Unused;
+							::gpk::view_bit<uint32_t>							Unused;
 							::gpk::array_obj<_tElement>							Elements;
 							::gpk::array_pod<uint32_t>							UnusedData;
 

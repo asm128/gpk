@@ -201,10 +201,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	 //, "..\\gpk_data\\pngsuite\\xlfn0g04.png"
 	 //, "..\\gpk_data\\pngsuite\\xc1n0g08.png"
 	 //, "..\\gpk_data\\pngsuite\\xc9n2c08.png"
-	 //, "..\\gpk_data\\pngsuite\\xd0n2c08.png"
+	 , "..\\gpk_data\\pngsuite\\xd0n2c08.png"
 	 //, "..\\gpk_data\\pngsuite\\xd3n2c08.png"
 	 //, "..\\gpk_data\\pngsuite\\xd9n2c08.png"
-	 //, "..\\gpk_data\\pngsuite\\xhdn0g08.png"
+	 , "..\\gpk_data\\pngsuite\\xhdn0g08.png"
 	 , "..\\gpk_data\\pngsuite\\PngSuite.png"
 	};
  

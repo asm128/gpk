@@ -68,7 +68,7 @@ namespace gpk
 					char_t													RootNodeName[40];
 					::gpk::array_obj<::gpk::SRSMNode>						Nodes;
 	};
-				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::array_view<ubyte_t>	& input);
+				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
 				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, FILE								* input);
 				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input);
 
@@ -87,7 +87,7 @@ namespace gpk
 					::gpk::array_pod<int32_t>								IdChildren		;
 	};
 
-				::gpk::error_t											rsmGeometryGenerate						(const ::gpk::SRSMFileContents& input, ::gpk::array_view<::gpk::SModelNodeRSM>& out_generated);
+				::gpk::error_t											rsmGeometryGenerate						(const ::gpk::SRSMFileContents& input, ::gpk::view_array<::gpk::SModelNodeRSM>& out_generated);
 } // namespace
 
 #endif // GPK_RSM_H_02938402983

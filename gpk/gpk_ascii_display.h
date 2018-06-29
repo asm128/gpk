@@ -1,4 +1,4 @@
-#include "gpk_grid_view.h"		// for grid_view<>
+#include "gpk_view_grid.h"		// for view_grid<>
 #include "gpk_ascii_target.h"	// for SASCIITarget
 
 #ifndef GPK_ASCII_DISPLAY_H_34234234
@@ -13,7 +13,7 @@ namespace gpk
 					::gpk::error_t									asciiDisplaySize					(::gpk::SCoord2<uint32_t>& size);
 
 					::gpk::error_t									asciiDisplayResize					(uint32_t frontBufferWidth, uint32_t frontBufferHeight);
-					::gpk::error_t									asciiDisplayPaletteSet				(const ::gpk::array_view<::gpk::SColorRGBA>& palette);
+					::gpk::error_t									asciiDisplayPaletteSet				(const ::gpk::view_array<::gpk::SColorRGBA>& palette);
 					::gpk::error_t									asciiDisplayPaletteReset			();
 					::gpk::error_t									asciiDisplayTitleSet				(const ::gpk::view_const_string& title);
 

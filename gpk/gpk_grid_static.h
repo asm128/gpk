@@ -1,5 +1,5 @@
 #include "gpk_array.h"
-#include "gpk_grid_view.h"
+#include "gpk_view_grid.h"
 
 #ifndef GPK_GRID_H_9802374982374
 #define GPK_GRID_H_9802374982374
@@ -7,16 +7,16 @@
 namespace gpk
 {
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
-	struct grid_static : public grid_view<_tCell> {
+	struct grid_static : public view_grid<_tCell> {
 							typedef										_tCell									TCell;
-							typedef										grid_view<_tCell>						TGridView;
+							typedef										view_grid<_tCell>						TGridView;
 
 		static constexpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
 		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
 							TCell										Cells	[_sizeDepth][_sizeWidth]		= {};
 
-		inline constexpr												grid_static								()																		: grid_view(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inline constexpr												grid_static								()																		: view_grid(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
 							::gpk::error_t								read									(const byte_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "Invalid input pointer!");

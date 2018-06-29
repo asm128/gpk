@@ -14,7 +14,7 @@ namespace gpk
 				::gpk::array_obj<ptr_block_type>						Blocks;
 				::gpk::array_pod<uint32_t>								RemainingSpace;
 
-				::gpk::error_t											push_sequence				(const char* sequence, uint32_t length, ::gpk::array_view<const char>& out_view)	{
+				::gpk::error_t											push_sequence				(const char* sequence, uint32_t length, ::gpk::view_array<const char>& out_view)	{
 			const uint32_t														lengthPlusOne				= length + 1;
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t															& blkRemainingSpace			= RemainingSpace[iBlock];
@@ -38,14 +38,14 @@ namespace gpk
 	class CLabelManager	{
 		static constexpr	const uint32_t								BLOCK_SIZE					= 8192;
 							unshrinkable_block_container<BLOCK_SIZE>	Characters;
-							::gpk::array_view<const char>				Empty;
+							::gpk::view_array<const char>				Empty;
 							::gpk::array_pod<uint32_t>					Counts;
 							::gpk::array_pod<const char*>				Texts;
 
 	public:
 																		CLabelManager				()																					{ Characters.push_sequence("", 0U, Empty); }
 
-							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::array_view<const char>& out_view)		{
+							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::view_array<const char>& out_view)		{
 			if(0 == textLen || 0 == text || 0 == text[0]) {
 				out_view														= Empty;
 				return 0;

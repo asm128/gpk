@@ -1,7 +1,7 @@
 #include "gpk_log.h"
 #include "gpk_runtime.h"
 #include "gpk_module.h"
-#include "gpk_array_view.h"
+#include "gpk_view_array.h"
 
 #ifndef GPK_RUNTIME_MODULE_H_23084728934
 #define GPK_RUNTIME_MODULE_H_23084728934

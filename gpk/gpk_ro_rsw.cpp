@@ -1,5 +1,5 @@
 #include "gpk_ro_rsw.h"
-#include "gpk_stream_view.h"
+#include "gpk_view_stream.h"
 
 #pragma pack(push, 1)
 	struct SRSWHeader {
@@ -21,8 +21,8 @@
 	};
 #pragma pack(pop)
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::array_view<ubyte_t>	& input)							{
-	::gpk::stream_view<const ubyte_t>							rsw_stream													= {input.begin(), input.size()};
+			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
+	::gpk::view_stream<const ubyte_t>							rsw_stream													= {input.begin(), input.size()};
 	SRSWHeader													header														= {};//*(SRSWHeader*)input.begin();
 	rsw_stream.read_pod(header);//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);

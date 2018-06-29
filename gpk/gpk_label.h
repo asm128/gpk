@@ -1,4 +1,4 @@
-#include "gpk_array_view.h"
+#include "gpk_view_array.h"
 
 #ifndef GPK_LABEL_H_2908742983
 #define GPK_LABEL_H_2908742983
@@ -6,7 +6,7 @@
 namespace gpk
 {
 	class CLabelManager;
-	class label : public array_view<const char> {
+	class label : public view_array<const char> {
 				CLabelManager*					LabelManager;
 	public:
 												label						()																			noexcept	= default;

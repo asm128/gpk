@@ -1,4 +1,4 @@
-#include "gpk_array_view.h"
+#include "gpk_view_array.h"
 
 #ifndef GPK_STREAM_VIEW_H_992834928749283
 #define GPK_STREAM_VIEW_H_992834928749283
@@ -6,11 +6,11 @@
 namespace gpk
 {
 	template<typename _tElement>
-	struct stream_view : public array_view<_tElement> {
+	struct view_stream : public view_array<_tElement> {
 		uint32_t										CursorPosition					= 0;
 		
-		using											array_view<_tElement>::			array_view;
-		using											array_view<_tElement>::			Data;
+		using											view_array<_tElement>::			view_array;
+		using											view_array<_tElement>::			Data;
 
 		//template<typename _tPOD>					inline	::gpk::error_t					rewd								(_tPOD& toSkip)					{ CursorPosition += sizeof(_tPOD); return CursorPosition; }
 		//template<typename _tPOD>					inline	::gpk::error_t					ffwd								(_tPOD& toSkip)					{ CursorPosition += sizeof(_tPOD); return CursorPosition; }

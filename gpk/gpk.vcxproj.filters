@@ -135,21 +135,6 @@
     <ClInclude Include="gpk_coord.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_stream_view.h">
-      <Filter>array_view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_layered_view.h">
-      <Filter>array_view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_grid_view.h">
-      <Filter>array_view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_bit_view.h">
-      <Filter>array_view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_view.h">
-      <Filter>array_view</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_runtime_module.h">
       <Filter>runtime</Filter>
     </ClInclude>
@@ -173,6 +158,21 @@
     </ClInclude>
     <ClInclude Include="gpk_png.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_array.h">
+      <Filter>array_view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_bit.h">
+      <Filter>array_view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_grid.h">
+      <Filter>array_view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_layered.h">
+      <Filter>array_view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_stream.h">
+      <Filter>array_view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

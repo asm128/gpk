@@ -72,7 +72,7 @@ namespace gpk
 	};
 
 	//709655609
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::array_view<ubyte_t>	& input);
+			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_const_string	& input);
 
@@ -118,10 +118,10 @@ namespace gpk
 	, TILE_FACE_FACING								facing_direction
 	, int32_t										textureIndex
 	, ::gpk::SModelNodeGND							& generated
-	, ::gpk::grid_view<::gpk::STileMapping>			& out_mapping
+	, ::gpk::view_grid<::gpk::STileMapping>			& out_mapping
 	);
 
-				::gpk::error_t											blendGNDNormals							(const ::gpk::grid_view<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::array_view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid_view<::gpk::STileMapping>& tileMappingView, ::gpk::array_view<::gpk::SModelNodeGND> & gndModelNodes);
+				::gpk::error_t											blendGNDNormals							(const ::gpk::view_grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view_grid<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

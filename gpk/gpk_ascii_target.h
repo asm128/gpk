@@ -1,6 +1,6 @@
 #include "gpk_array.h"
 #include "gpk_ascii_color.h"
-#include "gpk_grid_view.h"
+#include "gpk_view_grid.h"
 #include "gpk_color.h"
 #include <memory> // this is required for ::std::swap()
 
@@ -10,8 +10,8 @@
 namespace gpk
 {
 	struct SASCIITarget {
-								::gpk::grid_view<uint8_t>						Characters									= {};
-								::gpk::grid_view<uint16_t>						Colors										= {};
+								::gpk::view_grid<uint8_t>						Characters									= {};
+								::gpk::view_grid<uint16_t>						Colors										= {};
 
 		inline constexpr		uint32_t										Width										()																	const	noexcept	{ return Characters.metrics().x; }
 		inline constexpr		uint32_t										Height										()																	const	noexcept	{ return Characters.metrics().y; }

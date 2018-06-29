@@ -1,6 +1,6 @@
 #include "gpk_coord.h"
 #include "gpk_color.h"
-#include "gpk_grid_view.h"
+#include "gpk_view_grid.h"
 
 #if defined(GPK_WINDOWS)
 #	include <windows.h>
@@ -50,7 +50,7 @@ namespace gpk
 		{}
 	};
 
-		::gpk::error_t																displayPresentTarget						(::gpk::SDisplay& displayInstance, const ::gpk::grid_view<::gpk::SColorBGRA>& targetToPresent);
+		::gpk::error_t																displayPresentTarget						(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent);
 		::gpk::error_t																displayUpdate								(::gpk::SDisplay& applicationInstance);
 		::gpk::error_t																displayUpdateTick							(::gpk::SDisplay& displayInstance);
 

@@ -1,8 +1,8 @@
 #include "application.h"
-#include "gpk_bitmap_file.h"
+#include "gpk_png.h"
 #include "gpk_grid_copy.h"
 
-#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
@@ -30,8 +30,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 
 	app.PNGImages.resize(::gpk::size(filenames));
+	::gpk::SPNGData															pngDataCacheForFasterLoad;
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
-		error_if(errored(::gpk::pngFileLoad(filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
+		error_if(errored(::gpk::pngFileLoad(pngDataCacheForFasterLoad, filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
 
 	return 0; 
 }

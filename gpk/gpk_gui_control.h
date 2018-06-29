@@ -62,11 +62,11 @@ namespace gpk
 	struct SPaletteGrid {
 				int32_t																	IdControl									= -1;
 				::gpk::array_pod<int32_t>												IdControls									= {};
-				::gpk::grid_view<::gpk::SColorBGRA>										Colors										= {};
+				::gpk::view_grid<::gpk::SColorBGRA>										Colors										= {};
 	};
 
 			::gpk::error_t															paletteGridInitialize						(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette);
-			::gpk::error_t															paletteGridColorsSet						(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::grid_view<::gpk::SColorBGRA>& colors);
+			::gpk::error_t															paletteGridColorsSet						(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view_grid<::gpk::SColorBGRA>& colors);
 
 }
 

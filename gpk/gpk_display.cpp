@@ -18,7 +18,7 @@
 	return 0;
 }
 
-		::gpk::error_t																			drawBuffer									(::HDC hdc, int width, int height, const ::gpk::grid_view<::gpk::SColorBGRA>& colorArray)				{
+		::gpk::error_t																			drawBuffer									(::HDC hdc, int width, int height, const ::gpk::view_grid<::gpk::SColorBGRA>& colorArray)				{
 	struct SOffscreenPlatformDetail { // raii destruction of resources
 		uint32_t																							BitmapInfoSize								= 0;
 		::BITMAPINFO																						* BitmapInfo								= 0;
@@ -63,7 +63,7 @@
 	return 0;
 }
 
-		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::grid_view<::gpk::SColorBGRA>& targetToPresent)		{ 
+		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent)		{ 
 	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;
 	retwarn_warn_if(0 == windowHandle, "presentTarget called without a valid window handle set for the main window.");
 	::HDC																								dc											= ::GetDC(windowHandle);

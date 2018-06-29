@@ -1,6 +1,6 @@
 #include "gpk_ro_rsm.h"
 #include "gpk_matrix.h"
-#include "gpk_stream_view.h"
+#include "gpk_view_stream.h"
 
 #include <string>
 
@@ -13,7 +13,7 @@ struct SRSMHeader {	// RSM Header
 #pragma pack(pop)
 
 			
-			::gpk::error_t								analyzeArray												(const ::gpk::array_view<ubyte_t>& input) {
+			::gpk::error_t								analyzeArray												(const ::gpk::view_array<ubyte_t>& input) {
 	info_printf("---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 										  
 	info_printf("---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
@@ -33,7 +33,7 @@ struct SRSMHeader {	// RSM Header
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::stream_view<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
 	uint32_t													keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
@@ -45,7 +45,7 @@ static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::stream_vi
 }
 
 // >= v1.5 Read position keyframes
-static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::stream_view<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t													positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
 	_CrtDbgBreak();
@@ -56,8 +56,8 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::stream_vi
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::array_view<ubyte_t>	& input)							{
-	::gpk::stream_view<const ubyte_t>							rsm_stream													= {input.begin(), input.size()};
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
+	::gpk::view_stream<const ubyte_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
 	rsm_stream.read_pod(loaded.AnimLength);
@@ -214,7 +214,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::stream_vi
 	return rsmFileLoad(loaded, {fileInMemory.begin(), fileInMemory.size()});
 }
 
-			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::array_view<::gpk::SModelNodeRSM>& out_meshes)			{
+			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view_array<::gpk::SModelNodeRSM>& out_meshes)			{
 	for(uint32_t iTex = 0, texCount = rsmData.TextureNames.size(); iTex < texCount; ++iTex) {
 		for(uint32_t iNode = 0, countNodes = rsmData.Nodes.size(); iNode < countNodes; ++iNode) {
 			const ::gpk::SRSMNode										& rsmNode													= rsmData.Nodes[iNode];

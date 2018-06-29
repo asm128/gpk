@@ -1,4 +1,4 @@
-#include "gpk_array_view.h"
+#include "gpk_view_array.h"
 
 #ifndef GPK_ARRAY_STATIC_H_2983749823749826534465243
 #define GPK_ARRAY_STATIC_H_2983749823749826534465243
@@ -9,8 +9,8 @@ namespace gpk
 	struct array_static	{
 							_tCell						Storage	[_sizeArray]						;
 	
-							operator					array_view<_tCell>							()												{ return {Storage, _sizeArray}; }
-							operator					array_view<const _tCell>					()										const	noexcept	{ return {Storage, _sizeArray}; }
+							operator					view_array<_tCell>							()												{ return {Storage, _sizeArray}; }
+							operator					view_array<const _tCell>					()										const	noexcept	{ return {Storage, _sizeArray}; }
 
 		inline				const _tCell&				operator[]									(uint32_t index)						const				{
 			throw_if(index >= _sizeArray, ::std::exception(""), "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);
