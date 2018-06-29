@@ -356,61 +356,30 @@ static			::gpk::error_t											pngDecodeInterlaced
 	return 0;
 }
 
-static			::gpk::error_t											scanlineBitDecodeOrder2							(::gpk::view_array<::gpk::array_pod<uint8_t>> & scanlines)			{
-	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) 
-		for(uint32_t iByte = 0; iByte < scanlines[iScanline].size(); ++iByte) {
-			::gpk::view_bit<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
-			bool																		_0												= scanlineBits[0];
-			bool																		_1												= scanlineBits[1];
-			bool																		_2												= scanlineBits[2];
-			bool																		_3												= scanlineBits[3];
-			scanlineBits[0]															= (bool)scanlineBits[6];
-			scanlineBits[1]															= (bool)scanlineBits[7];
-			scanlineBits[2]															= (bool)scanlineBits[4];
-			scanlineBits[3]															= (bool)scanlineBits[5];
-			scanlineBits[4]															= _2;
-			scanlineBits[5]															= _3;
-			scanlineBits[6]															= _0;
-			scanlineBits[7]															= _1;
-		}
-	return 0;
-}
-
-static			::gpk::error_t											scanlineBitDecodeOrder4							(::gpk::view_array<::gpk::array_pod<uint8_t>> & scanlines)			{
-	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) 
-		for(uint32_t iByte = 0; iByte < scanlines[iScanline].size(); ++iByte) {
-			::gpk::view_bit<uint8_t>													scanlineBits									= {&scanlines[iScanline][iByte], 8};
-			bool																		_0												= scanlineBits[0];
-			bool																		_1												= scanlineBits[1];
-			bool																		_2												= scanlineBits[2];
-			bool																		_3												= scanlineBits[3];
-			scanlineBits[0]															= (bool)scanlineBits[4];
-			scanlineBits[1]															= (bool)scanlineBits[5];
-			scanlineBits[2]															= (bool)scanlineBits[6];
-			scanlineBits[3]															= (bool)scanlineBits[7];
-			scanlineBits[4]															= _0;
-			scanlineBits[5]															= _1;
-			scanlineBits[6]															= _2;
-			scanlineBits[7]															= _3;
-		}
-	return 0;
+template <typename _tField>
+static			_tField													bitReverseOrder									(_tField input, const int32_t bitDepth)	{
+	const uint32_t																sizeType										= (uint32_t)(sizeof(_tField) * 8);
+	const _tField																mask											= ((_tField)(-1)) >> (sizeType - bitDepth);
+	_tField																		result											= 0;
+	for(uint32_t iBit = 0; iBit < sizeType; iBit += bitDepth) {
+		result																	|= (input & mask) << (sizeType - bitDepth - iBit);
+		input																	>>= bitDepth;
+	}
+	return result;
 }
 
 static			::gpk::error_t											scanlineBitDecodeOrder								
 	( const int32_t										bitDepth	
 	, ::gpk::view_array<::gpk::array_pod<uint8_t>>		scanlines	
 	) {
-	switch(bitDepth) {
-	default: return -1;
-	case  4: return ::scanlineBitDecodeOrder4(scanlines);
-	case  2: return ::scanlineBitDecodeOrder2(scanlines);
-	case  1:
+	if(bitDepth <= 4)
 		for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 			::gpk::array_pod<uint8_t>													& scanline										= scanlines[iScanline];
-			for(uint32_t iByte = 0; iByte < scanline.size(); ++iByte) 
-				::gpk::reverse_bits<uint8_t>(::gpk::view_bit<uint8_t>{&scanline[iByte], 8});
+			for(uint32_t iByte = 0; iByte < scanline.size(); ++iByte) {
+				uint8_t																		& pixel											= scanline[iByte];
+				pixel																	= bitReverseOrder(pixel, bitDepth);
+			}
 		}
-	}
 	return 0;
 }
 
