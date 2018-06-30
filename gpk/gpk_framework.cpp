@@ -74,11 +74,11 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	static	const int																			adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	::SDisplayInput																				* actualMainDisplay							= (::SDisplayInput*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
-	::gpk::SDisplay																				dummyDisplay;
-	::gpk::SDisplay																				& mainDisplay								= (actualMainDisplay) ? actualMainDisplay->Display : dummyDisplay;
-	::gpk::SDisplayPlatformDetail																& displayDetail								= mainDisplay.PlatformDetail;
+	::gpk::SDisplay																				dummyDisplay								= {};	// we need this to create the reference in case the display pointer isn't there.
 	::gpk::SInput																				dummyInput									= {};
+	::gpk::SDisplay																				& mainDisplay								= (actualMainDisplay) ? actualMainDisplay->Display : dummyDisplay;
 	::gpk::SInput																				& input										= (actualMainDisplay && actualMainDisplay->Input) ? *actualMainDisplay->Input : dummyInput;
+	::gpk::SDisplayPlatformDetail																& displayDetail								= mainDisplay.PlatformDetail;
 
 	int32_t																						zDelta										= {};
 	switch(uMsg) {

@@ -78,22 +78,40 @@ namespace gpk
 	typedef				::gpk::view_array<const int64_t		>	view_const_int64	;
 
 	struct view_const_string : public view_array<const char_t> {
-		inline constexpr											view_const_string					()															= default;
-																	view_const_string					(const char* inputString, uint32_t length)					: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
-		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength], uint32_t length)	: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
-		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])					: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+		inline constexpr											view_const_string					()																				= default;
+																	view_const_string					(const char* inputString, uint32_t length)										: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
+		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength], uint32_t length)						: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
+		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])										: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+
+						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
+			if(Data == other.begin()) 
+				return true;
+			if(Count != other.size())
+				return false;
+			return 0 == memcmp(Data, other.begin(), Count);
+		}
 	};
 
 	struct view_string : public view_array<char_t> {
-		inline constexpr											view_string							()															= default;
-																	view_string							(char* inputString, uint32_t length)						: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)		: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])						: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+		inline constexpr											view_string							()																				= default;
+																	view_string							(char* inputString, uint32_t length)											: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])											: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+						
+		constexpr		operator									const view_const_string&			()															const	noexcept	{ return *this; }
+
+						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
+			if(Data == other.begin()) 
+				return true;
+			if(Count != other.size())
+				return false;
+			return 0 == memcmp(Data, other.begin(), Count);
+		}
 	};
 
 
 	template <typename _tCell>
-						int32_t										reverse						(::gpk::view_array<_tCell> elements)														{
+						int32_t									reverse								(::gpk::view_array<_tCell> elements)											{
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
 			uint8_t																old							= elements[i];
 			elements[i]														= elements[elements.size() - 1 - i];

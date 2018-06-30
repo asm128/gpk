@@ -7,7 +7,7 @@ namespace gpk
 {
 	class CLabelManager;
 	class label : public view_array<const char> {
-				CLabelManager*					LabelManager;
+				CLabelManager					* LabelManager;
 	public:
 												label						()																			noexcept	= default;
 												label						(const label& other)														noexcept	= default;
@@ -17,10 +17,12 @@ namespace gpk
 												label						(const char* str, uint32_t len)												noexcept;
 
 		template<size_t _stringLength>
-		inline 									label						(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)			noexcept	: label(str, ::gpk::min((uint32_t)_stringLength, count))	{}
+		inline 									label						(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)			noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
+		inline 									label						(const ::gpk::view_const_string& other)										noexcept	: label(other.begin(), other.size())							{}
 
 		inline	operator						::gpk::view_const_string	()																	const	{ return {Data, Count}; }
 
+				bool							operator==					(const ::gpk::view_const_string& other)								const	noexcept;
 				bool							operator==					(const label& other)												const	noexcept;
 		inline	bool							operator!=					(const label& other)												const	noexcept	{ return !operator==(other); }
 	};
