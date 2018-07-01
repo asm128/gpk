@@ -12,29 +12,25 @@
 
 namespace gpk
 {
-	struct SRenderTarget {
-							::gpk::STexture<::gpk::SColorBGRA>					Color										= {};
-							::gpk::STexture<uint32_t>							DepthStencil								= {};
-	};
-							::gpk::error_t									clearTarget									(::gpk::SRenderTarget& targetToClear);
 
 	struct SFramework {
-		typedef				::gpk::STexture<::gpk::SColorBGRA>					TOffscreen;
+		typedef				::gpk::SColorBGRA											TTexel;
+		typedef				::gpk::STexture<TTexel>										TOffscreen;
 
-							::gpk::SRuntimeValues								& RuntimeValues								;
-							::gpk::SDisplay										MainDisplay									= {};
-							::gpk::ptr_obj<::gpk::SRenderTarget>				MainDisplayOffscreen						= {};
-							::gpk::ptr_obj<::gpk::SInput>						Input										= {};
-							::gpk::STimer										Timer										= {};
-							::gpk::SFrameInfo									FrameInfo									= {};
-							::gpk::SGUI											GUI											= {};
+							::gpk::SRuntimeValues										& RuntimeValues								;
+							::gpk::SDisplay												MainDisplay									= {};
+							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>		MainDisplayOffscreen						= {};
+							::gpk::ptr_obj<::gpk::SInput>								Input										= {};
+							::gpk::STimer												Timer										= {};
+							::gpk::SFrameInfo											FrameInfo									= {};
+							::gpk::SGUI													GUI											= {};
 
-																				SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{}
+																						SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{}
 	}; // struct
 
-						::gpk::error_t										updateFramework								(::gpk::SFramework& framework);
-						::gpk::error_t										mainWindowCreate							(::gpk::SDisplay& mainWindow, SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
-						::gpk::error_t										mainWindowDestroy							(::gpk::SDisplay& mainWindow);
+						::gpk::error_t												updateFramework								(::gpk::SFramework& framework);
+						::gpk::error_t												mainWindowCreate							(::gpk::SDisplay& mainWindow, SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
+						::gpk::error_t												mainWindowDestroy							(::gpk::SDisplay& mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928

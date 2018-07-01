@@ -79,8 +79,6 @@ namespace gpk
 		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)			{ return resize(newSize.x, newSize.y); }
 	}; // struct
 
-
-
 	template<typename _tTexel>
 	struct STextureProcessable {
 		typedef				_tTexel												TTexel;
@@ -88,6 +86,21 @@ namespace gpk
 							::gpk::STexture<_tTexel>							Original;
 							::gpk::STexture<_tTexel>							Processed;
 	}; // struct
+
+	template<typename _tTexel, typename _tDepthStencil>
+	struct SRenderTarget {
+							::gpk::STexture<_tTexel>							Color										= {};
+							::gpk::STexture<_tDepthStencil>						DepthStencil								= {};
+	};
+
+	template<typename _tTexel, typename _tDepthStencil>
+							::gpk::error_t									clearTarget									(::gpk::SRenderTarget<_tTexel, _tDepthStencil>& targetToClear)		{ 
+		::gpk::STexture<_tTexel>													& offscreen									= targetToClear.Color;
+		::gpk::STexture<_tDepthStencil>												& offscreenDepth							= targetToClear.DepthStencil;
+		::memset(offscreenDepth	.Texels.begin(), -1, sizeof(_tDepthStencil)	* offscreenDepth	.Texels.size());	// Clear target.
+		::memset(offscreen		.Texels.begin(),  0, sizeof(_tTexel)		* offscreen			.Texels.size());	// Clear target.
+		return 0;					
+	}
 } // namespace 
 
 #endif // GPK_TEXTURE_H_902387498237

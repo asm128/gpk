@@ -30,7 +30,7 @@ struct SDisplayInput {
 	ree_if(errored(updateResult), "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
 	rvi_if(1, 1 == updateResult, "Application exiting because the WM_QUIT message was processed.");
-	::gpk::ptr_obj<::gpk::SRenderTarget>														offscreen									= framework.MainDisplayOffscreen;
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 #endif
@@ -51,14 +51,6 @@ struct SDisplayInput {
 		}
 	}
 	return 0;
-}
-
-					::gpk::error_t														gpk::clearTarget							(::gpk::SRenderTarget& targetToClear)	{ 
-	::gpk::SFramework::TOffscreen																& offscreen									= targetToClear.Color;
-	::gpk::STexture<uint32_t>																	& offscreenDepth							= targetToClear.DepthStencil;
-	::memset(offscreenDepth	.Texels.begin(), -1, sizeof(uint32_t)								* offscreenDepth	.Texels.size());	// Clear target.
-	::memset(offscreen		.Texels.begin(), 0, sizeof(::gpk::SFramework::TOffscreen::TTexel)	* offscreen			.Texels.size());	// Clear target.
-	return 0;					
 }
 
 #include <Windowsx.h>

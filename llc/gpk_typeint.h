@@ -36,6 +36,19 @@ namespace gpk
 	template<class _tBase>	struct remove_volatile<volatile			_tBase>												{ using type = _tBase; };
 	template<class _tBase>	struct remove_volatile<const volatile	_tBase>												{ using type = _tBase; };
 	template<class _tBase>	using									remove_volatile_t									= typename remove_volatile<_tBase>::type;
+
+	template<typename _tField>
+	static			_tField											reverse_bitfield									(_tField input, const int32_t bitDepth)	{
+		const uint32_t														sizeType											= (uint32_t)(sizeof(_tField) * 8);
+		const _tField														mask												= ((_tField)(-1)) >> (sizeType - bitDepth);
+		_tField																result												= 0;
+		for(uint32_t iBit = 0; iBit < sizeType; iBit += bitDepth) {
+			result															|= (input & mask) << (sizeType - bitDepth - iBit);
+			input															>>= bitDepth;
+		}
+		return result;
+	}
+
 }
 
 #endif // GPK_TYPEINT_H_29873490827342

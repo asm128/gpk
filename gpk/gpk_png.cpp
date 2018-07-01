@@ -356,17 +356,6 @@ static			::gpk::error_t											pngDecodeInterlaced
 	return 0;
 }
 
-template <typename _tField>
-static			_tField													bitReverseOrder									(_tField input, const int32_t bitDepth)	{
-	const uint32_t																sizeType										= (uint32_t)(sizeof(_tField) * 8);
-	const _tField																mask											= ((_tField)(-1)) >> (sizeType - bitDepth);
-	_tField																		result											= 0;
-	for(uint32_t iBit = 0; iBit < sizeType; iBit += bitDepth) {
-		result																	|= (input & mask) << (sizeType - bitDepth - iBit);
-		input																	>>= bitDepth;
-	}
-	return result;
-}
 
 static			::gpk::error_t											scanlineBitDecodeOrder								
 	( const int32_t										bitDepth	
@@ -377,7 +366,7 @@ static			::gpk::error_t											scanlineBitDecodeOrder
 			::gpk::array_pod<uint8_t>													& scanline										= scanlines[iScanline];
 			for(uint32_t iByte = 0; iByte < scanline.size(); ++iByte) {
 				uint8_t																		& pixel											= scanline[iByte];
-				pixel																	= bitReverseOrder(pixel, bitDepth);
+				pixel																	= ::gpk::reverse_bitfield(pixel, bitDepth);
 			}
 		}
 	return 0;
