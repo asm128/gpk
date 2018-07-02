@@ -443,7 +443,6 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 
 	if(colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
-		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
 		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
@@ -465,12 +464,17 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	scaledBorders.Right												= (int32_t)(control.Border.Right	* scaleFinal.x);
 	scaledBorders.Bottom											= (int32_t)(control.Border.Bottom	* scaleFinal.y);
 
-	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= controlMetrics.Total.Global ; 
+	const ::gpk::SRectangle2D<int32_t>									& rectTotal												= controlMetrics.Total.Global;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal; 
 	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]			= controlMetrics.Client.Global; 
-	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]			= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{control.Border.Left, controlMetrics.Total.Global.Size.y}}; 
-	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]			= {controlMetrics.Total.Global.Offset, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Top}}; 
-	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]			= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x - control.Border.Right, 0}, ::gpk::SCoord2<int32_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
-	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]			= {controlMetrics.Total.Global.Offset + ::gpk::SCoord2<int32_t>{0, controlMetrics.Total.Global.Size.y - control.Border.Bottom}, ::gpk::SCoord2<int32_t>{controlMetrics.Total.Global.Size.x, control.Border.Bottom}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]			= {rectTotal.Offset , ::gpk::SCoord2<int32_t>{control.Border.Left, rectTotal.Size.y}}; 
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]			= {rectTotal.Offset , ::gpk::SCoord2<int32_t>{rectTotal.Size.x, control.Border.Top}}; 
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]			= {rectTotal.Offset + ::gpk::SCoord2<int32_t>{rectTotal.Size.x - control.Border.Right, 0}, ::gpk::SCoord2<int32_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]			= {rectTotal.Offset + ::gpk::SCoord2<int32_t>{0, rectTotal.Size.y - control.Border.Bottom}, ::gpk::SCoord2<int32_t>{rectTotal.Size.x, control.Border.Bottom}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Offset.x	+= control.Border.Left	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Offset.y	+= control.Border.Top	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Size	.x	-= control.Border.Left	+ control.Border.Right	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Size	.y	-= control.Border.Top	+ control.Border.Bottom	;
 
 	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_COUNT; ++iElement)
 		if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT)
