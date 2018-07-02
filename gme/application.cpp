@@ -69,7 +69,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::error_t											draw					(::gme::SApplication & app)						{ 
 	//::gpk::STimer															timer;
 	app;
-	::gpk::ptr_obj<::gpk::SRenderTarget>									target;
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
 	target->Color		.resize(app.Framework.MainDisplay.Size);
 	target->DepthStencil.resize(target->Color.View.metrics());
