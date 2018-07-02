@@ -62,7 +62,7 @@
 static		::gpk::error_t												displace										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<double> & mouseDeltas)	{
 	const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.Cast<int32_t>();
+	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.Cast<int16_t>();
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }
 
@@ -147,8 +147,8 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 					::gpk::SCoord2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 					const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 					::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-					gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled.Cast<int32_t>();
-					gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled.Cast<int32_t>();
+					gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled.Cast<int16_t>();
+					gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled.Cast<int16_t>();
 					::gpk::controlMetricsInvalidate(gui, vp.IdControl);
 				//}
 			}
@@ -276,7 +276,7 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 				::gpk::SControlConstraints											& parentControlListConstraints							= gui.Controls.Constraints[parentControlList.IdControl];
 				if(gui.Controls.Constraints[parentControlList.IdControl].DockToControl.Bottom != -1) {
 					int32_t offsety = gui.Controls.Controls	[parentControlListConstraints.DockToControl.Bottom].Area.Offset.y + gui.Controls.Controls[parentControlListConstraints.DockToControl.Bottom].Area.Size.y + gui.Controls.Controls[parentControlList.IdControls[iParentListItem]].Area.Size.y * iParentListItem;
-					controlListControl.Area.Offset.y			= offsety;
+					controlListControl.Area.Offset.y			= (int16_t)offsety;
 				}
 				else
 					controlListControl.Area.Offset.y			= gui.Controls.Controls[parentControlList.IdControl].Area.Offset.y + gui.Controls.Controls[parentControlList.IdControls[iParentListItem]].Area.Offset.y;

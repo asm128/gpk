@@ -99,7 +99,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		const int32_t													idPaletteItem			= ::gpk::controlCreate(gui);
 		::gpk::SControl													& control				= gui.Controls.Controls	[idPaletteItem];
 		control.Align												= ::gpk::ALIGN_TOP_RIGHT;
-		control.Area												= {{256 - ((int32_t)iColor % iShades) * 16, ((int32_t)iColor / iShades) * 16}, {16, 16}};
+		control.Area												= {{(int16_t)(256 - (iColor % iShades) * 16), (int16_t)((iColor / iShades) * 16)}, {16, 16}};
 		//control.Area.Offset											+= {mainWi, 0};
 		//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
 		control.Border												= 

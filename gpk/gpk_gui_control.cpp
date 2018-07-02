@@ -24,7 +24,7 @@
 		switch(menu.Orientation) {
 		default:
 		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: 
-			control.Area.Size.x														= gui.FontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x;
+			control.Area.Size.x														= int16_t(gui.FontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
 			if(menu.IdControls.size() > iPrevItem) 
 				control.Area.Offset.x													= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
@@ -50,7 +50,7 @@
 			break;
 		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: 
 			controlMenu.Area.Size.y													+= gui.Controls.Controls[idControl].Area.Size.y; 
-			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int32_t)controlText.Text.size() * (int32_t)gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x); 
+			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x)); 
 			break; 
 		}
 	}
@@ -76,7 +76,7 @@
 }
 
 			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI& gui, ::gpk::SViewport& viewport)																				{
-	uint32_t																	heightTitleBar							= gui.FontCharSize.y + 4;
+	int16_t																		heightTitleBar							= gui.FontCharSize.y + 4;
 	uint32_t																	widthTarget								= 800;
 	const ::gpk::SCoord2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
 
@@ -92,7 +92,7 @@
 
 		const uint32_t																widthViewport							= (uint32_t)(targetSize.x + ::gpk::controlNCSpacing(control).x);
 		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + ((int64_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
-		control.Area.Size														= {(int32_t)widthViewport, (int32_t)heightViewport};
+		control.Area.Size														= {(int16_t)widthViewport, (int16_t)heightViewport};
 		for(uint32_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
 			gpk_necall(viewport.IdControls[iElement] = ::gpk::controlCreate(gui), "This shouldn't fail");
 			::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[iElement]];
@@ -120,7 +120,7 @@
 	{
 		::gpk::SControl																& control								= gui.Controls.Controls		[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
-		control.Area.Size														= {(int32_t)heightTitleBar, (int32_t)heightTitleBar};
+		control.Area.Size														= {(int16_t)heightTitleBar, (int16_t)heightTitleBar};
 		control.Align															= ::gpk::ALIGN_TOP_RIGHT;
 		controlText.Text														= {"X", (uint32_t)1};
 		controlText.Align														= ::gpk::ALIGN_CENTER;
@@ -147,7 +147,7 @@
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
 		controlText.Align														= ::gpk::ALIGN_CENTER_TOP;
 		control.Border = control.Margin											= {};
-		control.Area.Size														= targetSize.Cast<int32_t>();
+		control.Area.Size														= targetSize.Cast<int16_t>();
 		//control.Area.Offset.y													= heightTitleBar;
 		control.ColorTheme														= 60;
 		::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
@@ -165,7 +165,7 @@
 	::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControl];
 	const uint32_t															widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
 	const uint32_t															heightViewport							= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
-	control.Area.Size													= {(int32_t)widthViewport, (int32_t)heightViewport};
+	control.Area.Size													= {(int16_t)widthViewport, (int16_t)heightViewport};
 	control.Align														= ::gpk::ALIGN_CENTER;
 	return 0;
 }
@@ -221,8 +221,8 @@
 		palette.IdControls[paletteElemIndex]								= ::gpk::controlCreate(gui);
 		::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
 		control.ColorTheme													= themeIndex + 1;
-		control.Area.Offset													= {(int32_t)(controlSize.x * x), (int32_t)(controlSize.y * y)};
-		control.Area.Size													= controlSize.Cast<int32_t>();
+		control.Area.Offset													= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
+		control.Area.Size													= controlSize.Cast<int16_t>();
 		::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl);
 	}
 	return 0;

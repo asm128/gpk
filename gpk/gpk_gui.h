@@ -44,7 +44,7 @@ namespace gpk
 		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
 		::gpk::SCoord2<bool>									AttachSizeToText						;
 		::gpk::SRectLimits<int32_t>								DockToControl							;
-		::gpk::SMinMax<::gpk::SCoord2<int32_t>>					SizeMinMax								= {{}, {0xFFFF, 0xFFFF}};
+		::gpk::SMinMax<::gpk::SCoord2<int16_t>>					SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlState {
@@ -107,7 +107,7 @@ namespace gpk
 		};
 
 	struct SControl {
-		::gpk::SRectangle2D<int32_t>							Area								= {{0, 0}, {16, 16}};
+		::gpk::SRectangle2D<int16_t>							Area								= {{0, 0}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>							Border								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint16_t>							Margin								= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image								= {};
@@ -116,10 +116,10 @@ namespace gpk
 		::gpk::ALIGN											Align								= ::gpk::ALIGN_TOP_LEFT;
 	};
 
-	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int32_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
-	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int32_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
-	constexpr	::gpk::SRectLimits	<int32_t>				controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
-	constexpr	::gpk::SCoord2		<int32_t>				controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
+	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
+	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
+	constexpr	::gpk::SRectLimits	<int16_t>				controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom};	 }
+	constexpr	::gpk::SCoord2		<int16_t>				controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}; }
 
 	struct SGUIZoom {
 		::gpk::SCoord2<double>									DPI									= {1.0, 1.0};

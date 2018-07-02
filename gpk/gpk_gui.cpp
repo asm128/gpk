@@ -284,7 +284,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 	rectText.Size.InPlaceScale(scale.x, scale.y);
 
 	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
-	const ::gpk::SRectLimits<int32_t>									ncSizes													= ::gpk::controlNCRect(control);
+	const ::gpk::SRectLimits<int16_t>									ncSizes													= ::gpk::controlNCRect(control);
 	const ::gpk::SRectLimits<double>									ncSizesScaled											= {(ncSizes.Left * scale.x), (ncSizes.Top * scale.y), (ncSizes.Right * scale.x), (ncSizes.Bottom * scale.y)};
 	const ::gpk::SCoord2<double>										ncTotalSize												= {(double)ncSizes.Left + ncSizes.Right, (double)ncSizes.Top + ncSizes.Bottom};
 	const ::gpk::SCoord2<double>										ncTotalSizeScaled										= ncTotalSize.GetScaled(scale.x, scale.y);
