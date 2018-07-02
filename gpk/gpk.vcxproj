@@ -24,7 +24,6 @@
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_view_array.h" />
     <ClInclude Include="gpk_ascii_color.h" />
-    <ClInclude Include="gpk_ascii_display.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
@@ -70,7 +69,6 @@
     <ClInclude Include="gpk_type_registry.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_ascii_display.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_display.cpp" />

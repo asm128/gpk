@@ -14,28 +14,30 @@ namespace gpk
 							::gpk::array_pod<_tTexel>							Texels										;
 							::gpk::view_grid<_tTexel>							View										;
 
-		constexpr																STexture									()													= default;
-																				STexture									(const ::gpk::view_grid<_tTexel>& other)			: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-																				STexture									(const ::gpk::STexture<_tTexel>& other)				: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+		constexpr																STexture									()																= default;
+																				STexture									(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																				STexture									(const ::gpk::STexture<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)			{ 
+							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)						{ 
 			Texels																	= {other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this; 
 		}
 
-							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::STexture<_tTexel>& other)				{ 
+							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::STexture<_tTexel>& other)							{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), other.View.metrics()};
 			return *this; 
 		}
 
 
-		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)									{ return View[index]; }
-		inline	const		::gpk::view_array<_tTexel>							operator[]									(uint32_t index)	const							{ return View[index]; }
+		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)												{ return View[index]; }
+		inline				const ::gpk::view_array<_tTexel>					operator[]									(uint32_t index)							const				{ return View[index]; }
 
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
-		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)			{ return resize(newSize.x, newSize.y); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)			noexcept	{ return resize(newSize.x, newSize.y); }
+
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()											const	noexcept	{ return View.metrics(); }
 	}; // struct
 
 	template<typename _tTexel>

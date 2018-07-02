@@ -96,9 +96,6 @@
     <ClInclude Include="gpk_ascii_color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_ascii_display.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_ascii_target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -176,9 +173,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_ascii_display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_ascii_target.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
