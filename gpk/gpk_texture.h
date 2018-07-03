@@ -31,13 +31,16 @@ namespace gpk
 		}
 
 
-		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)												{ return View[index]; }
-		inline				const ::gpk::view_array<_tTexel>					operator[]									(uint32_t index)							const				{ return View[index]; }
+		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)																	{ return View[index]; }
+		inline				const ::gpk::view_array<_tTexel>					operator[]									(uint32_t index)												const				{ return View[index]; }
 
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
-		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)			noexcept	{ return resize(newSize.x, newSize.y); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)									noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)								noexcept	{ return resize(newSize.x, newSize.y); }
 
-		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()											const	noexcept	{ return View.metrics(); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel & newValue)		noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY, newValue), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize, const _tTexel & newValue)		noexcept	{ return resize(newSize.x, newSize.y, newValue); }
+
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()																const	noexcept	{ return View.metrics(); }
 	}; // struct
 
 	template<typename _tTexel>
@@ -48,37 +51,37 @@ namespace gpk
 							::gpk::view_bit	<_tTexel>							View										;
 							uint32_t											Pitch										= 0;
 
-		constexpr																STextureMonochrome							()													= default;
-																				STextureMonochrome							(const ::gpk::view_bit<_tTexel>& other)				{ 
+		constexpr																STextureMonochrome							()													noexcept	= default;
+																				STextureMonochrome							(const ::gpk::view_bit<_tTexel>& other)							{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-																				STextureMonochrome							(const ::gpk::STextureMonochrome<_tTexel>& other)	{ 
+																				STextureMonochrome							(const ::gpk::STextureMonochrome<_tTexel>& other)				{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)				{ 
+							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)							{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::STextureMonochrome<_tTexel>& other)	{ 
+							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::STextureMonochrome<_tTexel>& other)				{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				{ gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / (sizeof(_tTexel) * 8) + 1), "cannot resize?"); View = {Texels.begin(), newSizeX * newSizeY}; Pitch = newSizeX; return 0; }
-		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)			{ return resize(newSize.x, newSize.y); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{ gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / (sizeof(_tTexel) * 8) + 1), "cannot resize?"); View = {Texels.begin(), newSizeX * newSizeY}; Pitch = newSizeX; return 0; }
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)			noexcept	{ return resize(newSize.x, newSize.y); }
 	}; // struct
 
 	template<typename _tTexel>
@@ -93,6 +96,18 @@ namespace gpk
 	struct SRenderTarget {
 							::gpk::STexture<_tTexel>							Color										= {};
 							::gpk::STexture<_tDepthStencil>						DepthStencil								= {};
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)															noexcept	{ 
+			gpk_necall(Color		.resize(newSize.x, newSize.y), "cannot resize?"); 
+			gpk_necall(DepthStencil	.resize(newSize.x, newSize.y), "cannot resize?"); 
+			return 0; 
+		}
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)														noexcept	{ return resize(newSize.x, newSize.y); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel& color, const _tDepthStencil& depth)		noexcept	{ 
+			gpk_necall(Color		.resize(newSizeX, newSizeY, color), "cannot resize?"); 
+			gpk_necall(DepthStencil	.resize(newSizeX, newSizeY, depth), "cannot resize?"); 
+			return 0; 
+		}
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize, const _tTexel& color, const _tDepthStencil& depth)	noexcept	{ return resize(newSize.x, newSize.y, color, depth); }
 	};
 
 	template<typename _tTexel, typename _tDepthStencil>

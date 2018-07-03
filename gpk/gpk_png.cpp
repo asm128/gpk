@@ -285,7 +285,6 @@ static			::gpk::error_t											pngDecodeInterlaced
 	, const ::gpk::view_array<const ::gpk::SCoord2<uint32_t>>	& imageSizes
 	, ::gpk::view_grid<::gpk::SColorBGRA>						& out_View
 	) {
-	out_View;
 	::gpk::STexture<::gpk::SColorBGRA>												adam7			[7]						= {};
 	uint32_t																		offsetScanline							= 0;
 	for(uint32_t iImage = 0; iImage < imageSizes.size(); ++iImage) {

@@ -516,10 +516,10 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		::gpk::grid_copy(target, control.Image, //controlMetrics.Client.Global);
 			::gpk::SRectangle2D<int32_t>
 				{ controlMetrics.Client.Global.Offset
-				, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, controlMetrics.Client.Global.Offset.x), ::gpk::min(0, controlMetrics.Client.Global.Offset.y)}
+				, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x)), ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))}
 				});
 
-	::controlTextDraw(gui, iControl, target);
+	error_if(errored(::controlTextDraw(gui, iControl, target)), "Why would this ever happen?");
 	return 0;
 }
 
