@@ -285,7 +285,7 @@ static			::gpk::error_t											pngDecodeInterlaced
 	, const ::gpk::view_array<const ::gpk::SCoord2<uint32_t>>	& imageSizes
 	, ::gpk::view_grid<::gpk::SColorBGRA>						& out_View
 	) {
-	::gpk::STexture<::gpk::SColorBGRA>												adam7			[7]						= {};
+	::gpk::SImage<::gpk::SColorBGRA>												adam7			[7]						= {};
 	uint32_t																		offsetScanline							= 0;
 	for(uint32_t iImage = 0; iImage < imageSizes.size(); ++iImage) {
 		const ::gpk::SCoord2<uint32_t>													currentImageSize						= imageSizes[iImage];
@@ -626,7 +626,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	return 0;
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::STexture<::gpk::SColorBGRA>& out_Texture) {
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
 	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::array_pod<uint32_t>													indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "Failed to read png stream! Corrupt file?");
@@ -704,7 +704,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 			);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::STexture<::gpk::SColorBGRA>& out_Texture)	{
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
 	FILE																		* fp											= 0;
 	ree_if(0 != fopen_s(&fp, filename.begin(), "rb") || 0 == fp, "Failed to open file: %s.", filename.begin());
 	info_printf("Loading png file: %s.", filename.begin());

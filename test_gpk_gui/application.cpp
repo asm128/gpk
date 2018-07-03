@@ -110,7 +110,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	//char															bmpFileName2	[]							= "Codepage-437-24.bmp";
 	//error_if(errored(::gpk::bmpOrBmgLoad(bmpFileName2, app.TextureFont)), "");
-	//::gpk::STexture<::gpk::SColorBGRA>								& verticalAtlas								= app.VerticalAtlas;
+	//::gpk::SImage<::gpk::SColorBGRA>								& verticalAtlas								= app.VerticalAtlas;
 	//const ::gpk::SCoord2<uint32_t>									fontCharSize								= {9, 16};
 	//verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
 	//for(uint32_t iChar = 0; iChar < 256; ++iChar) {

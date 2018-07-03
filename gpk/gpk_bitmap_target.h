@@ -1,4 +1,4 @@
-#include "gpk_texture.h"
+#include "gpk_image.h"
 #include "gpk_color.h"
 #include "gpk_coord.h"
 #include <memory> // this is required for ::std::swap()
@@ -48,7 +48,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::STexture<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
+	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::SImage<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
@@ -63,7 +63,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::STexture<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
+	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

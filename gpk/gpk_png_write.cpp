@@ -82,7 +82,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 	safe_Bytes.append((const ubyte_t*)&crc, 4);
 
 	// Reverse RGB byte order
-	::gpk::STexture<::gpk::color_rgba<uint8_t>>							convertedScanlines						= {};
+	::gpk::SImage<::gpk::color_rgba<uint8_t>>							convertedScanlines						= {};
 	convertedScanlines.resize(in_imageView.metrics());
 	for(uint32_t y = 0; y < in_imageView.metrics().y; ++y)
 	for(uint32_t x = 0; x < in_imageView.metrics().x; ++x) {
@@ -94,7 +94,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 		colorDst.a														= colorSrc.a;
 	}
 	::gpk::array_pod<ubyte_t>											deflated;
-	::gpk::STexture<uint8_t>											filtered								= {};
+	::gpk::SImage<uint8_t>											filtered								= {};
 	filtered.resize({convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
 	const uint32_t														scanlineWidthUnfiltered					= convertedScanlines.View.metrics().x * 4;
 	for(uint32_t y = 0; y < in_imageView.metrics().y; ++y) {

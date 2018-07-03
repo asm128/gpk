@@ -2,7 +2,7 @@
 #include "gpk_color.h"
 #include "gpk_input.h"
 #include "gpk_view_grid.h"
-#include "gpk_texture.h"
+#include "gpk_image.h"
 #include "gpk_array_static.h"
 #include "gpk_ascii_color.h"
 #include <string>
@@ -158,7 +158,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
 		// Font
-		::gpk::STextureMonochrome<uint32_t>						FontTexture							= {};
+		::gpk::SImageMonochrome<uint32_t>						FontTexture							= {};
 		::gpk::SCoord2<uint16_t>								FontCharSize						= {9, 16};
 
 		::gpk::SGUIZoom											Zoom								= {};

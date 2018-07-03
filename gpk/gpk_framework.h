@@ -4,7 +4,7 @@
 #include "gpk_input.h"
 #include "gpk_timer.h"
 #include "gpk_frameinfo.h"
-#include "gpk_texture.h"
+#include "gpk_image.h"
 #include "gpk_ptr.h"
 
 #ifndef GPK_FRAMEWORK_H_20987347928
@@ -15,7 +15,7 @@ namespace gpk
 
 	struct SFramework {
 		typedef				::gpk::SColorBGRA											TTexel;
-		typedef				::gpk::STexture<TTexel>										TOffscreen;
+		typedef				::gpk::SImage<TTexel>										TOffscreen;
 
 							::gpk::SRuntimeValues										& RuntimeValues								;
 							::gpk::SDisplay												MainDisplay									= {};

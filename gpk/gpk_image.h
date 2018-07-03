@@ -2,29 +2,29 @@
 #include "gpk_view_grid.h"
 #include "gpk_view_bit.h"
 
-#ifndef GPK_TEXTURE_H_902387498237
-#define GPK_TEXTURE_H_902387498237
+#ifndef GPK_IMAGE_H_902387498237
+#define GPK_IMAGE_H_902387498237
 
 namespace gpk
 {
 	template<typename _tTexel>
-	struct STexture {
+	struct SImage {
 		typedef				_tTexel												TTexel;
 
 							::gpk::array_pod<_tTexel>							Texels										;
 							::gpk::view_grid<_tTexel>							View										;
 
-		constexpr																STexture									()																= default;
-																				STexture									(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-																				STexture									(const ::gpk::STexture<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+		constexpr																SImage									()																= default;
+																				SImage									(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																				SImage									(const ::gpk::SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)						{ 
+							::gpk::SImage<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)						{ 
 			Texels																	= {other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this; 
 		}
 
-							::gpk::STexture<_tTexel>&							operator=									(const ::gpk::STexture<_tTexel>& other)							{ 
+							::gpk::SImage<_tTexel>&							operator=									(const ::gpk::SImage<_tTexel>& other)							{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), other.View.metrics()};
 			return *this; 
@@ -44,36 +44,36 @@ namespace gpk
 	}; // struct
 
 	template<typename _tTexel>
-	struct STextureMonochrome {
+	struct SImageMonochrome {
 		typedef				_tTexel												TTexel;
 
 							::gpk::array_pod<_tTexel>							Texels										;
 							::gpk::view_bit	<_tTexel>							View										;
 							uint32_t											Pitch										= 0;
 
-		constexpr																STextureMonochrome							()													noexcept	= default;
-																				STextureMonochrome							(const ::gpk::view_bit<_tTexel>& other)							{ 
+		constexpr																SImageMonochrome							()													noexcept	= default;
+																				SImageMonochrome							(const ::gpk::view_bit<_tTexel>& other)							{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-																				STextureMonochrome							(const ::gpk::STextureMonochrome<_tTexel>& other)				{ 
+																				SImageMonochrome							(const ::gpk::SImageMonochrome<_tTexel>& other)				{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)							{ 
+							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)							{ 
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
 			return *this; 
 		}
 
-							::gpk::STextureMonochrome<_tTexel>&					operator=									(const ::gpk::STextureMonochrome<_tTexel>& other)				{ 
+							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::SImageMonochrome<_tTexel>& other)				{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
@@ -85,17 +85,17 @@ namespace gpk
 	}; // struct
 
 	template<typename _tTexel>
-	struct STextureProcessable {
+	struct SImageProcessable {
 		typedef				_tTexel												TTexel;
 
-							::gpk::STexture<_tTexel>							Original;
-							::gpk::STexture<_tTexel>							Processed;
+							::gpk::SImage<_tTexel>							Original;
+							::gpk::SImage<_tTexel>							Processed;
 	}; // struct
 
 	template<typename _tTexel, typename _tDepthStencil>
 	struct SRenderTarget {
-							::gpk::STexture<_tTexel>							Color										= {};
-							::gpk::STexture<_tDepthStencil>						DepthStencil								= {};
+							::gpk::SImage<_tTexel>							Color										= {};
+							::gpk::SImage<_tDepthStencil>						DepthStencil								= {};
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)															noexcept	{ 
 			gpk_necall(Color		.resize(newSize.x, newSize.y), "cannot resize?"); 
 			gpk_necall(DepthStencil	.resize(newSize.x, newSize.y), "cannot resize?"); 
@@ -112,12 +112,12 @@ namespace gpk
 
 	template<typename _tTexel, typename _tDepthStencil>
 							::gpk::error_t									clearTarget									(::gpk::SRenderTarget<_tTexel, _tDepthStencil>& targetToClear)		{ 
-		::gpk::STexture<_tTexel>													& offscreen									= targetToClear.Color;
-		::gpk::STexture<_tDepthStencil>												& offscreenDepth							= targetToClear.DepthStencil;
+		::gpk::SImage<_tTexel>													& offscreen									= targetToClear.Color;
+		::gpk::SImage<_tDepthStencil>												& offscreenDepth							= targetToClear.DepthStencil;
 		::memset(offscreenDepth	.Texels.begin(), -1, sizeof(_tDepthStencil)	* offscreenDepth	.Texels.size());	// Clear target.
 		::memset(offscreen		.Texels.begin(),  0, sizeof(_tTexel)		* offscreen			.Texels.size());	// Clear target.
 		return 0;					
 	}
 } // namespace 
 
-#endif // GPK_TEXTURE_H_902387498237
+#endif // GPK_IMAGE_H_902387498237

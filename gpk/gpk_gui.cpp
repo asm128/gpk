@@ -372,7 +372,7 @@ static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gu
 	return 0;
 }
 
-static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<uint32_t> & targetMetrics, const ::gpk::SCoord2<uint16_t> & fontCharSize, const ::gpk::SRectangle2D<int16_t> & targetRect, const ::gpk::STextureMonochrome<uint32_t>& fontTexture, const ::gpk::view_const_string& textToRaster, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)												{
+static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<uint32_t> & targetMetrics, const ::gpk::SCoord2<uint16_t> & fontCharSize, const ::gpk::SRectangle2D<int16_t> & targetRect, const ::gpk::SImageMonochrome<uint32_t>& fontTexture, const ::gpk::view_const_string& textToRaster, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)												{
 	const uint32_t														charsPerRow												= fontTexture.Pitch / fontCharSize.x;
 	for(uint32_t iChar = 0, countChars = (uint32_t)textToRaster.size(); iChar < countChars; ++iChar) {
 		char																charToDraw												= textToRaster[iChar];

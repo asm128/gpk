@@ -1,5 +1,5 @@
 #include "gpk_color.h"
-#include "gpk_texture.h"
+#include "gpk_image.h"
 
 #include <string>
 
@@ -96,7 +96,7 @@ namespace gpk
 
 	struct SModelGND {
 				::gpk::array_obj<::gpk::SModelNodeGND>				Nodes;
-				::gpk::STexture<::gpk::STileMapping>				TileMapping;
+				::gpk::SImage<::gpk::STileMapping>				TileMapping;
 	
 //																	SModelGND						()							= default;
 //																	SModelGND						(const SModelGND& other)	= default;

@@ -1,5 +1,5 @@
 #include "gpk_ascii_color.h"
-#include "gpk_texture.h"
+#include "gpk_image.h"
 #include "gpk_color.h"
 #include <memory> // this is required for ::std::swap()
 
@@ -9,8 +9,8 @@
 namespace gpk
 {
 	struct SASCIITarget {
-								::gpk::STexture<uint8_t>						Characters									= {};
-								::gpk::STexture<uint16_t>						Colors										= {};
+								::gpk::SImage<uint8_t>						Characters									= {};
+								::gpk::SImage<uint16_t>						Colors										= {};
 
 		inline constexpr		::gpk::SCoord2<uint32_t>						metrics										()																	const	noexcept	{ return Characters.metrics(); }
 	};

@@ -318,7 +318,7 @@ struct SHeaderInfoBMP {
 	return 0; 
 }
 
-					::gpk::error_t																	gpk::bmpOrBmgLoad							(::gpk::view_string bmpFileName, ::gpk::STexture<::gpk::SColorBGRA>& loaded)		{
+					::gpk::error_t																	gpk::bmpOrBmgLoad							(::gpk::view_string bmpFileName, ::gpk::SImage<::gpk::SColorBGRA>& loaded)		{
 	::gpk::view_const_string																				bmpFileNameC								= {bmpFileName.begin(), bmpFileName.size()};
 	if(errored(::gpk::bmpFileLoad(bmpFileNameC, loaded))) {
 		error_printf("Failed to load bitmap from file: %s.", bmpFileNameC.begin());
