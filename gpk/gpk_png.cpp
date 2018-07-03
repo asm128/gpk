@@ -2,9 +2,10 @@
 #include "gpk_view_stream.h"
 #include "zlib.h"
 #include "gpk_png.h"
+#include "gpk_adam7.h"
 
-static		::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
-	int32_t																	scanLineWidth									= imageWidth;
+static			::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
+	int32_t																		scanLineWidth									= imageWidth;
 	switch(bitDepth) {
 	default	  : return -1; // ?? Corrupt file?
 	case	 1: { scanLineWidth /= 8;	if(colorType == 2) { scanLineWidth *= 3; } else if(colorType == 4) { error_printf("Unsupported color type/bit depth combination"); } else if(colorType == 6) { error_printf("Unsupported color type/bit depth combination"); }	} break; 
@@ -22,7 +23,7 @@ static		::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorTy
 	}
 }
 
-static	::gpk::error_t												pngInflate											(const ::gpk::view_array<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
+static			::gpk::error_t											pngInflate										(const ::gpk::view_array<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
 	z_stream																	strm											= {};
 	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
 	if (ret != Z_OK)
@@ -329,29 +330,7 @@ static			::gpk::error_t											pngDecodeInterlaced
 		} // switch(colorType)
 		offsetScanline															+= currentImageSize.y;
 	}
-	for(uint32_t iImage = 0; iImage < imageSizes.size(); ++iImage) {
-		::gpk::SCoord2<uint32_t>													offsetMultiplier								= {1, 1};
-		::gpk::SCoord2<uint32_t>													offsetBase										= {0, 0};
-		switch(iImage) {
-		case 0: offsetMultiplier = {8, 8}; offsetBase = {0, 0}; break;
-		case 1: offsetMultiplier = {8, 8}; offsetBase = {4, 0}; break;
-		case 2: offsetMultiplier = {4, 8}; offsetBase = {0, 4}; break;
-		case 3: offsetMultiplier = {4, 4}; offsetBase = {2, 0}; break;
-		case 4: offsetMultiplier = {2, 4}; offsetBase = {0, 2}; break;
-		case 5: offsetMultiplier = {2, 2}; offsetBase = {1, 0}; break;
-		case 6: offsetMultiplier = {1, 2}; offsetBase = {0, 1}; break;
-		}
-		for(uint32_t y = 0; y < imageSizes[iImage].y; ++y)
-		for(uint32_t x = 0; x < imageSizes[iImage].x; ++x) {
-			/*if(iImage == 0) */{
-				::gpk::SCoord2<uint32_t>												targetCell										= {x * offsetMultiplier.x + offsetBase.x, y * offsetMultiplier.y + offsetBase.y};
-				::gpk::SColorBGRA														inputColor										= adam7[iImage].View[y][x];
-				if(targetCell.y < out_View.metrics().y)
-					if(targetCell.x < out_View[targetCell.y].size())
-						out_View[targetCell.y][targetCell.x]								= inputColor;
-			}
-		}
-	}
+	::gpk::adam7Interlace(::gpk::view_array<::gpk::SImage<::gpk::SColorBGRA>>{adam7}, out_View);
 	return 0;
 }
 
@@ -559,38 +538,12 @@ static			::gpk::error_t											pngBytesPerPixel								(int32_t colorType, in
 	}
 }
 
-static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData& pngData)								{
-	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
+static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData& pngData)									{
+	const ::gpk::SPNGIHDR														& imageHeader									= pngData.Header;
+	const ::gpk::SCoord2<uint32_t>												& imageSize										= imageHeader.Size;
 	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines										= pngData.Scanlines;
 	::gpk::view_array<::gpk::SCoord2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
-	imageSizes	[0]															= // 1
-		{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 8 + one_if(imageHeader.Size.x % 8)
-		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if(imageHeader.Size.y % 8)
-		};
-	imageSizes	[1]															= // 2
-		{ (imageHeader.Size.x <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.x - 4) % 8)
-		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 8 + one_if((imageHeader.Size.y) % 8)
-		};
-	imageSizes	[2]															= // 3
-		{ (imageHeader.Size.x <= 4)	? 0 : imageHeader.Size.x / 4 + one_if(imageHeader.Size.x % 4)
-		, (imageHeader.Size.y <= 4)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 4) / 8, 0) + one_if(((int32_t)imageHeader.Size.y - 4) % 8)
-		};
-	imageSizes	[3]															= // 4
-		{ (imageHeader.Size.x <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.x - 2) % 4)
-		, (imageHeader.Size.y <= 4)	? 0 : imageHeader.Size.y / 4 + one_if(imageHeader.Size.y % 4)
-		};
-	imageSizes	[4]															= // 5
-		{ (imageHeader.Size.x <  2)	? 0 : (imageHeader.Size.x) / 2 + one_if(imageHeader.Size.x % 2)
-		, (imageHeader.Size.y <= 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.y - 2) / 4, 0) + one_if(((int32_t)imageHeader.Size.y - 2) % 4)
-		};
-	imageSizes	[5]															= // 6
-		{ (imageHeader.Size.x < 2)	? 0 : (uint32_t)::gpk::max(((int32_t)imageHeader.Size.x - 1) / 2, 0) + one_if(((int32_t)imageHeader.Size.x - 1) % 2)
-		, (imageHeader.Size.y < 2)	? 0 : (imageHeader.Size.y) / 2 + one_if(imageHeader.Size.y % 2)
-		};
-	imageSizes	[6]															= // Adam 7
-		{ imageHeader.Size.x
-		, imageHeader.Size.y		/ 2 
-		};
+	::gpk::adam7Sizes(imageSizes, imageSize);
 
 	uint32_t																	totalScanlines									= 0;
 	for(uint32_t iImage = 0; iImage < 7; ++iImage) 
@@ -599,14 +552,14 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	gpk_necall(pngData.Filters.resize(scanlines.size())	, "Out of memory or corrupt file.");
 	uint32_t																	offsetByte										= 0;
 	uint32_t																	offsetScanline									= 0;
-	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
+	const uint32_t																bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
 	ree_if(errored(bytesPerPixel), "Invalid format! ColorType: %u. Bit Depth: %u.", bytesPerPixel);
 	for(uint32_t iImage = 0; iImage < 7; ++iImage) {
 		uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
 		info_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
 		const ::gpk::SCoord2<uint32_t>												currentImageSize								= imageSizes[iImage];
 		for(uint32_t y = 0; y < currentImageSize.y; ++y) {
-			int32_t																		currentScanline									= offsetScanline + y;
+			const int32_t																currentScanline									= offsetScanline + y;
 			pngData.Filters[currentScanline]										= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];
 			info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[currentScanline]);
 			gpk_necall	(scanlines[currentScanline].resize(widthScanlineCurrent), "Out of memory or corrupt file.");
@@ -641,8 +594,8 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	}
 
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
-	uint32_t																	maxScanLineWidth							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-	pngData.Inflated.resize(maxScanLineWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
+	const uint32_t																aSuitableWidth									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
+	pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
 	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "Failed to decompress!");
 	info_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."	
@@ -667,7 +620,7 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
 	ree_if(errored(bytesPerPixel), "Invalid format! Color Type: %u. Bit Depth: %u.");
 	if(imageHeader.MethodInterlace) 
-		::pngDefilterScanlinesInterlaced(pngData);
+		gpk_necall(::pngDefilterScanlinesInterlaced(pngData), "Corrupt file?");
 	else {
 		pngData.Filters.clear();
 		scanlines.resize(imageHeader.Size.y);
@@ -707,9 +660,9 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
 	FILE																		* fp											= 0;
 	ree_if(0 != fopen_s(&fp, filename.begin(), "rb") || 0 == fp, "Failed to open file: %s.", filename.begin());
-	info_printf("Loading png file: %s.", filename.begin());
 	if(0 == fp) // don't do anything with a null pointer
 		return -1;
+	info_printf("Loading png file: %s.", filename.begin());
 	fseek(fp, 0, SEEK_END);
 	const int32_t																fileSize										= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);

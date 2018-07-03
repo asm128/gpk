@@ -86,7 +86,7 @@
 		//::gpk::SControlMode															& controlMode							= gui.Controls.Modes		[viewport.IdControl];
 		//controlMode.Design														= true;
 		::gpk::SControl																& control								= gui.Controls.Controls	[viewport.IdControl];
-		control.Align															= ::gpk::ALIGN_CENTER;
+		control.Align															= ::gpk::ALIGN_TOP_LEFT;
 		control.Border															= {1, 1, 1, 1};
 		control.Margin															= {1, 1, 1, 1};
 
@@ -100,10 +100,9 @@
 			gpk_necall(::gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), " Maybe the tree integrity has been broken");
 		}
 		for(uint32_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
-			gui.Controls.Controls		[viewport.IdControls[iElement]].Area.Size														= {16, 16};
-			gui.Controls.Controls		[viewport.IdControls[iElement]].Area.Offset														= {-2, -2};
-			gui.Controls.Constraints	[viewport.IdControls[iElement]].AttachSizeToControl												= {-1, -1};
-
+			gui.Controls.Controls		[viewport.IdControls[iElement]].Area.Size			= {16, 16};
+			gui.Controls.Controls		[viewport.IdControls[iElement]].Area.Offset			= {-2, -2};
+			gui.Controls.Constraints	[viewport.IdControls[iElement]].AttachSizeToControl	= {-1, -1};
 		}
 	}
 	{
