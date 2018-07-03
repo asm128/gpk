@@ -381,7 +381,7 @@ static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<u
 		const ::gpk::SCoord2<int32_t>										coordCharTable											= ::gpk::SCoord2<int32_t>{coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
 		const ::gpk::SRectangle2D<int32_t>									srcRect0												= {coordCharTable, fontCharSize.Cast<int32_t>()};
 		::gpk::SRectangle2D<int32_t>										dstRect1												= {{((int32_t)targetRect.Offset.x + (int32_t)fontCharSize.x * (int32_t)iChar), targetRect.Offset.y}, fontCharSize.Cast<int32_t>()};
-		dstRect1.Size.x													+= ::gpk::min(0, (int32_t)targetRect.Offset.x);
+		//dstRect1.Size.x													+= ::gpk::min(0, (int32_t)targetRect.Offset.x);
 		dstRect1.Size.y													+= ::gpk::min(0, (int32_t)targetRect.Offset.y);
 		error_if(errored(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {charsPerRow * fontCharSize.x, 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)), "I believe this never fails.");
 	}

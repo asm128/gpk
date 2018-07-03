@@ -54,6 +54,8 @@
 			break; 
 		}
 	}
+	if(::gpk::CONTROL_LIST_DIRECTION_VERTICAL == menu.Orientation) 
+		controlMenu.Area.Size.x													+= 16; 
 	return 0;
 }
 
