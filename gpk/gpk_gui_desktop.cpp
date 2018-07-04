@@ -21,6 +21,7 @@
 			::gpk::error_t												gpk::desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(ControlList	, controlList	); 
 	if(iControlList >= desktop.Children.size())
 		gpk_necall(desktop.Children.resize(iControlList + 1), "Out of memory?");
+	desktop.Children[iControlList].clear();
 	return iControlList; 
 }
 
@@ -29,9 +30,9 @@
 	::gpk::SControlList															controlListToDelete								= desktop.Items.ControlLists[iElement];
 	::gpk::array_pod<int32_t>													childLists										= desktop.Children[iElement];
 	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
-		int32_t																		childControlListIndex							= desktop.Children[iElement][iOption];
+		int32_t																		childControlListIndex							= childLists[iOption];
 		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex]) 
-			gpk::desktopDeleteControlList(gui, desktop, desktop.Children[iElement][iOption]);
+			gpk_necall(::gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "??");
 		else 
 			error_if(childControlListIndex != -1, "");
 	}
