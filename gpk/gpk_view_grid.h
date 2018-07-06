@@ -40,6 +40,24 @@ namespace gpk
 	};
 #pragma pack(pop)
 
+	template<typename _tCoord, typename _tColor>
+	static					::gpk::error_t						drawRectangle				(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2D<_tCoord>& rectangle)		{
+		int32_t															yStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
+		int32_t															yStop						= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
+		int32_t															xStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
+		int32_t															xStop						= ::gpk::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)bitmapTarget.metrics().x);
+		if(yStart >= yStop || xStart >= xStop)
+			return 0;
+
+		for(int32_t x = xStart; x < xStop; ++x) 	
+			bitmapTarget[yStart][x]										= value;
+		int32_t															sizeToCopy					= (int32_t)(sizeof(_tColor) * (xStop - (int64_t)xStart));
+		for(int32_t y = yStart + 1; y < yStop; ++y)
+			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeToCopy);
+		return 0;
+	}
+
+
 	// view_array common typedefs
 	typedef				::gpk::view_grid<char_t				>	view2d_char				;
 	typedef				::gpk::view_grid<ubyte_t			>	view2d_ubyte			;
@@ -69,6 +87,8 @@ namespace gpk
 	typedef				::gpk::view_grid<const int16_t		>	view2d_const_int16		;
 	typedef				::gpk::view_grid<const int32_t		>	view2d_const_int32		;
 	typedef				::gpk::view_grid<const int64_t		>	view2d_const_int64		;
+
+
 
 }
 

@@ -87,25 +87,6 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawRectangle								(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2D<_tCoord>& rectangle)		{
-		int32_t																		yStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
-		int32_t																		yStop										= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
-		int32_t																		xStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
-		int32_t																		xStop										= ::gpk::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)bitmapTarget.metrics().x);
-		if(yStart >= yStop || xStart >= xStop)
-			return 0;
-		//for(int32_t y = yStart; y < yStop; ++y)  
-		//for(int32_t x = xStart; x < xStop; ++x) 	
-		//	bitmapTarget[y][x]													= value;
-
-		for(int32_t x = xStart; x < xStop; ++x) 	
-			bitmapTarget[yStart][x]													= value;
-		for(int32_t y = yStart + 1; y < yStop; ++y)
-			memcpy(&bitmapTarget[y][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * (xStop - (int64_t)xStart));
-		return 0;
-	}
-
-	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawCircle									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle2D<_tCoord>& circle)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.metrics().x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;

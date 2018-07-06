@@ -22,7 +22,7 @@
     <Filter Include="runtime">
       <UniqueIdentifier>{56bdc711-7e6b-4241-b705-57c96d06c106}</UniqueIdentifier>
     </Filter>
-    <Filter Include="array_view">
+    <Filter Include="view">
       <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -154,24 +154,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_array.h">
-      <Filter>array_view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_bit.h">
-      <Filter>array_view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_grid.h">
-      <Filter>array_view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_layered.h">
-      <Filter>array_view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_stream.h">
-      <Filter>array_view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_adam7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_storage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -231,6 +234,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_adam7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

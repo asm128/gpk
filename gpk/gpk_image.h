@@ -14,17 +14,17 @@ namespace gpk
 							::gpk::array_pod<_tTexel>							Texels										;
 							::gpk::view_grid<_tTexel>							View										;
 
-		constexpr																SImage									()																= default;
-																				SImage									(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-																				SImage									(const ::gpk::SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+		constexpr																SImage										()																= default;
+																				SImage										(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																				SImage										(const ::gpk::SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-							::gpk::SImage<_tTexel>&							operator=									(const ::gpk::view_grid<_tTexel>& other)						{ 
+							::gpk::SImage<_tTexel>&								operator=									(const ::gpk::view_grid<_tTexel>& other)						{ 
 			Texels																	= {other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this; 
 		}
 
-							::gpk::SImage<_tTexel>&							operator=									(const ::gpk::SImage<_tTexel>& other)							{ 
+							::gpk::SImage<_tTexel>&								operator=									(const ::gpk::SImage<_tTexel>& other)							{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), other.View.metrics()};
 			return *this; 
@@ -34,13 +34,17 @@ namespace gpk
 		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)																	{ return View[index]; }
 		inline				const ::gpk::view_array<_tTexel>					operator[]									(uint32_t index)												const				{ return View[index]; }
 
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)									noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
-		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)								noexcept	{ return resize(newSize.x, newSize.y); }
-
-							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel & newValue)		noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY, newValue), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
-		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize, const _tTexel & newValue)		noexcept	{ return resize(newSize.x, newSize.y, newValue); }
-
 		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()																const	noexcept	{ return View.metrics(); }
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)								noexcept	{ return resize(newSize.x, newSize.y); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)									noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?"); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
+
+		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize, const _tTexel & newValue)		noexcept	{ return resize(newSize.x, newSize.y, newValue); }
+							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel & newValue)		noexcept	{ 
+			gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize?");
+			View																	= {Texels.begin(), newSizeX, newSizeY};
+			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::SRectangle2D<int32_t>{{}, View.metrics().Cast<int32_t>()}), "Unknown error.");
+			return 0; 
+		}
 	}; // struct
 
 	template<typename _tTexel>
@@ -88,13 +92,13 @@ namespace gpk
 	struct SImageProcessable {
 		typedef				_tTexel												TTexel;
 
-							::gpk::SImage<_tTexel>							Original;
-							::gpk::SImage<_tTexel>							Processed;
+							::gpk::SImage<_tTexel>								Original;
+							::gpk::SImage<_tTexel>								Processed;
 	}; // struct
 
 	template<typename _tTexel, typename _tDepthStencil>
 	struct SRenderTarget {
-							::gpk::SImage<_tTexel>							Color										= {};
+							::gpk::SImage<_tTexel>								Color										= {};
 							::gpk::SImage<_tDepthStencil>						DepthStencil								= {};
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)															noexcept	{ 
 			gpk_necall(Color		.resize(newSize.x, newSize.y), "cannot resize?"); 

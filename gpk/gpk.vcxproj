@@ -23,6 +23,7 @@
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
+    <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_view_array.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
+    <ClCompile Include="gpk_storage.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />
   </ItemGroup>
