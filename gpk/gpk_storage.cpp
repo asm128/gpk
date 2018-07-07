@@ -18,9 +18,9 @@
 		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::array_obj<::gpk::label>& output, bool listFolders)	{
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
-    HANDLE																			hFind								= NULL;
-    char																			sPath	[4096];
-    sprintf_s(sPath, "%s\\*.*", pathToList.begin());
+	HANDLE																			hFind								= NULL;
+	char																			sPath	[4096];
+	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "Path too long?");
 	hFind																		= FindFirstFile(sPath, &fdFile);
 	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s].", pathToList.begin());
 	do if(	0 != strcmp(fdFile.cFileName,  ".")
@@ -35,18 +35,18 @@
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
 #endif
-	return 0;		
+	return 0;
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::SPathContents& pathContents)						{
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
-    HANDLE																			hFind								= NULL;
-    char																			sPath[4096];
-    sprintf_s(sPath, "%s\\*.*", pathToList.begin());
+	HANDLE																			hFind								= NULL;
+	char																			sPath[4096];
+	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "Path too long?");
 	hFind																		= FindFirstFile(sPath, &fdFile);
 	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s].", pathToList.begin());
-    do if(	0 != strcmp(fdFile.cFileName,  ".")	
+	do if(	0 != strcmp(fdFile.cFileName,  ".")	
 		 &&	0 != strcmp(fdFile.cFileName, "..")
 		) {
 		int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), fdFile.cFileName);
