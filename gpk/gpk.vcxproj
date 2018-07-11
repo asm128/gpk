@@ -23,6 +23,7 @@
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
+    <ClInclude Include="gpk_endpoint_command.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_view_array.h" />

@@ -1,4 +1,5 @@
 #include "gpk_typeint.h"
+#include "gpk_error.h"
 
 #ifndef GPK_SYNC_H_023749082374
 #define GPK_SYNC_H_023749082374
@@ -36,6 +37,7 @@ namespace gpk
 #	define ENTER_SHARED_SECTION(Name)							EnterCriticalSection (&Name)
 #	define LEAVE_SHARED_SECTION(Name)							LeaveCriticalSection (&Name)
 #	define DELETE_SHARED_SECTION(Name)							DeleteCriticalSection(&Name)
+	static inline ::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
 #else
 #	include <mutex>
 #	define gpk__sync_increment(nCount)								(++(nCount))

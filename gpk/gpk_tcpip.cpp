@@ -21,24 +21,26 @@
 	return 0;
 }
 
-
+::gpk::error_t								gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
+	char											host_name[257]								= {};
+	gethostname(host_name, 256);
+	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
+}
 ::gpk::error_t								gpk::tcpipAddress							(const char_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)				{
 	char_t											portString			[8]							= {};
 	::sprintf_s(portString, "%u", portRequested);
 	
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
 	::addrinfo										hints											= {};
-	::memset(&hints, 0, sizeof(hints));
 	hints.ai_family								= AF_INET;
-	hints.ai_socktype							= mode ? SOCK_STREAM	: SOCK_DGRAM	;
-	hints.ai_protocol							= mode ? IPPROTO_TCP	: IPPROTO_UDP	;
+	hints.ai_socktype							= (TRANSPORT_PROTOCOL_TCP == mode) ? SOCK_STREAM	: SOCK_DGRAM	;
+	hints.ai_protocol							= (TRANSPORT_PROTOCOL_TCP == mode) ? IPPROTO_TCP	: IPPROTO_UDP	;
 
 	const ::addrinfo								* createdAddrInfo								= 0;
 	ree_if(errored(::getaddrinfo(szHostName, portString, &hints, (::addrinfo**)&createdAddrInfo)), "gettaddrinfo failed for host_name: %s, port: %s", szHostName, portString);
 	//sockaddr_in6									* sockaddr_ipv6									= 0;
 
 	uint32_t										iAddress										= 0;
-	iAddress;
 	bool											addressFound									= false;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
 		info_printf("getaddrinfo response at index %u.", iAddress);

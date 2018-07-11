@@ -1,0 +1,31 @@
+#include "gpk_typeint.h"
+
+#ifndef GPK_ENDPOINT_COMMAND_H_0923409238
+#define GPK_ENDPOINT_COMMAND_H_0923409238
+
+namespace gpk
+{
+#pragma pack(push, 1)
+	enum ENDPOINT_COMMAND : uint8_t
+		{ ENDPOINT_COMMAND_NOOP				= 0
+		, ENDPOINT_COMMAND_DISCONNECT
+		, ENDPOINT_COMMAND_CONNECT
+		, ENDPOINT_COMMAND_PING
+		, ENDPOINT_COMMAND_TIME
+		, ENDPOINT_COMMAND_PAYLOAD
+		};
+
+	enum ENDPOINT_MESSAGE_TYPE : uint8_t
+		{ ENDPOINT_MESSAGE_TYPE_REQUEST		= 1
+		, ENDPOINT_MESSAGE_TYPE_RESPONSE
+		};
+
+	struct SEndpointCommand {
+		ENDPOINT_COMMAND		Command		: 6;
+		ENDPOINT_MESSAGE_TYPE	Type		: 2;
+	};
+#pragma pack(pop)
+} // namespace
+
+
+#endif // GPK_ENDPOINT_COMMAND_H_0923409238
