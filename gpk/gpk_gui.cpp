@@ -673,6 +673,11 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return imHidden ? imHidden : (false == ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && ::gpk::controlHidden(gui, gui.Controls.Controls[iControl].IndexParent));
 }
 
+			::gpk::error_t										gpk::controlDisabled									(::gpk::SGUI& gui, int32_t iControl)	{
+	bool																imDisabled												= ::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Disabled;
+	return imDisabled ? imDisabled : (false == ::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent) && ::gpk::controlDisabled(gui, gui.Controls.Controls[iControl].IndexParent));
+}
+
 			::gpk::error_t										gpk::controlMetricsInvalidate							(::gpk::SGUI& gui, int32_t iControl)	{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	controlState.Updated											= false;

@@ -178,6 +178,7 @@ namespace gpk
 	//::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t											controlUpdateMetricsTopToDown		(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t											controlHidden						(::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlDisabled						(::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlMetricsInvalidate			(::gpk::SGUI& gui, int32_t iControl);
 
 #pragma pack(pop)

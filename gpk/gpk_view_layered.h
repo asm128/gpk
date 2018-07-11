@@ -16,10 +16,13 @@ namespace gpk
 	public:
 		// Constructors
 		inline constexpr												view_layered				()																				noexcept	= default;
-		inline															view_layered				(_tElement* dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LinearSize(layerWidth * layerHeight) {
+		inline															view_layered				(_tElement* dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LayerSize(layerWidth * layerHeight) {
 			throw_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, ::std::exception(""), "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
+		inline															view_layered				(_tElement* dataElements, const ::gpk::SCoord3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
+			throw_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, ::std::exception(""), "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+		}
 		// Operators
 							::gpk::view_grid<_tElement>					operator[]					(uint32_t layer)																			{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid layer: %i.", layer); return ::gpk::view_grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y); }
 							::gpk::view_grid<const _tElement>			operator[]					(uint32_t layer)														const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(layer >= Size.z, ::std::exception(""), "Invalid layer: %i.", layer); return ::gpk::view_grid<const _tElement	>(&Data[layer * LayerSize], Size.x, Size.y); }
@@ -31,12 +34,9 @@ namespace gpk
 		inline constexpr	_tElement*									begin						()																				noexcept	{ return Data;						}
 		inline constexpr	_tElement*									end							()																				noexcept	{ return Data + size();				}
 
-		inline constexpr	::gpk::SCoord3<uint32_t>					metrics						()																		const	noexcept	{ return {Size.x, Size.y, Size.z};	}
+		inline constexpr	const ::gpk::SCoord3<uint32_t>&				metrics						()																		const	noexcept	{ return Size;						}
 		inline constexpr	uint32_t									size						()																		const	noexcept	{ return Size.x * Size.y * Size.z;	}
-		inline constexpr	uint32_t									layer_width					()																		const	noexcept	{ return Size.x;					}
-		inline constexpr	uint32_t									layer_height				()																		const	noexcept	{ return Size.y;					}
-		inline constexpr	uint32_t									layer_count					()																		const	noexcept	{ return Size.z;					}
-	};
+};
 #pragma pack(pop)
 
 	// view_grid common typedefs

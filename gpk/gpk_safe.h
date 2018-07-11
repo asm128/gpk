@@ -13,4 +13,8 @@
 #	define safe_podcpy(oldValue, val) if((oldValue) && (val)) do { ::gpk::podcpy((oldValue), (val)); } while(0)
 #endif
 
+#ifndef safe_closesocket
+#	define safe_closesocket(p) if(p != 0 && p != INVALID_SOCKET) do { closesocket(p); p = INVALID_SOCKET; } while(0)
+#endif
+
 #endif // GPK_SAFE_H_209934782093

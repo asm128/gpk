@@ -30,6 +30,15 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
+						::gpk::error_t							grid_copy_alpha_ex				(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc, const _tCell& comparand, const _tCell& color)	{
+		for(int32_t y = 0; y < size_.y; ++y)
+			for(int32_t x = 0; x < size_.x; ++x)
+				if (src[y + offsetSrc.y][x + offsetSrc.x] != comparand)
+					dst[y + offsetDst.y][x + offsetDst.x]						= color;
+		return ::gpk::max(size_.x * size_.y, 0);
+	}
+
+	template<typename _tCell, typename _tCoord>
 						::gpk::error_t							grid_copy_blend_ex				(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc)	{
 		for(int32_t y = 0; y < size_.y; ++y)
 			for(int32_t x = 0; x < size_.x; ++x) {
@@ -205,6 +214,16 @@ namespace gpk
 		stopDst.y													= ::gpk::min(stopDst.y, (int32_t)dst.metrics().y - offsetDst.y);
 		stopDst.x													= ::gpk::min(stopDst.x, (int32_t)dst.metrics().x - offsetDst.x);
 		return (stopDst.x > 0) ? ::gpk::grid_copy_alpha_ex(dst, src, stopDst, offsetDst, offsetSrc, comparand) : 0;
+	}
+
+	template<typename _tCell, typename _tCoord>
+						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const _tCell& comparand, const _tCell& color)														{
+		const ::gpk::SCoord2<int32_t>									offsetSrc						= {-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
+		const ::gpk::SCoord2<int32_t>									offsetDst						= { ::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
+		::gpk::SCoord2<int32_t>											stopDst							= src.metrics().Cast<int32_t>() + ::gpk::SCoord2<int32_t>{::gpk::min(0, (int32_t)dstOffset.x), ::gpk::min(0, (int32_t)dstOffset.y)};
+		stopDst.y													= ::gpk::min(stopDst.y, (int32_t)dst.metrics().y - offsetDst.y);
+		stopDst.x													= ::gpk::min(stopDst.x, (int32_t)dst.metrics().x - offsetDst.x);
+		return (stopDst.x > 0) ? ::gpk::grid_copy_alpha_ex(dst, src, stopDst, offsetDst, offsetSrc, comparand, color) : 0;
 	}
 
 	template<typename _tCell, typename _tCoord>
