@@ -6,7 +6,7 @@
 #endif
 
 #ifndef safe_assign
-#	define safe_assign(p, val) if(p) do { (p) = (val); } while(0)
+#	define safe_assign(p, val) if(p) do { (*p) = (val); } while(0)
 #endif
 
 #ifndef safe_podcpy

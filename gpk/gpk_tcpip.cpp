@@ -21,6 +21,19 @@
 	return 0;
 }
 
+::gpk::error_t								gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
+	char											buf		[256]								= "";
+	sockaddr_in										sockaddr_ipv4								= {};
+	socklen_t										len											= sizeof(sockaddr_in);
+	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "getpeername failed.");
+	safe_assign(a1	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
+	safe_assign(a2	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
+	safe_assign(a3	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
+	safe_assign(a4	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
+	return 0;
+}
+
 ::gpk::error_t								gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
 	char											host_name[257]								= {};
 	gethostname(host_name, 256);
