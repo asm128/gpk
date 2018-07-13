@@ -1,6 +1,7 @@
 #include "gpk_tcpip.h"
 #include "gpk_log.h"
 #include "gpk_windows.h"
+#include "gpk_stdsocket.h"
 
 #include <WS2tcpip.h>
 
