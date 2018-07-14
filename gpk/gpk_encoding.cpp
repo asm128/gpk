@@ -153,16 +153,11 @@ using namespace std;
 	for(int32_t i = n - 1	; i >= 1	; --i)	sn[i]	= sn[i] ^ sn[i - 1] ^ (k1 * sn[i - 1]) % 256;
 	
 	uint32_t											outputOffset													= output.size();
-	if (salt) {
-		gpk_necall(output.resize(outputOffset + n - 4), "Out of memory?");
-		for(int32_t i = 0; i < (n - 4); ++i)	
-			output[outputOffset + i]						= (char)sn[2 + i];
-	}
-	else {
-		gpk_necall(output.resize(outputOffset + n), "Out of memory?");
-		for(int32_t i = 0; i < n; ++i)	
-			output[outputOffset + i]						= (char)sn[i];
-	}
+	const uint32_t										finalStringSize													= salt ? n - 4 : n;
+	const ::gpk::view_array<const int32_t>				finalValues														= {salt ? &sn[2] : sn, finalStringSize};
+	gpk_necall(output.resize(outputOffset + finalStringSize), "Out of memory?");
+	for(int32_t i = 0, count = finalStringSize; i < count; ++i)	
+		output[outputOffset + i]						= (char)finalValues[i];
 	return 0;
 }
 

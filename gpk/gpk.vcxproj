@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
@@ -75,6 +76,7 @@
     <ClInclude Include="gpk_stdsocket.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gpk_aes.cpp" />
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_bitmap_file.cpp" />
