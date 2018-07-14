@@ -39,6 +39,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_png", "test_gpk_pn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_tictactoe", "test_tictactoe\test_tictactoe.vcxproj", "{7A38F58A-3A85-47F2-92B4-FB2DC8A54900}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_encoding", "test_gpk_encoding\test_gpk_encoding.vcxproj", "{B1821EF9-9723-4760-9105-60B7C11BB017}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{39953D8D-A830-46BD-917E-1A96C8BDADC6} = {39953D8D-A830-46BD-917E-1A96C8BDADC6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +117,14 @@ Global
 		{7A38F58A-3A85-47F2-92B4-FB2DC8A54900}.Release|x64.Build.0 = Release|x64
 		{7A38F58A-3A85-47F2-92B4-FB2DC8A54900}.Release|x86.ActiveCfg = Release|Win32
 		{7A38F58A-3A85-47F2-92B4-FB2DC8A54900}.Release|x86.Build.0 = Release|Win32
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Debug|x64.ActiveCfg = Debug|x64
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Debug|x64.Build.0 = Debug|x64
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Debug|x86.ActiveCfg = Debug|Win32
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Debug|x86.Build.0 = Debug|Win32
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Release|x64.ActiveCfg = Release|x64
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Release|x64.Build.0 = Release|x64
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Release|x86.ActiveCfg = Release|Win32
+		{B1821EF9-9723-4760-9105-60B7C11BB017}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

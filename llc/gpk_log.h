@@ -57,6 +57,9 @@ namespace gpk
 		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																		\
 	} while(0)
 
+
+#	define always_printf(format, ...)								debug_printf(3, "info"		, format, __VA_ARGS__)
+
 #if defined (GPK_ERROR_PRINTF_ENABLED)
 #	define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else

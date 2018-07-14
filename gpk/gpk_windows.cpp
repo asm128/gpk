@@ -14,7 +14,7 @@
 
 	retval_error_if({}, nullptr == messageBuffer, "FormatMessage() failed.")
 	else {
-		const ::gpk::array_pod<char_t>						message								= ::gpk::view_array<char_t>{messageBuffer, size >= 2 ? size - 2 : size};
+		const ::gpk::array_pod<char_t>						message								= ::gpk::view_array<const char_t>{messageBuffer, size >= 2 ? size - 2 : size};
 		LocalFree(messageBuffer); 
 		return message;
 	}

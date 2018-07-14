@@ -93,8 +93,8 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}
-														array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<_tPOD>&) other) {}
-														array_pod									(const view_array<_tPOD>& other)														{
+														array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<const _tPOD>&) other) {}
+														array_pod									(const view_array<const _tPOD>& other)													{
 			if(other.size()) {
 				const uint32_t										newSize										= other.size();
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);

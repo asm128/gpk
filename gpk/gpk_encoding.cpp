@@ -1,7 +1,11 @@
 #include "gpk_encoding.h"
 #include "gpk_view_bit.h"
 
+#include <ctime>
+
 static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+using namespace std;
 
 			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "Empty input stream.");
@@ -94,3 +98,73 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 	else if(in_base64[in_base64.size() - 1] == '=') { outputBytes.resize(outputBytes.size() - 1); } // Remove leading nulls.
 	return 0;
 }
+
+::gpk::error_t									gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
+	char												saltValue		[4]												= {};
+	if (salt) 
+		for (int32_t i = 0; i < 4; i++) {
+			int32_t												t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
+			saltValue[i]									= t % 256;
+		}
+	int32_t												k1																= 11 + (key % 233);
+	int32_t												k2																=  7 + (key % 239);
+	int32_t												k3																=  5 + (key % 241);
+	int32_t												k4																=  3 + (key % 251);
+	int32_t												n																= salt ? input.size() + 4 : input.size();
+	gpk_necall(cache.resize(n), "Out of memory?");
+	int32_t												* sn															= cache.begin();
+	if(salt) {
+		for(int32_t i = 0; i < 2; ++i)	
+			sn[i]										= saltValue[i];
+		for(int32_t i = 0; i < n - 4; ++i)	
+			sn[2 + i]									= input[i];
+		for(int32_t i = 0; i < 2; ++i)	
+			sn[2 + n + i]								= saltValue[2 + i];
+	}
+	else 
+		for(int32_t i = 0; i  < n; ++i)	
+			sn[i]										= input[i];
+
+	for(int32_t i = 1		; i  < n; ++i)	sn[i]		= sn[i] ^ sn[i - 1] ^ ((k1 * sn[i - 1]) % 256);
+	for(int32_t i = n - 2	; i >= 0; --i)	sn[i]		= sn[i] ^ sn[i + 1] ^  (k2 * sn[i + 1]) % 256 ;
+	for(int32_t i = 2		; i  < n; ++i)	sn[i]		= sn[i] ^ sn[i - 2] ^  (k3 * sn[i - 1]) % 256 ;
+	for(int32_t i = n - 3	; i >= 0; --i)	sn[i]		= sn[i] ^ sn[i + 2] ^  (k4 * sn[i + 1]) % 256 ;
+
+	uint32_t											outputOffset													= output.size();
+	gpk_necall(output.resize(outputOffset + n), "Out of memory?");
+	for(int32_t i = 0; i < n; ++i)	
+		output[outputOffset + i]						= (char)sn[i];
+	return 0;
+}
+
+::gpk::error_t									gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int key, bool salt, ::gpk::array_pod<byte_t>& output)		{
+	int32_t												k1																= 11 + (key % 233);
+	int32_t												k2																=  7 + (key % 239);
+	int32_t												k3																=  5 + (key % 241);
+	int32_t												k4																=  3 + (key % 251);
+	int32_t												n																= (int32_t)input.size();
+
+	gpk_necall(cache.resize(n), "Out of memory?");
+	int32_t												* sn															= cache.begin();
+	for(int32_t i = 0		; i  < n	; ++i)	sn[i]	= input[i];
+	for(int32_t i = 0		; i  < n - 2; ++i)	sn[i]	= sn[i] ^ sn[i + 2] ^ (k4 * sn[i + 1]) % 256;
+	for(int32_t i = n - 1	; i >= 2	; --i)	sn[i]	= sn[i] ^ sn[i - 2] ^ (k3 * sn[i - 1]) % 256;
+	for(int32_t i = 0		; i  < n - 1; ++i)	sn[i]	= sn[i] ^ sn[i + 1] ^ (k2 * sn[i + 1]) % 256;
+	for(int32_t i = n - 1	; i >= 1	; --i)	sn[i]	= sn[i] ^ sn[i - 1] ^ (k1 * sn[i - 1]) % 256;
+	
+	uint32_t											outputOffset													= output.size();
+	if (salt) {
+		gpk_necall(output.resize(outputOffset + n - 4), "Out of memory?");
+		for(int32_t i = 0; i < (n - 4); ++i)	
+			output[outputOffset + i]						= (char)sn[2 + i];
+	}
+	else {
+		gpk_necall(output.resize(outputOffset + n), "Out of memory?");
+		for(int32_t i = 0; i < n; ++i)	
+			output[outputOffset + i]						= (char)sn[i];
+	}
+	return 0;
+}
+
+::gpk::error_t									gpk::ardellEncode												(const ::gpk::view_array<const byte_t>& input, int key, bool salt, ::gpk::array_pod<byte_t>& output)	{ ::gpk::array_pod<int32_t>	tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
+::gpk::error_t									gpk::ardellDecode												(const ::gpk::view_array<const byte_t>& input, int key, bool salt, ::gpk::array_pod<byte_t>& output)	{ ::gpk::array_pod<int32_t>	tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
