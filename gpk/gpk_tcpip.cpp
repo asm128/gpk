@@ -22,17 +22,30 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
-	char											buf		[256]								= "";
-	sockaddr_in										sockaddr_ipv4								= {};
-	socklen_t										len											= sizeof(sockaddr_in);
-	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "getpeername failed.");
+::gpk::error_t								gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
 	safe_assign(a1	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	safe_assign(a2	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
 	safe_assign(a3	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
 	safe_assign(a4	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
+}
+
+::gpk::error_t								gpk::tcpipAddressToSockaddr					(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
+	sockaddr_ipv4								= {AF_INET, port ? htons(*port) : (uint16_t)0};
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1 ? *a1 : 0;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2 ? *a2 : 0;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3 ? *a3 : 0;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4 ? *a4 : 0;
+	return 0;
+}
+
+::gpk::error_t								gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
+	char											buf		[256]								= "";
+	sockaddr_in										sockaddr_ipv4								= {};
+	socklen_t										len											= sizeof(sockaddr_in);
+	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "getpeername failed.");
+	return tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
 ::gpk::error_t								gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
@@ -83,10 +96,7 @@
 			info_printf("IPv4 address %s", ipstringbuffer);
 			// Copy address
 			if(adapterIndex == iAddress) {
-				*a1											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b1;
-				*a2											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b2;
-				*a3											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b3;
-				*a4											= sockaddr_ipv4->sin_addr.S_un.S_un_b.s_b4;
+				::gpk::tcpipAddressFromSockaddr(*sockaddr_ipv4, a1, a2, a3, a4, 0);
 				//printf("\tIPv4 address %s\n", inet_ntoa(sockaddr_ipv4->sin_addr) );
 				addressFound								= true;
 			}
