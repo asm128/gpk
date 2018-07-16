@@ -24,7 +24,7 @@ namespace gpk
 
 	struct SEndpointCommand {
 		ENDPOINT_COMMAND					Command			: 3;
-		uint8_t								PayloadBytes	: 4;
+		uint8_t								Payload			: 4;
 		ENDPOINT_MESSAGE_TYPE				Type			: 1;
 	};
 	//constexpr const size_t etlaskn = sizeof(SEndpointCommand);
