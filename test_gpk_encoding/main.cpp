@@ -19,17 +19,17 @@ int													main						()			{
 		, "Some string to test 0003" 
 		, "Some string to test 00004" 
 		, "Some string to test 000005" 
-		, "Some string to test 0000007"				
-		, "Some string to test 00000008"				
-		, "Some string to test 000000009"				
-		, "Some string to test 000000000A"				
-		, "Some string to test 0000000000B"				
-		, "Some string to test 00000000000C"				
-		, "Some string to test 000000000000D"				
-		, "Some string to test 0000000000000E"				
-		, "Some string to test 00000000000000F"				
+		, "Some string to test 0000007"	
+		, "Some string to test 00000008"	
+		, "Some string to test 000000009"	
+		, "Some string to test 000000000A"	
+		, "Some string to test 0000000000B"	
+		, "Some string to test 00000000000C"	
+		, "Some string to test 000000000000D"	
+		, "Some string to test 0000000000000E"	
+		, "Some string to test 00000000000000F"	
 		};
-	const uint32_t											rounds						= 100000;
+	const uint32_t											rounds						= 1000;
 	::gpk::array_pod<int32_t>								encodingCache;
 	//{
 	//	::gpk::STimer											timer;
@@ -139,7 +139,7 @@ int													main						()			{
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ Base64 encode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ Base64 encode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 		timeTotal											= 0;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
@@ -156,7 +156,47 @@ int													main						()			{
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ Base64 decode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ Base64 decode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+
+	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
+		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
+		gpk_necall(encodedList.resize(rounds * ::gpk::size(testStrings)), "Out of memory?");
+		gpk_necall(decodedList.resize(rounds * ::gpk::size(testStrings)), "Out of memory?");
+		{
+			::gpk::STimer											timer;
+			double													timeTotal					= 0;
+			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
+					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
+					ce_if(errored(::gpk::aesEncode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, encoded)), "Out of memory?");
+					timer.Frame();
+					timeTotal											+= timer.LastTimeSeconds;
+				}
+			always_printf("------ AES encode (level %u)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode time: %g milliseconds.", iAESLevel, rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		}
+		{
+			::gpk::STimer											timer;
+			double													timeTotal					= 0;
+			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
+					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
+					::gpk::array_pod<ubyte_t>								& decoded					= decodedList[indexBuffer];
+					if errored(::gpk::aesDecode(encoded.begin(), encoded.size(), ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, decoded)) {
+						error_printf( "Out of memory?");
+						encoded.clear_pointer();
+						continue;
+					}
+					encoded.clear_pointer();
+					error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+					timer.Frame();
+					timeTotal											+= timer.LastTimeSeconds;
+				}
+			always_printf("------ AES decode (level %u)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average decode time: %g milliseconds.", iAESLevel, rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		}
 	}
 
 	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
@@ -203,8 +243,8 @@ int													main						()			{
 
 // prints string as hex
 static	::gpk::error_t				phex							(uint8_t* str, ::gpk::AES_LEVEL level)			{
-    uint8_t len = (uint8_t)::gpk::AES_LEVEL_PROPERTIES[level].KeyLength;
-    unsigned char i;
+    uint8_t									len								= (uint8_t)::gpk::AES_LEVEL_PROPERTIES[level].KeyLength;
+    unsigned char							i;
     for (i = 0; i < len; ++i)
         printf("%.2x", str[i]);
     printf("\n");
@@ -234,7 +274,7 @@ static	::gpk::error_t				test_encrypt_ecb_verbose		(::gpk::AES_LEVEL level)					
 	::gpk::SAESContext ctx;
 	::gpk::aesInitCtx(&ctx, key, level);
 	for (i = 0; i < 4; ++i) {
-		::gpk::aesECBEncrypt(&ctx, plain_text + (i * 16), level);
+		::gpk::aesECBEncrypt(&ctx, plain_text + (i * 16));
 		phex(plain_text + (i * 16), level);
     }
     printf("\n");
@@ -262,7 +302,7 @@ static	::gpk::error_t				test_encrypt_ecb				(::gpk::AES_LEVEL level)						{
 	case ::gpk::AES_LEVEL_256: key = key_256; out = out_256; break;
 	}
     ::gpk::aesInitCtx(&ctx, key, level);
-    ::gpk::aesECBEncrypt(&ctx, in, level);
+    ::gpk::aesECBEncrypt(&ctx, in);
 	return (0 == memcmp((char*) out, (char*) in, 16)) ? 0 : -1;
 }
 
@@ -297,8 +337,8 @@ static	::gpk::error_t				test_decrypt_cbc				(::gpk::AES_LEVEL level)						{
 	case ::gpk::AES_LEVEL_192: key = key_192; in = in_192; break;
 	case ::gpk::AES_LEVEL_256: key = key_256; in = in_256; break;
 	}
-    ::gpk::aesInitCtxIV(&ctx, key, iv, level);
-    ::gpk::aesCBCDecryptBuffer(&ctx, in, 64, level);
+    ::gpk::aesInitCtxIV(&ctx, key, level, iv);
+    ::gpk::aesCBCDecryptBuffer(&ctx, in, 64);
     //printf("CBC decrypt: ");
 	return (0 == memcmp((char*) out, (char*) in, 64)) ? 0 : -1;
 }
@@ -334,10 +374,10 @@ static	::gpk::error_t				test_encrypt_cbc				(::gpk::AES_LEVEL level)						{
 	}
 
 	::gpk::SAESContext						ctx;
-    ::gpk::aesInitCtxIV(&ctx, key, iv, level);
-    ::gpk::aesCBCEncryptBuffer(&ctx, in, 64, level);
+    ::gpk::aesInitCtxIV(&ctx, key, level, iv);
+    ::gpk::aesCBCEncryptBuffer(&ctx, in, 64);
     //printf("CBC encrypt: ");
-	return (0 == memcmp((char*) out, (char*) in, 64)) ? 0 : -1;
+	return (0 == memcmp((char*)out, (char*)in, 64)) ? 0 : -1;
 }
 
 static	::gpk::error_t				test_xcrypt_ctr					(const char* xcrypt, ::gpk::AES_LEVEL level);
@@ -376,8 +416,8 @@ static	::gpk::error_t				test_xcrypt_ctr					(const char* xcrypt, ::gpk::AES_LEV
 																				0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10 };
     ::gpk::SAESContext						ctx;
     
-    aesInitCtxIV(&ctx, key, iv, level);
-    ::gpk::aesCTRXCryptBuffer(&ctx, in, 64, level);
+    aesInitCtxIV(&ctx, key, level, iv);
+    ::gpk::aesCTRXCryptBuffer(&ctx, in, 64);
 	xcrypt;
     //printf("CTR %s: ", xcrypt);
     return (0 == memcmp((char *) out, (char *) in, 64)) ? 0 : -1;
@@ -404,7 +444,7 @@ static	::gpk::error_t				test_decrypt_ecb							(::gpk::AES_LEVEL level) {
 	case ::gpk::AES_LEVEL_256: key = key_256; in = in_256; break;
 	}
 	::gpk::aesInitCtx	(&ctx, key, level);
-	::gpk::aesECBDecrypt(&ctx, in, level);
+	::gpk::aesECBDecrypt(&ctx, in);
 	return (0 == memcmp((char*) out, (char*) in, 16)) ? 0 : -1;
 }
 

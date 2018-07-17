@@ -92,6 +92,7 @@
 // NOTE:   String length must be evenly divisible by 16byte (str_len % 16 == 0)
 //         You should pad the end of the string with zeros if this is not the case. For AES192/256 the key size is proportionally larger.
 #include "gpk_aes.h"
+#include <ctime>
 
 // Defines: The number of columns comprising a state in AES. This is a constant in AES. Value=4
 static constexpr	const uint32_t				AES_Nb									= 4;
@@ -200,8 +201,8 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 	}
 }
 
-void											gpk::aesInitCtx							(::gpk::SAESContext* ctx, const uint8_t* key, ::gpk::AES_LEVEL level)						{ ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); }
-void											gpk::aesInitCtxIV						(::gpk::SAESContext* ctx, const uint8_t* key, const uint8_t* iv, ::gpk::AES_LEVEL level)	{ ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
+void											gpk::aesInitCtx							(::gpk::SAESContext* ctx, const uint8_t* key, ::gpk::AES_LEVEL level)						{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); }
+void											gpk::aesInitCtxIV						(::gpk::SAESContext* ctx, const uint8_t* key, ::gpk::AES_LEVEL level, const uint8_t* iv)	{ ctx->Level = level; ctx->RoundKey.resize(::gpk::AES_LEVEL_PROPERTIES[level].KeyExpSize); KeyExpansion(ctx->RoundKey.begin(), key, level); memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
 void											gpk::aesCtxSetIV						(::gpk::SAESContext* ctx, const uint8_t* iv)												{ memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
 
 // This function adds the round key to state. The round key is added to	 the state by an XOR function.
@@ -346,9 +347,9 @@ static	void									Cipher									(state_t* state, uint8_t* RoundKey, ::gpk::AE
 static	void									InvCipher							(state_t* state, uint8_t* RoundKey, ::gpk::AES_LEVEL level)					{
 	uint8_t												Nr									= 0;
 	switch(level) {
-	case ::gpk::AES_LEVEL_128: Nr						= 10; break;
-	case ::gpk::AES_LEVEL_192: Nr						= 12; break;
-	case ::gpk::AES_LEVEL_256: Nr						= 14; break;
+	case ::gpk::AES_LEVEL_128: Nr = 10; break;
+	case ::gpk::AES_LEVEL_192: Nr = 12; break;
+	case ::gpk::AES_LEVEL_256: Nr = 14; break;
 	}
 	AddRoundKey(Nr, state, RoundKey);	// Add the First round key to the state before starting the rounds.
 	for (uint8_t round = (Nr - 1); round > 0; --round) {	// There will be Nr rounds. The first Nr-1 rounds are identical. These Nr-1 rounds are executed in the loop below.
@@ -369,13 +370,13 @@ static	void									XorWithIv							(uint8_t* buf, uint8_t* Iv)													{
 }
 
 /* Public functions:                                                         */
-void											gpk::aesECBEncrypt					(::gpk::SAESContext *ctx, uint8_t* buf, ::gpk::AES_LEVEL level)				{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesECBDecrypt					(::gpk::SAESContext* ctx, uint8_t* buf, ::gpk::AES_LEVEL level)				{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf, uint32_t length, AES_LEVEL level)	{
+void											gpk::aesECBEncrypt					(::gpk::SAESContext *ctx, uint8_t* buf)										{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesECBDecrypt					(::gpk::SAESContext* ctx, uint8_t* buf)										{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf, uint32_t length)	{
 	uint8_t												* Iv								= ctx->Iv;
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		XorWithIv(buf, Iv);
-		Cipher((state_t*)buf, ctx->RoundKey.begin(), level);
+		Cipher((state_t*)buf, ctx->RoundKey.begin(), ctx->Level);
 		Iv												= buf;
 		buf												+= ::gpk::AES_SIZEBLOCK;
 		//printf("Step %d - %d", i/16, i);
@@ -383,11 +384,11 @@ void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf,
 	memcpy(ctx->Iv, Iv, ::gpk::AES_SIZEBLOCK);	// store Iv in ctx for next call */
 }
 
-void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf,  uint32_t length, AES_LEVEL level)	{
+void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)	{
 	uint8_t												storeNextIv	[::gpk::AES_SIZEBLOCK];
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		memcpy(storeNextIv, buf, ::gpk::AES_SIZEBLOCK);
-		InvCipher((state_t*)buf, ctx->RoundKey.begin(), level);
+		InvCipher((state_t*)buf, ctx->RoundKey.begin(), ctx->Level);
 		XorWithIv(buf, ctx->Iv);
 		memcpy(ctx->Iv, storeNextIv, ::gpk::AES_SIZEBLOCK);
 		buf												+= ::gpk::AES_SIZEBLOCK;
@@ -395,13 +396,13 @@ void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf
 }
 
 // Symmetrical operation: same function for encrypting as for decrypting. Note any IV/nonce should never be reused with the same key 
-void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length, AES_LEVEL level)	{
+void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)	{
 	uint8_t												buffer	[::gpk::AES_SIZEBLOCK];
 	int													bi									= ::gpk::AES_SIZEBLOCK;
 	for (uint32_t i = 0; i < length; ++i, ++bi) {
 		if (bi == ::gpk::AES_SIZEBLOCK) {// we need to regen xor compliment in buffer */
 			memcpy(buffer, ctx->Iv, ::gpk::AES_SIZEBLOCK);
-			Cipher((state_t*)buffer, ctx->RoundKey.begin(), level);
+			Cipher((state_t*)buffer, ctx->RoundKey.begin(), ctx->Level);
 			for(bi = (::gpk::AES_SIZEBLOCK - 1); bi >= 0; --bi) {	// Increment Iv and handle overflow 
 				if (ctx->Iv[bi] == 255) {	/* inc will owerflow */
 					ctx->Iv[bi]										= 0;
@@ -414,4 +415,48 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 		}
 		buf[i]											= (buf[i] ^ buffer[bi]);
 	}
+}
+
+::gpk::error_t										gpk::aesEncode							(const ubyte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{
+	ree_if(0 == messageToEncrypt, "Cannot encode a null input.");
+	ree_if(0 == dataLength		, "Cannot encode an empty message.");
+	int8_t													excedent								= dataLength % ::gpk::AES_SIZEBLOCK;
+	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
+	outputEncrypted.clear();
+	gpk_necall(outputEncrypted.resize(dataLength + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "Out of memory?");
+	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
+		outputEncrypted[dataLength + iPad]					= paddingRequired;
+	memcpy(outputEncrypted.begin(), messageToEncrypt, dataLength);
+	srand((unsigned int)time(0));
+
+	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
+	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
+	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal) 
+		iv[iVal]											= (uint8_t)(rand() * fraction);
+	::gpk::SAESContext										aes;
+	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, iv);
+	::gpk::aesCBCEncryptBuffer(&aes, outputEncrypted.begin(), outputEncrypted.size());
+	gpk_necall(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV), "Out of memory?");
+	memcpy(&outputEncrypted[outputEncrypted.size() - ::gpk::AES_SIZEIV], iv, ::gpk::AES_SIZEIV);
+	return 0;
+}
+
+::gpk::error_t										gpk::aesDecode							(const ubyte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{
+	ree_if(0 == messageEncrypted, "Cannot encode a null input.");
+	ree_if(0 == dataLength		, "Cannot encode an empty message.");
+	ree_if(dataLength % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", dataLength);
+	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
+	gpk_necall(outputDecrypted.resize(dataLength - ::gpk::AES_SIZEIV), "Out of memory?");
+	memcpy(outputDecrypted.begin(), messageEncrypted, outputDecrypted.size());
+	::gpk::SAESContext										aes;
+	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, &messageEncrypted[outputDecrypted.size()]);
+	::gpk::aesCBCDecryptBuffer(&aes, outputDecrypted.begin(), outputDecrypted.size());
+	if(outputDecrypted[outputDecrypted.size() - 1] == 0)
+		gpk_necall(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK), "Out of memory?");
+	else {
+		const int32_t											padCunt									= outputDecrypted[outputDecrypted.size() - 1];
+		const int32_t											sizeOriginal							= outputDecrypted.size() - padCunt;
+		gpk_necall(outputDecrypted.resize(sizeOriginal), "Out of memory?");
+	}
+	return 0;
 }

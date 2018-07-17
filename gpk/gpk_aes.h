@@ -37,25 +37,30 @@ namespace gpk
 							uint8_t								Iv			[AES_SIZEBLOCK]		= {};
 	};
 
-						void								aesInitCtx						(SAESContext* ctx, const uint8_t* key, AES_LEVEL level);
-						void								aesInitCtxIV					(SAESContext* ctx, const uint8_t* key, const uint8_t* iv, AES_LEVEL level);
+						void								aesInitCtx						(SAESContext* ctx, const uint8_t* key, ::gpk::AES_LEVEL level);
+						void								aesInitCtxIV					(SAESContext* ctx, const uint8_t* key, ::gpk::AES_LEVEL level, const uint8_t* iv);
 						void								aesCtxSetIV						(SAESContext* ctx, const uint8_t* iv);
 
 						// ECB enables the basic ECB 16-byte block algorithm. All can be enabled simultaneously. Buffer size is exactly AES_SIZEBLOCK bytes; you need only AES_init_ctx as IV is not used in ECB. 
 						// NB: ECB is considered insecure for most uses
-						void								aesECBEncrypt					(SAESContext* ctx, uint8_t* buf, AES_LEVEL level);
-						void								aesECBDecrypt					(SAESContext* ctx, uint8_t* buf, AES_LEVEL level);
+						void								aesECBEncrypt					(SAESContext* ctx, uint8_t* buf);
+						void								aesECBDecrypt					(SAESContext* ctx, uint8_t* buf);
 
 						// CBC enables AES encryption in CBC-mode of operation.
 						// buffer size MUST be mutile of AES_SIZEBLOCK; Suggest https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7 for padding scheme.
 						// NOTES: you need to set IV in ctx via aesInitCtxIV() or aesCtxSetIV() no IV should ever be reused with the same key 
-						void								aesCBCEncryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length, AES_LEVEL level);
-						void								aesCBCDecryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length, AES_LEVEL level);
+						void								aesCBCEncryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length);
+						void								aesCBCDecryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length);
 
 						// CTR enables encryption in counter-mode.
 						// Symmetrical operation: Same function for encrypting as for decrypting. IV is incremented for every block, and used after encryption as XOR-compliment for output; Suggesting https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7 for padding scheme.
 						// NOTES: you need to set IV in ctx with aesInitCtxIV() or aesCtxSetIV() no IV should ever be reused with the same key 
-						void								aesCTRXCryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length, AES_LEVEL level);
+						void								aesCTRXCryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length);
+
+						::gpk::error_t						aesEncode						(const ubyte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted);
+						::gpk::error_t						aesDecode						(const ubyte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted);
+	static inline		::gpk::error_t						aesEncode						(const ::gpk::view_array<const ubyte_t>& messageToEncrypt, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{ return ::gpk::aesEncode(messageToEncrypt.begin(), messageToEncrypt.size(), encryptionKey, level, outputEncrypted); }
+	static inline		::gpk::error_t						aesDecode						(const ::gpk::view_array<const ubyte_t>& messageEncrypted, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{ return ::gpk::aesDecode(messageEncrypted.begin(), messageEncrypted.size(), encryptionKey, level, outputDecrypted); }
 }
 
 #endif //AES_H_28937498273423049
