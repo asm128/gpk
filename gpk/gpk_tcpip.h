@@ -9,8 +9,8 @@ namespace gpk
 						ubyte_t											IP		[4]							;
 						uint16_t										Port								;
 
-		inline			bool											operator!=							(const SIPv4& other)	{ return !operator==(other); }
-						bool											operator==							(const SIPv4& other)	{ 
+		inline			bool											operator!=							(const SIPv4& other)	const	noexcept	{ return !operator==(other); }
+						bool											operator==							(const SIPv4& other)	const	noexcept	{ 
 			return IP[0]	== other.IP[0]
 				&& IP[1]	== other.IP[1]
 				&& IP[2]	== other.IP[2]

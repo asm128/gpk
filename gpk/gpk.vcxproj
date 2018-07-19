@@ -24,6 +24,7 @@
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
+    <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_endpoint_command.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_bitmap_file.cpp" />
+    <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_display.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
