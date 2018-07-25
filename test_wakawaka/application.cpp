@@ -46,7 +46,43 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		, TEXTURE_FRUIT_0
 		, ANIMATION_COUNT
 		};
+	enum MAP_TILE 
+		{	MAP_VOID
+		,	MAP_UP_LEFT
+		,	MAP_DOWN_LEFT
+		,	MAP_UP_RIGHT
+		,	MAP_DOWN_RIGHT
+		,	MAP_VERTICAL
+		,	MAP_HORIZONTAL
+		,	MAP_T_DOWN_LEFT
+		,	MAP_T_UP_RIGHT
+		,	MAP_T_DOWN_RIGHT
+		,	MAP_T_UP_LEFT
+		,	MAP_LINE
+		,	MAP_PELLET
+		,	MAP_ENERGYZER
+		,	MAP_DOWN_HORIZONTAL
+		,	MAP_VERTICAL_RIGHT
+		,	MAP_INNER_CORNER_UP_RIGHT
+		,	MAP_INNER_CORNER_UP_LEFT
+		,	MAP_INNER_CORNER_DOWN_RIGHT
+		,	MAP_INNER_CORNER_DOWN_LEFT
+		,	MAP_S_HORIZONTAL
+		,	MAP_S_HORIZONTAL_DOWN
+		,	MAP_S_VERTICAL
+		,	MAP_S_VERTICAL_RIGHT
+		,	MAP_S_CORNER_DOWN_LEFT
+		,	MAP_S_CORNER_UP_LEFT
+		,	MAP_S_CORNER_UP_RIGHT
+		,	MAP_S_CORNER_DOWN_RIGHT
+		,	MAP_T_RIGHT_UP
+		,	MAP_T_RIGHT_DOWN
+		,	MAP_T_LEFT_UP
+		,	MAP_T_LEFT_DOWN
+		,	TEXTURE_COUNT
+		};
 
+	uint32_t tileSize = 8;
 struct SSprite {
 	uint8_t			Frames	;
 	char			Name	[15];
@@ -98,17 +134,8 @@ struct SSprite {
 	app.GameInstance.Map.posToDraw.x = (app.Framework.MainDisplay.Size.x / 2) - (app.GameInstance.Map.Size.x / 2);
 	app.GameInstance.Map.posToDraw.y = app.Framework.MainDisplay.Size.y / 4;
 
-	//uint32_t																	myTextureCount				= ::gpk::size(textureNames);
-	//app.TexturesTest.resize(myTextureCount);
-	//
-	//for(uint32_t iTexture = 0; iTexture < myTextureCount; ++iTexture) {
-	//	::gpk::SImage<::gpk::SColorBGRA>											& textureLoaded				= app.TexturesTest[iTexture];
-	//	::gpk::bmpFileLoad(textureNames[iTexture], textureLoaded);
-	//}
-
 	app.CharacterAnimationImages.resize(ANIMATION_COUNT);
 	app.CharacterAnimationLayers.resize(ANIMATION_COUNT);
-	uint32_t frameCoutn[ANIMATION_COUNT] = {2, 4, 4, 1, 1, 1, 1, 1};
 	for(uint32_t iAnimation = 0; iAnimation < app.CharacterAnimationImages.size(); ++iAnimation)
 		::gpk::pngFileLoad(spriteNames[iAnimation].Name, app.CharacterAnimationImages[iAnimation]);
 
@@ -160,8 +187,8 @@ struct SSprite {
 }
 
 	::gpk::SCoord2<int32_t>										getPosToDraw				(const ::wak::SAnimatedObject & animated, const ::gpk::SCoord2<int32_t> & mapPosition) {
-		return	{ (int32_t)(mapPosition.x + ((animated.Position.x + animated.PositionDeltas.x) * 10) - 8)
-				, (int32_t)(mapPosition.y + ((animated.Position.y + animated.PositionDeltas.y) * 10) - 8)
+		return	{ (int32_t)(mapPosition.x + ((animated.Position.x + animated.PositionDeltas.x) * tileSize) - 8)
+				, (int32_t)(mapPosition.y + ((animated.Position.y + animated.PositionDeltas.y) * tileSize) - 8)
 		};
 	}
 
@@ -183,8 +210,8 @@ struct SSprite {
 		::gpk::SCoord2<int32_t>														& mapPosition				= app.GameInstance.Map.posToDraw;
 		::gpk::view_array<::wak::SEnemy>											& enemies					= app.GameInstance.Enemies;
 
-		::gpk::SCoord2<int32_t>						playerPosToDraw				= { (int32_t)(mapPosition.x + ((app.GameInstance.Player.Position.x + app.GameInstance.Player.PositionDeltas.x) * 10 - 8))	,
-																					(int32_t)(mapPosition.y + ((app.GameInstance.Player.Position.y + app.GameInstance.Player.PositionDeltas.y) * 10 - 8))	};
+		::gpk::SCoord2<int32_t>						playerPosToDraw				= { (int32_t)(mapPosition.x + ((app.GameInstance.Player.Position.x + app.GameInstance.Player.PositionDeltas.x) * tileSize - tileSize))	,
+																					(int32_t)(mapPosition.y + ((app.GameInstance.Player.Position.y + app.GameInstance.Player.PositionDeltas.y) * tileSize - tileSize))	};
 
 		::gpk::SCoord2<int32_t>														posToDraw[::wak::GHOST_COUNT] = {};
 
@@ -193,19 +220,50 @@ struct SSprite {
 		}
 	
 		//--- Dibujar sobrne el target
-		::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][0], mapPosition, magenta);
+		//::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][0], mapPosition, magenta);
 
 		for (int32_t y = 0; y < app.GameInstance.Map.Size.y; ++y) {
 			for (int32_t x = 0; x < app.GameInstance.Map.Size.x; ++x) {
-				::gpk::SCoord2<int32_t>								pointToDraw = { mapPosition.x + (x * 10) , mapPosition.y + (y * 10) };
-				if (app.GameInstance.Map.TilesMap[y][x]			== TILE_PELLET) 
-					::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PELLET][0], pointToDraw, magenta);
-				else if (app.GameInstance.Map.TilesMap[y][x]	== TILE_ENERGYZER && (app.GameInstance.CounterAnimation / 3) % 2)
-					::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_ENERGYZER][0], pointToDraw, magenta);
+				::gpk::SCoord2<uint32_t>								pointToDraw = { mapPosition.x + (x * tileSize) , mapPosition.y + (y * tileSize) };
+				uint32_t											texture = 0;
+					 if (app.GameInstance.Map.TilesMap[y][x] == TILE_VOID || app.GameInstance.Map.TilesMap[y][x] == TILE_FRUIT)				texture = MAP_VOID;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_PELLET)																texture = MAP_PELLET;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_ENERGYZER)																texture = MAP_ENERGYZER;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL_LINE)															texture = MAP_LINE;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_LEFT)																texture = MAP_DOWN_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_RIGHT)															texture = MAP_DOWN_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_UP_LEFT)																texture = MAP_UP_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_UP_RIGHT)																texture = MAP_UP_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_HORIZONTAL)															texture = MAP_HORIZONTAL;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL)																texture = MAP_VERTICAL;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_DOWN_LEFT)															texture = MAP_T_DOWN_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_UP_RIGHT)															texture = MAP_T_UP_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_DOWN_RIGHT)															texture = MAP_T_DOWN_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_UP_LEFT)																texture = MAP_T_UP_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_HORIZONTAL)														texture = MAP_DOWN_HORIZONTAL;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL_RIGHT)														texture = MAP_VERTICAL_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_UP_RIGHT)													texture = MAP_INNER_CORNER_UP_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_UP_LEFT)													texture = MAP_INNER_CORNER_UP_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_DOWN_RIGHT)												texture = MAP_INNER_CORNER_DOWN_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_DOWN_LEFT)												texture = MAP_INNER_CORNER_DOWN_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_HORIZONTAL)															texture = MAP_S_HORIZONTAL;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_HORIZONTAL_DOWN)														texture = MAP_S_HORIZONTAL_DOWN;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_VERTICAL)															texture = MAP_S_VERTICAL;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_VERTICAL_RIGHT)														texture = MAP_S_VERTICAL_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_DOWN_LEFT)													texture = MAP_S_CORNER_DOWN_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_UP_LEFT)														texture = MAP_S_CORNER_UP_LEFT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_UP_RIGHT)														texture = MAP_S_CORNER_UP_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_DOWN_RIGHT)													texture = MAP_S_CORNER_DOWN_RIGHT;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_RIGHT_DOWN)															texture = MAP_T_RIGHT_DOWN;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_RIGHT_UP)															texture = MAP_T_RIGHT_UP;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_LEFT_DOWN)															texture = MAP_T_LEFT_DOWN;
+				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_LEFT_UP)																texture = MAP_T_LEFT_UP;
+
+				::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][texture], pointToDraw, magenta);
 			}
 		}
 		if (app.GameInstance.Map.TilesMap[20][15] == TILE_FRUIT) {
-			::gpk::SCoord2<int32_t>								pointToDraw = { mapPosition.x + (15 * 10 -5) , mapPosition.y + (20 * 10) };
+			::gpk::SCoord2<uint32_t>								pointToDraw = { mapPosition.x + (15 * tileSize - (tileSize / 2)) , mapPosition.y + (20 * tileSize) };
 			::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_FRUIT_0][0], pointToDraw, magenta);
 		}
 
@@ -260,6 +318,13 @@ struct SSprite {
 				return ::gpk::APPLICATION_STATE_EXIT;
 		}
 	}
+
+	app.GameInstance.NextDirection = (::wak::DIRECTION)-1;
+		 if (GetAsyncKeyState('D')) app.GameInstance.NextDirection = ::wak::RIGHT	;
+	else if (GetAsyncKeyState('A')) app.GameInstance.NextDirection = ::wak::LEFT	;
+	else if (GetAsyncKeyState('W')) app.GameInstance.NextDirection = ::wak::UP		;
+	else if (GetAsyncKeyState('S')) app.GameInstance.NextDirection = ::wak::DOWN	;
+
 	{
 		::gme::mutex_guard															lock						(app.LockGame);
 		::wak::update(app.GameInstance, (float)framework.FrameInfo.Seconds.LastFrame);

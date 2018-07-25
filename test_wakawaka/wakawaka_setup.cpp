@@ -1,21 +1,39 @@
 #include "wakawaka.h"
 
 static const ::wak::STile tileDefinitions[] =
-{ { ' '		, '0', "VOID"					, false, }
-,{ 250		, 'P', "POINTS"					, false, }
-,{ 15		, 'W', "POWER_UP"				, false, }
-,{ 3		, 'X', "TARGET_FRUIT"			, false, }
-,{ 179		, '4', "VERTICAL_LINE"			, true, }
-,{ 200		, 'C', "CORNER_DOWN_LEFT"		, true, }
-,{ 201		, 'D', "CORNER_UP_LEFT"			, true, }
-,{ 187		, 'E', "CORNER_UP_RIGHT"		, true, }
-,{ 188		, 'F', "CORNER_DOWN_RIGHT"		, true, }
-,{ 203		, 'T', "T_DOWN"					, true, }
-,{ 202		, 'U', "T_UP"					, true, }
-,{ 204		, 'R', "T_RIGHT"				, true, }
-,{ 185		, 'L', "T_LEFT"					, true, }
-,{ 205		, 'H', "HORIZONTAL"				, true, }
-,{ 186		, 'V', "VERTICAL"				, true, }
+{ { ' '		, '0', "VOID"					, false,	}
+,{ 250		, 'P', "POINTS"					, false,	}
+,{ 15		, 'W', "POWER_UP"				, false,	}
+,{ 3		, 'X', "TARGET_FRUIT"			, false,	}
+,{ 179		, '4', "VERTICAL_LINE"			, true,		}
+,{ 200		, 'C', "CORNER_DOWN_LEFT"		, true,		}
+,{ 201		, 'D', "CORNER_UP_LEFT"			, true,		}
+,{ 187		, 'E', "CORNER_UP_RIGHT"		, true,		}
+,{ 188		, 'F', "CORNER_DOWN_RIGHT"		, true,		}
+,{ 203		, 'T', "T_DOWN_LEFT"			, true,		}
+,{ 202		, 'U', "T_UP_RIGHT"				, true,		}
+,{ 204		, 'R', "T_DOWN_RIGHT"			, true,		}
+,{ 185		, 'L', "T_UP_LEFT"				, true,		}
+,{ 205		, 'H', "HORIZONTAL"				, true,		}
+,{ 186		, 'V', "VERTICAL"				, true,		}
+,{ 206		, 'A', "DOWN_HORIZONTAL"		, true,		}
+,{ 180		, 'B', "VERTICAL_RIGHT"			, true,		}
+,{ 181		, 'G', "INNER_CORNER_UP_RIGHT"	, true,		}
+,{ 182		, 'I', "INNER_CORNER_UP_LEFT"	, true,		}
+,{ 183		, 'J', "INNER_CORNER_DOWN_RIGHT", true,		}
+,{ 184		, 'Q', "INNER_CORNER_DOWN_LEFT"	, true,		}
+,{ 190		, 'K', "S_HORIZONTAL"			, true,		}
+,{ 191		, 'M', "S_HORIZONTAL_DOWN"		, true,		}
+,{ 192		, 'N', "S_VERTICAL"				, true,		}
+,{ 193		, 'S', "S_VERTICAL_RIGHT"		, true,		}
+,{ 194		, 'Y', "S_CORNER_DOWN_LEFT"		, true,		}
+,{ 195		, 'Z', "S_CORNER_UP_LEFT"		, true,		}
+,{ 196		, 'O', "S_CORNER_UP_RIGHT"		, true,		}
+,{ 197		, '1', "S_CORNER_DOWN_RIGHT"	, true,		}
+,{ 100		, '2', "T_RIGHT_UP"				, true,		}
+,{ 101		, '3', "T_RIGHT_DOWN"			, true,		}
+,{ 102		, '5', "T_LEFT_UP"				, true,		}
+,{ 103		, '6', "T_LEFT_DOWN"			, true,		}
 };
 
 unsigned char													 getImageByCode(unsigned char code) {
@@ -33,6 +51,11 @@ bool															 getSolidByImage(unsigned char image) {
 }
 
 void																					::wak::setupMap														(SGame& gameObject, const ::gpk::SImage<ubyte_t>& tileMap) {
+	gameObject.Map.TilesMap			.resize(tileMap.metrics());
+	gameObject.Map.TilesEnemy		.resize(tileMap.metrics());
+	gameObject.Map.TilesDecision	.resize(tileMap.metrics());
+	gameObject.Map.TilesSolid		.resize(tileMap.metrics());
+
 	gameObject.Map.Size		= tileMap.metrics().Cast<int32_t>();
 
 	for (uint32_t y = 0; y < (uint32_t)gameObject.Map.Size.y; ++y) {
@@ -64,11 +87,10 @@ void																					::wak::setupEnemies														(SGame& gameObject) {
 	gameObject.Enemies.clear();
 	for (uint32_t enemyCount = 0; enemyCount < GHOST_COUNT; enemyCount++) {
 		SEnemy														newEnemy;
-		newEnemy.CurrentMode										= MODE_SCATTER;
-		newEnemy.PrevtMode											= MODE_SCATTER;
+		newEnemy.CurrentMode										= MODE_DISBAND;
+		newEnemy.PrevtMode											= MODE_DISBAND;
 		newEnemy.PositionDeltas										= { 0, 0.5f };
 		newEnemy.Speed												= 4.0f;
-		newEnemy.Vulnerability										=
 		newEnemy.Reverse											=
 		newEnemy.Dead												=
 		newEnemy.AlreadyOut											= false;

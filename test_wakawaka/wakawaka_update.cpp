@@ -32,7 +32,31 @@ void																			lifeLost												(::wak::SGame & gameObject) {
 void																			ghostLost												(::wak::SGame & gameObject) { ::wak::setupEnemies(gameObject); }
 
 void																			moveInDirection								(::wak::SGame & gameObject, ::wak::SAnimatedObject & character, float fLastFrameTime) {
-	if (character.CurrentDirection == ::wak::UP) {
+	if (character.Position.x == 0) {
+		if (character.CurrentDirection == ::wak::LEFT) {
+			if (character.PositionDeltas.x < 0.5f) {
+				character.Position.x = 29;
+				character.PositionDeltas.x = 0.9f;
+			}
+			else
+				character.PositionDeltas.x -= character.Speed * fLastFrameTime;
+		}
+		else
+			character.PositionDeltas.x += character.Speed * fLastFrameTime;
+	}
+	else if (character.Position.x == 29) {
+		if (character.CurrentDirection == ::wak::RIGHT) {
+			if (character.PositionDeltas.x > 0.5f) {
+				character.Position.x = 0;
+				character.PositionDeltas.x = 0.1f;
+			}
+			else
+				character.PositionDeltas.x += character.Speed * fLastFrameTime;
+		}
+		else
+			character.PositionDeltas.x -= character.Speed * fLastFrameTime;
+	}
+	else if (character.CurrentDirection == ::wak::UP) {
 		if (gameObject.Map.TilesSolid[character.Position.y - 1][character.Position.x] != true || gameObject.Map.TilesSolid[character.Position.y - 1][character.Position.x] == true && character.PositionDeltas.y > 0.5f)
 			character.PositionDeltas.y			-= character.Speed * fLastFrameTime;
 		else { character.PositionDeltas.y		= 0.5f;		character.Stand					= true; }
@@ -78,15 +102,22 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 	
 	player.Stand															= false;
 
-		 if (GetAsyncKeyState('D')	&&	map.TilesSolid[player.Position.y][player.Position.x + 1] != true && playerDeltas.y > 0.4f && playerDeltas.y < 0.6f) { player.CurrentDirection = RIGHT; playerDeltas.y = 0.5f; }
-	else if (GetAsyncKeyState('A')	&&	map.TilesSolid[player.Position.y][player.Position.x - 1] != true && playerDeltas.y > 0.4f && playerDeltas.y < 0.6f) { player.CurrentDirection = LEFT ; playerDeltas.y = 0.5f; }
-	else if (GetAsyncKeyState('W')	&&	map.TilesSolid[player.Position.y - 1][player.Position.x] != true && playerDeltas.x > 0.4f && playerDeltas.x < 0.6f && player.Position.x != 0 && player.Position.x != 29)	{player.CurrentDirection = UP;		playerDeltas.x = 0.5f;}
-	else if (GetAsyncKeyState('S')	&&	map.TilesSolid[player.Position.y + 1][player.Position.x] != true && playerDeltas.x > 0.4f && playerDeltas.x < 0.6f && player.Position.x != 0 && player.Position.x != 29)	{player.CurrentDirection = DOWN;	playerDeltas.x = 0.5f;}
+	bool set = false;
+		 if (gameObject.NextDirection == ::wak::RIGHT	&& player.Position.x != map.Size.x - 1	&& map.TilesSolid[player.Position.y][player.Position.x + 1] != true && playerDeltas.y > 0.3f && playerDeltas.y < 0.7f)															{ set = true; }
+	else if (gameObject.NextDirection == ::wak::LEFT	&& player.Position.x != 0				&& map.TilesSolid[player.Position.y][player.Position.x - 1] != true && playerDeltas.y > 0.3f && playerDeltas.y < 0.7f)															{ set = true; }
+	else if (gameObject.NextDirection == ::wak::UP		&& player.Position.y != 0				&& map.TilesSolid[player.Position.y - 1][player.Position.x] != true && playerDeltas.x > 0.3f && playerDeltas.x < 0.7f && player.Position.x != 0 && player.Position.x != 29)	{ set = true; }
+	else if (gameObject.NextDirection == ::wak::DOWN	&& player.Position.y != map.Size.y - 1	&& map.TilesSolid[player.Position.y + 1][player.Position.x] != true && playerDeltas.x > 0.3f && playerDeltas.x < 0.7f && player.Position.x != 0 && player.Position.x != 29)	{ set = true; }
 
-	if		( player.Position.x ==  0 && playerDeltas.x < 0.1f)	{ player.Position.x = 29; playerDeltas.x = 0.9f;}
-	else if ( player.Position.x == 29 && playerDeltas.x > 0.9f)	{ player.Position.x =  0; playerDeltas.x = 0.1f;}
-
+	if(set) {
+		player.CurrentDirection = gameObject.NextDirection; 
+		if(0 == player.CurrentDirection % 2)
+			playerDeltas.y			= 0.5f; 
+		else
+			playerDeltas.x			= 0.5f; 
+	}
+	
 	moveInDirection(gameObject, player, fLastFrameTime);
+
 	refreshPosFromDeltas(player);
 
 	if (gameObject.CounterPellet == 70 || gameObject.CounterPellet == 170) {
@@ -100,7 +131,7 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 		gameObject.Map.TilesMap[20][15] = TILE_VOID;
 	}
 
-	if (map.TilesMap[player.Position.y][player.Position.x] == TILE_PELLET && playerDeltas.y < 0.6f && playerDeltas.x < 0.6f && playerDeltas.y > 0.4f && playerDeltas.x > 0.4f) {
+	if (map.TilesMap[player.Position.y][player.Position.x] == TILE_PELLET && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
 		gameObject.Score											+= 10;
 		gameObject.CounterPellet									++;
 		map.TilesMap[player.Position.y][player.Position.x]			= TILE_VOID;
@@ -109,7 +140,7 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 		gameObject.Map.TilesMap[player.Position.y][player.Position.x] = TILE_VOID;
 		gameObject.CounterFruit = 0;
 	}
-	else if (map.TilesMap[player.Position.y][player.Position.x] == TILE_ENERGYZER && playerDeltas.y < 0.6f && playerDeltas.x < 0.6f && playerDeltas.y > 0.4f && playerDeltas.x > 0.4f) {
+	else if (map.TilesMap[player.Position.y][player.Position.x] == TILE_ENERGYZER && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
 		gameObject.Score											+= 50;
 		map.TilesMap[player.Position.y][player.Position.x]			= TILE_VOID;
 		if (gameObject.CounterFrightened > 0)
@@ -120,8 +151,6 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 			if (gameObject.Enemies[i].InHouse == false && gameObject.Enemies[i].Dead == false) {
 				gameObject.Enemies[i].CurrentMode	= MODE_ESCAPE;
 				gameObject.Enemies[i].Reverse		= true;
-				gameObject.Enemies[i].Vulnerability = true;
-				gameObject.Enemies[i].Speed			= 3.0f;
 			}
 		}
 	}
@@ -131,9 +160,8 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 			float deltasY = playerDeltas.y - gameObject.Enemies[iEnemy].PositionDeltas.y;
 			float finalDelta = deltasY - deltasX;
 			if (finalDelta > -0.3f && finalDelta < 0.3f) {
-				if (gameObject.Enemies[iEnemy].Vulnerability == true) {
+				if (gameObject.Enemies[iEnemy].CurrentMode == MODE_ESCAPE) {
 					gameObject.Enemies[iEnemy].Dead = true;
-					gameObject.Enemies[iEnemy].Speed *= 2;
 					gameObject.Enemies[iEnemy].CurrentMode = gameObject.Enemies[iEnemy].PrevtMode;
 				}
 				else
@@ -207,9 +235,9 @@ void																	getDirectionByTarget (::gpk::SCoord2<int32_t> target, ::wak
 
 void																	getDirection														(::wak::SGame & gameObject, ::wak::SEnemy & ghost) {
 	::gpk::SCoord2<int32_t>														targetTile															= {};
-	if (ghost.CurrentMode == ::wak::MODE_ESCAPE || ghost.InHouse == true)
+	if (ghost.CurrentMode == ::wak::MODE_ESCAPE && ghost.PrevTile != ghost.Position)
 		ghost.CurrentDirection												= (::wak::DIRECTION)(rand() % 4);
-	else if (ghost.CurrentMode == ::wak::MODE_SCATTER) {
+	else if (ghost.CurrentMode == ::wak::MODE_DISBAND) {
 		targetTile = ghost.TargetTile;
 		getDirectionByTarget(targetTile, gameObject, ghost);
 	}
@@ -254,44 +282,23 @@ void																	reverse																(::wak::SAnimatedObject & ghost) {
 }
 void																	::wak::updateEnemies												(SGame& gameObject, float fLastFrameTime) {
 	for (uint32_t y = 0; y < (uint32_t)gameObject.Map.Size.y; y++)
-		memset(gameObject.Map.TilesEnemy[y], INVALID_ENEMY, gameObject.Map.Size.x);
+		memset(gameObject.Map.TilesEnemy[y].begin(), INVALID_ENEMY, gameObject.Map.Size.x);
 
-	if (gameObject.CounterPellet == 1) {
-		gameObject.Enemies[ROSITA].Position.y = 14;
-		gameObject.Enemies[ROSITA].Position.x = 15;
-		gameObject.Enemies[ROSITA].InHouse = false;
-		gameObject.Enemies[ROSITA].CurrentDirection = LEFT;
-		gameObject.Enemies[ROSITA].AlreadyOut =
-			gameObject.Enemies[ROSITA].Reverse = true;
-	}
-	else if (gameObject.CounterPellet == 30) {
-		gameObject.Enemies[DONJAIME].Position.y = 14;
-		gameObject.Enemies[DONJAIME].Position.x = 15;
-		gameObject.Enemies[DONJAIME].InHouse = false;
-		gameObject.Enemies[DONJAIME].CurrentDirection = LEFT;
-		gameObject.Enemies[DONJAIME].AlreadyOut =
-			gameObject.Enemies[DONJAIME].Reverse = true;
-	}
-	else if (gameObject.CounterPellet == 80) {
-		gameObject.Enemies[COOLGUY].Position.y = 14;
-		gameObject.Enemies[COOLGUY].Position.x = 15;
-		gameObject.Enemies[COOLGUY].InHouse = false;
-		gameObject.Enemies[COOLGUY].CurrentDirection = LEFT;
-		gameObject.Enemies[COOLGUY].AlreadyOut =
-			gameObject.Enemies[COOLGUY].Reverse = true;
-	}
+	if		(gameObject.CounterPellet == 1)		gameObject.Enemies[ROSITA].AlreadyOut		= true;
+	else if (gameObject.CounterPellet == 30)	gameObject.Enemies[DONJAIME].AlreadyOut		= true;
+	else if (gameObject.CounterPellet == 80)	gameObject.Enemies[COOLGUY].AlreadyOut		= true;
 
 	::gpk::SCoord2<int32_t>										modeCheck = {};
 	modeCheck.y = uint32_t(gameObject.Player.Position.y - gameObject.Enemies[COOLGUY].Position.y);
 	modeCheck.x = uint32_t(gameObject.Player.Position.x - gameObject.Enemies[COOLGUY].Position.x);
 	if (gameObject.Enemies[COOLGUY].CurrentMode != MODE_ESCAPE) {
 		if (modeCheck.y < 8 && modeCheck.x < 8) {
-			gameObject.Enemies[COOLGUY].CurrentMode = MODE_SCATTER;
-			gameObject.Enemies[COOLGUY].PrevtMode = MODE_SCATTER;
+			gameObject.Enemies[COOLGUY].CurrentMode				= MODE_DISBAND;
+			gameObject.Enemies[COOLGUY].PrevtMode				= MODE_DISBAND;
 		}
 		else {
-			gameObject.Enemies[COOLGUY].CurrentMode = MODE_PURSUIT;
-			gameObject.Enemies[COOLGUY].PrevtMode = MODE_PURSUIT;
+			gameObject.Enemies[COOLGUY].CurrentMode				= MODE_PURSUIT;
+			gameObject.Enemies[COOLGUY].PrevtMode				= MODE_PURSUIT;
 		}
 	}
 	if (gameObject.CounterFrightened == 0 && gameObject.CounterMode != 4) {
@@ -301,30 +308,22 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 				gameObject.CounterChase += fLastFrameTime;
 				gameObject.CounterScatter = 0;
 				gameObject.CounterMode++;
-				gameObject.Enemies[REDDY].CurrentMode =
-					gameObject.Enemies[ROSITA].CurrentMode =
-					gameObject.Enemies[DONJAIME].CurrentMode = MODE_PURSUIT;
-				gameObject.Enemies[REDDY].PrevtMode =
-					gameObject.Enemies[ROSITA].PrevtMode =
-					gameObject.Enemies[DONJAIME].PrevtMode = MODE_PURSUIT;
-				gameObject.Enemies[REDDY].Reverse =
-					gameObject.Enemies[ROSITA].Reverse =
-					gameObject.Enemies[DONJAIME].Reverse = true;
+				for (uint32_t iEnemy = 0; iEnemy < GHOST_COUNT - 1; ++iEnemy) {
+					gameObject.Enemies[iEnemy].CurrentMode	= 
+					gameObject.Enemies[iEnemy].PrevtMode	= MODE_PURSUIT;
+					gameObject.Enemies[iEnemy].Reverse		= true;
+				}
 			}
 		}
 		else {
 			gameObject.CounterChase += fLastFrameTime;
 			if (gameObject.CounterChase >= 20) {
 				gameObject.CounterChase = 0;
-				gameObject.Enemies[REDDY].CurrentMode =
-					gameObject.Enemies[ROSITA].CurrentMode =
-					gameObject.Enemies[DONJAIME].CurrentMode = MODE_SCATTER;
-				gameObject.Enemies[REDDY].PrevtMode =
-					gameObject.Enemies[ROSITA].PrevtMode =
-					gameObject.Enemies[DONJAIME].PrevtMode = MODE_SCATTER;
-				gameObject.Enemies[REDDY].Reverse =
-					gameObject.Enemies[ROSITA].Reverse =
-					gameObject.Enemies[DONJAIME].Reverse = true;
+				for (uint32_t iEnemy = 0; iEnemy < GHOST_COUNT - 1; ++iEnemy) {
+					gameObject.Enemies[iEnemy].CurrentMode	= 
+					gameObject.Enemies[iEnemy].PrevtMode	= MODE_DISBAND;
+					gameObject.Enemies[iEnemy].Reverse		= true;
+				}
 			}
 		}
 	}
@@ -332,10 +331,8 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 		gameObject.CounterFrightened += fLastFrameTime;
 		if (gameObject.CounterFrightened >= 7) {
 			gameObject.CounterFrightened = 0;
-			gameObject.Enemies[REDDY].CurrentMode = gameObject.Enemies[REDDY].PrevtMode;
-			gameObject.Enemies[ROSITA].CurrentMode = gameObject.Enemies[ROSITA].PrevtMode;
-			gameObject.Enemies[DONJAIME].CurrentMode = gameObject.Enemies[DONJAIME].PrevtMode;
-			gameObject.Enemies[COOLGUY].CurrentMode = gameObject.Enemies[COOLGUY].PrevtMode;
+			for (uint32_t iEnemy = 0; iEnemy < GHOST_COUNT; ++iEnemy)
+				gameObject.Enemies[iEnemy].CurrentMode = gameObject.Enemies[iEnemy].PrevtMode;
 		}
 	}
 
@@ -344,7 +341,7 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 
 		if (currentEnemy.Dead == true)
 			currentEnemy.Speed = 9.0f;
-		else if (currentEnemy.Vulnerability == true || currentEnemy.Position.x < 10 && currentEnemy.Position.y == 17 || currentEnemy.Position.x > 19 && currentEnemy.Position.y == 17)
+		else if (currentEnemy.CurrentMode == MODE_ESCAPE || currentEnemy.Position.x < 10 && currentEnemy.Position.y == 17 || currentEnemy.Position.x > 19 && currentEnemy.Position.y == 17)
 			currentEnemy.Speed = 3.0f;
 		else if (currentEnemy.CurrentGhost == ::wak::REDDY && currentEnemy.CurrentMode == ::wak::MODE_PURSUIT)
 			currentEnemy.Speed = 4.5f;
@@ -353,17 +350,17 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 
 		if (currentEnemy.Stand == true)
 			getDirectionByCollission(currentEnemy, gameObject);
-		else if (gameObject.Map.TilesDecision[currentEnemy.Position.y][currentEnemy.Position.x] == true && currentEnemy.PositionDeltas.y > 0.4f && currentEnemy.PositionDeltas.x > 0.4f && currentEnemy.PositionDeltas.y < 0.6f && currentEnemy.PositionDeltas.x < 0.6f && currentEnemy.PrevTile != currentEnemy.Position) {
+		else if (currentEnemy.Reverse == true) {
+			reverse(currentEnemy);
+			currentEnemy.Reverse = false;
+		}
+		else if (gameObject.Map.TilesDecision[currentEnemy.Position.y][currentEnemy.Position.x] == true && currentEnemy.PositionDeltas.y > 0.3f && currentEnemy.PositionDeltas.x > 0.3f && currentEnemy.PositionDeltas.y < 0.7f && currentEnemy.PositionDeltas.x < 0.7f /*&& currentEnemy.PrevTile != currentEnemy.Position*/) {
 			if (currentEnemy.Dead == true) {
 				getDirectionByTarget({ 15, 15 }, gameObject, currentEnemy);
 			}
 			else if (currentEnemy.Position.y == 14 && currentEnemy.Position.x == 13 || currentEnemy.Position.y == 14 && currentEnemy.Position.x == 16 || currentEnemy.Position.y == 26 && currentEnemy.Position.x == 13 || currentEnemy.Position.y == 26 && currentEnemy.Position.x == 16) {
 				if (currentEnemy.CurrentDirection == ::wak::DOWN)
 					getDirection(gameObject, currentEnemy);
-			}
-			else if (currentEnemy.Reverse == true) {
-				reverse(currentEnemy);
-				currentEnemy.Reverse = false;
 			}
 			else
 				getDirection(gameObject, currentEnemy);
@@ -375,7 +372,7 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 			float deltasY = gameObject.Player.PositionDeltas.y - currentEnemy.PositionDeltas.y;
 			float finalDelta = deltasY - deltasX;
 			if (finalDelta > -0.3f && finalDelta < 0.3f) {
-				if (currentEnemy.Vulnerability == true) {
+				if (currentEnemy.CurrentMode == MODE_ESCAPE) {
 					currentEnemy.Dead = true;
 					currentEnemy.CurrentMode = currentEnemy.PrevtMode;
 				}
@@ -384,19 +381,41 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 			}
 		}
 		if (currentEnemy.Dead == true) {
-			if (currentEnemy.Position.y == 14 && currentEnemy.Position.x == 15 && currentEnemy.PositionDeltas.x < 0.2f) {
-				currentEnemy.Position.y = 15;
-				currentEnemy.PositionDeltas.x = 0;
-				currentEnemy.PositionDeltas.y = 0;
+			if (currentEnemy.Position.y == 14 && currentEnemy.Position.x == 15 /*&& currentEnemy.PositionDeltas.x < 0.3f*/) {
+				currentEnemy.Position.y				= 15;
+				currentEnemy.PositionDeltas.x		= 0;
+				currentEnemy.PositionDeltas.y		= 0;
+				currentEnemy.CurrentDirection = ::wak::DOWN;
 			}
 			else if (currentEnemy.Position.y == 15 && currentEnemy.Position.x == 15) {
 				if (currentEnemy.PositionDeltas.y >= 0.9f) {
-					currentEnemy.Position.y = 16;
-					currentEnemy.PositionDeltas.y = 0;
-					currentEnemy.Dead = false;
+					currentEnemy.Position.y			= 16;
+					currentEnemy.PositionDeltas.y	= 0;
+					currentEnemy.Dead				= false;
+					currentEnemy.InHouse			= true;
 				}
 				else
 					currentEnemy.PositionDeltas.y += 0.9f * fLastFrameTime;
+			}
+			else
+				moveInDirection(gameObject, currentEnemy, fLastFrameTime);
+		}
+		else if (currentEnemy.AlreadyOut == true && currentEnemy.InHouse == true) {
+			if (currentEnemy.Position.y == 16 && currentEnemy.Position.x == 15) {
+				currentEnemy.Position.y				= 15;
+				currentEnemy.PositionDeltas.x		= 0;
+				currentEnemy.PositionDeltas.y		= 0.9f;
+				currentEnemy.CurrentDirection = ::wak::UP;
+			}
+			else if (currentEnemy.Position.y == 15 && currentEnemy.Position.x == 15) {
+				if (currentEnemy.PositionDeltas.y <= 0.1f) {
+					currentEnemy.Position.y			= 14;
+					currentEnemy.PositionDeltas.y	= 0.9f;
+					currentEnemy.InHouse			= false;
+					currentEnemy.Reverse			= true;
+				}
+				else
+					currentEnemy.PositionDeltas.y -= 0.9f * fLastFrameTime;
 			}
 			else
 				moveInDirection(gameObject, currentEnemy, fLastFrameTime);
@@ -406,12 +425,8 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 
 		refreshPosFromDeltas(currentEnemy);
 
-		if (currentEnemy.Position.x == 0 && currentEnemy.PositionDeltas.x < 0.1f) { currentEnemy.Position.x = 29;				currentEnemy.PositionDeltas.x = 0.9f; }
-		else if (currentEnemy.Position.x == 29 && currentEnemy.PositionDeltas.x > 0.9f) { currentEnemy.Position.x = 0;				currentEnemy.PositionDeltas.x = 0.1f; }
-
 		gameObject.Map.TilesEnemy[currentEnemy.Position.y][currentEnemy.Position.x] = 1;
 	}
-
 }
 void																					::wak::update															(SGame& gameObject, float fLastFrameTime) {
 	updatePlayer(gameObject, fLastFrameTime);
