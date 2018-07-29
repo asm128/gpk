@@ -44,7 +44,7 @@ namespace gpk
 		inline constexpr	const _tElement*		begin						()																	const	noexcept	{ return Data;			}
 		inline constexpr	const _tElement*		end							()																	const	noexcept	{ return Data + Count;	}
 
-		inline constexpr	uint32_t				size						()																	const	noexcept	{ return Count;			}
+		inline constexpr	const uint32_t&			size						()																	const	noexcept	{ return Count;			}
 	};
 
 	// view_array common typedefs
