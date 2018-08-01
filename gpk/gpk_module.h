@@ -11,12 +11,16 @@
 #	define GPK_STDCALL				
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define GPK_MODULE_API_IMPORT
+#elif defined(GPK_ANDROID)
+#	define GPK_STDCALL				
+#	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
+#	define GPK_MODULE_API_IMPORT
 #else
 //  do nothing and hope for the best?
 #	define GPK_STDCALL				
 #	define GPK_MODULE_API_EXPORT
 #	define GPK_MODULE_API_IMPORT
-#	pragma warning "Unknown dynamic link import/export semantics."
+#	error "Unknown dynamic link import/export semantics."
 #endif
 
 #define GPK_MODULE_FUNCTION_NAME(functionName)	GPK_func_##functionName

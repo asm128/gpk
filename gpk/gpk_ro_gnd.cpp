@@ -1,6 +1,7 @@
 #include "gpk_ro_gnd.h"
 #include "gpk_view_grid.h"
 #include "gpk_view_stream.h"
+#include "gpk_io.h"
 
 namespace gpk
 {
@@ -16,11 +17,11 @@ namespace gpk
 				::gpk::error_t								gpk::gndFileLoad										(::gpk::SGNDFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
 	::gpk::view_stream<const ubyte_t>								gnd_stream										= {input.begin(), input.size()};
 	::gpk::SGNDHeader												gndHeader										= {};
-	gpk_necall(gnd_stream.read_pod(gndHeader), "Cannot read GND header. Corrupt file?");
+	gpk_necall(gnd_stream.read_pod(gndHeader), "%s", "Cannot read GND header. Corrupt file?");
 #if defined (GPK_ANDROID) || defined(GPK_LINUX)
-	ree_if(gndHeader.nMagicHeader != 0x4E475247UL , "Invalid GND file header.");
+	ree_if(gndHeader.nMagicHeader != 0x4E475247UL , "%s", "Invalid GND file header.");
 #elif defined(GPK_WINDOWS)
-	ree_if(gndHeader.nMagicHeader != 'NGRG', "Invalid GND file header.");
+	ree_if(gndHeader.nMagicHeader != 'NGRG', "%s", "Invalid GND file header.");
 #endif
 	ree_if((gndHeader.nVersionMajor < 1) || (gndHeader.nVersionMajor == 1 && gndHeader.nVersionMinor < 5), "Invalid GND file version. Major version: %u, Minor version: %u", (int)gndHeader.nVersionMajor, (int)gndHeader.nVersionMinor);
 	uint32_t														nTextureCount									= 0;
@@ -97,7 +98,9 @@ namespace gpk
 	return gndFileLoad(loaded, fileInMemory);
 }
 
-#pragma warning(disable : 4100)
+#if defined(GPK_WINDOWS)
+#	pragma warning(disable : 4100)
+#endif
 static		::gpk::error_t									gndGenerateFaceGeometryRight							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileRight, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{ 
 	const uint32_t													baseVertexIndex											= generated.Vertices.size();
 	const ::gpk::SCoord3<float>										faceVerts	[4]											= 
@@ -193,7 +196,9 @@ static		::gpk::error_t									gndGenerateFaceGeometryFront							(uint32_t base
 	}	
 	return 0; 
 }
-#pragma warning(default : 4100)
+#if defined(GPK_WINDOWS)
+#	pragma warning(default : 4100)
+#endif
 
 static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t													baseVertexIndex											= generated.Vertices.size();

@@ -6,6 +6,10 @@
 #ifndef GPK_RUNTIME_MODULE_H_23084728934
 #define GPK_RUNTIME_MODULE_H_23084728934
 
+#if !defined(GPK_WINDOWS)
+#	include <dlfcn.h>
+#endif
+
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, char_t* outputBuffer, uint8_t* outputBufferLenght					);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, uint32_t* version													);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void** customApplication, ::gpk::SRuntimeValues* runtimeValues	);
@@ -35,8 +39,15 @@ namespace gpk
 	::gpk::error_t												loadRuntimeModule			(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
 
 
-#define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
-#define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))GetProcAddress((HMODULE)moduleHandle, #symbolName))
+#if defined(GPK_WINDOWS)
+#	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
+#	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		(moduleAddr)
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))GetProcAddress((HMODULE)moduleHandle, #symbolName))
+#else
+#	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
+#	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))dlsym(moduleHandle, #symbolName))
+#endif
 
 #if defined GPK_WINDOWS
 #	define GPK_MODULE_EXTENSION "dll"

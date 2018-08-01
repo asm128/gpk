@@ -274,8 +274,8 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 	if(fabs(1.0 - scale.y) < 0.001) scale.y = 1.0;
 	::gpk::SCoord2<double>												scaledPosition											= {control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y};
 	::gpk::SCoord2<double>												scaledSize												= {control.Area.Size	.x * scale.x, control.Area.Size		.y * scale.y};
-	::gpk::SRectLimits<double>											scaledBorders											= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
-	::gpk::SRectLimits<double>											scaledMargins											= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
+	//::gpk::SRectLimits<double>											scaledBorders											= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
+	//::gpk::SRectLimits<double>											scaledMargins											= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics[iControl];
 	::gpk::SRectangle2D<double>											rectText												= {};
@@ -404,7 +404,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 		: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
 		: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
 		];
-	const ::gpk::SColorBGRA												colorBack												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]];
+	//const ::gpk::SColorBGRA												colorBack												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]];
 	const ::gpk::SColorBGRA												colorFace												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]];
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];

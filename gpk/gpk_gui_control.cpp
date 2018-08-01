@@ -4,7 +4,7 @@
 
 			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ 
 	menu																	= {}; 
-	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "Failed to create menu control!"); 
+	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!"); 
 	gui.Controls.Controls		[menu.IdControl].Border						= 
 	gui.Controls.Controls		[menu.IdControl].Margin						= {};
 	gui.Controls.Text			[menu.IdControl].Text						= " ";
@@ -61,10 +61,10 @@
 
 			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text, int64_t eventCode)				{
 	if(menu.IdControl == -1) 
-		gpk_necall(::gpk::controlListInitialize(gui, menu), "");
+		gpk_necall(::gpk::controlListInitialize(gui, menu), "%s", "");
 
 	const int32_t																idControl								= ::gpk::controlCreate(gui);
-	gpk_necall(idControl, "Failed to create control! Out of memory?");
+	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
 	::gpk::controlSetParent(gui, idControl, menu.IdControl);
 	::gpk::SControl																& control								= gui.Controls.Controls		[idControl];
 	::gpk::SControlText															& controlText							= gui.Controls.Text			[idControl];
@@ -96,10 +96,10 @@
 		const uint32_t																heightViewport							= (uint32_t)(targetSize.y + ((int64_t)heightTitleBar + ::gpk::controlNCSpacing(control).y));
 		control.Area.Size														= {(int16_t)widthViewport, (int16_t)heightViewport};
 		for(uint32_t iElement = 0; iElement < viewport.IdControls.size(); ++iElement) {
-			gpk_necall(viewport.IdControls[iElement] = ::gpk::controlCreate(gui), "This shouldn't fail");
+			gpk_necall(viewport.IdControls[iElement] = ::gpk::controlCreate(gui), "%s", "This shouldn't fail");
 			::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[iElement]];
 			controlConstraints.AttachSizeToControl.x								= viewport.IdControls[iElement];
-			gpk_necall(::gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), " Maybe the tree integrity has been broken");
+			gpk_necall(::gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), "%s", "Maybe the tree integrity has been broken");
 		}
 		for(uint32_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
 			gui.Controls.Controls		[viewport.IdControls[iElement]].Area.Size			= {16, 16};

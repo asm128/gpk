@@ -5,6 +5,16 @@
 
 #if defined(GPK_WINDOWS)
 #	include <WinSock2.h>
+#else
+	#include <sys/types.h>          /* See NOTES */
+	#include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <unistd.h>
+  
+	typedef int SOCKET;
+#	ifndef INVALID_SOCKET
+#		define INVALID_SOCKET -1
+#	endif
 #endif
 
 #ifndef GPK_STDSOCKET_H_9287349823

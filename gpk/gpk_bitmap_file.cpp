@@ -1,5 +1,7 @@
 // Original file created on: 2002/08/30 19:33 by Andreas Hartl. Visit http://www.runicsoft.com for updates and more information
 #include "gpk_bitmap_file.h"
+#if defined(GPK_WINDOWS)
+
 #include <Windows.h>
 
 #pragma pack(push, 1)
@@ -330,3 +332,5 @@ struct SHeaderInfoBMP {
 	}
 	return 0;
 }
+
+#endif // defined(GPK_WINDOWS)

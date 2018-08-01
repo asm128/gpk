@@ -14,8 +14,8 @@ namespace gpk
 		typedef									SCoord2<_tBase>			TCoord2;
 												_tBase					x, y;
 		//
-		constexpr								TCoord2					operator+				(const TCoord2& other)												const	noexcept	{ return {x + other.x, y + other.y};									}
-		constexpr								TCoord2					operator-				(const TCoord2& other)												const	noexcept	{ return {x - other.x, y - other.y};									}
+		constexpr								TCoord2					operator+				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x + other.x), (_tBase)(y + other.y)};				}
+		constexpr								TCoord2					operator-				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x - other.x), (_tBase)(y - other.y)};				}
 		constexpr								TCoord2					operator*				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
 		constexpr								TCoord2					operator/				(double			scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
 		constexpr								TCoord2					operator*				(int64_t		scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}

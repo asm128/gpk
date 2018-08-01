@@ -14,7 +14,11 @@
 #endif
 
 #ifndef safe_closesocket
-#	define safe_closesocket(p) if(p != 0 && p != INVALID_SOCKET) do { closesocket(p); p = INVALID_SOCKET; } while(0)
+#	if defined(GPK_WINDOWS)
+#		define safe_closesocket(p) if(p != 0 && p != INVALID_SOCKET) do { closesocket(p); p = INVALID_SOCKET; } while(0)
+#	else
+#		define safe_closesocket(p) if(p != 0 && p != INVALID_SOCKET) do { ::close(p); p = INVALID_SOCKET; } while(0)
+#	endif
 #endif
 
 #endif // GPK_SAFE_H_209934782093

@@ -1,4 +1,6 @@
 #include "gpk_timer.h"
+
+#if defined(GPK_WINDOWS)
 #include <windows.h>
 
 void							gpk::STimer::Reset											()				noexcept				{
@@ -16,3 +18,22 @@ void							gpk::STimer::Frame											()				noexcept				{
 	LastTimeMicroseconds			=  uint64_t	(( CurrentTimeStamp - PrevTimeStamp ) / (CountsPerSecond / 1000000.0));
 	PrevTimeStamp					= CurrentTimeStamp;
 }
+
+#else
+
+void							gpk::STimer::Reset											()				noexcept				{
+	//SecondsPerCount					= (1.0 / (CountsPerSecond ? CountsPerSecond : 1));
+	PrevTimeStamp					= ::std::chrono::high_resolution_clock::now();
+	CurrentTimeStamp				= PrevTimeStamp;
+	LastTimeMicroseconds			= 0;
+	LastTimeSeconds					= 0;
+}
+
+void							gpk::STimer::Frame											()				noexcept				{
+	CurrentTimeStamp				= ::std::chrono::high_resolution_clock::now();
+	auto								timeDifference									= CurrentTimeStamp - PrevTimeStamp;
+	LastTimeMicroseconds			= (int64_t)::std::chrono::duration_cast<std::chrono::microseconds	>(timeDifference).count();
+	LastTimeSeconds					= (int64_t)::std::chrono::duration_cast<std::chrono::seconds		>(timeDifference).count();
+	PrevTimeStamp					= CurrentTimeStamp;
+}
+#endif

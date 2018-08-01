@@ -1,6 +1,7 @@
 #include "gpk_ro_rsm.h"
 #include "gpk_matrix.h"
 #include "gpk_view_stream.h"
+#include "gpk_io.h"
 
 #include <string>
 
@@ -48,7 +49,7 @@ static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stre
 static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t													positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
-	_CrtDbgBreak();
+	GPK_PLATFORM_CRT_BREAKPOINT();
 	if(positionFrameCount) {
 		modelKeyframes.resize(positionFrameCount);
 		rsm_stream.read_pod(modelKeyframes.begin(), positionFrameCount);
@@ -227,13 +228,13 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 				if(rsmNode.TextureIndices[face.IndexTextureIndex] != (int32_t)iTex)
 					continue;
 				for(uint32_t iVert = 0; iVert < 3; ++iVert) {
-					gpk_necall(meshNode.UVs				.push_back(rsmNode.UVs		[face.UVs		[iVert]].UV				), "Out of memory. Invalid RSM input?");
-					gpk_necall(meshNode.Vertices		.push_back(rsmNode.Vertices	[face.Vertices	[iVert]]				), "Out of memory. Invalid RSM input?");
+					gpk_necall(meshNode.UVs				.push_back(rsmNode.UVs		[face.UVs		[iVert]].UV				), "%s", "Out of memory. Invalid RSM input?");
+					gpk_necall(meshNode.Vertices		.push_back(rsmNode.Vertices	[face.Vertices	[iVert]]				), "%s", "Out of memory. Invalid RSM input?");
 				}
-				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "Out of memory. Invalid RSM input?");
-				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "Out of memory. Invalid RSM input?");						
-				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "Out of memory. Invalid RSM input?");
-				gpk_necall(meshNode.VertexIndices	.push_back({vertexOffset, vertexOffset + 1, vertexOffset + 2}), "Out of memory. Invalid RSM input?");
+				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");
+				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");						
+				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");
+				gpk_necall(meshNode.VertexIndices	.push_back({vertexOffset, vertexOffset + 1, vertexOffset + 2}), "%s", "Out of memory. Invalid RSM input?");
 				vertexOffset											+= 3;
 			}
 		}

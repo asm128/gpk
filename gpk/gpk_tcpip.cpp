@@ -3,7 +3,12 @@
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
 
-#include <WS2tcpip.h>
+#if defined(GPK_WINDOWS)
+#	include <WS2tcpip.h>
+#else
+#	include <netdb.h>
+#	include <arpa/inet.h>
+#endif
 
 ::gpk::error_t								gpk::tcpipInitialize					()																															{
 #if defined(GPK_WINDOWS)
@@ -23,20 +28,34 @@
 }
 
 ::gpk::error_t								gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
+#if defined(GPK_WINDOWS)
 	safe_assign(a1	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	safe_assign(a2	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
 	safe_assign(a3	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
 	safe_assign(a4	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+#else
+	safe_assign(a1	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
+	safe_assign(a2	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
+	safe_assign(a3	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >> 8));
+	safe_assign(a4	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >> 0));
+#endif
 	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
 
 ::gpk::error_t								gpk::tcpipAddressToSockaddr					(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
 	sockaddr_ipv4								= {AF_INET, port ? htons(*port) : (uint16_t)0};
+#if defined(GPK_WINDOWS)
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1 ? *a1 : 0;
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2 ? *a2 : 0;
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3 ? *a3 : 0;
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4 ? *a4 : 0;
+#else
+	sockaddr_ipv4.sin_addr.s_addr				=  a1 ? ((int)*a1) << 24	: 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a2 ? ((int)*a2) << 16	: 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a3 ? ((int)*a3) <<  8	: 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a4 ? ((int)*a4) <<  0	: 0;
+#endif
 	return 0;
 }
 
@@ -44,7 +63,7 @@
 	char											buf		[256]								= "";
 	sockaddr_in										sockaddr_ipv4								= {};
 	socklen_t										len											= sizeof(sockaddr_in);
-	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "getpeername failed.");
+	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");
 	return tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
@@ -72,8 +91,7 @@
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
 		info_printf("getaddrinfo response at index %u.", iAddress);
 		info_printf("Flags: 0x%x.", ptr->ai_flags);
-		info_printf("Family: ");
-		DWORD											ipbufferlength									= 46;
+		info_printf("%s", "Family: ");
 		char_t											ipstringbuffer	[46]							= {};
 #if defined(GPK_WINDOWS)
 		wchar_t											ipwstringbuffer	[46]							= {};
@@ -82,11 +100,17 @@
 		::sockaddr_in									* sockaddr_ipv4									=  0;
 		::sockaddr_in6									* sockaddr_ipv6									=  0;
 		//DWORD dwRetval;
-		INT												iRetval;
+#if defined(GPK_WINDOWS)
+		DWORD											iRetval;
+		DWORD											ipbufferlength									= 46;
+#else
+		int												iRetval;
+		uint32_t										ipbufferlength									= 46;
+#endif
 
 		switch (ptr->ai_family)  {
 		default			:	info_printf("Other %li.", ptr->ai_family	); break;
-		case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
+		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
 		case AF_UNSPEC	:	info_printf("%s", "Unspecified"				); break;
 		case AF_INET	:
 			info_printf("AF_INET (IPv4)");

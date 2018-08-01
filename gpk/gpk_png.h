@@ -1,3 +1,7 @@
+#include "gpk_array.h"
+#include "gpk_color.h"
+#include "gpk_image.h"
+
 #ifndef GPK_PNG_H_0928374982374
 #define GPK_PNG_H_0928374982374
 

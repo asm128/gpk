@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-
+#if defined(GPK_WINDOWS)
 						::gpk::error_t							bmpFileLoad							(const byte_t					* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
 						::gpk::error_t							bmpFileLoad							(FILE							* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
 						::gpk::error_t							bmpFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
@@ -28,7 +28,7 @@ namespace gpk
 	static inline		::gpk::error_t							bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmgFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 
 						::gpk::error_t							bmpOrBmgLoad						(::gpk::view_string bmpFileName, ::gpk::SImage<::gpk::SColorBGRA>& loaded);
-
+#endif
 }
 
 #endif // GPK_BITMAP_FILE_H_236544263544352344

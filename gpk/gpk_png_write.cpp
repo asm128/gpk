@@ -46,8 +46,8 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 		return -1;
 	}
     (void)deflateEnd(&strm);
-    error_if(strm.avail_in != 0, "Not all of the input bytes was consumed.");	/* all input will be used */
-    error_if(ret != Z_STREAM_END && ret != Z_OK, "Unknown error");				/* stream will be complete */
+    error_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
+    error_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
 	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
     /* clean up and return */
 	info_printf("deflateEnd: %u.", (uint32_t)ret);
@@ -101,8 +101,8 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 		filtered[y][0]													= 0;
 		memcpy(&filtered[y][1], &convertedScanlines[y][0], scanlineWidthUnfiltered);
 	}
-	gpk_necall(deflated.resize(filtered.Texels.size() * 2 + 65535), "Out of memory?");
-	gpk_necall(::pngDeflate({(const ubyte_t*)filtered.Texels.begin(), filtered.Texels.size()}, deflated), "Failed to compress! Out of memory?");
+	gpk_necall(deflated.resize(filtered.Texels.size() * 2 + 65535), "%s", "Out of memory?");
+	gpk_necall(::pngDeflate({(const ubyte_t*)filtered.Texels.begin(), filtered.Texels.size()}, deflated), "%s", "Failed to compress! Out of memory?");
 
 	static constexpr const char											typeIDAT	[4]							= {'I', 'D', 'A', 'T'};
 	chunkSize														= deflated.size();
@@ -127,7 +127,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 	safe_Bytes.append((const ubyte_t*)&crc, 4);
 
 	int32_t																oldSize									= out_Bytes.size();
-	gpk_necall(out_Bytes.resize(oldSize + safe_Bytes.size()), "Out of memory?");
+	gpk_necall(out_Bytes.resize(oldSize + safe_Bytes.size()), "%s", "Out of memory?");
 	memcpy(&out_Bytes[oldSize], safe_Bytes.begin(), safe_Bytes.size());
 	return 0;
 }

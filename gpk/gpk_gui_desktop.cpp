@@ -2,46 +2,46 @@
 #include "gpk_label.h"
 
 #define NEW_OR_UNUSED(ctoken, utoken)																																			\
-	uint32_t																	i##ctoken##									= 0;												\
-	while(i##ctoken## < desktop.Items.##ctoken##s.size()) {																														\
-		if(desktop.Items.##ctoken##s.Unused[i##ctoken##]) 																														\
+	uint32_t																	i##ctoken									= 0;												\
+	while(i##ctoken < desktop.Items.ctoken##s.size()) {																															\
+		if(desktop.Items.ctoken##s.Unused[i##ctoken]) 																															\
 			break;																																								\
-		++i##ctoken##;																																							\
+		++i##ctoken;																																							\
 	}																																											\
-	if(i##ctoken## >= desktop.Items.##ctoken##s.size())																															\
-		gpk_necall(i##ctoken## = desktop.Items.##ctoken##s.push_back({}), "Out of memory?");																					\
-	desktop.Items.##ctoken##s.Unused[i##ctoken##]	= false;																													\
-	::gpk::S##ctoken##															& elementToSetUp							= desktop.Items.##ctoken##s[i##ctoken##]	= {};	\
-	gpk_necall(::gpk::##utoken##Initialize(gui, elementToSetUp), "Unknown.");																									\
-	gpk_necall(::gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "Invalid desktop id?");
+	if(i##ctoken >= desktop.Items.ctoken##s.size())																																\
+		gpk_necall(i##ctoken = desktop.Items.ctoken##s.push_back({}), "%s", "Out of memory?");																					\
+	desktop.Items.ctoken##s.Unused[i##ctoken]								= false;																							\
+	::gpk::S##ctoken															& elementToSetUp							= desktop.Items.ctoken##s[i##ctoken]		= {};	\
+	gpk_necall(::gpk::utoken##Initialize(gui, elementToSetUp), "%s", "Unknown.");																								\
+	gpk_necall(::gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "%s", "Invalid desktop id?");
 
 			::gpk::error_t												gpk::desktopDeletePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ desktop.Items.PaletteGrids.Unused[iElement] = true; ::gpk::controlDelete(gui, desktop.Items.PaletteGrids[iElement].IdControl); desktop.Items.PaletteGrids[iElement] = {}; return 0; }
 			::gpk::error_t												gpk::desktopCreateViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(Viewport	, viewport		); return iViewport		; }
 			::gpk::error_t												gpk::desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(PaletteGrid	, paletteGrid	); return iPaletteGrid	; }
 			::gpk::error_t												gpk::desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop)										{ NEW_OR_UNUSED(ControlList	, controlList	); 
 	if(iControlList >= desktop.Children.size())
-		gpk_necall(desktop.Children.resize(iControlList + 1), "Out of memory?");
+		gpk_necall(desktop.Children.resize(iControlList + 1), "%s", "Out of memory?");
 	desktop.Children[iControlList].clear();
 	return iControlList; 
 }
 
 			::gpk::error_t												gpk::desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{ 
-	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "Invalid control list.");
+	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "%s", "Invalid control list.");
 	::gpk::SControlList															controlListToDelete								= desktop.Items.ControlLists[iElement];
 	::gpk::array_pod<int32_t>													childLists										= desktop.Children[iElement];
 	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
 		int32_t																		childControlListIndex							= childLists[iOption];
 		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex]) 
-			gpk_necall(::gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "??");
+			gpk_necall(::gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
 		else 
-			error_if(childControlListIndex != -1, "");
+			error_if(childControlListIndex != -1, "%s", "");
 	}
 	if(desktop.Items.ControlLists.size() > (uint32_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
 		if (desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)
 			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]				= -1;
 	}
 	desktop.Items.ControlLists.Unused[iElement]								= true; 
-	gpk_necall(::gpk::controlDelete(gui, controlListToDelete.IdControl), "Failed to delete control! Deleted already?");
+	gpk_necall(::gpk::controlDelete(gui, controlListToDelete.IdControl), "%s", "Failed to delete control! Deleted already?");
 	controlListToDelete														= {};
 	return 0;
 }
@@ -71,12 +71,12 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui
 	const int32_t																parentControlId									= gui.Controls.Controls[iControl].IndexParent;
 	for(uint32_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
 		if(gui.Controls.Children[parentControlId][iChild] == iControl) {
-			gpk_necall(gui.Controls.Children[parentControlId].remove(iChild)		, "Unknown issue!");
-			gpk_necall(gui.Controls.Children[parentControlId].push_back(iControl)	, "Unknown issue!");
+			gpk_necall(gui.Controls.Children[parentControlId].remove(iChild)		, "%s", "Unknown issue!");
+			gpk_necall(gui.Controls.Children[parentControlId].push_back(iControl)	, "%s", "Unknown issue!");
 			break;
 		}
 	if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) 
-		gpk_necall(::displace(gui, iControl, {(double)input.MouseCurrent.Deltas.x, (double)input.MouseCurrent.Deltas.y}), "Unknown issue!");
+		gpk_necall(::displace(gui, iControl, {(double)input.MouseCurrent.Deltas.x, (double)input.MouseCurrent.Deltas.y}), "%s", "Unknown issue!");
 	return 0;
 }
 
@@ -261,7 +261,7 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 		if(parentChildren.size() < parentControlList.IdControls.size())
 			parentChildren.resize(parentControlList.IdControls.size(), -1);
 
-		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item!");
+		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item: %i.", iParentListItem);
 		::gpk::SControlConstraints													& controlListConstraints								= gui.Controls.Constraints[controlList.IdControl];
 		if(iParentListItem != -1) {
 			controlList.Orientation													= ::gpk::CONTROL_LIST_DIRECTION_VERTICAL;
