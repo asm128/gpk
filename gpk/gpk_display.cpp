@@ -1,23 +1,28 @@
 #include "gpk_display.h"
 
 		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{ 
+#if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE);
 	::TranslateMessage	(&msg);
 	::DispatchMessage	(&msg);
 	if(msg.message == WM_QUIT)
 		return 1;
+#endif
 	return 0;
 }
 
 		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{ 
+#if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE)) 
 		if(1 == displayUpdateTick(displayInstance))
 			return 1;
+#endif
 	return 0;
 }
 
+#if defined(GPK_WINDOWS)
 		::gpk::error_t																			drawBuffer									(::HDC hdc, int width, int height, const ::gpk::view_grid<::gpk::SColorBGRA>& colorArray)				{
 	struct SOffscreenPlatformDetail { // raii destruction of resources
 		uint32_t																							BitmapInfoSize								= 0;
@@ -62,13 +67,16 @@
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
 	return 0;
 }
+#endif
 
 		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent)		{ 
+#if defined(GPK_WINDOWS)
 	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;
 	retwarn_warn_if(0 == windowHandle, "presentTarget called without a valid window handle set for the main window.");
 	::HDC																								dc											= ::GetDC(windowHandle);
 	reterr_error_if(0 == dc, "Failed to retrieve device context from the provided window handle.");
 	error_if(errored(::drawBuffer(dc, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
+#endif
 	return 0;
 }

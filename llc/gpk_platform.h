@@ -13,7 +13,7 @@
 #	define GPK_MTSUPPORT
 #endif
 
-#if (!defined(GPK_ANDROID)) && defined(ANDROID) 
+#if (!defined(GPK_ANDROID)) && (defined(ANDROID) || defined(__ANDROID__))
 #	define GPK_ANDROID
 #elif (!defined(GPK_LINUX)) && defined(__linux__)
 #	define GPK_LINUX

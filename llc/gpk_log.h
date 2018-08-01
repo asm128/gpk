@@ -1,6 +1,7 @@
 #include "gpk_error.h"
 #include "gpk_debug.h"
 #include "gpk_size.h"
+#include "gpk_string.h"
 
 #include <cstdio>
 
@@ -49,6 +50,15 @@ namespace gpk
 	}
 }
 
+#if !defined(GPK_WINDOWS)
+#define debug_printf(severity, severityStr, format, ...)																																	\
+	do { 																																													\
+		static constexpr const char											prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){%s}:";	\
+		static char															prefixString	[::gpk::size(prefixFormat) + 8]	= {}; 															\
+		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__, __func__);	\
+		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																		\
+	} while(0)
+#else
 #define debug_printf(severity, severityStr, format, ...)																																	\
 	do { 																																													\
 		static constexpr const char											prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:";	\
@@ -56,7 +66,7 @@ namespace gpk
 		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__);	\
 		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																		\
 	} while(0)
-
+#endif
 
 #	define always_printf(format, ...)								debug_printf(3, "info"		, format, __VA_ARGS__)
 
@@ -90,8 +100,14 @@ namespace gpk
 #	define verbose_printf(format, ...)								do { __VA_ARGS__; } while(0)
 #endif	
 
+#if defined (GPK_WINDOWS)
+#	define gpk_throw(...)	throw(__VA_ARGS__)
+#else
+#	define gpk_throw(...)	do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; } while(0)
+#endif
+
 #ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#define throw_if(condition, exception, format, ...)				if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); throw(exception);	}
+#define throw_if(condition, format, ...)				if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
 #else
 #pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #pragma warning(disable:4553)	// this is required because "condition" may have no side effect.

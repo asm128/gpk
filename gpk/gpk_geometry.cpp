@@ -89,10 +89,10 @@ static constexpr	const ::gpk::STriangle2D<float>					geometryCubeUV					[12]				
 	, ::gpk::array_pod<::gpk::STriangle2D	<float>> & out_UV
 	)
 { 
-	gpk_necall(::gpk::generateCubePositions			(out_Positions		), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateCubeNormalsTriangle	(out_Normals		), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateCubeNormalsVertex		(out_NormalsVertex	), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateCubeUV				(out_UV				), "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateCubePositions			(out_Positions		), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateCubeNormalsTriangle	(out_Normals		), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateCubeNormalsVertex		(out_NormalsVertex	), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateCubeUV				(out_UV				), "%s", "Some nasty problem caused this to fail.");
 	return 0; 
 }
 
@@ -141,9 +141,9 @@ static constexpr	const ::gpk::STriangle2D<float>					geometryCubeUV					[12]				
 	, ::gpk::array_pod<::gpk::STriangle2D	<float>>	& out_UV
 	)
 { 
-	gpk_necall(::gpk::generateGridPositions			(gridMetrics, out_Positions		), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateGridNormalsTriangle	(gridMetrics, out_Normals		), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateGridNormalsVertex		(gridMetrics, out_NormalsVertex	), "Some nasty problem caused this to fail.");
-	gpk_necall(::gpk::generateGridUV				(gridMetrics, out_UV			), "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateGridPositions			(gridMetrics, out_Positions		), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateGridNormalsTriangle	(gridMetrics, out_Normals		), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateGridNormalsVertex		(gridMetrics, out_NormalsVertex	), "%s", "Some nasty problem caused this to fail.");
+	gpk_necall(::gpk::generateGridUV				(gridMetrics, out_UV			), "%s", "Some nasty problem caused this to fail.");
 	return 0; 
 }

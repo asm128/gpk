@@ -48,6 +48,12 @@
     <ClInclude Include="gpk_bit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_io.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_log.cpp">

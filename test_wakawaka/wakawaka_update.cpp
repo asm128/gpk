@@ -121,28 +121,28 @@ void																	::wak::updatePlayer												(SGame& gameObject, float fL
 	refreshPosFromDeltas(player);
 
 	if (gameObject.CounterPellet == 70 || gameObject.CounterPellet == 170) {
-		gameObject.Map.TilesMap[20][15] = TILE_FRUIT;
-		gameObject.CounterFruit += fLastFrameTime;
+		gameObject.Fruit			= true;
+		gameObject.CounterFruit		+= fLastFrameTime;
 	}
 	if(gameObject.CounterFruit > 0)
 		gameObject.CounterFruit += fLastFrameTime;
 	if (gameObject.CounterFruit >= 10) {
 		gameObject.CounterFruit = 0;
-		gameObject.Map.TilesMap[20][15] = TILE_VOID;
+		gameObject.Map.TilesMap[20][15] = ::wak::MAP_VOID;
 	}
 
-	if (map.TilesMap[player.Position.y][player.Position.x] == TILE_PELLET && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
+	if (map.TilesMap[player.Position.y][player.Position.x] == ::wak::MAP_PELLET && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
 		gameObject.Score											+= 10;
 		gameObject.CounterPellet									++;
-		map.TilesMap[player.Position.y][player.Position.x]			= TILE_VOID;
+		map.TilesMap[player.Position.y][player.Position.x]			= ::wak::MAP_VOID;
 	}
-	else if (map.TilesMap[player.Position.y][player.Position.x] == TILE_FRUIT && playerDeltas.x < 0.3f && playerDeltas.x > 0) {
-		gameObject.Map.TilesMap[player.Position.y][player.Position.x] = TILE_VOID;
-		gameObject.CounterFruit = 0;
-	}
-	else if (map.TilesMap[player.Position.y][player.Position.x] == TILE_ENERGYZER && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
+	//else if (map.TilesMap[player.Position.y][player.Position.x] == TILE_FRUIT && playerDeltas.x < 0.3f && playerDeltas.x > 0) {
+	//	gameObject.Map.TilesMap[player.Position.y][player.Position.x] = ::wak::MAP_VOID;
+	//	gameObject.CounterFruit = 0;
+	//}
+	else if (map.TilesMap[player.Position.y][player.Position.x] == ::wak::MAP_ENERGYZER && playerDeltas.y < 0.7f && playerDeltas.x < 0.7f && playerDeltas.y > 0.3f && playerDeltas.x > 0.3f) {
 		gameObject.Score											+= 50;
-		map.TilesMap[player.Position.y][player.Position.x]			= TILE_VOID;
+		map.TilesMap[player.Position.y][player.Position.x]			= ::wak::MAP_VOID;
 		if (gameObject.CounterFrightened > 0)
 			gameObject.CounterFrightened = 0.1f;
 		else
@@ -281,8 +281,6 @@ void																	reverse																(::wak::SAnimatedObject & ghost) {
 	}
 }
 void																	::wak::updateEnemies												(SGame& gameObject, float fLastFrameTime) {
-	for (uint32_t y = 0; y < (uint32_t)gameObject.Map.Size.y; y++)
-		memset(gameObject.Map.TilesEnemy[y].begin(), INVALID_ENEMY, gameObject.Map.Size.x);
 
 	if		(gameObject.CounterPellet == 1)		gameObject.Enemies[ROSITA].AlreadyOut		= true;
 	else if (gameObject.CounterPellet == 30)	gameObject.Enemies[DONJAIME].AlreadyOut		= true;
@@ -353,7 +351,7 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 		else if (currentEnemy.Reverse == true) {
 			reverse(currentEnemy);
 			currentEnemy.Reverse = false;
-		}
+		}	
 		else if (gameObject.Map.TilesDecision[currentEnemy.Position.y][currentEnemy.Position.x] == true && currentEnemy.PositionDeltas.y > 0.3f && currentEnemy.PositionDeltas.x > 0.3f && currentEnemy.PositionDeltas.y < 0.7f && currentEnemy.PositionDeltas.x < 0.7f /*&& currentEnemy.PrevTile != currentEnemy.Position*/) {
 			if (currentEnemy.Dead == true) {
 				getDirectionByTarget({ 15, 15 }, gameObject, currentEnemy);
@@ -424,8 +422,6 @@ void																	::wak::updateEnemies												(SGame& gameObject, float f
 			moveInDirection(gameObject, currentEnemy, fLastFrameTime);
 
 		refreshPosFromDeltas(currentEnemy);
-
-		gameObject.Map.TilesEnemy[currentEnemy.Position.y][currentEnemy.Position.x] = 1;
 	}
 }
 void																					::wak::update															(SGame& gameObject, float fLastFrameTime) {

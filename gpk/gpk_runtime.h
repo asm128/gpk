@@ -2,6 +2,8 @@
 #include "gpk_typeint.h"
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
+#elif defined(GPK_ANDROID)
+#	include <android/native_activity.h>
 #endif
 
 #ifndef GPK_RUNTIME_H_28903749028374

@@ -24,10 +24,12 @@
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_error.h" />
     <ClInclude Include="gpk_eval.h" />
+    <ClInclude Include="gpk_io.h" />
     <ClInclude Include="gpk_log.h" />
     <ClInclude Include="gpk_memory.h" />
     <ClInclude Include="gpk_platform.h" />
     <ClInclude Include="gpk_size.h" />
+    <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_sync.h" />
     <ClInclude Include="gpk_typeint.h" />
   </ItemGroup>

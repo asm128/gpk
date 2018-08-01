@@ -4,11 +4,16 @@
 #ifndef GPK_SYNC_H_023749082374
 #define GPK_SYNC_H_023749082374
 
+#if defined(GPK_ANDROID) || defined(GPK_LINUX)
+#	include <mutex>
+#elif defined(GPK_WINDOWS)  
+#	define WIN32_LEAN_AND_MEAN
+#	include <Windows.h>
+#endif
 namespace gpk
 {
 #if defined(GPK_ANDROID) || defined(GPK_LINUX)
 /// <Atomic Builtins> http://gcc.gnu.org/onlinedocs/gcc-4.4.3/gcc/Atomic-Builtins.html#Atomic-Builtins
-#	include <mutex>
 #	define gpk__sync_increment(nCount)							(__sync_add_and_fetch(&nCount, 1))
 #	define gpk__sync_decrement(nCount)							(__sync_sub_and_fetch(&nCount, 1))
 #	define gpk__sync_exchange(target, value)					(__sync_lock_test_and_set(&(target), (value)))
@@ -19,8 +24,6 @@ namespace gpk
 #	define LEAVE_SHARED_SECTION(Name)							(Name).unlock()
 #	define DELETE_SHARED_SECTION(Name)							(0)
 #elif defined(GPK_WINDOWS)  
-#	define WIN32_LEAN_AND_MEAN
-#	include <Windows.h>
 #	if (defined( _WIN64 ) || defined( WIN64 )) 
 #		define gpk__sync_increment(nCount)							( InterlockedIncrement64		( &(nCount) ) )
 #		define gpk__sync_decrement(nCount)							( InterlockedDecrement64		( &(nCount) ) )
@@ -39,7 +42,6 @@ namespace gpk
 #	define DELETE_SHARED_SECTION(Name)							DeleteCriticalSection(&Name)
 	static inline ::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
 #else
-#	include <mutex>
 #	define gpk__sync_increment(nCount)								(++(nCount))
 #	define gpk__sync_decrement(nCount)								(--(nCount))
 #	define gpk__sync_exchange(Target, Value)							((Target) = (Value))

@@ -284,7 +284,7 @@ namespace gpk
 				r12									= 2 * (x*y - w*z);
 				r13									= 2 * (x*z + w*y);
 				*fPitch								= 0.0f;
-				*fYaw								= -((::gpk::math_pi2) * r31/tmp);
+				*fYaw								= -((::gpk::math_pi_2) * r31/tmp);
 				*fRoll								= ::atan2(-r12, -r31*r13);
 			}
 			else {
@@ -357,11 +357,11 @@ namespace gpk
 	template<typename _tElement>	static		  constexpr	_tElement				orient2d3d				(const ::gpk::SLine3D<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 
 	// ---- Collision
-	template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{
-		const double																		t2						= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
-		const double																		t1						= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
-		return (t2 > 0 && 0 < t2 && t2 < 1);
-	}
+	//template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{
+	//	const double																		t2						= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
+	//	const double																		t1						= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
+	//	return (t2 > 0 && 0 < t2 && t2 < 1);
+	//}
 
 	template<typename _tElement>	static					bool					sphereOverlaps			(const SSphere2D<_tElement> &sphereA, const SSphere2D<_tElement> &sphereB)	noexcept	{
 		const double																		distanceSquared			= (sphereA.Center - sphereB.Center).LengthSquared();
@@ -431,11 +431,11 @@ namespace gpk
 					,	ALIGN									align
 					)																																					noexcept	{
 		rectangleRealigned															= rectangleToRealign;
-			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (_tCoord)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (_tCoord)(targetSize.x >> 1)	- (rectangleRealigned.Size.x / 2); }
 		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (_tCoord) targetSize.x			- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }
 		else													{}
 	
-			 if(::gpk::bit_true(align, ::gpk::ALIGN_VCENTER	))	{ rectangleRealigned.Offset.y += (_tCoord)(targetSize.y >> 1)	- (rectangleRealigned.Size.y >> 1); }
+			 if(::gpk::bit_true(align, ::gpk::ALIGN_VCENTER	))	{ rectangleRealigned.Offset.y += (_tCoord)(targetSize.y >> 1)	- (rectangleRealigned.Size.y / 2); }
 		else if(::gpk::bit_true(align, ::gpk::ALIGN_BOTTOM	))	{ rectangleRealigned.Offset.y =  (_tCoord) targetSize.y			- (rectangleRealigned.Size.y + rectangleRealigned.Offset.y); }
 		else													{}
 		return rectangleRealigned;

@@ -49,10 +49,14 @@ namespace gpk
 	static inline			void																	safe_gpk_free				(_typePtr &p)										noexcept	{ 
 		_typePtr																							_pepe						= p; 
 		p																								= 0; 
+#if defined(GPK_WINDOWS)
 		_aligned_free((void*)_pepe);
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
+		free((void*)_pepe);
+#endif
 	}
 
-	struct auto_gpk_free : public ::gpk::auto_handler<ptrdiff_t, 0>					{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
+	struct auto_gpk_free : public ::gpk::auto_handler<void*, nullptr>					{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
 	template<typename _tBase>	static inline constexpr		uint32_t								get_page_size				()																noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };

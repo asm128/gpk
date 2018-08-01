@@ -1,8 +1,6 @@
 #include "gpk_log.h"
 #include "gpk_eval.h"
 
-#include <exception>	// for ::std::exception
-
 #ifndef GPK_ARRAY_VIEW_BIT_H_9276349872384
 #define GPK_ARRAY_VIEW_BIT_H_9276349872384
 
@@ -26,13 +24,13 @@ namespace gpk
 							_tElement									* Element;
 							int8_t										Offset;
 
-		inline constexpr	operator									bool						()																	const				{ throw_if(Element >= End, ::std::exception(""), "Out of range."); return (*Element) & (1ULL << Offset); }
+		inline				operator									bool						()																	const				{ throw_if(Element >= End, "Out of range: %u. End: %u.", Element, End); return (*Element) & (1ULL << Offset); }
 		inline constexpr	bool										operator==					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) == (((1ULL << other.Offset)) & *other.Element); }
 		inline constexpr	bool										operator!=					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) != (((1ULL << other.Offset)) & *other.Element); }
 
 		inline				view_bit_iterator&							operator=					(bool value)																			{ value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
-							view_bit_iterator&							operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				throw_if(Element >= (End	+ 1), ::std::exception(""), "Out of range"); } return *this; }
-							view_bit_iterator&							operator--					()																						{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; throw_if(Element <  (Begin	- 1), ::std::exception(""), "Out of range"); } return *this; }
+							view_bit_iterator&							operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				throw_if(Element >= (End	+ 1), "Out of range: %u.", Element); } return *this; }
+							view_bit_iterator&							operator--					()																						{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; throw_if(Element <  (Begin	- 1), "Out of range: %u.", Element); } return *this; }
 							view_bit_iterator							operator++					(int)																					{ 
 			view_bit_iterator													result						(*this);	// Make a copy.
 			++(*this);																										// Use the prefix version to do the work.
@@ -60,21 +58,21 @@ namespace gpk
 		// Constructors
 		inline constexpr												view_bit					()																			noexcept	= default;
 		inline															view_bit					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
-			throw_if(0 == dataElements && 0 != elementCount, ::std::exception(""), "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			throw_if(0 == dataElements && 0 != elementCount, "Invalid parameters. Element count: %u.", elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
 		inline constexpr												view_bit					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount * ELEMENT_BITS)											{}
 
 		template <size_t _elementCount>
-		inline constexpr												view_bit					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min(_elementCount * ELEMENT_BITS, elementCount))	{
-			throw_if(elementCount > (_elementCount * ELEMENT_BITS), ::std::exception(""), "Out of range count.");
+		inline															view_bit					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)(_elementCount * ELEMENT_BITS), elementCount))	{
+			throw_if(elementCount > (_elementCount * ELEMENT_BITS), "Out of range count. Max count: %u. Requested: %u.", _elementCount, elementCount);
 		}
 
 		// Operators
 							view_bit_proxy<_tElement>					operator[]					(uint32_t index)																		{ 
-			throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); 
-			throw_if(index >= Count, ::std::exception(""), "Invalid index: %u.", index); 
+			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index); 
+			throw_if(index >= Count, "Invalid index: %u.", index); 
 			const uint32_t														offsetRow					= index / ELEMENT_BITS;
 			const uint32_t														offsetBit					= index % ELEMENT_BITS;
 			_tElement															& selectedElement			= Data[offsetRow];
@@ -82,8 +80,8 @@ namespace gpk
 		}
 
 							bool										operator[]					(uint32_t index)													const				{ 
-			throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); 
-			throw_if(index >= Count, ::std::exception(""), "Invalid index: %u.", index); 
+			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index); 
+			throw_if(index >= Count, "Invalid index: %u.", index); 
 			const uint32_t														offsetElement				= index / ELEMENT_BITS;
 			const uint32_t														offsetLocal					= index % ELEMENT_BITS;
 			const _tElement														& selectedElement			= Data[offsetElement];

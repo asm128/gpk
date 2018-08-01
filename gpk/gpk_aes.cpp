@@ -92,6 +92,7 @@
 // NOTE:   String length must be evenly divisible by 16byte (str_len % 16 == 0)
 //         You should pad the end of the string with zeros if this is not the case. For AES192/256 the key size is proportionally larger.
 #include "gpk_aes.h"
+#include <random>
 #include <ctime>
 
 // Defines: The number of columns comprising a state in AES. This is a constant in AES. Value=4
@@ -418,12 +419,12 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 }
 
 ::gpk::error_t										gpk::aesEncode							(const ubyte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{
-	ree_if(0 == messageToEncrypt, "Cannot encode a null input.");
-	ree_if(0 == dataLength		, "Cannot encode an empty message.");
+	ree_if(0 == messageToEncrypt, "Cannot encode a null input. Data length: %u.", dataLength);
+	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageToEncrypt);
 	int8_t													excedent								= dataLength % ::gpk::AES_SIZEBLOCK;
 	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
 	outputEncrypted.clear();
-	gpk_necall(outputEncrypted.resize(dataLength + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "Out of memory?");
+	gpk_necall(outputEncrypted.resize(dataLength + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "%s", "Out of memory?");
 	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
 		outputEncrypted[dataLength + iPad]					= paddingRequired;
 	memcpy(outputEncrypted.begin(), messageToEncrypt, dataLength);
@@ -436,27 +437,27 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	::gpk::SAESContext										aes;
 	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, iv);
 	::gpk::aesCBCEncryptBuffer(&aes, outputEncrypted.begin(), outputEncrypted.size());
-	gpk_necall(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV), "Out of memory?");
+	gpk_necall(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV), "%s", "Out of memory?");
 	memcpy(&outputEncrypted[outputEncrypted.size() - ::gpk::AES_SIZEIV], iv, ::gpk::AES_SIZEIV);
 	return 0;
 }
 
 ::gpk::error_t										gpk::aesDecode							(const ubyte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{
-	ree_if(0 == messageEncrypted, "Cannot encode a null input.");
-	ree_if(0 == dataLength		, "Cannot encode an empty message.");
+	ree_if(0 == messageEncrypted, "Cannot decode a null input. Data length: %u.", dataLength);
+	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageEncrypted);
 	ree_if(dataLength % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", dataLength);
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
-	gpk_necall(outputDecrypted.resize(dataLength - ::gpk::AES_SIZEIV), "Out of memory?");
+	gpk_necall(outputDecrypted.resize(dataLength - ::gpk::AES_SIZEIV), "%s", "Out of memory?");
 	memcpy(outputDecrypted.begin(), messageEncrypted, outputDecrypted.size());
 	::gpk::SAESContext										aes;
 	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, &messageEncrypted[outputDecrypted.size()]);
 	::gpk::aesCBCDecryptBuffer(&aes, outputDecrypted.begin(), outputDecrypted.size());
 	if(outputDecrypted[outputDecrypted.size() - 1] == 0)
-		gpk_necall(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK), "Out of memory?");
+		gpk_necall(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK), "%s", "Out of memory?");
 	else {
 		const int32_t											padCunt									= outputDecrypted[outputDecrypted.size() - 1];
 		const int32_t											sizeOriginal							= outputDecrypted.size() - padCunt;
-		gpk_necall(outputDecrypted.resize(sizeOriginal), "Out of memory?");
+		gpk_necall(outputDecrypted.resize(sizeOriginal), "%s", "Out of memory?");
 	}
 	return 0;
 }

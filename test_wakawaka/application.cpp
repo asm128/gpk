@@ -46,41 +46,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		, TEXTURE_FRUIT_0
 		, ANIMATION_COUNT
 		};
-	enum MAP_TILE 
-		{	MAP_VOID
-		,	MAP_UP_LEFT
-		,	MAP_DOWN_LEFT
-		,	MAP_UP_RIGHT
-		,	MAP_DOWN_RIGHT
-		,	MAP_VERTICAL
-		,	MAP_HORIZONTAL
-		,	MAP_T_DOWN_LEFT
-		,	MAP_T_UP_RIGHT
-		,	MAP_T_DOWN_RIGHT
-		,	MAP_T_UP_LEFT
-		,	MAP_LINE
-		,	MAP_PELLET
-		,	MAP_ENERGYZER
-		,	MAP_DOWN_HORIZONTAL
-		,	MAP_VERTICAL_RIGHT
-		,	MAP_INNER_CORNER_UP_RIGHT
-		,	MAP_INNER_CORNER_UP_LEFT
-		,	MAP_INNER_CORNER_DOWN_RIGHT
-		,	MAP_INNER_CORNER_DOWN_LEFT
-		,	MAP_S_HORIZONTAL
-		,	MAP_S_HORIZONTAL_DOWN
-		,	MAP_S_VERTICAL
-		,	MAP_S_VERTICAL_RIGHT
-		,	MAP_S_CORNER_DOWN_LEFT
-		,	MAP_S_CORNER_UP_LEFT
-		,	MAP_S_CORNER_UP_RIGHT
-		,	MAP_S_CORNER_DOWN_RIGHT
-		,	MAP_T_RIGHT_UP
-		,	MAP_T_RIGHT_DOWN
-		,	MAP_T_LEFT_UP
-		,	MAP_T_LEFT_DOWN
-		,	TEXTURE_COUNT
-		};
 
 	uint32_t tileSize = 8;
 struct SSprite {
@@ -170,7 +135,7 @@ struct SSprite {
 		};
 
 	if (mode == ::wak::MODE_ESCAPE) {
-		const bool																swapColors			= (app.GameInstance.CounterFrightened > 4 && (app.GameInstance.CounterAnimation / 2 % 2));
+		const bool																swapColors			= ((app.GameInstance.CounterFrightened > 4) && (app.GameInstance.CounterAnimation / 2 % 2));
 		::gpk::SColorBGRA														colorFrightened		= swapColors ? ::gpk::SColorBGRA{0xFF, 0xFF, 0xFF, 0xFF} : ::gpk::SColorBGRA{0xFF, 0, 0, 0xFF};
 		::gpk::SColorBGRA														colorFrightenedFace	= swapColors ? ::gpk::SColorBGRA{0, 0, 0xFF, 0xFF} : ::gpk::SColorBGRA{0xFF, 0xFF, 0xFF, 0xFF};
 		::gpk::grid_copy_alpha(target, animations[ANIMATION_GHOST][app.GameInstance.CounterAnimation % 2]	, posToDraw, magenta, colorFrightened);
@@ -220,50 +185,14 @@ struct SSprite {
 		}
 	
 		//--- Dibujar sobrne el target
-		//::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][0], mapPosition, magenta);
-
 		for (int32_t y = 0; y < app.GameInstance.Map.Size.y; ++y) {
 			for (int32_t x = 0; x < app.GameInstance.Map.Size.x; ++x) {
 				::gpk::SCoord2<uint32_t>								pointToDraw = { mapPosition.x + (x * tileSize) , mapPosition.y + (y * tileSize) };
-				uint32_t											texture = 0;
-					 if (app.GameInstance.Map.TilesMap[y][x] == TILE_VOID || app.GameInstance.Map.TilesMap[y][x] == TILE_FRUIT)				texture = MAP_VOID;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_PELLET)																texture = MAP_PELLET;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_ENERGYZER)																texture = MAP_ENERGYZER;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL_LINE)															texture = MAP_LINE;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_LEFT)																texture = MAP_DOWN_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_RIGHT)															texture = MAP_DOWN_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_UP_LEFT)																texture = MAP_UP_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_UP_RIGHT)																texture = MAP_UP_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_HORIZONTAL)															texture = MAP_HORIZONTAL;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL)																texture = MAP_VERTICAL;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_DOWN_LEFT)															texture = MAP_T_DOWN_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_UP_RIGHT)															texture = MAP_T_UP_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_DOWN_RIGHT)															texture = MAP_T_DOWN_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_UP_LEFT)																texture = MAP_T_UP_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_DOWN_HORIZONTAL)														texture = MAP_DOWN_HORIZONTAL;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_VERTICAL_RIGHT)														texture = MAP_VERTICAL_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_UP_RIGHT)													texture = MAP_INNER_CORNER_UP_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_UP_LEFT)													texture = MAP_INNER_CORNER_UP_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_DOWN_RIGHT)												texture = MAP_INNER_CORNER_DOWN_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_INNER_CORNER_DOWN_LEFT)												texture = MAP_INNER_CORNER_DOWN_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_HORIZONTAL)															texture = MAP_S_HORIZONTAL;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_HORIZONTAL_DOWN)														texture = MAP_S_HORIZONTAL_DOWN;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_VERTICAL)															texture = MAP_S_VERTICAL;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_VERTICAL_RIGHT)														texture = MAP_S_VERTICAL_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_DOWN_LEFT)													texture = MAP_S_CORNER_DOWN_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_UP_LEFT)														texture = MAP_S_CORNER_UP_LEFT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_UP_RIGHT)														texture = MAP_S_CORNER_UP_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_S_CORNER_DOWN_RIGHT)													texture = MAP_S_CORNER_DOWN_RIGHT;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_RIGHT_DOWN)															texture = MAP_T_RIGHT_DOWN;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_RIGHT_UP)															texture = MAP_T_RIGHT_UP;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_LEFT_DOWN)															texture = MAP_T_LEFT_DOWN;
-				else if (app.GameInstance.Map.TilesMap[y][x] == TILE_T_LEFT_UP)																texture = MAP_T_LEFT_UP;
-
-				::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][texture], pointToDraw, magenta);
+				::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_PAC_MAP][app.GameInstance.Map.TilesMap[y][x]], pointToDraw, magenta);
 			}
 		}
-		if (app.GameInstance.Map.TilesMap[20][15] == TILE_FRUIT) {
-			::gpk::SCoord2<uint32_t>								pointToDraw = { mapPosition.x + (15 * tileSize - (tileSize / 2)) , mapPosition.y + (20 * tileSize) };
+		if (app.GameInstance.Fruit) {
+			::gpk::SCoord2<uint32_t>								pointToDraw = { mapPosition.x + (15 * tileSize - (tileSize)) , mapPosition.y + (20 * tileSize - (tileSize / 2)) };
 			::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_FRUIT_0][0], pointToDraw, magenta);
 		}
 

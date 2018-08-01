@@ -24,18 +24,17 @@ struct SDisplayInput {
 	::gpk::SFrameInfo																			& frameInfo									= framework.FrameInfo;
 	::gpk::STimer																				& timer										= framework.Timer;
 	timer		.Frame();
-	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, 200000ULL));
+	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
 	::gpk::error_t																				updateResult								= ::gpk::displayUpdateTick(mainWindow);
-	ree_if(errored(updateResult), "Not sure why this would fail.");
-	rvi_if(1, mainWindow.Closed, "Application exiting because the main window was closed.");
-	rvi_if(1, 1 == updateResult, "Application exiting because the WM_QUIT message was processed.");
+	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
+	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
+	rvi_if(1, 1 == updateResult, "%s", "Application exiting because the WM_QUIT message was processed.");
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
-#endif
 		if(offscreen && offscreen->Color.Texels.size())
-			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "Unknown error.");
+			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 
 	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
@@ -50,10 +49,12 @@ struct SDisplayInput {
 			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 	}
+#endif
 	return 0;
 }
 
-#include <Windowsx.h>
+#if defined(GPK_WINDOWS)
+#	include <Windowsx.h>
 
 static constexpr	const uint32_t														BMP_SCREEN_WIDTH							= 1280;
 static constexpr	const uint32_t														BMP_SCREEN_HEIGHT							= uint32_t(::BMP_SCREEN_WIDTH * (9.0 / 16.0));
@@ -189,3 +190,4 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::UpdateWindow	(displayDetail.WindowHandle);
 	return 0;
 }
+#endif

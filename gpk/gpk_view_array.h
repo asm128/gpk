@@ -2,8 +2,6 @@
 #include "gpk_eval.h"
 #include <cstring>
 
-#include <exception>	// for ::std::exception
-
 #ifndef GPK_ARRAY_VIEW_H_2398472395543
 #define GPK_ARRAY_VIEW_H_2398472395543
 
@@ -21,21 +19,21 @@ namespace gpk
 		// Constructors
 		inline constexpr							view_array					()																			noexcept	= default;
 		inline										view_array					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
-			throw_if(0 == dataElements && 0 != elementCount, ::std::exception(""), "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			throw_if(0 == dataElements && 0 != elementCount, "Invalid parameters: %p, %u.", dataElements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
 		inline constexpr							view_array					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount)										{}
 
 		template <size_t _elementCount>
-		inline constexpr							view_array					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min(_elementCount, elementCount))			{
-			throw_if(elementCount > _elementCount, ::std::exception(""), "Element count out of range.");
+		inline										view_array					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)_elementCount, elementCount))			{
+			throw_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
 		}
 
 		// Operators
 		inline constexpr	operator				view_array<const _tElement>	()																			noexcept	{ return {Data, Count}; }
-							_tElement&				operator[]					(uint32_t index)																		{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(index >= Count, ::std::exception(""), "Invalid index: %u.", index); return Data[index]; }
-							const _tElement&		operator[]					(uint32_t index)													const				{ throw_if(0 == Data, ::std::exception(""), "Uninitialized array pointer."); throw_if(index >= Count, ::std::exception(""), "Invalid index: %u.", index); return Data[index]; }
+							_tElement&				operator[]					(uint32_t index)																		{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
+							const _tElement&		operator[]					(uint32_t index)													const				{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 
 		// Methods
 		inline				_tElement*				begin						()																			noexcept	{ return Data;			}
@@ -98,7 +96,7 @@ namespace gpk
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])											: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
 						
-		constexpr		operator									const view_const_string&			()															const	noexcept	{ return *this; }
+		//constexpr		operator									const view_const_string&			()															const	noexcept	{ return (const view_const_string&)*this; }
 
 						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
 			if(Data == other.begin()) 

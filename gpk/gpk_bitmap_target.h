@@ -1,6 +1,7 @@
 #include "gpk_image.h"
 #include "gpk_color.h"
 #include "gpk_coord.h"
+#include "gpk_grid_scale.h"
 #include <memory> // this is required for ::std::swap()
 
 #ifndef BITMAP_TARGET_H_98237498023745654654
@@ -41,7 +42,7 @@ namespace gpk
 
 	template<typename _tElement>
 						::gpk::error_t										updateSizeDependentTarget					(::gpk::array_pod<_tElement>& out_colors, ::gpk::view_grid<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{ 
-		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "Out of memory?");		// Update size-dependent resources.
+		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
 		if( out_view.metrics() != newSize) 
 			out_view																= {out_colors.begin(), newSize};
 		return 0;
@@ -53,11 +54,11 @@ namespace gpk
 	}
 	template<typename _tElement>
 						::gpk::error_t										updateSizeDependentTexture					(::gpk::array_pod<_tElement>& out_scaled, ::gpk::view_grid<_tElement>& out_view, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{ 
-		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "Out of memory?");		// Update size-dependent resources.
+		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
 		if( out_view.metrics() != newSize ) { 
 			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
-				error_if(errored(::gpk::grid_scale(out_view, in_view)), "I believe this never fails.");
+				error_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
 		}
 		return 0;
 	}
@@ -108,7 +109,7 @@ namespace gpk
 
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle2D<_tCoord>& circle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)			{
-		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.metrics().x);
+		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
@@ -205,9 +206,9 @@ namespace gpk
 			}
 			const ::gpk::SCoord2<double>												cellCurrentF								= {x, y};
 			::gpk::STriangleWeights<double>												proportions									= 
-				{ ::gpk::orient2d3d({triangle.C.Cast<double>(), triangle.B.Cast<double>()}, cellCurrentF)
-				, ::gpk::orient2d3d({triangle.A.Cast<double>(), triangle.C.Cast<double>()}, cellCurrentF)
-				, ::gpk::orient2d3d({triangle.B.Cast<double>(), triangle.A.Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
+				{ ::gpk::orient2d3d({triangle.C.template Cast<double>(), triangle.B.template Cast<double>()}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
+				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
+				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
 				};
 			double																		proportABC									= proportions.A + proportions.B + proportions.C;
 			if(proportABC == 0)
@@ -254,8 +255,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									rasterLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line, gpk_raster_callback callback)				{
-		::gpk::SCoord2<float>														A											= line.A.Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.Cast<float>();
+		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
+		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -265,7 +266,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, ::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -302,8 +303,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line)				{
-		::gpk::SCoord2<float>														A											= line.A.Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.Cast<float>();
+		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
+		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -313,7 +314,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, ::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -350,8 +351,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord>
 	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine2D<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
-		::gpk::SCoord2<float>														A											= line.A.Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.Cast<float>();
+		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
+		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -361,7 +362,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, ::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;

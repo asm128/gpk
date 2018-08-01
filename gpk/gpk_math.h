@@ -1,4 +1,5 @@
 #include "gpk_typeint.h"
+#include "gpk_eval.h"
 
 #include <cmath>
 

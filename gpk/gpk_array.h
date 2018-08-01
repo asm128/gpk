@@ -2,6 +2,7 @@
 #include "gpk_memory.h"
 #include <memory.h>
 #include <new>
+#include <initializer_list>
 
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
@@ -56,15 +57,15 @@ namespace gpk
 
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
 		inline constexpr								array_pod									()																			noexcept	= default;
-		inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), ::std::exception(), "Failed to resize array! Why?");		}
+		inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
 														array_pod									(::std::initializer_list<_tPOD> init)													{ 
-			throw_if(errored(resize((uint32_t)init.size())), ::std::exception(), "Failed to resize array! Why?");
+			throw_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 			memcpy(Data, init.begin(), Count * sizeof(_tPOD));
 		}
 
 		//template<size_t sizeStatic>
 		//												array_pod									(const _tPOD (&init)[sizeStatic])														{ 
-		//	throw_if(errored(resize(sizeStatic)), ::std::exception(), "Failed to resize array! Why?");
+		//	throw_if(errored(resize(sizeStatic)), "Failed to resize array! Why?");
 		//	memcpy(Data, init, Count * sizeof(_tPOD));
 		//}
 		//												array_pod									(const view_array<const _tPOD>& other)													{
@@ -101,7 +102,7 @@ namespace gpk
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
-				Data											= (_tPOD*)(safeguard.Handle = (ptrdiff_t)::gpk::gpk_malloc(mallocSize));
+				Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
 				throw_if(0 == other.begin()	, "", "%s", "other.Data is null!");
 				memcpy(Data, other.begin(), newSize * sizeof(_tPOD));
@@ -142,7 +143,7 @@ namespace gpk
 		}
 		template<size_t sizeStatic>
 							array_pod<_tPOD>&			operator =									(const _tPOD (&init)[sizeStatic])														{ 
-			throw_if(resize(sizeStatic) != sizeStatic, ::std::exception(), "Failed to resize array! Why?");
+			throw_if(resize(sizeStatic) != sizeStatic, "Failed to resize array! Why? Size requested: %u.", (uint32_t)sizeStatic);
 			memcpy(Data, init, Count * sizeof(_tPOD));
 			return *this;
 		}
@@ -175,9 +176,9 @@ namespace gpk
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{ 
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength; 
-			ree_if(requestedSize < Count, "Size overflow. Cannot append chain.");
+			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
 			const int32_t										newSize										= resize(requestedSize); 
-			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending.");
+			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested sizE: %u.", requestedSize);
 
 			//for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, newSize - startIndex); i < maxCount; ++i)
 				//Data[startIndex + i]							= chainToAppend[i];
@@ -205,7 +206,7 @@ namespace gpk
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
-				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = (ptrdiff_t)::gpk::gpk_malloc(mallocSize));
+				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
 
 				//TArrayView											safe_data									= {newData, reserveSize};
@@ -237,7 +238,7 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				ree_if(nullptr == newData, "Failed to allocate array for inserting new value.");
+				ree_if(nullptr == newData, "Failed to allocate array for inserting new value. Memory requesteD: %u.", mallocSize);
 
 				TArrayView											viewSafe									= {newData, Count+1};
 				memcpy(viewSafe.begin(), oldData, ::gpk::min(index, Count) * sizeof(_tPOD));
@@ -266,16 +267,17 @@ namespace gpk
 
 			if(Size < Count + chainLength) {
 				_tPOD												* oldData									= Data;
-				uint32_t											newSize										= calc_reserve_size(Count + chainLength);
+				uint32_t											newSize										= Count + chainLength;
+				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				ree_if(nullptr == newData, "Failed to allocate array for inserting new value.");
+				ree_if(nullptr == newData, "Failed to allocate array for inserting new value. memory requesteD: %u.", mallocSize);
 				::gpk::view_array<_tPOD>							viewSafe									= {newData, newSize};
-				for(uint32_t i = 0					, maxCount = ::gpk::min(index, Count)				; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
-				for(uint32_t i = 0					, maxCount = ::gpk::min(chainLength, newSize-index)	; i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
-				for(uint32_t i = index + chainLength, maxCount = ::gpk::min(index + 1, Count)			; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
+				for(uint32_t i = 0					, maxCount = ::gpk::min(index, Count)					; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
+				for(uint32_t i = 0					, maxCount = ::gpk::min(chainLength, newSize - index)	; i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
+				for(uint32_t i = index + chainLength, maxCount = ::gpk::min(index + 1, Count)				; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
 			}	
@@ -300,7 +302,7 @@ namespace gpk
 		// returns the new array size or -1 if failed.
 		template<typename _tObj>
 							::gpk::error_t				erase										(const _tObj* address)														noexcept	{ 
-			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(0 == Data, "Uninitialized array pointer! When trying to erase element at address: %p", address);
 			const ptrdiff_t										ptrDiff										= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t										index										= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(_tObj));
 			ree_if(index >= Count, "Invalid index: %u.", index);
@@ -309,7 +311,7 @@ namespace gpk
 
 		// returns the new array size or -1 if failed.
 							::gpk::error_t				remove										(uint32_t index)															noexcept	{ 
-			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(0 == Data, "Uninitialized array pointer! When trying to remove element at index: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			--Count;
 			while(index < Count) {
@@ -330,7 +332,7 @@ namespace gpk
 							::gpk::error_t				read										(const byte_t* input, uint32_t* inout_bytesRead)							noexcept	{
 			uint32_t											elementsToRead								= 0;
 			if(input) {
-				uint32_t											elementsToRead								= *(uint32_t*)input;
+				elementsToRead									= *(uint32_t*)input;
 				input											+= sizeof(uint32_t);
 			}
 
@@ -341,7 +343,7 @@ namespace gpk
 			}
 
 			::gpk::view_array<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
-			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read elements.");
+			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read %u elements.", elementsToRead);
 			if(0 == input) {
 				for(uint32_t i = 0; i < Count; ++i) 
 					*inout_bytesRead								+= sizeof(_tPOD);
@@ -375,7 +377,7 @@ namespace gpk
 			for(uint32_t i = 0; i < Count; ++i) {
 				::gpk::podcpy(&newStorage[i], &Data[i]);
 				input											+= sizeof(_tPOD);
-				*inout_bytesRead								+= sizeof(_tPOD);
+				*inout_bytesWritten								+= sizeof(_tPOD);
 			}
 			return 0;
 		}
@@ -414,7 +416,7 @@ namespace gpk
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
-				_tObj												* newData									= (_tObj*)(safeguard.Handle = (ptrdiff_t)::gpk::gpk_malloc(mallocSize));
+				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size);
 				throw_if(0 == other.Data	, "", "%s", "other.Data is null!");
 				for(uint32_t i = 0; i < newSize; ++i) 
@@ -453,9 +455,8 @@ namespace gpk
 		}
 
 		// returns the new array size or -1 if failed.
-		template<typename _tObj>
 		inline				int32_t						erase										(const _tObj* address)																	{ 
-			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(0 == Data, "Uninitialized array pointer! Invalid address to erase: %p.", address);
 			const ptrdiff_t										ptrDiff										= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t										index										= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(_tObj));
 			ree_if(index >= Count, "Invalid index: %u.", index);
@@ -463,7 +464,7 @@ namespace gpk
 		}
 
 							int32_t						remove										(uint32_t index)																		{ 
-			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			--Count;
 			while(index < Count) {
@@ -477,7 +478,7 @@ namespace gpk
 
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 							int32_t						remove_unordered							(uint32_t index)																		{ 
-			ree_if(0 == Data, "Uninitialized array pointer!");
+			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index].~_tObj();							// Destroy old
 			if(1 == Count) 
@@ -534,7 +535,7 @@ namespace gpk
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
-				_tObj												* newData									= (_tObj*)(safeguard.Handle = (ptrdiff_t)::gpk::gpk_malloc(mallocSize));
+				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size);
 				if(oldData) {
 					for(uint32_t i = 0, copyCount = ::gpk::min(oldCount, newSize); i < copyCount; ++i)
