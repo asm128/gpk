@@ -1,6 +1,10 @@
 #include "gpk_log.h"
 #include "gpk_string.h"
 
+
+#if defined(GPK_ANDROID)
+#	include <android/log.h>
+#endif
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #else
@@ -9,12 +13,24 @@
 #include <stdio.h>
 
 
-		void														gpk::_base_debug_print							(const char* text, uint32_t textLen)									{
-#if defined(GPK_WINDOWS)
-	OutputDebugStringA(text); textLen;
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "threaded_app", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "threaded_app", __VA_ARGS__))
+
+// For debug builds, always enable the debug traces in this library 
+#ifndef NDEBUG
+#	define LOGV(...)  ((void)__android_log_print(ANDROID_LOG_VERBOSE, "threaded_app", __VA_ARGS__))
 #else
-	if(textLen)
-		printf("%s", text); 
+#	define LOGV(...)  ((void)0)
+#endif
+
+
+		void														gpk::_base_debug_print							(const char* text, uint32_t textLen)									{
+	if(textLen) 
+#if defined(GPK_WINDOWS)
+		OutputDebugStringA(text); 
+#else
+		LOGI("%s", text);
+		//printf("%s", text); 
 #endif 
 }
 
