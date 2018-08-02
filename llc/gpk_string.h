@@ -41,13 +41,13 @@
 		return result;
 	}
 
-	static inline							int				sprintf_s					(char *buffer, size_t bufferSize, const char *format, ...)							{
-		va_list args;
-		va_start(args, format);
-		const int													result						= vsprintf(buffer, format, args);
-		va_end(args);
-		return result;
-	}
+	//static inline							int				sprintf_s					(char *buffer, size_t bufferSize, const char *format, ...)							{
+	//	va_list args;
+	//	va_start(args, format);
+	//	const int													result						= vsprintf(buffer, format, args);
+	//	va_end(args);
+	//	return result;
+	//}
 
 	static inline							int				vsprintf_s					(char *buffer, size_t bufferSize, const char *format, ...)							{
 		va_list args;

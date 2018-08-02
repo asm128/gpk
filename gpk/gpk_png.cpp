@@ -380,7 +380,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		uint32_t																	crcGenerated									= ::gpk::get_crc({&source[crcDataStart], sizeChunk + 4});
 		error_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
 		gpk_necall(pngData.Chunks.push_back(chunkRead), "%s", "Out of memory?");
-		break_info_if(0 == memcmp(chunkRead.Type, "IEND", 4), "Found IEND chunk (image end).");
+		break_info_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
 	}
 
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
@@ -438,7 +438,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		else if(0 == memcmp(newChunk.Type, "tRNS", 4)) { if(-1 == pngData.Feature.tRNS) pngData.Feature.tRNS = iChunk; }	// Contains transparency information. For indexed images, it stores alpha channel values for one or more palette entries. For truecolor and grayscale images, it stores a single pixel value that is to be regarded as fully transparent.
 		else if(0 == memcmp(newChunk.Type, "fcTL", 4)) { if(-1 == pngData.Feature.fcTL) pngData.Feature.fcTL = iChunk; }	// The frame control chunk contains several bits of information, the most important of which is the display time of the following frame. 
 		else if(0 == memcmp(newChunk.Type, "fdAT", 4)) { if(-1 == pngData.Feature.fdAT) pngData.Feature.fdAT = iChunk; }	// The frame data chunks have the same structure as the IDAT chunks, except preceded by a sequence number. 
-		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature.acTL) pngData.Feature.acTL = iChunk; info_printf("This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png. 
+		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature.acTL) pngData.Feature.acTL = iChunk; info_printf("%s", "This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png. 
 	}
 	return 0;
 }

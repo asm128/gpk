@@ -43,7 +43,8 @@ static	::gpk::error_t												getSystemErrorAsString						(const uint64_t las
 	const DWORD																size										= ::FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)(lastError & 0xFFFFFFFF), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, bufferSize, NULL);
 	return (::gpk::error_t)size;
 #else
-	sprintf_s(buffer, bufferSize, "%u.", (uint32_t)lastError);
+	(void) bufferSize;
+	sprintf(buffer, "%u.", (uint32_t)lastError);
 	return 0;
 #endif
 }

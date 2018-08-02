@@ -15,21 +15,21 @@ struct SRSMHeader {	// RSM Header
 
 			
 			::gpk::error_t								analyzeArray												(const ::gpk::view_array<ubyte_t>& input) {
-	info_printf("---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
+	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 										  
-	info_printf("---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
-	info_printf("---- Analyzing ints      :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[0])[iChar], ((int32_t			*)input.begin())[iChar], ((uint32_t	*)input.begin())[iChar]);
-	info_printf("---- Analyzing floats    :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12f"						, ((float		*)&input[0])[iChar]);
+	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
+	info_printf("%s", "---- Analyzing ints      :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[0])[iChar], ((int32_t			*)input.begin())[iChar], ((uint32_t	*)input.begin())[iChar]);
+	info_printf("%s", "---- Analyzing floats    :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12f"						, ((float		*)&input[0])[iChar]);
 
-	info_printf("---- Analyzing shifted shorts (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 2; ++iChar)	info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[1])[iChar], (int32_t)((int16_t	*)&input[1])[iChar], ((uint16_t	*)&input[1])[iChar]);
-	info_printf("---- Analyzing shifted ints   (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[1])[iChar], ((int32_t			*)&input[1])[iChar], ((uint32_t	*)&input[1])[iChar]);
-	info_printf("---- Analyzing shifted floats (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[1])[iChar], ((float			*)&input[1])[iChar]);
+	info_printf("%s", "---- Analyzing shifted shorts (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 2; ++iChar)	info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[1])[iChar], (int32_t)((int16_t	*)&input[1])[iChar], ((uint16_t	*)&input[1])[iChar]);
+	info_printf("%s", "---- Analyzing shifted ints   (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[1])[iChar], ((int32_t			*)&input[1])[iChar], ((uint32_t	*)&input[1])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (1):");	for(uint32_t iChar = 0; iChar < (input.size() - 1) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[1])[iChar], ((float			*)&input[1])[iChar]);
 
-	info_printf("---- Analyzing shifted ints   (2):");	for(uint32_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[2])[iChar], ((int32_t			*)&input[2])[iChar], ((uint32_t	*)&input[2])[iChar]);
-	info_printf("---- Analyzing shifted floats (2):");	for(uint32_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[2])[iChar], ((float			*)&input[2])[iChar]);
+	info_printf("%s", "---- Analyzing shifted ints   (2):");	for(uint32_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[2])[iChar], ((int32_t			*)&input[2])[iChar], ((uint32_t	*)&input[2])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (2):");	for(uint32_t iChar = 0; iChar < (input.size() - 2) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[2])[iChar], ((float			*)&input[2])[iChar]);
 
-	info_printf("---- Analyzing shifted ints   (3):");	for(uint32_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[3])[iChar], ((int32_t			*)&input[3])[iChar], ((uint32_t	*)&input[3])[iChar]);
-	info_printf("---- Analyzing shifted floats (3):");	for(uint32_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[3])[iChar], ((float			*)&input[3])[iChar]);
+	info_printf("%s", "---- Analyzing shifted ints   (3):");	for(uint32_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[3])[iChar], ((int32_t			*)&input[3])[iChar], ((uint32_t	*)&input[3])[iChar]);
+	info_printf("%s", "---- Analyzing shifted floats (3):");	for(uint32_t iChar = 0; iChar < (input.size() - 3) / 4; ++iChar)	info_printf("%.12f : %.12f"				, ((float		*)&input[3])[iChar], ((float			*)&input[3])[iChar]);
 	return 0;
 }
 

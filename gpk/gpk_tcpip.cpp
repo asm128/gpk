@@ -15,7 +15,7 @@
 	::WSADATA										w												= {};	
 	ree_if(::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		
 #endif
-	info_printf("Network subsystem initialized.");
+	info_printf("%s", "Network subsystem initialized.");
 	return 0;
 }
 
@@ -23,7 +23,7 @@
 #if defined(GPK_WINDOWS)
 	ree_if(::WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		// Open windows connection
 #endif
-	info_printf("Network subsystem shut down.");
+	info_printf("%s", "Network subsystem shut down.");
 	return 0;
 }
 
@@ -113,7 +113,7 @@
 		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
 		case AF_UNSPEC	:	info_printf("%s", "Unspecified"				); break;
 		case AF_INET	:
-			info_printf("AF_INET (IPv4)");
+			info_printf("%s", "AF_INET (IPv4)");
 			sockaddr_ipv4								= (::sockaddr_in *) ptr->ai_addr;
 			ipbufferlength								= 46;
  			::inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ipstringbuffer, ipbufferlength);
@@ -126,7 +126,7 @@
 			}
 			break;
 		case AF_INET6	:
-			info_printf("AF_INET6 (IPv6)");
+			info_printf("%s", "AF_INET6 (IPv6)");
 			// the InetNtop function is available on Windows Vista and later
 			sockaddr_ipv6								= (struct ::sockaddr_in6 *) ptr->ai_addr;
 			//info_printf("IPv6 address %s", InetNtop(AF_INET6, &sockaddr_ipv6->sin6_addr, ipwstringbuffer, 46) );
@@ -144,23 +144,23 @@
 			break;
 		}
 
-		info_printf("Socket type: ");
+		info_printf("%s", "Socket type: ");
 		switch (ptr->ai_socktype) {
-		case 0				: info_printf("Unspecified"								);	break;
-		case SOCK_STREAM	: info_printf("SOCK_STREAM (stream)"					);	break;
-		case SOCK_DGRAM		: info_printf("SOCK_DGRAM (datagram)"					);	break;
-		case SOCK_RAW		: info_printf("SOCK_RAW (raw)"							);	break;
-		case SOCK_RDM		: info_printf("SOCK_RDM (reliable message datagram)"	);	break;
-		case SOCK_SEQPACKET	: info_printf("SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
+		case 0				: info_printf("%s", "Unspecified"								);	break;
+		case SOCK_STREAM	: info_printf("%s", "SOCK_STREAM (stream)"					);	break;
+		case SOCK_DGRAM		: info_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
+		case SOCK_RAW		: info_printf("%s", "SOCK_RAW (raw)"							);	break;
+		case SOCK_RDM		: info_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
+		case SOCK_SEQPACKET	: info_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
 		default:
 			info_printf("Other %ld", ptr->ai_socktype);
 			break;
 		}
-		info_printf("Protocol: ");
+		info_printf("%s", "Protocol: ");
 		switch (ptr->ai_protocol) {
-		case 0				: info_printf("Unspecified"								);	break;
-		case IPPROTO_TCP	: info_printf("IPPROTO_TCP (TCP)"						);	break;
-		case IPPROTO_UDP	: info_printf("IPPROTO_UDP (UDP)"						);	break;
+		case 0				: info_printf("%s", "Unspecified"								);	break;
+		case IPPROTO_TCP	: info_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
+		case IPPROTO_UDP	: info_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
 		default:
 			info_printf("Other %ld", ptr->ai_protocol);
 			break;

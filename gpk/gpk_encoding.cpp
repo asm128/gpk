@@ -9,7 +9,7 @@ static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMN
 using namespace std;
 
 			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
-	rni_if(0 == inputBytes.size(), "Empty input stream.");
+	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t													iOutput64														= out_base64.size(); // append the result 
 	gpk_necall(out_base64.resize(out_base64.size() + packsNeeded * 4), "Out of memory? out_base64.size() : %u. packsNeeded : %u.", iOutput64, packsNeeded);
