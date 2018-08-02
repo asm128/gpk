@@ -34,10 +34,10 @@
 	safe_assign(a3	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
 	safe_assign(a4	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	safe_assign(a1	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
-	safe_assign(a2	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
-	safe_assign(a3	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >> 8));
-	safe_assign(a4	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >> 0));
+	safe_assign(a1	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >> 24));
+	safe_assign(a2	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >> 16));
+	safe_assign(a3	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 8));
+	safe_assign(a4	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 0));
 #endif
 	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
@@ -51,10 +51,10 @@
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3 ? *a3 : 0;
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4 ? *a4 : 0;
 #else
-	sockaddr_ipv4.sin_addr.s_addr				=  a1 ? ((int)*a1) << 24	: 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a2 ? ((int)*a2) << 16	: 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a3 ? ((int)*a3) <<  8	: 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a4 ? ((int)*a4) <<  0	: 0;
+	sockaddr_ipv4.sin_addr.s_addr				=  a1 ? ((unsigned int)*a1) <<  0 : 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a2 ? ((unsigned int)*a2) <<  8 : 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a3 ? ((unsigned int)*a3) << 16 : 0;
+	sockaddr_ipv4.sin_addr.s_addr				|= a4 ? ((unsigned int)*a4) << 24 : 0;
 #endif
 	return 0;
 }
