@@ -1,3 +1,5 @@
+#include "gpk_platform.h"
+
 #ifndef GPK_SAFE_H_209934782093
 #define GPK_SAFE_H_209934782093
 
