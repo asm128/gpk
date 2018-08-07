@@ -64,7 +64,7 @@
 	sockaddr_in										sockaddr_ipv4								= {};
 	socklen_t										len											= sizeof(sockaddr_in);
 	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");
-	return tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
+	return ::gpk::tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
 ::gpk::error_t								gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
@@ -146,10 +146,10 @@
 
 		info_printf("%s", "Socket type: ");
 		switch (ptr->ai_socktype) {
-		case 0				: info_printf("%s", "Unspecified"								);	break;
+		case 0				: info_printf("%s", "Unspecified"							);	break;
 		case SOCK_STREAM	: info_printf("%s", "SOCK_STREAM (stream)"					);	break;
 		case SOCK_DGRAM		: info_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
-		case SOCK_RAW		: info_printf("%s", "SOCK_RAW (raw)"							);	break;
+		case SOCK_RAW		: info_printf("%s", "SOCK_RAW (raw)"						);	break;
 		case SOCK_RDM		: info_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
 		case SOCK_SEQPACKET	: info_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
 		default:
@@ -158,7 +158,7 @@
 		}
 		info_printf("%s", "Protocol: ");
 		switch (ptr->ai_protocol) {
-		case 0				: info_printf("%s", "Unspecified"								);	break;
+		case 0				: info_printf("%s", "Unspecified"							);	break;
 		case IPPROTO_TCP	: info_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
 		case IPPROTO_UDP	: info_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
 		default:
