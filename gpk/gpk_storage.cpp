@@ -5,6 +5,10 @@
 #		define WIN32_LEAN_AND_MEAN
 #	endif
 #	include <Windows.h>
+#elif defined(GPK_ANDROID)
+#	include <dirent.h>
+#	include <string>
+#	include <iostream>
 #endif
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::label>& output)					{
@@ -16,15 +20,17 @@
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::array_obj<::gpk::label>& output, bool listFolders)	{
+	static constexpr const char														curDir []							= ".";
+	static constexpr const char														parDir []							= "..";
+	char																			sPath	[4096];
+	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
 	HANDLE																			hFind								= NULL;
-	char																			sPath	[4096];
-	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 	hFind																		= FindFirstFile(sPath, &fdFile);
 	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s].", pathToList.begin());
-	do if(	0 != strcmp(fdFile.cFileName,  ".")
-		 &&	0 != strcmp(fdFile.cFileName, "..")
+	do if(	0 != strcmp(fdFile.cFileName, curDir)
+		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
 		int32_t																			lenPath							= sprintf_s(sPath, "%s\\%s", pathToList.begin(), fdFile.cFileName);
 		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders) 
@@ -34,20 +40,36 @@
 	}
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
+#elif defined(GPK_ANDROID)
+    DIR																				* dir								= 0;
+    dirent																			* drnt								= 0;
+    dir																			= opendir(pathToList.begin());
+    while ((drnt = readdir(dir)) != NULL) {
+        ::std::string																	name								(drnt->d_name);
+        if (name != curDir && name != parDir) {
+			if(drnt->d_type == DT_DIR && false == listFolders) 
+				continue;
+			int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), drnt->d_name);
+			info_printf("Path: %s.", sPath);
+			gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+        }
+	}
 #endif
 	return 0;
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::SPathContents& pathContents)						{
+	char																			sPath[4096];
+	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
+	static constexpr const char														curDir []							= ".";
+	static constexpr const char														parDir []							= "..";
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
 	HANDLE																			hFind								= NULL;
-	char																			sPath[4096];
-	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 	hFind																		= FindFirstFile(sPath, &fdFile);
 	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s].", pathToList.begin());
-	do if(	0 != strcmp(fdFile.cFileName,  ".")	
-		 &&	0 != strcmp(fdFile.cFileName, "..")
+	do if(	0 != strcmp(fdFile.cFileName, curDir)	
+		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
 		int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), fdFile.cFileName);
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -63,6 +85,26 @@
 	}
 	while(FindNextFile(hFind, &fdFile)); 
 	FindClose(hFind);
+#elif defined(GPK_ANDROID)
+    DIR																				* dir;
+    struct dirent																	* drnt;
+    dir																			= opendir(pathToList.begin());
+    while ((drnt = readdir(dir)) != NULL) {
+        ::std::string																	name								(drnt->d_name);
+        if (name != curDir && name != parDir) {
+			int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), drnt->d_name);
+			if(drnt->d_type == DT_DIR) {
+				::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
+				gpk_necall(newFolderIndex, "%s", "Out of memory?");
+				gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unkown error!");
+				info_printf("Directory: %s.", sPath);
+			}
+			else {
+				gpk_necall(pathContents.Files.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+				info_printf("File: %s.", sPath);
+			}
+		}
+	}
 #endif
     return 0;
 }

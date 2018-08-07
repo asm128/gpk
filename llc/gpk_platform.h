@@ -62,7 +62,6 @@
 #	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
-
 namespace gpk 
 {
 	// -- Returns 0 on little-endian machines

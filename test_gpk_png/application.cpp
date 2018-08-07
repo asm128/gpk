@@ -1,6 +1,7 @@
 #include "application.h"
 #include "gpk_png.h"
 #include "gpk_grid_copy.h"
+#include "gpk_grid_scale.h"
 
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -79,8 +80,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
-	target->Color		.resize(app.Framework.MainDisplay.Size);
-	target->DepthStencil.resize(target->Color.View.metrics());
+	target->resize(app.Framework.MainDisplay.Size, {}, 0xFFFFFFFFU);
 	for(uint32_t y = 0; y < target->Color.View.metrics().y; ++y) 
 	for(uint32_t x = 0; x < target->Color.View.metrics().x; ++x) {
 		target->Color.View[y][x]											= rand();
@@ -90,6 +90,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) {
 		::gpk::SCoord2<uint32_t>												position				= {(iFile * 64) % (target->Color.View.metrics().x - 64), (iFile * 64) / (target->Color.View.metrics().x - 64) * 64};
 		::gpk::grid_copy_blend(target->Color.View, app.PNGImages[iFile].View, position);
+		//::gpk::grid_scale_alpha(target->Color.View, app.PNGImages[iFile].View, position.Cast<int32_t>(), app.PNGImages[iFile].View.metrics().Cast<int32_t>() * (1 + (.01 * iFile)));
 	}
 
 	//::gpk::array_pod<ubyte_t>												bytesPNG				= 0;

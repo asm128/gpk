@@ -39,21 +39,6 @@ namespace gpk
 	::gpk::error_t												loadRuntimeModule			(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
 
 
-#if defined(GPK_WINDOWS)
-#	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
-#	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		(moduleAddr)
-#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))GetProcAddress((HMODULE)moduleHandle, #symbolName))
-#else
-#	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
-#	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
-#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))dlsym(moduleHandle, #symbolName))
-#endif
-
-#if defined GPK_WINDOWS
-#	define GPK_MODULE_EXTENSION "dll"
-#else
-#	define GPK_MODULE_EXTENSION "os"
-#endif
 }
 
 #endif // GPK_RUNTIME_MODULE_H_23084728934
