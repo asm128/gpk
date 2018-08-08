@@ -63,8 +63,9 @@ struct SSprite {
 	SSprite							spriteNames[ANIMATION_COUNT];
 	{
 		FILE							* fp		= 0;
-		fopen_s(&fp, "pacman.txt", "rb");
-		if(fp) {
+		fopen_s(&fp, "..\\gpk_data\\scripts\\pacman.txt", "rb");
+		error_if(0 == fp, "Failed to open pacman.txt")
+		else {
 			fseek(fp, 0, SEEK_END);
 			int32_t							fileSize		= ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -80,8 +81,9 @@ struct SSprite {
 	}
 	{
 		FILE							* fp		= 0;
-		fopen_s(&fp, "pacman.bin", "rb");
-		if(fp) {
+		fopen_s(&fp, "..\\gpk_data\\scripts\\pacman.bin", "rb");
+		error_if(0 == fp, "Failed to open pacman.bin")
+		else {
 			fseek(fp, 0, SEEK_END);
 			int32_t							fileSize		= ftell(fp);
 			fseek(fp, 0, SEEK_SET);
@@ -101,8 +103,11 @@ struct SSprite {
 
 	app.CharacterAnimationImages.resize(ANIMATION_COUNT);
 	app.CharacterAnimationLayers.resize(ANIMATION_COUNT);
-	for(uint32_t iAnimation = 0; iAnimation < app.CharacterAnimationImages.size(); ++iAnimation)
-		::gpk::pngFileLoad(spriteNames[iAnimation].Name, app.CharacterAnimationImages[iAnimation]);
+	for(uint32_t iAnimation = 0; iAnimation < app.CharacterAnimationImages.size(); ++iAnimation) {
+		char						fileName[1024];
+		sprintf_s(fileName, "..\\gpk_data\\images\\%s", spriteNames[iAnimation].Name);
+		error_if(errored(::gpk::pngFileLoad(fileName, app.CharacterAnimationImages[iAnimation])), "Failed to load file: %s", fileName);
+	}
 
 	for(uint32_t iAnimation = 0; iAnimation < app.CharacterAnimationImages.size(); ++iAnimation)
 		// --- Build Ghost animation layered views
