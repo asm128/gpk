@@ -388,7 +388,7 @@ static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<u
 	return 0;
 }
 
-static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)						{
+static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target, bool bDisabled)				{
 	if(0 == gui.FontTexture.Texels.size())
 		gpk_necall(::setupDefaultFontTexture(gui), "%s", "Failed to set up default texture!");
 
@@ -398,7 +398,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	::gpk::SControlState												& controlState											= gui.Controls.States	[iControl];
 	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-		[ ::gpk::controlDisabled(gui, iControl)	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
+		[ bDisabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
 		: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
 		: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
@@ -432,13 +432,15 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
 	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
+	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-		[ ::gpk::controlDisabled(gui, iControl)	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
+		[ disabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
 		: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
 		: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
 		: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
 		];
+	
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 
@@ -519,7 +521,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 				, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x)), ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))}
 				});
 
-	error_if(errored(::controlTextDraw(gui, iControl, target)), "%s", "Why would this ever happen?");
+	error_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
 	return 0;
 }
 
@@ -546,8 +548,8 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 			gui.Controls.States[iOutdated].Updated							= false;
 		gui.LastSize													= target.metrics();
 	}
-	::gpk::SControlState												controlState											= gui.Controls.States[iControl];
-	if(false == controlState.Hidden) {
+	if(false == ::gpk::controlHidden(gui, iControl)) {
+		::gpk::SControlState												controlState											= gui.Controls.States[iControl];
 		if(false == controlState.Design)
 			gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
 		::gpk::view_array<int32_t>											& children												= gui.Controls.Children[iControl];
@@ -578,8 +580,6 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 
 static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)														{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
-	if(controlState.Hidden)
-		return -1;
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
@@ -600,6 +600,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	{
 		::gpk::view_array<int32_t>											& children													= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
+			if(::gpk::controlHidden(gui, children[iChild]))
+				continue;
 			::gpk::error_t														controlPressed												= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.Controls.size() > (uint32_t)controlPressed) {
 				controlState.Hover												= false;
@@ -634,6 +636,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	}
 
 	for(uint32_t iControl = 0, countControls = rootControlsToProcess.size(); iControl < countControls; ++iControl) {
+		if(::gpk::controlHidden(gui, rootControlsToProcess[iControl]))
+			continue;
 		::gpk::error_t														controlPressed											= ::controlProcessInput(gui, input, rootControlsToProcess[iControl]);
 		if(gui.Controls.Controls.size() > (uint32_t)controlPressed)
 			controlHovered													= controlPressed;
