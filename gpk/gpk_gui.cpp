@@ -398,7 +398,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	::gpk::SControlState												& controlState											= gui.Controls.States	[iControl];
 	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-		[ controlState.Disabled	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
+		[ ::gpk::controlDisabled(gui, iControl)	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
 		: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
 		: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
@@ -433,7 +433,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
 	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-		[ controlState.Disabled	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
+		[ ::gpk::controlDisabled(gui, iControl)	? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
 		: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
 		: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
 		: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
@@ -557,7 +557,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	return 0;
 }
 
-static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem)								noexcept	{ 
+static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControlState& controlFlags, const ::gpk::SInput& inputSystem, bool disabled)								noexcept	{ 
 	if(controlFlags.Hover) {
 		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed) 
 			controlFlags.Pressed											= true;
@@ -572,7 +572,7 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 		}
 	}
 	else 
-		controlFlags.Hover												= false == controlFlags.Disabled;
+		controlFlags.Hover												= false == disabled;//controlFlags.Disabled;
 	return one_if(controlFlags.Hover);
 }
 
@@ -585,7 +585,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
 		if(false == controlState.Design) {
 			controlHovered													= iControl;
-			::updateGUIControlHovered(controlState, input);
+			::updateGUIControlHovered(controlState, input,  ::gpk::controlDisabled(gui, iControl));
 		}
 	}
 	else {
@@ -690,7 +690,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
-		if(controlState.Unused || controlState.Disabled || ::gpk::controlHidden(gui, iControl))
+		if(controlState.Unused || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
 			continue;
 		gpk_necall(controlIndices.push_back(iControl), "%s", "Out of memory?");
 	}

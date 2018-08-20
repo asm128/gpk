@@ -69,13 +69,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				return 1;
 		}
 	}
-
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 
 }
 
-			::gpk::error_t											draw					(::gme::SApplication & app)						{ 
+			::gpk::error_t											draw					(::gme::SApplication & app)							{ 
 	//::gpk::STimer															timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
