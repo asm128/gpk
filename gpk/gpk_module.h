@@ -43,7 +43,7 @@
 #if defined GPK_WINDOWS
 #	define GPK_MODULE_EXTENSION "dll"
 #else
-#	define GPK_MODULE_EXTENSION "os"
+#	define GPK_MODULE_EXTENSION "so"
 #endif
 
 //#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 																	\
