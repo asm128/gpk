@@ -275,11 +275,7 @@ namespace gpk
 			r32									= 2 * (y*z + w*x);
 			r33									= q00 - q11 - q22 + q33;
 		
-#if defined( __ANDROID__ ) || defined( __LINUX__ )
-			tmp									= ::std::abs(r31);
-#else
 			tmp									= ::abs(r31);
-#endif
 			if(tmp > 0.999999) {
 				r12									= 2 * (x*y - w*z);
 				r13									= 2 * (x*z + w*y);
