@@ -69,3 +69,7 @@ namespace gpk
 }
 
 #endif // GPK_PLATFORM_GLOBALS_H_298365465465
+
+#if !defined(GPK_WINDOWS)
+#	include <cstddef>
+#endif
