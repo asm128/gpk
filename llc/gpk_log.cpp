@@ -27,11 +27,12 @@
 		void														gpk::_base_debug_print							(const char* text, uint32_t textLen)									{
 	if(textLen) 
 #if defined(GPK_WINDOWS)
-		OutputDebugStringA(text); 
+	OutputDebugStringA(text);
+#elif defined(GPK_ANDROID)
+	LOGI("%s", text);
 #else
-		LOGI("%s", text);
-		//printf("%s", text); 
-#endif 
+	printf("%s", text); 
+#endif
 }
 
 static	::gpk::error_t												getSystemErrorAsString						(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
