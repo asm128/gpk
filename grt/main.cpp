@@ -3,10 +3,12 @@
 #include "gpk_sync.h"
 #include "gpk_timer.h"
 
-#include <Windows.h>
+#if defined(GPK_WINDOWS)
+#	include <Windows.h>
+#	include <crtdbg.h>
+#	include <process.h>
+#endif
 #include <stdlib.h>		// for EXIT_SUCCESS
-#include <crtdbg.h>
-#include <process.h>
 
 struct SRuntimeState {
 			::gpk::refcount_t									RenderThreadUsers	= 0;
@@ -37,7 +39,9 @@ static	int													threadRenderStart				(::SRuntimeState& runtimeState)					
 
 static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)	{
 	globalRuntimeValues;
+#if defined(GPK_WINDOWS)
 	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+#endif
 	SRuntimeState													runtimeState					= {};
 	{
 		::gpk::view_const_string										fileName						= "gme";
@@ -83,7 +87,11 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 			while(-1 != gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, -1, 0)) {		// Wait until the render thread is closed.
 				if(elapsedTime > 5.0f)
 					break;
+#if defined(GPK_WINDOWS)
 				Sleep(10);
+#else
+#	error "Not implemented."
+#endif
 				timer.Frame();
 				//elapsedTime													+= timer.LastTimeSeconds;
 			}

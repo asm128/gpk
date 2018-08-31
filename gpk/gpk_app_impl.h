@@ -25,7 +25,51 @@
 }	
 #else
 
+#if defined(GPK_WINDOWS)
+#	define GPK_SYSTEM_OS_DEBUG_INIT_FLAGS()	_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);
+#else
+#	define GPK_SYSTEM_DEBUG_INIT_FLAGS()
+#endif
+
+	
+#if defined(GPK_WINDOWS)
+#	define GPK_SYSTEM_OS_ENTRY_POINT()																																																		\
+	static	::gpk::error_t																				rtMain										(::gpk::SRuntimeValues& runtimeValues);													\
+			int																							main										(int argc, char *argv[], char *envp[])												{	\
+		::gpk::SRuntimeValues																					runtimeValues								= {};																			\
+		runtimeValues.PlatformDetail.EntryPointArgsWin														= {GetModuleHandle(NULL), 0, 0, SW_SHOW};																						\
+		runtimeValues.PlatformDetail.EntryPointArgsStd														= {argc, argv, envp};																											\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
+	}																																																										\
+																																																											\
+			int	WINAPI																					WinMain																																\
+		(	_In_		::HINSTANCE		hInstance																																															\
+		,	_In_opt_	::HINSTANCE		hPrevInstance																																														\
+		,	_In_		::LPSTR			lpCmdLine																																															\
+		,	_In_		::INT			nShowCmd																																															\
+		)																																																									\
+	{																																																										\
+		::gpk::SRuntimeValues																					runtimeValues					= {};																						\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance											= hInstance		;																												\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance										= hPrevInstance	;																												\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine											= lpCmdLine		;																												\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd												= nShowCmd		;																												\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.argc													= __argc;																														\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.argv													= __argv;																														\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.envp													= _environ;																														\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
+	}																																																										
+#else 
+#	define GPK_SYSTEM_OS_ENTRY_POINT()																																																		\
+			int																							main										(int argc, char *argv[], char *envp[])												{	\
+		::gpk::SRuntimeValues																					runtimeValues								= {};																			\
+		runtimeValues.PlatformDetail.EntryPointArgsStd														= {argc, argv, envp};																											\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
+	}
+#endif
+
 #define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)																																									\
+static	::gpk::error_t																				rtMain										(::gpk::SRuntimeValues& runtimeValues);													\
 		::gpk::error_t																				setup										(_mainClass& applicationInstance);																																												\
 		::gpk::error_t																				cleanup										(_mainClass& applicationInstance);																																												\
 		::gpk::error_t																				update										(_mainClass& applicationInstance, bool systemRequestedExit);																																					\
@@ -43,40 +87,15 @@
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
 	return 0;																						\
-}	\
-static	::gpk::error_t																				rtMain										(::gpk::SRuntimeValues& runtimeValues);													\
-		int																							main										(int argc, char *argv[], char *envp[])												{	\
-	::gpk::SRuntimeValues																					runtimeValues								= {};																			\
-	runtimeValues.PlatformDetail.EntryPointArgsWin														= {GetModuleHandle(NULL), 0, 0, SW_SHOW};																						\
-	runtimeValues.PlatformDetail.EntryPointArgsStd														= {argc, argv, envp};																											\
-	return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
-}																																																										\
-																																																										\
-		int	WINAPI																					WinMain																																\
-	(	_In_		::HINSTANCE		hInstance																																															\
-	,	_In_opt_	::HINSTANCE		hPrevInstance																																														\
-	,	_In_		::LPSTR			lpCmdLine																																															\
-	,	_In_		::INT			nShowCmd																																															\
-	)																																																									\
-{																																																										\
-	::gpk::SRuntimeValues																					runtimeValues					= {};																						\
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance											= hInstance		;																												\
-	runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance										= hPrevInstance	;																												\
-	runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine											= lpCmdLine		;																												\
-	runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd												= nShowCmd		;																												\
-	runtimeValues.PlatformDetail.EntryPointArgsStd.argc													= __argc;																														\
-	runtimeValues.PlatformDetail.EntryPointArgsStd.argv													= __argv;																														\
-	runtimeValues.PlatformDetail.EntryPointArgsStd.envp													= _environ;																														\
-	return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
-}																																																										\
-																																																										\
+}																									\
+		GPK_SYSTEM_OS_ENTRY_POINT()																																																		\
 		::gpk::error_t																				setup										(_mainClass& applicationInstance);														\
 		::gpk::error_t																				cleanup										(_mainClass& applicationInstance);														\
 		::gpk::error_t																				update										(_mainClass& applicationInstance, bool systemRequestedExit);							\
 		::gpk::error_t																				draw										(_mainClass& applicationInstance);														\
 		::gpk::error_t																				rtMain										(::gpk::SRuntimeValues& runtimeValues)												{	\
 	{																																																									\
-		_CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF | _CRTDBG_ALLOC_MEM_DF);																																									\
+		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																									\
 		::gpk::ptr_obj<_mainClass>																			applicationInstance							= {};																			\
 		reterr_error_if(0 == applicationInstance.create(runtimeValues), "Failed to create application instance. Out of memory?");																										\
 		info_printf("Initializing application instance.");																																												\
