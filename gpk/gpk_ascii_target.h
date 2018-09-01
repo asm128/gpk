@@ -12,7 +12,7 @@ namespace gpk
 								::gpk::SImage<uint8_t>						Characters									= {};
 								::gpk::SImage<uint16_t>						Colors										= {};
 
-		inline					::gpk::SCoord2<uint32_t>					metrics										()																	const	noexcept	{ return Characters.metrics(); }
+		inline constexpr		::gpk::SCoord2<uint32_t>					metrics										()																	const	noexcept	{ return Characters.metrics(); }
 	};
 
 							::gpk::error_t									asciiTargetClear							(::gpk::SASCIITarget& target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
