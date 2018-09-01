@@ -51,26 +51,32 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 		sprintf_s(mainModuleName, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule											mainModule						= {};
 		gpk_necall(::gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
-		info_printf("Created main module. %s.", mainModuleName);
+		info_printf("%s", "Created main module. %s.", mainModuleName);
 		void															* applicationInstance;
 		gpk_necall(mainModule.Create(&applicationInstance, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
 		mainModule.Application										= applicationInstance;
-		info_printf("Initializing application instance.");
+		info_printf("%s", "Initializing application instance.");
 		if errored(mainModule.Setup(applicationInstance)) {
-			error_printf("Setup() Failed!");			
+			error_printf("%s", "Setup() Failed!");			
 			gpk_necall(mainModule.Delete(&applicationInstance), "Failed to create main module. %s.");
 			return -1;
 		}
 		runtimeState.MainModule											= &mainModule;
 		const ::gpk::error_t											updateResult0					= mainModule.Update(applicationInstance, ::GetAsyncKeyState(VK_ESCAPE) != 0);	
 		if(1 == updateResult0 || errored(updateResult0)) {
-			info_if(1 == updateResult0, "Application requested termination.");
-			error_if(errored(updateResult0), "update() returned error.");
+			info_if(1 == updateResult0, "%s", "Application requested termination.");
+			error_if(errored(updateResult0), "%s", "update() returned error.");
 		}
 		else {
 			gpk_sync_increment(runtimeState.RenderThreadUsers);	// Report we're alive
-			gpk_necall(::threadRenderStart(runtimeState), "Failed ");
-			info_printf("Application instance initialized successfully. Executing main loop...");
+			if errored(::threadRenderStart(runtimeState)) {
+				error_printf("%s failed.", "::threadRenderStart(runtimeState)");
+				info_printf("%s", "Cleaning up application instance...");
+				error_if(errored(mainModule.Cleanup(applicationInstance)), "%s", "Failed.");
+				info_printf("%s", "Application instance destroyed.");
+				gpk_necall(mainModule.Delete(&applicationInstance), "");
+			}
+			info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 			while(true) {
 				const ::gpk::error_t											updateResult					= mainModule.Update(applicationInstance, ::GetAsyncKeyState(VK_ESCAPE) != 0);	
 				break_info_if(1 == updateResult, "Application requested termination.");
@@ -96,9 +102,9 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 				//elapsedTime													+= timer.LastTimeSeconds;
 			}
 		}
-		info_printf("Cleaning up application instance...");
-		error_if(errored(mainModule.Cleanup(applicationInstance)), "Failed.");
-		info_printf("Application instance destroyed.");
+		info_printf("%s", "Cleaning up application instance...");
+		error_if(errored(mainModule.Cleanup(applicationInstance)), "%s", "Failed.");
+		info_printf("%s", "Application instance destroyed.");
 		gpk_necall(mainModule.Delete(&applicationInstance), "");
 	}
 	return 0;

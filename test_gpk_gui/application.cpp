@@ -15,7 +15,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s", " why?????!?!?!?!?");
 	::gpk::SGUI															& gui					= framework.GUI;
-	const int32_t iShades = 16;
+	const int32_t														iShades					= 16;
 	gui.ThemeDefault												= 18 * iShades + 14;
 	gui.ColorModeDefault											= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t																controlTestRoot			= ::gpk::controlCreate(gui);
