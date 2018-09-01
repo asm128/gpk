@@ -460,9 +460,9 @@ static			::gpk::error_t											pngDefilterAverage								(::gpk::view_array<u
 
 static			::gpk::error_t											paethPredictor									(int32_t left, int32_t above, int32_t upperleft)	{
 	int32_t																		p												= left + above - upperleft;	// initial estimate
-	int32_t																		pa												= abs(p - left		); // distances to a, b, c
-	int32_t																		pb												= abs(p - above		); // a = left, b = above, c = upper left
-	int32_t																		pc												= abs(p - upperleft	); // 
+	int32_t																		pa												= ::gpk::abs(p - left		); // distances to a, b, c
+	int32_t																		pb												= ::gpk::abs(p - above		); // a = left, b = above, c = upper left
+	int32_t																		pc												= ::gpk::abs(p - upperleft	); // 
 	if (pa <= pb && pa <= pc)	// return nearest of a,b,c, breaking ties in order a,b,c.
 		return left;
 	return (pb <= pc) ? above : upperleft;
