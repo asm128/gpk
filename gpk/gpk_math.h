@@ -33,9 +33,16 @@ namespace gpk
 	// [c d]
 	constexpr				double					determinant				(double a, double b, double c, double d)									noexcept	{ return a * d - b * c; }
 
-#if defined( GPK_ANDROID ) || defined( GPK_LINUX )
-#	define abs std::abs
+#if defined( GPK_ANDROID ) 
+#	define abs	std::abs
 #	define fabs std::fabs
+#elif defined( GPK_LINUX )
+	using	std::abs	;
+	using	std::fabs	;
+	using	std::atan	;
+	using	std::acos	;
+	using	std::sin	;
+	using	std::asin	;
 #endif
 #pragma pack(pop)
 }

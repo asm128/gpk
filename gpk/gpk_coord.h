@@ -232,8 +232,8 @@ namespace gpk
 				return ::gpk::interpolate_linear(p, q_, fTime); 
  		
 			//calculate the angle between the quaternions  
-			const	double							fTheta					= ::acos(fDot); 
-			return *this						= (p * ::sin(fTheta * (1 - fTime)) + q_ * ::sin(fTheta * fTime)) / ::sin(fTheta); 
+			const	double							fTheta					= acos(fDot); 
+			return *this						= (p * sin(fTheta * (1 - fTime)) + q_ * sin(fTheta * fTime)) / sin(fTheta); 
 		}
 		// Convert from Euler Angles	
 		inline				TQuat&			MakeFromEulerTaitBryan	(const TCoord3& v)																{ return MakeFromEulerTaitBryan(v.x, v.y, v.z);																			}
@@ -275,18 +275,18 @@ namespace gpk
 			r32									= 2 * (y*z + w*x);
 			r33									= q00 - q11 - q22 + q33;
 		
-			tmp									= ::abs(r31);
+			tmp									= abs(r31);
 			if(tmp > 0.999999) {
 				r12									= 2 * (x*y - w*z);
 				r13									= 2 * (x*z + w*y);
 				*fPitch								= 0.0f;
 				*fYaw								= -((::gpk::math_pi_2) * r31/tmp);
-				*fRoll								= ::atan2(-r12, -r31*r13);
+				*fRoll								= atan2(-r12, -r31*r13);
 			}
 			else {
-				*fPitch								 = ::atan2(r32, r33);
-				*fYaw								 = ::asin(-r31);
-				*fRoll								 = ::atan2(r21, r11);
+				*fPitch								 = atan2(r32, r33);
+				*fYaw								 = asin(-r31);
+				*fRoll								 = atan2(r21, r11);
 			}
 		} //
 	}; // struct SQuaternion

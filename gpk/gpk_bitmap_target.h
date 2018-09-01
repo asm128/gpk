@@ -257,7 +257,7 @@ namespace gpk
 	static					::gpk::error_t									rasterLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line, gpk_raster_callback callback)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
-		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
+		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
 			::std::swap(B.x, B.y);
@@ -266,7 +266,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -305,7 +305,7 @@ namespace gpk
 	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
-		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
+		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
 			::std::swap(B.x, B.y);
@@ -314,7 +314,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -353,7 +353,7 @@ namespace gpk
 	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine2D<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
-		const bool																	steep										= (::fabs(B.y - A.y) > ::fabs(B.x - A.x));
+		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
 			::std::swap(B.x, B.y);
@@ -362,7 +362,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)::fabs(B.y - A.y)};
+		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
