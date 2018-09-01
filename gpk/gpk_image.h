@@ -60,14 +60,12 @@ namespace gpk
 			Texels																	= other;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
-			return *this; 
 		}
 
 																				SImageMonochrome							(const ::gpk::SImageMonochrome<_tTexel>& other)				{ 
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), Texels.size()};
 			Pitch																	= other.Pitch;
-			return *this; 
 		}
 
 							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)							{ 
