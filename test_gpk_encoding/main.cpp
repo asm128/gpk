@@ -65,8 +65,8 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, false, encoded)), "Out of memory?");
-				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, false, decoded)), "Out of memory?");
+				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, false, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, false, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -82,8 +82,8 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, true, encoded)), "Out of memory?");
-				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, true, decoded)), "Out of memory?");
+				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, true, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, true, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -99,8 +99,8 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::ardellEncode(testStrings[iTest], iTest, false, encoded)), "Out of memory?");
-				ce_if(errored(::gpk::ardellDecode(encoded			, iTest, false, decoded)), "Out of memory?");
+				ce_if(errored(::gpk::ardellEncode(testStrings[iTest], iTest, false, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::ardellDecode(encoded			, iTest, false, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -116,8 +116,8 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::ardellEncode(testStrings[iTest], iTest, true, encoded)), "Out of memory?");
-				ce_if(errored(::gpk::ardellDecode(encoded			, iTest, true, decoded)), "Out of memory?");
+				ce_if(errored(::gpk::ardellEncode(testStrings[iTest], iTest, true, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::ardellDecode(encoded			, iTest, true, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -135,7 +135,7 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
-				ce_if(errored(::gpk::base64Encode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, encoded)), "Out of memory?");
+				ce_if(errored(::gpk::base64Encode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, encoded)), "%s", "Out of memory?");
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
@@ -162,8 +162,8 @@ int													main						()			{
 	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			encodedList;	
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
-		gpk_necall(encodedList.resize(rounds * ::gpk::size(testStrings)), "Out of memory?");
-		gpk_necall(decodedList.resize(rounds * ::gpk::size(testStrings)), "Out of memory?");
+		gpk_necall(encodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
+		gpk_necall(decodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
@@ -171,7 +171,7 @@ int													main						()			{
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
-					ce_if(errored(::gpk::aesEncode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, encoded)), "Out of memory?");
+					ce_if(errored(::gpk::aesEncode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, encoded)), "%s", "Out of memory?");
 					timer.Frame();
 					timeTotal											+= timer.LastTimeSeconds;
 				}
@@ -186,7 +186,7 @@ int													main						()			{
 					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
 					::gpk::array_pod<ubyte_t>								& decoded					= decodedList[indexBuffer];
 					if errored(::gpk::aesDecode(encoded.begin(), encoded.size(), ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, decoded)) {
-						error_printf( "Out of memory?");
+						error_printf("%s", "Out of memory?");
 						encoded.clear_pointer();
 						continue;
 					}
@@ -205,8 +205,8 @@ int													main						()			{
 			double													timeTotal					= 0;
 			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
-					error_if(errored(test_encrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
-					error_if(errored(test_decrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
+					error_if(errored(test_encrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
+					error_if(errored(test_decrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					timer.Frame();
 					timeTotal											+= timer.LastTimeSeconds;
 				}
@@ -217,8 +217,8 @@ int													main						()			{
 			double													timeTotal					= 0;
 			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
-					error_if(errored(test_encrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
-					error_if(errored(test_decrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
+					error_if(errored(test_encrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
+					error_if(errored(test_decrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					timer.Frame();
 					timeTotal											+= timer.LastTimeSeconds;
 				}
@@ -229,8 +229,8 @@ int													main						()			{
 			double													timeTotal					= 0;
 			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
 				for(uint32_t iTest = 0; iTest < ::gpk::size(testStrings); ++iTest) {
-					error_if(errored(test_decrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
-					error_if(errored(test_encrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "Algorithm got broken?");
+					error_if(errored(test_decrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
+					error_if(errored(test_encrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					timer.Frame();
 					timeTotal											+= timer.LastTimeSeconds;
 				}
