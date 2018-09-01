@@ -26,7 +26,6 @@ namespace gpk	//
 		double												SecondsPerCount					= 0;
 		double												MicrosecondsPerCount			= 0;
 #else
-
 		::std::chrono::high_resolution_clock::time_point	PrevTimeStamp					= {};
 		::std::chrono::high_resolution_clock::time_point	CurrentTimeStamp				= {};
 #endif

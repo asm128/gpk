@@ -11,7 +11,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 			::gpk::error_t												optionListInitialize		(::gpk::SGUI& gui, ::gme::SOptionList& menu)													{
-	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "Failed to create menu control!");
+	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
 	return 0;
 }
 
@@ -19,7 +19,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	if(menu.IdControl == -1) 
 		gpk_necall(::optionListInitialize(gui, menu), "");
 	const int32_t																idControl					= ::gpk::controlCreate(gui);
-	gpk_necall(idControl, "Failed to create control! Out of memory?");
+	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
 	::gpk::controlSetParent(gui, idControl, menu.IdControl);
 	::gpk::SControl																& control					= gui.Controls.Controls		[idControl];
 	::gpk::SControlText															& controlText				= gui.Controls.Text			[idControl];
@@ -47,7 +47,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		, ANIMATION_COUNT
 		};
 
-	uint32_t tileSize = 8;
+			uint32_t													tileSize					= 8;
+
 struct SSprite {
 	uint8_t			Frames	;
 	char			Name	[15];
@@ -57,14 +58,15 @@ struct SSprite {
 			::gpk::error_t												setup						(::gme::SApplication & app)						{ 
 	::gpk::SFramework															& framework					= app.Framework;
 	::gpk::SDisplay																& mainWindow				= framework.MainDisplay;
-	ree_if(0 == framework.Input.create(), "Out of memory?");
-	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
+	ree_if(0 == framework.Input.create(), "%s", "Out of memory?");
+	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "%s", "Failed to create main window why?????!?!?!?!?");
 	::gpk::SImage<ubyte_t>			tileMap;
 	SSprite							spriteNames[ANIMATION_COUNT];
 	{
+		static constexpr	const char	filename[]	= "..\\gpk_data\\scripts\\pacman.txt";
 		FILE							* fp		= 0;
-		fopen_s(&fp, "..\\gpk_data\\scripts\\pacman.txt", "rb");
-		error_if(0 == fp, "Failed to open pacman.txt")
+		fopen_s(&fp, filename, "rb");
+		error_if(0 == fp, "Failed to open file: %s.", filename)
 		else {
 			fseek(fp, 0, SEEK_END);
 			int32_t							fileSize		= ftell(fp);
@@ -81,8 +83,9 @@ struct SSprite {
 	}
 	{
 		FILE							* fp		= 0;
-		fopen_s(&fp, "..\\gpk_data\\scripts\\pacman.bin", "rb");
-		error_if(0 == fp, "Failed to open pacman.bin")
+		static constexpr	const char	filename[]	= "..\\gpk_data\\scripts\\pacman.bin";
+		fopen_s(&fp, filename, "rb");
+		error_if(0 == fp, "Failed to open '%s'.", filename)
 		else {
 			fseek(fp, 0, SEEK_END);
 			int32_t							fileSize		= ftell(fp);
@@ -224,13 +227,13 @@ struct SSprite {
 
 			::gpk::error_t												update						(::gme::SApplication & app, bool exitSignal)	{ 
 	::gpk::STimer																timer;
-	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
 		::gme::mutex_guard															lock						(app.LockRender);
 		app.Framework.MainDisplayOffscreen										= app.Offscreen;
 	}
 	::gpk::SFramework															& framework					= app.Framework;
-	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
+	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 
 	::gpk::SGUI																	& gui						= framework.GUI;
 	{

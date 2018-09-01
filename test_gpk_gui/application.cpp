@@ -13,7 +13,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 ::gpk::error_t													setup					(::gme::SApplication & app)						{ 
 	::gpk::SFramework													& framework				= app.Framework;
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
-	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?????!?!?!?!?");
+	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s", " why?????!?!?!?!?");
 	::gpk::SGUI															& gui					= framework.GUI;
 	const int32_t iShades = 16;
 	gui.ThemeDefault												= 18 * iShades + 14;
@@ -152,13 +152,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 ::gpk::error_t												update					(::gme::SApplication & app, bool exitSignal)	{ 
 	//::gpk::STimer													timer;
-	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
 		::gme::mutex_guard												lock					(app.LockRender);
 		app.Framework.MainDisplayOffscreen							= app.Offscreen;
 	}
 	::gpk::SFramework												& framework				= app.Framework;
-	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(framework), "Exit requested by framework update.");
+	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(framework), "%s", "Exit requested by framework update.");
 	::gpk::SGUI														& gui					= framework.GUI;
 
 	{
