@@ -147,7 +147,7 @@ int													main						()			{
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
 				::gpk::array_pod<ubyte_t>								& decoded					= decodedList[indexBuffer];
 				if errored(::gpk::base64Decode(encoded, decoded)) {
-					error_printf( "Out of memory?");
+					error_printf( "%s", "Out of memory?");
 					encoded.clear_pointer();
 					continue;
 				}
