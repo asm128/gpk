@@ -14,7 +14,7 @@ void							gpk::STimer::Reset											()				noexcept				{
 
 void							gpk::STimer::Frame											()				noexcept				{
 	QueryPerformanceCounter( ( ::LARGE_INTEGER* ) &CurrentTimeStamp );
-	LastTimeSeconds					=  (float)	(( CurrentTimeStamp - PrevTimeStamp ) * SecondsPerCount);
+	LastTimeSeconds					=  (double)	(( CurrentTimeStamp - PrevTimeStamp ) * SecondsPerCount);
 	LastTimeMicroseconds			=  uint64_t	(( CurrentTimeStamp - PrevTimeStamp ) / (CountsPerSecond / 1000000.0));
 	PrevTimeStamp					= CurrentTimeStamp;
 }
@@ -32,8 +32,8 @@ void							gpk::STimer::Reset											()				noexcept				{
 void							gpk::STimer::Frame											()				noexcept				{
 	CurrentTimeStamp				= ::std::chrono::high_resolution_clock::now();
 	auto								timeDifference									= CurrentTimeStamp - PrevTimeStamp;
-	LastTimeMicroseconds			= (int64_t)::std::chrono::duration_cast<std::chrono::microseconds	>(timeDifference).count();
-	LastTimeSeconds					= (int64_t)::std::chrono::duration_cast<std::chrono::seconds		>(timeDifference).count();
+	LastTimeMicroseconds			= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds	>(timeDifference).count();
+	LastTimeSeconds					= LastTimeMicroseconds / 1000000.0;
 	PrevTimeStamp					= CurrentTimeStamp;
 }
 #endif

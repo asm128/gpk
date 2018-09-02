@@ -18,7 +18,6 @@ struct SRuntimeState {
 			bool												Exit				= false;
 };
 
-
 static	void												threadRender					(void* pRuntimeState)							{
 	::SRuntimeState													& runtimeState					= *(::SRuntimeState*)pRuntimeState;
 	::gpk::SRuntimeModule											* runtimeModule					= runtimeState.MainModule;
