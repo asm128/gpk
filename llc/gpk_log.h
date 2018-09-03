@@ -116,11 +116,11 @@ namespace gpk
 #endif
 
 #ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#define throw_if(condition, format, ...)				if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
+#define throw_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
 #else
 #pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define throw_if(condition, format, ...)				do{ condition; } while(0)
+#define throw_if(condition, format, ...)						do{ condition; } while(0)
 #endif
 
 #ifndef GPK_NULLIFY_CONDITIONAL_LOG
