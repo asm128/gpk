@@ -26,7 +26,7 @@
 #		//	define GPK_NULLIFY_CONDITIONAL_LOG
 #		//endif
 #		//ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#		//	define GPK_NULLIFY_CONDITIONAL_THROWF
+#		//	define GPK_NULLIFY_CONDITIONAL_THROW
 #		//endif
 #	endif
 #endif
@@ -120,7 +120,7 @@ namespace gpk
 #else
 #pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define throw_if(condition, exception, format, ...)				do{ condition; } while(0)
+#define throw_if(condition, format, ...)				do{ condition; } while(0)
 #endif
 
 #ifndef GPK_NULLIFY_CONDITIONAL_LOG
@@ -130,9 +130,9 @@ namespace gpk
 #else
 #pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define error_if(condition, format, ...)						do{ condition; } while(0)
-#define warn_if(condition, format, ...)							do{ condition; } while(0)
-#define info_if(condition, format, ...)							do{ condition; } while(0)
+#define error_if(condition, format, ...)						if(condition) { }
+#define warn_if(condition, format, ...)							if(condition) { }
+#define info_if(condition, format, ...)							if(condition) { }
 #endif
 
 #define ret_error_if(condition, format, ...)					if(condition) { error_printf	(format, __VA_ARGS__); return;			}
