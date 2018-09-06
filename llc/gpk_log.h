@@ -77,7 +77,7 @@ namespace gpk
 #	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #endif
 
-#	define always_printf(format, ...)								debug_printf(3, "info"		, format, __VA_ARGS__)
+#define always_printf(format, ...)								debug_printf(3, "info"		, format, __VA_ARGS__)
 
 #if defined (GPK_ERROR_PRINTF_ENABLED)
 #	define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
@@ -110,29 +110,29 @@ namespace gpk
 #endif	
 
 #if defined (GPK_WINDOWS)
-#	define gpk_throw(...)	throw(__VA_ARGS__)
+#	define gpk_throw(...)											throw(__VA_ARGS__)
 #else
-#	define gpk_throw(...)	do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; } while(0)
+#	define gpk_throw(...)											do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; } while(0)
 #endif
 
 #ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#define throw_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
+#	define throw_if(condition, format, ...)							if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
 #else
-#pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
-#pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define throw_if(condition, format, ...)						do{ condition; } while(0)
+//#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
+//#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
+#	define throw_if(condition, format, ...)							if(condition) do{} while(0)
 #endif
 
 #ifndef GPK_NULLIFY_CONDITIONAL_LOG
-#define error_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
-#define warn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
-#define info_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
+#	define error_if(condition, format, ...)							if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
+#	define warn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
+#	define info_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
 #else
-#pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
-#pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define error_if(condition, format, ...)						if(condition) { }
-#define warn_if(condition, format, ...)							if(condition) { }
-#define info_if(condition, format, ...)							if(condition) { }
+//#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
+//#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
+#	define error_if(condition, format, ...)							if(condition) do{} while(0)
+#	define warn_if(condition, format, ...)							if(condition) do{} while(0)
+#	define info_if(condition, format, ...)							if(condition) do{} while(0)
 #endif
 
 #define ret_error_if(condition, format, ...)					if(condition) { error_printf	(format, __VA_ARGS__); return;			}
@@ -156,15 +156,15 @@ namespace gpk
 #define retnul_info_if(condition, format, ...)					retval_info_if	( 0, condition, format, __VA_ARGS__)
 
 #ifndef GPK_NULLIFY_CONDITIONAL_RETERR
-#define reterr_error_if(condition, format, ...)					retval_error_if	(-1, condition, format, __VA_ARGS__)
-#define reterr_warn_if(condition, format, ...)					retval_warn_if	(-1, condition, format, __VA_ARGS__)
-#define reterr_info_if(condition, format, ...)					retval_info_if	(-1, condition, format, __VA_ARGS__)
+#	define reterr_error_if(condition, format, ...)					retval_error_if	(-1, condition, format, __VA_ARGS__)
+#	define reterr_warn_if(condition, format, ...)					retval_warn_if	(-1, condition, format, __VA_ARGS__)
+#	define reterr_info_if(condition, format, ...)					retval_info_if	(-1, condition, format, __VA_ARGS__)
 #else
-#pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
-#pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#define reterr_error_if(condition, format, ...)					do{ condition; } while(0)
-#define reterr_warn_if(condition, format, ...)					do{ condition; } while(0)
-#define reterr_info_if(condition, format, ...)					do{ condition; } while(0)
+#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
+#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
+#	define reterr_error_if(condition, format, ...)					if(condition) do{} while(0)
+#	define reterr_warn_if(condition, format, ...)					if(condition) do{} while(0)
+#	define reterr_info_if(condition, format, ...)					if(condition) do{} while(0)
 #endif
 
 #define retwarn_error_if(condition, format, ...)				retval_error_if	( 1, condition, format, __VA_ARGS__)
