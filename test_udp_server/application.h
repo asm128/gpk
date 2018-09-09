@@ -1,10 +1,22 @@
 #include "gpk_framework.h"
 #include "gpk_gui.h"
+#include "gpk_stdsocket.h"
 
 #include <mutex>
 
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
+
+struct SUDPClient {
+	SOCKET							Socket;
+	::gpk::SIPv4					Address;
+};
+
+struct SUDPServer {
+	SOCKET							Socket;
+	::gpk::SIPv4					Address							= {{}, 9999};
+	::gpk::array_obj<SUDPClient>	Clients;
+};
 
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
@@ -12,6 +24,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::SFramework													Framework;
 		::gpk::SImage<::gpk::SColorBGRA>									TextureFont							= {};
 		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen							= {};
+		SUDPServer															Server								= {9999,};
 
 		int32_t																IdExit								= -1;
 
