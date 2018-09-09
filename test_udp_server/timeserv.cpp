@@ -63,7 +63,7 @@ int												server								(SUDPServer& serverInstance)		{
 	_beginthread(updateClients, 0, &serverInstance);
 #else
 #	error "Not implemented."
-#error 
+#endif
 
 	info_printf("Server running on %u.%u.%u.%u:%u"
 		, (uint32_t)serverInstance.Address.IP[0]
