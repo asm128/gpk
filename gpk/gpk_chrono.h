@@ -6,6 +6,7 @@
 namespace gpk
 {
 	int64_t											timeCurrent							();
+	int64_t											timeCurrentInMs						();
 } // namespace
 
 #endif // GPK_CHRONO_H_2983742893

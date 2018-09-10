@@ -24,8 +24,8 @@ namespace gpk
 
 	struct SUDPCommand {
 		ENDPOINT_COMMAND					Command			: 2;
-		uint8_t								Payload			: 5;
 		ENDPOINT_MESSAGE_TYPE				Type			: 1;
+		uint8_t								Payload			: 5;
 	};
 
 	struct SEndpointCommand {

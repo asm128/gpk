@@ -10,16 +10,16 @@
 #	include <arpa/inet.h>
 #endif
 
-::gpk::error_t								gpk::tcpipInitialize					()																															{
+::gpk::error_t								gpk::tcpipInitialize						()																										{
 #if defined(GPK_WINDOWS)
-	::WSADATA										w												= {};	
+	::WSADATA										w											= {};	
 	ree_if(::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		
 #endif
 	info_printf("%s", "Network subsystem initialized.");
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipShutdown						()																															{
+::gpk::error_t								gpk::tcpipShutdown							()																										{
 #if defined(GPK_WINDOWS)
 	ree_if(::WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		// Open windows connection
 #endif
@@ -29,15 +29,15 @@
 
 ::gpk::error_t								gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
 #if defined(GPK_WINDOWS)
-	safe_assign(a1	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
-	safe_assign(a2	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
-	safe_assign(a3	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
-	safe_assign(a4	, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+	safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
+	safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
+	safe_assign(a3, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
+	safe_assign(a4, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	safe_assign(a1	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >> 24));
-	safe_assign(a2	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >> 16));
-	safe_assign(a3	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 8));
-	safe_assign(a4	, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 0));
+	safe_assign(a1, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >>  0));
+	safe_assign(a2, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >>  8));
+	safe_assign(a3, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
+	safe_assign(a4, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
 #endif
 	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
@@ -72,6 +72,7 @@
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
+
 ::gpk::error_t								gpk::tcpipAddress							(const char_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)				{
 	char_t											portString			[8]							= {};
 	::sprintf_s(portString, "%u", portRequested);
@@ -107,7 +108,6 @@
 		int												iRetval;
 		uint32_t										ipbufferlength									= 46;
 #endif
-
 		switch (ptr->ai_family)  {
 		default			:	info_printf("Other %li.", ptr->ai_family	); break;
 		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
@@ -182,6 +182,5 @@
 //	b3											= hp->h_addr_list[0][2];
 //	b4											= hp->h_addr_list[0][3];
 //#endif
-
 	return iAddress;
 }
