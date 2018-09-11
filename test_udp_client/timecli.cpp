@@ -38,6 +38,6 @@ int									runClient							(::gpk::SIPv4 & addressServer, SOCKET sd)	{
 	ree_if(sd == INVALID_SOCKET, "Could not create socket.\n");
 	error_if(errored(runClient(addressServer, sd)), "Client exit with error.");
 	safe_closesocket(sd);
-	::gpk::sleep(1000);
+	::gpk::sleep(100);
 	return 0;
 }

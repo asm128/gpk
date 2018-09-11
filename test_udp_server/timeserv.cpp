@@ -40,19 +40,18 @@
 ::gpk::error_t												updateClients						(SUDPServer& serverInstance)		{
 	::gpk::array_obj<::SUDPClient>									clientsToProcess;
 	while(serverInstance.Socket != INVALID_SOCKET) {		
-		clientsToProcess.clear();
 		const uint32_t													totalClientCount					= serverInstance.Clients.size();
-		timeval															wait_time							= {0, 100000};
-		uint32_t														offsetClient						= 0;
+		timeval															wait_time							= {0, 1000};
 		uint32_t														remainder							= totalClientCount % 64;
 		uint32_t														stageCount							= totalClientCount / 64 + one_if(remainder);
 		fd_set															sockets								= {};
 		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
+			uint32_t														offsetClient						= iStage * 64;
+			clientsToProcess.clear();
 			sockets.fd_count											= 0;
 			uint32_t														stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
-			uint32_t														currentClient						= 0;
 			for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
-				currentClient												= offsetClient + iClient;
+				uint32_t														currentClient						= offsetClient + iClient;
 				error_if(errored(::sendQueue(serverInstance, currentClient)), "??");
 				sockets.fd_array[sockets.fd_count++]						= serverInstance.Clients[currentClient].Socket;
 			}
