@@ -20,60 +20,71 @@
 	int																sa_length							= (int)sizeof(sockaddr_in);		// Length of client struct 
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 	for(uint32_t iMessage = 0, countMessages = queueToSend.size(); iMessage < countMessages;  ++iMessage) {
-		::SUDPClientMessage												& messageToSend = queueToSend[iMessage];
+		::SUDPClientMessage												& messageToSend						= queueToSend[iMessage];
 		if(messageToSend.Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
-			ree_if(sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_remote, sa_length) != (int)sizeof(::gpk::SEndpointCommand), "Error sending datagram.");	// Send data back
+			ree_if((int)sizeof(::gpk::SEndpointCommand) != sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
 		}
 		else {
-			gpk_necall(messageBytes.resize(sizeof(::gpk::SEndpointCommand) + sizeof(uint32_t) + messageToSend.Payload.size()), "??");
+			gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SEndpointCommand) + (uint32_t)sizeof(uint32_t) + messageToSend.Payload.size()), "??");
 			::gpk::view_stream<byte_t>										sendStream							= {messageBytes.begin(), messageBytes.size()};
 			gpk_necall(sendStream.write_pod(messageToSend.Command), "??");
 			gpk_necall(sendStream.write_pod(messageToSend.Payload.size()), "??");
 			gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "??");
 		}
+		gpk_necall(client.Queue.Sent.push_back(messageToSend), "Out of memory?");
 	}
+	queueToSend.clear();
 	return 0;
 }
 
 ::gpk::error_t												updateClients						(SUDPServer& serverInstance)		{
-	::gpk::array_obj<SUDPClient>									clientsToProcess;
+	::gpk::array_obj<::SUDPClient>									clientsToProcess;
 	while(serverInstance.Socket != INVALID_SOCKET) {		
 		clientsToProcess.clear();
-		const uint32_t													clientCount							= serverInstance.Clients.size();
-		fd_set															sockets								= {};
+		const uint32_t													totalClientCount					= serverInstance.Clients.size();
 		timeval															wait_time							= {0, 100000};
-		for(uint32_t iClient = 0; iClient < clientCount; ++iClient) {
-			error_if(errored(sendQueue(serverInstance, iClient)), "??");
-			sockets.fd_array[sockets.fd_count++]						= serverInstance.Clients[iClient].Socket;
-		}
-		select(0, &sockets, 0, 0, &wait_time);
-		for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) 
-			for(uint32_t iClient = 0; iClient < clientCount; ++iClient) {
-				if(sockets.fd_array[sd] == serverInstance.Clients[iClient].Socket) {
-					gpk_necall(clientsToProcess.push_back(serverInstance.Clients[iClient]), "Out of memory?");
+		uint32_t														offsetClient						= 0;
+		uint32_t														remainder							= totalClientCount % 64;
+		uint32_t														stageCount							= totalClientCount / 64 + one_if(remainder);
+		fd_set															sockets								= {};
+		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
+			sockets.fd_count											= 0;
+			uint32_t														stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
+			uint32_t														currentClient						= 0;
+			for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
+				currentClient												= offsetClient + iClient;
+				error_if(errored(::sendQueue(serverInstance, currentClient)), "??");
+				sockets.fd_array[sockets.fd_count++]						= serverInstance.Clients[currentClient].Socket;
+			}
+			::select(0, &sockets, 0, 0, &wait_time);
+			for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
+				for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
+					::SUDPClient													client								= serverInstance.Clients[offsetClient + iClient];
+					if(sockets.fd_array[sd] == client.Socket) 
+						gpk_necall(clientsToProcess.push_back(client), "Out of memory?");
 				}
 			}
-		for(uint32_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
-			sockaddr_in														sa_client							= {};						// Information about the client 
-			int																client_length						= (int)sizeof(sockaddr_in);	// Length of client struct 
-			::gpk::SEndpointCommand											command								= {};						// Where to store received data 
-			int																bytes_received						= 0;			
-			if errored(bytes_received = recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length)) {
-				error_printf("Could not receive datagram.");	
-				recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_client, &client_length);	
-				continue;
-			}
-			switch(command.Type) {
-			case ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST:
-				switch(command.Command) {
-				case ::gpk::ENDPOINT_COMMAND_CONNECT:
-					if(command.Payload == 1)
-						info_printf("connected!");
-					break;
+			for(uint32_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
+				sockaddr_in														sa_client							= {};						// Information about the client 
+				int																client_length						= (int)sizeof(sockaddr_in);	// Length of client struct 
+				::gpk::SEndpointCommand											command								= {};						// Where to store received data 
+				int																bytes_received						= 0;			
+				if errored(bytes_received = ::recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length)) {
+					error_printf("Could not receive datagram.");	
+					::recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_client, &client_length);	
+					continue;
 				}
-			}
-			if(INVALID_SOCKET != clientsToProcess[iClient].Socket) {
-				recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_client, &client_length);	
+				switch(command.Type) {
+				case ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST:
+					switch(command.Command) {
+					case ::gpk::ENDPOINT_COMMAND_CONNECT:
+						if(command.Payload == 1)
+							info_printf("connected!");
+						break;
+					}
+				}
+				if(INVALID_SOCKET != clientsToProcess[iClient].Socket) 
+					::recvfrom(clientsToProcess[iClient].Socket, (char*)&command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr*)&sa_client, &client_length);	
 			}
 		}
 	}
@@ -87,14 +98,12 @@ void														threadUpdateClients					(void* serverInstance)				{ updateClie
 	gpk_necall(::gpk::tcpipAddress(serverInstance.Address.Port, 0, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address), "??");
 	sockaddr_in														server								= {};			
 	gpk_necall(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server), "??");
-	gpk_necall(bind(serverInstance.Socket, (sockaddr *)&server, sizeof(sockaddr_in)), "Could not bind name to socket.");	/* Bind address to socket */
-	
+	gpk_necall(::bind(serverInstance.Socket, (sockaddr *)&server, sizeof(sockaddr_in)), "Could not bind name to socket.");	/* Bind address to socket */
 #if defined(GPK_WINDOWS)
 	_beginthread(threadUpdateClients, 0, &serverInstance);
 #else
 #	error "Not implemented."
 #endif
-
 	info_printf("Server running on %u.%u.%u.%u:%u"
 		, (uint32_t)serverInstance.Address.IP[0]
 		, (uint32_t)serverInstance.Address.IP[1]
@@ -119,7 +128,6 @@ void														threadUpdateClients					(void* serverInstance)				{ updateClie
 			SUDPClient														client								= {};
 			::gpk::tcpipAddressFromSockaddr(sa_client, client.Address);
 			ce_if(INVALID_SOCKET == (client.Socket = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
-			//ree_if(sendto(client.Socket, (char *)&command, (int)sizeof(::gpk::SEndpointCommand), 0, (sockaddr *)&sa_client, client_length) != (int)sizeof(::gpk::SEndpointCommand), "Error sending datagram.");			// Send data back
 			command.Type												= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
 			gpk_necall(client.Queue.Send		.push_back({command, {}, (uint64_t)::gpk::timeCurrentInMs()}), "Out of memory?");
 			gpk_necall(serverInstance.Clients	.push_back(client), "Out of memory?");
