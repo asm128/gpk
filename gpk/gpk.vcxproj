@@ -28,6 +28,7 @@
     <ClInclude Include="gpk_endpoint_command.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
+    <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_view_array.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />

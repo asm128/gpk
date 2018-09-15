@@ -32,9 +32,11 @@ namespace gpk
 					::gpk::error_t									tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4);
 					::gpk::error_t									tcpipAddress						(const char_t* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4);
 	static inline	::gpk::error_t									tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)							{ 
+		address.Port													= portRequested;
 		return tcpipAddress(portRequested, adapterIndex, mode, &address.IP[0], &address.IP[1], &address.IP[2], &address.IP[3]); 
 	}
 	static inline	::gpk::error_t									tcpipAddress						(const char_t* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)	{ 
+		address.Port													= portRequested;
 		return tcpipAddress(hostName, portRequested, adapterIndex, mode, &address.IP[0], &address.IP[1], &address.IP[2], &address.IP[3]); 
 	}
 } // namespace

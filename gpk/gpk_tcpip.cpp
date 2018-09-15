@@ -90,9 +90,9 @@
 	uint32_t										iAddress										= 0;
 	bool											addressFound									= false;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
-		info_printf("getaddrinfo response at index %u.", iAddress);
-		info_printf("Flags: 0x%x.", ptr->ai_flags);
-		info_printf("%s", "Family: ");
+		verbose_printf("getaddrinfo response at index %u.", iAddress);
+		verbose_printf("Flags: 0x%x.", ptr->ai_flags);
+		verbose_printf("%s", "Family: ");
 		char_t											ipstringbuffer	[46]							= {};
 #if defined(GPK_WINDOWS)
 		wchar_t											ipwstringbuffer	[46]							= {};
@@ -109,15 +109,15 @@
 		uint32_t										ipbufferlength									= 46;
 #endif
 		switch (ptr->ai_family)  {
-		default			:	info_printf("Other %li.", ptr->ai_family	); break;
+		default			:	verbose_printf("Other %li.", ptr->ai_family	); break;
 		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
-		case AF_UNSPEC	:	info_printf("%s", "Unspecified"				); break;
+		case AF_UNSPEC	:	verbose_printf("%s", "Unspecified"				); break;
 		case AF_INET	:
-			info_printf("%s", "AF_INET (IPv4)");
+			verbose_printf("%s", "AF_INET (IPv4)");
 			sockaddr_ipv4								= (::sockaddr_in *) ptr->ai_addr;
 			ipbufferlength								= 46;
  			::inet_ntop(AF_INET, &sockaddr_ipv4->sin_addr, ipstringbuffer, ipbufferlength);
-			info_printf("IPv4 address %s", ipstringbuffer);
+			verbose_printf("IPv4 address %s", ipstringbuffer);
 			// Copy address
 			if(adapterIndex == iAddress) {
 				::gpk::tcpipAddressFromSockaddr(*sockaddr_ipv4, a1, a2, a3, a4, 0);
@@ -126,7 +126,7 @@
 			}
 			break;
 		case AF_INET6	:
-			info_printf("%s", "AF_INET6 (IPv6)");
+			verbose_printf("%s", "AF_INET6 (IPv6)");
 			// the InetNtop function is available on Windows Vista and later
 			sockaddr_ipv6								= (struct ::sockaddr_in6 *) ptr->ai_addr;
 			//info_printf("IPv6 address %s", InetNtop(AF_INET6, &sockaddr_ipv6->sin6_addr, ipwstringbuffer, 46) );
@@ -144,30 +144,30 @@
 			break;
 		}
 
-		info_printf("%s", "Socket type: ");
+		verbose_printf("%s", "Socket type: ");
 		switch (ptr->ai_socktype) {
-		case 0				: info_printf("%s", "Unspecified"							);	break;
-		case SOCK_STREAM	: info_printf("%s", "SOCK_STREAM (stream)"					);	break;
-		case SOCK_DGRAM		: info_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
-		case SOCK_RAW		: info_printf("%s", "SOCK_RAW (raw)"						);	break;
-		case SOCK_RDM		: info_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
-		case SOCK_SEQPACKET	: info_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
+		case 0				: verbose_printf("%s", "Unspecified"							);	break;
+		case SOCK_STREAM	: verbose_printf("%s", "SOCK_STREAM (stream)"					);	break;
+		case SOCK_DGRAM		: verbose_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
+		case SOCK_RAW		: verbose_printf("%s", "SOCK_RAW (raw)"						);	break;
+		case SOCK_RDM		: verbose_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
+		case SOCK_SEQPACKET	: verbose_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
 		default:
-			info_printf("Other %ld", ptr->ai_socktype);
+			verbose_printf("Other %ld", ptr->ai_socktype);
 			break;
 		}
-		info_printf("%s", "Protocol: ");
+		verbose_printf("%s", "Protocol: ");
 		switch (ptr->ai_protocol) {
-		case 0				: info_printf("%s", "Unspecified"							);	break;
-		case IPPROTO_TCP	: info_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
-		case IPPROTO_UDP	: info_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
+		case 0				: verbose_printf("%s", "Unspecified"							);	break;
+		case IPPROTO_TCP	: verbose_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
+		case IPPROTO_UDP	: verbose_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
 		default:
-			info_printf("Other %ld", ptr->ai_protocol);
+			verbose_printf("Other %ld", ptr->ai_protocol);
 			break;
 		}
 		++iAddress;
-		info_printf("Length of this sockaddr: %u", (uint32_t)ptr->ai_addrlen);
-		info_printf("Canonical name: %s", ptr->ai_canonname);
+		verbose_printf("Length of this sockaddr: %u", (uint32_t)ptr->ai_addrlen);
+		verbose_printf("Canonical name: %s", ptr->ai_canonname);
 		if(addressFound)
 			break;
 	}

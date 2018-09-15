@@ -1,17 +1,21 @@
 #include "gpk_typeint.h"
 #include "gpk_error.h"
 
+#include <mutex>
+
 #ifndef GPK_SYNC_H_023749082374
 #define GPK_SYNC_H_023749082374
 
 #if defined(GPK_ANDROID) || defined(GPK_LINUX)
-#	include <mutex>
 #elif defined(GPK_WINDOWS)  
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
 #endif
 namespace gpk
 {
+	typedef ::std::lock_guard<::std::mutex>								mutex_guard;
+
+
 #if defined(GPK_ANDROID) || defined(GPK_LINUX)
 /// <Atomic Builtins> http://gcc.gnu.org/onlinedocs/gcc-4.4.3/gcc/Atomic-Builtins.html#Atomic-Builtins
 #	define gpk__sync_increment(nCount)							(__sync_add_and_fetch(&nCount, 1))

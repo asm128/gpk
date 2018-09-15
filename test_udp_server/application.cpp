@@ -7,12 +7,15 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::error_t												cleanup					(::gme::SApplication & app)						{ 
+			::gpk::error_t											serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port);
+			::gpk::error_t											serverStop					(::gpk::SUDPServer& serverInstance);
+
+			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ 
+	::serverStop(app.Server);
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
 	::gpk::tcpipShutdown();
 	return 0; 
 }
-			int														server						(SUDPServer& serverInstance);
 
 			::gpk::error_t											setup						(::gme::SApplication & app)						{ 
 	::gpk::SFramework														& framework					= app.Framework;
@@ -34,7 +37,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x								= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
-	::server(app.Server);
+	::serverStart(app.Server, 9998);
 	return 0; 
 }
 

@@ -198,6 +198,9 @@
     <ClInclude Include="gpk_chrono.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_udp_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
