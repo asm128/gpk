@@ -1,24 +1,11 @@
+#include "gpk_udp_client.h"
 #include "gpk_framework.h"
 #include "gpk_gui.h"
-#include "gpk_stdsocket.h"
 
 #include <mutex>
 
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
-
-enum UDP_CONNECTION_STATE 
-	{ UDP_CONNECTION_STATE_DISCONNECTED		= 0
-	, UDP_CONNECTION_STATE_HANDSHAKE
-	, UDP_CONNECTION_STATE_IDLE
-	};
-
-struct SUDPClient {
-	::gpk::auto_socket_close				Socket										= {};
-	::gpk::SIPv4							AddressServer								= {};
-	uint16_t								PortServer									= {};
-	UDP_CONNECTION_STATE					State										= UDP_CONNECTION_STATE_DISCONNECTED;
-};
 
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
@@ -32,7 +19,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::std::mutex														LockGUI;
 		::std::mutex														LockRender;
 
-		::SUDPClient														Client;
+		::gpk::SUDPClient													Client;
 
 																			SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};

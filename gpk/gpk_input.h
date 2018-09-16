@@ -21,6 +21,11 @@ namespace gpk
 	};
 
 	struct SInput {
+							::gpk::array_pod<SInputKeyboard	>		StateKeyboard		;
+							::gpk::array_pod<SInputMouse	>		StateMouse			;
+							::gpk::array_pod<float>					TimeStampKeyboard	;
+							::gpk::array_pod<float>					TimeStampMouse		;
+
 							SInputKeyboard							KeyboardPrevious							= {};
 							SInputKeyboard							KeyboardCurrent								= {};
 							SInputMouse								MousePrevious								= {};

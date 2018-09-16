@@ -25,9 +25,11 @@
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_chrono.h" />
-    <ClInclude Include="gpk_endpoint_command.h" />
+    <ClInclude Include="gpk_connection.h" />
+    <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
+    <ClInclude Include="gpk_udp_client.h" />
     <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_view_array.h" />
     <ClInclude Include="gpk_ascii_color.h" />
@@ -91,6 +93,7 @@
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_label.cpp" />
+    <ClCompile Include="gpk_noise.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />

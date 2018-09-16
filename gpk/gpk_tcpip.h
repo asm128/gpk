@@ -39,6 +39,12 @@ namespace gpk
 		address.Port													= portRequested;
 		return tcpipAddress(hostName, portRequested, adapterIndex, mode, &address.IP[0], &address.IP[1], &address.IP[2], &address.IP[3]); 
 	}
+
+#define GPK_IPV4_EXPAND(addr) (uint32_t)addr.IP[0]	\
+							, (uint32_t)addr.IP[1]	\
+							, (uint32_t)addr.IP[2]	\
+							, (uint32_t)addr.IP[3]	\
+							, (uint32_t)addr.Port
 } // namespace
 
 #endif // GPK_TCPIP_H_2874982374

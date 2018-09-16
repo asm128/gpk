@@ -34,8 +34,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::tcpipInitialize();
 	return 0; 
 }
-
-			::gpk::error_t											clientConnect				(::SUDPClient & client);
+			::gpk::error_t											clientDisconnect			(::gpk::SUDPClient & client);
+			::gpk::error_t											clientConnect				(::gpk::SUDPClient & client);
+			::gpk::error_t											clientUpdate				(::gpk::SUDPClient & client);
 			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{ 
 	::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
@@ -70,6 +71,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.Client.PortServer												= 9998;
 	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.AddressServer);
 	clientConnect(app.Client);
+	error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
+	else
+		clientDisconnect(app.Client);
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 

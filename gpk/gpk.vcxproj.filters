@@ -189,9 +189,6 @@
     <ClInclude Include="gpk_stdsocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_endpoint_command.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_aes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -199,6 +196,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_udp_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_udp_client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_noise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -273,6 +279,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_chrono.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_noise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
