@@ -1,5 +1,6 @@
 #include "gpk_array.h"
 #include "gpk_ptr.h"
+#include "gpk_stdsocket.h"
 
 #ifndef GPK_CONNECTION_H_20347892908347
 #define GPK_CONNECTION_H_20347892908347
@@ -55,6 +56,18 @@ namespace gpk
 		::std::mutex															MutexSend		;
 		::std::mutex															MutexReceive	;
 	};
+
+	struct SUDPConnection {
+		::gpk::auto_socket_close												Socket								;
+		::gpk::SUDPClientQueue													Queue								;
+		::gpk::SIPv4															Address								= {};
+		int64_t																	LastPing							= 0;
+		::gpk::UDP_CONNECTION_STATE												State;
+	};
+
+	::gpk::error_t															sendQueue							(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer);
+	::gpk::error_t															handleCommand						(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
+	::gpk::error_t															pushData							(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data);
 }
 
 #endif // GPK_CONNECTION_H_20347892908347

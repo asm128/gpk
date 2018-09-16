@@ -85,6 +85,7 @@
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
+    <ClCompile Include="gpk_connection.cpp" />
     <ClCompile Include="gpk_display.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_framework.cpp" />

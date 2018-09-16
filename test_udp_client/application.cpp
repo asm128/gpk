@@ -4,6 +4,7 @@
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 #include "gpk_tcpip.h"
+#include "gpk_chrono.h"
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
@@ -68,12 +69,17 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	app.Client.PortServer												= 9998;
-	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.AddressServer);
+	app.Client.PortServer													= 9998;
+	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
 	clientConnect(app.Client);
 	error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
-	else
-		clientDisconnect(app.Client);
+	else 
+	{
+		::gpk::pushData(app.Client.Queue, "Message arrived!");
+		::clientUpdate(app.Client);
+		::gpk::sleep(1000);
+		::clientDisconnect(app.Client);
+	}
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 

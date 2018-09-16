@@ -14,165 +14,6 @@
 #	error	"Not implemented."
 #endif
 
-::gpk::error_t												sendQueue							(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer)				{
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& queueToSend						= client.Queue.Send;
-	::gpk::array_pod<byte_t>										messageBytes;
-	sockaddr_in														sa_remote							= {};							// Information about the client 
-	int																sa_length							= (int)sizeof(sockaddr_in);		// Length of client struct 
-	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
-
-	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
-	messageBuffer.clear();								
-	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
-		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= queueToSend[0];
-		if(0 == pMessageToSend)
-			continue;
-		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
-		int64_t															currentTime							= ::gpk::timeCurrentInMs();
-		if(messageToSend.Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
-			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
-			pMessageToSend->Time										= currentTime;
-			messageBuffer.push_back(pMessageToSend);
-		}
-		else {
-			if(messageToSend.Command.Type == ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST) {
-				ce_if(messageToSend.Payload.size() > 60000U, "Maximum allowed payload size is only %u bytes.", 60000U);
-				gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + messageToSend.Payload.size()), "Out of memory?");
-				::gpk::view_stream<byte_t>										sendStream							= {messageBytes.begin(), messageBytes.size()};
-				::gpk::SUDPPayloadHeader										payloadHeader						= {};
-				payloadHeader.Command										= messageToSend.Command;
-				payloadHeader.Size											= messageToSend.Payload.size();
-				payloadHeader.Hash											= (uint64_t)(::gpk::noiseNormal1D(currentTime) * 0xffFFffFFffFFffFFULL);
-				gpk_necall(sendStream.write_pod(payloadHeader), "??");
-				gpk_necall(sendStream.write_pod(messageToSend.Payload.size()), "??");
-				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "??");
-				ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
-				pMessageToSend->Time										= currentTime;
-				messageBuffer.push_back(pMessageToSend);
-			}
-			else { // response
-				::gpk::SUDPPayloadHeader										payloadHeader						= {};
-				payloadHeader.Command										= messageToSend.Command;
-				payloadHeader.Size											= messageToSend.Payload.size();
-				payloadHeader.Hash											= messageToSend.Time;
-				ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
-				messageBuffer.push_back(pMessageToSend);
-			}
-		}
-		gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "Out of memory?");
-	}
-	for(uint32_t iSent = 0; iSent < messageBuffer.size(); ++iSent)
-		for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend)
-			if(queueToSend[iSend] == messageBuffer[iSent]) {
-				queueToSend.remove(iSend);
-				break;
-			}
-	return 0;
-}
-
-static	::gpk::error_t										handleCONNECT						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
-	if(1 != command.Payload || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State) 
-		return -1;
-	client.LastPing												= gpk::timeCurrentInMs();
-	{
-		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
-		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent) {
-			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
-				client.Queue.Sent.remove(iSent);
-				break;
-			}
-		}
-		client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
-	}
-	info_printf("Connected!");
-	return 0; 
-}
-
-static	::gpk::error_t										handleDISCONNECT					(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
-	if(0 != command.Payload || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State) 
-		return -1;
-	client.LastPing												= gpk::timeCurrentInMs();
-	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
-	client.Socket.close();
-	info_printf("Disconnected!");
-	return 0; 
-}
-
-static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{ 
-	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
-		return 1;
-	::gpk::SUDPPayloadHeader										header							= {};
-	sockaddr_in														sa_client						= {};						// Information about the client 
-	int																sa_length						= (int)sizeof(sockaddr_in);	// Length of client struct 
-	int																bytes_received					= {};
-	if errored(bytes_received = ::recvfrom(client.Socket, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-		rew_if(WSAGetLastError() != WSAEMSGSIZE, "Could not receive payload header.");	
-	}
-	if(command.Type == ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST) {
-		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "Out of memory?");
-		rew_if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)), "Could not receive payload data.");	
-		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived					= {};
-		messageReceived->Command									= header.Command;
-		messageReceived->Time										= header.Hash;
-		gpk_necall(messageReceived->Payload.resize(header.Size), "Out of memory?");
-		if(header.Size > 0)
-			memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
-		client.LastPing												= gpk::timeCurrentInMs();
-		{
-			::gpk::mutex_guard												lock							(client.Queue.MutexReceive);
-			client.Queue.Received.push_back(messageReceived);
-		}
-		{
-			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					response						= {};
-			response->Command											= header.Command;
-			response->Command.Type										= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
-			response->Time												= header.Hash;
-			::gpk::mutex_guard												lock							(client.Queue.MutexSend);
-			client.Queue.Send.push_back(response);
-		}
-	}
-	else { // response
-		::gpk::mutex_guard												lock							(client.Queue.MutexSend);
-		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent) {
-			int64_t															hashLocal						=  (uint64_t)(::gpk::noiseNormal1D(client.Queue.Sent[iSent]->Time) * 0xffFFffFFffFFffFFULL);
-			if((hashLocal & 0xffFFffFFffFF0000ULL) == (header.Hash & 0xffFFffFFffFF0000ULL)) {
-				client.Queue.Sent.remove(iSent);
-				client.LastPing												= gpk::timeCurrentInMs();
-				break;
-			}
-		}
-	}
-	return 0; 
-}
-
-::gpk::error_t												handleCommand						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{
-	switch(command.Type) {
-	case ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST:
-		switch(command.Command) {
-		case ::gpk::ENDPOINT_COMMAND_CONNECT	: return ::handleCONNECT	(command, client); 
-		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD	(command, client, receiveBuffer); 
-		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: return ::handleDISCONNECT	(command, client); 
-		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0; 
-		default									: 
-			error_printf("Invalid command!: %u.", command.Command); 
-			break;
-		}
-		break;
-	case ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE:
-		switch(command.Command) {
-		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD	(command, client, receiveBuffer); 
-		case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
-		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: 
-		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0; 
-		default									: 
-			error_printf("Invalid command!: %u.", command.Command); 
-			break;
-		}
-		break;
-	}
-	return -1;
-}
-
 ::gpk::error_t												updateClients						(gpk::SUDPServer& serverInstance)		{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnection>>			clientsToProcess;
 	::gpk::array_pod<byte_t>										receiveBuffer;
@@ -199,7 +40,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 					if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size()) 
-						error_if(errored(::sendQueue(*pclient, messageBuffer)), "??");
+						error_if(errored(::gpk::sendQueue(*pclient, messageBuffer)), "??");
 					sockets.fd_array[sockets.fd_count]							= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -227,13 +68,15 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 						return 0;
 					sockaddr_in														sa_client							= {};						// Information about the client 
 					int																sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct 
-					::gpk::SUDPCommand											command								= {};						// Where to store received data 
+					::gpk::SUDPCommand												command								= {};						// Where to store received data 
 					int																bytes_received						= 0;			
 					::gpk::SUDPConnection											& client							= *clientsToProcess[iClient];
 					if errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-						warning_printf("Could not receive datagram.");	
-						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
-						continue;
+						if(::WSAGetLastError() != WSAEMSGSIZE) {
+							warning_printf("Could not receive datagram.");	
+							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
+							continue;
+						}
 					}
 					::gpk::SIPv4													address								= {{}, 9999};
 					::gpk::tcpipAddressFromSockaddr(sa_client, address);
@@ -242,7 +85,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
 						continue;
 					}
-					error_if(errored(::handleCommand(command, client, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+					error_if(errored(::gpk::handleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 					if(INVALID_SOCKET != client.Socket) 
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
 				}
@@ -283,35 +126,43 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 		else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
 			break;
 		else {
-			::gpk::ptr_obj<::gpk::SUDPConnection>						pclient								= {};
+			::gpk::ptr_obj<::gpk::SUDPConnection>						pClient								= {};
 			int32_t														found								= -1;
 			{
 				::gpk::mutex_guard											lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
-					pclient														= serverInstance.Clients[iClient];
-					int64_t															limitTime						= (::gpk::timeCurrentInMs() - pclient->LastPing);
+					pClient														= serverInstance.Clients[iClient];
+					::gpk::SUDPConnection											& client						= *pClient;
+					int64_t															limitTime						= (::gpk::timeCurrentInMs() - client.LastPing);
 					info_printf("LimitTime : %lli.", limitTime);
-					if(limitTime > serverInstance.Timeout || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
+					if(limitTime > serverInstance.Timeout || client.Socket == INVALID_SOCKET || client.State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
 						found														= (int32_t)iClient;
-						pclient->Socket.close();
-						pclient->Queue.Received	.clear();
-						pclient->Queue.Send		.clear();
-						pclient->Queue.Sent		.clear();
+						client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+						client.Socket.close();
+						{
+							::gpk::mutex_guard											lockRecv							(client.Queue.MutexReceive);
+							client.Queue.Received	.clear();
+						}
+						{
+							::gpk::mutex_guard											lockSend							(client.Queue.MutexSend);
+							client.Queue.Send		.clear();
+							client.Queue.Sent		.clear();
+						}
 						break;
 					}
 					else
-						pclient														= {};
+						pClient														= {};
 				}
-				::gpk::tcpipAddressFromSockaddr(sa_client, pclient->Address);
+				::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
 				command.Type											= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
 				::gpk::ptr_obj<::gpk::SUDPConnectionMessage>				connectResponse						= {};
 				connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInMs(), command});
-				gpk_necall(pclient->Queue.Send.push_back(connectResponse), "Out of memory?");
-				pclient->LastPing										= ::gpk::timeCurrentInMs();
-				ce_if(INVALID_SOCKET == (pclient->Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
-				pclient->State											= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
+				gpk_necall(pClient->Queue.Send.push_back(connectResponse), "Out of memory?");
+				pClient->LastPing										= ::gpk::timeCurrentInMs();
+				ce_if(INVALID_SOCKET == (pClient->Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
+				pClient->State											= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 				if(found == -1) 
-					gpk_necall(serverInstance.Clients.push_back(pclient), "Out of memory?");
+					gpk_necall(serverInstance.Clients.push_back(pClient), "Out of memory?");
 			}
 			info_printf("Current client count: %u", serverInstance.Clients.size());
 		}
