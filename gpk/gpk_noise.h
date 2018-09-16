@@ -5,6 +5,7 @@
 
 namespace gpk
 {
+	uint64_t	noise1DBase			(uint64_t x, uint64_t noiseSeed = 16381)																noexcept;
 	double		noise1D				(uint64_t x, uint64_t noiseSeed = 16381)																noexcept;
 	double		noiseNormal1D		(uint64_t x, uint64_t noiseSeed = 16381)																noexcept;
 	double		noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = 16381)	noexcept;

@@ -71,6 +71,16 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				return 1;
 		}
 	}
+	{
+		::gpk::mutex_guard	lock(app.Server.Mutex);
+		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
+			::gpk::mutex_guard	lockRecv(app.Server.Clients[iClient]->Queue.MutexReceive);
+			for(uint32_t iMessage = 0; iMessage < app.Server.Clients[iClient]->Queue.Received.size(); ++iMessage) {
+				info_printf("Received: %s.", app.Server.Clients[iClient]->Queue.Received[iMessage]->Payload.begin());
+			}
+			app.Server.Clients[iClient]->Queue.Received.clear();
+		}
+	}
 
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);

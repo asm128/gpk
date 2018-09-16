@@ -6,7 +6,7 @@
 namespace gpk
 {
 	struct SUDPClient : public ::gpk::SUDPConnection {
-		uint16_t														PortServer			= {};
+		uint16_t														PortServer				= {};
 		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	MessageBuffer;
 
 	};

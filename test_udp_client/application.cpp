@@ -8,8 +8,13 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
+			::gpk::error_t											clientDisconnect			(::gpk::SUDPClient & client);
+			::gpk::error_t											clientConnect				(::gpk::SUDPClient & client);
+			::gpk::error_t											clientUpdate				(::gpk::SUDPClient & client);
+
 			::gpk::error_t											cleanup					(::gme::SApplication & app)							{ 
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
+	::clientDisconnect(app.Client);
 	::gpk::tcpipShutdown();
 	return 0; 
 }
@@ -33,11 +38,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x								= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
+
+	app.Client.PortServer													= 9998;
+	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
+	::clientConnect(app.Client);
 	return 0; 
 }
-			::gpk::error_t											clientDisconnect			(::gpk::SUDPClient & client);
-			::gpk::error_t											clientConnect				(::gpk::SUDPClient & client);
-			::gpk::error_t											clientUpdate				(::gpk::SUDPClient & client);
 			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{ 
 	::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
@@ -69,16 +75,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	app.Client.PortServer													= 9998;
-	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
-	clientConnect(app.Client);
-	error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
+	reterr_error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
 	else 
 	{
 		::gpk::connectionPushData(app.Client.Queue, "Message arrived!");
 		::clientUpdate(app.Client);
-		::gpk::sleep(1000);
-		::clientDisconnect(app.Client);
+		::gpk::sleep(10);
 	}
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
