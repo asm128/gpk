@@ -60,7 +60,7 @@ static	::gpk::error_t										updateClient								(::gpk::SUDPClient & client)	
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 		if(*(uint32_t*)temp.IP == *(uint32_t*)client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			if(temp.Port == client.Address.Port) 
-				gpk::handleCommand(client, commandReceived, receiveBuffer);
+				::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer);
 		}
 		received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 	}
@@ -123,5 +123,5 @@ static	void												threadUpdateClient							(void* pClient)						{
 
 		::gpk::error_t										clientUpdate								(::gpk::SUDPClient & client)		{
 	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
-	return ::gpk::sendQueue(client, client.MessageBuffer);
+	return ::gpk::connectionSendQueue(client, client.MessageBuffer);
 }

@@ -65,9 +65,9 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE												State;
 	};
 
-	::gpk::error_t															sendQueue							(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer);
-	::gpk::error_t															handleCommand						(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
-	::gpk::error_t															pushData							(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data);
+	::gpk::error_t															connectionSendQueue				(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer);
+	::gpk::error_t															connectionHandleCommand			(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
+	::gpk::error_t															connectionPushData				(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data);
 }
 
 #endif // GPK_CONNECTION_H_20347892908347

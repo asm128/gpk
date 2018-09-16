@@ -3,7 +3,22 @@
 #include "gpk_view_stream.h"
 #include "gpk_noise.h"
 
-::gpk::error_t												gpk::sendQueue							(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer)				{
+::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data) {
+	ree_if(data.size() > 60000, "Invalid payload size.");
+	{
+		::gpk::mutex_guard												lock								(queue.MutexSend);
+		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					message;
+		message->Command.Command									= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
+		message->Command.Type										= ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST;
+		message->Command.Payload									= 0;
+		message->Time												= ::gpk::timeCurrentInMs();
+		message->Payload											= data;
+		gpk_necall(queue.Send.push_back(message), "Out of memory?");
+	}
+	return 0;
+}
+
+::gpk::error_t												gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer)				{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& queueToSend						= client.Queue.Send;
 	::gpk::array_pod<byte_t>										messageBytes;
 	sockaddr_in														sa_remote							= {};							// Information about the client 
@@ -145,7 +160,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	return 0; 
 }
 
-::gpk::error_t												gpk::handleCommand					(::gpk::SUDPConnection& client, ::gpk::SUDPCommand& command, ::gpk::array_pod<byte_t> & receiveBuffer)		{
+::gpk::error_t												gpk::connectionHandleCommand		(::gpk::SUDPConnection& client, ::gpk::SUDPCommand& command, ::gpk::array_pod<byte_t> & receiveBuffer)		{
 	switch(command.Type) {
 	case ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST:
 		switch(command.Command) {
@@ -171,20 +186,4 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		break;
 	}
 	return -1;
-}
-
-
-::gpk::error_t												gpk::pushData						(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data) {
-	ree_if(data.size() > 60000, "Invalid payload size.");
-	{
-		::gpk::mutex_guard												lock								(queue.MutexSend);
-		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					message;
-		message->Command.Command									= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
-		message->Command.Type										= ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST;
-		message->Command.Payload									= 0;
-		message->Time												= ::gpk::timeCurrentInMs();
-		message->Payload											= data;
-		gpk_necall(queue.Send.push_back(message), "Out of memory?");
-	}
-	return 0;
 }

@@ -75,7 +75,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
 	else 
 	{
-		::gpk::pushData(app.Client.Queue, "Message arrived!");
+		::gpk::connectionPushData(app.Client.Queue, "Message arrived!");
 		::clientUpdate(app.Client);
 		::gpk::sleep(1000);
 		::clientDisconnect(app.Client);

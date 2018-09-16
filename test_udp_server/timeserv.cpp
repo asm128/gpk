@@ -40,7 +40,7 @@
 					if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size()) 
-						error_if(errored(::gpk::sendQueue(*pclient, messageBuffer)), "??");
+						error_if(errored(::gpk::connectionSendQueue(*pclient, messageBuffer)), "??");
 					sockets.fd_array[sockets.fd_count]							= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -85,7 +85,7 @@
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
 						continue;
 					}
-					error_if(errored(::gpk::handleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+					error_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 					if(INVALID_SOCKET != client.Socket) 
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);	
 				}
@@ -179,7 +179,7 @@ void														threadServer								(void* pServerInstance)				{
 	serverInstance.Listen										= false;
 	serverInstance.Socket.close();
 	{
-		::gpk::mutex_guard											lock								(serverInstance.Mutex);
+		::gpk::mutex_guard												lock										(serverInstance.Mutex);
 		serverInstance.Clients.clear();
 	}
 } 
@@ -195,7 +195,7 @@ void														threadServer								(void* pServerInstance)				{
 	serverInstance.Listen										= false;
 	sockaddr_in														sa_srv										= {};							// Information about the client 
 	int																sa_length									= (int)sizeof(sockaddr_in);		// Length of client struct 
-	::gpk::SUDPCommand											command										= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST};							// Where to store received data 
+	::gpk::SUDPCommand												command										= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST};							// Where to store received data 
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
 	uint32_t														attempt										= 0;
 	do{ 
