@@ -1,8 +1,4 @@
-// Tiny AES in C (from https://github.com/kokke/tiny-AES-c)
-// This is a small and portable implementation of the AES ECB, CTR and CBC encryption algorithms written in C.
-// 
-// You can override the default key-size of 128 bit with 192 or 256 bit by defining the symbols AES192 or AES256 in aes.h.
-// 
+// Tiny AES in C (from https://github.com/kokke/tiny-AES-c). A small and portable implementation of the AES ECB, CTR and CBC encryption algorithms written in C.
 // The API is very simple and looks like this (I am using C99 <stdint.h>-style annotated types):
 // 
 // /* Initialize context calling one of: */
@@ -28,13 +24,11 @@
 // You can choose to use any or all of the modes-of-operations, by defining the symbols CBC, CTR or ECB. See the header file for clarification.
 // 
 // C++ users should #include aes.hpp instead of aes.h
-// 
-// There is no built-in error checking or protection from out-of-bounds memory access errors as a result of malicious input.
-// 
-// The module uses less than 200 bytes of RAM and 1-2K ROM when compiled for ARM, but YMMV depending on which modes are enabled.
-// 
-// It is one of the smallest implementations in C I've seen yet, but do contact me if you know of something smaller (or have improvements to the code here).
-// 
+//
+// - There is no built-in error checking or protection from out-of-bounds memory access errors as a result of malicious input.
+// - The module uses less than 200 bytes of RAM and 1-2K ROM when compiled for ARM, but YMMV depending on which modes are enabled.
+// - It is one of the smallest implementations in C I've seen yet, but do contact me if you know of something smaller (or have improvements to the code here).
+//
 // I've successfully used the code on 64bit x86, 32bit ARM and 8 bit AVR platforms.
 // 
 // GCC size output when only CTR mode is compiled for ARM:
@@ -53,14 +47,11 @@
 // 
 // $ arm-none-eabi-gcc --version
 // arm-none-eabi-gcc (4.8.4-1+11-1) 4.8.4 20141219 (release)
-// Copyright (C) 2013 Free Software Foundation, Inc.
-// This is free software; see the source for copying conditions.  There is NO
-// warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// Copyright (C) 2013 Free Software Foundation, Inc. This is free software; see the source for copying conditions. 
+// There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // This implementation is verified against the data in:
-// 
-// National Institute of Standards and Technology Special Publication 800-38A 2001 ED Appendix F: Example Vectors for Modes of Operation of the AES.
-// 
-// The other appendices in the document are valuable for implementation details on e.g. padding, generation of IVs and nonces in CTR-mode etc.
+// - National Institute of Standards and Technology Special Publication 800-38A 2001 ED Appendix F: Example Vectors for Modes of Operation of the AES.
+// - The other appendices in the document are valuable for implementation details on e.g. padding, generation of IVs and nonces in CTR-mode etc.
 // 
 // A heartfelt thank-you to all the nice people out there who have contributed to this project.
 // 

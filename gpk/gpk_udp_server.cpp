@@ -126,25 +126,28 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 		else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
 			break;
 		else {
-			::gpk::ptr_obj<::gpk::SUDPConnection>						pClient								= {};
-			int32_t														found								= -1;
+			::gpk::ptr_obj<::gpk::SUDPConnection>							pClient								= {};
+			int32_t															found								= -1;
 			{
-				::gpk::mutex_guard											lock								(serverInstance.Mutex);
+				::gpk::mutex_guard												lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 					pClient														= serverInstance.Clients[iClient];
-					::gpk::SUDPConnection											& client						= *pClient;
-					int64_t															limitTime						= (::gpk::timeCurrentInMs() - client.LastPing);
+					::gpk::SUDPConnection											& client							= *pClient;
+					int64_t															limitTime							= (::gpk::timeCurrentInUs() - client.LastPing);
 					info_printf("LimitTime : %lli.", limitTime);
 					if(limitTime > serverInstance.Timeout || client.Socket == INVALID_SOCKET || client.State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
 						found														= (int32_t)iClient;
 						client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 						client.Socket.close();
+						client.KeyPing												= 
+						client.LastPing												= 
+						client.FirstPing											= 0;
 						{
-							::gpk::mutex_guard											lockRecv							(client.Queue.MutexReceive);
+							::gpk::mutex_guard												lockRecv							(client.Queue.MutexReceive);
 							client.Queue.Received	.clear();
 						}
 						{
-							::gpk::mutex_guard											lockSend							(client.Queue.MutexSend);
+							::gpk::mutex_guard												lockSend							(client.Queue.MutexSend);
 							client.Queue.Send		.clear();
 							client.Queue.Sent		.clear();
 						}
@@ -154,50 +157,52 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 						pClient														= {};
 				}
 				::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
-				command.Type											= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
-				::gpk::ptr_obj<::gpk::SUDPConnectionMessage>				connectResponse						= {};
-				connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInMs(), command});
+				command.Type												= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
+				::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					connectResponse								= {};
+				connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
 				gpk_necall(pClient->Queue.Send.push_back(connectResponse), "Out of memory?");
-				pClient->LastPing										= ::gpk::timeCurrentInMs();
+				pClient->LastPing											= 
+				pClient->FirstPing											= ::gpk::timeCurrentInUs();
 				ce_if(INVALID_SOCKET == (pClient->Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
-				pClient->State											= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
+				pClient->State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 				if(found == -1) 
 					gpk_necall(serverInstance.Clients.push_back(pClient), "Out of memory?");
 			}
 			info_printf("Current client count: %u", serverInstance.Clients.size());
+			::gpk::sleep(1);
 		}
 	}
 	serverInstance.Socket.close();
 	return 0;
 }
 
-void														threadServer								(void* pServerInstance)				{ 
-	::gpk::SUDPServer												& serverInstance							= *(::gpk::SUDPServer*)pServerInstance;
+void														threadServer						(void* pServerInstance)				{ 
+	::gpk::SUDPServer												& serverInstance					= *(::gpk::SUDPServer*)pServerInstance;
 	error_if(errored(server(serverInstance)), "Server exiting with error.")
 	else  
 		info_printf("Server gracefully closed.");
 	serverInstance.Listen										= false;
 	serverInstance.Socket.close();
 	{
-		::gpk::mutex_guard												lock										(serverInstance.Mutex);
+		::gpk::mutex_guard												lock								(serverInstance.Mutex);
 		serverInstance.Clients.clear();
 	}
 } 
 
-::gpk::error_t												gpk::serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port)		{
+::gpk::error_t												gpk::serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port)		{
 	serverInstance.Listen										= true;
 	serverInstance.Address.Port									= port;
 	_beginthread(::threadServer, 0, &serverInstance);
 	return 0;
 }
 
-::gpk::error_t												gpk::serverStop								(::gpk::SUDPServer& serverInstance)		{
+::gpk::error_t												gpk::serverStop						(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen										= false;
-	sockaddr_in														sa_srv										= {};							// Information about the client 
-	int																sa_length									= (int)sizeof(sockaddr_in);		// Length of client struct 
-	::gpk::SUDPCommand												command										= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST, };							// Where to store received data 
+	sockaddr_in														sa_srv								= {};							// Information about the client 
+	int																sa_length							= (int)sizeof(sockaddr_in);		// Length of client struct 
+	::gpk::SUDPCommand												command								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST, };							// Where to store received data 
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
-	uint32_t														attempt										= 0;
+	uint32_t														attempt								= 0;
 	do{ 
 		::sendto(serverInstance.Socket, (const char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);

@@ -60,25 +60,24 @@ struct SSprite {
 	::gpk::SDisplay																& mainWindow				= framework.MainDisplay;
 	ree_if(0 == framework.Input.create(), "%s", "Out of memory?");
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "%s", "Failed to create main window why?????!?!?!?!?");
-	::gpk::SImage<ubyte_t>			tileMap;
-	SSprite							spriteNames[ANIMATION_COUNT];
+	::gpk::SImage<ubyte_t>														tileMap;
+	SSprite																		spriteNames[ANIMATION_COUNT];
 	{
-		static constexpr	const char	filename[]	= "..\\gpk_data\\scripts\\pacman.txt";
-		FILE							* fp		= 0;
+		static constexpr	const char												filename[]	= "..\\gpk_data\\scripts\\pacman.txt";
+		FILE																		* fp		= 0;
 		fopen_s(&fp, filename, "rb");
 		error_if(0 == fp, "Failed to open file: %s.", filename)
 		else {
 			fseek(fp, 0, SEEK_END);
-			int32_t							fileSize		= ftell(fp);
+			int32_t																		fileSize		= ftell(fp);
 			fseek(fp, 0, SEEK_SET);
-			::gpk::array_pod<ubyte_t>		mapFile;
+			::gpk::array_pod<ubyte_t>													mapFile;
 			mapFile.resize(fileSize);
 			fread(mapFile.begin(), 1, fileSize, fp);
 			fclose(fp);
 			tileMap.resize({AXIS_X, AXIS_Y}, ' ');
-			for(uint32_t y = 0; y < tileMap.metrics().y; ++y) {
+			for(uint32_t y = 0; y < tileMap.metrics().y; ++y) 
 				memcpy(tileMap[y].begin(), &mapFile[y * (tileMap.metrics().x + 2)], tileMap.metrics().x);
-			}
 		}
 	}
 	{
@@ -88,9 +87,9 @@ struct SSprite {
 		error_if(0 == fp, "Failed to open '%s'.", filename)
 		else {
 			fseek(fp, 0, SEEK_END);
-			int32_t							fileSize		= ftell(fp);
+			int32_t																		fileSize		= ftell(fp);
 			fseek(fp, 0, SEEK_SET);
-			::gpk::array_pod<ubyte_t>		mapFile;
+			::gpk::array_pod<ubyte_t>													mapFile;
 			mapFile.resize(fileSize);
 			fread(mapFile.begin(), 1, fileSize, fp);
 			fclose(fp);
@@ -124,7 +123,7 @@ struct SSprite {
 	return 0; 
 }
 
-::gpk::error_t												drawAnimated
+::gpk::error_t															drawAnimated
 				(::gme::SApplication					& app
 				, const ::gpk::SCoord2<int32_t>			& posToDraw
 				, const ::wak::SAnimatedObject			& animated
@@ -159,24 +158,23 @@ struct SSprite {
 	return 0;
 }
 
-	::gpk::SCoord2<int32_t>										getPosToDraw				(const ::wak::SAnimatedObject & animated, const ::gpk::SCoord2<int32_t> & mapPosition) {
+				::gpk::SCoord2<int32_t>										getPosToDraw				(const ::wak::SAnimatedObject & animated, const ::gpk::SCoord2<int32_t> & mapPosition)		{
 		return	{ (int32_t)(mapPosition.x + ((animated.Position.x + animated.PositionDeltas.x) * tileSize) - 8)
 				, (int32_t)(mapPosition.y + ((animated.Position.y + animated.PositionDeltas.y) * tileSize) - 8)
 		};
 	}
 
-				::gpk::error_t												draw						(::gme::SApplication & app)						{ 
+				::gpk::error_t												draw						(::gme::SApplication & app)																	{ 
 	::gpk::STimer																timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>			target;
 	target.create();
-	target->Color		.resize(app.Framework.MainDisplay.Size);
-	target->DepthStencil.resize(target->Color.View.metrics());
+	target->resize(app.Framework.MainDisplay.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 
 	static constexpr const ::gpk::SColorBGRA									magenta							= { 0xFF, 0x00, 0xFF, 0xFF };
 
 	for(uint32_t iAnim = 0; iAnim < TEXTURE_PAC_MAP; ++iAnim)
-		::gpk::grid_copy_alpha										(target->Color.View, app.CharacterAnimationImages[iAnim].View, ::gpk::SCoord2<int32_t>{0, 128 + 128 * (int32_t)iAnim}, magenta);
+		::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationImages[iAnim].View, ::gpk::SCoord2<int32_t>{0, 128 + 128 * (int32_t)iAnim}, magenta);
 
 	{
 		::gme::mutex_guard															lock						(app.LockGame);
@@ -256,7 +254,7 @@ struct SSprite {
 		}
 	}
 
-	app.GameInstance.NextDirection = (::wak::DIRECTION)-1;
+	app.GameInstance.NextDirection											= (::wak::DIRECTION)-1;
 		 if (GetAsyncKeyState('D')) app.GameInstance.NextDirection = ::wak::RIGHT	;
 	else if (GetAsyncKeyState('A')) app.GameInstance.NextDirection = ::wak::LEFT	;
 	else if (GetAsyncKeyState('W')) app.GameInstance.NextDirection = ::wak::UP		;

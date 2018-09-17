@@ -1,6 +1,6 @@
 #include "gpk_noise.h"
 																																																												// 4611686018427387904
-uint64_t					gpk::noise1DBase			(uint64_t x, uint64_t noiseSeed)																noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883ULL) + 9876534021204356789ULL); }
+uint64_t					gpk::noise1DBase			(uint64_t x, uint64_t noiseSeed)																noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883ULL)  + 10657331232548839ULL); }
 double						gpk::noise1D				(uint64_t x, uint64_t noiseSeed)																noexcept	{ return ( 1.0 - (noise1DBase(x, noiseSeed)  & 0x7fFFffFFffFFffFFULL) / 4611686018427387904.0); }
 double						gpk::noiseNormal1D			(uint64_t x, uint64_t noiseSeed)																noexcept	{ return ::gpk::noise1D(x, noiseSeed) *.5 + .5f; }																							  
 	//----------------------------
@@ -14,4 +14,4 @@ double						gpk::noiseNormal3D			(uint32_t x, uint32_t y, uint32_t z	, uint32_t 
 //		if( generator.Seed != seed )
 //			generator.Reset(seed);
 //		return generator.Next();
-//	}
+//	}987 653 402 120 435 678 //  792 606 555 396 977 //  10 657 331 232 548 839

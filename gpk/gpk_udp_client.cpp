@@ -34,6 +34,8 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	commandToSend.Payload										= 1;
 	sa_length													= sizeof(struct sockaddr_in);
 	gpk_necall(sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
+	client.LastPing												= 
+	client.FirstPing											= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
 }

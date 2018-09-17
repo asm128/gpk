@@ -2,8 +2,9 @@
 #include "gpk_chrono.h"
 #include "gpk_view_stream.h"
 #include "gpk_noise.h"
+#include "gpk_encoding.h"
 
-::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data) {
+::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data) {
 	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 	{
 		::gpk::mutex_guard												lock								(queue.MutexSend);
@@ -11,15 +12,21 @@
 		message->Command.Command									= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
 		message->Command.Type										= ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST;
 		message->Command.Payload									= 0;
-		message->Time												= ::gpk::timeCurrentInMs();
-		message->Payload											= data;
+		message->Time												= ::gpk::timeCurrentInUs();
+		//message->Payload											= data;
+		if(0 == client.KeyPing) {
+			client.KeyPing												= message->Time;
+			info_printf("Key ping set: %llu.", client.KeyPing);
+		}
+		message->Payload.clear();
+		::gpk::ardellEncode(data, client.KeyPing & 0xFFFFFFFF, true, message->Payload);
 		gpk_necall(queue.Send.push_back(message), "%s", "Out of memory?");
 	}
 	return 0;
 }
 
 static				uint64_t								hashFromTime						(uint64_t currentTime)	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
-static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // milliseconds
+static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // microseconds
 
 ::gpk::error_t												gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageBuffer)				{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& queueToSend						= client.Queue.Send;
@@ -31,16 +38,19 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
 	messageBuffer.clear();								
 	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) 
-		if((gpk::timeCurrentInMs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
-			client.Queue.Sent.remove(iSent--);
+		if((gpk::timeCurrentInUs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
+			client.Queue.Sent.remove(iSent);
+			if(iSent)
+				--iSent;
 			warning_printf("%s", "A message sent didn't receive a confirmation on time.");
+
 		}
 	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= queueToSend[iSend];
 		if(0 == pMessageToSend)
 			continue;
 		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
-		int64_t															currentTime							= ::gpk::timeCurrentInMs();
+		int64_t															currentTime							= ::gpk::timeCurrentInUs();
 		if(messageToSend.Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sa_length), "%s", "Error sending datagram.");	// Send data back
 			pMessageToSend->Time										= currentTime;
@@ -55,12 +65,12 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 				ce_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
 				gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + messageToSend.Payload.size()), "%s", "Out of memory?");
 				::gpk::view_stream<byte_t>										sendStream							= {messageBytes.begin(), messageBytes.size()};
-				payloadHeader.Hash											= ::hashFromTime(currentTime);//(uint64_t)(::gpk::noiseNormal1D(currentTime) * 0xffFFffFFffFFffFFULL);
+				payloadHeader.Hash											= ::hashFromTime(messageToSend.Time);//(uint64_t)(::gpk::noiseNormal1D(currentTime) * 0xffFFffFFffFFffFFULL);
 				gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
 				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
 				ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sa_length), "%s", "Error sending datagram.");	// Send data back
 				verbose_printf("%u bytes sent.", sendStream.CursorPosition);
-				pMessageToSend->Time										= currentTime;
+				//pMessageToSend->Time										= currentTime;
 				gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
 				gpk_necall(messageBuffer.push_back(pMessageToSend), "%s", "Out of memory?");
 			}
@@ -83,7 +93,9 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 static	::gpk::error_t										handleDISCONNECT					(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
 	if(0 != command.Payload || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State) 
 		return -1;
-	client.LastPing												= gpk::timeCurrentInMs();
+	client.FirstPing											= 
+	client.KeyPing												= 0;
+	client.LastPing												= gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	client.Socket.close();
 	info_printf("%s", "Disconnected!");
@@ -93,8 +105,8 @@ static	::gpk::error_t										handleDISCONNECT					(::gpk::SUDPCommand& command
 static	::gpk::error_t										handleCONNECT						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
 	if(1 != command.Payload || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State) 
 		return -1;
-	client.LastPing												= gpk::timeCurrentInMs();
 	{
+		client.LastPing												= gpk::timeCurrentInUs();
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
 		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent) {
 			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
@@ -124,18 +136,31 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	}
 	if(command.Type == ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST) {
 		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "%s", "Out of memory?");
+		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
 		if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 			rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
 			else 
 				warning_printf("%s", "Failed to receive all of the payload data.");
 		}
+		if(client.KeyPing == 0) {
+			for(uint32_t iTime = 0, countLapse = 3000000; iTime < countLapse; ++iTime)
+				if(::hashFromTime(client.FirstPing + 100000 + iTime) == header.Hash) {
+					client.KeyPing												= client.FirstPing + 100000 + iTime;
+					always_printf("Key ping detected in %u attempts: %llu.", iTime, client.KeyPing);
+					break;
+				}
+			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");
+		}
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= header.Hash;
-		gpk_necall(messageReceived->Payload.resize(header.Size), "%s", "Out of memory?");
-		if(header.Size > 0)
-			memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
-		client.LastPing												= gpk::timeCurrentInMs();
+		//gpk_necall(messageReceived->Payload.resize(header.Size), "%s", "Out of memory?");
+		if(header.Size > 0) {
+			//memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
+			messageReceived->Payload.clear();
+			::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+		}
+		client.LastPing												= gpk::timeCurrentInUs();
 		{
 			::gpk::mutex_guard												lock								(client.Queue.MutexReceive);
 			client.Queue.Received.push_back(messageReceived);
@@ -155,7 +180,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			uint64_t														hashLocal							= ::hashFromTime(client.Queue.Sent[iSent]->Time);
 			if(hashLocal == header.Hash) {
 				client.Queue.Sent.remove(iSent);
-				client.LastPing												= gpk::timeCurrentInMs();
+				client.LastPing												= gpk::timeCurrentInUs();
 				break;
 			}
 		}

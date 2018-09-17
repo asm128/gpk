@@ -67,7 +67,7 @@ int													main						()			{
 				decoded.clear();
 				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, false, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, false, decoded)), "%s", "Out of memory?");
-				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				error_if(0 == decoded.size() || ::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
@@ -84,7 +84,7 @@ int													main						()			{
 				decoded.clear();
 				ce_if(errored(::gpk::ardellEncode(encodingCache, testStrings[iTest]	, iTest, true, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::ardellDecode(encodingCache, encoded			, iTest, true, decoded)), "%s", "Out of memory?");
-				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				error_if(0 == decoded.size() || ::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}

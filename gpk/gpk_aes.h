@@ -57,10 +57,15 @@ namespace gpk
 						// NOTES: you need to set IV in ctx with aesInitCtxIV() or aesCtxSetIV() no IV should ever be reused with the same key 
 						void								aesCTRXCryptBuffer				(SAESContext* ctx, uint8_t* buf, uint32_t length);
 
-						::gpk::error_t						aesEncode						(const ubyte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted);
-						::gpk::error_t						aesDecode						(const ubyte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted);
-	static inline		::gpk::error_t						aesEncode						(const ::gpk::view_array<const ubyte_t>& messageToEncrypt, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{ return ::gpk::aesEncode(messageToEncrypt.begin(), messageToEncrypt.size(), encryptionKey, level, outputEncrypted); }
-	static inline		::gpk::error_t						aesDecode						(const ::gpk::view_array<const ubyte_t>& messageEncrypted, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{ return ::gpk::aesDecode(messageEncrypted.begin(), messageEncrypted.size(), encryptionKey, level, outputDecrypted); }
+						::gpk::error_t						aesEncode						(const ubyte_t* messageToEncrypt, uint32_t dataLength		, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted);
+						::gpk::error_t						aesDecode						(const ubyte_t* messageEncrypted, uint32_t dataLength		, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted);
+	static inline		::gpk::error_t						aesEncode						(const ::gpk::view_array<const ubyte_t>& messageToEncrypt	, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{ return ::gpk::aesEncode(messageToEncrypt.begin(), messageToEncrypt.size(), encryptionKey, level, outputEncrypted); }
+	static inline		::gpk::error_t						aesDecode						(const ::gpk::view_array<const ubyte_t>& messageEncrypted	, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{ return ::gpk::aesDecode(messageEncrypted.begin(), messageEncrypted.size(), encryptionKey, level, outputDecrypted); }
+
+						::gpk::error_t						aesEncode						(const ubyte_t* messageToEncrypt, uint32_t dataLength		, const ubyte_t* iv, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted);
+						::gpk::error_t						aesDecode						(const ubyte_t* messageEncrypted, uint32_t dataLength		, const ubyte_t* iv, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted);
+	static inline		::gpk::error_t						aesEncode						(const ::gpk::view_array<const ubyte_t>& messageToEncrypt	, const ubyte_t* iv, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{ return ::gpk::aesEncode(messageToEncrypt.begin(), messageToEncrypt.size(), iv, encryptionKey, level, outputEncrypted); }
+	static inline		::gpk::error_t						aesDecode						(const ::gpk::view_array<const ubyte_t>& messageEncrypted	, const ubyte_t* iv, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{ return ::gpk::aesDecode(messageEncrypted.begin(), messageEncrypted.size(), iv, encryptionKey, level, outputDecrypted); }
 }
 
 #endif //AES_H_28937498273423049

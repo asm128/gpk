@@ -11,7 +11,7 @@ namespace gpk
 		::std::mutex															Mutex;
 		::gpk::SIPv4															Address								= {};
 		bool																	Listen								= false;
-		int32_t																	Timeout								= 3000;	// Kill clients timeout
+		int32_t																	Timeout								= 3000000;	// Kill clients timeout
 	};
 
 	::gpk::error_t															serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port);

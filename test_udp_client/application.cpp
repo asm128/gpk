@@ -74,9 +74,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	reterr_error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
 	else 
 	{
-		::gpk::connectionPushData(app.Client.Queue, "Message arrived!");
+		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived!");
 		::gpk::clientUpdate(app.Client);
-		::gpk::sleep(10);
+		::gpk::sleep(1000);
 	}
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
@@ -89,8 +89,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>			target;
 	target.create();
-	target->Color		.resize(app.Framework.MainDisplay.Size);
-	target->DepthStencil.resize(target->Color.View.metrics());
+	target->resize(app.Framework.MainDisplay.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	//::gpk::clearTarget(*target);
 	{
 		::gme::mutex_guard															lock					(app.LockGUI);

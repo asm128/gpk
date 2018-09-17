@@ -6,6 +6,11 @@ int64_t											gpk::timeCurrent							()																													{
 	return std::chrono::system_clock::to_time_t(nowclock);
 }
 
+int64_t											gpk::timeCurrentInUs						()																													{
+	::std::chrono::system_clock::time_point				nowclock									= std::chrono::system_clock::now();
+	return ::std::chrono::duration_cast<std::chrono::microseconds>(nowclock.time_since_epoch()).count();
+}
+
 int64_t											gpk::timeCurrentInMs						()																													{
 	::std::chrono::system_clock::time_point				nowclock									= std::chrono::system_clock::now();
 	return ::std::chrono::duration_cast<std::chrono::milliseconds>(nowclock.time_since_epoch()).count();
