@@ -6,10 +6,13 @@
 namespace gpk
 {
 	struct SUDPClient : public ::gpk::SUDPConnection {
-		uint16_t														PortServer				= {};
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	MessageBuffer;
-
+		uint16_t															PortServer					= {};
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>		MessageBuffer;
 	};
+
+	::gpk::error_t														clientDisconnect			(::gpk::SUDPClient & client);
+	::gpk::error_t														clientConnect				(::gpk::SUDPClient & client);
+	::gpk::error_t														clientUpdate				(::gpk::SUDPClient & client);
 }
 
 #endif // GPK_UDP_CLIENT_H_238947239847

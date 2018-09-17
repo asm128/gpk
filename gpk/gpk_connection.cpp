@@ -4,7 +4,7 @@
 #include "gpk_noise.h"
 
 ::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data) {
-	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Invalid payload size.");
+	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 	{
 		::gpk::mutex_guard												lock								(queue.MutexSend);
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					message;
@@ -13,7 +13,7 @@
 		message->Command.Payload									= 0;
 		message->Time												= ::gpk::timeCurrentInMs();
 		message->Payload											= data;
-		gpk_necall(queue.Send.push_back(message), "Out of memory?");
+		gpk_necall(queue.Send.push_back(message), "%s", "Out of memory?");
 	}
 	return 0;
 }
@@ -30,6 +30,11 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 
 	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
 	messageBuffer.clear();								
+	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) 
+		if((gpk::timeCurrentInMs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
+			client.Queue.Sent.remove(iSent--);
+			warning_printf("%s", "A message sent didn't receive a confirmation on time.");
+		}
 	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= queueToSend[iSend];
 		if(0 == pMessageToSend)
@@ -37,10 +42,10 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
 		int64_t															currentTime							= ::gpk::timeCurrentInMs();
 		if(messageToSend.Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
-			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
+			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sa_length), "%s", "Error sending datagram.");	// Send data back
 			pMessageToSend->Time										= currentTime;
-			gpk_necall(messageBuffer.push_back(pMessageToSend), "Out of memory?");
-			gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "Out of memory?");
+			gpk_necall(messageBuffer.push_back(pMessageToSend), "%s", "Out of memory?");
+			gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
 		}
 		else {
 			::gpk::SUDPPayloadHeader										payloadHeader						= {};
@@ -48,21 +53,21 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 			payloadHeader.Size											= messageToSend.Payload.size();
 			if(messageToSend.Command.Type == ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST) {
 				ce_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
-				gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + messageToSend.Payload.size()), "Out of memory?");
+				gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + messageToSend.Payload.size()), "%s", "Out of memory?");
 				::gpk::view_stream<byte_t>										sendStream							= {messageBytes.begin(), messageBytes.size()};
 				payloadHeader.Hash											= ::hashFromTime(currentTime);//(uint64_t)(::gpk::noiseNormal1D(currentTime) * 0xffFFffFFffFFffFFULL);
-				gpk_necall(sendStream.write_pod(payloadHeader), "??");
-				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "??");
-				ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
+				gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
+				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
+				ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sa_length), "%s", "Error sending datagram.");	// Send data back
 				verbose_printf("%u bytes sent.", sendStream.CursorPosition);
 				pMessageToSend->Time										= currentTime;
-				gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "Out of memory?");
-				gpk_necall(messageBuffer.push_back(pMessageToSend), "Out of memory?");
+				gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
+				gpk_necall(messageBuffer.push_back(pMessageToSend), "%s", "Out of memory?");
 			}
 			else { // response
 				payloadHeader.Hash											= messageToSend.Time;
-				ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sa_length), "Error sending datagram.");	// Send data back
-				gpk_necall(messageBuffer.push_back(pMessageToSend), "Out of memory?");
+				ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sa_length), "%s", "Error sending datagram.");	// Send data back
+				gpk_necall(messageBuffer.push_back(pMessageToSend), "%s", "Out of memory?");
 			}
 		}
 	}
@@ -72,11 +77,6 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000; // mil
 				queueToSend.remove(iSend);
 				break;
 			}
-	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) 
-		if((gpk::timeCurrentInMs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
-			client.Queue.Sent.remove(iSent--);
-			warning_printf("A message sent didn't receive a confirmation on time.");
-		}
 	return 0;
 }
 
@@ -86,7 +86,7 @@ static	::gpk::error_t										handleDISCONNECT					(::gpk::SUDPCommand& command
 	client.LastPing												= gpk::timeCurrentInMs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	client.Socket.close();
-	info_printf("Disconnected!");
+	info_printf("%s", "Disconnected!");
 	return 0; 
 }
 
@@ -104,31 +104,35 @@ static	::gpk::error_t										handleCONNECT						(::gpk::SUDPCommand& command, 
 		}
 		client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	}
-	info_printf("Connected!");
+	info_printf("%s", "Connected!");
 	return 0; 
 }
+
+#if defined(GPK_WINDOWS) 
+typedef int socklen_t;
+#endif
 
 static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{ 
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
 		return 1;
 	::gpk::SUDPPayloadHeader										header								= {};
 	sockaddr_in														sa_client							= {};						// Information about the client 
-	int																sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct 
+	socklen_t														sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct 
 	int																bytes_received						= {};
-	if errored(bytes_received = ::recvfrom(client.Socket, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-		rew_if(WSAGetLastError() != WSAEMSGSIZE, "Could not receive payload header.");	
+	if errored(bytes_received = ::recvfrom(client.Socket.Handle, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
+		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");	
 	}
 	if(command.Type == ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST) {
-		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "Out of memory?");
+		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "%s", "Out of memory?");
 		if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
-			rew_if(WSAGetLastError() != WSAEMSGSIZE, "Could not receive payload data.")
+			rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
 			else 
-				warning_printf("Failed to receive all of the payload data.");
+				warning_printf("%s", "Failed to receive all of the payload data.");
 		}
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= header.Hash;
-		gpk_necall(messageReceived->Payload.resize(header.Size), "Out of memory?");
+		gpk_necall(messageReceived->Payload.resize(header.Size), "%s", "Out of memory?");
 		if(header.Size > 0)
 			memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
 		client.LastPing												= gpk::timeCurrentInMs();

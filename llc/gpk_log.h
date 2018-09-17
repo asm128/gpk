@@ -72,7 +72,7 @@ namespace gpk
 
 
 #if !defined(GPK_WINDOWS)
-#	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, __VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, ## __VA_ARGS__)
 #else
 #	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #endif

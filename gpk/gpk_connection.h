@@ -25,15 +25,15 @@ namespace gpk
 		};
 
 	struct SUDPCommand {
-		ENDPOINT_COMMAND					Command			: 2;
-		ENDPOINT_MESSAGE_TYPE				Type			: 1;
-		uint8_t								Payload			: 5;
+		ENDPOINT_COMMAND														Command			: 2;
+		ENDPOINT_MESSAGE_TYPE													Type			: 1;
+		uint8_t																	Payload			: 5;
 	};
 
 	struct SUDPPayloadHeader {
-		::gpk::SUDPCommand														Command;
-		uint32_t																Size;
-		uint64_t																Hash;
+		::gpk::SUDPCommand														Command			;
+		uint32_t																Size			;
+		uint64_t																Hash			;
 	};
 
 	enum UDP_CONNECTION_STATE 
@@ -44,15 +44,15 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SUDPConnectionMessage {
-		::gpk::array_pod<byte_t>												Payload;
-		uint64_t																Time;
-		::gpk::SUDPCommand														Command;
+		::gpk::array_pod<byte_t>												Payload			;
+		uint64_t																Time			;
+		::gpk::SUDPCommand														Command			;
 	};
 
 	struct SUDPClientQueue {
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Received;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Send;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Sent;
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Received		;
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Send			;
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Sent			;
 		::std::mutex															MutexSend		;
 		::std::mutex															MutexReceive	;
 	};

@@ -142,7 +142,7 @@ namespace gpk
 
 	template<typename _tParticleType, typename _tCoord>
 	struct SParticleSystem {
-		typedef					::gpk::SParticleBinding<_tParticleType>		TParticleInstance;
+		typedef					::gpk::SParticleBinding<_tParticleType>			TParticleInstance;
 		typedef					::gpk::SParticle2Integrator<_tCoord>			TIntegrator;
 
 								::gpk::array_pod<TParticleInstance>				Instances									= {};

@@ -8,13 +8,9 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::error_t											clientDisconnect			(::gpk::SUDPClient & client);
-			::gpk::error_t											clientConnect				(::gpk::SUDPClient & client);
-			::gpk::error_t											clientUpdate				(::gpk::SUDPClient & client);
-
 			::gpk::error_t											cleanup					(::gme::SApplication & app)							{ 
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
-	::clientDisconnect(app.Client);
+	::gpk::clientDisconnect(app.Client);
 	::gpk::tcpipShutdown();
 	return 0; 
 }
@@ -41,7 +37,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	app.Client.PortServer													= 9998;
 	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
-	::clientConnect(app.Client);
+	::gpk::clientConnect(app.Client);
 	return 0; 
 }
 			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{ 
@@ -79,7 +75,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	else 
 	{
 		::gpk::connectionPushData(app.Client.Queue, "Message arrived!");
-		::clientUpdate(app.Client);
+		::gpk::clientUpdate(app.Client);
 		::gpk::sleep(10);
 	}
 	//timer.Frame();

@@ -1,7 +1,6 @@
 // http://www.gomorgan89.com
 #include "gpk_udp_client.h"
 #include "gpk_sync.h"
-#include "gpk_log.h"
 #include "gpk_view_stream.h"
 #include "gpk_noise.h"
 #include "gpk_chrono.h"
@@ -74,7 +73,12 @@ static	void												threadUpdateClient							(void* pClient)						{
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 }
 
-		::gpk::error_t										clientDisconnect							(::gpk::SUDPClient & client)		{
+		::gpk::error_t										gpk::clientUpdate							(::gpk::SUDPClient & client)		{
+	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
+	return ::gpk::connectionSendQueue(client, client.MessageBuffer);
+}
+
+		::gpk::error_t										gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
 	int																sa_length									= sizeof(struct sockaddr_in);
 	sockaddr_in														sa_server									= {AF_INET,};
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_server);
@@ -88,7 +92,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	return 0;
 }
 
-		::gpk::error_t										clientConnect								(::gpk::SUDPClient & client)		{
+		::gpk::error_t										gpk::clientConnect							(::gpk::SUDPClient & client)		{
 	uint32_t														attempts									= 0;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
@@ -118,9 +122,4 @@ static	void												threadUpdateClient							(void* pClient)						{
 		return -1;
 	}
 	return 0;
-}
-
-		::gpk::error_t										clientUpdate								(::gpk::SUDPClient & client)		{
-	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
-	return ::gpk::connectionSendQueue(client, client.MessageBuffer);
 }

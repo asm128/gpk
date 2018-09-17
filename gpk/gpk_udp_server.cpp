@@ -184,18 +184,18 @@ void														threadServer								(void* pServerInstance)				{
 	}
 } 
 
-::gpk::error_t												serverStart									(::gpk::SUDPServer& serverInstance, uint16_t port)		{
+::gpk::error_t												gpk::serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port)		{
 	serverInstance.Listen										= true;
 	serverInstance.Address.Port									= port;
 	_beginthread(::threadServer, 0, &serverInstance);
 	return 0;
 }
 
-::gpk::error_t												serverStop									(::gpk::SUDPServer& serverInstance)		{
+::gpk::error_t												gpk::serverStop								(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen										= false;
 	sockaddr_in														sa_srv										= {};							// Information about the client 
 	int																sa_length									= (int)sizeof(sockaddr_in);		// Length of client struct 
-	::gpk::SUDPCommand												command										= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST};							// Where to store received data 
+	::gpk::SUDPCommand												command										= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST, };							// Where to store received data 
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
 	uint32_t														attempt										= 0;
 	do{ 

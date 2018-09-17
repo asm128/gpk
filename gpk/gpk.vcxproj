@@ -105,6 +105,8 @@
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />
+    <ClCompile Include="gpk_udp_client.cpp" />
+    <ClCompile Include="gpk_udp_server.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
   </ItemGroup>
   <ItemGroup>

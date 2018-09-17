@@ -13,6 +13,10 @@ namespace gpk
 		bool																	Listen								= false;
 		int32_t																	Timeout								= 3000;	// Kill clients timeout
 	};
+
+	::gpk::error_t															serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port);
+	::gpk::error_t															serverStop							(::gpk::SUDPServer& serverInstance);
+
 } // namespace
 
 #endif // GPK_UDP_SERVER_H_28874928347

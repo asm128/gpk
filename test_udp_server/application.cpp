@@ -7,11 +7,8 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
-			::gpk::error_t											serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port);
-			::gpk::error_t											serverStop					(::gpk::SUDPServer& serverInstance);
-
 			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ 
-	::serverStop(app.Server);
+	::gpk::serverStop(app.Server);
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
 	::gpk::tcpipShutdown();
 	return 0; 
@@ -37,7 +34,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x								= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
-	::serverStart(app.Server, 9998);
+	::gpk::serverStart(app.Server, 9998);
 	return 0; 
 }
 
@@ -72,9 +69,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 	{
-		::gpk::mutex_guard	lock(app.Server.Mutex);
+		::gpk::mutex_guard														lock						(app.Server.Mutex);
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
-			::gpk::mutex_guard	lockRecv(app.Server.Clients[iClient]->Queue.MutexReceive);
+			::gpk::mutex_guard														lockRecv					(app.Server.Clients[iClient]->Queue.MutexReceive);
 			for(uint32_t iMessage = 0; iMessage < app.Server.Clients[iClient]->Queue.Received.size(); ++iMessage) {
 				info_printf("Received: %s.", app.Server.Clients[iClient]->Queue.Received[iMessage]->Payload.begin());
 			}
