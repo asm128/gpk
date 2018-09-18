@@ -14,6 +14,8 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen							= {};
 
 		int32_t																IdExit								= -1;
+		int32_t																IdText								= -1;
+		::gpk::array_pod<char_t>											StringTest;
 
 		::std::mutex														LockGUI;
 		::std::mutex														LockRender;
