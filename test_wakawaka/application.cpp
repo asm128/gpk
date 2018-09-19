@@ -177,7 +177,7 @@ struct SSprite {
 		::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationImages[iAnim].View, ::gpk::SCoord2<int32_t>{0, 128 + 128 * (int32_t)iAnim}, magenta);
 
 	{
-		::gme::mutex_guard															lock						(app.LockGame);
+		::gpk::mutex_guard															lock						(app.LockGame);
 		::gpk::SCoord2<int32_t>														& mapPosition				= app.GameInstance.Map.posToDraw;
 		::gpk::view_array<::wak::SEnemy>											& enemies					= app.GameInstance.Enemies;
 
@@ -211,11 +211,11 @@ struct SSprite {
 	}
 
 	{
-		::gme::mutex_guard															lock						(app.LockGUI);
+		::gpk::mutex_guard															lock						(app.LockGUI);
 		::gpk::guiDraw(app.Framework.GUI, target->Color.View);
 	}
 	{
-		::gme::mutex_guard															lock						(app.LockRender);
+		::gpk::mutex_guard															lock						(app.LockRender);
 		app.Offscreen															= target;
 	}
 	//timer.Frame();
@@ -227,7 +227,7 @@ struct SSprite {
 	::gpk::STimer																timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
-		::gme::mutex_guard															lock						(app.LockRender);
+		::gpk::mutex_guard															lock						(app.LockRender);
 		app.Framework.MainDisplayOffscreen										= app.Offscreen;
 	}
 	::gpk::SFramework															& framework					= app.Framework;
@@ -235,7 +235,7 @@ struct SSprite {
 
 	::gpk::SGUI																	& gui						= framework.GUI;
 	{
-		::gme::mutex_guard															lock						(app.LockGUI);
+		::gpk::mutex_guard															lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
@@ -261,7 +261,7 @@ struct SSprite {
 	else if (GetAsyncKeyState('S')) app.GameInstance.NextDirection = ::wak::DOWN	;
 
 	{
-		::gme::mutex_guard															lock						(app.LockGame);
+		::gpk::mutex_guard															lock						(app.LockGame);
 		::wak::update(app.GameInstance, (float)framework.FrameInfo.Seconds.LastFrame);
 	}
 	//timer.Frame();

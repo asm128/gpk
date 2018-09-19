@@ -25,11 +25,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControl															& controlExit				= gui.Controls.Controls[app.IdExit];
 		controlExit.Area													= {{0, 0}, {64, 20}};
 		controlExit.Border													= {1, 1, 1, 1};
-		controlExit.Margin													= {1, 1, 1, 1};
+		controlExit.Margin													= {};
 		controlExit.Align													= ::gpk::ALIGN_TOP_LEFT;
-		controlExit.ColorTheme												= 32;
-		::gpk::SControlText														& controlText				= gui.Controls.Text[app.IdExit];
-		controlText.Align													= ::gpk::ALIGN_CENTER;
+		controlExit.ColorTheme												= 16;
 		::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
 		controlConstraints.AttachSizeToText.y								= false;
 		controlConstraints.AttachSizeToText.x								= false;
@@ -40,17 +38,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	{
 		app.IdExit															= ::gpk::controlCreate(gui);
 		::gpk::SControl															& controlExit				= gui.Controls.Controls[app.IdExit];
-		controlExit.Area													= {{0, 0}, {64, 20}};
+		controlExit.Area													= {{0, 1}, {64, 20}};
 		controlExit.Border													= {1, 1, 1, 1};
 		controlExit.Margin													= {1, 1, 1, 1};
 		controlExit.Align													= ::gpk::ALIGN_BOTTOM_RIGHT;
-		controlExit.ColorTheme												= 25;
+		controlExit.ColorTheme												= 64;
 		::gpk::SControlText														& controlText				= gui.Controls.Text[app.IdExit];
 		controlText.Text													= "Exit";
 		controlText.Align													= ::gpk::ALIGN_CENTER;
 		::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
-		controlConstraints.AttachSizeToText.y								= app.IdExit;
-		controlConstraints.AttachSizeToText.x								= app.IdExit;
+		controlConstraints.AttachSizeToText.y								= false;
+		controlConstraints.AttachSizeToText.x								= false;
+		gui.Controls.Modes[app.IdExit].ColorMode							= ::gpk::GUI_COLOR_MODE_3D;
 		::gpk::controlSetParent(gui, app.IdExit, 0);
 	}
 	{
@@ -65,8 +64,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlText.Text													= {app.StringTest.begin(), app.StringTest.size()};
 		controlText.Align													= ::gpk::ALIGN_TOP_LEFT;
 		::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdText];
-		controlConstraints.AttachSizeToText.y								= false; //app.IdText;
-		controlConstraints.AttachSizeToText.x								= false; //app.IdText;
+		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
+		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, -1};
 		gui.Controls.States[app.IdText].Design								= false;
 		gui.Controls.States[app.IdText].Hidden								= false;
@@ -82,7 +81,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
-		::gme::mutex_guard														lock						(app.LockRender);
+		::gpk::mutex_guard														lock						(app.LockRender);
 		app.Framework.MainDisplayOffscreen									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;
@@ -90,7 +89,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	::gpk::SGUI																& gui						= framework.GUI;
 	{
-		::gme::mutex_guard														lock						(app.LockGUI);
+		::gpk::mutex_guard														lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
@@ -111,13 +110,26 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	for(uint32_t iKey = 0; iKey < 256; ++iKey)
 		if(framework.Input->KeyDown((uint8_t)iKey)) {
-			if(iKey >= '0' && iKey <= '9')
+			if(iKey >= 0x20/*'0'*/ && iKey <= '9')
 				app.StringTest.push_back(iKey & 0xFF);
-			else if(iKey >= 'A' && iKey <= 'z')
-				app.StringTest.push_back(iKey & 0xFF);
+			else if(iKey >= 'A' && iKey <= 'Z') {
+				if(framework.Input->KeyboardCurrent.KeyState[VK_SHIFT])
+					app.StringTest.push_back(iKey & 0xFF);
+				else
+					app.StringTest.push_back((iKey & 0xFF) + 32);
+			}
+			else if(iKey == VK_BACK) { // Backspace 
+				if(app.StringTest.size())
+					app.StringTest.resize(app.StringTest.size() - 1);
+			}
+			else if(iKey != VK_SHIFT && iKey != VK_CONTROL) {
+				char number[32] = {};
+				//sprintf_s(number, "0x%X", iKey);
+				app.StringTest.append(number, sprintf_s(number, "0x%X", iKey));
+			}
 		}
-	gui.Controls.Text[app.IdText].Text = {app.StringTest.begin(), app.StringTest.size()};
 
+	::gpk::controlTextSet(gui, app.IdText, {app.StringTest.begin(), app.StringTest.size()});
 	reterr_error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
 	else 
 	{
@@ -139,11 +151,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target->resize(app.Framework.MainDisplay.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	//::gpk::clearTarget(*target);
 	{
-		::gme::mutex_guard															lock					(app.LockGUI);
+		::gpk::mutex_guard															lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::gme::mutex_guard															lock					(app.LockRender);
+		::gpk::mutex_guard															lock					(app.LockRender);
 		app.Offscreen															= target;
 	}
 	//timer.Frame();

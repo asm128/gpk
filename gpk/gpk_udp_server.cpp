@@ -51,15 +51,17 @@
 			::select(0, &sockets, 0, 0, &wait_time);
 			{
 				clientsToProcess.clear();
-				for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
-					for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
-						::gpk::mutex_guard												lock								(serverInstance.Mutex);
-						::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
-						if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
-							continue;
-						if(sockets.fd_array[sd] == pclient->Socket) {
-							gpk_necall(clientsToProcess.push_back(pclient), "Out of memory?");
-							break;
+				{
+					::gpk::mutex_guard												lock								(serverInstance.Mutex);
+					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
+						for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
+							::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
+							if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
+								continue;
+							if(sockets.fd_array[sd] == pclient->Socket) {
+								gpk_necall(clientsToProcess.push_back(pclient), "Out of memory?");
+								break;
+							}
 						}
 					}
 				}

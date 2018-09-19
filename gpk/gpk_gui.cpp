@@ -700,3 +700,14 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	}
 	return controlIndices.size();
 }
+
+			::gpk::error_t										gpk::controlTextSet										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text)				{
+	::gpk::view_const_string											& oldText												= gui.Controls.Text[iControl].Text;
+	if(text.begin	() != oldText.begin()
+	|| text.size	() != oldText.size()
+	) {
+		oldText															= text;
+		gui.Controls.States[iControl].Updated							= false;
+	}
+	return 0;
+}

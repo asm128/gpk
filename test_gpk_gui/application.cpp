@@ -154,7 +154,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//::gpk::STimer													timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
-		::gme::mutex_guard												lock					(app.LockRender);
+		::gpk::mutex_guard												lock					(app.LockRender);
 		app.Framework.MainDisplayOffscreen							= app.Offscreen;
 	}
 	::gpk::SFramework												& framework				= app.Framework;
@@ -162,7 +162,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SGUI														& gui					= framework.GUI;
 
 	{
-		::gme::mutex_guard												lock					(app.LockGUI);
+		::gpk::mutex_guard												lock					(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 		for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 			if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
@@ -208,12 +208,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target->resize(app.Framework.MainDisplay.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	//::gpk::clearTarget(*target);
 	{
-		::gme::mutex_guard												lock					(app.LockGUI);
+		::gpk::mutex_guard												lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
 		::gpk::grid_copy(target->Color.View, app.VerticalAtlas.View);
 	}
 	{
-		::gme::mutex_guard												lock					(app.LockRender);
+		::gpk::mutex_guard												lock					(app.LockRender);
 		app.Offscreen												= target;
 	}
 	//timer.Frame();

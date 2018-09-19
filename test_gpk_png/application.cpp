@@ -42,7 +42,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
-		::gme::mutex_guard														lock						(app.LockRender);
+		::gpk::mutex_guard														lock						(app.LockRender);
 		app.Framework.MainDisplayOffscreen									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;
@@ -50,11 +50,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	::gpk::SGUI																& gui						= framework.GUI;
 	{
-		::gme::mutex_guard														lock						(app.LockGUI);
+		::gpk::mutex_guard														lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		::gme::mutex_guard														lock						(app.LockGUI);
+		::gpk::mutex_guard														lock						(app.LockGUI);
 		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4ULL));
 		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 	}
@@ -103,11 +103,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	//::gpk::clearTarget(*target);
 	{
-		::gme::mutex_guard														lock					(app.LockGUI);
+		::gpk::mutex_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::gme::mutex_guard														lock					(app.LockRender);
+		::gpk::mutex_guard														lock					(app.LockRender);
 		app.Offscreen														= target;
 	}
 	//timer.Frame();

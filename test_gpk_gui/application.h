@@ -23,9 +23,6 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 																							SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
-
-	typedef		::std::lock_guard<::std::mutex>											mutex_guard;
-
 } // namespace
 
 #endif // APPLICATION_H_2078934982734

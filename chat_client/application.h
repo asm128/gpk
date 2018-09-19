@@ -7,6 +7,21 @@
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
 
+struct SGUIConsole {
+	int32_t																IdControl				= -1;
+	::gpk::array_pod<char_t>											Contents;
+	::gpk::array_obj<::gpk::view_const_string>							Lines;
+
+	::gpk::error_t														PushLine				(const ::gpk::view_const_string & line)			{
+		const int32_t															offset					= Contents.size();
+		if(line.size()) {
+			Contents.append(line.begin(), line.size());
+			Lines.push_back({&Contents[offset], line.size()});
+		}
+		return 0;
+	}
+};
+
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SApplication {
@@ -22,11 +37,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 
 		::gpk::SUDPClient													Client;
 
+		::SGUIConsole														Console;
+
 																			SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
-
-	typedef ::std::lock_guard<::std::mutex>									mutex_guard;
-
 } // namespace
 
 #endif // APPLICATION_H_2078934982734
