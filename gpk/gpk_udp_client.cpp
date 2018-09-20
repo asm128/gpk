@@ -111,7 +111,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 		client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 		_beginthread(threadClientConnect, 0, &client);
 		//clientConnectAttempt(client);
-		::gpk::sleep(200);
+		::gpk::sleep(500);
 	} while(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE && ++attempts < 10);
 	if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE) {
 		info_printf("Client connected in %u attempt%s", attempts + 1, (attempts) ? "s" : "");

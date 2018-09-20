@@ -144,9 +144,9 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		}
 		if(client.KeyPing == 0) {
 			for(uint32_t iTime = 0, countLapse = 3000000; iTime < countLapse; ++iTime)
-				if(::hashFromTime(client.FirstPing + 100000 + iTime) == header.Hash) {
-					client.KeyPing												= client.FirstPing + 100000 + iTime;
-					always_printf("Key ping detected in %u attempts: %llu.", iTime, client.KeyPing);
+				if(::hashFromTime(client.FirstPing + iTime) == header.Hash) {
+					client.KeyPing												= client.FirstPing + iTime;
+					always_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
 					break;
 				}
 			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");

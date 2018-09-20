@@ -13,10 +13,15 @@ struct SGUIConsole {
 	::gpk::array_obj<::gpk::view_const_string>							Lines;
 
 	::gpk::error_t														PushLine				(const ::gpk::view_const_string & line)			{
-		const int32_t															offset					= Contents.size();
 		if(line.size()) {
+			int32_t																	offset					= Contents.size();
 			Contents.append(line.begin(), line.size());
 			Lines.push_back({&Contents[offset], line.size()});
+			offset = 0;
+			for(uint32_t iLine = 0; iLine < Lines.size(); ++iLine) {
+				Lines[iLine]	= {&Contents[offset], Lines[iLine].size()};
+				offset			+= Lines[iLine].size();
+			}
 		}
 		return 0;
 	}
@@ -29,7 +34,9 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen							= {};
 
 		int32_t																IdExit								= -1;
-		int32_t																IdText								= -1;
+		int32_t																IdInput								= -1;
+		int32_t																IdConsole							= -1;
+		int32_t																IdConsole1							= -1;
 		::gpk::array_pod<char_t>											StringTest;
 
 		::std::mutex														LockGUI;
