@@ -53,6 +53,25 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::controlSetParent(gui, app.IdExit, 0);
 	}
 	{
+		app.Console.IdControl												= ::gpk::controlCreate(gui);
+		::gpk::SControl															& controlInput				= gui.Controls.Controls[app.Console.IdControl];
+		controlInput.Area													= {{0, 0}, {512, 256}};
+		controlInput.Border													= {1, 1, 1, 1};
+		controlInput.Margin													= {1, 1, 1, 1};
+		controlInput.Align													= ::gpk::ALIGN_BOTTOM_LEFT;
+		controlInput.ColorTheme												= 25;
+		::gpk::SControlText														& controlText				= gui.Controls.Text[app.Console.IdControl];
+		controlText.Text													= {app.StringTest.begin(), app.StringTest.size()};
+		controlText.Align													= ::gpk::ALIGN_TOP_LEFT;
+		::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.Console.IdControl];
+		controlConstraints.AttachSizeToText.y								= false; //app.IdText;
+		controlConstraints.AttachSizeToText.x								= false; //app.IdText;
+		controlConstraints.DockToControl									= {-1, -1, -1, app.IdInput};
+		gui.Controls.States[app.Console.IdControl].Design					= false;
+		gui.Controls.States[app.Console.IdControl].Hidden					= false;
+		::gpk::controlSetParent(gui, app.Console.IdControl, 0);
+	}
+	{
 		app.IdInput															= ::gpk::controlCreate(gui);
 		::gpk::SControl															& controlInput				= gui.Controls.Controls[app.IdInput];
 		controlInput.Area													= {{0, 0}, {64, 20}};
@@ -109,6 +128,25 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		gui.Controls.States[app.IdConsole1].Hidden							= false;
 		::gpk::controlSetParent(gui, app.IdConsole1, 0);
 	}
+	{
+		app.IdConsole2														= ::gpk::controlCreate(gui);
+		::gpk::SControl															& controlInput				= gui.Controls.Controls[app.IdConsole2];
+		controlInput.Area													= {{0, 0}, {64, 20}};
+		controlInput.Border													= {1, 1, 1, 1};
+		controlInput.Margin													= {1, 1, 1, 1};
+		controlInput.Align													= ::gpk::ALIGN_BOTTOM_LEFT;
+		controlInput.ColorTheme												= 25;
+		::gpk::SControlText														& controlText				= gui.Controls.Text[app.IdConsole2];
+		controlText.Text													= {app.StringTest.begin(), app.StringTest.size()};
+		controlText.Align													= ::gpk::ALIGN_TOP_LEFT;
+		::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdConsole2];
+		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
+		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
+		controlConstraints.DockToControl									= {-1, -1, -1, app.IdConsole1};
+		gui.Controls.States[app.IdConsole2].Design							= false;
+		gui.Controls.States[app.IdConsole2].Hidden							= false;
+		::gpk::controlSetParent(gui, app.IdConsole2, 0);
+	}
 	::gpk::tcpipInitialize();
 	app.Client.PortServer													= 9998;
 	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
@@ -157,16 +195,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 					app.StringTest.push_back((iKey & 0xFF) + 32);
 			}
 			else if(iKey == VK_RETURN) {
-				//::gpk::mutex_guard lock(app.
+				//::gpk::mutex_guard lock(app.LockGUI);
 				app.Console.PushLine({app.StringTest.begin(), app.StringTest.size()});
 				app.StringTest.clear();
-				if(app.Console.Lines.size() > 1) {
-					for(uint32_t iLine = 1; iLine < app.Console.Lines.size(); ++iLine) 
-						app.Console.Lines[iLine - 1] = app.Console.Lines[iLine];
-				}
 				for(uint32_t iLine = 0; iLine < app.Console.Lines.size(); ++iLine) 
 					::gpk::controlTextSet(gui, app.IdConsole + iLine, app.Console.Lines[app.Console.Lines.size() - 1 - iLine]);
-
 			}
 			else if(iKey == VK_BACK) { // Backspace 
 				if(framework.Input->KeyboardCurrent.KeyState[VK_CONTROL])  // Backspace 

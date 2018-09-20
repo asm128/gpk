@@ -16,11 +16,13 @@ struct SGUIConsole {
 		if(line.size()) {
 			int32_t																	offset					= Contents.size();
 			Contents.append(line.begin(), line.size());
+			if(Lines.size() >= 256) 
+				Lines.remove(0);
 			Lines.push_back({&Contents[offset], line.size()});
-			offset = 0;
+			offset																= 0;
 			for(uint32_t iLine = 0; iLine < Lines.size(); ++iLine) {
-				Lines[iLine]	= {&Contents[offset], Lines[iLine].size()};
-				offset			+= Lines[iLine].size();
+				Lines[iLine]														= {&Contents[offset], Lines[iLine].size()};
+				offset																+= Lines[iLine].size();
 			}
 		}
 		return 0;
@@ -37,6 +39,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		int32_t																IdInput								= -1;
 		int32_t																IdConsole							= -1;
 		int32_t																IdConsole1							= -1;
+		int32_t																IdConsole2							= -1;
 		::gpk::array_pod<char_t>											StringTest;
 
 		::std::mutex														LockGUI;
