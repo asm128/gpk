@@ -7,11 +7,9 @@
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
 
-struct SGUIConsole {
-	int32_t																IdControl				= -1;
+struct SGUIConsoleBuffer {
 	::gpk::array_pod<char_t>											Contents;
 	::gpk::array_obj<::gpk::view_const_string>							Lines;
-
 	::gpk::error_t														PushLine				(const ::gpk::view_const_string & line)			{
 		if(line.size()) {
 			int32_t																	offset					= Contents.size();
@@ -29,6 +27,14 @@ struct SGUIConsole {
 	}
 };
 
+struct SGUIConsole {
+	::SGUIConsoleBuffer													Buffer					= {};
+	::gpk::array_pod<int32_t>											IdConsoleLines			= {};
+	int32_t																IdInput					= -1;
+	int32_t																IdControl				= -1;
+	int32_t																IdCursor				= -1;
+};
+
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SApplication {
@@ -36,10 +42,10 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen							= {};
 
 		int32_t																IdExit								= -1;
-		int32_t																IdInput								= -1;
 		int32_t																IdConsole							= -1;
 		int32_t																IdConsole1							= -1;
 		int32_t																IdConsole2							= -1;
+
 		::gpk::array_pod<char_t>											StringTest;
 
 		::std::mutex														LockGUI;
