@@ -3,11 +3,13 @@
 		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{ 
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
-	::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE);
-	::TranslateMessage	(&msg);
-	::DispatchMessage	(&msg);
-	if(msg.message == WM_QUIT)
-		return 1;
+	int																									counter										= 0; 
+	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (10 > counter++)) {
+		::TranslateMessage	(&msg);
+		::DispatchMessage	(&msg);
+		if(msg.message == WM_QUIT)
+			return 1;
+	}
 #endif
 	return 0;
 }
