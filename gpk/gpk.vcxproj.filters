@@ -210,6 +210,9 @@
     <ClInclude Include="gpk_connection.h">
       <Filter>udp</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_deque.h">
+      <Filter>container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">

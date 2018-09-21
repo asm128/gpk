@@ -300,6 +300,9 @@ static	::gpk::error_t				test_encrypt_ecb				(::gpk::AES_LEVEL level)						{
 	case ::gpk::AES_LEVEL_128: key = key_128; out = out_128; break;
 	case ::gpk::AES_LEVEL_192: key = key_192; out = out_192; break;
 	case ::gpk::AES_LEVEL_256: key = key_256; out = out_256; break;
+	default:
+		error_printf("Invalid AES level: %u.", (uint32_t)level);
+		return -1;
 	}
     ::gpk::aesInitCtx(&ctx, key, level);
     ::gpk::aesECBEncrypt(&ctx, in);

@@ -54,7 +54,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4));
 		::gpk::guiUpdateMetrics(gui, app.Offscreen->Color.metrics(), true);
 	}
  

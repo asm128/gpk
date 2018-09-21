@@ -29,6 +29,7 @@ namespace gpk
 	struct array_base : public view_array<_tCell> {
 	protected:
 		using				view_array<_tCell>::		Count;
+							uint32_t					Offset										= 0;
 							uint32_t					Size										= 0;
 
 		inline constexpr								array_base									()																			noexcept	= default;

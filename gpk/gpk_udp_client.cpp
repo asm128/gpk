@@ -14,8 +14,8 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	sockaddr_in														sa_server									= {};				/* Information about the server */
 	int																sa_length									= sizeof(struct sockaddr_in);
 	client.Socket.close();
-	gpk_necall(::gpk::tcpipAddressToSockaddr(client.Address, sa_server), "??");
-	sa_server.sin_port											= htons(client.PortServer);
+	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "??");
+	sa_server.sin_port											= htons(client.AddressConnect.Port);
 	ree_if(INVALID_SOCKET == (client.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Failed to create socket!!");
 	gpk_necall(sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
 	sa_length													= sizeof(struct sockaddr_in);
@@ -26,7 +26,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	rew_if(-1 == received_bytes, "Failed to receive connect response!");
 	::gpk::SIPv4													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
-	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.Address.IP, "Invalid server response address!");
+	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address!");
 	client.Address												= temp;
 	int																wsae										= WSAGetLastError() ;
 	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed!");	/* Receive time */

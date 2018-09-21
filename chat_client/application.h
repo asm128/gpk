@@ -33,6 +33,7 @@ struct SGUIConsole {
 	int32_t																IdInput					= -1;
 	int32_t																IdControl				= -1;
 	int32_t																IdCursor				= -1;
+	int32_t																Cursor					= 0;
 };
 
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.

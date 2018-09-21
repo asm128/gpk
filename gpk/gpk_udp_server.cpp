@@ -130,7 +130,7 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 		else {
 			::gpk::ptr_obj<::gpk::SUDPConnection>							pClient								= {};
 			int32_t															found								= -1;
-			{
+			{ // accept
 				::gpk::mutex_guard												lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 					pClient														= serverInstance.Clients[iClient];

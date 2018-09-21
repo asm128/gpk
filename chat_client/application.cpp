@@ -148,7 +148,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::controlSetParent(gui, app.IdConsole2, app.Console.IdControl);
 	}
 	::gpk::tcpipInitialize();
-	app.Client.PortServer												= 9998;
+	app.Client.AddressConnect											= {{}, 9998};
 	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
 	::gpk::clientConnect(app.Client);
 	return 0; 
@@ -172,7 +172,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::guiProcessInput(gui, input);
 	}
 	if(input.MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel													+= input.MouseCurrent.Deltas.z * (1.0f / (120 * 4));
+		gui.Zoom.ZoomLevel													+= input.MouseCurrent.Deltas.z * (1.0 / (120 * 4));
 		::gpk::guiUpdateMetrics(gui, app.Offscreen->Color.metrics(), true);
 	}
  

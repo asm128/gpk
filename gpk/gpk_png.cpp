@@ -24,39 +24,6 @@ static			::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorT
 	}
 }
 
-static			::gpk::error_t											pngInflate										(const ::gpk::view_array<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
-	z_stream																	strm											= {};
-	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
-	if (ret != Z_OK)
-		return ret;
-
-	strm.avail_in															= (uint32_t)deflated.size(); 
-	strm.avail_out															= (uint32_t)inflated.size();
-	strm.next_in															= (Bytef *)deflated.begin();
-	strm.next_out															= (Bytef *)inflated.begin();
-	ret																		= ::inflate(&strm, Z_NO_FLUSH);
-	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered 
-	switch (ret) {
-	case Z_NEED_DICT		:
-		ret																			= Z_DATA_ERROR;     // and fall through 
-	case Z_VERSION_ERROR	:
-	case Z_STREAM_ERROR		:
-	case Z_DATA_ERROR		:
-	case Z_MEM_ERROR		:
-		(void)inflateEnd(&strm);
-		return -1;
-	}
-	if(ret != Z_STREAM_END && ret != Z_OK) {
-		(void)inflateEnd(&strm);
-		error_printf("%s", "Failed to decompress?");
-		return -1;
-	}
-	inflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)inflated.begin()));
-	ret																			= ::inflateEnd(&strm);
-	info_printf("inflateEnd: %u.", (uint32_t)ret);
-	return 0;
-}
-
 static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -577,6 +544,39 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 			offsetScanline															+= currentImageSize.y;
 		}
 	}
+	return 0;
+}
+
+static			::gpk::error_t											pngInflate										(const ::gpk::view_array<ubyte_t>& deflated, ::gpk::array_pod<ubyte_t>& inflated)							{
+	z_stream																	strm											= {};
+	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
+	if (ret != Z_OK)
+		return ret;
+
+	strm.avail_in															= (uint32_t)deflated.size(); 
+	strm.avail_out															= (uint32_t)inflated.size();
+	strm.next_in															= (Bytef *)deflated.begin();
+	strm.next_out															= (Bytef *)inflated.begin();
+	ret																		= ::inflate(&strm, Z_NO_FLUSH);
+	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered 
+	switch (ret) {
+	case Z_NEED_DICT		:
+		ret																			= Z_DATA_ERROR;     // and fall through 
+	case Z_VERSION_ERROR	:
+	case Z_STREAM_ERROR		:
+	case Z_DATA_ERROR		:
+	case Z_MEM_ERROR		:
+		(void)inflateEnd(&strm);
+		return -1;
+	}
+	if(ret != Z_STREAM_END && ret != Z_OK) {
+		(void)inflateEnd(&strm);
+		error_printf("%s", "Failed to decompress?");
+		return -1;
+	}
+	inflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)inflated.begin()));
+	ret																			= ::inflateEnd(&strm);
+	info_printf("inflateEnd: %u.", (uint32_t)ret);
 	return 0;
 }
 
