@@ -4,7 +4,7 @@
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	int																									counter										= 0; 
-	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (10 > counter++)) {
+	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (100 > counter++)) {
 		::TranslateMessage	(&msg);
 		::DispatchMessage	(&msg);
 		if(msg.message == WM_QUIT)

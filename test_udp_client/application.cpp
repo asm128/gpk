@@ -35,8 +35,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
 
-	app.Client.AddressConnect											= {{}, 9998};
-	::gpk::tcpipAddress(0, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.Address);
+	app.Client.AddressConnect											= {};
+	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.AddressConnect);
 	::gpk::clientConnect(app.Client);
 	return 0; 
 }
