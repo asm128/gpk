@@ -17,7 +17,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "??");
 	sa_server.sin_port											= htons(client.AddressConnect.Port);
 	ree_if(INVALID_SOCKET == (client.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Failed to create socket!!");
-	gpk_necall(sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
+	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
 	sa_length													= sizeof(struct sockaddr_in);
 	sa_server													= {};
 
@@ -33,14 +33,14 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	ree_if(commandReceived.Type != ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE, "Invalid server command received!");
 	commandToSend.Payload										= 1;
 	sa_length													= sizeof(struct sockaddr_in);
-	gpk_necall(sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
+	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
 	client.LastPing												= 
 	client.FirstPing											= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
 }
 
-static	::gpk::error_t										updateClient								(::gpk::SUDPClient & client)		{
+static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & client)		{
 	::gpk::array_pod<byte_t>										receiveBuffer;
 	while(client.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED && client.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
@@ -71,13 +71,13 @@ static	::gpk::error_t										updateClient								(::gpk::SUDPClient & client)	
 static	void												threadClientConnect							(void* pClient)						{ clientConnectAttempt(*(::gpk::SUDPClient*)pClient); }
 static	void												threadUpdateClient							(void* pClient)						{ 
 	::gpk::SUDPClient												& client									= *(::gpk::SUDPClient*)pClient;
-	::updateClient(client); 
+	::clientQueueReceive(client); 
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 }
 
 		::gpk::error_t										gpk::clientUpdate							(::gpk::SUDPClient & client)		{
 	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
-	return ::gpk::connectionSendQueue(client, client.MessageBuffer);
+	return ::gpk::connectionSendQueue(client, client.MessageBufferCache);
 }
 
 		::gpk::error_t										gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
@@ -109,18 +109,21 @@ static	void												threadUpdateClient							(void* pClient)						{
 	do {
 		client.Socket.close();
 		client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
-		_beginthread(threadClientConnect, 0, &client);
-		//clientConnectAttempt(client);
-		::gpk::sleep(500);
+		_beginthread(::threadClientConnect, 0, &client);
+		for(uint32_t i = 0; i < 500; ++i) {
+			::gpk::sleep(1);
+			if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE)
+				break;
+		}
 	} while(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE && ++attempts < 10);
 	if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE) {
 		info_printf("Client connected in %u attempt%s", attempts + 1, (attempts) ? "s" : "");
-		_beginthread(threadUpdateClient, 0, &client);
+		_beginthread(::threadUpdateClient, 0, &client);
 	}
 	else {
 		client.Socket.close();
 		client.State											= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
-		error_printf("Failed to connect to %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.Address));
+		error_printf("Failed to connect to %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.AddressConnect));
 		return -1;
 	}
 	return 0;

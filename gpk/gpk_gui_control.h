@@ -56,10 +56,15 @@ namespace gpk
 	};
 
 			::gpk::error_t															viewportInitialize							(::gpk::SGUI& gui, ::gpk::SViewport& viewport);
-
 #pragma pack(pop)
 
 	struct SPaletteGrid {
+				int32_t																	IdControl									= -1;
+				::gpk::array_pod<int32_t>												IdControls									= {};
+				::gpk::view_grid<::gpk::SColorBGRA>										Colors										= {};
+	};
+
+	struct SEditBox {
 				int32_t																	IdControl									= -1;
 				::gpk::array_pod<int32_t>												IdControls									= {};
 				::gpk::view_grid<::gpk::SColorBGRA>										Colors										= {};

@@ -10,8 +10,8 @@ namespace gpk
 #pragma pack(push, 1)
 	enum ENDPOINT_COMMAND : uint8_t
 		{ ENDPOINT_COMMAND_NOOP				= 0
-		, ENDPOINT_COMMAND_CONNECT			= 1
-		, ENDPOINT_COMMAND_PAYLOAD			= 2
+		, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
+		, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: 
 		, ENDPOINT_COMMAND_DISCONNECT		= 3
 		, ENDPOINT_COMMAND_PING				= 4
 		, ENDPOINT_COMMAND_TIME				= 5
@@ -36,7 +36,7 @@ namespace gpk
 	struct SUDPPayloadHeader {
 		::gpk::SUDPCommand														Command			;
 		uint32_t																Size			;
-		uint64_t																Hash			;
+		uint64_t																MessageId		;
 	};
 
 	enum UDP_CONNECTION_STATE 

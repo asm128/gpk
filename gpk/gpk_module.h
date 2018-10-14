@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_error.h"
 
 #ifndef GPK_MODULE_H
 #define GPK_MODULE_H

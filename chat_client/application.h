@@ -10,9 +10,9 @@
 struct SGUIConsoleBuffer {
 	::gpk::array_pod<char_t>											Contents;
 	::gpk::array_obj<::gpk::view_const_string>							Lines;
-	::gpk::error_t														PushLine				(const ::gpk::view_const_string & line)			{
+	::gpk::error_t														PushLine							(const ::gpk::view_const_string & line)			{
 		if(line.size()) {
-			int32_t																	offset					= Contents.size();
+			int32_t																	offset								= Contents.size();
 			Contents.append(line.begin(), line.size());
 			if(Lines.size() >= 256) 
 				Lines.remove(0);
@@ -28,12 +28,12 @@ struct SGUIConsoleBuffer {
 };
 
 struct SGUIConsole {
-	::SGUIConsoleBuffer													Buffer					= {};
-	::gpk::array_pod<int32_t>											IdConsoleLines			= {};
-	int32_t																IdInput					= -1;
-	int32_t																IdControl				= -1;
-	int32_t																IdCursor				= -1;
-	int32_t																Cursor					= 0;
+	::SGUIConsoleBuffer													Buffer								= {};
+	::gpk::array_pod<int32_t>											IdConsoleLines						= {};
+	int32_t																IdInput								= -1;
+	int32_t																IdControl							= -1;
+	int32_t																IdCursor							= -1;
+	int32_t																Cursor								= 0;
 };
 
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.

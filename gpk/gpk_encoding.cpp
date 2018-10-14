@@ -63,9 +63,9 @@ using namespace std;
 	}
 	// --- Generate symbol value remap table.
 	uint8_t														base64SymbolRemap	[128]										= {};
-	base64SymbolRemap[(uint32_t)'=']									= 0;
+	base64SymbolRemap[(uint32_t)'=']						= 0;
 	for(uint32_t iSymbol = 0; iSymbol < 64; ++iSymbol)			
-		base64SymbolRemap[(uint32_t)base64Symbols[iSymbol]]				= (uint8_t)iSymbol;
+		base64SymbolRemap[(uint32_t)base64Symbols[iSymbol]]		= (uint8_t)iSymbol;
 
 	// --- Decode input symbols
 	const uint32_t												packsNeeded														= lengthInput / 4;

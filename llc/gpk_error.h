@@ -12,7 +12,7 @@ namespace gpk
 }
 
 #if !defined(errored)
-#	define						errored(errVal)								(::gpk::failed(errVal)) 
+#	define						errored(errVal)								((errVal) < 0) //(::gpk::failed(errVal)) 
 #endif
 #if !defined(not_errored)
 #	define						not_errored(errVal)							(::gpk::succeeded(errVal)) 
