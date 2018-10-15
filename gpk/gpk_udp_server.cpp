@@ -17,7 +17,8 @@
 ::gpk::error_t												updateClients						(gpk::SUDPServer& serverInstance)		{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnection>>			clientsToProcess;
 	::gpk::array_pod<byte_t>										receiveBuffer;
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	messageBuffer						= {};
+	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
+	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
 	while(serverInstance.Listen) {		
 		uint32_t														totalClientCount					= serverInstance.Clients.size();
 		{
@@ -40,7 +41,7 @@
 					if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size()) 
-						error_if(errored(::gpk::connectionSendQueue(*pclient, messageBuffer)), "??");
+						error_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "??");
 					sockets.fd_array[sockets.fd_count]							= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;

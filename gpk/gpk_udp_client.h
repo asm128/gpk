@@ -7,7 +7,8 @@ namespace gpk
 {
 	struct SUDPClient : public ::gpk::SUDPConnection {
 		::gpk::SIPv4														AddressConnect;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>		MessageBufferCache;	// This is only to speed up message processing.
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>		CacheSend;	// This is only to speed up message processing.
+		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>		CacheSent;	// This is only to speed up message processing.
 	};
 
 	::gpk::error_t														clientDisconnect			(::gpk::SUDPClient & client);

@@ -77,7 +77,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 
 		::gpk::error_t										gpk::clientUpdate							(::gpk::SUDPClient & client)		{
 	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
-	return ::gpk::connectionSendQueue(client, client.MessageBufferCache);
+	return ::gpk::connectionSendQueue(client, client.CacheSend, client.CacheSent);
 }
 
 		::gpk::error_t										gpk::clientDisconnect						(::gpk::SUDPClient & client)		{
