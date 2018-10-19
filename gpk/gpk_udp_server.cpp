@@ -123,7 +123,7 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 			error_printf("Could not receive datagram.");	
 			continue;
 		}
-			 error_if(	command.Type	!= ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST	, "Invalid message type!")
+			 error_if(	command.Type	!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	, "Invalid message type!")
 		else error_if(	command.Command	!= ::gpk::ENDPOINT_COMMAND_CONNECT		
 					&&	command.Command	!= ::gpk::ENDPOINT_COMMAND_DISCONNECT	, "Invalid message type!")
 		else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
@@ -160,7 +160,7 @@ void														threadUpdateClients					(void* serverInstance)					{ updateCli
 						pClient														= {};
 				}
 				::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
-				command.Type												= ::gpk::ENDPOINT_MESSAGE_TYPE_RESPONSE;
+				command.Type												= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
 				::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					connectResponse								= {};
 				connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
 				gpk_necall(pClient->Queue.Send.push_back(connectResponse), "Out of memory?");
@@ -203,7 +203,7 @@ void														threadServer						(void* pServerInstance)				{
 	serverInstance.Listen										= false;
 	sockaddr_in														sa_srv								= {};							// Information about the client 
 	int																sa_length							= (int)sizeof(sockaddr_in);		// Length of client struct 
-	::gpk::SUDPCommand												command								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_MESSAGE_TYPE_REQUEST, };							// Where to store received data 
+	::gpk::SUDPCommand												command								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, };							// Where to store received data 
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
 	uint32_t														attempt								= 0;
 	do{ 

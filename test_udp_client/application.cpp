@@ -75,6 +75,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	else 
 	{
 		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived!");
+		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived! 2");
+		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived! 3");
+		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived! 4");
 		::gpk::clientUpdate(app.Client);
 		::gpk::sleep(1000);
 	}
