@@ -27,7 +27,7 @@
 static				uint64_t								hashFromTime						(uint64_t currentTime)	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
 static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // microseconds
 
-::gpk::error_t												payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend) {
+::gpk::error_t												payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend) {
 	if(payloadsToSend.size() < 2)
 		return 0;
 	{
@@ -56,6 +56,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // 
 			gpk_necall(payloadSizes.push_back((uint16_t)currentPayload->Payload.size()), "Out of memory? Payload size: %u.", currentPayload->Payload.size());
 			gpk_necall(serialized.append(currentPayload->Payload.begin(), currentPayload->Payload.size()), "Failed to append payload! Payload size: %u.", currentPayload->Payload.size());
 			gpk_necall(payloadsToRemove.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
+			gpk_necall(messageCacheSent.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
 		}
 		const uint32_t														sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
 		uint16_t															packetCount							= (uint16_t)payloadSizes.size();
@@ -150,7 +151,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // 
 			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
 		}
 	}
-	gpk_necall(::payloadQueueOptimize(client, payloadsToSend), "Failed to optimize payload queue.");
+	gpk_necall(::payloadQueueOptimize(client, messageCacheSent, payloadsToSend), "Failed to optimize payload queue.");
 	gpk_necall(::payloadQueueSend(client, messageCacheSent, payloadsToSend), "Failed ");
 	for(uint32_t iSent = 0; iSent < messageCacheSent.size(); ++iSent)
 		for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend)
