@@ -2,6 +2,7 @@
 #include "gpk_view_grid.h"
 #include "gpk_view_stream.h"
 #include "gpk_io.h"
+#include "gpk_storage.h"
 
 namespace gpk
 {
@@ -80,22 +81,9 @@ namespace gpk
 }
 
 			::gpk::error_t								gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, const ::gpk::view_const_string	& input)							{ 
-	FILE														* fp												= 0;
-	ree_if(0 != fopen_s(&fp, input.begin(), "rb") || 0 == fp, "Cannot open .gnd file: %s.", input.begin());
-
-	fseek(fp, 0, SEEK_END);
-	int32_t														fileSize											= (int32_t)ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	::gpk::array_pod<ubyte_t>									fileInMemory										= 0;
-	gpk_necall(fileInMemory.resize(fileSize), "File too large? : %llu.", (uint64_t)fileSize);
-	if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(ubyte_t), fileSize, fp)) {
-		fclose(fp);
-		error_printf("fread() failed! file: '%s'.", input.begin());
-		return -1;
-	}
-	fclose(fp);
-
-	return gndFileLoad(loaded, fileInMemory);
+	::gpk::array_pod<byte_t>									fileInMemory												= {};
+	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
+	return ::gpk::gndFileLoad(loaded, ::gpk::view_ubyte((ubyte_t*)fileInMemory.begin(), fileInMemory.size()));
 }
 
 #if defined(GPK_WINDOWS)

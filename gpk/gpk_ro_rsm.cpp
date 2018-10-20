@@ -2,6 +2,7 @@
 #include "gpk_matrix.h"
 #include "gpk_view_stream.h"
 #include "gpk_io.h"
+#include "gpk_storage.h"
 
 #include <string>
 
@@ -195,24 +196,12 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 }
 
 			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input)							{ 
-	FILE														* fp														= 0;
-	ree_if(0 != fopen_s(&fp, input.begin(), "rb") || 0 == fp, "Cannot open .rsm file: %s.", input.begin());
-	fseek(fp, 0, SEEK_END);
-	int32_t														fileSize													= (int32_t)ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	::gpk::array_pod<ubyte_t>									fileInMemory												= 0;
-	gpk_necall(fileInMemory.resize(fileSize), "File too large? : %llu.", (uint64_t)fileSize);
-	if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(ubyte_t), fileSize, fp)) {
-		fclose(fp);
-		error_printf("fread() failed! file: '%s'.", input.begin());
-		return -1;
-	}
-	fclose(fp);
+	::gpk::array_pod<byte_t>									fileInMemory												= 0;
+	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	info_printf("%u", unk);
-
 	info_printf("Parsing RSM file: %s.", input.begin());
-	return rsmFileLoad(loaded, {fileInMemory.begin(), fileInMemory.size()});
+	return rsmFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});
 }
 
 			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view_array<::gpk::SModelNodeRSM>& out_meshes)			{

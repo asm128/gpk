@@ -12,10 +12,8 @@
 #endif
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::label>& output)					{
-	for(uint32_t iFile		= 0; iFile		< input.Files	.size(); ++iFile) 
-		gpk_necall(output.push_back(input.Files[iFile]), "%s", "Out of memory?");
-	for(uint32_t iFolder	= 0; iFolder	< input.Folders	.size(); ++iFolder) 
-		gpk_necall(::gpk::pathList(input.Folders[iFolder], output), "%s", "Unknown error!");
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files[iFile]), "%s", "Out of memory?");
+	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) gpk_necall(::gpk::pathList(input.Folders[iFolder], output), "%s", "Unknown error!");
 	return 0;
 }
 
@@ -108,3 +106,38 @@
 #endif
     return 0;
 }
+
+		::gpk::error_t									gpk::fileToMemory									(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory)		{
+	FILE														* fp												= 0;
+	ree_if(0 != fopen_s(&fp, fileName.begin(), "rb") || 0 == fp, "Cannot open .gnd file: %s.", fileName.begin());
+
+	fseek(fp, 0, SEEK_END);
+	int32_t														fileSize											= (int32_t)ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	::gpk::error_t												result												= 0;
+	if errored(fileInMemory.resize(fileSize)) {
+		error_printf("File too large? : %llu.", (uint64_t)fileSize);
+		result													= -1;
+	} 
+	else {
+		if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(ubyte_t), fileSize, fp)) {
+			error_printf("fread() failed! file: '%s'.", fileName.begin());
+			result													= -1;
+		}
+	}
+	fclose(fp);
+	return result;
+}
+
+		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_string& fileName, const ::gpk::array_pod<byte_t>& fileInMemory)	{
+	FILE														* fp												= 0;
+	ree_if(0 != fopen_s(&fp, fileName.begin(), "wb"), "Failed to create file for writing: %s.", fileName.begin());
+	::gpk::error_t												result												= 0;
+	if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fp)) {
+		error_printf("Failed to write file. Disk full? File size: %u.", fileInMemory.size());
+		result													= -1;
+	}
+	fclose(fp);
+	return result;		
+}	

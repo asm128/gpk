@@ -81,6 +81,14 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::clientUpdate(app.Client);
 		::gpk::sleep(1000);
 	}
+
+	::gpk::SUDPClient connectTest;
+	connectTest.AddressConnect = app.Client.AddressConnect;
+	::gpk::clientConnect(connectTest);
+	::gpk::connectionPushData(app.Client, app.Client.Queue, "Connect test!");
+	::gpk::clientUpdate(app.Client);
+	::gpk::clientDisconnect(connectTest);
+
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0; 

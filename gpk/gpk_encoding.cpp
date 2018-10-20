@@ -4,11 +4,46 @@
 #include <ctime>
 #include <random>
 
-static constexpr const char								base64Symbols[]													= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)																{	
+	char														converted [0x20]												= {};
+	sprintf_s(converted, "%*.2X", 2, i);		 
+	hexed[0]												= converted[0];
+	hexed[1]												= converted[1];
+	return 0;
+}
 
-using namespace std;
+static		::gpk::error_t								hexToByte														(const char* s, uint8_t& byte)															{
+	char														temp [3]														= {};
+	temp[0]													= s[0];
+	temp[1]													= s[1];
+	try {
+		int32_t														hex																= std::stoi(temp, nullptr, 16);
+		byte													= (char)hex;
+	}
+	catch (::std::invalid_argument) {
+		return -1;
+	}
+	return 0;
+}
 
-			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
+			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & inputBinary	, ::gpk::array_pod<char_t	> & out_hexed	)	{ 
+	uint32_t													offset															= out_hexed.size();
+	out_hexed.resize(offset + inputBinary.size() * 2);
+	for(uint32_t iByte = 0; iByte < inputBinary.size(); ++iByte)
+		hexFromByte(inputBinary[iByte], &out_hexed[offset + iByte * 2]); 
+	return 0; 
+}
+
+			::gpk::error_t								gpk::hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<ubyte_t	> & outputBinary)	{
+	uint32_t													offset															= outputBinary.size();
+	uint32_t													binarySize														= in_hexed.size() >> 1;
+	outputBinary.resize(offset + binarySize);
+	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
+		hexToByte(&in_hexed[iByte * 2], outputBinary[offset + iByte]); 
+	return 0; 
+}
+
+			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const char_t> & base64Symbols, char_t base64PadSymbol, const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t													iOutput64														= out_base64.size(); // append the result 
@@ -33,7 +68,7 @@ using namespace std;
 			for(uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
 				outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
 			::gpk::reverse_bits(outputBits);
-			if(outputQuad[iSingleOut] >= ::gpk::size(base64Symbols) - 1) { 
+			if(outputQuad[iSingleOut] >= base64Symbols.size() - 1) { 
 				error_printf("%s", "Out of range. This could happen if the algorithm or the input character table got broken.");
 				out_base64[iOutput64++]									= -1;
 			}
@@ -45,16 +80,16 @@ using namespace std;
 	}
 	const uint32_t												modTriplet														= inputBytes.size() % 3;
 	if(0 != modTriplet) { // pad with '='
-		out_base64[out_base64.size() - 1]						= '=';
+		out_base64[out_base64.size() - 1]						= base64PadSymbol;
 		if(1 == modTriplet) // pad with another '='
-			out_base64[out_base64.size() - 2]						= '=';
+			out_base64[out_base64.size() - 2]						= base64PadSymbol;
 	}
 	gpk_necall(out_base64.push_back(0), "%s", "Out of memory?"); // add a null byte at the end for safety.
 	gpk_necall(out_base64.resize(out_base64.size() - 1), "%s", "There are no known reasons for this to fail so it probably indicates memory corruption or something really bad."); // restore the count to ignore the null byte just added.
 	return 0;
 }
 
-			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_array<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
+			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_array<const char_t> & base64Symbols, char_t base64PadSymbol, const ::gpk::view_array<const char_t> & in_base64, ::gpk::array_pod<ubyte_t> & outputBytes)	{
 	rni_if(0 == in_base64.size(), "%s", "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {
@@ -63,7 +98,7 @@ using namespace std;
 	}
 	// --- Generate symbol value remap table.
 	uint8_t														base64SymbolRemap	[128]										= {};
-	base64SymbolRemap[(uint32_t)'=']						= 0;
+	base64SymbolRemap[(uint32_t)base64PadSymbol]			= 0;
 	for(uint32_t iSymbol = 0; iSymbol < 64; ++iSymbol)			
 		base64SymbolRemap[(uint32_t)base64Symbols[iSymbol]]		= (uint8_t)iSymbol;
 
@@ -73,10 +108,10 @@ using namespace std;
 	gpk_necall(outputBytes.resize(outputBytes.size() + packsNeeded * 3), "Out of memory? outputBinary.size() : %u. packsNeeded : %u.", iOutputByte, packsNeeded); // Append result
 	for(uint32_t iInput64 = 0, symbolCount = lengthInput; iInput64 < symbolCount; iInput64 += 4) {
 		uint8_t														inputQuad	[4]													= 
-			{ base64SymbolRemap[((uint8_t)in_base64[iInput64 + 0]) % 128]
-			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 1]) % 128]
-			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 2]) % 128]
-			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 3]) % 128]
+			{ base64SymbolRemap[((uint8_t)in_base64[iInput64 + 0]) % ::gpk::size(base64SymbolRemap)]
+			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 1]) % ::gpk::size(base64SymbolRemap)]
+			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 2]) % ::gpk::size(base64SymbolRemap)]
+			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 3]) % ::gpk::size(base64SymbolRemap)]
 			};
 		for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
 			::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
@@ -95,47 +130,47 @@ using namespace std;
 			outputBytes[iOutputByte++]								= outputTriplet[iSingleOut];
 		}
 	}
-		 if(in_base64[in_base64.size() - 2] == '=') { outputBytes.resize(outputBytes.size() - 2); } // Remove leading nulls.
-	else if(in_base64[in_base64.size() - 1] == '=') { outputBytes.resize(outputBytes.size() - 1); } // Remove leading nulls.
+		 if(in_base64[in_base64.size() - 2] == base64PadSymbol) { outputBytes.resize(outputBytes.size() - 2); } // Remove leading nulls.
+	else if(in_base64[in_base64.size() - 1] == base64PadSymbol) { outputBytes.resize(outputBytes.size() - 1); } // Remove leading nulls.
 	return 0;
 }
 
-::gpk::error_t									gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
-	char												saltValue		[4]												= {};
+::gpk::error_t											gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
+	char														saltValue		[4]												= {};
 	if (salt) 
 		for (int32_t i = 0; i < 4; i++) {
-			int32_t												t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
-			saltValue[i]									= t % 256;
+			int32_t														t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
+			saltValue[i]											= t % 256;
 		}
-	int32_t												k1																= 11 + (key % 233);
-	int32_t												k2																=  7 + (key % 239);
-	int32_t												k3																=  5 + (key % 241);
-	int32_t												k4																=  3 + (key % 251);
-	int32_t												n																= salt ? input.size() + 4 : input.size();
+	int32_t														k1																= 11 + (key % 233);
+	int32_t														k2																=  7 + (key % 239);
+	int32_t														k3																=  5 + (key % 241);
+	int32_t														k4																=  3 + (key % 251);
+	int32_t														n																= salt ? input.size() + 4 : input.size();
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
-	int32_t												* sn															= cache.begin();
-	if(salt) {
-		for(int32_t i = 0; i < 2; ++i)	
-			sn[i]										= saltValue[i];
-		for(int32_t i = 0; i < n - 4; ++i)	
-			sn[2 + i]									= input[i];
-		for(int32_t i = 0; i < 2; ++i)	
-			sn[2 + n + i]								= saltValue[2 + i];
-	}
-	else 
-		for(int32_t i = 0; i  < n; ++i)	
-			sn[i]										= input[i];
-
-	for(int32_t i = 1		; i  < n; ++i)	sn[i]		= sn[i] ^ sn[i - 1] ^ ((k1 * sn[i - 1]) % 256);
-	for(int32_t i = n - 2	; i >= 0; --i)	sn[i]		= sn[i] ^ sn[i + 1] ^  (k2 * sn[i + 1]) % 256 ;
-	for(int32_t i = 2		; i  < n; ++i)	sn[i]		= sn[i] ^ sn[i - 2] ^  (k3 * sn[i - 1]) % 256 ;
-	for(int32_t i = n - 3	; i >= 0; --i)	sn[i]		= sn[i] ^ sn[i + 2] ^  (k4 * sn[i + 1]) % 256 ;
-
-	uint32_t											outputOffset													= output.size();
+	int32_t														* sn															= cache.begin();
+	if(salt) {		
+		for(int32_t i = 0; i < 2; ++i)			
+			sn[i]													= saltValue[i];
+		for(int32_t i = 0; i < n - 4; ++i)				
+			sn[2 + i]												= input[i];
+		for(int32_t i = 0; i < 2; ++i)				
+			sn[2 + n + i]											= saltValue[2 + i];
+	}			
+	else		
+		for(int32_t i = 0; i  < n; ++i)			
+			sn[i]													= input[i];
+		
+	for(int32_t i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((k1 * sn[i - 1]) % 256);
+	for(int32_t i = n - 2	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 1] ^  (k2 * sn[i + 1]) % 256 ;
+	for(int32_t i = 2		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 2] ^  (k3 * sn[i - 1]) % 256 ;
+	for(int32_t i = n - 3	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 2] ^  (k4 * sn[i + 1]) % 256 ;
+		
+	uint32_t													outputOffset													= output.size();
 	gpk_necall(output.resize(outputOffset + n), "%s", "Out of memory?");
 	for(int32_t i = 0; i < n; ++i)	
-		output[outputOffset + i]						= (char)sn[i];
-	return 0;
+		output[outputOffset + i]								= (char)sn[i];
+	return 0;	
 }
 
 ::gpk::error_t									gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{

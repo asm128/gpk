@@ -159,6 +159,41 @@ int													main						()			{
 		always_printf("------ Base64 decode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 	}
 
+	{
+		::gpk::STimer											timer;
+		double													timeTotal					= 0;
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
+		encodedList.resize(rounds * ::gpk::size(testStrings));
+		decodedList.resize(rounds * ::gpk::size(testStrings));
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
+				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
+				ce_if(errored(::gpk::hexEncode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, encoded)), "%s", "Out of memory?");
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ Hex encode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		timeTotal											= 0;
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
+				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
+				::gpk::array_pod<ubyte_t>								& decoded					= decodedList[indexBuffer];
+				if errored(::gpk::hexDecode(encoded, decoded)) {
+					error_printf( "%s", "Out of memory?");
+					encoded.clear_pointer();
+					continue;
+				}
+				encoded.clear_pointer();
+				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ Hex decode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+
 	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			encodedList;	
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;

@@ -4,6 +4,7 @@
 #include "gpk_png.h"
 #include "gpk_adam7.h"
 #include "gpk_io.h"
+#include "gpk_storage.h"
 
 static			::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
 	int32_t																		scanLineWidth									= imageWidth;
@@ -659,21 +660,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 }
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
-	FILE																		* fp											= 0;
-	ree_if(0 != fopen_s(&fp, filename.begin(), "rb") || 0 == fp, "Failed to open file: %s.", filename.begin());
-	if(0 == fp) // don't do anything with a null pointer
-		return -1;
-	info_printf("Loading png file: %s.", filename.begin());
-	fseek(fp, 0, SEEK_END);
-	const int32_t																fileSize										= (int32_t)ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	::gpk::array_pod<ubyte_t>													fileInMemory									= 0;
-	gpk_necall(fileInMemory.resize(fileSize), "Failet to load file in memory. File too large? : %llu.", (uint64_t)fileSize);
-	if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(byte_t), fileSize, fp)) {
-		fclose(fp);
-		error_printf("Failet to read file: '%s'. File corrupt?", filename.begin());
-		return -1;
-	}
-	fclose(fp);
-	return ::gpk::pngFileLoad(pngData, fileInMemory, out_Texture);
+	::gpk::array_pod<byte_t>													fileInMemory									= 0;
+	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .rsw file: %s", filename.begin());
+	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
 }
