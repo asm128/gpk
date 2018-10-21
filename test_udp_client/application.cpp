@@ -85,8 +85,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SUDPClient connectTest;
 	connectTest.AddressConnect = app.Client.AddressConnect;
 	::gpk::clientConnect(connectTest);
-	::gpk::connectionPushData(app.Client, app.Client.Queue, "Connect test!");
-	::gpk::clientUpdate(app.Client);
+	::gpk::connectionPushData(connectTest, connectTest.Queue, "Connect test!");
+	::gpk::clientUpdate(connectTest);
 	::gpk::clientDisconnect(connectTest);
 
 	//timer.Frame();
