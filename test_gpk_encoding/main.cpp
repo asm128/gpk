@@ -1,15 +1,30 @@
 #include "gpk_aes.h"
+#include "gpk_rsa.h"
 #include "gpk_encoding.h"
 #include "gpk_timer.h"
+#include "gpk_sync.h"
 
-static ::gpk::error_t phex						(uint8_t* str, ::gpk::AES_LEVEL level);
-static ::gpk::error_t test_encrypt_cbc			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_decrypt_cbc			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_encrypt_ctr			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_decrypt_ctr			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_encrypt_ecb			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_decrypt_ecb			(::gpk::AES_LEVEL level);
-static ::gpk::error_t test_encrypt_ecb_verbose	(::gpk::AES_LEVEL level);
+static ::gpk::error_t								phex						(uint8_t* str, ::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_encrypt_cbc			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_decrypt_cbc			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_encrypt_ctr			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_decrypt_ctr			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_encrypt_ecb			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_decrypt_ecb			(::gpk::AES_LEVEL level);
+static ::gpk::error_t								test_encrypt_ecb_verbose	(::gpk::AES_LEVEL level);
+
+static int											primalityTest				(uint64_t number)						{
+	uint64_t												j							= (uint64_t)sqrt((double)number);
+	if(number > 1 && number < 4)
+		return 1;
+	if(0 == number % 2)
+		return 0;
+	for(uint64_t i = 5; i <= j; i += 2) {
+		if(0 == (number % i))
+			return 0;
+	}
+	return 1;
+}
 
 int													main						()			{
 	const ::gpk::view_const_string							testStrings	[]				= 
@@ -29,7 +44,7 @@ int													main						()			{
 		, "Some string to test 0000000000000E"	
 		, "Some string to test 00000000000000F"	
 		};
-	const uint32_t											rounds						= 1000;
+	const uint32_t											rounds						= 10;
 	::gpk::array_pod<int32_t>								encodingCache;
 	//{
 	//	::gpk::STimer											timer;
@@ -108,10 +123,10 @@ int													main						()			{
 		always_printf("------ Ardell (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 	}
 	{
-		::gpk::STimer											timer;
 		double													timeTotal					= 0;
 		::gpk::array_pod<byte_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
+		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
@@ -125,12 +140,116 @@ int													main						()			{
 		always_printf("------ Ardell (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 	}
 	{
+		double													timeTotal					= 0;
+		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<byte_t>								decoded;
+		uint32_t												prime1						= 251; 
+		uint32_t												prime2						= 241; 
+		::gpk::SRSA												rsa							= {};
+		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
+		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
 		::gpk::STimer											timer;
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				encoded.clear();
+				decoded.clear();
+				ce_if(errored(::gpk::rsaEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::rsaDecode(rsa, encoded				, rsaKeys[0].Private, decoded)), "%s", "Out of memory?");
+				always_printf("RSA:"
+					"\nEncoded: %s."
+					"\nDecoded: %s."
+					, encoded.begin()
+					, decoded.begin()
+					);
+				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ RSA (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+	{
+		double													timeTotal					= 0;
+		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<byte_t>								decoded;
+		uint32_t												prime1						= 251; 
+		uint32_t												prime2						= 241; 
+		::gpk::SRSA												rsa							= {};
+		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
+		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::STimer											timer;
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				encoded.clear();
+				decoded.clear();
+				ce_if(errored(::gpk::rsaEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::rsaDecode(rsa, encoded				, rsaKeys[0].Private, decoded)), "%s", "Out of memory?");
+				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ RSA (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+	{
+		double													timeTotal					= 0;
+		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<byte_t>								decoded;
+		uint32_t												prime1						= 251; 
+		uint32_t												prime2						= 241; 
+		::gpk::SRSA												rsa							= {};
+		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
+		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::STimer											timer;
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				encoded.clear();
+				decoded.clear();
+				ce_if(errored(::gpk::rsaSafeEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, false, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::rsaSafeDecode(rsa, encoded				, rsaKeys[0].Private, false, decoded)), "%s", "Out of memory?");
+				always_printf("RSA:"
+					"\nEncoded: %s."
+					"\nDecoded: %s."
+					, encoded.begin()
+					, decoded.begin()
+					);
+				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ RSA safe (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+	{
+		double													timeTotal					= 0;
+		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<byte_t>								decoded;
+		uint32_t												prime1						= 251; 
+		uint32_t												prime2						= 241; 
+		::gpk::SRSA												rsa							= {};
+		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
+		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
+		::gpk::STimer											timer;
+		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
+				encoded.clear();
+				decoded.clear();
+				ce_if(errored(::gpk::rsaSafeEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, true, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::rsaSafeDecode(rsa, encoded				, rsaKeys[0].Private, true, decoded)), "%s", "Out of memory?");
+				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
+				timer.Frame();
+				timeTotal											+= timer.LastTimeSeconds;
+			}
+		always_printf("------ RSA safe (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+	}
+	{
 		double													timeTotal					= 0;
 		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
 		encodedList.resize(rounds * ::gpk::size(testStrings));
 		decodedList.resize(rounds * ::gpk::size(testStrings));
+		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
@@ -160,12 +279,12 @@ int													main						()			{
 	}
 
 	{
-		::gpk::STimer											timer;
 		double													timeTotal					= 0;
 		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
 		encodedList.resize(rounds * ::gpk::size(testStrings));
 		decodedList.resize(rounds * ::gpk::size(testStrings));
+		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
@@ -273,6 +392,16 @@ int													main						()			{
 		}
 		test_encrypt_ecb_verbose((::gpk::AES_LEVEL)iAESLevel);
 	}
+
+	::gpk::array_pod<uint64_t>	primes;
+	for(uint32_t i = 0; i < (uint32_t)(INT_MAX >> 24); ++i) {
+		if(primalityTest(i)) {
+			primes.push_back(i);
+			//always_printf("Prime found: %u.", i);
+			::gpk::sleep(1);
+		}
+	}
+	always_printf("Primes found: %u.", primes.size());
 	return 0;
 }
 
