@@ -28,6 +28,7 @@
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_noise.h" />
+    <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_udp_client.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
+    <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_storage.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />

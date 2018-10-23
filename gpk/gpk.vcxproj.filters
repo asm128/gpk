@@ -213,6 +213,9 @@
     <ClInclude Include="gpk_deque.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_rsa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -298,6 +301,9 @@
     </ClCompile>
     <ClCompile Include="gpk_udp_client.cpp">
       <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rsa.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

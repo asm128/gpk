@@ -72,8 +72,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 
 	reterr_error_if(app.Client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
-	else 
-	{
+	else {
 		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived!");
 		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived! 2");
 		::gpk::connectionPushData(app.Client, app.Client.Queue, "Message arrived! 3");
@@ -82,12 +81,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::sleep(1000);
 	}
 
-	::gpk::SUDPClient connectTest;
-	connectTest.AddressConnect = app.Client.AddressConnect;
-	::gpk::clientConnect(connectTest);
-	::gpk::connectionPushData(connectTest, connectTest.Queue, "Connect test!");
-	::gpk::clientUpdate(connectTest);
-	::gpk::clientDisconnect(connectTest);
+	::gpk::SUDPClient															connectTest;
+	connectTest.AddressConnect												= app.Client.AddressConnect;
+	::gpk::clientConnect		(connectTest);
+	::gpk::connectionPushData	(connectTest, connectTest.Queue, "Connect test!");
+	::gpk::clientUpdate			(connectTest);
+	::gpk::clientDisconnect		(connectTest);
 
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
