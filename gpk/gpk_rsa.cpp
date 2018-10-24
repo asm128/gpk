@@ -9,7 +9,7 @@ static	int									primalityTest						(uint64_t number)						{
 		return 1;
 	if(0 == number % 2)
 		return 0;
-	for(uint64_t i = 5; i <= j; i += 2) {
+	for(uint64_t i = 3; i <= j; ++i) {
 		if(0 == (number % i))
 			return 0;
 	}
@@ -46,9 +46,8 @@ uint64_t									commonDivisor						(::gpk::SRSA & g_SRSA, uint64_t a)				{
 				//break;
 				++k;
 			}
-			else 
-				if(k == limit)
-					break;
+			if(k >= limit)
+				break;
 		}
 	}
 	return ::gpk::error_t(j);

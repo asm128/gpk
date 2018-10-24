@@ -139,16 +139,25 @@ int													main						()			{
 			}
 		always_printf("------ Ardell (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 	}
+	uint32_t												prime1						= 251; 
+	uint32_t												prime2						= 241; 
+	//uint32_t												prime1						= 13; 
+	//uint32_t												prime2						= 17; 
+	::gpk::SRSA												rsa							= {};
+	::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
+	{
+		::gpk::STimer											timer;
+		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2);
+		e_if(errored(::gpk::rsaKeys			(rsa, 1024 * 1024, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
+		for(uint32_t iPair = 0; iPair < rsaKeys.size(); ++iPair)
+			always_printf("Private: %llu. Public: %llu.", rsaKeys[iPair].Private, rsaKeys[iPair].Public);
+		timer.Frame();
+		always_printf("------ RSA Key generation time: %g seconds.", timer.LastTimeSeconds);
+	}
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
-		uint32_t												prime1						= 251; 
-		uint32_t												prime2						= 241; 
-		::gpk::SRSA												rsa							= {};
-		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
-		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
-		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
 		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
@@ -172,12 +181,6 @@ int													main						()			{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
-		uint32_t												prime1						= 251; 
-		uint32_t												prime2						= 241; 
-		::gpk::SRSA												rsa							= {};
-		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
-		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
-		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
 		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
@@ -195,12 +198,6 @@ int													main						()			{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
-		uint32_t												prime1						= 251; 
-		uint32_t												prime2						= 241; 
-		::gpk::SRSA												rsa							= {};
-		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
-		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
-		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
 		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
@@ -224,12 +221,6 @@ int													main						()			{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
-		uint32_t												prime1						= 251; 
-		uint32_t												prime2						= 241; 
-		::gpk::SRSA												rsa							= {};
-		e_if(errored(::gpk::rsaInitialize	(rsa, prime1, prime2)), "Failed to initialize: %u, %u.", prime1, prime2)
-		::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
-		e_if(errored(::gpk::rsaKeys			(rsa, UINT64_MAX, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2)
 		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
