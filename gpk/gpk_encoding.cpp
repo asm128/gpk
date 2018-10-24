@@ -1,8 +1,27 @@
 #include "gpk_encoding.h"
 #include "gpk_view_bit.h"
+#include "gpk_noise.h"
+#include "gpk_chrono.h"
+
 
 #include <ctime>
 #include <random>
+
+			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::array_pod<byte_t> & salted)				{
+	salted.resize(binary.size() * 2);
+	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) {
+		salted[iBinary * 2]										= binary[iBinary];
+		salted[iBinary * 2 + 1]									= ::gpk::noise1DBase(::gpk::timeCurrentInUs()) & 0xFF;
+	}
+	return 0;
+}
+
+			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::array_pod<byte_t> & binary)				{
+	binary.resize(salted.size() / 2);
+	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) 
+		binary[iBinary]											= salted[iBinary * 2];
+	return 0;
+}
 
 static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)																{	
 	char														converted [0x20]												= {};
@@ -149,7 +168,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	int32_t														n																= salt ? input.size() + 4 : input.size();
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
 	int32_t														* sn															= cache.begin();
-	if(salt) {		
+	if(salt) {
 		for(int32_t i = 0; i < 2; ++i)			
 			sn[i]													= saltValue[i];
 		for(int32_t i = 0; i < n - 4; ++i)				
@@ -157,8 +176,8 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 		for(int32_t i = 0; i < 2; ++i)				
 			sn[2 + n + i]											= saltValue[2 + i];
 	}			
-	else		
-		for(int32_t i = 0; i  < n; ++i)			
+	else
+		for(int32_t i = 0; i < n; ++i)			
 			sn[i]													= input[i];
 		
 	for(int32_t i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((k1 * sn[i - 1]) % 256);
@@ -196,3 +215,4 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 		output[outputOffset + i]						= (char)finalValues[i];
 	return 0;
 }
+

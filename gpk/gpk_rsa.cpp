@@ -1,7 +1,7 @@
 #include "gpk_rsa.h"
 #include "gpk_encoding.h"
 
-#define RSA_ARDELL_KEY	987654321
+#define RSA_ARDELL_KEY	1054987632
 
 static	int									primalityTest						(uint64_t number)						{
 	uint64_t										j									= (uint64_t)sqrt((double)number);
@@ -36,15 +36,15 @@ uint64_t									commonDivisor						(::gpk::SRSA & g_SRSA, uint64_t a)				{
 		unsigned int									isPrime								= ::primalityTest(i);
 		if(isPrime == 1 && i != g_SRSA.Primes[0] && i != g_SRSA.Primes[1]) {
 			if(keys.size() > k)
-				keys[k].Public						= i;
+				keys[k].Public								= i;
 			else
-				keys.push_back({i});
+				gpk_necall(keys.push_back({i}), "Out of memory?");
 
 			uint64_t										cd									= ::commonDivisor(g_SRSA, keys[(uint32_t)k].Public);
 			if(cd > 0) {
 				keys[k].Private								= cd;
-				break;
-				//++k;
+				//break;
+				++k;
 			}
 			else 
 				if(k == limit)
@@ -81,6 +81,12 @@ static	::gpk::error_t						rsaDefilterSub	(::gpk::view_array<ubyte_t>& scanline,
 	return 0; 
 }
 
+static	::gpk::error_t						rsaDefilterSub2	(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
+	for(int32_t iByte = scanline.size() - bpp - 1; iByte >= 0; --iByte) 
+		scanline[iByte] += scanline[iByte + bpp];	
+	return 0; 
+}
+
 static	::gpk::error_t						rsaFilterSub2	(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
 	::gpk::array_pod<ubyte_t>						filtered;
 	filtered.resize(scanline.size());
@@ -91,17 +97,11 @@ static	::gpk::error_t						rsaFilterSub2	(::gpk::view_array<ubyte_t>& scanline, 
 	return 0; 
 }
 
-static	::gpk::error_t						rsaDefilterSub2	(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
-	for(int32_t iByte = scanline.size() - bpp - 1; iByte >= 0; --iByte) 
-		scanline[iByte] += scanline[iByte + bpp];	
-	return 0; 
-}
-
 //function to encrypt the message
-::gpk::error_t								gpk::rsaEncode						(::gpk::SRSA & g_SRSA, ::gpk::view_array<const byte_t> decrypted, uint64_t key, ::gpk::array_pod<uint64_t>& encrypted) {
+::gpk::error_t								gpk::rsaEncode						(::gpk::SRSA & g_SRSA, const ::gpk::view_array<const byte_t> & decrypted, uint64_t key, ::gpk::array_pod<uint64_t>& encrypted) {
 	uint32_t										offset								= encrypted.size();
 	uint32_t										i									= 0;
-	encrypted.resize(offset + decrypted.size());
+	gpk_necall(encrypted.resize(offset + decrypted.size()), "Out of memory?");
 	while(i < decrypted.size()) {			
 		uint64_t										pt									= (ubyte_t)decrypted[i];
 		uint64_t										k									= 1;
@@ -116,10 +116,10 @@ static	::gpk::error_t						rsaDefilterSub2	(::gpk::view_array<ubyte_t>& scanline
 }
 
 // function to decrypt the message
-::gpk::error_t								gpk::rsaDecode						(::gpk::SRSA & g_SRSA, ::gpk::view_const_uint64 encrypted, uint64_t key, ::gpk::array_pod<char>& decrypted) {
+::gpk::error_t								gpk::rsaDecode						(::gpk::SRSA & g_SRSA, const ::gpk::view_array<const uint64_t> & encrypted, uint64_t key, ::gpk::array_pod<char>& decrypted) {
 	uint32_t										offset								= decrypted.size();
 	uint32_t										i									= 0;
-	decrypted.resize(offset + encrypted.size() + 1);
+	gpk_necall(decrypted.resize(offset + encrypted.size() + 1), "%s", "Out of memory?");
 	while(i < encrypted.size()) {
 		uint64_t										ct									= encrypted[i];
 		uint64_t										k									= 1;
@@ -135,30 +135,34 @@ static	::gpk::error_t						rsaDefilterSub2	(::gpk::view_array<ubyte_t>& scanline
 	return (int)i;
 }
 
-
 //function to encrypt the message
-::gpk::error_t								gpk::rsaSafeEncode						(::gpk::SRSA & g_SRSA, ::gpk::view_array<const byte_t> decrypted, uint64_t key, bool salt, ::gpk::array_pod<uint64_t>& encrypted) {
-	salt;																																		  
+::gpk::error_t								gpk::gpcEncode						(::gpk::SRSA & g_SRSA, const ::gpk::view_array<const byte_t> & decrypted, uint64_t key, bool salt, ::gpk::array_pod<uint64_t>& encrypted) {
 	uint32_t										offset								= encrypted.size();
 	uint32_t										i									= 0;
-	::gpk::array_pod<byte_t>						filtered;//							(decrypted);
-	::gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered);
 
-	::gpk::view_array<ubyte_t>						filter_view							({(ubyte_t*)filtered.begin(), filtered.size()});
-	::rsaFilterSub(filter_view, 1U);
-	::rsaFilterSub2(filter_view, 1U);
+	::gpk::array_pod<byte_t>						filtered;
+	if(false == salt) 		
+		gpk_necall(::gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered), "Failed to encode Ardell. %s", "Out of memory?");
+	else {
+		::gpk::array_pod<byte_t>						salted;
+		gpk_necall(::gpk::saltDataSalt(decrypted, salted), "Failed to add salt. %s", "Out of memory?");
+		gpk_necall(::gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered), "Failed to encode Ardell. %s", "Out of memory?");
+	}
 
-	::gpk::rsaEncode(g_SRSA, {(byte_t*)filter_view.begin(), filter_view.size()}, key, encrypted);
+	::gpk::view_array<ubyte_t>						filter_view							= {(ubyte_t*)filtered.begin(), filtered.size()};
+	gpk_necall(::rsaFilterSub	(filter_view, 1U), "%s", "Out of memory?");
+	gpk_necall(::rsaFilterSub2	(filter_view, 1U), "%s", "Out of memory?");
+
+	gpk_necall(::gpk::rsaEncode(g_SRSA, {(byte_t*)filter_view.begin(), filter_view.size()}, key, encrypted), "%s", "Out of memory?");
 
 	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * sizeof(uint64_t)};
-	::rsaFilterSub2(filter_view, 1U);
-	::rsaFilterSub(filter_view, 1U);
+	gpk_necall(::rsaFilterSub2	(filter_view, 1U), "%s", "Out of memory?");
+	gpk_necall(::rsaFilterSub	(filter_view, 1U), "%s", "Out of memory?");
 	return i;
 }
 
 // function to decrypt the message
-::gpk::error_t								gpk::rsaSafeDecode						(::gpk::SRSA & g_SRSA, ::gpk::view_const_uint64 encrypted, uint64_t key, bool salt, ::gpk::array_pod<char>& decrypted) {
-	salt;
+::gpk::error_t								gpk::gpcDecode						(::gpk::SRSA & g_SRSA, const ::gpk::view_array<const uint64_t> & encrypted, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& decrypted) {
 	uint32_t										offset								= decrypted.size();
 	uint32_t										i									= 0;
 	::gpk::array_pod<uint64_t>						defiltered							(encrypted);
@@ -166,19 +170,26 @@ static	::gpk::error_t						rsaDefilterSub2	(::gpk::view_array<ubyte_t>& scanline
 	::rsaDefilterSub(defilter_view, 1U);
 	::rsaDefilterSub2(defilter_view, 1U);
 
-	::gpk::rsaDecode(g_SRSA, defiltered, key, decrypted);
+	gpk_necall(::gpk::rsaDecode(g_SRSA, defiltered, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
 
 	::gpk::view_array<ubyte_t>						filter_view							({(ubyte_t*)&decrypted[offset], decrypted.size() - offset});
 	::rsaDefilterSub2(filter_view, 1U);
 	::rsaDefilterSub(filter_view, 1U);
 
 	::gpk::array_pod<byte_t>						defiltered2							= {};
-	::gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2);
-
-	for(uint32_t j=0; j < defiltered2.size(); ++j)
-		decrypted[offset + j]						= defiltered2[j];
-
-	decrypted.resize(offset + defiltered2.size() + 1);
+	gpk_necall(::gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
+	if(false == salt) {
+		for(uint32_t j=0; j < defiltered2.size(); ++j)
+			decrypted[offset + j]						= defiltered2[j];
+		gpk_necall(decrypted.resize(offset + defiltered2.size() + 1), "%s", "Out of memory?");
+	}
+	else {
+		::gpk::array_pod<byte_t>						unsalted;
+		gpk_necall(::gpk::saltDataUnsalt(defiltered2, unsalted), "Failed to remove salt. %s", "Out of memory?");;
+		for(uint32_t j=0; j < unsalted.size(); ++j)
+			decrypted[offset + j]						= unsalted[j];
+		gpk_necall(decrypted.resize(offset + unsalted.size() + 1), "%s", "Out of memory?");
+	}
 	decrypted[decrypted.size() - 1]				= 0;
 	decrypted.resize(decrypted.size() - 1);
 	return (int)i;

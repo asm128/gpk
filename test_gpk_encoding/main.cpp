@@ -156,12 +156,12 @@ int													main						()			{
 				decoded.clear();
 				ce_if(errored(::gpk::rsaEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::rsaDecode(rsa, encoded				, rsaKeys[0].Private, decoded)), "%s", "Out of memory?");
-				always_printf("RSA:"
-					"\nEncoded: %s."
-					"\nDecoded: %s."
-					, encoded.begin()
-					, decoded.begin()
-					);
+				//always_printf("RSA:"
+				//	"\nEncoded: %s."
+				//	"\nDecoded: %s."
+				//	, encoded.begin()
+				//	, decoded.begin()
+				//	);
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -206,14 +206,14 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::rsaSafeEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, false, encoded)), "%s", "Out of memory?");
-				ce_if(errored(::gpk::rsaSafeDecode(rsa, encoded				, rsaKeys[0].Private, false, decoded)), "%s", "Out of memory?");
-				always_printf("RSA:"
-					"\nEncoded: %s."
-					"\nDecoded: %s."
-					, encoded.begin()
-					, decoded.begin()
-					);
+				ce_if(errored(::gpk::gpcEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, false, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::gpcDecode(rsa, encoded				, rsaKeys[0].Private, false, decoded)), "%s", "Out of memory?");
+				//always_printf("RSA:"
+				//	"\nEncoded: %s."
+				//	"\nDecoded: %s."
+				//	, encoded.begin()
+				//	, decoded.begin()
+				//	);
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
@@ -235,8 +235,8 @@ int													main						()			{
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				ce_if(errored(::gpk::rsaSafeEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, true, encoded)), "%s", "Out of memory?");
-				ce_if(errored(::gpk::rsaSafeDecode(rsa, encoded				, rsaKeys[0].Private, true, decoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::gpcEncode(rsa, testStrings[iTest]	, rsaKeys[0].Public	, true, encoded)), "%s", "Out of memory?");
+				ce_if(errored(::gpk::gpcDecode(rsa, encoded				, rsaKeys[0].Private, true, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;

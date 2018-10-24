@@ -16,6 +16,7 @@ namespace gpk
 				::gpk::error_t														pathList						(const ::gpk::label & pathToList, ::gpk::array_obj<::gpk::label>& output, bool listFolders);		// Not recursive
 				::gpk::error_t														fileToMemory					(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory);
 				::gpk::error_t														fileFromMemory					(const ::gpk::view_const_string& fileName, const ::gpk::array_pod<byte_t>& fileInMemory);
+				::gpk::error_t														dirCreate						(const ::gpk::view_const_string& folderName);				// Recursive
 } // namespace
 
 #endif // GPK_STORAGE_H_2983749283
