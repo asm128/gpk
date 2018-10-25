@@ -8,18 +8,22 @@
 #include <random>
 
 			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::array_pod<byte_t> & salted)				{
-	salted.resize(binary.size() * 2);
+	gpk_necall(salted.resize(binary.size() * 2), "%s", "Out of memory?");
+	byte_t														* pSalted														= salted.begin();
+	const byte_t												* pBinary														= binary.begin();
 	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) {
-		salted[iBinary * 2]										= binary[iBinary];
-		salted[iBinary * 2 + 1]									= ::gpk::noise1DBase(::gpk::timeCurrentInUs()) & 0xFF;
+		pSalted[iBinary * 2]									= pBinary[iBinary];
+		pSalted[iBinary * 2 + 1]								= ::gpk::noise1DBase(::gpk::timeCurrentInUs()) & 0xFF;
 	}
 	return 0;
 }
 
 			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::array_pod<byte_t> & binary)				{
-	binary.resize(salted.size() / 2);
+	gpk_necall(binary.resize(salted.size() / 2), "%s", "Out of memory?");
+	const byte_t												* pSalted														= salted.begin();
+	byte_t														* pBinary														= binary.begin();
 	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) 
-		binary[iBinary]											= salted[iBinary * 2];
+		pBinary[iBinary]										= pSalted[iBinary * 2];
 	return 0;
 }
 
@@ -40,25 +44,30 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 		byte													= (char)hex;
 	}
 	catch (::std::invalid_argument) {
-		return -1;
+		byte													= '?';
+		return -1;	// we should never get here
 	}
 	return 0;
 }
 
-			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & inputBinary	, ::gpk::array_pod<char_t	> & out_hexed	)	{ 
+			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & in_binary, ::gpk::array_pod<char_t	> & out_hexed	)	{ 
 	uint32_t													offset															= out_hexed.size();
-	out_hexed.resize(offset + inputBinary.size() * 2);
-	for(uint32_t iByte = 0; iByte < inputBinary.size(); ++iByte)
-		hexFromByte(inputBinary[iByte], &out_hexed[offset + iByte * 2]); 
+	gpk_necall(out_hexed.resize(offset + in_binary.size() * 2), "%s", "Out of memory?");
+	byte_t														* pHexed														= out_hexed.begin();
+	const ubyte_t												* pBinary														= in_binary.begin();
+	for(uint32_t iByte = 0; iByte < in_binary.size(); ++iByte)
+		hexFromByte(pBinary[iByte], &pHexed[offset + iByte * 2]); 
 	return 0; 
 }
 
-			::gpk::error_t								gpk::hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<ubyte_t	> & outputBinary)	{
-	uint32_t													offset															= outputBinary.size();
+			::gpk::error_t								gpk::hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<ubyte_t	> & out_binary)	{
+	uint32_t													offset															= out_binary.size();
 	uint32_t													binarySize														= in_hexed.size() >> 1;
-	outputBinary.resize(offset + binarySize);
+	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
+	const byte_t												* pHexed														= in_hexed.begin();
+	ubyte_t														* pBinary														= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
-		hexToByte(&in_hexed[iByte * 2], outputBinary[offset + iByte]); 
+		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]); 
 	return 0; 
 }
 
@@ -155,6 +164,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 }
 
 ::gpk::error_t											gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
+	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
 	char														saltValue		[4]												= {};
 	if (salt) 
 		for (int32_t i = 0; i < 4; i++) {
@@ -193,6 +203,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 }
 
 ::gpk::error_t									gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
+	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
 	int32_t												k1																= 11 + (key % 233);
 	int32_t												k2																=  7 + (key % 239);
 	int32_t												k3																=  5 + (key % 241);

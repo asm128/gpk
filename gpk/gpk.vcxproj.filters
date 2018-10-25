@@ -216,6 +216,9 @@
     <ClInclude Include="gpk_rsa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_session.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">

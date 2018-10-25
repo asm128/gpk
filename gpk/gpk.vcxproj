@@ -29,6 +29,7 @@
     <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_rsa.h" />
+    <ClInclude Include="gpk_session.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_udp_client.h" />
