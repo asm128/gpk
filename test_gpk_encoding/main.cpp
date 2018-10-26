@@ -150,24 +150,27 @@ int													main						()			{
 		uint32_t												prime2						= 23; 
 		//uint32_t												prime1						= 251; 
 		//uint32_t												prime2						= 241; 
+		//uint32_t												prime1						= 521; 
+		//uint32_t												prime2						= 541; 
 		rsa_n												= prime1 * prime2;
 		::gpk::STimer											timer;
-		e_if(errored(::gpk::rsaKeys(prime1, prime2, 1024 * 1024, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
+		e_if(errored(::gpk::rsaKeys(prime1, prime2, 64, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
 		for(uint32_t iPair = 0; iPair < rsaKeys.size(); ++iPair)
 			always_printf("Private: %llu. Public: %llu.", rsaKeys[iPair].Private, rsaKeys[iPair].Public);
 		timer.Frame();
 		always_printf("------ RSA Key generation time: %g seconds.", timer.LastTimeSeconds);
 	}
+	const uint32_t											rsaRounds					= (rsaKeys[rsaKeys.size() - 1].Public == rsaKeys[rsaKeys.size() - 1].Private) ? rsaKeys.size() - 1 : rsaKeys.size();
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				const int32_t											pair						= rand() % rsaKeys.size();
+				const uint32_t											pair						= iRound; //rand() % rsaKeys.size();
 				ce_if(errored(::gpk::rsaEncode(testStrings[iTest]	, rsa_n, rsaKeys[pair].Public	, rsaKeys[pair].Private	, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::rsaDecode(encoded				, rsa_n, rsaKeys[pair].Private	, decoded)), "%s", "Out of memory?");
 				//always_printf("RSA:"
@@ -180,36 +183,36 @@ int													main						()			{
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ RSA (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ RSA (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rsaRounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rsaRounds, timeTotal * 1000 / rsaRounds / ::gpk::size(testStrings));
 	}
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				const int32_t											pair						= rand() % rsaKeys.size();
+				const uint32_t											pair						= iRound; //rand() % rsaKeys.size();
 				ce_if(errored(::gpk::rsaEncode(testStrings[iTest]	, rsa_n, rsaKeys[pair].Public	, rsaKeys[pair].Private	, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::rsaDecode(encoded				, rsa_n, rsaKeys[pair].Private	, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ RSA (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ RSA (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rsaRounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rsaRounds, timeTotal * 1000 / rsaRounds / ::gpk::size(testStrings));
 	}
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				const int32_t											pair						= rand() % ::gpk::max(0, ((int32_t)rsaKeys.size() - 1));
+				const int32_t											pair						= iRound; //rand() % ::gpk::max(0, ((int32_t)rsaKeys.size() - 1));
 				ce_if(errored(::gpk::gpcEncode(testStrings[iTest]	, rsa_n, rsaKeys[pair].Public	, rsaKeys[pair].Private	, false, encoded)), "%s", "Out of memory?");
 				ce_if(errored(::gpk::gpcDecode(encoded				, rsa_n, rsaKeys[pair].Private	, false, decoded)), "%s", "Out of memory?");
 				//always_printf("RSA:"
@@ -222,14 +225,14 @@ int													main						()			{
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ GPC (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ GPC (cacheless)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rsaRounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rsaRounds, timeTotal * 1000 / rsaRounds / ::gpk::size(testStrings));
 	}
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -240,25 +243,25 @@ int													main						()			{
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ GPC (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ GPC (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rsaRounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rsaRounds, timeTotal * 1000 / rsaRounds / ::gpk::size(testStrings));
 	}
 	{
 		double													timeTotal					= 0;
 		::gpk::array_pod<uint64_t>								encoded;	
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
-				const int32_t											pair						= 0; //rand() % rsaKeys.size();
+				const int32_t											pair						= iRound; //rand() % rsaKeys.size();
 				ce_if(errored(::gpk::gpcEncodeWithHash(testStrings[iTest]	, rsa_n, rsaKeys[pair].Public	, rsaKeys[pair].Private	, false, encoded)), "%s", "Out of memory?");
 				e_if(errored(::gpk::gpcDecodeWithHash(encoded				, rsa_n, rsaKeys[pair].Private	, false, decoded)), "%s", "Out of memory?");
 				error_if(::memcmp(testStrings[iTest].begin(), decoded.begin(), decoded.size()), "Failed to encode/decode! \nOriginal: %s\nDecoded: %s.", testStrings[iTest].begin(), decoded.begin());
 				timer.Frame();
 				timeTotal											+= timer.LastTimeSeconds;
 			}
-		always_printf("------ GPC hashed (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
+		always_printf("------ GPC hashed (cacheless) (salt)\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode/decode time: %g milliseconds.", rsaRounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rsaRounds, timeTotal * 1000 / rsaRounds / ::gpk::size(testStrings));
 	}
 	{
 		double													timeTotal					= 0;
@@ -411,7 +414,7 @@ int													main						()			{
 	}
 
 	::gpk::array_pod<uint64_t>				primes;
-	uint32_t								maxPrime		= 0xFFFFFFU;
+	uint32_t								maxPrime		= 0xFFFFFU;
 	for(uint32_t i = 0; i < maxPrime; ++i) {
 		if(primalityTest(i)) {
 			primes.push_back(i);

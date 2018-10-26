@@ -256,7 +256,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
 		const uint64_t									hashedChar = ::gpk::noise1DBase((i - decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), GPK_NOISE_SEED);
 		checkhash									+= hashedChar;
-		info_printf("Check Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
+		//info_printf("Check Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
 	info_printf("prehash: %llx == checkprehash: %llx", hash, checkhash);
 	ree_if(hash != checkhash, "Failed to check pre hash.");
@@ -274,7 +274,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {
 		const uint64_t									hashedChar = ::gpk::noise1DBase(i * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), GPK_NOISE_SEED);
 		hash										+= hashedChar;
-		info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
+		//info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
 	info_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *(uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)], *(uint64_t*)&prehashed[decrypted.size()], decrypted.size(), prehashed.size());
 
