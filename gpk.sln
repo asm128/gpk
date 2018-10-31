@@ -92,6 +92,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chat_client", "chat_client\
 		{8FD826F8-3739-44E6-8CC8-997122E53B8D} = {8FD826F8-3739-44E6-8CC8-997122E53B8D}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "primegen", "primegen\primegen.vcxproj", "{33E3D781-387C-490E-B65D-A5F0923022AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -212,6 +214,14 @@ Global
 		{DB268E93-53E2-4799-9528-5B93E3AEA989}.Release|x64.Build.0 = Release|x64
 		{DB268E93-53E2-4799-9528-5B93E3AEA989}.Release|x86.ActiveCfg = Release|Win32
 		{DB268E93-53E2-4799-9528-5B93E3AEA989}.Release|x86.Build.0 = Release|Win32
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Debug|x64.ActiveCfg = Debug|x64
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Debug|x64.Build.0 = Debug|x64
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Debug|x86.ActiveCfg = Debug|Win32
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Debug|x86.Build.0 = Debug|Win32
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x64.ActiveCfg = Release|x64
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x64.Build.0 = Release|x64
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x86.ActiveCfg = Release|Win32
+		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
