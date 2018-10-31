@@ -4,7 +4,6 @@
 #include "gpk_encoding.h"
 #include "gpk_noise.h"
 
-#define GPK_NOISE_SEED	16381
 #define RSA_ARDELL_KEY	1079150697//117515017//1054987632
 
 static	int									primalityTest						(uint64_t number)						{
@@ -30,13 +29,13 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 }
 
 // function to generate encryption keys
-		::gpk::error_t						gpk::rsaKeys						(uint32_t prime1, uint32_t prime2, uint64_t limit, ::gpk::array_pod<SRSAKeyPair>& keys)			{
+		::gpk::error_t						gpk::rsaKeys						(uint32_t prime1, uint32_t prime2, uint32_t offset, uint64_t limit, ::gpk::array_pod<SRSAKeyPair>& keys)			{
 	ree_if(0 == ::primalityTest(prime1), "Cannot generate RSA keys with a number that is not prime: %u.", prime1);
 	ree_if(0 == ::primalityTest(prime2), "Cannot generate RSA keys with a number that is not prime: %u.", prime2);
 	uint32_t										k									= 0;
 	uint64_t										j									= 0;
 	uint64_t										t									= (prime1 - 1) * (prime2 - 1);
-	for(uint64_t i = 2; i < t; ++i) {
+	for(uint64_t i = offset; i < t; ++i) {
 		if(t % i == 0)
 			continue;
 		j											= (uint64_t)sqrt((double)i);
@@ -111,21 +110,21 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	return (int)i;
 }
 
-	::gpk::error_t						gpcDefilterSub			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
+		::gpk::error_t						gpcDefilterSub			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
 	ubyte_t											* pScanline				= scanline.begin();
 	for(uint32_t iByte = bpp, countBytes = scanline.size(); iByte < countBytes; ++iByte) 
 		pScanline[iByte]							+= pScanline[iByte - bpp];	
 	return 0; 
 }
 
-	::gpk::error_t						gpcDefilterSub2			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
+		::gpk::error_t						gpcDefilterSub2			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
 	ubyte_t											* pScanline				= scanline.begin();
 	for(int32_t iByte = scanline.size() - bpp - 1; iByte >= 0; --iByte) 
 		pScanline[iByte]							+= pScanline[iByte + bpp];	
 	return 0; 
 }
 
-	::gpk::error_t						gpcFilterSub			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
+		::gpk::error_t						gpcFilterSub			(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
 	::gpk::array_pod<ubyte_t>						filtered;
 	const uint32_t									countBytes				= scanline.size();
 	gpk_necall(filtered.resize(countBytes), "%s", "Out of memory?");
@@ -143,7 +142,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	return 0; 
 }
 
-	::gpk::error_t						gpcFilterSub2	(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
+		::gpk::error_t						gpcFilterSub2	(::gpk::view_array<ubyte_t>& scanline, uint32_t bpp) { 
 	::gpk::array_pod<ubyte_t>						filtered;
 	gpk_necall(filtered.resize(scanline.size()), "%s", "Out of memory?");;
 	ubyte_t											* pScanline				= scanline.begin();
@@ -249,7 +248,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	const uint64_t									posthash							= encrypted[actualSize];
 	uint64_t										checkposthash						= 0;
 	for(uint32_t i = 0, maxEncrypted = encrypted.size() - 2; i < maxEncrypted; ++i) 
-		checkposthash								+= ::gpk::noise1DBase(i * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), GPK_NOISE_SEED);
+		checkposthash								+= ::gpk::noise1DBase(i * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), ::gpk::NOISE_SEED);
 	ree_if(posthash != checkposthash, "%s", "Failed to check post hash. posthash: %llx == checkposthash: %llx", posthash, checkposthash);
 
 	const uint32_t									decryptedStart						= decrypted.size();
@@ -261,7 +260,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint64_t										checkhash							= 0;
 	gpk_necall(decrypted.resize(decrypted.size() - sizeof(uint64_t)), "%s", "Out of memory?");
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
-		const uint64_t									hashedChar = ::gpk::noise1DBase((i - decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), GPK_NOISE_SEED);
+		const uint64_t									hashedChar = ::gpk::noise1DBase((i - decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		checkhash									+= hashedChar;
 		//info_printf("Check Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
@@ -278,7 +277,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 		prehashed[i]								= decrypted[i];
 
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {
-		const uint64_t									hashedChar = ::gpk::noise1DBase(i * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), GPK_NOISE_SEED);
+		const uint64_t									hashedChar							= ::gpk::noise1DBase(i * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		hash										+= hashedChar;
 		//info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
@@ -297,7 +296,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 
 	uint64_t										posthash							= 0;
 	for(uint32_t i = encryptedStart, maxEncrypted = encrypted.size() - 1; i < maxEncrypted; ++i) 
-		posthash									+= ::gpk::noise1DBase((i - encryptedStart) * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), GPK_NOISE_SEED);
+		posthash									+= ::gpk::noise1DBase((i - encryptedStart) * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), ::gpk::NOISE_SEED);
 
 	gpk_necall(encrypted.push_back(posthash), "%s", "Out of memory?");
 	verbose_printf("posthash: %llx.", posthash);

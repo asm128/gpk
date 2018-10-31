@@ -29,20 +29,21 @@ static int											primalityTest				(uint64_t number)						{
 int													main						()			{
 	const ::gpk::view_const_string							testStrings	[]				= 
 		{ "Some string to test 0"
-		, "Some string to test 01" 
-		, "Some string to test 002" 
-		, "Some string to test 0003" 
-		, "Some string to test 00004" 
-		, "Some string to test 000005" 
-		, "Some string to test 0000007"	
-		, "Some string to test 00000008"	
-		, "Some string to test 000000009"	
-		, "Some string to test 000000000A"	
-		, "Some string to test 0000000000B"	
-		, "Some string to test 00000000000C"	
-		, "Some string to test 000000000000D"	
-		, "Some string to test 0000000000000E"	
-		, "Some string to test 00000000000000F"	
+		,
+		//, "Some string to test 01" 
+		//, "Some string to test 002" 
+		//, "Some string to test 0003" 
+		//, "Some string to test 00004" 
+		//, "Some string to test 000005" 
+		//, "Some string to test 0000007"	
+		//, "Some string to test 00000008"	
+		//, "Some string to test 000000009"	
+		//, "Some string to test 000000000A"	
+		//, "Some string to test 0000000000B"	
+		//, "Some string to test 00000000000C"	
+		//, "Some string to test 000000000000D"	
+		//, "Some string to test 0000000000000E"	
+		//, "Some string to test 00000000000000F"	
 		};
 	const uint32_t											rounds						= 10;
 	::gpk::array_pod<int32_t>								encodingCache;
@@ -304,7 +305,7 @@ int													main						()			{
 		//uint32_t												prime2						= 541; 
 		rsa_n												= prime1 * prime2;
 		::gpk::STimer											timer;
-		e_if(errored(::gpk::rsaKeys(prime1, prime2, 64, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
+		e_if(errored(::gpk::rsaKeys(prime1, prime2, 2, 0xFFFF, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
 		for(uint32_t iPair = 0; iPair < rsaKeys.size(); ++iPair)
 			always_printf("Private: %llu. Public: %llu.", rsaKeys[iPair].Private, rsaKeys[iPair].Public);
 		timer.Frame();
