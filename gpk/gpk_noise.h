@@ -6,7 +6,7 @@
 namespace gpk
 {
 
-	static constexpr	const uint64_t			NOISE_SEED			= 16381;
+	static constexpr	const uint64_t			NOISE_SEED			= 16381; // 525253
 
 						uint64_t				noise1DBase			(uint64_t x, uint64_t noiseSeed = 16381)																noexcept;
 						double					noise1D				(uint64_t x, uint64_t noiseSeed = 16381)																noexcept;

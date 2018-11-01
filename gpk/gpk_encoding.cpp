@@ -13,7 +13,7 @@
 	const byte_t												* pBinary														= binary.begin();
 	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) {
 		pSalted[iBinary * 2]									= pBinary[iBinary];
-		pSalted[iBinary * 2 + 1]								= ::gpk::noise1DBase(::gpk::timeCurrentInUs()) & 0xFF;
+		pSalted[iBinary * 2 + 1]								= (::gpk::noise1DBase(::gpk::timeCurrentInUs()) + ::gpk::timeCurrentInUs()) & 0xFF;
 	}
 	return 0;
 }

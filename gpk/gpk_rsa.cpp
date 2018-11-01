@@ -8,10 +8,10 @@
 
 static	int									primalityTest						(uint64_t number)						{
 	uint64_t										j									= (uint64_t)sqrt((double)number);
-	if(number > 1 && number < 4)
-		return 1;
-	if(0 == number % 2)
+	if(0 == (number & 1))
 		return 0;
+	if(number > 1 && number < 9)
+		return 1;
 	for(uint64_t i = 3; i <= j; ++i) {
 		if(0 == (number % i))
 			return 0;
@@ -65,7 +65,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint32_t										i									= 0;
 	gpk_necall(encrypted.resize(offset + decrypted.size()), "%s", "Out of memory?");
 	const byte_t									* pDecrypted						= decrypted.begin();
-	uint64_t										* pEncrypted						= encrypted.begin();
+	uint64_t										* pEncrypted						= &encrypted[offset];
 	while(i < decrypted.size()) {			
 		uint64_t										pt									= (ubyte_t)pDecrypted[i];
 		uint64_t										k									= 1;
@@ -93,7 +93,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint32_t										offset								= decrypted.size();
 	uint32_t										i									= 0;
 	gpk_necall(decrypted.resize(offset + encrypted.size() + 1), "%s", "Out of memory?");
-	byte_t											* pDecrypted						= decrypted.begin();pDecrypted; 
+	byte_t											* pDecrypted						= &decrypted[offset];pDecrypted; 
 	const uint64_t									* pEncrypted						= encrypted.begin();pEncrypted; 
 	while(i < encrypted.size()) {
 		uint64_t										ct									= pEncrypted[i];
@@ -184,7 +184,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 #endif
 	}
 
-	::gpk::view_array<ubyte_t>						filter_view							= {(ubyte_t*)filtered.begin(), filtered.size()};filter_view, offset;
+	::gpk::view_array<ubyte_t>						filter_view							= {(ubyte_t*)filtered.begin(), filtered.size()};
 	gpk_necall(::gpcFilterSub	(filter_view, 1U), "%s", "Out of memory?");
 	gpk_necall(::gpcFilterSub2	(filter_view, 1U), "%s", "Out of memory?");
 
@@ -199,8 +199,8 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	}
 
 	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * sizeof(uint64_t)};
-	gpk_necall(::gpcFilterSub2	(filter_view, 1U), "%s", "Out of memory?");
-	gpk_necall(::gpcFilterSub	(filter_view, 1U), "%s", "Out of memory?");
+	gpk_necall(::gpcFilterSub2	(filter_view, 2U), "%s", "Out of memory?");
+	gpk_necall(::gpcFilterSub	(filter_view, 4U), "%s", "Out of memory?");
 	return (::gpk::error_t)i;
 }
 
@@ -210,8 +210,8 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint32_t										i									= 0;
 	::gpk::array_pod<uint64_t>						defiltered							(encrypted);
 	::gpk::view_array<ubyte_t>						defilter_view						= {(ubyte_t*)defiltered.begin(), defiltered.size() * sizeof(uint64_t)};
-	::gpcDefilterSub(defilter_view, 1U);
-	::gpcDefilterSub2(defilter_view, 1U);
+	::gpcDefilterSub(defilter_view, 4U);
+	::gpcDefilterSub2(defilter_view, 2U);
 
 	gpk_necall(::gpk::rsaDecode(defiltered, n, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
 	//info_printf("Last qword: %llx.", *(uint64_t*)&decrypted[decrypted.size() - 8]);
