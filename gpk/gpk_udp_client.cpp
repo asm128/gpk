@@ -90,6 +90,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 		sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time 
 		client.Socket.close();
 	}
+	client.KeyPing												= 0;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	return 0;
 }
