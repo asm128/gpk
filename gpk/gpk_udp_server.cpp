@@ -54,7 +54,7 @@
 				clientsToProcess.clear();
 				{
 					::gpk::mutex_guard												lock								(serverInstance.Mutex);
-					break_info_if(serverInstance.Clients.size(), "No clients to process. Server closed?");
+					break_info_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
