@@ -216,6 +216,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	if errored(bytes_received = ::recvfrom(client.Socket.Handle, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
 		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");	
 	}
+	uint64_t estimatedTimeSent = 0;
 	if(command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST) {
 		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "%s", "Out of memory?");
 		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
@@ -229,14 +230,27 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			for(uint32_t iTime = 0, countLapse = 3000000; iTime < countLapse; ++iTime)
 				if(::hashFromTime(client.FirstPing + iTime) == header.MessageId) {
 					client.KeyPing												= client.FirstPing + iTime;
+					estimatedTimeSent											= client.FirstPing + iTime;
 					info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
 					break;
 				}
 			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");
 		}
+		else {
+			const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
+			const uint64_t																startTime						= nowInUs - 3000000;
+			for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
+				const uint64_t timeSent	 = startTime + iTime;
+				if(::hashFromTime(timeSent) == header.MessageId) {
+					info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
+					estimatedTimeSent											= timeSent;
+					break;
+				}
+			}
+		}
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
-		messageReceived->Time										= header.MessageId;
+		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
 		if(header.Size > 0) {
 			messageReceived->Payload.clear();
 			::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);

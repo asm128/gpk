@@ -409,7 +409,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	}
 }
 
-::gpk::error_t										gpk::aesEncode							(const ubyte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputEncrypted)	{
+::gpk::error_t										gpk::aesEncode							(const byte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted)	{
 	ree_if(0 == messageToEncrypt, "Cannot encode a null input. Data length: %u.", dataLength);
 	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageToEncrypt);
 	int8_t													excedent								= dataLength % ::gpk::AES_SIZEBLOCK;
@@ -427,13 +427,13 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 		iv[iVal]											= (uint8_t)(rand() * fraction);
 	::gpk::SAESContext										aes;
 	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, iv);
-	::gpk::aesCBCEncryptBuffer(&aes, outputEncrypted.begin(), outputEncrypted.size());
+	::gpk::aesCBCEncryptBuffer(&aes, (uint8_t*)outputEncrypted.begin(), outputEncrypted.size());
 	gpk_necall(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV), "%s", "Out of memory?");
 	memcpy(&outputEncrypted[outputEncrypted.size() - ::gpk::AES_SIZEIV], iv, ::gpk::AES_SIZEIV);
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode							(const ubyte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<ubyte_t>& outputDecrypted)	{
+::gpk::error_t										gpk::aesDecode							(const byte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const ubyte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted)	{
 	ree_if(0 == messageEncrypted, "Cannot decode a null input. Data length: %u.", dataLength);
 	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageEncrypted);
 	ree_if(dataLength % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", dataLength);
@@ -441,8 +441,8 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	gpk_necall(outputDecrypted.resize(dataLength - ::gpk::AES_SIZEIV), "%s", "Out of memory?");
 	memcpy(outputDecrypted.begin(), messageEncrypted, outputDecrypted.size());
 	::gpk::SAESContext										aes;
-	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, &messageEncrypted[outputDecrypted.size()]);
-	::gpk::aesCBCDecryptBuffer(&aes, outputDecrypted.begin(), outputDecrypted.size());
+	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, (uint8_t*)&messageEncrypted[outputDecrypted.size()]);
+	::gpk::aesCBCDecryptBuffer(&aes, (uint8_t*)outputDecrypted.begin(), outputDecrypted.size());
 	if(outputDecrypted[outputDecrypted.size() - 1] == 0)
 		gpk_necall(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK), "%s", "Out of memory?");
 	else {

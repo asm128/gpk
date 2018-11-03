@@ -13,13 +13,13 @@ static ::gpk::error_t								test_encrypt_ecb			(::gpk::AES_LEVEL level);
 static ::gpk::error_t								test_decrypt_ecb			(::gpk::AES_LEVEL level);
 static ::gpk::error_t								test_encrypt_ecb_verbose	(::gpk::AES_LEVEL level);
 
-static int											primalityTest				(uint64_t number)						{
-	uint64_t												j							= (uint64_t)sqrt((double)number);
-	if(number > 1 && number < 4)
-		return 1;
-	if(0 == number % 2)
+static	int											primalityTest						(uint64_t number)						{
+	uint64_t												j									= (uint64_t)sqrt((double)number);
+	if(0 == (number & 1))
 		return 0;
-	for(uint64_t i = 5; i <= j; i += 2) {
+	if(number > 1 && number < 9)
+		return 1;
+	for(uint64_t i = 3; i <= j; ++i) {
 		if(0 == (number % i))
 			return 0;
 	}
@@ -251,8 +251,8 @@ int													main						()			{
 	}
 
 	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
-		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			encodedList;	
-		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			decodedList;
 		gpk_necall(encodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
 		gpk_necall(decodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
 		{
@@ -261,8 +261,8 @@ int													main						()			{
 			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
-					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
-					ce_if(errored(::gpk::aesEncode({(const ubyte_t*)testStrings[iTest].begin(), testStrings[iTest].size()}, ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, encoded)), "%s", "Out of memory?");
+					::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
+					ce_if(errored(::gpk::aesEncode({testStrings[iTest].begin(), testStrings[iTest].size()}, ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, encoded)), "%s", "Out of memory?");
 					timer.Frame();
 					timeTotal											+= timer.LastTimeSeconds;
 				}
@@ -274,8 +274,8 @@ int													main						()			{
 			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
-					::gpk::array_pod<ubyte_t>								& encoded					= encodedList[indexBuffer];
-					::gpk::array_pod<ubyte_t>								& decoded					= decodedList[indexBuffer];
+					::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
+					::gpk::array_pod<byte_t>								& decoded					= decodedList[indexBuffer];
 					if errored(::gpk::aesDecode(encoded.begin(), encoded.size(), ::gpk::view_array<const ubyte_t>{(const ubyte_t*)"RandomnessAtLargeQuantities1234", 32}, (::gpk::AES_LEVEL)iAESLevel, decoded)) {
 						error_printf("%s", "Out of memory?");
 						encoded.clear_pointer();

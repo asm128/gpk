@@ -189,6 +189,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)new SDisplayInput{mainWindow, displayInput});
 	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	::UpdateWindow	(displayDetail.WindowHandle);
+	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.argv[0]);
 	return 0;
 }
 #endif
