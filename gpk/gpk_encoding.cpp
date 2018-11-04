@@ -163,7 +163,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0;
 }
 
-::gpk::error_t											gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
+::gpk::error_t											gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
 	char														saltValue		[4]												= {};
 	if (salt) 
@@ -202,7 +202,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0;	
 }
 
-::gpk::error_t									gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, int32_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
+::gpk::error_t									gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
 	int32_t												k1																= 11 + (key % 233);
 	int32_t												k2																=  7 + (key % 239);
