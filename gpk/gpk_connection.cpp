@@ -237,16 +237,16 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");
 		}
 		else {
-			const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
-			const uint64_t																startTime						= nowInUs - 3000000;
-			for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
-				const uint64_t timeSent	 = startTime + iTime;
-				if(::hashFromTime(timeSent) == header.MessageId) {
-					info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
-					estimatedTimeSent											= timeSent;
-					break;
-				}
-			}
+			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
+			//const uint64_t																startTime						= nowInUs - 3000000;
+			//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
+			//	const uint64_t timeSent	 = startTime + iTime;
+			//	if(::hashFromTime(timeSent) == header.MessageId) {
+			//		info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
+			//		estimatedTimeSent											= timeSent;
+			//		break;
+			//	}
+			//}
 		}
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
@@ -264,6 +264,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			}
 			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					response							= {};
 			::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
+			info_printf("Sent ack for message id: %llu.", header.MessageId);
 		}
 		else if(header.Command.Payload == 1) {
 			// 1. Read packet count
@@ -272,6 +273,8 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			::gpk::view_stream<byte_t>										payload								= {messageReceived->Payload.begin(), messageReceived->Payload.size()};
 			uint16_t														packetCount							= 0;
 			gpk_necall(payload.read_pod(packetCount), "Invalid data.");
+			if(0 == packetCount)
+				return 0;
 			ree_if((packetCount * sizeof(uint16_t)) > (payload.size() - payload.CursorPosition), "Invalid packet data.");
 			::gpk::view_array<const uint16_t>								sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
 			payload.CursorPosition										+= packetCount * sizeof(uint16_t);
