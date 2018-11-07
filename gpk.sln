@@ -93,6 +93,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chat_client", "chat_client\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "primegen", "primegen\primegen.vcxproj", "{33E3D781-387C-490E-B65D-A5F0923022AE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{39953D8D-A830-46BD-917E-1A96C8BDADC6} = {39953D8D-A830-46BD-917E-1A96C8BDADC6}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_cube", "test_gpk_cube\test_gpk_cube.vcxproj", "{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{39953D8D-A830-46BD-917E-1A96C8BDADC6} = {39953D8D-A830-46BD-917E-1A96C8BDADC6}
+		{8FD826F8-3739-44E6-8CC8-997122E53B8D} = {8FD826F8-3739-44E6-8CC8-997122E53B8D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -222,6 +233,14 @@ Global
 		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x64.Build.0 = Release|x64
 		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x86.ActiveCfg = Release|Win32
 		{33E3D781-387C-490E-B65D-A5F0923022AE}.Release|x86.Build.0 = Release|Win32
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Debug|x64.ActiveCfg = Debug|x64
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Debug|x64.Build.0 = Debug|x64
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Debug|x86.ActiveCfg = Debug|Win32
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Debug|x86.Build.0 = Debug|Win32
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Release|x64.ActiveCfg = Release|x64
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Release|x64.Build.0 = Release|x64
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Release|x86.ActiveCfg = Release|Win32
+		{389664AC-A4E7-4137-9FF3-B9080E0DC0E6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -271,7 +271,7 @@ namespace gpk
 			};
 		uint32_t														srcMaxY							= src.metrics().y - 1;
 		if(metrics.x > 0)
-			for(uint32_t y = 0; y < metrics.y; ++y) 
+			for(uint32_t y = 0; y < (uint32_t)metrics.y; ++y) 
 				memcpy(&dst[y][0], &src[srcMaxY - y][0], sizeof(_tCell) * metrics.x);
 		return metrics.y * metrics.x;
 	}
