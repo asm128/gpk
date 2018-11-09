@@ -38,10 +38,11 @@ namespace gpk
 					Microseconds	.UpdateFromTime(timeElapsedMicroseconds);
 					Seconds			.UpdateFromTime(timeElapsedMicroseconds / 1000000.0);
 					FrameStep														+= timeElapsedMicroseconds;
+					//FramesPerSecond													= FramesThisSecond;
+					//FramesThisSecond												= 0;
+					//AverageFrameTime												= FramesThisSecond ? 1.0 / FramesThisSecond : 0;
 					while(FrameStep >= 1000000) {
 						FrameStep														-= 1000000;
-						FramesPerSecond													= FramesThisSecond;
-						AverageFrameTime												= FramesThisSecond ? 1.0 / FramesThisSecond : 0;
 					}
 				}
 	};

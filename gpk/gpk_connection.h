@@ -11,12 +11,12 @@ namespace gpk
 	enum ENDPOINT_COMMAND : uint8_t
 		{ ENDPOINT_COMMAND_NOOP				= 0
 		, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
-		, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: 
+		, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: Single payload. - Payload 1: Payload combo.
 		, ENDPOINT_COMMAND_DISCONNECT		= 3
-		, ENDPOINT_COMMAND_PING				= 4
-		, ENDPOINT_COMMAND_TIME				= 5
-		, ENDPOINT_COMMAND_RESERVED_0		= 6
-		, ENDPOINT_COMMAND_INVALID			= 7
+		//, ENDPOINT_COMMAND_PING				= 4
+		//, ENDPOINT_COMMAND_TIME				= 5
+		//, ENDPOINT_COMMAND_RESERVED_0		= 6
+		//, ENDPOINT_COMMAND_INVALID			= 7
 		};
 	static constexpr const uint8_t											ENDPOINT_COMMAND_NOP		= ENDPOINT_COMMAND_NOOP;
 
@@ -70,11 +70,11 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE												State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 60000;
+	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024*8;
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
-	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data);
+	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = false);
 }
 
 #endif // GPK_CONNECTION_H_20347892908347

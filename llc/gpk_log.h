@@ -259,17 +259,17 @@ namespace gpk
 	} while(0)
 
 #else
-#	define gpk_rve_ecall(retVal, gpkl_call, ...) do {																																\
+#	define gpk_rve_ecall(retval, gpkl_call, ...) do {																																\
 		if(::gpk::failed(gpkl_call))  																																				\
 			return retval; 																																							\
 	} while(0)
 
-#	define gpk_rve_hrcall(retVal, gpkl_call, ...) do {																																\
+#	define gpk_rve_hrcall(retval, gpkl_call, ...) do {																																\
 		if(FAILED(gpkl_call))  																																						\
 			return retval; 																																							\
 	} while(0)
 
-#	define gpk_rv_hrcall(retVal, gpkl_call) do {																																	\
+#	define gpk_rv_hrcall(retval, gpkl_call) do {																																	\
 		if(FAILED(gpkl_call))  																																						\
 			return retval; 																																							\
 	} while(0)
