@@ -6,6 +6,7 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	struct SInputMouse {
 							::gpk::SCoord2<int32_t>					Position									= {};
 							::gpk::SCoord3<int32_t>					Deltas										= {};
@@ -19,7 +20,7 @@ namespace gpk
 							double									KeyTime				[256]					= {};
 							int64_t									KeyStrength			[256]					= {};
 	};
-
+#pragma pack(pop)
 	struct SInput {
 							::gpk::array_pod<SInputKeyboard	>		StateKeyboard		;
 							::gpk::array_pod<SInputMouse	>		StateMouse			;

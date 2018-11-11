@@ -28,7 +28,7 @@
 }
 
 static				uint64_t								hashFromTime						(uint64_t currentTime)	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
-static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // microseconds
+static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // microseconds
 
 ::gpk::error_t												payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend) {
 	if(payloadsToSend.size() < 2)
@@ -142,7 +142,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 3000000; // 
 		if((gpk::timeCurrentInUs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
 			client.Queue.Sent.remove(iSent);
 			--iSent;
-			warning_printf("%s", "A message sent didn't receive a confirmation on time.");
+			//warning_printf("%s", "A message sent didn't receive a confirmation on time.");
 		}
 
 	// Send non-payload commands and 
@@ -281,7 +281,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			}
 			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					response							= {};
 			::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
-			info_printf("Sent ack for message id: %llu.", header.MessageId);
+			//info_printf("Sent ack for message id: %llu.", header.MessageId);
 		}
 		else {
 			// 1. Read packet count
