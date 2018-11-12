@@ -36,7 +36,7 @@
 			uint32_t														stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
 				::gpk::mutex_guard												lock								(serverInstance.Mutex);
-				for(uint32_t iClient = 0; iClient < stageClientCount; ++iClient) {
+				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < actualCount; ++iClient) {
 					::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
 					if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
