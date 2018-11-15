@@ -30,7 +30,10 @@ namespace gpk
 	struct SUDPCommand {
 		ENDPOINT_COMMAND														Command			: 3;
 		ENDPOINT_COMMAND_TYPE													Type			: 2;
-		uint8_t																	Payload			: 3;
+		uint8_t																	Packed			: 1;
+		uint8_t																	Encrypted		: 1;
+		uint8_t																	Compressed		: 1;
+		//uint8_t																	Payload			: 3;
 	};
 
 	struct SUDPPayloadHeader {
@@ -74,7 +77,7 @@ namespace gpk
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
-	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true);
+	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true, bool bCompress = false);
 }
 
 #endif // GPK_CONNECTION_H_20347892908347

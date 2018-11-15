@@ -31,7 +31,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	int																wsae										= WSAGetLastError() ;
 	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed!");	/* Receive time */
 	ree_if(commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received!");
-	commandToSend.Payload										= 1;
+	commandToSend.Packed										= 1;
 	sa_length													= sizeof(struct sockaddr_in);
 	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
 	client.LastPing												= 

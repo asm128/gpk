@@ -4,17 +4,12 @@
 #include "gpk_noise.h"
 #include "gpk_encoding.h"
 
-::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypt) {
+::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypt, bool bCompress) {
 	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 	{
 		::gpk::mutex_guard												lock								(queue.MutexSend);
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					message;
-		message->Command.Command									= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
-		message->Command.Type										= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST;
-		message->Command.Payload									= 0;
-		if(bEncrypt) 
-			message->Command.Payload									|= 2;
-
+		message->Command											= {::gpk::ENDPOINT_COMMAND_PAYLOAD, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, 0, (uint8_t)(bEncrypt ? 1 : 0), (uint8_t)(bCompress ? 1 : 0)};
 		message->Time												= ::gpk::timeCurrentInUs();
 		if(0 == client.KeyPing) {
 			client.KeyPing												= message->Time;
@@ -41,15 +36,16 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					optimizedPayload					= {};
 		optimizedPayload->Time										= ::gpk::timeCurrentInUs();
+		optimizedPayload->Command									= {};
 		optimizedPayload->Command.Command							= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
 		optimizedPayload->Command.Type								= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST;
-		optimizedPayload->Command.Payload							= 1;
+		optimizedPayload->Command.Packed							= 1;
 		bool															keyPing								= false;
 		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayload						= payloadsToSend[iPayload];
 			if(0 == currentPayload)
 				continue;
-			if((currentPayload->Command.Payload & 1) || currentPayload->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayload->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
+			if((currentPayload->Command.Packed & 1) || currentPayload->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayload->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 				continue;
 			const bool														sizeEnough							= (serialized.size() + sizeof(uint16_t) + currentPayload->Payload.size()) < ::gpk::UDP_PAYLOAD_SIZE_LIMIT;
 			if(false == sizeEnough)
@@ -61,8 +57,8 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 			gpk_necall(payloadsToRemove.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
 			gpk_necall(messageCacheSent.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
 		}
-		const uint32_t														sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
-		uint16_t															packetCount							= (uint16_t)payloadSizes.size();
+		const uint32_t													sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
+		uint16_t														packetCount							= (uint16_t)payloadSizes.size();
 		gpk_necall(optimizedPayload->Payload.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
 		optimizedPayload->Payload.clear();
 		optimizedPayload->Payload.append((const byte_t*)&packetCount, sizeof(uint16_t));
@@ -72,7 +68,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 		gpk_necall(payloadsToSend.push_back(optimizedPayload), "Failed! Payload queue size: %u.", payloadsToSend.size());
 
 		if(keyPing) 
-			client.KeyPing													= optimizedPayload->Time;
+			client.KeyPing												= optimizedPayload->Time;
 
 		// Done. Remove packed payloads from send queue.
 		for(int32_t iPayloadTR = 0; iPayloadTR < (int32_t)payloadsToRemove.size(); ++iPayloadTR) 
@@ -108,7 +104,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 			::gpk::view_stream<byte_t>										sendStream;
 			::gpk::array_pod<byte_t>										ardellEncoded;
 			payloadHeader.MessageId										= ::hashFromTime(messageToSend.Time);
-			if(0 == (payloadHeader.Command.Payload & 2))
+			if(0 == (payloadHeader.Command.Encrypted & 1))
 				payloadHeader.Size											= messageToSend.Payload.size();
 			else  {
 				::gpk::ardellEncode(messageToSend.Payload, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
@@ -118,7 +114,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 			gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size), "%s", "Out of memory?");
 			sendStream							= {messageBytes.begin(), messageBytes.size()};
 			gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
-			if(0 == (payloadHeader.Command.Payload & 2)) 
+			if(0 == (payloadHeader.Command.Encrypted & 1)) 
 				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
 			else
 				gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
@@ -176,7 +172,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 }
 
 static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
-	ree_if(0 != command.Payload || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid client state.");
+	ree_if(0 != command.Packed || 0 != command.Encrypted || 0 != command.Compressed || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid command or client state.");
 	client.FirstPing											= 
 	client.KeyPing												= 0;
 	client.LastPing												= gpk::timeCurrentInUs();
@@ -187,7 +183,7 @@ static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand& 
 }
 
 static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
-	ree_if(1 != command.Payload || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state.");
+	ree_if(1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state.");
 	{
 		client.LastPing												= gpk::timeCurrentInUs();
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
@@ -264,7 +260,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
-		if(header.Size > 0 && (command.Payload & 2)) {
+		if(header.Size > 0 && (command.Encrypted & 1)) {
 			messageReceived->Payload.clear();
 			::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
 		}
@@ -273,8 +269,8 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
 		}
 		client.LastPing												= ::gpk::timeCurrentInUs();
-		ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
-		if(0 == (header.Command.Payload & 1)) {
+		//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
+		if(0 == (header.Command.Packed & 1)) {
 			{
 				::gpk::mutex_guard												lock								(client.Queue.MutexReceive);
 				gpk_necall(client.Queue.Received.push_back(messageReceived), "Out of memory? Queue size: %u.", client.Queue.Received.size());
@@ -300,7 +296,9 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceivedInt						= {};
 				messageReceivedInt->Command									= header.Command;
 				messageReceivedInt->Time									= header.MessageId;
-				messageReceivedInt->Command.Payload							= 0;	// Clear payload mode bits
+				messageReceivedInt->Command.Packed							= 0;	// Clear payload mode bits
+				messageReceivedInt->Command.Encrypted						= 0;
+				messageReceivedInt->Command.Compressed						= 0;
 				gpk_necall(messageReceivedInt->Payload.resize(sizes[iSizes]), "%s", "Out of memory?");
 				gpk_necall(payload.read_pod(messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
 				gpk_necall(tempQueue.push_back(messageReceivedInt), "%s", "Out of memory?");
