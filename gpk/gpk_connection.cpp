@@ -3,6 +3,7 @@
 #include "gpk_view_stream.h"
 #include "gpk_noise.h"
 #include "gpk_encoding.h"
+#include "gpk_deflate.h"
 
 ::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypt, bool bCompress) {
 	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
@@ -70,8 +71,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 		if(keyPing) 
 			client.KeyPing												= optimizedPayload->Time;
 
-		// Done. Remove packed payloads from send queue.
-		for(int32_t iPayloadTR = 0; iPayloadTR < (int32_t)payloadsToRemove.size(); ++iPayloadTR) 
+		for(int32_t iPayloadTR = 0; iPayloadTR < (int32_t)payloadsToRemove.size(); ++iPayloadTR)	// Done. Remove packed payloads from send queue.
 			for(int32_t iPayload = 0; iPayload < (int32_t)payloadsToSend.size(); ++iPayload) {
 				if(payloadsToRemove[iPayloadTR] == payloadsToSend[iPayload]) {
 					payloadsToSend.remove_unordered(iPayload);
@@ -104,20 +104,40 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 			::gpk::view_stream<byte_t>										sendStream;
 			::gpk::array_pod<byte_t>										ardellEncoded;
 			payloadHeader.MessageId										= ::hashFromTime(messageToSend.Time);
-			if(0 == (payloadHeader.Command.Encrypted & 1))
-				payloadHeader.Size											= messageToSend.Payload.size();
+			::gpk::array_pod<byte_t>										compressed;
+			ree_if(errored(compressed.resize(messageToSend.Payload.size() * 2)), "Wtf: %s.", "Out of memory?");
+			if(0 == payloadHeader.Command.Encrypted) {
+				if(0 == payloadHeader.Command.Compressed) 
+					payloadHeader.Size											= messageToSend.Payload.size();
+				else {
+					::gpk::arrayDeflate(messageToSend.Payload, compressed);
+					payloadHeader.Size											= compressed.size();
+				}
+			}
 			else  {
 				::gpk::ardellEncode(messageToSend.Payload, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
-				payloadHeader.Size											= ardellEncoded.size();
+				if(0 == payloadHeader.Command.Compressed) 
+					payloadHeader.Size											= ardellEncoded.size();
+				else {
+					::gpk::arrayDeflate(ardellEncoded, compressed);
+					payloadHeader.Size											= compressed.size();
+				}
 			}
 
 			gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size), "%s", "Out of memory?");
 			sendStream							= {messageBytes.begin(), messageBytes.size()};
 			gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
-			if(0 == (payloadHeader.Command.Encrypted & 1)) 
-				gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
-			else
-				gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
+
+			if(0 != payloadHeader.Command.Compressed) {
+				info_printf("Original packet size: %u. Compressed size: %u.", messageToSend.Payload.size(), compressed.size());
+				gpk_necall(sendStream.write_pod(compressed.begin(), compressed.size()), "%s", "??");
+			}
+			else {
+				if(0 == (payloadHeader.Command.Encrypted & 1)) 
+					gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
+				else
+					gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
+			}
 
 			ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
@@ -260,13 +280,30 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
-		if(header.Size > 0 && (command.Encrypted & 1)) {
-			messageReceived->Payload.clear();
-			::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
-		}
-		else {
-			messageReceived->Payload.resize(header.Size);
-			memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
+		if(header.Size > 0) {
+			if(0 != command.Compressed) {
+				if(0 != command.Encrypted) {
+					::gpk::array_pod<byte_t>										inflated;
+					inflated.resize(65535);
+					::gpk::arrayInflate({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, inflated);
+					messageReceived->Payload.clear();
+					::gpk::ardellDecode(inflated, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+				}
+				else {
+					messageReceived->Payload.resize(65535);
+					::gpk::arrayInflate({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, messageReceived->Payload);
+				}
+			}
+			else {
+				if(0 != command.Encrypted) {
+					messageReceived->Payload.clear();
+					::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+				}
+				else {
+					messageReceived->Payload.resize(header.Size);
+					memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
+				}
+			}
 		}
 		client.LastPing												= ::gpk::timeCurrentInUs();
 		//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);

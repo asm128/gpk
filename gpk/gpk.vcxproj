@@ -26,6 +26,7 @@
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_connection.h" />
+    <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_rsa.h" />
@@ -89,6 +90,7 @@
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
+    <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_display.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
