@@ -13,27 +13,19 @@ namespace gpk
 		, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
 		, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: Single payload. - Payload 1: Payload combo.
 		, ENDPOINT_COMMAND_DISCONNECT		= 3
-		//, ENDPOINT_COMMAND_PING				= 4
-		//, ENDPOINT_COMMAND_TIME				= 5
-		//, ENDPOINT_COMMAND_RESERVED_0		= 6
-		//, ENDPOINT_COMMAND_INVALID			= 7
 		};
-	static constexpr const uint8_t											ENDPOINT_COMMAND_NOP		= ENDPOINT_COMMAND_NOOP;
 
 	enum ENDPOINT_COMMAND_TYPE : uint8_t
 		{ ENDPOINT_COMMAND_TYPE_REQUEST		= 0
 		, ENDPOINT_COMMAND_TYPE_RESPONSE	= 1
-		, ENDPOINT_COMMAND_TYPE_RESERVED_0	= 2 
-		, ENDPOINT_COMMAND_TYPE_RESERVED_1	= 3
 		};
 
 	struct SUDPCommand {
-		ENDPOINT_COMMAND														Command			: 3;
-		ENDPOINT_COMMAND_TYPE													Type			: 2;
+		ENDPOINT_COMMAND														Command			: 2;
+		ENDPOINT_COMMAND_TYPE													Type			: 1;
 		uint8_t																	Packed			: 1;
 		uint8_t																	Encrypted		: 1;
 		uint8_t																	Compressed		: 1;
-		//uint8_t																	Payload			: 3;
 	};
 
 	struct SUDPPayloadHeader {
