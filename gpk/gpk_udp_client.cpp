@@ -111,7 +111,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 		client.Socket.close();
 		client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 		_beginthread(::threadClientConnect, 0, &client);
-		for(uint32_t i = 0; i < 500; ++i) {
+		for(uint32_t i = 0; i < 1000; ++i) {
 			::gpk::sleep(1);
 			if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE)
 				break;

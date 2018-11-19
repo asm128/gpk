@@ -5,13 +5,21 @@
 #include "gpk_encoding.h"
 #include "gpk_deflate.h"
 
-::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypt, bool bCompress) {
+::gpk::error_t												gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypt, bool bCompress, uint8_t retryCount) {
 	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 	{
 		::gpk::mutex_guard												lock								(queue.MutexSend);
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					message;
-		message->Command											= {::gpk::ENDPOINT_COMMAND_PAYLOAD, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, 0, (uint8_t)(bEncrypt ? 1 : 0), (uint8_t)(bCompress ? 1 : 0)};
+		//message->Command											= {::gpk::ENDPOINT_COMMAND_PAYLOAD, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, 0, };
+		message->Command.Command									= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
+		message->Command.Type										= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST;
+		message->Command.Encrypted									= (uint8_t)(bEncrypt ? 1 : 0);
+		message->Command.Compressed									= (uint8_t)(bCompress ? 1 : 0);
+		message->Command.Packed										= 0;
+		message->Command.Multipart									= 0;
 		message->Time												= ::gpk::timeCurrentInUs();
+		message->RetryCount											= retryCount;
+
 		if(0 == client.KeyPing) {
 			client.KeyPing												= message->Time;
 			info_printf("Key ping set: %llu.", client.KeyPing);
@@ -24,7 +32,7 @@
 }
 
 static				uint64_t								hashFromTime						(uint64_t currentTime)	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
-static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // microseconds
+static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
 ::gpk::error_t												payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend) {
 	if(payloadsToSend.size() < 2)
@@ -41,12 +49,13 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 		optimizedPayload->Command.Command							= ::gpk::ENDPOINT_COMMAND_PAYLOAD;
 		optimizedPayload->Command.Type								= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST;
 		optimizedPayload->Command.Packed							= 1;
+		optimizedPayload->RetryCount								= 1;
 		bool															keyPing								= false;
 		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayload						= payloadsToSend[iPayload];
 			if(0 == currentPayload)
 				continue;
-			if((currentPayload->Command.Packed & 1) || currentPayload->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayload->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
+			if((currentPayload->Command.Packed & 1) || (0 != currentPayload->RetryCount) || currentPayload->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayload->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 				continue;
 			const bool														sizeEnough							= (serialized.size() + sizeof(uint16_t) + currentPayload->Payload.size()) < ::gpk::UDP_PAYLOAD_SIZE_LIMIT;
 			if(false == sizeEnough)
@@ -154,12 +163,29 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 100000; // m
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 
 	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
-	for(int32_t iSent = 0; iSent < (int32_t)client.Queue.Sent.size(); ++iSent) 
-		if((gpk::timeCurrentInUs() - client.Queue.Sent[iSent]->Time) > ::UDP_PAYLOAD_SENT_LIFETIME) {
+	for(int32_t iSent = 0; iSent < (int32_t)client.Queue.Sent.size(); ++iSent) {
+		::gpk::ptr_obj<::gpk::SUDPConnectionMessage> messageSent = client.Queue.Sent[iSent];
+		if(0 == messageSent)
+			continue;
+		const uint64_t timeCurr = gpk::timeCurrentInUs();
+		const uint64_t timeSent = messageSent->Time;
+		const uint64_t timeDiff = timeCurr - timeSent;
+		if(timeDiff > ::UDP_PAYLOAD_SENT_LIFETIME) {
 			client.Queue.Sent.remove(iSent);
 			--iSent;
-			//warning_printf("%s", "A message sent didn't receive a confirmation on time.");
+			if(messageSent->RetryCount) {
+				--messageSent->RetryCount;
+				info_printf("A message sent didn't receive a confirmation on time. Retries left: %u.", (uint32_t)messageSent->RetryCount);
+				if(messageSent->Time == client.KeyPing)
+					messageSent->Time	= client.KeyPing	= timeCurr;
+				else
+					messageSent->Time	= timeCurr;
+				queueToSend.push_back(messageSent);
+			}
+			else
+				info_printf("%s", "A message sent didn't receive a confirmation on time.");
 		}
+	}
 
 	// Send non-payload commands and 
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend						= messageCacheSend;

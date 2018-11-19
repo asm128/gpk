@@ -28,22 +28,22 @@ static	int											primalityTest						(uint64_t number)						{
 
 int													main						()			{
 	const ::gpk::view_const_string							testStrings	[]				= 
-		{ "Some string to test 0"
-		,
-		//, "Some string to test 01" 
-		//, "Some string to test 002" 
-		//, "Some string to test 0003" 
-		//, "Some string to test 00004" 
-		//, "Some string to test 000005" 
-		//, "Some string to test 0000007"	
-		//, "Some string to test 00000008"	
-		//, "Some string to test 000000009"	
-		//, "Some string to test 000000000A"	
-		//, "Some string to test 0000000000B"	
-		//, "Some string to test 00000000000C"	
-		//, "Some string to test 000000000000D"	
-		//, "Some string to test 0000000000000E"	
-		//, "Some string to test 00000000000000F"	
+		{ "0Some string to test 0"
+		//,
+		, "1Some string to test 01" 
+		, "2Some string to test 002" 
+		, "3Some string to test 0003" 
+		, "4Some string to test 00004" 
+		, "5Some string to test 000005" 
+		, "6Some string to test 0000007"	
+		, "7Some string to test 00000008"	
+		, "8Some string to test 000000009"	
+		, "9Some string to test 000000000A"	
+		, "ASome string to test 0000000000B"	
+		, "BSome string to test 00000000000C"	
+		, "CSome string to test 000000000000D"	
+		, "DSome string to test 0000000000000E"	
+		, "ESome string to test 00000000000000F"	
 		};
 	const uint32_t											rounds						= 10;
 	::gpk::array_pod<int32_t>								encodingCache;

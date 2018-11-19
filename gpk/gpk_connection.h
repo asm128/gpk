@@ -26,6 +26,8 @@ namespace gpk
 		uint8_t																	Packed			: 1;
 		uint8_t																	Encrypted		: 1;
 		uint8_t																	Compressed		: 1;
+		uint8_t																	Multipart		: 1;
+		//uint8_t																	Retry			: 1;
 	};
 
 	struct SUDPPayloadHeader {
@@ -45,6 +47,7 @@ namespace gpk
 		::gpk::array_pod<byte_t>												Payload			;
 		uint64_t																Time			;
 		::gpk::SUDPCommand														Command			;
+		uint8_t																	RetryCount		;
 	};
 
 	struct SUDPClientQueue {
@@ -69,7 +72,7 @@ namespace gpk
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
-	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true, bool bCompress = false);
+	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true, bool bCompress = false, uint8_t retryCount = 0);
 }
 
 #endif // GPK_CONNECTION_H_20347892908347
