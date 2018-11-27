@@ -222,6 +222,9 @@
     <ClInclude Include="gpk_deflate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">

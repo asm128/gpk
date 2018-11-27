@@ -1,6 +1,7 @@
 #include "gpk_array.h"
 #include "gpk_ptr.h"
 #include "gpk_stdsocket.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_CONNECTION_H_20347892908347
 #define GPK_CONNECTION_H_20347892908347
@@ -8,17 +9,26 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	enum ENDPOINT_COMMAND : uint8_t
-		{ ENDPOINT_COMMAND_NOOP				= 0
-		, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
-		, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: Single payload. - Payload 1: Payload combo.
-		, ENDPOINT_COMMAND_DISCONNECT		= 3
-		};
+	GDEFINE_ENUM_TYPE (ENDPOINT_COMMAND, uint8_t)
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND, NOOP		, 0);
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND, CONNECT	, 1);	// - Payload 0: Request connect. - Payload 1: Confirm connect
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND, PAYLOAD	, 2);	// - Payload 0: Single payload. - Payload 1: Payload combo.
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND, DISCONNECT	, 3);
 
-	enum ENDPOINT_COMMAND_TYPE : uint8_t
-		{ ENDPOINT_COMMAND_TYPE_REQUEST		= 0
-		, ENDPOINT_COMMAND_TYPE_RESPONSE	= 1
-		};
+	GDEFINE_ENUM_TYPE (ENDPOINT_COMMAND_TYPE, uint8_t)
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND_TYPE, REQUEST	, 0);
+	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND_TYPE, RESPONSE	, 1);
+
+	//enum ENDPOINT_COMMAND : uint8_t
+	//	{ ENDPOINT_COMMAND_NOOP				= 0
+	//	, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
+	//	, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: Single payload. - Payload 1: Payload combo.
+	//	, ENDPOINT_COMMAND_DISCONNECT		= 3
+	//	};
+	//enum ENDPOINT_COMMAND_TYPE : uint8_t
+	//	{ ENDPOINT_COMMAND_TYPE_REQUEST		= 0
+	//	, ENDPOINT_COMMAND_TYPE_RESPONSE	= 1
+	//	};
 
 	struct SUDPCommand {
 		ENDPOINT_COMMAND														Command			: 2;
@@ -36,11 +46,15 @@ namespace gpk
 		uint64_t																MessageId		;
 	};
 
-	enum UDP_CONNECTION_STATE 
-		{ UDP_CONNECTION_STATE_DISCONNECTED		= 0
-		, UDP_CONNECTION_STATE_HANDSHAKE
-		, UDP_CONNECTION_STATE_IDLE
-		};
+	GDEFINE_ENUM_TYPE (UDP_CONNECTION_STATE, uint8_t)
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, DISCONNECTED	, 0);
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, HANDSHAKE		, 1);	// - Payload 0: Request connect. - Payload 1: Confirm connect
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, IDLE			, 2);	// - Payload 0: Single payload. - Payload 1: Payload combo.
+	//enum UDP_CONNECTION_STATE 
+	//	{ UDP_CONNECTION_STATE_DISCONNECTED		= 0
+	//	, UDP_CONNECTION_STATE_HANDSHAKE
+	//	, UDP_CONNECTION_STATE_IDLE
+	//	};
 #pragma pack(pop)
 
 	struct SUDPConnectionMessage {
@@ -68,7 +82,7 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE												State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024*8;
+	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024*4;
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);

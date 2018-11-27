@@ -1,7 +1,7 @@
 #include "application.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_tcpip.h"
-#include "TINYAUDIO/tinyaudio.h"
+//#include "TINYAUDIO/tinyaudio.h"
 
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
@@ -14,33 +14,33 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::tcpipShutdown();
 	return 0; 
 }
-
-			void													samples_callback			(::tinyaudio::sample_type* samples, int nsamples) {
-	memset(samples, 0, sizeof(::tinyaudio::sample_type) * nsamples);
-	static int																frame						= 0;
-	//if(++frame % 20 && (frame % 40))
-	//	return;
-	double																	testValue					= 1;
-	bool																	cycleUp						= true;
-	double																	fscalesamples				= (65535.0 / 4.0) / (nsamples / 4.0);
-	for(uint32_t iSample = 0; iSample < (uint32_t)nsamples; ++iSample) {
-		if(cycleUp) {
-			testValue															+= fscalesamples;
-			if(testValue >= fscalesamples * nsamples / 4) {
-				testValue															= fscalesamples * nsamples / 4;
-				cycleUp																= false;
-			}
-		}
-		else {
-			testValue															-= fscalesamples;
-			if(testValue <= -fscalesamples * nsamples / 4) {
-				testValue															= -fscalesamples * nsamples / 4;
-				cycleUp																= true;
-			}
-		}
-		samples[iSample]													= (::tinyaudio::sample_type)testValue ; //(testValue % 2 ? testValue / 2 : testValue);
-	}
-}
+//
+//			void													samples_callback			(::tinyaudio::sample_type* samples, int nsamples) {
+//	memset(samples, 0, sizeof(::tinyaudio::sample_type) * nsamples);
+//	static int																frame						= 0;
+//	//if(++frame % 20 && (frame % 40))
+//	//	return;
+//	double																	testValue					= 1;
+//	bool																	cycleUp						= true;
+//	double																	fscalesamples				= (65535.0 / 4.0) / (nsamples / 4.0);
+//	for(uint32_t iSample = 0; iSample < (uint32_t)nsamples; ++iSample) {
+//		if(cycleUp) {
+//			testValue															+= fscalesamples;
+//			if(testValue >= fscalesamples * nsamples / 4) {
+//				testValue															= fscalesamples * nsamples / 4;
+//				cycleUp																= false;
+//			}
+//		}
+//		else {
+//			testValue															-= fscalesamples;
+//			if(testValue <= -fscalesamples * nsamples / 4) {
+//				testValue															= -fscalesamples * nsamples / 4;
+//				cycleUp																= true;
+//			}
+//		}
+//		samples[iSample]													= (::tinyaudio::sample_type)testValue ; //(testValue % 2 ? testValue / 2 : testValue);
+//	}
+//}
 
 			::gpk::error_t											setup						(::gme::SApplication & app)						{ 
 	::gpk::SFramework														& framework					= app.Framework;
@@ -64,7 +64,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::tcpipInitialize();
 	::gpk::serverStart(app.Server, 9998);
 	const int																samples_rate				= 48000;
-	::tinyaudio::init(samples_rate, ::samples_callback);
+	//::tinyaudio::init(samples_rate, ::samples_callback);
 	return 0; 
 }
 
@@ -102,9 +102,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::mutex_guard														lock						(app.Server.Mutex);
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::mutex_guard														lockRecv					(app.Server.Clients[iClient]->Queue.MutexReceive);
-			//for(uint32_t iMessage = 0; iMessage < app.Server.Clients[iClient]->Queue.Received.size(); ++iMessage) {
-			//	info_printf("Received: %s.", app.Server.Clients[iClient]->Queue.Received[iMessage]->Payload.begin());
-			//}
+			for(uint32_t iMessage = 0; iMessage < app.Server.Clients[iClient]->Queue.Received.size(); ++iMessage) {
+				info_printf("Received: %s.", app.Server.Clients[iClient]->Queue.Received[iMessage]->Payload.begin());
+			}
 			app.Server.Clients[iClient]->Queue.Received.clear();
 		}
 	}

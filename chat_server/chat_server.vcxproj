@@ -127,7 +127,6 @@
     <ClInclude Include="application.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\tinyaudio\src\tinyaudio_xaudio.cpp" />
     <ClCompile Include="application.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

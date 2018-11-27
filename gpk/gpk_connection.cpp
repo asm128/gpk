@@ -150,7 +150,9 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 
 			ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
-			gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
+			{
+				gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
+			}
 			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
 		}
 	}
@@ -389,6 +391,19 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 }
 
 ::gpk::error_t												gpk::connectionHandleCommand		(::gpk::SUDPConnection& client, ::gpk::SUDPCommand& command, ::gpk::array_pod<byte_t> & receiveBuffer)		{
+	::gpk::label													labelCommand						= ::gpk::get_value_label(command.Command);
+	::gpk::label													labelType							= ::gpk::get_value_label(command.Type	);
+	info_printf("Command: %s. Type: %s."
+		"\nCompressed   : %i."
+		"\nEncrypted    : %i."
+		"\nMultipart    : %i."
+		"\nPacked       : %i."
+		, labelCommand.begin(), labelType.begin()
+		, command.Compressed ? 1 : 0
+		, command.Encrypted	 ? 1 : 0
+		, command.Multipart	 ? 1 : 0
+		, command.Packed	 ? 1 : 0
+		);
 	switch(command.Type) {
 	case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST:
 		switch(command.Command) {

@@ -28,6 +28,7 @@
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_deque.h" />
+    <ClInclude Include="gpk_enum.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_session.h" />
