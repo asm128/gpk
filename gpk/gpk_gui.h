@@ -101,19 +101,23 @@ namespace gpk
 		, GUI_CONTROL_STATE_COLORS_HOVER
 		, GUI_CONTROL_STATE_COLORS_PRESSED
 		, GUI_CONTROL_STATE_COLORS_SELECTED
+		, GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED
+		, GUI_CONTROL_STATE_COLORS_SELECTED_HOVER
+		, GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED
 		, GUI_CONTROL_STATE_COLORS_EXECUTE
 		, GUI_CONTROL_STATE_COLORS_OUTDATED
 		, GUI_CONTROL_STATE_COLORS_COUNT
 		};
 
 	struct SControl {
-		::gpk::SRectangle2D<int16_t>							Area								= {{0, 0}, {16, 16}};
-		::gpk::SRectLimits<uint16_t>							Border								= {1, 1, 1, 1};
-		::gpk::SRectLimits<uint16_t>							Margin								= {1, 1, 1, 1};
-		::gpk::view_grid<::gpk::SColorBGRA>						Image								= {};
-		int32_t													ColorTheme							= 0;
-		int32_t													IndexParent							= -1;
-		::gpk::ALIGN											Align								= ::gpk::ALIGN_TOP_LEFT;
+		::gpk::SRectangle2D<int16_t>							Area													= {{0, 0}, {16, 16}};
+		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};
+		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
+		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
+		int32_t													ColorTheme												= 0;
+		int32_t													Palettes	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]		= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
+		int32_t													IndexParent												= -1;
+		::gpk::ALIGN											Align													= ::gpk::ALIGN_TOP_LEFT;
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
@@ -152,12 +156,32 @@ namespace gpk
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>			Children							= {};
 	};
 
+	struct SGUIDefaultPalette {
+		int32_t													CONTROL_NORMAL						= -1;
+		int32_t													CONTROL_DISABLED					= -1;
+		int32_t													CONTROL_HOVER						= -1;
+		int32_t													CONTROL_PRESSED						= -1;
+		int32_t													CONTROL_SELECTED					= -1;
+		int32_t													CONTROL_SELECTED_DISABLED			= -1;
+		int32_t													CONTROL_SELECTED_HOVER				= -1;
+		int32_t													CONTROL_SELECTED_PRESSED			= -1;
+		int32_t													CONTROL_EXECUTE						= -1;
+		int32_t													CONTROL_OUTDATED					= -1;
+	};
+
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>								LastSize							= {16, 16};
 		::gpk::SCoord2<float>									CursorPos							= {};
 		::gpk::SGUIControlTable									Controls							= {};
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
+
+		SGUIDefaultPalette										DefaultColors;
+
+		::gpk::array_pod<
+			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
+		>														Palettes;
+
 		// Font
 		::gpk::SImageMonochrome<uint32_t>						FontTexture							= {};
 		::gpk::SCoord2<uint16_t>								FontCharSize						= {9, 16};
@@ -165,6 +189,8 @@ namespace gpk
 		::gpk::SGUIZoom											Zoom								= {};
 		uint32_t												ThemeDefault						= 0;
 		::gpk::GUI_COLOR_MODE									ColorModeDefault					= ::gpk::GUI_COLOR_MODE_THEME;//::gpk::GUI_COLOR_MODE_DEFAULT;
+
+																SGUI								();
 	};
 
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
