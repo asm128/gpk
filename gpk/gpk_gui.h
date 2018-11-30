@@ -22,6 +22,7 @@ namespace gpk
 
 	struct SControlMode {
 		GUI_COLOR_MODE											ColorMode								: 4;
+		uint8_t													UseNewPalettes							: 1;
 	};
 
 	struct SControlRectangle {
