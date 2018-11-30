@@ -27,16 +27,16 @@
 // GUI_CONTROL_COLOR_CLIENT			
 
 																gpk::SGUI::SGUI												()	{
-	DefaultColors.CONTROL_NORMAL					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_DISABLED					= Palettes.push_back({{::gpk::GRAY	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY	 ,}});
-	DefaultColors.CONTROL_HOVER						= Palettes.push_back({{::gpk::GREEN	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, ::gpk::ORANGE, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_PRESSED					= Palettes.push_back({{::gpk::RED	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_SELECTED					= Palettes.push_back({{::gpk::ORANGE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_SELECTED_DISABLED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_SELECTED_HOVER			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_SELECTED_PRESSED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_EXECUTE					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
-	DefaultColors.CONTROL_OUTDATED					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE		 ,}});
+	DefaultColors.CONTROL_NORMAL					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_DISABLED					= Palettes.push_back({{::gpk::GRAY	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY		,}});
+	DefaultColors.CONTROL_HOVER						= Palettes.push_back({{::gpk::CYAN	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
+	DefaultColors.CONTROL_PRESSED					= Palettes.push_back({{::gpk::RED	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_SELECTED					= Palettes.push_back({{::gpk::ORANGE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_SELECTED_DISABLED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_SELECTED_HOVER			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_SELECTED_PRESSED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_EXECUTE					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors.CONTROL_OUTDATED					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
 }
 
 static		::gpk::error_t										controlInvalid											(const ::gpk::SGUI& gui, int32_t iControl)				{
@@ -119,16 +119,16 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::array_p
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
 
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboPressed		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboHover		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboHover 		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT	]		= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND	]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND	]	= colorComboPressed		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboPressed 	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND	]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboSelected	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboSelected	[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND	]	= colorComboHover		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboHover 	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboHover 		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND	]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
+	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
 	for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) 
 		for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea) 
@@ -151,7 +151,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	controlTable.Children	[iControl]								= ::gpk::view_array<int32_t>{};
 	controlTable.Modes		[iControl]								= {};	
 	controlTable.States		[iControl]								= {};
-	controlTable.Modes		[iControl].UseNewPalettes				= 1;
+	//controlTable.Modes		[iControl].UseNewPalettes				= 1;
 	::gpk::SControl														& control				= controlTable.Controls		[iControl]	= {};
 	::gpk::SControlConstraints											& controlConstraints	= controlTable.Constraints	[iControl]	= {};	
 	::gpk::SControlText													& controlText			= controlTable.Text			[iControl]	= {};
