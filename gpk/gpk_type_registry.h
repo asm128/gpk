@@ -36,14 +36,16 @@ namespace gpk
 
 #define GPK_STRUCT_MEMBER_DESC_NAME(_name)	_gpk_dsc_##_name
 
-#define GPK_STRUCT_MEMBER(_type, _name)																																									\
-		struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																																						\
-			static constexpr	const char*					gpk_member_type_name					()		noexcept	{ static constexpr const char name[] = #_type; return name; }					\
-			static constexpr	uint32_t					gpk_member_type_name_len				()		noexcept	{ static constexpr const char name[] = #_type; return ::gpk::size(name) - 1; }	\
-			static constexpr	const char*					gpk_member_name							()		noexcept	{ static constexpr const char name[] = #_name; return name; }					\
-			static constexpr	uint32_t					gpk_member_name_len						()		noexcept	{ static constexpr const char name[] = #_name; return ::gpk::size(name) - 1; }	\
-		};																																																\
-							_type						_name
+#define GPK_STRUCT_MEMBER(_type, _name)																																								\
+	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																																						\
+		static constexpr	const char*					gpk_member_type_name					()		noexcept	{ static constexpr const char	name[]	= #_type; return name; }					\
+		static constexpr	const char*					gpk_member_type_name_label				()		noexcept	{ static const ::gpk::label		name	= #_name; return name; }					\
+		static constexpr	uint32_t					gpk_member_type_name_len				()		noexcept	{ static constexpr const char	name[]	= #_type; return ::gpk::size(name) - 1; }	\
+		static constexpr	const char*					gpk_member_name							()		noexcept	{ static constexpr const char	name[]	= #_name; return name; }					\
+		static constexpr	const char*					gpk_member_name_label					()		noexcept	{ static const ::gpk::label		name	= #_name; return name; }					\
+		static constexpr	uint32_t					gpk_member_name_len						()		noexcept	{ static constexpr const char	name[]	= #_name; return ::gpk::size(name) - 1; }	\
+	};																																																\
+						_type						_name
 }
 
 #endif // GPK_TYPE_REGISTRY_H_9028347293847
