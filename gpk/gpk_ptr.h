@@ -100,12 +100,13 @@ namespace gpk
 		inline				TRef**								operator &							()															noexcept	{ return &Reference;	}
 
 		inline constexpr	const TRef*							get_ref								()													const	noexcept	{ return Reference;	}
+		inline constexpr	const TRef*							set_ref								(TRef* ref)													noexcept	{ TRef* oldInstance = Reference; Reference = ref; ::gpk::ref_release(&oldInstance); return Reference;	}
 
 		template<typename _tNCOOther>
 		inline				_tNCO*								as									(_tNCOOther** other)										noexcept	{ return *other = (Reference ? (_tNCOOther*)Reference->Instance : 0);				}
 
 		template<typename _tNCOOther>
-		inline				_tNCO*								as									(TNCOPtr& other)											noexcept	{ other = ::gpk::ref_acquire(Reference); return 0;									}
+		inline				_tNCO*								as									(::gpk::ptr_nco<_tNCOOther>& other)							noexcept	{ other = (::gpk::gpk_ref<_tNCOOther>*)::gpk::ref_acquire(Reference); return 0;									}
 	};
 	
 	template<typename _tOBJ>

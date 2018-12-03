@@ -226,7 +226,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_dialog.h">
-      <Filter>Header Files</Filter>
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +321,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_dialog.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -199,16 +199,18 @@ namespace gpk
 	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);	
 	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);	
 
+	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
 	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);
-	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlCreateChild					(::gpk::SGUI& gui, int32_t iParent);
 	::gpk::error_t											controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target);
 	::gpk::error_t											controlTextSet						(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
 	//::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t											controlUpdateMetricsTopToDown		(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t											controlHidden						(::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t											controlDisabled						(::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlMetricsInvalidate			(::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlHidden						(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlDisabled						(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t											controlInvalid						(const ::gpk::SGUI& gui, int32_t iControl);
 
 #pragma pack(pop)
 } // namespace

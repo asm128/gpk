@@ -41,7 +41,7 @@
 			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]				= -1;
 	}
 	desktop.Items.ControlLists.Unused[iElement]								= true; 
-	gpk_necall(::gpk::controlDelete(gui, controlListToDelete.IdControl), "%s", "Failed to delete control! Deleted already?");
+	gpk_necall(::gpk::controlDelete(gui, controlListToDelete.IdControl, true), "%s", "Failed to delete control! Deleted already?");
 	controlListToDelete														= {};
 	return 0;
 }
@@ -100,13 +100,12 @@ static		::gpk::error_t												unhideMenuHierarchy						(::gpk::SGUI& gui, ::
 	return 0;
 }
 
-
 static		::gpk::error_t												selectMenuHierarchy						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SControlList& menu)	{
 	if(menu.IndexParentList != -1 && false == desktop.Items.ControlLists.Unused[menu.IndexParentList]) {
 		::selectMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
 		desktop.Items.ControlLists[menu.IndexParentList].IdSelected				= menu.IndexParentItem;
 	}
-	gui.Controls.States[menu.IdControl].Hidden = false;
+	gui.Controls.States[menu.IdControl].Hidden								= false;
 	return 0;
 }
 
@@ -131,29 +130,32 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 	return 0;
 }
 
+			int64_t														viewportUpdate							(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input, int32_t iViewport)							{
+	::gpk::SViewport															& vp									= desktop.Items.Viewports[iViewport];
+	if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].Execute) 
+		::gpk::desktopDeleteViewport(gui, desktop, iViewport);
+	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]].Pressed) 
+		::pushToFrontAndDisplace(gui, vp.IdControl, input);
+	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
+		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
+			//::gpk::SCoord2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::SCoord2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
+				::gpk::SCoord2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+				const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+				::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
+				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled.Cast<int16_t>();
+				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled.Cast<int16_t>();
+				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
+			//}
+		}
+	}
+	return 0;
+}
 			int64_t														gpk::desktopUpdate						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input)							{
 	for(uint32_t iViewport = 0; iViewport < desktop.Items.Viewports.size(); ++iViewport) {
 		if(desktop.Items.Viewports.Unused[iViewport])
 			continue;
-
-		::gpk::SViewport															& vp									= desktop.Items.Viewports[iViewport];
-		if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].Execute) 
-			::gpk::desktopDeleteViewport(gui, desktop, iViewport);
-		else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]].Pressed) 
-			::pushToFrontAndDisplace(gui, vp.IdControl, input);
-		else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
-			if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
-				//::gpk::SCoord2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::SCoord2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-				//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
-					::gpk::SCoord2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-					const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-					::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-					gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled.Cast<int16_t>();
-					gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled.Cast<int16_t>();
-					::gpk::controlMetricsInvalidate(gui, vp.IdControl);
-				//}
-			}
-		}
+		::viewportUpdate(gui, desktop, input, iViewport);
 	}
 
 	::gpk::array_pod<uint32_t>													controlsToProcess						= {};
