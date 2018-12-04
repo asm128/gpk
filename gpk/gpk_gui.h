@@ -131,6 +131,14 @@ namespace gpk
 		::gpk::SCoord2<double>									DPI									= {1.0, 1.0};
 		::gpk::SMinMax<double>									ZoomLimits							= {0.1, 10.0};
 		double													ZoomLevel							= 1.0;
+
+		bool													operator ==							(const ::gpk::SGUIZoom& other)		const	noexcept	{
+			return DPI			== other.DPI
+				&& ZoomLevel	== other.ZoomLevel
+				;
+		}
+		inline	bool											operator!=							(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+
 	};
 
 	struct SControlText {
@@ -157,19 +165,6 @@ namespace gpk
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>			Children							= {};
 	};
 
-	struct SGUIDefaultPalette {
-		int32_t													CONTROL_NORMAL						= -1;
-		int32_t													CONTROL_DISABLED					= -1;
-		int32_t													CONTROL_HOVER						= -1;
-		int32_t													CONTROL_PRESSED						= -1;
-		int32_t													CONTROL_SELECTED					= -1;
-		int32_t													CONTROL_SELECTED_DISABLED			= -1;
-		int32_t													CONTROL_SELECTED_HOVER				= -1;
-		int32_t													CONTROL_SELECTED_PRESSED			= -1;
-		int32_t													CONTROL_EXECUTE						= -1;
-		int32_t													CONTROL_OUTDATED					= -1;
-	};
-
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>								LastSize							= {16, 16};
 		::gpk::SCoord2<float>									CursorPos							= {};
@@ -177,7 +172,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
 
-		SGUIDefaultPalette										DefaultColors;
+		int32_t													DefaultColors	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT];
 
 		::gpk::array_pod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
@@ -187,6 +182,7 @@ namespace gpk
 		::gpk::SImageMonochrome<uint32_t>						FontTexture							= {};
 		::gpk::SCoord2<uint16_t>								FontCharSize						= {9, 16};
 
+		::gpk::SGUIZoom											LastZoom							= {};
 		::gpk::SGUIZoom											Zoom								= {};
 		uint32_t												ThemeDefault						= 0;
 		::gpk::GUI_COLOR_MODE									ColorModeDefault					= ::gpk::GUI_COLOR_MODE_THEME;//::gpk::GUI_COLOR_MODE_DEFAULT;

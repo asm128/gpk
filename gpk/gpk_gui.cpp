@@ -24,16 +24,16 @@
 // GUI_CONTROL_COLOR_CLIENT			
 
 																gpk::SGUI::SGUI												()	{
-	DefaultColors.CONTROL_NORMAL					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_DISABLED					= Palettes.push_back({{::gpk::GRAY	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY		,}});
-	DefaultColors.CONTROL_HOVER						= Palettes.push_back({{::gpk::CYAN	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
-	DefaultColors.CONTROL_PRESSED					= Palettes.push_back({{::gpk::RED	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_SELECTED					= Palettes.push_back({{::gpk::ORANGE, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_SELECTED_DISABLED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_SELECTED_HOVER			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_SELECTED_PRESSED			= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_EXECUTE					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
-	DefaultColors.CONTROL_OUTDATED					= Palettes.push_back({{::gpk::BLUE	, ::gpk::ORANGE, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE			,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL			]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED			]	= Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_HOVER				]	= Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED			]	= Palettes.push_back({{::gpk::ORANGE	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED	]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_HOVER	]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED	]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_EXECUTE			]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	DefaultColors[::gpk::GUI_CONTROL_STATE_COLORS_OUTDATED			]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 }
 
 			::gpk::error_t										gpk::controlInvalid										(const ::gpk::SGUI& gui, int32_t iControl)				{
@@ -157,16 +157,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	control.Area															= {{0, 0}, {16, 16}};
 	control.Border															= {1, 1, 1, 1};
 	control.Margin															= {1, 0, 1, 0};
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL				]	= gui.DefaultColors.CONTROL_NORMAL				;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED			]	= gui.DefaultColors.CONTROL_DISABLED			;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_HOVER				]	= gui.DefaultColors.CONTROL_HOVER				;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= gui.DefaultColors.CONTROL_PRESSED				;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED			]	= gui.DefaultColors.CONTROL_SELECTED			;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED	]	= gui.DefaultColors.CONTROL_SELECTED_DISABLED	;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_HOVER		]	= gui.DefaultColors.CONTROL_SELECTED_HOVER		;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED	]	= gui.DefaultColors.CONTROL_SELECTED_PRESSED	;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_EXECUTE			]	= gui.DefaultColors.CONTROL_EXECUTE				;
-	control.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_OUTDATED			]	= gui.DefaultColors.CONTROL_OUTDATED			;
+	::gpk::memcpy_s(control.Palettes, gui.DefaultColors);
 	controlConstraints.AttachSizeToControl									= {-1, -1};
 	controlConstraints.AttachSizeToText										= {};
 	controlConstraints.DockToControl										= {-1, -1, -1, -1};

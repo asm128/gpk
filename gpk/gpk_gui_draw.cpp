@@ -228,10 +228,11 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 }
 
 			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target)													{
-	if(gui.LastSize != target.metrics()) {
+	if(gui.LastSize != target.metrics() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
 			gui.Controls.States[iOutdated].Updated							= false;
 		gui.LastSize													= target.metrics();
+		gui.LastZoom													= gui.Zoom;
 	}
 	gpk_necall(::gpk::guiUpdateMetrics(gui, gui.LastSize, false), "%s", "Unknown issue!");;
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)

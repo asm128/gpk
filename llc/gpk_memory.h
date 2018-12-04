@@ -1,6 +1,7 @@
 /// Copyright 2010-2017 - asm128
 #include "gpk_eval.h"
 #include <malloc.h>
+#include <memory.h>
 //#include "gpk_safe.h"
 #include "gpk_auto_handler.h"
 
@@ -116,7 +117,7 @@ namespace gpk
 		return dest;
 	}
 
-	template <typename _tBase, size_t _sizeArray>			_tBase*									memcpy_s					(_tBase (&dest)[_sizeArray], const _tBase (&src)[_sizeArray])	noexcept	{ memcpy_s(dest, sizeof(_tBase) * _sizeArray, src, sizeof(_tBase) * _sizeArray); return dest; }
+	template <typename _tBase, size_t _sizeArray>			_tBase*									memcpy_s					(_tBase (&dest)[_sizeArray], const _tBase (&src)[_sizeArray])	noexcept	{ ::memcpy_s(dest, sizeof(_tBase) * _sizeArray, src, sizeof(_tBase) * _sizeArray); return dest; }
 }	// namespace
 
 #endif // GPK_MEMORY_H__92836409283642038462309846

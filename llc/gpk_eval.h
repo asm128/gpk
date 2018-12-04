@@ -25,6 +25,9 @@ namespace gpk
 	struct SMinMax	{
 					_tValue					Min;
 					_tValue					Max;
+
+		inline		bool					operator==(const SMinMax & other)		const	noexcept	{ return Min == other.Min && Max == other.Max; }
+					bool					operator!=(const SMinMax & other)		const	noexcept	{ return !operator==(other); }
 	};
 
 #define true_if(expression)					((expression) ? true : false)	// returns true	 if the parameter evaluates to true
