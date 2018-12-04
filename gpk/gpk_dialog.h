@@ -95,24 +95,24 @@ namespace gpk
 						{ 1.0 / (Dialog->GUI.Zoom.ZoomLevel * (Dialog->GUI.Zoom.DPI.x / 96.0))
 						, 1.0 / (Dialog->GUI.Zoom.ZoomLevel * (Dialog->GUI.Zoom.DPI.y / 96.0))
 						};
-					::gpk::SCoord2<double>											slideInPixels		 				= 
+					::gpk::SCoord2<double>											pixelsSlide		 				= 
 						{ Dialog->Input->MouseCurrent.Deltas.x * scale.x * ((ValueMax - ValueMin)) * (1.0 / (Dialog->GUI.Controls.Metrics[IdGUIControl].Total.Global.Size.x))
 						, Dialog->Input->MouseCurrent.Deltas.y * scale.y * ((ValueMax - ValueMin)) * (1.0 / (Dialog->GUI.Controls.Metrics[IdGUIControl].Total.Global.Size.y))
 						};
 
-					if(slideInPixels.y > 0 && slideInPixels.y < 1)
-						slideInPixels.y = 1;
-					if(slideInPixels.y < 0 && slideInPixels.y > -1)
-						slideInPixels.y = -1;
+					if (pixelsSlide.y > 0 && pixelsSlide.y < 1)
+						pixelsSlide.y = 1;
+					if (pixelsSlide.y < 0 && pixelsSlide.y > -1)
+						pixelsSlide.y = -1;
 		
-					if(slideInPixels.x > 0 && slideInPixels.x < 1)
-						slideInPixels.x = 1;
-					if(slideInPixels.x < 0 && slideInPixels.x > -1)
-						slideInPixels.x = -1;
+					if (pixelsSlide.x > 0 && pixelsSlide.x < 1)
+						pixelsSlide.x = 1;
+					if (pixelsSlide.x < 0 && pixelsSlide.x > -1)
+						pixelsSlide.x = -1;
 
 					int32_t															slide								= Vertical
-						? (int32_t)slideInPixels.y
-						: (int32_t)slideInPixels.x
+						? (int32_t)pixelsSlide.y
+						: (int32_t)pixelsSlide.x
 						;
 					::gpk::sliderSetValue(*this, ValueCur + slide);
 					
