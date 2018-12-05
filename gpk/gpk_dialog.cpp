@@ -15,33 +15,6 @@
 	return index;
 }
 
-::gpk::error_t									gpk::numericTunerCreate						(::gpk::SDialog & dialog)			{
-	int32_t												index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogTuner>			tuner;
-	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
-	tuner->ValueCurrent								= tuner->ValueLimits.Min;
-	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	dialog.GUI.Controls.Controls[tuner->IdGUIControl].Margin	= {};
-
-	dialog.GUI.Controls.Controls[tuner->IdDecrease].Align		= ::gpk::ALIGN_CENTER_LEFT;
-	dialog.GUI.Controls.Controls[tuner->IdIncrease].Align		= ::gpk::ALIGN_CENTER_RIGHT;
-	dialog.GUI.Controls.Controls[tuner->IdDecrease].Area.Size	= {16, 16};
-	dialog.GUI.Controls.Controls[tuner->IdIncrease].Area.Size	= {16, 16};
-	dialog.GUI.Controls.Modes[tuner->IdDecrease].UseNewPalettes	= true;
-	dialog.GUI.Controls.Modes[tuner->IdIncrease].UseNewPalettes	= true;
-	dialog.GUI.Controls.Modes[tuner->IdDecrease].ColorMode		= ::gpk::GUI_COLOR_MODE_3D;
-	dialog.GUI.Controls.Modes[tuner->IdIncrease].ColorMode		= ::gpk::GUI_COLOR_MODE_3D;
-	::gpk::memcpy_s(dialog.GUI.Controls.Controls[tuner->IdIncrease].Palettes, dialog.ColorsButton);
-	::gpk::memcpy_s(dialog.GUI.Controls.Controls[tuner->IdDecrease].Palettes, dialog.ColorsButton);
-	dialog.GUI.Controls.Constraints[tuner->IdDecrease].AttachSizeToControl.y	= tuner->IdDecrease;
-	dialog.GUI.Controls.Constraints[tuner->IdIncrease].AttachSizeToControl.y	= tuner->IdIncrease;
-	::gpk::SControlText									& tunerText				= dialog.GUI.Controls.Text[tuner->IdGUIControl];
-	tunerText.Text									= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
-	tunerText.Align									= ::gpk::ALIGN_CENTER;
-	return index;
-}
-
 ::gpk::error_t									gpk::checkBoxUpdate							(::gpk::SDialogCheckBox & checkbox)		{
 	if(checkbox.Dialog->GUI.Controls.States[checkbox.IdGUIControl].Execute) {
 		checkbox.Checked								= !checkbox.Checked;
@@ -51,7 +24,29 @@
 	return 0;
 }
 
-::gpk::error_t									gpk::numericTunerUpdate						(::gpk::SDialogTuner & tuner)			{
+::gpk::error_t									gpk::tunerCreate							(::gpk::SDialog & dialog)			{
+	int32_t												index										= -1;
+	::gpk::ptr_obj<::gpk::SDialogTuner>			tuner;
+	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
+	tuner->ValueCurrent								= tuner->ValueLimits.Min;
+	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	dialog.GUI.Controls.Controls[tuner->IdGUIControl].Margin		= {};
+	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
+		dialog.GUI.Controls.Controls[iControl].Align					= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
+		dialog.GUI.Controls.Controls[iControl].Area.Size				= {16, 16};
+		dialog.GUI.Controls.Modes	[iControl].UseNewPalettes			= true;
+		dialog.GUI.Controls.Modes	[iControl].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
+		::gpk::memcpy_s(dialog.GUI.Controls.Controls[iControl].Palettes, dialog.ColorsButton);
+		dialog.GUI.Controls.Constraints[iControl].AttachSizeToControl.y	= iControl;
+	}
+	::gpk::SControlText									& tunerText				= dialog.GUI.Controls.Text[tuner->IdGUIControl];
+	tunerText.Text									= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
+	tunerText.Align									= ::gpk::ALIGN_CENTER;
+	return index;
+}
+
+::gpk::error_t									gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)			{
 	if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute || tuner.Dialog->GUI.Controls.States[tuner.IdIncrease].Execute) {
 			 if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute)
 			--tuner.ValueCurrent;

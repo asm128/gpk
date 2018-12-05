@@ -110,6 +110,64 @@ namespace gpk
 		, GUI_CONTROL_STATE_COLORS_COUNT
 		};
 
+	//enum IMAGE_TYPE : uint8_t
+	//	{ IMAGE_TYPE_32_BGRA
+	//	, IMAGE_TYPE_32_BGR
+	//	, IMAGE_TYPE_32_RGBA
+	//	, IMAGE_TYPE_32_RGB
+	//	, IMAGE_TYPE_16_BGRA
+	//	, IMAGE_TYPE_16_BGR
+	//	, IMAGE_TYPE_16_RGBA
+	//	, IMAGE_TYPE_16_RGB
+	//	, IMAGE_TYPE_MONOCHROME_8
+	//	, IMAGE_TYPE_MONOCHROME_1
+	//	};
+	//
+	//struct IImage {
+	//	void													* pImage			= 0;
+	//	IMAGE_TYPE												Type				= ::gpk::IMAGE_TYPE_32_BGRA;
+	//
+	//															~IImage				()									{ Clear(); }
+	//	::gpk::error_t											Reset				(IMAGE_TYPE type)					{
+	//		Clear();
+	//		Type													= type;
+	//		return 0;
+	//	}
+	//	::gpk::error_t											Clear				()									{
+	//		if(0 == pImage)
+	//			return 0;
+	//		switch(Type) {						  
+	//		default								: break;
+	//		case ::gpk::IMAGE_TYPE_32_BGRA		: ::gpk::SImage<::gpk::SColorBGRA	>*	oldImage = (::gpk::SImage<::gpk::SColorBGRA	>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_32_BGR		: ::gpk::SImage<::gpk::SColorBGR	>*	oldImage = (::gpk::SImage<::gpk::SColorBGR	>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_32_RGBA		: ::gpk::SImage<::gpk::SColorRGBA	>*	oldImage = (::gpk::SImage<::gpk::SColorRGBA	>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_32_RGB		: ::gpk::SImage<::gpk::SColorRGB	>*	oldImage = (::gpk::SImage<::gpk::SColorRGB	>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_16_BGRA		: ::gpk::SImage<uint16_t			>*	oldImage = (::gpk::SImage<uint16_t			>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_16_BGR		: ::gpk::SImage<uint16_t			>*	oldImage = (::gpk::SImage<uint16_t			>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_16_RGBA		: ::gpk::SImage<uint16_t			>*	oldImage = (::gpk::SImage<uint16_t			>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_16_RGB		: ::gpk::SImage<uint16_t			>*	oldImage = (::gpk::SImage<uint16_t			>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_MONOCHROME_8	: ::gpk::SImage<ubyte_t				>*	oldImage = (::gpk::SImage<ubyte_t			>*)	pImage; pImage = 0; delete oldImage; break;
+	//		case ::gpk::IMAGE_TYPE_MONOCHROME_1	: ::gpk::SImageMonochrome<ubyte_t	>*	oldImage = (::gpk::SImageMonochrome<ubyte_t	>*)	pImage; pImage = 0; delete oldImage; break;
+	//		}
+	//		return 0;
+	//	}
+	//	::gpk::SCoord2<uint32_t>								Metrics				()	{
+	//		switch(Type) {						  
+	//		default								: break;
+	//		case ::gpk::IMAGE_TYPE_32_BGRA		: return ((::gpk::SImage<::gpk::SColorBGRA	>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_32_BGR		: return ((::gpk::SImage<::gpk::SColorBGR	>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_32_RGBA		: return ((::gpk::SImage<::gpk::SColorRGBA	>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_32_RGB		: return ((::gpk::SImage<::gpk::SColorRGB	>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_16_BGRA		: return ((::gpk::SImage<uint16_t			>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_16_BGR		: return ((::gpk::SImage<uint16_t			>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_16_RGBA		: return ((::gpk::SImage<uint16_t			>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_16_RGB		: return ((::gpk::SImage<uint16_t			>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_MONOCHROME_8	: return ((::gpk::SImage<ubyte_t			>*)	pImage)->metrics(); break;
+	//		case ::gpk::IMAGE_TYPE_MONOCHROME_1	: return ((::gpk::SImageMonochrome<ubyte_t	>*)	pImage)->metrics(); break;
+	//		}
+	//	}
+	//};
+
 	struct SControl {
 		::gpk::SRectangle2D<int16_t>							Area													= {{0, 0}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};

@@ -110,8 +110,8 @@ namespace gpk
 	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider	& control);
 
 	struct SDialogTuner;
-	::gpk::error_t										numericTunerCreate					(::gpk::SDialog			& dialog);
-	::gpk::error_t										numericTunerUpdate					(::gpk::SDialogTuner	& control);
+	::gpk::error_t										tunerCreate							(::gpk::SDialog			& dialog);
+	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner	& control);
 
 	struct SDialogCheckBox;
 	::gpk::error_t										checkBoxCreate						(::gpk::SDialog			& dialog);
@@ -141,8 +141,13 @@ namespace gpk
 				int64_t										ValueCurrent						= -1;
 				char_t										ValueString	[32]					= {};
 
-		virtual	::gpk::error_t								Update								()							{ return ::gpk::numericTunerUpdate(*this); }
+		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
 	};
+
+	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
+	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
+	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
+
 }
 
 #endif // GPK_DIALOG_H_67383889976

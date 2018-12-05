@@ -36,11 +36,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
 		error_if(errored(::gpk::pngFileLoad(pngDataCacheForFasterLoad, filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
 
-	app.NumericTuner													= ::gpk::numericTunerCreate(app.DialogMain);
+	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner						= {};
+	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Offset	= {128, 192};
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.x	= 128;
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.y	= 24;
-	::gpk::ptr_obj<::gpk::SDialogTuner>								tuner						= {};
 	app.DialogMain.Controls[app.NumericTuner].as(tuner);
 	tuner->ValueLimits.Min	= tuner->ValueCurrent						= 100;
 	tuner->ValueLimits.Max												= 200;

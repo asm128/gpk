@@ -84,6 +84,7 @@ namespace gpk
 
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{ gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / (sizeof(_tTexel) * 8) + 1), "cannot resize? Size requested: %u.", (uint32_t)((newSizeX * (int64_t)newSizeY) / (sizeof(_tTexel) * 8) + 1)); View = {Texels.begin(), newSizeX * newSizeY}; Pitch = newSizeX; return 0; }
 		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t> & newSize)			noexcept	{ return resize(newSize.x, newSize.y); }
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()											const	noexcept	{ return {Pitch, View.size() / Pitch}; }
 	}; // struct
 
 	template<typename _tTexel>
