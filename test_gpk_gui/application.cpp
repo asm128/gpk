@@ -250,7 +250,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 					return 1;
 				else if(iControl == (uint32_t)app.IdMode) {
 					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild) 
-						gui.Controls.Modes[iChild].ColorMode					= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_THEME ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_THEME; 
+						gui.Controls.Modes[iChild].ColorMode					= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_FLAT ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_FLAT; 
 				}
 				else if(iControl == (uint32_t)app.IdTheme) {
 					++gui.ThemeDefault; 

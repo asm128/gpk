@@ -8,9 +8,10 @@
 typedef					signed char						schar_t	, sbyte_t	;
 typedef					char							char_t	, byte_t	;
 typedef					unsigned char					uchar_t	, ubyte_t	;
-
 namespace gpk
 {
+	typedef					double							float64_t;
+	typedef					float							float32_t;
 	static constexpr		const uint8_t					PLATFORM_BYTE_BIT_COUNT								= 8;
 #if defined GPK_WINDOWS
 #	if defined(_WIN64) || defined(WIN64)		

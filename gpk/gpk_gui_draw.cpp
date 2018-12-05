@@ -101,7 +101,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 				;
 		colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	];
 		colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		];
-		if(colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
+		if(colorMode == ::gpk::GUI_COLOR_MODE_FLAT) { 
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	];
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	];
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	];
@@ -127,7 +127,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
 		colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
 		
-		if(colorMode == ::gpk::GUI_COLOR_MODE_THEME) { 
+		if(colorMode == ::gpk::GUI_COLOR_MODE_FLAT) { 
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
 			colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
@@ -199,7 +199,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
 
 	if(control.Image.metrics().LengthSquared())
-		::gpk::grid_copy(target, control.Image, //controlMetrics.Client.Global);
+		::gpk::grid_copy_blend(target, control.Image, //controlMetrics.Client.Global);
 			::gpk::SRectangle2D<int32_t>
 				{ controlMetrics.Client.Global.Offset
 				, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x)), ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))}

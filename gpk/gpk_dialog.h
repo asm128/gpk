@@ -29,43 +29,19 @@ namespace gpk
 	struct SDialog {
 		int32_t												ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
 		int32_t												ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
+		int32_t												ColorsCheckBox	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
+		int32_t												FocusedCurrent						= -1;
+		int32_t												FocusedPrevious						= -1;
+
 		::gpk::ptr_obj<::gpk::SInput>						Input;
-		::gpk::SImageMonochrome<uint32_t>					ImageCross ={};
-::gpk::SImage<::gpk::SColorBGRA>  imageCrossBGRA;
+		::gpk::SImageMonochrome<uint32_t>					ImageCross							= {};
+		::gpk::SImage<::gpk::SColorBGRA>					ImageCrossBGRA						= {};
 
 		::gpk::SGUI											GUI;
 		int32_t												Root;
 		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>	Controls;
 
-															SDialog								()				{
-			Root												= ::gpk::controlCreate(GUI);													
-			throw_if(-1 == Root, "%s", "Out of memory?");
-			GUI.Controls.Constraints[Root].AttachSizeToControl	= {Root, Root};
-			GUI.Controls.States[Root].Design					= true;
-			GUI.ColorModeDefault								= ::gpk::GUI_COLOR_MODE_THEME;
-			GUI.ThemeDefault									= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL				]	= GUI.Palettes.push_back({{::gpk::GRAY				, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_HOVER				]	= GUI.Palettes.push_back({{::gpk::GRAY	 	* 1.1	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= GUI.Palettes.push_back({{::gpk::RED				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED			]	= GUI.Palettes.push_back({{::gpk::ORANGE			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED	]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_HOVER		]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED	]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_EXECUTE			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL				]	= GUI.Palettes.push_back({{::gpk::GRAY				, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_HOVER				]	= GUI.Palettes.push_back({{::gpk::GRAY	 	* 1.1	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= GUI.Palettes.push_back({{::gpk::WHITE				, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED			]	= GUI.Palettes.push_back({{::gpk::ORANGE			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED	]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_HOVER		]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED	]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_EXECUTE			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-			ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-		}
+															SDialog								();
 
 		template<typename _TDialogControl>
 		::gpk::error_t										Create								(::gpk::ptr_nco<_TDialogControl>& createdControl)		{
@@ -104,6 +80,11 @@ namespace gpk
 			}
 			return 0;
 		}
+
+
+		::gpk::error_t										Focus								(int32_t iControl)	{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }
+		::gpk::error_t										Focused								()					{ return FocusedCurrent; }
+
 	};
 
 	struct SDialogSlider;
@@ -118,6 +99,17 @@ namespace gpk
 	struct SDialogCheckBox;
 	::gpk::error_t										checkBoxCreate						(::gpk::SDialog			& dialog);
 	::gpk::error_t										checkBoxUpdate						(::gpk::SDialogCheckBox	& control);
+
+	struct SDialogEditBox;
+	::gpk::error_t										editBoxCreate						(::gpk::SDialog			& dialog);
+	::gpk::error_t										editBoxUpdate						(::gpk::SDialogEditBox	& control);
+
+	struct SDialogEditBox : public ::gpk::IDialogControl {
+				::gpk::SMinMax<uint32_t>					Selection							= {};
+				::gpk::array_pod<char_t>					String								= {};
+
+		virtual	::gpk::error_t								Update								()							{ return ::gpk::editBoxUpdate(*this); }
+	};
 
 	struct SDialogCheckBox : public ::gpk::IDialogControl {
 				bool										Checked								= false;
@@ -139,16 +131,16 @@ namespace gpk
 				int32_t										IdDecrease							= -1;
 				int32_t										IdIncrease							= -1;
 
-				::gpk::SMinMax<int64_t>						ValueLimits							= {0, 0x7fFFffFF};
+				::gpk::SMinMax<int64_t>						ValueLimits							= {0xC0000000, 0x3fFFffFF};
 				int64_t										ValueCurrent						= -1;
 				char_t										ValueString	[32]					= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
 	};
 
-	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
-	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
-	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return 0; }
+	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 
 }
 

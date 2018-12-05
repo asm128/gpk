@@ -31,34 +31,31 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 
-	app.PNGImages.resize(::gpk::size(filenames));
-	::gpk::SPNGData															pngDataCacheForFasterLoad;
-	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
-		error_if(errored(::gpk::pngFileLoad(pngDataCacheForFasterLoad, filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
+	//app.PNGImages.resize(::gpk::size(filenames));
+	//::gpk::SPNGData															pngDataCacheForFasterLoad;
+	//for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
+	//	error_if(errored(::gpk::pngFileLoad(pngDataCacheForFasterLoad, filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
 
 	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner						= {};
 	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Offset	= {128, 192};
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.x	= 128;
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.y	= 24;
-	app.DialogMain.Controls[app.NumericTuner].as(tuner);
 	tuner->ValueLimits.Min	= tuner->ValueCurrent						= 100;
 	tuner->ValueLimits.Max												= 200;
-	app.DialogMain.GUI.Controls.Text[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Text				= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
+	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
+	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
+	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
+	app.DialogMain.GUI.Controls.Text	[tuner->IdGUIControl].Text			= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
 
-	app.Slider															= ::gpk::sliderCreate(app.DialogMain);
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Offset			= {128, 128};
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Size.x			= 128;
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Size.y			= 8;
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
-	app.DialogMain.Controls[app.Slider].as(slider);
+	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);
 	slider->ValueLimits.Min												= 0;
 	slider->ValueLimits.Max												= 8;
+	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
+	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.x	= 128;
+	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.y	= 8;
 
-
-	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox						= {};
-	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain);
-	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.CheckBox]->IdGUIControl].Area.Offset	= {128, 256};
+	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox					= {};
+	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
+	app.DialogMain.GUI.Controls.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
 	return 0; 
 }
 

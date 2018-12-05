@@ -36,7 +36,7 @@ namespace gpk
 
 #define GPK_STRUCT_MEMBER_DESC_NAME(_name)	_gpk_dsc_##_name
 
-#define GPK_STRUCT_MEMBER(_type, _name)																																								\
+#define GPK_STRUCT_MEMBER(_type, _name, ...)																																								\
 	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																																						\
 		static constexpr	const char*					gpk_member_type_name					()		noexcept	{ static constexpr const char	name[]	= #_type; return name; }					\
 		static constexpr	const char*					gpk_member_type_name_label				()		noexcept	{ static const ::gpk::label		name	= #_name; return name; }					\

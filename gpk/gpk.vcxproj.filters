@@ -228,6 +228,15 @@
     <ClInclude Include="gpk_dialog.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_member_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_datatype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_type_identifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -324,6 +333,9 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_draw.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_datatype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

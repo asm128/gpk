@@ -155,8 +155,6 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	control.IndexParent														= -1;
 	control.Align															= ::gpk::ALIGN_TOP_LEFT;
 	control.Area															= {{0, 0}, {16, 16}};
-	control.Border															= {1, 1, 1, 1};
-	control.Margin															= {1, 0, 1, 0};
 	::gpk::memcpy_s(control.Palettes, gui.DefaultColors);
 	controlConstraints.AttachSizeToControl									= {-1, -1};
 	controlConstraints.AttachSizeToText										= {};

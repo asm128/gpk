@@ -4,6 +4,7 @@
 #include "gpk_timer.h"
 #include "gpk_sync.h"
 #include "gpk_noise.h"
+#include <string>
 
 static ::gpk::error_t								phex						(uint8_t* str, ::gpk::AES_LEVEL level);
 static ::gpk::error_t								test_encrypt_cbc			(::gpk::AES_LEVEL level);

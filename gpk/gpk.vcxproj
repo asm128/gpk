@@ -26,15 +26,18 @@
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_connection.h" />
+    <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_member_registry.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_session.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_tcpip.h" />
+    <ClInclude Include="gpk_type_identifier.h" />
     <ClInclude Include="gpk_udp_client.h" />
     <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_view_array.h" />
@@ -92,6 +95,7 @@
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
+    <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_display.cpp" />

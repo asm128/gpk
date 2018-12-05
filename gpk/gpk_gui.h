@@ -16,7 +16,7 @@ namespace gpk
 	enum GUI_COLOR_MODE : uint8_t
 		{ GUI_COLOR_MODE_DEFAULT		= 0
 		, GUI_COLOR_MODE_3D			
-		, GUI_COLOR_MODE_THEME
+		, GUI_COLOR_MODE_FLAT
 		, GUI_COLOR_MODE_COUNT
 		};
 
@@ -169,7 +169,7 @@ namespace gpk
 	//};
 
 	struct SControl {
-		::gpk::SRectangle2D<int16_t>							Area													= {{0, 0}, {16, 16}};
+		::gpk::SRectangle2D<int16_t>							Area													= {{}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
@@ -200,10 +200,9 @@ namespace gpk
 	};
 
 	struct SControlText {
-		::gpk::view_const_string								Text								;
-		::gpk::ALIGN											Align								;
-		int8_t													Padding								;
-		int16_t													ColorIndex							;
+		::gpk::view_const_string								Text								= {};
+		::gpk::ALIGN											Align								= ::gpk::ALIGN_CENTER;
+		::gpk::SMinMax<uint32_t>								Selection							= {0, 1};
 	};
 
 	struct SControlTheme {
@@ -224,7 +223,7 @@ namespace gpk
 	};
 
 	struct SGUI {
-		::gpk::SCoord2<uint32_t>								LastSize							= {16, 16};
+		::gpk::SCoord2<uint32_t>								LastSize							= {};
 		::gpk::SCoord2<float>									CursorPos							= {};
 		::gpk::SGUIControlTable									Controls							= {};
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
@@ -243,7 +242,7 @@ namespace gpk
 		::gpk::SGUIZoom											LastZoom							= {};
 		::gpk::SGUIZoom											Zoom								= {};
 		uint32_t												ThemeDefault						= 0;
-		::gpk::GUI_COLOR_MODE									ColorModeDefault					= ::gpk::GUI_COLOR_MODE_THEME;//::gpk::GUI_COLOR_MODE_DEFAULT;
+		::gpk::GUI_COLOR_MODE									ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
 
 																SGUI								();
 	};
