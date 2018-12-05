@@ -30,6 +30,8 @@ namespace gpk
 		int32_t												ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
 		int32_t												ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
 		::gpk::ptr_obj<::gpk::SInput>						Input;
+		::gpk::SImageMonochrome<uint32_t>					ImageCross ={};
+::gpk::SImage<::gpk::SColorBGRA>  imageCrossBGRA;
 
 		::gpk::SGUI											GUI;
 		int32_t												Root;

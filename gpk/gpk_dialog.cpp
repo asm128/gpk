@@ -1,4 +1,5 @@
 #include "gpk_dialog.h"
+#include "gpk_png.h"
 
 												::gpk::IDialogControl::~IDialogControl		()									{ if(-1 != IdGUIControl) ::gpk::controlDelete(Dialog->GUI, IdGUIControl, true); }
 
@@ -16,10 +17,23 @@
 }
 
 ::gpk::error_t									gpk::checkBoxUpdate							(::gpk::SDialogCheckBox & checkbox)		{
+				::gpk::SImage<::gpk::SColorBGRA> & imageCross = checkbox.Dialog->imageCrossBGRA;
+
+
 	if(checkbox.Dialog->GUI.Controls.States[checkbox.IdGUIControl].Execute) {
+		if(checkbox.Dialog->ImageCross.Texels.size() < 4) {
+			::gpk::pngFileLoad("..\\gpk_data\\images\\cross.png", imageCross);
+
+			checkbox.Dialog->ImageCross.resize(imageCross.metrics());
+			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel)
+				checkbox.Dialog->ImageCross.View[iTexel] = (imageCross.Texels[iTexel] == ::gpk::BLACK) ? true : false;
+		}
 		checkbox.Checked								= !checkbox.Checked;
 		if(false == checkbox.Checked) 
 			checkbox.Dialog->GUI.Controls.Controls[checkbox.IdGUIControl].Image = {};
+		else
+	checkbox.Dialog->GUI.Controls.Controls[checkbox.IdGUIControl].Image = imageCross.View;
+
 	}
 	return 0;
 }
