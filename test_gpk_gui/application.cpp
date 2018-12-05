@@ -21,15 +21,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	gui.ColorModeDefault											= ::gpk::GUI_COLOR_MODE_3D;
 	int32_t																controlTestRoot			= ::gpk::controlCreate(gui);
 	const ::gpk::SColorBGRA												colorBase				= gui.Palette[gui.ThemeDefault];
+	::gpk::memcpy_s(app.Palettes, gui.DefaultColors);
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL				]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_NORMAL				;
-	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_DISABLED			;
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_HOVER				]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_HOVER				;
-	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_PRESSED				;
+	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_PRESSED			;
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_SELECTED			;
-	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED	]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_SELECTED_DISABLED	;
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_HOVER		]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_SELECTED_HOVER		;
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED	]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_SELECTED_PRESSED	;
-	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_EXECUTE			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_EXECUTE				;
 	app.Palettes[::gpk::GUI_CONTROL_STATE_COLORS_OUTDATED			]	= gui.Palettes.push_back({colorBase, {}, {}, {}, {}, {}, ::gpk::RED, {}, {}, {}, });// gui.DefaultColors.CONTROL_OUTDATED			;
 
 	::gpk::SControl														& controlRoot			= gui.Controls.Controls[controlTestRoot];

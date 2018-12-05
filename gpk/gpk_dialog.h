@@ -109,18 +109,18 @@ namespace gpk
 	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider	& control, int64_t value);
 	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider	& control);
 
-	struct SDialogNumericTuner;
-	::gpk::error_t										numericTunerCreate					(::gpk::SDialog				& dialog);
-	::gpk::error_t										numericTunerUpdate					(::gpk::SDialogNumericTuner	& control);
+	struct SDialogTuner;
+	::gpk::error_t										numericTunerCreate					(::gpk::SDialog			& dialog);
+	::gpk::error_t										numericTunerUpdate					(::gpk::SDialogTuner	& control);
 
 	struct SDialogCheckBox;
-	::gpk::error_t										checkBoxCreate						(::gpk::SDialog				& dialog);
-	::gpk::error_t										checkBoxUpdate						(::gpk::SDialogNumericTuner	& control);
+	::gpk::error_t										checkBoxCreate						(::gpk::SDialog			& dialog);
+	::gpk::error_t										checkBoxUpdate						(::gpk::SDialogCheckBox	& control);
 
 	struct SDialogCheckBox : public ::gpk::IDialogControl {
 				bool										Checked								= false;
 
-		virtual	::gpk::error_t								Update								()							{ return 0; }//::gpk::sliderUpdate(*this); }
+		virtual	::gpk::error_t								Update								()							{ return ::gpk::checkBoxUpdate(*this); }
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
@@ -133,7 +133,7 @@ namespace gpk
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::sliderUpdate(*this); }
 	};
 
-	struct SDialogNumericTuner : public ::gpk::IDialogControl {
+	struct SDialogTuner : public ::gpk::IDialogControl {
 				int32_t										IdDecrease							= -1;
 				int32_t										IdIncrease							= -1;
 

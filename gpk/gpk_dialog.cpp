@@ -17,7 +17,7 @@
 
 ::gpk::error_t									gpk::numericTunerCreate						(::gpk::SDialog & dialog)			{
 	int32_t												index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogNumericTuner>			tuner;
+	::gpk::ptr_obj<::gpk::SDialogTuner>			tuner;
 	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
 	tuner->ValueCurrent								= tuner->ValueLimits.Min;
 	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
@@ -42,7 +42,16 @@
 	return index;
 }
 
-::gpk::error_t									gpk::numericTunerUpdate						(::gpk::SDialogNumericTuner & tuner)			{
+::gpk::error_t									gpk::checkBoxUpdate							(::gpk::SDialogCheckBox & checkbox)		{
+	if(checkbox.Dialog->GUI.Controls.States[checkbox.IdGUIControl].Execute) {
+		checkbox.Checked								= !checkbox.Checked;
+		if(false == checkbox.Checked) 
+			checkbox.Dialog->GUI.Controls.Controls[checkbox.IdGUIControl].Image = {};
+	}
+	return 0;
+}
+
+::gpk::error_t									gpk::numericTunerUpdate						(::gpk::SDialogTuner & tuner)			{
 	if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute || tuner.Dialog->GUI.Controls.States[tuner.IdIncrease].Execute) {
 			 if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute)
 			--tuner.ValueCurrent;

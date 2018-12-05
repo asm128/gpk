@@ -40,12 +40,23 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Offset	= {128, 192};
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.x	= 128;
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Area.Size.y	= 24;
+	::gpk::ptr_obj<::gpk::SDialogTuner>								tuner						= {};
+	app.DialogMain.Controls[app.NumericTuner].as(tuner);
+	tuner->ValueLimits.Min	= tuner->ValueCurrent						= 100;
+	tuner->ValueLimits.Max												= 200;
+	app.DialogMain.GUI.Controls.Text[app.DialogMain.Controls[app.NumericTuner]->IdGUIControl].Text				= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
 
 	app.Slider															= ::gpk::sliderCreate(app.DialogMain);
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Offset			= {128, 128};
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Size.x			= 128;
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.Slider]->IdGUIControl].Area.Size.y			= 8;
+	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
+	app.DialogMain.Controls[app.Slider].as(slider);
+	slider->ValueLimits.Min												= 0;
+	slider->ValueLimits.Max												= 8;
 
+
+	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox						= {};
 	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain);
 	app.DialogMain.GUI.Controls.Controls[app.DialogMain.Controls[app.CheckBox]->IdGUIControl].Area.Offset	= {128, 256};
 	return 0; 
