@@ -18,36 +18,36 @@ namespace gpk
 
 	struct SDialog;
 	struct IDialogControl {
-		SDialog												* Dialog							= 0;
-		int32_t												IdGUIControl						= -1;
+		SDialog												* Dialog											= 0;
+		int32_t												IdGUIControl										= -1;
 
-	    virtual												~IDialogControl						();
+	    virtual												~IDialogControl										();
 
-        virtual	::gpk::error_t								Update								()				= 0;
+        virtual	::gpk::error_t								Update												()													= 0;
 	};
 
 	struct SDialog {
-		int32_t												ColorsControl	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
-		int32_t												ColorsButton	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
-		int32_t												ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
-		int32_t												FocusedCurrent						= -1;
-		int32_t												FocusedPrevious						= -1;
-		int32_t												SelectedCurrent						= -1;
-		int32_t												SelectedPrevious					= -1;
+		int32_t												ColorsControl	[::gpk::GUI_CONTROL_PALETTE_COUNT]	= {};
+		int32_t												ColorsButton	[::gpk::GUI_CONTROL_PALETTE_COUNT]	= {};
+		int32_t												ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_COUNT]	= {};
+		int32_t												FocusedCurrent										= -1;
+		int32_t												FocusedPrevious										= -1;
+		int32_t												SelectedCurrent										= -1;
+		int32_t												SelectedPrevious									= -1;
 
 		::gpk::ptr_obj<::gpk::SInput>						Input;
-		::gpk::SImageMonochrome<uint32_t>					ImageCross							= {};
-		::gpk::SImage<::gpk::SColorBGRA>					ImageCrossBGRA						= {};
+		::gpk::SImageMonochrome<uint32_t>					ImageCross											= {};
+		::gpk::SImage<::gpk::SColorBGRA>					ImageCrossBGRA										= {};
 
 		::gpk::SGUI											GUI;
 		int32_t												Root;
 		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>	Controls;
 
-															SDialog								();
+															SDialog												();
 
 		template<typename _TDialogControl>
-		::gpk::error_t										Create								(::gpk::ptr_nco<_TDialogControl>& createdControl)		{
-			int32_t													index								= -1;
+		::gpk::error_t										Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
+			int32_t													index												= -1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl]) {
 					index												= iControl;
@@ -69,7 +69,7 @@ namespace gpk
 			return index;
 		}
 
-		::gpk::error_t										Update								()	{
+		::gpk::error_t										Update												()													{
 			if(0 != Input)
 				gpk_necall(::gpk::guiProcessInput(GUI, *Input), "%s", "Unknown reason.");
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
@@ -107,6 +107,12 @@ namespace gpk
 	::gpk::error_t										editBoxCreate						(::gpk::SDialog			& dialog);
 	::gpk::error_t										editBoxUpdate						(::gpk::SDialogEditBox	& control);
 
+
+	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						editBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogEditBox	>& createdControl)	 { int32_t index = -1; gpk_necall(index = editBoxCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+
 	struct SDialogEditBox : public ::gpk::IDialogControl {
 				::gpk::SMinMax<uint32_t>					Selection							= {};
 				::gpk::array_pod<char_t>					String								= {};
@@ -140,10 +146,6 @@ namespace gpk
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
 	};
-
-	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
-	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
-	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 
 }
 

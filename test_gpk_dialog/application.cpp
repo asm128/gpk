@@ -48,7 +48,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
 	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);
 	slider->ValueLimits.Min												= 0;
-	slider->ValueLimits.Max												= 8;
+	slider->ValueLimits.Max												= 255;
 	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
 	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.x	= 128;
 	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.y	= 8;
