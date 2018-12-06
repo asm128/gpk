@@ -38,12 +38,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner						= {};
 	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
-	tuner->ValueLimits.Min	= tuner->ValueCurrent						= 100;
+	tuner->ValueLimits.Min												= 100;
 	tuner->ValueLimits.Max												= 200;
 	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
 	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
 	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
-	app.DialogMain.GUI.Controls.Text	[tuner->IdGUIControl].Text			= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
+	::gpk::tunerSetValue(*tuner, 0);
 
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
 	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);

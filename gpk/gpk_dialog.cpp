@@ -99,19 +99,23 @@
 	return index;
 }
 
+::gpk::error_t									gpk::tunerSetValue						(::gpk::SDialogTuner & control, int64_t value) {
+	if(value < control.ValueLimits.Min)
+		value										= control.ValueLimits.Min;
+	else if(value > control.ValueLimits.Max)
+		value										= control.ValueLimits.Max;
+	control.ValueCurrent						= value;
+	control.Dialog->GUI.Controls.Text[control.IdGUIControl].Text = {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
+	::gpk::controlMetricsInvalidate(control.Dialog->GUI, control.IdGUIControl);
+	return 0;
+}
+
 ::gpk::error_t									gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)			{
 	if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute || tuner.Dialog->GUI.Controls.States[tuner.IdIncrease].Execute) {
-			 if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute)
-			--tuner.ValueCurrent;
+		if(tuner.Dialog->GUI.Controls.States[tuner.IdDecrease].Execute)
+			::gpk::tunerSetValue(tuner, tuner.ValueCurrent - 1);
 		else if(tuner.Dialog->GUI.Controls.States[tuner.IdIncrease].Execute)
-			++tuner.ValueCurrent;
-		if (tuner.ValueCurrent < tuner.ValueLimits.Min)
-			tuner.ValueCurrent = tuner.ValueLimits.Min;
-		if (tuner.ValueCurrent > tuner.ValueLimits.Max)
-			tuner.ValueCurrent = tuner.ValueLimits.Max;
-		::gpk::SControlText									& tunerText									= tuner.Dialog->GUI.Controls.Text[tuner.IdGUIControl];
-		tunerText.Text									= {tuner.ValueString, (uint32_t)sprintf_s(tuner.ValueString, "%lli", tuner.ValueCurrent)};
-		::gpk::controlMetricsInvalidate(tuner.Dialog->GUI, tuner.IdGUIControl);
+			::gpk::tunerSetValue(tuner, tuner.ValueCurrent + 1);
 	}
 	return 0;
 }
