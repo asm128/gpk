@@ -9,7 +9,7 @@
 #define GPKM_REGISTRY_NAME		gpk_member_registry
 #define GPKM_NAME(_memberName)	_gpk_info_##_memberName##_	// This mangles the member name for use as the type name.
 
-#define GPKM(_structNameSpace, _structName, _nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
+#define GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
 	struct GPKM_NAME(_memberName)	{																																												\
 		typedef _nameSpace::_memberType			TMember;	\
 		static inline constexpr	const char_t*												get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
@@ -38,7 +38,7 @@ namespace gpk {
 } // namespace 
 
 #define	GPKMNDO(_memberType, _memberName)				GPKM(_memberType, _memberName, ::gpk::DATA_TYPE_OBJECT, #_memberName, #_memberName)
-#define	GPKMNDF(_structNameSpace, _structName, _nameSpace, _memberType, _memberName, _dataTypeId)				GPKM(_structNameSpace, _structName, _nameSpace, _memberType, _memberName, _dataTypeId, #_memberName, #_memberName)
+#define	GPKMNDF(_nameSpace, _memberType, _memberName, _dataTypeId)				GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, #_memberName, #_memberName)
 #define GPKM_REGISTRY(...)								GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
 #define GPKM_GET_MEMBER_REGISTRY(objectType)			objectType::get_member_registry()
 

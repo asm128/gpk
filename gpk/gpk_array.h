@@ -248,15 +248,14 @@ namespace gpk
 				viewSafe[index]									= newValue;
 				//if(index < Count)
 				//	memcpy(&viewSafe[index + 1], oldData, (Count - index) * sizeof(_tPOD));
-				for(uint32_t i = index, maxCount = ::gpk::min(index + 1, Count); i < maxCount; ++i) 
+				for(uint32_t i = index, maxCount = Count; i < maxCount; ++i) 
 					viewSafe[i + 1]									= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
 			}	
 			else {
-				for(int32_t i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index; i >= maxCount; --i) 
-					Data[i + 1]										= Data[i];
-
+				for(int32_t i = (int32_t)Count, iStop = index; i > iStop; --i) 
+					memcpy(&Data[i], &Data[i - 1], sizeof(_tPOD));
 				Data[index]										= newValue;
 			}			
 			return ++Count;
