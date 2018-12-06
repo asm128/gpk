@@ -52,7 +52,7 @@
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
 	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
-	controlTable.Modes[checkBox->IdGUIControl].UseNewPalettes	= true;
+	controlTable.Modes[checkBox->IdGUIControl].UseNewPalettes			= true;
 	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes, dialog.ColorsCheckBox);
 	return index;
 }
