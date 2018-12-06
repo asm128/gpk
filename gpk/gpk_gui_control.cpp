@@ -199,11 +199,11 @@
 			int32_t																	indexColor								= gui.Palette.push_back(gridCellColor);
 			themeIndex															= gui.ControlThemes.push_back({});
 			::gpk::SControlTheme													& theme									= gui.ControlThemes[themeIndex];
-			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboDisabled					= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_DISABLED	]	= {};
-			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboPressed 					= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_PRESSED		]	= {};
-			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboSelected					= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_SELECTED	]	= {};
-			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboHover 						= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_HOVER		]	= {};
-			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboNormal						= theme.ColorCombos[::gpk::GUI_CONTROL_STATE_COLORS_NORMAL		]	= {};
+			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboDisabled					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
+			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboPressed 					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED		]	= {};
+			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboSelected					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
+			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboHover 						= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER		]	= {};
+			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboNormal						= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL		]	= {};
 			colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]		= indexColor;
 			colorComboDisabled	[::gpk::GUI_CONTROL_COLOR_CLIENT		]		= colorComboDisabled[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 			colorComboNormal	[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]		= indexColor;

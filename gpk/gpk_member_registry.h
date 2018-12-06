@@ -30,15 +30,16 @@ namespace gpk {
 		static inline			const ::gpk::view_array<const ::gpk::label				>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view_array<const ::gpk::label			> results_view = {results}; return results_view;	}
 		static inline			const ::gpk::view_array<const ::gpk::label				>&	get_display_names				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view_array<const ::gpk::label			> results_view = {results}; return results_view;	}
 		static inline			const ::gpk::view_array<const ::gpk::label				>&	get_descriptions				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_description	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view_array<const ::gpk::label			> results_view = {results}; return results_view;	}
-		static inline constexpr	const ::gpk::view_array<const ::gpk::DATA_TYPE			>&	get_data_type_ids				()							noexcept	{ static const ::gpk::DATA_TYPE			results[] = {			_tArgs::get_member_data_type_id	()					...,					::gpk::GDATA_TYPE_UNKNOWN	}; static const ::gpk::view_array<const ::gpk::GDATA_TYPE		> results_view = {results}; return results_view;	}
+		static inline constexpr	const ::gpk::view_array<const ::gpk::DATA_TYPE			>&	get_data_type_ids				()							noexcept	{ static const ::gpk::DATA_TYPE			results[] = {			_tArgs::get_member_data_type_id	()					...,					::gpk::DATA_TYPE_UNKNOWN	}; static const ::gpk::view_array<const ::gpk::DATA_TYPE		> results_view = {results}; return results_view;	}
 		static inline constexpr	const ::gpk::view_array<const uint32_t					>&	get_member_sizes				()							noexcept	{ static const uint32_t					results[] = {(uint32_t)	_tArgs::get_member_size			()					...,											 0	}; static const ::gpk::view_array<const uint32_t				> results_view = {results}; return results_view;	}
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 #pragma pack(pop)
 } // namespace 
 
-#define	GPKMND(_memberType, _memberName)		GPKM(_memberType, _memberName, ::gpk::DATA_TYPE_OBJECT, #_memberName, #_memberName)
-#define GPKM_REGISTRY(...)						GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
-#define GPKM_GET_MEMBER_REGISTRY(objectType)	objectType::get_member_registry()
+#define	GPKMNDO(_memberType, _memberName)				GPKM(_memberType, _memberName, ::gpk::DATA_TYPE_OBJECT, #_memberName, #_memberName)
+#define	GPKMNDF(_structNameSpace, _structName, _nameSpace, _memberType, _memberName, _dataTypeId)				GPKM(_structNameSpace, _structName, _nameSpace, _memberType, _memberName, _dataTypeId, #_memberName, #_memberName)
+#define GPKM_REGISTRY(...)								GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
+#define GPKM_GET_MEMBER_REGISTRY(objectType)			objectType::get_member_registry()
 
 #endif // GPK_MEMBER_REGISTRY_H_9214982364982734

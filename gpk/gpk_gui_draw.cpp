@@ -42,11 +42,11 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	::gpk::SColorBGRA													colorFace												= {0xFF, 0x00, 0xFF, 0xFF};
 	if(0 == gui.Controls.Modes[iControl].UseNewPalettes) {
 		const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-			[ bDisabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
-			: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
-			: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
-			: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
-			: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
+			[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+			: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED 
+			: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+			: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER 
+			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			];
 		colorFace												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]];
 		//const ::gpk::SColorBGRA												colorBack												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]];
@@ -54,11 +54,11 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	else {
 		const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= 
 			gui.Palettes[control.Palettes
-				[ bDisabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
-				: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
-				: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
-				: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
-				: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
+				[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+				: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED 
+				: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+				: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER 
+				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 				]]
 				;
 		colorFace												= colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE];
@@ -92,11 +92,11 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	if(gui.Controls.Modes[iControl].UseNewPalettes) {
 		const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= 
 			gui.Palettes[control.Palettes
-				[ disabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
-				: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
-				: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
-				: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
-				: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
+				[ disabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+				: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED 
+				: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+				: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER 
+				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 				]]
 				;
 		colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	];
@@ -118,11 +118,11 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	else {
 		const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 		const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
-			[ disabled				? ::gpk::GUI_CONTROL_STATE_COLORS_DISABLED
-			: controlState.Pressed	? ::gpk::GUI_CONTROL_STATE_COLORS_PRESSED 
-			: controlState.Selected	? ::gpk::GUI_CONTROL_STATE_COLORS_SELECTED
-			: controlState.Hover	? ::gpk::GUI_CONTROL_STATE_COLORS_HOVER 
-			: ::gpk::GUI_CONTROL_STATE_COLORS_NORMAL
+			[ disabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
+			: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED 
+			: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+			: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER 
+			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			];
 		colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
 		colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];

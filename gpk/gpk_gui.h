@@ -96,18 +96,18 @@ namespace gpk
 		, GUI_CONTROL_COLOR_COUNT
 		};
 
-	enum GUI_CONTROL_STATE_COLORS 
-		{ GUI_CONTROL_STATE_COLORS_NORMAL						= 0
-		, GUI_CONTROL_STATE_COLORS_DISABLED
-		, GUI_CONTROL_STATE_COLORS_HOVER
-		, GUI_CONTROL_STATE_COLORS_PRESSED
-		, GUI_CONTROL_STATE_COLORS_SELECTED
-		, GUI_CONTROL_STATE_COLORS_SELECTED_DISABLED
-		, GUI_CONTROL_STATE_COLORS_SELECTED_HOVER
-		, GUI_CONTROL_STATE_COLORS_SELECTED_PRESSED
-		, GUI_CONTROL_STATE_COLORS_EXECUTE
-		, GUI_CONTROL_STATE_COLORS_OUTDATED
-		, GUI_CONTROL_STATE_COLORS_COUNT
+	enum GUI_CONTROL_PALETTE 
+		{ GUI_CONTROL_PALETTE_NORMAL						= 0
+		, GUI_CONTROL_PALETTE_DISABLED
+		, GUI_CONTROL_PALETTE_HOVER
+		, GUI_CONTROL_PALETTE_PRESSED
+		, GUI_CONTROL_PALETTE_SELECTED
+		, GUI_CONTROL_PALETTE_SELECTED_DISABLED
+		, GUI_CONTROL_PALETTE_SELECTED_HOVER
+		, GUI_CONTROL_PALETTE_SELECTED_PRESSED
+		, GUI_CONTROL_PALETTE_EXECUTE
+		, GUI_CONTROL_PALETTE_OUTDATED
+		, GUI_CONTROL_PALETTE_COUNT
 		};
 
 	//enum IMAGE_TYPE : uint8_t
@@ -174,7 +174,7 @@ namespace gpk
 		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
 		int32_t													ColorTheme												= 0;
-		int32_t													Palettes	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]		= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
+		int32_t													Palettes	[::gpk::GUI_CONTROL_PALETTE_COUNT]		= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
 		int32_t													IndexParent												= -1;
 		::gpk::ALIGN											Align													= ::gpk::ALIGN_TOP_LEFT;
 	};
@@ -209,7 +209,7 @@ namespace gpk
 		::gpk::array_static
 			<::gpk::array_static
 				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
-			, ::gpk::GUI_CONTROL_STATE_COLORS_COUNT>			ColorCombos							= {};
+			, ::gpk::GUI_CONTROL_PALETTE_COUNT>			ColorCombos							= {};
 	};
 
 	struct SGUIControlTable {
@@ -229,7 +229,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
 		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
 
-		int32_t													DefaultColors	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT];
+		int32_t													DefaultColors	[::gpk::GUI_CONTROL_PALETTE_COUNT];
 
 		::gpk::array_pod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>

@@ -27,11 +27,13 @@ namespace gpk
 	};
 
 	struct SDialog {
-		int32_t												ColorsControl	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
-		int32_t												ColorsButton	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
-		int32_t												ColorsCheckBox	[::gpk::GUI_CONTROL_STATE_COLORS_COUNT]						= {};
+		int32_t												ColorsControl	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
+		int32_t												ColorsButton	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
+		int32_t												ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_COUNT]						= {};
 		int32_t												FocusedCurrent						= -1;
 		int32_t												FocusedPrevious						= -1;
+		int32_t												SelectedCurrent						= -1;
+		int32_t												SelectedPrevious					= -1;
 
 		::gpk::ptr_obj<::gpk::SInput>						Input;
 		::gpk::SImageMonochrome<uint32_t>					ImageCross							= {};
