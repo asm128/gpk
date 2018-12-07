@@ -1,4 +1,5 @@
 #include "gpk_dialog.h"
+#include "gpk_dialog_controls.h"
 #include "gpk_png.h"
 
 																	::gpk::IDialogControl::~IDialogControl		()									{ if(-1 != IdGUIControl) ::gpk::controlDelete(Dialog->GUI, IdGUIControl, true); }

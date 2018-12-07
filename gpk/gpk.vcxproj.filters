@@ -22,14 +22,14 @@
     <Filter Include="runtime">
       <UniqueIdentifier>{56bdc711-7e6b-4241-b705-57c96d06c106}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view">
-      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gui">
       <UniqueIdentifier>{7469d73b-8b8a-43b3-aa26-cbc5c69bc3f8}</UniqueIdentifier>
     </Filter>
     <Filter Include="udp">
       <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runtime\view">
+      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,19 +148,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_array.h">
-      <Filter>view</Filter>
+      <Filter>runtime\view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_bit.h">
-      <Filter>view</Filter>
+      <Filter>runtime\view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_grid.h">
-      <Filter>view</Filter>
+      <Filter>runtime\view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_layered.h">
-      <Filter>view</Filter>
+      <Filter>runtime\view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_stream.h">
-      <Filter>view</Filter>
+      <Filter>runtime\view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>Header Files</Filter>
@@ -235,6 +235,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_type_identifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog_controls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -336,6 +342,9 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_datatype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

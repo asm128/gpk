@@ -3,6 +3,7 @@
 #include "gpk_grid_copy.h"
 #include "gpk_grid_scale.h"
 
+#include "gpk_dialog_controls.h"
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 

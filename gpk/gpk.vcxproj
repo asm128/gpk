@@ -30,7 +30,9 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_dialog.h" />
+    <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_member_registry.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_rsa.h" />
@@ -106,6 +108,7 @@
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
+    <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_noise.cpp" />
     <ClCompile Include="gpk_png.cpp" />

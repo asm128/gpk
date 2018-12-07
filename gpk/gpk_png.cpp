@@ -661,6 +661,6 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
 	::gpk::array_pod<byte_t>													fileInMemory									= 0;
-	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .rsw file: %s", filename.begin());
+	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
 	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
 }
