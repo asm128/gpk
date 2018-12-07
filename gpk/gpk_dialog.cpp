@@ -47,6 +47,10 @@
 	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
 }
 
+::gpk::error_t														gpk::viewportCreate							(::gpk::SDialog			& dialog )	{ dialog ; return 0; }
+::gpk::error_t														gpk::viewportUpdate							(::gpk::SDialogViewport	& control)	{ control; return 0; }
+
+
 ::gpk::error_t														gpk::checkBoxCreate							(::gpk::SDialog & dialog)			{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
