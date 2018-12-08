@@ -90,7 +90,7 @@
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner;
 	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
-	tuner->ValueCurrent													= tuner->ValueLimits.Min;
+	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
 	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
 	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;

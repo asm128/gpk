@@ -68,7 +68,7 @@ namespace gpk
 				int32_t										IdDecrease							= -1;
 				int32_t										IdIncrease							= -1;
 
-				::gpk::SMinMax<int64_t>						ValueLimits							= {0xC0000000, 0x3fFFffFF};
+				::gpk::SMinMax<int64_t>						ValueLimits							= {(int32_t)0xC0000001, (int32_t)0x3fFFffFF};
 				int64_t										ValueCurrent						= -1;
 				char_t										ValueString	[32]					= {};
 
