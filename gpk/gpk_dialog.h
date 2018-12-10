@@ -103,7 +103,8 @@ namespace gpk
 			if(0 != Input)
 				gpk_necall(::gpk::guiProcessInput(GUI, *Input), "%s", "Unknown reason.");
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) 
-				Controls[iControl]->Update();
+				if(-1 == Controls[iControl]->IdParent)
+					Controls[iControl]->Update();
 			return 0;
 		}
 	};
