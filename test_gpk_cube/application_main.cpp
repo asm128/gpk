@@ -144,9 +144,7 @@ struct SCamera {
 	const ::gpk::SCoord3<float>													tilt										= {10, };	// ? cam't remember what is this. Radians? Eulers?
 	const ::gpk::SCoord3<float>													rotation									= {0, (float)frameInfo.FrameNumber / 100, 0};
 
-	float																		fFar										= 1000.0f
-		,																		fNear										= 0.01f
-		;
+	::gpk::SCameraRange															nearFar										= {0.01f , 1000.0f};
 
 	static constexpr const ::gpk::SCoord3<float>								cameraUp									= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
 	::SCamera																	camera										= {{10, 5, 0}, {}};
@@ -158,15 +156,15 @@ struct SCamera {
 	lightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f * -2);
 	viewMatrix.LookAt(camera.Position, camera.Target, cameraUp);
 	const ::gpk::SCoord2<uint32_t>												& offscreenMetrics							= offscreen.View.metrics();
-	projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, fNear, fFar );
+	projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Near, nearFar.Far );
 	projection																= viewMatrix * projection;
 	lightPos.Normalize();
 
 	::gpk::SMatrix4<float>														viewport									= {};
 	viewport._11															= 2.0f / offscreenMetrics.x;
 	viewport._22															= 2.0f / offscreenMetrics.y;
-	viewport._33															= 1.0f / (fFar - fNear);
-	viewport._43															= - fNear * ( 1.0f / (fFar - fNear) );
+	viewport._33															= 1.0f / (float)(nearFar.Far - nearFar.Near);
+	viewport._43															= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
 	viewport._44															= 1.0f;
 	projection																= projection * viewport.GetInverse();
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {

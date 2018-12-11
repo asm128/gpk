@@ -60,7 +60,6 @@
 }
 
 ::gpk::error_t								gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
-	char											buf		[256]								= "";
 	sockaddr_in										sockaddr_ipv4								= {};
 	socklen_t										len											= sizeof(sockaddr_in);
 	ree_if(getpeername(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");

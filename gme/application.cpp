@@ -28,46 +28,46 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 
-	{
-		unsigned char		test	[]		= "unixunix";
-		unsigned __int8		* c1			= (unsigned __int8		*)&test[0];
-		unsigned short		* s1			= (unsigned short		*)&test[0];
-		unsigned short		* s2			= (unsigned short		*)&test[2];
-		unsigned short		* s3			= (unsigned short		*)&test[4];
-		unsigned short		* s4			= (unsigned short		*)&test[6];
-		unsigned int		* i1			= (unsigned int			*)&test[0];
-		unsigned int		* i2			= (unsigned int			*)&test[4];
-		unsigned long long	* ll1			= (unsigned long long	*)&test[0];
-		c1	;
-		s1	;
-		s2	;
-		s3	;
-		s4	;
-		i1	;
-		i2	;
-		ll1	;
-		Sleep(1);
-	}
-	{
-		unsigned int		test			= 'unix';
-		unsigned __int8		* c1			= (unsigned __int8		*)&((char*)(&test))[0];
-		unsigned short		* s1			= (unsigned short		*)&((char*)(&test))[0];
-		unsigned short		* s2			= (unsigned short		*)&((char*)(&test))[2];
-		unsigned short		* s3			= (unsigned short		*)&((char*)(&test))[4];
-		unsigned short		* s4			= (unsigned short		*)&((char*)(&test))[6];
-		unsigned int		* i1			= (unsigned int			*)&((char*)(&test))[0];
-		unsigned int		* i2			= (unsigned int			*)&((char*)(&test))[4];
-		unsigned long long	* ll1			= (unsigned long long	*)&((char*)(&test))[0];
-		c1	;
-		s1	;
-		s2	;
-		s3	;
-		s4	;
-		i1	;
-		i2	;
-		ll1	;
-		Sleep(1);
-	}
+	//{
+	//	unsigned char		test	[]		= "unixunix";
+	//	unsigned __int8		* c1			= (unsigned __int8		*)&test[0];
+	//	unsigned short		* s1			= (unsigned short		*)&test[0];
+	//	unsigned short		* s2			= (unsigned short		*)&test[2];
+	//	unsigned short		* s3			= (unsigned short		*)&test[4];
+	//	unsigned short		* s4			= (unsigned short		*)&test[6];
+	//	unsigned int		* i1			= (unsigned int			*)&test[0];
+	//	unsigned int		* i2			= (unsigned int			*)&test[4];
+	//	unsigned long long	* ll1			= (unsigned long long	*)&test[0];
+	//	c1	;
+	//	s1	;
+	//	s2	;
+	//	s3	;
+	//	s4	;
+	//	i1	;
+	//	i2	;
+	//	ll1	;
+	//	Sleep(1);
+	//}
+	//{
+	//	unsigned int		test			= 'unix';
+	//	unsigned __int8		* c1			= (unsigned __int8		*)&((char*)(&test))[0];
+	//	unsigned short		* s1			= (unsigned short		*)&((char*)(&test))[0];
+	//	unsigned short		* s2			= (unsigned short		*)&((char*)(&test))[2];
+	//	unsigned short		* s3			= (unsigned short		*)&((char*)(&test))[4];
+	//	unsigned short		* s4			= (unsigned short		*)&((char*)(&test))[6];
+	//	unsigned int		* i1			= (unsigned int			*)&((char*)(&test))[0];
+	//	unsigned int		* i2			= (unsigned int			*)&((char*)(&test))[4];
+	//	unsigned long long	* ll1			= (unsigned long long	*)&((char*)(&test))[0];
+	//	c1	;
+	//	s1	;
+	//	s2	;
+	//	s3	;
+	//	s4	;
+	//	i1	;
+	//	i2	;
+	//	ll1	;
+	//	Sleep(1);
+	//}
 
 	return 0; 
 }
@@ -77,9 +77,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
-	target->Color		.resize(app.Framework.MainDisplay.Size);
-	target->DepthStencil.resize(target->Color.View.metrics());
-	//::gpk::clearTarget(*target);
+	target->resize(app.Framework.MainDisplay.Size, {}, 0xFFFFFFFF);
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);

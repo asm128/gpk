@@ -18,7 +18,7 @@ namespace gpk
 	template <typename _tValue>
 	struct enum_definition {
 		typedef				_tValue								TValue;
-		static constexpr	const _tValue						INVALID_VALUE							= (_tValue)-1;
+		static constexpr	const _tValue						INVALID_VALUE							= (_tValue)(-1);
 
 							::gpk::label						Name									= ::gpk::label::statics().empty;
 							::gpk::array_pod<_tValue>			Values									= {};

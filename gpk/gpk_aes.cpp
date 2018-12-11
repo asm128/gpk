@@ -157,15 +157,13 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 			RoundKey[(base * 4) + idx]							= Key[(base * 4) + idx];
 	}
 
-	uint32_t						i, j, k;
 	// All other round keys are found from the previous round keys.
 	uint8_t												tempa[4]; // Used for the column/row operations
-	for (i = Nk; i < AES_Nb * (Nr + 1); ++i) {
-		{
-			k												= (i - 1) * 4;
-			for(int idx = 0; idx < 4; ++idx) 
-				tempa[idx]										= RoundKey[k + idx];
-		}
+	for (uint32_t i = Nk; i < AES_Nb * (Nr + 1); ++i) {
+		uint32_t											k										= (i - 1) * 4;
+		for(int idx = 0; idx < 4; ++idx) 
+			tempa[idx]										= RoundKey[k + idx];
+
 		if (i % Nk == 0) {
 			{	// Function RotWord()	// This function shifts the 4 bytes in a word to the left once. [a0,a1,a2,a3] becomes [a1,a2,a3,a0]
 				k												= tempa[0];
@@ -186,7 +184,7 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 				for(int idx = 0; idx < 4; ++idx)	// Function Subword()
 					tempa[idx]										= getSBoxValue(tempa[idx]);
 			}
-		j												= i * 4; 
+		uint32_t											j										= i * 4; 
 		k												= (i - Nk) * 4;
 		for(int idx = 0; idx < 4; ++idx) 
 			RoundKey[j + idx]									= RoundKey[k + idx] ^ tempa[idx];
@@ -242,11 +240,10 @@ static uint8_t									xtime									(uint8_t x)														{ return ((x<<1) ^
 
 // MixColumns function mixes the columns of the state matrix
 static void										MixColumns								(state_t* state)												{
-	uint8_t												i;
-	uint8_t												Tmp, Tm, t;
-	for (i = 0; i < 4; ++i) {  
-		t												= (*state)[i][0];
-		Tmp												= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
+	for (uint8_t i = 0; i < 4; ++i) {  
+		const uint8_t										t										= (*state)[i][0];
+		const uint8_t										Tmp										= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
+		uint8_t												Tm;
 		Tm												= (*state)[i][0] ^ (*state)[i][1] ; Tm = xtime(Tm);  (*state)[i][0] ^= Tm ^ Tmp ;
 		Tm												= (*state)[i][1] ^ (*state)[i][2] ; Tm = xtime(Tm);  (*state)[i][1] ^= Tm ^ Tmp ;
 		Tm												= (*state)[i][2] ^ (*state)[i][3] ; Tm = xtime(Tm);  (*state)[i][2] ^= Tm ^ Tmp ;

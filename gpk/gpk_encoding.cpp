@@ -71,10 +71,25 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0; 
 }
 
+			::gpk::error_t								base64EncodeTriplet												(::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<uint8_t> outputQuad) {
+	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
+		::gpk::view_bit<uint8_t>									inputBits														= { &inputTriplet[iSingleIn], 8 };
+		::gpk::reverse_bits(inputBits);
+	}
+	const ::gpk::view_bit<uint8_t>								inputBits														= {inputTriplet.begin(), 24};
+	uint32_t													iBitIn															= 0;
+	for (uint32_t iSingleOut = 0; iSingleOut < outputQuad.size(); ++iSingleOut) { // encode to four output bytes
+		::gpk::view_bit<uint8_t>									outputBits														= { &outputQuad[iSingleOut], 6 };
+		for (uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
+			outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
+		::gpk::reverse_bits(outputBits);
+	}
+	return 0;
+}
 			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_array<const char_t> & base64Symbols, char_t base64PadSymbol, const ::gpk::view_array<const ubyte_t> & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
-	uint32_t													iOutput64														= out_base64.size(); // append the result 
+	uint32_t													iOutput64														= out_base64.size(); //
 	gpk_necall(out_base64.resize(out_base64.size() + packsNeeded * 4), "Out of memory? out_base64.size() : %u. packsNeeded : %u.", iOutput64, packsNeeded);
 	for(uint32_t iInputByte = 0, inputByteCount = inputBytes.size(); iInputByte < inputByteCount; iInputByte += 3) { // process each byte triplet and turn it into 4 bytes padded with 2 bit
 		const bool													use1															= iInputByte < (inputByteCount - 1);
@@ -84,29 +99,20 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			, use1 ? inputBytes[iInputByte + 1] : (uint8_t)0U
 			, use2 ? inputBytes[iInputByte + 2] : (uint8_t)0U
 			};
-		for(uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
-			::gpk::view_bit<uint8_t>									inputBits													= {&inputTriplet[iSingleIn], 8};
-			::gpk::reverse_bits(inputBits);
-		}
-		const ::gpk::view_bit<uint8_t>								inputBits														= inputTriplet;
-		uint8_t														outputQuad		[4]												= {};
-		uint32_t													iBitIn															= 0;
-		for(uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
-			::gpk::view_bit<uint8_t>									outputBits														= {&outputQuad[iSingleOut], 6};
-			for(uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
-				outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
-			::gpk::reverse_bits(outputBits);
-			if(outputQuad[iSingleOut] >= base64Symbols.size() - 1) { 
+		uint8_t														outputQuad[4] = {};
+		::base64EncodeTriplet(inputTriplet, outputQuad);
+		for (uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
+			if (outputQuad[iSingleOut] >= base64Symbols.size() - 1) {
 				error_printf("%s", "Out of range. This could happen if the algorithm or the input character table got broken.");
-				out_base64[iOutput64++]									= -1;
+				out_base64[iOutput64++] = -1;
 			}
 			else
-				out_base64[iOutput64++]									= base64Symbols[outputQuad[iSingleOut]];
+				out_base64[iOutput64++] = base64Symbols[outputQuad[iSingleOut]];
 		}
 		//if(false == use2)							out_base64[out_base64.size() - 1]	= '=';
 		//if(false == use1 && outputQuad[3] == 0)	out_base64[out_base64.size() - 2]	= '=';
 	}
-	const uint32_t												modTriplet														= inputBytes.size() % 3;
+		const uint32_t												modTriplet														= inputBytes.size() % 3;
 	if(0 != modTriplet) { // pad with '='
 		out_base64[out_base64.size() - 1]						= base64PadSymbol;
 		if(1 == modTriplet) // pad with another '='

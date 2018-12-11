@@ -58,7 +58,7 @@ namespace gpk
 
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
 		inline constexpr								array_pod									()																			noexcept	= default;
-		inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
+		//inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
 														array_pod									(::std::initializer_list<_tPOD> init)													{ 
 			throw_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 			memcpy(Data, init.begin(), Count * sizeof(_tPOD));
@@ -95,7 +95,7 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}
-														array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<const _tPOD>&) other) {}
+		inline											array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<const _tPOD>&) other) {}
 														array_pod									(const view_array<const _tPOD>& other)													{
 			if(other.size()) {
 				const uint32_t										newSize										= other.size();
@@ -272,13 +272,13 @@ namespace gpk
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
-				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				ree_if(nullptr == newData, "Failed to allocate array for inserting new value. memory requesteD: %u.", mallocSize);
-				::gpk::view_array<_tPOD>							viewSafe									= {newData, newSize};
-				for(uint32_t i = 0					, maxCount = ::gpk::min(index, Count)					; i <	maxCount; ++i)	viewSafe[i			]	= oldData[i];
-				for(uint32_t i = 0					, maxCount = ::gpk::min(chainLength, newSize - index)	; i <	maxCount; ++i)	viewSafe[i + index	]	= chainToInsert[i];
-				for(uint32_t i = index + chainLength, maxCount = ::gpk::min(index + 1, Count)				; i <	maxCount; ++i)	viewSafe[i + 1		]	= oldData[i];
-				Data											= newData;
+				ree_if(nullptr == (safeguard.Handle = ::gpk::gpk_malloc(mallocSize)), "Failed to allocate array for inserting new value. memory requesteD: %u.", mallocSize);
+				::gpk::view_array<_tPOD>							viewSafe									= {(_tPOD*)safeguard.Handle, newSize};
+				uint32_t											i, maxCount;
+				for(i = 0					, maxCount = ::gpk::min(index, Count)					; i < maxCount; ++i) viewSafe[i]			= oldData[i];
+				for(i = 0					, maxCount = ::gpk::min(chainLength, newSize - index)	; i < maxCount; ++i) viewSafe[i + index]	= chainToInsert[i];
+				for(i = index + chainLength	, maxCount = ::gpk::min(index + 1, Count)				; i < maxCount; ++i) viewSafe[i + 1]		= oldData[i];
+				Data											= safeguard.Handle; //newData;
 				safeguard.Handle								= 0;
 			}	
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place

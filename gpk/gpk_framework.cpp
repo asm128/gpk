@@ -13,6 +13,24 @@ struct SDisplayInput {
 						::gpk::ptr_obj<::gpk::SInput>										Input;
 };
 
+static				::gpk::error_t														updateDPI									(::gpk::SFramework& framework)													{
+#if defined(GPK_WINDOWS)
+	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
+		RECT																						rcWindow									= {};
+		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
+		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
+		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
+		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
+		if(0 == hr && (framework.GUI.Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+			framework.GUI.Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
+			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
+			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics(), true);
+		}
+	}
+#endif
+	return 0;
+}
 					::gpk::error_t														gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.Input)
 		framework.Input.create();
@@ -36,21 +54,8 @@ struct SDisplayInput {
 		if(offscreen && offscreen->Color.Texels.size())
 			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
-
-	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
-		RECT																						rcWindow									= {};
-		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
-		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
-		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
-		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
-		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr && (framework.GUI.Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
-			framework.GUI.Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics(), true);
-		}
-	}
 #endif
-	return 0;
+	return ::updateDPI(framework);
 }
 
 #if defined(GPK_WINDOWS)

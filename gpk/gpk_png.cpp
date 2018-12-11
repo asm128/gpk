@@ -384,29 +384,29 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 			value[valueLength]														= 0;
 			memcpy(&value[0], &newChunk.Data[keyLength + 1], valueLength);
 			info_printf("Text: %s.", value.begin());
-			if(-1 == pngData.Feature.tEXt)
-				pngData.Feature.tEXt													= iChunk;
+			if(-1 == pngData.Feature[::gpk::PNG_TAG_tEXt])
+				pngData.Feature[::gpk::PNG_TAG_tEXt] = iChunk;
 			
 		}
-		else if(0 == memcmp(newChunk.Type, "zTXt", 4)) { if(-1 == pngData.Feature.zTXt) pngData.Feature.zTXt = iChunk; }	// Contains compressed text (and a compression method marker) with the same limits as tEXt.
-		else if(0 == memcmp(newChunk.Type, "bKGD", 4)) { if(-1 == pngData.Feature.bKGD) pngData.Feature.bKGD = iChunk; }	// Gives the default background color. It is intended for use when there is no better choice available, such as in standalone image viewers (but not web browsers; see below for more details).
-		else if(0 == memcmp(newChunk.Type, "cHRM", 4)) { if(-1 == pngData.Feature.cHRM) pngData.Feature.cHRM = iChunk; }	// Gives the chromaticity coordinates of the display primaries and white point.
-		else if(0 == memcmp(newChunk.Type, "dSIG", 4)) { if(-1 == pngData.Feature.dSIG) pngData.Feature.dSIG = iChunk; }	// Is for storing digital signatures.[13]
-		else if(0 == memcmp(newChunk.Type, "eXIf", 4)) { if(-1 == pngData.Feature.eXIf) pngData.Feature.eXIf = iChunk; }	// Stores Exif metadata.[14]
-		else if(0 == memcmp(newChunk.Type, "gAMA", 4)) { if(-1 == pngData.Feature.gAMA) pngData.Feature.gAMA = iChunk; }	// Specifies gamma.
-		else if(0 == memcmp(newChunk.Type, "hIST", 4)) { if(-1 == pngData.Feature.hIST) pngData.Feature.hIST = iChunk; }	// Can store the histogram, or total amount of each color in the image.
-		else if(0 == memcmp(newChunk.Type, "iCCP", 4)) { if(-1 == pngData.Feature.iCCP) pngData.Feature.iCCP = iChunk; }	// Is an ICC color profile.
-		else if(0 == memcmp(newChunk.Type, "iTXt", 4)) { if(-1 == pngData.Feature.iTXt) pngData.Feature.iTXt = iChunk; }	// Contains a keyword and UTF-8 text, with encodings for possible compression and translations marked with language tag. The Extensible Metadata Platform (XMP) uses this chunk with a keyword 'XML:com.adobe.xmp'
-		else if(0 == memcmp(newChunk.Type, "pHYs", 4)) { if(-1 == pngData.Feature.pHYs) pngData.Feature.pHYs = iChunk; }	// Holds the intended pixel size and/or aspect ratio of the image.
-		else if(0 == memcmp(newChunk.Type, "sBIT", 4)) { if(-1 == pngData.Feature.sBIT) pngData.Feature.sBIT = iChunk; }	// (significant bits) indicates the color-accuracy of the source data.
-		else if(0 == memcmp(newChunk.Type, "sPLT", 4)) { if(-1 == pngData.Feature.sPLT) pngData.Feature.sPLT = iChunk; }	// Suggests a palette to use if the full range of colors is unavailable.
-		else if(0 == memcmp(newChunk.Type, "sRGB", 4)) { if(-1 == pngData.Feature.sRGB) pngData.Feature.sRGB = iChunk; }	// Indicates that the standard sRGB color space is used.
-		else if(0 == memcmp(newChunk.Type, "sTER", 4)) { if(-1 == pngData.Feature.sTER) pngData.Feature.sTER = iChunk; }	// Stereo-image indicator chunk for stereoscopic images.[15]
-		else if(0 == memcmp(newChunk.Type, "tIME", 4)) { if(-1 == pngData.Feature.tIME) pngData.Feature.tIME = iChunk; }	// Stores the time that the image was last changed.
-		else if(0 == memcmp(newChunk.Type, "tRNS", 4)) { if(-1 == pngData.Feature.tRNS) pngData.Feature.tRNS = iChunk; }	// Contains transparency information. For indexed images, it stores alpha channel values for one or more palette entries. For truecolor and grayscale images, it stores a single pixel value that is to be regarded as fully transparent.
-		else if(0 == memcmp(newChunk.Type, "fcTL", 4)) { if(-1 == pngData.Feature.fcTL) pngData.Feature.fcTL = iChunk; }	// The frame control chunk contains several bits of information, the most important of which is the display time of the following frame. 
-		else if(0 == memcmp(newChunk.Type, "fdAT", 4)) { if(-1 == pngData.Feature.fdAT) pngData.Feature.fdAT = iChunk; }	// The frame data chunks have the same structure as the IDAT chunks, except preceded by a sequence number. 
-		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature.acTL) pngData.Feature.acTL = iChunk; info_printf("%s", "This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png. 
+		else if(0 == memcmp(newChunk.Type, "zTXt", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_zTXt]) pngData.Feature[::gpk::PNG_TAG_zTXt] = iChunk; }	// Contains compressed text (and a compression method marker) with the same limits as tEXt.
+		else if(0 == memcmp(newChunk.Type, "bKGD", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_bKGD]) pngData.Feature[::gpk::PNG_TAG_bKGD] = iChunk; }	// Gives the default background color. It is intended for use when there is no better choice available, such as in standalone image viewers (but not web browsers; see below for more details).
+		else if(0 == memcmp(newChunk.Type, "cHRM", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_cHRM]) pngData.Feature[::gpk::PNG_TAG_cHRM] = iChunk; }	// Gives the chromaticity coordinates of the display primaries and white point.
+		else if(0 == memcmp(newChunk.Type, "dSIG", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_dSIG]) pngData.Feature[::gpk::PNG_TAG_dSIG] = iChunk; }	// Is for storing digital signatures.[13]
+		else if(0 == memcmp(newChunk.Type, "eXIf", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_eXIf]) pngData.Feature[::gpk::PNG_TAG_eXIf] = iChunk; }	// Stores Exif metadata.[14]
+		else if(0 == memcmp(newChunk.Type, "gAMA", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_gAMA]) pngData.Feature[::gpk::PNG_TAG_gAMA] = iChunk; }	// Specifies gamma.
+		else if(0 == memcmp(newChunk.Type, "hIST", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_hIST]) pngData.Feature[::gpk::PNG_TAG_hIST] = iChunk; }	// Can store the histogram, or total amount of each color in the image.
+		else if(0 == memcmp(newChunk.Type, "iCCP", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_iCCP]) pngData.Feature[::gpk::PNG_TAG_iCCP] = iChunk; }	// Is an ICC color profile.
+		else if(0 == memcmp(newChunk.Type, "iTXt", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_iTXt]) pngData.Feature[::gpk::PNG_TAG_iTXt] = iChunk; }	// Contains a keyword and UTF-8 text, with encodings for possible compression and translations marked with language tag. The Extensible Metadata Platform (XMP) uses this chunk with a keyword 'XML:com.adobe.xmp'
+		else if(0 == memcmp(newChunk.Type, "pHYs", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_pHYs]) pngData.Feature[::gpk::PNG_TAG_pHYs] = iChunk; }	// Holds the intended pixel size and/or aspect ratio of the image.
+		else if(0 == memcmp(newChunk.Type, "sBIT", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_sBIT]) pngData.Feature[::gpk::PNG_TAG_sBIT] = iChunk; }	// (significant bits) indicates the color-accuracy of the source data.
+		else if(0 == memcmp(newChunk.Type, "sPLT", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_sPLT]) pngData.Feature[::gpk::PNG_TAG_sPLT] = iChunk; }	// Suggests a palette to use if the full range of colors is unavailable.
+		else if(0 == memcmp(newChunk.Type, "sRGB", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_sRGB]) pngData.Feature[::gpk::PNG_TAG_sRGB] = iChunk; }	// Indicates that the standard sRGB color space is used.
+		else if(0 == memcmp(newChunk.Type, "sTER", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_sTER]) pngData.Feature[::gpk::PNG_TAG_sTER] = iChunk; }	// Stereo-image indicator chunk for stereoscopic images.[15]
+		else if(0 == memcmp(newChunk.Type, "tIME", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_tIME]) pngData.Feature[::gpk::PNG_TAG_tIME] = iChunk; }	// Stores the time that the image was last changed.
+		else if(0 == memcmp(newChunk.Type, "tRNS", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_tRNS]) pngData.Feature[::gpk::PNG_TAG_tRNS] = iChunk; }	// Contains transparency information. For indexed images, it stores alpha channel values for one or more palette entries. For truecolor and grayscale images, it stores a single pixel value that is to be regarded as fully transparent.
+		else if(0 == memcmp(newChunk.Type, "fcTL", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_fcTL]) pngData.Feature[::gpk::PNG_TAG_fcTL] = iChunk; }	// The frame control chunk contains several bits of information, the most important of which is the display time of the following frame. 
+		else if(0 == memcmp(newChunk.Type, "fdAT", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_fdAT]) pngData.Feature[::gpk::PNG_TAG_fdAT] = iChunk; }	// The frame data chunks have the same structure as the IDAT chunks, except preceded by a sequence number. 
+		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_acTL]) pngData.Feature[::gpk::PNG_TAG_acTL] = iChunk; info_printf("%s", "This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png. 
 	}
 	return 0;
 }
@@ -660,7 +660,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 }
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
-	::gpk::array_pod<byte_t>													fileInMemory									= 0;
+	::gpk::array_pod<byte_t>													fileInMemory									= {};
 	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
 	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
 }

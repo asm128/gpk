@@ -77,7 +77,7 @@ namespace gpk
 		constexpr					SColorBGR						(const SColorBGR& otherColorInt)								noexcept	= default;
 		constexpr					SColorBGR						(uint8_t b_, uint8_t g_, uint8_t r_)							noexcept	: b(b_), g(g_), r(r_)																																														{}
 		constexpr					SColorBGR						(const SColorBGRA& other)										noexcept	: b(other.b), g(other.b), r(other.r)																																										{}
-		constexpr					SColorBGR						(const SColor16& other)											noexcept	: b((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), r((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))							{}
+		//constexpr					SColorBGR						(const SColor16& other)											noexcept	: b((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), r((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))							{}
 		constexpr					SColorBGR						(uint32_t other)												noexcept	: b((uint8_t)(((other & 0x000000FF) >> 0)))				, g((uint8_t)((other & 0x0000FF00) >> 8))					, r((uint8_t)(((other & 0x00FF0000) >> 16)))											{}
 
 		constexpr					operator		uint32_t		()														const	noexcept	{ return				0xFF000000 | (((uint32_t)r) << 16)	| (((uint32_t)g) << 8)							| (((uint32_t)b) << 0);																			}
@@ -108,7 +108,7 @@ namespace gpk
 		constexpr					SColorRGB						(const SColorRGB& otherColorInt)								noexcept	= default;
 		constexpr					SColorRGB						(uint8_t b_, uint8_t g_, uint8_t r_)							noexcept	: r(r_), g(g_), b(b_)																																													{}
 		constexpr					SColorRGB						(const SColorRGBA& other)										noexcept	: r(other.r), g(other.g), b(other.b)																																									{}
-		constexpr					SColorRGB						(const SColor16& other)											noexcept	: r((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), b((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))						{}
+		//constexpr					SColorRGB						(const SColor16& other)											noexcept	: r((uint8_t)((other & 0x001F) / ((float)(0x1F))*255))	, g((uint8_t)(((other & 0x07E0) >>5) / ((float)(0x3F))*255)), b((uint8_t)(((other & 0xF800) >>11) / ((float)(0x1F))*255))						{}
 		constexpr					SColorRGB						(uint32_t other)												noexcept	: r((uint8_t)(((other & 0x000000FF) >> 0)))				, g((uint8_t)((other & 0x0000FF00) >> 8))					, b((uint8_t)(((other & 0x00FF0000) >> 16)))										{}
 
 		constexpr					operator		uint32_t		()														const	noexcept	{ return				0xFF000000 | (((uint32_t)b) << 16)	| (((uint32_t)g) << 8)							| (((uint32_t)r) << 0);																			}
@@ -138,10 +138,10 @@ namespace gpk
 		constexpr									SColorFloat		()																noexcept	= default;
 		constexpr									SColorFloat		(const SColorFloat& color)										noexcept	= default;
 		constexpr									SColorFloat		(float _r, float _g, float _b, float _a=1.0f)					noexcept	: r(::gpk::clamp(_r, 0.0f, 1.0f)) ,g(::gpk::clamp(_g, 0.0f, 1.0f)) ,b(::gpk::clamp(_b, 0.0f, 1.0f)) ,a(::gpk::clamp(_a, 0.0f, 1.0f))																{}
-		constexpr									SColorFloat		(uint16_t Color)												noexcept	: SColorFloat(SColorBGR(Color))																																										{}
-		constexpr									SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))							{}
+		//constexpr									SColorFloat		(uint16_t Color)												noexcept	: SColorFloat(SColorBGR(Color))																																										{}
+		//constexpr									SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))							{}
 		constexpr									SColorFloat		(SColorBGRA Color)												noexcept	: r(Color.r * (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(Color.a * (1/255.0f))																								{}
-		constexpr									SColorFloat		(SColorBGR Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(1.0f)																												{}
+		//constexpr									SColorFloat		(SColorBGR Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(1.0f)																												{}
 		constexpr									SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																																{}		
 
 									SColorFloat&	operator=		(const SColorFloat& color)													= default;
@@ -186,7 +186,7 @@ namespace gpk
 	static constexpr	const ::gpk::SColorFloat	MAGENTA			= {1.0f, 0.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	CYAN			= {0.0f, 1.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	ORANGE			= {1.0f, 0.647f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	BROWN			= 0xFF964B00;	
+	static constexpr	const ::gpk::SColorFloat	BROWN			= ::gpk::SColorBGRA{0xFF, 0x00, 0x4B, 0x96};
 	static constexpr	const ::gpk::SColorFloat	GRAY			= {0.5f, 0.5f, 0.5f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	DARKGRAY		= {0.25f, 0.25f, 0.25f, 1.0f				};
 	static constexpr	const ::gpk::SColorFloat	DARKRED			= {0.5f, 0.0f, 0.0f, 1.0f					};

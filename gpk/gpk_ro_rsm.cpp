@@ -196,7 +196,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 }
 
 			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input)							{ 
-	::gpk::array_pod<byte_t>									fileInMemory												= 0;
+	::gpk::array_pod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	info_printf("%u", unk);

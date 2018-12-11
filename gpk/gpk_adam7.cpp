@@ -1,4 +1,23 @@
 #include "gpk_adam7.h"
+					::gpk::error_t											gpk::adam7ScaleIndex				
+	( int32_t													iImage
+	, ::gpk::SCoord2<uint32_t>									& offsetMultiplier	
+	, ::gpk::SCoord2<uint32_t>									& offsetBase			
+	) 
+{
+	ree_if(iImage >= 7 || iImage < 0, "Invalid Adam7 image: %i.", iImage)
+	switch(iImage) {
+	case 0: offsetMultiplier = {8, 8}; offsetBase = {0, 0}; break;
+	case 1: offsetMultiplier = {8, 8}; offsetBase = {4, 0}; break;
+	case 2: offsetMultiplier = {4, 8}; offsetBase = {0, 4}; break;
+	case 3: offsetMultiplier = {4, 4}; offsetBase = {2, 0}; break;
+	case 4: offsetMultiplier = {2, 4}; offsetBase = {0, 2}; break;
+	case 5: offsetMultiplier = {2, 2}; offsetBase = {1, 0}; break;
+	case 6: offsetMultiplier = {1, 2}; offsetBase = {0, 1}; break;
+	}
+	return 0;
+}
+
 
 					::gpk::error_t											gpk::adam7Sizes						(::gpk::view_array<::gpk::SCoord2<uint32_t>> & imageSizes, const ::gpk::SCoord2<uint32_t> & imageSize)	{
 	imageSizes	[0]																= // 1

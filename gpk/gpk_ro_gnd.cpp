@@ -311,20 +311,20 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 
 			::gpk::error_t										gpk::blendGNDNormals								(const ::gpk::view_grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view_grid<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes)																						{
 	for(uint32_t y = 0; y < tileGeometryView.metrics().y - 1; ++y) {
-		const ::gpk::view_array<const ::gpk::STileGeometryGND>				rowTileGeometry										= tileGeometryView	[y];
-		const ::gpk::view_array<const ::gpk::STileMapping	   >			rowTileMapping										= tileMappingView	[y];
-		const ::gpk::view_array<const ::gpk::STileGeometryGND>				rowNextTileGeometry									= tileGeometryView	[y + 1];
-		const ::gpk::view_array<const ::gpk::STileMapping	   >			rowNextTileMapping									= tileMappingView	[y + 1];
+		const ::gpk::view_array<const ::gpk::STileGeometryGND	>			rowTileGeometry										= tileGeometryView	[y];
+		const ::gpk::view_array<const ::gpk::STileMapping		>			rowTileMapping										= tileMappingView	[y];
+		const ::gpk::view_array<const ::gpk::STileGeometryGND	>			rowNextTileGeometry									= tileGeometryView	[y + 1];
+		const ::gpk::view_array<const ::gpk::STileMapping		>			rowNextTileMapping									= tileMappingView	[y + 1];
 		for(uint32_t x = 0; x < tileGeometryView.metrics().x - 1; ++x) {
 			const ::gpk::STileGeometryGND										& tileGeometry0										= rowTileGeometry		[x];
 			const ::gpk::STileGeometryGND										& tileGeometry1										= rowTileGeometry		[x + 1];
 			const ::gpk::STileGeometryGND										& tileGeometry2										= rowNextTileGeometry	[x];
 			const ::gpk::STileGeometryGND										& tileGeometry3										= rowNextTileGeometry	[x + 1];
 
-			const ::gpk::STileMapping											& tileMapping0										= rowTileMapping	[x + 0];
-			const ::gpk::STileMapping											& tileMapping1										= rowTileMapping	[x + 1];
-			const ::gpk::STileMapping											& tileMapping2										= rowNextTileMapping[x + 0];
-			const ::gpk::STileMapping											& tileMapping3										= rowNextTileMapping[x + 1];
+			const ::gpk::STileMapping											& tileMapping0										= rowTileMapping		[x + 0];
+			const ::gpk::STileMapping											& tileMapping1										= rowTileMapping		[x + 1];
+			const ::gpk::STileMapping											& tileMapping2										= rowNextTileMapping	[x + 0];
+			const ::gpk::STileMapping											& tileMapping3										= rowNextTileMapping	[x + 1];
 
 			const bool															processTile0										= (tileGeometry0.SkinMapping.SkinIndexTop != -1);// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex != -1);
 			const bool															processTile1										= (tileGeometry1.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexFront == -1;// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex != -1);
