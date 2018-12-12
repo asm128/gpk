@@ -161,6 +161,11 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 
 //#define DISABLE_ARDELL
 
+static	::gpk::error_t						gpcFilter0Apply				(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub		(scanline, 1), "%s", "??"); return ::gpcFilterSub2		(scanline, 1);		}
+static	::gpk::error_t						gpcFilter0Remove			(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub2	(scanline, 1), "%s", "??"); return ::gpcDefilterSub		(scanline, 1);		}
+static	::gpk::error_t						gpcFilter1Apply				(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub2		(scanline, 2), "%s", "??"); return ::gpcFilterSub		(scanline, 4);		}
+static	::gpk::error_t						gpcFilter1Remove			(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub	(scanline, 4), "%s", "??"); return ::gpcDefilterSub2	(scanline, 2);		}
+
 //function to encrypt the message
 		::gpk::error_t						gpk::gpcEncode						(const ::gpk::view_array<const byte_t> & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::array_pod<uint64_t>& encrypted) {
 	uint32_t										offset								= encrypted.size();
@@ -183,11 +188,8 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 		gpk_necall(::gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered), "Failed to encode Ardell. %s", "Out of memory?");
 #endif
 	}
-
 	::gpk::view_array<ubyte_t>						filter_view							= {(ubyte_t*)filtered.begin(), filtered.size()};
-	gpk_necall(::gpcFilterSub	(filter_view, 1U), "%s", "Out of memory?");
-	gpk_necall(::gpcFilterSub2	(filter_view, 1U), "%s", "Out of memory?");
-
+	::gpcFilter0Apply(filter_view);
 	gpk_necall(::gpk::rsaEncode({(const byte_t*)filter_view.begin(), filter_view.size()}, n, key, testkey, encrypted), "%s", "Out of memory?");
 	if(testkey) {
 		::gpk::array_pod<byte_t> decryptTest = {};
@@ -197,10 +199,8 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 			error_if(decryptTest[iTest] != (byte_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
-
 	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * sizeof(uint64_t)};
-	gpk_necall(::gpcFilterSub2	(filter_view, 2U), "%s", "Out of memory?");
-	gpk_necall(::gpcFilterSub	(filter_view, 4U), "%s", "Out of memory?");
+	::gpcFilter1Apply(filter_view);
 	return (::gpk::error_t)i;
 }
 
@@ -210,17 +210,11 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint32_t										i									= 0;
 	::gpk::array_pod<uint64_t>						defiltered							(encrypted);
 	::gpk::view_array<ubyte_t>						defilter_view						= {(ubyte_t*)defiltered.begin(), defiltered.size() * sizeof(uint64_t)};
-	::gpcDefilterSub(defilter_view, 4U);
-	::gpcDefilterSub2(defilter_view, 2U);
-
+	::gpcFilter1Remove(defilter_view);
 	gpk_necall(::gpk::rsaDecode(defiltered, n, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
-	//info_printf("Last qword: %llx.", *(uint64_t*)&decrypted[decrypted.size() - 8]);
-
 	::gpk::view_array<ubyte_t>						filter_view							({(ubyte_t*)&decrypted[offset], decrypted.size() - offset});
-	::gpcDefilterSub2(filter_view, 1U);
-	::gpcDefilterSub(filter_view, 1U);
+	::gpcFilter0Remove(filter_view);
 	::gpk::array_pod<byte_t>						defiltered2							= {};
-
 #if defined(DISABLE_ARDELL)
 	defiltered2									= {&decrypted[offset], decrypted.size() - offset};
 #else

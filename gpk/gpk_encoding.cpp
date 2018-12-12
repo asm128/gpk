@@ -177,10 +177,12 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			int32_t														t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
 			saltValue[i]											= t % 256;
 		}
-	int32_t														k1																= 11 + (key % 233);
-	int32_t														k2																=  7 + (key % 239);
-	int32_t														k3																=  5 + (key % 241);
-	int32_t														k4																=  3 + (key % 251);
+	int32_t    keyFinal[4]   = 
+	{ 11 + (key % 233)
+	,  7 + (key % 239)
+	,  5 + (key % 241)
+	,  3 + (key % 251)
+	};
 	int32_t														n																= salt ? input.size() + 4 : input.size();
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
 	int32_t														* sn															= cache.begin();
@@ -195,35 +197,38 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	else
 		for(int32_t i = 0; i < n; ++i)			
 			sn[i]													= input[i];
-		
-	for(int32_t i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((k1 * sn[i - 1]) % 256);
-	for(int32_t i = n - 2	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 1] ^  (k2 * sn[i + 1]) % 256 ;
-	for(int32_t i = 2		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 2] ^  (k3 * sn[i - 1]) % 256 ;
-	for(int32_t i = n - 3	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 2] ^  (k4 * sn[i + 1]) % 256 ;
+	int32_t i;	
+	for(i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((keyFinal[0] * sn[i - 1]) % 256);
+	for(i = n - 2	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 1] ^  (keyFinal[1] * sn[i + 1]) % 256 ;
+	for(i = 2		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 2] ^  (keyFinal[2] * sn[i - 1]) % 256 ;
+	for(i = n - 3	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 2] ^  (keyFinal[3] * sn[i + 1]) % 256 ;
 		
 	uint32_t													outputOffset													= output.size();
 	gpk_necall(output.resize(outputOffset + n), "%s", "Out of memory?");
 	byte_t														* outputFast													= output.begin();
-	for(int32_t i = 0; i < n; ++i)	
+	for( i = 0; i < n; ++i)	
 		outputFast[outputOffset + i]							= (char)sn[i];
 	return 0;	
 }
 
 ::gpk::error_t											gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
-	int32_t														k1																= 11 + (key % 233);
-	int32_t														k2																=  7 + (key % 239);
-	int32_t														k3																=  5 + (key % 241);
-	int32_t														k4																=  3 + (key % 251);
+	int32_t    keyFinal[4]   = 
+	{ 11 + (key % 233)
+	,  7 + (key % 239)
+	,  5 + (key % 241)
+	,  3 + (key % 251)
+	};
 	int32_t														n																= (int32_t)input.size();
 
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
 	int32_t														* sn															= cache.begin();
-	for(int32_t i = 0		; i  < n	; ++i)	sn[i]			= input[i];
-	for(int32_t i = 0		; i  < n - 2; ++i)	sn[i]			= sn[i] ^ sn[i + 2] ^ (k4 * sn[i + 1]) % 256;
-	for(int32_t i = n - 1	; i >= 2	; --i)	sn[i]			= sn[i] ^ sn[i - 2] ^ (k3 * sn[i - 1]) % 256;
-	for(int32_t i = 0		; i  < n - 1; ++i)	sn[i]			= sn[i] ^ sn[i + 1] ^ (k2 * sn[i + 1]) % 256;
-	for(int32_t i = n - 1	; i >= 1	; --i)	sn[i]			= sn[i] ^ sn[i - 1] ^ (k1 * sn[i - 1]) % 256;
+	int32_t i;
+	for(i = 0		; i  < n	; ++i)	sn[i]			= input[i];
+	for(i = 0		; i  < n - 2; ++i)	sn[i]			= sn[i] ^ sn[i + 2] ^ (keyFinal[3] * sn[i + 1]) % 256;
+	for(i = n - 1	; i >= 2	; --i)	sn[i]			= sn[i] ^ sn[i - 2] ^ (keyFinal[2] * sn[i - 1]) % 256;
+	for(i = 0		; i  < n - 1; ++i)	sn[i]			= sn[i] ^ sn[i + 1] ^ (keyFinal[1] * sn[i + 1]) % 256;
+	for(i = n - 1	; i >= 1	; --i)	sn[i]			= sn[i] ^ sn[i - 1] ^ (keyFinal[0] * sn[i - 1]) % 256;
 	
 	uint32_t													outputOffset													= output.size();
 	const uint32_t												finalStringSize													= salt ? n - 4 : n;
@@ -231,7 +236,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	gpk_necall(output.resize(outputOffset + finalStringSize), "%s", "Out of memory?");
 	byte_t														* outputFast													= output.begin();
 	const int32_t												* finalValuesFast												= finalValues.begin();
-	for(int32_t i = 0, count = finalStringSize; i < count; ++i)	
+	for( i = 0; i < (int32_t)finalStringSize; ++i)	
 		outputFast[outputOffset + i]							= (char)finalValuesFast[i];
 	return 0;
 }

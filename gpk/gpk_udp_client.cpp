@@ -20,7 +20,6 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
 	sa_length													= sizeof(struct sockaddr_in);
 	sa_server													= {};
-
 	::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
 	int																received_bytes								= recvfrom(client.Socket.Handle, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, &sa_length);
 	rew_if(-1 == received_bytes, "Failed to receive connect response!");

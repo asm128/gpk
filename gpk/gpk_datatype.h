@@ -81,8 +81,8 @@ namespace gpk
 		inline constexpr	uint32_t					ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
 		inline constexpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * ElementCount : SizeInBits * ElementCount / 8 + one_if( SizeInBits * ElementCount % 8 ); }
 
-		inline constexpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat				&& IsNorm				&& (IsBigEndian == false); }
-		inline constexpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == false)	&& (IsNorm == false)	&& (IsBigEndian == false); }
+		inline constexpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
+		inline constexpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
 		inline constexpr	bool						IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
 
 		inline constexpr								SDataTypeID		( DATA_TYPE typeId )				noexcept

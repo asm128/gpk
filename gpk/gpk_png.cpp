@@ -581,24 +581,8 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 	return 0;
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
-	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
-	::gpk::array_pod<uint32_t>													indicesIDAT;
-	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");
-	::gpk::array_pod<ubyte_t>													& imageDeflated									= pngData.Deflated;
-	for(uint32_t iChunk = 0; iChunk < indicesIDAT.size(); ++iChunk) {
-		const ::gpk::SPNGChunk														& loadedChunk									= pngData.Chunks[indicesIDAT[iChunk]];
-		if(loadedChunk.Data.size()) {
-			uint32_t																	dataOffset										= imageDeflated.size();
-			gpk_necall(imageDeflated.resize(imageDeflated.size() + loadedChunk.Data.size()), "Out of memory? Requested size: %u.", imageDeflated.size() + loadedChunk.Data.size());
-			memcpy(&imageDeflated[dataOffset], loadedChunk.Data.begin(), loadedChunk.Data.size());
-		}
-	}
-
+static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
-	const uint32_t																aSuitableWidth									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-	pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
-	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "%s", "Failed to decompress!");
 	info_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."	
 		"\nBit Depth            : 0x%X."		
@@ -615,29 +599,39 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 		, (uint32_t)imageHeader.MethodFilter		
 		, (uint32_t)imageHeader.MethodInterlace		
 		, pngData.Inflated.size()
-		, imageDeflated.size()
+		, pngData.Deflated.size()
 		);
+	return 0;
+}
 
-	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines									= pngData.Scanlines;
-	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
+				::gpk::error_t											pngDefilterScanlinesNonInterlaced				(::gpk::SPNGData& pngData, uint32_t bytesPerPixel) {
+	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
+	::gpk::array_obj<::gpk::array_pod<ubyte_t>>									& scanlines										= pngData.Scanlines;
+	pngData.Filters.clear();
+	scanlines.resize(imageHeader.Size.y);
+	uint32_t																	widthScanline									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
+	info_printf("Scanline size: %u.", widthScanline);
+	for(uint32_t y = 0; y < imageHeader.Size.y; ++y) {
+		pngData.Filters.push_back(pngData.Inflated[y * widthScanline + y]);
+		info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[y]);
+		gpk_necall(scanlines[y].resize(widthScanline), "%s", "Out of memory or corrupt file.");
+		memcpy(scanlines[y].begin(), &pngData.Inflated[y * widthScanline + y + 1], widthScanline);
+	}
+	gpk_necall(::pngScanlineDefilter(pngData.Filters, imageHeader.Size, bytesPerPixel, scanlines), "%s", "Corrupt file?");
+	if(imageHeader.ColorType == 3 || imageHeader.ColorType == 0) // Decode pixel ordering for bit depths of 1, 2 and 4 bits
+		::scanlineBitDecodeOrder(imageHeader.BitDepth, pngData.Scanlines);
+
+	return 0;
+}
+
+static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
+	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
+	uint32_t																	bytesPerPixel								= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
 	ree_if(errored(bytesPerPixel), "%s", "Invalid format! Color Type: %u. Bit Depth: %u.");
 	if(imageHeader.MethodInterlace) 
 		gpk_necall(::pngDefilterScanlinesInterlaced(pngData), "%s", "Corrupt file?");
-	else {
-		pngData.Filters.clear();
-		scanlines.resize(imageHeader.Size.y);
-		uint32_t																	widthScanline									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-		info_printf("Scanline size: %u.", widthScanline);
-		for(uint32_t y = 0; y < imageHeader.Size.y; ++y) {
-			pngData.Filters.push_back(pngData.Inflated[y * widthScanline + y]);
-			info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[y]);
-			gpk_necall(scanlines[y].resize(widthScanline), "%s", "Out of memory or corrupt file.");
-			memcpy(scanlines[y].begin(), &pngData.Inflated[y * widthScanline + y + 1], widthScanline);
-		}
-		gpk_necall(::pngScanlineDefilter(pngData.Filters, imageHeader.Size, bytesPerPixel, scanlines), "%s", "Corrupt file?");
-		if(imageHeader.ColorType == 3 || imageHeader.ColorType == 0) // Decode pixel ordering for bit depths of 1, 2 and 4 bits
-			::scanlineBitDecodeOrder(imageHeader.BitDepth, pngData.Scanlines);
-	}
+	else 
+		gpk_necall(::pngDefilterScanlinesNonInterlaced(pngData, bytesPerPixel), "%s", "Corrupt file?");
 
 	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
 	if(imageHeader.MethodInterlace)
@@ -657,6 +651,27 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 			, pngData.Palette
 			, out_Texture.View
 			);
+}
+
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
+	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
+	::gpk::array_pod<uint32_t>													indicesIDAT;
+	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");
+	::gpk::array_pod<ubyte_t>													& imageDeflated									= pngData.Deflated;
+	for(uint32_t iChunk = 0; iChunk < indicesIDAT.size(); ++iChunk) {
+		const ::gpk::SPNGChunk														& loadedChunk									= pngData.Chunks[indicesIDAT[iChunk]];
+		if(loadedChunk.Data.size()) {
+			uint32_t																	dataOffset										= imageDeflated.size();
+			gpk_necall(imageDeflated.resize(imageDeflated.size() + loadedChunk.Data.size()), "Out of memory? Requested size: %u.", imageDeflated.size() + loadedChunk.Data.size());
+			memcpy(&imageDeflated[dataOffset], loadedChunk.Data.begin(), loadedChunk.Data.size());
+		}
+	}
+	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
+	const uint32_t																aSuitableWidth									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
+	pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
+	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "%s", "Failed to decompress!");
+	::pngFilePrintInfo(pngData);
+	return ::pngProcess(pngData, out_Texture);
 }
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
