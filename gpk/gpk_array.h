@@ -430,7 +430,7 @@ namespace gpk
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
-				operator[](iElement)							= other[iElement];
+				this->operator[](iElement)							= other[iElement];
 			return *this;
 		}
 		inline				int32_t						clear										()																						{ 

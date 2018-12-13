@@ -43,7 +43,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 		int32_t														hex																= std::stoi(temp, nullptr, 16);
 		byte													= (char)hex;
 	}
-	catch (::std::invalid_argument) {
+	catch (...) {
 		byte													= '?';
 		return -1;	// we should never get here
 	}
