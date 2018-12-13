@@ -26,13 +26,13 @@
 
 #if defined(GPK_WINDOWS)
 		::gpk::error_t																			drawBuffer									(::HDC hdc, int width, int height, const ::gpk::view_grid<::gpk::SColorBGRA>& colorArray)				{
-	struct SOffscreenPlatformDetail { // raii destruction of resources
+	struct SOffscreenDetail { // raii destruction of resources
 		uint32_t																							BitmapInfoSize								= 0;
 		::BITMAPINFO																						* BitmapInfo								= 0;
 		::HDC																								IntermediateDeviceContext					= 0;    // <- note, we're creating, so it needs to be destroyed
 		::HBITMAP																							IntermediateBitmap							= 0;
 
-																											~SOffscreenPlatformDetail					()																					{
+																											~SOffscreenDetail							()																					{
 			if(BitmapInfo					) ::free			(BitmapInfo					); 
 			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			); 
 			if(IntermediateDeviceContext	) ::DeleteDC		(IntermediateDeviceContext	); 

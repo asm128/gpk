@@ -38,9 +38,9 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SControlState												& controlState											= gui.Controls.States	[iControl];
-	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	::gpk::SColorBGRA													colorFace												= {0xFF, 0x00, 0xFF, 0xFF};
 	if(0 == gui.Controls.Modes[iControl].UseNewPalettes) {
+		const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 		const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos
 			[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
 			: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED 
@@ -48,7 +48,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 			: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER 
 			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			];
-		colorFace												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]];
+		colorFace														= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE]];
 		//const ::gpk::SColorBGRA												colorBack												= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_BACKGROUND]];
 	}
 	else {
@@ -61,7 +61,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 				]]
 				;
-		colorFace												= colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE];
+		colorFace														= colorCombo[::gpk::GUI_CONTROL_COLOR_TEXT_FACE];
 	}
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];
@@ -89,7 +89,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
-	if(gui.Controls.Modes[iControl].UseNewPalettes) {
+	if(mode.UseNewPalettes) {
 		const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= 
 			gui.Palettes[control.Palettes
 				[ disabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED

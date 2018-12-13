@@ -68,6 +68,27 @@ namespace gpk
 	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
+	template<typename _tColor>
+						::gpk::error_t										drawLineVertical							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t x, int32_t y1, int32_t y2)	{
+		if(x < 0 || x >= (int32_t)target.metrics().x)
+			return 0;
+		int32_t																		y											= ::sltk::max(::sltk::min(y1, y2), 0);
+		int32_t																		yStop										= ::sltk::min(::sltk::max(y1, y2), (int32_t)target.metrics().y);
+		for(; y < yStop; ++y) 
+			target[y][x]															= value;;
+		return y; 
+	}
+
+	template<typename _tColor>
+						::gpk::error_t										drawLineHorizontal							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t y, int32_t x1, int32_t x2)	{
+		if(y < 0 || y >= (int32_t)target.metrics().y)
+			return 0;
+		int32_t																		x											= ::sltk::max(::sltk::min(x1, x2), 0);
+		int32_t																		xStop										= ::sltk::min(::sltk::max(x1, x2), (int32_t)target.metrics().x);
+		for(; y < xStop; ++y) 
+			target[y][x]															= value;;
+		return y; 
+	}
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
 	template<typename _tCoord, typename _tColor>

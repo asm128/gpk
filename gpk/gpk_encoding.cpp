@@ -71,18 +71,27 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0; 
 }
 
-			::gpk::error_t								base64EncodeTriplet												(::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<uint8_t> outputQuad) {
+			::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_array<const char_t> & base64Symbols, ::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<uint8_t> out_base64) {
 	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<uint8_t>									inputBits														= { &inputTriplet[iSingleIn], 8 };
 		::gpk::reverse_bits(inputBits);
 	}
 	const ::gpk::view_bit<uint8_t>								inputBits														= {inputTriplet.begin(), 24};
 	uint32_t													iBitIn															= 0;
-	for (uint32_t iSingleOut = 0; iSingleOut < outputQuad.size(); ++iSingleOut) { // encode to four output bytes
+	uint8_t														outputQuad[4]													= {};
+	for (uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
 		::gpk::view_bit<uint8_t>									outputBits														= { &outputQuad[iSingleOut], 6 };
 		for (uint32_t iBitOut = 0; iBitOut < 6; ++iBitOut) // copy the relevant input bits to the output bytes
 			outputBits[iBitOut]										= (bool)inputBits[iBitIn++];
 		::gpk::reverse_bits(outputBits);
+	}
+	for (uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
+		if (outputQuad[iSingleOut] >= base64Symbols.size() - 1) {
+			error_printf("%s", "Out of range. This could happen if the algorithm or the input character table got broken.");
+			out_base64[iSingleOut] = (uint8_t)-1;
+		}
+		else
+			out_base64[iSingleOut] = base64Symbols[outputQuad[iSingleOut]];
 	}
 	return 0;
 }
@@ -99,16 +108,8 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			, use1 ? inputBytes[iInputByte + 1] : (uint8_t)0U
 			, use2 ? inputBytes[iInputByte + 2] : (uint8_t)0U
 			};
-		uint8_t														outputQuad[4] = {};
-		::base64EncodeTriplet(inputTriplet, outputQuad);
-		for (uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
-			if (outputQuad[iSingleOut] >= base64Symbols.size() - 1) {
-				error_printf("%s", "Out of range. This could happen if the algorithm or the input character table got broken.");
-				out_base64[iOutput64++] = -1;
-			}
-			else
-				out_base64[iOutput64++] = base64Symbols[outputQuad[iSingleOut]];
-		}
+		::base64EncodeTriplet(base64Symbols, inputTriplet, {(ubyte_t*)&out_base64[iOutput64], 4});
+		iOutput64 += 4;
 		//if(false == use2)							out_base64[out_base64.size() - 1]	= '=';
 		//if(false == use1 && outputQuad[3] == 0)	out_base64[out_base64.size() - 2]	= '=';
 	}
@@ -120,6 +121,26 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	}
 	gpk_necall(out_base64.push_back(0), "%s", "Out of memory?"); // add a null byte at the end for safety.
 	gpk_necall(out_base64.resize(out_base64.size() - 1), "%s", "There are no known reasons for this to fail so it probably indicates memory corruption or something really bad."); // restore the count to ignore the null byte just added.
+	return 0;
+}
+
+			gpk::error_t								base64DecodeQuad												(::gpk::view_array<uint8_t> inputQuad, ::gpk::view_array<ubyte_t> outputBytes)	{
+	for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
+		::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
+		::gpk::reverse_bits(inputBits);
+	}
+	const ::gpk::view_bit<uint8_t>								inputBits														= {inputQuad.begin(), inputQuad.size() * 8};
+	uint8_t														outputTriplet		[3]											= {};
+	uint32_t													iBitIn															= 0;
+	for(uint32_t iSingleOut = 0; iSingleOut < 3; ++iSingleOut) {
+		::gpk::view_bit<ubyte_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
+		for(uint32_t iBitOut = 0; iBitOut < 8; ++iBitOut) { // extract relevant bits from encoded bytes
+			outputBits[iBitOut]										= inputBits[iBitIn + (iBitIn / 6) * 2];
+			++iBitIn;
+		}
+		::gpk::reverse_bits(outputBits);
+		outputBytes[iSingleOut]								= outputTriplet[iSingleOut];
+	}
 	return 0;
 }
 
@@ -147,22 +168,8 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 2]) % ::gpk::size(base64SymbolRemap)]
 			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 3]) % ::gpk::size(base64SymbolRemap)]
 			};
-		for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
-			::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
-			::gpk::reverse_bits(inputBits);
-		}
-		const ::gpk::view_bit<uint8_t>								inputBits														= inputQuad;
-		uint8_t														outputTriplet		[3]											= {};
-		uint32_t													iBitIn															= 0;
-		for(uint32_t iSingleOut = 0; iSingleOut < 3; ++iSingleOut) {
-			::gpk::view_bit<ubyte_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
-			for(uint32_t iBitOut = 0; iBitOut < 8; ++iBitOut) { // extract relevant bits from encoded bytes
-				outputBits[iBitOut]										= inputBits[iBitIn + (iBitIn / 6) * 2];
-				++iBitIn;
-			}
-			::gpk::reverse_bits(outputBits);
-			outputBytes[iOutputByte++]								= outputTriplet[iSingleOut];
-		}
+		::base64DecodeQuad(inputQuad, {(ubyte_t*)&outputBytes[iOutputByte], 3});
+		iOutputByte	+= 3;
 	}
 		 if(in_base64[in_base64.size() - 2] == base64PadSymbol) { outputBytes.resize(outputBytes.size() - 2); } // Remove leading nulls.
 	else if(in_base64[in_base64.size() - 1] == base64PadSymbol) { outputBytes.resize(outputBytes.size() - 1); } // Remove leading nulls.

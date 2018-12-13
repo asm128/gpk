@@ -134,34 +134,35 @@ struct SHeaderInfoBMP {
 	ubyte_t																									* srcBytes									= (ubyte_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
 	bool																									b32Bit										= false;
 	uint32_t																								colorSize									= 0;
+	int32_t																									x, y, linearIndexSrc;
 	switch(infoHeader.Bpp) {
 	default: error_printf("Unsupported BMP file! The image is not 24 bit."); return -1;
 	case 32:
 		b32Bit																								= true;
 	case 24:
 		colorSize																							= b32Bit ? 4 : 3;
-		for(int32_t y = 0; y < infoHeader.Metrics.y; ++y)
-		for(int32_t x = 0; x < infoHeader.Metrics.x; ++x) {
-				int32_t																									linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-				out_Colors[y * infoHeader.Metrics.x + x]																= 
-					{ srcBytes[linearIndexSrc + 0]
-					, srcBytes[linearIndexSrc + 1]
-					, srcBytes[linearIndexSrc + 2]
-					, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
-					};
-			}
+		for(y = 0; y < infoHeader.Metrics.y; ++y)
+		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+			linearIndexSrc																						= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
+			out_Colors[y * infoHeader.Metrics.x + x]															= 
+				{ srcBytes[linearIndexSrc + 0]
+				, srcBytes[linearIndexSrc + 1]
+				, srcBytes[linearIndexSrc + 2]
+				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
+				};
+		}
 		break;
 	case 8 :
-		for( int32_t y = 0; y < infoHeader.Metrics.y; ++y )
-		for( int32_t x = 0; x < infoHeader.Metrics.x; ++x ) {
-				int32_t																									linearIndexSrc								= y * infoHeader.Metrics.x + x;
-				out_Colors[linearIndexSrc]																			= 
-					{ srcBytes[linearIndexSrc]
-					, srcBytes[linearIndexSrc]
-					, srcBytes[linearIndexSrc]
-					, 0xFFU
-					};
-			}
+		for(y = 0; y < infoHeader.Metrics.y; ++y )
+		for(x = 0; x < infoHeader.Metrics.x; ++x ) {
+			linearIndexSrc								= y * infoHeader.Metrics.x + x;
+			out_Colors[linearIndexSrc]																			= 
+				{ srcBytes[linearIndexSrc]
+				, srcBytes[linearIndexSrc]
+				, srcBytes[linearIndexSrc]
+				, 0xFFU
+				};
+		}
 		break;
 	}
 	out_ImageView																						= ::gpk::view_grid<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
@@ -195,47 +196,48 @@ struct SHeaderInfoBMP {
 	gpk_necall(out_Colors.resize(nPixelCount), "Out of memory?");
 	bool																									b32Bit										= false;
 	uint32_t																								colorSize									= 0;
+	int32_t																									x, y, linearIndexSrc;
 	switch(infoHeader.Bpp) {
 	default: error_printf("Unsupported BMP file! The image is not 24 bit."); return -1;
 	case 32:
 		b32Bit																								= true;
 	case 24:
 		colorSize																							= b32Bit ? 4 : 3;
-		for(int32_t y = 0; y < infoHeader.Metrics.y; ++y)
-		for(int32_t x = 0; x < infoHeader.Metrics.x; ++x) {
-				int32_t																									linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-				out_Colors[y * infoHeader.Metrics.x + x]																= 
-					{ srcBytes[linearIndexSrc + 0]
-					, srcBytes[linearIndexSrc + 1]
-					, srcBytes[linearIndexSrc + 2]
-					, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
-					};
-			}
+		for(y = 0; y < infoHeader.Metrics.y; ++y)
+		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+			linearIndexSrc																							= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
+			out_Colors[y * infoHeader.Metrics.x + x]																= 
+				{ srcBytes[linearIndexSrc + 0]
+				, srcBytes[linearIndexSrc + 1]
+				, srcBytes[linearIndexSrc + 2]
+				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
+				};
+		}
 		break;
 	case 8 :
-		for(int32_t y = 0; y < infoHeader.Metrics.y; ++y)
-		for(int32_t x = 0; x < infoHeader.Metrics.x; ++x) {
-				int32_t																									linearIndexSrc								= y * infoHeader.Metrics.x + x;
-				out_Colors[linearIndexSrc]																			= 
-					{ srcBytes[linearIndexSrc]
-					, srcBytes[linearIndexSrc]
-					, srcBytes[linearIndexSrc]
-					, 0xFFU
-					};
-			}
+		for(y = 0; y < infoHeader.Metrics.y; ++y)
+		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+			linearIndexSrc																							= y * infoHeader.Metrics.x + x;
+			out_Colors[linearIndexSrc]																				= 
+				{ srcBytes[linearIndexSrc]
+				, srcBytes[linearIndexSrc]
+				, srcBytes[linearIndexSrc]
+				, 0xFFU
+				};
+		}
 		break;
 	case 1 :
-		for(int32_t y = 0; y < infoHeader.Metrics.y; ++y)
-		for(int32_t x = 0; x < infoHeader.Metrics.x; ++x) {
-				int32_t																									linearIndexSrc								= y * (infoHeader.Metrics.x / 8) + x / 8;
-				int32_t																									linearIndexDst								= y *  infoHeader.Metrics.x + x;
-				out_Colors[linearIndexDst]																			= 
-					{ srcBytes[linearIndexSrc] & (1U << (x % 8))
-					, srcBytes[linearIndexSrc] & (1U << (x % 8))
-					, srcBytes[linearIndexSrc] & (1U << (x % 8))
-					, 0xFFU
-					};
-			}
+		for(y = 0; y < infoHeader.Metrics.y; ++y)
+		for(x = 0; x < infoHeader.Metrics.x; ++x) {
+			linearIndexSrc																							= y * (infoHeader.Metrics.x / 8) + x / 8;
+			int32_t																										linearIndexDst							= y *  infoHeader.Metrics.x + x;
+			out_Colors[linearIndexDst]																				= 
+				{ srcBytes[linearIndexSrc] & (1U << (x % 8))
+				, srcBytes[linearIndexSrc] & (1U << (x % 8))
+				, srcBytes[linearIndexSrc] & (1U << (x % 8))
+				, 0xFFU
+				};
+		}
 		break;
 	}
 	out_ImageView																						= ::gpk::view_grid<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
