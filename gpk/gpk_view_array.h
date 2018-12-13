@@ -79,10 +79,10 @@ namespace gpk
 		inline constexpr											view_const_string					()																				= default;
 																	view_const_string					(const char* inputString, uint32_t length)										: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
 		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength], uint32_t length)						: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
-		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])										: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
+		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])										: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}
 
 						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
-			if(Data == other.begin()) 
+			if(Data == other.begin())
 				return true;
 			if(Count != other.size())
 				return false;
@@ -94,12 +94,12 @@ namespace gpk
 		inline constexpr											view_string							()																				= default;
 																	view_string							(char* inputString, uint32_t length)											: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])											: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}	
-						
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])											: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}
+
 		//constexpr		operator									const view_const_string&			()															const	noexcept	{ return (const view_const_string&)*this; }
 
 						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
-			if(Data == other.begin()) 
+			if(Data == other.begin())
 				return true;
 			if(Count != other.size())
 				return false;

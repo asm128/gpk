@@ -10,8 +10,8 @@ namespace gpk
 				double															LastFrame											;
 				double															LastFrameHalfSquared								;
 		// Helper
-		inline	void															UpdateFromTime										(double secondsToAdd)						noexcept	{ 
-			Total																	+= LastFrame											= secondsToAdd; 
+		inline	void															UpdateFromTime										(double secondsToAdd)						noexcept	{
+			Total																	+= LastFrame											= secondsToAdd;
 			LastFrameHalfSquared													=  secondsToAdd * secondsToAdd * 0.5;
 		}
 	};
@@ -31,7 +31,7 @@ namespace gpk
 				double															AverageFrameTime									= 0;
 				SFrameMicroseconds												Microseconds										= {};
 				SFrameSeconds													Seconds												= {};
-		
+
 				void															Frame												(uint64_t timeElapsedMicroseconds)						{	// Set last frame time and number.
 					++FrameNumber;
 					++FramesThisSecond;

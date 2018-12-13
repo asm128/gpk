@@ -7,21 +7,21 @@
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
 
-namespace gpk 
+namespace gpk
 {
 	template <typename... _Args>	void			clear					(_Args&&... args)						{ const int32_t results[] = {args.clear()..., 0}; }
-	template <typename... _Args>	::gpk::error_t	resize					(uint32_t newSize, _Args&&... args)		{ 
-		const uint32_t										oldSizes	[]			= {args.size	()			..., 0}; 
-		const ::gpk::error_t								results		[]			= {args.resize	(newSize)	..., 0}; 
+	template <typename... _Args>	::gpk::error_t	resize					(uint32_t newSize, _Args&&... args)		{
+		const uint32_t										oldSizes	[]			= {args.size	()			..., 0};
+		const ::gpk::error_t								results		[]			= {args.resize	(newSize)	..., 0};
 		for(uint32_t i=0; i < ::gpk::size(results); ++i)
 			if(errored(results[i])) {
 				error_printf("Failed to set container size: %i. Out of memory?", (int32_t)newSize);
 				int32_t												j						= 0;
-				const int32_t dummy	[] = {args.resize(oldSizes[j++])..., 0}; 
+				const int32_t dummy	[] = {args.resize(oldSizes[j++])..., 0};
 				dummy;
 				return -1;
 			}
-		return newSize; 
+		return newSize;
 	}
 
 	// Base for arrays that keeps track of its actual size.
@@ -59,13 +59,13 @@ namespace gpk
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
 		inline constexpr								array_pod									()																			noexcept	= default;
 		//inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
-														array_pod									(::std::initializer_list<_tPOD> init)													{ 
+														array_pod									(::std::initializer_list<_tPOD> init)													{
 			throw_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 			memcpy(Data, init.begin(), Count * sizeof(_tPOD));
 		}
 
 		//template<size_t sizeStatic>
-		//												array_pod									(const _tPOD (&init)[sizeStatic])														{ 
+		//												array_pod									(const _tPOD (&init)[sizeStatic])														{
 		//	throw_if(errored(resize(sizeStatic)), "Failed to resize array! Why?");
 		//	memcpy(Data, init, Count * sizeof(_tPOD));
 		//}
@@ -131,7 +131,7 @@ namespace gpk
 				Size											= (uint32_t)reserveSize;
 				Count											= other.Count;
 				safeguard.Handle								= 0;
-			} // 
+			} //
 		}
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view_array<_tPOD>&) other); }
 							array_pod<_tPOD>&			operator =									(const view_array<_tPOD>& other)														{
@@ -143,7 +143,7 @@ namespace gpk
 			return *this;
 		}
 		template<size_t sizeStatic>
-							array_pod<_tPOD>&			operator =									(const _tPOD (&init)[sizeStatic])														{ 
+							array_pod<_tPOD>&			operator =									(const _tPOD (&init)[sizeStatic])														{
 			throw_if(resize(sizeStatic) != sizeStatic, "Failed to resize array! Why? Size requested: %u.", (uint32_t)sizeStatic);
 			memcpy(Data, init, Count * sizeof(_tPOD));
 			return *this;
@@ -156,17 +156,17 @@ namespace gpk
 							::gpk::error_t				clear_pointer								()																			noexcept	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
 
 		// Returns the new size of the array
-		inline				::gpk::error_t				pop_back									(_tPOD* oldValue)															noexcept	{ 
-			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array."); 
+		inline				::gpk::error_t				pop_back									(_tPOD* oldValue)															noexcept	{
+			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			--Count;
-			safe_podcpy(oldValue, &Data[Count]); 
-			return Count; 
+			safe_podcpy(oldValue, &Data[Count]);
+			return Count;
 		}
 
 		// Returns the index of the pushed value or -1 on failure
-							::gpk::error_t				push_back									(const _tPOD& newValue)														noexcept	{ 
+							::gpk::error_t				push_back									(const _tPOD& newValue)														noexcept	{
 			const int32_t										indexExpected								= Count;
-			const int32_t										indexNew									= resize(Count+1, newValue)-1; 
+			const int32_t										indexNew									= resize(Count+1, newValue)-1;
 			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
 			return indexNew;
 		}
@@ -174,11 +174,11 @@ namespace gpk
 		// Returns the index of the pushed value
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);		}
-							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{ 
+							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
-			const uint32_t										requestedSize								= Count + chainLength; 
+			const uint32_t										requestedSize								= Count + chainLength;
 			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
-			const int32_t										newSize										= resize(requestedSize); 
+			const int32_t										newSize										= resize(requestedSize);
 			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested sizE: %u.", requestedSize);
 
 			//for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, newSize - startIndex); i < maxCount; ++i)
@@ -188,18 +188,18 @@ namespace gpk
 		}
 
 		// Returns the new size of the array.
-							::gpk::error_t				resize										(uint32_t newSize, const _tPOD& newValue)									noexcept	{ 
+							::gpk::error_t				resize										(uint32_t newSize, const _tPOD& newValue)									noexcept	{
 			int32_t												oldCount									= (int32_t)Count;
 			int32_t												newCount									= resize(newSize);
 			ree_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
 			for( int32_t i = oldCount; i < newCount; ++i )
 				Data[i]											= newValue;
 				//::gpk::podcpy(&Data[i], &newValue);
-			return newCount;			
+			return newCount;	
 		}
 
 		// Returns the new size of the array.
-							::gpk::error_t				resize										(uint32_t newSize)															noexcept	{ 
+							::gpk::error_t				resize										(uint32_t newSize)															noexcept	{
 			const uint32_t										oldCount									= Count;
 			if(newSize >= Size) {
 				_tPOD												* oldData									= Data;
@@ -230,7 +230,7 @@ namespace gpk
 		}
 
 		// returns the new size of the list or -1 on failure.
-							::gpk::error_t				insert										(uint32_t index, const _tPOD& newValue)										noexcept	{ 
+							::gpk::error_t				insert										(uint32_t index, const _tPOD& newValue)										noexcept	{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			if(Size < Count + 1) {
 				_tPOD												* oldData									= Data;
@@ -248,16 +248,16 @@ namespace gpk
 				viewSafe[index]									= newValue;
 				//if(index < Count)
 				//	memcpy(&viewSafe[index + 1], oldData, (Count - index) * sizeof(_tPOD));
-				for(uint32_t i = index, maxCount = Count; i < maxCount; ++i) 
+				for(uint32_t i = index, maxCount = Count; i < maxCount; ++i)
 					viewSafe[i + 1]									= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
-			}	
+			}
 			else {
-				for(int32_t i = (int32_t)Count, iStop = index; i > iStop; --i) 
+				for(int32_t i = (int32_t)Count, iStop = index; i > iStop; --i)
 					memcpy(&Data[i], &Data[i - 1], sizeof(_tPOD));
 				Data[index]										= newValue;
-			}			
+			}	
 			return ++Count;
 		}
 
@@ -280,7 +280,7 @@ namespace gpk
 				for(i = index + chainLength	, maxCount = ::gpk::min(index + 1, Count)				; i < maxCount; ++i) viewSafe[i + 1]		= oldData[i];
 				Data											= safeguard.Handle; //newData;
 				safeguard.Handle								= 0;
-			}	
+			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
 				for(int32_t  i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index	; i >=	maxCount; --i)	Data[i + chainLength]	= Data[i];
 				for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, Count - index)				; i <	maxCount; ++i)	Data[i + index		]	= chainToInsert[i];
@@ -292,7 +292,7 @@ namespace gpk
 		inline				::gpk::error_t				insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])				noexcept	{ return insert(index, chainToInsert, _chainLength); }
 
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-							::gpk::error_t				remove_unordered							(uint32_t index)															noexcept	{ 
+							::gpk::error_t				remove_unordered							(uint32_t index)															noexcept	{
 			ree_if(0 == Data, "%s", "Uninitialized array pointer!");
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index]										= Data[--Count];
@@ -301,16 +301,16 @@ namespace gpk
 
 		// returns the new array size or -1 if failed.
 		template<typename _tObj>
-							::gpk::error_t				erase										(const _tObj* address)														noexcept	{ 
+							::gpk::error_t				erase										(const _tObj* address)														noexcept	{
 			ree_if(0 == Data, "Uninitialized array pointer! When trying to erase element at address: %p", address);
 			const ptrdiff_t										ptrDiff										= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t										index										= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(_tObj));
 			ree_if(index >= Count, "Invalid index: %u.", index);
-			return remove(index); 
+			return remove(index);
 		}
 
 		// returns the new array size or -1 if failed.
-							::gpk::error_t				remove										(uint32_t index)															noexcept	{ 
+							::gpk::error_t				remove										(uint32_t index)															noexcept	{
 			ree_if(0 == Data, "Uninitialized array pointer! When trying to remove element at index: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			--Count;
@@ -323,7 +323,7 @@ namespace gpk
 
 		// Returns the index of the argument if found or -1 if not.
 		inline				::gpk::error_t				find										(const _tPOD& valueToLookFor)										const	noexcept	{
-			for(uint32_t i = 0; i < Count; ++i) 
+			for(uint32_t i = 0; i < Count; ++i)
 				if(0 == ::gpk::podcmp(&Data[i], &valueToLookFor))
 					return i;
 			return -1;
@@ -345,7 +345,7 @@ namespace gpk
 			::gpk::view_array<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead), elementsToRead};
 			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read %u elements.", elementsToRead);
 			if(0 == input) {
-				for(uint32_t i = 0; i < Count; ++i) 
+				for(uint32_t i = 0; i < Count; ++i)
 					*inout_bytesRead								+= sizeof(_tPOD);
 			}
 			else {
@@ -419,7 +419,7 @@ namespace gpk
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size);
 				throw_if(0 == other.Data	, "", "%s", "other.Data is null!");
-				for(uint32_t i = 0; i < newSize; ++i) 
+				for(uint32_t i = 0; i < newSize; ++i)
 					new (&newData[i]) _tObj(other.Data[i]);
 				Data											= newData;
 				Size											= reserveSize;
@@ -433,37 +433,37 @@ namespace gpk
 				this->operator[](iElement)							= other[iElement];
 			return *this;
 		}
-		inline				int32_t						clear										()																						{ 
+		inline				int32_t						clear										()																						{
 			for(uint32_t i = 0; i < Count; ++i)
 				Data[i].~_tObj();
-			return Count									= 0; 
+			return Count									= 0;
 		}
 		// Returns the new size of the array
-		inline				int32_t						pop_back									(_tObj* oldValue)																		{ 
-			ree_if(0 == Count, "%s", "Cannot pop elements from an empty array."); 
+		inline				int32_t						pop_back									(_tObj* oldValue)																		{
+			ree_if(0 == Count, "%s", "Cannot pop elements from an empty array.");
 			--Count;
-			safe_assign(oldValue, Data[Count]); 
+			safe_assign(oldValue, Data[Count]);
 			Data[Count].~_tObj();
-			return Count; 
+			return Count;
 		}
 		// Returns the index of the pushed value or -1 on failure
-		inline				int32_t						push_back									(const _tObj& newValue)																	{ 
+		inline				int32_t						push_back									(const _tObj& newValue)																	{
 			int32_t												indexExpected								= Count;
-			int32_t												indexNew									= resize(Count+1, newValue)-1; 
+			int32_t												indexNew									= resize(Count+1, newValue)-1;
 			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
 			return indexNew;
 		}
 
 		// returns the new array size or -1 if failed.
-		inline				int32_t						erase										(const _tObj* address)																	{ 
+		inline				int32_t						erase										(const _tObj* address)																	{
 			ree_if(0 == Data, "Uninitialized array pointer! Invalid address to erase: %p.", address);
 			const ptrdiff_t										ptrDiff										= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t										index										= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(_tObj));
 			ree_if(index >= Count, "Invalid index: %u.", index);
-			return remove(index); 
+			return remove(index);
 		}
 
-							int32_t						remove										(uint32_t index)																		{ 
+							int32_t						remove										(uint32_t index)																		{
 			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			--Count;
@@ -477,11 +477,11 @@ namespace gpk
 		}
 
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-							int32_t						remove_unordered							(uint32_t index)																		{ 
+							int32_t						remove_unordered							(uint32_t index)																		{
 			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index].~_tObj();							// Destroy old
-			if(1 == Count) 
+			if(1 == Count)
 				--Count;
 			else {
 				new (&Data[index]) _tObj(Data[--Count]);	// Placement new
@@ -491,7 +491,7 @@ namespace gpk
 			return Count;
 		}
 		// returns the new size of the list or -1 on failure.
-							int32_t						insert										(uint32_t index, const _tObj& newValue)													{ 
+							int32_t						insert										(uint32_t index, const _tObj& newValue)													{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 
 			if(Size < Count + 1) {
@@ -515,14 +515,14 @@ namespace gpk
 				Data											= newData;
 				Size											= reserveSize;
 				safeguard.Handle								= 0;
-			}	
+			}
 			else {
 				for(int32_t i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index; i >= maxCount; --i) {
 					new (&Data[i + 1]) _tObj(Data[i]);
 					Data[i].~_tObj();
 				}
 				new (&Data[index]) _tObj(newValue);
-			}			
+			}	
 			return ++Count;
 		}
 		// Returns the new size of the array or -1 if failed.
@@ -547,7 +547,7 @@ namespace gpk
 				Size											= reserveSize;
 				Count											= (uint32_t)newSize;
 				safeguard.Handle								= 0;
-				if(oldData) 
+				if(oldData)
 					::gpk::gpk_free(oldData);
 			}
 			else {
@@ -559,7 +559,7 @@ namespace gpk
 				new (&Data[i])_tObj{constructorArgs...};
 
 			return (int32_t)Count;
-		}	
+		}
 		//// returns the index or -1 if not found.
 		//inline				int32_t						find										(const _tObj& valueToLookFor)										const				{
 		//	for(uint32_t i=0; i<Count; ++i)

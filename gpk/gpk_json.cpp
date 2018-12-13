@@ -18,7 +18,7 @@
 	}
 	jsonRoot																= {};
 	jsonRoot.Children														= tree;
-	return 0;						
+	return 0;
 }
 
 						::gpk::error_t									gpk::jsonParse										(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength)	{
@@ -26,14 +26,14 @@
 	currentElement.ParentIndex												= -1;
 	currentElement.Span														= {0, jsonLength};
 	currentElement.Type														= ::gpk::JSON_TYPE_UNKNOWN;
-	
+
 	int32_t																		elementIndexCurrent									= document.Object.push_back(currentElement);
 	uint32_t																	nestLevel											= 0;
 	for(uint32_t iDocChar = 0; iDocChar < jsonLength; ++iDocChar) {
 		switch(jsonAsString[iDocChar]) {
-		case ' '	: 
-		case '\t'	: 
-		case '\r'	: 
+		case ' '	:
+		case '\t'	:
+		case '\r'	:
 		case '\n'	: continue;	// These separator characters mean nothing in json.
 		case ':'	: continue;	// Need to report that we've switched from element name to element value
 		case ','	: continue;	// Need to report that we've switched from an element to the next
@@ -41,7 +41,7 @@
 		case '['	: ++nestLevel; info_printf("opening level %u array"		, nestLevel); currentElement.Type = ::gpk::JSON_TYPE_ARRAY ; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a list has been entered
 		case '}'	: info_printf("closing level %u object"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a block has been exited
 		case ']'	: info_printf("closing level %u array"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a list has been exited
-		default		: 
+		default		:
 			switch(jsonAsString[iDocChar]) {	// --- We may have a word... or a number.
 			case '0'	:
 			case '1'	:
@@ -55,7 +55,7 @@
 			case '9'	:
 			case '.'	:	// parse int or float accordingly
 				break;
-			default		:	// parse text 
+			default		:	// parse text
 				{
 					::gpk::SSlice<uint32_t>													keywordSpan											= {iDocChar, iDocChar};
 					bool																		insideQuotes										= false;

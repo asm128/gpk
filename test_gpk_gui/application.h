@@ -22,7 +22,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 					int32_t																	IdNewPalette						= -1;
 					int32_t																	PaletteRow							= 10;
 					int32_t																	PaletteColumn						= 16;
-					char																	RowText	[64][3]						= 
+					char																	RowText	[64][3]						=
 						{ "00"
 						, "01"
 						, "02"

@@ -24,7 +24,7 @@ namespace gpk
 						int8_t													MethodInterlace					= 0;
 	};
 
-	enum PNG_TAG 
+	enum PNG_TAG
 		{	PNG_TAG_tEXt	= 0
 		,	PNG_TAG_zTXt
 		,	PNG_TAG_bKGD

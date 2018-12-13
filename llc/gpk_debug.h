@@ -15,9 +15,9 @@
 #	else
 #		error "Platform not supported."
 #	endif
-#	define GPK_ERROR_PRINTF_ENABLED	
-#	define GPK_WARNING_PRINTF_ENABLED	
-#	define GPK_INFO_PRINTF_ENABLED	
+#	define GPK_ERROR_PRINTF_ENABLED
+#	define GPK_WARNING_PRINTF_ENABLED
+#	define GPK_INFO_PRINTF_ENABLED
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_VERBOSE_PRINTF_ENABLED
 #	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
@@ -26,7 +26,7 @@
 #else
 #	define GPK_PLATFORM_CRT_BREAKPOINT()		do {} while(0)
 #	define GPK_PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
-//#	define GPK_ERROR_PRINTF_ENABLED	
+//#	define GPK_ERROR_PRINTF_ENABLED
 //#	define GPK_WARNING_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_INFO_PRINTF_ENABLED		// Uncomment as needed
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed

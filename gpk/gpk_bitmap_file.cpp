@@ -75,12 +75,12 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	return 0;
 }
 
-					::gpk::error_t																	gpk::bmpFileLoad							(const ::gpk::view_const_string	& filename	, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ // 
+					::gpk::error_t																	gpk::bmpFileLoad							(const ::gpk::view_const_string	& filename	, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ //
 #if defined(GPK_WINDOWS)
 	bool																									isAlpha										= false;
 	return ::LoadBitmapFromBMPFile(filename, out_Colors, out_ImageView, {0xFF, 0x00, 0xFF, 0xFF}, &isAlpha);
 #else
-	FILE																									* source									= 0; 
+	FILE																									* source									= 0;
 
 	fopen_s(&source, filename.begin(), "rb");
 	if(0 == source) {
@@ -97,7 +97,7 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 #endif
 }
 
-// BMP File header 
+// BMP File header
 struct SHeaderFileBMP {
 					uint8_t																			Type[2]		;	// Identifier, must be BM
 					uint32_t																		Size		;	// Size of BMP file
@@ -121,15 +121,15 @@ struct SHeaderInfoBMP {
 
 // Currently supporting only 24-bit bitmaps
 					::gpk::error_t																	gpk::bmpFileLoad							(const byte_t* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)					{
-	SHeaderFileBMP																							& fileHeader								= *(SHeaderFileBMP*)*source;	
-	ree_if(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");	
+	SHeaderFileBMP																							& fileHeader								= *(SHeaderFileBMP*)*source;
+	ree_if(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");
 	SHeaderInfoBMP																							& infoHeader								= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
 	ree_if(infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
 		&& infoHeader.Bpp != 8
-		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");	
+		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 	uint32_t																								nPixelCount									= infoHeader.Metrics.x * infoHeader.Metrics.y;
-	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data 
+	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	out_Colors.resize(nPixelCount);
 	ubyte_t																									* srcBytes									= (ubyte_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
 	bool																									b32Bit										= false;
@@ -144,7 +144,7 @@ struct SHeaderInfoBMP {
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																						= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-			out_Colors[y * infoHeader.Metrics.x + x]															= 
+			out_Colors[y * infoHeader.Metrics.x + x]															=
 				{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
@@ -156,7 +156,7 @@ struct SHeaderInfoBMP {
 		for(y = 0; y < infoHeader.Metrics.y; ++y )
 		for(x = 0; x < infoHeader.Metrics.x; ++x ) {
 			linearIndexSrc								= y * infoHeader.Metrics.x + x;
-			out_Colors[linearIndexSrc]																			= 
+			out_Colors[linearIndexSrc]																			=
 				{ srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
@@ -176,12 +176,12 @@ struct SHeaderInfoBMP {
 
 // Currently supporting only 24-bit bitmaps
 					::gpk::error_t																	gpk::bmpFileLoad							(FILE* source, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)					{
-	::SHeaderFileBMP																						fileHeader									= {};	
+	::SHeaderFileBMP																						fileHeader									= {};
 	::SHeaderInfoBMP																						infoHeader									= {};
 	ree_if(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "Failed to read file! File corrupt?");
 	ree_if(fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source) != sizeof(::SHeaderInfoBMP), "Failed to read file! File corrupt?");
 	uint32_t																								nPixelCount									= infoHeader.Metrics.x * infoHeader.Metrics.y;
-	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data 
+	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	ree_if(infoHeader.Compression != BI_RGB, "Unsupported bmp compression!");
 	ree_if(infoHeader.Bpp != 24
 		&& infoHeader.Bpp != 32
@@ -206,7 +206,7 @@ struct SHeaderInfoBMP {
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																							= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-			out_Colors[y * infoHeader.Metrics.x + x]																= 
+			out_Colors[y * infoHeader.Metrics.x + x]																=
 				{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
@@ -218,7 +218,7 @@ struct SHeaderInfoBMP {
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																							= y * infoHeader.Metrics.x + x;
-			out_Colors[linearIndexSrc]																				= 
+			out_Colors[linearIndexSrc]																				=
 				{ srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
@@ -231,7 +231,7 @@ struct SHeaderInfoBMP {
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																							= y * (infoHeader.Metrics.x / 8) + x / 8;
 			int32_t																										linearIndexDst							= y *  infoHeader.Metrics.x + x;
-			out_Colors[linearIndexDst]																				= 
+			out_Colors[linearIndexDst]																				=
 				{ srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, srcBytes[linearIndexSrc] & (1U << (x % 8))
@@ -245,7 +245,7 @@ struct SHeaderInfoBMP {
 }
 
 // Currently supporting only 24-bit bitmaps
-					::gpk::error_t																	gpk::bmgFileLoad							(FILE							* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
+					::gpk::error_t																	gpk::bmgFileLoad							(FILE							* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{
 	ree_if(0 == source, "Invalid function usage: destionation file cannot be NULL.");
 	uint32_t																								sizeRead									= (uint32_t)(out_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	uint32_t																								elementSize									= 0;  fread(&elementSize, sizeof(uint32_t					), 1, source);
@@ -253,10 +253,10 @@ struct SHeaderInfoBMP {
 	gpk_necall(out_Colors.resize(gridMetrics.x * gridMetrics.y), "Out of memory");
 	ree_if(out_Colors.size() != fread(out_Colors.begin(), ::gpk::min((size_t)elementSize, sizeof(::gpk::SColorBGRA)), out_Colors.size(), source), "Corrupt file?");
 	out_ImageView																						= {out_Colors.begin(), gridMetrics};
-	return sizeRead; 
+	return sizeRead;
 }
 
-					::gpk::error_t																	gpk::bmgFileLoad							(const byte_t					* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
+					::gpk::error_t																	gpk::bmgFileLoad							(const byte_t					* source		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{
 	ree_if(0 == source, "Invalid function usage: source cannot be NULL.");
 	uint32_t																								sizeRead									= (uint32_t)(sizeof(uint32_t) + sizeof(uint32_t));
 	uint32_t																								& elementSize								= *(uint32_t*)source;
@@ -265,10 +265,10 @@ struct SHeaderInfoBMP {
 	gpk_necall(out_Colors.resize(gridMetrics.x * gridMetrics.y), "Out of memory");
 	memcpy(out_Colors.begin(), elementGrid, out_Colors.size() * ::gpk::min((size_t)elementSize, sizeof(::gpk::SColorBGRA)));
 	out_ImageView																						= {out_Colors.begin(), gridMetrics};
-	return sizeRead + out_Colors.size(); 
+	return sizeRead + out_Colors.size();
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(byte_t							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)							{ 
+					::gpk::error_t																	gpk::bmgFileWrite							(byte_t							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)							{
 	uint32_t																								sizeToWrite									= (uint32_t)(in_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	if(0 == destination)
 		return sizeToWrite;	// count + element size + (grid size * element size)
@@ -278,20 +278,20 @@ struct SHeaderInfoBMP {
 	elementSize																							= (uint32_t)sizeof(::gpk::SColorBGRA);
 	gridMetrics																							= in_ImageView.metrics();
 	memcpy(elementGrid, in_ImageView.begin(), in_ImageView.size() * (size_t)elementSize);
-	return sizeToWrite; 
+	return sizeToWrite;
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(FILE							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{ 
+					::gpk::error_t																	gpk::bmgFileWrite							(FILE							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{
 	ree_if(0 == destination, "Invalid function usage: destionation file cannot be NULL.");
 	uint32_t																								sizeToWrite									= (uint32_t)(in_ImageView.size() * sizeof(::gpk::SColorBGRA) + sizeof(uint32_t) + sizeof(uint32_t));
 	const uint32_t																							elementSize									= (uint32_t)sizeof(::gpk::SColorBGRA);	ree_if(fwrite(&elementSize, sizeof(uint32_t					), 1, destination) != 1, "No space on disk?");
 	const ::gpk::SCoord2<uint32_t>																			& gridMetrics								= in_ImageView.metrics();				ree_if(fwrite(&gridMetrics, sizeof(::gpk::SCoord2<uint32_t> ), 1, destination) != 1, "No space on disk?");
 	ree_if(fwrite(in_ImageView.begin(), elementSize, in_ImageView.size(), destination) != in_ImageView.size(), "No space on disk?");
-	return sizeToWrite; 
+	return sizeToWrite;
 }
 
-					::gpk::error_t																	gpk::bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{ 
-	FILE																									* source									= 0; 
+					::gpk::error_t																	gpk::bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView)	{
+	FILE																									* source									= 0;
 	fopen_s(&source, filename.begin(), "rb");
 	if(0 == source) {
 		error_printf("Failed to open file: %s. File not found?", filename.begin());
@@ -303,11 +303,11 @@ struct SHeaderInfoBMP {
 		return -1;
 	}
 	fclose(source);
-	return 0; 
+	return 0;
 }
 
-					::gpk::error_t																	gpk::bmgFileWrite							(const ::gpk::view_const_string	& filename		, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{ 
-	FILE																									* source									= 0; 
+					::gpk::error_t																	gpk::bmgFileWrite							(const ::gpk::view_const_string	& filename		, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView)												{
+	FILE																									* source									= 0;
 	fopen_s(&source, filename.begin(), "wb");
 	if(0 == source) {
 		error_printf("Failed to open file: %s. Forbidden?", filename.begin());
@@ -319,7 +319,7 @@ struct SHeaderInfoBMP {
 		return -1;
 	}
 	fclose(source);
-	return 0; 
+	return 0;
 }
 
 					::gpk::error_t																	gpk::bmpOrBmgLoad							(::gpk::view_string bmpFileName, ::gpk::SImage<::gpk::SColorBGRA>& loaded)		{

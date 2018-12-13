@@ -3,7 +3,7 @@
 #ifndef GPK_EVAL_H_2983742983047239874
 #define GPK_EVAL_H_2983742983047239874
 
-#if defined(GPK_WINDOWS) 
+#if defined(GPK_WINDOWS)
 #	if defined(min)
 #		undef min
 #	endif
@@ -15,14 +15,14 @@
 #	endif
 #endif
 
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tValue>	static inline constexpr		const _tValue&					min				(const _tValue& a, const _tValue& b)												noexcept	{ return (a < b) ? a : b; }
 	template<typename _tValue>	static inline constexpr		const _tValue&					max				(const _tValue& a, const _tValue& b)												noexcept	{ return (a > b) ? a : b; }
 	template<typename _tValue>	static inline constexpr		bool							in_range		(const _tValue& valueToTest, const _tValue& rangeStart, const _tValue& rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
 
-	template<typename _tValue>	
+	template<typename _tValue>
 	struct SMinMax	{
 					_tValue					Min;
 					_tValue					Max;

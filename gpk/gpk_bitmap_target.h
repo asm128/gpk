@@ -14,7 +14,7 @@ namespace gpk
 					::gpk::error_t											drawPixelBrightness								(::gpk::view_grid<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::SCoord2<double>														maxRange										= {range, range};
 		double																		rangeUnit										= 1.0 / maxRange.Length();
-		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates 
+		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates
 		for(int32_t x = -(int32_t)range - 1; x < blendCount; ++x) {										// as it causes a visual effect of the light being cut to a rectangle and having sharp borders.
 			if(x || y) {
 				::gpk::SCoord2<_tCoord>													blendPos										= sourcePosition + ::gpk::SCoord2<_tCoord>{(_tCoord)x, (_tCoord)y};
@@ -42,21 +42,21 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTarget					(::gpk::array_pod<_tElement>& out_colors, ::gpk::view_grid<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{ 
+						::gpk::error_t										updateSizeDependentTarget					(::gpk::array_pod<_tElement>& out_colors, ::gpk::view_grid<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
 		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize) 
+		if( out_view.metrics() != newSize)
 			out_view																= {out_colors.begin(), newSize};
 		return 0;
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::SImage<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
+	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::SImage<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTexture					(::gpk::array_pod<_tElement>& out_scaled, ::gpk::view_grid<_tElement>& out_view, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{ 
+						::gpk::error_t										updateSizeDependentTexture					(::gpk::array_pod<_tElement>& out_scaled, ::gpk::view_grid<_tElement>& out_view, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
 		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize ) { 
+		if( out_view.metrics() != newSize ) {
 			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
 				error_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
@@ -65,7 +65,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{ 
+	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 	template<typename _tColor>
@@ -74,9 +74,9 @@ namespace gpk
 			return 0;
 		int32_t																		y											= ::sltk::max(::sltk::min(y1, y2), 0);
 		int32_t																		yStop										= ::sltk::min(::sltk::max(y1, y2), (int32_t)target.metrics().y);
-		for(; y < yStop; ++y) 
+		for(; y < yStop; ++y)
 			target[y][x]															= value;;
-		return y; 
+		return y;
 	}
 
 	template<typename _tColor>
@@ -85,9 +85,9 @@ namespace gpk
 			return 0;
 		int32_t																		x											= ::sltk::max(::sltk::min(x1, x2), 0);
 		int32_t																		xStop										= ::sltk::min(::sltk::max(x1, x2), (int32_t)target.metrics().x);
-		for(; y < xStop; ++y) 
+		for(; y < xStop; ++y)
 			target[y][x]															= value;;
-		return y; 
+		return y;
 	}
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
@@ -99,7 +99,7 @@ namespace gpk
 		int32_t																		xStop										= ::gpk::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)bitmapTarget.metrics().x);
 		if(yStart >= yStop || xStart >= xStop)
 			return 0;
-		for(int32_t x = xStart; x < xStop; ++x) 	
+		for(int32_t x = xStart; x < xStop; ++x)
 			bitmapTarget[yStart][x]													= value;
 		memcpy(&bitmapTarget[yStop - 1][xStart], &bitmapTarget[yStart][xStart], sizeof(_tColor) * xStop - xStart);
 		for(int32_t y = yStart + 1, yMax = (yStop - 1); y < yMax; ++y) {
@@ -115,7 +115,7 @@ namespace gpk
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {	
+		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
@@ -135,7 +135,7 @@ namespace gpk
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {	
+		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
@@ -149,7 +149,7 @@ namespace gpk
 		return pixelsDrawn;
 	}
 
-	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/ 
+	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2D<_tCoord>& triangle)										{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
@@ -157,7 +157,7 @@ namespace gpk
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {	
+		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
 			const ::gpk::SCoord2<int32_t>												cellCurrent									= {x, y};
 			// Determine barycentric coordinates
 			int																			w0											= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -184,7 +184,7 @@ namespace gpk
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)targetMetrics.y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {	
+		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
 			const ::gpk::SCoord2<int32_t>												cellCurrent									= {x, y};
 			// Determine barycentric coordinates
 			int32_t																		w0											= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -212,9 +212,9 @@ namespace gpk
 		::gpk::SCoord2	<float>														areaMax										= {(float)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (float)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const float																	xStop										= ::gpk::min(areaMax.x, (float)_targetMetrics.x);
 		for(float y = ::gpk::max(areaMin.y, 0.f), yStop = ::gpk::min(areaMax.y, (float)_targetMetrics.y); y < yStop; ++y)
-		for(float x = ::gpk::max(areaMin.x, 0.f); x < xStop; ++x) {	
+		for(float x = ::gpk::max(areaMin.x, 0.f); x < xStop; ++x) {
 			const ::gpk::SCoord2<int32_t>												cellCurrent									= {(int32_t)x, (int32_t)y};
-			const ::gpk::STriangle2D<int32_t>											triangle2D									= 
+			const ::gpk::STriangle2D<int32_t>											triangle2D									=
 				{ {(int32_t)triangle.A.x, (int32_t)triangle.A.y}
 				, {(int32_t)triangle.B.x, (int32_t)triangle.B.y}
 				, {(int32_t)triangle.C.x, (int32_t)triangle.C.y}
@@ -227,7 +227,7 @@ namespace gpk
 					continue;
 			}
 			const ::gpk::SCoord2<double>												cellCurrentF								= {x, y};
-			::gpk::STriangleWeights<double>												proportions									= 
+			::gpk::STriangleWeights<double>												proportions									=
 				{ ::gpk::orient2d3d({triangle.C.template Cast<double>(), triangle.B.template Cast<double>()}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
 				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
 				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
@@ -258,7 +258,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static	inline			::gpk::error_t									drawTriangleIndexed							
+	static	inline			::gpk::error_t									drawTriangleIndexed
 		( ::gpk::view_grid<uint32_t>						& targetDepth
 		, const ::gpk::SCameraRange							& fNearFar // fFar
 		//, double											fNear

@@ -48,7 +48,7 @@ namespace gpk
 	};
 
 	struct STiledTerrainMetricsGND {
-				::gpk::SCoord2<uint32_t>							Size							;	// Tile count 
+				::gpk::SCoord2<uint32_t>							Size							;	// Tile count
 				float												TileScale						;	// The size to expand the tiles
 	};
 
@@ -64,8 +64,8 @@ namespace gpk
 	struct SGNDFileContents {
 				STiledTerrainMetricsGND								Metrics;
 				::gpk::array_obj<::std::string>						TextureNames;
-				uint32_t											LightmapTiles;		// ?? 
-				::gpk::SCoord2<uint32_t>							LightmapSize;	
+				uint32_t											LightmapTiles;		// ??
+				::gpk::SCoord2<uint32_t>							LightmapSize;
 				::gpk::array_pod<STileBrightnessGND	>				lstTileBrightnessData;
 				::gpk::array_pod<STileSkinGND		>				lstTileTextureData;
 				::gpk::array_pod<STileGeometryGND	>				lstTileGeometryData;
@@ -80,7 +80,7 @@ namespace gpk
 				::gpk::array_pod<::gpk::SCoord3<float>>				Normals			;
 				::gpk::array_pod<::gpk::SCoord3<float>>				Vertices		;
 				::gpk::array_pod<::gpk::SCoord2<float>>				UVs				;
-				::gpk::array_pod<::gpk::STriangleWeights<uint32_t>>	VertexIndices	; 
+				::gpk::array_pod<::gpk::STriangleWeights<uint32_t>>	VertexIndices	;
 				//::gpk::array_pod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
@@ -97,12 +97,12 @@ namespace gpk
 	struct SModelGND {
 				::gpk::array_obj<::gpk::SModelNodeGND>				Nodes;
 				::gpk::SImage<::gpk::STileMapping>				TileMapping;
-	
+
 //																	SModelGND						()							= default;
 //																	SModelGND						(const SModelGND& other)	= default;
 	};
 
-	enum TILE_FACE_FACING 
+	enum TILE_FACE_FACING
 		{ TILE_FACE_FACING_TOP
 		, TILE_FACE_FACING_FRONT
 		, TILE_FACE_FACING_RIGHT

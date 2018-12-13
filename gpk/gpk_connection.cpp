@@ -77,7 +77,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		ree_if(sizeRequired != optimizedPayload->Payload.size(), "Invalid sizes! Size required: %u. Actual size: %u.", sizeRequired, optimizedPayload->Payload.size());
 		gpk_necall(payloadsToSend.push_back(optimizedPayload), "Failed! Payload queue size: %u.", payloadsToSend.size());
 
-		if(keyPing) 
+		if(keyPing)
 			client.KeyPing												= optimizedPayload->Time;
 
 		for(int32_t iPayloadTR = 0; iPayloadTR < (int32_t)payloadsToRemove.size(); ++iPayloadTR)	// Done. Remove packed payloads from send queue.
@@ -93,7 +93,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 
 ::gpk::error_t												payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend) {
 	::gpk::array_pod<byte_t>										messageBytes;
-	sockaddr_in														sa_remote							= {};							// Information about the client 
+	sockaddr_in														sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 	for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= payloadsToSend[iPayload];
@@ -116,7 +116,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			::gpk::array_pod<byte_t>										compressed;
 			ree_if(errored(compressed.resize(messageToSend.Payload.size() * 2)), "Wtf: %s.", "Out of memory?");
 			if(0 == payloadHeader.Command.Encrypted) {
-				if(0 == payloadHeader.Command.Compressed) 
+				if(0 == payloadHeader.Command.Compressed)
 					payloadHeader.Size											= messageToSend.Payload.size();
 				else {
 					::gpk::arrayDeflate(messageToSend.Payload, compressed);
@@ -125,7 +125,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			}
 			else  {
 				::gpk::ardellEncode(messageToSend.Payload, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
-				if(0 == payloadHeader.Command.Compressed) 
+				if(0 == payloadHeader.Command.Compressed)
 					payloadHeader.Size											= ardellEncoded.size();
 				else {
 					::gpk::arrayDeflate(ardellEncoded, compressed);
@@ -142,7 +142,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 				gpk_necall(sendStream.write_pod(compressed.begin(), compressed.size()), "%s", "??");
 			}
 			else {
-				if(0 == (payloadHeader.Command.Encrypted & 1)) 
+				if(0 == (payloadHeader.Command.Encrypted & 1))
 					gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
 				else
 					gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
@@ -161,7 +161,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 
 ::gpk::error_t												gpk::connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend)				{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& queueToSend						= client.Queue.Send;
-	sockaddr_in														sa_remote							= {};							// Information about the client 
+	sockaddr_in														sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 
 	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
@@ -189,17 +189,17 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		}
 	}
 
-	// Send non-payload commands and 
+	// Send non-payload commands and
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	& payloadsToSend						= messageCacheSend;
 	payloadsToSend.clear();
-	messageCacheSent.clear();								
+	messageCacheSent.clear();
 	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= queueToSend[iSend];
 		if(0 == pMessageToSend)
 			continue;
 		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
 //		int64_t															currentTime							= ::gpk::timeCurrentInUs();
-		if(messageToSend.Command.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) 
+		if(messageToSend.Command.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 			payloadsToSend.push_back(pMessageToSend);
 		else {
 			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
@@ -219,23 +219,23 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 	return 0;
 }
 
-static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
+static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{
 	ree_if(0 != command.Packed || 0 != command.Encrypted || 0 != command.Compressed || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid command or client state.");
-	client.FirstPing											= 
+	client.FirstPing											=
 	client.KeyPing												= 0;
 	client.LastPing												= gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	client.Socket.close();
 	info_printf("%s", "Disconnected!");
-	return 0; 
+	return 0;
 }
 
-static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{ 
+static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client)												{
 	ree_if(1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state.");
 	{
 		client.LastPing												= gpk::timeCurrentInUs();
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
-		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent) 
+		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent)
 			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
 				client.Queue.Sent.remove(iSent);
 				break;
@@ -244,10 +244,10 @@ static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand& co
 		client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	}
 	info_printf("%s", "Connected!");
-	return 0; 
+	return 0;
 }
 
-#if defined(GPK_WINDOWS) 
+#if defined(GPK_WINDOWS)
 typedef int socklen_t;
 #endif
 
@@ -263,15 +263,15 @@ static	::gpk::error_t										postConfirmationResponse			(::gpk::SUDPClientQueu
 	return 0;
 }
 
-static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{ 
+static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
 		return 1;
 	::gpk::SUDPPayloadHeader										header								= {};
-	sockaddr_in														sa_client							= {};						// Information about the client 
-	socklen_t														sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct 
+	sockaddr_in														sa_client							= {};						// Information about the client
+	socklen_t														sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct
 	int																bytes_received						= {};
 	if errored(bytes_received = ::recvfrom(client.Socket.Handle, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");	
+		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");
 	}
 	uint64_t estimatedTimeSent = 0;
 	if(command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST) {
@@ -279,7 +279,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
 		if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 			rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
-			else 
+			else
 				warning_printf("%s", "Failed to receive all of the payload data.");
 		}
 		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
@@ -387,7 +387,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			}
 		}
 	}
-	return 0; 
+	return 0;
 }
 
 ::gpk::error_t												gpk::connectionHandleCommand		(::gpk::SUDPConnection& client, ::gpk::SUDPCommand& command, ::gpk::array_pod<byte_t> & receiveBuffer)		{
@@ -407,23 +407,23 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	switch(command.Type) {
 	case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST:
 		switch(command.Command) {
-		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD			(command, client, receiveBuffer); 
-		case ::gpk::ENDPOINT_COMMAND_CONNECT	: return ::handleRequestCONNECT		(command, client); 
-		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: return ::handleRequestDISCONNECT	(command, client); 
-		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0; 
-		default									: 
-			error_printf("Invalid command!: %u.", command.Command); 
+		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD			(command, client, receiveBuffer);
+		case ::gpk::ENDPOINT_COMMAND_CONNECT	: return ::handleRequestCONNECT		(command, client);
+		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: return ::handleRequestDISCONNECT	(command, client);
+		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0;
+		default									:
+			error_printf("Invalid command!: %u.", command.Command);
 			break;
 		}
 		break;
 	case ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE:
 		switch(command.Command) {
-		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD	(command, client, receiveBuffer); 
-		case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
-		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: 
-		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0; 
-		default									: 
-			error_printf("Invalid command!: %u.", command.Command); 
+		case ::gpk::ENDPOINT_COMMAND_PAYLOAD	: return ::handlePAYLOAD	(command, client, receiveBuffer);
+		case ::gpk::ENDPOINT_COMMAND_CONNECT	:
+		case ::gpk::ENDPOINT_COMMAND_DISCONNECT	:
+		case ::gpk::ENDPOINT_COMMAND_NOOP		: return 0;
+		default									:
+			error_printf("Invalid command!: %u.", command.Command);
 			break;
 		}
 		break;

@@ -14,7 +14,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 					::gpk::SFramework													Framework;
 					::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen							= {};
 					::gpk::array_obj<::gpk::SImage<::gpk::SColorBGRA>>					PNGImages							= {};
-					
+
 					int32_t																IdExit								= -1;
 
 					::std::mutex														LockGUI;
@@ -203,5 +203,5 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	 //, "..\\gpk_data\\pngsuite\\xhdn0g08.png"
 	 , "..\\gpk_data\\pngsuite\\PngSuite.png"
 	};
- 
+
 #endif // APPLICATION_H_2078934982734

@@ -16,7 +16,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 }
 
 			::gpk::error_t												gme::optionListPush			(::gpk::SGUI& gui, ::gme::SOptionList& menu, const ::gpk::view_const_string& text)				{
-	if(menu.IdControl == -1) 
+	if(menu.IdControl == -1)
 		gpk_necall(::optionListInitialize(gui, menu), "");
 	const int32_t																idControl					= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
@@ -28,11 +28,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlText			.Text												= {text.begin(), text.size()};
 	controlText			.Align												= ::gpk::ALIGN_CENTER_LEFT;
 	controlConstraints	.AttachSizeToText									= {true, true};
-	switch(menu.Orientation) {	
+	switch(menu.Orientation) {
 	case ::gme::MENU_ORIENTATION_HORIZONTAL	: controlConstraints.AttachSizeToControl.y = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.Right	 = menu.IdControls[menu.IdControls.size() - 1]; break;
 	case ::gme::MENU_ORIENTATION_VERTICAL	: controlConstraints.AttachSizeToControl.x = menu.IdControl; if(menu.IdControls.size()) controlConstraints.DockToControl.Bottom	 = menu.IdControls[menu.IdControls.size() - 1]; break;
 	}
-	return menu.IdControls.push_back(idControl);			
+	return menu.IdControls.push_back(idControl);
 }
 
 	enum ANIMATION
@@ -55,7 +55,7 @@ struct SSprite {
 };
 
 			::gpk::error_t												cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
-			::gpk::error_t												setup						(::gme::SApplication & app)						{ 
+			::gpk::error_t												setup						(::gme::SApplication & app)						{
 	::gpk::SFramework															& framework					= app.Framework;
 	::gpk::SDisplay																& mainWindow				= framework.MainDisplay;
 	ree_if(0 == framework.Input.create(), "%s", "Out of memory?");
@@ -76,7 +76,7 @@ struct SSprite {
 			fread(mapFile.begin(), 1, fileSize, fp);
 			fclose(fp);
 			tileMap.resize({AXIS_X, AXIS_Y}, ' ');
-			for(uint32_t y = 0; y < tileMap.metrics().y; ++y) 
+			for(uint32_t y = 0; y < tileMap.metrics().y; ++y)
 				memcpy(tileMap[y].begin(), &mapFile[y * (tileMap.metrics().x + 2)], tileMap.metrics().x);
 		}
 	}
@@ -113,14 +113,14 @@ struct SSprite {
 
 	for(uint32_t iAnimation = 0; iAnimation < app.CharacterAnimationImages.size(); ++iAnimation)
 		// --- Build Ghost animation layered views
-		app.CharacterAnimationLayers[iAnimation]								= 
+		app.CharacterAnimationLayers[iAnimation]								=
 			{ app.CharacterAnimationImages[iAnimation].Texels.begin()
 			, app.CharacterAnimationImages[iAnimation].View.metrics().x
 			, app.CharacterAnimationImages[iAnimation].View.metrics().y / spriteNames[iAnimation].Frames
 			, spriteNames[iAnimation].Frames
 			};
 
-	return 0; 
+	return 0;
 }
 
 ::gpk::error_t															drawAnimated
@@ -131,10 +131,10 @@ struct SSprite {
 				, ::wak::MODE							mode
 				, ::gpk::view_array<::gpk::view_layered<::gpk::SColorBGRA>>	animations
 				, int32_t iGhost
-			) 
+			)
 {
 	static constexpr const ::gpk::SColorBGRA									magenta				= { 0xFF, 0x00, 0xFF, 0xFF };
-	const ::gpk::SColorBGRA														ghostColors	[4]		= 
+	const ::gpk::SColorBGRA														ghostColors	[4]		=
 		{ {0x00, 0x00, 0xFF, 0xFF}
 		, {0xFF, 0x00, 0xFF, 0xFF}
 		, {0xFF, 0xFF, 0x00, 0xFF}
@@ -147,7 +147,7 @@ struct SSprite {
 		::gpk::SColorBGRA														colorFrightenedFace	= swapColors ? ::gpk::SColorBGRA{0, 0, 0xFF, 0xFF} : ::gpk::SColorBGRA{0xFF, 0xFF, 0xFF, 0xFF};
 		::gpk::grid_copy_alpha(target, animations[ANIMATION_GHOST][app.GameInstance.CounterAnimation % 2]	, posToDraw, magenta, colorFrightened);
 		::gpk::grid_copy_alpha(target, animations[FRIGHTENED_FACE][0]										, posToDraw, magenta, colorFrightenedFace);
-		
+
 	}
 	else if(app.GameInstance.Enemies[iGhost].Dead == true)
 		::gpk::grid_copy_alpha(target, animations[ANIMATION_EYES][animated.CurrentDirection], posToDraw, magenta);
@@ -164,7 +164,7 @@ struct SSprite {
 		};
 	}
 
-				::gpk::error_t												draw						(::gme::SApplication & app)																	{ 
+				::gpk::error_t												draw						(::gme::SApplication & app)																	{
 	::gpk::STimer																timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>			target;
@@ -189,7 +189,7 @@ struct SSprite {
 		for (uint32_t iGhost = 0; iGhost < ::wak::GHOST_COUNT; ++iGhost) {
 			posToDraw[iGhost]							= getPosToDraw(enemies[iGhost], mapPosition);
 		}
-	
+
 		//--- Dibujar sobrne el target
 		for (int32_t y = 0; y < app.GameInstance.Map.Size.y; ++y) {
 			for (int32_t x = 0; x < app.GameInstance.Map.Size.x; ++x) {
@@ -202,7 +202,7 @@ struct SSprite {
 			::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[TEXTURE_FRUIT_0][0], pointToDraw, magenta);
 		}
 
-		if (app.GameInstance.Player.Position.x > 0 && app.GameInstance.Player.Position.x < 29) 
+		if (app.GameInstance.Player.Position.x > 0 && app.GameInstance.Player.Position.x < 29)
 			::gpk::grid_copy_alpha(target->Color.View, app.CharacterAnimationLayers[ANIMATION_PLAYER][app.GameInstance.CounterAnimationPlayer % 4], playerPosToDraw, magenta, ::gpk::SColorBGRA{0x00, 0xFF, 0xFF, 0xFF});
 
 		for (uint32_t iGhost = 0; iGhost < ::wak::GHOST_COUNT; ++iGhost)
@@ -220,10 +220,10 @@ struct SSprite {
 	}
 	//timer.Frame();
 	//info_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t												update						(::gme::SApplication & app, bool exitSignal)	{ 
+			::gpk::error_t												update						(::gme::SApplication & app, bool exitSignal)	{
 	::gpk::STimer																timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
@@ -242,7 +242,7 @@ struct SSprite {
 		gui.Zoom.ZoomLevel														+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4));
 		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 	}
- 
+
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState													& controlState				= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
@@ -266,5 +266,5 @@ struct SSprite {
 	}
 	//timer.Frame();
 	//info_printf("Update time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }

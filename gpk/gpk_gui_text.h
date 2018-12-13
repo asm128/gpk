@@ -8,7 +8,7 @@
 #ifndef GPK_GUI_TEXT_H_928734982734
 #define GPK_GUI_TEXT_H_928734982734
 
-namespace gpk 
+namespace gpk
 {
 	static inline constexpr		::gpk::error_t										textLineCalcWidth								(const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::view_const_string& text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
 

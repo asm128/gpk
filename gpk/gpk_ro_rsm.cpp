@@ -8,16 +8,16 @@
 
 #pragma pack(push, 1)
 struct SRSMHeader {	// RSM Header
-	char										filecode[4];	
+	char										filecode[4];
 	uint8_t										versionMajor;
 	uint8_t										versionMinor;
 };
 #pragma pack(pop)
 
-			
+
 			::gpk::error_t								analyzeArray												(const ::gpk::view_array<ubyte_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
-										  
+
 	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
 	info_printf("%s", "---- Analyzing ints      :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12u : %.12i : 0x%.8x"	, ((uint32_t	*)&input[0])[iChar], ((int32_t			*)input.begin())[iChar], ((uint32_t	*)input.begin())[iChar]);
 	info_printf("%s", "---- Analyzing floats    :");			for(uint32_t iChar = 0; iChar < input.size() / 4; ++iChar)			info_printf("%.12f"						, ((float		*)&input[0])[iChar]);
@@ -66,7 +66,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	rsm_stream.read_pod(loaded.ShadeType);
 	if(header.versionMajor > 1 || (header.versionMajor == 1 && header.versionMinor >= 4))
 		rsm_stream.read_pod(loaded.Alpha);
-	
+
 	rsm_stream.read_pod(loaded.Unknown);
 
 	uint32_t													textureCount												= 0;			// Get the number of textures
@@ -84,7 +84,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 		info_printf("Texture %i name: %s.", (int32_t)iTex, loaded.TextureNames[iTex].Storage);
 	}
 
-	rsm_stream.read_pod(loaded.RootNodeName); 
+	rsm_stream.read_pod(loaded.RootNodeName);
 
 	int32_t														meshCountIBelieve											= 1;
 	rsm_stream.read_pod(meshCountIBelieve);
@@ -107,7 +107,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(texMappingCount);
 			info_printf("Texture index count: %u.", texMappingCount);
 			if(texMappingCount) {
-				::gpk::array_pod<int32_t>									& modelTextures												= newNode.TextureIndices;	
+				::gpk::array_pod<int32_t>									& modelTextures												= newNode.TextureIndices;
 				modelTextures.resize(texMappingCount);
 				rsm_stream.read_pod(modelTextures.begin(), texMappingCount);
 			}
@@ -127,7 +127,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
-				::gpk::array_pod<::gpk::SCoord3<float>>						& modelVertices												= newNode.Vertices;	
+				::gpk::array_pod<::gpk::SCoord3<float>>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
 				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
 			}
@@ -137,13 +137,13 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(texVtxCount);
 			info_printf("UV coord count: %u.", texVtxCount);
 			if(texVtxCount) {
-				::gpk::array_pod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;	
+				::gpk::array_pod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;
 				modelUNKs.resize(texVtxCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || header.versionMajor > 1) //{ >= v1.2
 					rsm_stream.read_pod(modelUNKs.begin(), texVtxCount);
 				else {
 					for( uint32_t iVertex = 0; iVertex < texVtxCount; ++iVertex ) {
-						::gpk::SRSMTexCoord											& curTexCoord												= modelUNKs[iVertex]; 
+						::gpk::SRSMTexCoord											& curTexCoord												= modelUNKs[iVertex];
 						curTexCoord.Unknown										= (uint32_t)-1;
 						rsm_stream.read_pod(curTexCoord.UV);
 					}
@@ -156,7 +156,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(faceCount);
 			info_printf("Face count: %u.", faceCount);
 			if(faceCount) {
-				::gpk::array_pod<SRSMFace>									& modelFaces												= newNode.Faces;		
+				::gpk::array_pod<SRSMFace>									& modelFaces												= newNode.Faces;
 				modelFaces.resize(faceCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || (header.versionMajor > 1))
 					rsm_stream.read_pod(modelFaces.begin(), faceCount);
@@ -190,12 +190,12 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return rsm_stream.CursorPosition;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, FILE								* input)							{ 
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, FILE								* input)							{
 	loaded, input;
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input)							{ 
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input)							{
 	::gpk::array_pod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
@@ -221,12 +221,12 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 					gpk_necall(meshNode.Vertices		.push_back(rsmNode.Vertices	[face.Vertices	[iVert]]				), "%s", "Out of memory. Invalid RSM input?");
 				}
 				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");
-				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");						
+				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");
 				gpk_necall(meshNode.Normals			.push_back({ (rsmNode.Vertices	[face.Vertices	[1]] - rsmNode.Vertices	[face.Vertices	[0]]).Cross(rsmNode.Vertices	[face.Vertices	[2]] - rsmNode.Vertices	[face.Vertices	[0]]).Normalize() }), "%s", "Out of memory. Invalid RSM input?");
 				gpk_necall(meshNode.VertexIndices	.push_back({vertexOffset, vertexOffset + 1, vertexOffset + 2}), "%s", "Out of memory. Invalid RSM input?");
 				vertexOffset											+= 3;
 			}
 		}
 	}
-	return 0;			
+	return 0;
 }

@@ -28,9 +28,9 @@ namespace gpk
 	struct SLightInfoRSW {
 					char													Name			[40];
 					char													ToDo			[40];
-					::gpk::SCoord3<float>									Position 		;	
-					::gpk::SCoord3<float>									Color			;	
-					float													ToDo2			;	
+					::gpk::SCoord3<float>									Position 		;
+					::gpk::SCoord3<float>									Color			;
+					float													ToDo2			;
 	};
 
 	struct SEffectInfoRSW {
@@ -46,25 +46,25 @@ namespace gpk
 	};
 
 	struct SSoundInfoRSW {
-					char													name			[40];	
-					char													strUnk0			[40];	
-					char													fileName		[40];	
-					char													strUnk1			[40];	
-					::gpk::SCoord3<float>									position		;		
-					float													vol				;		
-					int32_t													width			;		
-					int32_t													height			;		
-					float													range			;		
+					char													name			[40];
+					char													strUnk0			[40];
+					char													fileName		[40];
+					char													strUnk1			[40];
+					::gpk::SCoord3<float>									position		;
+					float													vol				;
+					int32_t													width			;
+					int32_t													height			;
+					float													range			;
 					float													cycle			;			// v >= 2.0
 	};
-	
+
 	struct SModelInfoRSW {
 					char_t													Name			[40];
 					char_t													Filename		[40];
 					char_t													Str2			[40];
 					char_t													RootRSMNode		[40];
 					char_t													Str4			[40];
-					int32_t													AnimType		;	
+					int32_t													AnimType		;
 					float													AnimSpeed		;
 					int32_t													BlockType		;
 					::gpk::SCoord3<float>									Position		;

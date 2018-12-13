@@ -10,13 +10,13 @@
 #else
 #	include <errno.h>
 #endif
-#include <stdio.h>
+#include <cstdio>
 
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "threaded_app", __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "threaded_app", __VA_ARGS__))
 
-// For debug builds, always enable the debug traces in this library 
+// For debug builds, always enable the debug traces in this library
 #ifndef NDEBUG
 #	define LOGV(...)  ((void)__android_log_print(ANDROID_LOG_VERBOSE, "threaded_app", __VA_ARGS__))
 #else
@@ -25,13 +25,13 @@
 
 
 		void														gpk::_base_debug_print							(const char* text, uint32_t textLen)									{
-	if(textLen) 
+	if(textLen)
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text);
 #elif defined(GPK_ANDROID)
 	LOGI("%s", text);
 #else
-	printf("%s", text); 
+	printf("%s", text);
 #endif
 }
 
@@ -39,7 +39,7 @@ static	::gpk::error_t												getSystemErrorAsString						(const uint64_t las
 #if defined(GPK_WINDOWS)
 	if(nullptr == buffer)
 		return -1;
-	if(0 == lastError) 
+	if(0 == lastError)
 		return 0;
 	const DWORD																size										= ::FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)(lastError & 0xFFFFFFFF), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, bufferSize, NULL);
 	return (::gpk::error_t)size;

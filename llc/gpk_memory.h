@@ -47,9 +47,9 @@ namespace gpk
 #endif
 
 	template<typename _typePtr>
-	static inline			void																	safe_gpk_free				(_typePtr &p)										noexcept	{ 
-		_typePtr																							_pepe						= p; 
-		p																								= 0; 
+	static inline			void																	safe_gpk_free				(_typePtr &p)										noexcept	{
+		_typePtr																							_pepe						= p;
+		p																								= 0;
 #if defined(GPK_WINDOWS)
 		_aligned_free((void*)_pepe);
 #elif defined(GPK_LINUX) || defined(GPK_ANDROID)
@@ -65,23 +65,23 @@ namespace gpk
 	template<typename _tBase>	static inline constexpr		uint32_t								get_type_size				(const _tBase&)													noexcept	{ return (uint32_t) sizeof(_tBase); }
 	template<typename _tBase>	static inline constexpr		uint32_t								get_type_size_padded		(uint32_t paddingInBytes)										noexcept	{ return paddingInBytes ? (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
 	template <typename _tBase>	static inline constexpr		uint32_t								get_type_align				()																noexcept	{
-		return (uint32_t)	
-			(	(0 == (sizeof(_tBase) % 32))	? 32	
-			:	(0 == (sizeof(_tBase) % 16))	? 16	
-			:	(0 == (sizeof(_tBase) % 8 ))	? 8		
-			:	(0 == (sizeof(_tBase) % 4 ))	? 4		
-			:	(0 == (sizeof(_tBase) % 2 ))	? 2		
+		return (uint32_t)
+			(	(0 == (sizeof(_tBase) % 32))	? 32
+			:	(0 == (sizeof(_tBase) % 16))	? 16
+			:	(0 == (sizeof(_tBase) % 8 ))	? 8
+			:	(0 == (sizeof(_tBase) % 4 ))	? 4
+			:	(0 == (sizeof(_tBase) % 2 ))	? 2
 			:	1
 			);
 	}
 	template <typename _tBase>	static inline constexpr		uint32_t								get_type_align_multiplier	()																noexcept	{
-		return (uint32_t) 
+		return (uint32_t)
 			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
 			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
 			:	(0 == (sizeof(_tBase) %  8)) ? sizeof(_tBase) /  8
 			:	(0 == (sizeof(_tBase) %  4)) ? sizeof(_tBase) /  4
 			:	(0 == (sizeof(_tBase) %  2)) ? sizeof(_tBase) /  2
-			:	sizeof(_tBase) 
+			:	sizeof(_tBase)
 			);
 	}
 	template <typename _tBase>	static inline				int32_t									podcmp						(const _tBase* pA, const _tBase* pB)							noexcept	{
@@ -89,8 +89,8 @@ namespace gpk
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)
 			return 0x7FFFFFFF;
-										
-		return memcmp(pA, pB, sizeof(_tBase));							
+			
+		return memcmp(pA, pB, sizeof(_tBase));
 	}
 
 	template <typename _tBase>	static inline				_tBase*									chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{

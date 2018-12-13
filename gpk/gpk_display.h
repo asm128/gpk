@@ -4,12 +4,12 @@
 
 #if defined(GPK_WINDOWS)
 #	include <windows.h>
-#endif 
+#endif
 
 #ifndef GPK_DISPLAY_H_293874928374
 #define GPK_DISPLAY_H_293874928374
 
-namespace gpk 
+namespace gpk
 {
 	struct SDisplayPlatformDetail {
 #if defined(GPK_WINDOWS)

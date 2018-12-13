@@ -15,7 +15,7 @@ namespace gpk
 #pragma pack(push, 1)
 	enum GUI_COLOR_MODE : uint8_t
 		{ GUI_COLOR_MODE_DEFAULT		= 0
-		, GUI_COLOR_MODE_3D			
+		, GUI_COLOR_MODE_3D
 		, GUI_COLOR_MODE_FLAT
 		, GUI_COLOR_MODE_COUNT
 		};
@@ -64,39 +64,39 @@ namespace gpk
 
 	enum GUI_CONTROL_AREA : uint8_t
 		{ GUI_CONTROL_AREA_BACKGROUND							= 0
-		, GUI_CONTROL_AREA_CLIENT			
-		, GUI_CONTROL_AREA_BORDER_LEFT		
+		, GUI_CONTROL_AREA_CLIENT
+		, GUI_CONTROL_AREA_BORDER_LEFT
 		, GUI_CONTROL_AREA_BORDER_TOP
 		, GUI_CONTROL_AREA_BORDER_RIGHT
-		, GUI_CONTROL_AREA_BORDER_BOTTOM	
+		, GUI_CONTROL_AREA_BORDER_BOTTOM
 		, GUI_CONTROL_AREA_COUNT
 		};
 
 	enum GUI_CONTROL_COLOR : uint8_t
 		{ GUI_CONTROL_COLOR_BACKGROUND							= 0
-		, GUI_CONTROL_COLOR_BORDER_LEFT		
+		, GUI_CONTROL_COLOR_BORDER_LEFT
 		, GUI_CONTROL_COLOR_BORDER_TOP
 		, GUI_CONTROL_COLOR_BORDER_RIGHT
-		, GUI_CONTROL_COLOR_BORDER_BOTTOM	
+		, GUI_CONTROL_COLOR_BORDER_BOTTOM
 		, GUI_CONTROL_COLOR_TEXT_BACKGROUND
-		, GUI_CONTROL_COLOR_TEXT_FACE			
-		, GUI_CONTROL_COLOR_MARGIN_LEFT		
+		, GUI_CONTROL_COLOR_TEXT_FACE
+		, GUI_CONTROL_COLOR_MARGIN_LEFT
 		, GUI_CONTROL_COLOR_MARGIN_TOP
 		, GUI_CONTROL_COLOR_MARGIN_RIGHT
-		, GUI_CONTROL_COLOR_MARGIN_BOTTOM	
+		, GUI_CONTROL_COLOR_MARGIN_BOTTOM
 		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_TOP
-		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_LEFT				
+		, GUI_CONTROL_COLOR_CORNER_LEFT_TOP_LEFT
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_TOP_TOP
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_TOP_RIGHT
-		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_LEFT	
+		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_LEFT
 		, GUI_CONTROL_COLOR_CORNER_LEFT_BOTTOM_BOTTOM
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_RIGHT
 		, GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_BOTTOM
-		, GUI_CONTROL_COLOR_CLIENT			
+		, GUI_CONTROL_COLOR_CLIENT
 		, GUI_CONTROL_COLOR_COUNT
 		};
 
-	enum GUI_CONTROL_PALETTE 
+	enum GUI_CONTROL_PALETTE
 		{ GUI_CONTROL_PALETTE_NORMAL						= 0
 		, GUI_CONTROL_PALETTE_DISABLED
 		, GUI_CONTROL_PALETTE_HOVER
@@ -136,7 +136,7 @@ namespace gpk
 	//	::gpk::error_t											Clear				()									{
 	//		if(0 == pImage)
 	//			return 0;
-	//		switch(Type) {						  
+	//		switch(Type) {
 	//		default								: break;
 	//		case ::gpk::IMAGE_TYPE_32_BGRA		: ::gpk::SImage<::gpk::SColorBGRA	>*	oldImage = (::gpk::SImage<::gpk::SColorBGRA	>*)	pImage; pImage = 0; delete oldImage; break;
 	//		case ::gpk::IMAGE_TYPE_32_BGR		: ::gpk::SImage<::gpk::SColorBGR	>*	oldImage = (::gpk::SImage<::gpk::SColorBGR	>*)	pImage; pImage = 0; delete oldImage; break;
@@ -152,7 +152,7 @@ namespace gpk
 	//		return 0;
 	//	}
 	//	::gpk::SCoord2<uint32_t>								Metrics				()	{
-	//		switch(Type) {						  
+	//		switch(Type) {
 	//		default								: break;
 	//		case ::gpk::IMAGE_TYPE_32_BGRA		: return ((::gpk::SImage<::gpk::SColorBGRA	>*)	pImage)->metrics(); break;
 	//		case ::gpk::IMAGE_TYPE_32_BGR		: return ((::gpk::SImage<::gpk::SColorBGR	>*)	pImage)->metrics(); break;
@@ -249,8 +249,8 @@ namespace gpk
 
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
 	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);	
-	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);	
+	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
+	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
 
 	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
 	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);

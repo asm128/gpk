@@ -10,7 +10,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 
-::gpk::error_t													setup					(::gme::SApplication & app)						{ 
+::gpk::error_t													setup					(::gme::SApplication & app)						{
 	::gpk::SFramework													& framework				= app.Framework;
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s", " why?????!?!?!?!?");
@@ -57,7 +57,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 		char															buffer [1024]				= {};
 		const int32_t													lenText						= (int32_t)sprintf_s(buffer, "(%u)", controlTestChild0);
-		controlText	.Text											= {::gpk::label(buffer).begin(), (uint32_t)lenText}; 
+		controlText	.Text											= {::gpk::label(buffer).begin(), (uint32_t)lenText};
 		//= {0 == (iChild % 4), 0 == (iChild % 5)};
 		gui.Controls.States	[controlTestChild0].Disabled			= 0 == (iChild % 9);
 		gui.Controls.States	[controlTestChild0].Design				= iChild % 2;
@@ -72,7 +72,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		case 7: control.Align = ::gpk::ALIGN_CENTER_BOTTOM	; controlText.Align = ::gpk::ALIGN_CENTER_TOP		; break;
 		case 8: control.Align = ::gpk::ALIGN_BOTTOM_RIGHT	; controlText.Align = ::gpk::ALIGN_TOP_LEFT			; break;
 		default:
-			control		.Align											=  
+			control		.Align											=
 			controlText	.Align											= {};
 		}
 		::gpk::controlSetParent(gui, controlTestChild0, iChild / 9);
@@ -123,7 +123,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	gui.Controls.Constraints[app.IdMode			].AttachSizeToText.x	= true;
 	gui.Controls.Constraints[app.IdNewPalette	].AttachSizeToText.x	= true;
-	
+
 	const int32_t													iShadesHalf				= iShades / 2;
 	for(uint32_t iTone = 0, countTones = gui.Palette.size() / iShades; iTone < countTones; ++iTone) {
 		for(uint32_t iShade = 0; iShade < iShades; ++iShade) {
@@ -134,7 +134,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			control.Area												= {{(int16_t)(256 - iShade * 16), (int16_t)(iTone * 16)}, {16, 16}};
 			//control.Area.Offset											+= {mainWi, 0};
 			//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-			control.Border												= 
+			control.Border												=
 			control.Margin												= {1, 1, 1, 1};
 			control.ColorTheme											= iTone * iShades + iShade + 1;
 			controlText.Text											= ".";
@@ -147,7 +147,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::SControlText												& controlRowText	= gui.Controls.Text[idPaletteRow];
 		controlRow.Align											= ::gpk::ALIGN_TOP_RIGHT;
 		controlRow.Area												= {{(int16_t)(256 - iShade * 16), -16}, {16, 16}};
-		controlRow.Border											= 
+		controlRow.Border											=
 		controlRow.Margin											= {1, 1, 1, 1};
 		controlRow.ColorTheme										= iShade + 1;
 		controlRowText.Text											= app.RowText[iShade];
@@ -162,7 +162,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlRow.Area												= {{(int16_t)256+16, (int16_t)(iTone * 16)}, {16, 16}};
 		//control.Area.Offset										+= {mainWi, 0};
 		//control.Area.Offset										-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-		controlRow.Border											= 
+		controlRow.Border											=
 		controlRow.Margin											= {1, 1, 1, 1};
 		controlRow.ColorTheme										= iTone * iShades + 0 + 1;
 		controlRowText.Text											= app.RowText[iTone];
@@ -178,7 +178,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//	control.Area												= {{(int16_t)(256 - (iColor % iShades) * 16), (int16_t)((iColor / iShades) * 16)}, {16, 16}};
 	//	//control.Area.Offset											+= {mainWi, 0};
 	//	//control.Area.Offset											-= {iShades * iShadesHalf - 8, iShades * iShadesHalf - 8};
-	//	control.Border												= 
+	//	control.Border												=
 	//	control.Margin												= {1, 1, 1, 1};
 	//	control.ColorTheme											= iColor + 1;
 	//	controlText.Text											= ".";
@@ -207,7 +207,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	//for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
 	//	const ::gpk::SColorBGRA											& srcColor									= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
-	//	gui.FontTexture.View[y * textureFontMetrics.x + x]	
+	//	gui.FontTexture.View[y * textureFontMetrics.x + x]
 	//		=	0 != srcColor.r
 	//		||	0 != srcColor.g
 	//		||	0 != srcColor.b
@@ -224,10 +224,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//fclose(fp);
 
 
-	return 0; 
+	return 0;
 }
 
-::gpk::error_t												update					(::gme::SApplication & app, bool exitSignal)	{ 
+::gpk::error_t												update					(::gme::SApplication & app, bool exitSignal)	{
 	//::gpk::STimer													timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
@@ -249,23 +249,23 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				if(iControl == (uint32_t)app.IdExit)
 					return 1;
 				else if(iControl == (uint32_t)app.IdMode) {
-					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild) 
-						gui.Controls.Modes[iChild].ColorMode					= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_FLAT ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_FLAT; 
+					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild)
+						gui.Controls.Modes[iChild].ColorMode					= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_FLAT ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_FLAT;
 				}
 				else if(iControl == (uint32_t)app.IdTheme) {
-					++gui.ThemeDefault; 
+					++gui.ThemeDefault;
 					if(gui.ThemeDefault >= gui.ControlThemes.size())
 						gui.ThemeDefault										= 0;
 				}
 				else if(iControl == (uint32_t)app.IdNewPalette) {
-					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild) 
+					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild)
 						gui.Controls.Modes[iChild].UseNewPalettes				= gui.Controls.Modes[iChild].UseNewPalettes ? 0 : 1;
 				}
 				else if(iControl > (uint32_t)app.IdMode) {
-					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdNewPalette; 
+					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdNewPalette;
 					if(gui.Controls.Controls[5].ColorTheme >= (int32_t)gui.Palette.size())
 						gui.Controls.Controls[5].ColorTheme						= 10;
-					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild) 
+					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild)
 						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
 				}
 			}
@@ -277,11 +277,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }
 
 ::gpk::error_t													cleanup					(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
-::gpk::error_t													draw					(::gme::SApplication & app)						{ 
+::gpk::error_t													draw					(::gme::SApplication & app)						{
 	::gpk::STimer														timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	target;
@@ -299,5 +299,5 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	//timer.Frame();
 	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }

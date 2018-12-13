@@ -35,7 +35,7 @@ namespace gpk {
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 #pragma pack(pop)
-} // namespace 
+} // namespace
 
 #define	GPKMNDO(_memberType, _memberName)				GPKM(_memberType, _memberName, ::gpk::DATA_TYPE_OBJECT, #_memberName, #_memberName)
 #define	GPKMNDF(_nameSpace, _memberType, _memberName, _dataTypeId)				GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, #_memberName, #_memberName)

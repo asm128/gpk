@@ -1,7 +1,7 @@
-// This work is loosely based on Ian Millington's "Game Physics Engine Development" 
+// This work is loosely based on Ian Millington's "Game Physics Engine Development"
 //
 // A particle is the simplest object that can be simulated in the physics system.
-// It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it. 
+// It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it.
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
 #include "gpk_coord.h"			// for ::gpk::SCoord2<>
 #include "gpk_error.h"			// for ::gpk::error_t
@@ -10,7 +10,7 @@
 #ifndef GPK_PARTICLE_H_29384923874
 #define GPK_PARTICLE_H_29384923874
 
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tElement>
@@ -19,8 +19,8 @@ namespace gpk
 		static constexpr	const _tElement										VelocityEpsilon								= 0.0001f;
 
 							TCoord												AccumulatedForce							= {};
-							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction 
-							TCoord												Velocity									= {};	// A vector representing the speed in a given direction 
+							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction
+							TCoord												Velocity									= {};	// A vector representing the speed in a given direction
 
 		inline constexpr	bool												VelocityDepleted							()																					const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
@@ -36,10 +36,10 @@ namespace gpk
 	template<typename _tElement>
 	struct SParticle2 {
 		// The member variables are organized such that matches the order in which they are used.
-							::gpk::SCoord2<_tElement>							Position									= {};	
+							::gpk::SCoord2<_tElement>							Position									= {};
 							SParticle2Forces<_tElement>							Forces										= {};
 							_tElement											InverseMass									= 0;
-							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction 
+							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction
 
 		inline				void												SetMass										(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
 		inline constexpr	double												GetMass										()																					const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
@@ -69,7 +69,7 @@ namespace gpk
 
 	template<typename _tElement>
 						::gpk::error_t										integrate									(const ::gpk::view_array<::gpk::SParticle2<_tElement>>& particles, ::gpk::array_pod<::gpk::SParticle2State>& particleStates, ::gpk::view_array<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
-		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)	
+		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
 				::gpk::particleIntegratePosition(particleNext.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particleNext.Position);
@@ -99,7 +99,7 @@ namespace gpk
 			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
 					ParticleState	[iBody]													= initialParticleState;
-					Particle		[iBody]													= 
+					Particle		[iBody]													=
 					ParticleNext	[iBody]													= particleData;
 					return iBody;
 				}
@@ -127,16 +127,16 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-							::gpk::error_t									addParticle														
+							::gpk::error_t									addParticle							
 		(	const _tParticleType										& particleType
 		,	::gpk::array_pod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
 		,	const ::gpk::SParticle2<_tCoord>							& particleDefinition
-		)														
+		)							
 	{
-		::gpk::SParticleBinding<_tParticleType>									newInstance									= {}; 
-		newInstance.Binding													= particleType; 
-		gpk_necall(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition), "Failed to add particle definition instance to integrator."); 
+		::gpk::SParticleBinding<_tParticleType>									newInstance									= {};
+		newInstance.Binding													= particleType;
+		gpk_necall(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition), "Failed to add particle definition instance to integrator.");
 		return particleInstances.push_back(newInstance);
 	}
 

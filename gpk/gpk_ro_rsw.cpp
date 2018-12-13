@@ -6,8 +6,8 @@
 #pragma pack(push, 1)
 	struct SRSWHeader {
 					char													Filecode[4];
-					uint8_t													VersionMajor; 
-					uint8_t													VersionMinor; 
+					uint8_t													VersionMajor;
+					uint8_t													VersionMinor;
 	};
 
 	struct SRSWWorldInfo {
@@ -36,7 +36,7 @@
 	//info_printf("RSW version: 0x%x.", header.Version);
 	rsw_stream.read_pod(loaded.INIFilename);
 	rsw_stream.read_pod(loaded.GNDFilename);
-	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 4)) 
+	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 4))
 		rsw_stream.read_pod(loaded.GATFilename);
 	rsw_stream.read_pod(loaded.SOMFilename);
 	info_printf("RSW INI: %s.", &loaded.INIFilename[0]);
@@ -44,7 +44,7 @@
 	info_printf("RSW GAT: %s.", &loaded.GATFilename[0]);
 	info_printf("RSW SOM: %s.", &loaded.SOMFilename[0]);
 	SRSWWorldInfo												worldInfo;
-	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 3)) 
+	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 3))
 		rsw_stream.read_pod(loaded.Water.Height);
 	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 8)) {
 		rsw_stream.read_pod(loaded.Water.Type		);
@@ -52,9 +52,9 @@
 		rsw_stream.read_pod(loaded.Water.Speed		);
 		rsw_stream.read_pod(loaded.Water.Pitch		);
 	}
-	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 9))  
+	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 9))
 		rsw_stream.read_pod(loaded.Water.TexCycling);
-	//else 
+	//else
 	//	throw "todo";
 	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 5))  {
 		rsw_stream.read_pod(loaded.Light.Latitude	);
@@ -62,7 +62,7 @@
 		rsw_stream.read_pod(loaded.Light.Diffuse	);
 		rsw_stream.read_pod(loaded.Light.Ambient	);
 	}
-	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 7)) 
+	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 7))
 		rsw_stream.read_pod(loaded.Light.Intensity	);
 
 	if(header.VersionMajor > 1 || (header.VersionMajor == 1 && header.VersionMinor >= 6)) {
@@ -132,7 +132,7 @@
 		case	3	: // Sound
 			memcpy(&soundInfo, &input[rsw_stream.CursorPosition], sizeof(SSoundInfoRSW) - sizeof(float));
 			rsw_stream.CursorPosition								+= sizeof(SSoundInfoRSW) - sizeof(float);
-			if (header.VersionMajor >= 2) 
+			if (header.VersionMajor >= 2)
 				rsw_stream.read_pod(soundInfo.cycle);
 			loaded.RSWSounds.push_back(soundInfo);
 			info_printf(" ---------------------------------------------------------------------------------- RSW Sound: %u ---------------------------------------------------------------------------------- ", loaded.RSWSounds.size());
@@ -170,12 +170,12 @@
 	return rsw_stream.CursorPosition;
 }
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{ 
+			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
 	loaded, input;
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_const_string	& input)							{ 
+			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_const_string	& input)							{
 	::gpk::array_pod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];

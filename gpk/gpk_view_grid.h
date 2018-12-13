@@ -49,7 +49,7 @@ namespace gpk
 		if(yStart >= yStop || xStart >= xStop)
 			return 0;
 
-		for(int32_t x = xStart; x < xStop; ++x) 	
+		for(int32_t x = xStart; x < xStop; ++x)
 			bitmapTarget[yStart][x]										= value;
 		int32_t															sizeToCopy					= (int32_t)(sizeof(_tColor) * (xStop - (int64_t)xStart));
 		for(int32_t y = yStart + 1; y < yStop; ++y)

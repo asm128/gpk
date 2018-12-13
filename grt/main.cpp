@@ -8,7 +8,7 @@
 #	include <crtdbg.h>
 #	include <process.h>
 #endif
-#include <stdlib.h>		// for EXIT_SUCCESS
+#include <cstdlib>		// for EXIT_SUCCESS
 
 struct SRuntimeState {
 			::gpk::refcount_t									RenderThreadUsers	= 0;
@@ -37,7 +37,7 @@ static	int													threadRenderStart				(::SRuntimeState& runtimeState)					
 }
 
 static	int													grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
-	::gpk::error_t													updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);	
+	::gpk::error_t													updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 	if(1 == updateResult || errored(updateResult)) {
 		info_if(1 == updateResult, "%s", "Application requested termination.");
 		error_if(errored(updateResult), "%s", "update() returned error.");
@@ -47,7 +47,7 @@ static	int													grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRunt
 		gpk_necall(::threadRenderStart(runtimeState), "%s", "Unknown error");
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
-			updateResult												= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);	
+			updateResult												= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 			break_info_if(1 == updateResult, "Application requested termination.");
 			break_error_if(errored(updateResult), "update() returned error.");
 			//error_if(mainModule.Render(applicationInstance), "Why would this ever happen?");
@@ -81,7 +81,7 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 	SRuntimeState													runtimeState					= {};
 	{
 		::gpk::view_const_string										fileName						= "gme";
-		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argc > 1) 
+		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argc > 1)
 			fileName													= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argv[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.argv[1])};
 		char															mainModuleName	[512]			= {};
 		sprintf_s(mainModuleName, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
@@ -93,7 +93,7 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 		mainModule.Application										= applicationInstance;
 		info_printf("%s", "Initializing application instance.");
 		if errored(mainModule.Setup(applicationInstance)) {
-			error_printf("%s", "Setup() Failed!");			
+			error_printf("%s", "Setup() Failed!");
 			gpk_necall(mainModule.Delete(&applicationInstance), "Failed to create main module. %s.");
 			return -1;
 		}
@@ -107,15 +107,15 @@ static	int													grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues
 	return 0;
 }
 
-	
+
 #if defined(GPK_WINDOWS)
 		int WINAPI											WinMain
-	( _In_		HINSTANCE		hInstance			
-	, _In_opt_	HINSTANCE		hPrevInstance		
-	, _In_		LPSTR			lpCmdLine			
-	, _In_		INT				nShowCmd			
+	( _In_		HINSTANCE		hInstance
+	, _In_opt_	HINSTANCE		hPrevInstance
+	, _In_		LPSTR			lpCmdLine
+	, _In_		INT				nShowCmd
 	)
-{	
+{
 	::gpk::STypeRegistry											& typeRegistry						= ::gpk::typeRegistrySingleton();
 	for(uint32_t iType = 0; iType < typeRegistry.Names.size(); ++iType)
 		info_printf("Type at index %u: '%s'.", iType, typeRegistry.Names[iType].begin());

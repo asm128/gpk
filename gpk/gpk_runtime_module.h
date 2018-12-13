@@ -19,7 +19,7 @@ GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void*	 customApplication								
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void*	 customApplication											);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void*	 customApplication, bool requestedExit						);
 
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	struct SRuntimeModule : public SModuleBase {

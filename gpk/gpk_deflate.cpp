@@ -29,19 +29,19 @@
 
 		::gpk::error_t									gpk::arrayInflate								(const ::gpk::view_array<byte_t> & deflated, ::gpk::array_pod<byte_t>& inflated)	{
 	z_stream																	strm											= {};
-	int																			ret												= inflateInit(&strm);	 // allocate inflate state 
+	int																			ret												= inflateInit(&strm);	 // allocate inflate state
 	if (ret != Z_OK)
 		return ret;
 
-	strm.avail_in															= (uint32_t)deflated.size(); 
+	strm.avail_in															= (uint32_t)deflated.size();
 	strm.avail_out															= (uint32_t)inflated.size();
 	strm.next_in															= (Bytef *)deflated.begin();
 	strm.next_out															= (Bytef *)inflated.begin();
 	ret																		= ::inflate(&strm, Z_NO_FLUSH);
-	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered 
+	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered
 	switch (ret) {
 	case Z_NEED_DICT		:
-		ret																			= Z_DATA_ERROR;     // and fall through 
+		ret																			= Z_DATA_ERROR;     // and fall through
 	case Z_VERSION_ERROR	:
 	case Z_STREAM_ERROR		:
 	case Z_DATA_ERROR		:

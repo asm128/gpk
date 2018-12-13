@@ -8,7 +8,7 @@ namespace gpk
 	template<typename _tCell, uint32_t _sizeArray>
 	struct array_static	{
 							_tCell						Storage	[_sizeArray]						;
-	
+
 							operator					view_array<_tCell>							()												{ return {Storage, _sizeArray}; }
 							operator					view_array<const _tCell>					()										const	noexcept	{ return {Storage, _sizeArray}; }
 
@@ -21,7 +21,7 @@ namespace gpk
 			return Storage[index];
 		}
 		//constexpr										array_static								()															= default;
-		//												array_static								(::std::initializer_list<_tCell> init)						{ 
+		//												array_static								(::std::initializer_list<_tCell> init)						{
 		//	throw_if(errored(init.size() > _sizeArray), "Failed to resize array! Why?");
 		//	for(uint32_t i = 0, count = (uint32_t)init.size(); i < count; ++i)
 		//		Storage[i]										= *(init.begin() + i);

@@ -2,7 +2,7 @@
 #ifndef GPK_AUTO_HANDLER_H_0239840239840238321
 #define GPK_AUTO_HANDLER_H_0239840239840238321
 
-namespace gpk 
+namespace gpk
 {
 	 // I have no idea how to call this type so I'm really sorry. Something about raii maybe?
 	template<typename _tHandle, _tHandle _vDefault>

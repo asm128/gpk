@@ -3,7 +3,7 @@
 #ifndef GPK_UDP_SERVER_H_28874928347
 #define GPK_UDP_SERVER_H_28874928347
 
-namespace gpk 
+namespace gpk
 {
 	struct SUDPServer {
 		::gpk::auto_socket_close												Socket;

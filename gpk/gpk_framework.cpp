@@ -1,5 +1,5 @@
 // Tip: Best viewed with zoom level at 81%.
-// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
+// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_framework.h"
 #include "gpk_safe.h"
@@ -80,7 +80,7 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 
 	int32_t																						zDelta										= {};
 	switch(uMsg) {
-	default: break;		
+	default: break;
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
 	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; return 0;
 	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; return 0;
@@ -93,13 +93,13 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	case WM_MBUTTONDOWN		: info_printf("M Down"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
 	case WM_MBUTTONDBLCLK	: info_printf("M DClck"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
 	case WM_MBUTTONUP		: info_printf("M Up"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; return 0;
-	case WM_MOUSEWHEEL		:			   
+	case WM_MOUSEWHEEL		:
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;
 		return 0;
 	case WM_MOUSEMOVE		: {
-		int32_t																						xPos										= GET_X_LPARAM(lParam); 
-		int32_t																						yPos										= GET_Y_LPARAM(lParam); 
+		int32_t																						xPos										= GET_X_LPARAM(lParam);
+		int32_t																						yPos										= GET_Y_LPARAM(lParam);
 		input.MouseCurrent.Position.x															= ::gpk::clamp(xPos, 0, (int32_t)mainDisplay.Size.x);
 		input.MouseCurrent.Position.y															= ::gpk::clamp(yPos, 0, (int32_t)mainDisplay.Size.y);
 		input.MouseCurrent.Deltas.x																= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
@@ -107,16 +107,16 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		return 0;
 	}
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
-		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top}; 
+		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
-	case WM_SIZE			: 
+	case WM_SIZE			:
 		if(lParam) {
 			::gpk::SCoord2<uint32_t>																	newMetrics									= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint32_t>();
 			if(newMetrics != mainDisplay.Size) {
 				mainDisplay.PreviousSize																= mainDisplay.Size;
 				mainDisplay.Size																		= newMetrics;
 				mainDisplay.Resized																		= true;
-				mainDisplay.Repaint																		= true; 
+				mainDisplay.Repaint																		= true;
 				char																						buffer		[256]							= {};
 				//sprintf_s(buffer, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, applicationInstance.Framework.Timer.LastTimeSeconds);
 				sprintf_s(buffer, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
@@ -139,17 +139,17 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 			mainDisplay.NoDraw																		= false;
 		}
 		else {
-			//State.Resized									= true;	? 
+			//State.Resized									= true;	?
 			mainDisplay.MinOrMaxed = mainDisplay.NoDraw												= false;
 		}
 		break;
 	case WM_PAINT			: break;
-	case WM_DESTROY			: 
+	case WM_DESTROY			:
 		::SDisplayInput																				* oldInput									= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
 		safe_delete(oldInput);
-		::PostQuitMessage(0); 
+		::PostQuitMessage(0);
 		return 0;
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -167,14 +167,14 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 }
 #endif
 
-					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{ 
-	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle); 
+					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{
+	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::displayUpdate(mainWindow);
 	return 0;
 }
 
-					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{ 
-	if(0 == displayInput) 
+					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{
+	if(0 == displayInput)
 		displayInput.create();
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;

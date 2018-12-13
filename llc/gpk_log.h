@@ -10,7 +10,7 @@
 
 //#define GPK_NULLIFY_ALL_CONDITIONAL_ERROR_CHECKING
 #if !defined(DEBUG) && !defined(_DEBUG)
-#	if defined(GPK_NULLIFY_ALL_CONDITIONAL_ERROR_CHECKING) 
+#	if defined(GPK_NULLIFY_ALL_CONDITIONAL_ERROR_CHECKING)
 #		define	GPK_NULLIFY_NECALL
 #		define	GPK_NULLIFY_CONDITIONAL_RETERR
 #		define	GPK_NULLIFY_CONDITIONAL_LOG
@@ -38,7 +38,7 @@ namespace gpk
 
 #define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
 
-	template<const size_t _sizePrefix, typename... TArgs>		
+	template<const size_t _sizePrefix, typename... TArgs>
 	void															_gpk_debug_printf								(int severity, const char (&prefix)[_sizePrefix], uint32_t prefixLength, const char* format, const TArgs... args)			{
 		base_debug_print(prefix, prefixLength);
 		char																customDynamicString	[8192]						= {0};
@@ -83,31 +83,31 @@ namespace gpk
 #	define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else
 #	define error_printf(format, ...)								do { __VA_ARGS__; GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
-#endif	
+#endif
 
 #if defined (GPK_WARNING_PRINTF_ENABLED)
 #	define warning_printf(format, ...)								debug_printf(2, "warning"	, format, __VA_ARGS__)
 #else
 #	define warning_printf(format, ...)								do { __VA_ARGS__; } while(0)
-#endif	
+#endif
 
 #if defined (GPK_INFO_PRINTF_ENABLED)
 #	define info_printf(format, ...)									debug_printf(3, "info"		, format, __VA_ARGS__)
 #else
 #	define info_printf(format, ...)									do { __VA_ARGS__; } while(0)
-#endif	
+#endif
 
 #if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #	define success_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #else
 #	define success_printf(format, ...)								do { __VA_ARGS__; } while(0)
-#endif	
+#endif
 
 #if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #	define verbose_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #else
 #	define verbose_printf(format, ...)								do { __VA_ARGS__; } while(0)
-#endif	
+#endif
 
 #if defined (GPK_WINDOWS)
 #	define gpk_throw(...)											throw(__VA_ARGS__)
@@ -317,15 +317,15 @@ namespace gpk
 #define rvi_if													retval_info_if
 
 #define rne_if													retnul_error_if
-#define rnw_if													retnul_warn_if 
+#define rnw_if													retnul_warn_if
 #define rni_if													retnul_info_if
 
 #define ree_if													reterr_error_if
-#define rew_if													reterr_warn_if 
-#define rei_if													reterr_info_if 
+#define rew_if													reterr_warn_if
+#define rei_if													reterr_info_if
 
 #define rwe_if													retwarn_error_if
-#define rww_if													retwarn_warn_if 
-#define rwi_if													retwarn_info_if 
+#define rww_if													retwarn_warn_if
+#define rwi_if													retwarn_info_if
 
 #endif // GPK_LOG_H_8927349654687654365

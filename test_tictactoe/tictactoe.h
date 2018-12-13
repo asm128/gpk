@@ -8,7 +8,7 @@
 #ifndef TICTACTOE_H__9283740923874
 #define TICTACTOE_H__9283740923874
 
-namespace ttt 
+namespace ttt
 {
 #pragma pack( push, 1 )
 	enum CELL_VALUE : uint16_t
@@ -18,14 +18,14 @@ namespace ttt
 		,	CELL_VALUE_MASK		= 3
 		};	// enum
 
-	template<typename _tNumeric> 
+	template<typename _tNumeric>
 	struct Coord2D {
 							_tNumeric									x, y;
 	};
 	typedef					Coord2D<uint32_t>							Coord2Du32;
 
 	// For representing the board cell positions we use this compact structure that works well with grids up to 16x16 cells. For everything else, such as screen coordinates, we use the Coord2D template structure.
-	struct CellCoord {	
+	struct CellCoord {
 							uint8_t										Row								: 4;
 							uint8_t										Column							: 4;
 	};	// struct
@@ -43,10 +43,10 @@ namespace ttt
 		inline constexpr												CellPick						(const CELL_VALUE value, const uint8_t cell, const uint8_t player)											noexcept	: Value(value)				, IndexCell(cell)	, Row(cell % 3)	, Column(cell / 3)	, IndexPlayer(player)	{}
 	};	// struct
 
-	// This structure represents a boolean layout of the board. It's used to determine the cells occupied by a given player. 
+	// This structure represents a boolean layout of the board. It's used to determine the cells occupied by a given player.
 	struct TicTacToeBoard16 {
 		// ----------------------------------------------------  Variables	-------------------------------------------------------------------------
-							uint16_t									Cells							: 9;	
+							uint16_t									Cells							: 9;
 							uint16_t									Used							: 4;	// Keep track of the amount of cells set to true.
 		// ----------------------------------------------------	  Methods	-------------------------------------------------------------------------
 		inline constexpr												TicTacToeBoard16				()																											noexcept	: Cells(0), Used(0)										{}
@@ -58,22 +58,22 @@ namespace ttt
 							bool										EvaluateLines					()																									const	noexcept	{
 			static constexpr	const uint16_t									maskHorizontal					= 0x7;	// bits representing a row		(111)
 			static constexpr	const uint16_t									maskVertical					= 0x49;	// bits representing a column	(001001001)
-			static constexpr	const uint16_t									cellMaskRows	[3]				= {(maskHorizontal	<< (0 * 3)), (maskHorizontal	<< (1 * 3)), (maskHorizontal	<< (2 * 3)),};		
-			static constexpr	const uint16_t									cellMaskColumns	[3]				= {(maskVertical	<< (0 * 1)), (maskVertical		<< (1 * 1)), (maskVertical		<< (2 * 1)),};		
+			static constexpr	const uint16_t									cellMaskRows	[3]				= {(maskHorizontal	<< (0 * 3)), (maskHorizontal	<< (1 * 3)), (maskHorizontal	<< (2 * 3)),};
+			static constexpr	const uint16_t									cellMaskColumns	[3]				= {(maskVertical	<< (0 * 1)), (maskVertical		<< (1 * 1)), (maskVertical		<< (2 * 1)),};
 			for(int32_t rowOrCol = 0; rowOrCol < 3; ++rowOrCol) {
 				if(((cellMaskRows		[rowOrCol]) & Cells) == cellMaskRows	[rowOrCol]) return true;
 				if(((cellMaskColumns	[rowOrCol]) & Cells) == cellMaskColumns	[rowOrCol]) return true;
-			}	// 
+			}	//
 			static constexpr	const uint16_t									diagonalMask1					= 0x111;
 			static constexpr	const uint16_t									diagonalMask2					= 0x54;
 								const bool										diagonal1						= (diagonalMask1 & Cells) == diagonalMask1;
 								const bool										diagonal2						= (diagonalMask2 & Cells) == diagonalMask2;
 
 			return diagonal1 || diagonal2;
-		}																												
+		}																					
 	};	// struct
 
-	// Allows us to define the type of player 
+	// Allows us to define the type of player
 	enum PLAYER_CONTROL : uint8_t
 		{	PLAYER_CONTROL_AI		= 0
 		,	PLAYER_CONTROL_HUMAN	= 1
@@ -113,7 +113,7 @@ namespace ttt
 		}
 	};	// struct
 
-	// 
+	//
 	template <size_t _sizeWidth, size_t _sizeHeight>
 	struct ScreenASCII {
 		// ----------------------------------------------------  Constants	-------------------------------------------------------------------------
@@ -133,7 +133,7 @@ namespace ttt
 							TicTacToeBoard32							Board							= {};
 		// ----------------------------------------------------	  Methods	-------------------------------------------------------------------------
 		inline				uint8_t										TurnChange						()																											noexcept	{ return (++Board.PlayerIndex) %= 2;	}
-		inline				void										Restart							()																											noexcept	{ 
+		inline				void										Restart							()																											noexcept	{
 			const int															playerIndex						= Board.PlayerIndex;
 			Board															= {};
 			Board.PlayerIndex												= playerIndex;
@@ -144,7 +144,7 @@ namespace ttt
 			const uint8_t														playerIndex						= Board.PlayerIndex;
 
 			// --- Handle turn depending on the player type. Currently there is no AI system other than random behavior which from time to time makes it look like it knows what she's doing.
-			switch(Board.GetPlayerControl(playerIndex))	{	
+			switch(Board.GetPlayerControl(playerIndex))	{
 			case PLAYER_CONTROL_HUMAN:	//		If it's the human's turn
 				if(!Board.GetCellValue(cellIndex))
 					result_value													= Board.PlayerIndex ? CELL_VALUE_O : CELL_VALUE_X;
@@ -165,8 +165,8 @@ namespace ttt
 		}
 		// --- Returns true if a full line was found
 		inline				CELL_VALUE									EvaluateBoard					()																									const	noexcept	{
-			const TicTacToeBoard16												boardX							= Board.GetCells(CELL_VALUE_X); 
-			const TicTacToeBoard16												boardO							= Board.GetCells(CELL_VALUE_O); 
+			const TicTacToeBoard16												boardX							= Board.GetCells(CELL_VALUE_X);
+			const TicTacToeBoard16												boardO							= Board.GetCells(CELL_VALUE_O);
 			if(boardX.EvaluateLines()) return CELL_VALUE_X;
 			if(boardO.EvaluateLines()) return CELL_VALUE_O;
 			return CELL_VALUE_EMPTY;
@@ -178,7 +178,7 @@ namespace ttt
 			return result;
 		}
 		// --- Execute loop. This isn't really working but serves as example of what your application should do more or less depending on user input.
-							CELL_VALUE									Run								()																											noexcept	{ 
+							CELL_VALUE									Run								()																											noexcept	{
 			ScreenASCII<SCREEN_WIDTH + 1, SCREEN_HEIGHT>						targetScreenTTT;
 			static	const uint32_t												halfWidth						= targetScreenTTT.Width		>> 1;
 			static	const uint32_t												halfHeight						= targetScreenTTT.Height	>> 1;
@@ -186,14 +186,14 @@ namespace ttt
 			static	const uint32_t												cellIndex						= 0;	// When the player is a human player, cellIndex should contain the index of the cell played.
 			while(CELL_VALUE_EMPTY == Board.Winner) {
 				Tick(cellIndex);
-				DrawBoard({halfWidth - 1, halfHeight - 1}, targetScreenTTT.Cells);	
+				DrawBoard({halfWidth - 1, halfHeight - 1}, targetScreenTTT.Cells);
 				::printf("%s", &targetScreenTTT.Cells[0][0]);
 			}
 			DrawResults(Board.GetWinner(), {halfWidth, halfHeight}, targetScreenTTT.Cells);		//		Congratulate the winner or declare a tie
 			::printf("%s", &targetScreenTTT.Cells[0][0]);
 			return Board.GetWinner();
 		}
-		// --- Display match results text 
+		// --- Display match results text
 		template <size_t _sizeWidth, size_t _sizeHeight>
 		inline				void										DrawResults						(const CELL_VALUE winner, const Coord2Du32& textCenter, char (&screen)[_sizeHeight][_sizeWidth])	const	noexcept	{
 			char																text[25]						= {};
@@ -222,7 +222,7 @@ namespace ttt
 			if((offset.y + 2) < _sizeHeight && (offset.x + 4) < _sizeWidth)		// print number of cells used if the screen is large enough
 				screen[offset.y + 2][offset.x + 4]								= (char)('0' + board.Used);
 			screen[_sizeHeight - 1][_sizeWidth - 1]							= 0;
-		}	
+		}
 	};	// struct
 #pragma pack( pop )
 } // namespace

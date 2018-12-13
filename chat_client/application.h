@@ -14,7 +14,7 @@ struct SGUIConsoleBuffer {
 		if(line.size()) {
 			int32_t																	offset								= Contents.size();
 			Contents.append(line.begin(), line.size());
-			if(Lines.size() >= 256) 
+			if(Lines.size() >= 256)
 				Lines.remove(0);
 			Lines.push_back({&Contents[offset], line.size()});
 			offset																= 0;

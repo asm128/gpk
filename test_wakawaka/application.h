@@ -12,7 +12,7 @@
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 #pragma pack(push, 1)
-	enum MENU_ORIENTATION : int32_t 
+	enum MENU_ORIENTATION : int32_t
 		{	MENU_ORIENTATION_HORIZONTAL	= 1
 		,	MENU_ORIENTATION_VERTICAL	= 2
 		};

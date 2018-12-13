@@ -1,9 +1,9 @@
 #include "gpk_adam7.h"
-					::gpk::error_t											gpk::adam7ScaleIndex				
+					::gpk::error_t											gpk::adam7ScaleIndex
 	( int32_t													iImage
-	, ::gpk::SCoord2<uint32_t>									& offsetMultiplier	
-	, ::gpk::SCoord2<uint32_t>									& offsetBase			
-	) 
+	, ::gpk::SCoord2<uint32_t>									& offsetMultiplier
+	, ::gpk::SCoord2<uint32_t>									& offsetBase
+	)
 {
 	ree_if(iImage >= 7 || iImage < 0, "Invalid Adam7 image: %i.", iImage)
 	switch(iImage) {
@@ -46,7 +46,7 @@
 		};
 	imageSizes	[6]																= // Adam 7
 		{ imageSize.x
-		, imageSize.y		/ 2 
+		, imageSize.y		/ 2
 		};
 	return 0;
 }

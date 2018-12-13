@@ -7,7 +7,7 @@ void							gpk::STimer::Reset											()				noexcept				{
 	QueryPerformanceFrequency( ( ::LARGE_INTEGER* )&CountsPerSecond );
 	SecondsPerCount					= (1.0 / (CountsPerSecond));
 	MicrosecondsPerCount			= (1.0 / (CountsPerSecond / 1000000.0));
-	QueryPerformanceCounter( ( ::LARGE_INTEGER* )&PrevTimeStamp );		
+	QueryPerformanceCounter( ( ::LARGE_INTEGER* )&PrevTimeStamp );
 	LastTimeSeconds					= 0;
 	LastTimeMicroseconds			= 0;
 }

@@ -9,7 +9,7 @@
 	#include <sys/socket.h>
     #include <netinet/in.h>
     #include <unistd.h>
-  
+
 	typedef int SOCKET;
 #	ifndef INVALID_SOCKET
 #		define INVALID_SOCKET -1
@@ -21,10 +21,10 @@
 
 namespace gpk
 {
-	struct auto_socket_close : public ::gpk::auto_handler<SOCKET, INVALID_SOCKET>					{ 
-		using			TWrapper						::auto_handler; 
-		inline											~auto_socket_close					()	noexcept	{ close(); } 
-		inline			void							close								()	noexcept	{ safe_closesocket(Handle); } 
+	struct auto_socket_close : public ::gpk::auto_handler<SOCKET, INVALID_SOCKET>					{
+		using			TWrapper						::auto_handler;
+		inline											~auto_socket_close					()	noexcept	{ close(); }
+		inline			void							close								()	noexcept	{ safe_closesocket(Handle); }
 	};
 
 					::gpk::error_t					tcpipAddressToSockaddr				(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr);

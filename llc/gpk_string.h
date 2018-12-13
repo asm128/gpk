@@ -32,7 +32,7 @@
 		return result;
 	}
 
-	template<size_t _bufferSize> 
+	template<size_t _bufferSize>
 	static inline							int				_snprintf_s					(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
 		va_list args;
 		va_start(args, format);
@@ -57,7 +57,7 @@
 		return result;
 	}
 
-	template<size_t _bufferSize> 
+	template<size_t _bufferSize>
 	static inline							int				sprintf_s					(char (&buffer)[_bufferSize], const char* format, ...)								{
 		va_list args;
 		va_start(args, format);

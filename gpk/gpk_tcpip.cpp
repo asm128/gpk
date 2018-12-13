@@ -12,8 +12,8 @@
 
 ::gpk::error_t								gpk::tcpipInitialize						()																										{
 #if defined(GPK_WINDOWS)
-	::WSADATA										w											= {};	
-	ree_if(::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		
+	::WSADATA										w											= {};
+	ree_if(::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());
 #endif
 	info_printf("%s", "Network subsystem initialized.");
 	return 0;
@@ -75,7 +75,7 @@
 ::gpk::error_t								gpk::tcpipAddress							(const char_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)				{
 	char_t											portString			[8]							= {};
 	::sprintf_s(portString, "%u", portRequested);
-	
+
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
 	::addrinfo										hints											= {};
 	hints.ai_family								= AF_INET;
@@ -148,7 +148,7 @@
 		case 0				: verbose_printf("%s", "Unspecified"							);	break;
 		case SOCK_STREAM	: verbose_printf("%s", "SOCK_STREAM (stream)"					);	break;
 		case SOCK_DGRAM		: verbose_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
-		case SOCK_RAW		: verbose_printf("%s", "SOCK_RAW (raw)"						);	break;
+		case SOCK_RAW		: verbose_printf("%s", "SOCK_RAW (raw)"							);	break;
 		case SOCK_RDM		: verbose_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
 		case SOCK_SEQPACKET	: verbose_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
 		default:

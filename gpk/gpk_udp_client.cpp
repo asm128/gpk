@@ -33,7 +33,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	commandToSend.Packed										= 1;
 	sa_length													= sizeof(struct sockaddr_in);
 	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
-	client.LastPing												= 
+	client.LastPing												=
 	client.FirstPing											= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
@@ -59,7 +59,7 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 		::gpk::SIPv4													temp										= {};
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 		if(*(uint32_t*)temp.IP == *(uint32_t*)client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
-			if(temp.Port == client.Address.Port) 
+			if(temp.Port == client.Address.Port)
 				::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer);
 		}
 		received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
@@ -68,9 +68,9 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 }
 
 static	void												threadClientConnect							(void* pClient)						{ clientConnectAttempt(*(::gpk::SUDPClient*)pClient); }
-static	void												threadUpdateClient							(void* pClient)						{ 
+static	void												threadUpdateClient							(void* pClient)						{
 	::gpk::SUDPClient												& client									= *(::gpk::SUDPClient*)pClient;
-	::clientQueueReceive(client); 
+	::clientQueueReceive(client);
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 }
 
@@ -86,7 +86,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	// Data to send */
 	{
 		::gpk::mutex_guard												lock										(client.Queue.MutexSend);
-		sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time 
+		sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.close();
 	}
 	client.KeyPing												= 0;

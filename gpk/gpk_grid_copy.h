@@ -9,7 +9,7 @@ namespace gpk
 	template<typename _tCell, typename _tCoord>
 						::gpk::error_t							grid_copy_ex					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc)	{
 		for(int32_t y = 0; y < size_.y; ++y) {
-#if defined(GPK_DEBUG_GRID_COPY_EX) && (defined(DEBUG) || defined(_DEBUG)) 
+#if defined(GPK_DEBUG_GRID_COPY_EX) && (defined(DEBUG) || defined(_DEBUG))
 			for(int32_t x = 0; x < size_.x; ++x)
 				dst[y + offsetDst.y][x + offsetDst.x]						= src[y + offsetSrc.y][x + offsetSrc.x];
 #else
@@ -252,26 +252,26 @@ namespace gpk
 
 	template<typename _tCell>
 						::gpk::error_t							grid_mirror_x					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src)																														{
-		const ::gpk::SCoord2<int32_t>									metrics							= 
+		const ::gpk::SCoord2<int32_t>									metrics							=
 			{ (int32_t)::gpk::min(dst.metrics().x, src.metrics().x)
 			, (int32_t)::gpk::min(dst.metrics().y, src.metrics().y)
 			};
 		uint32_t														srcMaxX							= src.metrics().x - 1;
-		for(uint32_t y = 0; y < metrics.y; ++y) 
-		for(uint32_t x = 0; x < metrics.x; ++x) 
+		for(uint32_t y = 0; y < metrics.y; ++y)
+		for(uint32_t x = 0; x < metrics.x; ++x)
 			dst[y][x]													= src[y][srcMaxX - x];
 		return metrics.y * metrics.x;
 	}
 
 	template<typename _tCell>
 						::gpk::error_t							grid_mirror_y					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src)		{
-		const ::gpk::SCoord2<int32_t>									metrics							= 
+		const ::gpk::SCoord2<int32_t>									metrics							=
 			{ (int32_t)::gpk::min(dst.metrics().x, src.metrics().x)
 			, (int32_t)::gpk::min(dst.metrics().y, src.metrics().y)
 			};
 		uint32_t														srcMaxY							= src.metrics().y - 1;
 		if(metrics.x > 0)
-			for(uint32_t y = 0; y < (uint32_t)metrics.y; ++y) 
+			for(uint32_t y = 0; y < (uint32_t)metrics.y; ++y)
 				memcpy(&dst[y][0], &src[srcMaxY - y][0], sizeof(_tCell) * metrics.x);
 		return metrics.y * metrics.x;
 	}

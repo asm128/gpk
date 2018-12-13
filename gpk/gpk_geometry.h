@@ -5,7 +5,7 @@
 #ifndef GPK_GEOMETRY_H
 #define GPK_GEOMETRY_H
 
-namespace gpk 
+namespace gpk
 {
 	template <typename _tUnit>
 	struct SModelGeometry {
@@ -51,8 +51,8 @@ namespace gpk
 				::gpk::error_t										generateCubeNormalsTriangle				(::gpk::array_pod<::gpk::SCoord3	<float>>& out_Normals	);
 				::gpk::error_t										generateCubeNormalsVertex				(::gpk::array_pod<::gpk::STriangle3D<float>>& out_Normals	);
 				::gpk::error_t										generateCubeUV							(::gpk::array_pod<::gpk::STriangle2D<float>>& out_UV		);
-				::gpk::error_t										generateCubeGeometry					
-					( ::gpk::array_pod<::gpk::STriangle3D	<float>> & out_Positions	
+				::gpk::error_t										generateCubeGeometry
+					( ::gpk::array_pod<::gpk::STriangle3D	<float>> & out_Positions
 					, ::gpk::array_pod<::gpk::SCoord3		<float>> & out_Normals
 					, ::gpk::array_pod<::gpk::STriangle3D	<float>> & out_NormalsVertex
 					, ::gpk::array_pod<::gpk::STriangle2D	<float>> & out_UV
@@ -70,9 +70,9 @@ namespace gpk
 				::gpk::error_t										generateGridNormalsTriangle				(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::SCoord3		<float>>& out_Normals	);
 				::gpk::error_t										generateGridNormalsVertex				(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::STriangle3D	<float>>& out_Normals	);
 				::gpk::error_t										generateGridUV							(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::STriangle2D	<float>>& out_UV		);
-				::gpk::error_t										generateGridGeometry					
+				::gpk::error_t										generateGridGeometry
 					( const ::gpk::SCoord2<uint32_t>					& gridMetrics
-					, ::gpk::array_pod<::gpk::STriangle3D	<float>>	& out_Positions	
+					, ::gpk::array_pod<::gpk::STriangle3D	<float>>	& out_Positions
 					, ::gpk::array_pod<::gpk::SCoord3		<float>>	& out_Normals
 					, ::gpk::array_pod<::gpk::STriangle3D	<float>>	& out_NormalsVertex
 					, ::gpk::array_pod<::gpk::STriangle2D	<float>>	& out_UV

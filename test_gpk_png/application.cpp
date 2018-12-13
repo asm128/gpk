@@ -9,7 +9,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
-			::gpk::error_t											setup						(::gme::SApplication & app)						{ 
+			::gpk::error_t											setup						(::gme::SApplication & app)						{
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
 	framework.Input.create();
@@ -32,13 +32,13 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	app.PNGImages.resize(::gpk::size(filenames));
 	::gpk::SPNGData															pngDataCacheForFasterLoad;
-	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile) 
+	for(uint32_t iFile = 0; iFile < app.PNGImages.size(); ++iFile)
 		error_if(errored(::gpk::pngFileLoad(pngDataCacheForFasterLoad, filenames[iFile], app.PNGImages[iFile])), "Failed to load file: %s.", filenames[iFile].begin());
 
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{ 
+			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{
 	//::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
@@ -58,7 +58,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4ULL));
 		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 	}
- 
+
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
@@ -71,16 +71,16 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t											draw					(::gme::SApplication & app)							{ 
+			::gpk::error_t											draw					(::gme::SApplication & app)							{
 	//::gpk::STimer															timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
 	target->resize(app.Framework.MainDisplay.Size, {}, 0xFFFFFFFFU);
-	for(uint32_t y = 0; y < target->Color.View.metrics().y; ++y) 
+	for(uint32_t y = 0; y < target->Color.View.metrics().y; ++y)
 	for(uint32_t x = 0; x < target->Color.View.metrics().x; ++x) {
 		target->Color.View[y][x]											= rand();
 		target->Color.View[y][x].a											= 255;
@@ -112,5 +112,5 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	//timer.Frame();
 	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
-	return 0; 
+	return 0;
 }

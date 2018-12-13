@@ -22,14 +22,14 @@
 	gpk_necall(binary.resize(salted.size() / 2), "%s", "Out of memory?");
 	const byte_t												* pSalted														= salted.begin();
 	byte_t														* pBinary														= binary.begin();
-	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary) 
+	for(uint32_t iBinary = 0; iBinary < binary.size(); ++iBinary)
 		pBinary[iBinary]										= pSalted[iBinary * 2];
 	return 0;
 }
 
-static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)																{	
+static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)																{
 	char														converted [0x20]												= {};
-	sprintf_s(converted, "%*.2X", 2, i);		 
+	sprintf_s(converted, "%*.2X", 2, i);
 	hexed[0]												= converted[0];
 	hexed[1]												= converted[1];
 	return 0;
@@ -40,7 +40,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	temp[0]													= s[0];
 	temp[1]													= s[1];
 	try {
-		int32_t														hex																= std::stoi(temp, nullptr, 16);
+		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
 		byte													= (char)hex;
 	}
 	catch (...) {
@@ -50,14 +50,14 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0;
 }
 
-			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & in_binary, ::gpk::array_pod<char_t	> & out_hexed	)	{ 
+			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & in_binary, ::gpk::array_pod<char_t	> & out_hexed	)	{
 	uint32_t													offset															= out_hexed.size();
 	gpk_necall(out_hexed.resize(offset + in_binary.size() * 2), "%s", "Out of memory?");
 	byte_t														* pHexed														= out_hexed.begin();
 	const ubyte_t												* pBinary														= in_binary.begin();
 	for(uint32_t iByte = 0; iByte < in_binary.size(); ++iByte)
-		hexFromByte(pBinary[iByte], &pHexed[offset + iByte * 2]); 
-	return 0; 
+		hexFromByte(pBinary[iByte], &pHexed[offset + iByte * 2]);
+	return 0;
 }
 
 			::gpk::error_t								gpk::hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<ubyte_t	> & out_binary)	{
@@ -67,8 +67,8 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	const byte_t												* pHexed														= in_hexed.begin();
 	ubyte_t														* pBinary														= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
-		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]); 
-	return 0; 
+		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
+	return 0;
 }
 
 			::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_array<const char_t> & base64Symbols, ::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<uint8_t> out_base64) {
@@ -103,7 +103,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	for(uint32_t iInputByte = 0, inputByteCount = inputBytes.size(); iInputByte < inputByteCount; iInputByte += 3) { // process each byte triplet and turn it into 4 bytes padded with 2 bit
 		const bool													use1															= iInputByte < (inputByteCount - 1);
 		const bool													use2															= iInputByte < (inputByteCount - 2);
-		uint8_t														inputTriplet	[3]												= 
+		uint8_t														inputTriplet	[3]												=
 			{ inputBytes[iInputByte]
 			, use1 ? inputBytes[iInputByte + 1] : (uint8_t)0U
 			, use2 ? inputBytes[iInputByte + 2] : (uint8_t)0U
@@ -154,7 +154,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	// --- Generate symbol value remap table.
 	uint8_t														base64SymbolRemap	[128]										= {};
 	base64SymbolRemap[(uint32_t)base64PadSymbol]			= 0;
-	for(uint32_t iSymbol = 0; iSymbol < 64; ++iSymbol)			
+	for(uint32_t iSymbol = 0; iSymbol < 64; ++iSymbol)
 		base64SymbolRemap[(uint32_t)base64Symbols[iSymbol]]		= (uint8_t)iSymbol;
 
 	// --- Decode input symbols
@@ -162,7 +162,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	uint32_t													iOutputByte														= outputBytes.size();
 	gpk_necall(outputBytes.resize(outputBytes.size() + packsNeeded * 3), "Out of memory? outputBinary.size() : %u. packsNeeded : %u.", iOutputByte, packsNeeded); // Append result
 	for(uint32_t iInput64 = 0, symbolCount = lengthInput; iInput64 < symbolCount; iInput64 += 4) {
-		uint8_t														inputQuad	[4]													= 
+		uint8_t														inputQuad	[4]													=
 			{ base64SymbolRemap[((uint8_t)in_base64[iInput64 + 0]) % ::gpk::size(base64SymbolRemap)]
 			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 1]) % ::gpk::size(base64SymbolRemap)]
 			, base64SymbolRemap[((uint8_t)in_base64[iInput64 + 2]) % ::gpk::size(base64SymbolRemap)]
@@ -177,14 +177,14 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 }
 
 ::gpk::error_t											gpk::ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)						{
-	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
+	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	char														saltValue		[4]												= {};
-	if (salt) 
+	if (salt)
 		for (int32_t i = 0; i < 4; i++) {
 			int32_t														t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
 			saltValue[i]											= t % 256;
 		}
-	int32_t    keyFinal[4]   = 
+	int32_t    keyFinal[4]   =
 	{ 11 + (key % 233)
 	,  7 + (key % 239)
 	,  5 + (key % 241)
@@ -194,33 +194,33 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
 	int32_t														* sn															= cache.begin();
 	if(salt) {
-		for(int32_t i = 0; i < 2; ++i)			
+		for(int32_t i = 0; i < 2; ++i)
 			sn[i]													= saltValue[i];
-		for(int32_t i = 0; i < n - 4; ++i)				
+		for(int32_t i = 0; i < n - 4; ++i)
 			sn[2 + i]												= input[i];
-		for(int32_t i = 0; i < 2; ++i)				
+		for(int32_t i = 0; i < 2; ++i)
 			sn[2 + n + i]											= saltValue[2 + i];
-	}			
+	}
 	else
-		for(int32_t i = 0; i < n; ++i)			
+		for(int32_t i = 0; i < n; ++i)
 			sn[i]													= input[i];
-	int32_t i;	
+	int32_t i;
 	for(i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((keyFinal[0] * sn[i - 1]) % 256);
 	for(i = n - 2	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 1] ^  (keyFinal[1] * sn[i + 1]) % 256 ;
 	for(i = 2		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 2] ^  (keyFinal[2] * sn[i - 1]) % 256 ;
 	for(i = n - 3	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 2] ^  (keyFinal[3] * sn[i + 1]) % 256 ;
-		
+
 	uint32_t													outputOffset													= output.size();
 	gpk_necall(output.resize(outputOffset + n), "%s", "Out of memory?");
 	byte_t														* outputFast													= output.begin();
-	for( i = 0; i < n; ++i)	
+	for( i = 0; i < n; ++i)
 		outputFast[outputOffset + i]							= (char)sn[i];
-	return 0;	
+	return 0;
 }
 
 ::gpk::error_t											gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
-	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions. 
-	int32_t    keyFinal[4]   = 
+	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
+	int32_t    keyFinal[4]   =
 	{ 11 + (key % 233)
 	,  7 + (key % 239)
 	,  5 + (key % 241)
@@ -236,15 +236,14 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	for(i = n - 1	; i >= 2	; --i)	sn[i]			= sn[i] ^ sn[i - 2] ^ (keyFinal[2] * sn[i - 1]) % 256;
 	for(i = 0		; i  < n - 1; ++i)	sn[i]			= sn[i] ^ sn[i + 1] ^ (keyFinal[1] * sn[i + 1]) % 256;
 	for(i = n - 1	; i >= 1	; --i)	sn[i]			= sn[i] ^ sn[i - 1] ^ (keyFinal[0] * sn[i - 1]) % 256;
-	
+
 	uint32_t													outputOffset													= output.size();
 	const uint32_t												finalStringSize													= salt ? n - 4 : n;
 	const ::gpk::view_array<const int32_t>						finalValues														= {salt ? &sn[2] : sn, finalStringSize};
 	gpk_necall(output.resize(outputOffset + finalStringSize), "%s", "Out of memory?");
 	byte_t														* outputFast													= output.begin();
 	const int32_t												* finalValuesFast												= finalValues.begin();
-	for( i = 0; i < (int32_t)finalStringSize; ++i)	
+	for( i = 0; i < (int32_t)finalStringSize; ++i)
 		outputFast[outputOffset + i]							= (char)finalValuesFast[i];
 	return 0;
 }
-

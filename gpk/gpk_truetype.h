@@ -69,10 +69,10 @@ struct STTCmapFormat6Table {
 
 // Glyph data
 struct STTGlyfTable {
-	int16_t					NumberOfContours;			// If the number of contours is positive or zero, it is a single glyph; If the number of contours is -1, the glyph is compound 
-	int16_t					XMin;						// Minimum x for coordinate data 
-	int16_t					YMin;						// Minimum y for coordinate data 
-	int16_t					XMax;						// Maximum x for coordinate data 
+	int16_t					NumberOfContours;			// If the number of contours is positive or zero, it is a single glyph; If the number of contours is -1, the glyph is compound
+	int16_t					XMin;						// Minimum x for coordinate data
+	int16_t					YMin;						// Minimum y for coordinate data
+	int16_t					XMax;						// Maximum x for coordinate data
 	int16_t					YMax;						// Maximum y for coordinate data
 };
 
@@ -82,7 +82,7 @@ struct STTHeadTable {
 	uint32_t				FontRevision;				// set by font manufacturer
 	uint32_t				CheckSumAdjust;				// To compute: set it to 0, calculate the checksum for the 'head' table and put it in the table directory, sum the entire font as uint32, then store B1B0AFBA - sum. The checksum for the 'head' table will not be wrong. That is OK.
 	uint32_t				MagicNumber;				// set to 0x5F0F3CF5
-	uint16_t				Flags;			
+	uint16_t				Flags;
 	uint16_t				UnitsPerEM;					// range from 64 to 16384
 	int32_t					Created[2];					// international date
 	int32_t					Modified[2];				// international date

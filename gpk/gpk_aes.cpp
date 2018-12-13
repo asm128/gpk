@@ -1,28 +1,28 @@
 // Tiny AES in C (from https://github.com/kokke/tiny-AES-c). A small and portable implementation of the AES ECB, CTR and CBC encryption algorithms written in C.
 // The API is very simple and looks like this (I am using C99 <stdint.h>-style annotated types):
-// 
+//
 // /* Initialize context calling one of: */
 // void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key);
 // void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv);
-// 
+//
 // /* ... or reset IV at random point: */
 // void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);
-// 
+//
 // /* Then start encrypting and decrypting with the functions below: */
 // void AES_ECB_encrypt(struct AES_ctx* ctx, uint8_t* buf);
 // void AES_ECB_decrypt(struct AES_ctx* ctx, uint8_t* buf);
-// 
+//
 // void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
 // void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
-// 
+//
 // /* Same function for encrypting as for decrypting in CTR mode */
 // void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
 // Note:
-// 
+//
 // No padding is provided so for CBC and ECB all buffers should be multiples of 16 bytes. For padding PKCS7 is recommendable.
 // ECB mode is considered unsafe for most uses and is not implemented in streaming mode. If you need this mode, call the function for every block of 16 bytes you need encrypted. See wikipedia's article on ECB for more details.
 // You can choose to use any or all of the modes-of-operations, by defining the symbols CBC, CTR or ECB. See the header file for clarification.
-// 
+//
 // C++ users should #include aes.hpp instead of aes.h
 //
 // - There is no built-in error checking or protection from out-of-bounds memory access errors as a result of malicious input.
@@ -30,70 +30,72 @@
 // - It is one of the smallest implementations in C I've seen yet, but do contact me if you know of something smaller (or have improvements to the code here).
 //
 // I've successfully used the code on 64bit x86, 32bit ARM and 8 bit AVR platforms.
-// 
+//
 // GCC size output when only CTR mode is compiled for ARM:
-// 
+//
 // $ arm-none-eabi-gcc -Os -DCBC=0 -DECB=0 -DCTR=1 -c aes.c
 // $ size aes.o
 //    text    data     bss     dec     hex filename
 //    1203       0       0    1203     4b3 aes.o
 // .. and when compiling for the THUMB instruction set, we end up just below 1K in code size.
-// 
+//
 // $ arm-none-eabi-gcc -Os -mthumb -DCBC=0 -DECB=0 -DCTR=1 -c aes.c
 // $ size aes.o
 //    text    data     bss     dec     hex filename
 //     955       0       0     955     3bb aes.o
 // I am using the Free Software Foundation, ARM GCC compiler:
-// 
+//
 // $ arm-none-eabi-gcc --version
 // arm-none-eabi-gcc (4.8.4-1+11-1) 4.8.4 20141219 (release)
-// Copyright (C) 2013 Free Software Foundation, Inc. This is free software; see the source for copying conditions. 
+// Copyright (C) 2013 Free Software Foundation, Inc. This is free software; see the source for copying conditions.
 // There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // This implementation is verified against the data in:
 // - National Institute of Standards and Technology Special Publication 800-38A 2001 ED Appendix F: Example Vectors for Modes of Operation of the AES.
 // - The other appendices in the document are valuable for implementation details on e.g. padding, generation of IVs and nonces in CTR-mode etc.
-// 
+//
 // A heartfelt thank-you to all the nice people out there who have contributed to this project.
-// 
+//
 // All material in this repository is in the public domain.
-// 
+//
 // This is an implementation of the AES algorithm, specifically ECB, CTR and CBC mode. Block size can be chosen in aes.h - available choices are AES128, AES192, AES256.
 // The implementation is verified against the test vectors in:
 //   National Institute of Standards and Technology Special Publication 800-38A 2001 ED
-// 
+//
 // ECB-AES128
 // ----------
-// 
+//
 //   plain-text:
 //     6bc1bee22e409f96e93d7e117393172a
 //     ae2d8a571e03ac9c9eb76fac45af8e51
 //     30c81c46a35ce411e5fbc1191a0a52ef
 //     f69f2445df4f9b17ad2b417be66c3710
-// 
+//
 //   key:
 //     2b7e151628aed2a6abf7158809cf4f3c
-// 
+//
 //   resulting cipher
-//     3ad77bb40d7a3660a89ecaf32466ef97 
-//     f5d3d58503b9699de785895a96fdbaaf 
-//     43b1cd7f598ece23881b00e3ed030688 
-//     7b0c785e27e8ad3f8223207104725dd4 
-// 
-// 
+//     3ad77bb40d7a3660a89ecaf32466ef97
+//     f5d3d58503b9699de785895a96fdbaaf
+//     43b1cd7f598ece23881b00e3ed030688
+//     7b0c785e27e8ad3f8223207104725dd4
+//
+//
 // NOTE:   String length must be evenly divisible by 16byte (str_len % 16 == 0)
 //         You should pad the end of the string with zeros if this is not the case. For AES192/256 the key size is proportionally larger.
 #include "gpk_aes.h"
+#include "gpk_noise.h"
+#include "gpk_chrono.h"
 #include <random>
-#include <ctime>
+//#include <ctime>
 
 // Defines: The number of columns comprising a state in AES. This is a constant in AES. Value=4
 static constexpr	const uint32_t				AES_Nb									= 4;
 
-// Private variables:                                                       
+// Private variables:
 typedef				uint8_t						state_t[4][4];	// array holding the intermediate results during decryption.
 
 // The lookup-tables are marked const so they can be placed in read-only storage instead of RAM
-// The numbers below can be computed dynamically trading ROM for RAM - 
+// The numbers below can be computed dynamically trading ROM for RAM -
 // This can be useful in (embedded) bootloader applications, where ROM is often limited.
 static constexpr	const uint8_t				sbox	[256]							= {
   //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
@@ -137,12 +139,12 @@ static constexpr	const uint8_t				Rcon	[11]							= {0x8d, 0x01, 0x02, 0x04, 0x0
 
 // Jordan Goulder points out in PR #12 (https://github.com/kokke/tiny-AES-C/pull/12), that you can remove most of the elements in the Rcon array, because they are unused.
 // From Wikipedia's article on the Rijndael key schedule @ https://en.wikipedia.org/wiki/Rijndael_key_schedule#Rcon
-// "Only the first some of these constants are actually used – up to rcon[10] for AES-128 (as 11 round keys are needed), 
+// "Only the first some of these constants are actually used – up to rcon[10] for AES-128 (as 11 round keys are needed),
 //  up to rcon[8] for AES-192, up to rcon[7] for AES-256. rcon[0] is not used in AES algorithm."
 static inline		uint8_t						getSBoxValue							(uint8_t num)														{ return  sbox[num]; }
 static inline		uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[num]; }
 
-// This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states. 
+// This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
 static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, ::gpk::AES_LEVEL level)		{
 	uint32_t											Nk = 0, Nr = 0;
 	switch(level) {
@@ -153,7 +155,7 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 
 	// The first round key is the key itself.
 	for (uint32_t base = 0; base < Nk; ++base) {
-		for(int idx = 0; idx < 4; ++idx) 
+		for(int idx = 0; idx < 4; ++idx)
 			RoundKey[(base * 4) + idx]							= Key[(base * 4) + idx];
 	}
 
@@ -161,7 +163,7 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 	uint8_t												tempa[4]; // Used for the column/row operations
 	for (uint32_t i = Nk; i < AES_Nb * (Nr + 1); ++i) {
 		uint32_t											k										= (i - 1) * 4;
-		for(int idx = 0; idx < 4; ++idx) 
+		for(int idx = 0; idx < 4; ++idx)
 			tempa[idx]										= RoundKey[k + idx];
 
 		if (i % Nk == 0) {
@@ -184,9 +186,9 @@ static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, :
 				for(int idx = 0; idx < 4; ++idx)	// Function Subword()
 					tempa[idx]										= getSBoxValue(tempa[idx]);
 			}
-		uint32_t											j										= i * 4; 
+		uint32_t											j										= i * 4;
 		k												= (i - Nk) * 4;
-		for(int idx = 0; idx < 4; ++idx) 
+		for(int idx = 0; idx < 4; ++idx)
 			RoundKey[j + idx]									= RoundKey[k + idx] ^ tempa[idx];
 	}
 }
@@ -212,14 +214,14 @@ static void										SubBytes								(state_t* state)																			{
 // The ShiftRows() function shifts the rows in the state to the left. Each row is shifted with different offset. Offset = Row number. So the first row is not shifted.
 static void										ShiftRows								(state_t* state)																			{
 	uint8_t												temp;
-	// Rotate first row 1 columns to left  
+	// Rotate first row 1 columns to left
 	temp											= (*state)[0][1];
 	(*state)[0][1]									= (*state)[1][1];
 	(*state)[1][1]									= (*state)[2][1];
 	(*state)[2][1]									= (*state)[3][1];
 	(*state)[3][1]									= temp;
 
-	// Rotate second row 2 columns to left  
+	// Rotate second row 2 columns to left
 	temp											= (*state)[0][2];
 	(*state)[0][2]									= (*state)[2][2];
 	(*state)[2][2]									= temp;
@@ -240,7 +242,7 @@ static uint8_t									xtime									(uint8_t x)														{ return ((x<<1) ^
 
 // MixColumns function mixes the columns of the state matrix
 static void										MixColumns								(state_t* state)												{
-	for (uint8_t i = 0; i < 4; ++i) {  
+	for (uint8_t i = 0; i < 4; ++i) {
 		const uint8_t										t										= (*state)[i][0];
 		const uint8_t										Tmp										= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
 		uint8_t												Tm;
@@ -255,17 +257,17 @@ static void										MixColumns								(state_t* state)												{
 // jcallan@github points out that declaring Multiply as a function reduces code size considerably with the Keil ARM compiler.
 // See this link for more information: https://github.com/kokke/tiny-AES-C/pull/3
 static uint8_t									Multiply								(uint8_t x, uint8_t y)											{
-	return	
-		( ((y		& 1) * x) 
-		^ ((y >> 1	& 1) * xtime(x)) 
-		^ ((y >> 2	& 1) * xtime(xtime(x))) 
+	return
+		( ((y		& 1) * x)
+		^ ((y >> 1	& 1) * xtime(x))
+		^ ((y >> 2	& 1) * xtime(xtime(x)))
 		^ ((y >> 3	& 1) * xtime(xtime(xtime(x))))
 		);
 }
 
 // MixColumns function mixes the columns of the state matrix. The method used to multiply may be difficult to understand for the inexperienced. Please use the references to gain more information.
 static void										InvMixColumns							(state_t* state)												{
-	for (int i = 0; i < 4; ++i) { 
+	for (int i = 0; i < 4; ++i) {
 		uint8_t											a										= (*state)[i][0];
 		uint8_t											b										= (*state)[i][1];
 		uint8_t											c										= (*state)[i][2];
@@ -287,14 +289,14 @@ static void										InvSubBytes								(state_t* state)												{
 static void										InvShiftRows							(state_t* state)												{
 	uint8_t												temp;
 
-	// Rotate first row 1 columns to right  
+	// Rotate first row 1 columns to right
 	temp											= (*state)[3][1];
 	(*state)[3][1]									= (*state)[2][1];
 	(*state)[2][1]									= (*state)[1][1];
 	(*state)[1][1]									= (*state)[0][1];
 	(*state)[0][1]									= temp;
 
-	// Rotate second row 2 columns to right 
+	// Rotate second row 2 columns to right
 	temp											= (*state)[0][2];
 	(*state)[0][2]									= (*state)[2][2];
 	(*state)[2][2]									= temp;
@@ -384,7 +386,7 @@ void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf
 	}
 }
 
-// Symmetrical operation: same function for encrypting as for decrypting. Note any IV/nonce should never be reused with the same key 
+// Symmetrical operation: same function for encrypting as for decrypting. Note any IV/nonce should never be reused with the same key
 void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)	{
 	uint8_t												buffer	[::gpk::AES_SIZEBLOCK];
 	int													bi									= ::gpk::AES_SIZEBLOCK;
@@ -392,13 +394,13 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 		if (bi == ::gpk::AES_SIZEBLOCK) {// we need to regen xor compliment in buffer */
 			memcpy(buffer, ctx->Iv, ::gpk::AES_SIZEBLOCK);
 			Cipher((state_t*)buffer, ctx->RoundKey.begin(), ctx->Level);
-			for(bi = (::gpk::AES_SIZEBLOCK - 1); bi >= 0; --bi) {	// Increment Iv and handle overflow 
+			for(bi = (::gpk::AES_SIZEBLOCK - 1); bi >= 0; --bi) {	// Increment Iv and handle overflow
 				if (ctx->Iv[bi] == 255) {	/* inc will owerflow */
 					ctx->Iv[bi]										= 0;
 					continue;
-				} 
+				}
 				ctx->Iv[bi]										+= 1;
-				break;   
+				break;
 			}
 			bi												= 0;
 		}
@@ -416,12 +418,11 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
 		outputEncrypted[dataLength + iPad]					= paddingRequired;
 	memcpy(outputEncrypted.begin(), messageToEncrypt, dataLength);
-	srand((unsigned int)time(0));
 
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
-	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal) 
-		iv[iVal]											= (uint8_t)(rand() * fraction);
+	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
+		iv[iVal]											= (uint8_t)(::gpk::noise1DBase(::gpk::timeCurrentInUs()) * fraction);
 	::gpk::SAESContext										aes;
 	::gpk::aesInitCtxIV(&aes, encryptionKey.begin(), level, iv);
 	::gpk::aesCBCEncryptBuffer(&aes, (uint8_t*)outputEncrypted.begin(), outputEncrypted.size());

@@ -7,8 +7,8 @@ namespace gpk
 {
 	template<typename _tCell>
 						::gpk::error_t							grid_scale_fast					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const float xFactor, const float yFactor)		{
-		for(uint32_t y = 0; y < dst.metrics().y; ++y) 
-		for(uint32_t x = 0; x < dst.metrics().x; ++x) 
+		for(uint32_t y = 0; y < dst.metrics().y; ++y)
+		for(uint32_t x = 0; x < dst.metrics().x; ++x)
 			dst[y][x]													= src[(uint32_t)(y * yFactor)][(uint32_t)(x * xFactor)];
 		return 0;
 	}
@@ -22,8 +22,8 @@ namespace gpk
 
 	template<typename _tCell>
 						::gpk::error_t							grid_scale					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const float xFactor, const float yFactor)			{
-		for(uint32_t y = 0; y < dst.metrics().y; ++y) 
-		for(uint32_t x = 0; x < dst.metrics().x; ++x) { 
+		for(uint32_t y = 0; y < dst.metrics().y; ++y)
+		for(uint32_t x = 0; x < dst.metrics().x; ++x) {
 			const uint32_t													xSrc						= (uint32_t)(x * yFactor);
 			const uint32_t													ySrc						= (uint32_t)(y * xFactor);
 			if( ::gpk::in_range(ySrc, 0, src.metrics().y)
@@ -35,7 +35,7 @@ namespace gpk
 	}
 
 	template<typename _tCell>
-						::gpk::error_t							grid_scale_alpha			(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) { 
+						::gpk::error_t							grid_scale_alpha			(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) {
 		const ::gpk::SCoord2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
 			::gpk::SCoord2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
@@ -49,7 +49,7 @@ namespace gpk
 		return 0;
 	}
 	template<typename _tCell>
-						::gpk::error_t							grid_scale					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) { 
+						::gpk::error_t							grid_scale					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) {
 		const ::gpk::SCoord2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
 			::gpk::SCoord2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};

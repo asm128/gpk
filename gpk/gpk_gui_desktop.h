@@ -16,8 +16,8 @@ namespace gpk
 		inline constexpr	_tElement&											operator[]									(uint32_t index)								{ return Elements[index]; }
 
 		inline constexpr	uint32_t											size										()							const	noexcept	{ return Elements.size(); }
-							::gpk::error_t										push_back									(const _tElement& toPush)						{ 
-			const int32_t																elemIndex									= Elements.push_back(toPush); 
+							::gpk::error_t										push_back									(const _tElement& toPush)						{
+			const int32_t																elemIndex									= Elements.push_back(toPush);
 			ree_if(errored(elemIndex), "%s", "Failed to add element to container! Out of memory?");
 			static constexpr	const uint32_t											boolContainerElementSize					= sizeof(uint32_t) * ::gpk::PLATFORM_BYTE_BIT_COUNT;
 			gpk_necall(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1), "%s", "Out of memory?");
@@ -27,9 +27,9 @@ namespace gpk
 		}
 	};
 
-#define GPK_DESKTOP_RECYCLABLE(elementType_token)	::gpk::SRecyclableElementContainer<::gpk::S##elementType_token>		elementType_token##s	
+#define GPK_DESKTOP_RECYCLABLE(elementType_token)	::gpk::SRecyclableElementContainer<::gpk::S##elementType_token>		elementType_token##s
 
-	struct SDesktopItems { 
+	struct SDesktopItems {
 				GPK_DESKTOP_RECYCLABLE(Viewport);
 				GPK_DESKTOP_RECYCLABLE(PaletteGrid);
 				GPK_DESKTOP_RECYCLABLE(ControlList);
@@ -39,7 +39,7 @@ namespace gpk
 				int32_t															IdControl									= -1;
 				::gpk::SDesktopItems											Items										= {};
 				::gpk::array_obj<::gpk::array_pod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
-	};			
+	};
 
 			::gpk::error_t													desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);
 			::gpk::error_t													desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);

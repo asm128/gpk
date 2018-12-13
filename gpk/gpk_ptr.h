@@ -4,7 +4,7 @@
 #ifndef GPK_PTR_H_0297349827348923
 #define GPK_PTR_H_0297349827348923
 
-namespace gpk 
+namespace gpk
 {
 	template<typename _tInstance>
 	struct gpk_ref {
@@ -13,7 +13,7 @@ namespace gpk
 					_tInstance									* Instance;
 					refcount_t									References;
 	};
-	
+
 	template<typename _tNCO>
 						::gpk::gpk_ref<_tNCO> *				ref_acquire							(::gpk::gpk_ref<_tNCO>* gpk_reference)									noexcept	{
 		if(gpk_reference)
@@ -108,7 +108,7 @@ namespace gpk
 		template<typename _tNCOOther>
 		inline				_tNCO*								as									(::gpk::ptr_nco<_tNCOOther>& other)							noexcept	{ other = (::gpk::gpk_ref<_tNCOOther>*)::gpk::ref_acquire(Reference); return 0;									}
 	};
-	
+
 	template<typename _tOBJ>
 	class ptr_obj : public ::gpk::ptr_nco<_tOBJ> {
 	public:

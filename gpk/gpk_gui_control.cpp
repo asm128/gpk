@@ -2,18 +2,18 @@
 #include "gpk_label.h"
 
 
-			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ 
-	menu																	= {}; 
-	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!"); 
-	gui.Controls.Controls		[menu.IdControl].Border						= 
+			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
+	menu																	= {};
+	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
+	gui.Controls.Controls		[menu.IdControl].Border						=
 	gui.Controls.Controls		[menu.IdControl].Margin						= {};
 	gui.Controls.Text			[menu.IdControl].Text						= " ";
 	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText			= {false, false};
 	//gui.Controls.Modes			[menu.IdControl].Design						= true;
-	return 0; 
+	return 0;
 }
 
-			::gpk::error_t												gpk::controlListArrange					(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{ 
+			::gpk::error_t												gpk::controlListArrange					(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls[iItem];
 		::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[idControl];
@@ -23,14 +23,14 @@
 		control.Area.Size.y														= gui.FontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: 
+		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
 			control.Area.Size.x														= int16_t(gui.FontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
-			if(menu.IdControls.size() > iPrevItem) 
+			if(menu.IdControls.size() > iPrevItem)
 				control.Area.Offset.x													= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: 
-			controlConstraints.AttachSizeToControl.x								= menu.IdControl; 
-			if(menu.IdControls.size() > iPrevItem) 
+		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
+			controlConstraints.AttachSizeToControl.x								= menu.IdControl;
+			if(menu.IdControls.size() > iPrevItem)
 				control.Area.Offset.y													= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().y;
 			break;
 		}
@@ -42,25 +42,25 @@
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text		[idControl];
-		switch(menu.Orientation) {	
+		switch(menu.Orientation) {
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	: 
-			controlMenu.Area.Size.x													+= gui.Controls.Controls[idControl].Area.Size.x; 
-			controlMenu.Area.Size.y													= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Controls[idControl].Area.Size.y); 
+		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
+			controlMenu.Area.Size.x													+= gui.Controls.Controls[idControl].Area.Size.x;
+			controlMenu.Area.Size.y													= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Controls[idControl].Area.Size.y);
 			break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		: 
-			controlMenu.Area.Size.y													+= gui.Controls.Controls[idControl].Area.Size.y; 
-			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x)); 
-			break; 
+		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
+			controlMenu.Area.Size.y													+= gui.Controls.Controls[idControl].Area.Size.y;
+			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x));
+			break;
 		}
 	}
-	if(::gpk::CONTROL_LIST_DIRECTION_VERTICAL == menu.Orientation) 
-		controlMenu.Area.Size.x													+= 16; 
+	if(::gpk::CONTROL_LIST_DIRECTION_VERTICAL == menu.Orientation)
+		controlMenu.Area.Size.x													+= 16;
 	return 0;
 }
 
 			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text, int64_t eventCode)				{
-	if(menu.IdControl == -1) 
+	if(menu.IdControl == -1)
 		gpk_necall(::gpk::controlListInitialize(gui, menu), "%s", "");
 
 	const int32_t																idControl								= ::gpk::controlCreate(gui);
@@ -82,7 +82,7 @@
 	uint32_t																	widthTarget								= 800;
 	const ::gpk::SCoord2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
 
-	//if(-1 == viewport.IdControl) 
+	//if(-1 == viewport.IdControl)
 	{
 		viewport.IdControl														= ::gpk::controlCreate(gui);
 		//::gpk::SControlMode															& controlMode							= gui.Controls.Modes		[viewport.IdControl];
@@ -183,17 +183,17 @@
 
 	const ::gpk::SCoord2<double>											targetSize								= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.Cast<double>(); //{256.0, 256.0};
 	::gpk::SCoord2<double>													controlSize								= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
-	
-	for(uint32_t y = 0; y < gridMetrics.y; ++y)																				  
+
+	for(uint32_t y = 0; y < gridMetrics.y; ++y)
 	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
 		const int32_t															linearIndex								= y * gridMetrics.x + x;
 		uint32_t																iFoundColor								= 0;
 		int32_t																	themeIndex								= -1;
 		const ::gpk::SColorBGRA													& gridCellColor							= colors[y][x];
-		for(; iFoundColor < gui.Palette.size(); ++iFoundColor) 
+		for(; iFoundColor < gui.Palette.size(); ++iFoundColor)
 			if(gui.Palette[iFoundColor] == gridCellColor) {
 				themeIndex															= iFoundColor;
-				break; 
+				break;
 			}
 		if(iFoundColor >= gui.Palette.size()) {
 			int32_t																	indexColor								= gui.Palette.push_back(gridCellColor);
@@ -214,8 +214,8 @@
 			colorComboHover		[::gpk::GUI_CONTROL_COLOR_CLIENT		]		= colorComboDisabled[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 			colorComboPressed	[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]		= indexColor;
 			colorComboPressed	[::gpk::GUI_CONTROL_COLOR_CLIENT		]		= colorComboDisabled[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
-			//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState) 
-			//	for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea) 
+			//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
+			//	for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
 			//		theme.ColorCombos[iState][iArea]									= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
 		}
 		const uint32_t															paletteElemIndex						= linearIndex;

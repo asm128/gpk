@@ -8,7 +8,7 @@
 namespace wak
 {
 
-	enum MAP_TILE 
+	enum MAP_TILE
 		{	MAP_VOID
 		,	MAP_UP_LEFT
 		,	MAP_DOWN_LEFT
@@ -42,9 +42,9 @@ namespace wak
 		,	MAP_T_LEFT_UP
 		,	MAP_T_LEFT_DOWN
 		,	TEXTURE_COUNT
-		};	
-	
-	enum														DIRECTION 
+		};
+
+	enum														DIRECTION
 		{ LEFT
 		, UP
 		, RIGHT
@@ -134,5 +134,5 @@ namespace wak
 	void																					updatePlayer													(SGame& gameObject, float fLastFrameTime);
 	void																					updateEnemies													(SGame& gameObject, float fLastFrameTime);
 	void																					update															(SGame& gameObject, float fLastFrameTime);
-} 
+}
 

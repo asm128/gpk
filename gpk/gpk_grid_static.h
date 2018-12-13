@@ -34,7 +34,7 @@ namespace gpk
 			if(0 != inout_bytesWritten)
 				*inout_bytesWritten												+= sizeof(_tCell) * size();	// Just return the size required to store this.
 
-			if(0 == input) 
+			if(0 == input)
 				return 0;
 
 			TGridView															newStorage								= {(_tCell*)input, Width, Depth};

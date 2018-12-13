@@ -5,17 +5,17 @@
 #ifndef GPK_JSON_H_92749028348923
 #define GPK_JSON_H_92749028348923
 
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	enum JSON_TYPE : int32_t
 		{	JSON_TYPE_UNKNOWN		= 0
-		,	JSON_TYPE_INT	
-		,	JSON_TYPE_FLOAT	
-		,	JSON_TYPE_STRING	
-		,	JSON_TYPE_OBJECT	
-		,	JSON_TYPE_ARRAY	
-		,	JSON_TYPE_COUNT		
+		,	JSON_TYPE_INT
+		,	JSON_TYPE_FLOAT
+		,	JSON_TYPE_STRING
+		,	JSON_TYPE_OBJECT
+		,	JSON_TYPE_ARRAY
+		,	JSON_TYPE_COUNT
 		,	JSON_TYPE_INVALID		= -1
 		};
 

@@ -12,7 +12,7 @@ namespace gpk
 #pragma pack(push, 1)
 	struct SRSMFace {
 					int16_t													Vertices[3]			;	// Vertex indices?
-					int16_t													UVs		[3]			;	// UVs indices? 
+					int16_t													UVs		[3]			;	// UVs indices?
 					int16_t													IndexTextureIndex	;	// texture index index
 					int16_t													todo1				;	//
 					int32_t													TwoSided			;	//
@@ -76,7 +76,7 @@ namespace gpk
 					::gpk::array_pod<::gpk::SCoord3<float>>					Normals			;
 					::gpk::array_pod<::gpk::SCoord3<float>>					Vertices		;
 					::gpk::array_pod<::gpk::SCoord2<float>>					UVs				;
-					::gpk::array_pod<::gpk::STriangleWeights<uint32_t>>		VertexIndices	; 
+					::gpk::array_pod<::gpk::STriangleWeights<uint32_t>>		VertexIndices	;
 					int32_t													TextureIndex	;
 					int32_t													RSMNodeIndex	;
 					//::gpk::array_pod<int32_t>								SkinIndices		; // one per triangle (VertexIndices.size() / 3)

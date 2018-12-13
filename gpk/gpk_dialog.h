@@ -1,4 +1,4 @@
-	#include "gpk_ptr.h"
+#include "gpk_ptr.h"
 #include "gpk_gui.h"
 
 #ifndef GPK_DIALOG_H_67383889976
@@ -96,13 +96,13 @@ namespace gpk
 				}
 			}
 			if(LastSize != GUI.LastSize) {
-				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) 
+				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 					Controls[iControl]->Resize(GUI.LastSize);
 				LastSize											= GUI.LastSize;
 			}
 			if(0 != Input)
 				gpk_necall(::gpk::guiProcessInput(GUI, *Input), "%s", "Unknown reason.");
-			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) 
+			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update();
 			return 0;

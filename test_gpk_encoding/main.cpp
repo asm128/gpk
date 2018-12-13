@@ -29,34 +29,34 @@ static	int											primalityTest						(uint64_t number)						{
 }
 
 int													main						()			{
-	const ::gpk::view_const_string							testStrings	[]				= 
+	const ::gpk::view_const_string							testStrings	[]				=
 		{ "0Some string to test 0"
 		//,
-		, "1Some string to test 01" 
-		, "2Some string to test 002" 
-		, "3Some string to test 0003" 
-		, "4Some string to test 00004" 
-		, "5Some string to test 000005" 
-		, "6Some string to test 0000007"	
-		, "7Some string to test 00000008"	
-		, "8Some string to test 000000009"	
-		, "9Some string to test 000000000A"	
-		, "ASome string to test 0000000000B"	
-		, "BSome string to test 00000000000C"	
-		, "CSome string to test 000000000000D"	
-		, "DSome string to test 0000000000000E"	
-		, "ESome string to test 00000000000000F"	
+		, "1Some string to test 01"
+		, "2Some string to test 002"
+		, "3Some string to test 0003"
+		, "4Some string to test 00004"
+		, "5Some string to test 000005"
+		, "6Some string to test 0000007"
+		, "7Some string to test 00000008"
+		, "8Some string to test 000000009"
+		, "9Some string to test 000000000A"
+		, "ASome string to test 0000000000B"
+		, "BSome string to test 00000000000C"
+		, "CSome string to test 000000000000D"
+		, "DSome string to test 0000000000000E"
+		, "ESome string to test 00000000000000F"
 		};
 	const uint32_t											rounds						= 10;
 	::gpk::array_pod<int32_t>								encodingCache;
 	//{
 	//	::gpk::STimer											timer;
 	//	double													timeTotal					= 0;
-	//	::gpk::array_pod<byte_t>								encoded		;	
+	//	::gpk::array_pod<byte_t>								encoded		;
 	//	::gpk::array_pod<byte_t>								decoded		;
-	//	::gpk::array_pod<byte_t>								encoded64	;	
+	//	::gpk::array_pod<byte_t>								encoded64	;
 	//	::gpk::array_pod<ubyte_t>								decoded64	;
-	//	for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+	//	for(uint32_t iRound=0; iRound < rounds; ++iRound)
 	//		for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 	//			encoded.clear();
 	//			decoded.clear();
@@ -77,9 +77,9 @@ int													main						()			{
 	{
 		::gpk::STimer											timer;
 		double													timeTotal					= 0;
-		::gpk::array_pod<byte_t>								encoded						;	
+		::gpk::array_pod<byte_t>								encoded						;
 		::gpk::array_pod<byte_t>								decoded						;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -94,9 +94,9 @@ int													main						()			{
 	{
 		::gpk::STimer											timer;
 		double													timeTotal					= 0;
-		::gpk::array_pod<byte_t>								encoded						;	
+		::gpk::array_pod<byte_t>								encoded						;
 		::gpk::array_pod<byte_t>								decoded						;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -111,9 +111,9 @@ int													main						()			{
 	{
 		::gpk::STimer											timer;
 		double													timeTotal					= 0;
-		::gpk::array_pod<byte_t>								encoded;	
+		::gpk::array_pod<byte_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -127,10 +127,10 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<byte_t>								encoded;	
+		::gpk::array_pod<byte_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -144,12 +144,12 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
 		encodedList.resize(rounds * ::gpk::size(testStrings));
 		decodedList.resize(rounds * ::gpk::size(testStrings));
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -159,7 +159,7 @@ int													main						()			{
 			}
 		always_printf("------ Base64 encode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 		timeTotal											= 0;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -179,12 +179,12 @@ int													main						()			{
 
 	{
 		double													timeTotal					= 0;
-		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;
 		::gpk::array_obj<::gpk::array_pod<ubyte_t>	>			decodedList;
 		encodedList.resize(rounds * ::gpk::size(testStrings));
 		decodedList.resize(rounds * ::gpk::size(testStrings));
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -194,7 +194,7 @@ int													main						()			{
 			}
 		always_printf("------ Hex encode\nTotal time for %u rounds of %u sizes: %g seconds. Average round time: %g milliseconds. Average encode time: %g milliseconds.", rounds, ::gpk::size(testStrings), timeTotal, timeTotal * 1000 / rounds, timeTotal * 1000 / rounds / ::gpk::size(testStrings));
 		timeTotal											= 0;
-		for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 				::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -216,7 +216,7 @@ int													main						()			{
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
-			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
+			for(uint32_t iRound = 0; iRound < rounds; ++iRound)
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					error_if(errored(::test_encrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					error_if(errored(::test_decrypt_cbc((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
@@ -228,7 +228,7 @@ int													main						()			{
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
-			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
+			for(uint32_t iRound = 0; iRound < rounds; ++iRound)
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					error_if(errored(::test_encrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					error_if(errored(::test_decrypt_ctr((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
@@ -240,7 +240,7 @@ int													main						()			{
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
-			for(uint32_t iRound = 0; iRound < rounds; ++iRound) 
+			for(uint32_t iRound = 0; iRound < rounds; ++iRound)
 				for(uint32_t iTest = 0; iTest < ::gpk::size(testStrings); ++iTest) {
 					error_if(errored(::test_decrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
 					error_if(errored(::test_encrypt_ecb((::gpk::AES_LEVEL)iAESLevel)), "%s", "Algorithm got broken?");
@@ -253,14 +253,14 @@ int													main						()			{
 	}
 
 	for(uint32_t iAESLevel = 0; iAESLevel < 3; ++iAESLevel) {
-		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;	
+		::gpk::array_obj<::gpk::array_pod<byte_t>	>			encodedList;
 		::gpk::array_obj<::gpk::array_pod<byte_t>	>			decodedList;
 		gpk_necall(encodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
 		gpk_necall(decodedList.resize(rounds * ::gpk::size(testStrings)), "%s", "Out of memory?");
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
-			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iRound=0; iRound < rounds; ++iRound)
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 					::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -273,7 +273,7 @@ int													main						()			{
 		{
 			::gpk::STimer											timer;
 			double													timeTotal					= 0;
-			for(uint32_t iRound=0; iRound < rounds; ++iRound) 
+			for(uint32_t iRound=0; iRound < rounds; ++iRound)
 				for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 					int32_t													indexBuffer					= iRound * ::gpk::size(testStrings) + iTest;
 					::gpk::array_pod<byte_t>								& encoded					= encodedList[indexBuffer];
@@ -295,16 +295,16 @@ int													main						()			{
 	::gpk::array_pod<::gpk::SRSAKeyPair>					rsaKeys						= {};	//, temp;
 	uint32_t												rsa_n						= 0;
 	{
-		uint32_t												prime1						= 48593; 
-		//uint32_t												prime1						= 1093; 
-		uint32_t												prime2						= 48611; 
-		//uint32_t												prime2						= 3041; 
-		//uint32_t												prime1						= 19; 
-		//uint32_t												prime2						= 23; 
-		//uint32_t												prime1						= 251; 
-		//uint32_t												prime2						= 241; 
-		//uint32_t												prime1						= 521; 
-		//uint32_t												prime2						= 541; 
+		uint32_t												prime1						= 48593;
+		//uint32_t												prime1						= 1093;
+		uint32_t												prime2						= 48611;
+		//uint32_t												prime2						= 3041;
+		//uint32_t												prime1						= 19;
+		//uint32_t												prime2						= 23;
+		//uint32_t												prime1						= 251;
+		//uint32_t												prime2						= 241;
+		//uint32_t												prime1						= 521;
+		//uint32_t												prime2						= 541;
 		rsa_n												= prime1 * prime2;
 		::gpk::STimer											timer;
 		e_if(errored(::gpk::rsaKeys(prime1, prime2, 2, 0xFFFF, rsaKeys)), "Failed to initialize: %u, %u.", prime1, prime2);
@@ -316,7 +316,7 @@ int													main						()			{
 	const uint32_t											rsaRounds					= (rsaKeys[rsaKeys.size() - 1].Public == rsaKeys[rsaKeys.size() - 1].Private) ? rsaKeys.size() - 1 : rsaKeys.size();
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<uint64_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
 		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) {
@@ -350,10 +350,10 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<uint64_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -368,10 +368,10 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<uint64_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -392,10 +392,10 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<uint64_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -410,10 +410,10 @@ int													main						()			{
 	}
 	{
 		double													timeTotal					= 0;
-		::gpk::array_pod<uint64_t>								encoded;	
+		::gpk::array_pod<uint64_t>								encoded;
 		::gpk::array_pod<byte_t>								decoded;
 		::gpk::STimer											timer;
-		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound) 
+		for(uint32_t iRound=0; iRound < rsaRounds; ++iRound)
 			for(uint32_t iTest=0; iTest < ::gpk::size(testStrings); ++iTest) {
 				encoded.clear();
 				decoded.clear();
@@ -593,17 +593,17 @@ static	::gpk::error_t				test_xcrypt_ctr					(const char* xcrypt, ::gpk::AES_LEV
 																				0x98, 0x06, 0xf6, 0x6b, 0x79, 0x70, 0xfd, 0xff, 0x86, 0x17, 0x18, 0x7b, 0xb9, 0xff, 0xfd, 0xff,
 																				0x5a, 0xe4, 0xdf, 0x3e, 0xdb, 0xd5, 0xd3, 0x5e, 0x5b, 0x4f, 0x09, 0x02, 0x0d, 0xb0, 0x3e, 0xab,
 																				0x1e, 0x03, 0x1d, 0xda, 0x2f, 0xbe, 0x03, 0xd1, 0x79, 0x21, 0x70, 0xa0, 0xf3, 0x00, 0x9c, 0xee };
-    uint8_t									key_192	[24]					= { 0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5, 
+    uint8_t									key_192	[24]					= { 0x8e, 0x73, 0xb0, 0xf7, 0xda, 0x0e, 0x64, 0x52, 0xc8, 0x10, 0xf3, 0x2b, 0x80, 0x90, 0x79, 0xe5,
 																				0x62, 0xf8, 0xea, 0xd2, 0x52, 0x2c, 0x6b, 0x7b };
-    uint8_t									in_192	[64]					= { 0x1a, 0xbc, 0x93, 0x24, 0x17, 0x52, 0x1c, 0xa2, 0x4f, 0x2b, 0x04, 0x59, 0xfe, 0x7e, 0x6e, 0x0b, 
-																				0x09, 0x03, 0x39, 0xec, 0x0a, 0xa6, 0xfa, 0xef, 0xd5, 0xcc, 0xc2, 0xc6, 0xf4, 0xce, 0x8e, 0x94, 
-																				0x1e, 0x36, 0xb2, 0x6b, 0xd1, 0xeb, 0xc6, 0x70, 0xd1, 0xbd, 0x1d, 0x66, 0x56, 0x20, 0xab, 0xf7, 
+    uint8_t									in_192	[64]					= { 0x1a, 0xbc, 0x93, 0x24, 0x17, 0x52, 0x1c, 0xa2, 0x4f, 0x2b, 0x04, 0x59, 0xfe, 0x7e, 0x6e, 0x0b,
+																				0x09, 0x03, 0x39, 0xec, 0x0a, 0xa6, 0xfa, 0xef, 0xd5, 0xcc, 0xc2, 0xc6, 0xf4, 0xce, 0x8e, 0x94,
+																				0x1e, 0x36, 0xb2, 0x6b, 0xd1, 0xeb, 0xc6, 0x70, 0xd1, 0xbd, 0x1d, 0x66, 0x56, 0x20, 0xab, 0xf7,
 																				0x4f, 0x78, 0xa7, 0xf6, 0xd2, 0x98, 0x09, 0x58, 0x5a, 0x97, 0xda, 0xec, 0x58, 0xc6, 0xb0, 0x50 };
     uint8_t									key_256	[32]					= { 0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
 																				0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7, 0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4 };
-    uint8_t									in_256	[64]					= { 0x60, 0x1e, 0xc3, 0x13, 0x77, 0x57, 0x89, 0xa5, 0xb7, 0xa7, 0xf5, 0x04, 0xbb, 0xf3, 0xd2, 0x28, 
-																				0xf4, 0x43, 0xe3, 0xca, 0x4d, 0x62, 0xb5, 0x9a, 0xca, 0x84, 0xe9, 0x90, 0xca, 0xca, 0xf5, 0xc5, 
-																				0x2b, 0x09, 0x30, 0xda, 0xa2, 0x3d, 0xe9, 0x4c, 0xe8, 0x70, 0x17, 0xba, 0x2d, 0x84, 0x98, 0x8d, 
+    uint8_t									in_256	[64]					= { 0x60, 0x1e, 0xc3, 0x13, 0x77, 0x57, 0x89, 0xa5, 0xb7, 0xa7, 0xf5, 0x04, 0xbb, 0xf3, 0xd2, 0x28,
+																				0xf4, 0x43, 0xe3, 0xca, 0x4d, 0x62, 0xb5, 0x9a, 0xca, 0x84, 0xe9, 0x90, 0xca, 0xca, 0xf5, 0xc5,
+																				0x2b, 0x09, 0x30, 0xda, 0xa2, 0x3d, 0xe9, 0x4c, 0xe8, 0x70, 0x17, 0xba, 0x2d, 0x84, 0x98, 0x8d,
 																				0xdf, 0xc9, 0xc5, 0x8d, 0xb6, 0x7a, 0xad, 0xa6, 0x13, 0xc2, 0xdd, 0x08, 0x45, 0x79, 0x41, 0xa6 };
 	uint8_t									* key							= 0;
 	uint8_t									* in							= 0;
@@ -619,7 +619,7 @@ static	::gpk::error_t				test_xcrypt_ctr					(const char* xcrypt, ::gpk::AES_LEV
 																				0x30, 0xc8, 0x1c, 0x46, 0xa3, 0x5c, 0xe4, 0x11, 0xe5, 0xfb, 0xc1, 0x19, 0x1a, 0x0a, 0x52, 0xef,
 																				0xf6, 0x9f, 0x24, 0x45, 0xdf, 0x4f, 0x9b, 0x17, 0xad, 0x2b, 0x41, 0x7b, 0xe6, 0x6c, 0x37, 0x10 };
     ::gpk::SAESContext						ctx;
-    
+
     aesInitCtxIV(&ctx, key, level, iv);
     ::gpk::aesCTRXCryptBuffer(&ctx, in, 64);
 	xcrypt;

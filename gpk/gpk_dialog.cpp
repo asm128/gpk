@@ -6,13 +6,13 @@
 
 																	::gpk::SDialog::SDialog						()				{
 	throw_if(-1 == (Root = ::gpk::controlCreate(GUI)), "%s", "Out of memory?");
-	GUI.Controls.Controls		[Root].Margin							= 
+	GUI.Controls.Controls		[Root].Margin							=
 	GUI.Controls.Controls		[Root].Border							= {};
 	GUI.Controls.Constraints	[Root].AttachSizeToControl				= {Root, Root};
 	GUI.Controls.States			[Root].Design							= true;
 	GUI.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_FLAT;
 	GUI.ThemeDefault													= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
-	
+
 	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= GUI.Palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85,}});
 	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2,}});
 	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= GUI.Palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
@@ -146,18 +146,18 @@
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
 	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
-	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min)); 
+	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
 	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
 	::gpk::SControl															& controlSlider								= controlTable.Controls[slider.IdGUIControl];
 	::gpk::SCoord2<double>													ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
-	if(slider.Vertical) 
-		controlButton.Area.Offset.y											= (int16_t)int32_t((controlSlider.Area.Size.y - 16 - ncSpacing.y) * proportion); 
+	if(slider.Vertical)
+		controlButton.Area.Offset.y											= (int16_t)int32_t((controlSlider.Area.Size.y - 16 - ncSpacing.y) * proportion);
 	else
-		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion); 
+		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion);
 
 	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
-	if(slider.Vertical) 
+	if(slider.Vertical)
 		buttonConstraints.AttachSizeToControl.x								= slider.IdButton;
 	else
 		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
@@ -173,13 +173,13 @@
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
 			const ::gpk::SGUIZoom													& zoom										= dialog.GUI.Zoom;
-			::gpk::SCoord2<double>													scale										= 
+			::gpk::SCoord2<double>													scale										=
 				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 				};
 			const ::gpk::SCoord2<int16_t>											& controlSliderSize							= controlTable.Controls[slider.IdGUIControl].Area.Size;
 
-			::gpk::SCoord2<double>													valueDisplacement							= 
+			::gpk::SCoord2<double>													valueDisplacement							=
 				{ input.MouseCurrent.Deltas.x * scale.x * (valueRange * (1.0 / controlSliderSize.x))
 				, input.MouseCurrent.Deltas.y * scale.y * (valueRange * (1.0 / controlSliderSize.y))
 				};
@@ -193,7 +193,7 @@
 		}
 	}
 	else
-		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	// 
+		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
 			::gpk::SInput															& input										= *dialog.Input;
 			const int64_t															valuePage									= ::gpk::max(1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
 			const ::gpk::SCoord2<int32_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
@@ -209,7 +209,7 @@
 	return 0;
 }
 
-::gpk::error_t														gpk::editBoxCreate							(::gpk::SDialog			& dialog )	{ 
+::gpk::error_t														gpk::editBoxCreate							(::gpk::SDialog			& dialog )	{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogEditBox>									editBox;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
@@ -217,12 +217,12 @@
 	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
 	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;
 	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes, dialog.ColorsCheckBox);
-	return index; 
+	return index;
 }
 
-::gpk::error_t														gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)	{ 
+::gpk::error_t														gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)	{
 	::gpk::SDialog															& dialog									= *control.Dialog;
 	if(dialog.Input->ButtonDown(0)) {
 	}
-	return 0; 
+	return 0;
 }

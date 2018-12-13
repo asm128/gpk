@@ -1,5 +1,5 @@
 // Tip: Best viewed with zoom level at 81%.
-// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
+// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_coord.h"
 #include "gpk_log.h"
@@ -11,7 +11,7 @@ namespace gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
-					::gpk::error_t											line_line_intersect			
+					::gpk::error_t											line_line_intersect
 		( const ::gpk::SLine2D<_tCoord>	& line1
 		, const ::gpk::SLine2D<_tCoord>	& line2
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
@@ -19,13 +19,13 @@ namespace gpk
 	{
 		double																		detL1						= ::gpk::determinant(line1);
 		double																		detL2						= ::gpk::determinant(line2);
-	
+
 		double																		x1mx2						= line1.A.x - line1.B.x;
 		double																		y1my2						= line1.A.y - line1.B.y;
-	
+
 		double																		x3mx4						= line2.A.x - line2.B.x;
 		double																		y3my4						= line2.A.y - line2.B.y;
-	
+
 		double																		xnom						= ::gpk::determinant(detL1, x1mx2, detL2, x3mx4);
 		double																		ynom						= ::gpk::determinant(detL1, y1my2, detL2, y3my4);
 		double																		denom						= ::gpk::determinant(x1mx2, y1my2, x3mx4, y3my4);
@@ -34,9 +34,9 @@ namespace gpk
 			out_intersect_point.y																= NAN;
 			return 0;
 		}
-		out_intersect_point.x																= (_tCoord)(xnom / denom);	
+		out_intersect_point.x																= (_tCoord)(xnom / denom);
 		out_intersect_point.y																= (_tCoord)(ynom / denom);
-		ree_if(!isfinite(out_intersect_point.x) 
+		ree_if(!isfinite(out_intersect_point.x)
 			|| !isfinite(out_intersect_point.y)
 			, "Probably a numerical issue.");
 		return 1; //All OK
@@ -56,7 +56,7 @@ namespace gpk
 	}
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
-					::gpk::error_t											line_segment_intersect			
+					::gpk::error_t											line_segment_intersect
 		( const ::gpk::SLine2D<_tCoord>	& line
 		, const ::gpk::SLine2D<_tCoord>	& segment
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
@@ -68,7 +68,7 @@ namespace gpk
 
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
-					::gpk::error_t											segment_segment_intersect			
+					::gpk::error_t											segment_segment_intersect
 		( const ::gpk::SLine2D<_tCoord>	& segment1
 		, const ::gpk::SLine2D<_tCoord>	& segment2
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
@@ -80,14 +80,14 @@ namespace gpk
 
 
 	template<typename _tCoord>
-						::gpk::error_t										buildAABBSegments		
+						::gpk::error_t										buildAABBSegments
 		( const ::gpk::SCoord2<_tCoord> & center
 		, const _tCoord					halfSizeBox
 		,		::gpk::SLine2D<_tCoord>	& left
 		,		::gpk::SLine2D<_tCoord>	& top
 		,		::gpk::SLine2D<_tCoord>	& right
 		,		::gpk::SLine2D<_tCoord>	& bottom
-		) 
+		)
 	{
 		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
 		left																	= {center + TCoord2{-halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox,-halfSizeBox}};
@@ -98,13 +98,13 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-						::gpk::error_t										buildAABBSegments		
+						::gpk::error_t										buildAABBSegments
 		( const ::gpk::SRectangle2D<_tCoord>	& rect
 		,		::gpk::SLine2D<_tCoord>			& left
 		,		::gpk::SLine2D<_tCoord>			& top
 		,		::gpk::SLine2D<_tCoord>			& right
 		,		::gpk::SLine2D<_tCoord>			& bottom
-		) 
+		)
 	{
 		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
 		left																	= {rect.Offset										, rect.Offset + TCoord2{0			, rect.Size.y}};

@@ -9,7 +9,7 @@
 #ifndef GPK_RUNTIME_H_28903749028374
 #define GPK_RUNTIME_H_28903749028374
 
-namespace gpk 
+namespace gpk
 {
 #if defined(GPK_WINDOWS)
 	struct SWindowsEntryPointArgs {
@@ -44,7 +44,7 @@ namespace gpk
 				char															**envp								;
 	};
 
-	struct SRuntimeValuesDetail {	
+	struct SRuntimeValuesDetail {
 #if defined(GPK_ANDROID)
 				ANativeActivity													* Activity							= nullptr;
 				void															* SavedState						= nullptr;

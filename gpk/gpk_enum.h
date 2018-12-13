@@ -141,7 +141,7 @@ namespace gpk
 					return 0;
 				}
 			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
-			name													= ::gpk::UNRESOLVED_ENUM_LABEL_STR;		
+			name													= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
 							::gpk::label						get_value_label							(const _tValue& value)									const			{
@@ -181,7 +181,7 @@ namespace gpk
 	struct genum_value {
 									_tValue						Value									= ::gpk::enum_definition<_tValue>::INVALID_VALUE;
 									::gpk::label				Name									= INVALID_ENUM_VALUE_STR;
-		// 
+		//
 		inline													genum_value								()																		= default;
 		inline constexpr										genum_value								(const genum_value& other)												= default;
 		inline													genum_value								(const _tValue& value)													: Value((_tValue)value), Name(::gpk::enum_definition<_tValue>::get().get_value_name(value))				{}
@@ -194,7 +194,7 @@ namespace gpk
 	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel			)								{ return ::gpk::enum_definition<_tEnum>::get().get_value			(valueLabel);	}
 } // namespace
 
-// Defines the enumeration type, the invalid value (-1) and the flag operators 
+// Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																																											\
 	enum EnumName : IntType {};																																															\
 	static						const ::gpk::label			EnumName##_STR							= #EnumName;																										\
@@ -216,9 +216,9 @@ namespace gpk
 	static constexpr			const EnumName				ValueName								= (EnumName)(EnumValue);														\
 	static						const EnumName				__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
-#define GDEFINE_FLAG_TYPE							GDEFINE_ENUM_TYPE				
-#define GDEFINE_FLAG_VALUE							GDEFINE_ENUM_VALUE				
-#define GDEFINE_FLAG_VALUE_NOPREFIX					GDEFINE_ENUM_VALUE_NOPREFIX		
+#define GDEFINE_FLAG_TYPE							GDEFINE_ENUM_TYPE
+#define GDEFINE_FLAG_VALUE							GDEFINE_ENUM_VALUE
+#define GDEFINE_FLAG_VALUE_NOPREFIX					GDEFINE_ENUM_VALUE_NOPREFIX
 
 #pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 

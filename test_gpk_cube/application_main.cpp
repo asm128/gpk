@@ -1,4 +1,4 @@
-// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once. 
+// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "application.h"
 
@@ -14,12 +14,12 @@
 static constexpr	const uint32_t										ASCII_SCREEN_WIDTH							= 132	;
 static constexpr	const uint32_t										ASCII_SCREEN_HEIGHT							= 50	;
 
-GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "Title");	
+GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "Title");
 
 					::SApplication										* g_ApplicationInstance						= 0;
 
-static				::gpk::error_t										updateSizeDependentResources				(::SApplication& applicationInstance)											{ 
-	const ::gpk::SCoord2<uint32_t>												newSize										= applicationInstance.Framework.MainDisplay.Size; 
+static				::gpk::error_t										updateSizeDependentResources				(::SApplication& applicationInstance)											{
+	const ::gpk::SCoord2<uint32_t>												newSize										= applicationInstance.Framework.MainDisplay.Size;
 	::gpk::updateSizeDependentTarget(applicationInstance.Framework.MainDisplayOffscreen->Color, newSize);
 	return 0;
 }
@@ -34,7 +34,7 @@ static				::gpk::error_t										updateSizeDependentResources				(::SApplicatio
 }
 
 // Vertex coordinates for cube faces
-static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						= 
+static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second		?? I have no idea if this is correct lol
 
@@ -54,7 +54,7 @@ static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						=
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
 
-					::gpk::error_t										setup										(::SApplication& applicationInstance)											{ 
+					::gpk::error_t										setup										(::SApplication& applicationInstance)											{
 	g_ApplicationInstance													= &applicationInstance;
 	::gpk::SFramework															& framework									= applicationInstance.Framework;
 	::gpk::SDisplay																& mainWindow								= framework.MainDisplay;
@@ -66,7 +66,7 @@ static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						=
 	applicationInstance.TextureFontMonochrome.resize(textureFontMetrics);
 	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x)
-		applicationInstance.TextureFontMonochrome.View[y * textureFontMetrics.x + x]	
+		applicationInstance.TextureFontMonochrome.View[y * textureFontMetrics.x + x]
 		=	0 != applicationInstance.TextureFont.View[y][x].r
 		||	0 != applicationInstance.TextureFont.View[y][x].g
 		||	0 != applicationInstance.TextureFont.View[y][x].b
@@ -84,7 +84,7 @@ static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						=
 	return 0;
 }
 
-					::gpk::error_t										update										(::SApplication& applicationInstance, bool systemRequestedExit)					{ 
+					::gpk::error_t										update										(::SApplication& applicationInstance, bool systemRequestedExit)					{
 	retval_info_if(1, systemRequestedExit, "Exiting because the runtime asked for close. We could also ignore this value and just continue execution if we don't want to exit.");
 	::gpk::error_t																frameworkResult								= ::gpk::updateFramework(applicationInstance.Framework);
 	ree_if(errored(frameworkResult), "Unknown error.");
@@ -100,7 +100,7 @@ static constexpr const ::gpk::STriangle3D<float>						geometryCube	[12]						=
 	return 0;
 }
 
-static constexpr const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						= 
+static constexpr const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						=
 	{ {0.0f, 0.0f, -1.0f}	// Right	- first			?? I have no idea if this is correct lol
 	, {0.0f, 0.0f, -1.0f}	// Right	- second		?? I have no idea if this is correct lol
 
@@ -213,6 +213,6 @@ struct SCamera {
 	::gpk::grid_mirror_y(framework.MainDisplayOffscreen->Color.View, backBuffer->Color.View);
 	//framework.MainDisplayOffscreen = backBuffer;
 	//------------------------------------------------
-	return 0;																																																
+	return 0;																																									
 }
 	

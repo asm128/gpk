@@ -2,21 +2,21 @@
 #include "gpk_png.h"
 #include "zlib.h"
 
-static			unsigned long									g_crc_table	[256]						= {};	// Table of CRCs of all 8-bit messages. 
-static			int32_t											g_crc_table_computed					= 0;	// Flag: has the table been computed? Initially false. 
+static			unsigned long									g_crc_table	[256]						= {};	// Table of CRCs of all 8-bit messages.
+static			int32_t											g_crc_table_computed					= 0;	// Flag: has the table been computed? Initially false.
 /* Make the table for a fast CRC. */
 static			int32_t											make_crc_table							()																									{
     uint32_t															n, k;
     for (n = 0; n < 256; ++n) {
 		uint32_t															c										= n;
-		for (k = 0; k < 8; ++k) 
+		for (k = 0; k < 8; ++k)
 			c																= (c & 1) ? 0xedb88320L ^ (c >> 1) : c >> 1;
 		g_crc_table[n]													= c;
     }
     return g_crc_table_computed										= 1;
 }
-   
-// Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below)).	 
+
+// Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below)).
 				uint32_t										gpk::update_crc							(const ::gpk::view_array<const ubyte_t> & buf, uint32_t crc)										{
     uint32_t															c										= crc;
     if(0 == g_crc_table_computed) {
@@ -24,7 +24,7 @@ static			int32_t											make_crc_table							()																									{
 		always_printf("Initialized PNG CRC table: %i.", initedTable);
 	}
 
-	for (uint32_t n = 0, count = buf.size(); n < count; ++n) 
+	for (uint32_t n = 0, count = buf.size(); n < count; ++n)
 		c																= g_crc_table[(c ^ buf[n]) & 0xff] ^ (c >> 8);
 
 	return c;

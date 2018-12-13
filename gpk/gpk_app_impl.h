@@ -22,7 +22,7 @@
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
 	return 0;																						\
-}	
+}
 #else
 
 #if defined(GPK_WINDOWS)
@@ -31,7 +31,7 @@
 #	define GPK_SYSTEM_OS_DEBUG_INIT_FLAGS() do {} while(0)
 #endif
 
-	
+
 #if defined(GPK_WINDOWS)
 #	define GPK_SYSTEM_OS_ENTRY_POINT()																																																		\
 	static	::gpk::error_t																				rtMain										(::gpk::SRuntimeValues& runtimeValues);													\
@@ -58,8 +58,8 @@
 		runtimeValues.PlatformDetail.EntryPointArgsStd.argv													= __argv;																														\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.envp													= _environ;																														\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
-	}																																																										
-#else 
+	}																																																			
+#else
 #	define GPK_SYSTEM_OS_ENTRY_POINT()																																																		\
 			int																							main										(int argc, char *argv[], char *envp[])												{	\
 		::gpk::SRuntimeValues																					runtimeValues								= {};																			\

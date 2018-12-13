@@ -31,7 +31,7 @@
 		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
 		int32_t																			lenPath							= sprintf_s(sPath, "%s\\%s", pathToList.begin(), fdFile.cFileName);
-		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders) 
+		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders)
 			continue;
 		info_printf("Path: %s.", sPath);
 		gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
@@ -45,7 +45,7 @@
     while ((drnt = readdir(dir)) != NULL) {
         ::std::string																	name								(drnt->d_name);
         if (name != curDir && name != parDir) {
-			if(drnt->d_type == DT_DIR && false == listFolders) 
+			if(drnt->d_type == DT_DIR && false == listFolders)
 				continue;
 			int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
@@ -66,7 +66,7 @@
 	HANDLE																			hFind								= NULL;
 	hFind																		= FindFirstFile(sPath, &fdFile);
 	ree_if(hFind == INVALID_HANDLE_VALUE, "Path not found: [%s].", pathToList.begin());
-	do if(	0 != strcmp(fdFile.cFileName, curDir)	
+	do if(	0 != strcmp(fdFile.cFileName, curDir)
 		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
 		int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), fdFile.cFileName);
@@ -81,7 +81,7 @@
 			info_printf("File: %s.", sPath);
 		}
 	}
-	while(FindNextFile(hFind, &fdFile)); 
+	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
 #elif defined(GPK_ANDROID)
     DIR																				* dir;
@@ -119,7 +119,7 @@
 	if errored(fileInMemory.resize(fileSize)) {
 		error_printf("File too large? : %llu.", (uint64_t)fileSize);
 		result													= -1;
-	} 
+	}
 	else {
 		if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(ubyte_t), fileSize, fp)) {
 			error_printf("fread() failed! file: '%s'.", fileName.begin());
@@ -139,5 +139,5 @@
 		result													= -1;
 	}
 	fclose(fp);
-	return result;		
-}	
+	return result;
+}

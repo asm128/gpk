@@ -29,7 +29,7 @@ int WINAPI											WinMain						(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 	timer.Frame();
 	always_printf("Primes found in %g seconds: %u of %llu (%g%%).", timer.LastTimeSeconds, primes.size(), maxPrime, (primes.size() / (float)maxPrime) * 100);
-	for(uint32_t i = 3000; i < primes.size(); ++i) 
+	for(uint32_t i = 3000; i < primes.size(); ++i)
 		always_printf("Prime found: %llu.", primes[i]);
 	return 0;
 }

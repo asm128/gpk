@@ -6,13 +6,13 @@
 namespace gpk
 {
 					::gpk::error_t											adam7Sizes						(::gpk::view_array<::gpk::SCoord2<uint32_t>> & imageSizes, const ::gpk::SCoord2<uint32_t> & imageSize);
-					::gpk::error_t											adam7ScaleIndex						
+					::gpk::error_t											adam7ScaleIndex
 		( int32_t													iImage
-		, ::gpk::SCoord2<uint32_t>									& offsetMultiplier	
-		, ::gpk::SCoord2<uint32_t>									& offsetBase			
+		, ::gpk::SCoord2<uint32_t>									& offsetMultiplier
+		, ::gpk::SCoord2<uint32_t>									& offsetBase
 		);
 
-	template<typename _tTexel> 
+	template<typename _tTexel>
 	static			::gpk::error_t											adam7Interlace					(::gpk::view_array<::gpk::SImage<_tTexel>> images, ::gpk::view_grid<_tTexel> & out_View)				{
 		for(uint32_t iImage = 0; iImage < images.size(); ++iImage) {
 			::gpk::SCoord2<uint32_t>													offsetMultiplier								= {1, 1};

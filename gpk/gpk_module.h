@@ -8,16 +8,16 @@
 #	define GPK_MODULE_API_EXPORT	__declspec(dllexport)
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
 #elif defined(GPK_LINUX)
-#	define GPK_STDCALL				
+#	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define GPK_MODULE_API_IMPORT
 #elif defined(GPK_ANDROID)
-#	define GPK_STDCALL				
+#	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define GPK_MODULE_API_IMPORT
 #else
 //  do nothing and hope for the best?
-#	define GPK_STDCALL				
+#	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT
 #	define GPK_MODULE_API_IMPORT
 #	error "Unknown dynamic link import/export semantics."
@@ -50,7 +50,7 @@
 //	extern "C"	::gpk::error_t		 GPK_MODULE_API_EXPORT	functionName									(__VA_ARGS__);	\
 //	typedef		::gpk::error_t		(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
 //
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	struct SModuleBase {

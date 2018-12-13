@@ -1,9 +1,9 @@
 #include "gpk_display.h"
 
-		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{ 
+		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
-	int																									counter										= 0; 
+	int																									counter										= 0;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (100 > counter++)) {
 		::TranslateMessage	(&msg);
 		::DispatchMessage	(&msg);
@@ -14,10 +14,10 @@
 	return 0;
 }
 
-		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{ 
+		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
-	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE)) 
+	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == displayUpdateTick(displayInstance))
 			return 1;
 #endif
@@ -33,9 +33,9 @@
 		::HBITMAP																							IntermediateBitmap							= 0;
 
 																											~SOffscreenDetail							()																					{
-			if(BitmapInfo					) ::free			(BitmapInfo					); 
-			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			); 
-			if(IntermediateDeviceContext	) ::DeleteDC		(IntermediateDeviceContext	); 
+			if(BitmapInfo					) ::free			(BitmapInfo					);
+			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
+			if(IntermediateDeviceContext	) ::DeleteDC		(IntermediateDeviceContext	);
 		}
 	}																									offscreenDetail								= {};
 
@@ -55,7 +55,7 @@
 	offscreenDetail.BitmapInfo->bmiHeader.biSizeImage												= bytesToCopy;
 	offscreenDetail.BitmapInfo->bmiHeader.biXPelsPerMeter											= 0x0ec4; // Paint and PSP use these values.
 	offscreenDetail.BitmapInfo->bmiHeader.biYPelsPerMeter											= 0x0ec4; // Paint and PSP use these values.
-	offscreenDetail.BitmapInfo->bmiHeader.biClrUsed													= 0; 
+	offscreenDetail.BitmapInfo->bmiHeader.biClrUsed													= 0;
 	offscreenDetail.BitmapInfo->bmiHeader.biClrImportant											= 0;
 
 	offscreenDetail.IntermediateDeviceContext														= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
@@ -71,7 +71,7 @@
 }
 #endif
 
-		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent)		{ 
+		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent)		{
 #if defined(GPK_WINDOWS)
 	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;
 	retwarn_warn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");

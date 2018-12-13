@@ -5,6 +5,6 @@
 
 namespace gpk
 {
-} // 
+} //
 
 #endif // GPK_SESSION_H_29749287497

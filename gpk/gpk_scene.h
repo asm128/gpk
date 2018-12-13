@@ -52,7 +52,7 @@ namespace gpk
 							::gpk::SCameraVectors									Vectors								;
 	};
 
-	enum SCENE_OBJECT_TYPE 
+	enum SCENE_OBJECT_TYPE
 		{ SCENE_OBJECT_TYPE_BOX
 		, SCENE_OBJECT_TYPE_GRID
 		, SCENE_OBJECT_TYPE_POLYHEDRON
@@ -86,14 +86,14 @@ namespace gpk
 							::gpk::array_pod<::gpk::SMatrix4	<float>>			ObjectOrientations							= {};
 							::gpk::array_pod<::gpk::SMatrix4	<float>>			ObjectOrientationsInverse					= {};
 
-							::gpk::SSceneCamera										Camera										= 
-								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}	
+							::gpk::SSceneCamera										Camera										=
+								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}
 								, ::gpk::SCameraRange
 									{ 0.01
 									, 100.0
 									, .25
 									}
-								, ::gpk::SCameraVectors	
+								, ::gpk::SCameraVectors
 									{ {1, 0, 0}
 									, {0, 1, 0}
 									, {0, 0, 1}
@@ -105,18 +105,18 @@ namespace gpk
 			const uint32_t																newIndex									= scene.ObjectPivots.size();
 		if(errored(::gpk::resize
 			( newIndex + 1
-			, scene.ObjectPivots			
-			, scene.ObjectTransform		
-			, scene.ObjectOrientations		
+			, scene.ObjectPivots
+			, scene.ObjectTransform
+			, scene.ObjectOrientations
 			, scene.ObjectOrientationsInverse
 			)))
 		{
 			::gpk::resize
 				( newIndex + 1
-				, scene.ObjectPivots			
-				, scene.ObjectTransform		
-				, scene.ObjectOrientations		
-				, scene.ObjectOrientationsInverse		
+				, scene.ObjectPivots
+				, scene.ObjectTransform
+				, scene.ObjectOrientations
+				, scene.ObjectOrientationsInverse
 				);
 			return -1;
 		}

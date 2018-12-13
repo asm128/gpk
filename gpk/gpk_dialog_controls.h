@@ -13,7 +13,7 @@ namespace gpk
 	struct SDialogTuner;
 	::gpk::error_t										tunerCreate							(::gpk::SDialog			& dialog);
 	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner	& control);
-	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner	& control, int64_t value); 
+	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner	& control, int64_t value);
 
 	struct SDialogCheckBox;
 	::gpk::error_t										checkBoxCreate						(::gpk::SDialog			& dialog);

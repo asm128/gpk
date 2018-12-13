@@ -31,12 +31,12 @@ namespace gpk
 		inline				view_bit_iterator&							operator=					(bool value)																			{ value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
 							view_bit_iterator&							operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				throw_if(Element >= (End	+ 1), "Out of range: %u.", Element); } return *this; }
 							view_bit_iterator&							operator--					()																						{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; throw_if(Element <  (Begin	- 1), "Out of range: %u.", Element); } return *this; }
-							view_bit_iterator							operator++					(int)																					{ 
+							view_bit_iterator							operator++					(int)																					{
 			view_bit_iterator													result						(*this);	// Make a copy.
 			++(*this);																										// Use the prefix version to do the work.
 			return result;																									// Return the old value.
 		}
-							view_bit_iterator							operator--					(int)																					{ 
+							view_bit_iterator							operator--					(int)																					{
 			view_bit_iterator													result						(*this);	// Make a copy.
 			--(*this);																										// Use the prefix version to do the work.
 			return result;																									// Return the old value.
@@ -70,22 +70,22 @@ namespace gpk
 		}
 
 		// Operators
-							view_bit_proxy<_tElement>					operator[]					(uint32_t index)																		{ 
-			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index); 
-			throw_if(index >= Count, "Invalid index: %u.", index); 
+							view_bit_proxy<_tElement>					operator[]					(uint32_t index)																		{
+			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index);
+			throw_if(index >= Count, "Invalid index: %u.", index);
 			const uint32_t														offsetRow					= index / ELEMENT_BITS;
 			const uint32_t														offsetBit					= index % ELEMENT_BITS;
 			_tElement															& selectedElement			= Data[offsetRow];
 			return {selectedElement, (uint8_t)offsetBit};
 		}
 
-							bool										operator[]					(uint32_t index)													const				{ 
-			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index); 
-			throw_if(index >= Count, "Invalid index: %u.", index); 
+							bool										operator[]					(uint32_t index)													const				{
+			throw_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index);
+			throw_if(index >= Count, "Invalid index: %u.", index);
 			const uint32_t														offsetElement				= index / ELEMENT_BITS;
 			const uint32_t														offsetLocal					= index % ELEMENT_BITS;
 			const _tElement														& selectedElement			= Data[offsetElement];
-			return (selectedElement & (1ULL << offsetLocal)) > 0 ? true : false; 
+			return (selectedElement & (1ULL << offsetLocal)) > 0 ? true : false;
 		}
 
 		// Methods

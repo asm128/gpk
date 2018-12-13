@@ -2,7 +2,7 @@
 #ifndef GPK_PLATFORM_GLOBALS_H_298365465465
 #define GPK_PLATFORM_GLOBALS_H_298365465465
 
-#if (defined(DEBUG) || defined(_DEBUG)) && (!defined(GPK_DISABLE_DEBUG)) && !defined(GPK_DEBUG_ENABLED) 
+#if (defined(DEBUG) || defined(_DEBUG)) && (!defined(GPK_DISABLE_DEBUG)) && !defined(GPK_DEBUG_ENABLED)
 #	define GPK_DEBUG_ENABLED
 #	if !defined(USE_DEBUG_BREAK_ON_ERROR_LOG)
 #		define USE_DEBUG_BREAK_ON_ERROR_LOG
@@ -28,9 +28,9 @@
 #	define UNUSED __attribute__((__unused__))
 #elif defined(GPK_WINDOWS)
 #	ifdef _DEBUG
-#		define UNUSED 
+#		define UNUSED
 #	else
-#		define UNUSED 
+#		define UNUSED
 #	endif
 #else
 #	define UNUSED
@@ -53,7 +53,7 @@
 #if defined(GPK_WINDOWS)
 #	if !defined(NOMINMAX)
 #		define NOMINMAX
-#	endif 
+#	endif
 #	if !defined(WIN32_LEAN_AND_MEAN)
 #		define WIN32_LEAN_AND_MEAN
 #	endif
@@ -62,7 +62,7 @@
 #	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
-namespace gpk 
+namespace gpk
 {
 	// -- Returns 0 on little-endian machines
 	static inline int				test_endianness			()		noexcept	{ static constexpr const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }

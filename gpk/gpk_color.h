@@ -21,7 +21,7 @@ namespace gpk
 			{ ((uint8_t)(((other & 0x000000FF) >> 0)))
 			, ((uint8_t)(((other & 0x0000FF00) >> 8)))
 			, ((uint8_t)(((other & 0x00FF0000) >> 16)))
-			, ((uint8_t)(((other & 0xFF000000) >> 24)))				
+			, ((uint8_t)(((other & 0xFF000000) >> 24)))
 			}
 		{}
 
@@ -39,8 +39,8 @@ namespace gpk
 
 	// Stores BGRA color channels
 	struct SColorBGRA {
-									uint8_t			b = 0, g = 0, r = 0, a = 0xff; 
-									//uint8_t			b, g, r, a; 
+									uint8_t			b = 0, g = 0, r = 0, a = 0xff;
+									//uint8_t			b, g, r, a;
 
 		constexpr									SColorBGRA		()																noexcept	= default;
 		constexpr									SColorBGRA		(const SColorRGBA& other)										noexcept	: b(other.b), g(other.g), r(other.r), a(other.a)																																										{}
@@ -71,7 +71,7 @@ namespace gpk
 
 	// Stores BGR color channels
 	struct SColorBGR {
-									uint8_t							b = 0, g = 0, r = 0; 
+									uint8_t							b = 0, g = 0, r = 0;
 
 		constexpr					SColorBGR						()																noexcept	= default;
 		constexpr					SColorBGR						(const SColorBGR& otherColorInt)								noexcept	= default;
@@ -102,7 +102,7 @@ namespace gpk
 
 	// Stores RGB color channels
 	struct SColorRGB {
-									uint8_t							r = 0, g = 0, b = 0; 
+									uint8_t							r = 0, g = 0, b = 0;
 
 		constexpr					SColorRGB						()																noexcept	= default;
 		constexpr					SColorRGB						(const SColorRGB& otherColorInt)								noexcept	= default;
@@ -132,7 +132,7 @@ namespace gpk
 	};	// struct
 
 	// Stores RGBA floating point color channels
-	struct SColorFloat {	
+	struct SColorFloat {
 									float			r = 0, g = 0, b = 0, a = 0;		// store the color values as floating point ranged in the values (0,1)
 
 		constexpr									SColorFloat		()																noexcept	= default;
@@ -142,7 +142,7 @@ namespace gpk
 		//constexpr									SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))							{}
 		constexpr									SColorFloat		(SColorBGRA Color)												noexcept	: r(Color.r * (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(Color.a * (1/255.0f))																								{}
 		//constexpr									SColorFloat		(SColorBGR Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(1.0f)																												{}
-		constexpr									SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																																{}		
+		constexpr									SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																																{}
 
 									SColorFloat&	operator=		(const SColorFloat& color)													= default;
 		//constexpr					operator		uint32_t		()														const	noexcept	{ return (((uint32_t)(a * 255.0f)) << 24) | (((uint32_t)(r * 255.0f)) << 16) | (((uint32_t)(g * 255.0f)) << 8) | ((uint32_t)(b*255.0f));															}

@@ -4,7 +4,7 @@
 #ifndef GPK_MATRIX_H_298374982374
 #define GPK_MATRIX_H_298374982374
 
-namespace gpk 
+namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tBase>
@@ -19,7 +19,7 @@ namespace gpk
 
 		//inline				const _tBase&		operator[]					(uint32_t index)																const				{ return ()&_11;//throw_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
 		//inline				_tBase&				operator[]					(uint32_t index)																					{ return ()&_11;//throw_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
-		
+
 		inline				TCoord3&			operator[]					(uint32_t index)																					{ return *(TCoord3*)((&_11) + 4 * index); }		//throw_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
@@ -28,8 +28,8 @@ namespace gpk
 		constexpr			_tMat4				operator -					(const _tMat4& other)															const	noexcept	{												return {_11 - other._11	, _12 - other._12	, _13 - other._13	, _14 - other._14	, _21 - other._21	, _22 - other._22	, _23 - other._23	, _24 - other._24	, _31 - other._31	, _32 - other._32	, _33 - other._33	, _34 - other._34	, _41 - other._41	, _42 - other._42	, _43 - other._43	, _44 - other._44	}; }
 		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{												return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
 							_tMat4				operator /					(double scalar)																	const				{ error_if(0 == scalar, "%s", "Division by zero.");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
-		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept	{ 
-			return	
+		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept	{
+			return
 				{ _11*right._11 + _12*right._21 + _13*right._31 + _14*right._41, _11*right._12 + _12*right._22 + _13*right._32 + _14*right._42, _11*right._13 + _12*right._23 + _13*right._33 + _14*right._43, _11*right._14 + _12*right._24 + _13*right._34 + _14*right._44
 				, _21*right._11 + _22*right._21 + _23*right._31 + _24*right._41, _21*right._12 + _22*right._22 + _23*right._32 + _24*right._42, _21*right._13 + _22*right._23 + _23*right._33 + _24*right._43, _21*right._14 + _22*right._24 + _23*right._34 + _24*right._44
 				, _31*right._11 + _32*right._21 + _33*right._31 + _34*right._41, _31*right._12 + _32*right._22 + _33*right._32 + _34*right._42, _31*right._13 + _32*right._23 + _33*right._33 + _34*right._43, _31*right._14 + _32*right._24 + _33*right._34 + _34*right._44
@@ -42,16 +42,16 @@ namespace gpk
 		inline				_tMat4&				operator /=					(double scalar)																						{ return *this = operator/(scalar	); }
 		inline				_tMat4&				operator *=					(const _tMat4& right)																	noexcept	{ return *this = operator*(right	); }
 
-		inline				void				SetTranspose				(const _tMat4& m)																					{ *this = m.GetTranspose(); }	
-		inline				void				SetInverse					(const _tMat4& m)																					{ *this = m.GetInverse();	}	
-		inline				void				Transpose					(const _tMat4& m)																					{ *this = GetTranspose();	}	
+		inline				void				SetTranspose				(const _tMat4& m)																					{ *this = m.GetTranspose(); }
+		inline				void				SetInverse					(const _tMat4& m)																					{ *this = m.GetInverse();	}
+		inline				void				Transpose					(const _tMat4& m)																					{ *this = GetTranspose();	}
 		inline				void				Invert						()																									{ *this = GetInverse();		}
 
 		inline				_tMat4&				LinearInterpolate			(const _tMat4&p, const _tMat4&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
 		constexpr			TCoord3				InverseTranslate			(const TCoord3& vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
 							void				InverseTranslateInPlace		(TCoord3& vec)																	const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
 		constexpr			TCoord3				Transform					(const TCoord3& v)																const				{
-			return 
+			return
 			TCoord3
 				{	(v.x*_11 + v.y*_21 + v.z*_31 + _41)	// x
 				,	(v.x*_12 + v.y*_22 + v.z*_32 + _42)	// y
@@ -61,75 +61,75 @@ namespace gpk
 			;
 		}
 		constexpr			TCoord3				TransformDirection			(const TCoord3& vector)														const	noexcept	{
-			return 
+			return
 				{	vector.x * _11 + vector.y * _21 + vector.z * _31
 				,	vector.x * _12 + vector.y * _22 + vector.z * _32
 				,	vector.x * _13 + vector.y * _23 + vector.z * _33
 				};
 		}
 		constexpr			TCoord3				TransformInverseDirection	(const TCoord3& _v)															const	noexcept	{
-			return	
-				{	_v.x * _11 + _v.y * _12 + _v.z * _13 
+			return
+				{	_v.x * _11 + _v.y * _12 + _v.z * _13
 				,	_v.x * _21 + _v.y * _22 + _v.z * _23
 				,	_v.x * _31 + _v.y * _32 + _v.z * _33
 				};
-		} 
+		}
 		//- Rotate avector using the inverse of the matrix
 		//inline				void				InverseRotateInPlace	(TCoord3& vector)				const			{ fpVec = InverseRotate(vector); }
 		//						TCoord3				InverseRotate			(const TCoord3& fpVec)			const
 		//{
-		//	return 
+		//	return
 		//	{	fpVec.x * _11 + fpVec.y * _21 + fpVec.z * _31
 		//	,	fpVec.x * _12 + fpVec.y * _22 + fpVec.z * _32
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
 							void				Viewport					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =												_14 = 
-			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =												_24 = 
-			_31 =										_32 = (_tBase)0;							_33 = (_tBase)(1.0f / (fFar - fNear));				_34 = 
+			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =												_14 =
+			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =												_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)(1.0f / (fFar - fNear));				_34 =
 			_41 =										_42 = (_tBase)0;							_43 = (_tBase)(-fNear * (1.0f / (fFar - fNear)));	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
 		}
 							void				Identity					()																						noexcept	{
-			*this									= 
+			*this									=
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)0,  (_tBase)1,  (_tBase)0
 				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
-							void				RotationX					(double angle)																			noexcept	{	
+							void				RotationX					(double angle)																			noexcept	{
 			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
-			_11 = (_tBase)1;	_12 =							_13 = 
+			_11 = (_tBase)1;	_12 =							_13 =
 			_31 = (_tBase)0;	_32 = -(_tBase)angleSinCos.Sin;	_33 = (_tBase)angleSinCos.Cos;
 			_21 = (_tBase)0;	_22 =  (_tBase)angleSinCos.Cos;	_23 = (_tBase)angleSinCos.Sin;
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
-							void				RotationY					(double angle)																			noexcept	{	
+							void				RotationY					(double angle)																			noexcept	{
 			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
 			_21 = (_tBase)0;				_22 = (_tBase)1;	_23 =  (_tBase)0;
 			_31 = (_tBase)angleSinCos.Sin;	_32 = (_tBase)0;	_33 =  (_tBase)angleSinCos.Cos;
-			// 
+			//
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
-							void				RotationZ					(double angle)																			noexcept	{	
+							void				RotationZ					(double angle)																			noexcept	{
 			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
-			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 = 
+			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 =
 			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
-			// 
+			//
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
 		inline				void				Scale						(const TCoord3& ypr, bool bEraseContent)												noexcept
-		{ 
+		{
 			if( bEraseContent ) {
-				_11 = (_tBase)ypr.x;	_12 =					_13 =					_14 = 
-				_21 = (_tBase)0;		_22 = (_tBase)ypr.y;	_23 =					_24 = 
-				_31 =					_32 = (_tBase)0;		_33 = (_tBase)ypr.z;	_34 = 
+				_11 = (_tBase)ypr.x;	_12 =					_13 =					_14 =
+				_21 = (_tBase)0;		_22 = (_tBase)ypr.y;	_23 =					_24 =
+				_31 =					_32 = (_tBase)0;		_33 = (_tBase)ypr.z;	_34 =
 				_41 =					_42 =					_43 = (_tBase)0;		_44 = (_tBase)1;
 			}
 			else {
@@ -138,8 +138,8 @@ namespace gpk
 		}
 							void				SetTranslation				(const TCoord3& vTranslation, bool bEraseContent)										noexcept	{
 			if( bEraseContent ) {
-				_11 = (_tBase)1;	_12 =				_13 =				_14 = 
-				_21 = (_tBase)0;	_22 = (_tBase)1;	_23 =				_24 = 
+				_11 = (_tBase)1;	_12 =				_13 =				_14 =
+				_21 = (_tBase)0;	_22 = (_tBase)1;	_23 =				_24 =
 				_31 =				_32 = (_tBase)0;	_33 = (_tBase)1;	_34 = (_tBase)0;
 				/*_41 =				_42 =				_43 */				_44 = (_tBase)1;
 			}
@@ -174,22 +174,22 @@ namespace gpk
 			_11 = vRight.x;	_12 = vUp.x; _13 = vFront.x; _14 = (_tBase)0;
 			_21 = vRight.y;	_22 = vUp.y; _23 = vFront.y; _24 = (_tBase)0;
 			_31 = vRight.z;	_32 = vUp.z; _33 = vFront.z; _34 = (_tBase)0;
-			_41 = (_tBase)-vPosition.Dot(vRight	);	
-			_42 = (_tBase)-vPosition.Dot(vUp	);	
-			_43 = (_tBase)-vPosition.Dot(vFront	);	
+			_41 = (_tBase)-vPosition.Dot(vRight	);
+			_42 = (_tBase)-vPosition.Dot(vUp	);
+			_43 = (_tBase)-vPosition.Dot(vFront	);
 			_44 = (_tBase)1;
 		}
 							void				Billboard					(const TCoord3& vPos, const TCoord3& vDir, const TCoord3& vWorldUp)								{
 			TCoord3										vUp
 				,										vRight
-				; 
+				;
 			double										fAngle						= vWorldUp.Dot(vDir);
 			vUp										= vWorldUp - vDir * fAngle;
 			vUp.Normalize();
 			vRight									= vUp.Cross( vDir );
-			_11 = vRight.x;	_12 = vRight.y;	_13 = vRight.z;	_14=(_tBase)0; 
-			_21 = vUp.x; 	_22 = vUp.y; 	_23 = vUp.z; 	_24=(_tBase)0; 
-			_31 = vDir.x;	_32 = vDir.y;	_33 = vDir.z;	_34=(_tBase)0; 
+			_11 = vRight.x;	_12 = vRight.y;	_13 = vRight.z;	_14=(_tBase)0;
+			_21 = vUp.x; 	_22 = vUp.y; 	_23 = vUp.z; 	_24=(_tBase)0;
+			_31 = vDir.x;	_32 = vDir.y;	_33 = vDir.z;	_34=(_tBase)0;
 			_41 = vPos.x;	_42 = vPos.y;	_43 = vPos.z;	_44=(_tBase)1;
 		} // Billboard
 		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)																		{ return Rotation({x, y, z}); }
@@ -218,7 +218,7 @@ namespace gpk
 			::gpk::SPairSinCos							pairSinCos					= ::gpk::getSinCos(a);
 			TCoord3										vcAxis						= _vcAxis;
 			double										fSum						= 1.0 - pairSinCos.Cos;
-   
+
 			if( vcAxis.LengthSquared() != 1.0 )
 				vcAxis.Normalize();
 
@@ -245,20 +245,20 @@ namespace gpk
 
 			double										wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
-			x2										= qo.x + qo.x; 
-			y2										= qo.y + qo.y; 
+			x2										= qo.x + qo.x;
+			y2										= qo.y + qo.y;
 			z2										= qo.z + qo.z;
 
-			xx										= qo.x * x2;   
-			xy										= qo.x * y2;  
+			xx										= qo.x * x2;
+			xy										= qo.x * y2;
 			xz										= qo.x * z2;
 
-			yy										= qo.y * y2;   
-			yz										= qo.y * z2;   
+			yy										= qo.y * y2;
+			yz										= qo.y * z2;
 			zz										= qo.z * z2;
 
-			wx										= qo.w * x2;   
-			wy										= qo.w * y2;   
+			wx										= qo.w * x2;
+			wy										= qo.w * y2;
 			wz										= qo.w * z2;
 
 			_11										= (_tBase)(1.0 - (yy + zz)	);
@@ -343,38 +343,38 @@ namespace gpk
 			mResult._44								 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
 			mResult._44								-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
 
-			double										fDet							=	mTranspose._11*mResult._11 
-				+																			mTranspose._12*mResult._12 
+			double										fDet							=	mTranspose._11*mResult._11
+				+																			mTranspose._12*mResult._12
 				+																			mTranspose._13*mResult._13
 				+																			mTranspose._14*mResult._14
 				;
 
 			fDet									= 1.0/fDet;
 
-			mResult._11								= (_tBase)(mResult._11 * fDet);  
-			mResult._12								= (_tBase)(mResult._12 * fDet);  
-			mResult._13								= (_tBase)(mResult._13 * fDet);  
+			mResult._11								= (_tBase)(mResult._11 * fDet);
+			mResult._12								= (_tBase)(mResult._12 * fDet);
+			mResult._13								= (_tBase)(mResult._13 * fDet);
 			mResult._14								= (_tBase)(mResult._14 * fDet);
 
-			mResult._21								= (_tBase)(mResult._21 * fDet);  
-			mResult._22								= (_tBase)(mResult._22 * fDet);  
-			mResult._23								= (_tBase)(mResult._23 * fDet);  
+			mResult._21								= (_tBase)(mResult._21 * fDet);
+			mResult._22								= (_tBase)(mResult._22 * fDet);
+			mResult._23								= (_tBase)(mResult._23 * fDet);
 			mResult._24								= (_tBase)(mResult._24 * fDet);
 
-			mResult._31								= (_tBase)(mResult._31 * fDet);  
-			mResult._32								= (_tBase)(mResult._32 * fDet);  
-			mResult._33								= (_tBase)(mResult._33 * fDet);  
+			mResult._31								= (_tBase)(mResult._31 * fDet);
+			mResult._32								= (_tBase)(mResult._32 * fDet);
+			mResult._33								= (_tBase)(mResult._33 * fDet);
 			mResult._34								= (_tBase)(mResult._34 * fDet);
 
-			mResult._41								= (_tBase)(mResult._41 * fDet);  
-			mResult._42								= (_tBase)(mResult._42 * fDet);  
-			mResult._43								= (_tBase)(mResult._43 * fDet);  
+			mResult._41								= (_tBase)(mResult._41 * fDet);
+			mResult._42								= (_tBase)(mResult._42 * fDet);
+			mResult._43								= (_tBase)(mResult._43 * fDet);
 			mResult._44								= (_tBase)(mResult._44 * fDet);
 
 			return mResult;
 		}
 
-							double				GetDeterminant				()																				const				{ 
+							double				GetDeterminant				()																				const				{
 			_tMat4										mTranspose					= GetTranspose()
 				,										mThis						= *this
 				;
@@ -440,8 +440,8 @@ namespace gpk
 			mThis._44								 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
 			mThis._44								-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
 
-			double										fDet						=	mTranspose._11*mThis._11 
-				+																		mTranspose._12*mThis._12 
+			double										fDet						=	mTranspose._11*mThis._11
+				+																		mTranspose._12*mThis._12
 				+																		mTranspose._13*mThis._13
 				+																		mTranspose._14*mThis._14
 				;
