@@ -31,10 +31,8 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed!");	/* Receive time */
 	ree_if(commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received!");
 	commandToSend.Packed										= 1;
-	sa_length													= sizeof(struct sockaddr_in);
-	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
-	client.LastPing												=
-	client.FirstPing											= ::gpk::timeCurrentInUs();
+	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed!");	/* Tranmsit data to get time */
+	client.LastPing = client.FirstPing							= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
 }

@@ -184,7 +184,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			int32_t														t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
 			saltValue[i]											= t % 256;
 		}
-	int32_t    keyFinal[4]   =
+	int32_t    keyFinal[8]   =
 	{ 11 + (key % 233)
 	,  7 + (key % 239)
 	,  5 + (key % 241)
@@ -220,7 +220,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 
 ::gpk::error_t											gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
-	int32_t    keyFinal[4]   =
+	int32_t    keyFinal[8]   =
 	{ 11 + (key % 233)
 	,  7 + (key % 239)
 	,  5 + (key % 241)

@@ -143,28 +143,28 @@
 			break;
 		}
 
-		verbose_printf("%s", "Socket type: ");
-		switch (ptr->ai_socktype) {
-		case 0				: verbose_printf("%s", "Unspecified"							);	break;
-		case SOCK_STREAM	: verbose_printf("%s", "SOCK_STREAM (stream)"					);	break;
-		case SOCK_DGRAM		: verbose_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
-		case SOCK_RAW		: verbose_printf("%s", "SOCK_RAW (raw)"							);	break;
-		case SOCK_RDM		: verbose_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
-		case SOCK_SEQPACKET	: verbose_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
-		default:
-			verbose_printf("Other %ld", ptr->ai_socktype);
-			break;
-		}
-		verbose_printf("%s", "Protocol: ");
-		switch (ptr->ai_protocol) {
-		case 0				: verbose_printf("%s", "Unspecified"							);	break;
-		case IPPROTO_TCP	: verbose_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
-		case IPPROTO_UDP	: verbose_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
-		default:
-			verbose_printf("Other %ld", ptr->ai_protocol);
-			break;
-		}
-		++iAddress;
+		//verbose_printf("%s", "Socket type: ");
+		//switch (ptr->ai_socktype) {
+		//case 0				: verbose_printf("%s", "Unspecified"							);	break;
+		//case SOCK_STREAM	: verbose_printf("%s", "SOCK_STREAM (stream)"					);	break;
+		//case SOCK_DGRAM		: verbose_printf("%s", "SOCK_DGRAM (datagram)"					);	break;
+		//case SOCK_RAW		: verbose_printf("%s", "SOCK_RAW (raw)"							);	break;
+		//case SOCK_RDM		: verbose_printf("%s", "SOCK_RDM (reliable message datagram)"	);	break;
+		//case SOCK_SEQPACKET	: verbose_printf("%s", "SOCK_SEQPACKET (pseudo-stream packet)"	);	break;
+		//default:
+		//	verbose_printf("Other %ld", ptr->ai_socktype);
+		//	break;
+		//}
+		//verbose_printf("%s", "Protocol: ");
+		//switch (ptr->ai_protocol) {
+		//case 0				: verbose_printf("%s", "Unspecified"							);	break;
+		//case IPPROTO_TCP	: verbose_printf("%s", "IPPROTO_TCP (TCP)"						);	break;
+		//case IPPROTO_UDP	: verbose_printf("%s", "IPPROTO_UDP (UDP)"						);	break;
+		//default:
+		//	verbose_printf("Other %ld", ptr->ai_protocol);
+		//	break;
+		//}
+		//++iAddress;
 		verbose_printf("Length of this sockaddr: %u", (uint32_t)ptr->ai_addrlen);
 		verbose_printf("Canonical name: %s", ptr->ai_canonname);
 		if(addressFound)

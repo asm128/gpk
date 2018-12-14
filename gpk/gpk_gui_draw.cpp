@@ -18,9 +18,7 @@ static		::gpk::error_t										textLineRaster											(const ::gpk::SCoord2<u
 	}
 	return 0;
 }
-
 static constexpr	const char									gpk_codepage_437_b64	[]								= "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";
-
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gui)																						{
 	gui.FontCharSize												= {9, 16};
 	gui.FontTexture.resize(gui.FontCharSize.x, gui.FontCharSize.y * 256);
@@ -29,7 +27,6 @@ static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gu
 	memcpy(gui.FontTexture.Texels.begin(), decoded.begin(), decoded.size());
 	return 0;
 }
-
 static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target, bool bDisabled)				{
 	if(0 == gui.FontTexture.Texels.size())
 		gpk_necall(::setupDefaultFontTexture(gui), "%s", "Failed to set up default texture!");
@@ -81,7 +78,6 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 		::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
 	return 0;
 }
-
 static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool disabled, const ::gpk::SControlState& controlState)					{
 	return
 		disabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
@@ -91,7 +87,6 @@ static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool dis
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-
 static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
 	const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= gui.Palettes[control.Palettes[::paletteIndexFromState(disabled, controlState)]];
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	];
@@ -111,7 +106,6 @@ static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI& gui, ::
 	}
 	return 0; 
 }
-
 static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
 		const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 		const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
@@ -132,7 +126,6 @@ static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI& gui, ::
 		}
 	return 0; 
 }
-
 static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int32_t iControl, bool disabled, ::gpk::view_array<::gpk::SColorBGRA> colors)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
@@ -144,7 +137,6 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 		fillColorTableOld(gui, colorMode, control, controlState, disabled, colors);
 	return 0;
 }
-
 static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2D<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2D<int32_t>> triangles)					{
 	::gpk::SRectLimits<int32_t>											scaledBorders											= {};
 	const ::gpk::SCoord2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
@@ -186,7 +178,6 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 	triangles[7]													= {startOffset, startOffset + ::gpk::SCoord2<int32_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int32_t>{control.Border.Right, control.Border.Bottom}	};
 	return 0;
 }
-
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
@@ -224,7 +215,6 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	error_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
 	return 0;
 }
-
 			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)								{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics()) {
@@ -242,7 +232,6 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	}
 	return 0;
 }
-
 			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target)													{
 	if(gui.LastSize != target.metrics() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
