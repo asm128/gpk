@@ -13,6 +13,10 @@
 namespace gpk
 {
 
+	struct SFrameworkSettings {
+							bool														GUIZoom										: 1;
+	};
+
 	struct SFramework {
 		typedef				::gpk::SColorBGRA											TTexel;
 		typedef				::gpk::SImage<TTexel>										TOffscreen;
@@ -24,6 +28,9 @@ namespace gpk
 							::gpk::STimer												Timer										= {};
 							::gpk::SFrameInfo											FrameInfo									= {};
 							::gpk::ptr_obj<::gpk::SGUI>									GUI											= {};
+							::gpk::SFrameworkSettings									Settings									= {1, };
+
+							::std::mutex												LockGUI;
 
 																						SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{
 			Input.create();

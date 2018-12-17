@@ -35,6 +35,9 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	if(0 == framework.Input)
 		framework.Input.create();
 
+	if(0 == framework.GUI)
+		framework.GUI.create();
+
 	SInput																						& input										= *framework.Input;
 	input.KeyboardPrevious																	= input.KeyboardCurrent;
 	input.MousePrevious																		= input.MouseCurrent;
@@ -55,6 +58,31 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 #endif
+	::gpk::SGUI																					& gui										= *framework.GUI;
+	{
+		::gpk::mutex_guard																			lock										(framework.LockGUI);
+		::gpk::guiProcessInput(gui, *framework.Input);
+	}
+
+	if(framework.Settings.GUIZoom) {
+		if(framework.Input->MouseCurrent.Deltas.z) {
+			::gpk::mutex_guard																			lock										(framework.LockGUI);
+			if(framework.Input->MouseCurrent.Deltas.z > 0) {
+				if(gui.Zoom.ZoomLevel > 1)
+					++gui.Zoom.ZoomLevel;
+				else
+					gui.Zoom.ZoomLevel			*= 2;
+
+			}
+			else {
+				if(gui.Zoom.ZoomLevel > 1)
+					--gui.Zoom.ZoomLevel;
+				else
+					gui.Zoom.ZoomLevel			*= .5;
+			}
+			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
+		}
+	}
 	return ::updateDPI(framework);
 }
 

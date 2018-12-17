@@ -13,6 +13,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::error_t											setup						(::gme::SApplication & app)						{
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
+	app.Framework.GUI													= app.DialogMain.GUI;
 	app.DialogMain.Input												= framework.Input;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s.", "why?????!?!?!?!?");
 	::gpk::SGUI																& gui						= *framework.GUI;
@@ -65,29 +66,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 
 	::gpk::SGUI																& gui						= *framework.GUI;
-	{
-		::gpk::mutex_guard														lock						(app.LockGUI);
-		::gpk::guiProcessInput(gui, *app.Framework.Input);
-		::gpk::guiProcessInput(*app.DialogMain.GUI, *app.Framework.Input);
-	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		::gpk::mutex_guard														lock						(app.LockGUI);
-		if(app.Framework.Input->MouseCurrent.Deltas.z > 0) {
-			if(gui.Zoom.ZoomLevel > 1)
-				++gui.Zoom.ZoomLevel;
-			else
-				gui.Zoom.ZoomLevel			*= 2;
-
-		}
-		else {
-			if(gui.Zoom.ZoomLevel > 1)
-				--gui.Zoom.ZoomLevel;
-			else
-				gui.Zoom.ZoomLevel			*= .5;
-		}
-		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
-	}
-
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
@@ -99,9 +77,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	app.DialogMain.GUI->Zoom		= gui.Zoom;
 	app.DialogMain.Update();
-
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
@@ -114,11 +90,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target.create();
 	target->resize(app.Framework.MainDisplay.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
 	{
-		::gpk::mutex_guard														lock					(app.LockGUI);
+		::gpk::mutex_guard														lock					(app.Framework.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::gpk::mutex_guard														lock					(app.LockGUI);
+		::gpk::mutex_guard														lock					(app.Framework.LockGUI);
 		::gpk::guiDraw(*app.DialogMain.GUI, target->Color.View);
 	}
 	{
