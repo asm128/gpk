@@ -63,7 +63,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];
 	::gpk::SRectangle2D<int16_t>										rectText												= controlMetrics.Text;
-	if(controlState.Pressed || controlState.Hover) { // shift text offset by one pixel to give the effect of being pushed.
+	if(false == gui.Controls.Modes[iControl].NoHoverEffect && (controlState.Pressed || controlState.Hover)) { // shift text offset by one pixel to give the effect of being pushed.
 		rectText.Offset													+= ::gpk::SCoord2<int16_t>{1, 1};
 		rectText.Size													-= ::gpk::SCoord2<int16_t>{1, 1};
 		if(rectText.Size.x < 0) rectText.Size.x = 0;
@@ -87,60 +87,52 @@ static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool dis
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
-	const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= gui.Palettes[control.Palettes[::paletteIndexFromState(disabled, controlState)]];
+
+static		::gpk::error_t										fillColorTableBorders3D									(const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
+	double																bright;
+	double																shaded;
+	if(controlMode.NoHoverEffect) {
+		bright															= controlMode.FrameOut ? 1.2 : 0.8;
+		shaded															= controlMode.FrameOut ? 0.8 : 1.2;
+	}
+	else {
+		bright															= controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2;
+		shaded															= controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8;
+	}
+	::gpk::SColorBGRA													colorBackground											= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colorBackground * bright;
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colorBackground * bright;
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colorBackground * shaded;
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colorBackground * shaded;
+	return 0;
+}
+static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
+	const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>	
+																		& colorCombo											= gui.Palettes[control.Palettes[::paletteIndexFromState(disabled, controlState)]];
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	];
 	colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		];
-	if(colorMode == ::gpk::GUI_COLOR_MODE_FLAT) {
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	];
-		colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	];
-	}
-	else { // 3d borders and ::gpk::GUI_COLOR_MODE_DEFAULT, or just unrecognized mode. This is simpler because here we define the colors ourselves.
-		//colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * (controlState.Pressed ? 1.0 : controlState.Hover ? 1.0 : 1.0);
-		if(controlState.Frame) {
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8;
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8;
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2;
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2;
-		}
-		else {
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2);
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2);
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8);
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8);
-		}
-	}
-	return 0; 
+	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) 
+		return ::fillColorTableBorders3D(controlState, controlMode, colors);
+
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	];
+	return 0;
 }
-static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
-		const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
-		const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
-		colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
-		colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
-		if(colorMode == ::gpk::GUI_COLOR_MODE_FLAT) {
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
-			colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]];
-		}
-		else { // 3d borders and ::gpk::GUI_COLOR_MODE_DEFAULT, or just unrecognized mode. This is simpler because here we define the colors ourselves.
-			//colors[::gpk::GUI_CONTROL_AREA_CLIENT			]				= colors[::gpk::GUI_CONTROL_AREA_CLIENT		] * (controlState.Pressed ? 1.0 : controlState.Hover ? 1.0 : 1.0);
-			if(controlState.Frame) {
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8;
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 0.8;
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2;
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * 1.2;
-			}
-			else {
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2);
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 0.4 : controlState.Hover ? 0.8 : 1.2);
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8);
-				colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colors[::gpk::GUI_CONTROL_AREA_BACKGROUND	] * (controlState.Pressed ? 1.5 : controlState.Hover ? 1.2 : 0.8);
-			}
-		}
-	return 0; 
+static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI& gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
+	const ::gpk::SControlTheme											& theme													= gui.ControlThemes[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
+	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
+	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
+	colors[::gpk::GUI_CONTROL_AREA_CLIENT				]			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_CLIENT		]];
+	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) 
+		return ::fillColorTableBorders3D(controlState, controlMode, colors);
+
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_LEFT	]];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_TOP	]];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_RIGHT	]];
+	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= gui.Palette[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]];
+	return 0;
 }
 static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int32_t iControl, bool disabled, ::gpk::view_array<::gpk::SColorBGRA> colors)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
@@ -148,9 +140,9 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
 	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
 	if(mode.UseNewPalettes) 
-		fillColorTableNew(gui, colorMode, control, controlState, disabled, colors);
+		fillColorTableNew(gui, colorMode, control, controlState, mode, disabled, colors);
 	else 
-		fillColorTableOld(gui, colorMode, control, controlState, disabled, colors);
+		fillColorTableOld(gui, colorMode, control, controlState, mode, disabled, colors);
 	return 0;
 }
 static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2D<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2D<int32_t>> triangles)					{
@@ -239,8 +231,8 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		gui.LastSize													= target.metrics();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
-		::gpk::SControlState												controlState											= gui.Controls.States[iControl];
-		if(false == controlState.Design)
+		::gpk::SControlMode													controlModes										= gui.Controls.Modes[iControl];
+		if(false == controlModes.Design)
 			gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
 		::gpk::view_array<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)

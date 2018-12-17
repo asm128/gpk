@@ -21,8 +21,11 @@ namespace gpk
 		};
 
 	struct SControlMode {
-		GUI_COLOR_MODE											ColorMode								: 4;
+		GUI_COLOR_MODE											ColorMode								: 2;
 		uint8_t													UseNewPalettes							: 1;
+		uint8_t													NoHoverEffect							: 1;
+		uint8_t													FrameOut								: 1;
+		uint8_t													Design									: 1;
 	};
 
 	struct SControlRectangle {
@@ -58,9 +61,7 @@ namespace gpk
 		bool													Execute									: 1;
 		bool													Updated									: 1;
 
-		bool													Frame									: 1;
 		bool													Hidden									: 1;
-		bool													Design									: 1;
 		bool													Unused									: 1;
 	};
 
@@ -176,7 +177,7 @@ namespace gpk
 		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
 		int32_t													ColorTheme												= 0;
-		int32_t													Palettes	[::gpk::GUI_CONTROL_PALETTE_COUNT]		= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
+		int32_t													Palettes	[::gpk::GUI_CONTROL_PALETTE_COUNT]			= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
 		int32_t													IndexParent												= -1;
 		::gpk::ALIGN											Align													= ::gpk::ALIGN_TOP_LEFT;
 	};
@@ -211,7 +212,7 @@ namespace gpk
 		::gpk::array_static
 			<::gpk::array_static
 				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
-			, ::gpk::GUI_CONTROL_PALETTE_COUNT>			ColorCombos							= {};
+			, ::gpk::GUI_CONTROL_PALETTE_COUNT>					ColorCombos							= {};
 	};
 
 	struct SGUIControlTable {

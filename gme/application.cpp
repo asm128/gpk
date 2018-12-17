@@ -102,26 +102,17 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
 	::gpk::SGUI																& gui						= *framework.GUI;
-	{
-		::gpk::mutex_guard														lock						(app.LockGUI);
-		::gpk::guiProcessInput(gui, *app.Framework.Input);
-	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4ULL));
-		::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
-	}
-
-	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
-		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
-		if(controlState.Unused || controlState.Disabled)
-			continue;
+	::gpk::array_pod<uint32_t>												controlsToProcess			= {};
+	::gpk::guiGetProcessableControls(gui, controlsToProcess);
+	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
+		uint32_t																idControl					= controlsToProcess[iControl];
+		const ::gpk::SControlState												& controlState				= gui.Controls.States[idControl];
 		if(controlState.Execute) {
-			info_printf("Executed %u.", iControl);
-			if(iControl == (uint32_t)app.IdExit)
+			info_printf("Executed %u.", idControl);
+			if(idControl == (uint32_t)app.IdExit)
 				return 1;
 		}
 	}
-
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0;

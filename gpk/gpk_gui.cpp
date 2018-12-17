@@ -434,7 +434,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int32_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
-		if(false == controlState.Design) {
+		if(false == gui.Controls.Modes[iControl].Design) {
 			controlHovered													= iControl;
 			::updateGUIControlHovered(controlState, input,  ::gpk::controlDisabled(gui, iControl));
 		}
@@ -533,7 +533,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
-		if(controlState.Unused || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
+		if(controlState.Unused || gui.Controls.Modes[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
 			continue;
 		gpk_necall(controlIndices.push_back(iControl), "%s", "Out of memory?");
 	}

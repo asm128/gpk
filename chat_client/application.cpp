@@ -67,8 +67,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlConstraints.AttachSizeToText.y								= false; //app.IdText;
 		controlConstraints.AttachSizeToText.x								= false; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, -1};
-		gui.Controls.States[app.Console.IdControl].Design					= false;
-		gui.Controls.States[app.Console.IdControl].Hidden					= false;
+		gui.Controls.Modes	[app.Console.IdControl].Design					= false;
+		gui.Controls.States	[app.Console.IdControl].Hidden					= false;
 		::gpk::controlSetParent(gui, app.Console.IdControl, 0);
 	}
 	{
@@ -86,8 +86,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
 		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, -1};
-		gui.Controls.States[app.Console.IdInput].Design						= false;
-		gui.Controls.States[app.Console.IdInput].Hidden						= false;
+		gui.Controls.Modes	[app.Console.IdInput].Design						= false;
+		gui.Controls.States	[app.Console.IdInput].Hidden						= false;
 		::gpk::controlSetParent(gui, app.Console.IdInput, app.Console.IdControl);
 	}
 	{
@@ -105,8 +105,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
 		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, app.Console.IdInput};
-		gui.Controls.States[app.IdConsole].Design							= false;
-		gui.Controls.States[app.IdConsole].Hidden							= false;
+		gui.Controls.Modes	[app.IdConsole].Design							= false;
+		gui.Controls.States	[app.IdConsole].Hidden							= false;
 		::gpk::controlSetParent(gui, app.IdConsole, app.Console.IdControl);
 	}
 	{
@@ -124,8 +124,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
 		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, app.IdConsole};
-		gui.Controls.States[app.IdConsole1].Design							= false;
-		gui.Controls.States[app.IdConsole1].Hidden							= false;
+		gui.Controls.Modes	[app.IdConsole1].Design							= false;
+		gui.Controls.States	[app.IdConsole1].Hidden							= false;
 		::gpk::controlSetParent(gui, app.IdConsole1, app.Console.IdControl);
 	}
 	{
@@ -143,8 +143,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		controlConstraints.AttachSizeToText.y								= true; //app.IdText;
 		controlConstraints.AttachSizeToText.x								= true; //app.IdText;
 		controlConstraints.DockToControl									= {-1, -1, -1, app.IdConsole1};
-		gui.Controls.States[app.IdConsole2].Design							= false;
-		gui.Controls.States[app.IdConsole2].Hidden							= false;
+		gui.Controls.Modes	[app.IdConsole2].Design							= false;
+		gui.Controls.States	[app.IdConsole2].Hidden							= false;
 		::gpk::controlSetParent(gui, app.IdConsole2, app.Console.IdControl);
 	}
 	::gpk::tcpipInitialize();
@@ -164,15 +164,14 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
 	::gpk::SGUI																& gui						= *framework.GUI;
-	if(0 == framework.Input)
-		framework.Input.create();
-	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
-		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
-		if(controlState.Unused || controlState.Disabled)
-			continue;
+	::gpk::array_pod<uint32_t>												controlsToProcess			= {};
+	::gpk::guiGetProcessableControls(gui, controlsToProcess);
+	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
+		uint32_t																idControl					= controlsToProcess[iControl];
+		const ::gpk::SControlState												& controlState				= gui.Controls.States[idControl];
 		if(controlState.Execute) {
-			info_printf("Executed %u.", iControl);
-			if(iControl == (uint32_t)app.IdExit)
+			info_printf("Executed %u.", idControl);
+			if(idControl == (uint32_t)app.IdExit)
 				return 1;
 		}
 	}

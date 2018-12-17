@@ -11,8 +11,8 @@
 	gui.Controls.Controls		[Root].Margin							=
 	gui.Controls.Controls		[Root].Border							= {};
 	gui.Controls.Constraints	[Root].AttachSizeToControl				= {Root, Root};
-	gui.Controls.States			[Root].Design							= true;
-	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_FLAT;
+	gui.Controls.Modes			[Root].Design							= true;
+	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 
 	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= gui.Palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85,}});
