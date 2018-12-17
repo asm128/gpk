@@ -212,7 +212,7 @@ struct SSprite {
 
 	{
 		::gpk::mutex_guard															lock						(app.LockGUI);
-		::gpk::guiDraw(app.Framework.GUI, target->Color.View);
+		::gpk::guiDraw(*app.Framework.GUI, target->Color.View);
 	}
 	{
 		::gpk::mutex_guard															lock						(app.LockRender);
@@ -233,7 +233,7 @@ struct SSprite {
 	::gpk::SFramework															& framework					= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 
-	::gpk::SGUI																	& gui						= framework.GUI;
+	::gpk::SGUI																	& gui						= *framework.GUI;
 	{
 		::gpk::mutex_guard															lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);

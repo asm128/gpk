@@ -14,7 +14,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
 	framework.Input.create();
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s.", "why?????!?!?!?!?");
-	::gpk::SGUI																& gui						= framework.GUI;
+	::gpk::SGUI																& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
 	app.IdExit															= ::gpk::controlCreate(gui);
@@ -48,7 +48,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SFramework														& framework					= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 
-	::gpk::SGUI																& gui						= framework.GUI;
+	::gpk::SGUI																& gui						= *framework.GUI;
 	{
 		::gpk::mutex_guard														lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
@@ -104,7 +104,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//::gpk::clearTarget(*target);
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
-		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
+		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
 		::gpk::mutex_guard														lock					(app.LockRender);

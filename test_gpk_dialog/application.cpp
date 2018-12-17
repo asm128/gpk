@@ -13,10 +13,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::error_t											setup						(::gme::SApplication & app)						{
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
-	framework.Input.create();
-	app.DialogMain.Input = framework.Input;
+	app.DialogMain.Input												= framework.Input;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s.", "why?????!?!?!?!?");
-	::gpk::SGUI																& gui						= framework.GUI;
+	::gpk::SGUI																& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
 	app.IdExit															= ::gpk::controlCreate(gui);
@@ -36,22 +35,22 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
 	tuner->ValueLimits.Min												= 100;
 	tuner->ValueLimits.Max												= 200;
-	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
-	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
-	app.DialogMain.GUI.Controls.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
+	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
+	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
+	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
 	::gpk::tunerSetValue(*tuner, 0);
 
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
 	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);
 	slider->ValueLimits.Min												= 0;
 	slider->ValueLimits.Max												= 255;
-	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
-	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.x	= 128;
-	app.DialogMain.GUI.Controls.Controls[slider->IdGUIControl].Area.Size.y	= 8;
+	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
+	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Size.x	= 128;
+	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Size.y	= 8;
 
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox					= {};
 	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
-	app.DialogMain.GUI.Controls.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
+	app.DialogMain.GUI->Controls.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
 	return 0;
 }
 
@@ -65,10 +64,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SFramework														& framework					= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
 
-	::gpk::SGUI																& gui						= framework.GUI;
+	::gpk::SGUI																& gui						= *framework.GUI;
 	{
 		::gpk::mutex_guard														lock						(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
+		::gpk::guiProcessInput(*app.DialogMain.GUI, *app.Framework.Input);
 	}
 	if(app.Framework.Input->MouseCurrent.Deltas.z) {
 		::gpk::mutex_guard														lock						(app.LockGUI);
@@ -99,7 +99,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	app.DialogMain.GUI.Zoom		= gui.Zoom;
+	app.DialogMain.GUI->Zoom		= gui.Zoom;
 	app.DialogMain.Update();
 
 	//timer.Frame();
@@ -115,11 +115,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target->resize(app.Framework.MainDisplay.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
-		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
+		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
-		::gpk::guiDraw(app.DialogMain.GUI, target->Color.View);
+		::gpk::guiDraw(*app.DialogMain.GUI, target->Color.View);
 	}
 	{
 		::gpk::mutex_guard														lock					(app.LockRender);

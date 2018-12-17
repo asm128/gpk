@@ -14,7 +14,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SFramework													& framework				= app.Framework;
 	::gpk::SDisplay														& mainWindow			= framework.MainDisplay;
 	error_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window. %s", " why?????!?!?!?!?");
-	::gpk::SGUI															& gui					= framework.GUI;
+	::gpk::SGUI															& gui					= *framework.GUI;
 
 	const int32_t														iShades					= 16;
 	gui.ThemeDefault												= app.PaletteColumn * iShades + app.PaletteRow;
@@ -236,7 +236,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	::gpk::SFramework														& framework				= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(framework), "%s", "Exit requested by framework update.");
-	::gpk::SGUI																& gui					= framework.GUI;
+	::gpk::SGUI																& gui					= *framework.GUI;
 
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
@@ -291,7 +291,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//::gpk::clearTarget(*target);
 	{
 		::gpk::mutex_guard													lock					(app.LockGUI);
-		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
+		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 		::gpk::grid_copy(target->Color.View, app.VerticalAtlas.View);
 	}
 	{

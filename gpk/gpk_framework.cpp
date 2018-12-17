@@ -22,10 +22,10 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
 		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr && (framework.GUI.Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
-			framework.GUI.Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
+		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
-			::gpk::guiUpdateMetrics(framework.GUI, offscreen->Color.View.metrics(), true);
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 	}
 #endif

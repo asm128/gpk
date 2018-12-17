@@ -51,7 +51,7 @@ namespace gpk
 		int32_t												Root												= -1;
 
 		::gpk::ptr_obj<::gpk::SInput>						Input												= {};
-		::gpk::SGUI											GUI													= {};
+		::gpk::ptr_obj<::gpk::SGUI>							GUI													= {};
 		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>	Controls											= {};
 		::gpk::SImage<::gpk::SColorBGRA>					ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>					ImageCross											= {};
@@ -63,6 +63,9 @@ namespace gpk
 
 		template<typename _TDialogControl>
 		::gpk::error_t										Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
+			if(0 == GUI)
+				GUI.create();
+			::gpk::SGUI												& gui												= *GUI;
 			int32_t													index												= -1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl]) {
@@ -79,29 +82,32 @@ namespace gpk
 			ree_if(0 == ::gpk::ref_create(&newRef), "%s", "Out of memory?");
 			Controls[index].set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog								= this;
-			Controls[index]->IdGUIControl						= ::gpk::controlCreate(GUI);
-			GUI.Controls.Modes[Controls[index]->IdGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(GUI.Controls.Controls[Controls[index]->IdGUIControl].Palettes, ColorsControl);
-			gpk_necall(::gpk::controlSetParent(GUI, Controls[index]->IdGUIControl, Root), "%s", "Invalid root id!");
+			Controls[index]->IdGUIControl						= ::gpk::controlCreate(*GUI);
+			gui.Controls.Modes[Controls[index]->IdGUIControl].UseNewPalettes	= true;
+			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes, ColorsControl);
+			//gpk_necall(::gpk::controlSetParent(gui, Controls[index]->IdGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}
 
 		::gpk::error_t										Update												()													{
+			if(0 == GUI)
+				GUI.create();
+			::gpk::SGUI												& gui												= *GUI;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
-				if(0 == Controls[iControl] || ::gpk::controlInvalid(GUI, Controls[iControl]->IdGUIControl)) {
+				if(0 == Controls[iControl] || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
 					Controls.remove_unordered(iControl);
 					--iControl;
 					continue;
 				}
 			}
-			if(LastSize != GUI.LastSize) {
+			if(LastSize != gui.LastSize) {
 				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
-					Controls[iControl]->Resize(GUI.LastSize);
-				LastSize											= GUI.LastSize;
+					Controls[iControl]->Resize(gui.LastSize);
+				LastSize											= gui.LastSize;
 			}
-			if(0 != Input)
-				gpk_necall(::gpk::guiProcessInput(GUI, *Input), "%s", "Unknown reason.");
+			//if(0 != Input)
+			//	gpk_necall(::gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update();

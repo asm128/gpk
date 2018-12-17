@@ -2,37 +2,39 @@
 #include "gpk_dialog_controls.h"
 #include "gpk_png.h"
 
-																	::gpk::IDialogControl::~IDialogControl		()									{ if(-1 != IdGUIControl) ::gpk::controlDelete(Dialog->GUI, IdGUIControl, true); }
+																	::gpk::IDialogControl::~IDialogControl		()									{ if(-1 != IdGUIControl && Dialog->GUI) ::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); }
 
 																	::gpk::SDialog::SDialog						()				{
-	throw_if(-1 == (Root = ::gpk::controlCreate(GUI)), "%s", "Out of memory?");
-	GUI.Controls.Controls		[Root].Margin							=
-	GUI.Controls.Controls		[Root].Border							= {};
-	GUI.Controls.Constraints	[Root].AttachSizeToControl				= {Root, Root};
-	GUI.Controls.States			[Root].Design							= true;
-	GUI.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_FLAT;
-	GUI.ThemeDefault													= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+	GUI.create();
+	::gpk::SGUI																& gui										= *GUI;
+	throw_if(-1 == (Root = ::gpk::controlCreate(gui)), "%s", "Out of memory?");
+	gui.Controls.Controls		[Root].Margin							=
+	gui.Controls.Controls		[Root].Border							= {};
+	gui.Controls.Constraints	[Root].AttachSizeToControl				= {Root, Root};
+	gui.Controls.States			[Root].Design							= true;
+	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_FLAT;
+	gui.ThemeDefault													= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= GUI.Palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85,}});
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2,}});
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= GUI.Palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, {}, ::gpk::WHITE			,}});
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= gui.Palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= gui.Palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= gui.Palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= gui.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, {}, ::gpk::WHITE			,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsControl	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
 
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= GUI.Palettes.push_back({{::gpk::GRAY				, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE			,}});
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= GUI.Palettes.push_back({{::gpk::GRAY	 	* 1.1	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, {}, ::gpk::BLUE			,}});
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= gui.Palettes.push_back({{::gpk::GRAY				, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE			,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= gui.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= gui.Palettes.push_back({{::gpk::GRAY	 	* 1.1	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= gui.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, {}, ::gpk::BLUE			,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsButton	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
 
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= GUI.Palettes.push_back({{::gpk::WHITE		* 0.7	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE			,}});
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= GUI.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= GUI.Palettes.push_back({{::gpk::WHITE		* 0.85	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= GUI.Palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE			,}});
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
-	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= GUI.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= gui.Palettes.push_back({{::gpk::WHITE		* 0.7	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE			,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= gui.Palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= gui.Palettes.push_back({{::gpk::WHITE		* 0.85	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE			,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= gui.Palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE			,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
+	ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= gui.Palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE			,}});
 	for(uint32_t i=0; i < 4; ++i) {
 		ColorsControl	[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]			= ColorsControl		[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
 		ColorsButton	[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]			= ColorsButton		[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
@@ -47,7 +49,7 @@
 ::gpk::error_t														gpk::checkBoxCreate							(::gpk::SDialog & dialog)			{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
 	controlTable.Modes[checkBox->IdGUIControl].UseNewPalettes			= true;
 	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes, dialog.ColorsCheckBox);
@@ -56,7 +58,7 @@
 
 ::gpk::error_t														gpk::checkBoxUpdate							(::gpk::SDialogCheckBox & checkbox)		{
 	::gpk::SDialog															& dialog									= *checkbox.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	::gpk::SImage<::gpk::SColorBGRA>										& imageCross								= dialog.ImageCrossBGRA;
 	if(controlTable.States[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
@@ -83,9 +85,9 @@
 	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner;
 	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
 	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
-	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	controlTable.Controls[tuner->IdGUIControl].Margin					= {};
 	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
 		::gpk::SControl															& controlButton								= controlTable.Controls[iControl];
@@ -108,14 +110,14 @@
 	else if(value > control.ValueLimits.Max)
 		value															= control.ValueLimits.Max;
 	control.ValueCurrent												= value;
-	control.Dialog->GUI.Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
-	::gpk::controlMetricsInvalidate(control.Dialog->GUI, control.IdGUIControl);
+	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
+	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
 	return 0;
 }
 
 ::gpk::error_t														gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)								{
 	::gpk::SDialog															& dialog									= *tuner.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	if(controlTable.States[tuner.IdDecrease].Execute || controlTable.States[tuner.IdIncrease].Execute) {
 		if(controlTable.States[tuner.IdDecrease].Execute)
 			::gpk::tunerSetValue(tuner, tuner.ValueCurrent - 1);
@@ -129,8 +131,8 @@
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider;
 	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
-	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	controlTable.Controls	[slider->IdGUIControl].Margin				= {};
 	controlTable.Controls	[slider->IdButton].Area.Size				= {16, 16};
 	controlTable.Text		[slider->IdButton].Text						= "-";
@@ -144,7 +146,7 @@
 
 ::gpk::error_t														gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value)			{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
 	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
@@ -161,18 +163,18 @@
 		buttonConstraints.AttachSizeToControl.x								= slider.IdButton;
 	else
 		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
-	::gpk::controlMetricsInvalidate(dialog.GUI, slider.IdGUIControl);
+	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
 	return 0;
 }
 
 ::gpk::error_t														gpk::sliderUpdate							(::gpk::SDialogSlider	& slider)	{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	const int64_t															valueRange									= slider.ValueLimits.Max - slider.ValueLimits.Min;
 	if(controlTable.States[slider.IdButton].Pressed) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
-			const ::gpk::SGUIZoom													& zoom										= dialog.GUI.Zoom;
+			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
 			::gpk::SCoord2<double>													scale										=
 				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
@@ -212,7 +214,7 @@
 ::gpk::error_t														gpk::editBoxCreate							(::gpk::SDialog			& dialog )	{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogEditBox>									editBox;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI.Controls;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
 	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
 	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;

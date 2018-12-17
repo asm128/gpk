@@ -23,9 +23,12 @@ namespace gpk
 							::gpk::ptr_obj<::gpk::SInput>								Input										= {};
 							::gpk::STimer												Timer										= {};
 							::gpk::SFrameInfo											FrameInfo									= {};
-							::gpk::SGUI													GUI											= {};
+							::gpk::ptr_obj<::gpk::SGUI>									GUI											= {};
 
-																						SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{}
+																						SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{
+			Input.create();
+			GUI.create();
+		}
 	}; // struct
 
 						::gpk::error_t												updateFramework								(::gpk::SFramework& framework);
