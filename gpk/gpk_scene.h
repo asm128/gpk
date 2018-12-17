@@ -91,7 +91,6 @@ namespace gpk
 								, ::gpk::SCameraRange
 									{ 0.01
 									, 100.0
-									, .25
 									}
 								, ::gpk::SCameraVectors
 									{ {1, 0, 0}
@@ -99,6 +98,8 @@ namespace gpk
 									, {0, 0, 1}
 									}
 								};
+
+							double    CameraAngle = .25;
 	};
 
 	static inline		::gpk::error_t											sceneBoxAdd									(SScene& scene)	{
