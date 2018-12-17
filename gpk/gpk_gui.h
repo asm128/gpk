@@ -57,6 +57,8 @@ namespace gpk
 		bool													Selected								: 1;
 		bool													Execute									: 1;
 		bool													Updated									: 1;
+
+		bool													Frame									: 1;
 		bool													Hidden									: 1;
 		bool													Design									: 1;
 		bool													Unused									: 1;

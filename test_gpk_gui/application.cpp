@@ -227,19 +227,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t												update					(::gme::SApplication & app, bool exitSignal)	{
-	//::gpk::STimer													timer;
+::gpk::error_t														update					(::gme::SApplication & app, bool exitSignal)	{
+	//::gpk::STimer															timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
-		::gpk::mutex_guard												lock					(app.LockRender);
-		app.Framework.MainDisplayOffscreen							= app.Offscreen;
+		::gpk::mutex_guard														lock					(app.LockRender);
+		app.Framework.MainDisplayOffscreen									= app.Offscreen;
 	}
-	::gpk::SFramework												& framework				= app.Framework;
+	::gpk::SFramework														& framework				= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(framework), "%s", "Exit requested by framework update.");
-	::gpk::SGUI														& gui					= framework.GUI;
+	::gpk::SGUI																& gui					= framework.GUI;
 
 	{
-		::gpk::mutex_guard												lock					(app.LockGUI);
+		::gpk::mutex_guard														lock					(app.LockGUI);
 		::gpk::guiProcessInput(gui, *app.Framework.Input);
 		for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 			if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
@@ -250,52 +250,53 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 					return 1;
 				else if(iControl == (uint32_t)app.IdMode) {
 					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild)
-						gui.Controls.Modes[iChild].ColorMode					= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_FLAT ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_FLAT;
+						gui.Controls.Modes[iChild].ColorMode							= gui.Controls.Modes[iChild].ColorMode == ::gpk::GUI_COLOR_MODE_FLAT ? ::gpk::GUI_COLOR_MODE_3D : ::gpk::GUI_COLOR_MODE_FLAT;
 				}
 				else if(iControl == (uint32_t)app.IdTheme) {
 					++gui.ThemeDefault;
 					if(gui.ThemeDefault >= gui.ControlThemes.size())
-						gui.ThemeDefault										= 0;
+						gui.ThemeDefault												= 0;
 				}
 				else if(iControl == (uint32_t)app.IdNewPalette) {
 					for(uint32_t iChild = 0; iChild < gui.Controls.Controls.size(); ++iChild)
-						gui.Controls.Modes[iChild].UseNewPalettes				= gui.Controls.Modes[iChild].UseNewPalettes ? 0 : 1;
+						gui.Controls.Modes[iChild].UseNewPalettes						= gui.Controls.Modes[iChild].UseNewPalettes ? 0 : 1;
 				}
 				else if(iControl > (uint32_t)app.IdMode) {
-					gui.Controls.Controls[5].ColorTheme						= iControl - app.IdNewPalette;
+					gui.Controls.Controls[5].ColorTheme								= iControl - app.IdNewPalette;
 					if(gui.Controls.Controls[5].ColorTheme >= (int32_t)gui.Palette.size())
-						gui.Controls.Controls[5].ColorTheme						= 10;
+						gui.Controls.Controls[5].ColorTheme								= 10;
 					for(uint32_t iChild = 0; iChild < gui.Controls.Children[5].size(); ++iChild)
 						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
 				}
 			}
 		}
 		if(app.Framework.Input->MouseCurrent.Deltas.z) {
-			gui.Zoom.ZoomLevel										+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120 * 4ULL));
+			gui.Zoom.ZoomLevel												+= (int32_t)(app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / 120));
 			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 		}
 	}
+	::gpk::sleep(1);
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
 
-::gpk::error_t													cleanup					(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
-::gpk::error_t													draw					(::gme::SApplication & app)						{
-	::gpk::STimer														timer;
+::gpk::error_t														cleanup					(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
+::gpk::error_t														draw					(::gme::SApplication & app)						{
+	::gpk::STimer															timer;
 	app;
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	target;
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
 	target->resize(app.Framework.MainDisplay.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	//::gpk::clearTarget(*target);
 	{
-		::gpk::mutex_guard												lock					(app.LockGUI);
+		::gpk::mutex_guard													lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(app.Framework.GUI, 0, target->Color.View);
 		::gpk::grid_copy(target->Color.View, app.VerticalAtlas.View);
 	}
 	{
-		::gpk::mutex_guard												lock					(app.LockRender);
-		app.Offscreen												= target;
+		::gpk::mutex_guard													lock					(app.LockRender);
+		app.Offscreen													= target;
 	}
 	//timer.Frame();
 	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);

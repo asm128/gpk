@@ -19,7 +19,6 @@
 		message->Command.Multipart									= 0;
 		message->Time												= ::gpk::timeCurrentInUs();
 		message->RetryCount											= retryCount;
-
 		if(0 == client.KeyPing) {
 			client.KeyPing												= message->Time;
 			info_printf("Key ping set: %llu.", client.KeyPing);

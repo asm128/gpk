@@ -68,14 +68,17 @@ namespace gpk
 	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
+
 	template<typename _tColor>
 						::gpk::error_t										drawLineVertical							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t x, int32_t y1, int32_t y2)	{
 		if(x < 0 || x >= (int32_t)target.metrics().x)
 			return 0;
-		int32_t																		y											= ::sltk::max(::sltk::min(y1, y2), 0);
-		int32_t																		yStop										= ::sltk::min(::sltk::max(y1, y2), (int32_t)target.metrics().y);
+		const int32_t																yMin										= ::gpk::min(y1, y2);
+		const int32_t																yMax										= ::gpk::max(y1, y2);
+		const int32_t																yStop										= ::gpk::min(yMax, (int32_t)target.metrics().y);
+		int32_t																		y											= ::gpk::max(yMin, 0);
 		for(; y < yStop; ++y)
-			target[y][x]															= value;;
+			target[y][x]															= value;
 		return y;
 	}
 
@@ -83,11 +86,13 @@ namespace gpk
 						::gpk::error_t										drawLineHorizontal							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t y, int32_t x1, int32_t x2)	{
 		if(y < 0 || y >= (int32_t)target.metrics().y)
 			return 0;
-		int32_t																		x											= ::sltk::max(::sltk::min(x1, x2), 0);
-		int32_t																		xStop										= ::sltk::min(::sltk::max(x1, x2), (int32_t)target.metrics().x);
-		for(; y < xStop; ++y)
-			target[y][x]															= value;;
-		return y;
+		const int32_t																xMin										= ::gpk::min(x1, x2);
+		const int32_t																xMax										= ::gpk::max(x1, x2);
+		const int32_t																xStop										= ::gpk::min(xMax, (int32_t)target.metrics().x);
+		int32_t																		x											= ::gpk::max(xMin, 0);
+		for(; x < xStop; ++x)
+			target[y][x]															= value;
+		return x;
 	}
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
@@ -324,9 +329,14 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line)				{
+	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
+		if(line.A.x == line.B.x)
+			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
+		else if(line.A.y == line.B.y) 
+			return ::gpk::drawLineHorizontal(target, value, line.A.y, line.A.x, line.B.x);
+
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -343,8 +353,8 @@ namespace gpk
 		int32_t																		pixelsDrawn									= 0;
 		if(steep) {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(x, 0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(y, 0, (int32_t)bitmapTarget.metrics().x)) {
-					bitmapTarget[x][y]														= value;
+				if(::gpk::in_range(x, 0, (int32_t)target.metrics().y) && ::gpk::in_range(y, 0, (int32_t)target.metrics().x)) {
+					target[x][y]														= value;
 					++pixelsDrawn;
 				}
 				error																	-= d.y;
@@ -356,8 +366,8 @@ namespace gpk
 		}
 		else {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(y, 0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(x, 0, (int32_t)bitmapTarget.metrics().x)) {
-					bitmapTarget[y][x]														= value;
+				if(::gpk::in_range(y, 0, (int32_t)target.metrics().y) && ::gpk::in_range(x, 0, (int32_t)target.metrics().x)) {
+					target[y][x]														= value;
 					++pixelsDrawn;
 				}
 				error																	-= d.y;

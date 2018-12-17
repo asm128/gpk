@@ -204,7 +204,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	else
 		for(int32_t i = 0; i < n; ++i)
 			sn[i]													= input[i];
-	int32_t i;
+	int32_t														i;
 	for(i = 1		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 1] ^ ((keyFinal[0] * sn[i - 1]) % 256);
 	for(i = n - 2	; i >= 0; --i)	sn[i]				= sn[i] ^ sn[i + 1] ^  (keyFinal[1] * sn[i + 1]) % 256 ;
 	for(i = 2		; i  < n; ++i)	sn[i]				= sn[i] ^ sn[i - 2] ^  (keyFinal[2] * sn[i - 1]) % 256 ;
@@ -230,7 +230,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
 	int32_t														* sn															= cache.begin();
-	int32_t i;
+	int32_t														i;
 	for(i = 0		; i  < n	; ++i)	sn[i]			= input[i];
 	for(i = 0		; i  < n - 2; ++i)	sn[i]			= sn[i] ^ sn[i + 2] ^ (keyFinal[3] * sn[i + 1]) % 256;
 	for(i = n - 1	; i >= 2	; --i)	sn[i]			= sn[i] ^ sn[i - 2] ^ (keyFinal[2] * sn[i - 1]) % 256;
