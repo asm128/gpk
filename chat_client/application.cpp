@@ -149,7 +149,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	::gpk::tcpipInitialize();
 	app.Client.AddressConnect											= {};
-	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.AddressConnect);
+	::gpk::tcpipAddress(6668, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, app.Client.AddressConnect);
 	::gpk::clientConnect(app.Client);
 	return 0;
 }
@@ -166,16 +166,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SGUI																& gui						= *framework.GUI;
 	if(0 == framework.Input)
 		framework.Input.create();
-	::gpk::SInput															& input						= *framework.Input;
-	{
-		::gpk::mutex_guard														lock						(app.LockGUI);
-		::gpk::guiProcessInput(gui, input);
-	}
-	if(input.MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel													+= input.MouseCurrent.Deltas.z * (1.0 / (120ULL * 4ULL));
-		::gpk::guiUpdateMetrics(gui, app.Offscreen->Color.metrics(), true);
-	}
-
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
@@ -186,6 +176,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				return 1;
 		}
 	}
+	::gpk::SInput															& input						= *framework.Input;
 	for(uint32_t iKey = 0; iKey < 256; ++iKey)
 		if(input.KeyDown((uint8_t)iKey)) {
 			if(iKey >= '0' && iKey <= '9' || iKey == 0x20) {

@@ -62,7 +62,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x								= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
-	::gpk::serverStart(app.Server, 9998);
+	::gpk::serverStart(app.Server, 6668);
 	const int																samples_rate				= 48000;
 	//::tinyaudio::init(samples_rate, ::samples_callback);
 	return 0;
@@ -79,15 +79,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
 	::gpk::SGUI																& gui						= *framework.GUI;
-	{
-		::gpk::mutex_guard														lock						(app.LockGUI);
-		::gpk::guiProcessInput(gui, *app.Framework.Input);
-	}
-	if(app.Framework.Input->MouseCurrent.Deltas.z) {
-		gui.Zoom.ZoomLevel													+= app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / (120ULL * 4));
-		::gpk::guiUpdateMetrics(gui, app.Offscreen->Color.metrics(), true);
-	}
-
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		const ::gpk::SControlState												& controlState				= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)

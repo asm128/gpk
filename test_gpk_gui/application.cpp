@@ -236,11 +236,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	}
 	::gpk::SFramework														& framework				= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(framework), "%s", "Exit requested by framework update.");
-	::gpk::SGUI																& gui					= *framework.GUI;
-
 	{
+		::gpk::SGUI																& gui					= *framework.GUI;
 		::gpk::mutex_guard														lock					(app.LockGUI);
-		::gpk::guiProcessInput(gui, *app.Framework.Input);
 		for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 			if(gui.Controls.States[iControl].Unused || gui.Controls.States[iControl].Disabled)
 				continue;
@@ -269,10 +267,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 						gui.Controls.Controls[gui.Controls.Children[5][iChild]].ColorTheme = gui.Controls.Controls[5].ColorTheme;
 				}
 			}
-		}
-		if(app.Framework.Input->MouseCurrent.Deltas.z) {
-			gui.Zoom.ZoomLevel												+= (int32_t)(app.Framework.Input->MouseCurrent.Deltas.z * (1.0 / 120));
-			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 		}
 	}
 	::gpk::sleep(1);

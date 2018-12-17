@@ -71,14 +71,14 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 				if(gui.Zoom.ZoomLevel > 1)
 					++gui.Zoom.ZoomLevel;
 				else
-					gui.Zoom.ZoomLevel			*= 2;
+					gui.Zoom.ZoomLevel																		*= 2;
 
 			}
 			else {
 				if(gui.Zoom.ZoomLevel > 1)
 					--gui.Zoom.ZoomLevel;
 				else
-					gui.Zoom.ZoomLevel			*= .5;
+					gui.Zoom.ZoomLevel																		*= .5;
 			}
 			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
 		}
