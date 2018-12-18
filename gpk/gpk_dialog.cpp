@@ -94,12 +94,23 @@ static constexpr	const uint32_t									heightOfField								= 20;
 }
 
 ::gpk::error_t														gpk::viewportUpdate							(::gpk::SDialogViewport	& control)	{ 
-	::gpk::SControl															& controlMain								= control.Dialog->GUI->Controls.Controls[control.IdGUIControl];
+	::gpk::SDialog															& dialog									= *control.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
 	::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
 	clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
 	clientFinalSize.y													-=  heightOfField + 1;
 	::gpk::SControl															& controlClient								= control.Dialog->GUI->Controls.Controls[control.IdClient];
 	controlClient.Area.Size												= clientFinalSize;
+	::gpk::SControlState														& controlTitle								= controlTable.States[control.IdTitle];
+	if(controlTitle.Pressed) {
+		if(dialog.Input->MouseCurrent.Deltas.x || dialog.Input->MouseCurrent.Deltas.y) {
+			controlMain.Area.Offset.x += (int16_t)dialog.Input->MouseCurrent.Deltas.x;
+			controlMain.Area.Offset.y += (int16_t)dialog.Input->MouseCurrent.Deltas.y;
+::gpk::controlMetricsInvalidate(*dialog.GUI,control.IdGUIControl);
+
+		}
+	}l
 	return 0; 
 }
 
