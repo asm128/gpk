@@ -42,6 +42,7 @@ namespace gpk
 				int32_t										IdTitle								= -1;
 				int32_t										IdClient							= -1;
 				bool										Dragging							= false;
+				bool										Folded								= false;
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::viewportUpdate(*this); }
 	};

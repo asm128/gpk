@@ -2,9 +2,8 @@
 #include "gpk_dialog_controls.h"
 #include "gpk_png.h"
 
-																	::gpk::IDialogControl::~IDialogControl		()									{ if(-1 != IdGUIControl && Dialog->GUI) ::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); }
-
-																	::gpk::SDialog::SDialog						()				{
+																	::gpk::IDialogControl::~IDialogControl		()																{ if(-1 != IdGUIControl && Dialog->GUI) ::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); }
+																	::gpk::SDialog::SDialog						()																{
 	GUI.create();
 	::gpk::SGUI																& gui										= *GUI;
 	throw_if(-1 == (Root = ::gpk::controlCreate(gui)), "%s", "Out of memory?");
@@ -46,9 +45,181 @@
 		ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]			= ColorsCheckBox	[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
 	}
 }
-
 static constexpr	const uint32_t									heightOfField								= 20;
-::gpk::error_t														gpk::viewportCreate							(::gpk::SDialog			& dialog)	{ 
+::gpk::error_t														gpk::checkBoxCreate							(::gpk::SDialog			& dialog)								{
+	int32_t																	index										= -1;
+	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
+	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
+	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
+	return index;
+}
+::gpk::error_t														gpk::checkBoxUpdate							(::gpk::SDialogCheckBox	& checkbox)								{
+	::gpk::SDialog															& dialog									= *checkbox.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	::gpk::SImage<::gpk::SColorBGRA>										& imageCross								= dialog.ImageCrossBGRA;
+	if(controlTable.States[checkbox.IdGUIControl].Execute) {
+		if(dialog.ImageCross.Texels.size() < 4) {
+			::gpk::pngFileLoad("..\\gpk_data\\images\\cross.png", imageCross);
+
+			dialog.ImageCross.resize(imageCross.metrics());
+			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
+				if(imageCross.Texels[iTexel] == ::gpk::BLACK)
+					dialog.ImageCross.View[iTexel]										=  true;
+				else {
+					imageCross.Texels[iTexel].a											= 0;
+					dialog.ImageCross.View[iTexel]										= false;
+				}
+			}
+		}
+		checkbox.Checked													= !checkbox.Checked;
+		controlTable.Controls[checkbox.IdGUIControl].Image					= (false == checkbox.Checked) ? ::gpk::view_grid<::gpk::SColorBGRA>{} : imageCross.View;
+	}
+	return 0;
+}
+::gpk::error_t														gpk::tunerCreate							(::gpk::SDialog			& dialog)								{
+	int32_t																	index										= -1;
+	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner;
+	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
+	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
+	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	controlTable.Controls[tuner->IdGUIControl].Margin					= {};
+	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
+		::gpk::SControl															& controlButton								= controlTable.Controls[iControl];
+		controlButton.Align													= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
+		::gpk::memcpy_s(controlButton.Palettes, dialog.ColorsButton.Storage);
+		controlTable.Text			[iControl].Text							= (iControl == tuner->IdDecrease) ? "-" : "+";
+		controlTable.Modes			[iControl].UseNewPalettes				= true;
+		controlTable.Modes			[iControl].ColorMode					= ::gpk::GUI_COLOR_MODE_3D;
+		controlTable.Constraints	[iControl].AttachSizeToControl.y		= iControl;
+	}
+	::gpk::SControlText														& tunerText									= controlTable.Text[tuner->IdGUIControl];
+	tunerText.Text														= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
+	tunerText.Align														= ::gpk::ALIGN_CENTER;
+	return index;
+}
+::gpk::error_t														gpk::tunerSetValue							(::gpk::SDialogTuner	& control, int64_t value)				{
+	if(value < control.ValueLimits.Min)
+		value															= control.ValueLimits.Min;
+	else if(value > control.ValueLimits.Max)
+		value															= control.ValueLimits.Max;
+	control.ValueCurrent												= value;
+	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
+	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
+	return 0;
+}
+::gpk::error_t														gpk::tunerUpdate							(::gpk::SDialogTuner	& tuner)								{
+	::gpk::SDialog															& dialog									= *tuner.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	if(controlTable.States[tuner.IdDecrease].Execute || controlTable.States[tuner.IdIncrease].Execute) {
+		if(controlTable.States[tuner.IdDecrease].Execute)
+			::gpk::tunerSetValue(tuner, tuner.ValueCurrent - 1);
+		else if(controlTable.States[tuner.IdIncrease].Execute)
+			::gpk::tunerSetValue(tuner, tuner.ValueCurrent + 1);
+	}
+	return 0;
+}
+::gpk::error_t														gpk::sliderCreate							(::gpk::SDialog			& dialog)								{
+	int32_t																	index										= -1;
+	::gpk::ptr_obj<::gpk::SDialogSlider>									slider;
+	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
+	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	controlTable.Controls	[slider->IdGUIControl].Margin				= {};
+	controlTable.Controls	[slider->IdButton].Area.Size				= {16, 16};
+	controlTable.Text		[slider->IdButton].Text						= "-";
+	controlTable.Constraints[slider->IdButton].AttachSizeToControl.y	= slider->IdButton;
+	controlTable.Modes		[slider->IdButton].UseNewPalettes			= true;
+	controlTable.Modes		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
+	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes, dialog.ColorsButton		.Storage);
+	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes, dialog.ColorsCheckBox	.Storage);
+	return index;
+}
+::gpk::error_t														gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value)				{
+	::gpk::SDialog															& dialog									= *slider.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
+	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
+
+	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
+	::gpk::SControl															& controlSlider								= controlTable.Controls[slider.IdGUIControl];
+	::gpk::SCoord2<double>													ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
+	if(slider.Vertical)
+		controlButton.Area.Offset.y											= (int16_t)int32_t((controlSlider.Area.Size.y - 16 - ncSpacing.y) * proportion);
+	else
+		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion);
+
+	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
+	if(slider.Vertical)
+		buttonConstraints.AttachSizeToControl.x								= slider.IdButton;
+	else
+		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
+	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
+	return 0;
+}
+::gpk::error_t														gpk::sliderUpdate							(::gpk::SDialogSlider	& slider)								{
+	::gpk::SDialog															& dialog									= *slider.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	const int64_t															valueRange									= slider.ValueLimits.Max - slider.ValueLimits.Min;
+	if(controlTable.States[slider.IdButton].Pressed) {
+		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
+			::gpk::SInput															& input										= *dialog.Input;
+			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
+			::gpk::SCoord2<double>													scale										=
+				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
+				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
+				};
+			const ::gpk::SCoord2<int16_t>											& controlSliderSize							= controlTable.Controls[slider.IdGUIControl].Area.Size;
+
+			::gpk::SCoord2<double>													valueDisplacement							=
+				{ input.MouseCurrent.Deltas.x * scale.x * (valueRange * (1.0 / controlSliderSize.x))
+				, input.MouseCurrent.Deltas.y * scale.y * (valueRange * (1.0 / controlSliderSize.y))
+				};
+
+			if (valueDisplacement.y > 0 && valueDisplacement.y <  1) valueDisplacement.y	=  1;
+			if (valueDisplacement.y < 0 && valueDisplacement.y > -1) valueDisplacement.y	= -1;
+			if (valueDisplacement.x > 0 && valueDisplacement.x <  1) valueDisplacement.x	=  1;
+			if (valueDisplacement.x < 0 && valueDisplacement.x > -1) valueDisplacement.x	= -1;
+
+			::gpk::sliderSetValue(slider, slider.ValueCurrent + (int64_t)(slider.Vertical ? valueDisplacement.y : valueDisplacement.x));
+		}
+	}
+	else
+		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
+			::gpk::SInput															& input										= *dialog.Input;
+			const int64_t															valuePage									= ::gpk::max(1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
+			const ::gpk::SCoord2<int32_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
+			if(slider.Vertical) {
+				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
+				::gpk::sliderSetValue(slider, finalValue);
+			}
+			else {
+				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
+				::gpk::sliderSetValue(slider, finalValue);
+			}
+		}
+	return 0;
+}
+::gpk::error_t														gpk::editBoxCreate							(::gpk::SDialog			& dialog )								{
+	int32_t																	index										= -1;
+	::gpk::ptr_obj<::gpk::SDialogEditBox>									editBox;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
+	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
+	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;
+	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
+	return index;
+}
+::gpk::error_t														gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)								{
+	::gpk::SDialog															& dialog									= *control.Dialog;
+	if(dialog.Input->ButtonDown(0)) {
+	}
+	return 0;
+}
+::gpk::error_t														gpk::viewportCreate							(::gpk::SDialog			& dialog)								{ 
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
@@ -92,214 +263,50 @@ static constexpr	const uint32_t									heightOfField								= 20;
 
 	return index;
 }
-
-::gpk::error_t														gpk::viewportUpdate							(::gpk::SDialogViewport	& control)	{ 
+::gpk::error_t														viewportFold								(::gpk::SDialogViewport	& control, bool fold)					{ 
 	::gpk::SDialog															& dialog									= *control.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
-	::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
-	clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
-	clientFinalSize.y													-=  heightOfField + 1;
-	::gpk::SControl															& controlClient								= control.Dialog->GUI->Controls.Controls[control.IdClient];
-	controlClient.Area.Size												= clientFinalSize;
+	::gpk::SControl															& controlTitle								= controlTable.Controls[control.IdTitle];
+	::gpk::SControlState													& stateClient								= controlTable.States[control.IdClient];
+	if(fold && false == control.Folded) {
+		::gpk::SCoord2<int16_t>													mainFinalSize								= {};
+		controlMain.Area.Size.y												= controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y;
+		::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
+	}
+	else if(control.Folded && false == fold) {
+		::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
+		controlMain.Area.Size.y												= controlClient.Area.Size.y + controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y + 1;
+		::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
+	}
+	stateClient.Hidden													= fold;
+	control.Folded														= fold;
+	return one_if(control.Folded);
+}
+::gpk::error_t														gpk::viewportUpdate							(::gpk::SDialogViewport	& control)								{ 
+	::gpk::SDialog															& dialog									= *control.Dialog;
+	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
+	if(false == control.Folded) {
+		::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
+		clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
+		clientFinalSize.y													-=  heightOfField + 1;
+		::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
+		controlClient.Area.Size												= clientFinalSize;
+	}
 	::gpk::SControlState													& controlTitle								= controlTable.States[control.IdTitle];
 	if(controlTitle.Pressed) {
 		if(dialog.Input->MouseCurrent.Deltas.x || dialog.Input->MouseCurrent.Deltas.y) {
 			control.Dragging													= true;
 			controlMain.Area.Offset.x += (int16_t)dialog.Input->MouseCurrent.Deltas.x;
 			controlMain.Area.Offset.y += (int16_t)dialog.Input->MouseCurrent.Deltas.y;
-			::gpk::controlMetricsInvalidate(*dialog.GUI,control.IdGUIControl);
+			::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
 		}
 	}
 	else { 
-		if(controlTitle.Execute && false == control.Dragging) {
-		
-		}
-		control.Dragging = false;
+		if(controlTitle.Execute && false == control.Dragging) 
+			::viewportFold(control, !control.Folded);
+		control.Dragging													= false;
 	}
 	return 0; 
-}
-
-
-::gpk::error_t														gpk::checkBoxCreate							(::gpk::SDialog & dialog)			{
-	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
-	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
-	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
-	return index;
-}
-
-::gpk::error_t														gpk::checkBoxUpdate							(::gpk::SDialogCheckBox & checkbox)		{
-	::gpk::SDialog															& dialog									= *checkbox.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	::gpk::SImage<::gpk::SColorBGRA>										& imageCross								= dialog.ImageCrossBGRA;
-	if(controlTable.States[checkbox.IdGUIControl].Execute) {
-		if(dialog.ImageCross.Texels.size() < 4) {
-			::gpk::pngFileLoad("..\\gpk_data\\images\\cross.png", imageCross);
-
-			dialog.ImageCross.resize(imageCross.metrics());
-			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
-				if(imageCross.Texels[iTexel] == ::gpk::BLACK)
-					dialog.ImageCross.View[iTexel]										=  true;
-				else {
-					imageCross.Texels[iTexel].a											= 0;
-					dialog.ImageCross.View[iTexel]										= false;
-				}
-			}
-		}
-		checkbox.Checked													= !checkbox.Checked;
-		controlTable.Controls[checkbox.IdGUIControl].Image					= (false == checkbox.Checked) ? ::gpk::view_grid<::gpk::SColorBGRA>{} : imageCross.View;
-	}
-	return 0;
-}
-
-::gpk::error_t														gpk::tunerCreate							(::gpk::SDialog & dialog)									{
-	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner;
-	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
-	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
-	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	controlTable.Controls[tuner->IdGUIControl].Margin					= {};
-	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
-		::gpk::SControl															& controlButton								= controlTable.Controls[iControl];
-		controlButton.Align													= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
-		::gpk::memcpy_s(controlButton.Palettes, dialog.ColorsButton.Storage);
-		controlTable.Text			[iControl].Text							= (iControl == tuner->IdDecrease) ? "-" : "+";
-		controlTable.Modes			[iControl].UseNewPalettes				= true;
-		controlTable.Modes			[iControl].ColorMode					= ::gpk::GUI_COLOR_MODE_3D;
-		controlTable.Constraints	[iControl].AttachSizeToControl.y		= iControl;
-	}
-	::gpk::SControlText														& tunerText									= controlTable.Text[tuner->IdGUIControl];
-	tunerText.Text														= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
-	tunerText.Align														= ::gpk::ALIGN_CENTER;
-	return index;
-}
-
-::gpk::error_t														gpk::tunerSetValue						(::gpk::SDialogTuner & control, int64_t value)					{
-	if(value < control.ValueLimits.Min)
-		value															= control.ValueLimits.Min;
-	else if(value > control.ValueLimits.Max)
-		value															= control.ValueLimits.Max;
-	control.ValueCurrent												= value;
-	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
-	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
-	return 0;
-}
-
-::gpk::error_t														gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)								{
-	::gpk::SDialog															& dialog									= *tuner.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	if(controlTable.States[tuner.IdDecrease].Execute || controlTable.States[tuner.IdIncrease].Execute) {
-		if(controlTable.States[tuner.IdDecrease].Execute)
-			::gpk::tunerSetValue(tuner, tuner.ValueCurrent - 1);
-		else if(controlTable.States[tuner.IdIncrease].Execute)
-			::gpk::tunerSetValue(tuner, tuner.ValueCurrent + 1);
-	}
-	return 0;
-}
-
-::gpk::error_t														gpk::sliderCreate							(::gpk::SDialog & dialog)									{
-	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogSlider>									slider;
-	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
-	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	controlTable.Controls	[slider->IdGUIControl].Margin				= {};
-	controlTable.Controls	[slider->IdButton].Area.Size				= {16, 16};
-	controlTable.Text		[slider->IdButton].Text						= "-";
-	controlTable.Constraints[slider->IdButton].AttachSizeToControl.y	= slider->IdButton;
-	controlTable.Modes		[slider->IdButton].UseNewPalettes			= true;
-	controlTable.Modes		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
-	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes, dialog.ColorsButton		.Storage);
-	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes, dialog.ColorsCheckBox	.Storage);
-	return index;
-}
-
-::gpk::error_t														gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value)			{
-	::gpk::SDialog															& dialog									= *slider.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
-	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
-
-	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
-	::gpk::SControl															& controlSlider								= controlTable.Controls[slider.IdGUIControl];
-	::gpk::SCoord2<double>													ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
-	if(slider.Vertical)
-		controlButton.Area.Offset.y											= (int16_t)int32_t((controlSlider.Area.Size.y - 16 - ncSpacing.y) * proportion);
-	else
-		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion);
-
-	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
-	if(slider.Vertical)
-		buttonConstraints.AttachSizeToControl.x								= slider.IdButton;
-	else
-		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
-	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
-	return 0;
-}
-
-::gpk::error_t														gpk::sliderUpdate							(::gpk::SDialogSlider	& slider)	{
-	::gpk::SDialog															& dialog									= *slider.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	const int64_t															valueRange									= slider.ValueLimits.Max - slider.ValueLimits.Min;
-	if(controlTable.States[slider.IdButton].Pressed) {
-		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
-			::gpk::SInput															& input										= *dialog.Input;
-			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
-			::gpk::SCoord2<double>													scale										=
-				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
-				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
-				};
-			const ::gpk::SCoord2<int16_t>											& controlSliderSize							= controlTable.Controls[slider.IdGUIControl].Area.Size;
-
-			::gpk::SCoord2<double>													valueDisplacement							=
-				{ input.MouseCurrent.Deltas.x * scale.x * (valueRange * (1.0 / controlSliderSize.x))
-				, input.MouseCurrent.Deltas.y * scale.y * (valueRange * (1.0 / controlSliderSize.y))
-				};
-
-			if (valueDisplacement.y > 0 && valueDisplacement.y <  1) valueDisplacement.y	=  1;
-			if (valueDisplacement.y < 0 && valueDisplacement.y > -1) valueDisplacement.y	= -1;
-			if (valueDisplacement.x > 0 && valueDisplacement.x <  1) valueDisplacement.x	=  1;
-			if (valueDisplacement.x < 0 && valueDisplacement.x > -1) valueDisplacement.x	= -1;
-
-			::gpk::sliderSetValue(slider, slider.ValueCurrent + (int64_t)(slider.Vertical ? valueDisplacement.y : valueDisplacement.x));
-		}
-	}
-	else
-		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
-			::gpk::SInput															& input										= *dialog.Input;
-			const int64_t															valuePage									= ::gpk::max(1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
-			const ::gpk::SCoord2<int32_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
-			if(slider.Vertical) {
-				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
-				::gpk::sliderSetValue(slider, finalValue);
-			}
-			else {
-				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
-				::gpk::sliderSetValue(slider, finalValue);
-			}
-		}
-	return 0;
-}
-
-::gpk::error_t														gpk::editBoxCreate							(::gpk::SDialog			& dialog )	{
-	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogEditBox>									editBox;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
-	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
-	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;
-	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
-	return index;
-}
-
-::gpk::error_t														gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)	{
-	::gpk::SDialog															& dialog									= *control.Dialog;
-	if(dialog.Input->ButtonDown(0)) {
-	}
-	return 0;
 }
