@@ -110,7 +110,7 @@ static constexpr	const uint32_t									heightOfField								= 20;
 ::gpk::controlMetricsInvalidate(*dialog.GUI,control.IdGUIControl);
 
 		}
-	}l
+	}
 	return 0; 
 }
 
