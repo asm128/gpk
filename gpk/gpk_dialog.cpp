@@ -102,14 +102,20 @@ static constexpr	const uint32_t									heightOfField								= 20;
 	clientFinalSize.y													-=  heightOfField + 1;
 	::gpk::SControl															& controlClient								= control.Dialog->GUI->Controls.Controls[control.IdClient];
 	controlClient.Area.Size												= clientFinalSize;
-	::gpk::SControlState														& controlTitle								= controlTable.States[control.IdTitle];
+	::gpk::SControlState													& controlTitle								= controlTable.States[control.IdTitle];
 	if(controlTitle.Pressed) {
 		if(dialog.Input->MouseCurrent.Deltas.x || dialog.Input->MouseCurrent.Deltas.y) {
+			control.Dragging													= true;
 			controlMain.Area.Offset.x += (int16_t)dialog.Input->MouseCurrent.Deltas.x;
 			controlMain.Area.Offset.y += (int16_t)dialog.Input->MouseCurrent.Deltas.y;
-::gpk::controlMetricsInvalidate(*dialog.GUI,control.IdGUIControl);
-
+			::gpk::controlMetricsInvalidate(*dialog.GUI,control.IdGUIControl);
 		}
+	}
+	else { 
+		if(controlTitle.Execute && false == control.Dragging) {
+		
+		}
+		control.Dragging = false;
 	}
 	return 0; 
 }

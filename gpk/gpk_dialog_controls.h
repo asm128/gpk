@@ -41,6 +41,7 @@ namespace gpk
 				int32_t										IdMaximize							= -1;
 				int32_t										IdTitle								= -1;
 				int32_t										IdClient							= -1;
+				bool										Dragging							= false;
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::viewportUpdate(*this); }
 	};
