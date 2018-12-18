@@ -22,6 +22,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 					int32_t																Slider;
 					int32_t																NumericTuner;
 					int32_t																CheckBox;
+					int32_t																Viewport;
 
 																						SApplication				(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};

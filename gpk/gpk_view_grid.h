@@ -48,6 +48,8 @@ namespace gpk
 		const int32_t													xStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
 		if(xStart >= (int32_t)target.metrics().x || yStart >= (int32_t)target.metrics().y) 
 			return 0;
+		if(xCount <= 0 || yCount <= 0) 
+			return 0;
 
 		::gpk::view_array<_tColor>										firstRow					= target[yStart];
 		if constexpr(1 == sizeof(_tColor))

@@ -52,6 +52,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox					= {};
 	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
 	app.DialogMain.GUI->Controls.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
+
+
+	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport					= {};
+	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
+	app.DialogMain.GUI->Controls.Controls[viewport->IdGUIControl].Area.Offset	= {320, 128};
+	app.DialogMain.GUI->Controls.Controls[viewport->IdGUIControl].Area.Size		= {320, 200};
 	return 0;
 }
 

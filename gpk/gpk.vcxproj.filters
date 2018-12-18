@@ -237,11 +237,11 @@
     <ClInclude Include="gpk_type_identifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_dialog_controls.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_json.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog_controls.h">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

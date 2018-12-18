@@ -32,13 +32,17 @@ namespace gpk
 	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 	static inline	::gpk::error_t						checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogCheckBox>& createdControl)	 { int32_t index = -1; gpk_necall(index = checkBoxCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 	static inline	::gpk::error_t						editBoxCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogEditBox	>& createdControl)	 { int32_t index = -1; gpk_necall(index = editBoxCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
+	static inline	::gpk::error_t						viewportCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogViewport>& createdControl)	 { int32_t index = -1; gpk_necall(index = viewportCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 
 #pragma pack(push, 1)
 	struct SDialogViewport : public ::gpk::IDialogControl {
 				int32_t										IdClose								= -1;
 				int32_t										IdMinimize							= -1;
 				int32_t										IdMaximize							= -1;
+				int32_t										IdTitle								= -1;
 				int32_t										IdClient							= -1;
+
+		virtual	::gpk::error_t								Update								()							{ return ::gpk::viewportUpdate(*this); }
 	};
 
 	struct SDialogEditBox : public ::gpk::IDialogControl {
