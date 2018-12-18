@@ -22,6 +22,7 @@ namespace gpk
 		SDialog												* Dialog											= 0;
 		int32_t												IdGUIControl										= -1;
 		int32_t												IdParent											= -1;
+		uint64_t											DeleteControl										: 1;
 
 		virtual												~IDialogControl										();
 
@@ -43,6 +44,8 @@ namespace gpk
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsControl										= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsButton										= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsCheckBox										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsViewport										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsViewportTitle									= {};
 		int32_t																FocusedCurrent										= -1;
 		int32_t																FocusedPrevious										= -1;
 		int32_t																SelectedCurrent										= -1;

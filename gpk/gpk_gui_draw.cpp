@@ -153,7 +153,6 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 	scaledBorders.Right												= (int32_t)(control.Border.Right	* scaleFinal.x);
 	scaledBorders.Bottom											= (int32_t)(control.Border.Bottom	* scaleFinal.y);
 
-
 	const ::gpk::SRectangle2D<int32_t>									& rectTotal												= controlMetrics.Total.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal;
 	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]			= controlMetrics.Client.Global;

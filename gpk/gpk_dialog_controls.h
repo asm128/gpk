@@ -6,27 +6,28 @@
 namespace gpk
 {
 	struct SDialogSlider;
-	::gpk::error_t										sliderCreate						(::gpk::SDialog			& dialog);
-	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider	& control, int64_t value);
-	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider	& control);
+	::gpk::error_t										sliderCreate						(::gpk::SDialog					& dialog);
+	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider			& control, int64_t value);
+	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider			& control);
 
 	struct SDialogTuner;
-	::gpk::error_t										tunerCreate							(::gpk::SDialog			& dialog);
-	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner	& control);
-	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner	& control, int64_t value);
+	::gpk::error_t										tunerCreate							(::gpk::SDialog					& dialog);
+	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner			& control);
+	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner			& control, int64_t value);
 
 	struct SDialogCheckBox;
-	::gpk::error_t										checkBoxCreate						(::gpk::SDialog			& dialog);
-	::gpk::error_t										checkBoxUpdate						(::gpk::SDialogCheckBox	& control);
+	::gpk::error_t										checkBoxCreate						(::gpk::SDialog					& dialog);
+	::gpk::error_t										checkBoxUpdate						(::gpk::SDialogCheckBox			& control);
 
 	struct SDialogEditBox;
-	::gpk::error_t										editBoxCreate						(::gpk::SDialog			& dialog);
-	::gpk::error_t										editBoxUpdate						(::gpk::SDialogEditBox	& control);
+	::gpk::error_t										editBoxCreate						(::gpk::SDialog					& dialog);
+	::gpk::error_t										editBoxUpdate						(::gpk::SDialogEditBox			& control);
 
 	struct SDialogViewport;
-	::gpk::error_t										viewportCreate						(::gpk::SDialog			& dialog);
-	::gpk::error_t										viewportUpdate						(::gpk::SDialogViewport	& control);
-
+	::gpk::error_t										viewportCreate						(::gpk::SDialog					& dialog);
+	::gpk::error_t										viewportUpdate						(::gpk::SDialogViewport			& control);
+	::gpk::error_t										viewportFold						(::gpk::SDialogViewport			& control, bool fold);
+	::gpk::error_t										viewportAdjustSize					(::gpk::SCoord2<int16_t>		& sizeViewport, const ::gpk::SCoord2<int16_t>	& sizeClient);
 
 	static inline	::gpk::error_t						sliderCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogSlider	>& createdControl)	 { int32_t index = -1; gpk_necall(index = sliderCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 	static inline	::gpk::error_t						tunerCreate							(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogTuner	>& createdControl)	 { int32_t index = -1; gpk_necall(index = tunerCreate		(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
@@ -43,6 +44,7 @@ namespace gpk
 				int32_t										IdClient							= -1;
 				bool										Dragging							= false;
 				bool										Folded								= false;
+				::gpk::SCoord2<bool>						DisplacementLock					= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::viewportUpdate(*this); }
 	};
