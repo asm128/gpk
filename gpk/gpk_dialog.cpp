@@ -61,7 +61,7 @@
 		ColorsViewportTitle	[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]			= ColorsViewportTitle	[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
 	}
 }
-static constexpr	const uint32_t									heightOfField								= 20;
+static constexpr	const uint32_t									heightOfField								= 18;
 ::gpk::error_t														gpk::checkBoxCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
@@ -268,6 +268,7 @@ static constexpr	const uint32_t									heightOfField								= 20;
 		::gpk::SControlConstraints												& constraints						= controlTable.Constraints	[idControl];
 		control.Area.Offset													= {};
 		control.Area.Size													= {2, heightOfField};
+		control.Align														= ::gpk::ALIGN_TOP_LEFT;
 		control.Margin.Left													= 4;
 		constraints.AttachSizeToControl.x									= idControl;
 
