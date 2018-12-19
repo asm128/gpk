@@ -36,28 +36,29 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
 	tuner->ValueLimits.Min												= 100;
 	tuner->ValueLimits.Max												= 200;
-	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
-	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
-	app.DialogMain.GUI->Controls.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
+	::gpk::SGUIControlTable    & controlTable = gui.Controls;
+	controlTable.Controls[tuner->IdGUIControl].Area.Offset	= {128, 192};
+	controlTable.Controls[tuner->IdGUIControl].Area.Size.x	= 128;
+	controlTable.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
 	::gpk::tunerSetValue(*tuner, 0);
 
 	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
 	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);
 	slider->ValueLimits.Min												= 0;
 	slider->ValueLimits.Max												= 255;
-	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
-	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Size.x	= 128;
-	app.DialogMain.GUI->Controls.Controls[slider->IdGUIControl].Area.Size.y	= 8;
+	controlTable.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
+	controlTable.Controls[slider->IdGUIControl].Area.Size.x	= 128;
+	controlTable.Controls[slider->IdGUIControl].Area.Size.y	= 8;
 
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox					= {};
 	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
-	app.DialogMain.GUI->Controls.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
+	controlTable.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
 
 
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport					= {};
 	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
-	app.DialogMain.GUI->Controls.Controls[viewport->IdGUIControl].Area.Offset	= {320, 128};
-	app.DialogMain.GUI->Controls.Controls[viewport->IdGUIControl].Area.Size		= {320, 200};
+	controlTable.Controls[viewport->IdGUIControl].Area.Offset	= {320, 128};
+	controlTable.Controls[viewport->IdGUIControl].Area.Size		= {320, 200};
 	return 0;
 }
 
