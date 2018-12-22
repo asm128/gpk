@@ -43,6 +43,7 @@
 	offscreenDetail.BitmapInfoSize																	= sizeof(::BITMAPINFO) + bytesToCopy;
 	ree_if(0 == (offscreenDetail.BitmapInfo = (::BITMAPINFO*)::malloc(offscreenDetail.BitmapInfoSize)), "malloc(%u) failed! Out of memory?", offscreenDetail.BitmapInfoSize);
 	const ::gpk::SCoord2<uint32_t>																		metricsSource								= colorArray.metrics();
+	//memcpy(&offscreenDetail.BitmapInfo->bmiColors[1], colorArray[0].begin(), metricsSource.x * metricsSource.y * sizeof(::gpk::SColorBGRA));
 	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
 		memcpy(&offscreenDetail.BitmapInfo->bmiColors[y * metricsSource.x], colorArray[metricsSource.y - 1 - y].begin(), metricsSource.x * sizeof(::gpk::SColorBGRA));
 

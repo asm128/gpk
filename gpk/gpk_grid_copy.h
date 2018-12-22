@@ -40,14 +40,14 @@ namespace gpk
 
 	template<typename _tCell, typename _tCoord>
 						::gpk::error_t							grid_copy_blend_ex				(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc)	{
-		for(int32_t y = 0; y < size_.y; ++y)
-			for(int32_t x = 0; x < size_.x; ++x) {
+		for(int32_t y = 0; y < (int32_t)size_.y; ++y)
+			for(int32_t x = 0; x < (int32_t)size_.x; ++x) {
 				const _tCell													& srcCell						= src[y + offsetSrc.y][x + offsetSrc.x];
 				_tCell															& dstCell						= dst[y + offsetDst.y][x + offsetDst.x];
 				double															factor							= srcCell.a / 255.0;
 				dstCell														= ::gpk::interpolate_linear(dstCell, srcCell, factor);
 			}
-		return ::gpk::max(size_.x * size_.y, 0);
+		return ::gpk::max((int32_t)size_.x * (int32_t)size_.y, 0);
 	}
 
 	template<typename _tCoord>
@@ -257,8 +257,8 @@ namespace gpk
 			, (int32_t)::gpk::min(dst.metrics().y, src.metrics().y)
 			};
 		uint32_t														srcMaxX							= src.metrics().x - 1;
-		for(uint32_t y = 0; y < metrics.y; ++y)
-		for(uint32_t x = 0; x < metrics.x; ++x)
+		for(int32_t y = 0; y < metrics.y; ++y)
+		for(int32_t x = 0; x < metrics.x; ++x)
 			dst[y][x]													= src[y][srcMaxX - x];
 		return metrics.y * metrics.x;
 	}

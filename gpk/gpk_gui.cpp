@@ -148,6 +148,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	controlTable.Children	[iControl]								= ::gpk::view_array<int32_t>{};
 	controlTable.Modes		[iControl]								= {};
 	controlTable.States		[iControl]								= {};
+	controlTable.Images		[iControl]								= {};
 	//controlTable.Modes		[iControl].UseNewPalettes				= 1;
 	::gpk::SControl														& control				= controlTable.Controls		[iControl]	= {};
 	::gpk::SControlConstraints											& controlConstraints	= controlTable.Constraints	[iControl]	= {};
@@ -228,6 +229,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 		, gui.Controls.Children
 		, gui.Controls.Constraints
 		, gui.Controls.Modes
+		, gui.Controls.Images
 		) - 1, "%s", "Failed to resize! Out of memory?");
 	gpk_necall(::controlInstanceReset(gui, iControl), "%s", "Unknown issue!");
 	return iControl;

@@ -62,6 +62,7 @@ namespace gpk
 		bool													Updated									: 1;
 
 		bool													Hidden									: 1;
+		bool													ImageInvertY							: 1;
 		bool													Unused									: 1;
 	};
 
@@ -170,6 +171,9 @@ namespace gpk
 	//		}
 	//	}
 	//};
+	struct SControlImage {
+		::gpk::SImage<::gpk::SColorBGRA>						Temp												= {};
+	};
 
 	struct SControl {
 		::gpk::SRectangle2D<int16_t>							Area													= {{}, {16, 16}};
@@ -223,6 +227,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SControlConstraints	>			Constraints							= {};
 		::gpk::array_obj<::gpk::SControlMode		>			Modes								= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>			Children							= {};
+		::gpk::array_obj<::gpk::SControlImage		>			Images								= {};
 	};
 
 	struct SGUI {

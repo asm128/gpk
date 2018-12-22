@@ -87,7 +87,6 @@ static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool dis
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-
 static		::gpk::error_t										fillColorTableBorders3D									(const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{ 
 	double																bright;
 	double																shaded;
@@ -212,12 +211,25 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	for(uint32_t iTri = 0; iTri < 8; ++iTri)
 		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
 
-	if(control.Image.metrics().LengthSquared())
-		::gpk::grid_copy_blend(target, control.Image, //controlMetrics.Client.Global);
-			::gpk::SRectangle2D<int32_t>
-				{ controlMetrics.Client.Global.Offset
-				, controlMetrics.Client.Global.Size + ::gpk::SCoord2<int32_t>{::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x)), ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))}
-				});
+	if(control.Image.metrics().x > 0 && control.Image.metrics().y > 0) {
+		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
+		::gpk::SRectangle2D<int32_t>									rectImage							=
+			{ controlMetrics.Client.Global.Offset
+			, controlMetrics.Client.Global.Size 
+				+ ::gpk::SCoord2<int32_t>
+					{ ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x))
+					, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
+					}
+			};
+		if(0 == state.ImageInvertY)
+			::gpk::grid_copy_blend(target, control.Image, rectImage);
+		else {
+			::gpk::SImage<::gpk::SColorBGRA>								& inverted							= gui.Controls.Images[iControl].Temp;
+			inverted.resize(control.Image.metrics());
+			::gpk::grid_mirror_y(inverted.View, control.Image);
+			::gpk::grid_copy_blend(target, inverted.View, rectImage);
+		}
+	}
 
 	error_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
 	return 0;
