@@ -43,9 +43,11 @@ namespace gpk
 		for(int32_t y = 0; y < (int32_t)size_.y; ++y)
 			for(int32_t x = 0; x < (int32_t)size_.x; ++x) {
 				const _tCell													& srcCell						= src[y + offsetSrc.y][x + offsetSrc.x];
-				_tCell															& dstCell						= dst[y + offsetDst.y][x + offsetDst.x];
-				double															factor							= srcCell.a / 255.0;
-				dstCell														= ::gpk::interpolate_linear(dstCell, srcCell, factor);
+				if(srcCell.a) {
+					_tCell															& dstCell						= dst[y + offsetDst.y][x + offsetDst.x];
+					double															factor							= srcCell.a / 255.0;
+					dstCell														= ::gpk::interpolate_linear(dstCell, srcCell, factor);
+				}
 			}
 		return ::gpk::max((int32_t)size_.x * (int32_t)size_.y, 0);
 	}

@@ -80,9 +80,9 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
 	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
-	controlTable.Controls	[viewport->IdGUIControl	].Area.Offset			= {320, 128};
-	controlTable.Controls	[viewport->IdGUIControl	].Area.Size				= {640, 480};
-	controlTable.States		[viewport->IdClient		].ImageInvertY			= true;
+	controlTable.Controls	[viewport->IdGUIControl	].Area.Offset		= {320, 128};
+	controlTable.Controls	[viewport->IdGUIControl	].Area.Size			= {640, 480};
+	controlTable.States		[viewport->IdClient		].ImageInvertY		= true;
 
 	static constexpr const ::gpk::SCoord3<float>							cubeCenter									= {0.5f, 0.5f, 0.5f};
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
@@ -105,7 +105,6 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	}
 	::gpk::SFramework														& framework									= app.Framework;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "%s", "Exit requested by framework update.");
-
 	::gpk::SGUI																& gui										= *framework.GUI;
 	::gpk::array_pod<uint32_t>												controlsToProcess							= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
@@ -118,7 +117,6 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 				return 1;
 		}
 	}
-
 	app.DialogMain.Update();
 	//timer.Frame();
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
@@ -165,13 +163,14 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	::gpk::array_pod<::gpk::SColorBGRA>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
 	triangle3dList		.resize(12);
 	triangle3dColorList	.resize(12);
-	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
-	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
+
 	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
+	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
 	::gpk::SCameraRange														& nearFar									= app.Scene.Camera.NearFar;
 	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
 	::gme::SCamera															& camera									= app.Scene.Camera;
-	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
+	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
+	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
 	projection.Identity();
 	const ::gpk::SCoord3<float>												tilt										= {10, };	// ? cam't remember what is this. Radians? Eulers?
 	const ::gpk::SCoord3<float>												rotation									= {0, (float)frameInfo.FrameNumber / 100, 0};
@@ -215,7 +214,7 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
 		double																	lightFactor									= geometryCubeNormals[iTriangle].Dot(lightPos);
-		triangle3dColorList[iTriangle]									= ::gpk::RED * lightFactor;
+		triangle3dColorList[iTriangle]										= ::gpk::RED * lightFactor;
 	}
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>								trianglePixelCoords;
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>								wireframePixelCoords;

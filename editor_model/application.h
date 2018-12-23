@@ -33,20 +33,21 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SApplication {
+							::std::mutex														LockRender						;
+
 							::gpk::SFramework													Framework;
 							::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Offscreen						= {};
 							::gpk::array_obj<::gpk::SImage<::gpk::SColorBGRA>>					PNGImages						= {};
 
 							int32_t																IdExit							= -1;
 
-							::std::mutex														LockRender;
+							::gpk::SDialog														DialogMain						= {};
+							int32_t																Slider							= -1;
+							int32_t																NumericTuner					= -1;
+							int32_t																CheckBox						= -1;
+							int32_t																Viewport						= -1;
+							::gpk::STriangle3D<float>											CubePositions	[12]			= {};
 
-							::gpk::SDialog														DialogMain;
-							int32_t																Slider;
-							int32_t																NumericTuner;
-							int32_t																CheckBox;
-							int32_t																Viewport;
-							::gpk::STriangle3D	<float>											CubePositions	[12]			= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>	Buffer3D;
 							SVertexCache														VertexCache;
 

@@ -146,19 +146,14 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	};
 
 					::gpk::error_t									draw										(::gme::SApplication & app)							{
-	//::gpk::STimer															timer;
-	app;
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
-	target.create();
-	target->resize(app.Framework.MainDisplay.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
-	//{
-	//	::gpk::mutex_guard														lock										(app.Framework.LockGUI);
-	//	::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
-	//}
+	// -- 
+
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		buffer3d									= app.Buffer3D;
 	::gpk::SFramework														& framework									= app.Framework;
 	::gpk::SGUI																& gui										= *framework.GUI;
-	buffer3d->resize(gui.Controls.Controls[gui.Controls.Children[app.DialogMain.Controls[app.Viewport]->IdGUIControl][0]].Area.Size.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
+	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
+	app.DialogMain.Controls[app.Viewport].as(viewport);
+	buffer3d->resize(gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
 
 	//------------------------------------------------
 	::gpk::array_pod<::gpk::STriangle3D<float>>								& triangle3dList							= app.VertexCache.Triangle3dList		;
@@ -189,13 +184,13 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	projection															= viewMatrix * projection;
 	lightPos.Normalize();
 
-	::gpk::SMatrix4<float>													viewport									= {};
-	viewport._11														= 2.0f / offscreenMetrics.x;
-	viewport._22														= 2.0f / offscreenMetrics.y;
-	viewport._33														= 1.0f / (float)(nearFar.Far - nearFar.Near);
-	viewport._43														= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
-	viewport._44														= 1.0f;
-	projection															= projection * viewport.GetInverse();
+	::gpk::SMatrix4<float>													mViewport									= {};
+	mViewport._11														= 2.0f / offscreenMetrics.x;
+	mViewport._22														= 2.0f / offscreenMetrics.y;
+	mViewport._33														= 1.0f / (float)(nearFar.Far - nearFar.Near);
+	mViewport._43														= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
+	mViewport._44														= 1.0f;
+	projection															= projection * mViewport.GetInverse();
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
 		::gpk::STriangle3D<float>												& transformedTriangle						= triangle3dList[iTriangle];
 		transformedTriangle													= app.CubePositions[iTriangle];
@@ -225,13 +220,6 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		if(lightFactor > 0)
 			continue;
 		error_if(errored(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])), "Not sure if these functions could ever fail");
-		//::gpk::drawLine(offscreen.View, (::gpk::SColorBGRA)::gpk::GREEN, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B});
-		//::gpk::drawLine(offscreen.View, (::gpk::SColorBGRA)::gpk::GREEN, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C});
-		//::gpk::drawLine(offscreen.View, (::gpk::SColorBGRA)::gpk::GREEN, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A});
-		//trianglePixelCoords.clear();
-		//error_if(errored(::gpk::drawTriangle(offscreenMetrics, triangle2dList[iTriangle], trianglePixelCoords)), "Not sure if these functions could ever fail");
-		//for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
-		//	::gpk::drawPixelLight(offscreen.View, trianglePixelCoords[iCoord], (::gpk::SColorBGRA)::gpk::BLUE, 0.05f, 2.5);
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A}, wireframePixelCoords);
@@ -239,7 +227,12 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::SColorBGRA)::gpk::GREEN, 0.05f, 1.5);
 
-	gui.Controls.Controls[gui.Controls.Children[app.DialogMain.Controls[app.Viewport]->IdGUIControl][0]].Image = buffer3d->Color.View; 
+	gui.Controls.Controls[viewport->IdClient].Image							= buffer3d->Color.View; 
+
+	// --- 
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
+	target.create();
+	target->resize(app.Framework.MainDisplay.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
 	{
 		::gpk::mutex_guard														lock										(app.Framework.LockGUI);
 		::gpk::guiDraw(*app.DialogMain.GUI, target->Color.View);
@@ -248,7 +241,5 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		::gpk::mutex_guard														lock										(app.LockRender);
 		app.Offscreen														= target;
 	}
-	//timer.Frame();
-	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
