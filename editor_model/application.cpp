@@ -227,7 +227,7 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord)
 		::gpk::drawPixelLight(buffer3d->Color.View, wireframePixelCoords[iCoord], (::gpk::SColorBGRA)::gpk::GREEN, 0.05f, 1.5);
 
-	gui.Controls.Controls[viewport->IdClient].Image							= buffer3d->Color.View; 
+	gui.Controls.Controls[viewport->IdClient].Image						= buffer3d->Color.View; 
 
 	// --- 
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
