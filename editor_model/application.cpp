@@ -81,7 +81,7 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
 	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
 	controlTable.Controls	[viewport->IdGUIControl	].Area.Offset			= {320, 128};
-	controlTable.Controls	[viewport->IdGUIControl	].Area.Size				= {1280, 720};
+	controlTable.Controls	[viewport->IdGUIControl	].Area.Size				= {640, 480};
 	controlTable.States		[viewport->IdClient		].ImageInvertY			= true;
 
 	static constexpr const ::gpk::SCoord3<float>							cubeCenter									= {0.5f, 0.5f, 0.5f};
@@ -146,8 +146,6 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	};
 
 					::gpk::error_t									draw										(::gme::SApplication & app)							{
-	// -- 
-
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		buffer3d									= app.Buffer3D;
 	::gpk::SFramework														& framework									= app.Framework;
 	::gpk::SGUI																& gui										= *framework.GUI;
