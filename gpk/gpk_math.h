@@ -22,7 +22,7 @@ namespace gpk
 	static inline constexpr	_tNumber				clamp					(const _tNumber _value, const _tNumber _min, const _tNumber _max)			noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
 
 	template<typename _tNumber>
-	constexpr				_tNumber				interpolate_linear		(const _tNumber a, const _tNumber b, const double factor)					noexcept	{ return (_tNumber)(b * factor + a * (1.0 - factor));	}
+	constexpr				_tNumber				interpolate_linear		(const _tNumber a, const _tNumber b, const double factor)					noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct					SPairSinCos				{ double Sin, Cos; };
 

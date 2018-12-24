@@ -81,7 +81,7 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
 	app.Viewport														= ::gpk::viewportCreate(app.DialogMain, viewport);
 	controlTable.Controls	[viewport->IdGUIControl	].Area.Offset			= {320, 128};
-	controlTable.Controls	[viewport->IdGUIControl	].Area.Size				= {640, 480};
+	controlTable.Controls	[viewport->IdGUIControl	].Area.Size				= {1280, 720};
 	controlTable.States		[viewport->IdClient		].ImageInvertY			= true;
 
 	static constexpr const ::gpk::SCoord3<float>							cubeCenter									= {0.5f, 0.5f, 0.5f};
