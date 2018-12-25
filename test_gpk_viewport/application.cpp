@@ -6,7 +6,7 @@
 #include "gpk_matrix.h"
 #include "gpk_bitmap_target.h"
 
-//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
@@ -32,8 +32,28 @@ static constexpr	const ::gpk::STriangle3D<float>					modelPositionsVertices	[12]
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
 
+static constexpr	const ::gpk::STriangle3D<float>						modelNormalVectors		[12]						=
+	{ {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- first			?? I have no idea if this is correct lol
+	, {{0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}}	// Right	- second		?? I have no idea if this is correct lol
+//		{					, , 										}
+	, {{-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}}	// Back		- first			?? I have no idea if this is correct lol
+	, {{-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}	, {-1.0f, 0.0f, 0.0f}}	// Back		- second		?? I have no idea if this is correct lol
+//		{					, , 										}
+	, {{0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}}	// Bottom	- first			?? I have no idea if this is correct lol
+	, {{0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}	, {0.0f, -1.0f, 0.0f}}	// Bottom	- second		?? I have no idea if this is correct lol
+//		{					, , 										}
+	, {{0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}}	// Left		- first
+	, {{0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}	, {0.0f, 0.0f, 1.0f}}	// Left		- second
+//		{					, , 										}
+	, {{1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}}	// Front	- first
+	, {{1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}	, {1.0f, 0.0f, 0.0f}}	// Front	- second
+//		{					, , 										}
+	, {{0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}}	// Top		- first
+	, {{0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}	, {0.0f, 1.0f, 0.0f}}	// Top		- second
+	};
+
 template<typename _tIndex, typename _tValue>
-					::gpk::error_t									indexValues									(const ::gpk::view_array<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values){
+					::gpk::error_t									indexValues									(const ::gpk::view_array<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values, ::gpk::array_pod<_tIndex> & out_remap){
 	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
 		bool																	bFound										= false;
 		const _tValue															& in_value									= in_values[iValue];
@@ -41,16 +61,20 @@ template<typename _tIndex, typename _tValue>
 			const _tValue															& out_value									= out_values[iValueIndexed];
 			if(in_value == out_value) {
 				bFound																= true;
-				out_indices.push_back(iValueIndexed);
+				out_indices.push_back((_tIndex)iValueIndexed);
+				out_remap.push_back((_tIndex)iValue);
 				break;
 			}
 		}
-		if(false == bFound)
-			out_indices.push_back(out_values.push_back(in_value));
+		if(false == bFound) {
+			int32_t																	newIndex;
+			gpk_necall(newIndex = out_values.push_back(in_value), "%s", "Out of memory?");
+			out_indices.push_back((_tIndex)newIndex);
+			out_remap.push_back((_tIndex)iValue);
+		}
 	}
 	return 0;
 }
-
 
 					::gpk::error_t									cleanup										(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
 					::gpk::error_t									setup										(::gme::SApplication & app)						{
@@ -129,13 +153,13 @@ template<typename _tIndex, typename _tValue>
 	controlTable.States		[viewport->IdClient		].ImageInvertY			= true;
 
 	static constexpr const ::gpk::SCoord3<float>							cubeCenter									= {0.5f, 0.5f, 0.5f};
-	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values);
-	app.ModelGeometry.Positions.Indices;
+	::gpk::array_pod<uint8_t>												& remap										= app.ModelGeometry.PositionRemap;
+	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values, remap);
 	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
 		::gpk::SCoord3<float>													& vertexToTransform					= app.ModelGeometry.Positions.Values[iVertex];
 		vertexToTransform													-= cubeCenter;
 	}
-
+	app.ModelGeometry.NormalsVertex.Values									= modelNormalVectors;
 	return 0;
 }
 
@@ -207,25 +231,6 @@ template<typename _tIndex, typename _tValue>
 	return 0;
 }
 
-static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						=
-	{ {0.0f, 0.0f, -1.0f}	// Right	- first			?? I have no idea if this is correct lol
-	, {0.0f, 0.0f, -1.0f}	// Right	- second		?? I have no idea if this is correct lol
-
-	, {-1.0f, 0.0f, 0.0f}	// Back		- first			?? I have no idea if this is correct lol
-	, {-1.0f, 0.0f, 0.0f}	// Back		- second		?? I have no idea if this is correct lol
-
-	, {0.0f, -1.0f, 0.0f}	// Bottom	- first			?? I have no idea if this is correct lol
-	, {0.0f, -1.0f, 0.0f}	// Bottom	- second		?? I have no idea if this is correct lol
-
-	, {0.0f, 0.0f, 1.0f}	// Left		- first
-	, {0.0f, 0.0f, 1.0f}	// Left		- second
-
-	, {1.0f, 0.0f, 0.0f}	// Front	- first
-	, {1.0f, 0.0f, 0.0f}	// Front	- second
-
-	, {0.0f, 1.0f, 0.0f}	// Top		- first
-	, {0.0f, 1.0f, 0.0f}	// Top		- second
-	};
 
 					::gpk::error_t									draw										(::gme::SApplication & app)							{
 	static ::gpk::STimer													timer;
@@ -242,7 +247,7 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	::gpk::array_pod<::gpk::SColorBGRA>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
 	const uint32_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
 	triangle3dList		.resize(countTriangles);
-	triangle3dColorList	.resize(countTriangles);
+	triangle3dColorList	.resize(countTriangles * 3);
 	::gpk::SMatrix4<float>													projection									;
 	::gme::SCamera															camera										;
 	{
@@ -262,7 +267,7 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		::gpk::transform(transformedTriangle, projection);
 	}
 	::gpk::array_pod<::gpk::STriangle2D<int32_t>>							triangle2dList								= {};
-	triangle2dList.resize(12);
+	triangle2dList.resize(countTriangles);
 	const ::gpk::SCoord2<int32_t>											screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
 	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
 		::gpk::STriangle3D<float>												& transformedTriangle3D						= triangle3dList[iTriangle];
@@ -271,19 +276,34 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		transformedTriangle2D.B												= {(int32_t)transformedTriangle3D.B.x, (int32_t)transformedTriangle3D.B.y};
 		transformedTriangle2D.C												= {(int32_t)transformedTriangle3D.C.x, (int32_t)transformedTriangle3D.C.y};
 		::gpk::translate(transformedTriangle2D, screenCenter);
+
 	}
 
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
-		double																	lightFactor									= geometryCubeNormals[iTriangle].Dot(lightPos);
-		triangle3dColorList[iTriangle]									= ::gpk::RED * lightFactor;
+	::gpk::view_array<::gpk::SCoord3<float>>								normals										= {(::gpk::SCoord3<float>*)app.ModelGeometry.NormalsVertex.Values.begin(), app.ModelGeometry.NormalsVertex.Values.size() * 3};
+	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Indices.size(); ++iVertex) {
+		double																	lightFactor									= normals[iVertex].Dot(lightPos);
+		triangle3dColorList[iVertex]										= ::gpk::RED * lightFactor;
 	}
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>								wireframePixelCoords;
+	::gpk::array_pod<::gpk::SCoord2<int32_t>>								trianglePixelCoords;
 	::gpk::SCoord3<float>													cameraFront										= (camera.Target - camera.Position).Normalize();
+	::gpk::array_pod<::gpk::STriangleWeights<double>>						triangleWeights;
+
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
-		double																	lightFactor									= geometryCubeNormals[iTriangle].Dot(cameraFront);
+		double																	lightFactor									= modelNormalVectors[iTriangle].A.Dot(cameraFront);
 		if(lightFactor > 0)
 			continue;
-		error_if(errored(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])), "Not sure if these functions could ever fail");
+		//error_if(errored(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])), "Not sure if these functions could ever fail");
+		trianglePixelCoords.clear();
+		::gpk::STriangle3D<float>												transformedTriangle3D						= {};
+		transformedTriangle3D.A												= {(float)triangle2dList[iTriangle].A.x, (float)triangle2dList[iTriangle].A.y, triangle3dList[iTriangle].A.z};
+		transformedTriangle3D.B												= {(float)triangle2dList[iTriangle].B.x, (float)triangle2dList[iTriangle].B.y, triangle3dList[iTriangle].B.z};
+		transformedTriangle3D.C												= {(float)triangle2dList[iTriangle].C.x, (float)triangle2dList[iTriangle].C.y, triangle3dList[iTriangle].C.z};
+		//::gpk::translate(transformedTriangle3D, {(float)screenCenter.x + .5f, (float)screenCenter.y + .5f, 0.f});
+		error_if(errored(::gpk::drawTriangle(buffer3d->DepthStencil.View, camera.NearFar, transformedTriangle3D, trianglePixelCoords, triangleWeights)), "Not sure if these functions could ever fail");
+		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
+			buffer3d->Color.View[trianglePixelCoords[iCoord].y][trianglePixelCoords[iCoord].x] = triangle3dColorList[iTriangle * 3];
+
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].A, triangle2dList[iTriangle].B}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].B, triangle2dList[iTriangle].C}, wireframePixelCoords);
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine2D<int32_t>{triangle2dList[iTriangle].C, triangle2dList[iTriangle].A}, wireframePixelCoords);

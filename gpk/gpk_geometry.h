@@ -27,6 +27,8 @@ namespace gpk
 					::gpk::SModelBufferIndexed<::gpk::SCoord3		<_tAxis>, _tIndex>	NormalsTriangle				;
 					::gpk::SModelBufferIndexed<::gpk::STriangle3D	<_tAxis>, _tIndex>	NormalsVertex				;
 					::gpk::SModelBufferIndexed<::gpk::STriangle2D	<_tAxis>, _tIndex>	UVs							;
+					::gpk::array_pod<_tIndex>											PositionRemap				;
+
 	};
 
 	template <typename _tUnit>
