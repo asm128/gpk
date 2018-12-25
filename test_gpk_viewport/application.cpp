@@ -290,7 +290,7 @@ template<typename _tIndex, typename _tValue>
 	::gpk::array_pod<::gpk::STriangleWeights<double>>						triangleWeights;
 
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
-		double																	lightFactor									= modelNormalVectors[iTriangle].A.Dot(cameraFront);
+		double																	lightFactor									= normals[iTriangle * 3].Dot(cameraFront);
 		if(lightFactor > 0)
 			continue;
 		//error_if(errored(::gpk::drawTriangle(buffer3d->Color.View, triangle3dColorList[iTriangle], triangle2dList[iTriangle])), "Not sure if these functions could ever fail");
@@ -299,7 +299,6 @@ template<typename _tIndex, typename _tValue>
 		transformedTriangle3D.A												= {(float)triangle2dList[iTriangle].A.x, (float)triangle2dList[iTriangle].A.y, triangle3dList[iTriangle].A.z};
 		transformedTriangle3D.B												= {(float)triangle2dList[iTriangle].B.x, (float)triangle2dList[iTriangle].B.y, triangle3dList[iTriangle].B.z};
 		transformedTriangle3D.C												= {(float)triangle2dList[iTriangle].C.x, (float)triangle2dList[iTriangle].C.y, triangle3dList[iTriangle].C.z};
-		//::gpk::translate(transformedTriangle3D, {(float)screenCenter.x + .5f, (float)screenCenter.y + .5f, 0.f});
 		error_if(errored(::gpk::drawTriangle(buffer3d->DepthStencil.View, camera.NearFar, transformedTriangle3D, trianglePixelCoords, triangleWeights)), "Not sure if these functions could ever fail");
 		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord)
 			buffer3d->Color.View[trianglePixelCoords[iCoord].y][trianglePixelCoords[iCoord].x] = triangle3dColorList[iTriangle * 3];
