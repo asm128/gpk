@@ -1,5 +1,6 @@
 #include "application.h"
 #include "gpk_bitmap_target.h"
+#include "gpk_dialog_controls.h"
 
 					::gpk::error_t										drawPixel									
 	( ::SRenderCache															& renderCache
@@ -49,7 +50,7 @@
 	return 0;
 }
 
-					::gpk::error_t										drawGrides									(::gme::SApplication& applicationInstance, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>& target)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+					::gpk::error_t										drawGrids									(::gme::SApplication& applicationInstance, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>& target)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	::gpk::SFramework::TOffscreen												& offscreen									= target.Color;
 	::gpk::SImage<uint32_t>														& offscreenDepth							= target.DepthStencil;
 	const ::gpk::SCoord2<uint32_t>												& offscreenMetrics							= offscreen.View.metrics();
@@ -121,7 +122,7 @@
 			gpk_necall(renderCache.Triangle3dToDraw		.push_back(transformedTriangle3D)	, "Out of memory?");
 			::gpk::transform(triangle3DWorld, xWorld);
 			gpk_necall(renderCache.Triangle3dWorld		.push_back(triangle3DWorld)			, "Out of memory?");
-			gpk_necall(renderCache.Triangle3dIndices	.push_back(iTriangle)		, "Out of memory?");
+			gpk_necall(renderCache.Triangle3dIndices	.push_back(iTriangle)				, "Out of memory?");
 		}
 		gpk_necall(::gpk::resize(renderCache.Triangle3dIndices.size()
 			, renderCache.TransformedNormalsTriangle
@@ -148,7 +149,11 @@
 				continue;
 			renderCache.TrianglePixelCoords.clear();
 			renderCache.TrianglePixelWeights.clear();
-			error_if(errored(::gpk::drawTriangle(offscreenDepth.View, {fNear, fFar}, renderCache.Triangle3dToDraw[iTriangle], renderCache.TrianglePixelCoords, renderCache.TrianglePixelWeights)), "Not sure if these functions could ever fail");
+			offscreenDepth;
+			::gpk::ptr_obj<::gpk::SDialogCheckBox>			checkbox;
+			applicationInstance.DialogMain.Controls[applicationInstance.CheckBox].as(checkbox);
+			if(false == checkbox->Checked)
+				error_if(errored(::gpk::drawTriangle(offscreenDepth.View, {fNear, fFar}, renderCache.Triangle3dToDraw[iTriangle], renderCache.TrianglePixelCoords, renderCache.TrianglePixelWeights)), "Not sure if these functions could ever fail");
 			//if(0 != renderCache.TrianglePixelCoords.size())
 			++renderCache.TrianglesDrawn;
 			const int32_t																iGridTri										= renderCache.Triangle3dIndices[iTriangle];
@@ -161,9 +166,11 @@
 				else
 					++pixelsSkipped;
 			}
-			//error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].A, renderCache.Triangle3dToDraw[iTriangle].B}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
-			//error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].B, renderCache.Triangle3dToDraw[iTriangle].C}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
-			//error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].C, renderCache.Triangle3dToDraw[iTriangle].A}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
+			if(checkbox->Checked) {
+				error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].A, renderCache.Triangle3dToDraw[iTriangle].B}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
+				error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].B, renderCache.Triangle3dToDraw[iTriangle].C}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
+				error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].C, renderCache.Triangle3dToDraw[iTriangle].A}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
+			}
 			// draw normals
 			//error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].A, renderCache.Triangle3dToDraw[iTriangle].A + (renderCache.TransformedNormalsTriangle[iTriangle])}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
 			//error_if(errored(::gpk::drawLine(offscreenMetrics, ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].B, renderCache.Triangle3dToDraw[iTriangle].B + (renderCache.TransformedNormalsTriangle[iTriangle])}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");

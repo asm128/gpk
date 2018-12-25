@@ -171,7 +171,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	
 	::gpk::SModelGeometry<float>												& geometryGrid								= app.Grid;
 	::generateModelFromHeights(app.TileHeights.View, geometryGrid);
-	::gpk::generateGridGeometry(textureGridMetrics, geometryGrid);
+	//::gpk::generateGridGeometry(textureGridMetrics, geometryGrid);
 	
 	const ::gpk::SCoord3<float>													gridCenter									= {textureGridMetrics.x / 2.0f, 0, textureGridMetrics.y / 2.0f};
 	
@@ -201,11 +201,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	framework.Settings.GUIZoom								= false;
-	app.Scene.Camera.Points.Position						= {30, 40, 0};
-	app.Scene.Camera.NearFar.Far							= 1000;
-	app.Scene.Camera.NearFar.Near							= 0.001;
-
+	framework.Settings.GUIZoom											= false;
+	app.Scene.Camera.Points.Position									= {30, 40, 0};
+	app.Scene.Camera.NearFar.Far										= 1000;
+	app.Scene.Camera.NearFar.Near										= 0.001;
 	return 0;
 }
 
@@ -281,7 +280,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-			::gpk::error_t											drawGrides									(::gme::SApplication& applicationInstance, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>& target);
+			::gpk::error_t											drawGrids									(::gme::SApplication& applicationInstance, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>& target);
 			::gpk::error_t											draw										(::gme::SApplication & app)							{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework									= app.Framework;
@@ -293,9 +292,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	buffer3D.resize(offscreenMetrics, {0, 0, 0, 0}, 0xFFFFFFFF);
 	gui.Controls.Controls[viewport->IdClient].Image						= buffer3D.Color.View;
-	int32_t 																pixelsDrawn0								= drawGrides(app, buffer3D); error_if(errored(pixelsDrawn0), "??");
+	int32_t 																pixelsDrawn0								= drawGrids(app, buffer3D); 
+	error_if(errored(pixelsDrawn0), "??");
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
-	target.create();
 	target->resize(app.Framework.MainDisplay.Size, ::gpk::LIGHTGRAY, 0xFFFFFFFFU);
 	{
 		::gpk::mutex_guard														lock					(app.Framework.LockGUI);
