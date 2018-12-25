@@ -189,9 +189,9 @@ template<typename _tIndex, typename _tValue>
 	app.DialogMain.Update();
 
 	//------------------------------------------------
+	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
 	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
 	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
-	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
 	::gpk::SCameraNearFar													& nearFar									= app.Scene.Camera.NearFar;
 	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
 	::gme::SCamera															& camera									= app.Scene.Camera;
