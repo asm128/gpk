@@ -15,16 +15,18 @@ namespace gpk
 					::gpk::array_pod<::gpk::STriangle2D	<_tUnit>>		UVs											;
 	};
 
-	template <typename _tUnit>
+	template <typename _tElement, typename _tIndex>
+	struct SModelBufferIndexed {
+					::gpk::array_pod<_tIndex>							Indices										;
+					::gpk::array_pod<_tElement>							Values										;
+	};
+
+	template <typename _tAxis, typename _tIndex>
 	struct SModelGeometryIndexed {
-					::gpk::array_pod<int32_t>							IndicesPositions							;
-					::gpk::array_pod<::gpk::STriangle3D	<_tUnit>>		Positions									;
-					::gpk::array_pod<int32_t>							IndicesNormalsTriangle						;
-					::gpk::array_pod<::gpk::SCoord3		<_tUnit>>		NormalsTriangle								;
-					::gpk::array_pod<int32_t>							IndicesNormalsVertex						;
-					::gpk::array_pod<::gpk::STriangle3D	<_tUnit>>		NormalsVertex								;
-					::gpk::array_pod<int32_t>							IndicesNormalsUVs							;
-					::gpk::array_pod<::gpk::STriangle2D	<_tUnit>>		UVs											;
+					::gpk::SModelBufferIndexed<::gpk::SCoord3		<_tAxis>, _tIndex>	Positions					;
+					::gpk::SModelBufferIndexed<::gpk::SCoord3		<_tAxis>, _tIndex>	NormalsTriangle				;
+					::gpk::SModelBufferIndexed<::gpk::STriangle3D	<_tAxis>, _tIndex>	NormalsVertex				;
+					::gpk::SModelBufferIndexed<::gpk::STriangle2D	<_tAxis>, _tIndex>	UVs							;
 	};
 
 	template <typename _tUnit>

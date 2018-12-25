@@ -48,8 +48,9 @@ namespace gpk
 
 	struct SSceneCamera {
 							::gpk::SCameraPoints									Points								;
-							::gpk::SCameraRange										Range								;
 							::gpk::SCameraVectors									Vectors								;
+							::gpk::SCameraNearFar									NearFar								;
+							double													Angle;
 	};
 
 	enum SCENE_OBJECT_TYPE
@@ -88,18 +89,17 @@ namespace gpk
 
 							::gpk::SSceneCamera										Camera										=
 								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}
-								, ::gpk::SCameraRange
-									{ 0.01
-									, 100.0
-									}
 								, ::gpk::SCameraVectors
 									{ {1, 0, 0}
 									, {0, 1, 0}
 									, {0, 0, 1}
 									}
+								, ::gpk::SCameraNearFar
+									{ 0.01
+									, 100.0
+									}
+								, .25
 								};
-
-							double    CameraAngle = .25;
 	};
 
 	static inline		::gpk::error_t											sceneBoxAdd									(SScene& scene)	{

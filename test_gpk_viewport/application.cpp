@@ -12,7 +12,7 @@
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 // Vertex coordinates for cube faces
-static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
+static constexpr	const ::gpk::STriangle3D<float>					modelPositionsVertices	[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second		?? I have no idea if this is correct lol
 
@@ -31,6 +31,26 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}}	// Top		- first
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
+
+template<typename _tIndex, typename _tValue>
+					::gpk::error_t									indexValues									(const ::gpk::view_array<const _tValue> & in_values, ::gpk::array_pod<_tIndex> & out_indices, ::gpk::array_pod<_tValue> & out_values){
+	for(uint32_t iValue = 0; iValue < in_values.size(); ++iValue) {
+		bool																	bFound										= false;
+		const _tValue															& in_value									= in_values[iValue];
+		for(uint32_t iValueIndexed = 0; iValueIndexed < out_values.size(); ++iValueIndexed) {
+			const _tValue															& out_value									= out_values[iValueIndexed];
+			if(in_value == out_value) {
+				bFound																= true;
+				out_indices.push_back(iValueIndexed);
+				break;
+			}
+		}
+		if(false == bFound)
+			out_indices.push_back(out_values.push_back(in_value));
+	}
+	return 0;
+}
+
 
 					::gpk::error_t									cleanup										(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
 					::gpk::error_t									setup										(::gme::SApplication & app)						{
@@ -109,12 +129,11 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	controlTable.States		[viewport->IdClient		].ImageInvertY			= true;
 
 	static constexpr const ::gpk::SCoord3<float>							cubeCenter									= {0.5f, 0.5f, 0.5f};
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
-		::gpk::STriangle3D<float>												& transformedTriangle						= app.CubePositions[iTriangle];
-		transformedTriangle													= geometryCube[iTriangle];
-		transformedTriangle.A												-= cubeCenter;
-		transformedTriangle.B												-= cubeCenter;
-		transformedTriangle.C												-= cubeCenter;
+	::indexValues({&modelPositionsVertices[0].A, ::gpk::size(modelPositionsVertices) * 3}, app.ModelGeometry.Positions.Indices, app.ModelGeometry.Positions.Values);
+	app.ModelGeometry.Positions.Indices;
+	for(uint32_t iVertex = 0; iVertex < app.ModelGeometry.Positions.Values.size(); ++iVertex) {
+		::gpk::SCoord3<float>													& vertexToTransform					= app.ModelGeometry.Positions.Values[iVertex];
+		vertexToTransform													-= cubeCenter;
 	}
 
 	return 0;
@@ -149,7 +168,7 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
 	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
 	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
-	::gpk::SCameraRange														& nearFar									= app.Scene.Camera.NearFar;
+	::gpk::SCameraNearFar													& nearFar									= app.Scene.Camera.NearFar;
 	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
 	::gme::SCamera															& camera									= app.Scene.Camera;
 	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
@@ -219,10 +238,11 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	const ::gpk::SCoord2<uint32_t>											& offscreenMetrics							= gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>();
 	buffer3d->resize(offscreenMetrics, {0, 0, 0, 0}, (uint32_t)-1);
 
-	::gpk::array_pod<::gpk::STriangle3D<float>>								& triangle3dList							= app.VertexCache.Triangle3dList		;
+	::gpk::array_pod<::gpk::STriangle3D<float>>								& triangle3dList							= app.VertexCache.Triangle3dTransformed	;
 	::gpk::array_pod<::gpk::SColorBGRA>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
-	triangle3dList		.resize(12);
-	triangle3dColorList	.resize(12);
+	const uint32_t															countTriangles								= app.ModelGeometry.Positions.Indices.size() / 3;
+	triangle3dList		.resize(countTriangles);
+	triangle3dColorList	.resize(countTriangles);
 	::gpk::SMatrix4<float>													projection									;
 	::gme::SCamera															camera										;
 	{
@@ -232,15 +252,19 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	}
 
 	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
+	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) {
 		::gpk::STriangle3D<float>												& transformedTriangle						= triangle3dList[iTriangle];
-		transformedTriangle													= app.CubePositions[iTriangle];
+		transformedTriangle													= 
+			{ app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 0]]
+			, app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 1]]
+			, app.ModelGeometry.Positions.Values[app.ModelGeometry.Positions.Indices[iTriangle * 3 + 2]]
+			};
 		::gpk::transform(transformedTriangle, projection);
 	}
 	::gpk::array_pod<::gpk::STriangle2D<int32_t>>							triangle2dList								= {};
 	triangle2dList.resize(12);
 	const ::gpk::SCoord2<int32_t>											screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
-	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) { // Maybe the scale
+	for(uint32_t iTriangle = 0; iTriangle < countTriangles; ++iTriangle) { // Maybe the scale
 		::gpk::STriangle3D<float>												& transformedTriangle3D						= triangle3dList[iTriangle];
 		::gpk::STriangle2D<int32_t>												& transformedTriangle2D						= triangle2dList[iTriangle];
 		transformedTriangle2D.A												= {(int32_t)transformedTriangle3D.A.x, (int32_t)transformedTriangle3D.A.y};

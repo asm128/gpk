@@ -111,8 +111,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_viewport", "test_g
 		{8FD826F8-3739-44E6-8CC8-997122E53B8D} = {8FD826F8-3739-44E6-8CC8-997122E53B8D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_light_directional", "test_gpk_light_directional\test_gpk_light_directional.vcxproj", "{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -257,14 +255,6 @@ Global
 		{BF115707-2B3F-4F71-B586-08386B28F377}.Release|x64.Build.0 = Release|x64
 		{BF115707-2B3F-4F71-B586-08386B28F377}.Release|x86.ActiveCfg = Release|Win32
 		{BF115707-2B3F-4F71-B586-08386B28F377}.Release|x86.Build.0 = Release|Win32
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Debug|x64.ActiveCfg = Debug|x64
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Debug|x64.Build.0 = Debug|x64
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Debug|x86.ActiveCfg = Debug|Win32
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Debug|x86.Build.0 = Debug|Win32
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Release|x64.ActiveCfg = Release|x64
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Release|x64.Build.0 = Release|x64
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Release|x86.ActiveCfg = Release|Win32
-		{C3C492A1-B2F7-4093-9F7A-1E0562F0242E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

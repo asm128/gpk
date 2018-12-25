@@ -144,7 +144,7 @@ struct SCamera {
 	const ::gpk::SCoord3<float>													tilt										= {10, };	// ? cam't remember what is this. Radians? Eulers?
 	const ::gpk::SCoord3<float>													rotation									= {0, (float)frameInfo.FrameNumber / 100, 0};
 
-	::gpk::SCameraRange															nearFar										= {0.01f , 1000.0f};
+	::gpk::SCameraNearFar														nearFar										= {0.01f , 1000.0f};
 
 	static constexpr const ::gpk::SCoord3<float>								cameraUp									= {0, 1, 0};	// ? cam't remember what is this. Radians? Eulers?
 	::SCamera																	camera										= {{10, 5, 0}, {}};

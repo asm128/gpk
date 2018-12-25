@@ -211,7 +211,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<uint32_t>& targetDepth, const ::gpk::SCameraRange & fNearFar, const ::gpk::STriangle3D<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points, ::gpk::array_pod<::gpk::STriangleWeights<double>>& triangleWeigths)		{
+	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<uint32_t>& targetDepth, const ::gpk::SCameraNearFar & fNearFar, const ::gpk::STriangle3D<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points, ::gpk::array_pod<::gpk::STriangleWeights<double>>& triangleWeigths)		{
 		int32_t																		pixelsDrawn									= 0;
 		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
 		::gpk::SCoord2	<float>														areaMin										= {(float)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (float)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
@@ -266,7 +266,7 @@ namespace gpk
 	template<typename _tCoord>
 	static	inline			::gpk::error_t									drawTriangleIndexed
 		( ::gpk::view_grid<uint32_t>						& targetDepth
-		, const ::gpk::SCameraRange							& fNearFar // fFar
+		, const ::gpk::SCameraNearFar						& fNearFar // fFar
 		//, double											fNear
 		, uint32_t											baseIndex
 		, uint32_t											baseVertexIndex
