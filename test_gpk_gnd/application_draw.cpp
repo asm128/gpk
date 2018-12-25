@@ -1,10 +1,11 @@
-#include "application.h"
 #include "gpk_bitmap_target.h"
 #include "gpk_ro_rsw.h"
 #include "gpk_dialog_controls.h"
+#include "gpk_scene.h"
+#include "gpk_ro_gnd.h"
 
 					::gpk::error_t										drawPixelGND									
-	( ::SRenderCache										& renderCache
+	( ::gpk::SRenderCache										& renderCache
 	, ::gpk::SColorBGRA										& targetColorCell
 	, const ::gpk::STriangleWeights<double>					& pixelWeights	
 	, const ::gpk::STriangle3D<float>						& positions
@@ -84,7 +85,7 @@ static				::gpk::error_t										transformTriangles
 	, const ::gpk::SMatrix4<float>									& xWV
 	, const ::gpk::SMatrix4<float>									& xProjection
 	, const ::gpk::SCoord2<int32_t>									& targetMetrics
-	, ::SRenderCache												& out_transformed
+	, ::gpk::SRenderCache											& out_transformed
 	) {	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	for(uint32_t iTriangle = 0, triCount = vertexIndexList.size(); iTriangle < triCount; ++iTriangle) {
 		const ::gpk::STriangleWeights<uint32_t>										& vertexIndices								= vertexIndexList[iTriangle];
@@ -139,7 +140,7 @@ static				::gpk::error_t										transformNormals
 	( const ::gpk::view_array<::gpk::STriangleWeights<uint32_t>>	& vertexIndexList
 	, const ::gpk::view_array<::gpk::SCoord3<float>>				& normals
 	, const ::gpk::SMatrix4<float>									& xWorld
-	, ::SRenderCache												& renderCache
+	, ::gpk::SRenderCache											& renderCache
 	) {	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		for(uint32_t iTriangle = 0, triCount = renderCache.Triangle3dIndices.size(); iTriangle < triCount; ++iTriangle) { // transform normals
 			const ::gpk::STriangleWeights<uint32_t>										& vertexIndices								= vertexIndexList[renderCache.Triangle3dIndices[iTriangle]];
@@ -168,12 +169,12 @@ static				::gpk::error_t										drawTriangles
 	, double														fFar
 	, double														fNear
 	, const ::gpk::SCoord3<float>									& lightDir
-	, ::SRenderCache												& renderCache
+	, ::gpk::SRenderCache											& renderCache
 	, ::gpk::view_grid<uint32_t>									& targetDepthView
 	, ::gpk::view_grid<::gpk::SColorBGRA>							& targetView
 	, const ::gpk::SColorFloat										& diffuseColor								
 	, const ::gpk::SColorFloat										& ambientColor								
-	, const ::gpk::view_array<::gpk::SLightInfoRSW>					& lights
+	, const ::gpk::view_array<const ::gpk::SLightInfoRSW>			& lights
 	, uint32_t														* pixelsDrawn
 	, uint32_t														* pixelsSkipped
 	, bool															wireframe
@@ -218,84 +219,90 @@ static				::gpk::error_t										drawTriangles
 	return 0;
 }
 
-					::gpk::error_t										drawGND										(::gme::SApplication& app, ::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t> & target, bool wireframe)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-	::gpk::SFramework::TOffscreen												& offscreen									= target.Color;
-	::gpk::SImage<uint32_t>														& offscreenDepth							= target.DepthStencil;
-	const ::gpk::SCoord2<uint32_t>												& offscreenMetrics							= offscreen.View.metrics();
-	::memset(offscreenDepth	.Texels.begin(), -1, sizeof(uint32_t)								* offscreenDepth	.Texels.size());	// Clear target.
-	::memset(offscreen		.Texels.begin(), 0, sizeof(::gpk::SFramework::TOffscreen::TTexel)	* offscreen			.Texels.size());	// Clear target.
-	for(uint32_t y = 0, yMax = offscreenMetrics.y; y < yMax; ++y) {
-		const uint8_t																colorHeight									= (uint8_t)(y / 10);
-		for(uint32_t x = 0, xMax = offscreenMetrics.x; x < xMax; ++x)
-			offscreen.View[y][x]													= {colorHeight, 0, 0, 0xFF};
-	}
+					::gpk::error_t										updateTransforms							(::gpk::SSceneTransforms & transforms, ::gpk::SSceneCamera& camera, ::gpk::SCoord2<uint32_t> targetMetrics)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	::gpk::SMatrix4<float>														& finalProjection							= transforms.FinalProjection	;
+	::gpk::SMatrix4<float>														& fieldOfView								= transforms.FieldOfView		;
+	::gpk::SMatrix4<float>														& mviewport									= transforms.Viewport			;
+	::gpk::SMatrix4<float>														& viewportInverse							= transforms.ViewportInverse	;
+	::gpk::SMatrix4<float>														& viewportInverseCentered					= transforms.ViewportInverse	;
+	fieldOfView.FieldOfView(camera.Angle * ::gpk::math_pi, targetMetrics.x / (double)targetMetrics.y, camera.NearFar.Near, camera.NearFar.Far);
+	mviewport.Viewport(targetMetrics, camera.NearFar.Far, camera.NearFar.Near);
+	viewportInverse															= mviewport.GetInverse();
+	const ::gpk::SCoord2<int32_t>												screenCenter								= {(int32_t)targetMetrics.x / 2, (int32_t)targetMetrics.y / 2};
+	viewportInverseCentered													= viewportInverse;
+	viewportInverseCentered._41												+= screenCenter.x;
+	viewportInverseCentered._42												+= screenCenter.y;
+	finalProjection															= fieldOfView * viewportInverseCentered;
+	transforms.FinalProjectionInverse										= finalProjection.GetInverse();
 
-	{
-		::gpk::SMatrix4<float>														& finalProjection							= app.Scene.Transforms.FinalProjection	;
-		::gpk::SMatrix4<float>														& fieldOfView								= app.Scene.Transforms.FieldOfView		;
-		::gpk::SMatrix4<float>														& mviewport									= app.Scene.Transforms.Viewport			;
-		::gpk::SMatrix4<float>														& viewportInverse							= app.Scene.Transforms.ViewportInverse	;
-		::gpk::SMatrix4<float>														& viewportInverseCentered					= app.Scene.Transforms.ViewportInverse	;
-		fieldOfView.FieldOfView(app.Scene.Camera.Angle * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, app.Scene.Camera.NearFar.Near, app.Scene.Camera.NearFar.Far);
-		mviewport.Viewport(offscreenMetrics, app.Scene.Camera.NearFar.Far, app.Scene.Camera.NearFar.Near);
-		viewportInverse															= mviewport.GetInverse();
-		const ::gpk::SCoord2<int32_t>												screenCenter								= {(int32_t)offscreenMetrics.x / 2, (int32_t)offscreenMetrics.y / 2};
-		viewportInverseCentered													= viewportInverse;
-		viewportInverseCentered._41												+= screenCenter.x;
-		viewportInverseCentered._42												+= screenCenter.y;
-		finalProjection															= fieldOfView * viewportInverseCentered;
-		app.Scene.Transforms.FinalProjectionInverse								= finalProjection.GetInverse();
+	::gpk::SMatrix4<float>														& viewMatrix								= transforms.View;
+	::gpk::SCameraVectors														& cameraVectors								= camera.Vectors;
+	cameraVectors.Up														= {0, 1, 0};
+	cameraVectors.Front														= (camera.Points.Target - camera.Points.Position).Normalize();
+	cameraVectors.Right														= cameraVectors.Up		.Cross(cameraVectors.Front).Normalize();
+	cameraVectors.Up														= cameraVectors.Front	.Cross(cameraVectors.Right).Normalize();
+	viewMatrix.View3D(camera.Points.Position, cameraVectors.Right, cameraVectors.Up, cameraVectors.Front);
+	//viewMatrix.LookAt(camera.Points.Position, {(app.GNDData.Metrics.Size.x / 2.0f), 0, -(app.GNDData.Metrics.Size.y / 2.0f)}, {0, 1, 0});
+	return 0;	
+}
 
-		::gpk::SMatrix4<float>														& viewMatrix								= app.Scene.Transforms.View;
-		const ::gpk::SCameraPoints													& camera									= app.Scene.Camera.Points;
-		::gpk::SCameraVectors														& cameraVectors								= app.Scene.Camera.Vectors;
-		cameraVectors.Up														= {0, 1, 0};
-		cameraVectors.Front														= (camera.Target - camera.Position).Normalize();
-		cameraVectors.Right														= cameraVectors.Up		.Cross(cameraVectors.Front).Normalize();
-		cameraVectors.Up														= cameraVectors.Front	.Cross(cameraVectors.Right).Normalize();
-		//viewMatrix.View3D(camera.Position, cameraVectors.Right, cameraVectors.Up, cameraVectors.Front);
-		viewMatrix.LookAt(camera.Position, {(app.GNDData.Metrics.Size.x / 2.0f), 0, -(app.GNDData.Metrics.Size.y / 2.0f)}, {0, 1, 0});
-	}
 
-	::SRenderCache																& renderCache								= app.RenderCache;
+					::gpk::error_t										drawGND										
+	( ::gpk::SRenderCache												& renderCache
+	, ::gpk::SSceneTransforms											& transforms
+	, ::gpk::SSceneCamera												& camera
+	, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>					& target
+	, const ::gpk::SModelPivot<float>									& modelPivot
+	, const ::gpk::SCoord3<float>										& lightDir
+	, const ::gpk::SModelGND											& modelGND
+	, const ::gpk::SRSWWorldLight										& directionalLight
+	, const ::gpk::view_array<const ::gpk::SImage<::gpk::SColorBGRA>>	& textures
+	, const ::gpk::view_array<const ::gpk::SLightInfoRSW>				& lights
+	, bool																wireframe
+	) {	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	::gpk::view_grid<::gpk::SColorBGRA>											& offscreen									= target.Color.View;
+	::gpk::view_grid<uint32_t>													& offscreenDepth							= target.DepthStencil.View;
+	const ::gpk::SCoord2<uint32_t>												& offscreenMetrics							= offscreen.metrics();
+	::updateTransforms(transforms, camera, offscreenMetrics);
 
-	const ::gpk::SMatrix4<float>												& projection								= app.Scene.Transforms.FinalProjection	;
-	const ::gpk::SMatrix4<float>												& viewMatrix								= app.Scene.Transforms.View				;
+	const ::gpk::SMatrix4<float>												& projection								= transforms.FinalProjection	;
+	const ::gpk::SMatrix4<float>												& viewMatrix								= transforms.View				;
 
 	//::gpk::SMatrix4<float>														xViewProjection								= viewMatrix * projection;
-	//::gpk::SMatrix4<float>														xRotation									= {};
-	//xRotation.Identity();
+	::gpk::SMatrix4<float>														xRotation									= {};
+	xRotation.Identity();
 	::gpk::SMatrix4<float>														xWorld										= {};
 	xWorld.Identity();
-	const double																& fFar										= app.Scene.Camera.NearFar.Far	;
-	const double																& fNear										= app.Scene.Camera.NearFar.Near	;
-	uint32_t																	& pixelsDrawn								= app.RenderCache.PixelsDrawn	= 0;
-	uint32_t																	& pixelsSkipped								= app.RenderCache.PixelsSkipped	= 0;
+	const double																& fFar										= camera.NearFar.Far	;
+	const double																& fNear										= camera.NearFar.Near	;
+	uint32_t																	& pixelsDrawn								= renderCache.PixelsDrawn	= 0;
+	uint32_t																	& pixelsSkipped								= renderCache.PixelsSkipped	= 0;
 	renderCache.WireframePixelCoords.clear();
 	renderCache.TrianglesDrawn												= 0;
 	const ::gpk::SCoord2<int32_t>												offscreenMetricsI							= offscreenMetrics.Cast<int32_t>();
 	const ::gpk::SCoord3<float>													screenCenter								= {offscreenMetricsI.x / 2.0f, offscreenMetricsI.y / 2.0f, };
 	const ::gpk::SColorFloat													ambient										= 
-		{ app.RSWData.Light.Ambient.x
-		, app.RSWData.Light.Ambient.y
-		, app.RSWData.Light.Ambient.z
+		{ directionalLight.Ambient.x
+		, directionalLight.Ambient.y
+		, directionalLight.Ambient.z
 		, 1
 		};
 	const ::gpk::SColorFloat													diffuse										= 
-		{ app.RSWData.Light.Diffuse.x
-		, app.RSWData.Light.Diffuse.y
-		, app.RSWData.Light.Diffuse.z
+		{ directionalLight.Diffuse.x
+		, directionalLight.Diffuse.y
+		, directionalLight.Diffuse.z
 		, 1
 		};
-	::gpk::STimer																timerMark									= {};
-	for(uint32_t iGNDTexture = 0; iGNDTexture < app.GNDData.TextureNames.size(); ++iGNDTexture) {
+	//::gpk::STimer																timerMark									= {};
+	xWorld		.Scale			(modelPivot.Scale, true);
+	xRotation	.Identity();
+	xRotation	.SetOrientation	(modelPivot.Orientation);
+	xWorld																= xWorld * xRotation;
+	xWorld		.SetTranslation	(modelPivot.Position, false);
+	for(uint32_t iGNDTexture = 0; iGNDTexture < textures.size(); ++iGNDTexture) {
 		for(uint32_t iFacingDirection = 0; iFacingDirection < 6; ++iFacingDirection) {
-			const ::gpk::view_grid<::gpk::SColorBGRA>									& gndNodeTexture							= app.TexturesGND	[iGNDTexture].View;
-			const ::gpk::SModelNodeGND													& gndNode									= app.GNDModel.Nodes[app.GNDData.TextureNames.size() * iFacingDirection + iGNDTexture];
-			xWorld		.Scale			(app.GridPivot.Scale, true);
-			//xRotation	.SetOrientation	(app.GridPivot.Orientation.Normalize());
-			//xWorld																	= xWorld * xRotation;
-			xWorld		.SetTranslation	(app.GridPivot.Position, false);
+			const ::gpk::view_grid<::gpk::SColorBGRA>									& gndNodeTexture							= textures[iGNDTexture].View;
+			const ::gpk::SModelNodeGND													& gndNode									= modelGND.Nodes[textures.size() * iFacingDirection + iGNDTexture];
 			::gpk::clear
 				( renderCache.Triangle3dWorld
 				, renderCache.Triangle3dToDraw		
@@ -307,8 +314,7 @@ static				::gpk::error_t										drawTriangles
 			gpk_necall(renderCache.TransformedNormalsVertex.resize(renderCache.Triangle3dIndices.size()), "Out of memory?");
 			transformNormals(gndNode.VertexIndices, gndNode.Normals, xWorld, renderCache);
 			//timerMark.Frame(); info_printf("Second iteration: %f.", timerMark.LastTimeSeconds);
-			const ::gpk::SCoord3<float>													& lightDir									= app.LightDirection;
-			drawTriangles(gndNode.VertexIndices, gndNode.Vertices, gndNode.UVs, gndNodeTexture, fFar, fNear, lightDir, renderCache, offscreenDepth.View, offscreen.View, diffuse, ambient, app.RSWData.RSWLights, &pixelsDrawn, &pixelsSkipped, wireframe);
+			drawTriangles(gndNode.VertexIndices, gndNode.Vertices, gndNode.UVs, gndNodeTexture, fFar, fNear, lightDir, renderCache, offscreenDepth, offscreen, diffuse, ambient, lights, &pixelsDrawn, &pixelsSkipped, wireframe);
 			//timerMark.Frame(); info_printf("Third iteration: %f.", timerMark.LastTimeSeconds);
 		}
 	}
@@ -316,8 +322,8 @@ static				::gpk::error_t										drawTriangles
 	static constexpr const ::gpk::SColorBGRA									color										= ::gpk::YELLOW;
 	for(uint32_t iPixel = 0, pixCount = renderCache.WireframePixelCoords.size(); iPixel < pixCount; ++iPixel) {
 		const ::gpk::SCoord2<int32_t>												& pixelCoord								= renderCache.WireframePixelCoords[iPixel];
-		if( offscreen.View[pixelCoord.y][pixelCoord.x] != color ) {
-			offscreen.View[pixelCoord.y][pixelCoord.x]								= color;
+		if( offscreen[pixelCoord.y][pixelCoord.x] != color ) {
+			offscreen[pixelCoord.y][pixelCoord.x]								= color;
 			++pixelsDrawn;
 		}
 		else

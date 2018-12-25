@@ -11,43 +11,6 @@
 #ifndef APPLICATION_H_2078934982734
 #define APPLICATION_H_2078934982734
 
-struct STiledTerrainCounters {
-						uint32_t														nBaseTileCount						;	// Base tile count is equal to (tile map width*tile map depth)
-						uint32_t														nTileColumnCount					;	// Stores the amount of tile columns that contain a single map chunk
-						uint32_t														nTileRowCount						;	// Stores the amount of tile rows that contain a single map chunk
-						uint32_t														nTopTileFaceCount					;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
-
-						uint32_t														nFrontTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
-						uint32_t														nRightTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-						uint32_t														nBottomTileFaceCount				;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
-						uint32_t														nBackTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
-
-						uint32_t														nLeftTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-						uint32_t														nTotalTileFaceCount					;	// Stores the total number of valid tiles, which should be equal to the addition of top, front and right tiles.
-						uint32_t														nChunkColumnTileCount				;	// Stores the amount of tile columns that contain a single map chunk
-						uint32_t														nChunkRowTileCount					;	// Stores the amount of tile rows that contain a single map chunk
-
-						uint32_t														nChunkTotalTileCount				;	// Stores the total number of tiles contained in a single chunk
-						uint32_t														nColumnChunkCount					;	// Stores the amount of column chunks
-						uint32_t														nRowChunkCount						;	// Stores the amount of row chunks
-						uint32_t														nTotalChunkCount					;	// Stores the total chunks contained in a map
-};
-
-struct SRenderCache {
-						::gpk::array_pod<::gpk::SCoord2<int32_t>>						TrianglePixelCoords					= {};
-						::gpk::array_pod<::gpk::STriangleWeights<double>>				TrianglePixelWeights				= {};
-						::gpk::array_pod<::gpk::SCoord2<int32_t>>						WireframePixelCoords				= {};
-
-						::gpk::array_pod<::gpk::STriangle3D<float>>						TransformedNormalsVertex			= {};
-
-						::gpk::array_pod<int32_t>										Triangle3dIndices					= {};
-						::gpk::array_pod<::gpk::STriangle3D<float>>						Triangle3dToDraw					= {};
-						::gpk::array_pod<::gpk::STriangle3D<float>>						Triangle3dWorld						= {};
-
-						uint32_t														TrianglesDrawn						= 0;
-						uint32_t														PixelsDrawn							= 0;
-						uint32_t														PixelsSkipped						= 0;
-};
 
 namespace gme // I'm gonna use a different namespace in order to test a few things about the macros.
 {
@@ -78,7 +41,7 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 					::gpk::SRSWFileContents												RSWData								= {};
 					::gpk::array_obj<::gpk::SRSMFileContents>							RSMData								= {};
 					::gpk::SModelGND													GNDModel							= {};
-					::SRenderCache														RenderCache							= {};
+					::gpk::SRenderCache													RenderCache							= {};
 
 																						SApplication				(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};

@@ -90,6 +90,24 @@ namespace gpk
 						, out_Geometry.UVs
 						);
 				}
+
+
+	struct SRenderCache {
+						::gpk::array_pod<::gpk::SCoord2<int32_t>>						TrianglePixelCoords					= {};
+						::gpk::array_pod<::gpk::STriangleWeights<double>>				TrianglePixelWeights				= {};
+						::gpk::array_pod<::gpk::SCoord2<int32_t>>						WireframePixelCoords				= {};
+
+						::gpk::array_pod<::gpk::STriangle3D<float>>						TransformedNormalsVertex			= {};
+
+						::gpk::array_pod<int32_t>										Triangle3dIndices					= {};
+						::gpk::array_pod<::gpk::STriangle3D<float>>						Triangle3dToDraw					= {};
+						::gpk::array_pod<::gpk::STriangle3D<float>>						Triangle3dWorld						= {};
+
+						uint32_t														TrianglesDrawn						= 0;
+						uint32_t														PixelsDrawn							= 0;
+						uint32_t														PixelsSkipped						= 0;
+	};
+
 } // namespace
 
 #endif // GPK_GEOMETRY_H

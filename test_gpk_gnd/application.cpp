@@ -226,6 +226,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//------------------------------------------------ 
 	//app.GridPivot.Scale										= {2.f, 4.f, 2.f};
 	app.GridPivot.Scale										= {1, -1, -1};
+	app.GridPivot.Orientation.Normalize();
+
 	timer.Frame();
 	sprintf_s(app.StringFrameRateUpdate, "Last frame time (update): %fs.", (float)timer.LastTimeSeconds);
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
@@ -235,7 +237,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-			::gpk::error_t											drawGND					(::gme::SApplication& applicationInstance, ::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>& target, bool wireframe);
+					::gpk::error_t										drawGND										
+	( ::gpk::SRenderCache												& renderCache
+	, ::gpk::SSceneTransforms											& transforms
+	, ::gpk::SSceneCamera												& camera
+	, ::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>			& target
+	, const ::gpk::SModelPivot<float>									& modelPivot
+	, const ::gpk::SCoord3<float>										& lightDir
+	, const ::gpk::SModelGND											& modelGND
+	, const ::gpk::SRSWWorldLight										& directionalLight
+	, const ::gpk::view_array<const ::gpk::SImage<::gpk::SColorBGRA>>	& textures
+	, const ::gpk::view_array<const ::gpk::SLightInfoRSW>				& lights
+	, bool																wireframe
+	);
 			::gpk::error_t											draw					(::gme::SApplication & app)							{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework									= app.Framework;
@@ -250,7 +264,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>			checkbox;
 	app.DialogMain.Controls[app.CheckBox].as(checkbox);
 
-	int32_t 																pixelsDrawn0								= drawGND(app, buffer3D, checkbox->Checked); 
+	int32_t 																pixelsDrawn0								= drawGND(app.RenderCache, app.Scene.Transforms, app.Scene.Camera, buffer3D, app.GridPivot, app.LightDirection, app.GNDModel, app.RSWData.Light, app.TexturesGND, app.RSWData.RSWLights, checkbox->Checked); 
 	error_if(errored(pixelsDrawn0), "??");
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
