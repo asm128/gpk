@@ -6,7 +6,7 @@
 #include "gpk_matrix.h"
 #include "gpk_bitmap_target.h"
 
-//#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
+#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
@@ -43,18 +43,42 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	::gpk::SGUI																& gui										= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
-	app.IdExit															= ::gpk::controlCreate(gui);
-	::gpk::SControl															& controlExit								= gui.Controls.Controls[app.IdExit];
-	controlExit.Area													= {{}, {64, 20}};
-	controlExit.Border													= {10, 10, 10, 10};
-	controlExit.Margin													= {1, 1, 1, 1};
-	controlExit.Align													= ::gpk::ALIGN_BOTTOM_RIGHT;
-	::gpk::SControlText														& controlText								= gui.Controls.Text[app.IdExit];
-	controlText.Text													= "Exit";
-	controlText.Align													= ::gpk::ALIGN_CENTER;
-	::gpk::SControlConstraints												& controlConstraints						= gui.Controls.Constraints[app.IdExit];
-	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
-	::gpk::controlSetParent(gui, app.IdExit, -1);
+	{
+		app.IdExit															= ::gpk::controlCreate(gui);
+		::gpk::SControl															& controlExit								= gui.Controls.Controls[app.IdExit];
+		controlExit.Area													= {{}, {64, 20}};
+		controlExit.Border													= {10, 10, 10, 10};
+		controlExit.Margin													= {1, 1, 1, 1};
+		controlExit.Align													= ::gpk::ALIGN_CENTER_BOTTOM;
+		::gpk::SControlText														& controlText								= gui.Controls.Text[app.IdExit];
+		controlText.Text													= "Exit";
+		controlText.Align													= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdExit, -1);
+	}
+
+	{
+		app.IdFrameRateUpdate												= ::gpk::controlCreate(gui);
+		::gpk::SControl															& controlExit								= gui.Controls.Controls[app.IdFrameRateUpdate];
+		controlExit.Area													= {{}, {384, 20}};
+		controlExit.Border													= {10, 10, 10, 10};
+		controlExit.Margin													= {1, 1, 1, 1};
+		controlExit.Align													= ::gpk::ALIGN_BOTTOM_LEFT;
+		::gpk::SControlText														& controlText								= gui.Controls.Text[app.IdFrameRateUpdate];
+		controlText.Align													= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdFrameRateUpdate, -1);
+	}
+
+	{
+		app.IdFrameRateRender												= ::gpk::controlCreate(gui);
+		::gpk::SControl															& controlExit								= gui.Controls.Controls[app.IdFrameRateRender];
+		controlExit.Area													= {{}, {384, 20}};
+		controlExit.Border													= {10, 10, 10, 10};
+		controlExit.Margin													= {1, 1, 1, 1};
+		controlExit.Align													= ::gpk::ALIGN_BOTTOM_RIGHT;
+		::gpk::SControlText														& controlText								= gui.Controls.Text[app.IdFrameRateRender];
+		controlText.Align													= ::gpk::ALIGN_CENTER;
+		::gpk::controlSetParent(gui, app.IdFrameRateRender, -1);
+	}
 
 	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner										= {};
 	app.NumericTuner													= ::gpk::tunerCreate(app.DialogMain, tuner);
@@ -97,7 +121,7 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 }
 
 					::gpk::error_t									update										(::gme::SApplication & app, bool exitSignal)	{
-	//::gpk::STimer															timer;
+	static ::gpk::STimer													timer;
 	retval_info_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "%s", "Exit requested by runtime.");
 	{
 		::gpk::mutex_guard														lock										(app.LockRender);
@@ -120,8 +144,47 @@ static constexpr	const ::gpk::STriangle3D<float>					geometryCube	[12]						=
 	}
 
 	app.DialogMain.Update();
-	//timer.Frame();
+
+	//------------------------------------------------
+	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
+	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
+	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
+	::gpk::SCameraRange														& nearFar									= app.Scene.Camera.NearFar;
+	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
+	::gme::SCamera															& camera									= app.Scene.Camera;
+	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
+	{
+		::gpk::mutex_guard														lockViewport								(app.LockViewport);
+		projection.Identity();
+		static	float															cameraRotation								= 0;
+		camera																= {{10, 5, 0}, {}};
+		lightPos															= camera.Position;
+		cameraRotation														+= (float)framework.Input->MouseCurrent.Deltas.x / 5.0f;
+		//camera.Position	.RotateY(cameraRotation);
+		camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
+		lightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
+		viewMatrix.LookAt(camera.Position, camera.Target, cameraUp);
+		::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
+		app.DialogMain.Controls[app.Viewport].as(viewport);
+		const ::gpk::SCoord2<uint32_t>											& offscreenMetrics							= gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>();
+		projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Near, nearFar.Far );
+		projection															= viewMatrix * projection;
+		lightPos.Normalize();
+
+		::gpk::SMatrix4<float>													mViewport									= {};
+		mViewport._11														= 2.0f / offscreenMetrics.x;
+		mViewport._22														= 2.0f / offscreenMetrics.y;
+		mViewport._33														= 1.0f / (float)(nearFar.Far - nearFar.Near);
+		mViewport._43														= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
+		mViewport._44														= 1.0f;
+		projection															= projection * mViewport.GetInverse();
+	}
+
+	timer.Frame();
+	sprintf_s(app.StringFrameRateUpdate, "Last frame time (update): %fs.", (float)timer.LastTimeSeconds);
 	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
+	gui.Controls.Text[app.IdFrameRateUpdate].Text							= app.StringFrameRateUpdate;
+	::gpk::controlMetricsInvalidate(gui, app.IdFrameRateUpdate);
 	return 0;
 }
 
@@ -146,49 +209,29 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 	};
 
 					::gpk::error_t									draw										(::gme::SApplication & app)							{
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		buffer3d									= app.Buffer3D;
+	static ::gpk::STimer													timer;
 	::gpk::SFramework														& framework									= app.Framework;
 	::gpk::SGUI																& gui										= *framework.GUI;
+
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		buffer3d									= app.Buffer3D;
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
 	app.DialogMain.Controls[app.Viewport].as(viewport);
-	buffer3d->resize(gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>(), {0, 0, 0, 0}, (uint32_t)-1);
+	const ::gpk::SCoord2<uint32_t>											& offscreenMetrics							= gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>();
+	buffer3d->resize(offscreenMetrics, {0, 0, 0, 0}, (uint32_t)-1);
 
-	//------------------------------------------------
 	::gpk::array_pod<::gpk::STriangle3D<float>>								& triangle3dList							= app.VertexCache.Triangle3dList		;
 	::gpk::array_pod<::gpk::SColorBGRA>										& triangle3dColorList						= app.VertexCache.Triangle3dColorList	;
 	triangle3dList		.resize(12);
 	triangle3dColorList	.resize(12);
-	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
-	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
-	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
-	::gpk::SCameraRange														& nearFar									= app.Scene.Camera.NearFar;
-	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
-	::gme::SCamera															& camera									= app.Scene.Camera;
+	::gpk::SMatrix4<float>													projection									;
+	::gme::SCamera															camera										;
+	{
+		::gpk::mutex_guard														lockViewport								(app.LockViewport);
+		projection															= app.Scene.Projection;
+		camera																= app.Scene.Camera;
+	}
+
 	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
-	projection.Identity();
-	const ::gpk::SCoord3<float>												tilt										= {10, };	// ? cam't remember what is this. Radians? Eulers?
-	const ::gpk::SCoord3<float>												rotation									= {0, (float)frameInfo.FrameNumber / 100, 0};
-
-	static	float															cameraRotation								= 0;
-	camera																= {{10, 5, 0}, {}};
-	lightPos															= camera.Position;
-	cameraRotation														+= (float)framework.Input->MouseCurrent.Deltas.x / 5.0f;
-	//camera.Position	.RotateY(cameraRotation);
-	camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
-	lightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
-	viewMatrix.LookAt(camera.Position, camera.Target, cameraUp);
-	const ::gpk::SCoord2<uint32_t>											& offscreenMetrics							= buffer3d->Color.View.metrics();
-	projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Near, nearFar.Far );
-	projection															= viewMatrix * projection;
-	lightPos.Normalize();
-
-	::gpk::SMatrix4<float>													mViewport									= {};
-	mViewport._11														= 2.0f / offscreenMetrics.x;
-	mViewport._22														= 2.0f / offscreenMetrics.y;
-	mViewport._33														= 1.0f / (float)(nearFar.Far - nearFar.Near);
-	mViewport._43														= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
-	mViewport._44														= 1.0f;
-	projection															= projection * mViewport.GetInverse();
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
 		::gpk::STriangle3D<float>												& transformedTriangle						= triangle3dList[iTriangle];
 		transformedTriangle													= app.CubePositions[iTriangle];
@@ -210,7 +253,6 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		double																	lightFactor									= geometryCubeNormals[iTriangle].Dot(lightPos);
 		triangle3dColorList[iTriangle]									= ::gpk::RED * lightFactor;
 	}
-	::gpk::array_pod<::gpk::SCoord2<int32_t>>								trianglePixelCoords;
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>								wireframePixelCoords;
 	::gpk::SCoord3<float>													cameraFront										= (camera.Target - camera.Position).Normalize();
 	for(uint32_t iTriangle = 0; iTriangle < 12; ++iTriangle) {
@@ -239,5 +281,9 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormals	[12]						
 		::gpk::mutex_guard														lock										(app.LockRender);
 		app.Offscreen														= target;
 	}
+	timer.Frame();
+	sprintf_s(app.StringFrameRateRender, "Last frame time (render): %fs.", (float)timer.LastTimeSeconds);
+	gui.Controls.Text[app.IdFrameRateRender].Text							= app.StringFrameRateRender;
+	::gpk::controlMetricsInvalidate(gui, app.IdFrameRateRender);
 	return 0;
 }

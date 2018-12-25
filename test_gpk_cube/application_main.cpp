@@ -7,9 +7,9 @@
 #include "gpk_grid_copy.h"
 #include "gpk_grid_scale.h"
 #include "gpk_view_bit.h"
+#include "gpk_matrix.h"
 
 #include "gpk_app_impl.h"
-#include "gpk_matrix.h"
 
 static constexpr	const uint32_t										ASCII_SCREEN_WIDTH							= 132	;
 static constexpr	const uint32_t										ASCII_SCREEN_HEIGHT							= 50	;
