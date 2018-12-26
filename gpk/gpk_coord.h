@@ -310,7 +310,28 @@ namespace gpk
 	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size			; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
 	template<typename _tElement>	struct SCircle3D		{ double Radius; ::gpk::SCoord3<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SCircle3D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 	template<typename _tElement>	struct SSphere3D		{ double Radius; ::gpk::SCoord3<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SSphere3D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
-	template<typename _tElement>	struct STriangle3D		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
+	template<typename _tElement>	struct STriangle3D		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); 
+		::gpk::error_t													CulledZSpecial					(const ::gpk::SMinMax<_tElement>& minMax)		{
+			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min)) 
+				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max)) 
+				? 1 : 0;
+		}
+		::gpk::error_t													CulledZ							(const ::gpk::SMinMax<_tElement>& minMax)		{
+			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min)) 
+				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max)) 
+				? 1 : 0;
+		}
+		::gpk::error_t													CulledX							(const ::gpk::SMinMax<_tElement>& minMax)		{
+			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min)) 
+				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max)) 
+				? 1 : 0;
+		}
+		::gpk::error_t													CulledY							(const ::gpk::SMinMax<_tElement>& minMax)		{
+			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min)) 
+				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max)) 
+				? 1 : 0;
+		}
+	};
 
 	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
 

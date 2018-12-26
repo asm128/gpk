@@ -183,9 +183,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		minimapView[minimapView.metrics().y - 1 - y][x]							= ::gpk::WHITE * colorRatio;
 	}
 
-	app.TextureMinimap.resize(gndData.Metrics.Size);
+	app.TextureMinimap.resize(gndData.Metrics.Size * 4);
 	::gpk::grid_scale(app.TextureMinimap.View, minimapTemp.View);
-
 
 	app.ViewportMinimap												= ::gpk::viewportCreate(app.DialogMain, viewport);
 	controlTable.Controls	[viewport->IdGUIControl].Area.Offset	= {0, 0};

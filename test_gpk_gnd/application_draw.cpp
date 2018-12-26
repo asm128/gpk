@@ -94,37 +94,18 @@ static				::gpk::error_t										transformTriangles
 		::gpk::STriangle3D<float>													transformedTriangle3D						= triangle3DWorld;
 		::gpk::transform(transformedTriangle3D, xWV);
 		// Check against far and near planes
-		if( transformedTriangle3D.A.z >= nearFar.Far
-		 && transformedTriangle3D.B.z >= nearFar.Far	
-		 && transformedTriangle3D.C.z >= nearFar.Far) 
+		if(transformedTriangle3D.CulledZSpecial({(float)nearFar.Near, (float)nearFar.Far}))
 			continue;
-		if( (transformedTriangle3D.A.z <= nearFar.Near)
-		 || (transformedTriangle3D.B.z <= nearFar.Near)
-		 || (transformedTriangle3D.C.z <= nearFar.Near)
-		 ) 
-		 continue;
-
 		float																		oldzA										= transformedTriangle3D.A.z;
 		float																		oldzB										= transformedTriangle3D.B.z;
 		float																		oldzC										= transformedTriangle3D.C.z;
-
 		::gpk::transform(transformedTriangle3D, xProjection);
 		transformedTriangle3D.A.z												= oldzA;
 		transformedTriangle3D.B.z												= oldzB;
 		transformedTriangle3D.C.z												= oldzC;
 		// Check against screen limits
-		if(transformedTriangle3D.A.x < 0 && transformedTriangle3D.B.x < 0 && transformedTriangle3D.C.x < 0) continue;
-		if(transformedTriangle3D.A.y < 0 && transformedTriangle3D.B.y < 0 && transformedTriangle3D.C.y < 0) continue;
-		if( transformedTriangle3D.A.x >= targetMetrics.x
-		 && transformedTriangle3D.B.x >= targetMetrics.x
-		 && transformedTriangle3D.C.x >= targetMetrics.x
-		 )
-			continue;
-		if( transformedTriangle3D.A.y >= targetMetrics.y
-		 && transformedTriangle3D.B.y >= targetMetrics.y
-		 && transformedTriangle3D.C.y >= targetMetrics.y
-		 )
-			continue;
+		if(transformedTriangle3D.CulledX({0, (float)targetMetrics.x})) continue;
+		if(transformedTriangle3D.CulledY({0, (float)targetMetrics.y})) continue;
 		gpk_necall(out_transformed.Triangle3dToDraw		.push_back(transformedTriangle3D)	, "Out of memory?");
 		::gpk::transform(triangle3DWorld, xWorld);
 		gpk_necall(out_transformed.Triangle3dWorld		.push_back(triangle3DWorld)			, "Out of memory?");
