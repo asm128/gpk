@@ -61,16 +61,16 @@ template<typename _tIndex, typename _tValue>
 			const _tValue															& out_value									= out_values[iValueIndexed];
 			if(in_value == out_value) {
 				bFound																= true;
-				out_indices.push_back((_tIndex)iValueIndexed);
-				out_remap.push_back((_tIndex)iValue);
+				out_indices	.push_back((_tIndex)iValueIndexed);
+				out_remap	.push_back((_tIndex)iValue);
 				break;
 			}
 		}
 		if(false == bFound) {
 			int32_t																	newIndex;
 			gpk_necall(newIndex = out_values.push_back(in_value), "%s", "Out of memory?");
-			out_indices.push_back((_tIndex)newIndex);
-			out_remap.push_back((_tIndex)iValue);
+			out_indices	.push_back((_tIndex)newIndex);
+			out_remap	.push_back((_tIndex)iValue);
 		}
 	}
 	return 0;
@@ -190,29 +190,25 @@ template<typename _tIndex, typename _tValue>
 
 	//------------------------------------------------
 	::gpk::SFrameInfo														& frameInfo									= framework.FrameInfo;
-	::gpk::SMatrix4<float>													& projection								= app.Scene.Projection;
-	::gpk::SMatrix4<float>													& viewMatrix								= app.Scene.ViewMatrix;
-	::gpk::SCameraNearFar													& nearFar									= app.Scene.Camera.NearFar;
-	const ::gpk::SCoord3<float>												& cameraUp									= app.Scene.CameraUp;
-	::gme::SCamera															& camera									= app.Scene.Camera;
-	::gpk::SCoord3<float>													& lightPos									= app.Scene.LightPos;
+	::gme::SViewportScene													& scene										= app.Scene;
+	::gpk::SCameraNearFar													& nearFar									= scene.Camera.NearFar;
 	{
 		::gpk::mutex_guard														lockViewport								(app.LockViewport);
-		projection.Identity();
+		scene.Projection.Identity();
 		static	float															cameraRotation								= 0;
-		camera																= {{10, 5, 0}, {}};
-		lightPos															= camera.Position;
+		scene.Camera																= {{10, 5, 0}, {}};
+		scene.LightPos															= scene.Camera.Position;
 		cameraRotation														+= (float)framework.Input->MouseCurrent.Deltas.x / 5.0f;
 		//camera.Position	.RotateY(cameraRotation);
-		camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
-		lightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
-		viewMatrix.LookAt(camera.Position, camera.Target, cameraUp);
+		scene.Camera.Position	.RotateY(frameInfo.Microseconds.Total / 1000000.0f);
+		scene.LightPos		.RotateY(frameInfo.Microseconds.Total /  500000.0f);
+		scene.ViewMatrix.LookAt(scene.Camera.Position, scene.Camera.Target, scene.CameraUp);
 		::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
 		app.DialogMain.Controls[app.Viewport].as(viewport);
 		const ::gpk::SCoord2<uint32_t>											& offscreenMetrics							= gui.Controls.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>();
-		projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Near, nearFar.Far );
-		projection															= viewMatrix * projection;
-		lightPos.Normalize();
+		scene.Projection.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Near, nearFar.Far );
+		scene.Projection															= scene.ViewMatrix * scene.Projection;
+		scene.LightPos.Normalize();
 
 		::gpk::SMatrix4<float>													mViewport									= {};
 		mViewport._11														= 2.0f / offscreenMetrics.x;
@@ -220,7 +216,7 @@ template<typename _tIndex, typename _tValue>
 		mViewport._33														= 1.0f / (float)(nearFar.Far - nearFar.Near);
 		mViewport._43														= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
 		mViewport._44														= 1.0f;
-		projection															= projection * mViewport.GetInverse();
+		scene.Projection													= scene.Projection * mViewport.GetInverse();
 	}
 
 	timer.Frame();
