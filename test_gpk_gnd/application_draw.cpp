@@ -5,7 +5,7 @@
 #include "gpk_ro_gnd.h"
 
 					::gpk::error_t										drawPixelGND									
-	( ::gpk::SRenderCache										& renderCache
+	( ::gpk::SRenderCache									& renderCache
 	, ::gpk::SColorBGRA										& targetColorCell
 	, const ::gpk::STriangleWeights<double>					& pixelWeights	
 	, const ::gpk::STriangle3D<float>						& positions
@@ -41,7 +41,6 @@
 	::gpk::SColorBGRA															interpolatedBGRA;
 	if( 0 == textureMetrics.x
 	 ||	0 == textureMetrics.y
-	 //||	0 != textureMetrics.y
 	 ) {
 		for(uint32_t iLight = 0; iLight < lights.size(); ++iLight) {
 			const ::gpk::SLightInfoRSW													& rswLight									= lights[iLight];
@@ -58,7 +57,6 @@
 		const ::gpk::SColorFloat													& srcTexel									= textureColors[uvcoords.y][uvcoords.x];
 		if(srcTexel == ::gpk::SColorBGRA{0xFF, 0, 0xFF, 0xFF}) 
 			return 1;
-		//interpolatedBGRA														= finalColor + ambientColor;
 		for(uint32_t iLight = 0, lightCount = lights.size(); iLight < lightCount; ++iLight) {
 			const ::gpk::SLightInfoRSW													& rswLight									= lights[rand() % lights.size()];
 			double																		distFactor									= 1.0 - (rswLight.Position.Cast<double>() - interpolatedPosition).Length() / 10.0;
@@ -79,8 +77,7 @@
 static				::gpk::error_t										transformTriangles							
 	( const ::gpk::view_array<::gpk::STriangleWeights<uint32_t>>	& vertexIndexList
 	, const ::gpk::view_array<::gpk::SCoord3<float>>				& vertices
-	, double														fFar
-	, double														fNear
+	, const ::gpk::SCameraNearFar									& nearFar
 	, const ::gpk::SMatrix4<float>									& xWorld
 	, const ::gpk::SMatrix4<float>									& xWV
 	, const ::gpk::SMatrix4<float>									& xProjection
@@ -97,13 +94,13 @@ static				::gpk::error_t										transformTriangles
 		::gpk::STriangle3D<float>													transformedTriangle3D						= triangle3DWorld;
 		::gpk::transform(transformedTriangle3D, xWV);
 		// Check against far and near planes
-		if( transformedTriangle3D.A.z >= fFar
-		 && transformedTriangle3D.B.z >= fFar	
-		 && transformedTriangle3D.C.z >= fFar) 
+		if( transformedTriangle3D.A.z >= nearFar.Far
+		 && transformedTriangle3D.B.z >= nearFar.Far	
+		 && transformedTriangle3D.C.z >= nearFar.Far) 
 			continue;
-		if( (transformedTriangle3D.A.z <= fNear)
-		 || (transformedTriangle3D.B.z <= fNear)
-		 || (transformedTriangle3D.C.z <= fNear)
+		if( (transformedTriangle3D.A.z <= nearFar.Near)
+		 || (transformedTriangle3D.B.z <= nearFar.Near)
+		 || (transformedTriangle3D.C.z <= nearFar.Near)
 		 ) 
 		 continue;
 
@@ -166,8 +163,7 @@ static				::gpk::error_t										drawTriangles
 	, const ::gpk::view_array<::gpk::SCoord3<float>>				& vertices
 	, const ::gpk::view_array<::gpk::SCoord2<float>>				& uvs
 	, const ::gpk::view_grid	<::gpk::SColorBGRA>					& textureView
-	, double														fFar
-	, double														fNear
+	, const ::gpk::SCameraNearFar									& nearFar
 	, const ::gpk::SCoord3<float>									& lightDir
 	, ::gpk::SRenderCache											& renderCache
 	, ::gpk::view_grid<uint32_t>									& targetDepthView
@@ -184,7 +180,7 @@ static				::gpk::error_t										drawTriangles
 			renderCache.TrianglePixelCoords.clear();
 			renderCache.TrianglePixelWeights.clear();
 			const ::gpk::STriangle3D<float>												& tri3DToDraw								= renderCache.Triangle3dToDraw[iTriangle];
-			error_if(errored(::gpk::drawTriangle(targetDepthView, {fNear, fFar}, tri3DToDraw, renderCache.TrianglePixelCoords, renderCache.TrianglePixelWeights)), "Not sure if these functions could ever fail");
+			error_if(errored(::gpk::drawTriangle(targetDepthView, nearFar, tri3DToDraw, renderCache.TrianglePixelCoords, renderCache.TrianglePixelWeights)), "Not sure if these functions could ever fail");
 			++renderCache.TrianglesDrawn;
 			const ::gpk::STriangleWeights<uint32_t>										& vertexIndices								= vertexIndexList[renderCache.Triangle3dIndices[iTriangle]];
 			const ::gpk::STriangle3D<float>												triangle3DPositions							= 
@@ -198,18 +194,16 @@ static				::gpk::error_t										drawTriangles
 				, uvs[vertexIndices.C]
 				};
 
-			//if(vertexIndices.C == -1) {
-				for(uint32_t iPixel = 0, pixCount = renderCache.TrianglePixelCoords.size(); iPixel < pixCount; ++iPixel) {
-					const ::gpk::SCoord2<int32_t>												& pixelCoord								= renderCache.TrianglePixelCoords	[iPixel];
-					const ::gpk::STriangleWeights<double>										& pixelWeights								= renderCache.TrianglePixelWeights	[iPixel];
-					if(false == wireframe) {
-						if(0 == ::drawPixelGND(renderCache, targetView[pixelCoord.y][pixelCoord.x], pixelWeights, triangle3DPositions, triangle3DUVs, textureView, iTriangle, lightDir.Cast<double>(), diffuseColor, ambientColor, ::gpk::view_array<const ::gpk::SLightInfoRSW>{lights.begin(), 8U}))
-							++*pixelsDrawn;
-						else
-							++*pixelsSkipped;
-					}
+			for(uint32_t iPixel = 0, pixCount = renderCache.TrianglePixelCoords.size(); iPixel < pixCount; ++iPixel) {
+				const ::gpk::SCoord2<int32_t>												& pixelCoord								= renderCache.TrianglePixelCoords	[iPixel];
+				const ::gpk::STriangleWeights<double>										& pixelWeights								= renderCache.TrianglePixelWeights	[iPixel];
+				if(false == wireframe) {
+					if(0 == ::drawPixelGND(renderCache, targetView[pixelCoord.y][pixelCoord.x], pixelWeights, triangle3DPositions, triangle3DUVs, textureView, iTriangle, lightDir.Cast<double>(), diffuseColor, ambientColor, ::gpk::view_array<const ::gpk::SLightInfoRSW>{lights.begin(), ::gpk::min(lights.size(), 8U)}))
+						++*pixelsDrawn;
+					else
+						++*pixelsSkipped;
 				}
-			//}
+			}
 			if(wireframe) {
 				error_if(errored(::gpk::drawLine(targetView.metrics(), ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].A, renderCache.Triangle3dToDraw[iTriangle].B}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
 				error_if(errored(::gpk::drawLine(targetView.metrics(), ::gpk::SLine3D<float>{renderCache.Triangle3dToDraw[iTriangle].B, renderCache.Triangle3dToDraw[iTriangle].C}, renderCache.WireframePixelCoords)), "Not sure if these functions could ever fail");
@@ -246,7 +240,6 @@ static				::gpk::error_t										drawTriangles
 	return 0;	
 }
 
-
 					::gpk::error_t										drawGND										
 	( ::gpk::SRenderCache												& renderCache
 	, ::gpk::SSceneTransforms											& transforms
@@ -261,43 +254,27 @@ static				::gpk::error_t										drawTriangles
 	, bool																wireframe
 	) {	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 	::gpk::view_grid<::gpk::SColorBGRA>											& offscreen									= target.Color.View;
-	::gpk::view_grid<uint32_t>													& offscreenDepth							= target.DepthStencil.View;
 	const ::gpk::SCoord2<uint32_t>												& offscreenMetrics							= offscreen.metrics();
 	::updateTransforms(transforms, camera, offscreenMetrics);
 
 	const ::gpk::SMatrix4<float>												& projection								= transforms.FinalProjection	;
 	const ::gpk::SMatrix4<float>												& viewMatrix								= transforms.View				;
 
-	//::gpk::SMatrix4<float>														xViewProjection								= viewMatrix * projection;
 	::gpk::SMatrix4<float>														xRotation									= {};
 	xRotation.Identity();
 	::gpk::SMatrix4<float>														xWorld										= {};
 	xWorld.Identity();
-	const double																& fFar										= camera.NearFar.Far	;
-	const double																& fNear										= camera.NearFar.Near	;
+	const ::gpk::SCameraNearFar													& nearFar									= camera.NearFar;
 	uint32_t																	& pixelsDrawn								= renderCache.PixelsDrawn	= 0;
 	uint32_t																	& pixelsSkipped								= renderCache.PixelsSkipped	= 0;
 	renderCache.WireframePixelCoords.clear();
 	renderCache.TrianglesDrawn												= 0;
-	const ::gpk::SCoord2<int32_t>												offscreenMetricsI							= offscreenMetrics.Cast<int32_t>();
-	const ::gpk::SCoord3<float>													screenCenter								= {offscreenMetricsI.x / 2.0f, offscreenMetricsI.y / 2.0f, };
-	const ::gpk::SColorFloat													ambient										= 
-		{ directionalLight.Ambient.x
-		, directionalLight.Ambient.y
-		, directionalLight.Ambient.z
-		, 1
-		};
-	const ::gpk::SColorFloat													diffuse										= 
-		{ directionalLight.Diffuse.x
-		, directionalLight.Diffuse.y
-		, directionalLight.Diffuse.z
-		, 1
-		};
-	//::gpk::STimer																timerMark									= {};
+	const ::gpk::SColorFloat													ambient										= {directionalLight.Ambient.x, directionalLight.Ambient.y, directionalLight.Ambient.z, 1};
+	const ::gpk::SColorFloat													diffuse										= {directionalLight.Diffuse.x, directionalLight.Diffuse.y, directionalLight.Diffuse.z, 1};
 	xWorld		.Scale			(modelPivot.Scale, true);
 	xRotation	.Identity();
 	xRotation	.SetOrientation	(modelPivot.Orientation);
-	xWorld																= xWorld * xRotation;
+	xWorld																	= xWorld * xRotation;
 	xWorld		.SetTranslation	(modelPivot.Position, false);
 	for(uint32_t iGNDTexture = 0; iGNDTexture < textures.size(); ++iGNDTexture) {
 		for(uint32_t iFacingDirection = 0; iFacingDirection < 6; ++iFacingDirection) {
@@ -309,13 +286,10 @@ static				::gpk::error_t										drawTriangles
 				, renderCache.Triangle3dIndices		
 				);
 			const ::gpk::SMatrix4<float>												xWV											= xWorld * viewMatrix;
-			transformTriangles(gndNode.VertexIndices, gndNode.Vertices, fFar, fNear, xWorld, xWV, projection, offscreenMetricsI, renderCache);
-			//timerMark.Frame(); info_printf("First iteration: %f.", timerMark.LastTimeSeconds);
+			transformTriangles	(gndNode.VertexIndices, gndNode.Vertices, nearFar, xWorld, xWV, projection, offscreenMetrics.Cast<int32_t>(), renderCache);
 			gpk_necall(renderCache.TransformedNormalsVertex.resize(renderCache.Triangle3dIndices.size()), "Out of memory?");
-			transformNormals(gndNode.VertexIndices, gndNode.Normals, xWorld, renderCache);
-			//timerMark.Frame(); info_printf("Second iteration: %f.", timerMark.LastTimeSeconds);
-			drawTriangles(gndNode.VertexIndices, gndNode.Vertices, gndNode.UVs, gndNodeTexture, fFar, fNear, lightDir, renderCache, offscreenDepth, offscreen, diffuse, ambient, lights, &pixelsDrawn, &pixelsSkipped, wireframe);
-			//timerMark.Frame(); info_printf("Third iteration: %f.", timerMark.LastTimeSeconds);
+			transformNormals	(gndNode.VertexIndices, gndNode.Normals, xWorld, renderCache);
+			drawTriangles		(gndNode.VertexIndices, gndNode.Vertices, gndNode.UVs, gndNodeTexture, nearFar, lightDir, renderCache, target.DepthStencil.View, offscreen, diffuse, ambient, lights, &pixelsDrawn, &pixelsSkipped, wireframe);
 		}
 	}
 

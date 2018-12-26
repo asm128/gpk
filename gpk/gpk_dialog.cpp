@@ -169,10 +169,14 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion);
 
 	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
-	if(slider.Vertical)
+	if(slider.Vertical) {
+		buttonConstraints.AttachSizeToControl.y								= -1;
 		buttonConstraints.AttachSizeToControl.x								= slider.IdButton;
-	else
+	}
+	else {
+		buttonConstraints.AttachSizeToControl.x								= -1;
 		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
+	}
 	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
 	return 0;
 }

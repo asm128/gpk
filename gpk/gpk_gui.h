@@ -180,6 +180,8 @@ namespace gpk
 		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
+		::gpk::SCoord2<int32_t>									ImageOffset												= {};
+
 		int32_t													ColorTheme												= 0;
 		int32_t													Palettes	[::gpk::GUI_CONTROL_PALETTE_COUNT]			= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
 		int32_t													IndexParent												= -1;

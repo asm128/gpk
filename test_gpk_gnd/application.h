@@ -24,15 +24,18 @@ namespace gme // I'm gonna use a different namespace in order to test a few thin
 					::std::mutex														LockRender;
 
 					::gpk::SDialog														DialogMain;
-					int32_t																Slider;
+					int32_t																SliderH;
+					int32_t																SliderV;
 					int32_t																NumericTuner;
 					int32_t																CheckBox;
 					int32_t																Viewport;
+					int32_t																ViewportMinimap;
 					int32_t																IdFrameRateUpdate				= -1;
 					int32_t																IdFrameRateRender				= -1;
 					char																StringFrameRateUpdate	[256]	= {};
 					char																StringFrameRateRender	[256]	= {};
 
+					::gpk::SImage<::gpk::SColorBGRA>									TextureMinimap						= {};
 					::gpk::array_obj<::gpk::SImage<::gpk::SColorBGRA>>					TexturesGND							= {};
 					::gpk::SModelPivot	<float>											GridPivot							= {};
 					::gpk::SScene														Scene;

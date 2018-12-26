@@ -68,14 +68,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlTable.Controls[tuner->IdGUIControl].Area.Size.y	=  20;
 	::gpk::tunerSetValue(*tuner, 0);
 
-	::gpk::ptr_obj<::gpk::SDialogSlider>									slider						= {};
-	app.Slider															= ::gpk::sliderCreate(app.DialogMain, slider);
-	slider->ValueLimits.Min												= 0;
-	slider->ValueLimits.Max												= 255;
-	controlTable.Controls[slider->IdGUIControl].Area.Offset	= {128, 128};
-	controlTable.Controls[slider->IdGUIControl].Area.Size.x	= 128;
-	controlTable.Controls[slider->IdGUIControl].Area.Size.y	= 8;
-
 	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkbox					= {};
 	app.CheckBox														= ::gpk::checkBoxCreate(app.DialogMain, checkbox);
 	controlTable.Controls[checkbox->IdGUIControl].Area.Offset	= {128, 256};
@@ -88,14 +80,14 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlTable.States		[viewport->IdClient].ImageInvertY		= true;
 
 
-
 	//---------------------------
 
 	static constexpr const char													ragnaPath	[]								= "..\\data_2006\\data\\";
 
 	char																		temp		[512]							= {};
 	::gpk::SRSWFileContents														& rswData									= app.RSWData;
-	sprintf_s(temp, "%s%s%s", ragnaPath, "", "in_sphinx1.rsw");						gpk_necall(::gpk::rswFileLoad(rswData						, ::gpk::view_const_string(temp)), "Error");
+	//sprintf_s(temp, "%s%s%s", ragnaPath, "", "in_sphinx1.rsw");						gpk_necall(::gpk::rswFileLoad(rswData						, ::gpk::view_const_string(temp)), "Error");
+	sprintf_s(temp, "%s%s%s", ragnaPath, "", "aldebaran.rsw");						gpk_necall(::gpk::rswFileLoad(rswData						, ::gpk::view_const_string(temp)), "Error");
 	sprintf_s(temp, "%s%s%s", ragnaPath, "", &rswData.GNDFilename[0]);			gpk_necall(::gpk::gndFileLoad(app.GNDData	, ::gpk::view_const_string(temp)), "Error");
 	app.RSMData.resize(rswData.RSWModels.size());
 	for(uint32_t iRSM = 0; iRSM < (uint32_t)rswData.RSWModels.size(); ++iRSM){
@@ -165,7 +157,65 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app.Scene.Camera.NearFar.Far											= 1000;
 	app.Scene.Camera.NearFar.Near											= 0.001;
 
-	::gpk::SCoord2<uint32_t>													newSize										= controlTable.Controls[viewport->IdClient].Area.Size.Cast<uint32_t>();
+	::gpk::SGNDFileContents														& gndData										= app.GNDData;
+		// -- Generate minimap
+	::gpk::SMinMax<float>														heightMinMax									= {};
+	for(uint32_t iTile = 0; iTile < gndData.lstTileGeometryData.size(); ++iTile)
+		if(gndData.lstTileGeometryData[iTile].SkinMapping.SkinIndexTop != -1) {
+			for(uint32_t iHeight = 0; iHeight < 4; ++iHeight) {
+				heightMinMax.Max												= ::gpk::max(gndData.lstTileGeometryData[iTile].fHeight[iHeight] * -1, heightMinMax.Max);
+				heightMinMax.Min												= ::gpk::min(gndData.lstTileGeometryData[iTile].fHeight[iHeight] * -1, heightMinMax.Min);
+			}
+		}
+	::gpk::SImage<::gpk::SColorBGRA>	minimapTemp;
+	minimapTemp.resize(gndData.Metrics.Size);
+
+	::gpk::view_grid<::gpk::SColorBGRA>											& minimapView									= minimapTemp.View;
+	const float																	heightRange										= heightMinMax.Max - heightMinMax.Min;
+	for(uint32_t y = 0, yMax = minimapView.metrics().y; y < yMax; ++y)
+	for(uint32_t x = 0, xMax = minimapView.metrics().x; x < xMax; ++x) {
+		float																		fAverageHeight									= 0;
+		for(uint32_t iHeight = 0; iHeight < 4; ++iHeight)
+			fAverageHeight															+= tileGeometryView[y][x].fHeight[iHeight] * -1;
+		fAverageHeight															*= .25f;
+		float																		colorRatio										= (fAverageHeight - heightMinMax.Min) / heightRange;
+		//minimapView[y][minimapView.metrics().x - 1 - x]							= ((fAverageHeight < 0) ? ::gpk::WHITE : ::gpk::BLUE) * colorRatio;
+		minimapView[minimapView.metrics().y - 1 - y][x]							= ::gpk::WHITE * colorRatio;
+	}
+
+	app.TextureMinimap.resize(gndData.Metrics.Size);
+	::gpk::grid_scale(app.TextureMinimap.View, minimapTemp.View);
+
+
+	app.ViewportMinimap												= ::gpk::viewportCreate(app.DialogMain, viewport);
+	controlTable.Controls	[viewport->IdGUIControl].Area.Offset	= {0, 0};
+	controlTable.Controls	[viewport->IdGUIControl].Align			= ::gpk::ALIGN_RIGHT;
+	controlTable.States		[viewport->IdClient].ImageInvertY		= true;
+	::gpk::viewportAdjustSize(controlTable.Controls[viewport->IdGUIControl].Area.Size, minimapTemp.metrics().Cast<int16_t>() * 2);
+	controlTable.Controls[viewport->IdClient].Image					= app.TextureMinimap.View;
+
+	::gpk::ptr_obj<::gpk::SDialogSlider>									sliderH						= {};
+	app.SliderH															= ::gpk::sliderCreate(app.DialogMain, sliderH);
+	sliderH->ValueLimits.Min											= 0;
+	sliderH->ValueLimits.Max											= app.TextureMinimap.View.metrics().x / 2;
+	controlTable.Controls[sliderH->IdGUIControl].Area.Offset			= {128, 128};
+	controlTable.Controls[sliderH->IdGUIControl].Area.Size.x			= 128;
+	controlTable.Controls[sliderH->IdGUIControl].Area.Size.y			= 8;
+	controlTable.Constraints[sliderH->IdGUIControl].DockToControl.Bottom= viewport->IdGUIControl;
+	controlTable.Constraints[sliderH->IdGUIControl].DockToControl.Left	= viewport->IdGUIControl;
+	//::gpk::controlSetParent(gui, sliderH->IdGUIControl, viewport->IdGUIControl);
+
+	::gpk::ptr_obj<::gpk::SDialogSlider>									sliderV						= {};
+	app.SliderV															= ::gpk::sliderCreate(app.DialogMain, sliderV);
+	sliderV->ValueLimits.Min											= 0;
+	sliderV->ValueLimits.Max											= app.TextureMinimap.View.metrics().y / 2;
+	sliderV->Vertical													= true;
+	controlTable.Controls[sliderV->IdGUIControl].Area.Offset			= {128, 128};
+	controlTable.Controls[sliderV->IdGUIControl].Area.Size.x			= 8;
+	controlTable.Controls[sliderV->IdGUIControl].Area.Size.y			= 128;
+	controlTable.Constraints[sliderV->IdGUIControl].DockToControl.Bottom= viewport->IdGUIControl;
+	controlTable.Constraints[sliderV->IdGUIControl].DockToControl.Right	= viewport->IdGUIControl;
+	::gpk::sliderSetValue(*sliderV, 0);
 	return 0;
 }
 
@@ -203,14 +253,14 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 	//------------------------------------------------ Camera
 	::gpk::SCameraPoints														& camera									= app.Scene.Camera.Points;
-	camera.Position.RotateY(framework.Input->MouseCurrent.Deltas.x / 20.0f / (framework.Input->KeyboardCurrent.KeyState[VK_CONTROL] ? 2.0 : 1));
-	if(framework.Input->MouseCurrent.Deltas.z) {
-		::gpk::SCoord3<float>														zoomVector									= camera.Position;
-		zoomVector.Normalize();
-		const double																zoomWeight									= framework.Input->MouseCurrent.Deltas.z * (framework.Input->KeyboardCurrent.KeyState[VK_SHIFT] ? 10 : 1) / 240.;
-		camera.Position															+= zoomVector * zoomWeight * .5;
-	}
-
+	//camera.Position.RotateY(framework.Input->MouseCurrent.Deltas.x / 20.0f / (framework.Input->KeyboardCurrent.KeyState[VK_CONTROL] ? 2.0 : 1));
+	//if(framework.Input->MouseCurrent.Deltas.z) {
+	//	::gpk::SCoord3<float>														zoomVector									= camera.Position;
+	//	zoomVector.Normalize();
+	//	const double																zoomWeight									= framework.Input->MouseCurrent.Deltas.z * (framework.Input->KeyboardCurrent.KeyState[VK_SHIFT] ? 10 : 1) / 240.;
+	//	camera.Position															+= zoomVector * zoomWeight * .5;
+	//}
+	camera.Target																= {app.TextureMinimap.metrics().x / 2.0f, 0, -(int32_t)app.TextureMinimap.metrics().y / 2.0f};
 	//------------------------------------------------ Lights
 	::gpk::SCoord3<float>														& lightDir									= app.LightDirection;
 	lightDir.RotateY(frameInfo.Microseconds.LastFrame / 1000000.0f);
@@ -227,6 +277,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//app.GridPivot.Scale										= {2.f, 4.f, 2.f};
 	app.GridPivot.Scale										= {1, -1, -1};
 	app.GridPivot.Orientation.Normalize();
+
+	::gpk::ptr_obj<::gpk::SDialogSlider>									slider									= {};
+	app.DialogMain.Controls[app.SliderH].as(slider);
+	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport									= {};
+	app.DialogMain.Controls[app.ViewportMinimap].as(viewport);
+	gui.Controls.Controls[viewport->IdClient].ImageOffset.x				= (int32_t)slider->ValueCurrent;
+	::gpk::controlMetricsInvalidate(gui, slider->IdGUIControl);
+
+	app.DialogMain.Controls[app.SliderV].as(slider);
+	gui.Controls.Controls[viewport->IdClient].ImageOffset.y				= (int32_t)slider->ValueCurrent;
+	::gpk::controlMetricsInvalidate(gui, slider->IdGUIControl);
+
 
 	timer.Frame();
 	sprintf_s(app.StringFrameRateUpdate, "Last frame time (update): %fs.", (float)timer.LastTimeSeconds);
