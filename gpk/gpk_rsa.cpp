@@ -159,10 +159,10 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 
 //#define DISABLE_ARDELL
 
-static	::gpk::error_t						gpcFilter0Apply				(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub		(scanline, 1), "%s", "??"); return ::gpcFilterSub2		(scanline, 1);		}
-static	::gpk::error_t						gpcFilter0Remove			(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub2	(scanline, 1), "%s", "??"); return ::gpcDefilterSub		(scanline, 1);		}
-static	::gpk::error_t						gpcFilter1Apply				(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub2		(scanline, 2), "%s", "??"); return ::gpcFilterSub		(scanline, 4);		}
-static	::gpk::error_t						gpcFilter1Remove			(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub	(scanline, 4), "%s", "??"); return ::gpcDefilterSub2	(scanline, 2);		}
+static	::gpk::error_t						gpcFilter0Apply						(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub		(scanline, 1), "%s", "??"); return ::gpcFilterSub2		(scanline, 1);		}
+static	::gpk::error_t						gpcFilter0Remove					(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub2	(scanline, 1), "%s", "??"); return ::gpcDefilterSub		(scanline, 1);		}
+static	::gpk::error_t						gpcFilter1Apply						(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcFilterSub2		(scanline, 2), "%s", "??"); return ::gpcFilterSub		(scanline, 4);		}
+static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& scanline) { gpk_necall(::gpcDefilterSub	(scanline, 4), "%s", "??"); return ::gpcDefilterSub2	(scanline, 2);		}
 
 //function to encrypt the message
 		::gpk::error_t						gpk::gpcEncode						(const ::gpk::view_array<const byte_t> & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::array_pod<uint64_t>& encrypted) {
@@ -251,9 +251,10 @@ static	::gpk::error_t						gpcFilter1Remove			(::gpk::view_array<ubyte_t>& scanl
 		::gpk::error_t						gpk::gpcEncodeWithHash				(const ::gpk::view_array<const byte_t	> & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::array_pod<uint64_t	>& encrypted)	{
 	::gpk::array_pod<byte_t>						prehashed, posthashed;
 	prehashed.resize(decrypted.size() + sizeof(uint64_t));
+	// -- Calculate the hash
 	uint64_t										& hash								= *(uint64_t*)&prehashed[decrypted.size()];
 	hash										= 0;
-	for(uint32_t i = 0; i < decrypted.size(); ++i)
+	for(uint32_t i = 0; i < decrypted.size(); ++i) 
 		prehashed[i]								= decrypted[i];
 
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {

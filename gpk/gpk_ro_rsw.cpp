@@ -5,21 +5,21 @@
 
 #pragma pack(push, 1)
 	struct SRSWHeader {
-					char													Filecode[4];
-					uint8_t													VersionMajor;
-					uint8_t													VersionMinor;
+					char										Filecode[4];
+					uint8_t										VersionMajor;
+					uint8_t										VersionMinor;
 	};
 
 	struct SRSWWorldInfo {
 					//::gpk::SRange;
-					int32_t													Top				;
-					int32_t													Bottom			;
-					int32_t													Left			;
-					int32_t													Right			;
-					uint32_t												ObjectCount;
-					//unsigned char											Unknown2	[8];
-					//unsigned char											UnknownStr	[40];
-					//uint32_t												UnknownInts	[2];
+					int32_t										Top				;
+					int32_t										Bottom			;
+					int32_t										Left			;
+					int32_t										Right			;
+					uint32_t									ObjectCount;
+					//unsigned char								Unknown2	[8];
+					//unsigned char								UnknownStr	[40];
+					//uint32_t									UnknownInts	[2];
 	};
 #pragma pack(pop)
 
