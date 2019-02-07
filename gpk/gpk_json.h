@@ -20,25 +20,25 @@ namespace gpk
 		};
 
 	struct SJSONType {
-						int32_t												ParentIndex;
-						JSON_TYPE											Type;
-						::gpk::SSlice<uint32_t>								Span;
+						int32_t											ParentIndex;
+						JSON_TYPE										Type;
+						::gpk::SSlice<uint32_t>							Span;
 	};
 
 	struct SJSONNode {
-						SJSONType											* Object;
-						SJSONNode											* Parent;
-						::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>			Children;
-						int32_t												ObjectIndex;
+						SJSONType										* Object;
+						SJSONNode										* Parent;
+						::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>		Children;
+						int32_t											ObjectIndex;
 	};
 
 	struct SJSONDocument {
-						::gpk::array_obj<::gpk::SJSONType>					Object;
+						::gpk::array_obj<::gpk::SJSONType>				Object;
 	};
 
-					::gpk::error_t										jsonParse							(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
-	static inline	::gpk::error_t										jsonParse							(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString)			{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size());				}
-	static inline	::gpk::error_t										jsonParse							(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::std::string& jsonAsString)						{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
+					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
+	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString)	{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size());			}
+	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::std::string& jsonAsString)				{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
 #pragma pack(pop)
 }
 

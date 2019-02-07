@@ -37,8 +37,8 @@
 		case '\n'	: continue;	// These separator characters mean nothing in json.
 		case ':'	: continue;	// Need to report that we've switched from element name to element value
 		case ','	: continue;	// Need to report that we've switched from an element to the next
-		case '{'	: ++nestLevel; info_printf("opening level %u object"	, nestLevel); currentElement.Type = ::gpk::JSON_TYPE_OBJECT; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a block has been entered
-		case '['	: ++nestLevel; info_printf("opening level %u array"		, nestLevel); currentElement.Type = ::gpk::JSON_TYPE_ARRAY ; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a list has been entered
+		case '{'	: ++nestLevel; info_printf("opening level %u object", nestLevel); currentElement.Type = ::gpk::JSON_TYPE_OBJECT; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a block has been entered
+		case '['	: ++nestLevel; info_printf("opening level %u array"	, nestLevel); currentElement.Type = ::gpk::JSON_TYPE_ARRAY ; currentElement.Span = {iDocChar, iDocChar}; currentElement.ParentIndex = elementIndexCurrent; elementIndexCurrent = document.Object.push_back(currentElement); continue;	// Need to report that a list has been entered
 		case '}'	: info_printf("closing level %u object"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a block has been exited
 		case ']'	: info_printf("closing level %u array"	, nestLevel); --nestLevel; document.Object[elementIndexCurrent].Span.End = iDocChar + 1; elementIndexCurrent = currentElement.ParentIndex; continue;	// Need to report that a list has been exited
 		default		:
@@ -56,34 +56,34 @@
 			case '.'	:	// parse int or float accordingly
 				break;
 			default		:	// parse text
-				{
-					::gpk::SSlice<uint32_t>													keywordSpan											= {iDocChar, iDocChar};
-					bool																		insideQuotes										= false;
-					while(keywordSpan.End < jsonLength) {
-						if( jsonAsString[keywordSpan.End] == '"' )
-							insideQuotes															= ((keywordSpan.End > keywordSpan.Begin) && jsonAsString[keywordSpan.End - 1] == '\\') ? insideQuotes : !insideQuotes;
-						else {
-							if( false == insideQuotes &&
-								(  jsonAsString[keywordSpan.End] == ' '
-								|| jsonAsString[keywordSpan.End] == '\t'
-								|| jsonAsString[keywordSpan.End] == '\r'
-								|| jsonAsString[keywordSpan.End] == '\n'
-								|| jsonAsString[keywordSpan.End] == ':'
-								|| jsonAsString[keywordSpan.End] == ','
-								|| jsonAsString[keywordSpan.End] == '{'
-								|| jsonAsString[keywordSpan.End] == '}'
-								|| jsonAsString[keywordSpan.End] == '['
-								|| jsonAsString[keywordSpan.End] == ']'
-								)
-							 )
-								break;
-						}
-						++keywordSpan.End;
+			{
+				::gpk::SSlice<uint32_t>													keywordSpan											= {iDocChar, iDocChar};
+				bool																	insideQuotes										= false;
+				while(keywordSpan.End < jsonLength) {
+					if( jsonAsString[keywordSpan.End] == '"' )
+						insideQuotes															= ((keywordSpan.End > keywordSpan.Begin) && jsonAsString[keywordSpan.End - 1] == '\\') ? insideQuotes : !insideQuotes;
+					else {
+						if( false == insideQuotes &&
+							(  jsonAsString[keywordSpan.End] == ' '
+							|| jsonAsString[keywordSpan.End] == '\t'
+							|| jsonAsString[keywordSpan.End] == '\r'
+							|| jsonAsString[keywordSpan.End] == '\n'
+							|| jsonAsString[keywordSpan.End] == ':'
+							|| jsonAsString[keywordSpan.End] == ','
+							|| jsonAsString[keywordSpan.End] == '{'
+							|| jsonAsString[keywordSpan.End] == '}'
+							|| jsonAsString[keywordSpan.End] == '['
+							|| jsonAsString[keywordSpan.End] == ']'
+							)
+							)
+							break;
 					}
-					const uint32_t																keywordLength										= keywordSpan.End - keywordSpan.Begin;
-					iDocChar																+= keywordLength;
-					break;
+					++keywordSpan.End;
 				}
+				const uint32_t																keywordLength										= keywordSpan.End - keywordSpan.Begin;
+				iDocChar																+= keywordLength;
+				break;
+			}
 			}
 			continue;
 		}

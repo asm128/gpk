@@ -36,15 +36,25 @@ namespace gpk
 	static inline	::gpk::error_t						viewportCreate						(::gpk::SDialog			& dialog, ::gpk::ptr_nco<SDialogViewport>& createdControl)	 { int32_t index = -1; gpk_necall(index = viewportCreate	(dialog), "%s", "Out of memory?"); dialog.Controls[index].as(createdControl); return index; }
 
 #pragma pack(push, 1)
+	struct SDialogViewportSettings {
+				bool										Dragging							: 1;
+				bool										Unfolded							: 1;
+				bool										DisplacementLockX					: 1;
+				bool										DisplacementLockY					: 1;
+				bool										ScrollBarX							: 1;
+				bool										ScrollBarY							: 1;
+	};
+
 	struct SDialogViewport : public ::gpk::IDialogControl {
 				int32_t										IdClose								= -1;
 				int32_t										IdMinimize							= -1;
 				int32_t										IdMaximize							= -1;
+				int32_t										IdScrollBarX						= -1;
+				int32_t										IdScrollBarY						= -1;
 				int32_t										IdTitle								= -1;
 				int32_t										IdClient							= -1;
-				bool										Dragging							= false;
-				bool										Folded								= false;
-				::gpk::SCoord2<bool>						DisplacementLock					= {};
+				SDialogViewportSettings						Settings							= {};
+				SDialogViewportSettings						SettingsOld							= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::viewportUpdate(*this); }
 	};

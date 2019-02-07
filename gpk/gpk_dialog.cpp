@@ -281,7 +281,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		controlTable.Text[idControl].Text									= "Viewport";
 		::gpk::memcpy_s(control.Palettes, dialog.ColorsViewportTitle.Storage);
 	}
-
+	viewport->Settings.Unfolded											= true;
 	return index;
 }
 
@@ -293,15 +293,15 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 
 ::gpk::error_t														gpk::viewportFold						(::gpk::SDialogViewport	& control, bool fold)														{ 
-	if((fold && false == control.Folded) || (control.Folded && false == fold)) {
+	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
 		::gpk::SDialog															& dialog									= *control.Dialog;
 		::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 		::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
 		::gpk::SControl															& controlTitle								= controlTable.Controls[control.IdTitle];
 		::gpk::SControlState													& stateClient								= controlTable.States[control.IdClient];
-		if(fold && false == control.Folded) 
+		if(fold && control.Settings.Unfolded) 
 			controlMain.Area.Size.y												= controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y;
-		else if(control.Folded && false == fold) {
+		else if(false == control.Settings.Unfolded && false == fold) {
 			::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
 			controlMain.Area.Size.y												= controlClient.Area.Size.y + controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y + 1;								
 		}
@@ -310,44 +310,48 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		else
 			::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
 		stateClient.Hidden													= fold;
-		control.Folded														= fold;
+		control.Settings.Unfolded											= !fold;
 	}
-	return one_if(control.Folded);
+	return one_if(false == control.Settings.Unfolded);
 }
 
+::gpk::error_t														viewportDrag								(::gpk::SDialogViewport	& control, ::gpk::SControl & controlMain, ::gpk::SDialog & dialog, ::gpk::SCoord2<bool> locked, ::gpk::SCoord2<int32_t> mouseDeltas)																{ 
+	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
+	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
+	control.Settings.Dragging											= true;
+	if(false == locked.x)
+		controlMain.Area.Offset.x											+= (controlMain.Align & ::gpk::ALIGN_RIGHT) ? -(int16_t)mouseDeltas.x : (int16_t)mouseDeltas.x;
+	if(false == locked.y)
+		controlMain.Area.Offset.y											+= (controlMain.Align & ::gpk::ALIGN_BOTTOM) ? -(int16_t)mouseDeltas.y : (int16_t)mouseDeltas.y;
+	::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
+	return 0;
+}
 ::gpk::error_t														gpk::viewportUpdate							(::gpk::SDialogViewport	& control)																{ 
 	::gpk::SDialog															& dialog									= *control.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
-	if(false == control.Folded) {
-		::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
-		clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
-		clientFinalSize.y													-=  heightOfField + 1;
-		::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
-		controlClient.Area.Size												= clientFinalSize;
-	}
 	::gpk::SControlState													& controlTitle								= controlTable.States[control.IdTitle];
 	if(controlTitle.Pressed) {
-		::gpk::SCoord2<bool>													locked										= control.DisplacementLock;
-		if(false == locked.x && false == locked.y) {
+		::gpk::SCoord2<bool>													locked										= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
+		if(false == locked.x || false == locked.y) {
 			::gpk::SCoord2<int32_t>													mouseDeltas									= {dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
-			mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
-			mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
-			//mouseDeltas.Scale( );
-			if(mouseDeltas.x || mouseDeltas.y) {
-				control.Dragging													= true;
-				if(false == locked.x)
-					controlMain.Area.Offset.x											+= (controlMain.Align & ::gpk::ALIGN_RIGHT) ? -(int16_t)mouseDeltas.x : (int16_t)mouseDeltas.x;
-				if(false == locked.y)
-					controlMain.Area.Offset.y											+= (controlMain.Align & ::gpk::ALIGN_BOTTOM) ? -(int16_t)mouseDeltas.y : (int16_t)mouseDeltas.y;
-				::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
-			}
+			if(mouseDeltas.x || mouseDeltas.y)
+				::viewportDrag(control, controlMain, dialog, locked, mouseDeltas);
 		}
 	}
 	else { 
-		if(controlTitle.Execute && false == control.Dragging) 
-			::gpk::viewportFold(control, !control.Folded);
-		control.Dragging													= false;
+		if(controlTitle.Execute && false == control.Settings.Dragging) 
+			::gpk::viewportFold(control, control.Settings.Unfolded);
+		control.Settings.Dragging											= false;
 	}
+	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
+		if(true == control.Settings.Unfolded) {
+			::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
+			clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
+			clientFinalSize.y													-=  heightOfField + 1;
+			::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
+			controlClient.Area.Size												= clientFinalSize;
+		}
+	control.SettingsOld													= control.Settings;
 	return 0; 
 }
