@@ -5,21 +5,21 @@
 #		define WIN32_LEAN_AND_MEAN
 #	endif
 #	include <Windows.h>
-#elif defined(GPK_ANDROID)
+#elif defined(GPK_ANDROID) || defined(GPK_LINUX)
 #	include <dirent.h>
 #	include <string>
 #	include <iostream>
 #endif
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::label>& output)					{
-	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files[iFile]), "%s", "Out of memory?");
-	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) gpk_necall(::gpk::pathList(input.Folders[iFolder], output), "%s", "Unknown error!");
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files	[iFile	]), "%s", "Out of memory?");
+	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) gpk_necall(::gpk::pathList(input.Folders	[iFolder], output), "%s", "Unknown error!");
 	return 0;
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::array_obj<::gpk::label>& output, bool listFolders)	{
-	static constexpr const char														curDir []							= ".";
-	static constexpr const char														parDir []							= "..";
+	static constexpr const char														curDir	[]							= ".";
+	static constexpr const char														parDir	[]							= "..";
 	char																			sPath	[4096];
 	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 #if defined(GPK_WINDOWS)
@@ -38,7 +38,7 @@
 	}
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
-#elif defined(GPK_ANDROID)
+#elif defined(GPK_ANDROID) || defined(GPK_LINUX)
     DIR																				* dir								= 0;
     dirent																			* drnt								= 0;
     dir																			= opendir(pathToList.begin());
@@ -47,7 +47,7 @@
         if (name != curDir && name != parDir) {
 			if(drnt->d_type == DT_DIR && false == listFolders)
 				continue;
-			int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), drnt->d_name);
+			int32_t																			lenPath								= sprintf_s(sPath, "%s//%s", pathToList.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
 			gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
         }
@@ -83,14 +83,14 @@
 	}
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
-#elif defined(GPK_ANDROID)
+#elif defined(GPK_ANDROID) || defined(GPK_LINUX)
     DIR																				* dir;
     struct dirent																	* drnt;
     dir																			= opendir(pathToList.begin());
     while ((drnt = readdir(dir)) != NULL) {
         ::std::string																	name								(drnt->d_name);
         if (name != curDir && name != parDir) {
-			int32_t																			lenPath								= sprintf_s(sPath, "%s\\%s", pathToList.begin(), drnt->d_name);
+			int32_t																			lenPath								= sprintf_s(sPath, "%s//%s", pathToList.begin(), drnt->d_name);
 			if(drnt->d_type == DT_DIR) {
 				::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 				gpk_necall(newFolderIndex, "%s", "Out of memory?");
