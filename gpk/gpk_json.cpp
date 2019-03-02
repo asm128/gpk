@@ -59,9 +59,12 @@
 			{
 				::gpk::SSlice<uint32_t>													keywordSpan											= {iDocChar, iDocChar};
 				bool																	insideQuotes										= false;
+				bool																	escaping											= false;
 				while(keywordSpan.End < jsonLength) {
-					if( jsonAsString[keywordSpan.End] == '"' )
-						insideQuotes															= ((keywordSpan.End > keywordSpan.Begin) && jsonAsString[keywordSpan.End - 1] == '\\') ? insideQuotes : !insideQuotes;
+					if(jsonAsString[keywordSpan.End] == '\\' && false == escaping)
+						escaping															= true;
+					else if(jsonAsString[keywordSpan.End] == '"' && false == escaping)
+						insideQuotes														= not insideQuotes;
 					else {
 						if( false == insideQuotes &&
 							(  jsonAsString[keywordSpan.End] == ' '

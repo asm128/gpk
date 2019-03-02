@@ -87,6 +87,8 @@
 	while(rsw_stream.CursorPosition < input.size()) {
 		int32_t														objectType											= -1;
 		rsw_stream.read_pod(objectType);
+		if(-1 == objectType)
+			break;
 		switch(objectType) {
 		default		: break;
 		case	1	: // RSM Model
@@ -181,5 +183,5 @@
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());
-	return rswFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size() - 8});
+	return rswFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});
 }

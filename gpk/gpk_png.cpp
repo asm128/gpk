@@ -562,7 +562,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered
 	switch (ret) {
 	case Z_NEED_DICT		:
-		ret																			= Z_DATA_ERROR;     // and fall through
+		ret																		= Z_DATA_ERROR;     // and fall through
 	case Z_VERSION_ERROR	:
 	case Z_STREAM_ERROR		:
 	case Z_DATA_ERROR		:
@@ -626,7 +626,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 
 static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
-	uint32_t																	bytesPerPixel								= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
+	uint32_t																	bytesPerPixel									= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
 	ree_if(errored(bytesPerPixel), "%s", "Invalid format! Color Type: %u. Bit Depth: %u.");
 	if(imageHeader.MethodInterlace)
 		gpk_necall(::pngDefilterScanlinesInterlaced(pngData), "%s", "Corrupt file?");
@@ -653,6 +653,12 @@ static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData,
 			);
 }
 
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
+	::gpk::array_pod<byte_t>													fileInMemory									= {};
+	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
+	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
+}
+
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
 	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::array_pod<uint32_t>													indicesIDAT;
@@ -672,10 +678,4 @@ static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData,
 	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "%s", "Failed to decompress!");
 	::pngFilePrintInfo(pngData);
 	return ::pngProcess(pngData, out_Texture);
-}
-
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
-	::gpk::array_pod<byte_t>													fileInMemory									= {};
-	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
-	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
 }
