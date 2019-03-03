@@ -84,6 +84,7 @@ namespace gpk
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
+		inline				void				Viewport					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, const ::gpk::SNearFar & nearFar)	noexcept	{ Viewport(offscreenMetrics, nearFar.Far, nearFar.Near); }
 							void				Viewport					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
 			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =												_14 =
 			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =												_24 =

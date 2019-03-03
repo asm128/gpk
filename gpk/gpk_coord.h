@@ -9,6 +9,12 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
+	struct SNearFar {
+							double											Near		;
+							double											Far			;
+	};
+
+
 	template<typename _tBase>
 	struct SCoord2 {
 		typedef									SCoord2<_tBase>			TCoord2;

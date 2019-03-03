@@ -49,7 +49,7 @@ namespace gpk
 	struct SSceneCamera {
 							::gpk::SCameraPoints									Points								;
 							::gpk::SCameraVectors									Vectors								;
-							::gpk::SCameraNearFar									NearFar								;
+							::gpk::SNearFar											NearFar								;
 							double													Angle;
 	};
 
@@ -94,7 +94,7 @@ namespace gpk
 									, {0, 1, 0}
 									, {0, 0, 1}
 									}
-								, ::gpk::SCameraNearFar
+								, ::gpk::SNearFar
 									{ 0.01
 									, 100.0
 									}

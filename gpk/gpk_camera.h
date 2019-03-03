@@ -15,13 +15,9 @@ namespace gpk
 							::gpk::SCoord3<float>							Up			;
 							::gpk::SCoord3<float>							Right		;
 	};
-	struct SCameraNearFar {
-							double											Near		;
-							double											Far			;
-	};
 
 	struct SCameraRange {
-							SCameraNearFar									NearFar		;
+							SNearFar										NearFar		;
 							double											Angle		;
 	};
 } // namespace
