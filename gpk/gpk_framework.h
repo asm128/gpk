@@ -12,7 +12,6 @@
 
 namespace gpk
 {
-
 	struct SFrameworkSettings {
 							bool														GUIZoom										: 1;
 	};

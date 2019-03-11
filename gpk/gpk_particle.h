@@ -6,6 +6,7 @@
 #include "gpk_coord.h"			// for ::gpk::SCoord2<>
 #include "gpk_error.h"			// for ::gpk::error_t
 #include "gpk_array.h"		// for ::gpk::view_array<>
+#include <cfloat>
 
 #ifndef GPK_PARTICLE_H_29384923874
 #define GPK_PARTICLE_H_29384923874

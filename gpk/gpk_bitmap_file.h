@@ -6,26 +6,15 @@
 
 namespace gpk
 {
-#if defined(GPK_WINDOWS)
+
+#if defined(GPK_WINDOWS)	// These functions exist in order to help with loading some images from a third-party game. Otherwise their use is discouraged in favor of ::gpk::png* functions.
 						::gpk::error_t							bmpFileLoad							(const byte_t					* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
 						::gpk::error_t							bmpFileLoad							(FILE							* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
 						::gpk::error_t							bmpFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
 
-						::gpk::error_t							bmgFileLoad							(const byte_t					* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
-						::gpk::error_t							bmgFileLoad							(FILE							* source		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
-						::gpk::error_t							bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::array_pod	<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView);
-
-						::gpk::error_t							bmgFileWrite						(byte_t							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView);
-						::gpk::error_t							bmgFileWrite						(FILE							* destination	, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView);
-						::gpk::error_t							bmgFileWrite						(const ::gpk::view_const_string	& filename		, const ::gpk::view_grid<::gpk::SColorBGRA>& in_ImageView);
-
 	static inline		::gpk::error_t							bmpFileLoad							(const byte_t					* source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
 	static inline		::gpk::error_t							bmpFileLoad							(FILE							* source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
 	static inline		::gpk::error_t							bmpFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
-
-	static inline		::gpk::error_t							bmgFileLoad							(const byte_t					* source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmgFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	static inline		::gpk::error_t							bmgFileLoad							(FILE							* source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmgFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	static inline		::gpk::error_t							bmgFileLoad							(const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)			{ return bmgFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 
 						::gpk::error_t							bmpOrBmgLoad						(::gpk::view_string bmpFileName, ::gpk::SImage<::gpk::SColorBGRA>& loaded);
 #endif

@@ -22,7 +22,7 @@ namespace gpk
 		}
 		//constexpr										array_static								()															= default;
 		//												array_static								(::std::initializer_list<_tCell> init)						{
-		//	throw_if(errored(init.size() > _sizeArray), "Failed to resize array! Why?");
+		//	throw_if(init.size() > _sizeArray, "%s", "Failed to resize array! Why?");
 		//	for(uint32_t i = 0, count = (uint32_t)init.size(); i < count; ++i)
 		//		Storage[i]										= *(init.begin() + i);
 		//}
