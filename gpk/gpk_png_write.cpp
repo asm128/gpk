@@ -21,7 +21,7 @@ static			int32_t											make_crc_table							()																									{
     uint32_t															c										= crc;
     if(0 == g_crc_table_computed) {
 		static const int32_t												initedTable								= make_crc_table();
-		always_printf("Initialized PNG CRC table: %i.", initedTable);
+		info_printf("Initialized PNG CRC table: %i.", initedTable);
 	}
 
 	for (uint32_t n = 0, count = buf.size(); n < count; ++n)
