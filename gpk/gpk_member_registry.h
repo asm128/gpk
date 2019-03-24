@@ -2,6 +2,7 @@
 #include "gpk_type_identifier.h"
 #include "gpk_datatype.h"
 #include "gpk_view_array.h"
+#include "gpk_module.h"
 
 #ifndef GPK_MEMBER_REGISTRY_H_9214982364982734
 #define GPK_MEMBER_REGISTRY_H_9214982364982734
@@ -22,6 +23,19 @@
 	};																																																				\
 	_nameSpace::_memberType		_memberName
 
+#define GPKFM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
+	struct GPKM_NAME(_memberName)	{																																												\
+		typedef GPK_MODULE_FUNCTION_NAME(_memberType)		TMember;	\
+		static inline constexpr	const char_t*												get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
+		static inline constexpr	const char_t*												get_member_type_name			()							noexcept	{ return #_memberType;						}	\
+		static inline constexpr	const char_t*												get_member_name					()							noexcept	{ return #_memberName;						}	\
+		static inline constexpr	const char_t*												get_member_display_name			()							noexcept	{ return _displayName;						}	\
+		static inline constexpr	const char_t*												get_member_description			()							noexcept	{ return _memberDescription;				}	\
+		static inline constexpr	::gpk::DATA_TYPE											get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
+		static inline constexpr	uint32_t													get_member_size					()							noexcept	{ return sizeof(GPK_MODULE_FUNCTION_NAME(_memberType));	}	\
+	};																																																				\
+	GPK_MODULE_FUNCTION_NAME(_memberType)		_memberName
+
 namespace gpk {
 #pragma pack(push, 1)
 	template <typename... _tArgs>	struct member_registry {
@@ -37,9 +51,10 @@ namespace gpk {
 #pragma pack(pop)
 } // namespace
 
-#define	GPKMNDO(_memberType, _memberName)				GPKM(_memberType, _memberName, ::gpk::DATA_TYPE_OBJECT, #_memberName, #_memberName)
-#define	GPKMNDF(_nameSpace, _memberType, _memberName, _dataTypeId)				GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, #_memberName, #_memberName)
-#define GPKM_REGISTRY(...)								GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
-#define GPKM_GET_MEMBER_REGISTRY(objectType)			objectType::get_member_registry()
+#define	GPKMFND(_nameSpace, _memberType, _memberName)				GPKFM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_FUN	, #_memberName, #_memberName)
+#define	GPKMOND(_nameSpace, _memberType, _memberName)				GPKM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_OBJECT	, #_memberName, #_memberName)
+#define	GPKMBND(_nameSpace, _memberType, _memberName, _dataTypeId)	GPKM(_nameSpace, _memberType, _memberName, _dataTypeId	, #_memberName, #_memberName)
+#define GPKM_REGISTRY(...)											GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
+#define GPKM_GET_MEMBER_REGISTRY(objectType)						objectType::get_member_registry()
 
 #endif // GPK_MEMBER_REGISTRY_H_9214982364982734

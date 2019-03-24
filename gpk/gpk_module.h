@@ -7,6 +7,7 @@
 #	define GPK_STDCALL				__stdcall
 #	define GPK_MODULE_API_EXPORT	__declspec(dllexport)
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
+#	include <Windows.h>
 #elif defined(GPK_LINUX)
 #	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
@@ -29,11 +30,10 @@
 	extern "C"	::gpk::error_t		 GPK_STDCALL			functionName									(__VA_ARGS__);	\
 	typedef		::gpk::error_t		(GPK_STDCALL			* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
 
-
 #if defined(GPK_WINDOWS)
 #	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
 #	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		(moduleAddr)
-#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))GetProcAddress((HMODULE)moduleHandle, #symbolName))
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		GetProcAddress((HMODULE)moduleHandle, symbolName)
 #else
 #	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
 #	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)

@@ -31,6 +31,9 @@
     <Filter Include="runtime\view">
       <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="web_cgi">
+      <UniqueIdentifier>{48d776c5-2461-4e7e-bcb5-5232ee90cb4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_bitmap_target.h">
@@ -246,6 +249,18 @@
     <ClInclude Include="gpk_bmg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_http_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_module.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_runtime.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -353,10 +368,19 @@
     <ClCompile Include="gpk_bmg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_cgi.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_module.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_runtime.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_module_exports.def">
-      <Filter>Source Files</Filter>
+      <Filter>runtime</Filter>
     </None>
   </ItemGroup>
 </Project>

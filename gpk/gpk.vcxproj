@@ -25,6 +25,8 @@
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_bmg.h" />
+    <ClInclude Include="gpk_cgi_module.h" />
+    <ClInclude Include="gpk_cgi_runtime.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_datatype.h" />
@@ -33,6 +35,7 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_member_registry.h" />
     <ClInclude Include="gpk_noise.h" />
@@ -88,6 +91,7 @@
     <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_truetype.h" />
     <ClInclude Include="gpk_type_registry.h" />
+    <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_stdsocket.h" />
   </ItemGroup>
@@ -97,6 +101,8 @@
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_bmg.cpp" />
+    <ClCompile Include="gpk_cgi_module.cpp" />
+    <ClCompile Include="gpk_cgi_runtime.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
@@ -126,6 +132,7 @@
     <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_udp_client.cpp" />
     <ClCompile Include="gpk_udp_server.cpp" />
+    <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -82,6 +82,16 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE												State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
+	struct STCPConnection {
+		::gpk::auto_socket_close												Socket								;
+		::gpk::SUDPClientQueue													Queue								= {};
+		::gpk::SIPv4															Address								= {};
+		uint64_t																LastPing							= 0;
+		uint64_t																FirstPing							= 0;
+		uint64_t																KeyPing								= 0;
+		::gpk::UDP_CONNECTION_STATE												State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+	};
+
 	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024*4;
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);

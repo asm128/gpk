@@ -3,6 +3,10 @@
 #ifndef GPK_SAFE_H_209934782093
 #define GPK_SAFE_H_209934782093
 
+#ifndef safe_free
+#	define safe_free(p) if(p) do { free(p); p = 0; } while(0)
+#endif
+
 #ifndef safe_delete
 #	define safe_delete(p) if(p) do { delete(p); p = 0; } while(0)
 #endif
