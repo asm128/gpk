@@ -261,6 +261,9 @@
     <ClInclude Include="gpk_cgi_runtime.h">
       <Filter>web_cgi</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -376,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="gpk_cgi_runtime.cpp">
       <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

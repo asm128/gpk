@@ -13,7 +13,7 @@ namespace gpk
 	template <typename... _Args>	::gpk::error_t	resize					(uint32_t newSize, _Args&&... args)		{
 		const uint32_t										oldSizes	[]			= {args.size	()			..., 0};
 		const ::gpk::error_t								results		[]			= {args.resize	(newSize)	..., 0};
-		for(uint32_t i=0; i < ::gpk::size(results); ++i)
+		for(uint32_t i=0; i < ::gpk::min(::gpk::size(results), ::gpk::size(oldSizes)); ++i)
 			if(errored(results[i])) {
 				error_printf("Failed to set container size: %i. Out of memory?", (int32_t)newSize);
 				int32_t												j						= 0;

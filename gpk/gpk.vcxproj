@@ -42,6 +42,7 @@
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_session.h" />
     <ClInclude Include="gpk_storage.h" />
+    <ClInclude Include="gpk_string_helper.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_type_identifier.h" />
     <ClInclude Include="gpk_udp_client.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_storage.cpp" />
+    <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />

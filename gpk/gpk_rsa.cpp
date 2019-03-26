@@ -262,7 +262,7 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 		hash										+= hashedChar;
 		//info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
-	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *(uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)], *(uint64_t*)&prehashed[decrypted.size()], decrypted.size(), prehashed.size());
+	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *((uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)]), *((uint64_t*)&prehashed[decrypted.size()]), decrypted.size(), prehashed.size());
 
 	const uint32_t									encryptedStart						= encrypted.size();
 	::gpk::gpcEncode(prehashed, n, key, testkey, salt, encrypted);
