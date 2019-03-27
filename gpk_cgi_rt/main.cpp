@@ -32,7 +32,7 @@
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
 	//char													buffer[4096]					= {};
 	::gpk::SCGIModule										module;
-	::std::string											moduleName						= {framework.ModuleName.begin(), framework.ModuleName.size()};
+	::std::string											moduleName						= {framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)};
 	::gpk::loadCGIModule(module, {moduleName.data(), (uint32_t)moduleName.size()});
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
