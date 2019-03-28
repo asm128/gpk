@@ -47,21 +47,18 @@
 
 static constexpr	const char						html_script	[]			= 
 	"\n<script>"
-	//"\nfunction mover(nam, col) {"
-	//"\n    document.getElementById(\"Title\" + nam).style.setProperty(\"color\", col);"
-	//"\n    document.getElementById(\"Button\"+ nam).style.setProperty(\"border-color\", col);"
-	//"\n}"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
     "\nself.location = url + \"?m=%s&bt=1\" + \"&width=\" + document.documentElement.clientWidth + \"&height=\" + document.documentElement.clientHeight;"
-	//"\n    self.location = name + \"?m=%s&bt=1\" + \"&width=\" + document.documentElement.clientWidth + \"&height=\" + document.documentElement.clientHeight;"
 	"\n}"
 	"\n</script>"
 	;
 
 int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
 	const ::gpk::SCGIRuntimeValues& runtimeValues = framework.RuntimeValues;
-	if(false == framework.Bootstrapped) {
+	if(framework.Bootstrapped) 
+		::genHTMLModuleOutput(framework, output);
+	else {
 		char													buffer[4096]		= {};
 		output.append(buffer, sprintf_s(buffer, "%s", 
 			"<html>"
@@ -97,8 +94,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		int														iArg					= 0;
 		::gpk::array_pod<char>									content_body			= {};
 		content_body.resize(1024*128);
-		while(content_count < content_length && iArg != -1)
-		{
+		while(content_count < content_length && iArg != -1) {
 			iArg												= 0;
 			int														count					= 0;
 			content_body.resize(0);
@@ -121,9 +117,6 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%\" height=\"100%\" src=\"http://localhost/home.html\"></iframe>\n"));
 		output.append(buffer, sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
-	else {
-		::genHTMLModuleOutput(framework, output);
-	}
 	return 0;
 }
 
@@ -132,9 +125,8 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework);
 	printf("%s\n\n", "Content-Type: text/html"
-		"\nCache-Control: no-store\n"
+		"\nCache-Control: no-store"
 	);
-	
 	::gpk::array_pod<char>									html;
 	::cgiBootstrap(framework, html);
 	html.push_back('\0');
