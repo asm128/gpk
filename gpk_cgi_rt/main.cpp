@@ -84,10 +84,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		output.append(buffer, sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>"	, (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
 		output.append(buffer, sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
-		int														argc					= __argc; 
-		char													** argv					= __argv;
-		for(int32_t iArg = 0; iArg < argc; ++iArg) 
-			output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
+		//int														argc					= __argc; 
+		//char													** argv					= __argv;
+		//for(int32_t iArg = 0; iArg < argc; ++iArg) 
+		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 
 		uint32_t												content_length			= runtimeValues.ContentLength.size() ? (uint32_t)::std::stoi(runtimeValues.ContentLength.begin()) : 0;
 		uint32_t												content_count			= 0;
