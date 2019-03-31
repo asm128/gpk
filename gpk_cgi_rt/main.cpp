@@ -55,7 +55,7 @@ static constexpr	const char						html_script	[]			=
 	;
 
 int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
-	const ::gpk::SCGIRuntimeValues& runtimeValues = framework.RuntimeValues;
+	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
 	if(framework.Bootstrapped) 
 		::genHTMLModuleOutput(framework, output);
 	else {
@@ -71,6 +71,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		));
 		output.append(buffer, sprintf_s(buffer, "\n<body style=\"width:95%%; height:95%%; background-color:#FFCCAA; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
+		output.append(buffer, sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		if(runtimeValues.QueryString.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
@@ -83,6 +84,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentLength	.begin(), runtimeValues.ContentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
 		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentType	.begin(), runtimeValues.ContentType		.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
 		output.append(buffer, sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>"	, (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
+		output.append(buffer, sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
+		output.append(buffer, sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"			, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
+		output.append(buffer, sprintf_s(buffer, "\n<h4>String IP: %s</h4>"				, framework.RuntimeValues.StrRemoteIP.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, framework.RuntimeValues.StrRemotePort.begin()));
 		output.append(buffer, sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
 		//int														argc					= __argc; 
@@ -115,7 +120,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			content_count += charCount ? charCount : 1;
 			output.append(buffer, sprintf_s(buffer, "\n<h1>content_body: %s</h1>", content_body.begin()));
 		}
-		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%\" height=\"100%\" src=\"http://localhost/home.html\"></iframe>\n"));
+		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
 		output.append(buffer, sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
 	return 0;

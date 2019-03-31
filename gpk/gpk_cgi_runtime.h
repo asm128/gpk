@@ -1,4 +1,5 @@
 #include"gpk_cgi.h"
+#include "gpk_tcpip.h"
 
 #ifndef GPK_CGI_RUNTIME_H_2938479283
 #define GPK_CGI_RUNTIME_H_2938479283
@@ -11,6 +12,9 @@ namespace gpk
 		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	QueryStringKeyVals	= {};
 		::gpk::array_pod<char>																	ContentLength		= {};
 		::gpk::array_pod<char>																	ContentType			= {};
+		::gpk::array_pod<char>																	StrRemoteIP			= {};
+		::gpk::array_pod<char>																	StrRemotePort		= {};
+		::gpk::SIPv4																			RemoteIP			= {};
 	};
 
 	struct SCGIFramework {
