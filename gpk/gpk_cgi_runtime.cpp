@@ -45,6 +45,8 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	::gpk::SCGIRuntimeValues								& webRuntimeValues				= framework.RuntimeValues;
 	::load_env("QUERY_STRING"	, webRuntimeValues.QueryString		); 
 	//webRuntimeValues.QueryString = "bt=1&width=100&height=200&m=test_cgi_module";
+	//webRuntimeValues.QueryString = "bt=1&width=720&height=640&frame=0&category=0&neighbor=6&m=tianadev";
+	//webRuntimeValues.QueryString = "bt=1&m=tianadev&width=1708&height=744&gallery=0&frame=1";
 	::gpk::querystring_split({webRuntimeValues.QueryString.begin(), webRuntimeValues.QueryString.size()}, webRuntimeValues.QueryStringElements);
 	webRuntimeValues.QueryStringKeyVals.resize(webRuntimeValues.QueryStringElements.size());
 	for(uint32_t iKeyVal = 0; iKeyVal < webRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
@@ -54,5 +56,40 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	}
 	::load_env("CONTENT_TYPE"	, webRuntimeValues.ContentType		); 
 	::load_env("CONTENT_LENGTH"	, webRuntimeValues.ContentLength	); 
+	::load_env("REMOTE_ADDR"	, webRuntimeValues.StrRemoteIP		);
+	::load_env("REMOTE_PORT"	, webRuntimeValues.StrRemotePort	);
+	//webRuntimeValues.StrRemoteIP	= "129.166.3.1";
+	//webRuntimeValues.StrRemotePort	= "500";
+	
+	if(webRuntimeValues.StrRemotePort.size())
+		try {
+			webRuntimeValues.RemoteIP.Port						= (uint16_t)::std::stoi(webRuntimeValues.StrRemotePort.begin());
+		}
+		catch(...) {
+			webRuntimeValues.RemoteIP.Port						= 0;
+		}
+	if(webRuntimeValues.StrRemoteIP.size()) {
+		uint32_t iOffset	= 0; 
+		uint32_t iEnd		= 0; 
+		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
+			while(iEnd < webRuntimeValues.StrRemoteIP.size()) {
+				char curChar = webRuntimeValues.StrRemoteIP[iEnd];
+				if( curChar == '.' 
+				 ||	curChar == ':' 
+				 ||	curChar == '\0'
+				)
+					break;
+				++iEnd;
+			}
+			try {
+				webRuntimeValues.RemoteIP.IP[iVal]						= (ubyte_t)::std::stoi({&webRuntimeValues.StrRemoteIP[iOffset], iEnd - iOffset});
+			}
+			catch(...) {
+				webRuntimeValues.RemoteIP.IP[iVal]						= 0;
+			}
+			iOffset													= iEnd + 1;
+			iEnd													= iOffset;
+		}
+	}
 	return 0;
 }
