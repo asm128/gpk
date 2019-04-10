@@ -21,8 +21,8 @@ namespace gpk
 #define	gbit_make(bitIndex)								( 1 << (bitIndex) )
 #define	gbit_set(inout_FlagVariable, in_BitsToSet  )	( (((inout_FlagVariable) & (in_BitsToSet)) == (in_BitsToSet))	? (inout_FlagVariable)						: (inout_FlagVariable) |= (in_BitsToSet)	)
 #define	gbit_clear(inout_FlagVariable, in_BitsToClear)	( ((inout_FlagVariable) & (in_BitsToClear))						? (inout_FlagVariable) &= ~(in_BitsToClear)	: (inout_FlagVariable)						)
-#define	gbit_true(in_FlagVariable, in_Bit)				( (((in_FlagVariable) & (in_Bit)) == (in_Bit)) ? true : false )
-#define	gbit_false(in_FlagVariable, in_Bit)				( (((in_FlagVariable) & (in_Bit)) != (in_Bit)) ? true : false )
+#define	gbit_true(in_FlagVariable, in_Bit)				( ((in_FlagVariable) & (in_Bit)) == (in_Bit) ) 
+#define	gbit_false(in_FlagVariable, in_Bit)				( ((in_FlagVariable) & (in_Bit)) != (in_Bit) ) 
 }
 
 #endif // GPK_BIT_H_034792701397

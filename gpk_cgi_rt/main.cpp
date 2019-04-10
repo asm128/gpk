@@ -94,32 +94,38 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		//char													** argv					= __argv;
 		//for(int32_t iArg = 0; iArg < argc; ++iArg) 
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
-
-		uint32_t												content_length			= runtimeValues.ContentLength.size() ? (uint32_t)::std::stoi(runtimeValues.ContentLength.begin()) : 0;
-		uint32_t												content_count			= 0;
-		int														iArg					= 0;
-		::gpk::array_pod<char>									content_body			= {};
-		content_body.resize(1024*128);
-		while(content_count < content_length && iArg != -1) {
-			iArg												= 0;
-			int														count					= 0;
-			content_body.resize(0);
-			int32_t charCount = 0;
-			while(iArg = getc(stdin)) {
-				if(iArg == -1)
-					break;
-				if(iArg == '\n') {
-					++count;
-					if(count >= 2)
-						break;
+		{
+			::gpk::array_pod<char>									content_body			= {};
+			content_body.resize(runtimeValues.Content.Length);
+			uint32_t												iChar					= 0;
+			char													iArg					= 0;
+			while(iChar < runtimeValues.Content.Length) {
+				int														count					= 0;
+				//memset(content_body.begin(), 0, content_body.size());
+				content_body.resize(0);
+				uint32_t												iOffset					= iChar;
+				bool													value					= false;
+				while(iChar < runtimeValues.Content.Length && (iArg = runtimeValues.Content.Body[iChar++])) {
+					if(iArg == '\n') {
+						++count;
+						if(count >= 2) {
+							value												= true;
+							count												= 0;
+							//break;
+						}
+					}
+					else if(iArg != '\r')
+						count												= 0;
+					content_body.push_back(iArg);
 				}
-				else if(iArg != '\r')
-					count												= 0;
-				content_body.push_back((char)iArg);
+				if(0 == content_body.size())
+					break;
+				content_body.push_back(0);
+				output.append(buffer, sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
 			}
-			content_count += charCount ? charCount : 1;
-			output.append(buffer, sprintf_s(buffer, "\n<h1>content_body: %s</h1>", content_body.begin()));
 		}
+		output.append(buffer, sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
+
 		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
 		output.append(buffer, sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
@@ -140,3 +146,6 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	printf("%s", html.begin());
 	return 0;
 }
+
+// 17070035
+// 0810-122-2666
