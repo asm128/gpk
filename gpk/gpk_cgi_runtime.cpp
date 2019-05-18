@@ -42,74 +42,106 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 }
 
 ::gpk::error_t										cgiLoadContentType				(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{ 
-		 if(0 == strcmp(strContentType.begin(), "application/javascript"                                                   )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_JAVASCRIPT															; }
-	else if(0 == strcmp(strContentType.begin(), "application/json"                                                         )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_JSON																; }
-	else if(0 == strcmp(strContentType.begin(), "application/x-www-form-urlencoded"                                        )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_X_WWW_FORM_URLENCODED												; }
-	else if(0 == strcmp(strContentType.begin(), "application/xml"                                                          )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_XML																	; }
-	else if(0 == strcmp(strContentType.begin(), "application/zip"                                                          )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_ZIP																	; }
-	else if(0 == strcmp(strContentType.begin(), "application/pdf"                                                          )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_PDF																	; }
-	else if(0 == strcmp(strContentType.begin(), "application/sql"                                                          )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_SQL																	; }
-	else if(0 == strcmp(strContentType.begin(), "application/graphql"                                                      )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_GRAPHQL																; }
-	else if(0 == strcmp(strContentType.begin(), "application/ld+json"                                                      )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_LD_JSON																; }
-	else if(0 == strcmp(strContentType.begin(), "application/msword"                                                       )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_MSWORD_DOC															; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"  )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT_DOCX	; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.ms-excel"                                                 )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_MS_EXCEL_XLS													; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"        )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET_XLSX			; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.ms-powerpoint"                                            )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_MS_POWERPOINT_PPT												; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.openxmlformats-officedocument.presentationml.presentation")) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION_PPTX	; }
-	else if(0 == strcmp(strContentType.begin(), "application/vnd.oasis.opendocument.text"                                  )) { contentType = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OASIS_OPENDOCUMENT_TEXT_ODT										; }
-	else if(0 == strcmp(strContentType.begin(), "audio/mpeg"                                                               )) { contentType = ::gpk::CGI_MEDIA_TYPE_AUDIO_MPEG																		; }
-	else if(0 == strcmp(strContentType.begin(), "audio/ogg"                                                                )) { contentType = ::gpk::CGI_MEDIA_TYPE_AUDIO_OGG																		; }
-	else if(0 == strcmp(strContentType.begin(), "multipart/form-data"                                                      )) { contentType = ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA																; }
-	else if(0 == strcmp(strContentType.begin(), "text/css"                                                                 )) { contentType = ::gpk::CGI_MEDIA_TYPE_TEXT_CSS																		; }
-	else if(0 == strcmp(strContentType.begin(), "text/html"                                                                )) { contentType = ::gpk::CGI_MEDIA_TYPE_TEXT_HTML																		; }
-	else if(0 == strcmp(strContentType.begin(), "text/xml"                                                                 )) { contentType = ::gpk::CGI_MEDIA_TYPE_TEXT_XML																		; }
-	else if(0 == strcmp(strContentType.begin(), "text/csv"                                                                 )) { contentType = ::gpk::CGI_MEDIA_TYPE_TEXT_CSV																		; }
-	else if(0 == strcmp(strContentType.begin(), "text/plain"                                                               )) { contentType = ::gpk::CGI_MEDIA_TYPE_TEXT_PLAIN																		; }
-	else if(0 == strcmp(strContentType.begin(), "image/png"                                                                )) { contentType = ::gpk::CGI_MEDIA_TYPE_IMAGE_PNG																		; }
-	else if(0 == strcmp(strContentType.begin(), "image/jpeg"                                                               )) { contentType = ::gpk::CGI_MEDIA_TYPE_IMAGE_JPEG																		; }
-	else if(0 == strcmp(strContentType.begin(), "image/gif"                                                                )) { contentType = ::gpk::CGI_MEDIA_TYPE_IMAGE_GIF																		; }
-	else 
+	static const ::gpk::view_const_string					content_types []				= 
+		{ "application/javascript"                                                   
+		, "application/json"                                                         
+		, "application/x-www-form-urlencoded"                                        
+		, "application/xml"                                                          
+		, "application/zip"                                                          
+		, "application/pdf"                                                          
+		, "application/sql"                                                          
+		, "application/graphql"                                                      
+		, "application/ld+json"                                                      
+		, "application/msword"                                                       
+		, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"  
+		, "application/vnd.ms-excel"                                                 
+		, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"        
+		, "application/vnd.ms-powerpoint"                                            
+		, "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+		, "application/vnd.oasis.opendocument.text"                                  
+		, "audio/mpeg"                                                               
+		, "audio/ogg"                                                                
+		, "multipart/form-data"                                                      
+		, "text/css"                                                                 
+		, "text/html"                                                                
+		, "text/xml"                                                                 
+		, "text/csv"                                                                 
+		, "text/plain"                                                               
+		, "image/png"                                                                
+		, "image/jpeg"                                                               
+		, "image/gif"                
+		};
+
+	::gpk::CGI_MEDIA_TYPE									val;
+		 if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_JAVASCRIPT															) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_JSON																	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_X_WWW_FORM_URLENCODED													) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_XML																	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_ZIP																	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_PDF																	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_SQL																	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_GRAPHQL																) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_LD_JSON																) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_MSWORD_DOC															) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT_DOCX		) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_MS_EXCEL_XLS														) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_SPREADSHEETML_SHEET_XLSX			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_MS_POWERPOINT_PPT													) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OPENXMLFORMATS_OFFICEDOCUMENT_PRESENTATIONML_PRESENTATION_PPTX	) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_APPLICATION_VND_OASIS_OPENDOCUMENT_TEXT_ODT										) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_AUDIO_MPEG																		) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_AUDIO_OGG																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA																) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_TEXT_CSS																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_TEXT_HTML																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_TEXT_XML																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_TEXT_CSV																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_TEXT_PLAIN																		) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_IMAGE_PNG																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_IMAGE_JPEG																		) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else if(((val = ::gpk::CGI_MEDIA_TYPE_IMAGE_GIF																			) == val) && 0 == strncmp(strContentType.begin(), content_types[val].begin(), content_types[val].size())) { contentType = val; }
+	else 													
 		return -1;
 	return 0;
 }
 
-::gpk::error_t										cgiLoadAddr				(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{ 
+::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{ 
 	if(strRemotePort.size())
 		try {
-			remoteIP.Port						= (uint16_t)::std::stoi(strRemotePort.begin());
+			remoteIP.Port										= (uint16_t)::std::stoi(strRemotePort.begin());
 		}
 		catch(...) {
-			remoteIP.Port						= 0;
+			remoteIP.Port										= 0;
 		}
 
 	if(strRemoteIP.size()) {
-		uint32_t iOffset	= 0; 
-		uint32_t iEnd		= 0; 
+		uint32_t												iOffset						= 0; 
+		uint32_t												iEnd						= 0; 
 		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				char curChar = strRemoteIP[iEnd];
 				if( curChar == '.' 
 				 ||	curChar == ':' 
 				 ||	curChar == '\0'
+				 || (iEnd - iOffset) > 3	// 3 digit max
 				)
 					break;
 				++iEnd;
 			}
 			try {
-				remoteIP.IP[iVal]						= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
+				remoteIP.IP[iVal]									= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
 			}
 			catch(...) {
-				remoteIP.IP[iVal]						= 0;
+				remoteIP.IP[iVal]									= 0;
 			}
-			iOffset													= iEnd + 1;
-			iEnd													= iOffset;
+			iOffset												= iEnd + 1;
+			iEnd												= iOffset;
 		}
 	}
 	return 0;
 }
 
-::gpk::error_t										cgiRuntimeValuesLoadEnv			(::gpk::SCGIRuntimeValues & webRuntimeValues)	{ 
+::gpk::error_t										cgiRuntimeValuesLoadEnv		(::gpk::SCGIRuntimeValues & webRuntimeValues)	{ 
 	::load_env("QUERY_STRING"	, webRuntimeValues.QueryString		); 
 	::load_env("CONTENT_TYPE"	, webRuntimeValues.ContentType		); 
 	::load_env("CONTENT_LENGTH"	, webRuntimeValues.ContentLength	); 
@@ -117,15 +149,26 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	::load_env("REMOTE_PORT"	, webRuntimeValues.StrRemotePort	);
 	return 0;
 }
-::gpk::error_t										gpk::cgiRuntimeValuesLoad		(::gpk::SCGIFramework & framework)	{ 
-	::gpk::SCGIRuntimeValues								& webRuntimeValues				= framework.RuntimeValues;
+::gpk::error_t										cgiLoadFormData				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view_array<const char> & strContent)	{ 
+	runtimeValues, strContent;
+	return 0;
+}
+
+::gpk::error_t										cgiLoadContent				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view_array<const char> & strContent)	{ 
+	runtimeValues;strContent;
+	switch(contentType) {
+	default: break;
+	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA: ::cgiLoadFormData(runtimeValues, strContent); break;
+	}
+	return 0;
+}
+
+::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIFramework & framework)	{ 
+	::gpk::SCGIRuntimeValues								& webRuntimeValues			= framework.RuntimeValues;
 	::cgiRuntimeValuesLoadEnv(webRuntimeValues);
 	//webRuntimeValues.QueryString						= "bt=1&width=100&height=200&m=test_cgi_module";
 	//webRuntimeValues.QueryString						= "bt=1&width=720&height=640&frame=0&category=0&neighbor=6&m=tianadev";
 	//webRuntimeValues.QueryString						= "bt=1&m=tianadev&width=1708&height=744&gallery=0&frame=1";
-	//webRuntimeValues.StrRemoteIP						= "129.166.3.1";
-	//webRuntimeValues.StrRemotePort					= "500";
-
 	::gpk::querystring_split({webRuntimeValues.QueryString.begin(), webRuntimeValues.QueryString.size()}, webRuntimeValues.QueryStringElements);
 	webRuntimeValues.QueryStringKeyVals.resize(webRuntimeValues.QueryStringElements.size());
 	for(uint32_t iKeyVal = 0; iKeyVal < webRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
@@ -147,7 +190,8 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	int														iArg							= 0;
 	while(iChar < webRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
 		webRuntimeValues.Content.Body[iChar++]				= (char)iArg;
-	//webRuntimeValues.Content.Body						= "Name:Pepo\r\nValue:Siso\r\n\r\nName:Pepe\r\nValue:Sise\r\n\r\nName:Pepa\r\nValue:Sisa\r\n\r\n";
-	//webRuntimeValues.Content.Length					= webRuntimeValues.Content.Body.size();
+
+	::cgiLoadContent(webRuntimeValues, webRuntimeValues.Content.Type, webRuntimeValues.Content.Body);
+
 	return 0;
 }
