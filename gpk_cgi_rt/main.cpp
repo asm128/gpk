@@ -49,7 +49,7 @@ static constexpr	const char						html_script	[]			=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
-    "\nself.location = url + \"?m=%s&bt=1\" + \"&width=\" + document.documentElement.clientWidth + \"&height=\" + document.documentElement.clientHeight;"
+    "\nself.location = url + \"?m=%s&bt=1\" + \"&w=\" + document.documentElement.clientWidth + \"&h=\" + document.documentElement.clientHeight;"
 	"\n}"
 	"\n</script>"
 	;

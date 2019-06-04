@@ -28,11 +28,11 @@
     <Filter Include="udp">
       <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="runtime\view">
-      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="web_cgi">
       <UniqueIdentifier>{48d776c5-2461-4e7e-bcb5-5232ee90cb4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -151,19 +151,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_array.h">
-      <Filter>runtime\view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_bit.h">
-      <Filter>runtime\view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_grid.h">
-      <Filter>runtime\view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_layered.h">
-      <Filter>runtime\view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_stream.h">
-      <Filter>runtime\view</Filter>
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>Header Files</Filter>

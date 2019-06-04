@@ -109,13 +109,36 @@ namespace gpk
 
 
 	template <typename _tCell>
-						int32_t									reverse								(::gpk::view_array<_tCell> elements)											{
+						::gpk::error_t							reverse								(::gpk::view_array<_tCell> elements)											{
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
-			uint8_t																old							= elements[i];
-			elements[i]														= elements[elements.size() - 1 - i];
-			elements[elements.size() - 1 - i]											= old;
+			uint8_t															old									= elements[i];
+			elements[i]													= elements[elements.size() - 1 - i];
+			elements[elements.size() - 1 - i]							= old;
 		}
 		return 0;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							find_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)	{
+		for(uint32_t iOffset = 0, offsetStop = target.size() - sequence.size(); iOffset < offsetStop; ++iOffset) {
+			bool															equal								= true;
+			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
+				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement])
+					equal														= false;
+			}
+			if(equal)
+				return iOffset;
+		}
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							find_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)	{
+		for(int32_t iOffset = 0, offsetStop = (int32_t)(target.size() - sequence.size()); iOffset < offsetStop; ++iOffset) {
+			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement))) 
+				return iOffset;
+		}
+		return -1;
 	}
 
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})

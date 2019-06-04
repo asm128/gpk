@@ -21,9 +21,9 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 ::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& webRuntimeValues, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{ 
 	if(0 == keyVal.Key.size())
 		return -1;
-	try {
-			 if(keyVal.Key.size() == (::gpk::size("width"	) - 1) && 0 == memcmp("width"	, keyVal.Key.begin(), ::gpk::size("width"	) - 1)) webRuntimeValues.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-		else if(keyVal.Key.size() == (::gpk::size("height"	) - 1) && 0 == memcmp("height"	, keyVal.Key.begin(), ::gpk::size("height"	) - 1)) webRuntimeValues.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+	try { // retrieve width and height
+			 if(keyVal.Key.size() == (::gpk::size("w") - 1) && 0 == memcmp("w", keyVal.Key.begin(), ::gpk::size("w") - 1)) webRuntimeValues.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+		else if(keyVal.Key.size() == (::gpk::size("h") - 1) && 0 == memcmp("h", keyVal.Key.begin(), ::gpk::size("h") - 1)) webRuntimeValues.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
 	}
 	catch(...){
 		webRuntimeValues.TargetSize							= {123, 456};
