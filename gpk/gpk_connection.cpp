@@ -292,7 +292,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				}
 			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");
 		}
-		else {
+		else { // Why the fuck is this commented??? 
 			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
 			//const uint64_t																startTime						= nowInUs - 3000000;
 			//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {

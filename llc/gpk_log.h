@@ -130,9 +130,9 @@ namespace gpk
 #else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 //#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#	define error_if(condition, format, ...)							if(condition) do{} while(0)
-#	define warn_if(condition, format, ...)							if(condition) do{} while(0)
-#	define info_if(condition, format, ...)							if(condition) do{} while(0)
+#	define error_if(condition, format, ...)							if(condition) { do{} while(0); }
+#	define warn_if(condition, format, ...)							if(condition) { do{} while(0); }
+#	define info_if(condition, format, ...)							if(condition) { do{} while(0); }
 #endif
 
 #define ret_error_if(condition, format, ...)					if(condition) { error_printf	(format, __VA_ARGS__); return;			}
@@ -162,9 +162,9 @@ namespace gpk
 #else
 #	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#	define reterr_error_if(condition, format, ...)					if(condition) do{} while(0)
-#	define reterr_warn_if(condition, format, ...)					if(condition) do{} while(0)
-#	define reterr_info_if(condition, format, ...)					if(condition) do{} while(0)
+#	define reterr_error_if(condition, format, ...)					if(condition) { do{} while(0); }
+#	define reterr_warn_if(condition, format, ...)					if(condition) { do{} while(0); }
+#	define reterr_info_if(condition, format, ...)					if(condition) { do{} while(0); }
 #endif
 
 #define retwarn_error_if(condition, format, ...)				retval_error_if	( 1, condition, format, __VA_ARGS__)
@@ -207,7 +207,7 @@ namespace gpk
 #	define gpk_rv_hrcall(retVal, hr_call) do {																																		\
 		::HRESULT errCall_ = (hr_call);  																																			\
 		if FAILED(errCall_) {																																						\
-			debug_printf(0, "error", "%s: (0x%X) : '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).c_str());													\
+			debug_printf(0, "error", "%s: (0x%X) : '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin());													\
 			return retVal; 																																							\
 		}																																											\
 		else {																																										\
@@ -219,7 +219,7 @@ namespace gpk
 #	define gpk_rve_hrcall(retVal, hr_call, format, ...) do {																														\
 		::HRESULT errCall_ = (hr_call);  																																			\
 		if FAILED(errCall_) {																																						\
-			debug_printf(0, "error", "%s: (0x%X) : '%s' - " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).c_str(), __VA_ARGS__);								\
+			debug_printf(0, "error", "%s: (0x%X) : '%s' - " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__);								\
 			return retVal; 																																							\
 		}																																											\
 		else {																																										\

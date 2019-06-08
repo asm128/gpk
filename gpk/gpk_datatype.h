@@ -53,8 +53,8 @@ namespace gpk
 #define	GTYPEID_ISFLOAT(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_FLOAT			& _dataTypeID ))		// returns true if the element bits represent a floating point number
 #define	GTYPEID_ISBIGENDIAN(	_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_BIG_ENDIAN		& _dataTypeID ))		// returns true if the element bits has the bits inverted													
 #define	GTYPEID_ELEMENTPAD(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_HAS_INNER_PADDING	& _dataTypeID ))		// returns true if the elements have inner padding to next byte size																									
-#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)								// returns the element count (up to 1024k elements)											
-#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(( 0x7FU		& _dataTypeID) + 1U)									// returns the element size in bits (up to 256 bits)
+#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)							// returns the element count (up to 1024k elements)											
+#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(( 0x7FU		& _dataTypeID) + 1U)								// returns the element size in bits (up to 128 bits)
 
 // Return the byte count of the element type (ElementSize/8). Note: this funcion pads leading bits to next byte size.
 #define	GTYPEID_ELEMENTBYTES( _dataTypeID )		((GTYPEID_ELEMENTSIZE( _dataTypeID )/8)	+ one_if(GTYPEID_ELEMENTSIZE( _dataTypeID ) % 8))
