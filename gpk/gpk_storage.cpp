@@ -11,8 +11,7 @@
 #	include <iostream>
 #endif
 
-
-::gpk::error_t						gpk::dirCreate				(const view_const_string & pathName) {
+::gpk::error_t						gpk::pathCreate				(const view_const_string & pathName) {
 	char									folder[1024]				= {};
 	const char								* end						= strchr(pathName.begin(), '\\');
 	const char								* path						= pathName.begin();
@@ -69,9 +68,19 @@
 	return iFile + 1;
 }
 
+		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_string>& output)					{
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) 
+		gpk_necall(output.push_back({input.Files[iFile].begin(), input.Files[iFile].size()}), "%s", "Out of memory?");
+	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) 
+		gpk_necall(::gpk::pathList(input.Folders	[iFolder], output), "%s", "Unknown error!");
+	return 0;
+}
+
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::array_pod<char_t>>& output)					{
-	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files	[iFile	]), "%s", "Out of memory?");
-	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) gpk_necall(::gpk::pathList(input.Folders	[iFolder], output), "%s", "Unknown error!");
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) 
+		gpk_necall(output.push_back(input.Files[iFile]), "%s", "Out of memory?");
+	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) 
+		gpk_necall(::gpk::pathList(input.Folders[iFolder], output), "%s", "Unknown error!");
 	return 0;
 }
 
