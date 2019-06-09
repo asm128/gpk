@@ -11,13 +11,30 @@
 #	include <iostream>
 #endif
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::label>& output)					{
+
+::gpk::error_t						gpk::dirCreate				(const view_const_string & pathName) {
+	char									folder[1024]				= {};
+	const char								* end						= strchr(pathName.begin(), '\\');
+	const char								* path						= pathName.begin();
+	while(0 != end) {
+		strncpy_s(folder, path, end - path + 1);
+		if(!CreateDirectoryA(folder, NULL)) {
+			DWORD								err							= GetLastError();
+			ree_if(err != ERROR_ALREADY_EXISTS, "Failed to create directory: %s. hr: (%u)", folder, err);
+		}
+		end									= strchr(++end, L'\\');
+	}
+	return 0;
+}
+
+
+		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::array_pod<char_t>>& output)					{
 	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files	[iFile	]), "%s", "Out of memory?");
 	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	) gpk_necall(::gpk::pathList(input.Folders	[iFolder], output), "%s", "Unknown error!");
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::array_obj<::gpk::label>& output, bool listFolders)	{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string & pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			sPath	[4096];
@@ -34,7 +51,7 @@
 		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders)
 			continue;
 		info_printf("Path: %s.", sPath);
-		gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+		gpk_necall(output.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
 	}
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
@@ -56,7 +73,7 @@
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::label & pathToList, ::gpk::SPathContents& pathContents)						{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string & pathToList, ::gpk::SPathContents& pathContents)						{
 	char																			sPath[4096];
 	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 	static constexpr const char														curDir []							= ".";
@@ -73,12 +90,14 @@
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 			gpk_necall(newFolderIndex, "%s", "Out of memory?");
-			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unkown error!");
+			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unknown error!");
 			info_printf("Directory: %s.", sPath);
 		}
 		else {
-			gpk_necall(pathContents.Files.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
-			info_printf("File: %s.", sPath);
+			int32_t indexFile;
+			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+			pathContents.Files[indexFile].push_back(0);
+			info_printf("File %u: %s.", indexFile, sPath);
 		}
 	}
 	while(FindNextFile(hFind, &fdFile));

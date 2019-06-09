@@ -40,12 +40,18 @@ namespace gpk
 
 	template<const size_t _sizePrefix, typename... TArgs>
 	void															_gpk_debug_printf								(int severity, const char (&prefix)[_sizePrefix], uint32_t prefixLength, const char* format, const TArgs... args)			{
+#if defined(GPK_CONSOLE_LOG_ENABLED)
+		printf("%s", prefix);
+#endif
 		base_debug_print(prefix, prefixLength);
 		char																customDynamicString	[8192]						= {0};
 #if !defined(GPK_WINDOWS)
 		const size_t														stringLength									= sprintf(customDynamicString, format, args...);
 #else
 		const size_t														stringLength									= sprintf_s(customDynamicString, format, args...);
+#endif
+#if defined(GPK_CONSOLE_LOG_ENABLED)
+		printf("%s\n", customDynamicString);
 #endif
 		base_debug_print(customDynamicString, (int)stringLength);
 		base_debug_print("\n", 1);

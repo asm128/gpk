@@ -674,7 +674,7 @@ static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData,
 	}
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	const uint32_t																aSuitableWidth									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-	pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
+	gpk_necall(pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y), "Failed to resize. Requested size: %u.", aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
 	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "%s", "Failed to decompress!");
 	::pngFilePrintInfo(pngData);
 	return ::pngProcess(pngData, out_Texture);

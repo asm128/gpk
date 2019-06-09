@@ -141,6 +141,15 @@ namespace gpk
 		return -1;
 	}
 
+	template<typename _tElement>
+						::gpk::error_t							rfind_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)	{
+		for(int32_t iOffset = (int32_t)(target.size() - sequence.size()); iOffset >= 0; --iOffset) {
+			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement))) 
+				return iOffset;
+		}
+		return -1;
+	}
+
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
