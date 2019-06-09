@@ -33,6 +33,7 @@ namespace gpk
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::view_const_string nameFileSrc);
 	::gpk::error_t											folderToDisk					(const ::gpk::SFolderInMemory & virtualFolder, const ::gpk::view_const_string destinationPath);
 	::gpk::error_t											folderToDisk					(const ::gpk::SFolderPackage & folderPackage, const ::gpk::view_const_string nameFileDst);
+	::gpk::error_t											folderPackToDisk				(const ::gpk::view_const_string nameFileDst, const ::gpk::view_const_string nameFolderSrc);
 } // namespace
 
 #endif // GPK_DEFLATE_H_92173498234

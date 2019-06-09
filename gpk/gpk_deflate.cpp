@@ -4,7 +4,7 @@
 
 #include "deflate.h"
 
-		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_array<const byte_t>	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
+		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
     int				ret;
 	z_stream		strm												= {};
     ret																	= deflateInit(&strm, Z_BEST_COMPRESSION);
@@ -71,10 +71,6 @@
 	{
 		::gpk::array_obj<::gpk::array_pod<char_t>>		listFiles				= {};
 		gpk_necall(::gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
-		// if the program works and these following 3 lines are still commented, please remove them.
-		//::gpk::SPathContents			pathTree				= {};	
-		//gpk_necall(::gpk::pathList(nameFolderSrc, pathTree), "Failed to list folder: %s.", nameFolderSrc.begin());
-		//gpk_necall(::gpk::pathList(pathTree, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
 		::gpk::array_pod<byte_t>						contentsTemp			= {};
 		::gpk::SRange<uint32_t>							fileLocation			= {0, 0};
 		for(uint32_t iFile = 0; iFile < listFiles.size(); ++iFile) {
@@ -88,24 +84,9 @@
 			fileLocation.Count							= contentsTemp.size();
 			gpk_necall(tableFiles.append((const byte_t*)&fileLocation, sizeof(::gpk::SRange<uint32_t>)), "Failed to append data! %s.", "Out of memory?");
 			uint32_t										pathLen					= pathToLoad.size();
-			gpk_necall(tableFiles.append((const byte_t*)&pathLen, sizeof(uint32_t)), "Failed to append data bytes. Buffer sizes:"
-				"\ntableFiles     : %u."
-				"\ncontentsPacked : %u."
-				, tableFiles		.size()
-				, contentsPacked	.size()
-				);
-			gpk_necall(tableFiles.append(pathToLoad.begin(), pathLen), "Failed to append data bytes. Buffer sizes:"
-				"\ntableFiles     : %u."
-				"\ncontentsPacked : %u."
-				, tableFiles		.size()
-				, contentsPacked	.size()
-				);
-			gpk_necall(contentsPacked.append(contentsTemp.begin(), contentsTemp.size()), "Failed to append data bytes. Buffer sizes:"
-				"\ntableFiles     : %u."
-				"\ncontentsPacked : %u."
-				, tableFiles		.size()
-				, contentsPacked	.size()
-				);
+			gpk_necall(tableFiles		.append((const byte_t*)&pathLen, sizeof(uint32_t))	, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
+			gpk_necall(tableFiles		.append(pathToLoad.begin(), pathLen)				, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
+			gpk_necall(contentsPacked	.append(contentsTemp.begin(), contentsTemp.size())	, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
 			contentsTemp.clear();
 			++fileHeader.TotalFileCount;
 		}
@@ -198,5 +179,15 @@
 		}
 		fclose(fp);
 	}
+	return 0;
+}
+
+::gpk::error_t							gpk::folderPackToDisk		
+	(	const ::gpk::view_const_string nameFileDst
+	,	const ::gpk::view_const_string nameFolderSrc
+	) {
+	::gpk::SFolderPackage						folderPackage;
+	gpk_necall(::gpk::folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %s.", nameFolderSrc.begin());
+	gpk_necall(::gpk::folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	return 0;
 }
