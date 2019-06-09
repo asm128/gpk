@@ -27,6 +27,47 @@
 	return 0;
 }
 
+// Splits a file into file.split.## parts.
+::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc) {
+	::gpk::array_pod<byte_t>				fileInMemory;
+	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
+
+	// -- Write parts to disk.
+	static constexpr const uint32_t			sizePartMax						= 15 * 1024 * 1024;
+	uint32_t								countParts						= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
+	char									fileNameDst	[1024]				= {};
+	for(uint32_t iPart = 0; iPart < countParts; ++iPart) {
+		const uint32_t							offsetPart						= sizePartMax * iPart;
+		sprintf_s(fileNameDst, "%s.split.%.2u", fileNameSrc.begin(), iPart);
+		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
+		FILE									* fpDest						= 0;
+		fopen_s(&fpDest, fileNameDst, "wb");
+		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
+		fwrite(&fileInMemory[offsetPart], 1, (iPart == countParts - 1) ? fileInMemory.size() - offsetPart : sizePartMax, fpDest);
+		fclose(fpDest);
+	}
+	return 0;
+}
+
+// Joins a file split into file.split.## parts.
+::gpk::error_t						gpk::fileJoin					(const ::gpk::view_const_string	& fileNameDst)	{
+	char									fileNameSrc	[1024]				= {};
+	
+	// Load each .split part and write it to the destionation file.
+	uint32_t								iFile							= 0;
+	sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile);
+	FILE									* fpDest						= 0;
+	fopen_s(&fpDest, fileNameDst.begin(), "wb");
+	ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst.begin());
+	::gpk::array_pod<byte_t>					fileInMemory					= {};
+	while(0 == ::gpk::fileToMemory(fileNameSrc, fileInMemory)) {	// Load first part and write it to the joined file. 
+		ree_if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %u. File name: %s.", fileInMemory.size(), fileNameSrc);
+		sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), ++iFile);
+		fileInMemory.clear();
+	}
+	fclose(fpDest);
+	return iFile + 1;
+}
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::array_pod<char_t>>& output)					{
 	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) gpk_necall(output.push_back(input.Files	[iFile	]), "%s", "Out of memory?");
