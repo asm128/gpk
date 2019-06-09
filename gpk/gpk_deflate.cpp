@@ -1,7 +1,7 @@
 #include "gpk_deflate.h"
 #include "gpk_storage.h"
 #include "gpk_coord.h"
-
+#include "gpk_safe.h"
 #include "deflate.h"
 
 		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
@@ -157,11 +157,12 @@
 	::gpk::array_pod<char_t>					finalPathName					= {};
 	finalPathName.resize(1024*16);
 	memset(finalPathName.begin(), 0, finalPathName.size());
+	FILE										* fp						= 0;
 	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
+		safe_fclose(fp);
 		const ::gpk::view_const_string				& fileName					= virtualFolder.Names		[iFile];
 		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
 		info_printf("File found (%u): %s. Size: %u.", iFile, fileName.begin(), fileContent.size());
-
 		sprintf_s(finalPathName.begin(), finalPathName.size(), "%s%s", destinationPath.begin(), fileName.begin());
 		::gpk::error_t								indexSlash					= ::gpk::rfind_sequence_pod(::gpk::view_array<const char>{"\\", 1}, {finalPathName.begin(), (uint32_t)-1});	
 		if(-1 != indexSlash) { // Create path if any specified.
@@ -169,16 +170,11 @@
 			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), (uint32_t)-1})), "Failed to create foder: %s.", finalPathName.begin());
 			finalPathName[indexSlash + 1]			= '\\';
 		}
-		FILE										* fp						= 0;
 		fopen_s(&fp, finalPathName.begin(), "wb");
 		ce_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());
-		if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp)) {
-			fclose(fp);
-			error_printf("Failed to write file: %s. Disk full?", finalPathName.begin());
-			continue;
-		}
-		fclose(fp);
+		ce_if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
 	}
+	safe_fclose(fp);
 	return 0;
 }
 

@@ -19,6 +19,10 @@
 #	define safe_podcpy(oldValue, val) if((oldValue) && (val)) do { ::gpk::podcpy((oldValue), (val)); } while(0)
 #endif
 
+#ifndef safe_fclose
+#	define safe_fclose(p) if(p) do { fclose(p); p = 0; } while(0)
+#endif 
+
 #ifndef safe_closesocket
 #	if defined(GPK_WINDOWS)
 #		define safe_closesocket(p) if(p != 0 && p != INVALID_SOCKET) do { closesocket(p); p = INVALID_SOCKET; } while(0)
