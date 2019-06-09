@@ -87,9 +87,6 @@
     <ClInclude Include="gpk_timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_app_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>

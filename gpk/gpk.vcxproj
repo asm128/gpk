@@ -90,7 +90,6 @@
     <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_image.h" />
     <ClInclude Include="gpk_timer.h" />
-    <ClInclude Include="gpk_truetype.h" />
     <ClInclude Include="gpk_type_registry.h" />
     <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_windows.h" />
