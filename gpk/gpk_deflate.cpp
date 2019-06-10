@@ -178,12 +178,17 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::folderPackToDisk		
-	(	const ::gpk::view_const_string nameFileDst
-	,	const ::gpk::view_const_string nameFolderSrc
-	) {
+::gpk::error_t							gpk::folderPackToDisk		(	const ::gpk::view_const_string nameFileDst,	const ::gpk::view_const_string nameFolderSrc)		{
 	::gpk::SFolderPackage						folderPackage;
 	gpk_necall(::gpk::folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	gpk_necall(::gpk::folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	return 0;
 }
+
+::gpk::error_t							gpk::folderUnpackToDisk			(const ::gpk::view_const_string namePathDst, const ::gpk::view_const_string nameFileSrc)		{
+	::gpk::SFolderInMemory						virtualFolder					= {};
+	gpk_necall(::gpk::folderUnpack(virtualFolder, nameFileSrc), "Failed to unpack file: %s.", nameFileSrc);
+	gpk_necall(::gpk::folderToDisk(virtualFolder, namePathDst), "Failed to write folder to disk. Disk full or insufficient permissions. File name: %s. Destionation Path: %s.", nameFileSrc, namePathDst);
+	return 0;
+}
+
