@@ -26,6 +26,7 @@ namespace gpk
 					::gpk::error_t									pathCreate				(const ::gpk::view_const_string& folderName);	// Recursive
 					::gpk::error_t									fileJoin				(const ::gpk::view_const_string	& fileNameDst);	// Joins a file split into file.split.## parts.
 					::gpk::error_t									fileSplit				(const ::gpk::view_const_string	& fileNameSrc, const uint32_t partSize);	// Splits a file into file.split.## parts.
+					int64_t											fileSize				(const ::gpk::view_const_string	& fileNameSrc);
 } // namespace
 
 #endif // GPK_STORAGE_H_2983749283

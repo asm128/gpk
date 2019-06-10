@@ -11,6 +11,16 @@
 #	include <iostream>
 #endif
 
+int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)								{
+	FILE									* fp							= 0;
+	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
+	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
+	ree_if(0 != fseek(fp, 0, SEEK_END), "%s", "Unknown error reading file: '%s'.", fileNameSrc);
+	const int64_t							fileSize						= _ftelli64(fp);
+	fclose(fp);
+	return fileSize;
+}
+
 ::gpk::error_t						gpk::pathCreate				(const view_const_string & pathName) {
 	char									folder[1024]				= {};
 	const char								* end						= strchr(pathName.begin(), '\\');
@@ -26,8 +36,8 @@
 	return 0;
 }
 
-// Splits a file into file.split.## parts.
-::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
+// This function is useful for splitting files smaller than 4gb very quick. 
+static ::gpk::error_t				fileSplitSmall					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
 	::gpk::array_pod<byte_t>				fileInMemory;
 	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
 
@@ -40,7 +50,7 @@
 		sprintf_s(fileNameDst, "%s.split.%.2u", fileNameSrc.begin(), iPart);
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
 		FILE									* fpDest						= 0;
-		fopen_s(&fpDest, fileNameDst, "wb");
+		ree_if(0 != fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
 		uint32_t								countBytes						= (iPart == countParts - 1) ? fileInMemory.size() - offsetPart : sizePartMax;
 		ree_if(countBytes != fwrite(&fileInMemory[offsetPart], 1, countBytes, fpDest), "Failed to write part %u of %u bytes to disk. Disk full?", iPart, countBytes);
@@ -49,17 +59,32 @@
 	return countParts;
 }
 
+// Splits a file into file.split.## parts.
+::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
+	// -- Get file size to determine which algorithm to use. 
+	// -- For files smaller than 3.5gb, we use a fast algorithm that loads the entire file in memory.
+	// -- For files of, or larger than, 3.5gb, we use a fast algorithm that loads chunks of 1gb in memory for writing the parts.
+	static constexpr	const uint32_t		gigabyte						= 1024U*1024U*1024U;
+	static constexpr	const uint32_t		sizeSmallFileMax				= 3U * gigabyte + gigabyte / 2;
+	const int64_t							sizeFile						= ::gpk::fileSize(fileNameSrc);
+	ree_if(-1 == sizeFile, "Failed to get size for file: '%s'.", fileNameSrc.begin());
+	if(sizeSmallFileMax > sizeFile)
+		return ::fileSplitSmall(fileNameSrc, sizePartMax);
+
+	error_printf("Files larger than 3.5gb still not supported.");
+	return -1;
+}
+
 // Joins a file split into file.split.## parts.
 ::gpk::error_t						gpk::fileJoin					(const ::gpk::view_const_string	& fileNameDst)	{
 	char									fileNameSrc	[1024]				= {};
-	
-	// Load each .split part and write it to the destionation file.
 	uint32_t								iFile							= 0;
 	sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile++);
 	FILE									* fpDest						= 0;
 	fopen_s(&fpDest, fileNameDst.begin(), "wb");
 	ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst.begin());
 	::gpk::array_pod<byte_t>					fileInMemory					= {};
+	// Load each .split part and write it to the destionation file.
 	while(0 == ::gpk::fileToMemory(fileNameSrc, fileInMemory)) {	// Load first part and write it to the joined file. 
 		ree_if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %u. File name: %s.", fileInMemory.size(), fileNameSrc);
 		sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile++);
