@@ -8,6 +8,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 
 			::gpk::error_t											cleanup						(::gme::SApplication & app)						{ return ::gpk::mainWindowDestroy(app.Framework.MainDisplay); }
 			::gpk::error_t											setup						(::gme::SApplication & app)						{
+	::gpk::STimer															timer;
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
 	framework.Input.create();
@@ -27,6 +28,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
 	controlConstraints.AttachSizeToControl								= {app.IdExit, -1};
 	::gpk::controlSetParent(gui, app.IdExit, -1);
+	timer.Frame();
+	info_printf("Setup time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
 
@@ -45,7 +48,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		app.Offscreen														= target;
 	}
 	//timer.Frame();
-	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
+	//info_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
 
@@ -72,6 +75,6 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 	//timer.Frame();
-	//warning_printf("Update time: %f.", (float)timer.LastTimeSeconds);
+	//info_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
