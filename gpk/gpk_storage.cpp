@@ -55,18 +55,18 @@
 	
 	// Load each .split part and write it to the destionation file.
 	uint32_t								iFile							= 0;
-	sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile);
+	sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile++);
 	FILE									* fpDest						= 0;
 	fopen_s(&fpDest, fileNameDst.begin(), "wb");
 	ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst.begin());
 	::gpk::array_pod<byte_t>					fileInMemory					= {};
 	while(0 == ::gpk::fileToMemory(fileNameSrc, fileInMemory)) {	// Load first part and write it to the joined file. 
 		ree_if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fpDest), "Write operation failed. Disk full? File size: %u. File name: %s.", fileInMemory.size(), fileNameSrc);
-		sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), ++iFile);
+		sprintf_s(fileNameSrc, "%s.split.%.2u", fileNameDst.begin(), iFile++);
 		fileInMemory.clear();
 	}
 	fclose(fpDest);
-	return iFile + 1;
+	return iFile - 1;
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_string>& output)					{
