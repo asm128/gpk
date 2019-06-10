@@ -27,12 +27,11 @@
 }
 
 // Splits a file into file.split.## parts.
-::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc) {
+::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
 	::gpk::array_pod<byte_t>				fileInMemory;
 	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
 
 	// -- Write parts to disk.
-	static constexpr const uint32_t			sizePartMax						= 15 * 1024 * 1024;
 	uint32_t								countParts						= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
 	char									fileNameDst	[1024]				= {};
 	uint32_t								iPart							= 0;
