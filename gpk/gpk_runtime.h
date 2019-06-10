@@ -1,5 +1,5 @@
 /// Copyright 2016-2018 - asm128
-#include "gpk_typeint.h"
+#include "gpk_view_array.h"
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #elif defined(GPK_ANDROID)
@@ -39,9 +39,8 @@ namespace gpk
 		};
 
 	struct SStandardEntryPointArgs {
-				int																argc								;
-				char															**argv								;
-				char															**envp								;
+				::gpk::view_array<const char*>									ArgsCommandLine						;
+				const char														**envp								;
 	};
 
 	struct SRuntimeValuesDetail {
