@@ -9,14 +9,15 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	enum JSON_TYPE : int32_t
-		{	JSON_TYPE_UNKNOWN		= 0
+		{	JSON_TYPE_NULL		= 0
 		,	JSON_TYPE_INT
+		,	JSON_TYPE_BOOL
 		,	JSON_TYPE_FLOAT
 		,	JSON_TYPE_STRING
 		,	JSON_TYPE_OBJECT
 		,	JSON_TYPE_ARRAY
 		,	JSON_TYPE_COUNT
-		,	JSON_TYPE_INVALID		= -1
+		,	JSON_TYPE_UNKNOWN	= -1
 		};
 
 	struct SJSONType {
@@ -26,10 +27,10 @@ namespace gpk
 	};
 
 	struct SJSONNode {
-						SJSONType										* Object;
-						SJSONNode										* Parent;
-						::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>		Children;
-						int32_t											ObjectIndex;
+						SJSONType										* Object				= 0;
+						SJSONNode										* Parent				= 0;
+						::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>		Children				= 0;
+						int32_t											ObjectIndex				= -1;
 	};
 
 	struct SJSONDocument {
@@ -37,8 +38,7 @@ namespace gpk
 	};
 
 					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
-	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString)	{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size());			}
-	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::std::string& jsonAsString)				{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.data (), (uint32_t)jsonAsString.size());	}
+	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString)		{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size()); }
 #pragma pack(pop)
 }
 
