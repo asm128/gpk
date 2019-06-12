@@ -19,39 +19,45 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 	if(0 != _fseeki64(fp, 0, SEEK_END)) {
 		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
 		fclose(fp);
+		return -1;
 	}
 	const int64_t							fileSize						= _ftelli64(fp);
 #else
 	if(0 != fseek(fp, 0, SEEK_END)) {
 		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
 		fclose(fp);
+		return -1;
 	}
 	const int64_t							fileSize						= ftell(fp);
 #endif
-	if(0 > fileSize) {
+	if(0 > fileSize)
 		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
-		fclose(fp);
-	}
 	fclose(fp);
 	return fileSize;
 }
 
 ::gpk::error_t						gpk::pathCreate				(const view_const_string & pathName) {
+	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
-	const char								* end						= strchr(pathName.begin(), '\\');
-	const char								* path						= pathName.begin();
-	while(0 != end) {
-		strncpy_s(folder, path, end - path + 1);
+	const ::gpk::view_const_string			charBar						= "\\";
+	int32_t									offsetBar					= -1;
+	do {
+		++offsetBar;
+		offsetBar							= ::gpk::find_sequence_pod(charBar, pathName, offsetBar);
+		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
+		if(0 == strcmp(".", folder)) 
+			continue;
 #if defined(GPK_WINDOWS)
 		if(!CreateDirectoryA(folder, NULL)) {
-			DWORD								err							= GetLastError();
+			DWORD									err							= GetLastError();
 			ree_if(err != ERROR_ALREADY_EXISTS, "Failed to create directory: %s. hr: (%u)", folder, err);
 		}
 #else
 #	error "Not implemented."
 #endif
-		end									= strchr(++end, L'\\');
-	}
+		if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
+			break;
+	} while(true);
 	return 0;
 }
 

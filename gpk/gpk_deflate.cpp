@@ -164,10 +164,12 @@
 		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
 		info_printf("File found (%u): %s. Size: %u.", iFile, fileName.begin(), fileContent.size());
 		sprintf_s(finalPathName.begin(), finalPathName.size(), "%s%s", destinationPath.begin(), fileName.begin());
-		::gpk::error_t								indexSlash					= ::gpk::rfind_sequence_pod(::gpk::view_array<const char>{"\\", 1}, {finalPathName.begin(), (uint32_t)-1});	
+		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
+		::gpk::error_t								indexSlash					= ::gpk::rfind_sequence_pod(::gpk::view_array<const char>{"\\", 1}, {finalPathName.begin(), lenPath});	
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash + 1]			= 0;
-			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), (uint32_t)-1})), "Failed to create foder: %s.", finalPathName.begin());
+			lenPath									= (uint32_t)strlen(finalPathName.begin());
+ 			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), lenPath})), "Failed to create foder: %s.", finalPathName.begin());
 			finalPathName[indexSlash + 1]			= '\\';
 		}
 		fopen_s(&fp, finalPathName.begin(), "wb");

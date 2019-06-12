@@ -133,8 +133,8 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							find_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)	{
-		for(int32_t iOffset = 0, offsetStop = (int32_t)(target.size() - sequence.size()); iOffset < offsetStop; ++iOffset) {
+						::gpk::error_t							find_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, int32_t offset = 0)	{
+		for(int32_t iOffset = offset, offsetStop = (int32_t)(target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement))) 
 				return iOffset;
 		}
