@@ -42,6 +42,11 @@ struct SJSONParserState {
 	return 0;
 }
 
+						::gpk::error_t									parseJsonNumber										(::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, ::gpk::view_const_string jsonAsString)	{
+	(void)stateParser, (void)document, (void)jsonAsString;
+	/* Determine the next characters that describe the whole number and remove this ugly block comment afterwards */
+	return 0;
+}
 						::gpk::error_t									jsonParseDocumentCharacter							(::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, ::gpk::view_const_string jsonAsString)	{
 	::gpk::SJSONType															* temp												= 0;
 	::gpk::SJSONType															currentElement										= {};
@@ -57,10 +62,9 @@ struct SJSONParserState {
 	case 't'	: jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString); break;
 	case 'n'	: jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString); break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
-		if(stateParser.Escaping) {
-			break;
-		}
-	case '.'	:	// parse int or float accordingly
+	case '.'	: // parse int or float accordingly
+		be_if(stateParser.Escaping, "Invalid character found at index %u: %s.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
+		parseJsonNumber(stateParser, document, jsonAsString);
 		break;
 	case ' '	:
 	case '\t'	: case '\r'	: case '\n'	: 
@@ -130,7 +134,6 @@ struct SJSONParserState {
 
 	SJSONParserState															stateParser											= {};
 	stateParser.IndexCurrentElement											= document.Object.push_back(currentElement);
-
 	for(stateParser.IndexCurrentChar = 0; stateParser.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateParser.IndexCurrentChar) {
 		stateParser.CharCurrent													= jsonAsString[stateParser.IndexCurrentChar];
 		if(stateParser.InsideString) 
