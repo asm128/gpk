@@ -37,8 +37,7 @@ namespace gpk
 						::gpk::array_obj<::gpk::SJSONType>				Object;
 	};
 
-					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const char* jsonAsString, uint32_t jsonLength);
-	static inline	::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString)		{ return ::gpk::jsonParse(document, jsonTree, jsonAsString.begin(), jsonAsString.size()); }
+					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString);
 #pragma pack(pop)
 }
 

@@ -117,7 +117,7 @@ namespace gpk
 		typedef				::gpk::gpk_ref<_tOBJ>				TRef;
 		using				TNCOPtr								::Reference;
 
-		inline				const _tOBJ*						operator->							()													const	noexcept	{ return Reference;																	}
+		inline				const _tOBJ*						operator->							()													const	noexcept	{ return Reference->Instance;														}
 		inline				_tOBJ*								operator->							()															noexcept	{ return (0 == Reference) ? ::gpk::ref_create(&Reference) : Reference->Instance;	}
 
 		template<typename... _tArgsConstructor>
