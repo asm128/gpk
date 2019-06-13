@@ -16,6 +16,7 @@ namespace gpk
 		,	JSON_TYPE_STRING
 		,	JSON_TYPE_OBJECT
 		,	JSON_TYPE_ARRAY
+		,	JSON_TYPE_CODEPOINT
 		,	JSON_TYPE_COUNT
 		,	JSON_TYPE_UNKNOWN	= -1
 		};
@@ -55,7 +56,7 @@ namespace gpk
 						::gpk::SJSONParserState							StateOfParser;
 	};
 
-					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString);
+					::gpk::error_t									jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923

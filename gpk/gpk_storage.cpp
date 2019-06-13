@@ -110,7 +110,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		ree_if(0 != fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
 		int64_t									countBytes						= (iPart == countParts - 1) ? sizeFile - offsetPart : sizePartMax;
-		ree_if(countBytes != (int64_t)fwrite(partInMemory.begin(), 1, countBytes, fpDest), "Failed to write part %u of %u bytes to disk. Disk full?", iPart, countBytes);
+		ree_if(countBytes != (int64_t)fwrite(partInMemory.begin(), 1, (uint32_t)countBytes, fpDest), "Failed to write part %u of %u bytes to disk. Disk full?", iPart, countBytes);
 		fclose(fpDest);
 	}
 	return countParts;
