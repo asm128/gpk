@@ -58,11 +58,11 @@ struct SJSONParserState {
 	switch(stateParser.CharCurrent) {
 	default:
 		break;
-	case 'f'	: jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString); break;
-	case 't'	: jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString); break;
-	case 'n'	: jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString); break;
+	case 'f'	: e_if(errored(jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString)), "Failed to parse token: %s.", tokenFalse.begin()); break;
+	case 't'	: e_if(errored(jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, document, jsonAsString)), "Failed to parse token: %s.", tokenTrue	.begin()); break;
+	case 'n'	: e_if(errored(jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, document, jsonAsString)), "Failed to parse token: %s.", tokenNull	.begin()); break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
-	case '.'	: // parse int or float accordingly
+	case '.'	: case 'x'	: case '-'	: case '+'	: // parse int or float accordingly
 		be_if(stateParser.Escaping, "Invalid character found at index %u: %s.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
 		parseJsonNumber(stateParser, document, jsonAsString);
 		break;
@@ -105,6 +105,12 @@ struct SJSONParserState {
 						::gpk::error_t									jsonParseStringCharacter							(SJSONParserState& stateParser, ::gpk::SJSONDocument& document)	{
 	switch(stateParser.CharCurrent) {
 	default:
+		break;
+	case 'u':
+		if(false == stateParser.Escaping) 
+			break;
+		// Parse unicode code point
+		stateParser.IndexCurrentChar += 3;
 		break;
 	case '\\'	: 
 		if(false == stateParser.Escaping) {
