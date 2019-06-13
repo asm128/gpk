@@ -21,18 +21,7 @@
 	return 0;
 }
 
-#pragma pack(push, 1)
-struct SJSONParserState {
-	uint32_t	IndexCurrentChar	= 0;
-	int32_t		IndexCurrentElement	= -1;
-	int32_t		NestLevel			= 0;
-	char		CharCurrent			= 0;
-	bool		Escaping			= 0;
-	bool		InsideString		= 0;
-};
-#pragma pack(pop)
-
-						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, ::gpk::view_const_string jsonAsString)	{
+						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, const ::gpk::view_const_string& jsonAsString)	{
 	if(jsonAsString.size() - stateParser.IndexCurrentChar >= token.size() && 0 == strncmp(token.begin(), &jsonAsString[stateParser.IndexCurrentChar], token.size())) { 
 		info_printf("JSON token found: %s.", token.begin());
 		::gpk::SJSONType															boolElement										= {stateParser.IndexCurrentElement, jsonType, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + token.size()}};
@@ -42,12 +31,66 @@ struct SJSONParserState {
 	return 0;
 }
 
-						::gpk::error_t									parseJsonNumber										(::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, ::gpk::view_const_string jsonAsString)	{
-	(void)stateParser, (void)document, (void)jsonAsString;
+						::gpk::error_t									lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_string& jsonAsString)	{
+	const uint32_t																offset												= indexCurrentChar;
+	char																		charCurrent											= jsonAsString[indexCurrentChar];
+	while(indexCurrentChar < jsonAsString.size() && 
+		( ( charCurrent >= '1' && charCurrent <= '9') 
+		 || charCurrent == '0' 
+		 || charCurrent == '.' 
+		 )
+		) {
+		++indexCurrentChar;
+		charCurrent													= jsonAsString[indexCurrentChar];
+	}
+	return indexCurrentChar - offset;
+}
+
+						::gpk::error_t									parseJsonNumber										(::gpk::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, const ::gpk::view_const_string& jsonAsString)	{
+	(void)document;
 	/* Determine the next characters that describe the whole number and remove this ugly block comment afterwards */
+	char																		bufferFormat[1024];
+	const uint32_t																offset												= stateParser.IndexCurrentChar;
+	uint32_t																	index												= offset;
+
+	char																		charCurrent											= jsonAsString[index];
+	uint32_t																	countSignPlus										= 0;
+	uint32_t																	countSignMinus										= 0;
+	while(index < jsonAsString.size() && 
+		 ( charCurrent == '-'
+		|| charCurrent == '+'
+		)) {
+		if(charCurrent == '-')
+			++countSignMinus;
+		else
+			++countSignPlus;
+
+		++index;
+		charCurrent													= jsonAsString[index];
+	}
+	const bool																	isNegative											= 0 != (countSignMinus % 2);
+	bool																		isHex												= false;
+	bool																		isFloat												= false;
+	if(index < jsonAsString.size() && jsonAsString[index] == '.') {
+		isFloat																	= true;
+		++index;
+	}
+	else if(index < jsonAsString.size() && jsonAsString[index] == 'x') {
+		isHex																	= true;
+		++index;
+	}
+	const uint32_t																sizeNum												= lengthJsonNumber(index, jsonAsString);
+	//uint32_t 
+	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Hex: %s. Float: %s.", sizeNum, sizeNum, sizeNum
+		, isNegative	? "true" : "false"
+		, isHex			? "true" : "false"
+		, isFloat		? "true" : "false"
+	), "Failed to parse json number. Number too long.");
+	info_printf(bufferFormat, &jsonAsString[index]);
+	stateParser.IndexCurrentChar											+= sizeNum + (index - offset) - 1;
 	return 0;
 }
-						::gpk::error_t									jsonParseDocumentCharacter							(::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, ::gpk::view_const_string jsonAsString)	{
+						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONType															* temp												= 0;
 	::gpk::SJSONType															currentElement										= {};
 	const uint32_t																sizeRemaining										= jsonAsString.size() - stateParser.IndexCurrentChar;
@@ -63,7 +106,7 @@ struct SJSONParserState {
 	case 'n'	: e_if(errored(jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, document, jsonAsString)), "Failed to parse token: %s.", tokenNull	.begin()); break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case 'x'	: case '-'	: case '+'	: // parse int or float accordingly
-		be_if(stateParser.Escaping, "Invalid character found at index %u: %s.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
+		be_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
 		parseJsonNumber(stateParser, document, jsonAsString);
 		break;
 	case ' '	:
@@ -102,15 +145,18 @@ struct SJSONParserState {
 	return 0;
 }
 
-						::gpk::error_t									jsonParseStringCharacter							(SJSONParserState& stateParser, ::gpk::SJSONDocument& document)	{
+						::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONParserState& stateParser, ::gpk::SJSONDocument& document, const ::gpk::view_const_string& jsonAsString)	{
 	switch(stateParser.CharCurrent) {
 	default:
 		break;
 	case 'u':
 		if(false == stateParser.Escaping) 
 			break;
+		stateParser.IndexCurrentChar											+= 1;	// skip the u to get the next 4 digits.
+		ree_if(jsonAsString.size() - stateParser.IndexCurrentChar < 4, "End of stream during unicode code point parsing. JSON length: %s. Current index: %u.", jsonAsString.size(), stateParser.IndexCurrentChar);
+		info_printf("Unicode code point found: %4.4s", &jsonAsString[stateParser.IndexCurrentChar]);
 		// Parse unicode code point
-		stateParser.IndexCurrentChar += 3;
+		stateParser.IndexCurrentChar											+= 3;
 		break;
 	case '\\'	: 
 		if(false == stateParser.Escaping) {
@@ -143,7 +189,7 @@ struct SJSONParserState {
 	for(stateParser.IndexCurrentChar = 0; stateParser.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateParser.IndexCurrentChar) {
 		stateParser.CharCurrent													= jsonAsString[stateParser.IndexCurrentChar];
 		if(stateParser.InsideString) 
-			::jsonParseStringCharacter(stateParser, document);
+			::jsonParseStringCharacter(stateParser, document, jsonAsString);
 		else 
 			::jsonParseDocumentCharacter(stateParser, document, jsonAsString);
 	}

@@ -19,6 +19,7 @@ namespace gpk
 		,	JSON_TYPE_COUNT
 		,	JSON_TYPE_UNKNOWN	= -1
 		};
+#pragma pack(pop)
 
 	struct SJSONType {
 						int32_t											ParentIndex;
@@ -37,8 +38,24 @@ namespace gpk
 						::gpk::array_obj<::gpk::SJSONType>				Object;
 	};
 
-					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString);
+#pragma pack(push, 1)
+	struct SJSONParserState {
+						uint32_t										IndexCurrentChar		= 0;
+						int32_t											IndexCurrentElement		= -1;
+						int32_t											NestLevel				= 0;
+						char											CharCurrent				= 0;
+						bool											Escaping				= 0;
+						bool											InsideString			= 0;
+	};
 #pragma pack(pop)
-}
+
+	struct SJSONReader {
+						::gpk::array_obj<::gpk::SJSONType>				Object;
+						::gpk::ptr_obj	<::gpk::SJSONNode>				Tree;
+						::gpk::SJSONParserState							StateOfParser;
+	};
+
+					::gpk::error_t									jsonParse				(::gpk::SJSONDocument& document, ::gpk::SJSONNode& jsonTree, const ::gpk::view_const_string& jsonAsString);
+} // namespace
 
 #endif // GPK_JSON_H_92749028348923
