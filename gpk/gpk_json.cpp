@@ -5,10 +5,10 @@
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							tree;
 	gpk_necall(tree.resize(object.size()), "Out of memory? Object count: %u.", object.size());
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
-		::gpk::SJSONNode															& nodeCurrent										= *tree[iObject];
-		nodeCurrent.Object														= &object[iObject];
-		nodeCurrent.Parent														= ::gpk::in_range((uint32_t)nodeCurrent.Object->ParentIndex, 0U, tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent.Object->ParentIndex] : nullptr;
-		nodeCurrent.ObjectIndex													= iObject;
+		::gpk::ptr_obj<::gpk::SJSONNode>											& nodeCurrent										= tree[iObject];
+		nodeCurrent->Object														= &object[iObject];
+		nodeCurrent->Parent														= ::gpk::in_range((uint32_t)nodeCurrent->Object->ParentIndex, 0U, tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Object->ParentIndex] : nullptr;
+		nodeCurrent->ObjectIndex												= iObject;
 	}
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
@@ -80,7 +80,7 @@
 		++index;
 	}
 	const uint32_t																sizeNum												= lengthJsonNumber(index, jsonAsString);
-	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_INT, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + sizeNum}};
+	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_INT, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + sizeNum + (index - stateParser.IndexCurrentChar)}};
 	gpk_necall(object.push_back(currentElement), "%s", "Out of memory?"); 
 	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Hex: %s. Float: %s.", sizeNum, sizeNum, sizeNum
 		, isNegative	? "true" : "false"
@@ -197,12 +197,12 @@
 	SJSONParserState															& stateParser										= reader.StateOfParser;
 	for(stateParser.IndexCurrentChar = 0; stateParser.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateParser.IndexCurrentChar)
 		error_if(errored(::gpk::jsonParseStep(reader, jsonAsString)), "Error during read step."
-			"\nPosition: %i." 
-			"\nCharacter: %c."
-			"\nElement: %i."
-			"\nString: %s."
-			"\nEscaping: %s."
-			"\nNestLevel: %i."
+			"\nPosition  : %i." 
+			"\nCharacter : %c."
+			"\nElement   : %i."
+			"\nString    : %s."
+			"\nEscaping  : %s."
+			"\nNestLevel : %i."
 			, reader.StateOfParser.IndexCurrentChar
 			, reader.StateOfParser.CharCurrent
 			, reader.StateOfParser.IndexCurrentElement 
@@ -211,6 +211,6 @@
 			, reader.StateOfParser.NestLevel
 		)
 	info_printf("Nest level: %u (Needs to be zero).", stateParser.NestLevel);
-	ree_if(errored(reader.Tree.create()), "If this fail then maybe it's because %s.", "running out of memory or memory corrupted.");
+	ree_if(errored(reader.Tree.create()), "If this fail then maybe it's because of %s.", "running out of memory or memory corrupted.");
 	return ::jsonTreeRebuild(reader.Object, *reader.Tree);
 }
