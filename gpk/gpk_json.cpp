@@ -1,5 +1,4 @@
 #include "gpk_json.h"
-#include "gpk_eval.h"
 
 						::gpk::error_t									jsonTreeRebuild										(::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::SJSONNode& jsonRoot)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							tree;
@@ -80,7 +79,7 @@
 		++index;
 	}
 	const uint32_t																sizeNum												= lengthJsonNumber(index, jsonAsString);
-	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_INT, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + sizeNum + (index - stateParser.IndexCurrentChar)}};
+	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_NUMBER, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + sizeNum + (index - stateParser.IndexCurrentChar)}};
 	gpk_necall(object.push_back(currentElement), "%s", "Out of memory?"); 
 	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Hex: %s. Float: %s.", sizeNum, sizeNum, sizeNum
 		, isNegative	? "true" : "false"
@@ -103,9 +102,9 @@
 	switch(stateParser.CharCurrent) {
 	default:
 		break;
-	case 'f'	: if(errored(jsonParseKeyword(tokenFalse, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenFalse	.begin()); errVal = -1; break; }
-	case 't'	: if(errored(jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenTrue	.begin()); errVal = -1; break; }
-	case 'n'	: if(errored(jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenNull	.begin()); errVal = -1; break; }
+	case 'f'	: if(errored(jsonParseKeyword(tokenFalse, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenFalse	.begin()); errVal = -1; } break; 
+	case 't'	: if(errored(jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenTrue	.begin()); errVal = -1; } break; 
+	case 'n'	: if(errored(jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, object, jsonAsString))) {	error_printf("Failed to parse token: %s.", tokenNull	.begin()); errVal = -1; } break; 
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case 'x'	: case '-'	: case '+'	: // parse int or float accordingly
 		be_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
@@ -117,8 +116,10 @@
 	case ' '	:
 	case '\t'	: case '\r'	: case '\n'	: 
 		break;	// These separator characters mean nothing in json.
-	case ':'	: break;	// Need to report that we've switched from element name to element value
-	case ','	: break;	// Need to report that we've switched from an element to the next
+	case ':'	: 
+		break;	// Need to report that we've switched from element name to element value
+	case ','	: 
+		break;	// Need to report that we've switched from an element to the next
 	case '{'	: 
 	case '['	: 
 	case '"'	: 
@@ -212,5 +213,9 @@
 		)
 	info_printf("Nest level: %u (Needs to be zero).", stateParser.NestLevel);
 	ree_if(errored(reader.Tree.create()), "If this fail then maybe it's because of %s.", "running out of memory or memory corrupted.");
+	for(uint32_t iView = 0; iView < reader.Object.size(); ++iView) {
+		::gpk::SJSONType															& currentElement									= reader.Object[iView];
+		reader.View.push_back({&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin});
+	}
 	return ::jsonTreeRebuild(reader.Object, *reader.Tree);
 }
