@@ -14,6 +14,7 @@ namespace gpk
 		,	JSON_TYPE_BOOL
 		,	JSON_TYPE_FLOAT
 		,	JSON_TYPE_STRING
+		,	JSON_TYPE_KEY
 		,	JSON_TYPE_OBJECT
 		,	JSON_TYPE_ARRAY
 		,	JSON_TYPE_CODEPOINT
@@ -35,18 +36,19 @@ namespace gpk
 						int32_t											ObjectIndex				= -1;
 	};
 
-	struct SJSONDocument {
-						::gpk::array_obj<::gpk::SJSONType>				Object;
-	};
-
 #pragma pack(push, 1)
 	struct SJSONParserState {
 						uint32_t										IndexCurrentChar		= 0;
 						int32_t											IndexCurrentElement		= -1;
 						int32_t											NestLevel				= 0;
 						char											CharCurrent				= 0;
-						bool											Escaping				= 0;
-						bool											InsideString			= 0;
+						bool											Escaping				: 1;
+						bool											InsideString			: 1;
+
+																		SJSONParserState		() 
+		: Escaping		(false)		
+		, InsideString	(false)		
+		{}
 	};
 #pragma pack(pop)
 
@@ -57,6 +59,7 @@ namespace gpk
 	};
 
 					::gpk::error_t									jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
+					::gpk::error_t									jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923

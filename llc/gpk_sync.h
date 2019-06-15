@@ -31,13 +31,13 @@ namespace gpk
 #	if (defined( _WIN64 ) || defined( WIN64 ))
 #		define gpk__sync_increment(nCount)							( InterlockedIncrement64		( &(nCount) ) )
 #		define gpk__sync_decrement(nCount)							( InterlockedDecrement64		( &(nCount) ) )
-#		define gpk__sync_exchange(nCount)							( InterlockedExchange64			( &(nCount) ) )
-#		define gpk__sync_compare_exchange(nCount, value, comparand)	( InterlockedCompareExchange64	( &(nCount), (value), (comparand) ) )
+#		define gpk__sync_exchange(target, value)					( InterlockedExchange64			( &(target), (value) ) )
+#		define gpk__sync_compare_exchange(target, value, comparand)	( InterlockedCompareExchange64	( &(target), (value), (comparand) ) )
 #	elif (defined( _WIN32 ) || defined( WIN32 ))
 #		define gpk__sync_increment(nCount)							( InterlockedIncrement			( &(nCount) ) )
 #		define gpk__sync_decrement(nCount)							( InterlockedDecrement			( &(nCount) ) )
-#		define gpk__sync_exchange(nCount)							( InterlockedExchange			( &(nCount) ) )
-#		define gpk__sync_compare_exchange(nCount, value, comparand)	( InterlockedCompareExchange	( &(nCount), (value), (comparand) ) )
+#		define gpk__sync_exchange(target, value)					( InterlockedExchange			( &(target), (value) ) )
+#		define gpk__sync_compare_exchange(target, value, comparand)	( InterlockedCompareExchange	( &(target), (value), (comparand) ) )
 #	endif
 #	define DECLARE_SHARED_SECTION(Name)							CRITICAL_SECTION Name
 #	define INIT_SHARED_SECTION(Name)							((int32_t)InitializeCriticalSectionAndSpinCount(&Name, 400))
