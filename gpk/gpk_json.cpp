@@ -90,8 +90,34 @@
 	stateParser.IndexCurrentChar											+= sizeNum + (index - offset) - 1;
 	return 0;
 }
+
+						::gpk::error_t									jsonCloseValue										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+	::gpk::SJSONType															* closing											= 0;
+	closing																	= &object[stateParser.IndexCurrentElement]; 
+	closing->Span.End														= stateParser.IndexCurrentChar + 1; 
+	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(closing->Type);
+	info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
+	stateParser.IndexCurrentElement												= closing->ParentIndex; 
+	--stateParser.NestLevel; 
+	return 0;	// Need to report that a list has been exited
+}
+
+						::gpk::error_t									jsonCloseValue										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType) {
+	const ::gpk::SJSONType														* open												= &object[stateParser.IndexCurrentElement];
+	ree_if(jsonType != open->Type, "Invalid object type: open: %u (%s). closing: %u (%s).", open->Type, ::gpk::get_value_label(open->Type).begin(), jsonType, ::gpk::get_value_label(jsonType).begin());
+	return jsonCloseValue(stateParser, object);
+}
+
+						::gpk::error_t									jsonOpenValue										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType) {
+	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, jsonType, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar}};
+	stateParser.IndexCurrentElement											= object.push_back(currentElement); 
+	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(currentElement.Type);
+	++stateParser.NestLevel; 
+	info_printf("%s open. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, currentElement.ParentIndex, currentElement.Type, currentElement.Span.Begin); 
+	return 0;
+}
+
 						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
-	::gpk::SJSONType															* temp												= 0;
 	::gpk::SJSONType															currentElement										= {};
 	const uint32_t																sizeRemaining										= jsonAsString.size() - stateParser.IndexCurrentChar;
 	static const ::gpk::view_const_string										tokenFalse											= "false";
@@ -109,7 +135,7 @@
 	case '.'	: case 'x'	: case '-'	: case '+'	: // parse int or float accordingly
 		be_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
 		if(errored(parseJsonNumber(stateParser, object, jsonAsString))) {
-			errVal																= -1;
+			errVal																	= -1;
 			error_printf("Error parsing JSON number.");
 		}
 		break;
@@ -117,34 +143,24 @@
 	case '\t'	: case '\r'	: case '\n'	: 
 		break;	// These separator characters mean nothing in json.
 	case ':'	: 
+		//::jsonCloseValue(stateParser, object);
+		//::jsonOpenValue	(stateParser, object, ::gpk::JSON_TYPE_VALUE); 
 		break;	// Need to report that we've switched from element name to element value
 	case ','	: 
 		break;	// Need to report that we've switched from an element to the next
-	case '{'	: 
-	case '['	: 
+	case '{'	: ::jsonOpenValue(stateParser, object, ::gpk::JSON_TYPE_OBJECT	); break;
+	case '['	: ::jsonOpenValue(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); break;
 	case '"'	: 
-		++stateParser.NestLevel; 
-		info_printf("opening at index %.2u a level %u %s. Parent index: %u.", object.size(), stateParser.NestLevel, 
-			( '{' == stateParser.CharCurrent ? "object" 
-			: '[' == stateParser.CharCurrent ? "array" 
-			: "string"
-			), stateParser.IndexCurrentElement); 
-		currentElement																= {stateParser.IndexCurrentElement, 
-			( '{' == stateParser.CharCurrent ? ::gpk::JSON_TYPE_OBJECT 
-			: '[' == stateParser.CharCurrent ? ::gpk::JSON_TYPE_ARRAY
-			: ::gpk::JSON_TYPE_STRING
-			), {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar}};
-		stateParser.IndexCurrentElement												= object.push_back(currentElement); 
-		if(stateParser.CharCurrent == '"')
-			stateParser.InsideString													= true;
+		//if(::gpk::JSON_TYPE_OBJECT == object[stateParser.IndexCurrentElement].Type) 
+		//	::jsonOpenValue(stateParser, object, ::gpk::JSON_TYPE_KEY); 
+		::jsonOpenValue(stateParser, object, ::gpk::JSON_TYPE_STRING); 
+		stateParser.InsideString													= true;
 		break;	// Need to report that a block has been entered
+	case ']'	: ::jsonCloseValue(stateParser, object); break;
 	case '}'	: 
-	case ']'	: 
-		temp																		= &object[stateParser.IndexCurrentElement]; 
-		info_printf("closing at index %.2u a level %u %s. Parent index: %u.", stateParser.IndexCurrentElement, stateParser.NestLevel, '{' == stateParser.CharCurrent ? "object" : "array", temp->ParentIndex); 
-		--stateParser.NestLevel; 
-		temp->Span.End																= stateParser.IndexCurrentChar + 1; 
-		stateParser.IndexCurrentElement												= temp->ParentIndex; 
+		::jsonCloseValue(stateParser, object);
+		//if(::gpk::JSON_TYPE_VALUE == object[stateParser.IndexCurrentElement].Type) 
+		//	::jsonCloseValue(stateParser, object); 
 		break;	// Need to report that a list has been exited
 	}
 	stateParser.Escaping													= false;
@@ -174,12 +190,11 @@
 		break;
 	case '"'	: 
 		if(false == stateParser.Escaping) {
-			::gpk::SJSONType														* temp												= &object[stateParser.IndexCurrentElement]; 
-			info_printf("Closing at index %.2u a level %u string. Parent index: %u.", stateParser.IndexCurrentElement, stateParser.NestLevel, temp->ParentIndex); 
-			--stateParser.NestLevel; 
-			temp->Span.End															= stateParser.IndexCurrentChar + 1; 
-			stateParser.IndexCurrentElement											= temp->ParentIndex; 
+			::jsonCloseValue(stateParser, object); 
 			stateParser.InsideString												= false;
+			//if(::gpk::JSON_TYPE_VALUE == object[stateParser.IndexCurrentElement].Type) 
+			//	::jsonCloseValue(stateParser, object); 
+
 		}
 	}
 	stateParser.Escaping													= false;
