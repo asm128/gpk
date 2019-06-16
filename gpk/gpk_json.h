@@ -44,16 +44,17 @@ namespace gpk
 						int32_t											ObjectIndex				= -1;
 	};
 
-	struct SJSONParserState {
+	struct SJSONReaderState {
 						uint32_t										IndexCurrentChar		= 0;
 						int32_t											IndexCurrentElement		= -1;
+						::gpk::SJSONType								* CurrentElement		= 0;
 						int32_t											NestLevel				= 0;
 						char											CharCurrent				= 0;
 						bool											Escaping				: 1;
 						bool											InsideString			: 1;
 						bool											ExpectingSeparator		: 1;
 
-																		SJSONParserState		() 
+																		SJSONReaderState		() 
 		: Escaping			(false)
 		, InsideString		(false)
 		, ExpectingSeparator(false)
@@ -65,11 +66,17 @@ namespace gpk
 						::gpk::array_obj<::gpk::SJSONType>				Object;
 						::gpk::array_obj<::gpk::view_const_string>		View;
 						::gpk::ptr_obj	<::gpk::SJSONNode>				Tree;
-						::gpk::SJSONParserState							StateOfParser;
+						::gpk::SJSONReaderState							StateRead;
 	};
 
+	// Reader functions: Populate a SJSONReader structure from an input JSON string.
 					::gpk::error_t									jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 					::gpk::error_t									jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
+
+	// Access functions: Iterate over children looking for keys or values.
+					::gpk::error_t									jsonValueGet			(::gpk::SJSONReader& reader, ::gpk::ptr_obj<::gpk::SJSONNode> Tree);
+
+
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923

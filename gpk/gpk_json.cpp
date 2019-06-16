@@ -21,7 +21,7 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	ree_if(token.size() > jsonAsString.size() - stateParser.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
 	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateParser.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	info_printf("JSON token found: %s.", token.begin());
@@ -46,7 +46,7 @@
 	return indexCurrentChar - offset;
 }
 
-						::gpk::error_t									parseJsonNumber										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									parseJsonNumber										(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	(void)object;
 	char																		bufferFormat[1024];
 	const uint32_t																offset												= stateParser.IndexCurrentChar;
@@ -91,26 +91,27 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonCloseElement									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar) {
+						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar) {
 	ree_if(object.size() <= (uint32_t)stateParser.IndexCurrentElement, "Invalid parser state. Cannot close element: %i.", stateParser.IndexCurrentElement);
 	::gpk::SJSONType															* closing											= 0;
-	closing																	= &object[stateParser.IndexCurrentElement]; 
+	closing																	= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement]; 
 	closing->Span.End														= (uint32_t)indexChar + 1; 
 	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(closing->Type);
 	info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
 	stateParser.IndexCurrentElement											= closing->ParentIndex; 
 	--stateParser.NestLevel; 
+	stateParser.CurrentElement												= ((uint32_t)stateParser.IndexCurrentElement < object.size()) ? &object[stateParser.IndexCurrentElement] : 0;
 	return 0;	// Need to report that a list has been exited
 }
 
-						::gpk::error_t									jsonCloseElement									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar, ::gpk::JSON_TYPE jsonType) {
-	const ::gpk::SJSONType														* open												= &object[stateParser.IndexCurrentElement];
+						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar, ::gpk::JSON_TYPE jsonType) {
+	const ::gpk::SJSONType														* open												= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement];
 	ree_if(jsonType != open->Type, "Invalid object type: open: %u (%s). closing: %u (%s).", open->Type, ::gpk::get_value_label(open->Type).begin(), jsonType, ::gpk::get_value_label(jsonType).begin());
 	return ::jsonCloseElement(stateParser, object, indexChar);
 }
 
-						::gpk::error_t									jsonTestAndCloseValue								(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
-	if((uint32_t)stateParser.IndexCurrentElement < object.size() && ::gpk::JSON_TYPE_VALUE == object[stateParser.IndexCurrentElement].Type) {
+						::gpk::error_t									jsonTestAndCloseValue								(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+	if(stateParser.CurrentElement && ::gpk::JSON_TYPE_VALUE == stateParser.CurrentElement->Type) {
 		::gpk::error_t																errVal												= ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar); 
 		stateParser.ExpectingSeparator											= true;
 		return errVal;
@@ -118,8 +119,8 @@
 	return 1;
 }
 
-						::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
-	if((uint32_t)stateParser.IndexCurrentElement < object.size() && ::gpk::JSON_TYPE_KEY == object[stateParser.IndexCurrentElement].Type) {
+						::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+	if(stateParser.CurrentElement && ::gpk::JSON_TYPE_KEY == stateParser.CurrentElement->Type) {
 		::gpk::error_t																errVal												= ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar); 
 		stateParser.ExpectingSeparator											= true;
 		return errVal;
@@ -127,13 +128,15 @@
 	return 1;
 }
 
-						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
 	::gpk::error_t																errVal												= 0;
 	if(object[object.size() - 1].Type == containerType) { 
 		info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
 		object.pop_back(0); 
 		--stateParser.IndexCurrentElement; 
 		--stateParser.NestLevel; 
+		if((uint32_t)stateParser.IndexCurrentElement < object.size())
+			stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	} 
 	else {
 		info_printf("Closing container at index %i (%s).", object.size() - 1, ::gpk::get_value_label(containerType).begin());
@@ -142,7 +145,7 @@
 	}
 	return errVal;
 }
-						::gpk::error_t									jsonCloseContainer									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+						::gpk::error_t									jsonCloseContainer									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
 	::gpk::error_t																errVal												= 0;
 	gpk_necall(::jsonCloseOrDiscardIfEmptyKeyOrVal(stateParser, object, (::gpk::JSON_TYPE_ARRAY == containerType) ? ::gpk::JSON_TYPE_VALUE : ::gpk::JSON_TYPE_KEY), "Failed to close container at index %i (%s).", stateParser.IndexCurrentElement, ::gpk::get_value_label(containerType).begin());
 	errVal																	= ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar, containerType); 
@@ -152,16 +155,17 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonOpenElement										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType, uint32_t indexChar) {
+						::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType, uint32_t indexChar) {
 	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, jsonType, {indexChar, indexChar}};
 	gpk_necall(stateParser.IndexCurrentElement = object.push_back(currentElement), "Failed to push element. %s", "Out of memory?");
+	stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(currentElement.Type);
 	++stateParser.NestLevel; 
 	info_printf("%s open. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, currentElement.ParentIndex, currentElement.Type, currentElement.Span.Begin); 
 	return 0;
 }
 
-						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONType															currentElement										= {};
 	const uint32_t																sizeRemaining										= jsonAsString.size() - stateParser.IndexCurrentChar;
 	static const ::gpk::view_const_string										tokenFalse											= "false"	;
@@ -203,13 +207,13 @@
 			error_printf("Separator found when not expected at index %i.", stateParser.IndexCurrentChar); 
 			break;
 		}
-		if(::gpk::JSON_TYPE_OBJECT == object[stateParser.IndexCurrentElement].Type) {
+		if(::gpk::JSON_TYPE_OBJECT == stateParser.CurrentElement->Type) {
 			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY, stateParser.IndexCurrentChar + 1)) {
 				errVal																	= -1; 
 				error_printf("Failed to open element at index %i.", object.size()); 
 			}
 		}
-		else if(::gpk::JSON_TYPE_ARRAY == object[stateParser.IndexCurrentElement].Type) {
+		else if(::gpk::JSON_TYPE_ARRAY == stateParser.CurrentElement->Type) {	// Test 
 			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE, stateParser.IndexCurrentChar + 1)) {
 				errVal																	= -1; 
 				error_printf("Failed to open element at index %i.", object.size()); 
@@ -218,18 +222,18 @@
 		stateParser.ExpectingSeparator											= false;
 		break;	
 	case ':'	: 
-		if(false == stateParser.ExpectingSeparator && ::gpk::JSON_TYPE_KEY != object[stateParser.IndexCurrentElement].Type) {
+		if(false == stateParser.ExpectingSeparator && ::gpk::JSON_TYPE_KEY != stateParser.CurrentElement->Type) {	// Test if we should be expecting this separator or not.
 			errVal																	= -1; 
 			error_printf("Separator found when not expected at index %i.", stateParser.IndexCurrentChar); 
 			break;
 		}
 		stateParser.ExpectingSeparator											= false;
-		if errored(::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar - 1, ::gpk::JSON_TYPE_KEY	)) { 
+		if errored(::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar - 1, ::gpk::JSON_TYPE_KEY	)) { // close the key before the : character
 			errVal = -1; 
 			error_printf("Failed to close key. %s", "Unknown error."); 
 			break; 
 		}
-		if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE, stateParser.IndexCurrentChar + 1)) { 
+		if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE, stateParser.IndexCurrentChar + 1)) { // open the value after the : character
 			errVal = -1; 
 			error_printf("Failed to open element at index %i.", 
 			object.size()); 
@@ -251,7 +255,7 @@
 	return errVal;
 }
 
-						::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONType															currentElement										= {};
 	::gpk::error_t																errVal												= 0;
 	switch(stateParser.CharCurrent) {
@@ -298,31 +302,43 @@
 }
 
 						::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString)	{
-	reader.StateOfParser.CharCurrent										= jsonAsString[reader.StateOfParser.IndexCurrentChar];
-	return (reader.StateOfParser.InsideString)
-		? ::jsonParseStringCharacter	(reader.StateOfParser, reader.Object, jsonAsString) 
-		: ::jsonParseDocumentCharacter	(reader.StateOfParser, reader.Object, jsonAsString)
+	reader.StateRead.CharCurrent										= jsonAsString[reader.StateRead.IndexCurrentChar];
+	return (reader.StateRead.InsideString)
+		? ::jsonParseStringCharacter	(reader.StateRead, reader.Object, jsonAsString) 
+		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Object, jsonAsString)
 		;
 }
 
 						::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString)	{
-	SJSONParserState															& stateParser										= reader.StateOfParser;
+	SJSONReaderState															& stateParser										= reader.StateRead;
 	for(stateParser.IndexCurrentChar = 0; stateParser.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateParser.IndexCurrentChar)
-		be_if(errored(::gpk::jsonParseStep(reader, jsonAsString)), "Error during read step. Malformed JSON?"
-			"\nPosition  : %i." 
-			"\nCharacter : '%c' (0x%x)."
-			"\nElement   : %i."
-			"\nString    : %s."
-			"\nEscaping  : %s."
-			"\nNestLevel : %i."
-			, reader.StateOfParser.IndexCurrentChar
-			, reader.StateOfParser.CharCurrent, reader.StateOfParser.CharCurrent
-			, reader.StateOfParser.IndexCurrentElement 
-			, reader.StateOfParser.InsideString ? "true" : "false"
-			, reader.StateOfParser.Escaping		? "true" : "false"
-			, reader.StateOfParser.NestLevel
-		)
-	info_printf("Nest level: %i (Needs to be zero).", stateParser.NestLevel);
+		if errored(::gpk::jsonParseStep(reader, jsonAsString)) {
+			const bool																validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Object.size();
+			const ::gpk::SJSONType													* currentElement									= validElement ? &reader.Object[reader.StateRead.IndexCurrentElement] : 0;
+			error_printf("Error during read step. Malformed JSON?"
+				"\nPosition  : %i." 
+				"\nCharacter : '%c' (0x%x)."
+				"\nElement   : %i."
+				"\nString    : %s."
+				"\nEscaping  : %s."
+				"\nNestLevel : %i."
+				"\nParent    : %i."
+				"\nType      : %i (%s)."
+				"\nOffset    : %i."
+				, reader.StateRead.IndexCurrentChar
+				, reader.StateRead.CharCurrent, reader.StateRead.CharCurrent
+				, reader.StateRead.IndexCurrentElement 
+				, reader.StateRead.InsideString ? "true" : "false"
+				, reader.StateRead.Escaping		? "true" : "false"
+				, reader.StateRead.NestLevel
+				, validElement ? currentElement->ParentIndex							: -1
+				, validElement ? currentElement->Type									: -1
+				, validElement ? ::gpk::get_value_label(currentElement->Type).begin()	: "N/A"
+				, validElement ? currentElement->Span.Begin								: -1
+			);
+			return -1;
+		}
+	ree_if(stateParser.NestLevel, "Nest level: %i (Needs to be zero).", stateParser.NestLevel);
 	ree_if(0 == reader.Tree.create(), "If this fail then maybe it's because of %s.", "running out of memory or memory corrupted.");
 	for(uint32_t iView = 0; iView < reader.Object.size(); ++iView) {
 		::gpk::SJSONType															& currentElement									= reader.Object[iView];
