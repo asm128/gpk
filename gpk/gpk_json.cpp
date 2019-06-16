@@ -110,9 +110,46 @@
 }
 
 						::gpk::error_t									jsonTestAndCloseValue								(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
-	if((uint32_t)stateParser.IndexCurrentElement < object.size() && ::gpk::JSON_TYPE_VALUE == object[stateParser.IndexCurrentElement].Type) 
-		return ::jsonCloseElement(stateParser, object); 
+	if((uint32_t)stateParser.IndexCurrentElement < object.size() && ::gpk::JSON_TYPE_VALUE == object[stateParser.IndexCurrentElement].Type) {
+		::gpk::error_t																errVal												= ::jsonCloseElement(stateParser, object); 
+		stateParser.ExpectingSeparator											= true;
+		return errVal;
+	}
 	return 1;
+}
+
+						::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+	if((uint32_t)stateParser.IndexCurrentElement < object.size() && ::gpk::JSON_TYPE_KEY == object[stateParser.IndexCurrentElement].Type) {
+		::gpk::error_t																errVal												= ::jsonCloseElement(stateParser, object); 
+		stateParser.ExpectingSeparator											= true;
+		return errVal;
+	}
+	return 1;
+}
+
+						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+	::gpk::error_t																errVal												= 0;
+	if(object[object.size() - 1].Type == containerType) { 
+		info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
+		object.pop_back(0); 
+		--stateParser.IndexCurrentElement; 
+		--stateParser.NestLevel; 
+	} 
+	else {
+		info_printf("Closing container at index %i (%s).", object.size() - 1, ::gpk::get_value_label(containerType).begin());
+			 if(::gpk::JSON_TYPE_VALUE	== containerType) errVal = ::jsonTestAndCloseValue	(stateParser, object); 
+		else if(::gpk::JSON_TYPE_KEY	== containerType) errVal = ::jsonTestAndCloseKey	(stateParser, object); 
+	}
+	return errVal;
+}
+						::gpk::error_t									jsonCloseContainer									(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+	::gpk::error_t																errVal												= 0;
+	gpk_necall(::jsonCloseOrDiscardIfEmptyKeyOrVal(stateParser, object, (::gpk::JSON_TYPE_ARRAY == containerType) ? ::gpk::JSON_TYPE_VALUE : ::gpk::JSON_TYPE_KEY), "Failed to close container at index %i (%s).", stateParser.IndexCurrentElement, ::gpk::get_value_label(containerType).begin());
+	errVal																	= ::jsonCloseElement(stateParser, object, containerType); 
+	stateParser.ExpectingSeparator											= false; 
+	if(stateParser.NestLevel > 0) // Root container isn't inside a value. Every other container is.
+		::jsonTestAndCloseValue(stateParser, object);
+	return 0;
 }
 
 						::gpk::error_t									jsonOpenElement										(::gpk::SJSONParserState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType) {
@@ -133,14 +170,20 @@
 	::gpk::error_t																errVal												= 0;
 	switch(stateParser.CharCurrent) {
 	default:
+		if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); }
 		error_printf("Invalid character at index %i. '%c'", stateParser.IndexCurrentChar, stateParser.CharCurrent);
 		errVal																	= -1;
 		break;
-	case 'f'	: errVal = ::jsonParseKeyword(tokenFalse, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
-	case 't'	: errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
-	case 'n'	: errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
+	case 'f'	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); } errVal = ::jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
+	case 't'	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); } errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
+	case 'n'	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); } errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case '-'	: case '+'	: //case 'x'	: // parse int or float accordingly
+		if (stateParser.ExpectingSeparator) { 
+			errVal = -1; 
+			error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); 
+			break;
+		}
 		be_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
 		if errored(::parseJsonNumber(stateParser, object, jsonAsString)) {
 			errVal																	= -1;
@@ -149,27 +192,38 @@
 		::jsonTestAndCloseValue(stateParser, object); 
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: 
+		//if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); }
 		break;	
 	case ','	: 
+		if(::gpk::JSON_TYPE_OBJECT == object[stateParser.IndexCurrentElement].Type) {
+			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY)) {
+				errVal																	= -1; 
+				error_printf("Failed to open element at index %i.", object.size()); 
+			}
+		}
+		else if(::gpk::JSON_TYPE_ARRAY == object[stateParser.IndexCurrentElement].Type) {
+			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE)) {
+				errVal																	= -1; 
+				error_printf("Failed to open element at index %i.", object.size()); 
+			}
+		}
+		stateParser.ExpectingSeparator											= false;
 		break;	
 	case ':'	: 
+		stateParser.ExpectingSeparator											= false;
 			 if errored(::jsonCloseElement	(stateParser, object, ::gpk::JSON_TYPE_KEY	)) { errVal = -1; error_printf("Failed to close key. %s", "Unknown error."); }
 		else if errored(::jsonOpenElement	(stateParser, object, ::gpk::JSON_TYPE_VALUE)) { errVal = -1; error_printf("Failed to open element at index %i.", object.size()); } 
 		break;	
-	case ']'	: errVal = ::jsonCloseElement	(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); ::jsonTestAndCloseValue(stateParser, object); break;
-	case '}'	: errVal = ::jsonCloseElement	(stateParser, object, ::gpk::JSON_TYPE_OBJECT	); ::jsonTestAndCloseValue(stateParser, object); break;	
-	case '{'	: errVal = ::jsonOpenElement	(stateParser, object, ::gpk::JSON_TYPE_OBJECT	); break;
-	case '['	: errVal = ::jsonOpenElement	(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); break;
-	case '"'	: 
-		if(::gpk::JSON_TYPE_OBJECT == object[stateParser.IndexCurrentElement].Type && errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY))) {
-			errVal = -1; 
-			error_printf("Failed to open element at index %i.", object.size()); 
-		}
+	case ']'	: errVal = ::jsonCloseContainer(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); break; 
+	case '}'	: errVal = ::jsonCloseContainer(stateParser, object, ::gpk::JSON_TYPE_OBJECT); break; 
+	case '{'	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); } errVal = ::jsonOpenElement	(stateParser, object, ::gpk::JSON_TYPE_OBJECT	); if(0 == errVal) errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY	); break;
+	case '['	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); } errVal = ::jsonOpenElement	(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); if(0 == errVal) errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE	); break;
+	case '"'	: if (stateParser.ExpectingSeparator) { errVal = -1; error_printf("Expected separator, found '%c'.", stateParser.CharCurrent); }
 		if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_STRING)) {
-			errVal = -1; 
+			errVal																	= -1; 
 			error_printf("Failed to open element at index %i.", object.size()); 
 		}
-		stateParser.InsideString													= true;
+		stateParser.InsideString												= true;
 		break;	
 	}
 	stateParser.Escaping													= false;
@@ -181,10 +235,10 @@
 	::gpk::error_t																errVal												= 0;
 	switch(stateParser.CharCurrent) {
 	default:
-		//if(stateParser.CharCurrent < 20 || stateParser.CharCurrent > 127) {
-		//	errVal																	= -1;
-		//	error_printf("Invalid character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
-		//}
+		if(stateParser.CharCurrent < 0x20 || stateParser.CharCurrent > 0xFE) {
+			errVal																	= -1;
+			error_printf("Invalid character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
+		}
 		break;
 	case 'u':
 		if(false == stateParser.Escaping) 
@@ -235,19 +289,19 @@
 	for(stateParser.IndexCurrentChar = 0; stateParser.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateParser.IndexCurrentChar)
 		error_if(errored(::gpk::jsonParseStep(reader, jsonAsString)), "Error during read step."
 			"\nPosition  : %i." 
-			"\nCharacter : %c."
+			"\nCharacter : '%c' (0x%x)."
 			"\nElement   : %i."
 			"\nString    : %s."
 			"\nEscaping  : %s."
 			"\nNestLevel : %i."
 			, reader.StateOfParser.IndexCurrentChar
-			, reader.StateOfParser.CharCurrent
+			, reader.StateOfParser.CharCurrent, reader.StateOfParser.CharCurrent
 			, reader.StateOfParser.IndexCurrentElement 
 			, reader.StateOfParser.InsideString ? "true" : "false"
 			, reader.StateOfParser.Escaping		? "true" : "false"
 			, reader.StateOfParser.NestLevel
 		)
-	info_printf("Nest level: %u (Needs to be zero).", stateParser.NestLevel);
+	info_printf("Nest level: %i (Needs to be zero).", stateParser.NestLevel);
 	ree_if(0 == reader.Tree.create(), "If this fail then maybe it's because of %s.", "running out of memory or memory corrupted.");
 	for(uint32_t iView = 0; iView < reader.Object.size(); ++iView) {
 		::gpk::SJSONType															& currentElement									= reader.Object[iView];

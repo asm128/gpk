@@ -2,7 +2,6 @@
 #include "gpk_eval.h"
 #include <malloc.h>
 #include <memory.h>
-//#include "gpk_safe.h"
 #include "gpk_auto_handler.h"
 
 #ifndef GPK_MEMORY_H__92836409283642038462309846

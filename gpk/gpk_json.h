@@ -51,10 +51,12 @@ namespace gpk
 						char											CharCurrent				= 0;
 						bool											Escaping				: 1;
 						bool											InsideString			: 1;
+						bool											ExpectingSeparator		: 1;
 
 																		SJSONParserState		() 
-		: Escaping		(false)		
-		, InsideString	(false)		
+		: Escaping			(false)
+		, InsideString		(false)
+		, ExpectingSeparator(false)
 		{}
 	};
 #pragma pack(pop)
