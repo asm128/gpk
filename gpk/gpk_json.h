@@ -74,7 +74,6 @@ namespace gpk
 					::gpk::error_t										jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 
 	// Access functions: Iterate over children looking for keys or values.
-					::gpk::error_t										jsonValueGet			(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key);
 					::gpk::error_t										jsonArrayValueGet		(::gpk::SJSONNode& tree, uint32_t valueIndex);
 					::gpk::error_t										jsonObjectValueGet		(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key);
 } // namespace

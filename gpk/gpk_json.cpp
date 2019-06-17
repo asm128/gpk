@@ -339,7 +339,7 @@
 	return ::jsonTreeRebuild(reader.Object, reader.Tree);
 }
 
-						::gpk::error_t									gpk::jsonValueGet									(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key)	{
+						::gpk::error_t									gpk::jsonObjectValueGet								(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != tree.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
 	for(uint32_t iNode = 0, countNodes = tree.Children.size(); iNode < countNodes; ++iNode) {
 		const ::gpk::SJSONNode														& node												= *tree.Children[iNode];
