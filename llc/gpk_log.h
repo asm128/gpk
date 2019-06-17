@@ -88,31 +88,31 @@ namespace gpk
 #if defined (GPK_ERROR_PRINTF_ENABLED)
 #	define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else
-#	define error_printf(format, ...)								do { __VA_ARGS__; GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#	define error_printf(format, ...)								do { ; GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #endif
 
 #if defined (GPK_WARNING_PRINTF_ENABLED)
 #	define warning_printf(format, ...)								debug_printf(2, "warning"	, format, __VA_ARGS__)
 #else
-#	define warning_printf(format, ...)								do { __VA_ARGS__; } while(0)
+#	define warning_printf(format, ...)								do { ; } while(0)
 #endif
 
 #if defined (GPK_INFO_PRINTF_ENABLED)
 #	define info_printf(format, ...)									debug_printf(3, "info"		, format, __VA_ARGS__)
 #else
-#	define info_printf(format, ...)									do { __VA_ARGS__; } while(0)
+#	define info_printf(format, ...)									do { ; } while(0)
 #endif
 
 #if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #	define success_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #else
-#	define success_printf(format, ...)								do { __VA_ARGS__; } while(0)
+#	define success_printf(format, ...)								do { ; } while(0)
 #endif
 
 #if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #	define verbose_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #else
-#	define verbose_printf(format, ...)								do { __VA_ARGS__; } while(0)
+#	define verbose_printf(format, ...)								do { ; } while(0)
 #endif
 
 #if defined (GPK_WINDOWS)

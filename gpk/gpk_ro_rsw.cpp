@@ -106,17 +106,17 @@
 			rsw_stream.read_pod(modelInfo.Rotation		);
 			rsw_stream.read_pod(modelInfo.Scale			);
 			info_printf(" ---------------------------------------------------------------------------------- RSW Model: %u ---------------------------------------------------------------------------------- ", loaded.RSWModels.size());
-			info_printf("RSW model object found     : %s.", &modelInfo.Name[0]);
-			info_printf("RSW model object filename  : %s.", &modelInfo.Filename[0]);
-			info_printf("RSW model object str2      : %s.", &modelInfo.Str2[0]);
-			info_printf("RSW model object str3      : %s.", &modelInfo.RootRSMNode[0]);
-			info_printf("RSW model object str4      : %s.", &modelInfo.Str4[0]);
+			info_printf("RSW model object found     : %s."			, &modelInfo.Name[0]);
+			info_printf("RSW model object filename  : %s."			, &modelInfo.Filename[0]);
+			info_printf("RSW model object str2      : %s."			, &modelInfo.Str2[0]);
+			info_printf("RSW model object str3      : %s."			, &modelInfo.RootRSMNode[0]);
+			info_printf("RSW model object str4      : %s."			, &modelInfo.Str4[0]);
 			info_printf("RSW model object position  : {%f, %f, %f}.", modelInfo.Position	.x, modelInfo.Position	.y, modelInfo.Position	.z);
 			info_printf("RSW model object rotation  : {%f, %f, %f}.", modelInfo.Rotation	.x, modelInfo.Rotation	.y, modelInfo.Rotation	.z);
 			info_printf("RSW model object scale     : {%f, %f, %f}.", modelInfo.Scale		.x, modelInfo.Scale		.y, modelInfo.Scale		.z);
-			info_printf("RSW model object animType  : %i.", modelInfo.AnimType );
-			info_printf("RSW model object animSpeed : %f.", modelInfo.AnimSpeed);
-			info_printf("RSW model object blockType : %i.", modelInfo.BlockType);
+			info_printf("RSW model object animType  : %i."			, modelInfo.AnimType );
+			info_printf("RSW model object animSpeed : %f."			, modelInfo.AnimSpeed);
+			info_printf("RSW model object blockType : %i."			, modelInfo.BlockType);
 			if(0 == modelInfo.Filename[0])
 				return 0;
 			loaded.RSWModels.push_back(modelInfo);
@@ -181,6 +181,7 @@
 	::gpk::array_pod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	(void)unk;
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());
 	return rswFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});

@@ -583,7 +583,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 
 static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
-	info_printf("----- PNG File Info summary: "
+	always_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."
 		"\nBit Depth            : 0x%X."
 		"\nColor Type           : 0x%X."
@@ -653,13 +653,13 @@ static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData,
 			);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string	& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::view_const_string& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
 	::gpk::array_pod<byte_t>													fileInMemory									= {};
 	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
 	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()}, out_Texture);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_array<const ubyte_t>& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_const_ubyte& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
 	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::array_pod<uint32_t>													indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");

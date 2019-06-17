@@ -186,6 +186,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	info_printf("Total Vertices        : %u.", totalVertices	);
 	info_printf("Total UVs             : %u.", totalUVs			);
 	info_printf("Total Faces           : %u.", totalFaces		);
+	(void)byteOffsetStartModel;
 	info_printf("Total Node bytes read : %u.", (rsm_stream.CursorPosition - byteOffsetStartModel));
 	return rsm_stream.CursorPosition;
 }
@@ -199,6 +200,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	::gpk::array_pod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	(void)unk;
 	info_printf("%u", unk);
 	info_printf("Parsing RSM file: %s.", input.begin());
 	return rsmFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});

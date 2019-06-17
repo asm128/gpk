@@ -36,7 +36,7 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 	return fileSize;
 }
 
-::gpk::error_t						gpk::pathCreate				(const view_const_string & pathName) {
+::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_string& pathName) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
 	const ::gpk::view_const_string			charBar						= "\\";
@@ -163,7 +163,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string & pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			sPath	[4096];
@@ -202,7 +202,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string & pathToList, ::gpk::SPathContents& pathContents)						{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string& pathToList, ::gpk::SPathContents& pathContents)						{
 	char																			sPath[4096];
 	gpk_necall(sprintf_s(sPath, "%s\\*.*", pathToList.begin()), "%s", "Path too long?");
 	static constexpr const char														curDir []							= ".";

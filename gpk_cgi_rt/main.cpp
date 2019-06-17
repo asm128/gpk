@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 
-::gpk::error_t										metrics_split			(const ::gpk::view_const_string & input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
+::gpk::error_t										metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
 	uint32_t												iChar					= 0;
 	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 		if('x' == input_string[iChar]) {

@@ -7,12 +7,28 @@
 
 namespace gpk
 {
+
 	template <typename _tElement>
 	class view_array {
 	protected:
 		// Properties / Member Variables
 							_tElement				* Data						= 0;
 							uint32_t				Count						= 0;
+		template<typename _tElement>
+							bool					equal						(const _tElement * other, const _tElement * local, uint32_t count)						const	{
+			for(uint32_t iElement = 0; iElement < count; ++iElement)
+				if(other[iElement] != local[iElement])
+					return false;
+			return true; 
+		}
+		template<>	inline	bool					equal						(const double	* other, const double	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(double	)*count); }
+		template<>	inline	bool					equal						(const float	* other, const float	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(float		)*count); }
+		template<>	inline	bool					equal						(const int32_t	* other, const int32_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(int32_t	)*count); }
+		template<>	inline	bool					equal						(const uint32_t	* other, const uint32_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uint32_t	)*count); }
+		template<>	inline	bool					equal						(const int16_t	* other, const int16_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(int16_t	)*count); }
+		template<>	inline	bool					equal						(const uint16_t	* other, const uint16_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uint16_t	)*count); }
+		template<>	inline	bool					equal						(const char_t	* other, const char_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(char_t	)*count); }
+		template<>	inline	bool					equal						(const uchar_t	* other, const uchar_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uchar_t	)*count); }
 	public:
 		typedef				_tElement				TElement;
 
@@ -35,6 +51,15 @@ namespace gpk
 							_tElement&				operator[]					(uint32_t index)																		{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 							const _tElement&		operator[]					(uint32_t index)													const				{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 
+							bool					operator					!=(const ::gpk::view_array<const _tElement>& other)					const				{ return !operator==(other); }
+							bool					operator					==(const ::gpk::view_array<const _tElement>& other)					const				{
+		if(this->size() != other.size())
+			return false;
+		if(this->begin() == other.begin())
+			return true;
+		return this->equal(other.begin(), this->begin(), this->size());
+	}
+
 		// Methods
 		inline				_tElement*				begin						()																			noexcept	{ return Data;			}
 		inline				_tElement*				end							()																			noexcept	{ return Data + Count;	}
@@ -49,6 +74,8 @@ namespace gpk
 	//typedef				::gpk::view_array<char_t			>	view_string			;
 	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			;
 	typedef				::gpk::view_array<byte_t			>	view_byte			;
+	typedef				::gpk::view_array<uchar_t			>	view_uchar			;
+	typedef				::gpk::view_array<char_t			>	view_char			;
 	typedef				::gpk::view_array<float				>	view_float32		;
 	typedef				::gpk::view_array<double			>	view_float64		;
 	typedef				::gpk::view_array<uint8_t			>	view_uint8			;
@@ -64,6 +91,8 @@ namespace gpk
 	//typedef				::gpk::view_array<const char_t		>	view_const_string	;
 	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	;
 	typedef				::gpk::view_array<const byte_t		>	view_const_byte		;
+	typedef				::gpk::view_array<const uchar_t		>	view_const_uchar	;
+	typedef				::gpk::view_array<const char_t		>	view_const_char		;
 	typedef				::gpk::view_array<const float		>	view_const_float32	;
 	typedef				::gpk::view_array<const double		>	view_const_float64	;
 	typedef				::gpk::view_array<const uint8_t		>	view_const_uint8	;
@@ -80,14 +109,6 @@ namespace gpk
 																	view_const_string					(const char* inputString, uint32_t length)										: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
 		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength], uint32_t length)						: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
 		template<size_t _stringLength>								view_const_string					(const char (&inputString)[_stringLength])										: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}
-
-						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
-			if(Data == other.begin())
-				return true;
-			if(Count != other.size())
-				return false;
-			return 0 == memcmp(Data, other.begin(), Count);
-		}
 	};
 
 	struct view_string : public view_array<char_t> {
@@ -95,16 +116,7 @@ namespace gpk
 																	view_string							(char* inputString, uint32_t length)											: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;										}
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : ::gpk::min(length, (uint32_t)_stringLength);	}
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])											: view_array(inputString, _stringLength)	{ Count = (uint32_t)strlen(inputString);																			}
-
-		//constexpr		operator									const view_const_string&			()															const	noexcept	{ return (const view_const_string&)*this; }
-
-						bool										operator==							(const ::gpk::view_const_string& other)						const	noexcept	{
-			if(Data == other.begin())
-				return true;
-			if(Count != other.size())
-				return false;
-			return 0 == memcmp(Data, other.begin(), Count);
-		}
+		//constexpr		operator									const view_const_char&			()															const	noexcept	{ return *(const view_const_string*)this; }
 	};
 
 
