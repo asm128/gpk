@@ -1,11 +1,11 @@
 #include "gpk_json.h"
 
-						::gpk::error_t									jsonTreeRebuild										(::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::SJSONNode& jsonRoot)								{
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							tree;
-	gpk_necall(tree.resize(object.size()), "Out of memory? Object count: %u.", object.size());
+						::gpk::error_t									jsonTreeRebuild										(::gpk::array_obj<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
+	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							& tree												= out_nodes;
+	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
 		::gpk::ptr_obj<::gpk::SJSONNode>											& nodeCurrent										= tree[iObject];
-		nodeCurrent->Object														= &object[iObject];
+		nodeCurrent->Object														= &in_object[iObject];
 		nodeCurrent->Parent														= ::gpk::in_range((uint32_t)nodeCurrent->Object->ParentIndex, 0U, tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Object->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex												= iObject;
 	}
@@ -16,8 +16,6 @@
 				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "Failed to push tree node. Out of memory?");
 		}
 	}
-	jsonRoot																= {};
-	jsonRoot.Children														= tree;
 	return 0;
 }
 
@@ -28,6 +26,7 @@
 	::gpk::SJSONType															boolElement											= {stateParser.IndexCurrentElement, jsonType, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + token.size()}};
 	gpk_necall(object.push_back(boolElement), "Failed to push! Out of memory? object count: %u.", object.size());
 	stateParser.IndexCurrentChar											+= token.size() - 1;
+	stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	return 0;
 }
 
@@ -72,6 +71,7 @@
 	const uint32_t																sizeNum												= lengthJsonNumber(index, jsonAsString);
 	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_NUMBER, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + sizeNum + (index - stateParser.IndexCurrentChar)}};
 	gpk_necall(object.push_back(currentElement), "%s", "Out of memory?"); 
+	stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Float: %s.", sizeNum, sizeNum, sizeNum
 		, isNegative	? "true" : "false"
 		, isFloat		? "true" : "false"
@@ -132,8 +132,8 @@
 	::gpk::error_t																errVal												= 0;
 	if(object[object.size() - 1].Type == containerType) { 
 		info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
+		stateParser.IndexCurrentElement											= object[object.size() - 1].ParentIndex;
 		object.pop_back(0); 
-		--stateParser.IndexCurrentElement; 
 		--stateParser.NestLevel; 
 		if((uint32_t)stateParser.IndexCurrentElement < object.size())
 			stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
@@ -194,8 +194,12 @@
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case '-'	: case '+'	: //case 'x'	: // parse int or float accordingly
 		GPK_JSON_EXPECTS_SEPARATOR();
-		be_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
-		if errored(::parseJsonNumber(stateParser, object, jsonAsString)) {
+		ree_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
+		if(::gpk::JSON_TYPE_VALUE != stateParser.CurrentElement->Type){
+			errVal																	= -1;
+			error_printf("Number found outside a value.");
+		}
+		else if errored(::parseJsonNumber(stateParser, object, jsonAsString)) {
 			errVal																	= -1;
 			error_printf("Error parsing JSON number.");
 		}
@@ -207,18 +211,10 @@
 			error_printf("Separator found when not expected at index %i.", stateParser.IndexCurrentChar); 
 			break;
 		}
-		if(::gpk::JSON_TYPE_OBJECT == stateParser.CurrentElement->Type) {
-			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY, stateParser.IndexCurrentChar + 1)) {
-				errVal																	= -1; 
-				error_printf("Failed to open element at index %i.", object.size()); 
-			}
-		}
-		else if(::gpk::JSON_TYPE_ARRAY == stateParser.CurrentElement->Type) {	// Test 
-			if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE, stateParser.IndexCurrentChar + 1)) {
-				errVal																	= -1; 
-				error_printf("Failed to open element at index %i.", object.size()); 
-			}
-		}
+		if(::gpk::JSON_TYPE_OBJECT == stateParser.CurrentElement->Type) 
+			errVal																	= ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY, stateParser.IndexCurrentChar + 1);
+		else if(::gpk::JSON_TYPE_ARRAY == stateParser.CurrentElement->Type) // Test 
+			errVal																	= ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE, stateParser.IndexCurrentChar + 1);
 		stateParser.ExpectingSeparator											= false;
 		break;	
 	case ':'	: 
@@ -240,14 +236,10 @@
 		} 
 		break;	
 	case ']'	: errVal = ::jsonCloseContainer(stateParser, object, ::gpk::JSON_TYPE_ARRAY	); break; 
-	case '}'	: errVal = ::jsonCloseContainer(stateParser, object, ::gpk::JSON_TYPE_OBJECT); break; 
-	case '{'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_OBJECT	, stateParser.IndexCurrentChar); if(0 == errVal) { errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY	, stateParser.IndexCurrentChar + 1); }break;
-	case '['	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_ARRAY	, stateParser.IndexCurrentChar); if(0 == errVal) { errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE	, stateParser.IndexCurrentChar + 1); }break;
-	case '"'	: GPK_JSON_EXPECTS_SEPARATOR();
-		if errored(::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_STRING, stateParser.IndexCurrentChar + 1)) {
-			errVal																	= -1; 
-			error_printf("Failed to open element at index %i.", object.size());
-		}
+	case '}'	: if(::gpk::JSON_TYPE_KEY == stateParser.CurrentElement->Type && object.size() - 1 != (uint32_t)stateParser.IndexCurrentElement) { error_printf("Invalid format: %s", "Keys cannot be left without a value."); errVal = -1; break; } errVal = ::jsonCloseContainer(stateParser, object, ::gpk::JSON_TYPE_OBJECT); break; 
+	case '{'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_OBJECT	, stateParser.IndexCurrentChar); if(0 <= errVal) { errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_KEY	, stateParser.IndexCurrentChar + 1); }break;
+	case '['	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_ARRAY	, stateParser.IndexCurrentChar); if(0 <= errVal) { errVal = jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_VALUE	, stateParser.IndexCurrentChar + 1); }break;
+	case '"'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonOpenElement(stateParser, object, ::gpk::JSON_TYPE_STRING	, stateParser.IndexCurrentChar + 1);	// skip the " character in order to set the begin the string
 		stateParser.InsideString												= true;
 		break;	
 	}
@@ -279,6 +271,7 @@
 			errVal																	= -1;
 			error_printf("%s", "Out of memory?"); 
 		}
+		stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 		stateParser.IndexCurrentChar											+= 3;	// Parse unicode code point
 		break;
 	case '\\'	: 
@@ -339,10 +332,33 @@
 			return -1;
 		}
 	ree_if(stateParser.NestLevel, "Nest level: %i (Needs to be zero).", stateParser.NestLevel);
-	ree_if(0 == reader.Tree.create(), "If this fail then maybe it's because of %s.", "running out of memory or memory corrupted.");
 	for(uint32_t iView = 0; iView < reader.Object.size(); ++iView) {
 		::gpk::SJSONType															& currentElement									= reader.Object[iView];
 		gpk_necall(reader.View.push_back({&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin}), "Failed to push view! Out of memory? View count: %u. Index: %i.", reader.View.size(), iView);
 	}
-	return ::jsonTreeRebuild(reader.Object, *reader.Tree);
+	return ::jsonTreeRebuild(reader.Object, reader.Tree);
+}
+
+						::gpk::error_t									gpk::jsonValueGet									(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key)	{
+	ree_if(::gpk::JSON_TYPE_OBJECT != tree.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
+	for(uint32_t iNode = 0, countNodes = tree.Children.size(); iNode < countNodes; ++iNode) {
+		const ::gpk::SJSONNode														& node												= *tree.Children[iNode];
+		if(::gpk::JSON_TYPE_KEY != node.Object->Type) 
+			continue;
+		ree_if(0 == node.Children.size(), "%s", "Malformed or corrupt tree. All keys should have a string as element 0.");
+		const int32_t																indexViewString										= node.Children[0]->ObjectIndex;
+		const	::gpk::view_const_string											& view												= views[indexViewString];
+		if(key.size() == view.size() && 0 == memcmp(key.begin(), view.begin(), key.size()))
+			return (::gpk::error_t)indexViewString + 2; // one for value and other for the actual element
+	}
+	return -1;
+}
+
+						::gpk::error_t									gpk::jsonArrayValueGet									(::gpk::SJSONNode& tree, uint32_t index)	{
+	ree_if(::gpk::JSON_TYPE_ARRAY != tree.Object->Type, "Invalid node type: %i (%s). Only arrays are allowed to be accessed by index.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
+	ree_if(index >= tree.Children.size(), "Index out of range: %i. Max index: %i.", index, tree.Children.size());
+	const ::gpk::SJSONNode														& node												= *tree.Children[index];	// Get the 
+	ree_if(::gpk::JSON_TYPE_VALUE != node.Object->Type, "Malformed or corrupt tree. Children of an arrray should be of type 'VALUE' (%i) instead of '%s' (%i).", ::gpk::JSON_TYPE_VALUE, ::gpk::get_value_label(node.Object->Type).begin(), node.Object->Type);
+	ree_if(0 == node.Children.size(), "%s", "Malformed or corrupt tree. All values should have a child element or should not exist.");
+	return (::gpk::error_t)node.Children[0]->ObjectIndex; // one for value and other for the actual element
 }

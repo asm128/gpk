@@ -191,7 +191,7 @@ namespace gpk
 
 	template <typename _tEnum>	::gpk::label				get_value_label							(const _tEnum& statusBit				)								{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
 	template <typename _tEnum>	int32_t						get_value_index							(const _tEnum& statusBit				)								{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
-	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel			)								{ return ::gpk::enum_definition<_tEnum>::get().get_value			(valueLabel);	}
+	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel			)								{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
