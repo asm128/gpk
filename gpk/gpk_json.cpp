@@ -4,15 +4,15 @@
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
-	// Build all nodes linearly, without assigning the children 
+	// -- Build all nodes linearly, without assigning the children 
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) { 
 		::gpk::ptr_obj<::gpk::SJSONNode>											& nodeCurrent										= tree[iObject];
 		nodeCurrent->Object														= &in_object[iObject];
-		nodeCurrent->Parent														= ::gpk::in_range((uint32_t)nodeCurrent->Object->ParentIndex, 0U, tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Object->ParentIndex] : nullptr;
+		nodeCurrent->Parent														= ((uint32_t)nodeCurrent->Object->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Object->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex												= iObject;
 	}
 
-	// Assign the children to every object of the hierarchy
+	// -- Assign the children to every object of the hierarchy
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) { 
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
 			const ::gpk::ptr_obj<::gpk::SJSONNode>										& nodeOther											= tree[iOther];
@@ -21,7 +21,7 @@
 		}
 	}
 
-	// Remove the key/value wrappers from objects.
+	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) { 
 		::gpk::ptr_obj<::gpk::SJSONNode>											& nodeCurrent										= tree[iObject];
 		if(::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Object->Type
@@ -30,9 +30,8 @@
 			continue;
 		::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							newChildren;
 		newChildren.resize(nodeCurrent->Children.size());
-		for(uint32_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild) {
+		for(uint32_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild)
 			newChildren[iChild]														= nodeCurrent->Children[iChild]->Children[0];
-		}
 		nodeCurrent->Children													= newChildren;
 	}
 	return 0;
