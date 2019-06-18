@@ -110,6 +110,7 @@
 			seterr_if(errored(::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar - 1, ::gpk::JSON_TYPE_STRING)), "Failed to close string elment. %s", "Unknown error."); 
 			stateParser.InsideString												= false;
 			::jsonTestAndCloseValue(stateParser, object); 
+			stateParser.ExpectingSeparator											= true;	// actually we expect the separator AFTER calling jsonCloseElement(). However, such function doesn't care about this value, so we can simplify the code by reversing the operations.
 		}
 	}
 	stateParser.Escaping													= false;
@@ -341,10 +342,22 @@
 	return ::jsonTreeRebuild(reader.Object, reader.Tree);
 }
 
-						::gpk::error_t									gpk::jsonObjectValueGet								(::gpk::SJSONNode& tree, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::view_const_string key)	{
-	ree_if(::gpk::JSON_TYPE_OBJECT != tree.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
-	for(uint32_t iNode = 0, countNodes = tree.Children.size(); iNode < countNodes; iNode += 2) {
-		const ::gpk::SJSONNode														* node												= tree.Children[iNode];
+						::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys)	{
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Object->Type, ::gpk::get_value_label(node_object.Object->Type).begin());
+	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
+		const ::gpk::SJSONNode														* node												= node_object.Children[iNode];
+		ree_if(::gpk::JSON_TYPE_STRING != node->Object->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), ::gpk::JSON_TYPE_STRING);
+		const ::gpk::view_const_string												& view												= views[node->ObjectIndex];
+		gpk_necall(indices	.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
+		gpk_necall(keys		.push_back(view)				, "Failed! %s", "Too many nodes?");
+	}
+	return 0;
+}
+
+						::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string& key)	{
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Object->Type, ::gpk::get_value_label(node_object.Object->Type).begin());
+	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
+		const ::gpk::SJSONNode														* node												= node_object.Children[iNode];
 		ree_if(::gpk::JSON_TYPE_STRING != node->Object->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		const ::gpk::view_const_string												& view												= views[node->ObjectIndex];
 		if(key == view)
@@ -353,11 +366,10 @@
 	return -1;
 }
 
-						::gpk::error_t									gpk::jsonArrayValueGet									(::gpk::SJSONNode& tree, uint32_t index)	{
+						::gpk::error_t									gpk::jsonArrayValueGet									(const ::gpk::SJSONNode& tree, uint32_t index)	{
 	ree_if(::gpk::JSON_TYPE_ARRAY != tree.Object->Type, "Invalid node type: %i (%s). Only arrays are allowed to be accessed by index.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
 	ree_if(index >= tree.Children.size(), "Index out of range: %i. Max index: %i.", index, tree.Children.size());
 	const ::gpk::SJSONNode														* node												= tree.Children[index];	// Get the 
 	ree_if(0 == node, "Invalid or corrupt tree. %s", "Nodes cannot be null.");
 	return node->ObjectIndex;
 }
-

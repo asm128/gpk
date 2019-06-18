@@ -8,11 +8,10 @@ namespace gpk
 	struct label_statics;
 
 	class CLabelManager;
-	class label : public view_array<const char> {
-				CLabelManager					* LabelManager;
+	class label : public view_const_char {
+				CLabelManager					* LabelManager				= 0;
 	public:
-		static	const ::gpk::label_statics&		statics					();
-
+		static	const ::gpk::label_statics&		statics						();
 
 												label						()																			noexcept	= default;
 												label						(const label& other)														noexcept	= default;

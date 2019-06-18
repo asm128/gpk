@@ -43,6 +43,11 @@ namespace gpk
 							::gpk::array_pod<const char*>				Texts;
 
 	public:
+																		~CLabelManager				()																					{ 
+		for(uint32_t iText = 0; iText < Texts.size(); ++iText) {
+			info_printf("Label found: %s.", Texts[iText]);
+		}
+	}
 																		CLabelManager				()																					{ Characters.push_sequence("", 0U, Empty); }
 
 							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::view_array<const char>& out_view)		{

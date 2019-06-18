@@ -85,7 +85,8 @@ namespace gpk
 		inline constexpr										ptr_nco								(TNCOPtr&& other)											noexcept	{ Reference = other.Reference; other.Reference = 0;									}
 		inline													ptr_nco								(TRef* other)												noexcept	{ Reference = other;																}
 
-		inline constexpr	operator							_tNCO	*							()															noexcept	{ return Reference ? Reference->Instance : 0;										}
+		inline constexpr	operator							_tNCO		*						()															noexcept	{ return Reference ? Reference->Instance : 0;										}
+		inline constexpr	operator							const _tNCO	*						()													const	noexcept	{ return Reference ? Reference->Instance : 0;										}
 
 		inline constexpr	bool								operator==							(const TNCOPtr& other)								const	noexcept	{ return Reference == other.Reference;												}
 		inline constexpr	bool								operator!=							(const TNCOPtr& other)								const	noexcept	{ return !operator==(other);														}

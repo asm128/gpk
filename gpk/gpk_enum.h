@@ -8,10 +8,10 @@
 
 namespace gpk
 {
-	static				const ::gpk::label				INVALID_ENUM_VALUE_STR					= "INVALID";
-	//static				const ::gpk::label				UNDEFINED_ENUM_TYPE_STR				= "Undefined enumeration type.";
-	static				const ::gpk::label				UNDEFINED_ENUM_VALUE_STR				= "Undefined enumeration value";
-	static				const ::gpk::label				UNRESOLVED_ENUM_LABEL_STR				= "Unresolved enumeration value name";
+	static				const ::gpk::label					INVALID_ENUM_VALUE_STR					= "INVALID";
+	//static				const ::gpk::label					UNDEFINED_ENUM_TYPE_STR				= "Undefined enumeration type.";
+	static				const ::gpk::label					UNDEFINED_ENUM_VALUE_STR				= "Undefined enumeration value";
+	static				const ::gpk::label					UNRESOLVED_ENUM_LABEL_STR				= "Unresolved enumeration value name";
 
 	// This template is intended to store the name of an enumeration, the values of such enumeration and a string representing each value.
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
