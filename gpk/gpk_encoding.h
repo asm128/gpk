@@ -67,9 +67,9 @@ namespace gpk
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
 			uint8_t												count														= encoded[iIn + sizeof(_tBase)];
-			decoded.push_back(current);
+			gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
       		for(uint32_t iOut = 0; iOut < count; ++iOut)	// this function only works for strings because it stops in null
-				decoded.push_back(current);
+				gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
 		}
 		return 0;
 	}
