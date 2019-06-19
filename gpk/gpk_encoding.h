@@ -41,17 +41,6 @@ namespace gpk
 					::gpk::error_t					saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::array_pod<byte_t> & salted);
 					::gpk::error_t					saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::array_pod<byte_t> & binary);
 
-
-	template<typename _tBase>
-					::gpk::error_t					rleEncodeNewCharacter										(const _tBase& current, ::gpk::array_pod<byte_t>& encoded) {
-		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
-		const uint32_t										newSize														= encoded.size() + sizeBlock;
-		gpk_necall(encoded.resize(newSize), "%s", "Failed to resize.");
-		memcpy(&encoded[encoded.size() - sizeBlock], &current, sizeof(_tBase));
-		encoded[encoded.size() - 1]						= 1;
-		return 0;
-	}
-
 	// Notes: 
 	template<typename _tBase>
 					::gpk::error_t					rleEncode													(const ::gpk::view_array<_tBase>& decoded, ::gpk::array_pod<byte_t>& encoded) {
@@ -60,8 +49,11 @@ namespace gpk
   		for(uint32_t iIn = 0; iIn < decoded.size(); ++iIn) {
 			const _tBase 										& current													= decoded[iIn];
   			const _tBase										& latest													= decoded[idxLatest];
-    		if(0 == iIn || 0 != memcmp(&current, &latest, sizeof(_tBase)) || 255 == encoded[encoded.size() - 1]) {
-				::gpk::rleEncodeNewCharacter(current, encoded);
+    		if(0 == iIn || 0 != memcmp(&current, &latest, sizeof(_tBase)) || 255 == (uint8_t)encoded[encoded.size() - 1]) {
+				const uint32_t										newSize														= encoded.size() + sizeBlock;
+				gpk_necall(encoded.resize(newSize), "%s", "Failed to resize.");
+				memcpy(&encoded[encoded.size() - sizeBlock], &current, sizeof(_tBase));
+				encoded[encoded.size() - 1]						= 1;
 				idxLatest										= iIn;
 			}
       		else 
