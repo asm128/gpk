@@ -41,7 +41,6 @@ namespace gpk
 					::gpk::error_t					saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::array_pod<byte_t> & salted);
 					::gpk::error_t					saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::array_pod<byte_t> & binary);
 
-	// Notes: 
 	template<typename _tBase>
 					::gpk::error_t					rleEncode													(const ::gpk::view_array<_tBase>& decoded, ::gpk::array_pod<byte_t>& encoded) {
   		uint32_t											idxLatest													= 0;
@@ -53,7 +52,7 @@ namespace gpk
 				const uint32_t										newSize														= encoded.size() + sizeBlock;
 				gpk_necall(encoded.resize(newSize), "%s", "Failed to resize.");
 				memcpy(&encoded[encoded.size() - sizeBlock], &current, sizeof(_tBase));
-				encoded[encoded.size() - 1]						= 1;
+				encoded[encoded.size() - 1]						= 0;
 				idxLatest										= iIn;
 			}
       		else 
@@ -68,6 +67,7 @@ namespace gpk
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
 			uint8_t												count														= encoded[iIn + sizeof(_tBase)];
+			decoded.push_back(current);
       		for(uint32_t iOut = 0; iOut < count; ++iOut)	// this function only works for strings because it stops in null
 				decoded.push_back(current);
 		}
