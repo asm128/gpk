@@ -56,7 +56,7 @@ namespace gpk
 				idxLatest										= iIn;
 			}
       		else 
-          		++encoded[encoded.size() - 1];	// this only works up to 255 consecutive characters. 
+          		++encoded[encoded.size() - 1];
 		}
 		return 0;
 	}
@@ -68,7 +68,7 @@ namespace gpk
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
 			uint8_t												count														= encoded[iIn + sizeof(_tBase)];
 			gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
-      		for(uint32_t iOut = 0; iOut < count; ++iOut)	// this function only works for strings because it stops in null
+      		for(uint32_t iOut = 0; iOut < count; ++iOut)
 				gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
 		}
 		return 0;
