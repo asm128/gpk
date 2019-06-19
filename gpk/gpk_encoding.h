@@ -40,6 +40,43 @@ namespace gpk
 
 					::gpk::error_t					saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::array_pod<byte_t> & salted);
 					::gpk::error_t					saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::array_pod<byte_t> & binary);
+
+
+	// Notes: 
+	// - Currently, this function will break if a character repeats more than 255 consecutive times.
+	template<typename _tBase>
+					::gpk::error_t					rleEncode													(const ::gpk::view_array<_tBase>& decoded, ::gpk::array_pod<byte_t>& encoded) {
+  		uint32_t											idxLatest													= 0;
+		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
+  		for(uint32_t iIn = 0; iIn < decoded.size(); ++iIn) {
+			const _tBase 										& current														= decoded[iIn];
+  			const _tBase										& latest														= decoded[idxLatest];
+    		if(0 == iIn || current != latest) {
+				const uint32_t										newSize															= encoded.size() + sizeBlock;
+				gpk_necall(encoded.resize(newSize), "%s", "Failed to resize.");
+				memcpy(&encoded[encoded.size() - sizeBlock], &current, sizeof(_tBase));
+				encoded[encoded.size() - 1]						= 1;
+				idxLatest										= iIn;
+			}
+      		else {
+          		++encoded[encoded.size() - 1];	// this only works up to 255 consecutive characters. 
+			}
+		}
+		return 0;
+	}
+
+	template<typename _tBase>
+					::gpk::error_t					rleDecode													(const ::gpk::view_array<byte_t>& encoded, ::gpk::array_pod<_tBase>& decoded) {
+		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
+  		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
+			const _tBase 										& current														= *(_tBase*)&encoded[iIn];
+			uint8_t												count														= encoded[iIn + sizeof(_tBase)];
+      		for(uint32_t iOut = 0; iOut < count; ++iOut)	// this function only works for strings because it stops in null
+				decoded.push_back(current);
+		}
+		return 0;
+	}
+
 }
 
 #endif // GPK_ENCODING_H_209873982374
