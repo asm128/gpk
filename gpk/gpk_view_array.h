@@ -14,21 +14,6 @@ namespace gpk
 		// Properties / Member Variables
 							_tElement				* Data						= 0;
 							uint32_t				Count						= 0;
-		template<typename _tElement>
-							bool					equal						(const _tElement * other, const _tElement * local, uint32_t count)						const	{
-			for(uint32_t iElement = 0; iElement < count; ++iElement)
-				if(other[iElement] != local[iElement])
-					return false;
-			return true; 
-		}
-		template<>	inline	bool					equal						(const double	* other, const double	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(double	)*count); }
-		template<>	inline	bool					equal						(const float	* other, const float	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(float		)*count); }
-		template<>	inline	bool					equal						(const int32_t	* other, const int32_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(int32_t	)*count); }
-		template<>	inline	bool					equal						(const uint32_t	* other, const uint32_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uint32_t	)*count); }
-		template<>	inline	bool					equal						(const int16_t	* other, const int16_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(int16_t	)*count); }
-		template<>	inline	bool					equal						(const uint16_t	* other, const uint16_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uint16_t	)*count); }
-		template<>	inline	bool					equal						(const char_t	* other, const char_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(char_t	)*count); }
-		template<>	inline	bool					equal						(const uchar_t	* other, const uchar_t	* local, uint32_t count)						const	{ return 0 == memcmp(other, local, sizeof(uchar_t	)*count); }
 	public:
 		typedef				_tElement				TElement;
 
@@ -57,7 +42,7 @@ namespace gpk
 			return false;
 		if(this->begin() == other.begin())
 			return true;
-		return this->equal(other.begin(), this->begin(), this->size());
+		return ::gpk::equal(other.begin(), this->begin(), this->size());
 	}
 
 		// Methods

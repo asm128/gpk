@@ -1,5 +1,5 @@
 /// Copyright 2010-2017 - asm128
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
 #ifndef GPK_BIT_H_034792701397
 #define GPK_BIT_H_034792701397
