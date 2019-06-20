@@ -2,11 +2,12 @@
 
 #include "gpk_parse.h"
 
-::gpk::error_t									jsonAccessSolverParse		(const ::gpk::view_const_string& format, const ::gpk::SJSONNode& input, ::gpk::array_pod<char_t>& )			{
+::gpk::error_t									jsonAccessSolverParse		(const ::gpk::view_const_string& format, const ::gpk::SJSONNode& input, ::gpk::array_pod<char_t>& output)			{
+	(void)format, (void)input, (void)output;
 	return 0;
 }
 
-::gpk::error_t									gpk::jsonStringFormat			(const ::gpk::view_const_string& format, const ::gpk::SJSONNode& input, ::gpk::array_pod<char_t>& )			{
+::gpk::error_t									gpk::jsonStringFormat			(const ::gpk::view_const_string& format, const ::gpk::SJSONNode& input, ::gpk::array_pod<char_t>& output)			{
 	::gpk::SStripLiteralState							stateLiteralStripper;
 	::gpk::array_pod<::gpk::SStripLiteralType>			literalTypes;
 	::gpk::stripLiteralParse(stateLiteralStripper, literalTypes, format);
@@ -24,6 +25,6 @@
 			info_printf(bufferFormatOut, iAll, viewsAll[iAll].begin());
 		}
 	}
-	input;
+	(void)input, (void)output;
 	return 0;
 }
