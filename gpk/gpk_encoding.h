@@ -66,14 +66,13 @@ namespace gpk
 		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
-			uint8_t												count														= encoded[iIn + sizeof(_tBase)];
+			const uint8_t										count														= encoded[iIn + sizeof(_tBase)];
 			gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
       		for(uint32_t iOut = 0; iOut < count; ++iOut)
 				gpk_necall(decoded.push_back(current), "%s", "Failed to resize.");
 		}
 		return 0;
 	}
-
 }
 
 #endif // GPK_ENCODING_H_209873982374
