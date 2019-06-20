@@ -15,6 +15,8 @@ namespace gpk
 	static constexpr		const double			math_pi_180				= ::gpk::math_pi / 180.0;				// Pi / 180.0
 	static constexpr		const double			math_epsilon			= 0.00001;
 
+	static inline			uint64_t				powui					(const uint32_t	base, const uint32_t	exponent)							noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
+
 	template<typename _tNumber>
 	static inline constexpr	double					sqrt_safe				(_tNumber _valueSquared)													noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
 

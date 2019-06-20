@@ -39,6 +39,7 @@
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_member_registry.h" />
     <ClInclude Include="gpk_noise.h" />
+    <ClInclude Include="gpk_parse.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_session.h" />
     <ClInclude Include="gpk_storage.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_stdsocket.h" />
+    <ClInclude Include="gpk_json_formatter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_aes.cpp" />
@@ -117,8 +119,10 @@
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_json.cpp" />
+    <ClCompile Include="gpk_json_formatter.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_noise.cpp" />
+    <ClCompile Include="gpk_parse.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />

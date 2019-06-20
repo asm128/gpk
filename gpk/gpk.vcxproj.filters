@@ -261,6 +261,12 @@
     <ClInclude Include="gpk_string_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_json_formatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_parse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -378,6 +384,12 @@
       <Filter>web_cgi</Filter>
     </ClCompile>
     <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_json_formatter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_parse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

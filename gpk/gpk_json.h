@@ -74,7 +74,7 @@ namespace gpk
 							::gpk::error_t										jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 
 	// Access functions: Iterate over children looking for keys or values.
-							::gpk::error_t										jsonArrayValueGet		(const ::gpk::SJSONNode& node, uint32_t valueIndex);
+							::gpk::error_t										jsonArrayValueGet		(const ::gpk::SJSONNode& node, uint32_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
 							::gpk::error_t										jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
 							::gpk::error_t										jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
 	static inline constexpr	::gpk::error_t										jsonObjectKeyCount		(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size() / 2; }
