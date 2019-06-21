@@ -35,6 +35,7 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_enum.h" />
+    <ClInclude Include="gpk_expression.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_member_registry.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_display.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
+    <ClCompile Include="gpk_expression.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui.cpp" />

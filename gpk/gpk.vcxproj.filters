@@ -267,6 +267,9 @@
     <ClInclude Include="gpk_parse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -390,6 +393,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_parse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

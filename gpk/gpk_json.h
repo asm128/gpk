@@ -63,7 +63,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SJSONReader {
-								::gpk::array_obj<::gpk::SJSONType>					Object;
+								::gpk::array_pod<::gpk::SJSONType>					Object;
 								::gpk::array_obj<::gpk::view_const_string>			View;
 								::gpk::array_obj<::gpk::ptr_obj	<::gpk::SJSONNode>>	Tree;
 								::gpk::SJSONReaderState								StateRead;

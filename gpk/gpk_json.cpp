@@ -1,6 +1,6 @@
 #include "gpk_json.h"
 
-						::gpk::error_t									jsonTreeRebuild										(::gpk::array_obj<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
+						::gpk::error_t									jsonTreeRebuild										(::gpk::array_pod<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
@@ -37,7 +37,7 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar) {
+						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, uint32_t indexChar) {
 	ree_if(object.size() <= (uint32_t)stateParser.IndexCurrentElement, "Invalid parser state. Cannot close element: %i.", stateParser.IndexCurrentElement);
 	::gpk::SJSONType															* closing											= 0;
 	closing																	= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement]; 
@@ -52,13 +52,13 @@
 	return 0;	// Need to report that a list has been exited
 }
 
-						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, uint32_t indexChar, ::gpk::JSON_TYPE jsonType) {
+						::gpk::error_t									jsonCloseElement									(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, uint32_t indexChar, ::gpk::JSON_TYPE jsonType) {
 	const ::gpk::SJSONType														* open												= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement];
 	ree_if(jsonType != open->Type, "Invalid object type: open: %u (%s). closing: %u (%s).", open->Type, ::gpk::get_value_label(open->Type).begin(), jsonType, ::gpk::get_value_label(jsonType).begin());
 	return ::jsonCloseElement(stateParser, object, indexChar);
 }
 
-						::gpk::error_t									jsonTestAndCloseValue								(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+						::gpk::error_t									jsonTestAndCloseValue								(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object) {
 	if(stateParser.CurrentElement && ::gpk::JSON_TYPE_VALUE == stateParser.CurrentElement->Type) {
 		stateParser.ExpectingSeparator											= true;	// actually we expect the separator AFTER calling jsonCloseElement(). However, such function doesn't care about this value, so we can simplify the code by reversing the operations.
 		return ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar); 
@@ -79,7 +79,7 @@
 		error_printf(format, __VA_ARGS__);		\
 	}
 
-						::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONType															currentElement										= {};
 	::gpk::error_t																errVal												= 0;
 	switch(stateParser.CharCurrent) {
@@ -116,7 +116,7 @@
 	return errVal;
 }
 
-						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	ree_if(token.size() > jsonAsString.size() - stateParser.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
 	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateParser.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	info_printf("JSON token found: %s.", token.begin());
@@ -142,7 +142,7 @@
 	return indexCurrentChar - offset;
 }
 
-						::gpk::error_t									parseJsonNumber										(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									parseJsonNumber										(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	char																		bufferFormat[1024];
 	const uint32_t																offset												= stateParser.IndexCurrentChar;
 	uint32_t																	index												= offset;
@@ -188,7 +188,7 @@
 }
 
 
-						::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object) {
+						::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object) {
 	if(stateParser.CurrentElement && ::gpk::JSON_TYPE_KEY == stateParser.CurrentElement->Type) {
 		stateParser.ExpectingSeparator											= true;	// actually we expect the separator AFTER calling jsonCloseElement(). However, such function doesn't care about this value, so we can simplify the code by reversing the operations.
 		return ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar); 
@@ -196,7 +196,7 @@
 	return 1;
 }
 
-						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
 	::gpk::error_t																errVal												= 0;
 	if(object[object.size() - 1].Type == containerType) { 
 		info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
@@ -213,7 +213,7 @@
 	}
 	return errVal;
 }
-						::gpk::error_t									jsonCloseContainer									(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
+						::gpk::error_t									jsonCloseContainer									(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
 	::gpk::error_t																errVal												= 0;
 	gpk_necall(::jsonCloseOrDiscardIfEmptyKeyOrVal(stateParser, object, (::gpk::JSON_TYPE_ARRAY == containerType) ? ::gpk::JSON_TYPE_VALUE : ::gpk::JSON_TYPE_KEY), "Failed to close container at index %i (%s).", stateParser.IndexCurrentElement, ::gpk::get_value_label(containerType).begin());
 	errVal																	= ::jsonCloseElement(stateParser, object, stateParser.IndexCurrentChar, containerType); 
@@ -223,7 +223,7 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType, uint32_t indexChar) {
+						::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, ::gpk::JSON_TYPE jsonType, uint32_t indexChar) {
 	::gpk::SJSONType															currentElement										= {stateParser.IndexCurrentElement, jsonType, {indexChar, indexChar}};
 	gpk_necall(stateParser.IndexCurrentElement = object.push_back(currentElement), "Failed to push element. %s", "Out of memory?");
 	stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
@@ -233,7 +233,7 @@
 	return 0;
 }
 
-						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_obj<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
+						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONType															currentElement										= {};
 	const uint32_t																sizeRemaining										= jsonAsString.size() - stateParser.IndexCurrentChar;
 	static const ::gpk::view_const_string										tokenFalse											= "false"	;
