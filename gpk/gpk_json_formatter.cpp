@@ -105,9 +105,9 @@ namespace gpk
 	return 0;
 }
 
-::gpk::error_t									expressionReaderCloseType	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::EXPRESSION_READER_TYPE type) { 
+::gpk::error_t									expressionReaderCloseType	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::EXPRESSION_READER_TYPE type, int32_t indexCurrentChar) { 
 	ree_if(type != stateSolver.CurrentElement->Type, "Invalid type to close: %s. Current type: %s.", ::gpk::get_value_label(type).begin(), ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
-	stateSolver.CurrentElement->Span.End			= stateSolver.IndexCurrentChar; 
+	stateSolver.CurrentElement->Span.End			= indexCurrentChar; 
 	stateSolver.IndexCurrentElement					= stateSolver.CurrentElement->ParentIndex; 
 	stateSolver.CurrentElement						= (-1 != stateSolver.IndexCurrentElement) ? &parsed[stateSolver.IndexCurrentElement] : nullptr; 
 	info_printf("Closing expression type: %s. Parent type: %s.", ::gpk::get_value_label(type).begin(), stateSolver.CurrentElement ? ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin() : "UNKNOWN");
@@ -117,7 +117,7 @@ namespace gpk
 ::gpk::error_t									expressionReaderCloseIfType	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::EXPRESSION_READER_TYPE type)	{
 	rni_if(0 == stateSolver.CurrentElement, "Cannot close %s. Nothing to close.", ::gpk::get_value_label(type).begin());
 	if(type == stateSolver.CurrentElement->Type) {
-		::expressionReaderCloseType(stateSolver, parsed, type); 
+		::expressionReaderCloseType(stateSolver, parsed, type, stateSolver.IndexCurrentChar); 
 		--stateSolver.NestLevel; 
 		info_printf("Nest level: %i.", stateSolver.NestLevel);
 		return 1;
@@ -159,7 +159,7 @@ namespace gpk
 	case ' ': case '\t': case '\r': case '\n':
 		skip_if_escaping(); 
 		if(::gpk::EXPRESSION_READER_TYPE_KEY == stateSolver.CurrentElement->Type) {
-			::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
+			::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar); 
 			--stateSolver.NestLevel; 
 			info_printf("Nest level: %u.", stateSolver.NestLevel);
 			stateSolver.ExpectsSeparator	= true;
@@ -192,9 +192,7 @@ namespace gpk
 		skip_if_escaping(); 
 		stateSolver.ExpectsSeparator	= false;
 		::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
-		++stateSolver.IndexCurrentChar;
-		::expressionReaderCloseType		(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY); 
-		--stateSolver.IndexCurrentChar;
+		::expressionReaderCloseType		(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar + 1); 
 		--stateSolver.NestLevel; 
 		break;
 	case '[': 
@@ -214,9 +212,7 @@ namespace gpk
 		skip_if_escaping(); 
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX); 
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
-		++stateSolver.IndexCurrentChar;
-		::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX); 
-		--stateSolver.IndexCurrentChar;
+		::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX, stateSolver.IndexCurrentChar + 1); 
 		--stateSolver.NestLevel;
 		break;
 	}
