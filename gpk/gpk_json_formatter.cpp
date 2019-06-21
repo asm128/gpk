@@ -58,7 +58,7 @@ namespace gpk
 ::gpk::error_t															expressionReaderViews			(::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::array_pod<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) { 
 	for(uint32_t iTag = 0; iTag < parsed.size(); ++iTag) {
 		const ::gpk::SExpressionReaderType										& type							 = parsed[iTag];
-		if(iTag && ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == type.Type && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
+		if(iTag && (::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == type.Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == type.Type) && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
 			views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2});
 		else
 			views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin});
@@ -106,6 +106,7 @@ namespace gpk
 }
 
 ::gpk::error_t									expressionReaderCloseType	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::EXPRESSION_READER_TYPE type) { 
+	ree_if(type != stateSolver.CurrentElement->Type, "Invalid type to close: %s. Current type: %s.", ::gpk::get_value_label(type).begin(), ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
 	stateSolver.CurrentElement->Span.End			= stateSolver.IndexCurrentChar; 
 	stateSolver.IndexCurrentElement					= stateSolver.CurrentElement->ParentIndex; 
 	stateSolver.CurrentElement						= (-1 != stateSolver.IndexCurrentElement) ? &parsed[stateSolver.IndexCurrentElement] : nullptr; 
@@ -114,6 +115,7 @@ namespace gpk
 }
 
 ::gpk::error_t									expressionReaderCloseIfType	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::EXPRESSION_READER_TYPE type)	{
+	rni_if(0 == stateSolver.CurrentElement, "Cannot close %s. Nothing to close.", ::gpk::get_value_label(type).begin());
 	if(type == stateSolver.CurrentElement->Type) {
 		::expressionReaderCloseType(stateSolver, parsed, type); 
 		--stateSolver.NestLevel; 
@@ -136,11 +138,11 @@ namespace gpk
 	switch(stateSolver.CharCurrent) {
 	default	: 
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
-		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type) {
+		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type) {
 			stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
 			stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
 			++stateSolver.NestLevel; 
-			info_printf("Entering KEY. Nest level: %u.", stateSolver.NestLevel);
+			info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_INDEX == stateSolver.CurrentElement->Type)
 			stateSolver.CurrentElement->Type				= ::gpk::EXPRESSION_READER_TYPE_KEY;
@@ -167,7 +169,33 @@ namespace gpk
 		stateSolver.ExpectsSeparator	= false;
 		test_first_position(); 
 		skip_if_escaping(); 
-		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
+		::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
+		//::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY); 
+		++stateSolver.IndexCurrentChar;
+		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
+		--stateSolver.IndexCurrentChar;
+		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
+		++stateSolver.NestLevel; 
+		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
+		break;
+	case '{': 
+		test_first_position(); 
+		skip_if_escaping(); 
+		ree_if(stateSolver.ExpectsSeparator, "This character can only be used after the . separator, so this requirement should be canceled already."); 
+		ree_if(::gpk::EXPRESSION_READER_TYPE_KEY != stateSolver.CurrentElement->Type, "Can only open brackets in EXPRESSION_KEY types. Current expression type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
+		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
+		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
+		++stateSolver.NestLevel; 
+		break;
+	case '}': 
+		test_first_position(); 
+		skip_if_escaping(); 
+		stateSolver.ExpectsSeparator	= false;
+		::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
+		++stateSolver.IndexCurrentChar;
+		::expressionReaderCloseType		(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY); 
+		--stateSolver.IndexCurrentChar;
+		--stateSolver.NestLevel; 
 		break;
 	case '[': 
 		stateSolver.ExpectsSeparator	= false;
@@ -187,7 +215,9 @@ namespace gpk
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX); 
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
 		++stateSolver.IndexCurrentChar;
-		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX); 
+		::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX); 
+		--stateSolver.IndexCurrentChar;
+		--stateSolver.NestLevel;
 		break;
 	}
 	if(stateSolver.IndexCurrentChar == expression.size() - 1) { // if this is the last character, make sure to close open key and root expression
