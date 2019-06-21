@@ -41,15 +41,30 @@
 
 ::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{ 
 	in_format;
-	ree_if('{' == work_state.CharCurrent, "The character '{' is not allowed inside tokens.");
 	switch(work_state.CharCurrent) {
 	default		: break;
+	case '{'	: 
+		++work_state.BracketsToSkip;
+		break;
 	case '}'	: 
+		if(work_state.Escaping)
+			break;	// do nothing if this bracket is escaped
+		if(0 < work_state.BracketsToSkip) {
+			--work_state.BracketsToSkip;
+			break;
+		}
 		out_types[work_state.IndexCurrentElement].Span.End	= work_state.IndexCurrentChar + 1;
 		work_state.InsideToken						= false;
 		gpk_necall(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}), "Failed to push_back(). %s", "Out of memory?");
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
+	case '\\'	: 
+		if(false == work_state.Escaping) {
+			work_state.Escaping							= true;
+			return 0;
+		}
+		break;
 	}
+	work_state.Escaping							= false;
 	return 0; 
 }
 

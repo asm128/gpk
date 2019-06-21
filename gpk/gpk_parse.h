@@ -28,6 +28,7 @@ namespace gpk
 		char							CharCurrent						= 0;
 		bool							Escaping						= false;
 		bool							InsideToken						= false;
+		int32_t							BracketsToSkip					= 0;
 	};
 #pragma pack(pop)
 	::gpk::error_t					stripLiteralParse			(::gpk::SStripLiteralState& stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format);

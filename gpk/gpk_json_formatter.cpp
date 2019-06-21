@@ -6,13 +6,11 @@
 namespace gpk
 {
 	GDEFINE_ENUM_TYPE (EXPRESSION_READER_TYPE, int8_t);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, LITERAL		, 0);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, ARRAY		, 1);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, OBJECT		, 2);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, KEY			, 3);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, INDEX		, 4);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, EXPRESSION	, 5);
-	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, UNKNOWN		, -1);
+	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, EXPRESSION_KEY	, 0);
+	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, EXPRESSION_INDEX	, 1);
+	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, KEY				, 2);
+	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, INDEX			, 3);
+	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, UNKNOWN			, -1);
 
 	struct SExpressionReaderType {
 		int32_t																	ParentIndex;
@@ -60,7 +58,7 @@ namespace gpk
 ::gpk::error_t															expressionReaderViews			(::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::array_pod<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) { 
 	for(uint32_t iTag = 0; iTag < parsed.size(); ++iTag) {
 		const ::gpk::SExpressionReaderType										& type							 = parsed[iTag];
-		if(iTag && ::gpk::EXPRESSION_READER_TYPE_EXPRESSION == type.Type && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
+		if(iTag && ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == type.Type && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
 			views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2});
 		else
 			views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin});
@@ -93,7 +91,7 @@ namespace gpk
 	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) { 
 		::gpk::ptr_obj<::gpk::SExpressionReaderNode>								& nodeCurrent										= tree[iObject];
-		if(iObject && (::gpk::EXPRESSION_READER_TYPE_EXPRESSION != nodeCurrent->Object->Type))
+		if(iObject && (::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX != nodeCurrent->Object->Type))
 			continue;
 		if(1 == nodeCurrent->Children.size() && ::gpk::EXPRESSION_READER_TYPE_INDEX == nodeCurrent->Children[0]->Object->Type) {
 			for(uint32_t iChild = 0; iChild < nodeCurrent->Parent->Children.size(); ++iChild) {
@@ -127,10 +125,10 @@ namespace gpk
 
 ::gpk::error_t									expressionReaderParseStep	(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, const ::gpk::view_const_string& expression)	{
 	if(0 == parsed.size()) {
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
+		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
 		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
 		++stateSolver.NestLevel;
-		info_printf("Entering EXPRESSION. Nest level: %u.", stateSolver.NestLevel); 
+		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel); 
 	}
 #define test_first_position()	seterr_break_if(0 == stateSolver.CharCurrent, "Character found at invalid position. Index: %u. Character: %c.", stateSolver.IndexCurrentChar, stateSolver.CharCurrent);
 #define skip_if_escaping()		if(true == stateSolver.Escaping) break
@@ -138,7 +136,7 @@ namespace gpk
 	switch(stateSolver.CharCurrent) {
 	default	: 
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
-		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION == stateSolver.CurrentElement->Type) {
+		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type) {
 			stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
 			stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
 			++stateSolver.NestLevel; 
@@ -149,11 +147,11 @@ namespace gpk
 		break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
-		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION == stateSolver.CurrentElement->Type) {
+		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type) {
 			stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, (0 != stateSolver.IndexCurrentElement) ? ::gpk::EXPRESSION_READER_TYPE_INDEX : ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
 			stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
 			++stateSolver.NestLevel; 
-			info_printf("Entering KEY. Nest level: %u.", stateSolver.NestLevel);
+			info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
 		}
 		break;
 	case ' ': case '\t': case '\r': case '\n':
@@ -177,10 +175,10 @@ namespace gpk
 		skip_if_escaping(); 
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
 		// Enter sub-expression
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
+		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
 		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
 		++stateSolver.NestLevel; 
-		info_printf("Entering EXPRESSION. Nest level: %u.", stateSolver.NestLevel); 
+		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel); 
 		break;
 	case ']': 
 		stateSolver.ExpectsSeparator	= false;
@@ -189,13 +187,13 @@ namespace gpk
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX); 
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
 		++stateSolver.IndexCurrentChar;
-		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION); 
+		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX); 
 		break;
 	}
-	if(stateSolver.IndexCurrentChar >= expression.size() - 1) { // if this is the last character, make sure to close open key and root expression
+	if(stateSolver.IndexCurrentChar == expression.size() - 1) { // if this is the last character, make sure to close open key and root expression
 		++stateSolver.IndexCurrentChar;
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
-		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION); 
+		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY); 
 	}
 	stateSolver.Escaping							= false;
 	(void)expression;
@@ -230,7 +228,7 @@ namespace gpk
 			const ::gpk::view_const_string						& expression							= viewsAll[iAll];
 			sprintf_s(bufferFormatOut, bufferFormatIn, isLiteral ? "Literal" : "Token", expression.size());
 			info_printf(bufferFormatOut, iAll, expression.begin());
-			::gpk::SExpressionReaderState					stateSolver;
+			::gpk::SExpressionReaderState						stateSolver;
 			::gpk::view_const_string							resultOfExpressionEval					= {};
 			::gpk::array_pod<::gpk::SExpressionReaderType>	parsed;
 			::expressionReaderParse(stateSolver, parsed, expression);
@@ -249,6 +247,7 @@ namespace gpk
 			::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionReaderNode>> nodesExpressionTree;
 			::expressionTreeRebuild(parsed, nodesExpressionTree);
 			::printNode(nodesExpressionTree[0], expression);
+			// TODO: Implement expression evaluation.
 			::gpk::view_const_string							evaluated								= {};
 			if(evaluated.size()) {
 				uint32_t											lenString								= evaluated.size();
