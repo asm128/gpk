@@ -83,13 +83,20 @@
 		break;										\
 	}
 
+static	::gpk::error_t							expressionReaderOpenLevel		(::gpk::SExpressionReader& reader, ::gpk::EXPRESSION_READER_TYPE type, uint32_t iChar)	{
+	::gpk::array_pod<::gpk::SExpressionReaderType>		& parsed						= reader.Object;
+	::gpk::SExpressionReaderState						& stateSolver					= reader.StateRead;
+	stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, type, {iChar, iChar}});
+	stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
+	++stateSolver.NestLevel;
+	return 0;
+}
+
 ::gpk::error_t									gpk::expressionReaderParseStep	(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression)	{
 	::gpk::array_pod<::gpk::SExpressionReaderType>		& parsed						= reader.Object;
 	::gpk::SExpressionReaderState						& stateSolver					= reader.StateRead;
 	if(0 == parsed.size()) {
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-		++stateSolver.NestLevel;
+		::expressionReaderOpenLevel(reader, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar);
 		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel); 
 	}
 #define test_first_position()	seterr_break_if(0 == stateSolver.CharCurrent, "Character found at invalid position. Index: %u. Character: %c.", stateSolver.IndexCurrentChar, stateSolver.CharCurrent);
@@ -99,9 +106,7 @@
 	default	: 
 		seterr_break_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
 		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type) {
-			stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-			stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-			++stateSolver.NestLevel; 
+			::expressionReaderOpenLevel(reader, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar);
 			info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_INDEX == stateSolver.CurrentElement->Type)
@@ -110,9 +115,7 @@
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 		seterr_break_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
 		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type) {
-			stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, (0 != stateSolver.IndexCurrentElement) ? ::gpk::EXPRESSION_READER_TYPE_INDEX : ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-			stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-			++stateSolver.NestLevel; 
+			::expressionReaderOpenLevel(reader, (0 != stateSolver.IndexCurrentElement) ? ::gpk::EXPRESSION_READER_TYPE_INDEX : ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar);	// review this
 			info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
 		}
 		break;
@@ -120,7 +123,7 @@
 		skip_if_escaping(); 
 		if(::gpk::EXPRESSION_READER_TYPE_KEY == stateSolver.CurrentElement->Type) {
 			seterr_break_if_err(::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to close type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
-			--stateSolver.NestLevel; 
+			--stateSolver.NestLevel;
 			info_printf("Nest level: %u.", stateSolver.NestLevel);
 			stateSolver.ExpectsSeparator	= true;
 		}
@@ -131,11 +134,7 @@
 		skip_if_escaping(); 
 		::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
 		//::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY); 
-		++stateSolver.IndexCurrentChar;
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-		--stateSolver.IndexCurrentChar;
-		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-		++stateSolver.NestLevel; 
+		::expressionReaderOpenLevel(reader, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar + 1);	
 		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel);
 		break;
 	case '{': 
@@ -143,27 +142,22 @@
 		skip_if_escaping(); 
 		seterr_break_if(stateSolver.ExpectsSeparator, "This character can only be used after the . separator, so this requirement should be canceled already."); 
 		seterr_break_if(::gpk::EXPRESSION_READER_TYPE_KEY != stateSolver.CurrentElement->Type, "Can only open brackets in EXPRESSION_KEY types. Current expression type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-		++stateSolver.NestLevel; 
+		::expressionReaderOpenLevel(reader, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar);	// Enter sub-expression
 		break;
 	case '}': 
-		test_first_position(); 
-		skip_if_escaping(); 
+		test_first_position();
+		skip_if_escaping();
 		stateSolver.ExpectsSeparator					= false;
-		::expressionReaderCloseIfType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
+		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
 		seterr_break_if_err(::expressionReaderCloseType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar + 1), "Failed to close type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
 		--stateSolver.NestLevel; 
 		break;
 	case '[': 
 		stateSolver.ExpectsSeparator					= false;
-		test_first_position(); 
-		skip_if_escaping(); 
+		test_first_position();
+		skip_if_escaping();
 		::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY); 
-		// Enter sub-expression
-		stateSolver.IndexCurrentElement					= parsed.push_back({stateSolver.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX, stateSolver.IndexCurrentChar, stateSolver.IndexCurrentChar});
-		stateSolver.CurrentElement						= &parsed[stateSolver.IndexCurrentElement];
-		++stateSolver.NestLevel; 
+		::expressionReaderOpenLevel(reader, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX, stateSolver.IndexCurrentChar);	// Enter sub-expression
 		info_printf("Entering %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.NestLevel); 
 		break;
 	case ']': 
