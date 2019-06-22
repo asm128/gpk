@@ -172,13 +172,20 @@ namespace gpk
 
 		// Returns the index of the pushed value
 		template<size_t _Length>
-		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);		}
+		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);					}
+		inline				::gpk::error_t				append										(const ::gpk::view_array<_tPOD>& newChain)									noexcept	{ return append(newChain.begin(), newChain.size());	}
+							::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{ 
+			gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
+			gpk_necall(this->push_back(0), "%s", "Failed!");
+			gpk_necall(this->resize(this->size() - 1), "%s", "Failed!");
+			return 0;
+		}
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
 			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
 			const int32_t										newSize										= resize(requestedSize);
-			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested sizE: %u.", requestedSize);
+			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested size: %u.", requestedSize);
 
 			//for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, newSize - startIndex); i < maxCount; ++i)
 				//Data[startIndex + i]							= chainToAppend[i];

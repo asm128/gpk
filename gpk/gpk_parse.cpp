@@ -65,6 +65,11 @@
 		break;
 	}
 	work_state.Escaping							= false;
+	if(work_state.IndexCurrentChar == in_format.size() - 1) { // if this is the last character, make sure to close open key and root expression
+		++work_state.IndexCurrentChar;
+		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
+		work_state.InsideToken						= false;
+	}
 	return 0; 
 }
 
@@ -89,6 +94,10 @@
 		break;
 	}
 	work_state.Escaping							= false;
+	if(work_state.IndexCurrentChar == in_format.size() - 1) { // if this is the last character, make sure to close open key and root expression
+		++work_state.IndexCurrentChar;
+		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
+	}
 	return 0; 
 }
 
