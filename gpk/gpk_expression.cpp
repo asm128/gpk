@@ -100,9 +100,7 @@ static	::gpk::error_t							expressionReaderOpenLevel	(::gpk::SExpressionReaderS
 		if( ::gpk::EXPRESSION_READER_TYPE_KEY	== stateSolver.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_INDEX	== stateSolver.CurrentElement->Type
 		 ) {
-			gpk_necall(::expressionReaderCloseType(stateSolver, parsed, 
-				(::gpk::EXPRESSION_READER_TYPE_KEY == stateSolver.CurrentElement->Type) ? ::gpk::EXPRESSION_READER_TYPE_KEY : ::gpk::EXPRESSION_READER_TYPE_INDEX
-				, stateSolver.IndexCurrentChar), "Failed to close type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), "%s", "Failed to close type."); 
+			gpk_necall(::expressionReaderCloseType(stateSolver, parsed, stateSolver.CurrentElement->Type, stateSolver.IndexCurrentChar), "Failed to close type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), "%s", "Failed to close type."); 
 			stateSolver.ExpectsSeparator					= true;
 		}
 		break;	// skip blank lines
