@@ -57,7 +57,8 @@
 	::gpk::view_const_string							evaluated								= {};
 	if(reader.Tree.size()) {
 		::printNode(reader.Tree[0], expression);
-		gpk_necall(::evaluateNode(reader.Tree[0], expressionViews, input, viewsJSON, output), "Failed to evaluate expression: '%s'", expression.begin());
+		int32_t												jsonNodeResultOfEvaluation				= ::evaluateNode(reader.Tree[0], expressionViews, input, viewsJSON, output);
+		gpk_necall(jsonNodeResultOfEvaluation, "Failed to evaluate expression: '%s'.", expression.begin());
 		evaluated										= output;
 	}
 	
@@ -72,18 +73,19 @@
 	return 0;
 }
 
-::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONNode& input, const ::gpk::view_array<::gpk::view_const_string>& viewsJSON, ::gpk::array_pod<char_t>& output)													{
+::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
 	::gpk::SStripLiteralState							stateLiteralStripper					= {};
 	::gpk::array_pod<::gpk::SStripLiteralType>			typesLiteral							= {};
 	::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format);	// strip root literals 
 	::gpk::array_obj<::gpk::view_const_string>			views									= {};
 	::gpk::stripLiteralGetViews(views, typesLiteral, format);
-
+	const ::gpk::SJSONNode								& inputNodeJSON							= *inputJSON.Tree[indexNodeJSON];
+	const ::gpk::view_array<::gpk::view_const_string>	& viewsJSON								= inputJSON.View;
 	info_printf("-**- %s -**-", "Results of token search");
 	for(uint32_t iView = 0; iView < views.size(); ++iView) {
 		if(typesLiteral[iView].Type == ::gpk::STRIP_LITERAL_TYPE_TOKEN)	{ // we only have to solve tokens
 			::gpk::view_const_string						& toResolve								= views[iView];
-			gpk_necall(::jsonStringFormatResolve(views[iView], input, viewsJSON, toResolve), "Failed to resolve expression: '%s'", views[iView].begin());
+			gpk_necall(::jsonStringFormatResolve(views[iView], inputNodeJSON, viewsJSON, toResolve), "Failed to resolve expression: '%s'", views[iView].begin());
 		}
 	}
 	for(uint32_t iView = 0; iView < views.size(); ++iView)
