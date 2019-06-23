@@ -51,17 +51,42 @@ static ::gpk::error_t							evaluateNode							(::gpk::SExpressionReader & reade
 	return 0;
 }
 
-//static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
-//	int32_t												indexJSONResult							= -1;
-//	::gpk::array_pod<int32_t>							listOfJSONElemIndices					= {};
-//	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];
-//	const ::gpk::SJSONNode								& input									= *inputJSON.Tree[indexNodeJSON]; 
-//	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < readerExpression.Tree[indexNodeExpression]->Children.size(); ++iFirstLevelExpression) {
-//		nodeExpression						;
-//	}
-//	inputJSON, indexNodeJSON, output;
-//	return indexJSONResult;
-//}
+static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
+	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this 
+	//const ::gpk::SJSONNode								& inputJSONNode							= *inputJSON.Tree[indexNodeJSON]; 
+
+	int32_t												indexJSONResult							= -1;
+	::gpk::array_pod<int32_t>							listOfJSONElemIndices					= {};	// U
+	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < nodeExpression->Children.size(); ++iFirstLevelExpression) {
+		if(::gpk::EXPRESSION_READER_TYPE_KEY == nodeExpression->Children[iFirstLevelExpression]->Object->Type) {
+			if(0 == listOfJSONElemIndices.size()) {
+				const ::gpk::view_const_string						& viewExpression						= readerExpression.View[nodeExpression->ObjectIndex];
+				indexJSONResult									= ::gpk::jsonObjectValueGet(*inputJSON.Tree[indexNodeJSON], inputJSON.View, viewExpression);
+				char												bufferFormat [4096]						= {};
+				sprintf_s(bufferFormat, "Key not found: %%.%us.", viewExpression.size());
+				ree_if(errored(indexJSONResult), bufferFormat, viewExpression.begin());
+				output											= inputJSON.View[indexJSONResult];
+				indexNodeJSON									= indexJSONResult;
+				listOfJSONElemIndices.push_back(indexJSONResult);
+			}
+			else {
+				const ::gpk::view_const_string						& viewExpression						= readerExpression.View[nodeExpression->ObjectIndex];
+				indexJSONResult									= ::gpk::jsonObjectValueGet(*inputJSON.Tree[indexNodeJSON], inputJSON.View, viewExpression);
+				char												bufferFormat [4096]						= {};
+				sprintf_s(bufferFormat, "Key not found: %%.%us.", viewExpression.size());
+				ree_if(errored(indexJSONResult), bufferFormat, viewExpression.begin());
+				output											= inputJSON.View[indexJSONResult];
+				indexNodeJSON									= indexJSONResult;
+				listOfJSONElemIndices.push_back(indexJSONResult);
+			}
+		}
+		else if(::gpk::EXPRESSION_READER_TYPE_INDEX == nodeExpression->Object->Type) {
+
+		}
+	}
+	inputJSON, indexNodeJSON, output;
+	return indexJSONResult;
+}
 
 static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
 	::gpk::view_const_string							resultOfExpressionEval					= {};
@@ -81,13 +106,15 @@ static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const
 	::gpk::view_const_string							evaluated								= {};
 	if(reader.Tree.size()) {
 		::printNode(reader.Tree[0], expression);
-		int32_t												jsonNodeResultOfEvaluation				= ::evaluateNode(reader, 0, inputJSON, indexNodeJSON, output);
-		gpk_necall(jsonNodeResultOfEvaluation, "Failed to evaluate expression: '%s'.", expression.begin());
+		//int32_t												jsonNodeResultOfEvaluation				= ::evaluateNode(reader, 0, inputJSON, indexNodeJSON, output);
+		int32_t												jsonNodeResultOfEvaluation				= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
+		char												bufferFormat [8192]						= {};
+		sprintf_s(bufferFormat, "Failed to evaluate expression: %%.%us.", expression.size());
+		gpk_necall(jsonNodeResultOfEvaluation, bufferFormat, expression.begin());
 		evaluated										= output;
 	}
 	
 	// TODO: Implement expression evaluation.
-
 	if(evaluated.size()) {
 		uint32_t											lenString								= evaluated.size();
 		char												bufferFormat [8192]						= {};
