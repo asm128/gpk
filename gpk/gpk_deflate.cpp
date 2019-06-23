@@ -159,7 +159,7 @@
 	memset(finalPathName.begin(), 0, finalPathName.size());
 	FILE										* fp						= 0;
 	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
-		safe_fclose(fp);
+		gpk_safe_fclose(fp);
 		const ::gpk::view_const_string				& fileName					= virtualFolder.Names		[iFile];
 		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
 		info_printf("File found (%u): %s. Size: %u.", iFile, fileName.begin(), fileContent.size());
@@ -176,7 +176,7 @@
 		ce_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());
 		ce_if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
 	}
-	safe_fclose(fp);
+	gpk_safe_fclose(fp);
 	return 0;
 }
 

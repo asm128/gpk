@@ -158,7 +158,7 @@ namespace gpk
 		inline				::gpk::error_t				pop_back									(_tPOD* oldValue)															noexcept	{
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			--Count;
-			safe_podcpy(oldValue, &Data[Count]);
+			gpk_safe_podcpy(oldValue, &Data[Count]);
 			return Count;
 		}
 
@@ -448,7 +448,7 @@ namespace gpk
 		inline				int32_t						pop_back									(_tObj* oldValue)																		{
 			ree_if(0 == Count, "%s", "Cannot pop elements from an empty array.");
 			--Count;
-			safe_assign(oldValue, Data[Count]);
+			gpk_safe_assign(oldValue, Data[Count]);
 			Data[Count].~_tObj();
 			return Count;
 		}

@@ -1,9 +1,9 @@
 #include "gpk_parse.h"
 #include "gpk_array.h"
+#include "gpk_safe.h"
 
 ::gpk::error_t													gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_string& symbolList, const ::gpk::view_const_string& sourceChars, uint64_t* number_)	{
 	uint32_t															totalCharsProcessed							= 0;
-	uint64_t															number										= 0;
 	::gpk::array_pod<char_t>											stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
 		bool																bSymbolProcessed							= false;
@@ -18,8 +18,9 @@
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	totalCharsProcessed												= 0;
 	gpk_necall(::gpk::reverse(stringToParse), "Cannot reverse string for parsing! How could this ever happen?");		// we assigned the digits backwards so we need to reverse the string.
+	uint64_t															number										= 0;
+	totalCharsProcessed												= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
 		bool																bSymbolProcessed							= false;
 		for( uint32_t iSymbol = 0; iSymbol < base; ++iSymbol ) 
@@ -35,7 +36,7 @@
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	*number_														= number;
+	gpk_safe_assign(number_, number);
 	return totalCharsProcessed;
 }
 

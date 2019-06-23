@@ -29,17 +29,17 @@
 
 ::gpk::error_t								gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
 #if defined(GPK_WINDOWS)
-	safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
-	safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
-	safe_assign(a3, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
-	safe_assign(a4, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
+	gpk_safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
+	gpk_safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
+	gpk_safe_assign(a3, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
+	gpk_safe_assign(a4, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	safe_assign(a1, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >>  0));
-	safe_assign(a2, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >>  8));
-	safe_assign(a3, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
-	safe_assign(a4, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
+	gpk_safe_assign(a1, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >>  0));
+	gpk_safe_assign(a2, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >>  8));
+	gpk_safe_assign(a3, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
+	gpk_safe_assign(a4, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
 #endif
-	safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
+	gpk_safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
 

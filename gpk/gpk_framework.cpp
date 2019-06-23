@@ -176,7 +176,7 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		::SDisplayInput																				* oldInput									= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
-		safe_delete(oldInput);
+		gpk_safe_delete(oldInput);
 		::PostQuitMessage(0);
 		return 0;
 	}
