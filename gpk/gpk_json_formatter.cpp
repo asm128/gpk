@@ -68,6 +68,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 			char												bufferFormat [4096]						= {};
 			sprintf_s(bufferFormat, "Key not found: %%.%us.", strKey.size());
 			ree_if(errored(indexJSONResult), bufferFormat, strKey.begin());
+			output											= inputJSON.View[indexJSONResult];
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_INDEX == childToSolve.Object->Type) {
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_ARRAY, "Only arrays can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
@@ -75,17 +76,19 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 			const ::gpk::view_const_string						& viewOfIndex							= readerExpression.View[childToSolve.ObjectIndex];
 			::gpk::parseArbitraryBaseInteger(10, "0123456789", viewOfIndex, &numberRead);
 			indexJSONResult									= ::gpk::jsonArrayValueGet(currentJSON, (uint32_t)numberRead);
+			output											= inputJSON.View[indexJSONResult];
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == childToSolve.Object->Type) {
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_ARRAY, "Only arrays can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
+			output											= inputJSON.View[indexJSONResult];
 			error_printf("%s", "Not Implemented");
 			indexRootJSONNode;
 		}
 		else {
 			error_printf("%s", "Not Implemented");
+			output											= inputJSON.View[indexJSONResult];
 			indexRootJSONNode;
 		}
-		output											= inputJSON.View[indexJSONResult];
 		indexNodeJSON									= indexJSONResult;
 	}
 	inputJSON, indexNodeJSON, output;
