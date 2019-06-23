@@ -3,19 +3,20 @@
 
 #include "gpk_parse.h"
 
-::gpk::error_t									printNode						(::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
-	char												bufferFormat [1024]				= {};
+static char										g_bufferFormat [8192]				= {};
+
+static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
 	uint32_t											lenString						= node->Object->Span.End - node->Object->Span.Begin;
-	sprintf_s(bufferFormat, "Entering expression node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%%u.%us", lenString, lenString);
-	info_printf(bufferFormat, node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
+	sprintf_s(g_bufferFormat, "Entering expression node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%.%us", lenString);
+	info_printf(g_bufferFormat, node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
 	for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
 		::printNode(node->Children[iChildren], expression);
-	sprintf_s(bufferFormat, "Exiting expression node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%%u.%us", lenString, lenString);
-	info_printf(bufferFormat, node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
+	sprintf_s(g_bufferFormat, "Exiting expression node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%.%us", lenString);
+	info_printf(g_bufferFormat, node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
 	return 0;
 }
 
-::gpk::error_t									evaluateNode							(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)						{
+static ::gpk::error_t							evaluateNode							(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)						{
 	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];
 	const ::gpk::view_array<::gpk::view_const_string>	& viewsExpression						= readerExpression.View;
 	const ::gpk::SJSONNode								& input									= *inputJSON.Tree[indexNodeJSON]; 
@@ -50,7 +51,19 @@
 	return 0;
 }
 
-::gpk::error_t									jsonStringFormatResolve					(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)		{
+//static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
+//	int32_t												indexJSONResult							= -1;
+//	::gpk::array_pod<int32_t>							listOfJSONElemIndices					= {};
+//	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];
+//	const ::gpk::SJSONNode								& input									= *inputJSON.Tree[indexNodeJSON]; 
+//	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < readerExpression.Tree[indexNodeExpression]->Children.size(); ++iFirstLevelExpression) {
+//		nodeExpression						;
+//	}
+//	inputJSON, indexNodeJSON, output;
+//	return indexJSONResult;
+//}
+
+static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
 	::gpk::view_const_string							resultOfExpressionEval					= {};
 	::gpk::SExpressionReader							reader;
 	gpk_necall(::gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", expression.begin());
@@ -59,8 +72,7 @@
 		const ::gpk::view_const_string						& viewExpression						= expressionViews[iView];
 		const ::gpk::SExpressionReaderType					& typeExpression						= reader.Object[iView];
 		if(viewExpression.size()) {
-			uint32_t										
-				lenString								= viewExpression.size();
+			uint32_t											lenString								= viewExpression.size();
 			char												bufferFormat [8192]						= {};
 			sprintf_s(bufferFormat, "Expression element: %%.%us. Type: %s. Parent: %i. Begin: %u. End: %u.", lenString, ::gpk::get_value_label(typeExpression.Type).begin(), typeExpression.ParentIndex, typeExpression.Span.Begin, typeExpression.Span.End);
 			info_printf(bufferFormat, viewExpression.begin());
@@ -95,7 +107,9 @@
 	for(uint32_t iView = 0; iView < views.size(); ++iView) {
 		if(typesLiteral[iView].Type == ::gpk::STRIP_LITERAL_TYPE_TOKEN)	{ // we only have to solve tokens
 			::gpk::view_const_string							& toResolve								= views[iView];
-			gpk_necall(::jsonStringFormatResolve(views[iView], inputJSON, indexNodeJSON, toResolve), "Failed to resolve expression: '%s'", views[iView].begin());
+			char												bufferFormat [8192]						= {};
+			sprintf_s(bufferFormat, "Failed to resolve expression: %%.%us.", toResolve.size());
+			gpk_necall(::jsonStringFormatResolve(toResolve, inputJSON, indexNodeJSON, toResolve), bufferFormat, toResolve.begin());
 		}
 	}
 	for(uint32_t iView = 0; iView < views.size(); ++iView)
