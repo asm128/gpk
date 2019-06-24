@@ -45,6 +45,19 @@ static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gp
 				break;
 			}
 	}
+	// -- Remove the key/value wrappers from objects.
+	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) { 
+		::gpk::ptr_obj<::gpk::SExpressionNode>							& nodeCurrent										= tree[iObject];
+		if(iObject && (::gpk::EXPRESSION_READER_TYPE_KEY != nodeCurrent->Object->Type))
+			continue;
+		if(1 != nodeCurrent->Children.size() || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY != nodeCurrent->Children[0]->Object->Type) 
+			continue;
+		for(uint32_t iChild = 0; iChild < nodeCurrent->Parent->Children.size(); ++iChild)
+			if(nodeCurrent->Parent->Children[iChild] == nodeCurrent) {
+				nodeCurrent->Parent->Children[iChild]							= nodeCurrent->Children[0];
+				break;
+			}
+	}
 	return 0;
 }
 
