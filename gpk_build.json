@@ -1,0 +1,7 @@
+[
+	{	"libs"			: ["gpk", "llc"]
+	,	"dlls"			: ["gme"]
+	,	"exes"			: ["gpk_cgi_rt", "grt"]
+	,	"dependencies"	: ["zlib"]
+	},
+]

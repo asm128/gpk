@@ -3,6 +3,7 @@
 #include "gpk_coord.h"
 #include "gpk_safe.h"
 #include "deflate.h"
+#include "gpk_find.h"
 
 		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
     int				ret;
@@ -22,6 +23,7 @@
 	}
     int ret_end = deflateEnd(&strm);
     error_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
+    ree_if(ret < 0, "%s", "Unknown error");				/* stream will be complete */
     error_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
 	ree_if(ret_end == Z_STREAM_ERROR, "deflateEnd() returned %s", "Z_STREAM_ERROR")
 	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
@@ -64,10 +66,14 @@
 }
 
 ::gpk::error_t								gpk::folderPack				(::gpk::SFolderPackage& out_packed, const ::gpk::view_const_string	nameFolderSrc) {
-	::gpk::SPackHeader 								& fileHeader			= out_packed.PackageInfo;
+	::gpk::SPackHeader 								& fileHeader				= out_packed.PackageInfo;
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
-	::gpk::array_pod<byte_t>						tableFiles				= {};
-	::gpk::array_pod<byte_t>						contentsPacked			= {};
+	::gpk::array_pod<byte_t>						tableFiles					= {};
+	::gpk::array_pod<byte_t>						contentsPacked				= {};
+	::gpk::array_pod<char_t>						bufferFormat				= {};
+	::gpk::array_pod<char_t>						finalPathName				= {};
+	finalPathName.resize(1024*8);
+	bufferFormat.resize(64);
 	{
 		::gpk::array_obj<::gpk::array_pod<char_t>>		listFiles				= {};
 		gpk_necall(::gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
@@ -78,8 +84,11 @@
 			const ::gpk::view_const_string					pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};
 			if(0 == pathToLoad.size())
 				continue;
-			printf("pathToLoad (%u): '%s'.\n", iFile, pathToLoad.begin());
-			gpk_necall(::gpk::fileToMemory(pathToLoad, contentsTemp), "Failed to load file: %s. Out of memory?", pathToLoad.begin());
+
+			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us", pathToLoad.size());
+			uint32_t lenFinalPath = (uint32_t)sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), pathToLoad.begin());
+			info_printf("pathToLoad (%u): '%s'.", iFile, finalPathName.begin());
+			gpk_necall(::gpk::fileToMemory({finalPathName.begin(), lenFinalPath}, contentsTemp), "Failed to load file: %s. Out of memory?", pathToLoad.begin());
 
 			fileLocation.Count							= contentsTemp.size();
 			gpk_necall(tableFiles.append((const byte_t*)&fileLocation, sizeof(::gpk::SRange<uint32_t>)), "Failed to append data! %s.", "Out of memory?");
@@ -142,7 +151,13 @@
 	const ::gpk::array_pod<byte_t>				& compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
 	{
 		FILE										* fp						= 0;
-		fopen_s(&fp, nameFileDst.begin(), "wb");
+		::gpk::array_pod<char_t>					bufferFormat					= {};
+		::gpk::array_pod<char_t>					finalPathName					= {};
+		finalPathName.resize(1024*8);
+		bufferFormat.resize(64);
+		sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us", nameFileDst.size());
+		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), nameFileDst.begin());
+		fopen_s(&fp, finalPathName.begin(), "wb");
 		ree_if(0 == fp, "Failed to create file: %s.", nameFileDst.begin());
 		fwrite(&fileHeader							, 1, sizeof(::gpk::SPackHeader)			, fp);
 		fwrite(compressedTableFiles		.begin	()	, 1, compressedTableFiles		.size()	, fp);
@@ -154,23 +169,26 @@
 
 // Write folder to disk.
 ::gpk::error_t							gpk::folderToDisk				(const ::gpk::SFolderInMemory & virtualFolder, ::gpk::view_const_string destinationPath)				{
+	::gpk::array_pod<char_t>					bufferFormat					= {};
 	::gpk::array_pod<char_t>					finalPathName					= {};
-	finalPathName.resize(1024*16);
+	finalPathName.resize(1024*8);
+	bufferFormat.resize(64);
 	memset(finalPathName.begin(), 0, finalPathName.size());
 	FILE										* fp						= 0;
 	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk_safe_fclose(fp);
 		const ::gpk::view_const_string				& fileName					= virtualFolder.Names		[iFile];
 		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
-		info_printf("File found (%u): %s. Size: %u.", iFile, fileName.begin(), fileContent.size());
-		sprintf_s(finalPathName.begin(), finalPathName.size(), "%s%s", destinationPath.begin(), fileName.begin());
+		sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
+		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
+		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
-		::gpk::error_t								indexSlash					= ::gpk::rfind_sequence_pod(::gpk::view_array<const char>{"\\", 1}, {finalPathName.begin(), lenPath});	
+		::gpk::error_t								indexSlash					= ::gpk::rfind('\\', ::gpk::view_const_string{finalPathName.begin(), lenPath});	
 		if(-1 != indexSlash) { // Create path if any specified.
-			finalPathName[indexSlash + 1]			= 0;
+			finalPathName[indexSlash]				= 0;
 			lenPath									= (uint32_t)strlen(finalPathName.begin());
  			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), lenPath})), "Failed to create foder: %s.", finalPathName.begin());
-			finalPathName[indexSlash + 1]			= '\\';
+			finalPathName[indexSlash]				= '/';
 		}
 		fopen_s(&fp, finalPathName.begin(), "wb");
 		ce_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());

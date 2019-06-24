@@ -214,6 +214,7 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
+				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
 
 				//TArrayView											safe_data									= {newData, reserveSize};
@@ -542,6 +543,7 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
+				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tObj));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size);
 				if(oldData) {
 					for(uint32_t i = 0, copyCount = ::gpk::min(oldCount, newSize); i < copyCount; ++i)

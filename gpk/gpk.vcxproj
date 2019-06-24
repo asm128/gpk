@@ -36,6 +36,7 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_enum.h" />
     <ClInclude Include="gpk_expression.h" />
+    <ClInclude Include="gpk_find.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_member_registry.h" />
