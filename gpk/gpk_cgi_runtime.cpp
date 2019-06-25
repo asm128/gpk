@@ -18,28 +18,6 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	return 0;
 }
 
-::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& webRuntimeValues, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{ 
-	if(0 == keyVal.Key.size())
-		return -1;
-	try { // retrieve width and height
-			 if(keyVal.Key.size() == (::gpk::size("w") - 1) && 0 == memcmp("w", keyVal.Key.begin(), ::gpk::size("w") - 1)) webRuntimeValues.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-		else if(keyVal.Key.size() == (::gpk::size("h") - 1) && 0 == memcmp("h", keyVal.Key.begin(), ::gpk::size("h") - 1)) webRuntimeValues.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-	}
-	catch(...){
-		webRuntimeValues.TargetSize							= {123, 456};
-		return -1;
-	}
-	try {
-		if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) if(1 == (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()})) webRuntimeValues.Bootstrapped = true;
-	}
-	catch(...){
-		webRuntimeValues.Bootstrapped						= false;
-		return -1;
-	}
-	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1)) 
-		webRuntimeValues.ModuleName							= keyVal.Val;
-	return 0;
-}
 
 ::gpk::error_t										cgiLoadContentType				(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{ 
 	static const ::gpk::view_const_string					content_types []				= 
@@ -163,35 +141,32 @@ static	::gpk::error_t								load_env	(const ::gpk::view_const_string& key, ::gp
 	return 0;
 }
 
-::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIFramework & framework)	{ 
-	::gpk::SCGIRuntimeValues								& webRuntimeValues			= framework.RuntimeValues;
-	::cgiRuntimeValuesLoadEnv(webRuntimeValues);
+::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{ 
+	::cgiRuntimeValuesLoadEnv(cgiRuntimeValues);
 	//webRuntimeValues.QueryString						= "bt=1&width=100&height=200&m=test_cgi_module";
 	//webRuntimeValues.QueryString						= "bt=1&width=720&height=640&frame=0&category=0&neighbor=6&m=tianadev";
 	//webRuntimeValues.QueryString						= "bt=1&m=tianadev&width=1708&height=744&gallery=0&frame=1";
-	::gpk::querystring_split({webRuntimeValues.QueryString.begin(), webRuntimeValues.QueryString.size()}, webRuntimeValues.QueryStringElements);
-	webRuntimeValues.QueryStringKeyVals.resize(webRuntimeValues.QueryStringElements.size());
-	for(uint32_t iKeyVal = 0; iKeyVal < webRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyValDst				= webRuntimeValues.QueryStringKeyVals[iKeyVal];
-		::gpk::keyval_split(webRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
-		::processKeyVal(framework, webRuntimeValues.QueryStringKeyVals[iKeyVal]);
+	::gpk::querystring_split({cgiRuntimeValues.QueryString.begin(), cgiRuntimeValues.QueryString.size()}, cgiRuntimeValues.QueryStringElements);
+	cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
+	for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
+		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+		::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 	}
-	::cgiLoadContentType(webRuntimeValues.Content.Type, webRuntimeValues.ContentType);
-	::cgiLoadAddr(webRuntimeValues.RemoteIP, webRuntimeValues.StrRemoteIP, webRuntimeValues.StrRemotePort);
+	::cgiLoadContentType(cgiRuntimeValues.Content.Type, cgiRuntimeValues.ContentType);
+	::cgiLoadAddr(cgiRuntimeValues.RemoteIP, cgiRuntimeValues.StrRemoteIP, cgiRuntimeValues.StrRemotePort);
 	try {
-		webRuntimeValues.Content.Length						= webRuntimeValues.ContentLength.size() ? (uint32_t)::std::stoi(webRuntimeValues.ContentLength.begin()) : 0;
+		cgiRuntimeValues.Content.Length						= cgiRuntimeValues.ContentLength.size() ? (uint32_t)::std::stoi(cgiRuntimeValues.ContentLength.begin()) : 0;
 	}
 	catch(...) {
-		webRuntimeValues.Content.Length						= 0;
+		cgiRuntimeValues.Content.Length						= 0;
 	}
-	webRuntimeValues.Content.Body.resize(webRuntimeValues.Content.Length);
-	memset(webRuntimeValues.Content.Body.begin(), 0, webRuntimeValues.Content.Body.size());
+	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
+	memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
 	uint32_t												iChar							= 0;
 	int														iArg							= 0;
-	while(iChar < webRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
-		webRuntimeValues.Content.Body[iChar++]				= (char)iArg;
+	while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
+		cgiRuntimeValues.Content.Body[iChar++]				= (char)iArg;
 
-	::cgiLoadContent(webRuntimeValues, webRuntimeValues.Content.Type, webRuntimeValues.Content.Body);
-
+	::cgiLoadContent(cgiRuntimeValues, cgiRuntimeValues.Content.Type, cgiRuntimeValues.Content.Body);
 	return 0;
 }

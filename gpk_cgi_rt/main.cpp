@@ -2,6 +2,8 @@
 #include "gpk_cgi_module.h"
 #include "gpk_string_helper.h"
 
+#include "gpk_udp_client.h"
+
 #include <string>
 
 #include <Windows.h>
@@ -54,10 +56,35 @@ static constexpr	const char						html_script	[]			=
 	"\n</script>"
 	;
 
+::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{ 
+	if(0 == keyVal.Key.size())
+		return -1;
+	try { // retrieve width and height
+			 if(keyVal.Key.size() == (::gpk::size("w") - 1) && 0 == memcmp("w", keyVal.Key.begin(), ::gpk::size("w") - 1)) framework.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+		else if(keyVal.Key.size() == (::gpk::size("h") - 1) && 0 == memcmp("h", keyVal.Key.begin(), ::gpk::size("h") - 1)) framework.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+	}
+	catch(...){
+		framework.TargetSize								= {123, 456};
+		return -1;
+	}
+	try {
+		if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) if(1 == (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()})) 
+			framework.Bootstrapped								= true;
+	}
+	catch(...){
+		framework.Bootstrapped								= false;
+		return -1;
+	}
+	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1)) 
+		framework.ModuleName								= keyVal.Val;
+	return 0;
+}
+
 int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
 	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
-	if(framework.Bootstrapped) 
+	if(framework.Bootstrapped) {
 		::genHTMLModuleOutput(framework, output);
+	}
 	else {
 		char													buffer[4096]		= {};
 		output.append(buffer, sprintf_s(buffer, "%s", 
@@ -70,10 +97,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			"\n</head>"
 		));
 		output.append(buffer, sprintf_s(buffer, "\n<body style=\"width:95%%; height:95%%; background-color:#FFCCAA; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
-		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
 		output.append(buffer, sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		if(runtimeValues.QueryString.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
+		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
@@ -126,6 +153,8 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		}
 		output.append(buffer, sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
 
+
+
 		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
 		output.append(buffer, sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
@@ -135,8 +164,13 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
 	::gpk::SCGIFramework									framework;
-	::gpk::cgiRuntimeValuesLoad(framework);
-	printf("%s\n\n", "Content-Type: text/html"
+	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues);
+	const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal) 
+		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
+
+	printf("%s\n\n"
+		, "Content-Type: application/json"
 		"\nCache-Control: no-store"
 	);
 	::gpk::array_pod<char>									html;

@@ -63,7 +63,7 @@ namespace gpk
 		bool																					Bootstrapped				= false;
 	};
 
-	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIFramework & framework);
+	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues);
 } // gpk
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)																																																																		\
