@@ -166,6 +166,7 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 	if errored(::expressionReaderProcessCharacter(stateSolver, parsed, expression)) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Object.size();
 		const ::gpk::SExpressionReaderType								* currentElement									= validElement ? &reader.Object[reader.StateRead.IndexCurrentElement] : 0;
+		const ::gpk::view_const_string									currentView											= validElement ? reader.View[reader.StateRead.IndexCurrentElement] : ::gpk::view_const_string{};
 		error_printf("Error during read step. Malformed expression?"
 			"\nPosition         : %i." 
 			"\nCharacter        : '%c' (0x%x)."
@@ -176,6 +177,8 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 			"\nParent           : %i."
 			"\nType             : %i (%s)."
 			"\nOffset           : %i."
+			"\nView             : %s."
+			"\nJSON             : %s."
 			, reader.StateRead.IndexCurrentChar
 			, reader.StateRead.CharCurrent, reader.StateRead.CharCurrent
 			, reader.StateRead.IndexCurrentElement 
@@ -186,6 +189,8 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 			, validElement ? currentElement->Type									: -1
 			, validElement ? ::gpk::get_value_label(currentElement->Type).begin()	: "N/A"
 			, validElement ? currentElement->Span.Begin								: -1
+			, validElement ? currentView.begin()									: ""
+			, expression.begin()
 		);
 	}
 	return 0;

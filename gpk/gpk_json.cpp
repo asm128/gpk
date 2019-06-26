@@ -367,7 +367,7 @@
 
 						::gpk::error_t									gpk::jsonArrayValueGet									(const ::gpk::SJSONNode& tree, uint32_t index)	{
 	ree_if(::gpk::JSON_TYPE_ARRAY != tree.Object->Type, "Invalid node type: %i (%s). Only arrays are allowed to be accessed by index.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
-	ree_if(index >= tree.Children.size(), "Index out of range: %i. Max index: %i.", index, tree.Children.size());
+	ree_if(index >= tree.Children.size(), "Index out of range: %i. Max index: %i.", index, tree.Children.size() - 1);
 	const ::gpk::SJSONNode														* node												= tree.Children[index];	// Get the 
 	ree_if(0 == node, "Invalid or corrupt tree. %s", "Nodes cannot be null.");
 	return node->ObjectIndex;
