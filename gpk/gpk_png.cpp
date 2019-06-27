@@ -216,11 +216,11 @@ static			::gpk::error_t											pngScanlineDecode_0_bits						(const ::gpk::vi
 			for(uint32_t i = 0; i < bitDepth; ++i)
 				valueGrayscaleBits[i]													= viewPixels[bitDepth * iPixel + i];
 
-			::gpk::SColorBGRA														& pixelOutput									= out_View[iScanline][iPixel];
-			pixelOutput.r														=
-			pixelOutput.g														=
-			pixelOutput.b														= (1 == bitDepth) ? (uint8_t)(valueGrayscale * 255) : (uint8_t)(valueGrayscale * unitGrayscale);
-			pixelOutput.a														= 255;
+			::gpk::SColorBGRA															& pixelOutput									= out_View[iScanline][iPixel];
+			pixelOutput.r															=
+			pixelOutput.g															=
+			pixelOutput.b															= (1 == bitDepth) ? (uint8_t)(valueGrayscale * 255) : (uint8_t)(valueGrayscale * unitGrayscale);
+			pixelOutput.a															= 255;
 		}
 	}
 	return 0;

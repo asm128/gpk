@@ -38,7 +38,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
 	target.create();
-	target->resize(app.Framework.MainDisplay.Size, {}, 0xFFFFFFFF);
+	target->resize(app.Framework.MainDisplay.Size, ::gpk::SColorBGRA{}, 0xFFFFFFFF);
 	{
 		::gpk::mutex_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);

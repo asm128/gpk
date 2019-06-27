@@ -107,7 +107,7 @@ namespace gpk
 		inline				_tNCO*								as									(_tNCOOther** other)										noexcept	{ return *other = (Reference ? dynamic_cast<_tNCOOther*>(Reference->Instance) : 0);				}
 
 		template<typename _tNCOOther>
-		inline				_tNCO*								as									(::gpk::ptr_nco<_tNCOOther>& other)							noexcept	{ other = (::gpk::gpk_ref<_tNCOOther>*)::gpk::ref_acquire(Reference); return 0;									}
+		inline				_tNCO*								as									(::gpk::ptr_nco<_tNCOOther>& other)							noexcept	{ other = {(::gpk::gpk_ref<_tNCOOther>*)::gpk::ref_acquire(Reference)}; return 0;									}
 	};
 
 	template<typename _tOBJ>

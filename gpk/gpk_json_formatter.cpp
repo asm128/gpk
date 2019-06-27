@@ -140,9 +140,12 @@ static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const
 		::printNode(reader.Tree[0], expression);
 		//int32_t												jsonNodeResultOfEvaluation				= ::evaluateNode(reader, 0, inputJSON, indexNodeJSON, output);
 		int32_t												jsonNodeResultOfEvaluation				= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
-		char												bufferFormat [8192]						= {};
-		sprintf_s(bufferFormat, "Failed to evaluate expression: %%.%us.", expression.size());
-		gpk_necall(jsonNodeResultOfEvaluation, bufferFormat, expression.begin());
+		if errored(jsonNodeResultOfEvaluation) {
+			char												bufferFormat[8192] = {};
+			sprintf_s(bufferFormat, "Failed to evaluate expression: %%.%us.", expression.size());
+			error_printf(bufferFormat, expression.begin());
+			return -1;
+		}
 		evaluated										= output;
 	}
 	
