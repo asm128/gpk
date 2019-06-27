@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{2af7f602-565c-43ba-a4b5-be22b1b04b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{5310ea78-5f6b-43e1-84b9-3d1339242565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_platform.h">
@@ -53,6 +59,33 @@
     </ClInclude>
     <ClInclude Include="gpk_string.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_array.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_bit.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_grid.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_layered.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_stream.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_color.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

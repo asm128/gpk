@@ -16,9 +16,6 @@
     <Filter Include="container">
       <UniqueIdentifier>{3e9b20c0-7cba-47c8-a3df-c12ceaffe120}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{9b958f7f-8d05-4884-9725-28ac32f6bb66}</UniqueIdentifier>
-    </Filter>
     <Filter Include="runtime">
       <UniqueIdentifier>{56bdc711-7e6b-4241-b705-57c96d06c106}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     </Filter>
     <Filter Include="web_cgi">
       <UniqueIdentifier>{48d776c5-2461-4e7e-bcb5-5232ee90cb4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view">
-      <UniqueIdentifier>{a89670f8-9c70-4822-bc5b-21af4e16ba03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,18 +111,6 @@
     <ClInclude Include="gpk_label.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_math.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_matrix.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_color.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_coord.h">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_runtime_module.h">
       <Filter>runtime</Filter>
     </ClInclude>
@@ -146,21 +128,6 @@
     </ClInclude>
     <ClInclude Include="gpk_png.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_array.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_bit.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_grid.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_layered.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_stream.h">
-      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>Header Files</Filter>
