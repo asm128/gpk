@@ -95,5 +95,8 @@
     <ClCompile Include="gpk_log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="llc_header_checkingg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

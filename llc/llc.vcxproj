@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_log.cpp" />
+    <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
