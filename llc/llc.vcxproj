@@ -32,6 +32,7 @@
     <ClInclude Include="gpk_matrix.h" />
     <ClInclude Include="gpk_memory.h" />
     <ClInclude Include="gpk_platform.h" />
+    <ClInclude Include="gpk_ptr.h" />
     <ClInclude Include="gpk_size.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_sync.h" />

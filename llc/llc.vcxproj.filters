@@ -87,6 +87,9 @@
     <ClInclude Include="gpk_color.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_ptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_log.cpp">
