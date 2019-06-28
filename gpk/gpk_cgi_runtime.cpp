@@ -14,6 +14,7 @@ static	::gpk::error_t								load_env					(const ::gpk::view_const_string& key, 
 	memset(out_value.begin(), 0, out_value.size());
 	memcpy(out_value.begin(), qs, ql);
 	gpk_necall(out_value.resize(out_value.begin() ? (uint32_t)strlen(out_value.begin()) + 1 : 0), "%s", "Out of memory?");
+	info_printf("Environment variable '%s': '%s'.", key.begin(), out_value.begin());
 	free(qs);
 	return 0;
 }
@@ -182,11 +183,11 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{ 
 	::cgiRuntimeValuesLoadEnv(cgiRuntimeValues);
-	cgiRuntimeValues.QueryString						= {cgiRuntimeValues.Environment.QUERY_STRING	.begin(), (uint32_t)strlen(cgiRuntimeValues.Environment.QUERY_STRING	.begin())};	
-	cgiRuntimeValues.ContentType						= {cgiRuntimeValues.Environment.CONTENT_TYPE	.begin(), (uint32_t)strlen(cgiRuntimeValues.Environment.CONTENT_TYPE	.begin())};			
-	cgiRuntimeValues.ContentLength						= {cgiRuntimeValues.Environment.CONTENT_LENGTH	.begin(), (uint32_t)strlen(cgiRuntimeValues.Environment.CONTENT_LENGTH	.begin())};	
-	cgiRuntimeValues.StrRemoteIP						= {cgiRuntimeValues.Environment.REMOTE_ADDR		.begin(), (uint32_t)strlen(cgiRuntimeValues.Environment.REMOTE_ADDR		.begin())};		
-	cgiRuntimeValues.StrRemotePort						= {cgiRuntimeValues.Environment.REMOTE_PORT		.begin(), (uint32_t)strlen(cgiRuntimeValues.Environment.REMOTE_PORT		.begin())};	
+	cgiRuntimeValues.QueryString						= {cgiRuntimeValues.Environment.QUERY_STRING	.begin(), (uint32_t)-1};	
+	cgiRuntimeValues.ContentType						= {cgiRuntimeValues.Environment.CONTENT_TYPE	.begin(), (uint32_t)-1};			
+	cgiRuntimeValues.ContentLength						= {cgiRuntimeValues.Environment.CONTENT_LENGTH	.begin(), (uint32_t)-1};	
+	cgiRuntimeValues.StrRemoteIP						= {cgiRuntimeValues.Environment.REMOTE_ADDR		.begin(), (uint32_t)-1};		
+	cgiRuntimeValues.StrRemotePort						= {cgiRuntimeValues.Environment.REMOTE_PORT		.begin(), (uint32_t)-1};	
 	//webRuntimeValues.QueryString						= "bt=1&width=100&height=200&m=test_cgi_module";
 	//webRuntimeValues.QueryString						= "bt=1&width=720&height=640&frame=0&category=0&neighbor=6&m=tianadev";
 	//webRuntimeValues.QueryString						= "bt=1&m=tianadev&width=1708&height=744&gallery=0&frame=1";

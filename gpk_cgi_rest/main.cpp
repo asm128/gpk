@@ -47,15 +47,6 @@
 	return 0;
 }
 
-static constexpr	const char						html_script	[]			= 
-	"\n<script>"
-	"\nfunction bootstrap() {"
-    "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
-    "\nself.location = url + \"?m=%s&bt=1\" + \"&w=\" + document.documentElement.clientWidth + \"&h=\" + document.documentElement.clientHeight;"
-	"\n}"
-	"\n</script>"
-	;
-
 int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
 	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
 	if (true) { //(framework.Bootstrapped) {
@@ -63,44 +54,65 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		bestClient.AddressConnect							= {};
 		::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);
 		::gpk::clientConnect		(bestClient);
-		ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
+		ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
 		::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!");
 		::gpk::clientUpdate			(bestClient);
 		::gpk::clientDisconnect		(bestClient);
-	}
-	else {
-		char													buffer[4096]		= {};
-		output.append(buffer, sprintf_s(buffer, "%s", 
-			"<html>"
-			"\n<head>"
-		));
-		output.append(buffer, sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
-		output.append(buffer, sprintf_s(buffer, "%s", 
-			"\n<link rel=\"stylesheet\" href=\"./page.css\">"
-			"\n</head>"
-		));
-		output.append(buffer, sprintf_s(buffer, "\n<body style=\"width:95%%; height:95%%; background-color:#FFCCAA; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
+
+		char													buffer[8192]		= {};
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
-		output.append(buffer, sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		if(runtimeValues.QueryString.size())
-			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
+			output.append(buffer, sprintf_s(buffer, "\r\n[{ \"QueryString\" : { \"length\" : %u, \"data\" : \"%s\" }, ", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
 
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
-			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
-
 			const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyval		= runtimeValues.QueryStringKeyVals[iChar];
-			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
-			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
+			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n { Key: \"", "\""));
+			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n , Val: \"", "\"\n }, "));
 		}
-		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentLength	.begin(), runtimeValues.ContentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
-		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentType	.begin(), runtimeValues.ContentType		.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
-		output.append(buffer, sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>"	, (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
-		output.append(buffer, sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
-		output.append(buffer, sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"			, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
-		output.append(buffer, sprintf_s(buffer, "\n<h4>String IP: %s</h4>"				, framework.RuntimeValues.StrRemoteIP.begin()));
-		output.append(buffer, sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, framework.RuntimeValues.StrRemotePort.begin()));
-		output.append(buffer, sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
-
+		output.append(buffer, sprintf_s(buffer, "\n { \"AUTH_PASSWORD\"			: \"%s\"", runtimeValues.Environment.AUTH_PASSWORD			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"AUTH_TYPE\"				: \"%s\"", runtimeValues.Environment.AUTH_TYPE				.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"AUTH_USER\"				: \"%s\"", runtimeValues.Environment.AUTH_USER				.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_COOKIE\"			: \"%s\"", runtimeValues.Environment.CERT_COOKIE			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_FLAGS\"			: \"%s\"", runtimeValues.Environment.CERT_FLAGS				.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_ISSUER\"			: \"%s\"", runtimeValues.Environment.CERT_ISSUER			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_KEYSIZE\"			: \"%s\"", runtimeValues.Environment.CERT_KEYSIZE			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_SECRETKEYSIZE\"	: \"%s\"", runtimeValues.Environment.CERT_SECRETKEYSIZE		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_SERIALNUMBER\"		: \"%s\"", runtimeValues.Environment.CERT_SERIALNUMBER		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_SERVER_ISSUER\"	: \"%s\"", runtimeValues.Environment.CERT_SERVER_ISSUER		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_SERVER_SUBJECT\"	: \"%s\"", runtimeValues.Environment.CERT_SERVER_SUBJECT	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CERT_SUBJECT\"			: \"%s\"", runtimeValues.Environment.CERT_SUBJECT			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CF_TEMPLATE_PATH\"		: \"%s\"", runtimeValues.Environment.CF_TEMPLATE_PATH		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CONTENT_LENGTH\"		: \"%s\"", runtimeValues.Environment.CONTENT_LENGTH			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CONTENT_TYPE\"			: \"%s\"", runtimeValues.Environment.CONTENT_TYPE			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"CONTEXT_PATH\"			: \"%s\"", runtimeValues.Environment.CONTEXT_PATH			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"GATEWAY_INTERFACE\"		: \"%s\"", runtimeValues.Environment.GATEWAY_INTERFACE		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTPS\"					: \"%s\"", runtimeValues.Environment.HTTPS					.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTPS_KEYSIZE\"			: \"%s\"", runtimeValues.Environment.HTTPS_KEYSIZE			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTPS_SECRETKEYSIZE\"	: \"%s\"", runtimeValues.Environment.HTTPS_SECRETKEYSIZE	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTPS_SERVER_ISSUER\"	: \"%s\"", runtimeValues.Environment.HTTPS_SERVER_ISSUER	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTPS_SERVER_SUBJECT\"	: \"%s\"", runtimeValues.Environment.HTTPS_SERVER_SUBJECT	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_ACCEPT\"			: \"%s\"", runtimeValues.Environment.HTTP_ACCEPT			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_ACCEPT_ENCODING\"	: \"%s\"", runtimeValues.Environment.HTTP_ACCEPT_ENCODING	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_ACCEPT_LANGUAGE\"	: \"%s\"", runtimeValues.Environment.HTTP_ACCEPT_LANGUAGE	.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_CONNECTION\"		: \"%s\"", runtimeValues.Environment.HTTP_CONNECTION		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_COOKIE\"			: \"%s\"", runtimeValues.Environment.HTTP_COOKIE			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_HOST\"				: \"%s\"", runtimeValues.Environment.HTTP_HOST				.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_REFERER\"			: \"%s\"", runtimeValues.Environment.HTTP_REFERER			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"HTTP_USER_AGENT\"		: \"%s\"", runtimeValues.Environment.HTTP_USER_AGENT		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"QUERY_STRING\"			: \"%s\"", runtimeValues.Environment.QUERY_STRING			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"REMOTE_ADDR\"			: \"%s\"", runtimeValues.Environment.REMOTE_ADDR			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"REMOTE_HOST\"			: \"%s\"", runtimeValues.Environment.REMOTE_HOST			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"REMOTE_USER\"			: \"%s\"", runtimeValues.Environment.REMOTE_USER			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"REQUEST_METHOD\"		: \"%s\"", runtimeValues.Environment.REQUEST_METHOD			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SCRIPT_NAME\"			: \"%s\"", runtimeValues.Environment.SCRIPT_NAME			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SERVER_NAME\"			: \"%s\"", runtimeValues.Environment.SERVER_NAME			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SERVER_PORT\"			: \"%s\"", runtimeValues.Environment.SERVER_PORT			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SERVER_PORT_SECURE\"	: \"%s\"", runtimeValues.Environment.SERVER_PORT_SECURE		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SERVER_PROTOCOL\"		: \"%s\"", runtimeValues.Environment.SERVER_PROTOCOL		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"SERVER_SOFTWARE\"		: \"%s\"", runtimeValues.Environment.SERVER_SOFTWARE		.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n , \"WEB_SERVER_API\"		: \"%s\"", runtimeValues.Environment.WEB_SERVER_API			.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n },"));
+																					 
 		//int														argc					= __argc; 
 		//char													** argv					= __argv;
 		//for(int32_t iArg = 0; iArg < argc; ++iArg) 
@@ -132,32 +144,52 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 				if(0 == content_body.size())
 					break;
 				content_body.push_back(0);
-				output.append(buffer, sprintf_s(buffer, "\n<h1>content_body (%u:%u/%u:%u): %s</h1>", iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
+				output.append(buffer, sprintf_s(buffer, "\n { \"content_body\" : \"u0\" : %u, \"u1\" : %u, \"u2\" : %u, \"u3\" : %u, \"value\": \n\"%s\" }, "
+					, iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
 			}
 		}
-		output.append(buffer, sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n { \"content_body_\" : \"u0\" : %u, \"u1\" : %u, \"text\" : \"%s\" }, ", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
 
 		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
-		output.append(buffer, sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
+		output.append(buffer, sprintf_s(buffer, "\n%s\n", "]"));
 	}
 	return 0;
 }
 
-int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
+static int											cgiMain				()	{
 	gpk_necall(::gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
-	(void)hInstance, (void)hPrevInstance, (void)szCmdLine, (void)nCmdShow;
 	::gpk::SCGIFramework									framework;
-	gpk_necall(::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues), "Failed to load cgi runtime values.");
-	printf("%s\n\n", "Content-Type: application/json"
-		"\nCache-Control: no-store"
-	);
+	gpk_necall(::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues), "%s", "Failed to load cgi runtime values.");
 	::gpk::array_pod<char>									html;
-	::cgiBootstrap(framework, html);
-	html.push_back('\0');
-	OutputDebugStringA(html.begin());
-	printf("%s", html.begin());
+	if errored(::cgiBootstrap(framework, html)) {
+		printf("%s\r\n", "Content-Type: text/html"
+			"\r\nCache-Control: no-store"
+			"\r\n\r\n"
+			"<html><head><title>Internal server error</title></head><body>Failed to process request.</body></html>"
+			"\r\n"
+			"\r\n"
+		);
+	}
+	else {
+		printf("%s\r\n", "Content-Type: application/json"
+			"\r\nCache-Control: no-store"
+		);
+		html.push_back('\0');
+		OutputDebugStringA(html.begin());
+		printf("%s", html.begin());
+	}
 	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why??!?");
 	return 0;
+}
+
+int													main				(int argc, char** argv, char**envv)	{
+	(void)argc, (void)argv, (void)envv;
+	return ::cgiMain();
+}
+
+int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
+	(void)hInstance, (void)hPrevInstance, (void)szCmdLine, (void)nCmdShow;
+	return ::cgiMain();
 }
 
 // 17070035
