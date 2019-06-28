@@ -48,11 +48,14 @@ namespace gpk {
 		static inline constexpr	const ::gpk::view_array<const uint32_t					>&	get_member_sizes				()							noexcept	{ static const uint32_t					results[] = {(uint32_t)	_tArgs::get_member_size			()					...,											 0	}; static const ::gpk::view_array<const uint32_t				> results_view = {results}; return results_view;	}
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
+
+	template<typename _tStruct>
+	inline	::gpk::error_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
 } // namespace
 
 #define	GPKMFND(_nameSpace, _memberType, _memberName)				GPKFM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_FUN	, #_memberName, #_memberName)
-#define	GPKMOND(_nameSpace, _memberType, _memberName)				GPKM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_OBJECT	, #_memberName, #_memberName)
+#define	GPKMOND(_nameSpace, _memberType, _memberName)				GPKM(_nameSpace, _memberType, _memberName, ::gpk::DATA_TYPE_OBJ		, #_memberName, #_memberName)
 #define	GPKMBND(_nameSpace, _memberType, _memberName, _dataTypeId)	GPKM(_nameSpace, _memberType, _memberName, _dataTypeId	, #_memberName, #_memberName)
 #define GPKM_REGISTRY(...)											GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
 #define GPKM_GET_MEMBER_REGISTRY(objectType)						objectType::get_member_registry()

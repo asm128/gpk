@@ -1,5 +1,6 @@
 #include "gpk_cgi.h"
 #include "gpk_tcpip.h"
+#include "gpk_member_registry.h"
 
 #ifndef GPK_CGI_RUNTIME_H_2938479283
 #define GPK_CGI_RUNTIME_H_2938479283
@@ -42,18 +43,70 @@ namespace gpk
 		::gpk::array_pod<char>																	Body						= {};
 	};
 
+	struct SCGIEnvironment {
+		GPKMOND(::gpk, array_pod<char_t>,	AUTH_PASSWORD			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	AUTH_TYPE				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	AUTH_USER				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_COOKIE				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_FLAGS				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_ISSUER				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_KEYSIZE			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_SECRETKEYSIZE		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERIALNUMBER		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERVER_ISSUER		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERVER_SUBJECT		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CERT_SUBJECT			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CF_TEMPLATE_PATH		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CONTENT_LENGTH			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CONTENT_TYPE			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	CONTEXT_PATH			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	GATEWAY_INTERFACE		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTPS					) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_KEYSIZE			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SECRETKEYSIZE		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SERVER_ISSUER		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SERVER_SUBJECT	) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT_ENCODING	) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT_LANGUAGE	) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_CONNECTION			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_COOKIE				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_HOST				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_REFERER			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	HTTP_USER_AGENT			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	QUERY_STRING			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_ADDR				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_HOST				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_USER				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	REQUEST_METHOD			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SCRIPT_NAME				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_NAME				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PORT				) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PORT_SECURE		) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PROTOCOL			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_SOFTWARE			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	WEB_SERVER_API			) = "";
+		GPKMOND(::gpk, array_pod<char_t>,	DOCUMENT_ROOT			) = "";// The root directory of your server
+		GPKMOND(::gpk, array_pod<char_t>,	PATH					) = "";// The system path your server is running under
+		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_PORT				) = "";// The port the visitor is connected to on the web server
+		GPKMOND(::gpk, array_pod<char_t>,	REQUEST_URI				) = "";// The interpreted pathname of the requested document or CGI (relative to the document root)
+		GPKMOND(::gpk, array_pod<char_t>,	SCRIPT_FILENAME			) = "";// The full pathname of the current CGI
+		GPKMOND(::gpk, array_pod<char_t>,	SERVER_ADMIN			) = "";// The email address for your server's webmaster
+		GPKM_REGISTRY()
+	};
+
 	struct SCGIRuntimeValues {
-		::gpk::array_pod<char>																	QueryString					= {};
+		::gpk::view_const_string																QueryString					= {};
 		::gpk::array_obj<::gpk::view_const_string>												QueryStringElements			= {};
 		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	QueryStringKeyVals			= {};
 		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	FormKeyVals					= {};
-		::gpk::array_pod<char>																	ContentLength				= {};
-		//::gpk::array_pod<char>																	ContentBody					= {};
-		::gpk::array_pod<char>																	ContentType					= {};
-		::gpk::array_pod<char>																	StrRemoteIP					= {};
-		::gpk::array_pod<char>																	StrRemotePort				= {};
+		::gpk::view_const_string																ContentLength				= {};
+		::gpk::view_const_string																ContentType					= {};
+		::gpk::view_const_string																StrRemoteIP					= {};
+		::gpk::view_const_string																StrRemotePort				= {};
 		::gpk::SIPv4																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
+		::gpk::SCGIEnvironment																	Environment					= {};
 	};
 
 	struct SCGIFramework {

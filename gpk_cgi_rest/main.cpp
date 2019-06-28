@@ -58,8 +58,10 @@ static constexpr	const char						html_script	[]			=
 
 int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
 	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
-	if(framework.Bootstrapped) {
+	if (true) { //(framework.Bootstrapped) {
 		::gpk::SUDPClient										bestClient				= {};
+		bestClient.AddressConnect							= {};
+		::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);
 		::gpk::clientConnect		(bestClient);
 		ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Failed to connect to server.")
 		::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!");
@@ -142,9 +144,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 }
 
 int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLine, INT nCmdShow)	{
-	hInstance, hPrevInstance, szCmdLine, nCmdShow;
+	gpk_necall(::gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
+	(void)hInstance, (void)hPrevInstance, (void)szCmdLine, (void)nCmdShow;
 	::gpk::SCGIFramework									framework;
-	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues);
+	gpk_necall(::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues), "Failed to load cgi runtime values.");
 	printf("%s\n\n", "Content-Type: application/json"
 		"\nCache-Control: no-store"
 	);
@@ -153,6 +156,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());
 	printf("%s", html.begin());
+	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why??!?");
 	return 0;
 }
 
