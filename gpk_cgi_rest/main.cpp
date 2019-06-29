@@ -56,7 +56,9 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		gpk_necall(::gpk::clientConnect			(bestClient), "%s", "error");
 		ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
 		gpk_necall(::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!"), "%s", "error");
-		gpk_necall(::gpk::clientUpdate			(bestClient), "%s", "error");
+		while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
+			gpk_necall(::gpk::clientUpdate			(bestClient), "%s", "error");
+		}
 		gpk_necall(::gpk::clientDisconnect		(bestClient), "%s", "error");
 
 		char													buffer[8192]		= {};

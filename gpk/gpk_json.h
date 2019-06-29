@@ -30,30 +30,30 @@ namespace gpk
 #endif
 
 	struct SJSONType {
-								int32_t												ParentIndex;
-								JSON_TYPE											Type;
-								::gpk::SSlice<uint32_t>								Span;
+								int32_t														ParentIndex;
+								JSON_TYPE													Type;
+								::gpk::SSlice<uint32_t>										Span;
 	};
 
 	struct SJSONNode {
-								SJSONType											* Object				= 0;
-								SJSONNode											* Parent				= 0;
-								::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>			Children				= 0;
-								int32_t												ObjectIndex				= -1;
+								SJSONType													* Object				= 0;
+								SJSONNode													* Parent				= 0;
+								::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>					Children				= 0;
+								int32_t														ObjectIndex				= -1;
 	};
 
 	struct SJSONReaderState {
-								uint32_t											IndexCurrentChar		= 0;
-								int32_t												IndexCurrentElement		= -1;
-								::gpk::SJSONType									* CurrentElement		= 0;
-								int32_t												NestLevel				= 0;
-								char												CharCurrent				= 0;
-								bool												Escaping				: 1;
-								bool												InsideString			: 1;
-								bool												ExpectingSeparator		: 1;
-								bool												DoneReading				: 1;
+								uint32_t													IndexCurrentChar		= 0;
+								int32_t														IndexCurrentElement		= -1;
+								::gpk::SJSONType											* CurrentElement		= 0;
+								int32_t														NestLevel				= 0;
+								char														CharCurrent				= 0;
+								bool														Escaping				: 1;
+								bool														InsideString			: 1;
+								bool														ExpectingSeparator		: 1;
+								bool														DoneReading				: 1;
 
-																					SJSONReaderState		() 
+																							SJSONReaderState		() 
 		: Escaping			(false)
 		, InsideString		(false)
 		, ExpectingSeparator(false)
@@ -63,25 +63,25 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SJSONReader {
-								::gpk::array_pod<::gpk::SJSONType>					Object;
-								::gpk::array_obj<::gpk::view_const_string>			View;
-								::gpk::array_obj<::gpk::ptr_obj	<::gpk::SJSONNode>>	Tree;
-								::gpk::SJSONReaderState								StateRead;
+								::gpk::array_pod<::gpk::SJSONType>							Object;
+								::gpk::array_obj<::gpk::view_const_string>					View;
+								::gpk::array_obj<::gpk::ptr_obj	<::gpk::SJSONNode>>			Tree;
+								::gpk::SJSONReaderState										StateRead;
 
-								const ::gpk::ptr_obj<::gpk::SJSONNode>&				operator[](uint32_t index)	const { return Tree[index]; }
+								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[](uint32_t index)	const { return Tree[index]; }
 	};
 
-	// Reader functions: Populate a SJSONReader structure from an input JSON string.
-							::gpk::error_t										jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
-							::gpk::error_t										jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
+	// Reader functions: Populate a SJSONReader structure from an input JSON string.	
+							::gpk::error_t												jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
+							::gpk::error_t												jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 
 	// Access functions: Iterate over children looking for keys or values.
-							::gpk::error_t										jsonArrayValueGet		(const ::gpk::SJSONNode& node, uint32_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
-	static inline constexpr	::gpk::error_t										jsonArraySize			(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
+							::gpk::error_t												jsonArrayValueGet		(const ::gpk::SJSONNode& node, uint32_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
+	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
 
-							::gpk::error_t										jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
-							::gpk::error_t										jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
-	static inline constexpr	::gpk::error_t										jsonObjectKeyCount		(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size() / 2; }
+							::gpk::error_t												jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
+							::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
+	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size() / 2; }
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923

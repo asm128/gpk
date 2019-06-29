@@ -183,9 +183,6 @@
     <ClInclude Include="gpk_rsa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_session.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_deflate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
