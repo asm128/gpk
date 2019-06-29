@@ -52,12 +52,12 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 	if (true) { //(framework.Bootstrapped) {
 		::gpk::SUDPClient										bestClient				= {};
 		bestClient.AddressConnect							= {};
-		::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);
-		::gpk::clientConnect		(bestClient);
+		gpk_necall(::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect), "%s", "error");
+		gpk_necall(::gpk::clientConnect			(bestClient), "%s", "error");
 		ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-		::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!");
-		::gpk::clientUpdate			(bestClient);
-		::gpk::clientDisconnect		(bestClient);
+		gpk_necall(::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!"), "%s", "error");
+		gpk_necall(::gpk::clientUpdate			(bestClient), "%s", "error");
+		gpk_necall(::gpk::clientDisconnect		(bestClient), "%s", "error");
 
 		char													buffer[8192]		= {};
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
