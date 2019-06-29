@@ -14,8 +14,8 @@
 		if('x' == input_string[iChar]) {
 			::gpk::array_pod<char>									sx						= {};
 			::gpk::array_pod<char>									sy						= {};
-			sy.append((char*)input_string.begin(), iChar);
-			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
+			gpk_necall(sy.append((char*)input_string.begin(), iChar), "%s", "");
+			gpk_necall(sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1)), "%s", "");
 			try {
 				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
 				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
@@ -58,17 +58,23 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!");
 		::gpk::clientUpdate			(bestClient);
 		::gpk::clientDisconnect		(bestClient);
-
+#defin true
 		char													buffer[8192]		= {};
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
 		if(runtimeValues.QueryString.size())
-			output.append(buffer, sprintf_s(buffer, "\r\n[{ \"QueryString\" : { \"length\" : %u, \"data\" : \"%s\" }, ", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
+			output.append(buffer, sprintf_s(buffer, "\r\n[{ \"queryString\" : { \"length\" : %u, \"data\" : \"%s\", \"values\" : [", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
 
-		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
-			const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyval		= runtimeValues.QueryStringKeyVals[iChar];
-			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n { Key: \"", "\""));
-			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n , Val: \"", "\"\n }, "));
+		for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal) {
+			const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyval		= runtimeValues.QueryStringKeyVals[iKeyVal];
+			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n { \"Key\": \"", "\""));
+			if(keyvalviews.size() - 1 == iKeyVal)
+				output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n , \"Val\": \"", "\"\n }"));// without the trailing , comma character
+			else
+				output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n , \"Val\": \"", "\"\n }, "));
 		}
+		output.append(buffer, sprintf_s(buffer, "\n] }, "));
+		output.append(buffer, sprintf_s(buffer, "\n \"cgi_environment\" : "));
+
 		output.append(buffer, sprintf_s(buffer, "\n { \"AUTH_PASSWORD\"			: \"%s\"", runtimeValues.Environment.AUTH_PASSWORD			.begin()));
 		output.append(buffer, sprintf_s(buffer, "\n , \"AUTH_TYPE\"				: \"%s\"", runtimeValues.Environment.AUTH_TYPE				.begin()));
 		output.append(buffer, sprintf_s(buffer, "\n , \"AUTH_USER\"				: \"%s\"", runtimeValues.Environment.AUTH_USER				.begin()));
@@ -144,14 +150,14 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 				if(0 == content_body.size())
 					break;
 				content_body.push_back(0);
-				output.append(buffer, sprintf_s(buffer, "\n { \"content_body\" : \"u0\" : %u, \"u1\" : %u, \"u2\" : %u, \"u3\" : %u, \"value\": \n\"%s\" }, "
+				output.append(buffer, sprintf_s(buffer, "\n \"content_body\" : {\"u0\" : %u, \"u1\" : %u, \"u2\" : %u, \"u3\" : %u, \"value\": \n\"%s\" }, "
 					, iChar - iOffset, content_body.size(), runtimeValues.Content.Length, runtimeValues.Content.Body.size(), content_body.begin()));
 			}
 		}
-		output.append(buffer, sprintf_s(buffer, "\n { \"content_body_\" : \"u0\" : %u, \"u1\" : %u, \"text\" : \"%s\" }, ", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
+		output.append(buffer, sprintf_s(buffer, "\n \"content_body_\" : {\"u0\" : %u, \"u1\" : %u, \"text\" : \"%s\" }", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
 
 		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
-		output.append(buffer, sprintf_s(buffer, "\n%s\n", "]"));
+		output.append(buffer, sprintf_s(buffer, "\n%s\n", "}]"));
 	}
 	return 0;
 }
