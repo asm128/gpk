@@ -58,7 +58,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		::gpk::connectionPushData	(bestClient, bestClient.Queue, "Connect test!");
 		::gpk::clientUpdate			(bestClient);
 		::gpk::clientDisconnect		(bestClient);
-#defin true
+
 		char													buffer[8192]		= {};
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews		= runtimeValues.QueryStringElements;
 		if(runtimeValues.QueryString.size())
