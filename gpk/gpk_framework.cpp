@@ -38,7 +38,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	if(0 == framework.GUI)
 		framework.GUI.create();
 
-	SInput																						& input										= *framework.Input;
+	::gpk::SInput																				& input										= *framework.Input;
 	input.KeyboardPrevious																	= input.KeyboardCurrent;
 	input.MousePrevious																		= input.MouseCurrent;
 	input.MouseCurrent.Deltas																= {};

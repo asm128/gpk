@@ -225,9 +225,6 @@
     <ClInclude Include="gpk_string_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_json_formatter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_parse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -235,6 +232,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_find.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json_expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -322,8 +322,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 				++iChar;
 			out_composed.push_back(curChar);
 		}
-		if('\\' != path[path.size() - 1])
-			out_composed.push_back('\\');
+		if('\\' != path[path.size() - 1] && '/' != path[path.size() - 1])
+			out_composed.push_back('/');
 	}
 
 	if(fileName.size()) 

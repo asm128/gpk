@@ -87,7 +87,7 @@
     <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_stdsocket.h" />
-    <ClInclude Include="gpk_json_formatter.h" />
+    <ClInclude Include="gpk_json_expression.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_aes.cpp" />
