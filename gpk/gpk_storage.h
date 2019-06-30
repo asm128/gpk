@@ -24,6 +24,7 @@ namespace gpk
 					::gpk::error_t									fileToMemory			(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory);
 					::gpk::error_t									fileFromMemory			(const ::gpk::view_const_string& fileName, const ::gpk::array_pod<byte_t>& fileInMemory);
 					::gpk::error_t									pathCreate				(const ::gpk::view_const_string& folderName);	// Recursive
+					::gpk::error_t									pathNameCompose			(::gpk::view_const_string path, ::gpk::view_const_string fileName, ::gpk::array_pod<char_t> & out_composed);
 					::gpk::error_t									fileJoin				(const ::gpk::view_const_string	& fileNameDst);	// Joins a file split into file.split.## parts.
 					::gpk::error_t									fileSplit				(const ::gpk::view_const_string	& fileNameSrc, const uint32_t partSize);	// Splits a file into file.split.## parts.
 					int64_t											fileSize				(const ::gpk::view_const_string	& fileNameSrc);

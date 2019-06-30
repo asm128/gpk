@@ -313,3 +313,27 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	fclose(fp);
 	return result;
 }
+
+		::gpk::error_t									gpk::pathNameCompose								(::gpk::view_const_string path, ::gpk::view_const_string fileName, ::gpk::array_pod<char_t> & out_composed)		{ 
+	if(path.size()) {
+		for(uint32_t iChar = 0; iChar < path.size(); ++iChar) {
+			const char curChar = path[iChar];
+			if(curChar == '\\' && iChar < (path.size() - 1) && '\\' == path[iChar + 1])
+				++iChar;
+			out_composed.push_back(curChar);
+		}
+		if('\\' != path[path.size() - 1])
+			out_composed.push_back('\\');
+	}
+
+	if(fileName.size()) 
+		for(uint32_t iChar = '\\' == fileName[0] ? 1 : 0; iChar < fileName.size(); ++iChar) {
+			const char curChar = fileName[iChar];
+			if(curChar == '\\' && iChar < (fileName.size() - 1) && '\\' == fileName[iChar + 1])
+				++iChar;
+			out_composed.push_back(curChar);
+		}
+	out_composed.push_back(0);
+	out_composed.resize(out_composed.size() - 1);
+	return 0;
+}
