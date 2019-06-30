@@ -356,13 +356,13 @@
     <ClCompile Include="gpk_string_helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_json_formatter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_parse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_json_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

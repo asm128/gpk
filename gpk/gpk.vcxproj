@@ -112,7 +112,7 @@
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_json.cpp" />
-    <ClCompile Include="gpk_json_formatter.cpp" />
+    <ClCompile Include="gpk_json_expression.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_noise.cpp" />
     <ClCompile Include="gpk_parse.cpp" />
