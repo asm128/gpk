@@ -10,6 +10,9 @@
 #	include <arpa/inet.h>
 #endif
 
+#include <string>
+
+
 ::gpk::error_t								gpk::tcpipInitialize						()																										{
 #if defined(GPK_WINDOWS)
 	::WSADATA										w											= {};
@@ -182,4 +185,49 @@
 //	b4											= hp->h_addr_list[0][3];
 //#endif
 	return iAddress;
+}
+
+::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) { 
+	if(strRemotePort.size())
+		try {
+			remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
+		}
+		catch(...) {
+			remoteIP.Port									= 0;
+		}
+
+	if(strRemoteIP.size()) {
+		uint32_t											iOffset						= 0; 
+		uint32_t											iEnd						= 0; 
+		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
+			while(iEnd < strRemoteIP.size()) {
+				char curChar = strRemoteIP[iEnd];
+				if( curChar == '.' 
+				 ||	curChar == ':' 
+				 ||	curChar == '\0'
+				 || (iEnd - iOffset) > 3	// 3 digit max
+				)
+					break;
+				++iEnd;
+			}
+			try {
+				remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
+			}
+			catch(...) {
+				remoteIP.IP[iVal]								= 0;
+			}
+			iOffset											= iEnd + 1;
+			iEnd											= iOffset;
+		}
+		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
+			if(strRemotePort.size())
+				try {
+					remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
+				}
+				catch(...) {
+					remoteIP.Port									= 0;
+				}
+		}
+	}
+	return 0;
 }

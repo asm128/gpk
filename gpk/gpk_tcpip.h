@@ -1,4 +1,4 @@
-#include "gpk_error.h"
+#include "gpk_view_array.h"
 
 #ifndef GPK_TCPIP_H_2874982374
 #define GPK_TCPIP_H_2874982374
@@ -58,6 +58,8 @@ namespace gpk
 		address.Port													= portRequested;
 		return tcpipAddress(hostName, portRequested, adapterIndex, mode, GPK_IPV4_EXPAND_PTR_IP(address));
 	}
+
+					::gpk::error_t									tcpipAddress						(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
 } // namespace
 
 #endif // GPK_TCPIP_H_2874982374
