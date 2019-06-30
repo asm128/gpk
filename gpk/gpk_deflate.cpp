@@ -184,6 +184,9 @@
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
 		::gpk::error_t								indexSlash					= ::gpk::rfind('\\', ::gpk::view_const_string{finalPathName.begin(), lenPath});	
+		if(-1 == indexSlash) // try with the other separator
+			::gpk::rfind('/', ::gpk::view_const_string{finalPathName.begin(), lenPath});	
+
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]				= 0;
 			lenPath									= (uint32_t)strlen(finalPathName.begin());

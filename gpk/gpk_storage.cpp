@@ -37,14 +37,13 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 	return fileSize;
 }
 
-::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_string& pathName) {
+::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_string& pathName, const char separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
-	const ::gpk::view_const_string			charBar						= "\\";
 	int32_t									offsetBar					= -1;
 	do {
 		++offsetBar;
-		offsetBar							= ::gpk::find_sequence_pod(charBar, pathName, offsetBar);
+		offsetBar							= ::gpk::find(separator, pathName, offsetBar);
 		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
 		if(0 == strcmp(".", folder)) 
 			continue;
@@ -175,7 +174,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
-	sprintf_s(bufferFormat, "%%.%us\\*.*", pathToList.size());
+	sprintf_s(bufferFormat, "%%.%us/*.*", pathToList.size());
 	char																			sPath	[4096];
 	gpk_necall(sprintf_s(sPath, bufferFormat, pathToList.begin()), "%s", "Path too long?");
 #if defined(GPK_WINDOWS)
@@ -186,7 +185,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	do if(	0 != strcmp(fdFile.cFileName, curDir)
 		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
-		sprintf_s(bufferFormat, "%%.%us\\%%s", pathToList.size());
+		sprintf_s(bufferFormat, "%%.%us/%%s", pathToList.size());
 		int32_t																			lenPath								= sprintf_s(sPath, bufferFormat, pathToList.begin(), fdFile.cFileName);
 		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders)
 			continue;
@@ -205,7 +204,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
         if (name != curDir && name != parDir) {
 			if(drnt->d_type == DT_DIR && false == listFolders)
 				continue;
-			int32_t																			lenPath								= sprintf_s(sPath, "%s//%s", pathToList.begin(), drnt->d_name);
+			int32_t																			lenPath								= sprintf_s(sPath, "%s/%s", pathToList.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
 			gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
         }
@@ -217,7 +216,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string& pathToList, ::gpk::SPathContents& pathContents)						{
 	char																			sPath[4096];
 	char																			bufferFormat[36];
-	sprintf_s(bufferFormat, "%%.%us\\*.*", pathToList.size());
+	sprintf_s(bufferFormat, "%%.%us/*.*", pathToList.size());
 	gpk_necall(sprintf_s(sPath, bufferFormat, pathToList.begin()), "%s", "Path too long?");
 	static constexpr const char														curDir []							= ".";
 	static constexpr const char														parDir []							= "..";
@@ -230,7 +229,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
 		_CrtCheckMemory();
-		sprintf_s(bufferFormat, "%%.%us\\%%s", pathToList.size());
+		sprintf_s(bufferFormat, "%%.%us/%%s", pathToList.size());
 		int32_t																			lenPath								= sprintf_s(sPath, bufferFormat, pathToList.begin(), fdFile.cFileName);
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
@@ -255,7 +254,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
     while ((drnt = readdir(dir)) != NULL) {
         ::std::string																	name								(drnt->d_name);
         if (name != curDir && name != parDir) {
-			int32_t																			lenPath								= sprintf_s(sPath, "%s//%s", pathToList.begin(), drnt->d_name);
+			int32_t																			lenPath								= sprintf_s(sPath, "%s/%s", pathToList.begin(), drnt->d_name);
 			if(drnt->d_type == DT_DIR) {
 				::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 				gpk_necall(newFolderIndex, "%s", "Out of memory?");
@@ -336,4 +335,14 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	out_composed.push_back(0);
 	out_composed.resize(out_composed.size() - 1);
 	return 0;
+}
+
+		::gpk::error_t								gpk::findLastSlash				(const ::gpk::view_const_string & path)		{
+	int32_t													indexOfStartOfFileName0			= ::gpk::rfind('\\', path);
+	int32_t													indexOfStartOfFileName1			= ::gpk::rfind('/', path);
+	return 
+		(-1 == indexOfStartOfFileName1) ? indexOfStartOfFileName0 :
+		(-1 == indexOfStartOfFileName0) ? indexOfStartOfFileName1 :
+		::gpk::max(indexOfStartOfFileName0, indexOfStartOfFileName1)
+		;
 }

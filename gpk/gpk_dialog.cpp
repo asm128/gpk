@@ -78,7 +78,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	::gpk::SImage<::gpk::SColorBGRA>										& imageCross								= dialog.ImageCrossBGRA;
 	if(controlTable.States[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
-			::gpk::pngFileLoad("..\\gpk_data\\images\\cross.png", imageCross);
+			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);
 
 			dialog.ImageCross.resize(imageCross.metrics());
 			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
