@@ -1,6 +1,6 @@
-#include "gpk_expression.h"
 #include "gpk_json_formatter.h"
 
+#include "gpk_expression.h"
 #include "gpk_parse.h"
 
 static char										g_bufferFormat [8192]				= {};
@@ -120,7 +120,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 	return indexJSONResult;
 }
 
-static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
+::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
 	::gpk::view_const_string							resultOfExpressionEval					= {};
 	::gpk::SExpressionReader							reader;
 	gpk_necall(::gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", expression.begin());
@@ -170,8 +170,7 @@ static ::gpk::error_t							jsonStringFormatResolve					(const ::gpk::view_const
 		if(typesLiteral[iView].Type == ::gpk::STRIP_LITERAL_TYPE_TOKEN)	{ // we only have to solve tokens
 			::gpk::view_const_string							& toResolve								= views[iView];
 			char												bufferFormat [8192]						= {};
-			sprintf_s(bufferFormat, "Failed to resolve expression: %%.%us.", toResolve.size());
-			gpk_necall(::jsonStringFormatResolve(toResolve, inputJSON, indexNodeJSON, toResolve), bufferFormat, toResolve.begin());
+			gpk_necall(::gpk::jsonExpressionResolve(toResolve, inputJSON, indexNodeJSON, toResolve), bufferFormat, sprintf_s(bufferFormat, "%%u|Failed to resolve expression: %%.%us.", toResolve.size()), toResolve.begin());
 		}
 	}
 	for(uint32_t iView = 0; iView < views.size(); ++iView)

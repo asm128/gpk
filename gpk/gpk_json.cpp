@@ -87,6 +87,8 @@
 		seterr_break_if(stateParser.CharCurrent < 0x20 || stateParser.CharCurrent > 0xFE, "Invalid character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
 		seterr_break_if(stateParser.Escaping, "Cannot escape character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
 		break;
+	case 'b': case 'f': case 'n': case 'r': case 't':
+		break;	// these characters are both valid as part of the string and as escapable characters.
 	case 'u':
 		if(false == stateParser.Escaping) 
 			break;
@@ -249,7 +251,7 @@
 	}
 
 	switch(stateParser.CharCurrent) {
-	case ' '	: case '\t'	: case '\r'	: case '\n'	: // Skip these characters without error.
+	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
 		break;	
 	default: // Fallback error for every character that is not recognized by the parser.
 		errVal																	= -1;
