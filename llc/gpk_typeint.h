@@ -15,15 +15,15 @@ namespace gpk
 	static constexpr		const uint8_t					PLATFORM_BYTE_BIT_COUNT								= 8;
 #if defined GPK_WINDOWS
 #	if defined(_WIN64) || defined(WIN64)
-#		define	REFCOUNT_T								long long
-		typedef volatile REFCOUNT_T						refcount_t			;
+#		define	GPK_REFCOUNT_T								long long
+		typedef volatile GPK_REFCOUNT_T						refcount_t			;
 #	else
-#		define	REFCOUNT_T								long
-		typedef volatile REFCOUNT_T						refcount_t			;
+#		define	GPK_REFCOUNT_T								long
+		typedef volatile GPK_REFCOUNT_T						refcount_t			;
 #	endif
 #else
-#	define	REFCOUNT_T								intptr_t
-	typedef REFCOUNT_T								refcount_t			;
+#	define	GPK_REFCOUNT_T								intptr_t
+	typedef GPK_REFCOUNT_T								refcount_t			;
 #endif
 
 	template<class _tBase>	struct remove_cv																			{ using type = _tBase; };

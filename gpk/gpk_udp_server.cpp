@@ -41,7 +41,7 @@
 					if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
-						error_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "??");
+						gerror_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "??");
 					sockets.fd_array[sockets.fd_count]							= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -54,7 +54,7 @@
 				clientsToProcess.clear();
 				{
 					::gpk::mutex_guard												lock								(serverInstance.Mutex);
-					break_info_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
+					break_ginfo_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
@@ -89,7 +89,7 @@
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 						continue;
 					}
-					error_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+					gerror_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 					if(INVALID_SOCKET != client.Socket)
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 				}
@@ -161,8 +161,8 @@ static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverIn
 		error_printf("Could not receive datagram.");
 		return 0;
 	}
-		 error_if(	command.Type	!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	, "Invalid message type!")
-	else error_if(	command.Command	!= ::gpk::ENDPOINT_COMMAND_CONNECT
+		 gerror_if(	command.Type	!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	, "Invalid message type!")
+	else gerror_if(	command.Command	!= ::gpk::ENDPOINT_COMMAND_CONNECT
 				&&	command.Command	!= ::gpk::ENDPOINT_COMMAND_DISCONNECT	, "Invalid message type!")
 	else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
 		return 0;
@@ -194,7 +194,7 @@ static	::gpk::error_t										server								(::gpk::SUDPServer& serverInstance)
 
 void														threadServer						(void* pServerInstance)				{
 	::gpk::SUDPServer												& serverInstance					= *(::gpk::SUDPServer*)pServerInstance;
-	error_if(errored(server(serverInstance)), "Server exiting with error.")
+	gerror_if(errored(server(serverInstance)), "Server exiting with error.")
 	else
 		info_printf("Server gracefully closed.");
 	serverInstance.Listen										= false;
@@ -223,6 +223,6 @@ void														threadServer						(void* pServerInstance)				{
 		::sendto(serverInstance.Socket, (const char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);
 	} while(10 > ++attempt && serverInstance.Clients.size());
-	info_if(attempt < 10, "Listening socket closed with %u disconnect attempt%s.", attempt, (attempt > 1) ? "s":"");
+	ginfo_if(attempt < 10, "Listening socket closed with %u disconnect attempt%s.", attempt, (attempt > 1) ? "s":"");
 	return 0;
 }

@@ -45,7 +45,7 @@ namespace gpk
 						_tOBJ *								ref_allocate						(::gpk::gpk_ref<_tOBJ>** gpk_reference)									noexcept	{
 		typedef	::gpk::gpk_ref<_tOBJ>								TRef;
 		TRef														* newRef							= (TRef*)::gpk::gpk_malloc(sizeof(TRef));
-		retnul_error_if(0 == newRef, "%s", "Failed to allocate reference! Out of memory?");
+		retnul_gerror_if(0 == newRef, "%s", "Failed to allocate reference! Out of memory?");
 		if(0 == (newRef->Instance = (_tOBJ*)::gpk::gpk_malloc(sizeof(_tOBJ)))) {
 			::gpk::gpk_free(newRef);
 			error_printf("%s", "Failed to allocate instance! Out of memory?");
@@ -62,7 +62,7 @@ namespace gpk
 						_tOBJ *								ref_create							(::gpk::gpk_ref<_tOBJ>** gpk_reference, _tArgs&&... argsConstructor)				{
 		typedef	::gpk::gpk_ref<_tOBJ>								TRef;
 		TRef														* newRef							= 0;
-		retnul_error_if(0 == ::gpk::ref_allocate(&newRef), "%s", "Failed to allocate reference");
+		retnul_gerror_if(0 == ::gpk::ref_allocate(&newRef), "%s", "Failed to allocate reference");
 		new (newRef->Instance) _tOBJ{argsConstructor...};
 
 		TRef														* oldRef							= *gpk_reference;

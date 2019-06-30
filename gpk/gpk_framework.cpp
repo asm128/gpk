@@ -55,7 +55,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())
-			error_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
+			gerror_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 #endif
 	::gpk::SGUI																					& gui										= *framework.GUI;

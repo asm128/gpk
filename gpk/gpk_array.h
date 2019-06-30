@@ -57,15 +57,15 @@ namespace gpk
 
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
 		inline constexpr								array_pod									()																			noexcept	= default;
-		//inline											array_pod									(uint32_t initialSize)																	{ throw_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
+		//inline											array_pod									(uint32_t initialSize)																	{ gthrow_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
 														array_pod									(::std::initializer_list<_tPOD> init)													{
-			throw_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
+			gthrow_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 			memcpy(Data, init.begin(), Count * sizeof(_tPOD));
 		}
 
 		//template<size_t sizeStatic>
 		//												array_pod									(const _tPOD (&init)[sizeStatic])														{
-		//	throw_if(errored(resize(sizeStatic)), "Failed to resize array! Why?");
+		//	gthrow_if(errored(resize(sizeStatic)), "Failed to resize array! Why?");
 		//	memcpy(Data, init, Count * sizeof(_tPOD));
 		//}
 		//												array_pod									(const view_array<const _tPOD>& other)													{
@@ -73,11 +73,11 @@ namespace gpk
 		//		const uint32_t										newSize										= other.Count;
 		//		const uint32_t										reserveSize									= calc_reserve_size(newSize);
 		//		uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-		//		throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+		//		gthrow_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 		//		::gpk::auto_gpk_free								safeguard;
 		//		Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-		//		throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
-		//		throw_if(0 == other.Data	, "", "%s", "other.Data is null!");
+		//		gthrow_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
+		//		gthrow_if(0 == other.Data	, "", "%s", "other.Data is null!");
 		//		memcpy(Data, other.Data, newSize * sizeof(_tPOD));
 		//		//for(uint32_t i = 0, count = newSize; i<count; ++i)
 		//		//	Data[i]											= other[i];
@@ -100,11 +100,11 @@ namespace gpk
 				const uint32_t										newSize										= other.size();
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+				gthrow_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				throw_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
-				throw_if(0 == other.begin()	, "", "%s", "other.Data is null!");
+				gthrow_if(0 == Data			, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
+				gthrow_if(0 == other.begin()	, "", "%s", "other.Data is null!");
 				memcpy(Data, other.begin(), newSize * sizeof(_tPOD));
 				//for(uint32_t i = 0, count = newSize; i<count; ++i)
 				//	Data[i]											= other[i];
@@ -118,10 +118,10 @@ namespace gpk
 			const uint32_t										newSize										= _otherCount;
 			const uint32_t										reserveSize									= calc_reserve_size(newSize);
 			uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-			throw_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+			gthrow_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 			::gpk::auto_gpk_free								safeguard;
 			Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-			throw_if(0 == Data, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
+			gthrow_if(0 == Data, "", "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
 			memcpy(Data, other, newSize * sizeof(_tPOD));
 			//for(uint32_t i = 0, count = newSize; i < count; ++i)
 			//	Data[i]											= other[i];
@@ -131,7 +131,7 @@ namespace gpk
 		}
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view_array<_tPOD>&) other); }
 							array_pod<_tPOD>&			operator =									(const view_array<_tPOD>& other)														{
-			throw_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
+			gthrow_if(resize(other.size()) != (int32_t)other.size(), "", "Failed to assign array.");
 			if(Count)
 				memcpy(Data, other.begin(), Count * sizeof(_tPOD));
 			//for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
@@ -140,7 +140,7 @@ namespace gpk
 		}
 		template<size_t sizeStatic>
 							array_pod<_tPOD>&			operator =									(const _tPOD (&init)[sizeStatic])														{
-			throw_if(resize(sizeStatic) != sizeStatic, "Failed to resize array! Why? Size requested: %u.", (uint32_t)sizeStatic);
+			gthrow_if(resize(sizeStatic) != sizeStatic, "Failed to resize array! Why? Size requested: %u.", (uint32_t)sizeStatic);
 			memcpy(Data, init, Count * sizeof(_tPOD));
 			return *this;
 		}
@@ -404,7 +404,7 @@ namespace gpk
 
 		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_gpk_free(Data); }	// dtor
 		inline constexpr								array_obj									()																						= default;
-		inline											array_obj									(const uint32_t newSize)																{ throw_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }
+		inline											array_obj									(const uint32_t newSize)																{ gthrow_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }
 		inline											array_obj									(array_obj<_tObj>&& other)													noexcept	{
 			Size											= other.Size									;
 			Count											= other.Count									;
@@ -418,11 +418,11 @@ namespace gpk
 				uint32_t											newSize										= other.Count;
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
-				throw_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+				gthrow_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "", "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				throw_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size);
-				throw_if(0 == other.Data	, "", "%s", "other.Data is null!");
+				gthrow_if(0 == newData		, "", "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size);
+				gthrow_if(0 == other.Data	, "", "%s", "other.Data is null!");
 				for(uint32_t i = 0; i < newSize; ++i)
 					new (&newData[i]) _tObj(other.Data[i]);
 				Data											= newData;
@@ -432,7 +432,7 @@ namespace gpk
 			}
 		}
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
-			throw_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
+			gthrow_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
 				this->operator[](iElement)							= other[iElement];
 			return *this;

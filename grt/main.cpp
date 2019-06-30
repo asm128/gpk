@@ -39,8 +39,8 @@ static	int														threadRenderStart				(::SRuntimeState& runtimeState)				
 static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 	::gpk::error_t														updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 	if(1 == updateResult || errored(updateResult)) {
-		info_if(1 == updateResult, "%s", "Application requested termination.");
-		error_if(errored(updateResult), "%s", "update() returned error.");
+		ginfo_if(1 == updateResult, "%s", "Application requested termination.");
+		gerror_if(errored(updateResult), "%s", "update() returned error.");
 	}
 	else {
 		gpk_sync_increment(runtimeState.RenderThreadUsers);	// Report we're alive
@@ -48,9 +48,9 @@ static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRun
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
 			updateResult												= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
-			break_info_if(1 == updateResult, "Application requested termination.");
-			break_error_if(errored(updateResult), "update() returned error.");
-			//error_if(mainModule.Render(applicationInstance), "Why would this ever happen?");
+			break_ginfo_if(1 == updateResult, "Application requested termination.");
+			break_gerror_if(errored(updateResult), "update() returned error.");
+			//gerror_if(mainModule.Render(applicationInstance), "Why would this ever happen?");
 			//Sleep(1);
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
@@ -100,7 +100,7 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 		runtimeState.MainModule											= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		error_if(errored(mainModule.Cleanup(applicationInstance)), "%s", "Failed.");
+		gerror_if(errored(mainModule.Cleanup(applicationInstance)), "%s", "Failed.");
 		info_printf("%s", "Application instance destroyed.");
 		gpk_necall(mainModule.Delete(&applicationInstance), "");
 	}

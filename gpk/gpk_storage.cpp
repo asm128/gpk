@@ -337,9 +337,9 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t								gpk::findLastSlash										(const ::gpk::view_const_string & path)		{
-	int32_t													indexOfStartOfFileName0									= ::gpk::rfind('\\', path);
-	int32_t													indexOfStartOfFileName1									= ::gpk::rfind('/', path);
+		::gpk::error_t									gpk::findLastSlash									(const ::gpk::view_const_string & path)		{
+	int32_t														indexOfStartOfFileName0								= ::gpk::rfind('\\', path);
+	int32_t														indexOfStartOfFileName1								= ::gpk::rfind('/', path);
 	return 
 		(-1 == indexOfStartOfFileName1) ? indexOfStartOfFileName0 :
 		(-1 == indexOfStartOfFileName0) ? indexOfStartOfFileName1 :

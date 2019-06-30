@@ -51,13 +51,25 @@ namespace gpk
 				bool						operator!=(const SMinMax & other)		const	noexcept	{ return !operator==(other); }
 	};
 #pragma pack(pop)
-#define true_if(expression)					((expression) ? true : false)	// returns true	 if the parameter evaluates to true
-#define false_if(expression)				((expression) ? false : true)	// returns false if the parameter evaluates to true
-#define one_if(expression)					((expression) ? 1 : 0)			// returns one   if the parameter evaluates to true
-#define zero_if(expression)					((expression) ? 0 : 1)			// returns zero  if the parameter evaluates to true
+#ifndef true_if
+#	define true_if(expression)					((expression) ? true : false)	// returns true	 if the parameter evaluates to true
+#endif
+#ifndef false_if
+#	define false_if(expression)					((expression) ? false : true)	// returns false if the parameter evaluates to true
+#endif
+#ifndef one_if
+#	define one_if(expression)					((expression) ? 1 : 0)			// returns one   if the parameter evaluates to true
+#endif
+#ifndef zero_if
+#	define zero_if(expression)					((expression) ? 0 : 1)			// returns zero  if the parameter evaluates to true
+#endif
 //
-#define is_one(your_int)					( 1 == (your_int))				// returns true if the parameter is equal to one
-#define is_zero(your_int)					( 0 == (your_int))				// returns true if the parameter is equal to zero
+#ifndef is_one
+#	define is_one(your_int)						( 1 == (your_int))				// returns true if the parameter is equal to one
+#endif
+#ifndef is_zero
+#	define is_zero(your_int)					( 0 == (your_int))				// returns true if the parameter is equal to zero
+#endif
 } // namespace
 
 #endif // GPK_EVAL_H_2983742983047239874

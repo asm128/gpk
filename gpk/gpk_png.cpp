@@ -346,9 +346,9 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		gpk_necall(png_stream.read_pod(chunkRead.CRC)						, "%s", "Failed to read PNG! File corrupt?");
 		be2le_32(chunkRead.CRC);
 		uint32_t																	crcGenerated									= ::gpk::get_crc({&source[crcDataStart], sizeChunk + 4});
-		error_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
+		gerror_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
 		gpk_necall(pngData.Chunks.push_back(chunkRead), "%s", "Out of memory?");
-		break_info_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
+		break_ginfo_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
 	}
 
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
@@ -488,11 +488,11 @@ static			::gpk::error_t											pngScanlineDefilter								(const ::gpk::view_
 				else if(scanlineFilters[y] == 3) { ::pngDefilterAverage	(scanlines[y], scanlines[y - 1], bytesPerPixel);	filteredScanlines[y] = true; }
 				else if(scanlineFilters[y] == 4) { ::pngDefilterPaeth	(scanlines[y], scanlines[y - 1], bytesPerPixel);	filteredScanlines[y] = true; }
 				else
-					reterr_error_if(scanlineFilters[y] > 4, "Invalid filter: %u! Corrupt png file?", (uint32_t)scanlineFilters[y]);
+					reterr_gerror_if(scanlineFilters[y] > 4, "Invalid filter: %u! Corrupt png file?", (uint32_t)scanlineFilters[y]);
 			}
 		}
 	}
-	warn_if(countPasses > 1, "Decoding passess executed: %u.", countPasses);
+	gwarn_if(countPasses > 1, "Decoding passess executed: %u.", countPasses);
 	return 0;
 }
 

@@ -240,7 +240,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	if(recursive) { // Delete children first.
 		::gpk::array_pod<int32_t>											children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			error_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
+			gerror_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
 	}
 	// Remove from parent list
 	const uint32_t														indexParent												= (uint32_t)gui.Controls.Controls[iControl].IndexParent;
@@ -261,7 +261,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 			}
 	}
 #if defined(GPK_DEBUG_ENABLED)
-	error_if(childrenRemoved > 1, "%s", "Parent should not reference a child control more than once.");
+	gerror_if(childrenRemoved > 1, "%s", "Parent should not reference a child control more than once.");
 #endif
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	controlState.Unused												= true;
@@ -467,7 +467,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 }
 
 			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)																		{
-	error_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
+	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
 	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t														controlHovered											= -1;
 	::gpk::array_pod<uint32_t>											rootControlsToProcess									= {};

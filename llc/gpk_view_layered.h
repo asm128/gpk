@@ -17,15 +17,15 @@ namespace gpk
 		// Constructors
 		inline constexpr												view_layered				()																				noexcept	= default;
 		inline															view_layered				(_tElement* dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LayerSize(layerWidth * layerHeight) {
-			throw_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		inline															view_layered				(_tElement* dataElements, const ::gpk::SCoord3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
-			throw_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters.");	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 		// Operators
-							::gpk::view_grid<_tElement>					operator[]					(uint32_t layer)																			{ throw_if(0 == Data, "Uninitialized array pointer."); throw_if(layer >= Size.z, "Invalid layer: %i.", layer); return ::gpk::view_grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y); }
-							::gpk::view_grid<const _tElement>			operator[]					(uint32_t layer)														const				{ throw_if(0 == Data, "Uninitialized array pointer."); throw_if(layer >= Size.z, "Invalid layer: %i.", layer); return ::gpk::view_grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y); }
+							::gpk::view_grid<_tElement>					operator[]					(uint32_t layer)																			{ gthrow_if(0 == Data, "Uninitialized array pointer."); gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer); return ::gpk::view_grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y); }
+							::gpk::view_grid<const _tElement>			operator[]					(uint32_t layer)														const				{ gthrow_if(0 == Data, "Uninitialized array pointer."); gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer); return ::gpk::view_grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y); }
 
 		// Methods
 		inline constexpr	const _tElement*							begin						()																		const	noexcept	{ return Data;						}

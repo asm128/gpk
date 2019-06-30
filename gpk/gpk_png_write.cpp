@@ -47,8 +47,8 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 		return -1;
 	}
     (void)deflateEnd(&strm);
-    error_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
-    error_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
+    gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
+    gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
 	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
     /* clean up and return */
 	info_printf("deflateEnd: %u.", (uint32_t)ret);

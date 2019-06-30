@@ -60,7 +60,7 @@ namespace gpk
 		if( out_view.metrics() != newSize ) {
 			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
-				error_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
+				gerror_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
 		}
 		return 0;
 	}

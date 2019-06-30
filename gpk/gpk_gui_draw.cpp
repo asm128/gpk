@@ -218,7 +218,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		}
 	}
 
-	error_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
+	gerror_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
 	return 0;
 }
 			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)								{
@@ -248,6 +248,6 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	gpk_necall(::gpk::guiUpdateMetrics(gui, gui.LastSize, false), "%s", "Unknown issue!");;
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
 		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent))
-			error_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)),"%s",  "Unknown issue!");
+			gerror_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)),"%s",  "Unknown issue!");
 	return 0;
 }

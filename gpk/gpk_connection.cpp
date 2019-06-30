@@ -290,7 +290,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 					info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
 					break;
 				}
-			reterr_error_if(0 == client.KeyPing, "Failed to determine encryption key!");
+			reterr_gerror_if(0 == client.KeyPing, "Failed to determine encryption key!");
 		}
 		else { // Why the fuck is this commented??? 
 			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();

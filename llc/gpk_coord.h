@@ -80,8 +80,8 @@ namespace gpk
 	struct SCoord3 {
 		typedef									SCoord3<_tBase>			TCoord3;
 												_tBase					x, y, z;
-		inline									const _tBase&			operator[]				(uint32_t index)											const				{ throw_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
-		inline									_tBase&					operator[]				(uint32_t index)																{ throw_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
+		inline									const _tBase&			operator[]				(uint32_t index)											const				{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
+		inline									_tBase&					operator[]				(uint32_t index)																{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		//
 		constexpr								TCoord3					operator+				(const TCoord3& other)												const	noexcept	{ return {x + other.x, y + other.y, z + other.z};												}
 		constexpr								TCoord3					operator-				(const TCoord3& other)												const	noexcept	{ return {x - other.x, y - other.y, z - other.z};												}
@@ -173,8 +173,8 @@ namespace gpk
 		typedef				SCoord3		<_tBase>	TCoord3;
 							_tBase					x, y, z, w;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ throw_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
+		inline				const _tBase&	operator[]				(uint32_t index)											const				{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
+		inline				_tBase&			operator[]				(uint32_t index)																{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
 		//
 		constexpr			bool			operator ==				(const TQuat& other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
 		constexpr inline	bool			operator !=				(const TQuat& other)										const	noexcept	{ return !operator==(other); }

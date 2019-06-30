@@ -22,9 +22,9 @@
 		return -1;
 	}
     int ret_end = deflateEnd(&strm);
-    error_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
+    gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
     ree_if(ret < 0, "%s", "Unknown error");				/* stream will be complete */
-    error_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
+    gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
 	ree_if(ret_end == Z_STREAM_ERROR, "deflateEnd() returned %s", "Z_STREAM_ERROR")
 	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
     /* clean up and return */

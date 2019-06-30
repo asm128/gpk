@@ -20,8 +20,8 @@ namespace gpk
 			const ::gpk::SCoord2<int32_t>													coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SRectangle2D<int32_t>												dstRect0										= {{sizeCharCell.x * iChar, dstOffsetY}, sizeCharCell};
 			const ::gpk::SRectangle2D<int32_t>												srcRect0										= {coordCharTable, sizeCharCell};
-			error_if(errored(::gpk::grid_copy_alpha(target, viewTextureFont, ::gpk::SRectangle2D<int32_t>{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})), "%s", "I believe this never fails.");
-			//error_if(errored(::gpk::grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)), "I believe this never fails.");
+			gerror_if(errored(::gpk::grid_copy_alpha(target, viewTextureFont, ::gpk::SRectangle2D<int32_t>{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})), "%s", "I believe this never fails.");
+			//gerror_if(errored(::gpk::grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)), "I believe this never fails.");
 		}
 		return 0;
 	}
@@ -36,9 +36,9 @@ namespace gpk
 			const ::gpk::SCoord2<int32_t>													coordCharTable									= {coordTableX * sizeCharCell.x, coordTableY * sizeCharCell.y};
 			const ::gpk::SRectangle2D<int32_t>												dstRect0										= {{sizeCharCell.x * iChar, dstOffsetY}, sizeCharCell};
 			const ::gpk::SRectangle2D<int32_t>												srcRect0										= {coordCharTable, sizeCharCell};
-			//error_if(errored(::gpk::grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
-			error_if(errored(::gpk::grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, ::gpk::SRectangle2D<int32_t>{dstTextOffset + dstRect0.Offset, sizeCharCell}, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
-			//error_if(errored(::gpk::grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)), "I believe this never fails.");
+			//gerror_if(errored(::gpk::grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
+			gerror_if(errored(::gpk::grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, ::gpk::SRectangle2D<int32_t>{dstTextOffset + dstRect0.Offset, sizeCharCell}, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
+			//gerror_if(errored(::gpk::grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)), "I believe this never fails.");
 		}
 		for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
 			::gpk::drawPixelLight(target, dstCoords[iCoord], color, 0.05f, 0.75);
@@ -71,7 +71,7 @@ namespace gpk
 			::gpk::SRectangle2D<int32_t>													dstRect1										= {{((int32_t)targetRect.Offset.x + (int32_t)fontCharSize.x * (int32_t)iChar), targetRect.Offset.y}, fontCharSize.Cast<int32_t>()};
 			//dstRect1.Size.x																+= ::gpk::min(0, (int32_t)targetRect.Offset.x);
 			dstRect1.Size.y																+= ::gpk::min(0, (int32_t)targetRect.Offset.y);
-			error_if(errored(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {charsPerRow * fontCharSize.x, 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
+			gerror_if(errored(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {charsPerRow * fontCharSize.x, 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
 		}
 		return 0;
 	}

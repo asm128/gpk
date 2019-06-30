@@ -79,7 +79,7 @@ namespace gpk
 			return -1;
 		}
 							_tValue								get_value_by_index						(uint32_t index)										const			{
-			retval_error_if(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
+			retval_gerror_if(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
 			return Values[index];
 		}
 							::gpk::error_t						get_label_by_index						(uint32_t index, ::gpk::label& value)					const			{

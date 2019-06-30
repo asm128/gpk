@@ -78,9 +78,9 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 		::gpk::array_pod<byte_t>						decryptTest							= {};
 		::gpk::rsaDecode({&pEncrypted[offset], encrypted.size() - offset}, n, testkey, decryptTest);
 		::gpk::view_array<const byte_t>					filter_view							= {&pDecrypted[offset], decrypted.size() - offset};
-		error_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
+		gerror_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest = 0; iTest < decryptTest.size(); ++iTest) {
-			error_if(decryptTest[iTest] != filter_view[iTest], "%s", "Error!");
+			gerror_if(decryptTest[iTest] != filter_view[iTest], "%s", "Error!");
 		}
 	}
 	return i;
@@ -184,9 +184,9 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 	if(testkey) {
 		::gpk::array_pod<byte_t> decryptTest = {};
 		::gpk::rsaDecode(encrypted, n, testkey, decryptTest);
-		error_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
+		gerror_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest =0; iTest < decryptTest.size(); ++iTest) {
-			error_if(decryptTest[iTest] != (byte_t)filter_view[iTest], "%s", "Error!");
+			gerror_if(decryptTest[iTest] != (byte_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
 	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * sizeof(uint64_t)};
@@ -269,9 +269,9 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 	if(testkey) {
 		::gpk::array_pod<byte_t>						decryptTest							= {};
 		::gpk::gpcDecode(encrypted, n, testkey, salt, decryptTest);
-		error_if(decryptTest.size() != prehashed.size(), "%s", "Error!");
+		gerror_if(decryptTest.size() != prehashed.size(), "%s", "Error!");
 		for(uint32_t i =0; i < decryptTest.size(); ++i) {
-			error_if(decryptTest[i] != prehashed[i], "%s", "Error!");
+			gerror_if(decryptTest[i] != prehashed[i], "%s", "Error!");
 		}
 	}
 

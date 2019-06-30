@@ -20,7 +20,7 @@ namespace gpk
 		// Constructors
 		inline constexpr							view_array					()																			noexcept	= default;
 		inline										view_array					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
-			throw_if(0 == dataElements && 0 != elementCount, "Invalid parameters: %p, %u.", dataElements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			gthrow_if(0 == dataElements && 0 != elementCount, "Invalid parameters: %p, %u.", dataElements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
@@ -28,13 +28,13 @@ namespace gpk
 
 		template <size_t _elementCount>
 		inline										view_array					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)_elementCount, elementCount))			{
-			throw_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
+			gthrow_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
 		}
 
 		// Operators
 		inline constexpr	operator				view_array<const _tElement>	()																			noexcept	{ return {Data, Count}; }
-							_tElement&				operator[]					(uint32_t index)																		{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
-							const _tElement&		operator[]					(uint32_t index)													const				{ throw_if(0 == Data, "%s", "Uninitialized array pointer."); throw_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
+							_tElement&				operator[]					(uint32_t index)																		{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
+							const _tElement&		operator[]					(uint32_t index)													const				{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 
 							bool					operator					!=(const ::gpk::view_array<const _tElement>& other)					const				{ return !operator==(other); }
 							bool					operator					==(const ::gpk::view_array<const _tElement>& other)					const				{
