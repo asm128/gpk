@@ -503,8 +503,8 @@ namespace gpk
 	// --------------		------------------------	------------------------- DATA_TYPE ---------------------------------------------------------------
 	// -- Non-POD types:
 	static constexpr		const SDataTypeID			DATA_TYPE_UNKNOWN				= GTYPEID_MAKE_NON_UNIFORM(0x01);				// aka DATA_TYPE_INT1
-	static constexpr		const SDataTypeID			DATA_TYPE_NWOLVECTOR			= GTYPEID_MAKE_NON_UNIFORM(0x02);				// aka DATA_TYPE_INT1_2
-	static constexpr		const SDataTypeID			DATA_TYPE_NWOLSTRING			= GTYPEID_MAKE_NON_UNIFORM(0x03);				// aka DATA_TYPE_INT1_3
+	static constexpr		const SDataTypeID			DATA_TYPE_GPKVECTOR				= GTYPEID_MAKE_NON_UNIFORM(0x02);				// aka DATA_TYPE_INT1_2
+	static constexpr		const SDataTypeID			DATA_TYPE_GPKSTRING				= GTYPEID_MAKE_NON_UNIFORM(0x03);				// aka DATA_TYPE_INT1_3
 	static constexpr		const SDataTypeID			DATA_TYPE_GLABEL				= GTYPEID_MAKE_NON_UNIFORM(0x04);				// aka DATA_TYPE_INT1_4
 	static constexpr		const SDataTypeID			DATA_TYPE_GENUM					= GTYPEID_MAKE_NON_UNIFORM(0x05);				// aka DATA_TYPE_INT1_5
 	static constexpr		const SDataTypeID			DATA_TYPE_GDESCRIPTOR			= GTYPEID_MAKE_NON_UNIFORM(0x06);				// aka DATA_TYPE_INT1_6
