@@ -22,12 +22,16 @@ Given the following json:
         },
 ]
 
-An expression from this language (which I've called JSON expression Notation), resolves as follows:
+An expression in this language (which I've called JSON expression notation), resolves as follows:
 
 Expression:
+
 {people[2].name}'s {properties[selection.index].name}: {people[2].property.{properties[selection.index].name}}
 
+Resolution:
+
 ---------------- Step 1:
+
 {[{ "name"     : "David"
   , "property" :
          { "color" : "red", "age" : 25 }
@@ -52,35 +56,47 @@ Expression:
   , "property" :
          { "color" : "blue", "age" : 95 }
  },
-][2].property.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][selection.index].name}}
+][2].property.{properties[selection.index].name}}
 
 ---------------- Step 2:
+
 {{ "name"     : "Charles"
   , "property" :
          { "color" : "blue", "age" : 95 }
  }.name}'s {[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][1].name}: {{ "name"     : "Charles"
   , "property" :
          { "color" : "blue", "age" : 95 }
- }.property.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][selection.index].name}}
+ }.property.{properties[selection.index].name}}
 
 ---------------- Step 3:
-{"Charles"}'s {"age"}: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][selection.index].name}}
+
+{"Charles"}'s {{ "name" : "age", "type" : "int"}.name}: {{ "color" : "blue", "age" : 95 }.{properties[selection.index].name}}
 
 ---------------- Step 4:
-Charles's age: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][1].name}}
+
+Charles's {"age"}: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][selection.index].name}}
+
 
 ---------------- Step 5:
-Charles's age: {{ "color" : "blue", "age" : 95 }.{{ "name" : "age", "type" : "int"}.name}}
+
+Charles's age: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][1].name}}
 
 ---------------- Step 6:
-Charles's age: {{ "color" : "blue", "age" : 95 }.{"age"}}
+
+Charles's age: {{ "color" : "blue", "age" : 95 }.{{ "name" : "age", "type" : "int"}.name}}
 
 ---------------- Step 7:
-Charles's age: {{ "color" : "blue", "age" : 95 }.age}
+
+Charles's age: {{ "color" : "blue", "age" : 95 }.{"age"}}
 
 ---------------- Step 8:
-Charles's age: {95}
+
+Charles's age: {{ "color" : "blue", "age" : 95 }.age}
 
 ---------------- Step 9:
-Charles's age: 95
 
+Charles's age: {95}
+
+---------------- Step 10:
+
+Charles's age: 95
