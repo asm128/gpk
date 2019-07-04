@@ -1,0 +1,86 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Win32.Debug",
+            "type": "shell",
+            "command": "msbuild",
+			"args": 
+				[ "/property:GenerateFullPaths=true"
+                , "/t:build"
+                , "/p:Configuration=Debug"
+                , "/p:Platform=x86"
+                , "-m"
+           		],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Win32.Release",
+            "type": "shell",
+            "command": "msbuild",
+            "args": 
+                [ "/property:GenerateFullPaths=true"
+                , "/t:build"
+                , "/p:Configuration=Release"
+                , "/p:Platform=x86"
+                , "-m"
+            	],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "x64.Debug",
+            "type": "shell",
+            "command": "msbuild",
+            "args": 
+                [ "/property:GenerateFullPaths=true"
+                , "/t:build"
+                , "/p:Configuration=Debug"
+                , "/p:Platform=x64"
+                , "-m"
+            	],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "x64.Release",
+            "type": "shell",
+            "command": "msbuild",
+            "args": 
+                [ "/property:GenerateFullPaths=true"
+                , "/t:build"
+                , "/p:Configuration=Release"
+                , "/p:Platform=x64"
+                , "-m"
+            	],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+    ]
+}
