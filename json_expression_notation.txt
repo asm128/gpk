@@ -76,7 +76,6 @@ Resolution:
 
 Charles's {"age"}: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][selection.index].name}}
 
-
 ---------------- Step 5:
 
 Charles's age: {{ "color" : "blue", "age" : 95 }.{[{ "name" : "color", "type" : "string"}, { "name" : "age", "type" : "int"} ][1].name}}
