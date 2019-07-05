@@ -4,6 +4,8 @@
 #include "gpk_find.h"
 #include "gpk_process.h"
 
+#include "gpk_parse.h"
+
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
@@ -36,7 +38,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	controlConstraints.AttachSizeToText.x								= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
-	::gpk::serverStart(app.Server, 9998);
+	uint64_t																port						= 9998;
+	{ // load port from config file
+		::gpk::view_const_string												jsonPort					= {};
+		const ::gpk::SJSONReader												& jsonReader						= framework.ReaderJSONConfig;
+		const int32_t															indexObjectConfig					= ::gpk::jsonArrayValueGet(*jsonReader.Tree[0], 0);	// Get the first JSON {object} found in the [document]
+		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.listen_port", jsonReader, indexObjectConfig, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+		else {
+			::gpk::parseIntegerDecimal(jsonPort, &port);
+			info_printf("Port to listen on: %u.", (uint32_t)port);
+		}
+	}
+	gpk_necall(::gpk::serverStart(app.Server, (uint16_t)port), "Failed to start server on port %u. Port busy?", (uint32_t)port);
 	return 0;
 }
 
@@ -61,7 +74,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 				return 1;
 		}
 	}
-	::gpk::array_obj<::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>>	receivedPerClient;
+	::gpk::array_obj<::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>>	& receivedPerClient		= app.ReceivedPerClient;
 	receivedPerClient.resize(app.Server.Clients.size());
 	{	// pick up messages for later processing
 		::gpk::mutex_guard																	lock						(app.Server.Mutex);
@@ -73,17 +86,23 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						clientResponses;
+	::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						& clientResponses		= app.ClientResponses;
 	clientResponses.resize(receivedPerClient.size());
-	{	// 
+	{	// Exectue processes
+		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
+				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
+				// llamar proceso
+			}
+		}
+	}
+	{	// Read processes output if they're done processing.
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			clientResponses[iClient].resize(receivedPerClient[iClient].size());
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
-				// llamar proceso
 				// generar respuesta proceso
 				clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
-
 			}
 		}
 	}
@@ -92,6 +111,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::mutex_guard														lock						(app.Server.Mutex);
 			::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
 			::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage]);
+			receivedPerClient[iClient][iMessage]		= {};
 		}
 	}
 	//timer.Frame();
