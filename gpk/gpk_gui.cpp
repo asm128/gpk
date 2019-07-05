@@ -1,7 +1,6 @@
 #include "gpk_gui.h"
 #include "gpk_gui_text.h"
 
-
 // GUI_CONTROL_COLOR_BACKGROUND
 // GUI_CONTROL_COLOR_BORDER_LEFT
 // GUI_CONTROL_COLOR_BORDER_TOP
@@ -545,8 +544,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::controlTextSet										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text)				{
 	::gpk::view_const_string												& oldText												= gui.Controls.Text[iControl].Text;
 	if(text.begin	() != oldText.begin()
-	|| text.size	() != oldText.size()
-	) {
+	 || text.size	() != oldText.size()
+	 ) {
 		oldText															= text;
 		gui.Controls.States[iControl].Updated							= false;
 	}

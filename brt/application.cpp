@@ -78,7 +78,7 @@ static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::vie
 	::gpk::array_pod<char_t>		userMessage				= {};
 	userMessage.resize(2 * commandLine.size() + 1024);
 	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdline.begin());
-	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK);
+	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
