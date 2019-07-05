@@ -54,6 +54,15 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			info_printf("Port to listen on: %u.", (uint32_t)port);
 		}
 	}
+	::gpk::array_pod<char_t>		& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
+	::gpk::array_pod<char_t>		& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
+	if(app.ProcessParams.size()) {
+		szCmdlineFinal.push_back(' ');
+		szCmdlineFinal.append(app.ProcessParams);
+	}
+	szCmdlineFinal.push_back(0);
+	szCmdlineApp.push_back(0);
+
 	gpk_necall(::gpk::serverStart(app.Server, (uint16_t)port), "Failed to start server on port %u. Port busy?", (uint32_t)port);
 	return 0;
 }
@@ -61,18 +70,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 static	::gpk::error_t		createChildProcess		
 	(	::brt::SProcess					& process
 	,	::gpk::view_array<char_t>		environmentBlock
-	,	const ::gpk::view_const_string	appPath
-	,	const ::gpk::view_const_string	commandLineExe
-	,	const ::gpk::view_const_string	commandLineArgs
+	,	::gpk::view_char				appPath
+	,	::gpk::view_char				commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	::gpk::array_pod<char_t>		szCmdlineApp			= appPath;
-	::gpk::array_pod<char_t>		szCmdlineFinal			= commandLineExe ;
-	if(commandLineArgs.size()) {
-		szCmdlineFinal.push_back(' ');
-		szCmdlineFinal.append(commandLineArgs);
-	}
-	szCmdlineFinal.push_back(0);
-	szCmdlineApp.push_back(0);
+	::gpk::view_char				szCmdlineApp			= appPath;
+	::gpk::view_char				szCmdlineFinal			= commandLine;
 	bool							bSuccess				= false; 
 	const uint32_t					creationFlags			= CREATE_SUSPENDED;
 	bSuccess					= CreateProcessA(szCmdlineApp.begin()	// Create the child process. 
@@ -185,7 +187,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 				gpk_necall(contentOffset, "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2});
-				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName, app.ProcessMockPath, app.ProcessParams)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
+				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
 			}
 		}
 	}

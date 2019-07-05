@@ -10,7 +10,7 @@
 	{	
 		"brt": 
 		{	"listen_port"	: "9797"
-		,	"process"		: {"executable_path" : "./test_cgi_environ.exe", "command_line_app_name" : "c:/asm128_test/x64.Debug/KitsuRPG.exe", "command_line_params" : ""}
+		,	"process"		: {"executable_path" : "./test_cgi_environ.exe", "command_line_app_name" : "c:/asm128_test/x64.Debug/KitsuRPG.exe", "command_line_params" : "-m:test_param"}
 		},
 		"gpk_cgi_rest": 
 		{	"remote_port"	: "9797"
