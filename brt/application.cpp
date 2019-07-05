@@ -62,18 +62,20 @@ static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::vie
 	szCmdline.resize(commandLine.size() + 1);
 	szCmdline[commandLine.size()] = 0;
 	bool							bSuccess				= false; 
+	const uint32_t					creationFlags			= CREATE_SUSPENDED;
 	bSuccess					= CreateProcessA(NULL	// Create the child process. 
 		, szCmdline.begin()			// command line 
 		, nullptr					// process security attributes 
 		, nullptr					// primary thread security attributes 
 		, true						// handles are inherited 
-		, 0							// creation flags 
+		, creationFlags				// creation flags 
 		, environmentBlock.begin()	// use parent's environment 
 		, NULL						// use parent's current directory 
 		, &process.StartInfo		// STARTUPINFO pointer 
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION 
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
+	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
 
@@ -161,8 +163,8 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 				app.ClientProcesses[iClient].StartInfo.hStdOutput	= app.ClientIOHandles[iClient].ChildStd_OUT_Write;
 				app.ClientProcesses[iClient].StartInfo.hStdInput	= app.ClientIOHandles[iClient].ChildStd_IN_Read;
 				app.ClientProcesses[iClient].StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
-				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
 				::writeToPipe(app.ClientIOHandles[iClient], receivedPerClient[iClient][iMessage]->Payload);
+				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
 			}
 		}
 	}
