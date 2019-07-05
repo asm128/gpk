@@ -237,6 +237,9 @@
     <ClInclude Include="gpk_json_expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_process.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_ascii_target.cpp">
@@ -363,6 +366,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_json_expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
