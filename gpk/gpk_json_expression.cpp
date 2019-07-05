@@ -3,10 +3,13 @@
 #include "gpk_expression.h"
 #include "gpk_parse.h"
 
+#define GPK_JSON_EXPRESSION_DEBUG
+
+#if defined(GPK_JSON_EXPRESSION_DEBUG)
 static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
 	uint32_t											lenString						= node->Object->Span.End - node->Object->Span.Begin;
 	::gpk::array_pod<char_t>							bufferFormat					= {};
-	bufferFormat.resize(lenString + 1024);
+	bufferFormat.resize(2 * lenString + 1024);
 	sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Entering expression node type: %%u (%%s). Node Span: {%%u, %%u}. Parent index: %%u. Object index: %%u. Text: %%.%us", lenString);
 	info_printf(bufferFormat.begin(), node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
 	for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
@@ -15,6 +18,7 @@ static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const 
 	info_printf(bufferFormat.begin(), node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), node->Object->Span.Begin, node->Object->Span.End, node->Object->ParentIndex, node->ObjectIndex, &expression[node->Object->Span.Begin]);
 	return 0;
 }
+#endif
 
 static ::gpk::error_t							evaluateNode							(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)						{
 	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];
@@ -145,7 +149,9 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 	::gpk::view_const_string							evaluated								= {};
 	int32_t												jsonNodeResultOfEvaluation				= -1;
 	if(reader.Tree.size()) {
+#if defined(GPK_JSON_EXPRESSION_DEBUG)
 		::printNode(reader.Tree[0], expression);
+#endif
 		jsonNodeResultOfEvaluation						= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
 		if errored(jsonNodeResultOfEvaluation) {
 			bufferFormat.resize(expression.size());

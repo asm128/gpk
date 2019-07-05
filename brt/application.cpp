@@ -9,16 +9,18 @@
 //#define GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #include "gpk_app_impl.h"
 
-GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
+GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 
-			::gpk::error_t											cleanup						(::gme::SApplication & app)						{
+#define BUFSIZE 4096 
+
+			::gpk::error_t											cleanup						(::brt::SApplication & app)						{
 	::gpk::serverStop(app.Server);
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
 	::gpk::tcpipShutdown();
 	return 0;
 }
 
-			::gpk::error_t											setup						(::gme::SApplication & app)						{
+			::gpk::error_t											setup						(::brt::SApplication & app)						{
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
 	framework.Input.create();
@@ -43,6 +45,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		::gpk::view_const_string												jsonPort					= {};
 		const ::gpk::SJSONReader												& jsonReader						= framework.ReaderJSONConfig;
 		const int32_t															indexObjectConfig					= ::gpk::jsonArrayValueGet(*jsonReader.Tree[0], 0);	// Get the first JSON {object} found in the [document]
+		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.process.name", jsonReader, indexObjectConfig, app.ProcessFileName)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+
 		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.listen_port", jsonReader, indexObjectConfig, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
 		else {
 			::gpk::parseIntegerDecimal(jsonPort, &port);
@@ -53,7 +57,65 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{
+static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::view_array<char_t> environmentBlock, const ::gpk::view_const_string commandLine)	{	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
+	::gpk::array_pod<char_t>		szCmdline				= commandLine;
+	szCmdline.resize(commandLine.size() + 1);
+	szCmdline[commandLine.size()] = 0;
+	bool							bSuccess				= false; 
+	bSuccess					= CreateProcessA(NULL	// Create the child process. 
+		, szCmdline.begin()			// command line 
+		, nullptr					// process security attributes 
+		, nullptr					// primary thread security attributes 
+		, true						// handles are inherited 
+		, 0							// creation flags 
+		, environmentBlock.begin()	// use parent's environment 
+		, NULL						// use parent's current directory 
+		, &process.StartInfo		// STARTUPINFO pointer 
+		, &process.ProcessInfo
+		) ? true : false;  // receives PROCESS_INFORMATION 
+	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
+	return 0;
+}
+
+static	::gpk::error_t		writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::view_const_byte chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data. 
+	DWORD							dwWritten				= 0;
+	bool							bSuccess				= false;
+	e_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "Failed to write to child process' standard input.");
+	ree_if(false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
+	return bSuccess ? 0 : -1;
+} 
+
+static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, ::gpk::array_pod<byte_t> & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data. 
+	char							chBuf	[BUFSIZE]		= {}; 
+	bool							bSuccess				= FALSE;
+	for (;;) { 
+		uint32_t						dwRead					= 0;
+		bSuccess					= ReadFile(handles.ChildStd_OUT_Read, chBuf, BUFSIZE, (DWORD*)&dwRead, NULL);
+		ree_if(false == bSuccess, "Failed to read from child process' standard output."); 
+		if(0 == dwRead) 
+			break; 
+		readBytes.append(chBuf, dwRead);
+		char							bufferFormat	[128]	= {};
+		sprintf_s(bufferFormat, "Process output: %%.%us", dwRead);
+		info_printf(bufferFormat, chBuf);
+		if(0 == readBytes[readBytes.size() - 1])
+			break;
+	}
+	return 0;
+}
+
+			static ::gpk::error_t							initHandles						(::brt::SProcessHandles & handles) { 
+	SECURITY_ATTRIBUTES				saAttr;
+	saAttr.bInheritHandle		= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited. 
+	saAttr.lpSecurityDescriptor = NULL; 
+	ree_if(false == (bool)CreatePipe			(&handles.ChildStd_OUT_Read, &handles.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT."); 
+	ree_if(false == (bool)SetHandleInformation	(handles.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)						, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited."); 
+	ree_if(false == (bool)CreatePipe			(&handles.ChildStd_IN_Read, &handles.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
+	ree_if(false == (bool)SetHandleInformation	(handles.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)						, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited."); 
+	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly. 
+} 
+
+		::gpk::error_t											update						(::brt::SApplication & app, bool exitSignal)	{
 	::gpk::STimer															timer;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
@@ -75,9 +137,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 	::gpk::array_obj<::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>>	& receivedPerClient		= app.ReceivedPerClient;
-	receivedPerClient.resize(app.Server.Clients.size());
 	{	// pick up messages for later processing
 		::gpk::mutex_guard																	lock						(app.Server.Mutex);
+		receivedPerClient.resize(app.Server.Clients.size());
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
 			::gpk::mutex_guard														lockRecv					(conn->Queue.MutexReceive);
@@ -86,32 +148,49 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 		}
 	}
 
-	::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						& clientResponses		= app.ClientResponses;
-	clientResponses.resize(receivedPerClient.size());
+	app.ClientIOHandles.resize(receivedPerClient.size());
+	app.ClientProcesses.resize(receivedPerClient.size());
 	{	// Exectue processes
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
+				::gpk::view_byte										environmentBlock		= receivedPerClient[iClient][iMessage]->Payload;
 				// llamar proceso
+				::initHandles(app.ClientIOHandles[iClient]);
+				app.ClientProcesses[iClient].StartInfo.hStdError	= app.ClientIOHandles[iClient].ChildStd_OUT_Write;
+				app.ClientProcesses[iClient].StartInfo.hStdOutput	= app.ClientIOHandles[iClient].ChildStd_OUT_Write;
+				app.ClientProcesses[iClient].StartInfo.hStdInput	= app.ClientIOHandles[iClient].ChildStd_IN_Read;
+				app.ClientProcesses[iClient].StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
+				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
+				::writeToPipe(app.ClientIOHandles[iClient], receivedPerClient[iClient][iMessage]->Payload);
 			}
 		}
 	}
+	::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						& clientResponses		= app.ClientResponses;
+	clientResponses.resize(receivedPerClient.size());
 	{	// Read processes output if they're done processing.
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			clientResponses[iClient].resize(receivedPerClient[iClient].size());
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
 				// generar respuesta proceso
-				clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
+				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
+				clientResponses[iClient][iMessage].clear();
+				::readFromPipe(app.ClientIOHandles[iClient], clientResponses[iClient][iMessage]);
 			}
 		}
 	}
 	for(uint32_t iClient = 0; iClient < clientResponses.size(); ++iClient) {
 		for(uint32_t iMessage = 0; iMessage < clientResponses[iClient].size(); ++iMessage) { // contestar 
-			::gpk::mutex_guard														lock						(app.Server.Mutex);
-			::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
-			::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage]);
-			receivedPerClient[iClient][iMessage]		= {};
+			if(clientResponses[iClient][iMessage].size()) {
+				::gpk::mutex_guard														lock						(app.Server.Mutex);
+				::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
+				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage]);
+				receivedPerClient[iClient][iMessage]		= {};
+				CloseHandle(app.ClientProcesses[iClient].ProcessInfo.hProcess	);
+				CloseHandle(app.ClientProcesses[iClient].ProcessInfo.hThread	);
+
+			}
 		}
 	}
 	//timer.Frame();
@@ -119,8 +198,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-
-			::gpk::error_t											draw					(::gme::SApplication & app)						{
+			::gpk::error_t											draw					(::brt::SApplication & app)						{
 	::gpk::STimer															timer;
 	app;
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
@@ -140,102 +218,22 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-
 #include <windows.h> 
 #include <cstdio> 
 
-struct SProcessHandles {
-	HANDLE	ChildStd_IN_Read	= nullptr;
-	HANDLE	ChildStd_IN_Write	= nullptr;
-	HANDLE	ChildStd_OUT_Read	= nullptr;
-	HANDLE	ChildStd_OUT_Write	= nullptr;
-	HANDLE	InputFile			= nullptr;
-};
+static int					REM_tmainN							()		{
+	::brt::SProcess						process				= {};
+	::brt::SProcessHandles				g_h					= {};
+	char							szCmdline	[]			= "C:\\amd128_test\\x64.Release\\KitsuTBS.exe";
+	createChildProcess(process, {}, szCmdline);	// Create the child process. 
 
-static ::SProcessHandles g_h	= {};
-
-#define BUFSIZE 4096 
-
-static	::gpk::error_t		writeToPipe				(::gpk::view_const_byte chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data. 
-	DWORD							dwWritten				= 0;
-	bool							bSuccess				= false;
-	e_if(false == (bSuccess = WriteFile(g_h.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "Failed to write to child process' standard input.");
-	ree_if(false == (CloseHandle(g_h.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
-	return bSuccess ? 0 : -1;
-} 
- 
-static	::gpk::error_t		readFromPipe			()	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data. 
-	uint32_t						dwRead					= 0
-		,							dwWritten				= 0
-		;
-	char							chBuf	[BUFSIZE]		= {}; 
-	bool							bSuccess				= FALSE;
-	HANDLE							hParentStdOut			= GetStdHandle(STD_OUTPUT_HANDLE);
-	for (;;) { 
-		bSuccess					= ReadFile(g_h.ChildStd_OUT_Read, chBuf, BUFSIZE, (DWORD*)&dwRead, NULL);
-		ree_if(false == bSuccess, "Failed to read from child process' standard output."); 
-		if(0 == dwRead) 
-			break; 
-		char							bufferFormat	[128]	= {};
-		sprintf_s(bufferFormat, "Process output: %%.%us", dwRead);
-		info_printf(bufferFormat, chBuf);
-		bSuccess					= WriteFile(hParentStdOut, chBuf, dwRead, (DWORD*)&dwWritten, NULL);
-		ree_if(false == bSuccess, "Failed to write to local bs"); 
-	}
-	return 0;
-} 
-
-
-struct SProcess {
-	PROCESS_INFORMATION			ProcessInfo				= {}; 
-	STARTUPINFO					StartInfo				= {sizeof(STARTUPINFO)};
-};
-
-static	::gpk::error_t		createChildProcess		(SProcess& process, ::gpk::view_const_string commandLine)	{	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	commandLine;
-	char			szCmdline	[]			= "C:\\amd128_test\\x64.Release\\KitsuTBS.exe";
-	bool							bSuccess				= false; 
-	bSuccess					= CreateProcessA(NULL	// Create the child process. 
-		, szCmdline					// command line 
-		, nullptr					// process security attributes 
-		, nullptr					// primary thread security attributes 
-		, true						// handles are inherited 
-		, 0							// creation flags 
-		, NULL						// use parent's environment 
-		, NULL						// use parent's current directory 
-		, &process.StartInfo		// STARTUPINFO pointer 
-		, &process.ProcessInfo
-		) ? true : false;  // receives PROCESS_INFORMATION 
-	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
+	writeToPipe(g_h, "Something to send to the standard input of the child process.");	// Write to the pipe that is the standard input for a child process. Data is written to the pipe's buffers, so it is not necessary to wait until the child process is running before writing data.
+	//printf("\n->Contents of %s written to child STDIN pipe.\n", argv[1]);
+	::gpk::array_pod<byte_t>		bytesRead;
+	readFromPipe(g_h, bytesRead);		// Read from pipe that is the standard output for child process. 
+	// Close handles to the child process and its primary thread. Some applications might keep these handles to monitor the status of the child process, for example. 
 	return 0;
 }
-
-static int					REM_main			(int argc, CHAR *argv[]) { 
-	ree_if(argc < 2, "USAGE: \n\t%s [processFile]", argv[0]);
-	info_printf("\n->Start of parent execution.\n");
-	
-	SECURITY_ATTRIBUTES				saAttr				= {sizeof(SECURITY_ATTRIBUTES)}; 
-	saAttr.bInheritHandle		= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited. 
-	saAttr.lpSecurityDescriptor = NULL; 
-	ree_if(false == (bool)CreatePipe			(&g_h.ChildStd_OUT_Read, &g_h.ChildStd_OUT_Write, &saAttr, 0)	, "StdoutRd CreatePipe: '%s'."			, "Failed to create a pipe for the child process's STDOUT."); 
-	ree_if(false == (bool)SetHandleInformation	(g_h.ChildStd_OUT_Read, HANDLE_FLAG_INHERIT, 0)					, "Stdout SetHandleInformation: '%s'."	, "Failed to ensure the read handle to the pipe for STDOUT is not inherited."); 
-	ree_if(false == (bool)CreatePipe			(&g_h.ChildStd_IN_Read, &g_h.ChildStd_IN_Write, &saAttr, 0)		, "Stdin CreatePipe: '%s'."				, "Failed to create a pipe for the child process's STDIN.");
-	ree_if(false == (bool)SetHandleInformation	(g_h.ChildStd_IN_Write, HANDLE_FLAG_INHERIT, 0)					, "Stdin SetHandleInformation: '%s'."	, "Failed to ensure the write handle to the pipe for STDIN is not inherited."); 
-
-	SProcess						process				= {};
-	char							szCmdline	[]			= "C:\\amd128_test\\x64.Release\\KitsuTBS.exe";
-	createChildProcess(process, szCmdline);	// Create the child process. 
-	ree_if(INVALID_HANDLE_VALUE == (g_h.InputFile = CreateFileA(argv[1], GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL)), "Failed to get a handle to an input file for the parent: '%s'.", "This example assumes a plain text file and uses string output to verify data flow.");
-
-	writeToPipe("Something to send to the standard input of the child process.");	// Write to the pipe that is the standard input for a child process. Data is written to the pipe's buffers, so it is not necessary to wait until the child process is running before writing data.
-	printf("\n->Contents of %s written to child STDIN pipe.\n", argv[1]);
-	readFromPipe();		// Read from pipe that is the standard output for child process. 
-	info_printf("\n->End of parent execution.\n");	
-	// Close handles to the child process and its primary thread. Some applications might keep these handles to monitor the status of the child process, for example. 
-	CloseHandle(process.ProcessInfo.hProcess);
-	CloseHandle(process.ProcessInfo.hThread);
-	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly. 
-} 
 
 // Example 1
 // By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
@@ -313,10 +311,8 @@ static int					REM_tmain1			() {
 }
 
 int							test					() {
-	::REM_main(0, 0);
+	::REM_tmainN();
 	::REM_tmain0();
 	::REM_tmain1();
-	::gpk::array_pod<char_t> environmentBlock;
-	ree_if(::gpk::getEnvironmentBlock(environmentBlock), "Failed to get environment block!");
 	return 0;
 }

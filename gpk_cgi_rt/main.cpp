@@ -175,6 +175,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());
 	printf("%s", html.begin());
+	::std::putc(0, stdout);
 	return 0;
 }
 
