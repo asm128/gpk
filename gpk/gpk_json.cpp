@@ -1,5 +1,7 @@
 #include "gpk_json.h"
 
+#define json_info_printf // info_printf
+
 						::gpk::error_t									jsonTreeRebuild										(::gpk::array_pod<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>							& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
@@ -43,7 +45,7 @@
 	closing																	= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement]; 
 	closing->Span.End														= (uint32_t)indexChar + 1; 
 	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(closing->Type);
-	info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
+	json_info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
 	stateParser.IndexCurrentElement											= closing->ParentIndex; 
 	--stateParser.NestLevel; 
 	stateParser.CurrentElement												= ((uint32_t)stateParser.IndexCurrentElement < object.size()) ? &object[stateParser.IndexCurrentElement] : 0;
@@ -94,7 +96,7 @@
 			break;
 		stateParser.IndexCurrentChar											+= 1;	// skip the u to get the next 4 digits.
 		seterr_break_if(jsonAsString.size() - stateParser.IndexCurrentChar < 4, "End of stream during unicode code point parsing. JSON length: %s. Current index: %u.", jsonAsString.size(), stateParser.IndexCurrentChar);
-		info_printf("Unicode code point found: %4.4s", &jsonAsString[stateParser.IndexCurrentChar]);
+		json_info_printf("Unicode code point found: %4.4s", &jsonAsString[stateParser.IndexCurrentChar]);
 		currentElement															= {stateParser.IndexCurrentElement, ::gpk::JSON_TYPE_CODEPOINT, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + 4}};
 		seterr_if(errored(object.push_back(currentElement)), "%s", "Out of memory?"); 
 		stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
@@ -121,7 +123,7 @@
 						::gpk::error_t									jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
 	ree_if(token.size() > jsonAsString.size() - stateParser.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
 	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateParser.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
-	info_printf("JSON token found: %s.", token.begin());
+	json_info_printf("JSON token found: %s.", token.begin());
 	::gpk::SJSONType															boolElement											= {stateParser.IndexCurrentElement, jsonType, {stateParser.IndexCurrentChar, stateParser.IndexCurrentChar + token.size()}};
 	gpk_necall(object.push_back(boolElement), "Failed to push! Out of memory? object count: %u.", object.size());
 	stateParser.IndexCurrentChar											+= token.size() - 1;
@@ -174,7 +176,7 @@
 		, isNegative	? "true" : "false"
 		, isFloat		? "true" : "false"
 	), "Failed to parse json number. Number too long.");
-	info_printf(bufferFormat, &jsonAsString[index]);
+	json_info_printf(bufferFormat, &jsonAsString[index]);
 	stateParser.IndexCurrentChar											+= sizeNum + (index - offset) - 1;
 	charCurrent																= jsonAsString[stateParser.IndexCurrentChar+1];
 	ree_if(charCurrent != ' ' 
@@ -201,7 +203,7 @@
 						::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, ::gpk::JSON_TYPE containerType) {
 	::gpk::error_t																errVal												= 0;
 	if(object[object.size() - 1].Type == containerType) { 
-		info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
+		json_info_printf("Discarding empty container element at index %i (%s). Level: %i", object.size() - 1, ::gpk::get_value_label(containerType).begin(), stateParser.NestLevel);
 		stateParser.IndexCurrentElement											= object[object.size() - 1].ParentIndex;
 		object.pop_back(0); 
 		--stateParser.NestLevel; 
@@ -209,7 +211,7 @@
 			stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	} 
 	else {
-		info_printf("Closing container at index %i (%s).", object.size() - 1, ::gpk::get_value_label(containerType).begin());
+		json_info_printf("Closing container at index %i (%s).", object.size() - 1, ::gpk::get_value_label(containerType).begin());
 			 if(::gpk::JSON_TYPE_VALUE	== containerType) errVal = ::jsonTestAndCloseValue	(stateParser, object); 
 		else if(::gpk::JSON_TYPE_KEY	== containerType) errVal = ::jsonTestAndCloseKey	(stateParser, object); 
 	}
@@ -231,7 +233,7 @@
 	stateParser.CurrentElement												= &object[stateParser.IndexCurrentElement];
 	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(currentElement.Type);
 	++stateParser.NestLevel; 
-	info_printf("%s open. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, currentElement.ParentIndex, currentElement.Type, currentElement.Span.Begin); 
+	json_info_printf("%s open. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, currentElement.ParentIndex, currentElement.Type, currentElement.Span.Begin); 
 	return 0;
 }
 
