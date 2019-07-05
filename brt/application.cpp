@@ -45,8 +45,9 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 		::gpk::view_const_string												jsonPort					= {};
 		const ::gpk::SJSONReader												& jsonReader						= framework.ReaderJSONConfig;
 		const int32_t															indexObjectConfig					= ::gpk::jsonArrayValueGet(*jsonReader.Tree[0], 0);	// Get the first JSON {object} found in the [document]
-		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.process.name", jsonReader, indexObjectConfig, app.ProcessFileName)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
-
+		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.process.executable_path"			, jsonReader, indexObjectConfig, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.process.command_line_app_name"	, jsonReader, indexObjectConfig, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.process.command_line_params"		, jsonReader, indexObjectConfig, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
 		gwarn_if(errored(::gpk::jsonExpressionResolve("application.brt.listen_port", jsonReader, indexObjectConfig, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
 		else {
 			::gpk::parseIntegerDecimal(jsonPort, &port);
@@ -57,14 +58,25 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::view_array<char_t> environmentBlock, const ::gpk::view_const_string commandLine)	{	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	::gpk::array_pod<char_t>		szCmdline				= commandLine;
-	szCmdline.resize(commandLine.size() + 1);
-	szCmdline[commandLine.size()] = 0;
+static	::gpk::error_t		createChildProcess		
+	(	::brt::SProcess					& process
+	,	::gpk::view_array<char_t>		environmentBlock
+	,	const ::gpk::view_const_string	appPath
+	,	const ::gpk::view_const_string	commandLineExe
+	,	const ::gpk::view_const_string	commandLineArgs
+	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
+	::gpk::array_pod<char_t>		szCmdlineApp			= appPath;
+	::gpk::array_pod<char_t>		szCmdlineFinal			= commandLineExe ;
+	if(commandLineArgs.size()) {
+		szCmdlineFinal.push_back(' ');
+		szCmdlineFinal.append(commandLineArgs);
+	}
+	szCmdlineFinal.push_back(0);
+	szCmdlineApp.push_back(0);
 	bool							bSuccess				= false; 
 	const uint32_t					creationFlags			= CREATE_SUSPENDED;
-	bSuccess					= CreateProcessA(NULL	// Create the child process. 
-		, szCmdline.begin()			// command line 
+	bSuccess					= CreateProcessA(szCmdlineApp.begin()	// Create the child process. 
+		, szCmdlineFinal.begin()	// command line 
 		, nullptr					// process security attributes 
 		, nullptr					// primary thread security attributes 
 		, true						// handles are inherited 
@@ -76,9 +88,10 @@ static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::vie
 		) ? true : false;  // receives PROCESS_INFORMATION 
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
 	::gpk::array_pod<char_t>		userMessage				= {};
-	userMessage.resize(2 * commandLine.size() + 1024);
-	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdline.begin());
+	userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
+	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
 	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
+	info_printf("Creating process '%s' with command line '%s'", szCmdlineApp.begin(), szCmdlineFinal.begin());
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
@@ -172,7 +185,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 				gpk_necall(contentOffset, "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2});
-				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
+				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName, app.ProcessMockPath, app.ProcessParams)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
 			}
 		}
 	}
