@@ -75,6 +75,10 @@ static	::gpk::error_t		createChildProcess		(::brt::SProcess& process, ::gpk::vie
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION 
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
+	::gpk::array_pod<char_t>		userMessage				= {};
+	userMessage.resize(2 * commandLine.size() + 1024);
+	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdline.begin());
+	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK);
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
 }
@@ -143,9 +147,9 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 		::gpk::mutex_guard																	lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
-			::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
-			::gpk::mutex_guard														lockRecv					(conn->Queue.MutexReceive);
-			receivedPerClient[iClient]											= app.Server.Clients[iClient]->Queue.Received;
+			::gpk::ptr_obj<::gpk::SUDPConnection>												conn						= app.Server.Clients[iClient];
+			::gpk::mutex_guard																	lockRecv					(conn->Queue.MutexReceive);
+			receivedPerClient[iClient]														= app.Server.Clients[iClient]->Queue.Received;
 			app.Server.Clients[iClient]->Queue.Received.clear();
 		}
 	}
@@ -163,7 +167,11 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 				app.ClientProcesses[iClient].StartInfo.hStdOutput	= app.ClientIOHandles[iClient].ChildStd_OUT_Write;
 				app.ClientProcesses[iClient].StartInfo.hStdInput	= app.ClientIOHandles[iClient].ChildStd_IN_Read;
 				app.ClientProcesses[iClient].StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
-				::writeToPipe(app.ClientIOHandles[iClient], receivedPerClient[iClient][iMessage]->Payload);
+				::gpk::view_const_byte									payload					= receivedPerClient[iClient][iMessage]->Payload;
+				::gpk::error_t											contentOffset			= ::gpk::find_sequence_pod(::gpk::view_const_byte{"\0"}, payload);
+				gpk_necall(contentOffset, "Failed to find environment block stop code.");
+				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
+					::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2});
 				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.ProcessFileName)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process. 
 			}
 		}
@@ -220,23 +228,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcessHandles & handles, :
 	return 0;
 }
 
-#include <windows.h> 
-#include <cstdio> 
-
-static int					REM_tmainN							()		{
-	::brt::SProcess						process				= {};
-	::brt::SProcessHandles				g_h					= {};
-	char							szCmdline	[]			= "C:\\amd128_test\\x64.Release\\KitsuTBS.exe";
-	createChildProcess(process, {}, szCmdline);	// Create the child process. 
-
-	writeToPipe(g_h, "Something to send to the standard input of the child process.");	// Write to the pipe that is the standard input for a child process. Data is written to the pipe's buffers, so it is not necessary to wait until the child process is running before writing data.
-	//printf("\n->Contents of %s written to child STDIN pipe.\n", argv[1]);
-	::gpk::array_pod<byte_t>		bytesRead;
-	readFromPipe(g_h, bytesRead);		// Read from pipe that is the standard output for child process. 
-	// Close handles to the child process and its primary thread. Some applications might keep these handles to monitor the status of the child process, for example. 
-	return 0;
-}
-
+// ---------------------------- Unused garbage follows
 // Example 1
 // By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
 static int					REM_tmain0							()		{
@@ -313,7 +305,6 @@ static int					REM_tmain1			() {
 }
 
 int							test					() {
-	::REM_tmainN();
 	::REM_tmain0();
 	::REM_tmain1();
 	return 0;

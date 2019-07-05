@@ -34,22 +34,6 @@
 	return 0;
 }
 
-::gpk::error_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output){
-	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
-	//char													buffer[4096]					= {};
-	::gpk::SCGIModule										module;
-	::std::string											moduleName						= {framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)};
-	::gpk::loadCGIModule(module, {moduleName.data(), (uint32_t)moduleName.size()});
-	module.Create	(&module.Application, &framework);
-	module.Setup	(module.Application);
-	module.Update	(module.Application, false);
-	module.Render	(module.Application, output);
-	module.Cleanup	(module.Application);
-	module.Delete	(&module.Application);
-	//output.append(buffer, formatForSize(framework.ModuleName, buffer, ::gpk::size(buffer), "<html>\n<body>\n<h1>bootstrapped module: ", "</h1>\n</body>\n</html>"));
-	runtimeValues;
-	return 0;
-}
 
 static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect							= {};
@@ -86,10 +70,14 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 	return 0;
 }
 
-int													cgiBootstrap			(::gpk::array_pod<char> & output)										{
+static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char> & output)										{
 	::gpk::array_pod<char_t>								environmentBlock		= {};
-	ree_if(errored(::gpk::getEnvironmentBlock(environmentBlock)), "%s", "Failed");
-	{ 
+	{	// Prepare CGI environment and request content packet to send to the service.
+		ree_if(errored(::gpk::getEnvironmentBlock(environmentBlock)), "%s", "Failed");
+		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
+		environmentBlock.push_back(0);
+	}
+	{	// Connect the client to the service.
 		::gpk::SUDPClient										bestClient				= {};
 		{	// setup and connect
 			bestClient.AddressConnect							= {};
@@ -97,19 +85,19 @@ int													cgiBootstrap			(::gpk::array_pod<char> & output)										{
 			gpk_necall(::gpk::clientConnect(bestClient), "%s", "error");
 		}
 		::gpk::array_pod<char_t>								responseRemote;
-		{
+		{	// Send the request data to the connected service.
 			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			gpk_necall(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock), "%s", "error");
-			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
-				gpk_necall(::gpk::clientUpdate(bestClient), "%s", "error");
+			gpk_necall(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock), "%s", "error");	// Enqueue the packet
+			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
+				gpk_necall(::gpk::clientUpdate(bestClient), "%s", "error");	
 				::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	received;
 				{	// pick up messages for later processing
-					::gpk::mutex_guard														lockRecv					(bestClient.Queue.MutexReceive);
-					received															= bestClient.Queue.Received;
+					::gpk::mutex_guard												lockRecv					(bestClient.Queue.MutexReceive);
+					received													= bestClient.Queue.Received;
 					bestClient.Queue.Received.clear();
 				}
-				if(received.size()) {
-					responseRemote	= received[0]->Payload;
+				if(received.size()) {	// Response has been received. Break loop.
+					responseRemote												= received[0]->Payload;
 					break;
 				}
 			}
@@ -126,7 +114,7 @@ static int											cgiMain				()	{
 	::gpk::SCGIRuntimeValues								runtimeValues;
 	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues), "%s", "Failed to load cgi runtime values.");
 	::gpk::array_pod<char>									html;
-	if errored(::cgiBootstrap(html)) {
+	if errored(::cgiBootstrap(runtimeValues, html)) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"
