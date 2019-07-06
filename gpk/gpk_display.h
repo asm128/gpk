@@ -34,7 +34,7 @@ namespace gpk
 	struct SDisplay {
 							::gpk::SDisplayPlatformDetail							PlatformDetail								= {};
 							::gpk::SCoord2<uint32_t>								PreviousSize								= {};
-							::gpk::SCoord2<uint32_t>								Size										= {};
+							::gpk::SCoord2<uint32_t>								Size										= {320, 200};
 							bool													Resized										: 1;
 							bool													Repaint										: 1;
 							bool													NoDraw										: 1;

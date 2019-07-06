@@ -208,7 +208,6 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
-	mainWindow.Size																			= {::BMP_SCREEN_WIDTH, ::BMP_SCREEN_HEIGHT};
 	::RECT																						finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	DWORD																						windowStyle									= WS_OVERLAPPEDWINDOW; //WS_POPUP;
 	::AdjustWindowRectEx(&finalClientRect, windowStyle, FALSE, 0);
