@@ -114,21 +114,21 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			payloadHeader.MessageId										= ::hashFromTime(messageToSend.Time);
 			::gpk::array_pod<byte_t>										compressed;
 			ree_if(errored(compressed.resize(messageToSend.Payload.size() * 2)), "Wtf: %s.", "Out of memory?");
-			if(0 == payloadHeader.Command.Encrypted) {
-				if(0 == payloadHeader.Command.Compressed)
+			if(0 == payloadHeader.Command.Compressed) {
+				if(0 == payloadHeader.Command.Encrypted)
 					payloadHeader.Size											= messageToSend.Payload.size();
 				else {
-					::gpk::arrayDeflate(messageToSend.Payload, compressed);
-					payloadHeader.Size											= compressed.size();
+					::gpk::ardellEncode(messageToSend.Payload, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
+					payloadHeader.Size											= ardellEncoded.size();
 				}
 			}
-			else  {
-				::gpk::ardellEncode(messageToSend.Payload, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
-				if(0 == payloadHeader.Command.Compressed)
-					payloadHeader.Size											= ardellEncoded.size();
-				else {
-					::gpk::arrayDeflate(ardellEncoded, compressed);
+			else {
+				::gpk::arrayDeflate(messageToSend.Payload, compressed);
+				if(0 == payloadHeader.Command.Encrypted)
 					payloadHeader.Size											= compressed.size();
+				else {
+					::gpk::ardellEncode(compressed, client.KeyPing & 0xFFFFFFFF, true, ardellEncoded);
+					payloadHeader.Size											= ardellEncoded.size();
 				}
 			}
 
@@ -136,15 +136,17 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			sendStream							= {messageBytes.begin(), messageBytes.size()};
 			gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
 
-			if(0 != payloadHeader.Command.Compressed) {
-				info_printf("Original packet size: %u. Compressed size: %u.", messageToSend.Payload.size(), compressed.size());
-				gpk_necall(sendStream.write_pod(compressed.begin(), compressed.size()), "%s", "??");
+			if(0 != payloadHeader.Command.Encrypted) {
+				info_printf("Original packet size: %u. Final size: %u.", messageToSend.Payload.size(), ardellEncoded.size());
+				gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
 			}
 			else {
-				if(0 == (payloadHeader.Command.Encrypted & 1))
+				if(0 == payloadHeader.Command.Compressed)
 					gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
-				else
-					gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
+				else {
+					info_printf("Original packet size: %u. Compressed size: %u.", messageToSend.Payload.size(), compressed.size());
+					gpk_necall(sendStream.write_pod(compressed.begin(), compressed.size()), "%s", "??");
+				}
 			}
 
 			ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
@@ -308,27 +310,28 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
 		if(header.Size > 0) {
+			const ::gpk::view_const_byte									viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
 			if(0 != command.Compressed) {
 				if(0 != command.Encrypted) {
 					::gpk::array_pod<byte_t>										inflated;
-					inflated.resize(65535);
-					::gpk::arrayInflate({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, inflated);
-					messageReceived->Payload.clear();
-					::gpk::ardellDecode(inflated, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+					::gpk::array_pod<byte_t>										decoded;
+					::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded);
+					messageReceived->Payload.resize(65535);
+					::gpk::arrayInflate(decoded, messageReceived->Payload);
 				}
 				else {
 					messageReceived->Payload.resize(65535);
-					::gpk::arrayInflate({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, messageReceived->Payload);
+					::gpk::arrayInflate(viewPayload, messageReceived->Payload);
 				}
 			}
 			else {
 				if(0 != command.Encrypted) {
 					messageReceived->Payload.clear();
-					::gpk::ardellDecode({&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size}, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+					::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
 				}
 				else {
 					messageReceived->Payload.resize(header.Size);
-					memcpy(messageReceived->Payload.begin(), &receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size);
+					memcpy(messageReceived->Payload.begin(), viewPayload.begin(), header.Size);
 				}
 			}
 		}
