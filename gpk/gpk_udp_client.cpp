@@ -7,17 +7,18 @@
 
 #if defined(GPK_WINDOWS)
 #	include <process.h>
+typedef	int			socklen_t;
 #endif
 
 static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_CONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	/* Data to send */
 	sockaddr_in														sa_server									= {};				/* Information about the server */
-	int																sa_length									= sizeof(struct sockaddr_in);
+	socklen_t														sa_length									= sizeof(struct sockaddr_in);
 	client.Socket.close();
 	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "%s", "??");
 	sa_server.sin_port											= htons(client.AddressConnect.Port);
 	ree_if(INVALID_SOCKET == (client.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Failed to create socket for address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
-	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed!");	/* Tranmsit data to get time */
+	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	sa_length													= sizeof(struct sockaddr_in);
 	sa_server													= {};
 	::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
@@ -25,13 +26,13 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	rew_if(-1 == received_bytes, "Failed to receive connect response from '%u.%u.%u.%u:%u'.", GPK_IPV4_EXPAND(client.AddressConnect));
 	::gpk::SIPv4													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
-	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address!");
+	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address! Expected: %u.%u.%u.%u:%u. Received from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.AddressConnect), GPK_IPV4_EXPAND(temp));
 	client.Address												= temp;
 	int																wsae										= WSAGetLastError() ;
-	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed!");	/* Receive time */
-	ree_if(commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received!");
+	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed to receive connect response from address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
+	ree_if(commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received! Command received: %s.", ::gpk::get_value_label(commandReceived.Type).begin());
 	commandToSend.Packed										= 1;
-	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed!");	/* Tranmsit data to get time */
+	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	client.LastPing = client.FirstPing							= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
@@ -50,7 +51,7 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 				continue;
 			if(wsae == WSAENOTSOCK || wsae == WSANOTINITIALISED)
 				return 0;
-			warning_printf("Failed to receive message!");
+			warning_printf("Failed to receive message! Error: 0x%x.", wsae);
 			received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 			continue;
 		}	/* Receive time */
@@ -73,7 +74,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 }
 
 		::gpk::error_t										gpk::clientUpdate							(::gpk::SUDPClient & client)		{
-	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected.");
+	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected. Current state: %s.", ::gpk::get_value_label(client.State).begin());
 	return ::gpk::connectionSendQueue(client, client.CacheSend, client.CacheSent);
 }
 
