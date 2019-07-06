@@ -1,4 +1,3 @@
-#include "gpk_bitmap_file.h"
 #include "gpk_view_stream.h"
 #include "zlib.h"
 #include "gpk_png.h"

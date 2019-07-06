@@ -1,6 +1,7 @@
 #include "gpk_rsa.h"
 #include "gpk_encoding.h"
 #include "gpk_noise.h"
+#include <cmath>
 
 #define RSA_ARDELL_KEY	1079150697//117515017//1054987632
 
@@ -189,7 +190,7 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 			gerror_if(decryptTest[iTest] != (byte_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
-	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * sizeof(uint64_t)};
+	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Apply(filter_view);
 	return (::gpk::error_t)i;
 }
@@ -199,7 +200,7 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 	uint32_t										offset								= decrypted.size();
 	uint32_t										i									= 0;
 	::gpk::array_pod<uint64_t>						defiltered							(encrypted);
-	::gpk::view_array<ubyte_t>						defilter_view						= {(ubyte_t*)defiltered.begin(), defiltered.size() * sizeof(uint64_t)};
+	::gpk::view_array<ubyte_t>						defilter_view						= {(ubyte_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Remove(defilter_view);
 	gpk_necall(::gpk::rsaDecode(defiltered, n, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
 	::gpk::view_array<ubyte_t>						filter_view							({(ubyte_t*)&decrypted[offset], decrypted.size() - offset});

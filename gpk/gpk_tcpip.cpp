@@ -102,6 +102,9 @@
 		::sockaddr										* sockaddr_ip									=  0;
 		::sockaddr_in									* sockaddr_ipv4									=  0;
 		::sockaddr_in6									* sockaddr_ipv6									=  0;
+		(void)sockaddr_ip	;
+		(void)sockaddr_ipv4	;
+		(void)sockaddr_ipv6	;
 		//DWORD dwRetval;
 #if defined(GPK_WINDOWS)
 		DWORD											iRetval;
@@ -110,6 +113,7 @@
 		int												iRetval;
 		uint32_t										ipbufferlength									= 46;
 #endif
+		(void)iRetval;
 		switch (ptr->ai_family)  {
 		default			:	verbose_printf("Other %li.", ptr->ai_family	); break;
 		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
@@ -188,13 +192,18 @@
 }
 
 ::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) { 
-	if(strRemotePort.size())
+	if(strRemotePort.size()) {
+#if defined(GPK_ANDROID)
+		remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
+#else
 		try {
 			remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
 		}
 		catch(...) {
 			remoteIP.Port									= 0;
 		}
+#endif
+	}
 
 	if(strRemoteIP.size()) {
 		uint32_t											iOffset						= 0; 
@@ -210,23 +219,32 @@
 					break;
 				++iEnd;
 			}
+#if defined(GPK_ANDROID)
+			remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
+#else
 			try {
 				remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
 			}
 			catch(...) {
 				remoteIP.IP[iVal]								= 0;
 			}
+#endif
 			iOffset											= iEnd + 1;
 			iEnd											= iOffset;
 		}
 		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
-			if(strRemotePort.size())
+			if(strRemotePort.size()) {
+#if defined(GPK_ANDROID)
+				remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
+#else
 				try {
 					remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
 				}
 				catch(...) {
 					remoteIP.Port									= 0;
 				}
+#endif
+			}
 		}
 	}
 	return 0;

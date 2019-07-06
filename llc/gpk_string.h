@@ -24,6 +24,13 @@
 		return 0;
 	}
 
+	static inline							int				strncpy_s					(char *dst, const char *src, size_t bufferSize)										{
+		//if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
+		//	return -1;
+		strncpy(dst, src, bufferSize);
+		return 0;
+	}
+
 	static inline							int				_snprintf_s					(char* buffer, size_t bufferSize, size_t count, const char* format, ...)			{
 		va_list args;
 		va_start(args, format);
@@ -66,8 +73,17 @@
 		return result;
 	}
 
+	static inline							int				sprintf_s					(char *buffer , uint32_t bufferSize, const char* format, ...)								{
+		va_list args;
+		va_start(args, format);
+		const int													result						= vsprintf_s(buffer, bufferSize, format, args);
+		va_end(args);
+		return result;
+	}
+
 	template<size_t _Size> static inline	int				strcat_s					( char (&dst)[_Size], const char *src )												{ return strcat_s	(dst, _Size, src);				}
 	template<size_t _Size> static inline	int				strcpy_s					( char (&dst)[_Size], const char *src )												{ return strcpy_s	(dst, _Size, src);				}
+	template<size_t _Size> static inline	int				strncpy_s					( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
 	static inline							int				_vsnprintf_s				( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, count, format, args);	}
 	static inline							int				vsprintf_s					( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsprintf	(buffer, format, args);			}
 #else

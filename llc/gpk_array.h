@@ -2,13 +2,14 @@
 #include "gpk_memory.h"
 #include "gpk_safe.h"
 #include <initializer_list>
+#include <new>
 
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
 
 namespace gpk
 {
-	template <typename... _Args>	void			clear					(_Args&&... args)						{ const int32_t results[] = {args.clear()..., 0}; }
+	template <typename... _Args>	void			clear					(_Args&&... args)						{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
 	template <typename... _Args>	::gpk::error_t	resize					(uint32_t newSize, _Args&&... args)		{
 		const uint32_t										oldSizes	[]			= {args.size	()			..., 0};
 		const ::gpk::error_t								results		[]			= {args.resize	(newSize)	..., 0};
@@ -17,7 +18,7 @@ namespace gpk
 				error_printf("Failed to set container size: %i. Out of memory?", (int32_t)newSize);
 				int32_t												j						= 0;
 				const int32_t dummy	[] = {args.resize(oldSizes[j++])..., 0};
-				dummy;
+				(void)dummy;
 				return -1;
 			}
 		return newSize;
@@ -544,7 +545,7 @@ namespace gpk
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size);
 				if(oldData) {
 					for(uint32_t i = 0, copyCount = ::gpk::min(oldCount, newSize); i < copyCount; ++i)
-						new (&newData[i])_tObj{oldData[i]};
+						new (&newData[i]) _tObj{oldData[i]};
 					for(uint32_t i = 0; i < oldCount; ++i)
 						oldData[i].~_tObj();
 				}

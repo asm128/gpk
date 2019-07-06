@@ -1,4 +1,3 @@
-#include "gpk_bitmap_file.h"
 #include "gpk_png.h"
 #include "zlib.h"
 
@@ -21,6 +20,7 @@ static			int32_t											make_crc_table							()																									{
     uint32_t															c										= crc;
     if(0 == g_crc_table_computed) {
 		static const int32_t												initedTable								= make_crc_table();
+		(void)initedTable;
 		info_printf("Initialized PNG CRC table: %i.", initedTable);
 	}
 

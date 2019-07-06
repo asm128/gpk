@@ -1,7 +1,9 @@
 #include "gpk_cgi_module.h"
 #include "gpk_module.h"
 
-#include <Windows.h>
+#if defined(GPK_WINDOWS)
+#	include <Windows.h>
+#endif
 
 			::gpk::error_t						gpk::loadCGIModule					(::gpk::SCGIModule& loadedModule, const ::gpk::view_const_string& moduleName)				{
 	loadedModule.Handle								= GPK_LOAD_MODULE(moduleName.begin());

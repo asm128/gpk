@@ -15,7 +15,7 @@
 	environmentBlock				= ::gpk::view_array<const char_t>{lpvEnv, (uint32_t)lengthEnvStrings + 2U};
 	FreeEnvironmentStringsA(lpvEnv);
 #else
-#	error "Not implemented"
+//#	error "Not implemented"
 #endif
 	return 0;
 }

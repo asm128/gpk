@@ -211,7 +211,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	else
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
 			::gpk::SInput															& input										= *dialog.Input;
-			const int64_t															valuePage									= ::gpk::max(1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
+			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
 			const ::gpk::SCoord2<int32_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
 				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);

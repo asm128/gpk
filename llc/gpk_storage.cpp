@@ -1,5 +1,8 @@
 #include "gpk_storage.h"
 #include "gpk_find.h"
+#include "gpk_io.h"
+#include "gpk_string.h"
+#include <new>
 
 #if defined(GPK_WINDOWS)
 #	ifndef WIN32_LEAN_AND_MEAN
@@ -37,6 +40,12 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 	return fileSize;
 }
 
+#if defined(GPK_ANDROID) || defined(GPK_LINUX)
+//#	include <sys/types.h>
+//#	include <unistd.h>
+#	include <sys/stat.h>
+#endif
+
 ::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_string& pathName, const char separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
@@ -53,7 +62,10 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 			ree_if(err != ERROR_ALREADY_EXISTS, "Failed to create directory: %s. hr: (%u)", folder, err);
 		}
 #else
-#	error "Not implemented."
+		struct stat st = {0};
+		if (stat(folder, &st) == -1) {
+			mkdir(folder, 0700);
+		}
 #endif
 		if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
 			break;
@@ -91,7 +103,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	int64_t									sizeFile						= ::gpk::fileSize(fileNameSrc);
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
 	FILE									* fp							= 0;
-	ree_if(0 == fp, "Files larger than 3gb still not supported.");
+	ree_if(0 == fp, "%s", "Files larger than 3gb still not supported.");
 	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
 	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
 
@@ -206,7 +218,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 				continue;
 			int32_t																			lenPath								= sprintf_s(sPath, "%s/%s", pathToList.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
-			gpk_necall(output.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+			gpk_necall(output.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
         }
 	}
 #endif
@@ -262,7 +274,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 				info_printf("Directory: %s.", sPath);
 			}
 			else {
-				gpk_necall(pathContents.Files.push_back({sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+				gpk_necall(pathContents.Files.push_back(::gpk::view_const_byte{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 				info_printf("File: %s.", sPath);
 			}
 		}

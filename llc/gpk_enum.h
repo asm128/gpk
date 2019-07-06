@@ -36,6 +36,7 @@ namespace gpk
 				info_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
 			static const ::gpk::label								newName									= instanceHere.Name = enumName;
+			(void)newName;
 			//static const ::gpk::error_t								errDummy								= instanceHere.add_value(INVALID_VALUE, ::gpk::INVALID_ENUM_VALUE_STR);
 
 			return INVALID_VALUE;
@@ -57,7 +58,7 @@ namespace gpk
 					value													= Values[i];
 					return 0;
 				}
-			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			error_printf("Enumeration value not found! Name: %s.", name);
 			value													= INVALID_VALUE;
 			return -1;
 		}
@@ -220,6 +221,8 @@ namespace gpk
 #define GDEFINE_FLAG_VALUE							GDEFINE_ENUM_VALUE
 #define GDEFINE_FLAG_VALUE_NOPREFIX					GDEFINE_ENUM_VALUE_NOPREFIX
 
-#pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
+#if defined(GPK_WINDOWS)
+#	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
+#endif
 
 #endif // GPK_ENUM_H_982364987234987234

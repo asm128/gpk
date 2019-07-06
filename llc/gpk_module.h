@@ -37,7 +37,7 @@
 #else
 #	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
 #	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
-#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		((GPK_MODULE_FUNCTION_NAME(symbolName))dlsym(moduleHandle, #symbolName))
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		dlsym	(moduleHandle, symbolName)
 #endif
 
 #if defined GPK_WINDOWS

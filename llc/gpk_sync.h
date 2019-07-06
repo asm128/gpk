@@ -7,6 +7,7 @@
 #define GPK_SYNC_H_023749082374
 
 #if defined(GPK_ANDROID) || defined(GPK_LINUX)
+#	include <thread>
 #elif defined(GPK_WINDOWS)
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
@@ -27,6 +28,7 @@ namespace gpk
 #	define ENTER_SHARED_SECTION(Name)							(Name).lock()
 #	define LEAVE_SHARED_SECTION(Name)							(Name).unlock()
 #	define DELETE_SHARED_SECTION(Name)							(0)
+	static inline ::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
 #elif defined(GPK_WINDOWS)
 #	if (defined( _WIN64 ) || defined( WIN64 ))
 #		define gpk__sync_increment(nCount)							( InterlockedIncrement64		( &(nCount) ) )
@@ -54,6 +56,7 @@ namespace gpk
 #	define ENTER_SHARED_SECTION(Name)							(Name).lock()
 #	define LEAVE_SHARED_SECTION(Name)							(Name).unlock()
 #	define DELETE_SHARED_SECTION(Name)							(0)
+	static inline ::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
 #endif
 
 #if defined(GPK_MTSUPPORT)

@@ -38,7 +38,7 @@ namespace gpk
 		out_intersect_point.y																= (_tCoord)(ynom / denom);
 		ree_if(!isfinite(out_intersect_point.x)
 			|| !isfinite(out_intersect_point.y)
-			, "Probably a numerical issue.");
+			, "%s", "Probably a numerical issue.");
 		return 1; //All OK
 	}
 

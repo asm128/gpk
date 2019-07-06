@@ -42,12 +42,6 @@
     <ClInclude Include="gpk_display.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_encoding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_frameinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,50 +87,17 @@
     <ClInclude Include="gpk_bitmap_file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_array_static.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_grid_static.h">
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_type_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_label_manager.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_label.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_runtime_module.h">
       <Filter>runtime</Filter>
     </ClInclude>
     <ClInclude Include="gpk_runtime.h">
       <Filter>runtime</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_module.h">
-      <Filter>runtime</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ptr.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_safe.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_png.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_adam7.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_storage.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui.h">
       <Filter>gui</Filter>
@@ -159,15 +120,6 @@
     <ClInclude Include="gpk_stdsocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_aes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_chrono.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_noise.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_udp_server.h">
       <Filter>udp</Filter>
     </ClInclude>
@@ -180,29 +132,8 @@
     <ClInclude Include="gpk_deque.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_rsa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_deflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_enum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_dialog.h">
       <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_member_registry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_datatype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_type_identifier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_json.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_dialog_controls.h">
       <Filter>gui</Filter>
@@ -225,18 +156,6 @@
     <ClInclude Include="gpk_string_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_find.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_json_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,9 +168,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_encoding.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_framework.cpp">
@@ -275,23 +191,8 @@
     <ClCompile Include="gpk_type_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_label.cpp">
-      <Filter>container</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_runtime_module.cpp">
       <Filter>runtime</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_png.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_png_write.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_adam7.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_storage.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_desktop.cpp">
       <Filter>gui</Filter>
@@ -308,15 +209,6 @@
     <ClCompile Include="gpk_tcpip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_aes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_chrono.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_noise.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_connection.cpp">
       <Filter>udp</Filter>
     </ClCompile>
@@ -326,23 +218,11 @@
     <ClCompile Include="gpk_udp_client.cpp">
       <Filter>udp</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_rsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_deflate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_dialog.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_draw.cpp">
       <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_datatype.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_json.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_bmg.cpp">
       <Filter>Source Files</Filter>
@@ -357,15 +237,6 @@
       <Filter>web_cgi</Filter>
     </ClCompile>
     <ClCompile Include="gpk_string_helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_json_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_process.cpp">

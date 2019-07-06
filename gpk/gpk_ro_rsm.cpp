@@ -192,7 +192,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 }
 
 			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, FILE								* input)							{
-	loaded, input;
+	(void)loaded, (void)input;
 	return 0;
 }
 

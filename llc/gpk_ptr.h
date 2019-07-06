@@ -1,5 +1,6 @@
 #include "gpk_sync.h"
 #include "gpk_log.h"
+#include "gpk_memory.h"
 
 #ifndef GPK_PTR_H_0297349827348923
 #define GPK_PTR_H_0297349827348923

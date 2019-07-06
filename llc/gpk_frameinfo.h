@@ -1,4 +1,4 @@
-#include <cstdint>
+#include "gpk_typeint.h"
 
 #ifndef GPK_FRAMEINFO_H_928374654
 #define GPK_FRAMEINFO_H_928374654

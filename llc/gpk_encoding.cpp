@@ -39,6 +39,10 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	char														temp [3]														= {};
 	temp[0]													= s[0];
 	temp[1]													= s[1];
+#if defined(GPK_ANDROID)
+		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
+		byte													= (char)hex;
+#else
 	try {
 		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
 		byte													= (char)hex;
@@ -47,6 +51,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 		byte													= '?';
 		return -1;	// we should never get here
 	}
+#endif
 	return 0;
 }
 
@@ -183,10 +188,10 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uin
 			saltValue[i]											= t % 256;
 		}
 	int32_t    keyFinal[8]   =
-	{ 11 + (key % 233)
-	,  7 + (key % 239)
-	,  5 + (key % 241)
-	,  3 + (key % 251)
+	{ (int32_t)(11 + (key % 233))
+	, (int32_t)( 7 + (key % 239))
+	, (int32_t)( 5 + (key % 241))
+	, (int32_t)( 3 + (key % 251))
 	};
 	int32_t														n																= salt ? input.size() + 4 : input.size();
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
@@ -219,10 +224,10 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uin
 ::gpk::error_t											gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	int32_t    keyFinal[8]   =
-	{ 11 + (key % 233)
-	,  7 + (key % 239)
-	,  5 + (key % 241)
-	,  3 + (key % 251)
+	{ (int32_t)(11 + (key % 233))
+	, (int32_t)( 7 + (key % 239))
+	, (int32_t)( 5 + (key % 241))
+	, (int32_t)( 3 + (key % 251))
 	};
 	int32_t														n																= (int32_t)input.size();
 

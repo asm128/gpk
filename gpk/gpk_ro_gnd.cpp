@@ -76,7 +76,7 @@ namespace gpk
 }
 
 			::gpk::error_t								gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, FILE								* input)							{
-	loaded, input;
+	(void)loaded, (void)input;
 	return 0;
 }
 

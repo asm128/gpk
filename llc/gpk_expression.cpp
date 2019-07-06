@@ -4,9 +4,9 @@ static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk
 	for(uint32_t iTag = 0; iTag < parsed.size(); ++iTag) {
 		const ::gpk::SExpressionReaderType								& type									 = parsed[iTag];
 		if(iTag && (::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == type.Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == type.Type) && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
-			gpk_necall(views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2}), "Out of memory?");
+			gpk_necall(views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2}), "%s", "Out of memory?");
 		else
-			gpk_necall(views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin}), "Out of memory?");
+			gpk_necall(views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin}), "%s", "Out of memory?");
 	}
 	return 0;
 }
@@ -28,7 +28,7 @@ static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gp
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
 			const ::gpk::ptr_obj<::gpk::SExpressionNode>					& nodeOther											= tree[iOther];
 			if(((uint32_t)nodeOther->Object->ParentIndex) == iObject)
-				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "Failed to push tree node. Out of memory?");
+				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}
 	}
 
@@ -126,7 +126,7 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		break;
 	case '{': 
 		skip_if_escaping(); 
-		ree_if(stateSolver.ExpectsSeparator, "This character can only be used after the . separator, so this requirement should be canceled already."); 
+		ree_if(stateSolver.ExpectsSeparator, "%s", "This character can only be used after the . separator, so this requirement should be canceled already."); 
 		ree_if(::gpk::EXPRESSION_READER_TYPE_KEY != stateSolver.CurrentElement->Type, "Can only open brackets in EXPRESSION_KEY types. Current expression type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin());
 		gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar), "Failed to open expression at index %i", stateSolver.IndexCurrentChar);	// Enter sub-expression
 		break;

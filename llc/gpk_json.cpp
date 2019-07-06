@@ -19,7 +19,7 @@
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
 			const ::gpk::ptr_obj<::gpk::SJSONNode>										& nodeOther											= tree[iOther];
 			if(((uint32_t)nodeOther->Object->ParentIndex) == iObject)
-				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "Failed to push tree node. Out of memory?");
+				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}
 	}
 
@@ -45,7 +45,9 @@
 	closing																	= stateParser.CurrentElement; //&object[stateParser.IndexCurrentElement]; 
 	closing->Span.End														= (uint32_t)indexChar + 1; 
 	const ::gpk::view_const_string												labelType											= ::gpk::get_value_label(closing->Type);
-	json_info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelType.begin(), stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
+	const char																	* labelText											= labelType.begin();
+	(void)labelText;
+	json_info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelText, stateParser.IndexCurrentElement, stateParser.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End); 
 	stateParser.IndexCurrentElement											= closing->ParentIndex; 
 	--stateParser.NestLevel; 
 	stateParser.CurrentElement												= ((uint32_t)stateParser.IndexCurrentElement < object.size()) ? &object[stateParser.IndexCurrentElement] : 0;
@@ -86,7 +88,7 @@
 	::gpk::error_t																errVal												= 0;
 	switch(stateParser.CharCurrent) {
 	default:
-		seterr_break_if(stateParser.CharCurrent < 0x20 || stateParser.CharCurrent > 0xFE, "Invalid character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
+		seterr_break_if(stateParser.CharCurrent < 0x20 || ((uchar_t)stateParser.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
 		seterr_break_if(stateParser.Escaping, "Cannot escape character: %i (%u) '%c'.", stateParser.CharCurrent, (uchar_t)stateParser.CharCurrent, stateParser.CharCurrent);
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
@@ -175,7 +177,7 @@
 	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Float: %s.", sizeNum, sizeNum, sizeNum
 		, isNegative	? "true" : "false"
 		, isFloat		? "true" : "false"
-	), "Failed to parse json number. Number too long.");
+	), "%s", "Failed to parse json number. Number too long.");
 	json_info_printf(bufferFormat, &jsonAsString[index]);
 	stateParser.IndexCurrentChar											+= sizeNum + (index - offset) - 1;
 	charCurrent																= jsonAsString[stateParser.IndexCurrentChar+1];
@@ -238,8 +240,6 @@
 }
 
 						::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateParser, ::gpk::array_pod<::gpk::SJSONType>& object, const ::gpk::view_const_string& jsonAsString)	{
-	::gpk::SJSONType															currentElement										= {};
-	const uint32_t																sizeRemaining										= jsonAsString.size() - stateParser.IndexCurrentChar;
 	static const ::gpk::view_const_string										tokenFalse											= "false"	;
 	static const ::gpk::view_const_string										tokenTrue											= "true"	;
 	static const ::gpk::view_const_string										tokenNull											= "null"	;

@@ -10,7 +10,7 @@
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
 			if( symbolList[iSymbol] == sourceChars[iChar] ) {
 				bSymbolProcessed												= true;
-				gpk_necall(stringToParse.push_back(sourceChars[iChar++]), "Failed to append character! Out of memory?"); 
+				gpk_necall(stringToParse.push_back(sourceChars[iChar++]), "%s", "Failed to append character! Out of memory?"); 
 				++totalCharsProcessed;
 				break;
 			}
@@ -18,7 +18,7 @@
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_necall(::gpk::reverse(stringToParse), "Cannot reverse string for parsing! How could this ever happen?");		// we assigned the digits backwards so we need to reverse the string.
+	gpk_necall(::gpk::reverse(stringToParse), "%s", "Cannot reverse string for parsing! How could this ever happen?");		// we assigned the digits backwards so we need to reverse the string.
 	uint64_t															number										= 0;
 	totalCharsProcessed												= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
@@ -120,7 +120,7 @@
 ::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
-		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "Parse step failed.");
+		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "%s", "Parse step failed.");
 	}
 	return 0;
 }

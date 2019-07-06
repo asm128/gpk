@@ -4,6 +4,7 @@
 #include "gpk_safe.h"
 #include "deflate.h"
 #include "gpk_find.h"
+#include "gpk_io.h"
 
 		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
     int				ret;
@@ -121,8 +122,8 @@
 	out_loaded.DataContents	.resize(header.SizeUncompressedContentsPacked	);
 	out_loaded.Names		.resize(header.TotalFileCount);
 	out_loaded.Contents		.resize(header.TotalFileCount);
-	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, out_loaded.DataInfo		), "Failed to uncompress file table.");
-	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles	, header.SizeCompressedContentsPacked	}, out_loaded.DataContents	), "Failed to uncompress file contents.");
+	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, out_loaded.DataInfo		), "%s", "Failed to uncompress file table.");
+	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles	, header.SizeCompressedContentsPacked	}, out_loaded.DataContents	), "%s", "Failed to uncompress file contents.");
 	{ // Build access tables.
 		uint32_t										offsetInfo				= 0;
 		for(uint32_t iFile = 0; iFile < out_loaded.Names.size(); ++iFile) {

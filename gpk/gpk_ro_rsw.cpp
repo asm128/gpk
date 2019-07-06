@@ -33,6 +33,7 @@
 	info_printf("RSW version minor: 0x%x.", (uint32_t)header.VersionMinor);
 	const uint32_t												promoted													= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
 	info_printf("RSW version number: 0x%x.", promoted);
+	(void)promoted;
 	//info_printf("RSW version: 0x%x.", header.Version);
 	rsw_stream.read_pod(loaded.INIFilename);
 	rsw_stream.read_pod(loaded.GNDFilename);
@@ -173,7 +174,7 @@
 }
 
 			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
-	loaded, input;
+	(void)loaded, (void)input;
 	return 0;
 }
 
