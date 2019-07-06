@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\llc\gpk_deflate.h" />
+    <ClInclude Include="..\llc\gpk_encoding.h" />
+    <ClInclude Include="..\llc\gpk_enum.h" />
+    <ClInclude Include="..\llc\gpk_error.h" />
+    <ClInclude Include="..\llc\gpk_eval.h" />
+    <ClInclude Include="..\llc\gpk_expression.h" />
+    <ClInclude Include="..\llc\gpk_find.h" />
+    <ClInclude Include="..\llc\gpk_frameinfo.h" />
+    <ClInclude Include="..\llc\gpk_grid_copy.h" />
+    <ClInclude Include="..\llc\gpk_grid_scale.h" />
+    <ClInclude Include="..\llc\gpk_image.h" />
+    <ClInclude Include="..\llc\gpk_io.h" />
+    <ClInclude Include="..\llc\gpk_json.h" />
+    <ClInclude Include="..\llc\gpk_json_expression.h" />
+    <ClInclude Include="..\llc\gpk_label.h" />
+    <ClInclude Include="..\llc\gpk_label_manager.h" />
+    <ClInclude Include="..\llc\gpk_log.h" />
+    <ClInclude Include="..\llc\gpk_math.h" />
+    <ClInclude Include="..\llc\gpk_matrix.h" />
+    <ClInclude Include="..\llc\gpk_member_registry.h" />
+    <ClInclude Include="..\llc\gpk_memory.h" />
+    <ClInclude Include="..\llc\gpk_module.h" />
+    <ClInclude Include="..\llc\gpk_noise.h" />
+    <ClInclude Include="..\llc\gpk_parse.h" />
+    <ClInclude Include="..\llc\gpk_platform.h" />
+    <ClInclude Include="..\llc\gpk_png.h" />
+    <ClInclude Include="..\llc\gpk_ptr.h" />
+    <ClInclude Include="..\llc\gpk_rsa.h" />
+    <ClInclude Include="..\llc\gpk_safe.h" />
+    <ClInclude Include="..\llc\gpk_size.h" />
+    <ClInclude Include="..\llc\gpk_storage.h" />
+    <ClInclude Include="..\llc\gpk_string.h" />
+    <ClInclude Include="..\llc\gpk_sync.h" />
+    <ClInclude Include="..\llc\gpk_type_identifier.h" />
+    <ClInclude Include="..\llc\gpk_typeint.h" />
+    <ClInclude Include="..\llc\gpk_view_array.h" />
+    <ClInclude Include="..\llc\gpk_view_bit.h" />
+    <ClInclude Include="..\llc\gpk_view_grid.h" />
+    <ClInclude Include="..\llc\gpk_view_layered.h" />
+    <ClInclude Include="..\llc\gpk_view_stream.h" />
+    <ClInclude Include="..\llc\gpk_adam7.h" />
+    <ClInclude Include="..\llc\gpk_aes.h" />
+    <ClInclude Include="..\llc\gpk_array.h" />
+    <ClInclude Include="..\llc\gpk_array_static.h" />
+    <ClInclude Include="..\llc\gpk_auto_handler.h" />
+    <ClInclude Include="..\llc\gpk_bit.h" />
+    <ClInclude Include="..\llc\gpk_chrono.h" />
+    <ClInclude Include="..\llc\gpk_collision.h" />
+    <ClInclude Include="..\llc\gpk_color.h" />
+    <ClInclude Include="..\llc\gpk_coord.h" />
+    <ClInclude Include="..\llc\gpk_datatype.h" />
+    <ClInclude Include="..\llc\gpk_debug.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\llc\gpk_adam7.cpp" />
+    <ClCompile Include="..\llc\gpk_aes.cpp" />
+    <ClCompile Include="..\llc\gpk_chrono.cpp" />
+    <ClCompile Include="..\llc\gpk_datatype.cpp" />
+    <ClCompile Include="..\llc\gpk_deflate.cpp" />
+    <ClCompile Include="..\llc\gpk_encoding.cpp" />
+    <ClCompile Include="..\llc\gpk_expression.cpp" />
+    <ClCompile Include="..\llc\gpk_json.cpp" />
+    <ClCompile Include="..\llc\gpk_json_expression.cpp" />
+    <ClCompile Include="..\llc\gpk_label.cpp" />
+    <ClCompile Include="..\llc\gpk_log.cpp" />
+    <ClCompile Include="..\llc\gpk_noise.cpp" />
+    <ClCompile Include="..\llc\gpk_parse.cpp" />
+    <ClCompile Include="..\llc\gpk_png.cpp" />
+    <ClCompile Include="..\llc\gpk_png_write.cpp" />
+    <ClCompile Include="..\llc\gpk_rsa.cpp" />
+    <ClCompile Include="..\llc\gpk_storage.cpp" />
+    <ClCompile Include="..\llc\llc_header_checkingg.cpp" />
+  </ItemGroup>
+</Project>
