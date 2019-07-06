@@ -51,29 +51,37 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		optimizedPayload->RetryCount								= 1;
 		bool															keyPing								= false;
 		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
-			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayload						= payloadsToSend[iPayload];
-			if(0 == currentPayload)
+			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayloadMsg						= payloadsToSend[iPayload];
+			const ::gpk::view_byte											currentPayloadView						= currentPayloadMsg->Payload;
+			if(0 == currentPayloadMsg)
 				continue;
-			if((currentPayload->Command.Packed & 1) || (0 != currentPayload->RetryCount) || currentPayload->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayload->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
+			if((currentPayloadMsg->Command.Packed & 1) || (0 != currentPayloadMsg->RetryCount) || currentPayloadMsg->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayloadMsg->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 				continue;
-			const bool														sizeEnough							= (serialized.size() + sizeof(uint16_t) + currentPayload->Payload.size()) < ::gpk::UDP_PAYLOAD_SIZE_LIMIT;
+			const bool														sizeEnough							= (serialized.size() + sizeof(uint16_t) + currentPayloadMsg->Payload.size()) < ::gpk::UDP_PAYLOAD_SIZE_LIMIT;
 			if(false == sizeEnough)
 				continue;
-			if(currentPayload->Time == client.KeyPing)
+			if(0 == currentPayloadView.size())
+				continue;
+			if(currentPayloadMsg->Time == client.KeyPing)
 				keyPing														= true;
-			gpk_necall(payloadSizes.push_back((uint16_t)currentPayload->Payload.size()), "Out of memory? Payload size: %u.", currentPayload->Payload.size());
-			gpk_necall(serialized.append(currentPayload->Payload.begin(), currentPayload->Payload.size()), "Failed to append payload! Payload size: %u.", currentPayload->Payload.size());
-			gpk_necall(payloadsToRemove.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
-			gpk_necall(messageCacheSent.push_back(currentPayload), "Out of memory? Payload count: %u.", payloadsToRemove.size());
+			gpk_necall(payloadSizes.push_back((uint16_t)currentPayloadView.size()), "Out of memory? Payload size: %u.", currentPayloadView.size());
+			gpk_necall(serialized.append(currentPayloadView.begin(), currentPayloadView.size()), "Failed to append payload! Payload size: %u.", currentPayloadView.size());
+			gpk_necall(payloadsToRemove.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size());
+			gpk_necall(messageCacheSent.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size());
 		}
+		rni_if(0 == payloadSizes.size(), "No packets to optimize. Total packets searched: %u.", payloadsToSend.size());
+		info_printf("%u packets optimized.", payloadSizes.size());
 		const uint32_t													sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
 		uint16_t														packetCount							= (uint16_t)payloadSizes.size();
-		gpk_necall(optimizedPayload->Payload.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
-		optimizedPayload->Payload.clear();
-		optimizedPayload->Payload.append((const byte_t*)&packetCount, sizeof(uint16_t));
-		optimizedPayload->Payload.append((const byte_t*)payloadSizes.begin(), sizeof(uint16_t) * payloadSizes.size());
-		optimizedPayload->Payload.append(serialized.begin(), serialized.size());
-		ree_if(sizeRequired != optimizedPayload->Payload.size(), "Invalid sizes! Size required: %u. Actual size: %u.", sizeRequired, optimizedPayload->Payload.size());
+		::gpk::array_pod<char_t>										& optimizedPayloadBuffer			= optimizedPayload->Payload;
+		gpk_necall(optimizedPayloadBuffer.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
+		optimizedPayloadBuffer.clear();
+		optimizedPayloadBuffer.append((const byte_t*)&packetCount, sizeof(uint16_t));
+		optimizedPayloadBuffer.append((const byte_t*)payloadSizes.begin(), sizeof(uint16_t) * payloadSizes.size());
+		optimizedPayloadBuffer.append(serialized.begin(), serialized.size());
+		ree_if(sizeRequired != optimizedPayloadBuffer.size(), "Invalid sizes! Size required: %u. Actual size: %u.", sizeRequired, optimizedPayloadBuffer.size());
+		optimizedPayload->Command.Compressed						= 1;
+		optimizedPayload->Command.Encrypted							= 1;
 		gpk_necall(payloadsToSend.push_back(optimizedPayload), "Failed! Payload queue size: %u.", payloadsToSend.size());
 
 		if(keyPing)
@@ -335,6 +343,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				}
 			}
 		}
+		info_printf("Packet received. Payload size received: %u. Payload size after unpacking/decrypting: %u.", header.Size, messageReceived->Payload.size());
 		client.LastPing												= ::gpk::timeCurrentInUs();
 		//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
 		if(0 == (header.Command.Packed & 1)) {

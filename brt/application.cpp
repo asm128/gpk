@@ -235,7 +235,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 			if(clientResponses[iClient][iMessage].size()) {
 				::gpk::mutex_guard														lock						(app.Server.Mutex);
 				::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
-				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage]);
+				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage], true, true);
 				receivedPerClient[iClient][iMessage]		= {};
 				::brt::SProcess											& process				= app.ClientProcesses[iClient];
 				gpk_safe_closehandle(process.ProcessInfo.hProcess	);

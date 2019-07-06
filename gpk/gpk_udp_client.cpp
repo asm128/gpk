@@ -22,7 +22,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	sa_server													= {};
 	::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
 	int																received_bytes								= recvfrom(client.Socket.Handle, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, &sa_length);
-	rew_if(-1 == received_bytes, "Failed to receive connect response!");
+	rew_if(-1 == received_bytes, "Failed to receive connect response from '%u.%u.%u.%u:%u'.", GPK_IPV4_EXPAND(client.AddressConnect));
 	::gpk::SIPv4													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address!");
