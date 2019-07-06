@@ -32,7 +32,7 @@ void							gpk::STimer::Reset											()				noexcept				{
 void							gpk::STimer::Frame											()				noexcept				{
 	CurrentTimeStamp				= ::std::chrono::high_resolution_clock::now();
 	auto								timeDifference									= CurrentTimeStamp - PrevTimeStamp;
-	LastTimeMicroseconds			= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds	>(timeDifference).count();
+	LastTimeMicroseconds			= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds>(timeDifference).count();
 	LastTimeSeconds					= LastTimeMicroseconds / 1000000.0;
 	PrevTimeStamp					= CurrentTimeStamp;
 }

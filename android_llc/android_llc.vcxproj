@@ -73,6 +73,7 @@
     <ClInclude Include="..\llc\gpk_parse.h" />
     <ClInclude Include="..\llc\gpk_platform.h" />
     <ClInclude Include="..\llc\gpk_png.h" />
+    <ClInclude Include="..\llc\gpk_process.h" />
     <ClInclude Include="..\llc\gpk_ptr.h" />
     <ClInclude Include="..\llc\gpk_rsa.h" />
     <ClInclude Include="..\llc\gpk_safe.h" />
@@ -104,6 +105,7 @@
     <ClCompile Include="..\llc\gpk_parse.cpp" />
     <ClCompile Include="..\llc\gpk_png.cpp" />
     <ClCompile Include="..\llc\gpk_png_write.cpp" />
+    <ClCompile Include="..\llc\gpk_process.cpp" />
     <ClCompile Include="..\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\llc\gpk_storage.cpp" />
     <ClCompile Include="..\llc\llc_header_checkingg.cpp" />

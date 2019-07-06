@@ -183,6 +183,15 @@
     <ClInclude Include="gpk_grid_copy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_process.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">
@@ -238,6 +247,15 @@
     </ClCompile>
     <ClCompile Include="gpk_datatype.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_timer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

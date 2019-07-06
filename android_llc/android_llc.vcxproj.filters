@@ -53,6 +53,7 @@
     <ClInclude Include="..\llc\gpk_coord.h" />
     <ClInclude Include="..\llc\gpk_datatype.h" />
     <ClInclude Include="..\llc\gpk_debug.h" />
+    <ClInclude Include="..\llc\gpk_process.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\llc\gpk_adam7.cpp" />
@@ -73,5 +74,6 @@
     <ClCompile Include="..\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\llc\gpk_storage.cpp" />
     <ClCompile Include="..\llc\llc_header_checkingg.cpp" />
+    <ClCompile Include="..\llc\gpk_process.cpp" />
   </ItemGroup>
 </Project>

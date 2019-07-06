@@ -3,6 +3,8 @@
 
 #ifdef GPK_WINDOWS
 #	include <windows.h>
+#else
+#	include <unistd.h>
 #endif
 
 // The following functions retrieves the process's environment block using GetEnvironmentStrings and prints the contents to the console. 
@@ -15,7 +17,9 @@
 	environmentBlock				= ::gpk::view_array<const char_t>{lpvEnv, (uint32_t)lengthEnvStrings + 2U};
 	FreeEnvironmentStringsA(lpvEnv);
 #else
-//#	error "Not implemented"
+    for (char **env = environ; *env; ++env) 
+		environmentBlock.append(*env, (uint32_t)strlen(*env) + 1);
+	environmentBlock.push_back(0);
 #endif
 	return 0;
 }

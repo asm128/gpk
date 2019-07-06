@@ -57,13 +57,16 @@
     <ClInclude Include="gpk_parse.h" />
     <ClInclude Include="gpk_platform.h" />
     <ClInclude Include="gpk_png.h" />
+    <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_ptr.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_safe.h" />
     <ClInclude Include="gpk_size.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_string.h" />
+    <ClInclude Include="gpk_string_helper.h" />
     <ClInclude Include="gpk_sync.h" />
+    <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_typeint.h" />
     <ClInclude Include="gpk_type_identifier.h" />
     <ClInclude Include="gpk_view_array.h" />
@@ -88,8 +91,11 @@
     <ClCompile Include="gpk_parse.cpp" />
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
+    <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_storage.cpp" />
+    <ClCompile Include="gpk_string_helper.cpp" />
+    <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

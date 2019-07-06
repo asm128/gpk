@@ -28,8 +28,6 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_http_server.h" />
-    <ClInclude Include="gpk_process.h" />
-    <ClInclude Include="gpk_string_helper.h" />
     <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_udp_client.h" />
     <ClInclude Include="gpk_udp_server.h" />
@@ -55,7 +53,6 @@
     <ClInclude Include="gpk_runtime.h" />
     <ClInclude Include="gpk_runtime_module.h" />
     <ClInclude Include="gpk_scene.h" />
-    <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_type_registry.h" />
     <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_windows.h" />
@@ -76,14 +73,11 @@
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
-    <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
-    <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
-    <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_udp_client.cpp" />
     <ClCompile Include="gpk_udp_server.cpp" />
