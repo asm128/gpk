@@ -188,16 +188,18 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	app.ClientProcesses.resize(receivedPerClient.size());
 	{	// Exectue processes
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
+			::brt::SProcessHandles									& iohandles				= app.ClientIOHandles[iClient];
+			::brt::SProcess											& process				= app.ClientProcesses[iClient];
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
 				::gpk::view_byte										environmentBlock		= receivedPerClient[iClient][iMessage]->Payload;
 				// llamar proceso
-				::initHandles(app.ClientIOHandles[iClient]);
-				app.ClientProcesses[iClient].StartInfo.hStdError	= app.ClientIOHandles[iClient].ChildStd_ERR_Write;
-				app.ClientProcesses[iClient].StartInfo.hStdOutput	= app.ClientIOHandles[iClient].ChildStd_OUT_Write;
-				app.ClientProcesses[iClient].StartInfo.hStdInput	= app.ClientIOHandles[iClient].ChildStd_IN_Read;
-				app.ClientProcesses[iClient].ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
-				app.ClientProcesses[iClient].StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
+				::initHandles(iohandles);
+				process.StartInfo.hStdError		= iohandles.ChildStd_ERR_Write;
+				process.StartInfo.hStdOutput	= iohandles.ChildStd_OUT_Write;
+				process.StartInfo.hStdInput		= iohandles.ChildStd_IN_Read;
+				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
+				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 				::gpk::view_const_byte									payload					= receivedPerClient[iClient][iMessage]->Payload;
 				::gpk::error_t											contentOffset			= ::gpk::find_sequence_pod(::gpk::view_const_byte{"\0"}, payload);
 				ce_if(errored(contentOffset), "Failed to find environment block stop code.");
@@ -213,15 +215,17 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	{	// Read processes output if they're done processing.
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			clientResponses[iClient].resize(receivedPerClient[iClient].size());
+			::brt::SProcessHandles									& iohandles				= app.ClientIOHandles[iClient];
+			::brt::SProcess											& process				= app.ClientProcesses[iClient];
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());	
 				// generar respuesta proceso
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
 				clientResponses[iClient][iMessage].clear();
-				::readFromPipe(app.ClientProcesses[iClient], app.ClientIOHandles[iClient], clientResponses[iClient][iMessage]);
-				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdError	);
-				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdInput	);
-				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdOutput	);
+				::readFromPipe(process, iohandles, clientResponses[iClient][iMessage]);
+				gpk_safe_closehandle(process.StartInfo.hStdError	);
+				gpk_safe_closehandle(process.StartInfo.hStdInput	);
+				gpk_safe_closehandle(process.StartInfo.hStdOutput	);
 			}
 		}
 	}
@@ -232,8 +236,9 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 				::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
 				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage]);
 				receivedPerClient[iClient][iMessage]		= {};
-				CloseHandle(app.ClientProcesses[iClient].ProcessInfo.hProcess	);
-				CloseHandle(app.ClientProcesses[iClient].ProcessInfo.hThread	);
+				::brt::SProcess											& process				= app.ClientProcesses[iClient];
+				gpk_safe_closehandle(process.ProcessInfo.hProcess	);
+				gpk_safe_closehandle(process.ProcessInfo.hThread	);
 
 			}
 		}

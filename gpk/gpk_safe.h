@@ -34,7 +34,7 @@
 
 #if defined(GPK_WINDOWS)
 #	ifndef gpk_safe_closehandle
-#		define gpk_safe_closehandle(p) do { auto & _refH = p; if(_refH == INVALID_HANDLE_VALUE) { CloseHandle(_refH); _refH = INVALID_HANDLE_VALUE; } } while(0)
+#		define gpk_safe_closehandle(p) do { if(INVALID_HANDLE_VALUE == (p)) { CloseHandle(p); p = INVALID_HANDLE_VALUE; } } while(0)
 #	endif
 #endif
 
