@@ -207,7 +207,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 			}
 		}
 	}
-	Sleep(100);
+	Sleep(10);
 	::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						& clientResponses		= app.ClientResponses;
 	clientResponses.resize(receivedPerClient.size());
 	{	// Read processes output if they're done processing.
@@ -219,10 +219,9 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
 				clientResponses[iClient][iMessage].clear();
 				::readFromPipe(app.ClientProcesses[iClient], app.ClientIOHandles[iClient], clientResponses[iClient][iMessage]);
-				if(INVALID_HANDLE_VALUE != app.ClientProcesses[iClient].StartInfo.hStdError		){ CloseHandle(app.ClientProcesses[iClient].StartInfo.hStdError	); app.ClientProcesses[iClient].StartInfo.hStdError		= INVALID_HANDLE_VALUE; }
-				if(INVALID_HANDLE_VALUE != app.ClientProcesses[iClient].StartInfo.hStdInput		){ CloseHandle(app.ClientProcesses[iClient].StartInfo.hStdInput	); app.ClientProcesses[iClient].StartInfo.hStdInput		= INVALID_HANDLE_VALUE; }
-				if(INVALID_HANDLE_VALUE != app.ClientProcesses[iClient].StartInfo.hStdOutput	){ CloseHandle(app.ClientProcesses[iClient].StartInfo.hStdOutput); app.ClientProcesses[iClient].StartInfo.hStdOutput	= INVALID_HANDLE_VALUE; }
-
+				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdError	);
+				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdInput	);
+				gpk_safe_closehandle(app.ClientProcesses[iClient].StartInfo.hStdOutput	);
 			}
 		}
 	}
