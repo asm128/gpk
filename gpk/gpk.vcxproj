@@ -43,8 +43,6 @@
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_geometry.h" />
     <ClInclude Include="gpk_grid_static.h" />
-    <ClInclude Include="gpk_grid_copy.h" />
-    <ClInclude Include="gpk_grid_scale.h" />
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_control.h" />
     <ClInclude Include="gpk_gui_desktop.h" />

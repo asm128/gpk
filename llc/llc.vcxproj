@@ -39,6 +39,8 @@
     <ClInclude Include="gpk_expression.h" />
     <ClInclude Include="gpk_find.h" />
     <ClInclude Include="gpk_frameinfo.h" />
+    <ClInclude Include="gpk_grid_copy.h" />
+    <ClInclude Include="gpk_grid_scale.h" />
     <ClInclude Include="gpk_image.h" />
     <ClInclude Include="gpk_io.h" />
     <ClInclude Include="gpk_json.h" />

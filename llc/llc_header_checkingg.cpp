@@ -1,4 +1,4 @@
-// This is done because if the .h""" files are not being included, they may not be read by the compiler, failing to notice problems on the sources that only get spotted when developing on top of this library.
+// This is done because if the .h"""" files are not being included, they may not be read by the compiler, failing to notice problems on the sources that only get spotted when developing on top of this library.
 #include "gpk_adam7.h"
 #include "gpk_aes.h"
 #include "gpk_array.h"
@@ -19,6 +19,8 @@
 #include "gpk_expression.h"
 #include "gpk_find.h"
 #include "gpk_frameinfo.h"
+#include "gpk_grid_copy.h"
+#include "gpk_grid_scale.h"
 #include "gpk_image.h"
 #include "gpk_io.h"
 #include "gpk_json.h"

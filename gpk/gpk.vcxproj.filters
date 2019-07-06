@@ -48,12 +48,6 @@
     <ClInclude Include="gpk_geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_grid_copy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_grid_scale.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
