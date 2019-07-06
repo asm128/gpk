@@ -15,6 +15,8 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		HANDLE						ChildStd_IN_Write	= nullptr;
 		HANDLE						ChildStd_OUT_Read	= nullptr;
 		HANDLE						ChildStd_OUT_Write	= nullptr;
+		HANDLE						ChildStd_ERR_Read	= nullptr;
+		HANDLE						ChildStd_ERR_Write	= nullptr;
 	};
 
 	struct SProcess {

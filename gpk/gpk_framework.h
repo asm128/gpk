@@ -31,14 +31,16 @@ namespace gpk
 							::gpk::SFrameworkSettings									Settings									= {1, };
 							::gpk::array_pod<char_t>									FileJSONConfig								= {};
 							::gpk::SJSONReader											ReaderJSONConfig							= {};
+							::gpk::view_const_string									FileNameJSONConfig							= "gpk_config.json";
 
 							::std::mutex												LockGUI;
 
-		inline																			SFramework									(::gpk::SRuntimeValues& runtimeValues)			noexcept	: RuntimeValues(runtimeValues)		{
+		inline																			SFramework									(::gpk::SRuntimeValues& runtimeValues, ::gpk::view_const_string	fileNameJSONConfig = "gpk_config.json")			noexcept	
+			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
+		{
 			Input.create();
 			GUI.create();
-			{	// Attempt to load config file.
-				::gpk::view_const_string															fileNameJSONConfig							= "gpk_config.json";
+			if(fileNameJSONConfig.size()) {	// Attempt to load config file.
 				rw_if(errored(::gpk::fileToMemory(fileNameJSONConfig, FileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
 				::gpk::SJSONReader																	jsonReader									= {};
 				gwarn_if(::gpk::jsonParse(ReaderJSONConfig, ::gpk::view_const_string{FileJSONConfig.begin(), FileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
