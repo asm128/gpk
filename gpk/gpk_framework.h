@@ -42,7 +42,6 @@ namespace gpk
 			GUI.create();
 			if(fileNameJSONConfig.size()) {	// Attempt to load config file.
 				rw_if(errored(::gpk::fileToMemory(fileNameJSONConfig, FileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
-				::gpk::SJSONReader																	jsonReader									= {};
 				gwarn_if(::gpk::jsonParse(ReaderJSONConfig, ::gpk::view_const_string{FileJSONConfig.begin(), FileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 			}
 		}

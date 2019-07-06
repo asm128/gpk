@@ -282,7 +282,7 @@ static int					REM_tmain0							()		{
 	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block. 
 	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2"); 
 	// Create the child process, specifying a new environment block. 
-	STARTUPINFO						si									= {sizeof(STARTUPINFO)};
+	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
 	static constexpr const bool		isUnicodeEnv						= false;
 	dwFlags						= dwFlags | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 	ree_if(FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
@@ -298,7 +298,7 @@ static int					REM_tmain0							()		{
 static int					REM_tmain1			() {
 	static constexpr	const uint32_t	BUFSIZE					= 4096;
 	::gpk::view_const_string		szAppName			= "ex3.exe";
-	STARTUPINFO						si					= {sizeof(STARTUPINFO)};
+	STARTUPINFOA						si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};
 	BOOL							fExist				= 0
 		; 
@@ -326,7 +326,7 @@ static int					REM_tmain1			() {
 
 	ree_if(FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit. 
 	// ---- Create a child process. 
-	si							= {sizeof(STARTUPINFO)};
+	si							= {sizeof(STARTUPINFOA)};
 	static constexpr const bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
 	char							bufferFormat	[64]	= {};

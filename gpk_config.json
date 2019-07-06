@@ -16,6 +16,13 @@
 			, "command_line_params" 	: "-test_param:value"	     
 			}
 		},
+		"gpk_cgi_interceptor": 
+		{	"process"		: 
+			{ "executable_path" 		: "./test_cgi_environ.exe"  
+			, "command_line_app_name" 	: "./test_cgi_environ.exe"   
+			, "command_line_params" 	: "-test_param:value"	     
+			}
+		},
 		"gpk_cgi_rest": 
 		{	"remote_port"	: "9797"
 		,	"remote_ip"		: "192.168.0.2"
