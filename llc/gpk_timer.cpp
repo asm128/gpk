@@ -1,7 +1,7 @@
 #include "gpk_timer.h"
 
 #if defined(GPK_WINDOWS)
-#include <windows.h>
+#include <Windows.h>
 
 void							gpk::STimer::Reset											()				noexcept				{
 	QueryPerformanceFrequency( ( ::LARGE_INTEGER* )&CountsPerSecond );

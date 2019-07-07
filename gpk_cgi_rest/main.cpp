@@ -73,7 +73,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char> & output)										{
 	::gpk::array_pod<char_t>								environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		ree_if(errored(::gpk::getEnvironmentBlock(environmentBlock)), "%s", "Failed");
+		ree_if(errored(::gpk::environmentBlockFromEnviron(environmentBlock)), "%s", "Failed");
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}

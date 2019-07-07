@@ -28,7 +28,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							find								(const _tElement& element, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)						{
+						::gpk::error_t							find								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, uint32_t offset = 0)						{
 		for(uint32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
 			if(element == target[iOffset]) 
 				return iOffset;

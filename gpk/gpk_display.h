@@ -3,7 +3,7 @@
 #include "gpk_view_grid.h"
 
 #if defined(GPK_WINDOWS)
-#	include <windows.h>
+#	include <Windows.h>
 #endif
 
 #ifndef GPK_DISPLAY_H_293874928374

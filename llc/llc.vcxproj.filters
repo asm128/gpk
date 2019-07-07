@@ -25,6 +25,9 @@
     <Filter Include="base">
       <UniqueIdentifier>{4937e132-c0fb-4e28-9b6b-3d651109d61d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="image">
+      <UniqueIdentifier>{f4195222-cb50-42bc-852b-82e910fa82f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_sync.h">
@@ -81,13 +84,7 @@
     <ClInclude Include="gpk_parse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_adam7.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_aes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_chrono.h">
@@ -100,9 +97,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_deflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_png.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_rsa.h">
@@ -192,6 +186,18 @@
     <ClInclude Include="gpk_timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_png.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_image.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_adam7.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">
@@ -201,9 +207,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_json_expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_adam7.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_aes.cpp">
@@ -216,12 +219,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_deflate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_png.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_png_write.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_storage.cpp">
@@ -255,6 +252,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_adam7.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_png_write.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_png.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_keyval.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

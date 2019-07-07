@@ -45,6 +45,7 @@
     <ClInclude Include="gpk_io.h" />
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_json_expression.h" />
+    <ClInclude Include="gpk_keyval.h" />
     <ClInclude Include="gpk_label.h" />
     <ClInclude Include="gpk_label_manager.h" />
     <ClInclude Include="gpk_log.h" />
@@ -85,6 +86,7 @@
     <ClCompile Include="gpk_expression.cpp" />
     <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_json_expression.cpp" />
+    <ClCompile Include="gpk_keyval.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_log.cpp" />
     <ClCompile Include="gpk_noise.cpp" />

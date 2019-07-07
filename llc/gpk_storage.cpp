@@ -12,7 +12,6 @@
 #elif defined(GPK_ANDROID) || defined(GPK_LINUX)
 #	include <dirent.h>
 #	include <string>
-#	include <iostream>
 #endif
 
 int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)								{
