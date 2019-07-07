@@ -11,8 +11,11 @@ namespace gpk
 				_tVal					Val;	
 	};
 
-			::gpk::error_t			token_split			(char token, const ::gpk::view_const_string& input_string, ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& output_views);
-	inline	::gpk::error_t			keyval_split		(const ::gpk::view_const_string& input_string, ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& output_views) { return ::gpk::token_split('=', input_string, output_views); }
+	typedef		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>		
+										TKeyValConstString;
+
+				::gpk::error_t			token_split			(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views);
+	inline		::gpk::error_t			keyval_split		(const ::gpk::view_const_string& input_string, TKeyValConstString& out_keyval) { return ::gpk::token_split('=', input_string, out_keyval); }
 
 } // namespace
 

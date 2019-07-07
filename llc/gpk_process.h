@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	::gpk::error_t			environmentBlockViews						(const ::gpk::view_const_byte & environmentBlock, ::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>> & out_Views);	
+	::gpk::error_t			environmentBlockViews						(const ::gpk::view_const_byte & environmentBlock, ::gpk::array_obj<TKeyValConstString> & out_Views);	
 	::gpk::error_t			environmentBlockFromEnviron					(::gpk::array_pod<byte_t> & environmentBlock);
 } // namespace
 
