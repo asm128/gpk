@@ -82,7 +82,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{ 
 	if(strRemotePort.size()) {
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		remoteIP.Port										= (uint16_t)::std::stoi(strRemotePort.begin());
 #else
 		try {
@@ -108,7 +108,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 					break;
 				++iEnd;
 			}
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 			remoteIP.IP[iVal]									= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
 #else
 			try {
@@ -205,7 +205,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	}
 	::cgiLoadContentType(cgiRuntimeValues.Content.Type, cgiRuntimeValues.ContentType);
 	::cgiLoadAddr(cgiRuntimeValues.RemoteIP, cgiRuntimeValues.StrRemoteIP, cgiRuntimeValues.StrRemotePort);
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 	cgiRuntimeValues.Content.Length						= cgiRuntimeValues.ContentLength.size() ? (uint32_t)::std::stoi(cgiRuntimeValues.ContentLength.begin()) : 0;
 #else
 	try {

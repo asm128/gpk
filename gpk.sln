@@ -82,6 +82,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_unpak", "gpk_unpak\gpk_
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_cgi_interceptor", "gpk_cgi_interceptor\gpk_cgi_interceptor.vcxproj", "{3B3DD6FF-22DB-4560-A27B-537EA477640F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{39953D8D-A830-46BD-917E-1A96C8BDADC6} = {39953D8D-A830-46BD-917E-1A96C8BDADC6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -193,7 +193,7 @@
 
 ::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) { 
 	if(strRemotePort.size()) {
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
 #else
 		try {
@@ -219,7 +219,7 @@
 					break;
 				++iEnd;
 			}
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 			remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
 #else
 			try {
@@ -234,7 +234,7 @@
 		}
 		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
 			if(strRemotePort.size()) {
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 				remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
 #else
 				try {

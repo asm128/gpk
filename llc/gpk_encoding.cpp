@@ -39,7 +39,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	char														temp [3]														= {};
 	temp[0]													= s[0];
 	temp[1]													= s[1];
-#if defined(GPK_ANDROID)
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
 		byte													= (char)hex;
 #else

@@ -62,6 +62,11 @@
 #	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
+#if defined GPK_ANDROID
+#	define GPK_DISABLE_CPP_EXCEPTIONS
+#endif
+
+
 namespace gpk
 {
 	// -- Returns 0 on little-endian machines
