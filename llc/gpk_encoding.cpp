@@ -276,37 +276,3 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uin
 	}
 	return 0;
 }
-
-::gpk::error_t		decodeUnicodeEscapeSequence	(::gpk::view_const_string input, uint32_t& ret_unicode) {
-	ree_if(input.size() < 4, "Invalid escape sequence: %s.", input.begin());
-	int					unicode		= 0;
-	for (int index = 0; index < 4; ++index) {
-		char				c			= input[index];
-		unicode			*= 16;
-		if (c >= '0' && c <= '9')
-			unicode			+= c - '0';
-		else if (c >= 'a' && c <= 'f')
-			unicode			+= c - 'a' + 10;
-		else if (c >= 'A' && c <= 'F')
-			unicode			+= c - 'A' + 10;
-		else
-			return -1;
-	}
-	ret_unicode		= static_cast<unsigned int>(unicode);
-	return true;
-}
-
-::gpk::error_t		jsonToCodePoint				(::gpk::view_const_string input, uint32_t& unicode) {
-	gpk_necall(decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", input.begin());
-	if (unicode < 0xD800 || unicode > 0xDBFF) 
-		return 0;
-	{	// surrogate pairs
-		ree_if(input.size() < 7, "%s", "expecting a \\u token for the second half of the surrogate pair");
-		ree_if(input[4] != '\\' || input[5] == 'u', "%s", "expecting a \\u token for the second half of the surrogate pair");
-		uint32_t			surrogatePair;
-		gpk_necall(decodeUnicodeEscapeSequence({&input[6], 4U}, surrogatePair), "Invalid escape sequence: %s.", input.begin());
-		unicode			= 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
-	}
-	return 0;
-}
-
