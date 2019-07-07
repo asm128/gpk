@@ -34,9 +34,6 @@
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
-    <ClInclude Include="gpk_bitmap_target.h" />
-    <ClInclude Include="gpk_camera.h" />
-    <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_display.h" />
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_geometry.h" />

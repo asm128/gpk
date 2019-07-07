@@ -5,6 +5,8 @@
 #include "gpk_array_static.h"
 #include "gpk_auto_handler.h"
 #include "gpk_bit.h"
+#include "gpk_bitmap_target.h"
+#include "gpk_camera.h"
 #include "gpk_chrono.h"
 #include "gpk_collision.h"
 #include "gpk_color.h"

@@ -25,6 +25,8 @@
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_auto_handler.h" />
     <ClInclude Include="gpk_bit.h" />
+    <ClInclude Include="gpk_bitmap_target.h" />
+    <ClInclude Include="gpk_camera.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_color.h" />
