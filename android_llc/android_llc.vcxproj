@@ -109,10 +109,12 @@
     <ClCompile Include="..\..\gpk\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\..\gpk\llc\gpk_storage.cpp" />
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp" />
+    <ClCompile Include="..\llc\gpk_ascii_target.cpp" />
     <ClCompile Include="..\llc\gpk_cgi.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_module.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_runtime.cpp" />
     <ClCompile Include="..\llc\gpk_gui.cpp" />
+    <ClCompile Include="..\llc\gpk_gui_draw.cpp" />
     <ClCompile Include="..\llc\gpk_keyval.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_tcpip.cpp" />
