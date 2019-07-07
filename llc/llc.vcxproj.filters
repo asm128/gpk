@@ -16,9 +16,6 @@
     <Filter Include="view">
       <UniqueIdentifier>{2af7f602-565c-43ba-a4b5-be22b1b04b6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{5310ea78-5f6b-43e1-84b9-3d1339242565}</UniqueIdentifier>
-    </Filter>
     <Filter Include="container">
       <UniqueIdentifier>{1ef7945b-1d26-41bf-9f58-c719dc22c61b}</UniqueIdentifier>
     </Filter>
@@ -28,13 +25,133 @@
     <Filter Include="image">
       <UniqueIdentifier>{f4195222-cb50-42bc-852b-82e910fa82f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="web_cgi">
+      <UniqueIdentifier>{5c9ad974-22c6-4aef-a002-98fa32dacff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{5310ea78-5f6b-43e1-84b9-3d1339242565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpk_sync.h">
+    <ClInclude Include="gpk_collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_deflate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_encoding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_frameinfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_copy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_scale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_member_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_parse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rsa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stdsocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_storage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tcpip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_type_identifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_windows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_aes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_auto_handler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bitmap_target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_static.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bit.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_datatype.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_enum.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_eval.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_error.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_debug.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_stream.h">
+      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_array.h">
       <Filter>view</Filter>
@@ -48,228 +165,96 @@
     <ClInclude Include="gpk_view_layered.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_stream.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_math.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_matrix.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_coord.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_color.h">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_json.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_json_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_encoding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_enum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_member_registry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_parse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_aes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_chrono.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_type_identifier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_deflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_rsa.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_storage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_frameinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_collision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_static.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_label.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_label_manager.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_eval.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_error.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_bit.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_debug.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_platform.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_memory.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ptr.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_log.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_size.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_typeint.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sync.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="gpk_string.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_size.h">
+      <Filter>base</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_safe.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_io.h">
+    <ClInclude Include="gpk_ptr.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_find.h">
+    <ClInclude Include="gpk_platform.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_datatype.h">
+    <ClInclude Include="gpk_color.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_memory.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_noise.h">
+    <ClInclude Include="gpk_chrono.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_grid_scale.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_ascii_target.h">
+      <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_grid_copy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_process.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_string_helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_png.h">
+    <ClInclude Include="gpk_ascii_color.h">
       <Filter>image</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_process.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_module.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_runtime.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_log.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_label_manager.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_label.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_find.h">
+      <Filter>base</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_adam7.h">
       <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_keyval.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_noise.h">
+      <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_bitmap_target.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_io.h">
+      <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_cgi_module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_cgi_runtime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_gui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_gui_text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_runtime.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_runtime_module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_stdsocket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_tcpip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ascii_color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ascii_target.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_cgi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_windows.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_png.h">
+      <Filter>image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="llc_header_checkingg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_json.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_json_expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_aes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_chrono.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_parse.cpp">
+    <ClCompile Include="gpk_datatype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_deflate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_storage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_rsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_encoding.cpp">
@@ -278,29 +263,74 @@
     <ClCompile Include="gpk_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_noise.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="gpk_gui.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_log.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="gpk_gui_draw.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_label.cpp">
-      <Filter>container</Filter>
+    <ClCompile Include="gpk_json.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_datatype.cpp">
-      <Filter>base</Filter>
+    <ClCompile Include="gpk_json_expression.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_process.cpp">
+    <ClCompile Include="gpk_keyval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_parse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rsa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_runtime_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_string_helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_tcpip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="gpk_timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_windows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="llc_header_checkingg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_adam7.cpp">
       <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ascii_target.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_label.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_runtime.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_module.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_log.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_chrono.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_noise.cpp">
+      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="gpk_png_write.cpp">
       <Filter>image</Filter>
@@ -308,35 +338,8 @@
     <ClCompile Include="gpk_png.cpp">
       <Filter>image</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_keyval.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_cgi.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_cgi_module.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_cgi_runtime.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_gui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_runtime_module.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_tcpip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_windows.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_gui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_ascii_target.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="gpk_process.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
