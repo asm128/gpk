@@ -89,6 +89,7 @@
     <ClInclude Include="gpk_view_grid.h" />
     <ClInclude Include="gpk_view_layered.h" />
     <ClInclude Include="gpk_view_stream.h" />
+    <ClInclude Include="gpk_windows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
@@ -118,6 +119,7 @@
     <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
+    <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

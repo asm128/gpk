@@ -69,3 +69,4 @@
 #include "gpk_view_grid.h"
 #include "gpk_view_layered.h"
 #include "gpk_view_stream.h"
+#include "gpk_windows.h"

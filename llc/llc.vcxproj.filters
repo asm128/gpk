@@ -240,6 +240,9 @@
     <ClInclude Include="gpk_input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_windows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">
@@ -324,6 +327,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_tcpip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_windows.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
