@@ -8,9 +8,7 @@
 
 #include "gpk_udp_client.h"
 
-#include <string>
-
-#include <Windows.h>
+#include <string>		// for ::std::stoi()
 
 ::gpk::error_t										metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
 	uint32_t												iChar					= 0;
@@ -33,7 +31,6 @@
 	}
 	return 0;
 }
-
 
 static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect							= {};
@@ -128,8 +125,10 @@ static int											cgiMain				()	{
 			"\r\nCache-Control: no-store"
 		);
 		html.push_back('\0');
-		OutputDebugStringA(html.begin());
 		printf("%s", html.begin());
+#ifdef GPK_WINDOWS
+		OutputDebugStringA(html.begin());
+#endif
 	}
 	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why??!?");
 	return 0;
@@ -140,6 +139,9 @@ int													main				(int argc, char** argv, char**envv)	{
 	return ::cgiMain();
 }
 
+#ifdef GPK_WINDOWS
+#include <Windows.h>
+
 int WINAPI											WinMain				
 	(	_In_		HINSTANCE	hInstance
 	,	_In_opt_	HINSTANCE	hPrevInstance
@@ -149,6 +151,4 @@ int WINAPI											WinMain
 	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
 	return ::cgiMain();
 }
-
-// 17070035
-// 0810-122-2666
+#endif
