@@ -23,10 +23,15 @@
     <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
+    <ClInclude Include="gpk_ascii_color.h" />
+    <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_auto_handler.h" />
     <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_camera.h" />
+    <ClInclude Include="gpk_cgi.h" />
+    <ClInclude Include="gpk_cgi_module.h" />
+    <ClInclude Include="gpk_cgi_runtime.h" />
     <ClInclude Include="gpk_chrono.h" />
     <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_color.h" />
@@ -43,7 +48,10 @@
     <ClInclude Include="gpk_frameinfo.h" />
     <ClInclude Include="gpk_grid_copy.h" />
     <ClInclude Include="gpk_grid_scale.h" />
+    <ClInclude Include="gpk_gui.h" />
+    <ClInclude Include="gpk_gui_text.h" />
     <ClInclude Include="gpk_image.h" />
+    <ClInclude Include="gpk_input.h" />
     <ClInclude Include="gpk_io.h" />
     <ClInclude Include="gpk_json.h" />
     <ClInclude Include="gpk_json_expression.h" />
@@ -63,12 +71,16 @@
     <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_ptr.h" />
     <ClInclude Include="gpk_rsa.h" />
+    <ClInclude Include="gpk_runtime.h" />
+    <ClInclude Include="gpk_runtime_module.h" />
     <ClInclude Include="gpk_safe.h" />
     <ClInclude Include="gpk_size.h" />
+    <ClInclude Include="gpk_stdsocket.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_helper.h" />
     <ClInclude Include="gpk_sync.h" />
+    <ClInclude Include="gpk_tcpip.h" />
     <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_typeint.h" />
     <ClInclude Include="gpk_type_identifier.h" />
@@ -81,11 +93,15 @@
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
+    <ClCompile Include="gpk_cgi.cpp" />
+    <ClCompile Include="gpk_cgi_module.cpp" />
+    <ClCompile Include="gpk_cgi_runtime.cpp" />
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />
+    <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_json_expression.cpp" />
     <ClCompile Include="gpk_keyval.cpp" />
@@ -97,8 +113,10 @@
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
+    <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_storage.cpp" />
     <ClCompile Include="gpk_string_helper.cpp" />
+    <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>

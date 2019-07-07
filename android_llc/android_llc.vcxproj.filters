@@ -180,12 +180,6 @@
     <ClInclude Include="..\..\gpk\llc\gpk_process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\gpk\llc\gpk_string_helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpk\llc\gpk_timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\gpk\llc\gpk_png.h">
       <Filter>image</Filter>
     </ClInclude>
@@ -194,15 +188,6 @@
     </ClInclude>
     <ClInclude Include="..\..\gpk\llc\gpk_adam7.h">
       <Filter>image</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpk\llc\gpk_keyval.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpk\llc\gpk_bitmap_target.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\gpk\llc\gpk_camera.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,12 +239,6 @@
     <ClCompile Include="..\..\gpk\llc\gpk_process.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gpk\llc\gpk_string_helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\gpk\llc\gpk_timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\gpk\llc\gpk_adam7.cpp">
       <Filter>image</Filter>
     </ClCompile>
@@ -269,7 +248,25 @@
     <ClCompile Include="..\..\gpk\llc\gpk_png.cpp">
       <Filter>image</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\gpk\llc\gpk_keyval.cpp">
+    <ClCompile Include="..\llc\gpk_cgi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_cgi_runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_cgi_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_keyval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_runtime_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_tcpip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

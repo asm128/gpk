@@ -109,6 +109,13 @@
     <ClCompile Include="..\..\gpk\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\..\gpk\llc\gpk_storage.cpp" />
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp" />
+    <ClCompile Include="..\llc\gpk_cgi.cpp" />
+    <ClCompile Include="..\llc\gpk_cgi_module.cpp" />
+    <ClCompile Include="..\llc\gpk_cgi_runtime.cpp" />
+    <ClCompile Include="..\llc\gpk_gui.cpp" />
+    <ClCompile Include="..\llc\gpk_keyval.cpp" />
+    <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
+    <ClCompile Include="..\llc\gpk_tcpip.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3fa64f44-eac9-4db5-bd82-62b55deee884}</ProjectGuid>

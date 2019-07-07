@@ -204,6 +204,42 @@
     <ClInclude Include="gpk_camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_cgi_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime_module.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stdsocket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tcpip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">
@@ -270,6 +306,24 @@
       <Filter>image</Filter>
     </ClCompile>
     <ClCompile Include="gpk_keyval.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_runtime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_runtime_module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_tcpip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
