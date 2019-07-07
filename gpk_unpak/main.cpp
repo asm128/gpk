@@ -17,8 +17,7 @@ int										main							(int argc, char ** argv)						{
 		gpk_necall(sprintf_s(namePathDst, "%s", argv[2]), "%s", "Buffer overflow.");
 	else if(2 == argc) {
 		gpk_necall(sprintf_s(namePathDst, "%s", argv[1]), "%s", "Buffer overflow.");
-		const ::gpk::view_const_string				extension						= ".";
-		::gpk::error_t								indexSequence					= ::gpk::rfind_sequence_pod(extension, ::gpk::view_const_string{nameFileSrc});
+		::gpk::error_t								indexSequence					= ::gpk::rfind('.', ::gpk::view_const_string{nameFileSrc});
 		if(-1 != indexSequence) {
 			namePathDst[indexSequence]				= '\\';
 			namePathDst[indexSequence + 1]			= 0;
