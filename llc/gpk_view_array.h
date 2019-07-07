@@ -38,12 +38,12 @@ namespace gpk
 
 							bool					operator					!=(const ::gpk::view_array<const _tElement>& other)					const				{ return !operator==(other); }
 							bool					operator					==(const ::gpk::view_array<const _tElement>& other)					const				{
-		if(this->size() != other.size())
-			return false;
-		if(this->begin() == other.begin())
-			return true;
-		return ::gpk::equal(other.begin(), this->begin(), this->size());
-	}
+			if(this->size() != other.size())
+				return false;
+			if(this->begin() == other.begin())
+				return true;
+			return ::gpk::equal(other.begin(), this->begin(), this->size());
+		}
 
 		// Methods
 		inline				_tElement*				begin						()																			noexcept	{ return Data;			}

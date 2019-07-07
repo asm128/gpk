@@ -73,6 +73,9 @@ namespace gpk
 		}
 		return 0;
 	}
+
+	// Description at http://en.wikipedia.org/wiki/UTF-8
+	::gpk::error_t									utf8FromCodePoint											(uint32_t codePoint, ::gpk::array_pod<char_t> & hexDigits);
 }
 
 #endif // GPK_ENCODING_H_209873982374
