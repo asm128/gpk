@@ -107,13 +107,11 @@
 		(void)sockaddr_ipv6	;
 		//DWORD dwRetval;
 #if defined(GPK_WINDOWS)
-		DWORD											iRetval;
+		int32_t											iRetval;
 		DWORD											ipbufferlength									= 46;
 #else
-		int												iRetval;
 		uint32_t										ipbufferlength									= 46;
 #endif
-		(void)iRetval;
 		switch (ptr->ai_family)  {
 		default			:	verbose_printf("Other %li.", ptr->ai_family	); break;
 		//case AF_NETBIOS	:	info_printf("%s", "AF_NETBIOS (NetBIOS)"	); break;
@@ -140,7 +138,7 @@
 #if defined(GPK_WINDOWS)
 			sockaddr_ip									= (LPSOCKADDR)ptr->ai_addr;
 			ipbufferlength								= 46;	// The buffer length is changed by each call to WSAAddresstoString, so we need to set it for each iteration through the loop for safety
-			iRetval										= ::WSAAddressToStringW(sockaddr_ip, (DWORD) ptr->ai_addrlen, NULL, ipwstringbuffer, &ipbufferlength );	// We use WSAAddressToString since it is supported on Windows XP and later
+			iRetval										= WSAAddressToStringW(sockaddr_ip, (DWORD) ptr->ai_addrlen, NULL, ipwstringbuffer, &ipbufferlength );	// We use WSAAddressToString since it is supported on Windows XP and later
 			if (iRetval) {
 				warning_printf("WSAAddressToString failed with code 0x%X: '%s'.", ::WSAGetLastError(), ::gpk::getWindowsErrorAsString(::WSAGetLastError()).begin() );
 			}
