@@ -61,11 +61,7 @@ static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRun
 		while(-1 != gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, -1, 0)) {		// Wait until the render thread is closed.
 			if(elapsedTime > 5.0f)
 				break;
-#if defined(GPK_WINDOWS)
-			Sleep(10);
-#else
-#	error "Not implemented."
-#endif
+			::gpk::sleep(10);
 			timer.Frame();
 			//elapsedTime													+= timer.LastTimeSeconds;
 		}
