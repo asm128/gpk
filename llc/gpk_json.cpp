@@ -1,4 +1,5 @@
 #include "gpk_json.h"
+#include "gpk_find.h"
 
 #define json_info_printf // info_printf
 
@@ -243,7 +244,7 @@
 	static const ::gpk::view_const_string							tokenTrue											= "true"	;
 	static const ::gpk::view_const_string							tokenNull											= "null"	;
 	::gpk::error_t													errVal												= 0;
-
+	::gpk::error_t													nextMatch											= -1;
 #define GPK_JSON_EXPECTS_SEPARATOR()													\
 	if (stateParser.ExpectingSeparator) { 												\
 		errVal														= -1; 				\
@@ -255,17 +256,24 @@
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
 		break;	
 	default: // Fallback error for every character that is not recognized by the parser.
+		GPK_JSON_EXPECTS_SEPARATOR();
 		errVal														= -1;
 		error_printf("Invalid character at index %i. '%c'", stateParser.IndexCurrentChar, stateParser.CharCurrent);
-		GPK_JSON_EXPECTS_SEPARATOR();
 		break;
+	case '/'	: 
+		seterr_break_if(stateParser.IndexCurrentChar >= jsonAsString.size() || '/' != jsonAsString[stateParser.IndexCurrentChar + 1], "Invalid character at index %i. '%c'", stateParser.IndexCurrentChar, stateParser.CharCurrent);
+		if(-1 != (nextMatch = ::gpk::find('\n', jsonAsString, stateParser.IndexCurrentChar)))
+			stateParser.IndexCurrentChar								= nextMatch - 1;
+		else
+			stateParser.IndexCurrentChar								= jsonAsString.size() - 1;
+	break; 
 	case 'f'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
 	case 't'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
 	case 'n'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateParser, object, jsonAsString); ::jsonTestAndCloseValue(stateParser, object); break; 
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case '-'	: case '+'	: //case 'x'	: // parse int or float accordingly
 		GPK_JSON_EXPECTS_SEPARATOR();
-		ree_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
+		seterr_break_if(stateParser.Escaping, "Invalid character found at index %u: %c.", stateParser.IndexCurrentChar, stateParser.CharCurrent);	// Set an error or something and skip this character.
 		seterr_break_if(::gpk::JSON_TYPE_VALUE != stateParser.CurrentElement->Type, "%s", "Number found outside a value.");
 		seterr_break_if(errored(::parseJsonNumber(stateParser, object, jsonAsString)), "%s", "Error parsing JSON number.");
 		::jsonTestAndCloseValue(stateParser, object); 

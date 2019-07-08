@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_app_impl.h" />
-    <ClInclude Include="gpk_bmg.h" />
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
@@ -38,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
-    <ClCompile Include="gpk_bmg.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_display.cpp" />

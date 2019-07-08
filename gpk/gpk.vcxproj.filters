@@ -63,9 +63,6 @@
     <ClInclude Include="gpk_dialog_controls.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_bmg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_http_server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -106,9 +103,6 @@
     </ClCompile>
     <ClCompile Include="gpk_dialog.cpp">
       <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_bmg.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

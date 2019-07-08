@@ -308,7 +308,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return result;
 }
 
-		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_string& fileName, const ::gpk::array_pod<byte_t>& fileInMemory)	{
+		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_string& fileName, const ::gpk::view_const_byte& fileInMemory)	{
 	char														bufferFormat[64]									= {};
 	char														bufferPath	[4096]									= {};
 	sprintf_s(bufferFormat, "%%.%us", fileName.size());

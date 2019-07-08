@@ -1,6 +1,7 @@
 // Original file created on: 2002/08/30 19:33 by Andreas Hartl. Visit http://www.runicsoft.com for updates and more information
 #include "gpk_bitmap_file.h"
-#include "gpk_bmg.h"
+#include "gpk_png.h"
+#include "gpk_storage.h"
 
 #if defined(GPK_WINDOWS)
 
@@ -36,11 +37,14 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	memset(&filename[0], 0, filename.size());
 	memcpy(&filename[0], &szFileName[0], lenFilename);
 	if('p' == filename[lenFilename - 2])
-		memcpy(&filename[lenFilename - 4], "bmg", 3);
+		memcpy(&filename[lenFilename - 4], "png", 3);
 	else
-		memcpy(&filename[lenFilename - 3], "bmg", 3);
+		memcpy(&filename[lenFilename - 3], "png", 3);
 
-	::gpk::bmgFileWrite(::gpk::view_const_string(filename.begin(), lenFilename), out_ImageView);
+	::gpk::view_const_string					pngfn		= {filename.begin(), lenFilename};
+	::gpk::array_pod<uint8_t>					filebytes;
+	::gpk::pngFileWrite(out_ImageView, filebytes);
+	::gpk::fileFromMemory(pngfn, {(const char*)filebytes.begin(), filebytes.size()});
 	//if((bm.bmBitsPixel * bm.bmPlanes) <= 8) { // If the DIBSection is 256 color or less, it has a color table
 	//	HDC																										hMemDC;
 	//	HBITMAP																									hOldBitmap;
@@ -243,19 +247,6 @@ struct SHeaderInfoBMP {
 		break;
 	}
 	out_ImageView																						= ::gpk::view_grid<::gpk::SColorBGRA>{out_Colors.begin(), (uint32_t)infoHeader.Metrics.x, (uint32_t)infoHeader.Metrics.y};
-	return 0;
-}
-
-					::gpk::error_t																	gpk::bmpOrBmgLoad							(::gpk::view_string bmpFileName, ::gpk::SImage<::gpk::SColorBGRA>& loaded)		{
-	::gpk::view_const_string																				bmpFileNameC								= {bmpFileName.begin(), bmpFileName.size()};
-	if(errored(::gpk::bmpFileLoad(bmpFileNameC, loaded))) {
-		error_printf("Failed to load bitmap from file: %s.", bmpFileNameC.begin());
-		if('p' == bmpFileName[bmpFileName.size() - 2])
-			bmpFileName[bmpFileName.size() - 2]										= 'g';
-		else
-			bmpFileName[bmpFileName.size() - 1]										= 'g';
-		gpk_necall(::gpk::bmgFileLoad(bmpFileNameC, loaded), "Failed to load bitmap from file: %s.", bmpFileNameC.begin());
-	}
 	return 0;
 }
 
