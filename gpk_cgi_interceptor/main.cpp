@@ -9,12 +9,12 @@
 namespace brt
 {
 	struct SProcessHandles {
-		HANDLE												ChildStd_IN_Read		= nullptr;
-		HANDLE												ChildStd_IN_Write		= nullptr;
-		HANDLE												ChildStd_OUT_Read		= nullptr;
-		HANDLE												ChildStd_OUT_Write		= nullptr;
-		HANDLE												ChildStd_ERR_Read		= nullptr;
-		HANDLE												ChildStd_ERR_Write		= nullptr;
+		HANDLE												ChildStd_IN_Read		= INVALID_HANDLE_VALUE;
+		HANDLE												ChildStd_IN_Write		= INVALID_HANDLE_VALUE;
+		HANDLE												ChildStd_OUT_Read		= INVALID_HANDLE_VALUE;
+		HANDLE												ChildStd_OUT_Write		= INVALID_HANDLE_VALUE;
+		HANDLE												ChildStd_ERR_Read		= INVALID_HANDLE_VALUE;
+		HANDLE												ChildStd_ERR_Write		= INVALID_HANDLE_VALUE;
 	};
 
 	struct SProcess {
