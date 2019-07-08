@@ -46,8 +46,10 @@
     <ClInclude Include="gpk_expression.h" />
     <ClInclude Include="gpk_find.h" />
     <ClInclude Include="gpk_frameinfo.h" />
+    <ClInclude Include="gpk_geometry.h" />
     <ClInclude Include="gpk_grid_copy.h" />
     <ClInclude Include="gpk_grid_scale.h" />
+    <ClInclude Include="gpk_grid_static.h" />
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_text.h" />
     <ClInclude Include="gpk_image.h" />
@@ -66,6 +68,7 @@
     <ClInclude Include="gpk_module.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_parse.h" />
+    <ClInclude Include="gpk_particle.h" />
     <ClInclude Include="gpk_platform.h" />
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_process.h" />
@@ -74,6 +77,7 @@
     <ClInclude Include="gpk_runtime.h" />
     <ClInclude Include="gpk_runtime_module.h" />
     <ClInclude Include="gpk_safe.h" />
+    <ClInclude Include="gpk_scene.h" />
     <ClInclude Include="gpk_size.h" />
     <ClInclude Include="gpk_stdsocket.h" />
     <ClInclude Include="gpk_storage.h" />
@@ -84,6 +88,7 @@
     <ClInclude Include="gpk_timer.h" />
     <ClInclude Include="gpk_typeint.h" />
     <ClInclude Include="gpk_type_identifier.h" />
+    <ClInclude Include="gpk_type_registry.h" />
     <ClInclude Include="gpk_view_array.h" />
     <ClInclude Include="gpk_view_bit.h" />
     <ClInclude Include="gpk_view_grid.h" />
@@ -103,6 +108,7 @@
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />
+    <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_json.cpp" />
@@ -121,6 +127,7 @@
     <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
+    <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>

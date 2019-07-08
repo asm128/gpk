@@ -22,7 +22,6 @@
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_bmg.h" />
     <ClInclude Include="gpk_connection.h" />
-    <ClInclude Include="gpk_deque.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_http_server.h" />
@@ -31,16 +30,11 @@
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_display.h" />
     <ClInclude Include="gpk_framework.h" />
-    <ClInclude Include="gpk_geometry.h" />
-    <ClInclude Include="gpk_grid_static.h" />
     <ClInclude Include="gpk_gui_control.h" />
     <ClInclude Include="gpk_gui_desktop.h" />
-    <ClInclude Include="gpk_particle.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
     <ClInclude Include="gpk_ro_rsw.h" />
-    <ClInclude Include="gpk_scene.h" />
-    <ClInclude Include="gpk_type_registry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
@@ -49,13 +43,11 @@
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_display.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
-    <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
-    <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_udp_client.cpp" />
     <ClCompile Include="gpk_udp_server.cpp" />
   </ItemGroup>

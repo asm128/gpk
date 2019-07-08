@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="container">
-      <UniqueIdentifier>{3e9b20c0-7cba-47c8-a3df-c12ceaffe120}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gui">
       <UniqueIdentifier>{7469d73b-8b8a-43b3-aa26-cbc5c69bc3f8}</UniqueIdentifier>
     </Filter>
@@ -30,12 +27,6 @@
     <ClInclude Include="gpk_framework.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_ro_gnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,19 +36,10 @@
     <ClInclude Include="gpk_ro_rsw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_app_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_bitmap_file.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_grid_static.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_type_registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_control.h">
@@ -74,9 +56,6 @@
     </ClInclude>
     <ClInclude Include="gpk_connection.h">
       <Filter>udp</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_deque.h">
-      <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_dialog.h">
       <Filter>gui</Filter>
@@ -101,9 +80,6 @@
     <ClCompile Include="gpk_framework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_ro_gnd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -111,9 +87,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_ro_rsw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_type_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_desktop.cpp">

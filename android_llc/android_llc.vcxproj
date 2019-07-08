@@ -88,6 +88,11 @@
     <ClInclude Include="..\..\gpk\llc\gpk_view_grid.h" />
     <ClInclude Include="..\..\gpk\llc\gpk_view_layered.h" />
     <ClInclude Include="..\..\gpk\llc\gpk_view_stream.h" />
+    <ClInclude Include="..\llc\gpk_geometry.h" />
+    <ClInclude Include="..\llc\gpk_grid_static.h" />
+    <ClInclude Include="..\llc\gpk_particle.h" />
+    <ClInclude Include="..\llc\gpk_scene.h" />
+    <ClInclude Include="..\llc\gpk_type_registry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\gpk\llc\gpk_adam7.cpp" />
@@ -113,11 +118,13 @@
     <ClCompile Include="..\llc\gpk_cgi.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_module.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_runtime.cpp" />
+    <ClCompile Include="..\llc\gpk_geometry.cpp" />
     <ClCompile Include="..\llc\gpk_gui.cpp" />
     <ClCompile Include="..\llc\gpk_gui_draw.cpp" />
     <ClCompile Include="..\llc\gpk_keyval.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_tcpip.cpp" />
+    <ClCompile Include="..\llc\gpk_type_registry.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3fa64f44-eac9-4db5-bd82-62b55deee884}</ProjectGuid>

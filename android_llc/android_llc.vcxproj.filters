@@ -189,6 +189,21 @@
     <ClInclude Include="..\..\gpk\llc\gpk_adam7.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="..\llc\gpk_type_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\llc\gpk_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\llc\gpk_grid_static.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\llc\gpk_particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\llc\gpk_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp">
@@ -273,6 +288,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_ascii_target.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_type_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

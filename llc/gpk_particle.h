@@ -104,6 +104,11 @@ namespace gpk
 					ParticleNext	[iBody]													= particleData;
 					return iBody;
 				}
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
+			ParticleState		.push_back(initialParticleState);
+			Particle			.push_back(particleData);
+			ParticleNext		.push_back(particleData);
+#else
 			try {	// Later on we're going to add a way to avoid using ::std::vector which require these ugly try/catch blocks.
 				ParticleState		.push_back(initialParticleState);
 				Particle			.push_back(particleData);
@@ -115,6 +120,7 @@ namespace gpk
 				ParticleNext		.resize(particleCount);
 				return -1;
 			}
+#endif
 			return particleCount;
 		}
 	};
@@ -137,7 +143,7 @@ namespace gpk
 	{
 		::gpk::SParticleBinding<_tParticleType>									newInstance									= {};
 		newInstance.Binding													= particleType;
-		gpk_necall(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition), "Failed to add particle definition instance to integrator.");
+		gpk_necall(newInstance.IndexParticlePhysics = particleIntegrator.AddParticle(particleDefinition), "%s", "Failed to add particle definition instance to integrator.");
 		return particleInstances.push_back(newInstance);
 	}
 

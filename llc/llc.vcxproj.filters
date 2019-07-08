@@ -246,6 +246,21 @@
     <ClInclude Include="gpk_png.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_static.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_type_registry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_aes.cpp">
@@ -340,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="gpk_process.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_type_registry.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

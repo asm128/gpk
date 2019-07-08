@@ -16,12 +16,12 @@ namespace gpk
 
 							TCell										Cells	[_sizeDepth][_sizeWidth]		= {};
 
-		inline constexpr												grid_static								()																		: view_grid(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inline constexpr												grid_static								()																		: view_grid<_tCell>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
 							::gpk::error_t								read									(const byte_t* input, uint32_t* inout_bytesRead)						{
-			ree_if(0 == input, "Invalid input pointer!");
+			ree_if(0 == input, "%s", "Invalid input pointer!");
 			TGridView															inputGrid								= {(_tCell*)input, Width, Depth};
-			*inout_bytesRead												+= sizeof(_tCell) * size();
+			*inout_bytesRead												+= sizeof(_tCell) * Width * Depth;
 			for(uint32_t y = 0; y < Depth; ++y) {
 				for(uint32_t x = 0; x < Width; ++x)
 					::gpk::podcpy(&Cells[y][x], inputGrid[y][x]);
@@ -29,18 +29,18 @@ namespace gpk
 			return 0;
 		}
 
-							::gpk::error_t								write									(byte_t* input, uint32_t* inout_bytesWritten)		const				{
-			ree_if(0 == input && 0 == inout_bytesWritten, "Invalid input!");
+							::gpk::error_t								write									(byte_t* output, uint32_t* inout_bytesWritten)		const				{
+			ree_if(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
 			if(0 != inout_bytesWritten)
-				*inout_bytesWritten												+= sizeof(_tCell) * size();	// Just return the size required to store this.
+				*inout_bytesWritten												+= sizeof(_tCell) * Width * Depth;	// Just return the size required to store this.
 
-			if(0 == input)
+			if(0 == output)
 				return 0;
 
-			TGridView															newStorage								= {(_tCell*)input, Width, Depth};
+			TGridView															newStorage								= {(_tCell*)output, Width, Depth};
 			for(uint32_t y = 0; y < Depth; ++y) {
 				for(uint32_t x = 0; x < Width; ++x)
-					::gpk::podcpy(&newStorage[i], &Data[i]);
+					::gpk::podcpy(output[y * Width + x], &Cells[y][x]);
 			}
 			return 0;
 		}
