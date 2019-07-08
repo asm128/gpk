@@ -282,9 +282,10 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	if errored(bytes_received = ::recvfrom(client.Socket.Handle, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
 #if defined(GPK_WINDOWS)
 		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");
+#else
 #endif
 	}
-	uint64_t estimatedTimeSent = 0;
+	uint64_t														estimatedTimeSent					= 0;
 	if(command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST) {
 		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "%s", "Out of memory?");
 		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
@@ -293,8 +294,14 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
 			else
 				warning_printf("%s", "Failed to receive all of the payload data.");
+#else
+			error_printf("%s", "Failed to receive all of the payload data.");
+			return -1;
 #endif
 		}
+		else 
+			rni_if(0 == bytes_received, "The peer has performed an orderly shutdown: '%s'", "https://linux.die.net/man/3/recvfrom");
+
 		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
 		if(client.KeyPing == 0) {
 			for(uint32_t iTime = 0, countLapse = 3000000; iTime < countLapse; ++iTime)

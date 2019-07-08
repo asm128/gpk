@@ -35,6 +35,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\gpk\gpk_bitmap_file.cpp" />
+    <ClCompile Include="..\gpk\gpk_bmg.cpp" />
+    <ClCompile Include="..\gpk\gpk_connection.cpp" />
+    <ClCompile Include="..\gpk\gpk_dialog.cpp" />
+    <ClCompile Include="..\gpk\gpk_display.cpp" />
+    <ClCompile Include="..\gpk\gpk_framework.cpp" />
+    <ClCompile Include="..\gpk\gpk_geometry.cpp" />
+    <ClCompile Include="..\gpk\gpk_gui_control.cpp" />
+    <ClCompile Include="..\gpk\gpk_gui_desktop.cpp" />
+    <ClCompile Include="..\gpk\gpk_ro_gnd.cpp" />
+    <ClCompile Include="..\gpk\gpk_ro_rsm.cpp" />
+    <ClCompile Include="..\gpk\gpk_ro_rsw.cpp" />
+    <ClCompile Include="..\gpk\gpk_type_registry.cpp" />
+    <ClCompile Include="..\gpk\gpk_udp_client.cpp" />
+    <ClCompile Include="..\gpk\gpk_udp_server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\gpk\gpk_app_impl.h" />
     <ClInclude Include="..\gpk\gpk_bitmap_file.h" />
     <ClInclude Include="..\gpk\gpk_bmg.h" />
@@ -57,27 +74,6 @@
     <ClInclude Include="..\gpk\gpk_type_registry.h" />
     <ClInclude Include="..\gpk\gpk_udp_client.h" />
     <ClInclude Include="..\gpk\gpk_udp_server.h" />
-    <ClInclude Include="..\llc\gpk_windows.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\gpk\gpk_ascii_target.cpp" />
-    <ClCompile Include="..\gpk\gpk_bitmap_file.cpp" />
-    <ClCompile Include="..\gpk\gpk_bmg.cpp" />
-    <ClCompile Include="..\gpk\gpk_connection.cpp" />
-    <ClCompile Include="..\gpk\gpk_dialog.cpp" />
-    <ClCompile Include="..\gpk\gpk_display.cpp" />
-    <ClCompile Include="..\gpk\gpk_framework.cpp" />
-    <ClCompile Include="..\gpk\gpk_geometry.cpp" />
-    <ClCompile Include="..\gpk\gpk_gui_control.cpp" />
-    <ClCompile Include="..\gpk\gpk_gui_desktop.cpp" />
-    <ClCompile Include="..\gpk\gpk_gui_draw.cpp" />
-    <ClCompile Include="..\gpk\gpk_ro_gnd.cpp" />
-    <ClCompile Include="..\gpk\gpk_ro_rsm.cpp" />
-    <ClCompile Include="..\gpk\gpk_ro_rsw.cpp" />
-    <ClCompile Include="..\gpk\gpk_type_registry.cpp" />
-    <ClCompile Include="..\gpk\gpk_udp_client.cpp" />
-    <ClCompile Include="..\gpk\gpk_udp_server.cpp" />
-    <ClCompile Include="..\llc\gpk_windows.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24953735-813e-4586-993b-f033657336f3}</ProjectGuid>
