@@ -384,6 +384,14 @@
 	return node->ObjectIndex;
 }
 
+// Get the codepoint from 4 hex characters of an unicode escape sequence
+//	For input "\u c1 c2 c3 c4" the codepoint is:
+//		(c1 * 0x1000)	+ (c2 * 0x0100)	+ (c3 * 0x0010) + c4
+// aka:	(c1 << 12)		+ (c2 << 8)		+ (c3 << 4)		+ (c4 << 0)
+// 
+//	Furthermore, the possible characters '0'..'9', 'A'..'F', and 'a'..'f' must be converted to the integers 0x0..0x9, 0xA..0xF, 0xA..0xF, resp. 
+//	The conversion is done by subtracting the offset (0x30, 0x37, and 0x57) between the ASCII value of the character and the desired integer value.
+//	Returns codepoint (0x0000..0xFFFF) or -1 in case of an error (e.g. EOF or non-hex character)
 static		::gpk::error_t									decodeUnicodeEscapeSequence							(::gpk::view_const_string input, uint32_t& ret_unicode)		{
 	ree_if(input.size() < 4, "Invalid escape sequence: %s.", input.begin());
 	int																unicode												= 0;
@@ -399,11 +407,12 @@ static		::gpk::error_t									decodeUnicodeEscapeSequence							(::gpk::view_co
 		else
 			return -1;
 	}
-	ret_unicode		= static_cast<unsigned int>(unicode);
+	ret_unicode													= static_cast<unsigned int>(unicode);
 	return true;
 }
 
-			::gpk::error_t									jsonToCodePoint										(::gpk::view_const_string input, uint32_t& unicode)			{
+// this function only makes sense after reading the first `\u`
+::gpk::error_t									jsonToCodePoint										(::gpk::view_const_string input, uint32_t& unicode)			{
 	gpk_necall(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", input.begin());
 	if (unicode < 0xD800 || unicode > 0xDBFF) 
 		return 0;

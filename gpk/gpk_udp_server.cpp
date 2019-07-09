@@ -89,7 +89,7 @@
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 						continue;
 					}
-					gerror_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+					e_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 					if(INVALID_SOCKET != client.Socket)
 						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 				}

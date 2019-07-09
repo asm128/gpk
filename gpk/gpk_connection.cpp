@@ -334,23 +334,27 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				if(0 != command.Encrypted) {
 					::gpk::array_pod<byte_t>										inflated;
 					::gpk::array_pod<byte_t>										decoded;
-					::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded);
+					rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded)), "%s", "Failed to decrypt packet!");
 					messageReceived->Payload.resize(65535);
-					::gpk::arrayInflate(decoded, messageReceived->Payload);
+					rew_if(errored(::gpk::arrayInflate(decoded, messageReceived->Payload)), "%s", "Failed to inflate packet!");
 				}
 				else {
 					messageReceived->Payload.resize(65535);
-					::gpk::arrayInflate(viewPayload, messageReceived->Payload);
+					rew_if(errored(::gpk::arrayInflate(viewPayload, messageReceived->Payload)), "%s", "Failed to inflate packet!");
 				}
 			}
 			else {
 				if(0 != command.Encrypted) {
 					messageReceived->Payload.clear();
-					::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload);
+					rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload)), "%s", "Failed to decrypt packet!");
 				}
 				else {
 					messageReceived->Payload.resize(header.Size);
 					memcpy(messageReceived->Payload.begin(), viewPayload.begin(), header.Size);
+					{
+						messageReceived->Payload.resize(header.Size + 1, 0);
+						messageReceived->Payload.resize(header.Size);
+					}
 				}
 			}
 		}
