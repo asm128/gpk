@@ -1,6 +1,7 @@
 #include "gpk_cgi.h"
 #include "gpk_tcpip.h"
 #include "gpk_member_registry.h"
+#include "gpk_runtime.h"
 
 #ifndef GPK_CGI_RUNTIME_H_2938479283
 #define GPK_CGI_RUNTIME_H_2938479283
@@ -156,6 +157,7 @@ namespace gpk
 		::gpk::SIPv4																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
 		::gpk::SCGIEnvironment																	Environment					= {};
+		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
 	};
 
 	struct SCGIFramework {
@@ -165,7 +167,7 @@ namespace gpk
 		bool																					Bootstrapped				= false;
 	};
 
-	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues);
+	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv);
 } // gpk
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)																																																																		\

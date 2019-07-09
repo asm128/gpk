@@ -187,7 +187,8 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{ 
+::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{ 
+	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
 	::cgiRuntimeValuesLoadEnv(cgiRuntimeValues);
 	cgiRuntimeValues.QueryString						= {cgiRuntimeValues.Environment.QUERY_STRING	.begin(), (uint32_t)-1};	
 	cgiRuntimeValues.ContentType						= {cgiRuntimeValues.Environment.CONTENT_TYPE	.begin(), (uint32_t)-1};			

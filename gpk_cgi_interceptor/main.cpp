@@ -2,6 +2,7 @@
 #include "gpk_cgi_runtime.h"		// for ::gpk::SCGIRuntimeVlaues and ::gpk::cgiRuntimeValuesLoad()
 #include "gpk_json_expression.h"	// for ::gpk::jsonParse()
 #include "gpk_storage.h"			// for ::gpk::fileToMemory()
+#include "gpk_encoding.h"
 
 #include <Windows.h>
 #include <process.h>
@@ -29,15 +30,14 @@ static	::gpk::error_t								createChildProcess
 	,	::gpk::view_char				appPath
 	,	::gpk::view_char				commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	::gpk::view_char										szCmdlineApp			= appPath;
-	::gpk::view_char										szCmdlineFinal			= commandLine;
 	bool													bSuccess				= false; 
 	static constexpr const bool								isUnicodeEnv			= false;
 	static constexpr const uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
-	bSuccess											= CreateProcessA(szCmdlineApp.begin()	// Create the child process. 
-		, szCmdlineFinal.begin()	// command line 
+	bSuccess											= CreateProcessA
+		( appPath.begin()	// Create the child process. 
+		, commandLine.begin()		// command line 
 		, nullptr					// process security attributes 
 		, nullptr					// primary thread security attributes 
 		, true						// handles are inherited 
@@ -47,13 +47,30 @@ static	::gpk::error_t								createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer 
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION 
-	ree_if(false == bSuccess, "Failed to create process'%s'.", szCmdlineApp.begin());
+	ree_if(false == bSuccess, "Failed to create process'%s'.", appPath.begin());
+
+	::gpk::array_pod<uchar_t>								popupTitle						= {};
+	{
+		static constexpr const ::gpk::view_const_char		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
+		char												ensure[encodedSignature.size()]	= {};
+		(void)ensure;
+		ree_if(encodedSignature.size() != 73, "%s", "");
+		::gpk::base64Decode(encodedSignature, popupTitle);
+		popupTitle.push_back('\0');
+		ree_if(popupTitle[0] != 'L', "%s", "");
+	}
 	::gpk::array_pod<char_t>								userMessage				= {};
-	userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
-	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
-	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
-	info_printf("Creating process '%s' with command line '%s'", szCmdlineApp.begin(), szCmdlineFinal.begin());
-	ResumeThread(process.ProcessInfo.hThread);
+	{
+		userMessage.resize(2 * appPath.size() + 2 * commandLine.size() + 1024);
+		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", appPath.begin());
+	}
+
+	MessageBoxA(0, userMessage.begin(), (const char*)popupTitle.begin(), MB_OK | MB_TOPMOST);	// Tell the user to attach the debugger to the child process.
+
+	{	// Resume the child CGI process' main thread after the user acknowledged the message box. 
+		info_printf("Creating process '%s' with command line '%s'", appPath.begin(), commandLine.begin());
+		ResumeThread(process.ProcessInfo.hThread);
+	}
 	return 0;
 }
 
@@ -214,9 +231,10 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 	return 0;
 }
 
-static int											cgiMain					()		{
+static int											cgiMain					(int argc, char** argv, char**envv)		{
+	(void)(envv);
 	::gpk::SCGIRuntimeValues								runtimeValues;
-	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::SThreadStateRead										appState;
 	if errored(::cgiBootstrap(runtimeValues, appState)) {
 		printf("%s\r\n", "Content-Type: text/html"
@@ -240,7 +258,7 @@ static int											cgiMain					()		{
 
 int													main					(int argc, char** argv, char**envv)	{
 	(void)argc, (void)argv, (void)envv;
-	return ::cgiMain();
+	return ::cgiMain(argc, argv, envv);
 }
 
 int WINAPI											WinMain				
@@ -250,5 +268,5 @@ int WINAPI											WinMain
 	,	_In_		int			nShowCmd
 	) {
 	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain();
+	return ::cgiMain(__argc, __argv, environ);
 }

@@ -106,10 +106,11 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 	return 0;
 }
 
-static int											cgiMain				()	{
+static int											cgiMain				(int argc, char** argv, char**envv)	{
+	(void)(envv);
 	gpk_necall(::gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
 	::gpk::SCGIRuntimeValues								runtimeValues;
-	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::gpk::array_pod<char>									html;
 	if errored(::cgiBootstrap(runtimeValues, html)) {
 		printf("%s\r\n", "Content-Type: text/html"
@@ -135,8 +136,7 @@ static int											cgiMain				()	{
 }
 
 int													main				(int argc, char** argv, char**envv)	{
-	(void)argc, (void)argv, (void)envv;
-	return ::cgiMain();
+	return ::cgiMain(argc, argv, envv);
 }
 
 #ifdef GPK_WINDOWS
@@ -149,6 +149,6 @@ int WINAPI											WinMain
 	,	_In_		int			nShowCmd
 	) {
 	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain();
+	return ::cgiMain(__argc, __argv, environ);
 }
 #endif
