@@ -43,10 +43,9 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		gwarn_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // attempt to load address from config file.
-		const int32_t											indexObjectConfig				= ::gpk::jsonArrayValueGet(*jsonConfig.Tree[0], 0);	// Get the first JSON {object} found in the [document]
 		{ // 
 			::gpk::view_const_string								jsonIP							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_ip", jsonConfig, indexObjectConfig, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
+			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_ip", jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
 			else {
 				info_printf("Remote IP: %s.", jsonIP.begin());
 				gerror_if(errored(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect)), "Failed to read IP address from JSON config file: %s.", jsonIP.begin());	// turn the string into a SIPv4 struct.
@@ -55,7 +54,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		{ // load port from config file
 			bestClient.AddressConnect.Port						= 9998;
 			::gpk::view_const_string								jsonPort							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port"	, jsonConfig, indexObjectConfig, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port"	, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
 			else {
 				uint64_t												port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, &port);

@@ -1,4 +1,4 @@
-[{	"assets": 
+{	"assets": 
 	{	"images"		: { "path" : "../gpk_data/images"	}
 	,	"sounds"		: { "path" : "../gpk_data/sounds"	}
 	,	"scripts"		: { "path" : "../gpk_data/scripts"	}
@@ -33,6 +33,7 @@
 		},
 		"test_udp_server": 
 		{	"listen_port"	: "9898"
+		,	"adapter"		: "0"
 		},
 		"test_gontrill" : 
 		{	"images" :
@@ -213,5 +214,4 @@
 			]
 		}
 	}
-},
-]
+}

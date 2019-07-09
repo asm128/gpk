@@ -3,7 +3,7 @@
 #include "gpk_expression.h"
 #include "gpk_parse.h"
 
-#define GPK_JSON_EXPRESSION_DEBUG
+//#define GPK_JSON_EXPRESSION_DEBUG
 
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
 static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
