@@ -173,10 +173,10 @@ static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverIn
 	return 0;
 }
 
-void														threadUpdateClients					(void* serverInstance)					{ updateClients(*(::gpk::SUDPServer*)serverInstance); }
+static	void												threadUpdateClients					(void* serverInstance)					{ updateClients(*(::gpk::SUDPServer*)serverInstance); }
 static	::gpk::error_t										server								(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen										= true;
-	gpk_necall(::gpk::tcpipAddress(serverInstance.Address.Port, 0, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address), "??");
+	gpk_necall(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address), "??");
 	sockaddr_in														server								= {};
 	gpk_necall(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server), "??");
 #if defined(GPK_WINDOWS)
@@ -205,9 +205,10 @@ void														threadServer						(void* pServerInstance)				{
 	}
 }
 
-::gpk::error_t												gpk::serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port)		{
+::gpk::error_t												gpk::serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex)		{
 	serverInstance.Listen										= true;
 	serverInstance.Address.Port									= port;
+	serverInstance.AdapterIndex									= adapterIndex;
 	_beginthread(::threadServer, 0, &serverInstance);
 	return 0;
 }

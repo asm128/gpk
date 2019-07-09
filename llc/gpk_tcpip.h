@@ -5,6 +5,7 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	struct SIPv4 {
 						ubyte_t											IP		[4]							;
 						uint16_t										Port								;
@@ -18,8 +19,8 @@ namespace gpk
 				&& Port		== other.Port
 				;
 		}
-//		int16_t											Adapter								;
 	};
+#pragma pack(pop)
 
 					::gpk::error_t									tcpipInitialize						();
 					::gpk::error_t									tcpipShutdown						();
