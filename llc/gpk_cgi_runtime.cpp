@@ -1,25 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "gpk_cgi_runtime.h"
+#include "gpk_process.h"
+
 #include <string>
 
-static	::gpk::error_t								load_env					(const ::gpk::view_const_string& key, ::gpk::array_pod<char> & out_value)	{
-	char													* qs						= getenv(key.begin());
-	if(0 == qs) {
-		warning_printf("Environment variable '%s' not found.", key.begin());
-		out_value.resize(0);
-		return -1;
-	}
-	size_t													ql							= strlen(qs);
-	gpk_necall(out_value.resize((uint32_t)ql + 1), "%s", "Out of memory?");
-	memset(out_value.begin(), 0, out_value.size());
-	memcpy(out_value.begin(), qs, ql);
-	gpk_necall(out_value.resize(out_value.size() - 1), "%s", "Out of memory?");
-	info_printf("Environment variable '%s': '%s'.", key.begin(), out_value.begin());
-	return 0;
-}
-
 static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{ 
-	static const ::gpk::view_const_string					content_types []			= 
+	ree_if(0 == strContentType.size(), "%s", "No input string");
+	static	const ::gpk::view_const_string					content_types []			= 
 		{ "application/javascript"                                                   
 		, "application/json"                                                         
 		, "application/x-www-form-urlencoded"                                        
@@ -125,59 +112,12 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										cgiRuntimeValuesLoadEnv		(::gpk::SCGIRuntimeValues & cgiRuntimeValues)	{ 
-	::load_env("AUTH_PASSWORD"			, cgiRuntimeValues.Environment.AUTH_PASSWORD		);
-	::load_env("AUTH_TYPE"				, cgiRuntimeValues.Environment.AUTH_TYPE			);
-	::load_env("AUTH_USER"				, cgiRuntimeValues.Environment.AUTH_USER			);
-	::load_env("CERT_COOKIE"			, cgiRuntimeValues.Environment.CERT_COOKIE			);
-	::load_env("CERT_FLAGS"				, cgiRuntimeValues.Environment.CERT_FLAGS			);
-	::load_env("CERT_ISSUER"			, cgiRuntimeValues.Environment.CERT_ISSUER			);
-	::load_env("CERT_KEYSIZE"			, cgiRuntimeValues.Environment.CERT_KEYSIZE			);
-	::load_env("CERT_SECRETKEYSIZE"		, cgiRuntimeValues.Environment.CERT_SECRETKEYSIZE	);
-	::load_env("CERT_SERIALNUMBER"		, cgiRuntimeValues.Environment.CERT_SERIALNUMBER	);
-	::load_env("CERT_SERVER_ISSUER"		, cgiRuntimeValues.Environment.CERT_SERVER_ISSUER	);
-	::load_env("CERT_SERVER_SUBJECT"	, cgiRuntimeValues.Environment.CERT_SERVER_SUBJECT	);
-	::load_env("CERT_SUBJECT"			, cgiRuntimeValues.Environment.CERT_SUBJECT			);
-	::load_env("CF_TEMPLATE_PATH"		, cgiRuntimeValues.Environment.CF_TEMPLATE_PATH		);
-	::load_env("CONTENT_LENGTH"			, cgiRuntimeValues.Environment.CONTENT_LENGTH		);
-	::load_env("CONTENT_TYPE"			, cgiRuntimeValues.Environment.CONTENT_TYPE			);
-	::load_env("CONTEXT_PATH"			, cgiRuntimeValues.Environment.CONTEXT_PATH			);
-	::load_env("GATEWAY_INTERFACE"		, cgiRuntimeValues.Environment.GATEWAY_INTERFACE	);
-	::load_env("HTTPS"					, cgiRuntimeValues.Environment.HTTPS				);
-	::load_env("HTTPS_KEYSIZE"			, cgiRuntimeValues.Environment.HTTPS_KEYSIZE		);
-	::load_env("HTTPS_SECRETKEYSIZE"	, cgiRuntimeValues.Environment.HTTPS_SECRETKEYSIZE	);
-	::load_env("HTTPS_SERVER_ISSUER"	, cgiRuntimeValues.Environment.HTTPS_SERVER_ISSUER	);
-	::load_env("HTTPS_SERVER_SUBJECT"	, cgiRuntimeValues.Environment.HTTPS_SERVER_SUBJECT	);
-	::load_env("HTTP_ACCEPT"			, cgiRuntimeValues.Environment.HTTP_ACCEPT			);
-	::load_env("HTTP_ACCEPT_ENCODING"	, cgiRuntimeValues.Environment.HTTP_ACCEPT_ENCODING	);
-	::load_env("HTTP_ACCEPT_LANGUAGE"	, cgiRuntimeValues.Environment.HTTP_ACCEPT_LANGUAGE	);
-	::load_env("HTTP_CONNECTION"		, cgiRuntimeValues.Environment.HTTP_CONNECTION		);
-	::load_env("HTTP_COOKIE"			, cgiRuntimeValues.Environment.HTTP_COOKIE			);
-	::load_env("HTTP_HOST"				, cgiRuntimeValues.Environment.HTTP_HOST			);
-	::load_env("HTTP_REFERER"			, cgiRuntimeValues.Environment.HTTP_REFERER			);
-	::load_env("HTTP_USER_AGENT"		, cgiRuntimeValues.Environment.HTTP_USER_AGENT		);
-	::load_env("QUERY_STRING"			, cgiRuntimeValues.Environment.QUERY_STRING			);
-	::load_env("REMOTE_ADDR"			, cgiRuntimeValues.Environment.REMOTE_ADDR			);
-	::load_env("REMOTE_HOST"			, cgiRuntimeValues.Environment.REMOTE_HOST			);
-	::load_env("REMOTE_USER"			, cgiRuntimeValues.Environment.REMOTE_USER			);
-	::load_env("REQUEST_METHOD"			, cgiRuntimeValues.Environment.REQUEST_METHOD		);
-	::load_env("SCRIPT_NAME"			, cgiRuntimeValues.Environment.SCRIPT_NAME			);
-	::load_env("SERVER_NAME"			, cgiRuntimeValues.Environment.SERVER_NAME			);
-	::load_env("SERVER_PORT"			, cgiRuntimeValues.Environment.SERVER_PORT			);
-	::load_env("SERVER_PORT_SECURE"		, cgiRuntimeValues.Environment.SERVER_PORT_SECURE	);
-	::load_env("SERVER_PROTOCOL"		, cgiRuntimeValues.Environment.SERVER_PROTOCOL		);
-	::load_env("SERVER_SOFTWARE"		, cgiRuntimeValues.Environment.SERVER_SOFTWARE		);
-	::load_env("WEB_SERVER_API"			, cgiRuntimeValues.Environment.WEB_SERVER_API		);
-	return 0;
-}
 ::gpk::error_t										cgiLoadFormData				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view_array<const char> & strContent)	{ 
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
 ::gpk::error_t										cgiLoadContent				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view_array<const char> & strContent)	{ 
-	(void)runtimeValues;
-	(void)strContent;
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA: 
@@ -189,33 +129,47 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{ 
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
-	::cgiRuntimeValuesLoadEnv(cgiRuntimeValues);
-	cgiRuntimeValues.QueryString						= {cgiRuntimeValues.Environment.QUERY_STRING	.begin(), (uint32_t)-1};	
-	cgiRuntimeValues.ContentType						= {cgiRuntimeValues.Environment.CONTENT_TYPE	.begin(), (uint32_t)-1};			
-	cgiRuntimeValues.ContentLength						= {cgiRuntimeValues.Environment.CONTENT_LENGTH	.begin(), (uint32_t)-1};	
-	cgiRuntimeValues.StrRemoteIP						= {cgiRuntimeValues.Environment.REMOTE_ADDR		.begin(), (uint32_t)-1};		
-	cgiRuntimeValues.StrRemotePort						= {cgiRuntimeValues.Environment.REMOTE_PORT		.begin(), (uint32_t)-1};	
-	//webRuntimeValues.QueryString						= "bt=1&width=100&height=200&m=test_cgi_module";
-	//webRuntimeValues.QueryString						= "bt=1&width=720&height=640&frame=0&category=0&neighbor=6&m=tianadev";
-	//webRuntimeValues.QueryString						= "bt=1&m=tianadev&width=1708&height=744&gallery=0&frame=1";
-	::gpk::querystring_split({cgiRuntimeValues.QueryString.begin(), cgiRuntimeValues.QueryString.size()}, cgiRuntimeValues.QueryStringElements);
-	cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
-	for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
-		::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
+	::gpk::array_pod<char_t>								environBlock;
+	::gpk::array_obj<::gpk::TKeyValConstString>				environBlockViews;
+	::gpk::environmentBlockFromEnviron(environBlock);
+	::gpk::environmentBlockViews(environBlock, environBlockViews);
+	{
+		::gpk::view_const_string								querystring;
+		::gpk::find("QUERY_STRING", environBlockViews, querystring);
+		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
+		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
+		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
+			::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
+		}
 	}
-	::cgiLoadContentType(cgiRuntimeValues.Content.Type, cgiRuntimeValues.ContentType);
-	::cgiLoadAddr(cgiRuntimeValues.RemoteIP, cgiRuntimeValues.StrRemoteIP, cgiRuntimeValues.StrRemotePort);
+	{
+		::gpk::view_const_string								contentype;
+		::gpk::find("CONTENT_TYPE", environBlockViews, contentype);
+		if(contentype.size())
+			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
+	}
+	{
+		::gpk::view_const_string								remoteIP	;
+		::gpk::view_const_string								remotePORT	;
+		::gpk::find("REMOTE_IP"			, environBlockViews, remoteIP	);
+		::gpk::find("REMOTE_PORT"		, environBlockViews, remotePORT	);
+		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
+	}
+	{
+		::gpk::view_const_string								contentLength;
+		::gpk::find("CONTENT_LENGTH"	, environBlockViews, contentLength);
 #if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-	cgiRuntimeValues.Content.Length						= cgiRuntimeValues.ContentLength.size() ? (uint32_t)::std::stoi(cgiRuntimeValues.ContentLength.begin()) : 0;
+		cgiRuntimeValues.Content.Length						= contentLength.size() ? (uint32_t)::std::stoi(contentLength.begin()) : 0;
 #else
-	try {
-		cgiRuntimeValues.Content.Length						= cgiRuntimeValues.ContentLength.size() ? (uint32_t)::std::stoi(cgiRuntimeValues.ContentLength.begin()) : 0;
-	}
-	catch(...) {
-		cgiRuntimeValues.Content.Length						= 0;
-	}
+		try {
+			cgiRuntimeValues.Content.Length						= contentLength.size() ? (uint32_t)::std::stoi(contentLength.begin()) : 0;
+		}
+		catch(...) {
+			cgiRuntimeValues.Content.Length						= 0;
+		}
 #endif
+	}
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
 	memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
 	uint32_t												iChar							= 0;

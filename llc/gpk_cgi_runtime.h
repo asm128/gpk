@@ -8,106 +8,50 @@
 
 namespace gpk
 {
-	struct SCGIEnvironment {
-		GPKMOND(::gpk, array_pod<char_t>,	AUTH_PASSWORD			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	AUTH_TYPE				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	AUTH_USER				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_COOKIE				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_FLAGS				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_ISSUER				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_KEYSIZE			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_SECRETKEYSIZE		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERIALNUMBER		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERVER_ISSUER		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_SERVER_SUBJECT		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CERT_SUBJECT			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CF_TEMPLATE_PATH		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CONTENT_LENGTH			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CONTENT_TYPE			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	CONTEXT_PATH			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	GATEWAY_INTERFACE		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTPS					) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_KEYSIZE			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SECRETKEYSIZE		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SERVER_ISSUER		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTPS_SERVER_SUBJECT	) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT_ENCODING	) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_ACCEPT_LANGUAGE	) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_CONNECTION			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_COOKIE				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_HOST				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_REFERER			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	HTTP_USER_AGENT			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	QUERY_STRING			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_ADDR				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_HOST				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_USER				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	REQUEST_METHOD			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SCRIPT_NAME				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_NAME				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PORT				) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PORT_SECURE		) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_PROTOCOL			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_SOFTWARE			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	WEB_SERVER_API			) = "";
-		GPKMOND(::gpk, array_pod<char_t>,	DOCUMENT_ROOT			) = "";// The root directory of your server
-		GPKMOND(::gpk, array_pod<char_t>,	PATH					) = "";// The system path your server is running under
-		GPKMOND(::gpk, array_pod<char_t>,	REMOTE_PORT				) = "";// The port the visitor is connected to on the web server
-		GPKMOND(::gpk, array_pod<char_t>,	REQUEST_URI				) = "";// The interpreted pathname of the requested document or CGI (relative to the document root)
-		GPKMOND(::gpk, array_pod<char_t>,	SCRIPT_FILENAME			) = "";// The full pathname of the current CGI
-		GPKMOND(::gpk, array_pod<char_t>,	SERVER_ADMIN			) = "";// The email address for your server's webmaster
-		GPKM_REGISTRY
-			(	GPKM_NAME(AUTH_PASSWORD			)
-			,	GPKM_NAME(AUTH_TYPE				)
-			,	GPKM_NAME(AUTH_USER				)
-			,	GPKM_NAME(CERT_COOKIE			)
-			,	GPKM_NAME(CERT_FLAGS			)
-			,	GPKM_NAME(CERT_ISSUER			)
-			,	GPKM_NAME(CERT_KEYSIZE			)
-			,	GPKM_NAME(CERT_SECRETKEYSIZE	)
-			,	GPKM_NAME(CERT_SERIALNUMBER		)
-			,	GPKM_NAME(CERT_SERVER_ISSUER	)
-			,	GPKM_NAME(CERT_SERVER_SUBJECT	)
-			,	GPKM_NAME(CERT_SUBJECT			)
-			,	GPKM_NAME(CF_TEMPLATE_PATH		)
-			,	GPKM_NAME(CONTENT_LENGTH		)
-			,	GPKM_NAME(CONTENT_TYPE			)
-			,	GPKM_NAME(CONTEXT_PATH			)
-			,	GPKM_NAME(GATEWAY_INTERFACE		)
-			,	GPKM_NAME(HTTPS					)
-			,	GPKM_NAME(HTTPS_KEYSIZE			)
-			,	GPKM_NAME(HTTPS_SECRETKEYSIZE	)
-			,	GPKM_NAME(HTTPS_SERVER_ISSUER	)
-			,	GPKM_NAME(HTTPS_SERVER_SUBJECT	)
-			,	GPKM_NAME(HTTP_ACCEPT			)
-			,	GPKM_NAME(HTTP_ACCEPT_ENCODING	)
-			,	GPKM_NAME(HTTP_ACCEPT_LANGUAGE	)
-			,	GPKM_NAME(HTTP_CONNECTION		)
-			,	GPKM_NAME(HTTP_COOKIE			)
-			,	GPKM_NAME(HTTP_HOST				)
-			,	GPKM_NAME(HTTP_REFERER			)
-			,	GPKM_NAME(HTTP_USER_AGENT		)
-			,	GPKM_NAME(QUERY_STRING			)
-			,	GPKM_NAME(REMOTE_ADDR			)
-			,	GPKM_NAME(REMOTE_HOST			)
-			,	GPKM_NAME(REMOTE_USER			)
-			,	GPKM_NAME(REQUEST_METHOD		)
-			,	GPKM_NAME(SCRIPT_NAME			)
-			,	GPKM_NAME(SERVER_NAME			)
-			,	GPKM_NAME(SERVER_PORT			)
-			,	GPKM_NAME(SERVER_PORT_SECURE	)
-			,	GPKM_NAME(SERVER_PROTOCOL		)
-			,	GPKM_NAME(SERVER_SOFTWARE		)
-			,	GPKM_NAME(WEB_SERVER_API		)
-			,	GPKM_NAME(DOCUMENT_ROOT			)
-			,	GPKM_NAME(PATH					)
-			,	GPKM_NAME(REMOTE_PORT			)
-			,	GPKM_NAME(REQUEST_URI			)
-			,	GPKM_NAME(SCRIPT_FILENAME		)
-			,	GPKM_NAME(SERVER_ADMIN			)
-			);
-	};
+	static	const ::gpk::view_const_string							cgi_environ	[]		=
+		{	"AUTH_PASSWORD"		
+		,	"AUTH_TYPE"			
+		,	"AUTH_USER"			
+		,	"CERT_COOKIE"		
+		,	"CERT_FLAGS"		
+		,	"CERT_ISSUER"		
+		,	"CERT_KEYSIZE"		
+		,	"CERT_SECRETKEYSIZE"
+		,	"CERT_SERIALNUMBER"	
+		,	"CERT_SERVER_ISSUER"
+		,	"CERT_SERVER_SUBJECT"
+		,	"CERT_SUBJECT"		
+		,	"CF_TEMPLATE_PATH"	
+		,	"CONTENT_LENGTH"	
+		,	"CONTENT_TYPE"		
+		,	"CONTEXT_PATH"		
+		,	"GATEWAY_INTERFACE"	
+		,	"HTTPS"				
+		,	"HTTPS_KEYSIZE"		
+		,	"HTTPS_SECRETKEYSIZE"
+		,	"HTTPS_SERVER_ISSUER"
+		,	"HTTPS_SERVER_SUBJECT"
+		,	"HTTP_ACCEPT"		
+		,	"HTTP_ACCEPT_ENCODING"
+		,	"HTTP_ACCEPT_LANGUAGE"
+		,	"HTTP_CONNECTION"	
+		,	"HTTP_COOKIE"		
+		,	"HTTP_HOST"			
+		,	"HTTP_REFERER"		
+		,	"HTTP_USER_AGENT"	
+		,	"QUERY_STRING"		
+		,	"REMOTE_ADDR"		
+		,	"REMOTE_HOST"		
+		,	"REMOTE_USER"		
+		,	"REQUEST_METHOD"	
+		,	"SCRIPT_NAME"		
+		,	"SERVER_NAME"		
+		,	"SERVER_PORT"		
+		,	"SERVER_PORT_SECURE"
+		,	"SERVER_PROTOCOL"	
+		,	"SERVER_SOFTWARE"	
+		,	"WEB_SERVER_API"	
+		};
 
 	enum CGI_MEDIA_TYPE
 		{ CGI_MEDIA_TYPE_APPLICATION_JAVASCRIPT															// application/javascript
@@ -146,17 +90,11 @@ namespace gpk
 	};
 
 	struct SCGIRuntimeValues {
-		::gpk::view_const_string																QueryString					= {};
 		::gpk::array_obj<::gpk::view_const_string>												QueryStringElements			= {};
 		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	QueryStringKeyVals			= {};
 		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	FormKeyVals					= {};
-		::gpk::view_const_string																ContentLength				= {};
-		::gpk::view_const_string																ContentType					= {};
-		::gpk::view_const_string																StrRemoteIP					= {};
-		::gpk::view_const_string																StrRemotePort				= {};
 		::gpk::SIPv4																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
-		::gpk::SCGIEnvironment																	Environment					= {};
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
 	};
 

@@ -98,8 +98,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		));
 		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:95%%; height:95%%; background-color:#FFCCAA; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
-		if(runtimeValues.QueryString.size())
-			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", runtimeValues.QueryString.size(), runtimeValues.QueryString.begin()));
+		::gpk::view_const_string								querystring;
+		::gpk::find("QUERY_STRING", framework.RuntimeValues.QueryStringKeyVals, querystring);
+		if(querystring.size())
+			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
 		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
@@ -108,13 +110,21 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
 			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
-		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentLength	.begin(), runtimeValues.ContentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
-		output.append(buffer, ::gpk::formatForSize({runtimeValues.ContentType	.begin(), runtimeValues.ContentType		.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
+		::gpk::view_const_string								contentype	;
+		::gpk::view_const_string								remoteIP	;
+		::gpk::view_const_string								remotePORT	;
+		::gpk::view_const_string								contentLength;
+		::gpk::find("CONTENT_TYPE"	, runtimeValues.QueryStringKeyVals, contentype);
+		::gpk::find("REMOTE_IP"		, runtimeValues.QueryStringKeyVals, remoteIP	);
+		::gpk::find("REMOTE_PORT"	, runtimeValues.QueryStringKeyVals, remotePORT	);
+		::gpk::find("CONTENT_LENGTH", runtimeValues.QueryStringKeyVals, contentLength);
+		output.append(buffer, ::gpk::formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
+		output.append(buffer, ::gpk::formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>IP: %u.%u.%u.%u:%u</h4>"		, GPK_IPV4_EXPAND(framework.RuntimeValues.RemoteIP)));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String IP: %s</h4>"			, framework.RuntimeValues.StrRemoteIP.begin()));
-		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, framework.RuntimeValues.StrRemotePort.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String IP: %s</h4>"			, remoteIP	.begin()));
+		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, remotePORT.begin()));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
 		//int														argc					= __argc; 
@@ -152,7 +162,6 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			}
 		}
 		output.append(buffer, ::sprintf_s(buffer, "\n<h1>content_body (Raw:%u:%u): %s</h1>", runtimeValues.Content.Length, runtimeValues.Content.Body.size(), runtimeValues.Content.Body.begin()));
-		//output.append(buffer, sprintf_s(buffer, "%s", "<iframe width=\"100%%\" height=\"100%%\" src=\"http://localhost/home.html\"></iframe>\n"));
 		output.append(buffer, ::sprintf_s(buffer, "\n%s\n", "</body>\n</html>"));
 	}
 	return 0;

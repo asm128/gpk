@@ -12,3 +12,15 @@
 	return 0;
 }
 
+::gpk::error_t						gpk::find					(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<::gpk::TKeyValConstString> & keyvals)											{
+	for(uint32_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal)
+		if(keyToFind == keyvals[iKeyVal].Key)
+			return iKeyVal;
+	return -1;
+}
+
+::gpk::error_t						gpk::find					(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<::gpk::TKeyValConstString> & keyvals, ::gpk::view_const_string& out_val)		{
+	::gpk::error_t							index						= ::gpk::find(keyToFind, keyvals);
+	out_val								= (-1 == index) ? ::gpk::view_const_string{} : keyvals[index].Val;
+	return index;
+}
