@@ -2,6 +2,7 @@
 #include "gpk_type_registry.h"
 #include "gpk_sync.h"
 #include "gpk_timer.h"
+#include "gpk_process.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -103,7 +104,6 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 	return 0;
 }
 
-
 #if defined(GPK_WINDOWS)
 		int WINAPI												WinMain
 	( _In_		HINSTANCE		hInstance
@@ -126,7 +126,8 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 	runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine		= lpCmdLine		;
 	runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd			= nShowCmd		;
 	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {argv, argc};
-	runtimeValues.PlatformDetail.EntryPointArgsStd.envp				= envp;
+	(void)envp;
+	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
 	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 #endif // defined(GPK_WINDOWS)
@@ -138,6 +139,7 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 	runtimeValues.PlatformDetail.EntryPointArgsWin					= {GetModuleHandle(NULL), 0, 0, SW_SHOW};
 #endif // defined(GPK_WINDOWS)
 	runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine	= {(const char**)argv, (uint32_t)argc};
-	runtimeValues.PlatformDetail.EntryPointArgsStd.envp				= (const char**)envp;
+	(void)envp;
+	::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);
 	return ::gpk::failed(::grt_Main(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;
 }

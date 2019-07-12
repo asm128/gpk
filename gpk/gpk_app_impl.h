@@ -2,6 +2,7 @@
 #include "gpk_runtime.h"
 #include "gpk_ptr.h"
 #include "gpk_module.h"
+#include "gpk_process.h"
 
 #if defined GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)																																																																							\
@@ -39,7 +40,8 @@
 		::gpk::SRuntimeValues														runtimeValues					= {};																			\
 		runtimeValues.PlatformDetail.EntryPointArgsWin							= {GetModuleHandle(NULL), 0, 0, SW_SHOW};																						\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= {(const char**)argv, (uint32_t)argc};	\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.envp						= (const char**)envp;					\
+		(void)envp;\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
 	}																																																							\
 																																																								\
@@ -52,7 +54,6 @@
 	{																																																							\
 		const uint32_t																argc							= __argc;										\
 		const char																	** argv							= (const char**)__argv;							\
-		const char																	** envp							= (const char**)_environ;						\
 		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																				\
 		::gpk::SRuntimeValues														runtimeValues					= {};																						\
 		runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance				= hInstance		;																												\
@@ -60,7 +61,7 @@
 		runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine				= lpCmdLine		;																												\
 		runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd					= nShowCmd		;																												\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{argv, argc};														\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.envp						= envp;																								\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																			\
 	}																																																
 #else
@@ -69,7 +70,8 @@
 		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																			\
 		::gpk::SRuntimeValues														runtimeValues					= {};					\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{(const char**)argv, (uint32_t)argc};				\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.envp						= (const char**)envp;																\
+		(void)envp;\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
 	}
 #endif
