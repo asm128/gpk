@@ -129,10 +129,9 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{ 
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
-	::gpk::array_pod<char_t>								environBlock;
 	::gpk::array_obj<::gpk::TKeyValConstString>				environBlockViews;
-	::gpk::environmentBlockFromEnviron(environBlock);
-	::gpk::environmentBlockViews(environBlock, environBlockViews);
+	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
+	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environBlockViews);
 	{
 		::gpk::view_const_string								querystring;
 		::gpk::find("QUERY_STRING", environBlockViews, querystring);

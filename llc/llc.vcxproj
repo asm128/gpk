@@ -30,6 +30,7 @@
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_camera.h" />
     <ClInclude Include="gpk_cgi.h" />
+    <ClInclude Include="gpk_cgi_app_impl.h" />
     <ClInclude Include="gpk_cgi_module.h" />
     <ClInclude Include="gpk_cgi_runtime.h" />
     <ClInclude Include="gpk_chrono.h" />
