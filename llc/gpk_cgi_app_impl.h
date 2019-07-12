@@ -22,7 +22,7 @@ namespace gpk
 	#define GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT()
 #endif
 
-#define GPK_CGI_APP_IMPL()																																												\
+#define GPK_CGI_JSON_APP_IMPL()																																												\
 			::gpk::error_t								generate_output					(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char_t> & output);									\
 	static	::gpk::error_t								cgiMain							(int argc, char** argv, char**envv)		{																		\
 		(void)(envv);																																													\

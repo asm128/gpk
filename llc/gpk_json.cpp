@@ -1,7 +1,14 @@
 #include "gpk_json.h"
 #include "gpk_find.h"
+#include "gpk_storage.h"
 
 #define json_info_printf // info_printf
+
+::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {
+	::gpk::fileToMemory(filename, file.Bytes);
+	::gpk::jsonParse(file.Reader, {file.Bytes.begin(), file.Bytes.size()});
+	return 0;
+}
 
 			::gpk::error_t									jsonTreeRebuild										(::gpk::array_pod<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				& tree												= out_nodes;

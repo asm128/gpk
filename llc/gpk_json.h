@@ -68,7 +68,7 @@ namespace gpk
 								::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>			Tree;
 								::gpk::SJSONReaderState										StateRead;
 
-								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[](uint32_t index)	const { return Tree[index]; }
+								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[]				(uint32_t index)	const { return Tree[index]; }
 	};
 
 	// Reader functions: Populate a SJSONReader structure from an input JSON string.	
@@ -82,6 +82,14 @@ namespace gpk
 							::gpk::error_t												jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
 							::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
 	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size() / 2; }
+
+	struct SJSONFile {
+								::gpk::array_pod<char_t>									Bytes					= {};
+								::gpk::SJSONReader											Reader					= {};
+	};
+
+							::gpk::error_t												jsonFileRead			(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename);
+
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923
