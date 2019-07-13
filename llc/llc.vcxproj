@@ -81,6 +81,7 @@
     <ClInclude Include="gpk_scene.h" />
     <ClInclude Include="gpk_size.h" />
     <ClInclude Include="gpk_stdsocket.h" />
+    <ClInclude Include="gpk_stdstring.h" />
     <ClInclude Include="gpk_storage.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_helper.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="gpk_process.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
+    <ClCompile Include="gpk_stdstring.cpp" />
     <ClCompile Include="gpk_storage.cpp" />
     <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />

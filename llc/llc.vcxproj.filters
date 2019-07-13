@@ -291,6 +291,9 @@
     <ClInclude Include="gpk_cgi_app_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_stdstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -391,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="gpk_geometry.cpp">
       <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stdstring.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
