@@ -16,7 +16,14 @@ namespace gpk
 
 				::gpk::error_t							token_split						(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views);
 	inline		::gpk::error_t							keyval_split					(const ::gpk::view_const_string& input_string, TKeyValConstString& out_keyval) { return ::gpk::token_split('=', input_string, out_keyval); }
-				::gpk::error_t							find							(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals);
+
+	template<typename _tVal>
+				::gpk::error_t							find							(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<const ::gpk::SKeyVal<::gpk::view_const_string, _tVal>> & keyvals)	{
+		for(uint32_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal)
+			if(keyToFind == keyvals[iKeyVal].Key)
+				return iKeyVal;
+		return -1;
+	}
 				::gpk::error_t							find							(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals, ::gpk::view_const_string& out_val);
 
 				::gpk::error_t							keyvalNumeric					(const ::gpk::view_const_string & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber);
