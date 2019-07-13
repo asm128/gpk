@@ -138,7 +138,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
 		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-			::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+			::gpk::TKeyValConstString								& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
 			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 		}
 	}

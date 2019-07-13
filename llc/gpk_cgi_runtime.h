@@ -91,8 +91,8 @@ namespace gpk
 
 	struct SCGIRuntimeValues {
 		::gpk::array_obj<::gpk::view_const_string>												QueryStringElements			= {};
-		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	QueryStringKeyVals			= {};
-		::gpk::array_obj<::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>>	FormKeyVals					= {};
+		::gpk::array_obj<::gpk::TKeyValConstString>												QueryStringKeyVals			= {};
+		::gpk::array_obj<::gpk::TKeyValConstString>												FormKeyVals					= {};
 		::gpk::SIPv4																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
