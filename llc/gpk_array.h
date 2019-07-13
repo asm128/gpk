@@ -574,6 +574,21 @@ namespace gpk
 		//	return -1;
 		//}
 	}; // array_obj
+
+
+	template<typename _tElement>
+	::gpk::error_t								split					(const ::gpk::view_array<const _tElement> & target, const _tElement& separator, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
+		uint32_t										lastOffset				= 0;
+		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
+			if(target[iChar] == separator) {
+				split.push_back({&target[lastOffset], iChar++});
+				lastOffset				= iChar;
+			}
+		}
+		if(lastOffset < target.size())
+			split.push_back({&target[lastOffset], target.size() - lastOffset});
+		return 0;
+	}
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837
