@@ -10,6 +10,41 @@
 	return 0;
 }
 
+::gpk::error_t												gpk::jsonWrite						(::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
+	switch(node->Object->Type) {
+	case ::gpk::JSON_TYPE_NULL			:	
+	case ::gpk::JSON_TYPE_NUMBER		:	
+	case ::gpk::JSON_TYPE_BOOL			:	
+		output.append(jsonViews[node->ObjectIndex]);
+		break;
+	case ::gpk::JSON_TYPE_STRING		:	
+		output.push_back('"');
+		output.append(jsonViews[node->ObjectIndex]);
+		output.push_back('"');
+		break;
+	case ::gpk::JSON_TYPE_OBJECT		:	
+		output.push_back('{');
+		for(uint32_t iChildren = 0; iChildren < node->Children.size(); iChildren += 2) {
+			::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output);
+			output.push_back(':');
+			::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output);
+			if(iChildren < node->Children.size() - 2) 
+				output.push_back(',');
+		}
+		output.push_back('}');
+		break;
+	case ::gpk::JSON_TYPE_ARRAY			:	
+		output.push_back('[');
+		for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren) {
+			::gpk::jsonWrite(node->Children[iChildren], jsonViews, output);
+			if(iChildren < node->Children.size() - 1) 
+				output.push_back(',');
+		}
+		output.push_back(']');
+	}
+	return 0;
+}
+
 			::gpk::error_t									jsonTreeRebuild										(::gpk::array_pod<::gpk::SJSONType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
