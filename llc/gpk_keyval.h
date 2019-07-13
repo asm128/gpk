@@ -24,7 +24,8 @@ namespace gpk
 				::gpk::error_t							keyvalNumeric					(const ::gpk::view_const_string & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, _tNumeric & outputNumber)	{
 		uint64_t												value							= 0;
 		::gpk::error_t											indexKey						= ::gpk::keyvalNumeric(key, keyVals, &value);
-		outputNumber										= *(_tNumeric*)&value;
+		if(-1 != indexKey)
+			outputNumber										= *(_tNumeric*)&value;
 		return indexKey;
 	}
 
