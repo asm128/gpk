@@ -32,7 +32,7 @@ namespace gpk
 		}
 
 		// Operators
-		inline constexpr	operator				view_array<const _tElement>	()																			noexcept	{ return {Data, Count}; }
+		inline constexpr	operator				view_array<const _tElement>	()																	const	noexcept	{ return {Data, Count}; }
 							_tElement&				operator[]					(uint32_t index)																		{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 							const _tElement&		operator[]					(uint32_t index)													const				{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %u.", index); return Data[index]; }
 

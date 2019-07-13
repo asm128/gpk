@@ -402,7 +402,7 @@ namespace gpk
 		using											_TVectorBase::calc_reserve_size;
 		using											_TVectorBase::calc_malloc_size;
 		using											_TVectorBase::operator[];
-
+			
 		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_gpk_free(Data); }	// dtor
 		inline constexpr								array_obj									()																						= default;
 		inline											array_obj									(const uint32_t newSize)																{ gthrow_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }

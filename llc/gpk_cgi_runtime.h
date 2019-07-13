@@ -106,7 +106,7 @@ namespace gpk
 	};
 
 	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv);
-} // gpk
+} // namespace
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)																																																																		\
 		::gpk::error_t																			setup					(_mainClass& applicationInstance);																																											\

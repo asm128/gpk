@@ -315,6 +315,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	sprintf_s(bufferPath, bufferFormat, fileName.begin());
 	FILE														* fp												= 0;
 	ree_if(0 != fopen_s(&fp, bufferPath, "wb"), "Failed to create file for writing: %s.", bufferPath);
+	ree_if(0 == fp, "Failed to create file for writing: %s.", bufferPath);
 	::gpk::error_t												result												= 0;
 	if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fp)) {
 		error_printf("Failed to write file. Disk full? File size: %u.", fileInMemory.size());

@@ -3,10 +3,6 @@
 #ifndef GPK_CGI_APP_IMPL_H_92836492873648723
 #define GPK_CGI_APP_IMPL_H_92836492873648723
 
-namespace gpk
-{
-} // namespace 
-
 #ifdef GPK_WINDOWS
 	#define GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT()											\
 		int WINAPI											WinMain						\
