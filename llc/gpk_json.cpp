@@ -10,7 +10,7 @@
 	return 0;
 }
 
-::gpk::error_t												gpk::jsonWrite						(::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
+::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
 	switch(node->Object->Type) {
 	case ::gpk::JSON_TYPE_NULL			:	
 	case ::gpk::JSON_TYPE_NUMBER		:	

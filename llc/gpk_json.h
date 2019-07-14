@@ -89,7 +89,7 @@ namespace gpk
 	};
 
 							::gpk::error_t												jsonFileRead			(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename);
-							::gpk::error_t												jsonWrite				(::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output);
+							::gpk::error_t												jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output);
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923
