@@ -10,6 +10,7 @@
 	{	
 		"brt": 
 		{	"listen_port"	: "9797"
+		,	"adapter"		: "1"
 		,	"process"		: 
 			{ "executable_path" 		: "./test_cgi_environ.exe"  
 			, "command_line_app_name" 	: "./test_cgi_environ.exe"   
