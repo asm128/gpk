@@ -92,7 +92,7 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE												State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024 * 8;
+	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024 * 128;
 
 	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);

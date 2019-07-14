@@ -43,7 +43,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	uint64_t																adapter						= 0;
 	{ // load port from config file
 		::gpk::view_const_string												jsonPort					= {};
-		const ::gpk::SJSONReader												& jsonReader						= framework.ReaderJSONConfig;
+		const ::gpk::SJSONReader												& jsonReader						= framework.JSONConfig.Reader;
 		const int32_t															indexObjectApp						= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
 		gwarn_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
@@ -56,7 +56,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
 			jsonPort = "";
-			gwarn_if(errored(::gpk::jsonExpressionResolve("adapter"	, jsonReader, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+			gwarn_if(errored(::gpk::jsonExpressionResolve("adapter"	, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, &adapter);
 				info_printf("Adapter: %u.", (uint32_t)adapter);
@@ -123,7 +123,6 @@ static	::gpk::error_t		writeToPipe				(const ::brt::SProcessHandles & handles, :
 
 
 static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::array_pod<byte_t> & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data. 
-	//char								chBuf	[BUFSIZE]		= {}; 
 	static	::gpk::array_pod<char_t>	chBuf;
 	static constexpr	const uint32_t	BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);

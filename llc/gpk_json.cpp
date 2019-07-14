@@ -5,9 +5,9 @@
 #define json_info_printf // info_printf
 
 ::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {
-	::gpk::fileToMemory(filename, file.Bytes);
-	::gpk::jsonParse(file.Reader, {file.Bytes.begin(), file.Bytes.size()});
-	return 0;
+	info_printf("Loading json file: %s.", filename.begin());
+	gpk_necall(::gpk::fileToMemory(filename, file.Bytes), "Failed to load file: '%s'", filename.begin());
+	return ::gpk::jsonParse(file.Reader, {file.Bytes.begin(), file.Bytes.size()});
 }
 
 ::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{

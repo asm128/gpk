@@ -97,28 +97,30 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 	return 0;																						\
 }																									\
 		GPK_SYSTEM_OS_ENTRY_POINT()																	\
-		::gpk::error_t														setup							(_mainClass& applicationInstance);														\
-		::gpk::error_t														cleanup							(_mainClass& applicationInstance);														\
-		::gpk::error_t														update							(_mainClass& applicationInstance, bool systemRequestedExit);							\
-		::gpk::error_t														draw							(_mainClass& applicationInstance);														\
-		::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeValues)												{	\
-	{																																																				\
-		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																											\
-		::gpk::ptr_obj<_mainClass>													applicationInstance				= {};																			\
-		reterr_gerror_if(0 == applicationInstance.create(runtimeValues), "%s", "Failed to create application instance. Out of memory?");																									\
-		info_printf("%s", "Initializing application instance.");																																										\
-		gpk_necall(::setup(*applicationInstance), "%s", "User reported error. Execution stopped.");																																		\
-		info_printf("%s", "Application instance initialized successfully. Executing main loop...");																																		\
-		while(true) {																																																					\
-			::gpk::error_t																updateResult					= ::update(*applicationInstance, false);									\
-			break_ginfo_if(1 == updateResult, "%s", "Application requested termination.");																																				\
-			break_gerror_if(errored(updateResult), "%s", "update() returned error.");																																					\
-			gerror_if(::draw(*applicationInstance), "%s", "Why would this ever happen?");																																				\
-		}																																																								\
-		info_printf("%s", "Cleaning up application instance...");																																										\
-		::cleanup(*applicationInstance);																																																\
-		info_printf("%s", "Application instance destroyed.");																																											\
-	}																																																									\
-	return 0;																																																							\
+		::gpk::error_t														setup							(_mainClass& applicationInstance);									\
+		::gpk::error_t														cleanup							(_mainClass& applicationInstance);									\
+		::gpk::error_t														update							(_mainClass& applicationInstance, bool systemRequestedExit);		\
+		::gpk::error_t														draw							(_mainClass& applicationInstance);									\
+		::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeValues)							{	\
+	{																																											\
+		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																		\
+		{																																										\
+			::gpk::ptr_obj<_mainClass>													applicationInstance				= {};													\
+			reterr_gerror_if(0 == applicationInstance.create(runtimeValues), "%s", "Failed to create application instance. Out of memory?");									\
+			info_printf("%s", "Initializing application instance.");																											\
+			gpk_necall(::setup(*applicationInstance), "%s", "User reported error. Execution stopped.");																			\
+			info_printf("%s", "Application instance initialized successfully. Executing main loop...");																			\
+			while(true) {																																						\
+				::gpk::error_t																updateResult					= ::update(*applicationInstance, false);			\
+				break_ginfo_if(1 == updateResult, "%s", "Application requested termination.");																					\
+				break_gerror_if(errored(updateResult), "%s", "update() returned error.");																						\
+				gerror_if(::draw(*applicationInstance), "%s", "Why would this ever happen?");																					\
+			}																																									\
+			info_printf("%s", "Cleaning up application instance...");																											\
+			::cleanup(*applicationInstance);																																	\
+		}																																										\
+		info_printf("%s", "Application instance destroyed.");																													\
+	}																																											\
+	return 0;																																									\
 }
 #endif // GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME

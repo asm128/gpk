@@ -5,6 +5,7 @@
 	,	"pngsuite"		: { "path" : "../gpk_data/pngsuite"	}
 	,	"html"			: { "path" : "../gpk_data/html"		}
 	,	"javascript"	: { "path" : "../gpk_data/js"		}
+	,	"jsondb"		: { "path" : "../gpk_data/jsondb"	}
 	},
 	"application": 
 	{	

@@ -29,8 +29,7 @@ namespace gpk
 							::gpk::SFrameInfo											FrameInfo									= {};
 							::gpk::ptr_obj<::gpk::SGUI>									GUI											= {};
 							::gpk::SFrameworkSettings									Settings									= {1, };
-							::gpk::array_pod<char_t>									FileJSONConfig								= {};
-							::gpk::SJSONReader											ReaderJSONConfig							= {};
+							::gpk::SJSONFile											JSONConfig									= {};
 							::gpk::view_const_string									FileNameJSONConfig							= "gpk_config.json";
 
 							::std::mutex												LockGUI;
@@ -40,10 +39,8 @@ namespace gpk
 		{
 			Input.create();
 			GUI.create();
-			if(fileNameJSONConfig.size()) {	// Attempt to load config file.
-				rw_if(errored(::gpk::fileToMemory(fileNameJSONConfig, FileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
-				gwarn_if(::gpk::jsonParse(ReaderJSONConfig, ::gpk::view_const_string{FileJSONConfig.begin(), FileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
-			}
+			if(fileNameJSONConfig.size())	// Attempt to load config file.
+				rw_if(errored(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
 		}
 	}; // struct
 
