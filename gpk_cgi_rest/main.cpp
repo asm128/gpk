@@ -98,7 +98,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 				}
 			}
 		}
-		info_printf("Remote CGI answer: %s.", responseRemote.begin());
+		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
 		gpk_necall(::gpk::clientDisconnect(bestClient), "%s", "error");
 		output									= responseRemote;
 	}

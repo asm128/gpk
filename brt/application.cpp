@@ -40,6 +40,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
 	uint64_t																port						= 9998;
+	uint64_t																adapter						= 0;
 	{ // load port from config file
 		::gpk::view_const_string												jsonPort					= {};
 		const ::gpk::SJSONReader												& jsonReader						= framework.ReaderJSONConfig;
@@ -54,6 +55,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 				::gpk::parseIntegerDecimal(jsonPort, &port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
+			jsonPort = "";
+			gwarn_if(errored(::gpk::jsonExpressionResolve("adapter"	, jsonReader, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+			else {
+				::gpk::parseIntegerDecimal(jsonPort, &adapter);
+				info_printf("Adapter: %u.", (uint32_t)adapter);
+			}
 		}
 	}
 	::gpk::array_pod<char_t>		& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
@@ -65,7 +72,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	gpk_necall(::gpk::serverStart(app.Server, (uint16_t)port), "Failed to start server on port %u. Port busy?", (uint32_t)port);
+	gpk_necall(::gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
 	return 0;
 }
 
@@ -74,6 +81,7 @@ static	::gpk::error_t		createChildProcess
 	,	::gpk::view_array<char_t>		environmentBlock
 	,	::gpk::view_char				appPath
 	,	::gpk::view_char				commandLine
+	,	bool							debugMessageBox			= true
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	::gpk::view_char				szCmdlineApp			= appPath;
 	::gpk::view_char				szCmdlineFinal			= commandLine;
@@ -94,10 +102,12 @@ static	::gpk::error_t		createChildProcess
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION 
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
-	::gpk::array_pod<char_t>		userMessage				= {};
-	userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
-	sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
-	MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
+	if(debugMessageBox) {
+		::gpk::array_pod<char_t>		userMessage				= {};
+		userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
+		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
+		MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
+	}
 	info_printf("Creating process '%s' with command line '%s'", szCmdlineApp.begin(), szCmdlineFinal.begin());
 	ResumeThread(process.ProcessInfo.hThread);
 	return 0;
