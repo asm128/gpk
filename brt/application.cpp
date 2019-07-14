@@ -15,6 +15,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::serverStop(app.Server);
 	::gpk::mainWindowDestroy(app.Framework.MainDisplay);
 	::gpk::tcpipShutdown();
+	::gpk::sleep(1000);
 	return 0;
 }
 
