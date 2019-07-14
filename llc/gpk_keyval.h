@@ -25,7 +25,7 @@ namespace gpk
 		return -1;
 	}
 				::gpk::error_t							find							(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals, ::gpk::view_const_string& out_val);
-				::gpk::error_t							keyValVerify					(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & valueToVerify);
+				::gpk::error_t							keyValVerify					(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_const_string & valueToVerify);
 				::gpk::error_t							keyvalNumeric					(const ::gpk::view_const_string & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber);
 	template <typename _tNumeric>
 				::gpk::error_t							keyvalNumeric					(const ::gpk::view_const_string & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, _tNumeric & outputNumber)	{

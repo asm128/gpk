@@ -39,10 +39,10 @@
 	return indexKey;
 }
 
-::gpk::error_t						gpk::keyValVerify	(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & valueToVerify)	{
+::gpk::error_t						gpk::keyValVerify	(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_const_string & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
-		if(environViews[iKey].Key == ::gpk::view_const_string{"REQUEST_METHOD"} && environViews[iKey].Val == valueToVerify)
-			return 1;
+		if(environViews[iKey].Key == keyToVerify)
+			return (environViews[iKey].Val == valueToVerify) ? 1 : 0;
 	}
 	return 0;
 }
