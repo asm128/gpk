@@ -580,7 +580,9 @@ namespace gpk
 		uint32_t										lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				split.push_back({&target[lastOffset], iChar++});
+				const ::gpk::view_array<const _tElement>		newView					= {&target[lastOffset], iChar - lastOffset};
+				++iChar;
+				split.push_back(newView);
 				lastOffset				= iChar;
 			}
 		}
