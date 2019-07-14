@@ -1,6 +1,7 @@
-#include "gpk_view_array.h"
+#include "gpk_keyval.h"
 #include "gpk_memory.h"
 #include "gpk_safe.h"
+
 #include <initializer_list>
 #include <new>
 
@@ -590,6 +591,8 @@ namespace gpk
 			split.push_back({&target[lastOffset], target.size() - lastOffset});
 		return 0;
 	}
+
+	typedef ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::array_obj<::gpk::view_const_string>>	TKeyValConstStringArray;
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837
