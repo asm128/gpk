@@ -577,14 +577,14 @@ namespace gpk
 	}; // array_obj
 
 	template<typename _tElement>
-	::gpk::error_t								split					(const ::gpk::view_array<const _tElement> & target, const _tElement& separator, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
-		uint32_t										lastOffset				= 0;
+	::gpk::error_t									split					(const ::gpk::view_array<const _tElement> & target, const _tElement& separator, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
+		uint32_t											lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view_array<const _tElement>		newView					= {&target[lastOffset], iChar - lastOffset};
+				const ::gpk::view_array<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
 				split.push_back(newView);
-				lastOffset				= iChar;
+				lastOffset										= iChar;
 			}
 		}
 		if(lastOffset < target.size())
@@ -594,15 +594,15 @@ namespace gpk
 
 
 	template<typename _tElement>
-	::gpk::error_t										viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{ 
+	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{ 
 		output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}); 
 		output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)});
 		return sizeof(uint32_t) + headerToWrite.size();
 	}
 
 	template<typename _tElement>
-	::gpk::error_t										viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
-		headerToRead										= {(const _tElement*)&input[sizeof(uint32_t)], *(uint32_t*)input.begin()}; 
+	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
+		headerToRead									= {(const _tElement*)&input[sizeof(uint32_t)], *(uint32_t*)input.begin()}; 
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
