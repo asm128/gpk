@@ -3,6 +3,8 @@
 #include "gpk_expression.h"
 #include "gpk_parse.h"
 
+#define gpk_jexpr_info_printf // info_printf
+
 //#define GPK_JSON_EXPRESSION_DEBUG
 
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
@@ -109,7 +111,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 			uint32_t											lenString								= viewExpression.size();
 			bufferFormat.resize(lenString + 1024);
 			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Expression element: %%.%us. Type: %s. Parent: %i. Begin: %u. End: %u.", lenString, ::gpk::get_value_label(typeExpression.Type).begin(), typeExpression.ParentIndex, typeExpression.Span.Begin, typeExpression.Span.End);
-			info_printf(bufferFormat.begin(), viewExpression.begin());
+			gpk_jexpr_info_printf(bufferFormat.begin(), viewExpression.begin());
 		}
 	}
 	::gpk::view_const_string							evaluated								= {};
@@ -131,7 +133,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 		uint32_t											lenString								= evaluated.size();
 		bufferFormat.resize(lenString + 1024);
 		sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Result of expression evaluation: %%.%us.", lenString);
-		info_printf(bufferFormat.begin(), evaluated.begin());
+		gpk_jexpr_info_printf(bufferFormat.begin(), evaluated.begin());
 	}
 	return jsonNodeResultOfEvaluation;
 }
@@ -142,7 +144,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 	::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format);	// strip root literals 
 	::gpk::array_obj<::gpk::view_const_string>			views									= {};
 	::gpk::stripLiteralGetViews(views, typesLiteral, format);
-	info_printf("-**- %s -**-", "Results of token search");
+	gpk_jexpr_info_printf("-**- %s -**-", "Results of token search");
 	for(uint32_t iView = 0; iView < views.size(); ++iView) {
 		if(typesLiteral[iView].Type == ::gpk::STRIP_LITERAL_TYPE_TOKEN)	{ // we only have to solve tokens
 			::gpk::view_const_string							& toResolve								= views[iView];

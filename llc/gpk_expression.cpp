@@ -1,5 +1,7 @@
 #include "gpk_expression.h"
 
+#define gpk_expression_info_printf // info_printf
+
 static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, ::gpk::array_obj<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) { 
 	for(uint32_t iTag = 0; iTag < parsed.size(); ++iTag) {
 		const ::gpk::SExpressionReaderType								& type									 = parsed[iTag];
@@ -66,7 +68,7 @@ static	::gpk::error_t										expressionReaderCloseType				(::gpk::SExpressionR
 	stateSolver.CurrentElement->Span.End						= indexCurrentChar; 
 	stateSolver.IndexCurrentElement								= stateSolver.CurrentElement->ParentIndex; 
 	stateSolver.CurrentElement									= (-1 != stateSolver.IndexCurrentElement) ? &parsed[stateSolver.IndexCurrentElement] : nullptr; 
-	info_printf("Closing expression type: %s. Parent type: %s. Nest level: %i.", ::gpk::get_value_label(type).begin(), stateSolver.CurrentElement ? ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin() : "UNKNOWN", stateSolver.NestLevel);
+	gpk_expression_info_printf("Closing expression type: %s. Parent type: %s. Nest level: %i.", ::gpk::get_value_label(type).begin(), stateSolver.CurrentElement ? ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin() : "UNKNOWN", stateSolver.NestLevel);
 	--stateSolver.NestLevel; 
 	return 0;
 }
@@ -84,7 +86,7 @@ static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionR
 	stateSolver.IndexCurrentElement								= parsed.push_back({stateSolver.IndexCurrentElement, type, {iChar, iChar}});
 	stateSolver.CurrentElement									= &parsed[stateSolver.IndexCurrentElement];
 	++stateSolver.NestLevel;
-	info_printf("Entering expression type: %s. Parent type: %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.CurrentElement ? ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin() : "UNKNOWN", stateSolver.NestLevel); 
+	gpk_expression_info_printf("Entering expression type: %s. Parent type: %s. Nest level: %u.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), stateSolver.CurrentElement ? ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin() : "UNKNOWN", stateSolver.NestLevel); 
 	return 0;
 }
 
