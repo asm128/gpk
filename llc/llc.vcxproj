@@ -53,6 +53,7 @@
     <ClInclude Include="gpk_grid_static.h" />
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_text.h" />
+    <ClInclude Include="gpk_http.h" />
     <ClInclude Include="gpk_image.h" />
     <ClInclude Include="gpk_input.h" />
     <ClInclude Include="gpk_io.h" />

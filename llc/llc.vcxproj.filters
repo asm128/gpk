@@ -294,6 +294,9 @@
     <ClInclude Include="gpk_stdstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_http.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">

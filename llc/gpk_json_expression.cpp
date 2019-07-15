@@ -122,7 +122,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 #endif
 		jsonNodeResultOfEvaluation						= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
 		if errored(jsonNodeResultOfEvaluation) {
-			bufferFormat.resize(expression.size());
+			bufferFormat.resize(expression.size() + 1024);
 			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to evaluate expression: %%.%us.", expression.size());
 			error_printf(bufferFormat.begin(), expression.begin());
 			return -1;
