@@ -20,6 +20,7 @@
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
 	while(serverInstance.Listen) {
+		::gpk::sleep(1);
 		uint32_t														totalClientCount					= serverInstance.Clients.size();
 		{
 			::gpk::mutex_guard												lock								(serverInstance.Mutex);
