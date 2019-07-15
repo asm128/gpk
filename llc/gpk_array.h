@@ -188,7 +188,8 @@ namespace gpk
 
 			//for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, newSize - startIndex); i < maxCount; ++i)
 				//Data[startIndex + i]							= chainToAppend[i];
-			memcpy(&Data[startIndex], chainToAppend, sizeof(_tPOD) * chainLength);
+			if(chainLength)
+				memcpy(&Data[startIndex], chainToAppend, sizeof(_tPOD) * chainLength);
 			return startIndex;
 		}
 
@@ -602,7 +603,7 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
-		headerToRead									= {(const _tElement*)&input[sizeof(uint32_t)], *(uint32_t*)input.begin()}; 
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()}; 
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
