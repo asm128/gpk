@@ -30,7 +30,7 @@ namespace gpk
 	struct array_base : public view_array<_tCell> {
 	protected:
 		using				view_array<_tCell>::		Count;
-							uint32_t					Offset										= 0;
+//							uint32_t					Offset										= 0;
 							uint32_t					Size										= 0;
 
 		inline constexpr								array_base									()																			noexcept	= default;
@@ -259,6 +259,7 @@ namespace gpk
 					viewSafe[i + 1]									= oldData[i];
 				Data											= newData;
 				safeguard.Handle								= 0;
+				::gpk::gpk_free(oldData);
 			}
 			else {
 				for(int32_t i = (int32_t)Count, iStop = index; i > iStop; --i)
@@ -520,11 +521,12 @@ namespace gpk
 					oldData[i].~_tObj();
 				}
 				Data											= newData;
+				::gpk::gpk_free(oldData);
 				Size											= reserveSize;
 				safeguard.Handle								= 0;
 			}
 			else {
-				for(int32_t i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index; i >= maxCount; --i) {
+				for(int32_t i = Count - 1, maxCount = (int32_t)index; i >= maxCount; --i) {
 					new (&Data[i + 1]) _tObj(Data[i]);
 					Data[i].~_tObj();
 				}
