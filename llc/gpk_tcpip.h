@@ -31,6 +31,11 @@ namespace gpk
 		};
 
 
+#define GPK_IPV4_EXPAND_IP(addr)  addr.IP[0]	\
+								, addr.IP[1]	\
+								, addr.IP[2]	\
+								, addr.IP[3]	\
+
 #define GPK_IPV4_EXPAND(addr) (uint32_t)addr.IP[0]	\
 							, (uint32_t)addr.IP[1]	\
 							, (uint32_t)addr.IP[2]	\
