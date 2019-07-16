@@ -44,6 +44,7 @@
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
+    <ClCompile Include="gpk_https_client.cpp" />
     <ClCompile Include="gpk_http_client.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
