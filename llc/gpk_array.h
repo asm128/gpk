@@ -593,6 +593,22 @@ namespace gpk
 		return 0;
 	}
 
+	template<typename _tElement>
+	::gpk::error_t									split					(const ::gpk::view_const_string & target, const _tElement& separator, ::gpk::array_obj<view_const_string> & split)	{
+		uint32_t											lastOffset				= 0;
+		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
+			if(target[iChar] == separator) {
+				const ::gpk::view_const_string					newView					= {&target[lastOffset], iChar - lastOffset};
+				++iChar;
+				split.push_back(newView);
+				lastOffset										= iChar;
+			}
+		}
+		if(lastOffset < target.size())
+			split.push_back({&target[lastOffset], target.size() - lastOffset});
+		return 0;
+	}
+
 
 	template<typename _tElement>
 	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{ 
