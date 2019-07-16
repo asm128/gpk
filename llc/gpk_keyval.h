@@ -46,6 +46,16 @@ namespace gpk
 		return indexKey;
 	}
 
+	template <typename... _tArgs>
+	::gpk::error_t										keyValVerify					(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_array<const ::gpk::view_const_string>& valueToVerify)	{
+		for(uint32_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
+			if(1 == ::gpk::keyValVerify(environViews, keyToVerify, valueToVerify[iKey]))
+				return 1;
+		}
+		return 0;
+	}
+
+
 } // namespace
 
 #endif // GPK_KEYVAL_H_298037928374

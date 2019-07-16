@@ -10,7 +10,8 @@
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
 #	elif defined(GPK_WINDOWS)
 #		include <crtdbg.h>
-#		define GPK_PLATFORM_CRT_BREAKPOINT		(void)_CrtDbgBreak
+//#		define GPK_PLATFORM_CRT_BREAKPOINT		(void)_CrtDbgBreak
+#		define GPK_PLATFORM_CRT_BREAKPOINT()
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory
 #	else
 #		error "Platform not supported."

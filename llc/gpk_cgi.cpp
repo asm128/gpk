@@ -1,4 +1,6 @@
 #include "gpk_cgi_runtime.h"
+#include "gpk_storage.h"
+#include <ctime>
 #include <string>
 
 ::gpk::error_t										gpk::querystring_split	(const ::gpk::view_const_string& input_string, ::gpk::array_obj<::gpk::view_const_string>& output_views)		{
@@ -25,3 +27,34 @@
 	return 0;
 }
 
+::gpk::error_t										gpk::writeCGIEnvironToFile		(::gpk::view_array<const ::gpk::TKeyValConstString> environViews)	{
+	::gpk::array_pod<char_t>								environmentBlockToSave			= {}; 
+	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
+	if(environmentBlockToSave.size()) {
+		::gpk::array_pod<char_t>								temp;
+		::gpk::array_pod<char_t>								tempName						= {};
+		uint64_t												curTime							= time(0);
+		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)					
+			if(environViews[iKey].Key == ::gpk::view_const_string{"REMOTE_ADDR"}) {
+				tempName											= environViews[iKey].Val;
+				tempName.append(".trace");
+			}
+		if(0 == tempName.size()) 
+			return 1;
+
+		::gpk::fileToMemory({tempName.begin(), tempName.size()}, temp);
+		temp.append((const char*)&curTime, sizeof(uint64_t));
+		temp.append(environmentBlockToSave);
+		temp.push_back('\r');
+		temp.push_back('\n');
+		::gpk::fileFromMemory({tempName.begin(), tempName.size()}, temp);
+		::gpk::array_obj<::gpk::TKeyValConstString>				environViewsTest;
+		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
+		char													format[256]							= {};
+		for(uint32_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron) {
+			sprintf_s(format, "CGI Environ: '%%.%us = %%.%us'.", environViewsTest[iEnviron].Key.size(), environViewsTest[iEnviron].Val.size());
+			info_printf(format, environViewsTest[iEnviron].Key.begin(), environViewsTest[iEnviron].Val.begin());
+		}
+	}
+	return 0;
+}

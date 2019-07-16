@@ -623,7 +623,16 @@ namespace gpk
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
+	template<typename _tElement>
+	::gpk::error_t									viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()}; 
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
+	}
+
 	typedef ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::array_obj<::gpk::view_const_string>>	TKeyValConstStringArray;
+
+	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_string> & keysToSave, ::gpk::array_pod<byte_t> & output);
+	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstString> & output);
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837

@@ -1,6 +1,7 @@
 #include "gpk_keyval.h"
 #include "gpk_find.h"
 #include "gpk_safe.h"
+#include "gpk_array.h"
 
 #include <string>
 
@@ -43,6 +44,37 @@
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
 			return (environViews[iKey].Val == valueToVerify) ? 1 : 0;
+	}
+	return 0;
+}
+
+::gpk::error_t										gpk::keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_string> & keysToSave, ::gpk::array_pod<byte_t> & output)	{
+	::gpk::array_pod<::gpk::TKeyValConstString>				keyValsToSave						= {};
+	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
+		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
+			const ::gpk::TKeyValConstString							& kvToCheck							= keyVals[iKey];
+			const ::gpk::view_const_string							& keyToSave							= keysToSave[iRef];
+			if(kvToCheck.Key == keyToSave) 
+				keyValsToSave.push_back(kvToCheck);
+		}
+	}
+	output.append((const char*)&keyValsToSave.size(), sizeof(uint32_t));
+	uint32_t												iOffset								= 0;
+	for(uint32_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
+		iOffset												+= ::gpk::viewWrite(keyValsToSave[iKey].Key, output);
+		iOffset												+= ::gpk::viewWrite(keyValsToSave[iKey].Val, output);
+	}
+	return 0;
+}
+
+::gpk::error_t										gpk::keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstString> & output)	{
+	uint32_t												offset								= 0;
+	const uint32_t											keysToRead							= *(const uint32_t*)input.begin();
+	offset												+= (uint32_t)sizeof(uint32_t);
+	output.resize(keysToRead);
+	for(uint32_t iKey = 0; iKey < keysToRead; ++iKey) {
+		offset												+= ::gpk::viewRead(output[iKey].Key, {&input[offset], input.size() - offset});
+		offset												+= ::gpk::viewRead(output[iKey].Val, {&input[offset], input.size() - offset});
 	}
 	return 0;
 }
