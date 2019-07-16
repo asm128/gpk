@@ -289,7 +289,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	sprintf_s(bufferPath, bufferFormat, fileName.begin());
 	FILE														* fp												= 0;
 	int32_t														fileErr												= fopen_s(&fp, bufferPath, "rb");
-	rve_if(fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", bufferPath);
+	rve_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", bufferPath);
 	fseek(fp, 0, SEEK_END);
 	int32_t														fileSize											= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);

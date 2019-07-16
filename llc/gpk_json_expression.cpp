@@ -23,6 +23,7 @@ static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const 
 #endif
 
 static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
+	ree_if(indexNodeJSON >= inputJSON.Tree.size(), "Invalid input json or index node: %i", indexNodeJSON)
 	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this 
 	//const ::gpk::SJSONNode								& inputJSONNode							= *inputJSON.Tree[indexNodeJSON]; 
 
