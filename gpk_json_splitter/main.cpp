@@ -68,7 +68,7 @@ int										main							(int argc, char ** argv)		{
 		const ::gpk::array_pod<char_t>				& partBytes						= outputJsons[iPart];
 		if(deflatedOutput){
 			partFileName.append(".zson");
-			deflated.append((char*)&partBytes.size(), sizeof(uint32_t));
+//			deflated.append((char*)&partBytes.size(), sizeof(uint32_t));
 			gpk_necall(::gpk::arrayDeflate(partBytes, deflated), "Failed to deflate part: %u.", iPart);
 			gpk_necall(::gpk::fileFromMemory({partFileName.begin(), partFileName.size()}, deflated), "Failed to write part: %u.", iPart);
 			deflated.clear();
