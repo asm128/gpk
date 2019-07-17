@@ -37,7 +37,7 @@ static constexpr const uint32_t			DEFAULT_BLOCK_SIZE				= 1024;
 int										main							(int argc, char ** argv)		{
 	for(int32_t iArg = 5; iArg < argc; ++iArg)
 		info_printf("Unknown parameter: %s.", argv[iArg]);
-	ree_if(2 > argc, "Usage:\n\t%s [filename] [blockSize] [deflated input (1:0)] [deflated output (1:0)]", argv[0]);
+	ree_if(2 > argc, "Usage:\n\t%s [filename] [blockSize] [deflated output (1:0)] [deflated input (1:0)] ", argv[0]);
 	ree_if(65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
 	const ::gpk::view_const_string				fileNameSrc						= {argv[1], (uint32_t)-1};	// First parameter is the only parameter, which is the name of the source file to be split.
 	uint32_t									blockSize						= 0;
