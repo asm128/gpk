@@ -45,8 +45,8 @@ int										main							(int argc, char ** argv)		{
 		::gpk::parseIntegerDecimal({argv[2], (uint32_t)-1}, &blockSize);
 		info_printf("Using block size: %u.", blockSize);
 	}
-	bool										deflatedOutput					= (argc <= 3 || argv[3][0] != '0');
-	//bool										deflatedinput					= (argc <= 4 || argv[4][0] == '0');
+	bool										deflatedOutput					= (argc >  3 && argv[3][0] != '0');
+	//bool										deflatedinput					= (argc >  4 && argv[4][0] != '0');
 	if(0 == blockSize)
 		blockSize								= DEFAULT_BLOCK_SIZE;
 	info_printf("Deflated output: %s", deflatedOutput ? "true" : "false");
