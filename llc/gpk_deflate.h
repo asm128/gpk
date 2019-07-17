@@ -26,8 +26,11 @@ namespace gpk
 		::gpk::array_pod<::gpk::view_const_string>				Names							;
 	};
 
-	::gpk::error_t											arrayDeflate					(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t> & deflated);
-	::gpk::error_t											arrayInflate					(const ::gpk::view_const_byte	& deflated, ::gpk::array_pod<byte_t> & inflated);
+	static constexpr const uint32_t							DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
+	static constexpr const uint32_t							INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
+
+	::gpk::error_t											arrayDeflate					(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);
+	::gpk::error_t											arrayInflate					(const ::gpk::view_const_byte	& deflated, ::gpk::array_pod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE);
 	::gpk::error_t											folderPack						(::gpk::SFolderPackage	& out_packed, const ::gpk::view_const_string nameFolderSrc);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::view_const_byte & rawFileInMemory);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::view_const_string nameFileSrc);

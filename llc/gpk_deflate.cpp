@@ -6,65 +6,71 @@
 #include "gpk_find.h"
 #include "gpk_io.h"
 
-		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated)	{
-    int				ret;
-	z_stream		strm												= {};
-    ret																	= deflateInit(&strm, Z_BEST_COMPRESSION);
+		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated, const uint32_t chunkSize)	{
+    int															ret;																												  
+	z_stream													strm											= {};
+    ret																											= deflateInit(&strm, Z_BEST_COMPRESSION);
     if (ret != Z_OK)
         return ret;
-    strm.avail_in														= inflated.size();
-    strm.next_in														= (Bytef*)inflated.begin();
-    strm.avail_out														= deflated.size();
-    strm.next_out														= (Bytef*)deflated.begin();
-    ret																	= deflate(&strm, Z_FINISH);    /* no bad return value */
-    if(ret == Z_STREAM_ERROR) {
-	   (void)deflateEnd(&strm);
-		error_printf("Failed to compress: 0x%x.", ret);  /* state not clobbered */
-		return -1;
+    strm.avail_in											= inflated.size();
+    strm.next_in											= (Bytef*)inflated.begin();
+	::gpk::array_pod<byte_t>									block;
+	block.resize(chunkSize);
+	while(true) {
+		strm.avail_out											= block.size();
+		strm.next_out											= (Bytef*)block.begin();
+		ret														= deflate(&strm, Z_FINISH);    // no bad return value 
+		be_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered 
+		const uint32_t												deflatedSize									= (uint32_t)((byte_t*)strm.next_out - block.begin());
+		deflated.append(block.begin(), deflatedSize);
+		if(ret == Z_STREAM_END)
+			break;
 	}
-    int ret_end = deflateEnd(&strm);
-    gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
-    ree_if(ret < 0, "%s", "Unknown error");				/* stream will be complete */
-    gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
+	int															ret_end											= deflateEnd(&strm);
+	gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
+	ree_if(ret < 0, "%s", "Unknown error");				/* stream will be complete */
+	gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
 	ree_if(ret_end == Z_STREAM_ERROR, "deflateEnd() returned %s", "Z_STREAM_ERROR")
-	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
-    /* clean up and return */
 	info_printf("deflateEnd: %u.", (uint32_t)ret);
 	return 0;
 }
 
-		::gpk::error_t									gpk::arrayInflate								(const ::gpk::view_const_byte & deflated, ::gpk::array_pod<byte_t>& inflated)	{
-	z_stream																	strm											= {};
-	int																			ret												= inflateInit(&strm);	 // allocate inflate state
+		::gpk::error_t									gpk::arrayInflate								(const ::gpk::view_const_byte & deflated, ::gpk::array_pod<byte_t>& inflated, const uint32_t chunkSize)	{
+	z_stream													strm											= {};
+	int															ret												= inflateInit(&strm);	 // allocate inflate state
 	if (ret != Z_OK)
 		return ret;
 
-	strm.avail_in															= (uint32_t)deflated.size();
-	strm.avail_out															= (uint32_t)inflated.size();
-	strm.next_in															= (Bytef *)deflated.begin();
-	strm.next_out															= (Bytef *)inflated.begin();
-	ret																		= ::inflate(&strm, Z_NO_FLUSH);
-	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered
-	switch (ret) {
-	case Z_NEED_DICT		:
-		ret																			= Z_DATA_ERROR;     // and fall through
-	case Z_VERSION_ERROR	:
-	case Z_STREAM_ERROR		:
-	case Z_DATA_ERROR		:
-	case Z_MEM_ERROR		:
-		(void)inflateEnd(&strm);
-		return -1;
+	strm.avail_in											= (uint32_t)deflated.size();
+	strm.next_in											= (Bytef *)deflated.begin();
+	::gpk::array_pod<byte_t>									block;
+	block.resize(chunkSize);
+	while(true) {
+		strm.avail_out											= (uint32_t)block.size();
+		strm.next_out											= (Bytef *)block.begin();
+		ret														= ::inflate(&strm, Z_NO_FLUSH);
+		switch (ret) {
+		case Z_NEED_DICT		:
+			ret														= Z_DATA_ERROR;     // and fall through
+		case Z_VERSION_ERROR	:
+		case Z_STREAM_ERROR		:
+		case Z_DATA_ERROR		:
+		case Z_MEM_ERROR		:
+			break;
+		}
+		ree_if(ret < 0, "Failed to decompress? inflate error: %i.", ret);
+		const uint32_t												inflatedSize									= (uint32_t)((byte_t*)strm.next_out - block.begin());
+		inflated.append(block.begin(), inflatedSize);
+		if(ret == Z_STREAM_END)
+			break;
 	}
-	if(ret != Z_STREAM_END && ret != Z_OK) {
-		(void)inflateEnd(&strm);
-		error_printf("%s", "Failed to decompress?");
-		return -1;
-	}
-	inflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)inflated.begin()));
-	ret																			= ::inflateEnd(&strm);
-	info_printf("inflateEnd: %u.", (uint32_t)ret);
+	ret														= inflateEnd(&strm);
+	ree_if(ret != Z_STREAM_END && ret != Z_OK, "Failed to decompress? inflateEnd error: %i.", ret);
 	return 0;
 }
+
+static constexpr const uint32_t				FOLDERPACK_DEFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
+static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
 
 ::gpk::error_t								gpk::folderPack				(::gpk::SFolderPackage& out_packed, const ::gpk::view_const_string	nameFolderSrc) {
 	::gpk::SPackHeader 								& fileHeader				= out_packed.PackageInfo;
@@ -105,11 +111,9 @@
 	fileHeader.SizeUncompressedContentsPacked	= contentsPacked	.size();
 	::gpk::array_pod<byte_t>						& compressedTableFiles		= out_packed.CompressedTableFiles		;
 	::gpk::array_pod<byte_t>						& compressedContentsPacked	= out_packed.CompressedContentsPacked	;
-	compressedTableFiles		.resize(tableFiles		.size()	);
-	compressedContentsPacked	.resize(contentsPacked	.size()	);
 	{	// compress
-		gpk_necall(::gpk::arrayDeflate(tableFiles		, compressedTableFiles		), "%s", "Unknown error.");
-		gpk_necall(::gpk::arrayDeflate(contentsPacked	, compressedContentsPacked	), "%s", "Unknown error.");
+		gpk_necall(::gpk::arrayDeflate(tableFiles		, compressedTableFiles		, FOLDERPACK_DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
+		gpk_necall(::gpk::arrayDeflate(contentsPacked	, compressedContentsPacked	, FOLDERPACK_DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
 		fileHeader.SizeCompressedTableFiles		= compressedTableFiles		.size();
 		fileHeader.SizeCompressedContentsPacked	= compressedContentsPacked	.size();
 	}	
@@ -118,12 +122,12 @@
 
 ::gpk::error_t								gpk::folderUnpack			(::gpk::SFolderInMemory& out_loaded, const ::gpk::view_const_byte & rawFileInMemory)		{
 	const ::gpk::SPackHeader						& header				= *(::gpk::SPackHeader*)&rawFileInMemory[0];
-	out_loaded.DataInfo		.resize(header.SizeUncompressedTableFiles		);
-	out_loaded.DataContents	.resize(header.SizeUncompressedContentsPacked	);
 	out_loaded.Names		.resize(header.TotalFileCount);
 	out_loaded.Contents		.resize(header.TotalFileCount);
-	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, out_loaded.DataInfo		), "%s", "Failed to uncompress file table.");
-	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles	, header.SizeCompressedContentsPacked	}, out_loaded.DataContents	), "%s", "Failed to uncompress file contents.");
+	out_loaded.DataInfo		.clear();
+	out_loaded.DataContents	.clear();
+	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, out_loaded.DataInfo		, FOLDERPACK_INFLATE_CHUNK_SIZE), "%s", "Failed to uncompress file table.");
+	gpk_necall(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles	, header.SizeCompressedContentsPacked	}, out_loaded.DataContents	, FOLDERPACK_INFLATE_CHUNK_SIZE), "%s", "Failed to uncompress file contents.");
 	{ // Build access tables.
 		uint32_t										offsetInfo				= 0;
 		for(uint32_t iFile = 0; iFile < out_loaded.Names.size(); ++iFile) {
@@ -184,10 +188,7 @@
 		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
-		::gpk::error_t								indexSlash					= ::gpk::rfind('\\', ::gpk::view_const_string{finalPathName.begin(), lenPath});	
-		if(-1 == indexSlash) // try with the other separator
-			::gpk::rfind('/', ::gpk::view_const_string{finalPathName.begin(), lenPath});	
-
+		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::view_const_string{finalPathName.begin(), uint32_t(-1)});	
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]				= 0;
 			lenPath									= (uint32_t)strlen(finalPathName.begin());

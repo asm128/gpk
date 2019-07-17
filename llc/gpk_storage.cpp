@@ -53,7 +53,7 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 		++offsetBar;
 		offsetBar							= ::gpk::find(separator, pathName, offsetBar);
 		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
-		if(0 == strcmp(".", folder)) 
+		if(0 == strcmp(".", folder))
 			continue;
 #if defined(GPK_WINDOWS)
 		if(!CreateDirectoryA(folder, NULL)) {

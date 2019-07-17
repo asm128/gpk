@@ -86,6 +86,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_cgi_interceptor", "gpk_
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_json_splitter", "gpk_json_splitter\gpk_json_splitter.vcxproj", "{7A6DE552-449A-4B19-8DAA-DFBF7714335D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{8FD826F8-3739-44E6-8CC8-997122E53B8D} = {8FD826F8-3739-44E6-8CC8-997122E53B8D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

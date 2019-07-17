@@ -8,6 +8,7 @@
 #include "gpk_json.h"
 #include "gpk_parse.h"
 #include "gpk_find.h"
+#include "gpk_deflate.h"
 
 static constexpr const uint32_t			DEFAULT_BLOCK_SIZE				= 1024;
 
@@ -40,12 +41,15 @@ int										main							(int argc, char ** argv)		{
 	ree_if(65535 < argc, "Invalid parameter count: %u.", (uint32_t)argc);
 	const ::gpk::view_const_string				fileNameSrc						= {argv[1], (uint32_t)-1};	// First parameter is the only parameter, which is the name of the source file to be split.
 	uint32_t									blockSize						= 0;
-	if(argc > 2)	// load block size param
+	if(argc > 2) {	// load block size param
 		::gpk::parseIntegerDecimal({argv[2], (uint32_t)-1}, &blockSize);
-	//bool										deflatedOutput					= (argc <= 3 || argv[3][0] == '0');
+		info_printf("Using block size: %u.", blockSize);
+	}
+	bool										deflatedOutput					= (argc <= 3 || argv[3][0] != '0');
 	//bool										deflatedinput					= (argc <= 4 || argv[4][0] == '0');
 	if(0 == blockSize)
 		blockSize								= DEFAULT_BLOCK_SIZE;
+	info_printf("Deflated output: %s", deflatedOutput ? "true" : "false");
 	
 	::gpk::SJSONFile							jsonFileToSplit					= {};
 	gpk_necall(::gpk::jsonFileRead(jsonFileToSplit, fileNameSrc), "Failed to load file: %s.", fileNameSrc.begin());
@@ -56,12 +60,23 @@ int										main							(int argc, char ** argv)		{
 	::gpk::error_t								indexOfLastSlash				= ::gpk::findLastSlash(fileNameSrc);
 	::gpk::array_pod<char_t>					partFileName					= {};
 	char										fileNameDigits	[32]			= {};
+	::gpk::array_pod<char_t>					deflated						= {};
 	for(uint32_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
 		partFileName							= (indexOfDot > indexOfLastSlash) ? ::gpk::view_const_string{fileNameSrc.begin(), (uint32_t)indexOfDot} : fileNameSrc;
 		sprintf_s(fileNameDigits, ".%u", iPart);
 		partFileName.append(::gpk::view_const_string{fileNameDigits});
-		partFileName.append(".json");
-		::gpk::fileFromMemory({partFileName.begin(), partFileName.size()}, outputJsons[iPart]);
+		const ::gpk::array_pod<char_t>				& partBytes						= outputJsons[iPart];
+		if(deflatedOutput){
+			partFileName.append(".zson");
+			deflated.append((char*)&partBytes.size(), sizeof(uint32_t));
+			gpk_necall(::gpk::arrayDeflate(partBytes, deflated), "Failed to deflate part: %u.", iPart);
+			gpk_necall(::gpk::fileFromMemory({partFileName.begin(), partFileName.size()}, deflated), "Failed to write part: %u.", iPart);
+			deflated.clear();
+		}
+		else {
+			partFileName.append(".json");
+			gpk_necall(::gpk::fileFromMemory({partFileName.begin(), partFileName.size()}, partBytes), "Failed to write part: %u.", iPart);
+		}
 	}
 	return 0; 
 }

@@ -121,7 +121,6 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			::gpk::array_pod<byte_t>										ardellEncoded;
 			payloadHeader.MessageId										= ::hashFromTime(messageToSend.Time);
 			::gpk::array_pod<byte_t>										compressed;
-			ree_if(errored(compressed.resize(messageToSend.Payload.size() * 2)), "Wtf: %s.", "Out of memory?");
 			if(0 == payloadHeader.Command.Compressed) {
 				if(0 == payloadHeader.Command.Encrypted)
 					payloadHeader.Size											= messageToSend.Payload.size();
@@ -335,11 +334,9 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 					::gpk::array_pod<byte_t>										inflated;
 					::gpk::array_pod<byte_t>										decoded;
 					rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded)), "%s", "Failed to decrypt packet!");
-					messageReceived->Payload.resize(65535);
 					rew_if(errored(::gpk::arrayInflate(decoded, messageReceived->Payload)), "%s", "Failed to inflate packet!");
 				}
 				else {
-					messageReceived->Payload.resize(65535);
 					rew_if(errored(::gpk::arrayInflate(viewPayload, messageReceived->Payload)), "%s", "Failed to inflate packet!");
 				}
 			}
