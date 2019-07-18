@@ -14,6 +14,14 @@ int main() {
 	gpk_necall(::bind(handle, (sockaddr *)&sa_server, sizeof(sockaddr_in)), "Failed to bind listener to address");
 	info_printf("Server listening on %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(addrLocal));
 	while(true) {
+		::gpk::SIPv4			addrLocalClient			= addrLocal;
+		addrLocalClient.Port = 0;
+		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
+
+		sockaddr_in				sa_server_client		= {AF_INET};
+		::gpk::tcpipAddressToSockaddr(addrLocalClient, sa_server_client);
+		gpk_necall(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
+		
 		sockaddr_in				sa_client				= {AF_INET};
 		int						client_length			= sizeof(sa_client);
 		char					connectReceived			= 0;
@@ -24,13 +32,6 @@ int main() {
 		
 		char					commandToSend			= '2';
 		//::gpk::tcpipAddressFromSockaddr(sa_server, addrLocal);
-		addrLocal.Port = 0;
-
-		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
-
-		sockaddr_in				sa_server_client		= {AF_INET};
-		::gpk::tcpipAddressToSockaddr(addrLocal, sa_server_client);
-		gpk_necall(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
 		::gpk::tcpipAddress(clientHandle, addrLocal);
 		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		::gpk::sleep(10);
