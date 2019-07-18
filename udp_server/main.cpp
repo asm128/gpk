@@ -1,5 +1,6 @@
 #define GPK_CONSOLE_LOG_ENABLED
 #include "gpk_stdsocket.h"
+#include "gpk_sync.h"
 
 int main() { 
 	::gpk::tcpipInitialize();
@@ -24,17 +25,18 @@ int main() {
 		char					commandToSend			= '2';
 		//::gpk::tcpipAddressFromSockaddr(sa_server, addrLocal);
 		addrLocal.Port = 0;
-		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 
 		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
 
 		sockaddr_in				sa_server_client		= {AF_INET};
 		::gpk::tcpipAddressToSockaddr(addrLocal, sa_server_client);
-
 		gpk_necall(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
 		::gpk::tcpipAddress(clientHandle, addrLocal);
+		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
+		::gpk::sleep(10);
 		ree_if(INVALID_SOCKET == clientHandle, "Failed to create socket.");
-		gpk_necall(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
+		for(uint32_t i=16*1024; i < 65535; ++i)
+			gpk_necall(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
 		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		if(handle != clientHandle)
 			gpk_safe_closesocket(clientHandle);
