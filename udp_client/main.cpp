@@ -5,11 +5,18 @@
 int main() {
 	::gpk::tcpipInitialize();
 	sockaddr_in			sa_server			= {AF_INET};
-	::gpk::tcpipAddressToSockaddr({{201,235,131,233}, 9898}, sa_server);
 	while(true) {
+//#define MAKE_IT_WORK
+#if defined MAKE_IT_WORK
+		::gpk::tcpipAddressToSockaddr({{192,168,0,2}, 9898}, sa_server);
+#else
+		::gpk::tcpipAddressToSockaddr({{201,235,131,233}, 9898}, sa_server);
+#endif
 		::gpk::SIPv4		addrRemote			= {};
 		SOCKET				handle				= socket(AF_INET, SOCK_DGRAM, 0);
 		ree_if(INVALID_SOCKET == handle, "Failed to create socket.");
+		sockaddr_in			sa_client			= {AF_INET};
+		gpk_necall(::bind(handle, (sockaddr *)&sa_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
 		char				commandToSend		= '1';
 		int					sa_length			= sizeof(sa_server);
 		gpk_necall(sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length), "Failed to send connect request to server.");

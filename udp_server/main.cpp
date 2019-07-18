@@ -33,11 +33,6 @@ int main() {
 
 		gpk_necall(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
 		::gpk::tcpipAddress(clientHandle, addrLocal);
-		#define MAKE_IT_WORK
-#if defined MAKE_IT_WORK
-		clientHandle = handle;
-#endif 
-
 		ree_if(INVALID_SOCKET == clientHandle, "Failed to create socket.");
 		gpk_necall(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
 		info_printf("Sent connect %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
