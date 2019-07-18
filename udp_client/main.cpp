@@ -23,5 +23,3 @@ int main() {
 	::gpk::tcpipShutdown();
 	return 0;
 }
-
-
