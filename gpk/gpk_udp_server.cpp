@@ -168,8 +168,8 @@ static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverIn
 	else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
 		return 0;
 	else {
-		command														= {::gpk::ENDPOINT_COMMAND_NOOP,};
-		::send(serverInstance.Socket, (const char*)&command, sizeof(::gpk::SUDPCommand), 0);
+		//command.Type	= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
+		//::send(serverInstance.Socket, (const char*)&command, sizeof(::gpk::SUDPCommand), 0);
 		::serverAcceptClient(serverInstance, command, sa_client);
 		::gpk::sleep(1);
 	}
