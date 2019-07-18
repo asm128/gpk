@@ -18,7 +18,10 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "%s", "??");
 	sa_server.sin_port											= htons(client.AddressConnect.Port);
 	ree_if(INVALID_SOCKET == (client.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Failed to create socket for address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
-	::bind(client.Socket, 0, 0);
+	//char addr[32] = {};
+	//sprintf_s(addr, "%u.%u.%u.%u");
+	//sockaddr_in														sa_client									= {};				/* Information about the server */
+	//::bind(client.Socket, (sockaddr*)&sa_client, sizeof(sockaddr_in));
 	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	sa_length													= sizeof(struct sockaddr_in);
 	sa_server													= {};
