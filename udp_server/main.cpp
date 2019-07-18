@@ -1,3 +1,4 @@
+#define GPK_CONSOLE_LOG_ENABLED
 #include "gpk_stdsocket.h"
 
 int main() { 
