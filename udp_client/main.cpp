@@ -14,9 +14,12 @@ int main() {
 		gpk_necall(sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length), "Failed to send connect request to server.");
 		info_printf("Send connect request to server: %c.", commandToSend);
 
-		char				commandReceived		= 0;
-		gpk_necall(recvfrom(handle, (char *)&commandReceived, (int)sizeof(char), 0, (sockaddr *)&sa_server, &sa_length), "Failed to receive response from server");
-		info_printf("Received connect response from server: %c.", commandReceived);
+		char				connectAcknowledge	= 0;
+		gpk_necall(recvfrom(handle, (char *)&connectAcknowledge, (int)sizeof(char), 0, (sockaddr *)&sa_server, &sa_length), "Failed to receive response from server");
+		::gpk::SIPv4			addrRemote;
+		::gpk::tcpipAddressFromSockaddr(sa_server, addrRemote);
+		info_printf("Received connect response from server: %c from %u.%u.%u.%u:%u.", connectAcknowledge, GPK_IPV4_EXPAND(addrRemote));
+		info_printf("Received connect response from server: %c.", connectAcknowledge);
 		::gpk::sleep(100);
 		gpk_safe_closesocket(handle);
 	}

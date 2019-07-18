@@ -15,7 +15,9 @@ int main() {
 		int						client_length			= sizeof(sa_client);
 		char					connectReceived			= 0;
 		gpk_necall(::recvfrom(handle, (char*)&connectReceived, (int)sizeof(char), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request.");
-		info_printf("Received connect request: %c", connectReceived);
+		::gpk::SIPv4			addrRemote;
+		::gpk::tcpipAddressFromSockaddr(sa_client, addrRemote);
+		info_printf("Received connect request: %c from %u.%u.%u.%u:%u.", connectReceived, GPK_IPV4_EXPAND(addrRemote));
 
 		char					commandToSend			= '2';
 		gpk_necall(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
