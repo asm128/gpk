@@ -39,6 +39,7 @@ namespace gpk
 		,	"HTTP_HOST"			
 		,	"HTTP_REFERER"		
 		,	"HTTP_USER_AGENT"	
+		,	"PATH_INFO"		
 		,	"QUERY_STRING"		
 		,	"REMOTE_ADDR"		
 		,	"REMOTE_HOST"		

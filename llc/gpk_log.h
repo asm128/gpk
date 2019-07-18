@@ -135,30 +135,30 @@ namespace gpk
 
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#		define gthrow_if(condition, format, ...)							if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); gpk_throw("");	}
+#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
 #	else
 /	/#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 /	/#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#		define gthrow_if(condition, format, ...)							if(condition) do{} while(0)
+#		define gthrow_if(condition, format, ...)						if(condition) do{} while(0)
 #	endif
 #endif
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
-#			define gerror_if(condition, format, ...)							if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
-#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
-#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition, (uint32_t)-1); 						}
+#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 //#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#		define gerror_if(condition, format, ...)							if(condition) { do{} while(0); }
+#		define gerror_if(condition, format, ...)						if(condition) { do{} while(0); }
 #		define gwarn_if(condition, format, ...)							if(condition) { do{} while(0); }
 #		define ginfo_if(condition, format, ...)							if(condition) { do{} while(0); }
 #	endif
 #endif
 
 #ifndef ret_gerror_if
-#	define ret_gerror_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); return;			}
+#	define ret_gerror_if(condition, format, ...)					if(condition) { error_printf	(format, __VA_ARGS__); return;			}
 #	define ret_gwarn_if(condition, format, ...)						if(condition) { warning_printf	(format, __VA_ARGS__); return;			}
 #	define ret_ginfo_if(condition, format, ...)						if(condition) { info_printf		(format, __VA_ARGS__); return;			}
 #endif

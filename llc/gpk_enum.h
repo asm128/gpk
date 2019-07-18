@@ -33,7 +33,7 @@ namespace gpk
 					enum_definition<_tValue>&							instanceHere							= get();
 
 			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != INVALID_VALUE)) )
-				info_printf("Initializing enumeration type: '%s'.", enumName.begin());
+				verbose_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
 			static const ::gpk::label								newName									= instanceHere.Name = enumName;
 			(void)newName;
