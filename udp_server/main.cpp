@@ -24,7 +24,7 @@ int main() {
 		char					commandToSend			= '2';
 		//::gpk::tcpipAddressFromSockaddr(sa_server, addrLocal);
 		addrLocal.Port = 0;
-		info_printf("Sending connect %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
+		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 
 		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -35,7 +35,7 @@ int main() {
 		::gpk::tcpipAddress(clientHandle, addrLocal);
 		ree_if(INVALID_SOCKET == clientHandle, "Failed to create socket.");
 		gpk_necall(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
-		info_printf("Sent connect %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
+		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		if(handle != clientHandle)
 			gpk_safe_closesocket(clientHandle);
 	}
