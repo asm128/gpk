@@ -26,6 +26,7 @@
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_auto_handler.h" />
+    <ClInclude Include="gpk_base64.h" />
     <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
     <ClInclude Include="gpk_camera.h" />
@@ -103,6 +104,7 @@
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
+    <ClCompile Include="gpk_base64.cpp" />
     <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_cgi_main.cpp" />
     <ClCompile Include="gpk_cgi_module.cpp" />

@@ -1,7 +1,7 @@
 #include "gpk_gui_text.h"
 #include "gpk_gui.h"
 #include "gpk_grid_copy.h"
-#include "gpk_encoding.h"
+#include "gpk_base64.h"
 #include "gpk_bitmap_target.h"
 
 
@@ -9,7 +9,7 @@ static constexpr	const char									gpk_codepage_437_b64	[]								= "AAAAAAAAAA
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gui)																						{
 	gui.FontCharSize												= {9, 16};
 	gui.FontTexture.resize(gui.FontCharSize.x, gui.FontCharSize.y * 256);
-	::gpk::array_pod<ubyte_t>											decoded;
+	::gpk::array_pod<byte_t>											decoded;
 	gpk_necall(::gpk::base64Decode(gpk_codepage_437_b64, decoded), "%s", "Maybe the decode function got broken?");
 	memcpy(gui.FontTexture.Texels.begin(), decoded.begin(), decoded.size());
 	return 0;

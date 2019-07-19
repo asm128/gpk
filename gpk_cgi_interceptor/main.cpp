@@ -2,7 +2,7 @@
 #include "gpk_cgi_runtime.h"		// for ::gpk::SCGIRuntimeVlaues and ::gpk::cgiRuntimeValuesLoad()
 #include "gpk_json_expression.h"	// for ::gpk::jsonParse()
 #include "gpk_storage.h"			// for ::gpk::fileToMemory()
-#include "gpk_encoding.h"
+#include "gpk_base64.h"
 
 #include <Windows.h>
 #include <process.h>
@@ -49,7 +49,7 @@ static	::gpk::error_t								createChildProcess
 		) ? true : false;  // receives PROCESS_INFORMATION 
 	ree_if(false == bSuccess, "Failed to create process'%s'.", appPath.begin());
 
-	::gpk::array_pod<uchar_t>								popupTitle						= {};
+	::gpk::array_pod<char_t>								popupTitle						= {};
 	{
 		static constexpr const ::gpk::view_const_char		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
 		char												ensure[encodedSignature.size()]	= {};

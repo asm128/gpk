@@ -74,7 +74,9 @@ namespace gpk
 		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, args...);
 	}
 #endif
+	template<typename... _tArgs>	void							dummy		(_tArgs...)		{}
 }
+
 
 
 #if !defined(GPK_WINDOWS)
@@ -99,7 +101,7 @@ namespace gpk
 #	if defined (GPK_WARNING_PRINTF_ENABLED)
 #		define warning_printf(format, ...)								debug_printf(2, "warning"	, format, __VA_ARGS__)
 #	else
-#		define warning_printf(format, ...)								do { ; } while(0)
+#		define warning_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
@@ -107,7 +109,7 @@ namespace gpk
 #	if defined (GPK_INFO_PRINTF_ENABLED)
 #		define info_printf(format, ...)									debug_printf(3, "info"		, format, __VA_ARGS__)
 #	else
-#		define info_printf(format, ...)									do { ; } while(0)
+#		define info_printf(format, ...)									do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
@@ -115,7 +117,7 @@ namespace gpk
 #	if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #		define success_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #	else
-#		define success_printf(format, ...)								do { ; } while(0)
+#		define success_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
@@ -123,14 +125,14 @@ namespace gpk
 #	if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #		define verbose_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
 #	else
-#		define verbose_printf(format, ...)								do { ; } while(0)
+#		define verbose_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
 #if defined (GPK_WINDOWS)
 #	define gpk_throw(...)											throw(__VA_ARGS__)
 #else
-#	define gpk_throw(...)											do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; } while(0)
+#	define gpk_throw(...)											do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
 #ifndef gthrow_if
@@ -139,7 +141,7 @@ namespace gpk
 #	else
 /	/#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 /	/#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#		define gthrow_if(condition, format, ...)						if(condition) do{} while(0)
+#		define gthrow_if(condition, format, ...)						if(condition) do{::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
@@ -151,9 +153,9 @@ namespace gpk
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 //#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#		define gerror_if(condition, format, ...)						if(condition) { do{} while(0); }
-#		define gwarn_if(condition, format, ...)							if(condition) { do{} while(0); }
-#		define ginfo_if(condition, format, ...)							if(condition) { do{} while(0); }
+#		define gerror_if(condition, format, ...)						if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define gwarn_if(condition, format, ...)							if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define ginfo_if(condition, format, ...)							if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
 #	endif
 #endif
 
@@ -183,26 +185,26 @@ namespace gpk
 
 #ifndef retnul_gerror_if
 #	define retnul_gerror_if(condition, format, ...)					retval_gerror_if	( 0, condition, format, __VA_ARGS__)
-#	define retnul_gwarn_if(condition, format, ...)					retval_gwarn_if	( 0, condition, format, __VA_ARGS__)
-#	define retnul_ginfo_if(condition, format, ...)					retval_ginfo_if	( 0, condition, format, __VA_ARGS__)
+#	define retnul_gwarn_if(condition, format, ...)					retval_gwarn_if		( 0, condition, format, __VA_ARGS__)
+#	define retnul_ginfo_if(condition, format, ...)					retval_ginfo_if		( 0, condition, format, __VA_ARGS__)
 #endif
 
 #ifndef reterr_gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_RETERR
 #		define reterr_gerror_if(condition, format, ...)					retval_gerror_if	(-1, condition, format, __VA_ARGS__)
-#		define reterr_gwarn_if(condition, format, ...)					retval_gwarn_if	(-1, condition, format, __VA_ARGS__)
-#		define reterr_ginfo_if(condition, format, ...)					retval_ginfo_if	(-1, condition, format, __VA_ARGS__)
+#		define reterr_gwarn_if(condition, format, ...)					retval_gwarn_if		(-1, condition, format, __VA_ARGS__)
+#		define reterr_ginfo_if(condition, format, ...)					retval_ginfo_if		(-1, condition, format, __VA_ARGS__)
 #	else
 #		pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #		pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
-#		define reterr_gerror_if(condition, format, ...)					if(condition) { do{} while(0); }
-#		define reterr_gwarn_if(condition, format, ...)					if(condition) { do{} while(0); }
-#		define reterr_ginfo_if(condition, format, ...)					if(condition) { do{} while(0); }
+#		define reterr_gerror_if(condition, format, ...)					if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define reterr_gwarn_if(condition, format, ...)					if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define reterr_ginfo_if(condition, format, ...)					if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
 #	endif
 #endif
 
 #ifndef retwarn_gerror_if
-#	define retwarn_gerror_if(condition, format, ...)				retval_gerror_if	( 1, condition, format, __VA_ARGS__)
+#	define retwarn_gerror_if(condition, format, ...)				retval_gerror_if( 1, condition, format, __VA_ARGS__)
 #	define retwarn_gwarn_if(condition, format, ...)					retval_gwarn_if	( 1, condition, format, __VA_ARGS__)
 #	define retwarn_ginfo_if(condition, format, ...)					retval_ginfo_if	( 1, condition, format, __VA_ARGS__)
 #endif
@@ -326,10 +328,10 @@ namespace gpk
 #define gpk_hrcall(hr_call)										gpk_rv_hrcall (-1, hr_call)					// HRESULT call.
 #define gpk_hrecall(hr_call, ...)								gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
 #else
-#define gpk_necall(gpkl_call, ...)								do{gpkl_call; } while(0) // Non-propagable error call.
-#define gpk_newcall(gpkl_call, ...)								do{gpkl_call; } while(0) // Non-propagable error-warning call.
-#define gpk_hrcall(hr_call)										do{hr_call	; } while(0) // HRESULT call.
-#define gpk_hrecall(hr_call, ...)								do{hr_call	; } while(0) // HRESULT call.
+#define gpk_necall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call.
+#define gpk_newcall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error-warning call.
+#define gpk_hrcall(hr_call)										do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
+#define gpk_hrecall(hr_call, ...)								do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
 #endif
 
 #ifndef e_if
