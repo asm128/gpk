@@ -160,7 +160,6 @@ static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverIn
 	sockaddr_in														sa_client							= {};							// Information about the client
 	if errored(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length)) {
 		warning_printf("Could not receive datagram.");
-		return 0;
 	}
 		 gerror_if(	command.Type	!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	, "Invalid message type!")
 	else gerror_if(	command.Command	!= ::gpk::ENDPOINT_COMMAND_CONNECT
@@ -168,8 +167,6 @@ static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverIn
 	else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
 		return 0;
 	else {
-		//command.Type	= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
-		//::send(serverInstance.Socket, (const char*)&command, sizeof(::gpk::SUDPCommand), 0);
 		::serverAcceptClient(serverInstance, command, sa_client);
 		::gpk::sleep(1);
 	}
