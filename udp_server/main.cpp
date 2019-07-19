@@ -36,8 +36,10 @@ int main() {
 		info_printf("Sending connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		::gpk::sleep(10);
 		ree_if(INVALID_SOCKET == clientHandle, "Failed to create socket.");
-		for(uint32_t i=16*1024; i < 65535; ++i)
+		while(true) {
 			gpk_necall(::sendto(clientHandle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr*)&sa_client, sizeof(sockaddr_in)), "Failed to respond.");
+			::gpk::sleep(10);
+		}
 		info_printf("Sent connect response %c from %u.%u.%u.%u:%u to %u.%u.%u.%u:%u.", commandToSend, GPK_IPV4_EXPAND(addrLocal), GPK_IPV4_EXPAND(addrRemote));
 		if(handle != clientHandle)
 			gpk_safe_closesocket(clientHandle);

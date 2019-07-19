@@ -22,7 +22,7 @@ int main() {
 		gpk_necall(sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_server, sa_length), "Failed to send connect request to server.");
 		{
 			sockaddr_in			sa_battery			= sa_server;
-			for(uint32_t j=3; j < 3; ++j) {
+			for(uint32_t j=10; j < 10; ++j) {
 			for(uint32_t i=16*1024; i < 64*1024; ++i) {
 				sa_battery.sin_port	= htons((u_short)i);
 				gpk_necall(sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "Failed to send connect request to server.");
@@ -30,7 +30,7 @@ int main() {
 			}}
 		}
 		::gpk::tcpipAddressFromSockaddr(sa_server, addrRemote);
-		info_printf("Send connect request to server: %c to %u.%u.%u.%u:%u", commandToSend, GPK_IPV4_EXPAND(addrRemote));
+		info_printf("Sent connect request to server: %c to %u.%u.%u.%u:%u", commandToSend, GPK_IPV4_EXPAND(addrRemote));
 
 		char				connectAcknowledge	= 0;
 		sa_server.sin_port	= 0;
