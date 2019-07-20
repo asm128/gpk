@@ -10,6 +10,26 @@
 	return ::gpk::jsonParse(file.Reader, {file.Bytes.begin(), file.Bytes.size()});
 }
 
+::gpk::error_t												gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, const uint32_t blockSize, ::gpk::array_obj<::gpk::array_pod<char_t>> & outputJsons)		{
+	const uint32_t													remainder							= jsonArrayToSplit.Children.size() % blockSize;
+	const uint32_t													countParts							= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
+	gpk_necall(outputJsons.resize(countParts), "%s", "Out of memory?");
+	uint32_t														iSourceRecord						= 0;
+	for(uint32_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
+		::gpk::array_pod<char_t>										& outputJson						= outputJsons[iPart];
+		gpk_necall(outputJson.push_back('['), "%s", "Out of memory?");
+		for(uint32_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
+			; iPartRecord < countPartRecords
+			; ++iPartRecord) {
+			gpk_necall(::gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson), "%s", "Unknown error!");;
+			if(iPartRecord < countPartRecords - 1)
+				gpk_necall(outputJson.push_back(','), "%s", "Out of memory?");
+		}
+		gpk_necall(outputJson.push_back(']'), "%s", "Out of memory?");
+	}
+	return 0;
+}
+
 ::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
 	switch(node->Object->Type) {
 	case ::gpk::JSON_TYPE_NULL			:	
