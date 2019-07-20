@@ -74,7 +74,7 @@ namespace gpk
 		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, args...);
 	}
 #endif
-	template<typename... _tArgs>	void							dummy		(_tArgs...)		{}
+	template<typename... _tArgs>	inline	void					dummy		(_tArgs...)		{}
 }
 
 
@@ -323,21 +323,21 @@ namespace gpk
 #endif
 
 #ifndef GPK_NULLIFY_NECALL
-#define gpk_necall(gpkl_call, ...)								gpk_rve_ecall (-1, gpkl_call, __VA_ARGS__)	// Non-propagable error call.
-#define gpk_newcall(gpkl_call, ...)								gpk_rve_ewcall(-1, gpkl_call, __VA_ARGS__)	// Non-propagable error-warning call.
-#define gpk_hrcall(hr_call)										gpk_rv_hrcall (-1, hr_call)					// HRESULT call.
-#define gpk_hrecall(hr_call, ...)								gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
+#	define gpk_necall(gpkl_call, ...)								gpk_rve_ecall (-1, gpkl_call, __VA_ARGS__)	// Non-propagable error call.
+#	define gpk_newcall(gpkl_call, ...)								gpk_rve_ewcall(-1, gpkl_call, __VA_ARGS__)	// Non-propagable error-warning call.
+#	define gpk_hrcall(hr_call)										gpk_rv_hrcall (-1, hr_call)					// HRESULT call.
+#	define gpk_hrecall(hr_call, ...)								gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
 #else
-#define gpk_necall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call.
-#define gpk_newcall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error-warning call.
-#define gpk_hrcall(hr_call)										do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
-#define gpk_hrecall(hr_call, ...)								do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
+#	define gpk_necall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call.
+#	define gpk_newcall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error-warning call.
+#	define gpk_hrcall(hr_call)										do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
+#	define gpk_hrecall(hr_call, ...)								do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
 #endif
 
 #ifndef e_if
-#	define e_if													gerror_if
-#	define w_if													gwarn_if
-#	define i_if													ginfo_if
+#	define e_if														gerror_if
+#	define w_if														gwarn_if
+#	define i_if														ginfo_if
 #endif
 
 #ifndef re_if

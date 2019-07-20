@@ -288,9 +288,6 @@
     <ClInclude Include="gpk_input.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_cgi_app_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_stdstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -299,6 +296,12 @@
     </ClInclude>
     <ClInclude Include="gpk_base64.h">
       <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_app_impl.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_app_impl_v2.h">
+      <Filter>web_cgi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

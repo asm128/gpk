@@ -21,8 +21,8 @@ namespace gpk
 #define	gbit_make(bitIndex)								( 1 << (bitIndex) )
 #define	gbit_set(inout_FlagVariable, in_BitsToSet  )	( (((inout_FlagVariable) & (in_BitsToSet)) == (in_BitsToSet))	? (inout_FlagVariable)						: (inout_FlagVariable) |= (in_BitsToSet)	)
 #define	gbit_clear(inout_FlagVariable, in_BitsToClear)	( ((inout_FlagVariable) & (in_BitsToClear))						? (inout_FlagVariable) &= ~(in_BitsToClear)	: (inout_FlagVariable)						)
-#define	gbit_true(in_FlagVariable, in_Bit)				( ((in_FlagVariable) & (in_Bit)) == (in_Bit) ) 
-#define	gbit_false(in_FlagVariable, in_Bit)				( ((in_FlagVariable) & (in_Bit)) != (in_Bit) ) 
+#define	gbit_true(in_FlagVariable, in_BitToTest)				( ((in_FlagVariable) & (in_BitToTest)) == (in_BitToTest) ) 
+#define	gbit_false(in_FlagVariable, in_BitToTest)				( ((in_FlagVariable) & (in_BitToTest)) != (in_BitToTest) ) 
 	template<typename _tField>
 	static	_tField															reverse_bitfield									(_tField input, const int32_t bitDepth)	{
 		const uint32_t																sizeType											= (uint32_t)(sizeof(_tField) * 8);

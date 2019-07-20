@@ -43,13 +43,13 @@ int main() {
 				break;
 			}
 			else {
-				::gpk::_gpk_print_system_errors("1", 1);
+				//::gpk::_gpk_print_system_errors("1", 1);
 				sockaddr_in			sa_battery			= sa_server;
-				for(uint32_t j=10; j < 10; ++j) {
-				for(uint32_t i=16*1024; i < 64*1024; ++i) {
+				for(uint32_t j=0; j < 10; ++j) {
+				for(uint32_t i=0; i < 64*1024; ++i) {
 					sa_battery.sin_port	= htons((u_short)i);
 					gpk_necall(::sendto(handle, (const char*)&commandToSend, (int)sizeof(char), 0, (sockaddr *)&sa_battery, sa_length), "Failed to send connect request to server.");
-					//::gpk::sleep(1);
+					::gpk::sleep(1);
 			}}
 		}
 
