@@ -200,7 +200,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		int32_t																			lenPath								= sprintf_s(sPath, bufferFormat, pathToList.begin(), fdFile.cFileName);
 		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders)
 			continue;
-		info_printf("Path: %s.", sPath);
+		verbose_printf("Path: %s.", sPath);
 		gpk_necall(output.push_back(::gpk::view_const_string{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
 		//output.push_back(0)
 	}
@@ -246,13 +246,13 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 			::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 			gpk_necall(newFolderIndex, "%s", "Out of memory?");
 			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unknown error!");
-			info_printf("Directory: %s.", sPath);
+			verbose_printf("Directory: %s.", sPath);
 		}
 		else {
 			int32_t indexFile;
 			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 			//pathContents.Files[indexFile].push_back(0);
-			info_printf("File %u: %s.", indexFile, sPath);
+			verbose_printf("File %u: %s.", indexFile, sPath);
 		}
 		_CrtCheckMemory();
 	}
