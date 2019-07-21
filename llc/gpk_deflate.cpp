@@ -15,14 +15,14 @@
     strm.avail_in											= inflated.size();
     strm.next_in											= (Bytef*)inflated.begin();
 	::gpk::array_pod<byte_t>									block;
-	block.resize(chunkSize);
+	gpk_necall(block.resize(chunkSize), "%s", "Out of memory?");
 	while(true) {
 		strm.avail_out											= block.size();
 		strm.next_out											= (Bytef*)block.begin();
 		ret														= deflate(&strm, Z_FINISH);    // no bad return value 
 		be_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered 
 		const uint32_t												deflatedSize									= (uint32_t)((byte_t*)strm.next_out - block.begin());
-		deflated.append(block.begin(), deflatedSize);
+		gpk_necall(deflated.append(block.begin(), deflatedSize), "%s", "Out of memory?");
 		if(ret == Z_STREAM_END)
 			break;
 	}
@@ -44,7 +44,7 @@
 	strm.avail_in											= (uint32_t)deflated.size();
 	strm.next_in											= (Bytef *)deflated.begin();
 	::gpk::array_pod<byte_t>									block;
-	block.resize(chunkSize);
+	gpk_necall(block.resize(chunkSize), "%s", "Out of memory?");
 	while(true) {
 		strm.avail_out											= (uint32_t)block.size();
 		strm.next_out											= (Bytef *)block.begin();
@@ -60,7 +60,7 @@
 		}
 		ree_if(ret < 0, "Failed to decompress? inflate error: %i.", ret);
 		const uint32_t												inflatedSize									= (uint32_t)((byte_t*)strm.next_out - block.begin());
-		inflated.append(block.begin(), inflatedSize);
+		gpk_necall(inflated.append(block.begin(), inflatedSize), "%s", "Out of memory?");
 		if(ret == Z_STREAM_END)
 			break;
 	}
