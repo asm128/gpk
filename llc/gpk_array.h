@@ -586,12 +586,12 @@ namespace gpk
 			if(target[iChar] == separator) {
 				const ::gpk::view_array<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
-				split.push_back(newView);
+				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
 			}
 		}
 		if(lastOffset < target.size())
-			split.push_back({&target[lastOffset], target.size() - lastOffset});
+			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
 		return 0;
 	}
 
