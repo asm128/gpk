@@ -173,7 +173,7 @@ namespace gpk
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);					}
 		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
-							::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{ 
+							::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{
 			gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
 			gpk_necall(this->push_back(0), "%s", "Failed!");
 			gpk_necall(this->resize(this->size() - 1), "%s", "Failed!");
@@ -201,7 +201,7 @@ namespace gpk
 			for( int32_t i = oldCount; i < newCount; ++i )
 				Data[i]											= newValue;
 				//::gpk::podcpy(&Data[i], &newValue);
-			return newCount;	
+			return newCount;
 		}
 
 		// Returns the new size of the array.
@@ -265,7 +265,7 @@ namespace gpk
 				for(int32_t i = (int32_t)Count, iStop = index; i > iStop; --i)
 					memcpy(&Data[i], &Data[i - 1], sizeof(_tPOD));
 				Data[index]										= newValue;
-			}	
+			}
 			return ++Count;
 		}
 
@@ -405,7 +405,7 @@ namespace gpk
 		using											_TVectorBase::calc_reserve_size;
 		using											_TVectorBase::calc_malloc_size;
 		using											_TVectorBase::operator[];
-			
+
 		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_gpk_free(Data); }	// dtor
 		inline constexpr								array_obj									()																						= default;
 		inline											array_obj									(const uint32_t newSize)																{ gthrow_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }
@@ -531,7 +531,7 @@ namespace gpk
 					Data[i].~_tObj();
 				}
 				new (&Data[index]) _tObj(newValue);
-			}	
+			}
 			return ++Count;
 		}
 		// Returns the new size of the array or -1 if failed.
@@ -602,32 +602,32 @@ namespace gpk
 			if(target[iChar] == separator) {
 				const ::gpk::view_const_string					newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
-				split.push_back(newView);
+				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
 			}
 		}
 		if(lastOffset < target.size())
-			split.push_back({&target[lastOffset], target.size() - lastOffset});
+			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
 		return 0;
 	}
 
 
 	template<typename _tElement>
-	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{ 
-		output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}); 
+	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{
+		output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)});
 		output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)});
 		return sizeof(uint32_t) + headerToWrite.size();
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()}; 
+	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{ 
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()}; 
+	::gpk::error_t									viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
