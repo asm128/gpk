@@ -40,7 +40,7 @@ namespace gpk
 
 	template<typename _tCell, typename _tCoord>
 						::gpk::error_t							grid_copy_blend_ex				(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc)	{
-		::gpk::SCoord2<int32_t> count = {size_.x + ((offsetSrc.x < 0) ? offsetSrc.x : 0), size_.y + ((offsetSrc.y < 0) ? offsetSrc.y : 0)}; 
+		::gpk::SCoord2<int32_t> count = {size_.x + ((offsetSrc.x < 0) ? offsetSrc.x : 0), size_.y + ((offsetSrc.y < 0) ? offsetSrc.y : 0)};
 		for(int32_t y = 0; y < (int32_t)count.y; ++y)
 			for(int32_t x = 0; x < (int32_t)count.x; ++x) {
 				const ::gpk::SCoord2<int32_t>									coordSrcCell					= {x + offsetSrc.x, y + offsetSrc.y};

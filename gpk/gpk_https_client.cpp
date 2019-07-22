@@ -13,7 +13,7 @@
 //void					init_openssl_library		()				{
 //	(void)SSL_library_init();
 //	SSL_load_error_strings();
-//	// ERR_load_crypto_strings(); 
+//	// ERR_load_crypto_strings();
 //	OPENSSL_config(0);
 //	// Include <openssl/opensslconf.h> to get this define
 //#if defined (OPENSSL_THREADS)
@@ -30,11 +30,11 @@
 //	SSL_CTX						* ctx						= SSL_CTX_new(method);
 //	ree_if(0 == ctx, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //
-//	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, verify_callback);	// Cannot fail ??? 
-//	SSL_CTX_set_verify_depth(ctx, 4);	// Cannot fail ??? 
-//	
+//	SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, verify_callback);	// Cannot fail ???
+//	SSL_CTX_set_verify_depth(ctx, 4);	// Cannot fail ???
+//
 //	const long					flags						= SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_COMPRESSION;
-//	SSL_CTX_set_options(ctx, flags);	// Cannot fail ??? 
+//	SSL_CTX_set_options(ctx, flags);	// Cannot fail ???
 //
 //	int64_t						res							= SSL_CTX_load_verify_locations(ctx, "random-org-chain.pem", NULL);
 //	ree_if(1 != res, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
@@ -58,7 +58,7 @@
 //
 //	/* Step 1: verify a server certificate was presented during the negotiation */
 //	X509						* cert						= SSL_get_peer_certificate(ssl);
-//	if(cert) 
+//	if(cert)
 //		X509_free(cert); // Free immediately */
 //
 //	ree_if(0 == cert, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");

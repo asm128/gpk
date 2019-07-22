@@ -24,7 +24,7 @@ static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const 
 
 static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
 	ree_if(indexNodeJSON >= inputJSON.Tree.size(), "Invalid input json or index node: %i", indexNodeJSON)
-	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this 
+	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this
 	uint32_t											indexRootJSONNode						= indexNodeJSON;
 	int32_t												indexJSONResult							= -1;
 	::gpk::array_pod<char_t>							bufferFormat							= {};
@@ -139,7 +139,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SExpressionReader & 
 ::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
 	::gpk::SStripLiteralState							stateLiteralStripper					= {};
 	::gpk::array_pod<::gpk::SStripLiteralType>			typesLiteral							= {};
-	::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format);	// strip root literals 
+	::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format);	// strip root literals
 	::gpk::array_obj<::gpk::view_const_string>			views									= {};
 	::gpk::stripLiteralGetViews(views, typesLiteral, format);
 	gpk_jexpr_info_printf("-**- %s -**-", "Results of token search");

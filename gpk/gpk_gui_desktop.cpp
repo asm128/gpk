@@ -53,8 +53,8 @@
 	case ::gpk::GUI_CONTROL_TYPE_PaletteGrid	: desktop.Items.PaletteGrids	.Unused[viewport.IdDesktopElement] = true; info_printf("Deleting viewport's palette grid: %i. Control Id: %i."	, viewport.IdDesktopElement, desktop.Items.PaletteGrids	[viewport.IdDesktopElement].IdControl);break;
 	case ::gpk::GUI_CONTROL_TYPE_Viewport		: desktop.Items.Viewports		.Unused[viewport.IdDesktopElement] = true; info_printf("Deleting viewport's vp: %i. Control Id: %i."			, viewport.IdDesktopElement, desktop.Items.Viewports	[viewport.IdDesktopElement].IdControl);break;
 	case ::gpk::GUI_CONTROL_TYPE_ControlList	: ::gpk::desktopDeleteControlList(gui, desktop, viewport.IdDesktopElement); info_printf("Deleting viewport's vp: %i. Control Id: %i."			, viewport.IdDesktopElement, desktop.Items.Viewports	[viewport.IdDesktopElement].IdControl);break;
-	case ::gpk::GUI_CONTROL_TYPE_COUNT			: 
-		error_printf("%s", "Some team of lammer idiots who can't code decided that not casing every enum value would be an error."); 
+	case ::gpk::GUI_CONTROL_TYPE_COUNT			:
+		error_printf("%s", "Some team of lammer idiots who can't code decided that not casing every enum value would be an error.");
 		break;
 	}
 	info_printf("Deleting control for viewport: %i. Control Id: %i.", iElement, viewport.IdControl);

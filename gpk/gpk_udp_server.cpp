@@ -147,7 +147,7 @@ static	::gpk::error_t										serverAcceptClient					(::gpk::SUDPServer& server
 			gpk_necall(serverInstance.Clients.push_back(pClient), "Out of memory?");
 	}
 	info_printf("Current client count: %u", serverInstance.Clients.size());
-	return 0; 
+	return 0;
 }
 
 static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{

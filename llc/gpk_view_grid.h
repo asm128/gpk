@@ -44,9 +44,9 @@ namespace gpk
 		const int32_t													yCount						= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, 0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, 0));
 		const int32_t													yStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
 		const int32_t													xStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
-		if(xStart >= (int32_t)target.metrics().x || yStart >= (int32_t)target.metrics().y) 
+		if(xStart >= (int32_t)target.metrics().x || yStart >= (int32_t)target.metrics().y)
 			return 0;
-		if(xCount <= 0 || yCount <= 0) 
+		if(xCount <= 0 || yCount <= 0)
 			return 0;
 
 		::gpk::view_array<_tColor>										firstRow					= target[yStart];

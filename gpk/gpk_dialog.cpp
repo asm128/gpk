@@ -240,7 +240,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	}
 	return 0;
 }
-		::gpk::error_t												gpk::viewportCreate							(::gpk::SDialog			& dialog)								{ 
+		::gpk::error_t												gpk::viewportCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
 	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
@@ -288,23 +288,23 @@ static constexpr	const uint32_t									heightOfField								= 18;
 
 		::gpk::error_t												gpk::viewportAdjustSize					(::gpk::SCoord2<int16_t> & sizeViewport, const ::gpk::SCoord2<int16_t> & sizeClient)		{
 	sizeViewport														= sizeClient;
-	sizeViewport.x														+= 4; 
+	sizeViewport.x														+= 4;
 	sizeViewport.y														+= 4 + 1 + heightOfField;
 	return 0;
 }
 
-		::gpk::error_t												gpk::viewportFold						(::gpk::SDialogViewport	& control, bool fold)														{ 
+		::gpk::error_t												gpk::viewportFold						(::gpk::SDialogViewport	& control, bool fold)														{
 	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
 		::gpk::SDialog															& dialog									= *control.Dialog;
 		::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 		::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
 		::gpk::SControl															& controlTitle								= controlTable.Controls[control.IdTitle];
 		::gpk::SControlState													& stateClient								= controlTable.States[control.IdClient];
-		if(fold && control.Settings.Unfolded) 
+		if(fold && control.Settings.Unfolded)
 			controlMain.Area.Size.y												= controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y;
 		else if(false == control.Settings.Unfolded && false == fold) {
 			::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
-			controlMain.Area.Size.y												= controlClient.Area.Size.y + controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y + 1;								
+			controlMain.Area.Size.y												= controlClient.Area.Size.y + controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y + 1;
 		}
 		if(-1 != controlMain.IndexParent)
 			::gpk::controlMetricsInvalidate(*dialog.GUI, controlMain.IndexParent);
@@ -316,7 +316,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	return one_if(false == control.Settings.Unfolded);
 }
 
-static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& control, ::gpk::SControl & controlMain, ::gpk::SDialog & dialog, ::gpk::SCoord2<bool> locked, ::gpk::SCoord2<int32_t> mouseDeltas)																{ 
+static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& control, ::gpk::SControl & controlMain, ::gpk::SDialog & dialog, ::gpk::SCoord2<bool> locked, ::gpk::SCoord2<int32_t> mouseDeltas)																{
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging											= true;
@@ -328,7 +328,7 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 	return 0;
 }
 
-		::gpk::error_t												gpk::viewportUpdate							(::gpk::SDialogViewport	& control)																{ 
+		::gpk::error_t												gpk::viewportUpdate							(::gpk::SDialogViewport	& control)																{
 	::gpk::SDialog															& dialog									= *control.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
@@ -341,8 +341,8 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 				::viewportDrag(control, controlMain, dialog, locked, mouseDeltas);
 		}
 	}
-	else { 
-		if(controlTitle.Execute && false == control.Settings.Dragging) 
+	else {
+		if(controlTitle.Execute && false == control.Settings.Dragging)
 			::gpk::viewportFold(control, control.Settings.Unfolded);
 		control.Settings.Dragging											= false;
 	}
@@ -355,5 +355,5 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 			controlClient.Area.Size												= clientFinalSize;
 		}
 	control.SettingsOld													= control.Settings;
-	return 0; 
+	return 0;
 }

@@ -16,5 +16,5 @@ int									main							(int argc, char ** argv)				{
 	info_printf("%u parts joined.", countJoined);
 	for(int32_t iArg = 2; iArg < argc; ++iArg)
 		info_printf("Unknown parameter: %s.", argv[iArg]);
-	return 0; 
+	return 0;
 }

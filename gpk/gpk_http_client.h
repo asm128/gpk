@@ -3,7 +3,7 @@
 
 namespace gpk
 {
-	::gpk::error_t					httpClientRequest			
+	::gpk::error_t					httpClientRequest
 		(	const ::gpk::SIPv4				& remoteAddress
 		,	::gpk::HTTP_METHOD				method
 		,	const ::gpk::view_const_string	& hostName

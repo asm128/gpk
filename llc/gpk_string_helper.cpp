@@ -6,5 +6,5 @@
 	memset(format.begin(), 0, format.size());
 	sprintf_s(format.begin(), format.size(), "%s" "%%" ".%u" "s" "%s", pre, text.size(), post);
 	return sprintf_s(output, maxlen, format.begin(), text.begin());
-	
+
 }

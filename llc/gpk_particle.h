@@ -134,12 +134,12 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-							::gpk::error_t									addParticle							
+							::gpk::error_t									addParticle
 		(	const _tParticleType										& particleType
 		,	::gpk::array_pod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
 		,	const ::gpk::SParticle2<_tCoord>							& particleDefinition
-		)							
+		)
 	{
 		::gpk::SParticleBinding<_tParticleType>									newInstance									= {};
 		newInstance.Binding													= particleType;

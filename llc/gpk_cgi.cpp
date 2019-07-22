@@ -28,18 +28,18 @@
 }
 
 ::gpk::error_t										gpk::writeCGIEnvironToFile		(::gpk::view_array<const ::gpk::TKeyValConstString> environViews)	{
-	::gpk::array_pod<char_t>								environmentBlockToSave			= {}; 
+	::gpk::array_pod<char_t>								environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {
 		::gpk::array_pod<char_t>								temp;
 		::gpk::array_pod<char_t>								tempName						= {};
 		uint64_t												curTime							= time(0);
-		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)					
+		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)
 			if(environViews[iKey].Key == ::gpk::view_const_string{"REMOTE_ADDR"}) {
 				tempName											= environViews[iKey].Val;
 				tempName.append(".trace");
 			}
-		if(0 == tempName.size()) 
+		if(0 == tempName.size())
 			return 1;
 
 		::gpk::fileToMemory({tempName.begin(), tempName.size()}, temp);

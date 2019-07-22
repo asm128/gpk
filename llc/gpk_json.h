@@ -53,7 +53,7 @@ namespace gpk
 								bool														ExpectingSeparator		: 1;
 								bool														DoneReading				: 1;
 
-																							SJSONReaderState		() 
+																							SJSONReaderState		()
 		: Escaping			(false)
 		, InsideString		(false)
 		, ExpectingSeparator(false)
@@ -71,7 +71,7 @@ namespace gpk
 								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[]				(uint32_t index)	const { return Tree[index]; }
 	};
 
-	// Reader functions: Populate a SJSONReader structure from an input JSON string.	
+	// Reader functions: Populate a SJSONReader structure from an input JSON string.
 							::gpk::error_t												jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 							::gpk::error_t												jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
 

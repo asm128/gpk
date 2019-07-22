@@ -298,7 +298,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 			return -1;
 #endif
 		}
-		else 
+		else
 			rni_if(0 == bytes_received, "The peer has performed an orderly shutdown: '%s'", "https://linux.die.net/man/3/recvfrom");
 
 		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
@@ -312,7 +312,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				}
 			reterr_gerror_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
 		}
-		else { // Why the fuck is this commented??? 
+		else { // Why the fuck is this commented???
 			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
 			//const uint64_t																startTime						= nowInUs - 3000000;
 			//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {

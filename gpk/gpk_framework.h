@@ -34,7 +34,7 @@ namespace gpk
 
 							::std::mutex												LockGUI;
 
-		inline																			SFramework									(::gpk::SRuntimeValues& runtimeValues, ::gpk::view_const_string	fileNameJSONConfig = "gpk_config.json")			noexcept	
+		inline																			SFramework									(::gpk::SRuntimeValues& runtimeValues, ::gpk::view_const_string	fileNameJSONConfig = "gpk_config.json")			noexcept
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
 		{
 			Input.create();

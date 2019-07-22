@@ -43,7 +43,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		gwarn_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // attempt to load address from config file.
-		{ // 
+		{ //
 			::gpk::view_const_string								jsonIP							= {};
 			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_ip", jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
 			else {
@@ -54,7 +54,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		{ // load port from config file
 			bestClient.AddressConnect.Port						= 9998;
 			::gpk::view_const_string								jsonPort							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port"	, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin()) 
+			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port"	, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				uint64_t												port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, &port);
@@ -85,7 +85,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
 			gpk_necall(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock, true, true), "%s", "error");	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
-				gpk_necall(::gpk::clientUpdate(bestClient), "%s", "error");	
+				gpk_necall(::gpk::clientUpdate(bestClient), "%s", "error");
 				::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	received;
 				{	// pick up messages for later processing
 					::gpk::mutex_guard												lockRecv					(bestClient.Queue.MutexReceive);
@@ -141,7 +141,7 @@ int													main				(int argc, char** argv, char**envv)	{
 #ifdef GPK_WINDOWS
 #include <Windows.h>
 
-int WINAPI											WinMain				
+int WINAPI											WinMain
 	(	_In_		HINSTANCE	hInstance
 	,	_In_opt_	HINSTANCE	hPrevInstance
 	,	_In_		LPSTR		lpCmdLine

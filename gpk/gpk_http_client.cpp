@@ -22,7 +22,7 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 		::gpk::view_const_string					strSize;
 		if(iStop <= body.size())
 			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
-		else 
+		else
 			break;
 		uint64_t									sizeChunk						= 0;
 		::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
@@ -70,7 +70,7 @@ static	::gpk::error_t					httpClientRequestConstruct
 
 // get sockaddr, IPv4 or IPv6:
 void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
-::gpk::error_t							gpk::httpClientRequest			
+::gpk::error_t							gpk::httpClientRequest
 	(	const ::gpk::SIPv4					& clientToConnect
 	,	::gpk::HTTP_METHOD					method
 	,	const ::gpk::view_const_string		& hostName
@@ -113,7 +113,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
     printf("client: connecting to %s\n", strAddress);
     freeaddrinfo(servinfo); // all done with this structure
 
-    int											numbytes						= 0;  
+    int											numbytes						= 0;
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
 	::gpk::array_pod<char>						buf								= {};
@@ -131,7 +131,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	uint32_t									stopOfHeader					= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()});
 	::gpk::view_const_byte						httpheaderReceived				= buf;
 	::gpk::view_const_byte						contentReceived					= {};
-	if(stopOfHeader >= buf.size() - 4) 
+	if(stopOfHeader >= buf.size() - 4)
 		stopOfHeader							= buf.size();
 	info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
 
@@ -146,7 +146,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		::gpk::array_pod<char_t>					strLine							= headerLines[iLine];
 		strLine.push_back(0);
 		info_printf("\n%s", strLine.begin());
-		if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, ::gpk::view_const_char{strLine})) 
+		if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, ::gpk::view_const_char{strLine}))
 			bChunked								= true;
 	}
 
@@ -160,7 +160,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		contentReceived							= joined;
 	}
 
-	if(contentReceived.size()) 
+	if(contentReceived.size())
 		out_received							= contentReceived;
 	return 0;
 }
@@ -172,7 +172,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 // Accept-Encoding: gzip, deflate
 // Connection: Keep-Alive
 // Here we are not sending any request data to the server because we are fetching a plain HTML page from the server. Connection is a general-header, and the rest of the headers are request headers. The following example shows how to send form data to the server using request message body:
-// 
+//
 // POST /cgi-bin/process.cgi HTTP/1.1
 // User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
 // Host: www.tutorialspoint.com
@@ -181,10 +181,10 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 // Accept-Language: en-us
 // Accept-Encoding: gzip, deflate
 // Connection: Keep-Alive
-// 
+//
 // licenseID=string&content=string&/paramsXML=string
 // Here the given URL /cgi-bin/process.cgi will be used to process the passed data and accordingly, a response will be returned. Here content-type tells the server that the passed data is a simple web form data and length will be the actual length of the data put in the message body. The following example shows how you can pass plain XML to your web server:
-// 
+//
 // POST /cgi-bin/process.cgi HTTP/1.1
 // User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
 // Host: www.tutorialspoint.com
@@ -193,7 +193,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 // Accept-Language: en-us
 // Accept-Encoding: gzip, deflate
 // Connection: Keep-Alive
-// 
+//
 // <?xml version="1.0" encoding="utf-8"?>
 // <string xmlns="http://clearforest.com/">string</string>
 

@@ -10,7 +10,7 @@
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
 			if( symbolList[iSymbol] == sourceChars[iChar] ) {
 				bSymbolProcessed												= true;
-				gpk_necall(stringToParse.push_back(sourceChars[iChar++]), "%s", "Failed to append character! Out of memory?"); 
+				gpk_necall(stringToParse.push_back(sourceChars[iChar++]), "%s", "Failed to append character! Out of memory?");
 				++totalCharsProcessed;
 				break;
 			}
@@ -23,11 +23,11 @@
 	totalCharsProcessed												= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
 		bool																bSymbolProcessed							= false;
-		for( uint32_t iSymbol = 0; iSymbol < base; ++iSymbol ) 
+		for( uint32_t iSymbol = 0; iSymbol < base; ++iSymbol )
 			if( symbolList[iSymbol] == stringToParse[iChar] ) {
-				number															+= iSymbol * ::gpk::powui(base, totalCharsProcessed); 
+				number															+= iSymbol * ::gpk::powui(base, totalCharsProcessed);
 				bSymbolProcessed												= true;
-				//gpk_necall(stepResult.push_back(stringToParse[]), "Failed to append character! Out of memory?"); 
+				//gpk_necall(stepResult.push_back(stringToParse[]), "Failed to append character! Out of memory?");
 				++iChar;
 				++totalCharsProcessed;
 				break;
@@ -40,14 +40,14 @@
 	return totalCharsProcessed;
 }
 
-::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{ 
+::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
 	in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
-	case '{'	: 
+	case '{'	:
 		++work_state.BracketsToSkip;
 		break;
-	case '}'	: 
+	case '}'	:
 		if(work_state.Escaping)
 			break;	// do nothing if this bracket is escaped
 		if(0 < work_state.BracketsToSkip) {
@@ -58,7 +58,7 @@
 		work_state.InsideToken						= false;
 		gpk_necall(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}), "Failed to push_back(). %s", "Out of memory?");
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
-	case '\\'	: 
+	case '\\'	:
 		if(false == work_state.Escaping) {
 			work_state.Escaping							= true;
 			return 0;
@@ -71,14 +71,14 @@
 		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
 		work_state.InsideToken						= false;
 	}
-	return 0; 
+	return 0;
 }
 
-::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{ 
+::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
 	in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
-	case '{'	: 
+	case '{'	:
 		if(work_state.Escaping)
 			break;	// do nothing if this bracket is escaped
 		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
@@ -87,7 +87,7 @@
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
 		// do work
 		break;
-	case '\\'	: 
+	case '\\'	:
 		if(false == work_state.Escaping) {
 			work_state.Escaping							= true;
 			return 0;
@@ -99,7 +99,7 @@
 		++work_state.IndexCurrentChar;
 		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
 	}
-	return 0; 
+	return 0;
 }
 
 ::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{

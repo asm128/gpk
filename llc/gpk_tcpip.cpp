@@ -189,7 +189,7 @@
 	return iAddress;
 }
 
-::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) { 
+::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
 	if(strRemotePort.size()) {
 #if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
@@ -204,13 +204,13 @@
 	}
 
 	if(strRemoteIP.size()) {
-		uint32_t											iOffset						= 0; 
-		uint32_t											iEnd						= 0; 
+		uint32_t											iOffset						= 0;
+		uint32_t											iEnd						= 0;
 		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				char curChar = strRemoteIP[iEnd];
-				if( curChar == '.' 
-				 ||	curChar == ':' 
+				if( curChar == '.'
+				 ||	curChar == ':'
 				 ||	curChar == '\0'
 				 || (iEnd - iOffset) > 3	// 3 digit max
 				)

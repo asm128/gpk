@@ -335,7 +335,7 @@ namespace gpk
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		if(line.A.x == line.B.x)
 			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
-		else if(line.A.y == line.B.y) 
+		else if(line.A.y == line.B.y)
 			return ::gpk::drawLineHorizontal(target, value, line.A.y, line.A.x, line.B.x);
 
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));

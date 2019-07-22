@@ -20,7 +20,7 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SProcess {
-		PROCESS_INFORMATION			ProcessInfo				= {}; 
+		PROCESS_INFORMATION			ProcessInfo				= {};
 		STARTUPINFOA				StartInfo				= {sizeof(STARTUPINFOA)};
 	};
 
@@ -36,7 +36,7 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::view_const_string															ProcessFileName						= "";
 		::gpk::view_const_string															ProcessMockPath						= "";
 		::gpk::view_const_string															ProcessParams						= "";
-		SECURITY_ATTRIBUTES																	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)}; 
+		SECURITY_ATTRIBUTES																	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
 		::gpk::array_pod<char_t>															szCmdlineApp						= "";
 		::gpk::array_pod<char_t>															szCmdlineFinal						= "";

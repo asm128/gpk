@@ -4,7 +4,7 @@
 #ifndef GPK_PARSE_H_298374298347
 #define GPK_PARSE_H_298374298347
 
-namespace gpk 
+namespace gpk
 {
 										::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::view_const_string& symbolList, const ::gpk::view_const_string& sourceChars, uint64_t* number_);
 	template<typename _tInt>	inline	::gpk::error_t			parseIntegerDecimal				(const ::gpk::view_const_string& sourceChars, _tInt* number_)	{ uint64_t number; gpk_necall(::gpk::parseArbitraryBaseInteger(10, "0123456789", sourceChars, &number), "%s", "Unknown error."); *number_ = (_tInt)number; return 0; };

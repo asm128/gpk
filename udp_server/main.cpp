@@ -2,7 +2,7 @@
 #include "gpk_stdsocket.h"
 #include "gpk_sync.h"
 
-int main() { 
+int main() {
 	::gpk::tcpipInitialize();
 	sockaddr_in				sa_server				= {};
 	::gpk::SIPv4			addrLocal				= {{}, 9898};
@@ -21,7 +21,7 @@ int main() {
 		sockaddr_in				sa_server_client		= {AF_INET};
 		::gpk::tcpipAddressToSockaddr(addrLocalClient, sa_server_client);
 		gpk_necall(::bind(clientHandle, (sockaddr *)&sa_server_client, sizeof(sockaddr_in)), "Failed to bind listener to address");
-		
+
 		sockaddr_in				sa_client				= {AF_INET};
 		int						client_length			= sizeof(sa_client);
 		char					connectReceived			= 0;
@@ -29,7 +29,7 @@ int main() {
 		::gpk::SIPv4			addrRemote;
 		::gpk::tcpipAddressFromSockaddr(sa_client, addrRemote);
 		info_printf("Received connect request: %c from %u.%u.%u.%u:%u.", connectReceived, GPK_IPV4_EXPAND(addrRemote));
-		
+
 		char					commandToSend			= '2';
 		//::gpk::tcpipAddressFromSockaddr(sa_server, addrLocal);
 		::gpk::tcpipAddress(clientHandle, addrLocal);
@@ -45,5 +45,5 @@ int main() {
 			gpk_safe_closesocket(clientHandle);
 	}
 	::gpk::tcpipShutdown();
-	return 0; 
+	return 0;
 }

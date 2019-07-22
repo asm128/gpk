@@ -1,7 +1,7 @@
 #include "gpk_chrono.h"
 #include <chrono>
 
-//    auto t0 = std::chrono::high_resolution_clock::now();        
+//    auto t0 = std::chrono::high_resolution_clock::now();
 //    auto nanosec = t0.time_since_epoch();
 //
 //    std::cout << nanosec.count() << " nanoseconds since epoch" "\n";

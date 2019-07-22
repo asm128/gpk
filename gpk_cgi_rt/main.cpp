@@ -47,7 +47,7 @@
 	return 0;
 }
 
-static constexpr	const char						html_script	[]			= 
+static constexpr	const char						html_script	[]			=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"
@@ -56,7 +56,7 @@ static constexpr	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{ 
+::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 	try { // retrieve width and height
@@ -68,14 +68,14 @@ static constexpr	const char						html_script	[]			=
 		return -1;
 	}
 	try {
-		if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) if(1 == (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()})) 
+		if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) if(1 == (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()}))
 			framework.Bootstrapped								= true;
 	}
 	catch(...){
 		framework.Bootstrapped								= false;
 		return -1;
 	}
-	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1)) 
+	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1))
 		framework.ModuleName								= keyVal.Val;
 	return 0;
 }
@@ -87,12 +87,12 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 	}
 	else {
 		char													buffer[4096]		= {};
-		output.append(buffer, ::sprintf_s(buffer, "%s", 
+		output.append(buffer, ::sprintf_s(buffer, "%s",
 			"<html>"
 			"\n<head>"
 		));
 		output.append(buffer, ::sprintf_s(buffer, html_script, framework.ModuleName.size() ? framework.ModuleName.begin() : "test_cgi_module"));
-		output.append(buffer, ::sprintf_s(buffer, "%s", 
+		output.append(buffer, ::sprintf_s(buffer, "%s",
 			"\n<link rel=\"stylesheet\" href=\"./page.css\">"
 			"\n</head>"
 		));
@@ -127,9 +127,9 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>String Port: %s</h4>"			, remotePORT.begin()));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Bootstrapped: %s</h4>"			, framework.Bootstrapped ? "true" : "false"));
 
-		//int														argc					= __argc; 
+		//int														argc					= __argc;
 		//char													** argv					= __argv;
-		//for(int32_t iArg = 0; iArg < argc; ++iArg) 
+		//for(int32_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
 			::gpk::array_pod<char>									content_body			= {};
@@ -172,7 +172,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
 	const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= framework.RuntimeValues.QueryStringElements;
-	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal) 
+	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 
 	printf("%s\n\n"

@@ -63,7 +63,7 @@
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{argv, argc};														\
 		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																			\
-	}																																																
+	}
 #else
 #	define GPK_SYSTEM_OS_ENTRY_POINT()																																															\
 			int																main							(int argc, char *argv[], char *envp[])												{	\

@@ -4,36 +4,36 @@
 
 #include <string>
 
-static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{ 
+static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
-	static	const ::gpk::view_const_string					content_types []			= 
-		{ "application/javascript"                                                   
-		, "application/json"                                                         
-		, "application/x-www-form-urlencoded"                                        
-		, "application/xml"                                                          
-		, "application/zip"                                                          
-		, "application/pdf"                                                          
-		, "application/sql"                                                          
-		, "application/graphql"                                                      
-		, "application/ld+json"                                                      
-		, "application/msword"                                                       
-		, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"  
-		, "application/vnd.ms-excel"                                                 
-		, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"        
-		, "application/vnd.ms-powerpoint"                                            
+	static	const ::gpk::view_const_string					content_types []			=
+		{ "application/javascript"
+		, "application/json"
+		, "application/x-www-form-urlencoded"
+		, "application/xml"
+		, "application/zip"
+		, "application/pdf"
+		, "application/sql"
+		, "application/graphql"
+		, "application/ld+json"
+		, "application/msword"
+		, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+		, "application/vnd.ms-excel"
+		, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+		, "application/vnd.ms-powerpoint"
 		, "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-		, "application/vnd.oasis.opendocument.text"                                  
-		, "audio/mpeg"                                                               
-		, "audio/ogg"                                                                
-		, "multipart/form-data"                                                      
-		, "text/css"                                                                 
-		, "text/html"                                                                
-		, "text/xml"                                                                 
-		, "text/csv"                                                                 
-		, "text/plain"                                                               
-		, "image/png"                                                                
-		, "image/jpeg"                                                               
-		, "image/gif"                
+		, "application/vnd.oasis.opendocument.text"
+		, "audio/mpeg"
+		, "audio/ogg"
+		, "multipart/form-data"
+		, "text/css"
+		, "text/html"
+		, "text/xml"
+		, "text/csv"
+		, "text/plain"
+		, "image/png"
+		, "image/jpeg"
+		, "image/gif"
 		};
 
 	::gpk::CGI_MEDIA_TYPE									val;
@@ -67,7 +67,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{ 
+::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{
 	if(strRemotePort.size()) {
 #if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		remoteIP.Port										= (uint16_t)::std::stoi(strRemotePort.begin());
@@ -82,13 +82,13 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	}
 
 	if(strRemoteIP.size()) {
-		uint32_t												iOffset						= 0; 
-		uint32_t												iEnd						= 0; 
+		uint32_t												iOffset						= 0;
+		uint32_t												iEnd						= 0;
 		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				char curChar = strRemoteIP[iEnd];
-				if( curChar == '.' 
-				 ||	curChar == ':' 
+				if( curChar == '.'
+				 ||	curChar == ':'
 				 ||	curChar == '\0'
 				 || (iEnd - iOffset) > 3	// 3 digit max
 				)
@@ -112,22 +112,22 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										cgiLoadFormData				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view_array<const char> & strContent)	{ 
+::gpk::error_t										cgiLoadFormData				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view_array<const char> & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-::gpk::error_t										cgiLoadContent				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view_array<const char> & strContent)	{ 
+::gpk::error_t										cgiLoadContent				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view_array<const char> & strContent)	{
 	switch(contentType) {
 	default: break;
-	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA: 
-		::cgiLoadFormData(runtimeValues, strContent); 
+	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
+		::cgiLoadFormData(runtimeValues, strContent);
 		break;
 	}
 	return 0;
 }
 
-::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{ 
+::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
 	::gpk::array_obj<::gpk::TKeyValConstString>				environBlockViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);

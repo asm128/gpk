@@ -7,7 +7,7 @@
 #include "gpk_io.h"
 
 		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::array_pod<byte_t>& deflated, const uint32_t chunkSize)	{
-    int															ret;																												  
+    int															ret;
 	z_stream													strm											= {};
     ret																											= deflateInit(&strm, Z_BEST_COMPRESSION);
     if (ret != Z_OK)
@@ -19,8 +19,8 @@
 	while(true) {
 		strm.avail_out											= block.size();
 		strm.next_out											= (Bytef*)block.begin();
-		ret														= deflate(&strm, Z_FINISH);    // no bad return value 
-		be_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered 
+		ret														= deflate(&strm, Z_FINISH);    // no bad return value
+		be_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered
 		const uint32_t												deflatedSize									= (uint32_t)((byte_t*)strm.next_out - block.begin());
 		gpk_necall(deflated.append(block.begin(), deflatedSize), "%s", "Out of memory?");
 		if(ret == Z_STREAM_END)
@@ -116,7 +116,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 		gpk_necall(::gpk::arrayDeflate(contentsPacked	, compressedContentsPacked	, FOLDERPACK_DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
 		fileHeader.SizeCompressedTableFiles		= compressedTableFiles		.size();
 		fileHeader.SizeCompressedContentsPacked	= compressedContentsPacked	.size();
-	}	
+	}
 	return 0;
 }
 
@@ -188,7 +188,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
-		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::view_const_string{finalPathName.begin(), uint32_t(-1)});	
+		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::view_const_string{finalPathName.begin(), uint32_t(-1)});
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]				= 0;
 			lenPath									= (uint32_t)strlen(finalPathName.begin());

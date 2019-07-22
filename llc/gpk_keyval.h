@@ -5,13 +5,13 @@
 
 namespace gpk
 {
-	template<typename _tKey, typename _tVal> 
+	template<typename _tKey, typename _tVal>
 	struct SKeyVal {
 				_tKey									Key;
 				_tVal									Val;
 	};
 
-	typedef		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>		
+	typedef		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>
 										TKeyValConstString;
 
 				::gpk::error_t							token_split						(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views);

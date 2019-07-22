@@ -27,7 +27,7 @@ namespace gpk
 					::gpk::error_t									fileSplit				(const ::gpk::view_const_string	& fileNameSrc, const uint32_t partSize);	// Splits a file into file.split.## parts.
 					int64_t											fileSize				(const ::gpk::view_const_string	& fileNameSrc);
 					::gpk::error_t									pathCreate				(const ::gpk::view_const_string& folderName, const char separator = '/');	// Recursive
-					
+
 	// this function was ceated in order to work around the problem of the JSON system returning pointers to the original string, without having the opportunity of processing escaped path slashes.
 					::gpk::error_t									pathNameCompose			(::gpk::view_const_string path, ::gpk::view_const_string fileName, ::gpk::array_pod<char_t> & out_composed);
 					::gpk::error_t									findLastSlash			(const ::gpk::view_const_string & path);
