@@ -511,12 +511,12 @@ namespace gpk
 				_tObj												* newData								= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
 				::gpk::view_array<_tObj>							viewSafe								= {newData, Count+1};
-				for(uint32_t i = 0, maxCount = ::gpk::min(index + 1, Count); i < maxCount; ++i) {
+				for(uint32_t i = 0, maxCount = ::gpk::min(index, Count); i < maxCount; ++i) {
 					new (&viewSafe[i]) _tObj(oldData[i]);
 					oldData[i].~_tObj();
 				}
 				new (&viewSafe[index]) _tObj(newValue);
-				for(uint32_t i = index, maxCount = ::gpk::min(index + 1, Count); i < maxCount; ++i) {
+				for(uint32_t i = index, maxCount = Count; i < maxCount; ++i) {
 					new (&viewSafe[i + 1]) _tObj(oldData[i]);
 					oldData[i].~_tObj();
 				}
