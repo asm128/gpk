@@ -35,32 +35,32 @@
 	case ::gpk::JSON_TYPE_NULL			:
 	case ::gpk::JSON_TYPE_NUMBER		:
 	case ::gpk::JSON_TYPE_BOOL			:
-		output.append(jsonViews[node->ObjectIndex]);
+		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
 		break;
 	case ::gpk::JSON_TYPE_STRING		:
-		output.push_back('"');
-		output.append(jsonViews[node->ObjectIndex]);
-		output.push_back('"');
+		gpk_necall(output.push_back('"'), "%s", "Out of memory?");
+		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
+		gpk_necall(output.push_back('"'), "%s", "Out of memory?");
 		break;
 	case ::gpk::JSON_TYPE_OBJECT		:
-		output.push_back('{');
+		gpk_necall(output.push_back('{'), "%s", "Out of memory?");
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); iChildren += 2) {
-			::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output);
-			output.push_back(':');
-			::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output);
+			gpk_necall(::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output), "%s", "Unknown error!");;
+			gpk_necall(output.push_back(':'), "%s", "Out of memory?");
+			gpk_necall(::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output), "%s", "Unknown error!");;
 			if(iChildren < node->Children.size() - 2)
-				output.push_back(',');
+				gpk_necall(output.push_back(','), "%s", "Out of memory?");
 		}
-		output.push_back('}');
+		gpk_necall(output.push_back('}'), "%s", "Out of memory?");
 		break;
 	case ::gpk::JSON_TYPE_ARRAY			:
-		output.push_back('[');
+		gpk_necall(output.push_back('['), "%s", "Out of memory?");
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren) {
-			::gpk::jsonWrite(node->Children[iChildren], jsonViews, output);
+			gpk_necall(::gpk::jsonWrite(node->Children[iChildren], jsonViews, output), "%s", "Unknown error!");;
 			if(iChildren < node->Children.size() - 1)
-				output.push_back(',');
+				gpk_necall(output.push_back(','), "%s", "Out of memory?");
 		}
-		output.push_back(']');
+		gpk_necall(output.push_back(']'), "%s", "Out of memory?");
 	}
 	return 0;
 }
@@ -94,7 +94,7 @@
 		)
 			continue;
 		::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				newChildren;
-		newChildren.resize(nodeCurrent->Children.size());
+		gpk_necall(newChildren.resize(nodeCurrent->Children.size()), "%s", "Out of memory?");
 		for(uint32_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild)
 			newChildren[iChild]											= nodeCurrent->Children[iChild]->Children[0];
 		nodeCurrent->Children										= newChildren;

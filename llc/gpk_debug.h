@@ -22,7 +22,7 @@
 #		include <crtdbg.h>
 #		if defined GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
 #			define GPK_PLATFORM_CRT_BREAKPOINT		(void)_CrtDbgBreak
-#		else 
+#		else
 #			define GPK_PLATFORM_CRT_BREAKPOINT()
 #		endif
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory

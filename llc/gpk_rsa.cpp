@@ -241,7 +241,7 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 	uint64_t										checkhash							= 0;
 	gpk_necall(decrypted.resize(decrypted.size() - sizeof(uint64_t)), "%s", "Out of memory?");
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
-		const uint64_t									hashedChar = ::gpk::noise1DBase((i - decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
+		const uint64_t									hashedChar							= ::gpk::noise1DBase((i - (uint64_t)decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		checkhash									+= hashedChar;
 		//info_printf("Check Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
@@ -255,11 +255,11 @@ static	::gpk::error_t						gpcFilter1Remove					(::gpk::view_array<ubyte_t>& sca
 	// -- Calculate the hash
 	uint64_t										& hash								= *(uint64_t*)&prehashed[decrypted.size()];
 	hash										= 0;
-	for(uint32_t i = 0; i < decrypted.size(); ++i) 
+	for(uint32_t i = 0; i < decrypted.size(); ++i)
 		prehashed[i]								= decrypted[i];
 
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {
-		const uint64_t									hashedChar							= ::gpk::noise1DBase(i * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
+		const uint64_t									hashedChar							= ::gpk::noise1DBase(i * (uint64_t)decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		hash										+= hashedChar;
 		//info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}

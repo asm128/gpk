@@ -18,7 +18,7 @@ namespace gpk
 			if(errored(results[i])) {
 				error_printf("Failed to set container size: %i. Out of memory?", (int32_t)newSize);
 				int32_t												j						= 0;
-				const int32_t dummy	[] = {args.resize(oldSizes[j++])..., 0};
+				const int32_t										dummy	[]				= {args.resize(oldSizes[j++])..., 0};
 				(void)dummy;
 				return -1;
 			}
