@@ -48,7 +48,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_ARRAY, "Only arrays can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
 			uint64_t											numberRead								= 0;
 			const ::gpk::view_const_string						& viewOfIndex							= readerExpression.View[childToSolve.ObjectIndex];
-			uint32_t											countDigits								= (uint32_t)::gpk::parseArbitraryBaseInteger(10, "0123456789", viewOfIndex, &numberRead);
+			uint32_t											countDigits								= (uint32_t)::gpk::parseIntegerDecimal(viewOfIndex, &numberRead);
 			gwarn_if(countDigits != viewOfIndex.size(), "countDigits: %u, viewOfIndex: %u.", countDigits, viewOfIndex.size())
 			indexJSONResult									= ::gpk::jsonArrayValueGet(currentJSON, (uint32_t)numberRead);
 			ree_if(errored(indexJSONResult), "Value not found for index: %lli.", numberRead);
