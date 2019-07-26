@@ -94,13 +94,8 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 	return indexJSONResult;
 }
 
-::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
+::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
 	::gpk::array_pod<char_t>							bufferFormat							= {};
-	::gpk::view_const_string							resultOfExpressionEval					= {};
-	::gpk::SExpressionReader							reader;
-	gpk_necall(bufferFormat.resize(expression.size() + 1024), "%s", "Out of memory?");
-	sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to read JSONeN expression: '%%.%us'.", expression.size());
-	gpk_necall(::gpk::expressionReaderParse(reader, expression), bufferFormat.begin(), expression.begin());
 	const ::gpk::array_obj<::gpk::view_const_string>	& expressionViews						= reader.View;
 	for(uint32_t iView = 0; iView < expressionViews.size(); ++iView) {
 		const ::gpk::view_const_string						& viewExpression						= expressionViews[iView];
@@ -120,9 +115,9 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 #endif
 		jsonNodeResultOfEvaluation						= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
 		if errored(jsonNodeResultOfEvaluation) {
-			gpk_necall(bufferFormat.resize(expression.size() + 1024), "%s", "Out of memory?");
-			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to evaluate expression: %%.%us.", expression.size());
-			warning_printf(bufferFormat.begin(), expression.begin());
+			gpk_necall(bufferFormat.resize(reader.View[0].size() + 1024), "%s", "Out of memory?");
+			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to evaluate expression: %%.%us.", reader.View[0].size());
+			warning_printf(bufferFormat.begin(), reader.View[0].begin());
 			return -1;
 		}
 		evaluated										= output;
@@ -134,6 +129,16 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 		gpk_jexpr_info_printf(bufferFormat.begin(), evaluated.begin());
 	}
 	return jsonNodeResultOfEvaluation;
+}
+
+::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)								{
+	::gpk::array_pod<char_t>							bufferFormat							= {};
+	::gpk::view_const_string							resultOfExpressionEval					= {};
+	::gpk::SExpressionReader							reader;
+	gpk_necall(bufferFormat.resize(expression.size() + 1024), "%s", "Out of memory?");
+	sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to read JSONeN expression: '%%.%us'.", expression.size());
+	gpk_necall(::gpk::expressionReaderParse(reader, expression), bufferFormat.begin(), expression.begin());
+	return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, output);
 }
 
 ::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
