@@ -82,7 +82,12 @@ namespace gpk
 #if !defined(GPK_WINDOWS)
 #	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, ## __VA_ARGS__)
 #else
-#	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:", format, __VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)			{																													\
+		static constexpr	const char										prefixFormat	[]							= ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:";	\
+		static char															prefixString	[sizeof(prefixFormat) + 8]	= {};															\
+		static const int 													prefixLength								= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__);	\
+		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																	\
+	}
 #endif
 
 #ifndef always_printf
@@ -350,36 +355,36 @@ namespace gpk
 #	define be_if													break_gerror_if
 #	define bw_if													break_gwarn_if
 #	define bi_if													break_ginfo_if
-#endif 
+#endif
 
 #ifndef ce_if
 #	define ce_if													continue_gerror_if
 #	define cw_if													continue_gwarn_if
 #	define ci_if													continue_ginfo_if
-#endif 
+#endif
 
 #ifndef rve_if
 #	define rve_if													retval_gerror_if
 #	define rvw_if													retval_gwarn_if
 #	define rvi_if													retval_ginfo_if
-#endif 
+#endif
 
 #ifndef rne_if
 #	define rne_if													retnul_gerror_if
 #	define rnw_if													retnul_gwarn_if
 #	define rni_if													retnul_ginfo_if
-#endif 
+#endif
 
 #ifndef ree_if
 #	define ree_if													reterr_gerror_if
 #	define rew_if													reterr_gwarn_if
 #	define rei_if													reterr_ginfo_if
-#endif 
+#endif
 
 #ifndef rwe_if
 #	define rwe_if													retwarn_gerror_if
 #	define rww_if													retwarn_gwarn_if
 #	define rwi_if													retwarn_ginfo_if
-#endif 
+#endif
 
 #endif // GPK_LOG_H_8927349654687654365
