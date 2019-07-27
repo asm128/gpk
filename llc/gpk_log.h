@@ -83,10 +83,10 @@ namespace gpk
 #	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, ## __VA_ARGS__)
 #else
 #	define debug_printf(severity, severityStr, format, ...)			do {																													\
-		static constexpr	const char										prefixFormat	[]							= ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:";	\
-		static char															prefixString	[sizeof(prefixFormat) + 8]	= {};															\
-		static const int 													prefixLength								= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__);	\
-		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																	\
+		static constexpr	const char										prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:";	\
+		static char															prefixString	[sizeof(prefixFormat) + 8]		= {};															\
+		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__);	\
+		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																		\
 	} while(0)
 #endif
 
