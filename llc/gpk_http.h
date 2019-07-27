@@ -27,10 +27,12 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SHTTPAPIRequest {
-		::gpk::view_const_char										Path			;
-		::gpk::view_const_char										QueryString		;
-		::gpk::view_const_char										ContentBody		;
-		::gpk::HTTP_METHOD											Method			;
+		::gpk::array_obj<::gpk::view_const_string>					QueryStringElements			= {};
+		::gpk::array_obj<::gpk::TKeyValConstString>					QueryStringKeyVals			= {};
+		::gpk::view_const_char										Path						= {};
+		::gpk::view_const_char										QueryString					= {};
+		::gpk::view_const_char										ContentBody					= {};
+		::gpk::HTTP_METHOD											Method						= {};
 	};
 #pragma pack(pop)
 } // namespace

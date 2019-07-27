@@ -18,6 +18,8 @@
 		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
 		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
 		requestReceived.ContentBody						= runtimeValues.Content.Body;
+		requestReceived.QueryStringElements				= runtimeValues.QueryStringElements;
+		requestReceived.QueryStringKeyVals				= runtimeValues.QueryStringKeyVals;
 	}
 	if(false == isCGIEnviron && runtimeValues.EntryPointArgs.ArgsCommandLine.size() > 1) {	// Get query from command line instead of CGI environ
 		requestReceived.Path							= ::gpk::view_const_string{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
@@ -29,9 +31,19 @@
 			if(0 <= queryStringStart) {
 				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
 				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
+
+				::gpk::view_const_string								querystring;
+				::gpk::querystring_split({requestReceived.QueryString.begin(), requestReceived.QueryString.size()}, requestReceived.QueryStringElements);
+				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
+				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
+					::gpk::TKeyValConstString								& keyValDst				= requestReceived.QueryStringKeyVals[iKeyVal];
+					::gpk::keyval_split(requestReceived.QueryStringElements[iKeyVal], keyValDst);
+				}
 			}
 		}
 	}
+	if(requestReceived.Path.size() && requestReceived.Path[0] == '/')
+		requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() -1};
 	return isCGIEnviron ? 1 : 0;
 }
 
