@@ -2,6 +2,7 @@
 #include "gpk_tcpip.h"
 #include "gpk_member_registry.h"
 #include "gpk_runtime.h"
+#include "gpk_http.h"
 
 #ifndef GPK_CGI_RUNTIME_H_2938479283
 #define GPK_CGI_RUNTIME_H_2938479283
@@ -99,16 +100,16 @@ namespace gpk
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
 	};
 
+	::gpk::error_t																			httpRequestInit					(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
+	::gpk::error_t																			cgiRuntimeValuesLoad			(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv);
+	::gpk::error_t																			cgiMain							(int argc, char** argv, char**envv);
+
 	struct SCGIFramework {
 		::gpk::view_const_string																ModuleName					= "";
 		::gpk::SCGIRuntimeValues																RuntimeValues				= {};
 		::gpk::SCoord2<int32_t>																	TargetSize					= {};
 		bool																					Bootstrapped				= false;
 	};
-
-	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv);
-	::gpk::error_t																			cgiMain						(int argc, char** argv, char**envv);
-
 } // namespace
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)																																																																		\

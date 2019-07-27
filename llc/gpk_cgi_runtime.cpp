@@ -1,8 +1,39 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "gpk_cgi_runtime.h"
 #include "gpk_process.h"
+#include "gpk_find.h"
 
 #include <string>
+
+::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
+	::gpk::array_obj<::gpk::TKeyValConstString>			environViews;
+	gpk_necall(::gpk::environmentBlockViews(runtimeValues.EntryPointArgs.EnvironmentBlock, environViews), "%s", "If this breaks, we better know ASAP.");
+	::gpk::view_const_string							remoteAddr;
+	const bool											isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
+	if(bLogCGIEnviron && isCGIEnviron)
+		::gpk::writeCGIEnvironToFile(environViews);
+
+	{	// Try to load query from querystring and request body
+		requestReceived.Method							= 0 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
+		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
+		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
+		requestReceived.ContentBody						= runtimeValues.Content.Body;
+	}
+	if(false == isCGIEnviron && runtimeValues.EntryPointArgs.ArgsCommandLine.size() > 1) {	// Get query from command line instead of CGI environ
+		requestReceived.Path							= ::gpk::view_const_string{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
+		if(requestReceived.Path.size() > 2) {
+			if('"' == requestReceived.Path[0])
+				requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() - 2};
+
+			const int32_t										queryStringStart					= ::gpk::find('?', requestReceived.Path);
+			if(0 <= queryStringStart) {
+				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
+				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
+			}
+		}
+	}
+	return isCGIEnviron ? 1 : 0;
+}
 
 static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");

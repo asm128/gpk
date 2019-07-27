@@ -24,6 +24,15 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, PROPFIND	,15);	//
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, VIEW		,16);	//
 	GDEFINE_ENUM_VALUE(HTTP_METHOD, PURGE		,17);	//
+
+#pragma pack(push, 1)
+	struct SHTTPAPIRequest {
+		::gpk::view_const_char										Path			;
+		::gpk::view_const_char										QueryString		;
+		::gpk::view_const_char										ContentBody		;
+		::gpk::HTTP_METHOD											Method			;
+	};
+#pragma pack(pop)
 } // namespace
 
 #endif // GPK_HTTP_H_23478298347928347
