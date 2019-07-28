@@ -30,14 +30,14 @@ namespace gpk
 				encoded[encoded.size() - 1]						= 0;
 				idxLatest										= iIn;
 			}
-      		else 
+      		else
           		++encoded[encoded.size() - 1];
 		}
 		return 0;
 	}
 
 	template<typename _tBase>
-					::gpk::error_t					rleDecode													(const ::gpk::view_array<byte_t>& encoded, ::gpk::array_pod<_tBase>& decoded) {
+					::gpk::error_t					rleDecode													(const ::gpk::view_const_byte& encoded, ::gpk::array_pod<_tBase>& decoded) {
 		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
