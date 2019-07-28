@@ -20,18 +20,24 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 		iBegin									= iStop;
 		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n
-		::gpk::view_const_string					strSize;
-		if(iStop <= body.size())
-			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
-		else
-			break;
-		uint64_t									sizeChunk						= 0;
-		::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
-		if(0 == sizeChunk)
-			break;
-		joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
-		iStop									+= (uint32_t)sizeChunk;
-		iStop									+= 2;	// skip \n
+		if(iStop == 1) {
+			joined.append(::gpk::view_const_byte{&body[iBegin], body.size() - iBegin});
+			return 0;
+		}
+		else {
+			::gpk::view_const_string					strSize;
+			if(iStop <= body.size())
+				strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
+			else
+				break;
+			uint64_t									sizeChunk						= 0;
+			::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
+			if(0 == sizeChunk)
+				break;
+			joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
+			iStop									+= (uint32_t)sizeChunk;
+			iStop									+= 2;	// skip \n
+		}
 	}
 	return 0;
 }
@@ -90,7 +96,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	char										addr[32]						= {};
 	char										port[32]						= {};
 	sprintf_s(addr, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
-	sprintf_s(port, "%u", address.Port);
+	sprintf_s(port, "%u", (0 == address.Port) ? 80 : address.Port);
 	addrinfo									* servinfo						= 0;
     int32_t										rv								= getaddrinfo(addr, port, &hints, &servinfo);
 	ree_if(0 != rv, "getaddrinfo: %s", gai_strerror(rv));
@@ -118,10 +124,51 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
 	::gpk::array_pod<char>						buf								= {};
-	buf.resize(1024*1024*64);
+	buf.resize(1024*1024*16);
 	uint32_t									totalBytes						= 0;
-    while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], buf.size() - totalBytes - 1, 0)) && 0 != numbytes) {
+	uint32_t									stopOfHeader					= 0;
+	uint32_t									contentLength					= 0;
+    while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], 1, 0)) && 0 != numbytes) {//buf.size() - totalBytes - 1, 0)) && 0 != numbytes) {
 		totalBytes								+= numbytes;
+		if(0 == stopOfHeader && totalBytes > 2) {
+			if( '\n' == buf[totalBytes - 1]
+			 && '\r' == buf[totalBytes - 2]
+			 && '\n' == buf[totalBytes - 3]
+			 && '\r' == buf[totalBytes - 4]
+			) {
+				// here we should do something in order to detect the content size
+				stopOfHeader						= totalBytes;
+				info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
+
+				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
+					buf[iByte]								= (byte_t)tolower(buf[iByte]);
+
+				int32_t									offsetContentLength				= ::gpk::find_sequence_pod(::gpk::view_const_string{"content-length"}, {buf.begin(), buf.size()});
+				if(-1 == offsetContentLength) // no content
+					continue;
+				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', ::gpk::view_const_string{buf.begin(), buf.size()}, offsetContentLength);
+				int32_t									offsetEndLine					= (uint32_t)::gpk::find('\r', ::gpk::view_const_string{buf.begin(), buf.size()}, offsetCristobal);
+				if(0 > offsetEndLine)
+					offsetEndLine						= (uint32_t)::gpk::find('\n', ::gpk::view_const_string{buf.begin(), buf.size()}, offsetCristobal);
+
+				int32_t digitsLengthStart	= 0;
+				int32_t digitsLengthStop	= offsetEndLine;
+				for(int32_t iOffset = offsetCristobal + 1; iOffset < offsetEndLine; ++iOffset) {
+					if(buf[iOffset] == ' ') {
+						if(0 == digitsLengthStart)
+							continue;
+						else
+							digitsLengthStop	= iOffset;
+					}
+					if(0 == digitsLengthStart)
+						digitsLengthStart	= iOffset;
+				}
+				::gpk::view_const_string				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
+				::gpk::parseIntegerDecimal(strContentLength, &contentLength);
+			}
+		}
+		if(contentLength != 0 && contentLength + stopOfHeader == totalBytes)
+			break;
 		continue;
 	}
 	if(totalBytes < buf.size()) {
@@ -129,7 +176,9 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		buf.resize(totalBytes);
 	}
 
-	uint32_t									stopOfHeader					= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()});
+	if(0 == stopOfHeader)
+		stopOfHeader							= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()});
+
 	::gpk::view_const_byte						httpheaderReceived				= buf;
 	::gpk::view_const_byte						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4)
