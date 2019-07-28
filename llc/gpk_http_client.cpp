@@ -10,6 +10,7 @@
 #	include <netinet/in.h>
 #	include <sys/socket.h>
 #	include <arpa/inet.h>
+#	include <ctype.h>
 #endif
 
 static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::array_pod<byte_t> & joined)		{
@@ -136,7 +137,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
 
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-		buf[iByte]								= (byte_t)::tolower(buf[iByte]);
+		buf[iByte]								= (byte_t)tolower(buf[iByte]);
 
 	::gpk::array_obj<::gpk::view_const_byte>	headerLines;
 	httpheaderReceived						= {buf.begin(), (uint32_t)stopOfHeader};

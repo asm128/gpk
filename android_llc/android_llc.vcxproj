@@ -90,6 +90,7 @@
     <ClInclude Include="..\..\gpk\llc\gpk_view_stream.h" />
     <ClInclude Include="..\llc\gpk_geometry.h" />
     <ClInclude Include="..\llc\gpk_grid_static.h" />
+    <ClInclude Include="..\llc\gpk_http_client.h" />
     <ClInclude Include="..\llc\gpk_particle.h" />
     <ClInclude Include="..\llc\gpk_scene.h" />
     <ClInclude Include="..\llc\gpk_type_registry.h" />
@@ -121,6 +122,8 @@
     <ClCompile Include="..\llc\gpk_geometry.cpp" />
     <ClCompile Include="..\llc\gpk_gui.cpp" />
     <ClCompile Include="..\llc\gpk_gui_draw.cpp" />
+    <ClCompile Include="..\llc\gpk_https_client.cpp" />
+    <ClCompile Include="..\llc\gpk_http_client.cpp" />
     <ClCompile Include="..\llc\gpk_keyval.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_tcpip.cpp" />

@@ -56,6 +56,7 @@
     <ClInclude Include="gpk_gui.h" />
     <ClInclude Include="gpk_gui_text.h" />
     <ClInclude Include="gpk_http.h" />
+    <ClInclude Include="gpk_http_client.h" />
     <ClInclude Include="gpk_image.h" />
     <ClInclude Include="gpk_input.h" />
     <ClInclude Include="gpk_io.h" />
@@ -118,6 +119,8 @@
     <ClCompile Include="gpk_geometry.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
+    <ClCompile Include="gpk_https_client.cpp" />
+    <ClCompile Include="gpk_http_client.cpp" />
     <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_json_expression.cpp" />
     <ClCompile Include="gpk_keyval.cpp" />

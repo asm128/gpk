@@ -204,6 +204,9 @@
     <ClInclude Include="..\llc\gpk_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\llc\gpk_http_client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp">
@@ -294,6 +297,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_type_registry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_https_client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_http_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
