@@ -20,24 +20,18 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 		iBegin									= iStop;
 		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n
-		if(iStop == 1) {
-			joined.append(::gpk::view_const_byte{&body[iBegin], body.size() - iBegin});
-			return 0;
-		}
-		else {
-			::gpk::view_const_string					strSize;
-			if(iStop <= body.size())
-				strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
-			else
-				break;
-			uint64_t									sizeChunk						= 0;
-			::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
-			if(0 == sizeChunk)
-				break;
-			joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
-			iStop									+= (uint32_t)sizeChunk;
-			iStop									+= 2;	// skip \n
-		}
+		::gpk::view_const_string					strSize;
+		if(iStop <= body.size())
+			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
+		else
+			break;
+		uint64_t									sizeChunk						= 0;
+		::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
+		if(0 == sizeChunk)
+			break;
+		joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
+		iStop									+= (uint32_t)sizeChunk;
+		iStop									+= 2;	// skip \n
 	}
 	return 0;
 }
@@ -177,7 +171,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	}
 
 	if(0 == stopOfHeader)
-		stopOfHeader							= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()});
+		stopOfHeader							= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()}) + 4;
 
 	::gpk::view_const_byte						httpheaderReceived				= buf;
 	::gpk::view_const_byte						contentReceived					= {};
@@ -200,8 +194,8 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 			bChunked								= true;
 	}
 
-	if(stopOfHeader + 4 < buf.size())
-		contentReceived							= {&buf[stopOfHeader + 4], buf.size() - stopOfHeader + 4};
+	if(stopOfHeader < buf.size())
+		contentReceived							= {&buf[stopOfHeader], buf.size() - stopOfHeader};
 
 	::gpk::array_pod<byte_t>					joined;
 	if(bChunked) {
