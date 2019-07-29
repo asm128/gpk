@@ -17,6 +17,9 @@
 		requestReceived.Method							= 0 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
 		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
+		::gpk::find("REMOTE_ADDR"	, environViews, requestReceived.Ip);
+		::gpk::find("REMOTE_IP"		, environViews, requestReceived.Port);
+
 		requestReceived.ContentBody						= runtimeValues.Content.Body;
 		requestReceived.QueryStringElements				= runtimeValues.QueryStringElements;
 		requestReceived.QueryStringKeyVals				= runtimeValues.QueryStringKeyVals;

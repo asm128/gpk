@@ -29,6 +29,8 @@ namespace gpk
 	struct SHTTPAPIRequest {
 		::gpk::array_obj<::gpk::view_const_string>					QueryStringElements			= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>					QueryStringKeyVals			= {};
+		::gpk::view_const_string									Ip							= {};
+		::gpk::view_const_string									Port						= {};
 		::gpk::view_const_char										Path						= {};
 		::gpk::view_const_char										QueryString					= {};
 		::gpk::view_const_char										ContentBody					= {};
