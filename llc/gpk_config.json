@@ -13,8 +13,8 @@
 		{	"listen_port"	: "9797"
 		,	"adapter"		: "1"
 		,	"process"		: 
-			{ "executable_path" 		: "./minefront.exe"  
-			, "command_line_app_name" 	: "./minefront.exe"   
+			{ "executable_path" 		: "./mineback.exe"  
+			, "command_line_app_name" 	: "./mineback.exe"   
 			, "command_line_params" 	: ""	     
 			}
 		},
