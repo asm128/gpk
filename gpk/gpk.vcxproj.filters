@@ -19,6 +19,9 @@
     <Filter Include="udp">
       <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{fa0b3630-5316-4ed2-9ea9-4ade2414be89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_display.h">

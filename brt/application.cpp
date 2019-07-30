@@ -82,7 +82,7 @@ static	::gpk::error_t		createChildProcess
 	,	::gpk::view_array<char_t>		environmentBlock
 	,	::gpk::view_char				appPath
 	,	::gpk::view_char				commandLine
-	,	bool							debugMessageBox			= true
+	,	bool							debugMessageBox			= false
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	::gpk::view_char				szCmdlineApp			= appPath;
 	::gpk::view_char				szCmdlineFinal			= commandLine;

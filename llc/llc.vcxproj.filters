@@ -423,4 +423,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="gpk_config.json" />
+    <None Include="copy_gpk_config.bat">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

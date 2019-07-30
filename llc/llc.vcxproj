@@ -142,6 +142,10 @@
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="copy_gpk_config.bat" />
+    <None Include="gpk_config.json" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{830AB681-B788-47D4-9767-BA4E0792F682}</ProjectGuid>

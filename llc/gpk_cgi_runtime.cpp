@@ -14,7 +14,7 @@
 		::gpk::writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		requestReceived.Method							= 0 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
+		requestReceived.Method							= 0 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") || 0 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
 		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
 		::gpk::find("REMOTE_ADDR"	, environViews, requestReceived.Ip);
