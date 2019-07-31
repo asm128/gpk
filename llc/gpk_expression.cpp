@@ -133,10 +133,17 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		break;
 	case '/':
 		skip_if_escaping();
+		if( ::gpk::EXPRESSION_READER_TYPE_KEY	== stateSolver.CurrentElement->Type
+		 || ::gpk::EXPRESSION_READER_TYPE_INDEX	== stateSolver.CurrentElement->Type
+		 ) {
+			gpk_necall(::expressionReaderCloseType(stateSolver, parsed, stateSolver.CurrentElement->Type, stateSolver.IndexCurrentChar), "Failed to close type: %s.", ::gpk::get_value_label(stateSolver.CurrentElement->Type).begin(), "%s", "Failed to close type.");
+			stateSolver.ExpectsSeparator								= true;
+		}
 		if(stateSolver.IndexCurrentChar + 1 < expression.size() && '/' == expression[stateSolver.IndexCurrentChar + 1]) {	// This is an end-of-line comment.
 			while(stateSolver.IndexCurrentChar < expression.size() &&  '\n' != expression[stateSolver.IndexCurrentChar])
 				++stateSolver.IndexCurrentChar;
 		}
+		break;
 	case ' ': case '\t': case '\r': case '\n':
 		skip_if_escaping();
 		if( ::gpk::EXPRESSION_READER_TYPE_KEY	== stateSolver.CurrentElement->Type
@@ -227,7 +234,6 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 	if errored(::expressionReaderProcessCharacter(stateSolver, parsed, expression)) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Object.size();
 		const ::gpk::SExpressionReaderType								* currentElement									= validElement ? &reader.Object[reader.StateRead.IndexCurrentElement] : 0;
-		//const ::gpk::view_const_string									currentView											= validElement ? reader.View[reader.StateRead.IndexCurrentElement] : ::gpk::view_const_string{};
 		error_printf("Error during read step. Malformed expression?"
 			"\nPosition         : %i."
 			"\nCharacter        : '%c' (0x%x)."
