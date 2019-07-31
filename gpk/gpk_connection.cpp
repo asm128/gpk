@@ -303,10 +303,11 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 
 		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
 		if(client.KeyPing == 0) {
-			for(uint32_t iTime = 0, countLapse = 3000000; iTime < countLapse; ++iTime)
-				if(::hashFromTime(client.FirstPing + iTime) == header.MessageId) {
-					client.KeyPing												= client.FirstPing + iTime;
-					estimatedTimeSent											= client.FirstPing + iTime;
+			const int64_t advantage = 1000000;
+			for(int64_t iTime = 0, countLapse = 60000000; iTime < countLapse; ++iTime)
+				if(::hashFromTime(client.FirstPing - advantage + iTime) == header.MessageId) {
+					client.KeyPing												= client.FirstPing - advantage + iTime;
+					estimatedTimeSent											= client.FirstPing - advantage + iTime;
 					info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
 					break;
 				}
