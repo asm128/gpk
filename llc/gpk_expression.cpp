@@ -90,6 +90,15 @@ static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionR
 	return 0;
 }
 
+static	bool												isSpaceCharacter						(const char characterToTest)		{
+	switch(characterToTest) {
+	case ' ': case '\t': case '\r': case '\n':
+		return true;
+	default:
+		return false;
+	}
+}
+
 static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpressionReaderState& stateSolver, ::gpk::array_pod<::gpk::SExpressionReaderType>& parsed, const ::gpk::view_const_string& expression)	{
 	if(0 == parsed.size())
 		gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY, stateSolver.IndexCurrentChar), "Failed to open expression at index %i", stateSolver.IndexCurrentChar);
@@ -98,10 +107,20 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 #define skip_if_escaping()		if(true == stateSolver.Escaping) break
 
 	switch(stateSolver.CharCurrent) {
+	case 'i':
+		if(expression.size() > stateSolver.IndexCurrentChar + 1 && expression[stateSolver.IndexCurrentChar + 1] == 'f' && ::isSpaceCharacter(expression[stateSolver.IndexCurrentChar + 1])) {
+			if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type)
+				gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_CONDITION, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+			else
+				error_printf("%s", "Unexpected situation.");
+			break;
+		}
 	default	:
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
 		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type)
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		else
+			error_printf("%s", "Unexpected situation.");
 		break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
@@ -109,6 +128,8 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX, stateSolver.IndexCurrentChar), "Failed to open index at position %i", stateSolver.IndexCurrentChar);
 		else if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type)
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		else
+			error_printf("%s", "Unexpected situation.");
 		break;
 	case ' ': case '\t': case '\r': case '\n':
 		skip_if_escaping();
