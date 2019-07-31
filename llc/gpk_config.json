@@ -11,9 +11,9 @@
 	{	
 		"brt": 
 		{	"listen_port"	: "9797"
-		,	"adapter"		: "1"
+		,	"adapter"		: "0"
 		,	"process"		: 
-			{ "executable_path" 		: "./mineback.exe"  
+			{ "executable_path" 		: "../x64.Release/mineback.exe"  
 			, "command_line_app_name" 	: "./mineback.exe"   
 			, "command_line_params" 	: ""	     
 			}
