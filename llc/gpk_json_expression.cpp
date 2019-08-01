@@ -120,6 +120,10 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				else {
 					indexOfResolvedSubExpression					= ::evaluateExpression(readerExpression, childEval.ObjectIndex, inputJSON, indexRootJSONNode, viewOfExpressionResult);
 					output											= (-1 == indexOfResolvedSubExpression) ? childExprView : viewOfExpressionResult;
+					if(-1 == indexOfResolvedSubExpression) {
+						error_printf("Failed to resolve subexpression: '%s'.", childEvalView.begin());
+						return -1;
+					}
 				}
 			}
 			++iFirstLevelExpression;

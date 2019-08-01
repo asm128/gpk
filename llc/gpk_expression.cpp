@@ -125,7 +125,7 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		 )
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
 		else if(0x20 > stateSolver.CharCurrent || 0x7F < stateSolver.CharCurrent)
-		 	error_printf("Invalid character: %s. Only ascii printable characters are allowed in expressions.");
+		 	error_printf("Invalid character: %c. Only ascii printable characters are allowed in expressions.", stateSolver.CharCurrent);
 		break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
