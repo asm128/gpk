@@ -22,6 +22,11 @@ static ::gpk::error_t							printNode						(const ::gpk::SExpressionNode* node, 
 }
 #endif
 
+static constexpr const ::gpk::view_const_char strTrue	= {"true"	, 4};
+static constexpr const ::gpk::view_const_char strFalse	= {"false"	, 5};
+static constexpr const ::gpk::view_const_char strZero	= {"0"		, 5};
+static constexpr const ::gpk::view_const_char strNull	= {"null"	, 5};
+
 static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
 	ree_if(indexNodeJSON >= inputJSON.Tree.size(), "Invalid input json or index node: %i", indexNodeJSON)
 	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this
@@ -88,20 +93,14 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			::gpk::view_const_string							strKey									= {};
 			int32_t												indexOfResolvedSubExpression			= -1;
 			int32_t												evalResult								= -1;
-			if(currentJSON.Object->Type == ::gpk::JSON_TYPE_BOOL) {
-				if(inputJSON.View[indexNodeJSON] == ::gpk::view_const_string{"true"}) {
-					evalResult	= 0;
-				}
-				else if(inputJSON.View[indexNodeJSON] == ::gpk::view_const_string{"false"}) {
-					evalResult	= 1;
-				}
-				else {
-					gpk_necall(bufferFormat.resize(readerExpression.View[childToSolve.ObjectIndex].size() + 512), "%s", "Out of memory?");
-					sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to solve expression: %%.%us.", readerExpression.View[childToSolve.ObjectIndex].size());
-					warning_printf(bufferFormat.begin(), readerExpression.View[childToSolve.ObjectIndex].begin());
-					return -1;
-				}
-			}
+			if(currentJSON.Object->Type == ::gpk::JSON_TYPE_BOOL)
+				evalResult										= (inputJSON.View[indexNodeJSON] == strTrue) ? 0 : 1;
+			else if(currentJSON.Object->Type == ::gpk::JSON_TYPE_NUMBER)
+				evalResult										= (inputJSON.View[indexNodeJSON] == strZero) ? 1 : 0;
+			else if(currentJSON.Object->Type == ::gpk::JSON_TYPE_NULL)
+				evalResult										= 1;
+			else if(currentJSON.Object->Type == ::gpk::JSON_TYPE_STRING)
+				evalResult										= inputJSON.View[indexNodeJSON].size() ? 0 : 1;
 			else {
 				gpk_necall(bufferFormat.resize(readerExpression.View[childToSolve.ObjectIndex].size() + 512), "%s", "Out of memory?");
 				sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to solve expression: %%.%us.", readerExpression.View[childToSolve.ObjectIndex].size());
