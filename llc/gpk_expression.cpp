@@ -119,7 +119,10 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 	switch(stateSolver.CharCurrent) {
 	default	:
 		ree_if(stateSolver.ExpectsSeparator, "Separator expected, found: %c (%i).", stateSolver.CharCurrent, (int32_t)stateSolver.CharCurrent);
-		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type)
+		if( ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY		== stateSolver.CurrentElement->Type
+		 || ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX		== stateSolver.CurrentElement->Type
+		 || ::gpk::EXPRESSION_READER_TYPE_EVALUATION			== stateSolver.CurrentElement->Type
+		 )
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
 		else if(0x20 > stateSolver.CharCurrent || 0x7F < stateSolver.CharCurrent)
 		 	error_printf("Invalid character: %s. Only ascii printable characters are allowed in expressions.");
@@ -129,6 +132,10 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		if( ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type)
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX, stateSolver.IndexCurrentChar), "Failed to open index at position %i", stateSolver.IndexCurrentChar);
 		else if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == stateSolver.CurrentElement->Type)
+			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		else if(::gpk::EXPRESSION_READER_TYPE_EVALUATION && stateSolver.CurrentElement->ParentIndex != -1 && ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == parsed[stateSolver.CurrentElement->ParentIndex].Type)
+			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_INDEX, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		else if(::gpk::EXPRESSION_READER_TYPE_EVALUATION && stateSolver.CurrentElement->ParentIndex != -1 && ::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == parsed[stateSolver.CurrentElement->ParentIndex].Type)
 			gpk_necall(::expressionReaderOpenLevel(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
 		break;
 	case '/':
@@ -167,7 +174,7 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		test_first_position();
 		skip_if_escaping();
 		gpk_necall(::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
-		gpk_necall(::expressionReaderOpenLevel	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		gpk_necall(::expressionReaderOpenLevel	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar + 1), "Failed to open evaluation at index %i", stateSolver.IndexCurrentChar + 1);
 		break;
 	case ':':
 		stateSolver.ExpectsSeparator								= false;
@@ -175,7 +182,10 @@ static	::gpk::error_t										expressionReaderProcessCharacter		(::gpk::SExpres
 		skip_if_escaping();
 		gpk_necall(::expressionReaderCloseIfType(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderCloseType	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
-		gpk_necall(::expressionReaderOpenLevel	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar + 1), "Failed to open key at index %i", stateSolver.IndexCurrentChar);
+		if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == stateSolver.CurrentElement->Type)
+			gpk_necall(::expressionReaderOpenLevel	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar + 1), "Failed to open evaluation at index %i", stateSolver.IndexCurrentChar + 1);
+		else
+			gpk_necall(::expressionReaderOpenLevel	(stateSolver, parsed, ::gpk::EXPRESSION_READER_TYPE_EVALUATION	, stateSolver.IndexCurrentChar + 1), "Failed to open evaluation at index %i", stateSolver.IndexCurrentChar + 1);
 		break;
 	case '{':
 		skip_if_escaping();

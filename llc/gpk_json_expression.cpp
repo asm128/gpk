@@ -8,7 +8,7 @@
 //#define GPK_JSON_EXPRESSION_DEBUG
 
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
-static ::gpk::error_t							printNode						(::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
+static ::gpk::error_t							printNode						(const ::gpk::SExpressionNode* node, const ::gpk::view_const_char& expression)			{
 	uint32_t											lenString						= node->Object->Span.End - node->Object->Span.Begin;
 	::gpk::array_pod<char_t>							bufferFormat					= {};
 	bufferFormat.resize(2 * lenString + 1024);
@@ -111,7 +111,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 	int32_t												jsonNodeResultOfEvaluation				= -1;
 	if(reader.Tree.size()) {
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
-		::printNode(reader.Tree[0], expression);
+		::printNode(reader.Tree[0], reader.View[0]);
 #endif
 		jsonNodeResultOfEvaluation						= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
 		if errored(jsonNodeResultOfEvaluation) {
