@@ -27,22 +27,41 @@ static constexpr const ::gpk::view_const_char	strFalse								= {"false"	, 5};
 static constexpr const ::gpk::view_const_char	strZero									= {"0"		, 5};
 static constexpr const ::gpk::view_const_char	strNull									= {"null"	, 5};
 
-static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionReader & readerExpression, uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
+// Returns an index pointing to the resulting JSON element, or a -16 - the index of the resulting expression element.
+static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionReader & readerExpression, const uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
 	ree_if(indexNodeJSON >= inputJSON.Tree.size(), "Invalid input json or index node: %i", indexNodeJSON)
 	const ::gpk::SExpressionNode						* nodeExpression						= readerExpression.Tree[indexNodeExpression];	// Take this
 	uint32_t											indexRootJSONNode						= indexNodeJSON;
 	int32_t												indexJSONResult							= -1;
 	::gpk::array_pod<char_t>							bufferFormat							= {};
+	bufferFormat									= readerExpression.View[indexNodeExpression];
+	bufferFormat.push_back(0);
+	info_printf("Processing expression: '%s'", bufferFormat.begin());
 	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < nodeExpression->Children.size(); ++iFirstLevelExpression) {
 		const ::gpk::SExpressionNode						& childToSolve								= *nodeExpression->Children[iFirstLevelExpression];
 		const ::gpk::SJSONNode								& currentJSON								= *inputJSON.Tree[indexNodeJSON];
-		if(::gpk::EXPRESSION_READER_TYPE_STRING == childToSolve.Object->Type)
+		info_printf("Reading first-level expression: %u.", iFirstLevelExpression);
+		bufferFormat									= inputJSON.View[indexNodeJSON];
+		bufferFormat.push_back(0);
+		info_printf("Current json view: '%s'", bufferFormat.begin());
+		bufferFormat									= readerExpression.View[childToSolve.ObjectIndex];
+		bufferFormat.push_back(0);
+		info_printf("Current child view: '%s'", bufferFormat.begin());
+		if(::gpk::EXPRESSION_READER_TYPE_LITERAL == childToSolve.Object->Type) {
 			output											= readerExpression.View[childToSolve.ObjectIndex];
+			indexJSONResult									= -(childToSolve.ObjectIndex + 0xF);
+			break;
+		}
 		else if(::gpk::EXPRESSION_READER_TYPE_KEY == childToSolve.Object->Type) {
-			const ::gpk::view_const_string						& strKey									= readerExpression.View[childToSolve.ObjectIndex];
+			::gpk::view_const_string							strKey										= readerExpression.View[childToSolve.ObjectIndex];
 			gpk_necall(bufferFormat.resize(strKey.size() + 1024), "%s", "Out of memory?");
 			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Only objects can be accessed by key. JSON type: %%s. Key to solve: %%.%us.", strKey.size());
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_OBJECT, bufferFormat.begin(), ::gpk::get_value_label(currentJSON.Object->Type).begin(), strKey.begin());
+			if(1 == childToSolve.Children.size()
+				&& (::gpk::EXPRESSION_READER_TYPE_TERM_KEY == childToSolve.Children[0]->Object->Type || ::gpk::EXPRESSION_READER_TYPE_TERM_ANY == childToSolve.Children[0]->Object->Type)) {
+				const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(readerExpression, childToSolve.ObjectIndex, inputJSON, indexRootJSONNode, strKey);
+				(void)indexOfResolvedSubExpression;
+			}
 			indexJSONResult									= ::gpk::jsonObjectValueGet(*inputJSON.Tree[indexNodeJSON], inputJSON.View, strKey);
 			if errored(indexJSONResult) {
 				sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Key not found: %%.%us.", strKey.size());
@@ -51,24 +70,14 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			}
 			output											= inputJSON.View[indexJSONResult];
 		}
-		else if(::gpk::EXPRESSION_READER_TYPE_INDEX == childToSolve.Object->Type) {
-			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_ARRAY, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
-			uint64_t											numberRead								= 0;
-			const ::gpk::view_const_string						& viewOfIndex							= readerExpression.View[childToSolve.ObjectIndex];
-			uint32_t											countDigits								= (uint32_t)::gpk::parseIntegerDecimal(viewOfIndex, &numberRead);
-			gerror_if(countDigits != viewOfIndex.size(), "countDigits: %u, viewOfIndex: %u.", countDigits, viewOfIndex.size())
-			indexJSONResult									= ::gpk::jsonArrayValueGet(currentJSON, (uint32_t)numberRead);
-			ree_if(errored(indexJSONResult), "Value not found for index: %lli.", numberRead);
-			output											= inputJSON.View[indexJSONResult];
-		}
-		else if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_INDEX == childToSolve.Object->Type) {
+		else if(::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == childToSolve.Object->Type) {
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_ARRAY, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
 			::gpk::view_const_string							viewOfIndex								= {};
 			const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(readerExpression, childToSolve.ObjectIndex, inputJSON, indexRootJSONNode, viewOfIndex);
-			if errored(indexOfResolvedSubExpression) {
+			if (-1 == indexOfResolvedSubExpression) {
 				gpk_necall(bufferFormat.resize(readerExpression.View[childToSolve.ObjectIndex].size() + 512), "%s", "Out of memory?");
 				sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to solve expression: %%.%us.", readerExpression.View[childToSolve.ObjectIndex].size());
-				warning_printf(bufferFormat.begin(), readerExpression.View[childToSolve.ObjectIndex].begin());
+				error_printf(bufferFormat.begin(), readerExpression.View[childToSolve.ObjectIndex].begin());
 				return -1;
 			}
 			uint64_t											numberRead								= 0;
@@ -77,7 +86,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			ree_if(errored(indexJSONResult), "Value not found for index: %lli.", numberRead);
 			output											= inputJSON.View[indexJSONResult];
 		}
-		else if(::gpk::EXPRESSION_READER_TYPE_EXPRESSION_KEY == childToSolve.Object->Type) {
+		else if(::gpk::EXPRESSION_READER_TYPE_TERM_KEY == childToSolve.Object->Type) {
 			ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
 			::gpk::view_const_string							strKey									= {};
 			const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(readerExpression, childToSolve.ObjectIndex, inputJSON, indexRootJSONNode, strKey);
@@ -90,6 +99,21 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				return -1;
 			}
 			output											= inputJSON.View[indexJSONResult];
+		}
+		else if(::gpk::EXPRESSION_READER_TYPE_TERM_ANY == childToSolve.Object->Type) {
+			//ree_if(currentJSON.Object->Type != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON.Object->Type).begin());
+			::gpk::view_const_string							strKey									= {};
+			const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(readerExpression, childToSolve.ObjectIndex, inputJSON, (-1 != indexJSONResult)? indexJSONResult : indexRootJSONNode, strKey);
+			ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve expression: %s.", "punto final")
+			else if(0 > indexOfResolvedSubExpression) {
+				output											= readerExpression.View[childToSolve.Children[0]->ObjectIndex];
+				indexJSONResult									= indexOfResolvedSubExpression;
+			}
+			else {
+				indexJSONResult									= indexOfResolvedSubExpression;
+				output											= inputJSON.View[indexOfResolvedSubExpression];
+			}
+			break;
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_EVALUATION == childToSolve.Object->Type) {
 			::gpk::view_const_string							strKey									= {};
@@ -121,9 +145,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				const ::gpk::view_const_string						& childEvalView						= readerExpression.View[childEval.ObjectIndex];(void)childEvalView;
 				const ::gpk::SExpressionNode						& childExpr							= *childEval.Children[0];
 				const ::gpk::view_const_string						& childExprView						= readerExpression.View[childExpr.ObjectIndex];(void)childExprView;
-				if(childExpr.Object->Type == ::gpk::EXPRESSION_READER_TYPE_INDEX)
-					output											= childExprView;
-				else if(childExpr.Object->Type == ::gpk::EXPRESSION_READER_TYPE_STRING)
+				if(childExpr.Object->Type == ::gpk::EXPRESSION_READER_TYPE_LITERAL)
 					output											= childExprView;
 				else {
 					indexOfResolvedSubExpression					= ::evaluateExpression(readerExpression, childEval.ObjectIndex, inputJSON, indexRootJSONNode, viewOfExpressionResult);
@@ -172,10 +194,10 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 		::printNode(reader.Tree[0], reader.View[0]);
 #endif
 		jsonNodeResultOfEvaluation						= ::evaluateExpression(reader, 0, inputJSON, indexNodeJSON, output);
-		if errored(jsonNodeResultOfEvaluation) {
+		if (-1 == jsonNodeResultOfEvaluation) {
 			gpk_necall(bufferFormat.resize(reader.View[0].size() + 1024), "%s", "Out of memory?");
 			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "Failed to evaluate expression: %%.%us.", reader.View[0].size());
-			warning_printf(bufferFormat.begin(), reader.View[0].begin());
+			error_printf(bufferFormat.begin(), reader.View[0].begin());
 			return -1;
 		}
 		evaluated										= output;
