@@ -22,6 +22,7 @@ namespace gpk
 		int32_t														ParentIndex;
 		EXPRESSION_READER_TYPE										Type;
 		::gpk::SSlice<uint32_t>										Span;
+		bool														ClosingEvaluation				= false;
 	};
 
 	struct SExpressionReaderState {
