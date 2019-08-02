@@ -9,10 +9,6 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-#if defined(NULL)
-#	undef NULL
-#	define GPK_REDEFINE_NULL_ASAP
-#endif
 	GDEFINE_ENUM_TYPE(JSON_TYPE, int8_t);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, NULL		,  0);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, NUMBER	,  1);
@@ -25,10 +21,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(JSON_TYPE, CODEPOINT	,  9);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, COUNT		, 10);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, UNKNOWN	, -1);
-#if defined(GPK_REDEFINE_NULL_ASAP)
-#	define NULL 0
-#endif
-
 	struct SJSONToken {
 								int32_t														ParentIndex;
 								JSON_TYPE													Type;

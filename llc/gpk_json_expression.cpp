@@ -115,7 +115,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				output											= inputJSON.View[indexOfResolvedSubExpression];
 			}
 		}
-		else if(::gpk::EXPRESSION_READER_TYPE_EVALUATION == childToSolve.Object->Type) {
+		else if(::gpk::EXPRESSION_READER_TYPE_TERM_BOOL == childToSolve.Object->Type) {
 			::gpk::view_const_string							strKey									= inputJSON.View[indexNodeJSON];
 			int32_t												indexOfResolvedSubExpression			= -1;
 			int32_t												evalResult								= -1;
@@ -176,7 +176,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 	const ::gpk::array_obj<::gpk::view_const_string>	& expressionViews						= reader.View;
 	for(uint32_t iView = 0; iView < expressionViews.size(); ++iView) {
 		const ::gpk::view_const_string						& viewExpression						= expressionViews[iView];
-		const ::gpk::SExpressionToken					& typeExpression						= reader.Object[iView];
+		const ::gpk::SExpressionToken						& typeExpression						= reader.Object[iView];
 		if(viewExpression.size()) {
 			uint32_t											lenString								= viewExpression.size();
 			gpk_necall(bufferFormat.resize(lenString + 1024), "%s", "Out of memory?");
