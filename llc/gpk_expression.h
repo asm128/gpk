@@ -18,7 +18,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EXPRESSION_READER_TYPE, UNKNOWN			, -1);
 
 #pragma pack(push, 1)
-	struct SExpressionReaderType {
+	struct SExpressionToken {
 		int32_t														ParentIndex;
 		EXPRESSION_READER_TYPE										Type;
 		::gpk::SSlice<uint32_t>										Span;
@@ -28,7 +28,7 @@ namespace gpk
 	struct SExpressionReaderState {
 		uint32_t													IndexCurrentChar				= 0;
 		int32_t														IndexCurrentElement				= -1;
-		::gpk::SExpressionReaderType								* CurrentElement				= 0;
+		::gpk::SExpressionToken								* CurrentElement				= 0;
 		int32_t														NestLevel						= 0;
 		char														CharCurrent						= 0;
 		bool														Escaping						= false;
@@ -38,7 +38,7 @@ namespace gpk
 	};
 
 	struct SExpressionNode {
-		SExpressionReaderType										* Object						= 0;
+		SExpressionToken										* Object						= 0;
 		SExpressionNode												* Parent						= 0;
 		::gpk::array_obj<::gpk::ptr_obj<SExpressionNode>>			Children						= {};
 		int32_t														ObjectIndex						= -1;
@@ -46,7 +46,7 @@ namespace gpk
 
 
 	struct SExpressionReader {
-		::gpk::array_pod<::gpk::SExpressionReaderType>				Object;
+		::gpk::array_pod<::gpk::SExpressionToken>				Object;
 		::gpk::array_obj<::gpk::view_const_string>					View;
 		::gpk::array_obj<::gpk::ptr_obj	<::gpk::SExpressionNode>>	Tree;
 		::gpk::SExpressionReaderState								StateRead;

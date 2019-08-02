@@ -2,9 +2,9 @@
 
 #define gpk_expression_info_printf //info_printf
 
-static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, ::gpk::array_obj<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) {
+static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk::SExpressionToken>& tokens, ::gpk::array_obj<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) {
 	for(uint32_t iTag = 0; iTag < tokens.size(); ++iTag) {
-		const ::gpk::SExpressionReaderType								& type									 = tokens[iTag];
+		const ::gpk::SExpressionToken								& type									 = tokens[iTag];
 		if(iTag && (::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == type.Type || ::gpk::EXPRESSION_READER_TYPE_TERM_KEY == type.Type || ::gpk::EXPRESSION_READER_TYPE_LITERAL
 			== type.Type) && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
 			gpk_necall(views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2}), "%s", "Out of memory?");
@@ -14,7 +14,7 @@ static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk
 	return 0;
 }
 
-static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gpk::SExpressionReaderType>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionNode>> & out_nodes)								{
+static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gpk::SExpressionToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionNode>>		& tree									= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
@@ -37,7 +37,7 @@ static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gp
 	return 0;
 }
 
-static	::gpk::error_t										expressionReaderCloseType				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, ::gpk::EXPRESSION_READER_TYPE type, int32_t indexCurrentChar) {
+static	::gpk::error_t										expressionReaderCloseType				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, ::gpk::EXPRESSION_READER_TYPE type, int32_t indexCurrentChar) {
 	ree_if(type != stateReader.CurrentElement->Type, "Invalid type to close: %s. Current type: %s.", ::gpk::get_value_label(type).begin(), ::gpk::get_value_label(stateReader.CurrentElement->Type).begin());
 	stateReader.CurrentElement->Span.End						= indexCurrentChar;
 	stateReader.IndexCurrentElement								= stateReader.CurrentElement->ParentIndex;
@@ -47,7 +47,7 @@ static	::gpk::error_t										expressionReaderCloseType				(::gpk::SExpressionR
 	return 0;
 }
 
-static	::gpk::error_t										expressionReaderCloseIfType				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, ::gpk::EXPRESSION_READER_TYPE type)	{
+static	::gpk::error_t										expressionReaderCloseIfType				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, ::gpk::EXPRESSION_READER_TYPE type)	{
 	rni_if(0 == stateReader.CurrentElement, "Cannot close %s. Nothing to close.", ::gpk::get_value_label(type).begin());
 	if(type == stateReader.CurrentElement->Type) {
 		gpk_necall(::expressionReaderCloseType(stateReader, tokens, type, stateReader.IndexCurrentChar), "Failed to close type: %s. Why would this happen?", ::gpk::get_value_label(type).begin());
@@ -56,7 +56,7 @@ static	::gpk::error_t										expressionReaderCloseIfType				(::gpk::SExpressio
 	return 0;
 }
 
-static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, ::gpk::EXPRESSION_READER_TYPE type, uint32_t iChar)	{
+static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, ::gpk::EXPRESSION_READER_TYPE type, uint32_t iChar)	{
 	stateReader.IndexCurrentElement								= tokens.push_back({stateReader.IndexCurrentElement, type, {iChar, iChar}});
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 	++stateReader.NestLevel;
@@ -77,8 +77,8 @@ static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionR
 		error_printf(format, __VA_ARGS__);		\
 	}
 
-			::gpk::error_t									expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, const ::gpk::view_const_string& expression)	{
-	::gpk::SExpressionReaderType									currentElement										= {};
+			::gpk::error_t									expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, const ::gpk::view_const_string& expression)	{
+	::gpk::SExpressionToken									currentElement										= {};
 	::gpk::error_t													errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
@@ -145,7 +145,7 @@ static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentC
 	return 0;
 }
 
-static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionReaderType>& tokens, const ::gpk::view_const_string& expression)	{
+static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, const ::gpk::view_const_string& expression)	{
 	if(0 == tokens.size())
 		gpk_necall(::expressionReaderOpenLevel(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_ANY, stateReader.IndexCurrentChar), "Failed to open expression at index %i", stateReader.IndexCurrentChar);
 
@@ -271,7 +271,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 }
 
 ::gpk::error_t												gpk::expressionReaderParseStep			(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression)	{
-	::gpk::array_pod<::gpk::SExpressionReaderType>					& tokens								= reader.Object;
+	::gpk::array_pod<::gpk::SExpressionToken>					& tokens								= reader.Object;
 	::gpk::SExpressionReaderState									& stateReader							= reader.StateRead;
 	stateReader.CharCurrent										= expression[stateReader.IndexCurrentChar];
 	int32_t															result									= reader.StateRead.InsideString
@@ -280,7 +280,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		;
 	if errored(result) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Object.size();
-		const ::gpk::SExpressionReaderType								* currentElement									= validElement ? &reader.Object[reader.StateRead.IndexCurrentElement] : 0;
+		const ::gpk::SExpressionToken								* currentElement									= validElement ? &reader.Object[reader.StateRead.IndexCurrentElement] : 0;
 		error_printf("Error during read step. Malformed expression?"
 			"\nPosition         : %i."
 			"\nCharacter        : '%c' (0x%x)."
@@ -312,7 +312,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 
 ::gpk::error_t												gpk::expressionReaderParse				(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression)	{
 	::gpk::SExpressionReaderState									& stateReader							= reader.StateRead;
-	::gpk::array_pod<::gpk::SExpressionReaderType>					& tokens								= reader.Object;
+	::gpk::array_pod<::gpk::SExpressionToken>					& tokens								= reader.Object;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < expression.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::expressionReaderParseStep(reader, expression), "%s", "Unknown error.");
 		gpk_necall(stateReader.NestLevel, "Nest level cannot be negative. Current level: %i.", stateReader.NestLevel);

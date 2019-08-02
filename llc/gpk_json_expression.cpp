@@ -22,10 +22,10 @@ static ::gpk::error_t							printNode						(const ::gpk::SExpressionNode* node, 
 }
 #endif
 
+//static constexpr const ::gpk::view_const_char	strNull									= {"null"	, 5};
+//static constexpr const ::gpk::view_const_char	strFalse								= {"false"	, 5};
 static constexpr const ::gpk::view_const_char	strTrue									= {"true"	, 4};
-static constexpr const ::gpk::view_const_char	strFalse								= {"false"	, 5};
 static constexpr const ::gpk::view_const_char	strZero									= {"0"		, 5};
-static constexpr const ::gpk::view_const_char	strNull									= {"null"	, 5};
 
 // Returns an index pointing to the resulting JSON element, or a -16 - the index of the resulting expression element.
 static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionReader & readerExpression, const uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
@@ -176,7 +176,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 	const ::gpk::array_obj<::gpk::view_const_string>	& expressionViews						= reader.View;
 	for(uint32_t iView = 0; iView < expressionViews.size(); ++iView) {
 		const ::gpk::view_const_string						& viewExpression						= expressionViews[iView];
-		const ::gpk::SExpressionReaderType					& typeExpression						= reader.Object[iView];
+		const ::gpk::SExpressionToken					& typeExpression						= reader.Object[iView];
 		if(viewExpression.size()) {
 			uint32_t											lenString								= viewExpression.size();
 			gpk_necall(bufferFormat.resize(lenString + 1024), "%s", "Out of memory?");

@@ -29,14 +29,14 @@ namespace gpk
 #	define NULL 0
 #endif
 
-	struct SJSONType {
+	struct SJSONToken {
 								int32_t														ParentIndex;
 								JSON_TYPE													Type;
 								::gpk::SSlice<uint32_t>										Span;
 	};
 
 	struct SJSONNode {
-								SJSONType													* Object				= 0;
+								SJSONToken													* Object				= 0;
 								SJSONNode													* Parent				= 0;
 								::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>					Children				= 0;
 								int32_t														ObjectIndex				= -1;
@@ -45,7 +45,7 @@ namespace gpk
 	struct SJSONReaderState {
 								uint32_t													IndexCurrentChar		= 0;
 								int32_t														IndexCurrentElement		= -1;
-								::gpk::SJSONType											* CurrentElement		= 0;
+								::gpk::SJSONToken											* CurrentElement		= 0;
 								int32_t														NestLevel				= 0;
 								char														CharCurrent				= 0;
 								bool														Escaping				: 1;
@@ -63,7 +63,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SJSONReader {
-								::gpk::array_pod<::gpk::SJSONType>							Object;
+								::gpk::array_pod<::gpk::SJSONToken>							Object;
 								::gpk::array_obj<::gpk::view_const_string>					View;
 								::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>			Tree;
 								::gpk::SJSONReaderState										StateRead;
