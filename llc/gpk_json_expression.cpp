@@ -108,15 +108,15 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			else if(0 > indexOfResolvedSubExpression) {
 				output											= readerExpression.View[childToSolve.Children[0]->ObjectIndex];
 				indexJSONResult									= indexOfResolvedSubExpression;
+				break;
 			}
 			else {
 				indexJSONResult									= indexOfResolvedSubExpression;
 				output											= inputJSON.View[indexOfResolvedSubExpression];
 			}
-			break;
 		}
 		else if(::gpk::EXPRESSION_READER_TYPE_EVALUATION == childToSolve.Object->Type) {
-			::gpk::view_const_string							strKey									= {};
+			::gpk::view_const_string							strKey									= inputJSON.View[indexNodeJSON];
 			int32_t												indexOfResolvedSubExpression			= -1;
 			int32_t												evalResult								= -1;
 			if(currentJSON.Object->Type == ::gpk::JSON_TYPE_NULL)
