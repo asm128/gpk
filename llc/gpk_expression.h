@@ -20,40 +20,41 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SExpressionToken {
-		int32_t														ParentIndex;
-		EXPRESSION_READER_TYPE										Type;
-		::gpk::SSlice<uint32_t>										Span;
-		bool														ClosingCondition				= false;
+		int32_t															ParentIndex;
+		EXPRESSION_READER_TYPE											Type;
+		::gpk::SSlice<uint32_t>											Span;
+		bool															ClosingCondition				= false;
 	};
 
 	struct SExpressionReaderState {
-		uint32_t													IndexCurrentChar				= 0;
-		int32_t														IndexCurrentElement				= -1;
-		::gpk::SExpressionToken										* CurrentElement				= 0;
-		int32_t														NestLevel						= 0;
-		char														CharCurrent						= 0;
-		bool														Escaping						= false;
-		bool														ExpectsSeparator				= false;
-		bool														InsideString					= false;
-		char														ClosingQuotes					= '0';
+		uint32_t														IndexCurrentChar				= 0;
+		int32_t															IndexCurrentElement				= -1;
+		::gpk::SExpressionToken											* CurrentElement				= 0;
+		int32_t															NestLevel						= 0;
+		char															CharCurrent						= 0;
+		bool															Escaping						= false;
+		bool															ExpectsSeparator				= false;
+		bool															InsideString					= false;
+		char															ClosingQuotes					= '0';
 	};
 
 	struct SExpressionNode {
-		SExpressionToken											* Object						= 0;
-		SExpressionNode												* Parent						= 0;
-		::gpk::array_obj<::gpk::ptr_obj<SExpressionNode>>			Children						= {};
-		int32_t														ObjectIndex						= -1;
+		SExpressionToken												* Object						= 0;
+		SExpressionNode													* Parent						= 0;
+		::gpk::array_obj<::gpk::ptr_obj<SExpressionNode>>				Children						= {};
+		int32_t															ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::array_pod<::gpk::SExpressionToken>					Object;
-		::gpk::array_obj<::gpk::view_const_string>					View;
+		::gpk::array_pod<::gpk::SExpressionToken>						Object;
+		::gpk::array_obj<::gpk::view_const_string>						View;
 		::gpk::array_obj<::gpk::ptr_obj	<::gpk::SExpressionNode>>	Tree;
-		::gpk::SExpressionReaderState								StateRead;
+		::gpk::SExpressionReaderState									StateRead;
+		::gpk::ptr_obj<::gpk::SExpressionReader>						SubExpressionCache;
 	};
 
-	::gpk::error_t												expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
-	::gpk::error_t												expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
+	::gpk::error_t													expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
+	::gpk::error_t													expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
 #pragma pack(pop)
 } // namespace
 

@@ -154,6 +154,8 @@
 		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
+	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
+		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
 		break;	// these characters are both valid as part of the string and as escapable characters.
 	case 'u':

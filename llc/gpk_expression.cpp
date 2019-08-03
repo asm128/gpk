@@ -274,6 +274,8 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		if(stateReader.IndexCurrentChar == expression.size() - 1)
 			++stateReader.IndexCurrentChar;
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		if(stateReader.CurrentElement->Type == ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_ANY), "%s", "Failed to close type.");
