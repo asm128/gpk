@@ -22,10 +22,12 @@ static ::gpk::error_t							printNode						(const ::gpk::SExpressionNode* node, 
 }
 #endif
 
-//static constexpr const ::gpk::view_const_char	strNull									= {"null"	, 5};
-static constexpr const ::gpk::view_const_char	strFalse								= {"false"	, 5};
-static constexpr const ::gpk::view_const_char	strTrue									= {"true"	, 4};
-static constexpr const ::gpk::view_const_char	strZero									= {"0"		, 5};
+static const ::gpk::view_const_string			strEmptyObj								= "{}"		;
+static const ::gpk::view_const_string			strEmptyArr								= "[]"		;
+static const ::gpk::view_const_string			strNull									= "null"	;
+static const ::gpk::view_const_string			strFalse								= "false"	;
+static const ::gpk::view_const_string			strTrue									= "true"	;
+static const ::gpk::view_const_string			strZero									= "0"		;
 
 
 //static ::gpk::error_t							evaluateFirstLevelExpression			(const ::gpk::SExpressionReader & readerExpression, const uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output)	{
@@ -48,7 +50,12 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 		const ::gpk::SExpressionNode						& childToSolve								= *nodeExpression->Children[iFirstLevelExpression];
 		const ::gpk::SJSONNode								* currentJSON								= (0 <= (int32_t)indexNodeJSON) ? inputJSON.Tree[indexNodeJSON] : 0;
 		//const ::gpk::SExpressionNode						* currentLiteral							= (0 <= (int32_t)indexNodeJSON) ? 0 : readerExpression.Tree[(((int32_t)indexNodeJSON) + 16) * -1];
-		const ::gpk::view_const_string						currentView									= (0 <= (int32_t)indexNodeJSON) ? inputJSON.View[indexNodeJSON] : readerExpression.View[(((int32_t)indexNodeJSON) + 16) * -1];
+		const ::gpk::view_const_string						currentView
+			= indexNodeJSON == -3				? ::strTrue
+			: indexNodeJSON == -4				? ::strFalse
+			: (0 <= (int32_t)indexNodeJSON)	? inputJSON.View[indexNodeJSON]
+			: readerExpression.View[(((int32_t)indexNodeJSON) + 16) * -1]
+			;
 		const ::gpk::view_const_string						currentExpressionView						= readerExpression.View[nodeExpression->Children[iFirstLevelExpression]->ObjectIndex];(void)currentExpressionView;
 		gpk_jexpr_info_printf("Reading first-level expression: %u.", iFirstLevelExpression);
 		bufferFormat									= currentView;
@@ -129,35 +136,42 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve expression: %s.", "punto final");
 				int32_t												evalResult								= -1;
 				indexJSONResult									= -(childToSolve.ObjectIndex + 0xF);
-				if(indexOfResolvedSubExpression >= 0) {
-					const ::gpk::SJSONNode								& evaluatedJSON							= *inputJSON[indexOfResolvedSubExpression];
-					if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_NULL)
-						evalResult										= 0;
-					else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_BOOL)
-						evalResult										= (strKey == strTrue) ? 1 : 0;
-					else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_NUMBER)
-						evalResult										= (strKey == strZero) ? 0 : 1;
-					else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_STRING)
-						evalResult										= strKey.size() ? 1 : 0;
-					else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_ARRAY)
-						evalResult										= inputJSON.Tree[indexOfResolvedSubExpression]->Children.size() ? 1 : 0;
-					else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_OBJECT)
-						evalResult										= inputJSON.Tree[indexOfResolvedSubExpression]->Children.size() ? 1 : 0;
+				if(lastCarryBool)
+					evalResult										= lastUnaryNot ? 0 : 1;
+				else {
+					if(indexOfResolvedSubExpression < 0) {
+						if(indexOfResolvedSubExpression <= -0xF)
+							evalResult										= (strKey == strZero || strKey == strFalse ||  strKey == strNull || strKey == strEmptyObj  || 0 == strKey.size() || strKey == ::strEmptyArr) ? 0 : 1;
+						else
+							evalResult										= indexOfResolvedSubExpression == -3 ? 1 : 0;//(strKey == ::gpk::view_const_string{"0"} || strKey == ::gpk::view_const_string{"false"} ||  strKey == ::gpk::view_const_string{"null"} || strKey == ::gpk::view_const_string{"{}"}  || strKey == ::gpk::view_const_string{""} || strKey == ::gpk::view_const_string{"[]"}) ? 0 : 1;
+						indexJSONResult									= evalResult ? -3 : -4;
+					}
 					else {
-						bufferFormat								= "Failed to solve expression: ";
-						bufferFormat.append(readerExpression.View[childToSolve.ObjectIndex]);
-						bufferFormat.push_back(0);
-						warning_printf("%s", bufferFormat.begin());
-						return -1;
+						const ::gpk::SJSONNode								& evaluatedJSON							= *inputJSON[indexOfResolvedSubExpression];
+						if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_NULL)
+							evalResult										= 0;
+						else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_BOOL)
+							evalResult										= (strKey == strTrue) ? 1 : 0;
+						else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_NUMBER)
+							evalResult										= (strKey == strZero) ? 0 : 1;
+						else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_STRING)
+							evalResult										= strKey.size() ? 1 : 0;
+						else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_ARRAY)
+							evalResult										= inputJSON.Tree[indexOfResolvedSubExpression]->Children.size() ? 1 : 0;
+						else if(evaluatedJSON.Object->Type == ::gpk::JSON_TYPE_OBJECT)
+							evalResult										= inputJSON.Tree[indexOfResolvedSubExpression]->Children.size() ? 1 : 0;
+						else {
+							bufferFormat								= "Failed to solve expression: ";
+							bufferFormat.append(readerExpression.View[childToSolve.ObjectIndex]);
+							bufferFormat.push_back(0);
+							warning_printf("%s", bufferFormat.begin());
+							return -1;
+						}
 					}
 				}
-				else {
-					evalResult										= indexOfResolvedSubExpression == -3 ? 1 : 0;//(strKey == ::gpk::view_const_string{"0"} || strKey == ::gpk::view_const_string{"false"} ||  strKey == ::gpk::view_const_string{"null"} || strKey == ::gpk::view_const_string{"{}"}  || strKey == ::gpk::view_const_string{""} || strKey == ::gpk::view_const_string{"[]"}) ? 0 : 1;
-					indexJSONResult									= indexOfResolvedSubExpression == -3 ? -4 : -3;
-				}
-				output											= (evalResult == -4) ? ::gpk::view_const_string{strTrue.begin(), strTrue.size()} : ::gpk::view_const_string{strFalse.begin(), strFalse.size()};
-				lastUnaryNot	= evalResult ? false : true;
-				lastCarryBool	= true;
+				lastUnaryNot								= evalResult ? false : true;
+				lastCarryBool								= true;
+				output										= lastUnaryNot ? ::gpk::view_const_string{strTrue.begin(), strTrue.size()} : ::gpk::view_const_string{strFalse.begin(), strFalse.size()};
 			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_BOOL == childToSolve.Object->Type) {
 				int32_t												indexOfResolvedSubExpression			= -1;
@@ -167,7 +181,9 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 					lastCarryBool									= false;
 				}
 				else {
-					if(currentJSON) {
+					if(0 == currentJSON)
+						evalResult										= indexNodeJSON == -3 ? 0 : 1;
+					else {
 						if(currentJSON->Object->Type == ::gpk::JSON_TYPE_NULL)
 							evalResult										= 1;
 						else if(currentJSON->Object->Type == ::gpk::JSON_TYPE_BOOL)
@@ -188,9 +204,6 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 							return -1;
 						}
 					}
-					else
-						evalResult										= indexNodeJSON == -3 ? 0 : 1;
-
 				}
 				::gpk::view_const_string							viewOfExpressionResult				= {};
 				{
