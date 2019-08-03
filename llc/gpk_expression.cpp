@@ -1,6 +1,6 @@
 #include "gpk_expression.h"
 
-#define gpk_expression_info_printf info_printf
+#define gpk_expression_info_printf //info_printf
 
 static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk::SExpressionToken>& tokens, ::gpk::array_obj<::gpk::view_const_string>& views, const ::gpk::view_const_string& expression) {
 	for(uint32_t iTag = 0; iTag < tokens.size(); ++iTag) {

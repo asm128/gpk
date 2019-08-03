@@ -99,6 +99,7 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 					error_printf(bufferFormat.begin(), readerExpression.View[childToSolve.ObjectIndex].begin());
 					return -1;
 				}
+				ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Object[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_NUMBER, "Arrays can only be accessed by index with a json number. Type found: %s.",::gpk::get_value_label(inputJSON.Object[indexOfResolvedSubExpression].Type).begin());
 				uint64_t											numberRead								= 0;
 				gpk_necall(::gpk::parseIntegerDecimal(viewOfIndex, &numberRead), "%s", "Out of memory?");
 				indexJSONResult									= ::gpk::jsonArrayValueGet(*currentJSON, (uint32_t)numberRead);
