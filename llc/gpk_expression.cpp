@@ -136,6 +136,13 @@ static	bool												isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
+//static	bool												isAnyOfCharacters						(const ::gpk::view_const_string& charactersToFind, const char characterToTest)		{
+//	for(uint32_t iCharacter = 0; iCharacter < charactersToFind.size(); ++iCharacter)
+//		if(characterToTest == charactersToFind[iCharacter])
+//			return true;
+//	return false;
+//}
+
 static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentChar, const ::gpk::view_const_string& expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::isSpaceCharacter(expression[indexCurrentChar]))
@@ -166,6 +173,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_INDEX	== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_ANY		== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL		== stateReader.CurrentElement->Type
+		 || ::gpk::EXPRESSION_READER_TYPE_TERM_AND		== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT		== stateReader.CurrentElement->Type
 		 )
 			gpk_necall(::expressionReaderOpenLevel(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY, stateReader.IndexCurrentChar), "Failed to open key at index %i", stateReader.IndexCurrentChar);
@@ -192,6 +200,17 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		::skipToNextCharacter(stateReader.IndexCurrentChar, expression);	// Skip blanks after this.
 		--stateReader.IndexCurrentChar;
 		break;
+	case '&':
+		stateReader.ExpectsSeparator								= false;
+		skip_if_escaping();
+		ree_if(stateReader.IndexCurrentChar >= expression.size() - 2 || '&' != expression[stateReader.IndexCurrentChar + 1], "%s", "Invalid syntax.")
+		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
+		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL	), "Failed to open key at index %i", stateReader.IndexCurrentChar);
+		++stateReader.IndexCurrentChar;
+		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar + 1), "Failed to open key at index %i", stateReader.IndexCurrentChar);
+		break;
 	case '.':
 		stateReader.ExpectsSeparator								= false;
 		test_first_position();
@@ -209,6 +228,8 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_TERM_AND == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL	, stateReader.IndexCurrentChar + 1), "Failed to open evaluation at index %i", stateReader.IndexCurrentChar + 1);
 		break;
 	case ':':
@@ -218,6 +239,8 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_TERM_AND == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL	), "Failed to open key at index %i", stateReader.IndexCurrentChar);
 		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL	, stateReader.IndexCurrentChar + 1), "Failed to open evaluation at index %i", stateReader.IndexCurrentChar + 1);
 		stateReader.CurrentElement->ClosingCondition				= true;
@@ -233,6 +256,8 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_TERM_AND == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL	), "Failed to open key at index %i", stateReader.IndexCurrentChar);
 		gpk_necall(::expressionReaderCloseType	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_KEY	, stateReader.IndexCurrentChar), "Failed to close type: %s.", ::gpk::get_value_label(stateReader.CurrentElement->Type).begin());
 		break;
@@ -276,6 +301,8 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 		while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
+		while(::gpk::EXPRESSION_READER_TYPE_TERM_AND == stateReader.CurrentElement->Type)
+			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		if(stateReader.CurrentElement->Type == ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL)
 			gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_ANY), "%s", "Failed to close type.");
