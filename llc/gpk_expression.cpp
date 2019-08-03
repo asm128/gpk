@@ -165,6 +165,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_INDEX	== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_ANY		== stateReader.CurrentElement->Type
 		 || ::gpk::EXPRESSION_READER_TYPE_TERM_BOOL		== stateReader.CurrentElement->Type
+		 || ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT		== stateReader.CurrentElement->Type
 		 )
 			gpk_necall(::expressionReaderOpenLevel(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY, stateReader.IndexCurrentChar), "Failed to open key at index %i", stateReader.IndexCurrentChar);
 		else if(0x20 > stateReader.CharCurrent || 0x7F < stateReader.CharCurrent)
@@ -195,7 +196,10 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 		test_first_position();
 		skip_if_escaping();
 		gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
-		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			, stateReader.IndexCurrentChar + 1), "Failed to open key at index %i", stateReader.IndexCurrentChar);
+		++stateReader.IndexCurrentChar;
+		::skipToNextCharacter(stateReader.IndexCurrentChar, expression);	// Skip blanks after this.
+		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			, stateReader.IndexCurrentChar), "Failed to open key at index %i", stateReader.IndexCurrentChar);
+		--stateReader.IndexCurrentChar;
 		break;
 	case '?':
 		stateReader.ExpectsSeparator								= false;
@@ -257,7 +261,6 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	case '!':
 		skip_if_escaping();
 		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar + 1), "Failed to open expression at index %i", stateReader.IndexCurrentChar);	// Enter sub-expression
-		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			, stateReader.IndexCurrentChar + 1), "Failed to open expression at index %i", stateReader.IndexCurrentChar);	// Enter sub-expression
 		break;
 	}
 	if(stateReader.IndexCurrentChar >= expression.size() - 1) { // if this is the last character, make sure to close open key and root expression
