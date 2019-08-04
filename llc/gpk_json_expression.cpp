@@ -157,9 +157,6 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 					ree_if(errored(lastResult.IndexJSONResult), "Value not found for index: %lli.", numberRead);
 					output											= inputJSON.View[lastResult.IndexJSONResult];
 				}
-				lastResult.IndexJSONResult						= ::gpk::jsonArrayValueGet(*currentJSON, (uint32_t)numberRead);
-				ree_if(errored(lastResult.IndexJSONResult), "Value not found for index: %lli.", numberRead);
-				output											= inputJSON.View[lastResult.IndexJSONResult];
 			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_KEY == childToSolve.Token->Type) {
 				ree_if(currentJSON && currentJSON->Object->Type != ::gpk::JSON_TYPE_OBJECT, "Only objects can be accessed by key. JSON type: %s.", ::gpk::get_value_label(currentJSON->Object->Type).begin());
