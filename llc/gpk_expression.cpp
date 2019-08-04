@@ -77,8 +77,7 @@ static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionR
 		error_printf(format, __VA_ARGS__);		\
 	}
 
-
-	::gpk::error_t										expressionReaderCloseTerm							(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens)	{
+static	::gpk::error_t											expressionReaderCloseTerm							(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens)	{
 	gpk_necall(::expressionReaderCloseIfType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_KEY			), "%s", "Failed to close type.");
 	while(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == stateReader.CurrentElement->Type)
 		gpk_necall(::expressionReaderCloseType(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_UNARY_NOT	, stateReader.IndexCurrentChar), "%s", "Failed to close type.");
@@ -93,7 +92,7 @@ static	::gpk::error_t										expressionReaderOpenLevel				(::gpk::SExpressionR
 }
 
 			::gpk::error_t									expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState& stateReader, ::gpk::array_pod<::gpk::SExpressionToken>& tokens, const ::gpk::view_const_string& expression)	{
-	::gpk::SExpressionToken									currentElement										= {};
+	::gpk::SExpressionToken											currentElement										= {};
 	::gpk::error_t													errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
