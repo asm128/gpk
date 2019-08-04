@@ -40,16 +40,16 @@ namespace gpk
 	};
 
 	struct SExpressionNode {
-		SExpressionToken												* Object						= 0;
+		SExpressionToken												* Token							= 0;
 		SExpressionNode													* Parent						= 0;
 		::gpk::array_obj<::gpk::ptr_obj<SExpressionNode>>				Children						= {};
 		int32_t															ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::array_pod<::gpk::SExpressionToken>						Object;
+		::gpk::array_pod<::gpk::SExpressionToken>						Token;
 		::gpk::array_obj<::gpk::view_const_string>						View;
-		::gpk::array_obj<::gpk::ptr_obj	<::gpk::SExpressionNode>>	Tree;
+		::gpk::array_obj<::gpk::ptr_obj	<::gpk::SExpressionNode>>		Tree;
 		::gpk::SExpressionReaderState									StateRead;
 		::gpk::ptr_obj<::gpk::SExpressionReader>						SubExpressionCache;
 	};
