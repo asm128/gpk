@@ -9,8 +9,11 @@ namespace gpk
 	static const ::gpk::view_const_string	strEmptyObj								= "{}"		;
 	static const ::gpk::view_const_string	strEmptyArr								= "[]"		;
 	static const ::gpk::view_const_string	strNull									= "null"	;
-	static const ::gpk::view_const_string	strFalse								= "false"	;
-	static const ::gpk::view_const_string	strTrue									= "true"	;
+	static const ::gpk::view_const_string	strBool		[2]							=
+		{ "false"
+		, "true"
+		};
+
 	static const ::gpk::view_const_string	strZero									= "0"		;
 #pragma pack(push, 1)
 	struct SEvaluationStepResult {
@@ -21,19 +24,11 @@ namespace gpk
 		::gpk::view_const_string				Output									;
 		bool									LastValueCarry							;
 
-		::gpk::error_t							SetBoolCarry							(int32_t evalResult, ::gpk::view_const_string & output)	{
-			if(evalResult) {
-				output									= ::gpk::strTrue;
-				IndexJSONResult							= -3;
-				LastValue								= true	;
-				LastValueCarry							= true	;
-			}
-			else {
-				output									= ::gpk::strFalse;
-				IndexJSONResult							= -4;
-				LastValue								= false	;
-				LastValueCarry							= true	;
-			}
+		::gpk::error_t							SetBoolCarry							(bool evalResult, ::gpk::view_const_string & output)	{
+			IndexJSONResult							= -5;
+			LastValueCarry							= true	;
+			LastValue								= evalResult ? 1 : 0;
+			output									= ::gpk::strBool[LastValue];
 			return 0;
 		}
 	};
