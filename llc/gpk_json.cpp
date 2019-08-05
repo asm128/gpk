@@ -31,7 +31,7 @@
 }
 
 ::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
-	switch(node->Object->Type) {
+	switch(node->Token->Type) {
 	case ::gpk::JSON_TYPE_NULL			:
 	case ::gpk::JSON_TYPE_NUMBER		:
 	case ::gpk::JSON_TYPE_BOOL			:
@@ -72,8 +72,8 @@
 	// -- Build all nodes linearly, without assigning the children
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
 		::gpk::ptr_obj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
-		nodeCurrent->Object											= &in_object[iObject];
-		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Object->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Object->ParentIndex] : nullptr;
+		nodeCurrent->Token											= &in_object[iObject];
+		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
 	}
 
@@ -81,7 +81,7 @@
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
 			const ::gpk::ptr_obj<::gpk::SJSONNode>						& nodeOther											= tree[iOther];
-			if(((uint32_t)nodeOther->Object->ParentIndex) == iObject)
+			if(((uint32_t)nodeOther->Token->ParentIndex) == iObject)
 				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}
 	}
@@ -89,8 +89,8 @@
 	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		::gpk::ptr_obj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
-		if(::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Object->Type
-		 &&::gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Object->Type
+		if(::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Token->Type
+		 &&::gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Token->Type
 		)
 			continue;
 		::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				newChildren;
@@ -214,7 +214,6 @@
 }
 
 			::gpk::error_t									parseJsonNumber										(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_string& jsonAsString)	{
-	char															bufferFormat[1024];
 	const uint32_t													offset												= stateReader.IndexCurrentChar;
 	uint32_t														index												= offset;
 
@@ -239,11 +238,12 @@
 	::gpk::SJSONToken												currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_NUMBER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
 	gpk_necall(tokens.push_back(currentElement), "%s", "Out of memory?");
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
-	gpk_necall(sprintf_s(bufferFormat, "Number found: %%%u.%us. Length: %u. Negative: %s. Float: %s.", sizeNum, sizeNum, sizeNum
+	json_info_printf("Number found: %s. Length: %u. Negative: %s. Float: %s."
+		, ::gpk::toString({&jsonAsString[index], sizeNum}).begin()
+		, sizeNum
 		, isNegative	? "true" : "false"
 		, isFloat		? "true" : "false"
-	), "%s", "Failed to parse json number. Number too long.");
-	json_info_printf(bufferFormat, &jsonAsString[index]);
+	);
 	stateReader.IndexCurrentChar								+= sizeNum + (index - offset) - 1;
 	charCurrent													= jsonAsString[stateReader.IndexCurrentChar+1];
 	ree_if(charCurrent != ' '
@@ -417,10 +417,10 @@
 }
 
 			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys)	{
-	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Object->Type, ::gpk::get_value_label(node_object.Object->Type).begin());
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
-		ree_if(::gpk::JSON_TYPE_STRING != node->Object->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), ::gpk::JSON_TYPE_STRING);
+		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		const ::gpk::view_const_string									& view												= views[node->ObjectIndex];
 		gpk_necall(indices	.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
 		gpk_necall(keys		.push_back(view)				, "Failed! %s", "Too many nodes?");
@@ -429,10 +429,10 @@
 }
 
 			::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string& key)	{
-	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Object->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Object->Type, ::gpk::get_value_label(node_object.Object->Type).begin());
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
-		ree_if(::gpk::JSON_TYPE_STRING != node->Object->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Object->Type, ::gpk::get_value_label(node->Object->Type).begin(), ::gpk::JSON_TYPE_STRING);
+		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		const ::gpk::view_const_string									& view												= views[node->ObjectIndex];
 		if(key == view)
 			return (::gpk::error_t)node->ObjectIndex + 2; // one for value and other for the actual element
@@ -441,7 +441,7 @@
 }
 
 			::gpk::error_t									gpk::jsonArrayValueGet								(const ::gpk::SJSONNode& tree, uint32_t index)				{
-	ree_if(::gpk::JSON_TYPE_ARRAY != tree.Object->Type, "Invalid node type: %i (%s). Only arrays are allowed to be accessed by index.", tree.Object->Type, ::gpk::get_value_label(tree.Object->Type).begin());
+	ree_if(::gpk::JSON_TYPE_ARRAY != tree.Token->Type, "Invalid node type: %i (%s). Only arrays are allowed to be accessed by index.", tree.Token->Type, ::gpk::get_value_label(tree.Token->Type).begin());
 	ree_if(index >= tree.Children.size(), "Index out of range: %i. Max index: %i.", index, tree.Children.size() - 1);
 	const ::gpk::SJSONNode											* node												= tree.Children[index];	// Get the
 	ree_if(0 == node, "Invalid or corrupt tree. %s", "Nodes cannot be null.");

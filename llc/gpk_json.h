@@ -28,7 +28,7 @@ namespace gpk
 	};
 
 	struct SJSONNode {
-								SJSONToken													* Object				= 0;
+								SJSONToken													* Token					= 0;
 								SJSONNode													* Parent				= 0;
 								::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>					Children				= 0;
 								int32_t														ObjectIndex				= -1;
