@@ -227,7 +227,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	ree_if(-1 == jsonNodeResultOfEvaluation, "Failed to evaluate expression: %s.", ::gpk::toString(reader.View[0]).begin());
 	for(uint32_t iResult = 0; iResult < results.Results.size(); ++iResult)
 		info_printf("Result %u: '%s'", iResult, ::gpk::toString(results.Results[iResult].Output).begin());
-	return 0;
+	return jsonNodeResultOfEvaluation;
 }
 
 ::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
