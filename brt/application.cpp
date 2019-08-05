@@ -139,9 +139,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 		GetExitCodeProcess(process.ProcessInfo.hProcess, &exitCode);
 		if(STILL_ACTIVE != exitCode)
 			break;
-		char							bufferFormat	[128]	= {};
-		sprintf_s(bufferFormat, "Process output: %%.%us", dwRead);
-		info_printf(bufferFormat, chBuf.begin());
+		info_printf("Process output: %s", ::gpk::toString({chBuf.begin(), chBuf.size()}).begin());
 		if(0 == readBytes[readBytes.size() - 1])
 			break;
 	}
@@ -307,7 +305,7 @@ static int					REM_tmain0							()		{
 static int					REM_tmain1			() {
 	static constexpr	const uint32_t	BUFSIZE					= 4096;
 	::gpk::view_const_string		szAppName			= "ex3.exe";
-	STARTUPINFOA						si					= {sizeof(STARTUPINFOA)};
+	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};
 	BOOL							fExist				= 0
 		;
@@ -338,11 +336,7 @@ static int					REM_tmain1			() {
 	si							= {sizeof(STARTUPINFOA)};
 	static constexpr const bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
-	char							bufferFormat	[64]	= {};
-	sprintf_s(bufferFormat, "%%.%us", szAppName.size());
-	::gpk::array_pod<char_t>		bufferAppName;
-	bufferAppName.resize(szAppName.size() * 2);
-	sprintf_s(bufferAppName.begin(), bufferAppName.size(), bufferFormat, szAppName.begin());
+	::gpk::array_pod<char_t>		bufferAppName			= ::gpk::toString(szAppName);
 	ree_if(FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	// - Restore the original environment variable.

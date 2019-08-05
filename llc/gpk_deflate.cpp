@@ -77,10 +77,8 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	// -- The following two arrays store the file table and the file contents that are going to be compressed and stored on disk
 	::gpk::array_pod<byte_t>						tableFiles					= {};
 	::gpk::array_pod<byte_t>						contentsPacked				= {};
-	::gpk::array_pod<char_t>						bufferFormat				= {};
 	::gpk::array_pod<char_t>						finalPathName				= {};
 	finalPathName.resize(1024*8);
-	bufferFormat.resize(64);
 	{
 		::gpk::array_obj<::gpk::array_pod<char_t>>		listFiles				= {};
 		gpk_necall(::gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
@@ -92,10 +90,8 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 			if(0 == pathToLoad.size())
 				continue;
 
-			sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us", pathToLoad.size());
-			uint32_t lenFinalPath = (uint32_t)sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), pathToLoad.begin());
-			info_printf("pathToLoad (%u): '%s'.", iFile, finalPathName.begin());
-			gpk_necall(::gpk::fileToMemory({finalPathName.begin(), lenFinalPath}, contentsTemp), "Failed to load file: %s. Out of memory?", pathToLoad.begin());
+			info_printf("pathToLoad (%u): '%s'.", iFile, ::gpk::toString(pathToLoad).begin());
+			gpk_necall(::gpk::fileToMemory(pathToLoad, contentsTemp), "Failed to load file: %s. Out of memory?", pathToLoad.begin());
 
 			fileLocation.Count							= contentsTemp.size();
 			gpk_necall(tableFiles.append((const byte_t*)&fileLocation, sizeof(::gpk::SRange<uint32_t>)), "Failed to append data! %s.", "Out of memory?");
@@ -156,14 +152,8 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	const ::gpk::array_pod<byte_t>				& compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
 	{
 		FILE										* fp						= 0;
-		::gpk::array_pod<char_t>					bufferFormat					= {};
-		::gpk::array_pod<char_t>					finalPathName					= {};
-		finalPathName.resize(1024*8);
-		bufferFormat.resize(64);
-		sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us", nameFileDst.size());
-		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), nameFileDst.begin());
-		fopen_s(&fp, finalPathName.begin(), "wb");
-		ree_if(0 == fp, "Failed to create file: %s.", nameFileDst.begin());
+		fopen_s(&fp, ::gpk::toString(nameFileDst).begin(), "wb");
+		ree_if(0 == fp, "Failed to create file: %s.", ::gpk::toString(nameFileDst).begin());
 		fwrite(&fileHeader							, 1, sizeof(::gpk::SPackHeader)			, fp);
 		fwrite(compressedTableFiles		.begin	()	, 1, compressedTableFiles		.size()	, fp);
 		fwrite(compressedContentsPacked	.begin	()	, 1, compressedContentsPacked	.size()	, fp);

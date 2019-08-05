@@ -145,13 +145,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	uint32_t								iFile							= 0;
 	gpk_necall(sprintf_s(fileNameSrc, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
 	FILE									* fpDest						= 0;
-	::gpk::array_pod<char_t>					bufferFormat					= {};
-	::gpk::array_pod<char_t>					finalPathName					= {};
-	finalPathName.resize(1024*8);
-	bufferFormat.resize(64);
-	sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us", fileNameDst.size());
-	sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), fileNameDst.begin());
-
+	::gpk::array_pod<char_t>					finalPathName					= ::gpk::toString(fileNameDst);
 	fopen_s(&fpDest, finalPathName.begin(), "wb");
 	ree_if(0 == fpDest, "Failed to create file: %s.", finalPathName.begin());
 	::gpk::array_pod<byte_t>					fileInMemory					= {};
@@ -283,13 +277,9 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 }
 
 		::gpk::error_t									gpk::fileToMemory									(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory)		{
-	char														bufferFormat[64]									= {};
-	char														bufferPath	[4096]									= {};
-	sprintf_s(bufferFormat, "%%.%us", fileName.size());
-	sprintf_s(bufferPath, bufferFormat, fileName.begin());
 	FILE														* fp												= 0;
-	int32_t														fileErr												= fopen_s(&fp, bufferPath, "rb");
-	rve_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", bufferPath);
+	int32_t														fileErr												= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
+	rve_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
 	fseek(fp, 0, SEEK_END);
 	int32_t														fileSize											= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);
@@ -300,7 +290,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	}
 	else {
 		if(fileSize != (int32_t)fread(fileInMemory.begin(), sizeof(ubyte_t), fileSize, fp)) {
-			error_printf("fread() failed! file: '%s'.", bufferPath);
+			error_printf("fread() failed! file: '%s'.", ::gpk::toString(fileName).begin());
 			result													= -1;
 		}
 	}
@@ -309,13 +299,9 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 }
 
 		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_string& fileName, const ::gpk::view_const_byte& fileInMemory)	{
-	char														bufferFormat[64]									= {};
-	char														bufferPath	[4096]									= {};
-	sprintf_s(bufferFormat, "%%.%us", fileName.size());
-	sprintf_s(bufferPath, bufferFormat, fileName.begin());
 	FILE														* fp												= 0;
-	ree_if(0 != fopen_s(&fp, bufferPath, "wb"), "Failed to create file for writing: %s.", bufferPath);
-	ree_if(0 == fp, "Failed to create file for writing: %s.", bufferPath);
+	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
+	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	::gpk::error_t												result												= 0;
 	if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fp)) {
 		error_printf("Failed to write file. Disk full? File size: %u.", fileInMemory.size());

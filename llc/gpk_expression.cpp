@@ -355,12 +355,12 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 			, reader.StateRead.ExpectsSeparator	? "true" : "false"
 			, reader.StateRead.Escaping			? "true" : "false"
 			, reader.StateRead.NestLevel
-			, validElement ? currentElement->ParentIndex							: -1
-			, validElement ? currentElement->Type									: -1
-			, validElement ? ::gpk::get_value_label(currentElement->Type).begin()	: "N/A"
-			, validElement ? currentElement->Span.Begin								: -1
-			, validElement ? &expression[currentElement->Span.Begin]				: ""
-			, expression.begin()
+			, validElement ? currentElement->ParentIndex								: -1
+			, validElement ? currentElement->Type										: -1
+			, validElement ? ::gpk::get_value_label(currentElement->Type).begin()		: "N/A"
+			, validElement ? currentElement->Span.Begin									: -1
+			, validElement ? &(::gpk::toString(expression)[currentElement->Span.Begin])	: ""
+			, ::gpk::toString(expression).begin()
 		);
 	}
 	return 0;
