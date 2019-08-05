@@ -63,6 +63,7 @@ static ::gpk::error_t							evaluateBoolResult						(const ::gpk::SJSONNode * js
 			evalResult										= indexNodeJSON == -3 ? 1 : 0;//(strKey == ::gpk::view_const_string{"0"} || strKey == ::gpk::view_const_string{"false"} ||  strKey == ::gpk::view_const_string{"null"} || strKey == ::gpk::view_const_string{"{}"}  || strKey == ::gpk::view_const_string{""} || strKey == ::gpk::view_const_string{"[]"}) ? 0 : 1;
 	return evalResult;
 }
+
 struct SEvaluationStepResult {
 	uint32_t											IndexRootJSONNode						;
 	int32_t												IndexJSONResult							;
@@ -205,19 +206,6 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 				ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve expression: %s.", "punto final");
 				lastResult.IndexJSONResult									= indexOfResolvedSubExpression;
 			}
-			else if(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == childToSolve.Token->Type) {
-				::gpk::view_const_string							viewOfExpressionResult					= {};
-				const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexJSONResult, viewOfExpressionResult);
-				output											= viewOfExpressionResult;
-				ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve expression: %s.", "punto final");
-				int32_t												evalResult								= -1;
-				if(lastResult.LastBoolCarry)
-					evalResult										= lastResult.LastBoolValue ? 1 : 0;
-				else
-					evalResult										= ::evaluateBoolResult((indexOfResolvedSubExpression >= 0) ? inputJSON[indexOfResolvedSubExpression] : 0, indexOfResolvedSubExpression, viewOfExpressionResult);
-
-				lastResult.SetBoolCarry(0 == evalResult, output);
-			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_BOOL == childToSolve.Token->Type) {
 				int32_t												indexOfResolvedSubExpression		= -1;
 				const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
@@ -233,6 +221,10 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 					lastResult.IndexJSONResult						= indexOfResolvedSubExpression;
 				}
 				iFirstLevelExpression							+= prevResult;
+			}
+			else if(::gpk::EXPRESSION_READER_TYPE_UNARY_NOT == childToSolve.Token->Type) {
+				const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexJSONResult);
+				lastResult.SetBoolCarry(0 == evalResult, output);
 			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_AND == childToSolve.Token->Type) {
 				const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
