@@ -16,23 +16,23 @@ namespace gpk
 	struct SEvaluationStepResult {
 		uint32_t								IndexRootJSONNode						;
 		int32_t									IndexJSONResult							;
+		uint64_t								LastValue								;
 		::gpk::ptr_obj<::gpk::SJSONReader>		JSONReader								;
 		::gpk::view_const_string				Output									;
-		bool									LastBoolValue							;
-		bool									LastBoolCarry							;
+		bool									LastValueCarry							;
 
 		::gpk::error_t							SetBoolCarry							(int32_t evalResult, ::gpk::view_const_string & output)	{
 			if(evalResult) {
 				output									= ::gpk::strTrue;
-				IndexJSONResult							= -3	;
-				LastBoolValue							= true	;
-				LastBoolCarry							= true	;
+				IndexJSONResult							= -3;
+				LastValue								= true	;
+				LastValueCarry							= true	;
 			}
 			else {
 				output									= ::gpk::strFalse;
-				IndexJSONResult							= -4	;
-				LastBoolValue							= false	;
-				LastBoolCarry							= true	;
+				IndexJSONResult							= -4;
+				LastValue								= false	;
+				LastValueCarry							= true	;
 			}
 			return 0;
 		}

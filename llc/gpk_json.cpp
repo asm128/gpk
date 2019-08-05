@@ -3,6 +3,7 @@
 #include "gpk_storage.h"
 
 #define json_info_printf // info_printf
+#define json_error_printf error_printf
 
 ::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {
 	info_printf("Loading json file: %s.", filename.begin());
@@ -136,15 +137,34 @@
 #define seterr_break_if(condition, format, ...)	\
 	if(condition) {								\
 		errVal					= -1;			\
-		error_printf(format, __VA_ARGS__);		\
+		json_error_printf(format, __VA_ARGS__);		\
 		break;									\
 	}
 
 #define seterr_if(condition, format, ...)	\
 	if(condition) {								\
 		errVal					= -1;			\
-		error_printf(format, __VA_ARGS__);		\
+		json_error_printf(format, __VA_ARGS__);		\
 	}
+
+static	bool												isSpaceCharacter						(const char characterToTest)		{
+	switch(characterToTest) {
+	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
+		return true;
+	default:
+		return false;
+	}
+}
+
+static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentChar, const ::gpk::view_const_string& expression)		{
+	while(indexCurrentChar < expression.size()) {
+		if(::isSpaceCharacter(expression[indexCurrentChar]))
+			++indexCurrentChar;
+		else
+			break;
+	}
+	return 0;
+}
 
 			::gpk::error_t									jsonParseStringCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_string& jsonAsString)	{
 	::gpk::SJSONToken												currentElement										= {};
@@ -155,6 +175,8 @@
 		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
+		::skipToNextCharacter(stateReader.IndexCurrentChar, jsonAsString);
+		--stateReader.IndexCurrentChar;
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
 		break;	// these characters are both valid as part of the string and as escapable characters.
@@ -198,10 +220,10 @@
 	return 0;
 }
 
-			::gpk::error_t									lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t									lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_string& jsonAsString)	{
 	const uint32_t													offset												= indexCurrentChar;
 	char															charCurrent											= jsonAsString[indexCurrentChar];
-	while(indexCurrentChar < jsonAsString.size() &&
+	while((indexCurrentChar + 1) < jsonAsString.size() &&
 		( ( charCurrent >= '1' && charCurrent <= '9')
 		 || charCurrent == '0'
 		 || charCurrent == '.'
@@ -245,16 +267,18 @@
 		, isFloat		? "true" : "false"
 	);
 	stateReader.IndexCurrentChar								+= sizeNum + (index - offset) - 1;
-	charCurrent													= jsonAsString[stateReader.IndexCurrentChar+1];
-	ree_if(charCurrent != ' '
-		&& charCurrent != '\t'
-		&& charCurrent != '\n'
-		&& charCurrent != '\r'
-		&& charCurrent != '\n'
-		&& charCurrent != ']'
-		&& charCurrent != '}'
-		&& charCurrent != ','
-		, "Invalid number termination: '%c'.", charCurrent)
+	if(stateReader.IndexCurrentChar + 1 < jsonAsString.size() - 1) {
+		charCurrent													= jsonAsString[stateReader.IndexCurrentChar+1];
+		ree_if(charCurrent != ' '
+			&& charCurrent != '\t'
+			&& charCurrent != '\n'
+			&& charCurrent != '\r'
+			&& charCurrent != '\n'
+			&& charCurrent != ']'
+			&& charCurrent != '}'
+			&& charCurrent != ','
+			, "Invalid number termination: '%c'.", charCurrent)
+	}
 	return 0;
 }
 
@@ -312,7 +336,7 @@
 #define GPK_JSON_EXPECTS_SEPARATOR()													\
 	if (stateReader.ExpectingSeparator) { 												\
 		errVal														= -1; 				\
-		error_printf("Expected separator, found '%c'.", stateReader.CharCurrent); 		\
+		json_error_printf("Expected separator, found '%c'.", stateReader.CharCurrent); 		\
 		break; 																			\
 	}
 
@@ -324,7 +348,7 @@
 	default: // Fallback error for every character that is not recognized by the parser.
 		GPK_JSON_EXPECTS_SEPARATOR();
 		errVal														= -1;
-		error_printf("Invalid character at index %i. '%c'", stateReader.IndexCurrentChar, stateReader.CharCurrent);
+		json_error_printf("Invalid character at index %i. '%c'", stateReader.IndexCurrentChar, stateReader.CharCurrent);
 		break;
 	case '/'	:
 		seterr_break_if(stateReader.IndexCurrentChar >= jsonAsString.size() || '/' != jsonAsString[stateReader.IndexCurrentChar + 1], "Invalid character at index %i. '%c'", stateReader.IndexCurrentChar, stateReader.CharCurrent);
@@ -333,12 +357,14 @@
 		else
 			stateReader.IndexCurrentChar								= jsonAsString.size() - 1;
 	break;
-	case 'f'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
-	case 't'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
-	case 'n'	: GPK_JSON_EXPECTS_SEPARATOR(); errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
+	case 'f'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenFalse, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
+	case 't'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
+	case 'n'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
 	case '.'	: case '-'	: case '+'	: //case 'x'	: // parse int or float accordingly
 		GPK_JSON_EXPECTS_SEPARATOR();
+		if(-1 == stateReader.IndexCurrentElement)
+			ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size());
 		seterr_break_if(stateReader.Escaping, "Invalid character found at index %u: %c.", stateReader.IndexCurrentChar, stateReader.CharCurrent);	// Set an error or something and skip this character.
 		seterr_break_if(::gpk::JSON_TYPE_VALUE != stateReader.CurrentElement->Type, "%s", "Number found outside a value.");
 		seterr_break_if(errored(::parseJsonNumber(stateReader, tokens, jsonAsString)), "%s", "Error parsing JSON number.");
@@ -381,7 +407,7 @@
 	if errored(errVal) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
 		const ::gpk::SJSONToken											* currentElement									= validElement ? &reader.Token[reader.StateRead.IndexCurrentElement] : 0;
-		error_printf("Error during read step. Malformed JSON?"
+		json_error_printf("Error during read step. Malformed JSON?"
 			"\nPosition  : %i."
 			"\nCharacter : '%c' (0x%x)."
 			"\nElement   : %i."

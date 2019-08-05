@@ -50,11 +50,11 @@ static ::gpk::error_t							evaluateBoolResult						(const ::gpk::SJSONNode * js
 }
 
 static ::gpk::error_t							evaluateAndClearBoolCarry				(::gpk::SEvaluationStepResult & lastResult, const ::gpk::SJSONNode * jsonToEvaluate, int32_t indexNodeJSON, const ::gpk::view_const_string & boolView)	{
-	if(false == lastResult.LastBoolCarry)
+	if(false == lastResult.LastValueCarry)
 		return ::evaluateBoolResult(jsonToEvaluate, (int32_t)indexNodeJSON, boolView);
 	else {
-		lastResult.LastBoolCarry						= false;
-		return lastResult.LastBoolValue ? 1 : 0;
+		lastResult.LastValueCarry						= false;
+		return lastResult.LastValue ? 1 : 0;
 	}
 }
 
