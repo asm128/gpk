@@ -5,6 +5,12 @@
 
 #include <string>
 
+::gpk::array_pod<char_t>			gpk::toString				(const ::gpk::view_const_string& strToLog)	{
+	::gpk::array_pod<char_t>							sprintfable								= strToLog;
+	sprintfable.push_back(0);
+	return sprintfable;
+}
+
 ::gpk::error_t						gpk::token_split			(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views)	{
 	int32_t									indexToken					= ::gpk::find(token, input_string);
 	rni_if(errored(indexToken), "'%c' Token not found.", token);
