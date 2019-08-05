@@ -237,25 +237,17 @@ static ::gpk::error_t							evaluateExpression						(const ::gpk::SExpressionRea
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_AND == childToSolve.Token->Type) {
 				const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 				int32_t												evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-				lastResult.SetBoolCarry(evalResult && prevResult, output);
+				lastResult.SetBoolCarry((evalResult && prevResult) ? 1 : 0, output);
 			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_OR == childToSolve.Token->Type) {
 				const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
-				if(prevResult)
-					lastResult.SetBoolCarry(1, output);
-				else {
-					const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-					lastResult.SetBoolCarry((evalResult || prevResult) ? 1 : 0, output);
-				}
+				const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
+				lastResult.SetBoolCarry((evalResult || prevResult) ? 1 : 0, output);
 			}
 			else if(::gpk::EXPRESSION_READER_TYPE_TERM_EQUALS == childToSolve.Token->Type) {
 				const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
-				if(prevResult)
-					lastResult.SetBoolCarry(1, output);
-				else {
-					const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-					lastResult.SetBoolCarry((evalResult || prevResult) ? 1 : 0, output);
-				}
+				const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
+				lastResult.SetBoolCarry((evalResult || prevResult) ? 1 : 0, output);
 			}
 			else {
 				error_printf("Unrecognized expression reader type: '%s'.", ::gpk::get_value_label(childToSolve.Token->Type).begin());
