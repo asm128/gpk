@@ -22,6 +22,7 @@ namespace gpk
 		uint64_t								LastValue								;
 		::gpk::ptr_obj<::gpk::SJSONReader>		JSONReader								;
 		::gpk::view_const_string				Output									;
+		::gpk::view_const_string				Expression								;
 		bool									LastValueCarry							;
 
 		::gpk::error_t							SetBoolCarry							(bool evalResult, ::gpk::view_const_string & output)	{

@@ -91,12 +91,20 @@ namespace gpk
 #endif
 
 #ifndef always_printf
+#if !defined(GPK_WINDOWS)
+#	define always_printf(format, ...)								debug_printf(3, "info"		, format, ## __VA_ARGS__)
+#else
 #	define always_printf(format, ...)								debug_printf(3, "info"		, format, __VA_ARGS__)
+#endif
 #endif
 
 #ifndef error_printf
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
+#if !defined(GPK_WINDOWS)
+#		define error_printf(format, ...)								do { debug_printf(1, "error"	, format, ## __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#else
 #		define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#endif
 #	else
 #		define error_printf(format, ...)								do { ; GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #	endif
@@ -104,7 +112,11 @@ namespace gpk
 
 #ifndef warning_printf
 #	if defined (GPK_WARNING_PRINTF_ENABLED)
+#if !defined(GPK_WINDOWS)
+#		define warning_printf(format, ...)								debug_printf(2, "warning"	, format, ## __VA_ARGS__)
+#else
 #		define warning_printf(format, ...)								debug_printf(2, "warning"	, format, __VA_ARGS__)
+#endif
 #	else
 #		define warning_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
@@ -112,7 +124,11 @@ namespace gpk
 
 #ifndef info_printf
 #	if defined (GPK_INFO_PRINTF_ENABLED)
+#if !defined(GPK_WINDOWS)
+#		define info_printf(format, ...)									debug_printf(3, "info"		, format, ## __VA_ARGS__)
+#else
 #		define info_printf(format, ...)									debug_printf(3, "info"		, format, __VA_ARGS__)
+#endif
 #	else
 #		define info_printf(format, ...)									do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
@@ -120,7 +136,11 @@ namespace gpk
 
 #ifndef success_printf
 #	if defined (GPK_SUCCESS_PRINTF_ENABLED)
+#if !defined(GPK_WINDOWS)
+#		define success_printf(format, ...)								debug_printf(4, "info"		, format, ## __VA_ARGS__)
+#else
 #		define success_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
+#endif
 #	else
 #		define success_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
@@ -128,7 +148,11 @@ namespace gpk
 
 #ifndef verbose_printf
 #	if defined (GPK_VERBOSE_PRINTF_ENABLED)
+#if !defined(GPK_WINDOWS)
+#		define verbose_printf(format, ...)								debug_printf(4, "info"		, format, ## __VA_ARGS__)
+#else
 #		define verbose_printf(format, ...)								debug_printf(4, "info"		, format, __VA_ARGS__)
+#endif
 #	else
 #		define verbose_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
@@ -142,10 +166,14 @@ namespace gpk
 
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
-#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#if !defined(GPK_WINDOWS)
+#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
 #	else
-/	/#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
-/	/#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
+#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#	endif
+#	else
+//#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
+//#	pragma warning(disable:4553)	// this was required because "condition" may have had no side effect.
 #		define gthrow_if(condition, format, ...)						if(condition) do{::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif

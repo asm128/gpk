@@ -78,6 +78,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 		//const ::gpk::SExpressionNode						* currentLiteral							= (0 <= (int32_t)indexNodeJSON) ? 0 : readerExpression.Tree[(((int32_t)indexNodeJSON) + 0xF) * -1];
 		const ::gpk::view_const_string						currentView									= lastResult.Output;
 		const ::gpk::view_const_string						currentExpressionView						= readerExpression.View[childToSolve.ObjectIndex];
+		lastResult.Expression							= currentExpressionView;
 		gpk_jexpr_info_printf("Reading first-level expression: %u.", iFirstLevelExpression);
 		gpk_jexpr_info_printf("Current json view  (%u): '%s'", ::gpk::toString(currentView).begin());
 		gpk_jexpr_info_printf("Current child view (%u): '%s'", ::gpk::toString(currentExpressionView).begin());
@@ -226,7 +227,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	::gpk::error_t										jsonNodeResultOfEvaluation				= ::gpk::jsonExpressionResolve(results, reader, inputJSON, indexNodeJSON, output);
 	ree_if(-1 == jsonNodeResultOfEvaluation, "Failed to evaluate expression: %s.", ::gpk::toString(reader.View[0]).begin());
 	for(uint32_t iResult = 0; iResult < results.Results.size(); ++iResult)
-		info_printf("Result %u: '%s'", iResult, ::gpk::toString(results.Results[iResult].Output).begin());
+		info_printf("Result %u: '%s' | '%s'", iResult, ::gpk::toString(results.Results[iResult].Expression).begin(), ::gpk::toString(results.Results[iResult].Output).begin());
 	return jsonNodeResultOfEvaluation;
 }
 
