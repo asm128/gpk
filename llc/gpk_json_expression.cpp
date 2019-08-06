@@ -174,23 +174,27 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 					lastResult.Output								= output;
 				} else {
 					if(currentJSON && indexOfResolvedSubExpression >= 0) {
-						if(currentJSON->Token->Type == ::gpk::JSON_TYPE_BOOL && inputJSON.Token[indexOfResolvedSubExpression].Type == ::gpk::JSON_TYPE_BOOL) {
+						if(currentJSON->Token->Type != inputJSON.Token[indexOfResolvedSubExpression].Type) {
+							lastResult.SetBoolCarry(false, output);
+							lastResult.Output								= output;
+						}
+						else if(currentJSON->Token->Type == ::gpk::JSON_TYPE_BOOL && inputJSON.Token[indexOfResolvedSubExpression].Type == ::gpk::JSON_TYPE_BOOL) {
 							const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 							const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-							lastResult.SetBoolCarry((evalResult == prevResult) ? 1 : 0, output);
+							lastResult.SetBoolCarry(evalResult == prevResult, output);
 							lastResult.Output								= output;
 						}
 					}
 					else if(currentJSON && currentJSON->Token->Type == ::gpk::JSON_TYPE_BOOL) {
 						const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 						const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-						lastResult.SetBoolCarry((evalResult == prevResult) ? 1 : 0, output);
+						lastResult.SetBoolCarry(evalResult == prevResult, output);
 						lastResult.Output								= output;
 					}
 					else if(0 == currentJSON) {
 						const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 						const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
-						lastResult.SetBoolCarry((evalResult == prevResult) ? 1 : 0, output);
+						lastResult.SetBoolCarry(evalResult == prevResult, output);
 						lastResult.Output								= output;
 					}
 					else if(viewOfExpressionResult == lastResult.Output) {

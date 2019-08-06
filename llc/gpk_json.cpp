@@ -90,8 +90,8 @@
 	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		::gpk::ptr_obj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
-		if(::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Token->Type
-		 &&::gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Token->Type
+		if( ::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Token->Type
+		 && ::gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Token->Type
 		)
 			continue;
 		::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				newChildren;
@@ -357,7 +357,7 @@ static	::gpk::error_t									lengthJsonNumber									(uint32_t indexCurrentCha
 		else
 			stateReader.IndexCurrentChar								= jsonAsString.size() - 1;
 	break;
-	case 'f'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenFalse, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
+	case 'f'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenFalse	, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
 	case 't'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenTrue	, ::gpk::JSON_TYPE_BOOL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
 	case 'n'	: GPK_JSON_EXPECTS_SEPARATOR(); if(-1 == stateReader.IndexCurrentElement) ree_if(errored(::jsonOpenElement(stateReader, tokens, ::gpk::JSON_TYPE_VALUE, stateReader.IndexCurrentChar)), "Failed to open element at index %i.", tokens.size()); errVal = ::jsonParseKeyword(tokenNull	, ::gpk::JSON_TYPE_NULL, stateReader, tokens, jsonAsString); ::jsonTestAndCloseValue(stateReader, tokens); break;
 	case '0'	: case '1'	: case '2'	: case '3'	: case '4'	: case '5'	: case '6'	: case '7'	: case '8'	: case '9'	:
