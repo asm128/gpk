@@ -478,6 +478,9 @@ static	::gpk::error_t									lengthJsonNumber									(uint32_t indexCurrentCha
 	return node->ObjectIndex;
 }
 
+			::gpk::error_t									gpk::jsonArrayCompare								(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews) { if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
+			::gpk::error_t									gpk::jsonObjectCompare								(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews) { if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
+
 // Get the codepoint from 4 hex characters of an unicode escape sequence
 //	For input "\u c1 c2 c3 c4" the codepoint is:
 //		(c1 * 0x1000)	+ (c2 * 0x0100)	+ (c3 * 0x0010) + c4
@@ -518,3 +521,4 @@ static		::gpk::error_t									decodeUnicodeEscapeSequence							(::gpk::view_co
 	unicode														= 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
 	return 0;
 }
+
