@@ -146,7 +146,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 					lastResult.Output								= output;
 				}
 				else if(::gpk::EXPRESSION_READER_TYPE_TERM_ANY == expressionType) {
-					const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexJSONResult, viewOfExpressionResult);
+					const int32_t										indexOfResolvedSubExpression		= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexJSONResult, viewOfExpressionResult);
 					lastResult.Output								= output = viewOfExpressionResult;
 					ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve expression: %s.", ::gpk::toString(currentExpressionView).begin());
 					lastResult.IndexJSONResult									= indexOfResolvedSubExpression;
@@ -178,7 +178,9 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 							lastResult.SetBoolCarry(true, output);
 							lastResult.Output								= output;
 						} else {
-							if(currentType == ::gpk::JSON_TYPE_STRING || resultType == ::gpk::JSON_TYPE_STRING) {
+							if( currentType == ::gpk::JSON_TYPE_STRING || resultType == ::gpk::JSON_TYPE_STRING
+							 ||	currentType == ::gpk::JSON_TYPE_NUMBER || resultType == ::gpk::JSON_TYPE_NUMBER
+							 ) {
 								lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output);
 								lastResult.Output								= output;
 							}
