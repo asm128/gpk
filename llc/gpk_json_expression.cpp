@@ -171,7 +171,10 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 				ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve subexpression: '%s'.", ::gpk::toString(currentExpressionView).begin());
 				const ::gpk::JSON_TYPE								resultType							= (indexOfResolvedSubExpression >= 0) ? inputJSON.Token[indexOfResolvedSubExpression].Type : ::gpk::JSON_TYPE_UNKNOWN;
 				const ::gpk::SJSONNode								* resultJSON						= (indexOfResolvedSubExpression >= 0) ? inputJSON[indexOfResolvedSubExpression] : nullptr;
-				if(viewOfExpressionResult == lastResult.Output) {
+				if( viewOfExpressionResult == lastResult.Output
+				 || (::gpk::strBool[0]	== viewOfExpressionResult && ::gpk::strNull		== lastResult.Output)
+				 || (::gpk::strNull		== viewOfExpressionResult && ::gpk::strBool[0]	== lastResult.Output)
+				 ) {
 					lastResult.SetBoolCarry(true, output);
 					lastResult.Output								= output;
 				} else {
