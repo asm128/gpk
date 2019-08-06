@@ -169,7 +169,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 				::gpk::view_const_string							viewOfExpressionResult				= {};
 				const int32_t										indexOfResolvedSubExpression		= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
 				ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve subexpression: '%s'.", ::gpk::toString(currentExpressionView).begin());
-				if(viewOfExpressionResult == currentExpressionView) {
+				if(viewOfExpressionResult == lastResult.Output) {
 					lastResult.SetBoolCarry(true, output);
 					lastResult.Output								= output;
 				} else {
@@ -195,10 +195,6 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 						const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 						const int32_t										evalResult							= ::evaluateExpressionAndBoolResult(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode);
 						lastResult.SetBoolCarry(evalResult == prevResult, output);
-						lastResult.Output								= output;
-					}
-					else if(viewOfExpressionResult == lastResult.Output) {
-						lastResult.SetBoolCarry(true, output);
 						lastResult.Output								= output;
 					}
 				}
