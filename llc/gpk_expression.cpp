@@ -101,6 +101,8 @@ static	::gpk::error_t										expressionReaderCloseTerm							(::gpk::SExpressi
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
 		break;	// these characters are both valid as part of the string and as escapable characters.
+	case '\b': case '\f': case '\n': case '\r': case '\t':
+		break;	// these characters are both valid as part of the string and as escapable characters.
 	case 'u':
 		if(false == stateReader.Escaping)
 			break;

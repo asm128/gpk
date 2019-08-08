@@ -25,8 +25,10 @@ static ::gpk::error_t							evaluateJSONBool						(const ::gpk::SJSONNode & json
 		evalResult										= 0;
 	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_BOOL)
 		evalResult										= (boolView == ::gpk::strBool[1]) ? 1 : 0;
-	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_NUMBER)
-		evalResult										= (boolView == ::gpk::strZero) ? 0 : 1;
+	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_INTEGER)
+		evalResult										= jsonToEvaluate.Token->Value == 0 ? 0 : 1;
+	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_DOUBLE)
+		evalResult										= jsonToEvaluate.Token->Value == 0 ? 0 : 1;
 	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_STRING)
 		evalResult										= boolView.size() ? 1 : 0;
 	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_ARRAY)
@@ -59,8 +61,8 @@ static ::gpk::error_t							evaluateAndClearBoolCarry				(::gpk::SEvaluationStep
 static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, const uint32_t indexNodeExpression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_string& output);
 
 static ::gpk::error_t							evaluateExpressionAndBoolResult			(::gpk::SJSONExpressionSolver& results, const ::gpk::SExpressionReader & readerExpression, uint32_t indexExpressionToken, const ::gpk::SJSONReader & jsonInput, const int32_t indexJSONNode)	{
-	::gpk::view_const_string							viewOfExpressionResult				= {};
-	const int32_t										indexOfResolvedSubExpression		= ::evaluateExpression(results, readerExpression, indexExpressionToken, jsonInput, indexJSONNode, viewOfExpressionResult);
+	::gpk::view_const_string							viewOfExpressionResult					= {};
+	const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, indexExpressionToken, jsonInput, indexJSONNode, viewOfExpressionResult);
 	ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve subexpression: '%s'.", ::gpk::toString(readerExpression.View[indexExpressionToken]).begin());
 	return ::evaluateBoolResult((indexOfResolvedSubExpression >= 0) ? jsonInput[indexOfResolvedSubExpression] : 0, indexOfResolvedSubExpression, viewOfExpressionResult);
 }
@@ -107,7 +109,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 					ree_if(currentJSON && currentType != ::gpk::JSON_TYPE_ARRAY && currentType != ::gpk::JSON_TYPE_STRING, "Only arrays can be accessed by index. JSON type: %s.", ::gpk::get_value_label(currentType).begin());
 					const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					ree_if(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %s.", ::gpk::toString(currentExpressionView).begin());
-					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_NUMBER, "Arrays can only be accessed by index with a json number. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
+					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
 					uint64_t											numberRead								= 0;
 					gpk_necall(::gpk::parseIntegerDecimal(viewOfExpressionResult, &numberRead), "%s", "Out of memory?");
 					if(currentType == ::gpk::JSON_TYPE_STRING)
@@ -172,22 +174,54 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 						const ::gpk::JSON_TYPE								resultType							= (indexOfResolvedSubExpression >= 0) ? inputJSON.Token[indexOfResolvedSubExpression].Type : ::gpk::JSON_TYPE_UNKNOWN;
 						const ::gpk::SJSONNode								* resultJSON						= (indexOfResolvedSubExpression >= 0) ? inputJSON[indexOfResolvedSubExpression] : nullptr;
 						if( viewOfExpressionResult == lastResult.Output
-						 || (::gpk::strBool[0]	== viewOfExpressionResult && ::gpk::strNull		== lastResult.Output)
-						 || (::gpk::strNull		== viewOfExpressionResult && ::gpk::strBool[0]	== lastResult.Output)
+						 || (0 == lastResult.Output			.size() && ::gpk::strNull		== viewOfExpressionResult	)
+						 || (0 == lastResult.Output			.size() && ::gpk::strBool[0]	== viewOfExpressionResult	)
+						 || (0 == viewOfExpressionResult	.size() && ::gpk::strNull		== lastResult.Output		)
+						 || (0 == viewOfExpressionResult	.size() && ::gpk::strBool[0]	== lastResult.Output		)
+						 || (::gpk::strBool[0]	== viewOfExpressionResult	&& ::gpk::strNull		== lastResult.Output)
+						 || (::gpk::strNull		== viewOfExpressionResult	&& ::gpk::strBool[0]	== lastResult.Output)
 						 ) {
 							lastResult.SetBoolCarry(true, output);
 							lastResult.Output								= output;
 						} else {
-							if( currentType == ::gpk::JSON_TYPE_STRING || resultType == ::gpk::JSON_TYPE_STRING
-							 ||	currentType == ::gpk::JSON_TYPE_NUMBER || resultType == ::gpk::JSON_TYPE_NUMBER
-							 ) {
-								lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output);
+							if(currentType == ::gpk::JSON_TYPE_STRING || resultType == ::gpk::JSON_TYPE_STRING) {
+								lastResult.SetBoolCarry(false, output);
+								lastResult.Output								= output;
+							}
+							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_INTEGER
+								 || currentType == ::gpk::JSON_TYPE_DOUBLE	&& resultType == ::gpk::JSON_TYPE_DOUBLE
+							) {
+								double												valueLeft				= 0;
+								double												valueRight				= 0;
+								if(currentType == ::gpk::JSON_TYPE_INTEGER) {
+									valueLeft										= (double)currentJSON->Token->Value;
+									valueRight										= (double)resultJSON->Token->Value;
+								}
+								else {
+									memcpy(&valueLeft , &currentJSON->Token->Value, sizeof(uint64_t));
+									memcpy(&valueRight, &resultJSON ->Token->Value, sizeof(uint64_t));
+								}
+								lastResult.SetBoolCarry(valueLeft == valueRight, output);
+								lastResult.Output								= output;
+							}
+							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_DOUBLE) {
+								const double 										valueLeft				= (double)currentJSON->Token->Value;
+								double 												valueRight				= 0;
+								memcpy(&valueRight, &resultJSON->Token->Value, sizeof(uint64_t));
+								lastResult.SetBoolCarry(valueLeft == valueRight, output);
+								lastResult.Output								= output;
+							}
+							else if(currentType == ::gpk::JSON_TYPE_DOUBLE && resultType == ::gpk::JSON_TYPE_INTEGER) {
+								const double 										valueRight				= (double)resultJSON->Token->Value;
+								double 												valueLeft				= 0;
+								memcpy(&valueLeft, &currentJSON->Token->Value, sizeof(uint64_t));
+								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}
 							else if(::gpk::JSON_TYPE_BOOL == resultType		|| ::gpk::JSON_TYPE_NULL == resultType
 								 || ::gpk::JSON_TYPE_BOOL == currentType	|| ::gpk::JSON_TYPE_NULL == currentType	) {
-								const int32_t										prevResult							= ::evaluateAndClearBoolCarry(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
-								const int32_t										evalResult							= ::evaluateBoolResult(resultJSON, indexOfResolvedSubExpression, viewOfExpressionResult);;
+								const int32_t										prevResult							= ::evaluateAndClearBoolCarry	(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
+								const int32_t										evalResult							= ::evaluateBoolResult			(resultJSON, indexOfResolvedSubExpression, viewOfExpressionResult);;
 								lastResult.SetBoolCarry(evalResult == prevResult, output);
 								lastResult.Output								= output;
 							}
@@ -196,8 +230,8 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 									lastResult.SetBoolCarry(false, output);
 									lastResult.Output								= output;
 								}
-								else if(currentType == ::gpk::JSON_TYPE_ARRAY	) { if(indexOfResolvedSubExpression < 0) { lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output); lastResult.Output = output; } else { lastResult.SetBoolCarry(::gpk::jsonArrayCompare (*currentJSON, *resultJSON, inputJSON.View), output); lastResult.Output = output; }  }
-								else if(currentType == ::gpk::JSON_TYPE_OBJECT	) { if(indexOfResolvedSubExpression < 0) { lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output); lastResult.Output = output; } else { lastResult.SetBoolCarry(::gpk::jsonObjectCompare(*currentJSON, *resultJSON, inputJSON.View), output); lastResult.Output = output; }  }
+								else if(currentType == ::gpk::JSON_TYPE_ARRAY	) { if(indexOfResolvedSubExpression < 0) { lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output); lastResult.Output = output; } else { lastResult.SetBoolCarry(::gpk::jsonCompareArray	(*currentJSON, *resultJSON, inputJSON.View), output); lastResult.Output = output; }  }
+								else if(currentType == ::gpk::JSON_TYPE_OBJECT	) { if(indexOfResolvedSubExpression < 0) { lastResult.SetBoolCarry(lastResult.Output == viewOfExpressionResult, output); lastResult.Output = output; } else { lastResult.SetBoolCarry(::gpk::jsonCompareObject	(*currentJSON, *resultJSON, inputJSON.View), output); lastResult.Output = output; }  }
 							}
 							else {
 								if(indexOfResolvedSubExpression < 0) {
