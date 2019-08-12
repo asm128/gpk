@@ -175,8 +175,9 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 
-	printf("%s\n\n"
-		, "Content-Type: application/json"
+	printf("%s\r\n\r\n",
+		//, "Content-Type: application/json"
+		"Content-Type: text/html"
 		"\nCache-Control: no-store"
 	);
 	::gpk::array_pod<char>									html;

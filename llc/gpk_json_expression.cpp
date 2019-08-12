@@ -188,8 +188,8 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 								lastResult.SetBoolCarry(false, output);
 								lastResult.Output								= output;
 							}
-							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_INTEGER
-								 || currentType == ::gpk::JSON_TYPE_DOUBLE	&& resultType == ::gpk::JSON_TYPE_DOUBLE
+							else if((currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_INTEGER	)
+								 || (currentType == ::gpk::JSON_TYPE_DOUBLE		&& resultType == ::gpk::JSON_TYPE_DOUBLE	)
 							) {
 								double												valueLeft				= 0;
 								double												valueRight				= 0;
