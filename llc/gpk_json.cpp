@@ -173,7 +173,7 @@ static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReade
 	::gpk::error_t													errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
-		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(((uchar_t)stateReader.CharCurrent) < 0x20 || ((uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
