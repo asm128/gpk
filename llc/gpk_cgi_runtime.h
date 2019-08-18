@@ -95,6 +95,7 @@ namespace gpk
 		::gpk::array_obj<::gpk::view_const_string>												QueryStringElements			= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>												QueryStringKeyVals			= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>												FormKeyVals					= {};
+		::gpk::array_obj<::gpk::TKeyValConstString>												EnvironViews				= {};
 		::gpk::SIPv4																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};

@@ -6,8 +6,7 @@
 #include <string>
 
 ::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
-	::gpk::array_obj<::gpk::TKeyValConstString>			environViews;
-	gpk_necall(::gpk::environmentBlockViews(runtimeValues.EntryPointArgs.EnvironmentBlock, environViews), "%s", "If this breaks, we better know ASAP.");
+	const ::gpk::array_obj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::view_const_string							remoteAddr;
 	const bool											isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
 	if(bLogCGIEnviron && isCGIEnviron)
@@ -175,12 +174,12 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
-	::gpk::array_obj<::gpk::TKeyValConstString>				environBlockViews;
+	::gpk::array_obj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
-	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environBlockViews);
+	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
 	{
 		::gpk::view_const_string								querystring;
-		::gpk::find("QUERY_STRING", environBlockViews, querystring);
+		::gpk::find("QUERY_STRING", environViews, querystring);
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
 		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
@@ -190,20 +189,20 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	}
 	{
 		::gpk::view_const_string								contentype;
-		::gpk::find("CONTENT_TYPE", environBlockViews, contentype);
+		::gpk::find("CONTENT_TYPE", environViews, contentype);
 		if(contentype.size())
 			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
 	}
 	{
 		::gpk::view_const_string								remoteIP	;
 		::gpk::view_const_string								remotePORT	;
-		::gpk::find("REMOTE_IP"			, environBlockViews, remoteIP	);
-		::gpk::find("REMOTE_PORT"		, environBlockViews, remotePORT	);
+		::gpk::find("REMOTE_IP"			, environViews, remoteIP	);
+		::gpk::find("REMOTE_PORT"		, environViews, remotePORT	);
 		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
 	}
 	{
 		::gpk::view_const_string								contentLength;
-		::gpk::find("CONTENT_LENGTH"	, environBlockViews, contentLength);
+		::gpk::find("CONTENT_LENGTH"	, environViews, contentLength);
 #if defined(GPK_DISABLE_CPP_EXCEPTIONS)
 		cgiRuntimeValues.Content.Length						= contentLength.size() ? (uint32_t)::std::stoi(contentLength.begin()) : 0;
 #else
