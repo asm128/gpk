@@ -31,8 +31,8 @@ static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_
 	uint32_t													iOutput64														= out_base64.size(); //
 	gpk_necall(out_base64.resize(out_base64.size() + packsNeeded * 4), "Out of memory? out_base64.size() : %u. packsNeeded : %u.", iOutput64, packsNeeded);
 	for(uint32_t iInputByte = 0, inputByteCount = inputBytes.size(); iInputByte < inputByteCount; iInputByte += 3) { // process each byte triplet and turn it into 4 bytes padded with 2 bit
-		const bool													use1															= iInputByte < (inputByteCount - 1);
-		const bool													use2															= iInputByte < (inputByteCount - 2);
+		const bool													use1															= ((int32_t)iInputByte) < (((int32_t)inputByteCount) - 1);
+		const bool													use2															= ((int32_t)iInputByte) < (((int32_t)inputByteCount) - 2);
 		uint8_t														inputTriplet	[3]												=
 			{		 (uint8_t)(inputBytes[iInputByte]		& 0xFF)
 			, use1 ? (uint8_t)(inputBytes[iInputByte + 1]	& 0xFF): (uint8_t)0U
