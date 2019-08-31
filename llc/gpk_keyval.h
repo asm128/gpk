@@ -49,10 +49,11 @@ namespace gpk
 	template <typename... _tArgs>
 	::gpk::error_t										keyValVerify					(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_array<const ::gpk::view_const_string>& valueToVerify)	{
 		for(uint32_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
-			if(1 == ::gpk::keyValVerify(environViews, keyToVerify, valueToVerify[iKey]))
-				return 1;
+			const ::gpk::error_t									val								= ::gpk::keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
+			if(-1 != val)
+				return val;
 		}
-		return 0;
+		return -1;
 	}
 
 

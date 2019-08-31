@@ -7,28 +7,28 @@
 #include <string>
 
 #include <Windows.h>
-
-::gpk::error_t										metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
-	uint32_t												iChar					= 0;
-	for(iChar = 0; iChar < input_string.size(); ++iChar) {
-		if('x' == input_string[iChar]) {
-			::gpk::array_pod<char>									sx						= {};
-			::gpk::array_pod<char>									sy						= {};
-			sy.append((char*)input_string.begin(), iChar);
-			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
-			try {
-				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
-				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
-			}
-			catch (...) {
-				output_metrics										= {};
-				return -1;
-			}
-			break;
-		}
-	}
-	return 0;
-}
+//
+//static ::gpk::error_t								metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
+//	uint32_t												iChar					= 0;
+//	for(iChar = 0; iChar < input_string.size(); ++iChar) {
+//		if('x' == input_string[iChar]) {
+//			::gpk::array_pod<char>									sx						= {};
+//			::gpk::array_pod<char>									sy						= {};
+//			sy.append((char*)input_string.begin(), iChar);
+//			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
+//			try {
+//				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
+//				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
+//			}
+//			catch (...) {
+//				output_metrics										= {};
+//				return -1;
+//			}
+//			break;
+//		}
+//	}
+//	return 0;
+//}
 
 ::gpk::error_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output){
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
@@ -60,8 +60,8 @@ static constexpr	const char						html_script	[]			=
 	if(0 == keyVal.Key.size())
 		return -1;
 	try { // retrieve width and height
-			 if(keyVal.Key.size() == (::gpk::size("w") - 1) && 0 == memcmp("w", keyVal.Key.begin(), ::gpk::size("w") - 1)) framework.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-		else if(keyVal.Key.size() == (::gpk::size("h") - 1) && 0 == memcmp("h", keyVal.Key.begin(), ::gpk::size("h") - 1)) framework.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+			 if(keyVal.Key == ::gpk::view_const_string("w")) framework.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
+		else if(keyVal.Key == ::gpk::view_const_string("h")) framework.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
 	}
 	catch(...){
 		framework.TargetSize								= {123, 456};
@@ -96,7 +96,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			"\n<link rel=\"stylesheet\" href=\"./page.css\">"
 			"\n</head>"
 		));
-		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:95%%; height:95%%; background-color:#FFCCAA; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
+		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		::gpk::view_const_string								querystring;
 		::gpk::find("QUERY_STRING", framework.RuntimeValues.QueryStringKeyVals, querystring);
@@ -110,6 +110,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
 			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
+
 		::gpk::view_const_string								contentype	;
 		::gpk::view_const_string								remoteIP	;
 		::gpk::view_const_string								remotePORT	;
@@ -176,7 +177,6 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 
 	printf("%s\r\n\r\n",
-		//, "Content-Type: application/json"
 		"Content-Type: text/html"
 		"\nCache-Control: no-store"
 	);

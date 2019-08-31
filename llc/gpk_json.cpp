@@ -563,7 +563,7 @@ static		::gpk::error_t									decodeUnicodeEscapeSequence							(::gpk::view_co
 }
 
 // this function only makes sense after reading the first `\u`
-::gpk::error_t									jsonToCodePoint										(::gpk::view_const_string input, uint32_t& unicode)			{
+::gpk::error_t												jsonToCodePoint										(::gpk::view_const_string input, uint32_t& unicode)			{
 	gpk_necall(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", input.begin());
 	if (unicode < 0xD800 || unicode > 0xDBFF)
 		return 0;

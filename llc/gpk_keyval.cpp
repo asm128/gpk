@@ -49,9 +49,9 @@
 ::gpk::error_t						gpk::keyValVerify	(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_const_string & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
-			return (environViews[iKey].Val == valueToVerify) ? 1 : 0;
+			return (environViews[iKey].Val == valueToVerify) ? iKey : -1;
 	}
-	return 0;
+	return -1;
 }
 
 ::gpk::error_t										gpk::keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_string> & keysToSave, ::gpk::array_pod<byte_t> & output)	{

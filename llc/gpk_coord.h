@@ -14,7 +14,6 @@ namespace gpk
 							double											Far			;
 	};
 
-
 	template<typename _tBase>
 	struct SCoord2 {
 		typedef									SCoord2<_tBase>			TCoord2;

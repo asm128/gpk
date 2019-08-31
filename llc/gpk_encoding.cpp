@@ -84,7 +84,7 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			int32_t														t																= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
 			saltValue[i]											= t % 256;
 		}
-	int32_t    keyFinal[8]   =
+	const int32_t												keyFinal[8]														=
 	{ (int32_t)(11 + (key % 233))
 	, (int32_t)( 7 + (key % 239))
 	, (int32_t)( 5 + (key % 241))
@@ -120,12 +120,12 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 
 ::gpk::error_t											gpk::ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
-	int32_t    keyFinal[8]   =
-	{ (int32_t)(11 + (key % 233))
-	, (int32_t)( 7 + (key % 239))
-	, (int32_t)( 5 + (key % 241))
-	, (int32_t)( 3 + (key % 251))
-	};
+	const int32_t												keyFinal[8]														=
+		{ (int32_t)(11 + (key % 233))
+		, (int32_t)( 7 + (key % 239))
+		, (int32_t)( 5 + (key % 241))
+		, (int32_t)( 3 + (key % 251))
+		};
 	int32_t														n																= (int32_t)input.size();
 
 	gpk_necall(cache.resize(n), "%s", "Out of memory?");
@@ -149,26 +149,26 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 }
 
 ::gpk::error_t											gpk::utf8FromCodePoint											(uint32_t codePoint, ::gpk::array_pod<char_t> & hexDigits) {
-	const uint32_t			offset = hexDigits.size();
+	const uint32_t												offset															= hexDigits.size();
 	if (codePoint <= 0x7f) {
 		hexDigits.resize(offset + 1);
-		hexDigits[offset + 0] = static_cast<char>(codePoint);
+		hexDigits[offset + 0]									= static_cast<char>(codePoint);
 	} else {
 		if (codePoint <= 0x7FF) {
 			hexDigits.resize(offset + 2);
-			hexDigits[offset + 1] = static_cast<char>(0x80 | (0x3f & codePoint));
-			hexDigits[offset + 0] = static_cast<char>(0xC0 | (0x1f & (codePoint >> 6)));
+			hexDigits[offset + 1]									= static_cast<char>(0x80 | (0x3f & codePoint));
+			hexDigits[offset + 0]									= static_cast<char>(0xC0 | (0x1f & (codePoint >> 6)));
 		} else if (codePoint <= 0xFFFF) {
 			hexDigits.resize(offset + 3);
-			hexDigits[offset + 2] = static_cast<char>(0x80 | (0x3f	&  codePoint));
-			hexDigits[offset + 1] = static_cast<char>(0x80 | (0x3f	& (codePoint >> 6)));
-			hexDigits[offset + 0] = static_cast<char>(0xE0 | (0xf	& (codePoint >> 12)));
+			hexDigits[offset + 2]									= static_cast<char>(0x80 | (0x3f &  codePoint));
+			hexDigits[offset + 1]									= static_cast<char>(0x80 | (0x3f & (codePoint >> 6)));
+			hexDigits[offset + 0]									= static_cast<char>(0xE0 | (0x0f & (codePoint >> 12)));
 		} else if (codePoint <= 0x10FFFF) {
 			hexDigits.resize(offset + 4);
-			hexDigits[offset + 3] = static_cast<char>(0x80 | (0x3f	&  codePoint));
-			hexDigits[offset + 2] = static_cast<char>(0x80 | (0x3f	& (codePoint >> 6)));
-			hexDigits[offset + 1] = static_cast<char>(0x80 | (0x3f	& (codePoint >> 12)));
-			hexDigits[offset + 0] = static_cast<char>(0xF0 | (0x7	& (codePoint >> 18)));
+			hexDigits[offset + 3]									= static_cast<char>(0x80 | (0x3f &  codePoint));
+			hexDigits[offset + 2]									= static_cast<char>(0x80 | (0x3f & (codePoint >> 6)));
+			hexDigits[offset + 1]									= static_cast<char>(0x80 | (0x3f & (codePoint >> 12)));
+			hexDigits[offset + 0]									= static_cast<char>(0xF0 | (0x07 & (codePoint >> 18)));
 		}
 	}
 	return 0;
