@@ -25,7 +25,7 @@
 		::gpk::SCGIRuntimeValues								runtimeValues;																							\
 		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc});																				\
 		::gpk::array_pod<char_t>								output;																									\
-		output.append(::gpk::view_const_string{"Content-type: application/json\r\n"});																					\
+		output.append_string("Content-type: application/json\r\n");																										\
 		::generate_output(runtimeValues, output);																														\
 		output.push_back('\0');																																			\
 		printf("%s", output.begin());																																	\
