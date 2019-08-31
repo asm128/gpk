@@ -171,7 +171,9 @@ namespace gpk
 
 		// Returns the index of the pushed value
 		template<size_t _Length>
-		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, _Length);					}
+		inline				::gpk::error_t				append_string								(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)strnlen(newChain, (uint32_t)_Length)); }
+		template<size_t _Length>
+		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
 		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
 							::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{
 			gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
