@@ -16,7 +16,7 @@ static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_
 		::gpk::reverse_bits(outputBits);
 	}
 	for (uint32_t iSingleOut = 0; iSingleOut < ::gpk::size(outputQuad); ++iSingleOut) { // encode to four output bytes
-		if (outputQuad[iSingleOut] >= base64Symbols.size() - 1) {
+		if (outputQuad[iSingleOut] >= base64Symbols.size()) {
 			error_printf("%s", "Out of range. This could happen if the algorithm or the input character table got broken.");
 			out_base64[iSingleOut]									= (uint8_t)-1;
 		}
