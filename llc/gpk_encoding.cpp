@@ -55,6 +55,26 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	return 0;
 }
 
+static		::gpk::error_t								hexToByte														(const char* s, byte_t& byte)															{
+	char														temp [3]														= {};
+	temp[0]													= s[0];
+	temp[1]													= s[1];
+#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
+	int32_t														hex																= ::std::stoi(temp, nullptr, 16);
+	byte													= (char)hex;
+#else
+	try {
+		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
+		byte													= (char)hex;
+	}
+	catch (...) {
+		byte													= '?';
+		return -1;	// we should never get here
+	}
+#endif
+	return 0;
+}
+
 			::gpk::error_t								gpk::hexEncode													(const ::gpk::view_array<const ubyte_t	> & in_binary, ::gpk::array_pod<char_t	> & out_hexed	)	{
 	uint32_t													offset															= out_hexed.size();
 	gpk_necall(out_hexed.resize(offset + in_binary.size() * 2), "%s", "Out of memory?");
@@ -71,6 +91,17 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
 	const byte_t												* pHexed														= in_hexed.begin();
 	ubyte_t														* pBinary														= out_binary.begin();
+	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
+		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
+	return 0;
+}
+
+			::gpk::error_t								gpk::hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<byte_t	> & out_binary)	{
+	uint32_t													offset															= out_binary.size();
+	uint32_t													binarySize														= in_hexed.size() >> 1;
+	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
+	const byte_t												* pHexed														= in_hexed.begin();
+	byte_t														* pBinary														= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
 	return 0;
@@ -170,6 +201,24 @@ static		::gpk::error_t								hexToByte														(const char* s, uint8_t& by
 			hexDigits[offset + 1]									= static_cast<char>(0x80 | (0x3f & (codePoint >> 12)));
 			hexDigits[offset + 0]									= static_cast<char>(0xF0 | (0x07 & (codePoint >> 18)));
 		}
+	}
+	return 0;
+}
+
+::gpk::error_t									gpk::digest													(const ::gpk::view_const_byte & input, ::gpk::array_pod<uint32_t> & digest)		{
+	uint32_t											x															= 0;
+	for(uint32_t i = 0; i < input.size() - 8; ++i) {
+		x	+= ::gpk::noise1DBase32(input[i])
+			+  ::gpk::noise1DBase32(input[i + 1])
+			+  ::gpk::noise1DBase32(input[i + 2])
+			+  ::gpk::noise1DBase32(input[i + 3])
+			+  ::gpk::noise1DBase32(input[i + 4])
+			+  ::gpk::noise1DBase32(input[i + 5])
+			+  ::gpk::noise1DBase32(input[i + 6])
+			+  ::gpk::noise1DBase32(input[i + 7])
+			;
+		x												+= x ^ (x << 11);
+		gpk_necall(digest.push_back(x), "%s", "Out of memory?");
 	}
 	return 0;
 }

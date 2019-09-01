@@ -116,7 +116,13 @@ namespace gpk
 		return 0;
 	}
 
+						::gpk::error_t							rtrim								(const ::gpk::view_const_string & original, ::gpk::view_const_string & trimmed)	;
+						::gpk::error_t							ltrim								(const ::gpk::view_const_string & original, ::gpk::view_const_string & trimmed)	;
+						::gpk::error_t							trim								(const ::gpk::view_const_string & original, ::gpk::view_const_string & trimmed)	;
 
+	static inline		::gpk::error_t							rtrim								(::gpk::view_const_string & trimmed)							{ return rtrim	(trimmed, trimmed); }
+	static inline		::gpk::error_t							ltrim								(::gpk::view_const_string & trimmed)							{ return ltrim	(trimmed, trimmed); }
+	static inline		::gpk::error_t							trim								(::gpk::view_const_string & trimmed)							{ return trim	(trimmed, trimmed); }
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})

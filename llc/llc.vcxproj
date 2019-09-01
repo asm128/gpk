@@ -139,6 +139,7 @@
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />
+    <ClCompile Include="gpk_view_array.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>

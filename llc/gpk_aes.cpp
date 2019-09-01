@@ -411,6 +411,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 ::gpk::error_t										gpk::aesEncode							(const byte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const byte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted)	{
 	ree_if(0 == messageToEncrypt, "Cannot encode a null input. Data length: %u.", dataLength);
 	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageToEncrypt);
+	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
 	int8_t													excedent								= dataLength % ::gpk::AES_SIZEBLOCK;
 	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
 	outputEncrypted.clear();

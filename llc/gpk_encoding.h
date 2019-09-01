@@ -7,6 +7,8 @@ namespace gpk
 {
 					::gpk::error_t					hexEncode													(const ::gpk::view_array<const ubyte_t	> & inputBinary	, ::gpk::array_pod<char_t	> & out_hexed	);
 					::gpk::error_t					hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<ubyte_t	> & outputBinary);
+	static inline	::gpk::error_t					hexEncode													(const ::gpk::view_array<const byte_t	> & inputBinary	, ::gpk::array_pod<char_t	> & out_hexed	) { return hexEncode(::gpk::view_const_ubyte{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+					::gpk::error_t					hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::array_pod<byte_t	> & outputBinary);
 	// Based on Gary Ardell's code for VB.
 					::gpk::error_t					ardellEncode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output);
 					::gpk::error_t					ardellDecode												(::gpk::array_pod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::array_pod<byte_t>& output);
@@ -51,6 +53,8 @@ namespace gpk
 
 	// Description at http://en.wikipedia.org/wiki/UTF-8
 	::gpk::error_t									utf8FromCodePoint											(uint32_t codePoint, ::gpk::array_pod<char_t> & hexDigits);
+
+	::gpk::error_t									digest														(const ::gpk::view_const_byte & input, ::gpk::array_pod<uint32_t> & digest);
 }
 
 #endif // GPK_ENCODING_H_209873982374
