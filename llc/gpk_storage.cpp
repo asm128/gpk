@@ -279,7 +279,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		::gpk::error_t									gpk::fileToMemory									(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory)		{
 	FILE														* fp												= 0;
 	int32_t														fileErr												= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
-	rve_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
+	rvw_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
 	fseek(fp, 0, SEEK_END);
 	int32_t														fileSize											= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);

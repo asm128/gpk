@@ -164,7 +164,7 @@ static	::gpk::error_t								readFromPipe			(::SThreadStateRead & appState)	{	//
 		GetExitCodeProcess(process.ProcessInfo.hProcess, &exitCode);
 		if(STILL_ACTIVE != exitCode && 0 == handleReadable(handles.ChildStd_OUT_Read))
 			break;
-		info_printf("Process output: %s", ::gpk::toString({chBuf.begin(), chBuf.size()}).begin());
+		//info_printf("Process output: %s", ::gpk::toString({chBuf.begin(), chBuf.size()}).begin());
 		if(0 == readBytes[readBytes.size() - 1])
 			break;
 	}
