@@ -206,7 +206,8 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 }
 
 ::gpk::error_t									gpk::digest													(const ::gpk::view_const_byte & input, ::gpk::array_pod<uint32_t> & digest)		{
-	uint32_t											x															= 0;
+	uint32_t											x								= 0;
+	::gpk::array_pod<uint32_t>							filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
@@ -218,7 +219,63 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 			+  ::gpk::noise1DBase32(input[i + 7])
 			;
 		x												+= x ^ (x << 11);
-		gpk_necall(digest.push_back(x), "%s", "Out of memory?");
+		filtered.push_back(x);
+	}
+	for(uint32_t i = 0; i < filtered.size() - 8; ++i) {
+		filtered[i]	^= ::gpk::noise1DBase32(filtered[i])
+					+  ::gpk::noise1DBase32(filtered[i + 1])
+					+  ::gpk::noise1DBase32(filtered[i + 2])
+					+  ::gpk::noise1DBase32(filtered[i + 3])
+					+  ::gpk::noise1DBase32(filtered[i + 4])
+					+  ::gpk::noise1DBase32(filtered[i + 5])
+					+  ::gpk::noise1DBase32(filtered[i + 6])
+					+  ::gpk::noise1DBase32(filtered[i + 7])
+					;
+	}
+	for(uint32_t i = 2; i < (filtered.size() - 32); i += 2) {
+		for(uint32_t j = 0; j < 32; j++)
+			filtered[j]										+= filtered[i + j];
+	}
+	digest.append({filtered.begin(), ::gpk::min(32U, filtered.size())});
+	return 0;
+}
+
+
+::gpk::error_t									gpk::digest													(const ::gpk::view_const_byte & input, ::gpk::array_pod<byte_t> & digest)		{
+	uint32_t											x								= 0;
+	::gpk::array_pod<uint32_t>							filtered						= {};
+	for(uint32_t i = 0; i < input.size() - 8; ++i) {
+		x	+= ::gpk::noise1DBase32(input[i])
+			+  ::gpk::noise1DBase32(input[i + 1])
+			+  ::gpk::noise1DBase32(input[i + 2])
+			+  ::gpk::noise1DBase32(input[i + 3])
+			+  ::gpk::noise1DBase32(input[i + 4])
+			+  ::gpk::noise1DBase32(input[i + 5])
+			+  ::gpk::noise1DBase32(input[i + 6])
+			+  ::gpk::noise1DBase32(input[i + 7])
+			;
+		x												+= x ^ (x << 11);
+		filtered.push_back(x);
+	}
+	for(uint32_t i = 0; i < filtered.size() - 8; ++i) {
+		filtered[i]	^= ::gpk::noise1DBase32(filtered[i])
+					+  ::gpk::noise1DBase32(filtered[i + 1])
+					+  ::gpk::noise1DBase32(filtered[i + 2])
+					+  ::gpk::noise1DBase32(filtered[i + 3])
+					+  ::gpk::noise1DBase32(filtered[i + 4])
+					+  ::gpk::noise1DBase32(filtered[i + 5])
+					+  ::gpk::noise1DBase32(filtered[i + 6])
+					+  ::gpk::noise1DBase32(filtered[i + 7])
+					;
+	}
+	for(uint32_t i = 2, count = (filtered.size() - 8); i < count; i += 2) {
+		for(uint32_t j = 0; j < 8; j++)
+			filtered[j]										+= filtered[i + j];
+	}
+	char												temp		[32]				= {};
+	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), 8U); ++i) {
+		sprintf_s(temp, "%i", filtered[i]);
+		digest.append_string(temp);
 	}
 	return 0;
 }

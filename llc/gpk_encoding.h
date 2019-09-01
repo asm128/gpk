@@ -55,6 +55,7 @@ namespace gpk
 	::gpk::error_t									utf8FromCodePoint											(uint32_t codePoint, ::gpk::array_pod<char_t> & hexDigits);
 
 	::gpk::error_t									digest														(const ::gpk::view_const_byte & input, ::gpk::array_pod<uint32_t> & digest);
+	::gpk::error_t									digest														(const ::gpk::view_const_byte & input, ::gpk::array_pod<byte_t> & digest);
 }
 
 #endif // GPK_ENCODING_H_209873982374
