@@ -599,17 +599,19 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									split					(const ::gpk::view_const_string & target, const _tElement& separator, ::gpk::array_obj<view_const_string> & split)	{
-		uint32_t											lastOffset				= 0;
-		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
+		int32_t												lastOffset				= 0;
+		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view_const_string					newView					= {&target[lastOffset], iChar - lastOffset};
+				const ::gpk::view_const_string					newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset - 1)};
 				++iChar;
 				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
 			}
 		}
-		if(lastOffset < target.size())
+		if(lastOffset < (int32_t)target.size()) {
 			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
+			//if(split[split.size()-1][] == separator)
+		}
 		return 0;
 	}
 
