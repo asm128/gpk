@@ -99,6 +99,7 @@
     <ClInclude Include="gpk_view_bit.h" />
     <ClInclude Include="gpk_view_grid.h" />
     <ClInclude Include="gpk_view_layered.h" />
+    <ClInclude Include="gpk_view_manager.h" />
     <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_windows.h" />
   </ItemGroup>

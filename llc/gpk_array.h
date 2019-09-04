@@ -612,7 +612,7 @@ namespace gpk
 			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
 			//if(split[split.size()-1][] == separator)
 		}
-		return 0;
+		return (int32_t)split.size();
 	}
 
 

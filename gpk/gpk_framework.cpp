@@ -20,6 +20,14 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
 		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
 		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
+#define GPK_WINDOWS7_COMPAT
+#if defined(GPK_WINDOWS7_COMPAT)
+		if((framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
+			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
+		}
+#else
 		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
 		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
@@ -27,6 +35,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
+#endif
 	}
 #endif
 	return 0;

@@ -1,6 +1,7 @@
 #include "gpk_parse.h"
 #include "gpk_array.h"
 #include "gpk_safe.h"
+#include <ctype.h>
 
 ::gpk::error_t													gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_string& symbolList, const ::gpk::view_const_string& sourceChars, uint64_t* number_)	{
 	uint32_t															totalCharsProcessed							= 0;
@@ -10,7 +11,7 @@
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
 			if( symbolList[iSymbol] == sourceChars[iChar] ) {
 				bSymbolProcessed												= true;
-				gpk_necall(stringToParse.push_back(sourceChars[iChar++]), "%s", "Failed to append character! Out of memory?");
+				gpk_necall(stringToParse.push_back((char_t)::tolower(sourceChars[iChar++])), "%s", "Failed to append character! Out of memory?");
 				++totalCharsProcessed;
 				break;
 			}
