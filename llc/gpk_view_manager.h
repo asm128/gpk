@@ -40,6 +40,7 @@ namespace gpk
 							::gpk::array_pod<const _tElement*>							Views;
 	public:
 																						~CViewManager				()																					{}
+																						CViewManager				()																					{ Views.push_back(0); Counts.push_back(0); }
 
 							::gpk::error_t												View						(const _tElement* elements, uint32_t count, ::gpk::view_array<const _tElement>& out_view)		{
 			if(0 == count || 0 == elements) {
@@ -47,19 +48,20 @@ namespace gpk
 				return 0;
 			}
 			const uint32_t																		totalChars					= ::gpk::min(count, CViewManager::BLOCK_SIZE);
-			for(uint32_t iLabel = 0, countLabels = Views.size(); iLabel < countLabels; ++iLabel) {
-				if(totalChars != Counts[iLabel])
+			for(uint32_t iView = 0, countLabels = Views.size(); iView < countLabels; ++iView) {
+				if(totalChars != Counts[iView])
 					continue;
-				const _tElement																		* pStored					= Views[iLabel];
+				const _tElement																		* pStored					= Views[iView];
 				if(0 == memcmp(pStored, elements, totalChars)) {
 					out_view																	= {pStored, totalChars};
-					return totalChars;
+					return iView;
 				}
 			}
-			gpk_necall(Elements		.push_sequence(elements, totalChars, out_view)	, "%s", "Out of memory?");
-			gpk_necall(Counts		.push_back(out_view.size	())					, "%s", "Out of memory?");
-			gpk_necall(Views		.push_back(out_view.begin	())					, "%s", "Out of memory?");
-			return 0;
+			gpk_necall(Elements.push_sequence(elements, totalChars, out_view)	, "%s", "Out of memory?");
+			const uint32_t																		newIndex					= Counts.push_back(out_view.size());
+			gpk_necall(newIndex, "%s", "Out of memory?");
+			gpk_necall(Views.push_back(out_view.begin())					, "%s", "Out of memory?");
+			return newIndex;
 		}
 	};
 }

@@ -163,10 +163,11 @@ namespace gpk
 
 		// Returns the index of the pushed value or -1 on failure
 							::gpk::error_t				push_back									(const _tPOD& newValue)														noexcept	{
-			const int32_t										indexExpected								= Count;
-			const int32_t										indexNew									= resize(Count+1, newValue)-1;
-			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
-			return indexNew;
+			const int32_t										oldSize										= Count;
+			const int32_t										newSize										= oldSize + 1;
+			const int32_t										finalSize									= resize(newSize, newValue);
+			ree_if(finalSize != newSize, "Failed to push value! Array size: %i.", oldSize);
+			return oldSize;
 		}
 
 		// Returns the index of the pushed value
