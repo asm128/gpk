@@ -30,12 +30,13 @@ namespace gpk
 			Blocks			.resize(Blocks.size() + 1);
 			RemainingSpace	.resize(Blocks.size() + 1, _blockSize - length - 1);
 			out_view														= {&Blocks[indexNewBlock]->operator[](0), length};
+			memcpy(Blocks[indexNewBlock]->Storage, sequence, length);
 			return indexNewBlock;
 		}
 	};
 
 	class CLabelManager	{
-		static constexpr	const uint32_t								BLOCK_SIZE					= 256;
+		static constexpr	const uint32_t								BLOCK_SIZE					= 1024*32;
 							unshrinkable_string_container<BLOCK_SIZE>	Characters;
 							::gpk::view_const_char						Empty;
 							::gpk::array_pod<uint32_t>					Counts;

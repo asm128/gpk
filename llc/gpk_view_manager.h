@@ -26,8 +26,9 @@ namespace gpk
 			}
 			int32_t																				indexNewBlock				= Blocks.size();
 			Blocks			.resize(Blocks.size() + 1);
-			RemainingSpace	.resize(Blocks.size() + 1, _blockSize - length - 1);
+			RemainingSpace	.resize(Blocks.size(), _blockSize - length);
 			out_view																		= {&Blocks[indexNewBlock]->operator[](0), length};
+			memcpy(Blocks[indexNewBlock]->Storage, sequence, length);
 			return indexNewBlock;
 		}
 	};
@@ -41,13 +42,12 @@ namespace gpk
 							::gpk::array_pod<const _tElement*>							Views;
 
 																						~CViewManager				()																					{}
-																						CViewManager				()																					{ Views.push_back(0); Counts.push_back(0); }
 
 			inline			::gpk::error_t												View						(const _tElement* elements, uint16_t count)													{ ::gpk::view_array<const _tElement> out_view; return View(elements, count, out_view); }
 							::gpk::error_t												View						(const _tElement* elements, uint16_t count, ::gpk::view_array<const _tElement>& out_view)	{
 			if(0 == count || 0 == elements) {
 				out_view																		= {};
-				return 0;
+				return -1;
 			}
 			const uint32_t																		totalChars					= ::gpk::min((uint32_t)count, CViewManager::BLOCK_SIZE);
 			for(uint32_t iView = 0, countLabels = Views.size(); iView < countLabels; ++iView) {
