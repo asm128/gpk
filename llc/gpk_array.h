@@ -639,7 +639,7 @@ namespace gpk
 
 	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_string> & keysToSave, ::gpk::array_pod<byte_t> & output);
 	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstString> & output);
-	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_string& strToLog);
+	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_char& strToLog);
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837
