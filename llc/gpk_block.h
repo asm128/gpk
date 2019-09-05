@@ -1,6 +1,7 @@
+#include "gpk_json.h"
+
 #ifndef GPK_BLOCK_H_9823749283749823
 #define GPK_BLOCK_H_9823749283749823
-
 
 namespace gpk
 {
@@ -15,6 +16,7 @@ namespace gpk
 		uint32_t									BlockSize;
 		bool										Deflate;
 	};
+	::gpk::error_t								blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {});
 } // namespace
 
 #endif // GPK_BLOCK_H_9823749283749823

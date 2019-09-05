@@ -109,6 +109,7 @@
     <ClCompile Include="gpk_aes.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_base64.cpp" />
+    <ClCompile Include="gpk_block.cpp" />
     <ClCompile Include="gpk_cgi.cpp" />
     <ClCompile Include="gpk_cgi_main.cpp" />
     <ClCompile Include="gpk_cgi_module.cpp" />

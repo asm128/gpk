@@ -431,6 +431,9 @@
     <ClCompile Include="gpk_view_array.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_config.json" />
