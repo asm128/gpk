@@ -11,3 +11,12 @@
 	loaded.Deflate								= (0 <= indexJSONDeflate	) ?				reader.Token[indexJSONDeflate	].Value : configDefault.Deflate;
 	return 0;
 }
+
+::gpk::error_t								gpk::blockFileName			(const uint32_t idBlock, const ::gpk::view_const_string & dbName, ::gpk::array_pod<char_t> & fileName)	{
+	fileName.append(::gpk::view_const_string{"db."});
+	fileName.append(dbName);
+	char											temp	[32]				= {};
+	sprintf_s(temp, ".%u.ubk", idBlock);
+	fileName.append(::gpk::view_const_string{temp});
+	return 0;
+}
