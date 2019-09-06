@@ -21,3 +21,5 @@
 /llc/gpk_array.h~RFea0706a.TMP
 /udp_server/x64/Debug
 /udp_client/x64/Debug
+/udp_client/x64/Release
+/udp_server/x64/Release
