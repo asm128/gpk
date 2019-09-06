@@ -603,7 +603,7 @@ namespace gpk
 		int32_t												lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view_const_string					newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset - 1)};
+				const ::gpk::view_const_string					newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset)};
 				++iChar;
 				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
