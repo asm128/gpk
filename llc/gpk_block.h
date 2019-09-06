@@ -21,7 +21,7 @@ namespace gpk
 	};
 
 	::gpk::error_t								blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
-	::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_string & dbName, ::gpk::array_pod<char_t> & fileName);
+	::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_string & dbName, const ::gpk::view_const_string & folderName, ::gpk::array_pod<char_t> & fileName);
 } // namespace
 
 #endif // GPK_BLOCK_H_9823749283749823

@@ -12,7 +12,11 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::blockFileName			(const uint32_t idBlock, const ::gpk::view_const_string & dbName, ::gpk::array_pod<char_t> & fileName)	{
+::gpk::error_t								gpk::blockFileName			(const uint32_t idBlock, const ::gpk::view_const_string & dbName, const ::gpk::view_const_string & folderName, ::gpk::array_pod<char_t> & fileName)	{
+	if(folderName.size()) {
+		fileName.append(folderName);
+		fileName.push_back('/');
+	}
 	fileName.append(::gpk::view_const_string{"db."});
 	fileName.append(dbName);
 	char											temp	[32]				= {};

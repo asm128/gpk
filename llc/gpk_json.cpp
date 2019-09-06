@@ -575,4 +575,3 @@ static		::gpk::error_t									decodeUnicodeEscapeSequence							(::gpk::view_co
 	unicode														= 0x10000 + ((unicode & 0x3FF) << 10) + (surrogatePair & 0x3FF);
 	return 0;
 }
-
