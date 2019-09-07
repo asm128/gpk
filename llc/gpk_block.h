@@ -39,6 +39,7 @@ namespace gpk
 
 					::gpk::SBlockConfig							BlockConfig;
 					::gpk::view_const_string					DBName;
+					int32_t										MaxBlockOnDisk				= -1;
 	};
 
 #pragma pack(push, 1)
@@ -61,10 +62,6 @@ namespace gpk
 				::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
 				::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint8_t indexContainer);
 
-				::gpk::error_t								crcGenerate					(const ::gpk::view_const_byte & bytes, uint64_t & crc);
-				::gpk::error_t								crcVerifyAndRemove			(::gpk::array_pod<byte_t> & bytes);
-				::gpk::error_t								crcGenerateAndAppend		(::gpk::array_pod<byte_t> & bytes);
-
 	template<typename _tElement>
 				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap)								{
 		loadedBytes.clear();
@@ -75,28 +72,7 @@ namespace gpk
 		::gpk::error_t												indexBlock					= mapBlock.Block.push_back({});
 		gpk_necall(mapBlock.Id			.push_back(indexMap.IdBlock			), "%s", "Out of memory?");
 		gpk_necall(mapBlock.IdContainer	.push_back(indexMap.IndexContainer	), "%s", "Out of memory?");
-		::gpk::array_pod<char_t>									encrypted;
-		::gpk::array_pod<char_t>									deflated;
-		if(false == mapBlock.BlockConfig.Deflate && 0 == mapBlock.BlockConfig.Key.size()) {
-			gpk_necall(::gpk::fileToMemory({fileName.begin(), fileName.size()}, loadedBytes), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-			gpk_necall(::gpk::crcVerifyAndRemove(loadedBytes), "%s", "CRC Check failed!");
-		}
-		else if(false == mapBlock.BlockConfig.Deflate) {
-			gpk_necall(::gpk::fileToMemory({fileName.begin(), fileName.size()}, encrypted), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-			gpk_necall(::gpk::crcVerifyAndRemove(encrypted), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::aesDecode(encrypted, mapBlock.BlockConfig.Key, ::gpk::AES_LEVEL_256, loadedBytes), "Failed to decompress file! Corrupt file?");
-		}
-		else if(0 == mapBlock.BlockConfig.Key.size()) {
-			gpk_necall(::gpk::fileToMemory({fileName.begin(), fileName.size()}, deflated), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-			gpk_necall(::gpk::crcVerifyAndRemove(deflated), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::arrayInflate(deflated, loadedBytes), "Failed to decompress file! Corrupt file?");
-		}
-		else {
-			gpk_necall(::gpk::fileToMemory({fileName.begin(), fileName.size()}, encrypted), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-			gpk_necall(::gpk::crcVerifyAndRemove(encrypted), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::aesDecode(encrypted, mapBlock.BlockConfig.Key, ::gpk::AES_LEVEL_256, deflated), "Failed to decompress file! Corrupt file?");
-			gpk_necall(::gpk::arrayInflate(deflated, loadedBytes), "Failed to decompress file! Corrupt file?");
-		}
+		gpk_necall(::gpk::fileToMemorySecure(loadedBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate), "Failed to load block file: %s.", ::gpk::toString(fileName).begin());
 		return indexBlock;
 	}
 
@@ -108,40 +84,12 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & fileName)								{
-		::gpk::array_pod<char_t>									encrypted;
-		::gpk::array_pod<char_t>									deflated;
-		if(false == mapBlock.BlockConfig.Deflate && 0 == mapBlock.BlockConfig.Key.size()) {
-			::gpk::array_pod<char_t>									bytesToWrite				= blockBytes;
-			gpk_necall(::gpk::crcGenerateAndAppend(bytesToWrite), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::fileFromMemory({fileName.begin(), fileName.size()}, bytesToWrite), "Failed to save block: {container: %u, block: %u}.", indexMap.IndexContainer, indexMap.IdBlock);
-		}
-		else if(false == mapBlock.BlockConfig.Deflate) {
-			gpk_necall(::gpk::aesEncode(blockBytes, mapBlock.BlockConfig.Key, ::gpk::AES_LEVEL_256, encrypted), "%s", "Failed to encrypt file!");
-			gpk_necall(::gpk::crcGenerateAndAppend(encrypted), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::fileFromMemory({fileName.begin(), fileName.size()}, encrypted), "Failed to save block: {container: %u, block: %u}.", indexMap.IndexContainer, indexMap.IdBlock);
-		}
-		else if(0 == mapBlock.BlockConfig.Key.size()) {
-			gpk_necall(::gpk::arrayDeflate(blockBytes, deflated), "Failed to compress file!");
-			gpk_necall(::gpk::crcGenerateAndAppend(deflated), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::fileFromMemory({fileName.begin(), fileName.size()}, deflated), "Failed to save block: {container: %u, block: %u}.", indexMap.IndexContainer, indexMap.IdBlock);
-		}
-		else {
-			gpk_necall(::gpk::arrayDeflate(blockBytes, deflated), "Failed to compress file! Corrupt file?");
-			gpk_necall(::gpk::aesEncode(deflated, mapBlock.BlockConfig.Key, ::gpk::AES_LEVEL_256, encrypted), "Failed to encrypt file!");
-			gpk_necall(::gpk::crcGenerateAndAppend(encrypted), "%s", "CRC Check failed!");
-			gpk_necall(::gpk::fileFromMemory({fileName.begin(), fileName.size()}, encrypted), "Failed to save block: {container: %u, block: %u}.", indexMap.IndexContainer, indexMap.IdBlock);
-		}
-		return 0;
-	}
-
-	template<typename _tElement>
 				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
 		::gpk::array_pod<char_t>									finalPath					= {};
 		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
 		::gpk::array_pod<char_t>									fileName					= {};
 		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
-		return ::gpk::blockMapSave(blockBytes, mapBlock, indexMap, fileName);
+		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
 
 	template<typename _tMapBlock>
@@ -189,6 +137,7 @@ namespace gpk
 			filePart												= {&filePart[indexOfPrevDot], filePart.size() - indexOfPrevDot};
 			uint32_t													idBlock								= (uint32_t)-1;
 			::gpk::parseIntegerDecimal(filePart, &idBlock);
+			mapBlocks.MaxBlockOnDisk								= ::gpk::max(mapBlocks.MaxBlockOnDisk, (int32_t)idBlock);
 			if(0 <= ::gpk::find(idBlock, ::gpk::view_array<const uint32_t>{blocksToSkip.begin(), blocksToSkip.size()}))
 				continue;
 			::gpk::SRecordMap											indexMap							= {};

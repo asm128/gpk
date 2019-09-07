@@ -32,6 +32,13 @@ namespace gpk
 					::gpk::error_t									pathNameCompose			(::gpk::view_const_string path, ::gpk::view_const_string fileName, ::gpk::array_pod<char_t> & out_composed);
 					::gpk::error_t									findLastSlash			(const ::gpk::view_const_string & path);
 
+					::gpk::error_t									crcGenerate					(const ::gpk::view_const_byte & bytes, uint64_t & crc);
+					::gpk::error_t									crcVerifyAndRemove			(::gpk::array_pod<byte_t> & bytes);
+					::gpk::error_t									crcGenerateAndAppend		(::gpk::array_pod<byte_t> & bytes);
+
+					::gpk::error_t									fileToMemorySecure			(::gpk::array_pod<char_t> & loadedBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate);
+					::gpk::error_t									fileFromMemorySecure		(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate);
+
 } // namespace
 
 #endif // GPK_STORAGE_H_2983749283

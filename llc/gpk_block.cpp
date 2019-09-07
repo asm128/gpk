@@ -63,32 +63,3 @@
 	}
 	return 0;
 }
-
-static constexpr const uint32_t				GPK_BLOCK_CRC_SEED			= 18973;
-
-::gpk::error_t								gpk::crcGenerate			(const ::gpk::view_const_byte & bytes, uint64_t & crc)	{
-	crc											= 0;
-	for(uint32_t i=0; i < bytes.size(); ++i)
-		crc											+= ::gpk::noise1DBase(bytes[i], ::GPK_BLOCK_CRC_SEED);
-	return 0;
-}
-
-::gpk::error_t								gpk::crcVerifyAndRemove		(::gpk::array_pod<byte_t> & bytes)	{
-	ree_if(bytes.size() < 8, "Invalid input. No CRC can be found in an array of %u bytes.", bytes.size());
-	uint64_t										check						= 0;
-	const uint32_t									startOfCRC					= bytes.size() - 8;
-	::gpk::crcGenerate({bytes.begin(), startOfCRC}, check);
-	const uint64_t									found						= *(uint64_t*)&bytes[startOfCRC];
-	ree_if(check != found, "CRC Check failed: Stored: %llu. Calculated: %llu.", found, check);
-	gpk_necall(bytes.resize(bytes.size() - 8), "%s", "Out of memory?");
-	return 0;
-}
-
-::gpk::error_t								gpk::crcGenerateAndAppend	(::gpk::array_pod<byte_t> & bytes)	{
-	uint64_t										crcToStore					= 0;
-	::gpk::crcGenerate(bytes, crcToStore);
-	gpk_necall(bytes.append((char*)&crcToStore, sizeof(uint64_t)), "%s", "Out of memory?");;
-	return 0;
-}
-
-
