@@ -30,9 +30,10 @@ namespace gpk
 					bool										Deflate;
 	};
 #pragma pack(pop)
+				::gpk::error_t								blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
 
 	template<typename _tBlock>
-	struct SMapBlock {
+	struct SMapTable {
 					::gpk::array_pod<uint8_t>					IdContainer;
 					::gpk::array_pod<uint32_t>					Id;
 					::gpk::array_obj<::gpk::ptr_obj<_tBlock>>	Block;
@@ -58,12 +59,11 @@ namespace gpk
 					return ::gpk::blockRecordPath(fileName, indices, containers, dbName, dbPath);
 				}
 
-				::gpk::error_t								blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
 				::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
 				::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint8_t indexContainer);
 
 	template<typename _tElement>
-				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap)								{
+				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap)								{
 		loadedBytes.clear();
 		for(uint32_t iBlock = 0; iBlock < mapBlock.Id.size(); ++iBlock) {
 			if((uint32_t)indexMap.IdBlock == mapBlock.Id[iBlock])
@@ -77,14 +77,14 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
+				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
 		::gpk::array_pod<char_t>									fileName					= {};
 		::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, mapBlock.BlockConfig.Containers, dbName, dbPath);
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	template<typename _tElement>
-				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
+				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
 		::gpk::array_pod<char_t>									finalPath					= {};
 		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
 		::gpk::array_pod<char_t>									fileName					= {};
@@ -93,7 +93,7 @@ namespace gpk
 	}
 
 	template<typename _tMapBlock>
-			int64_t											getMapId							(::gpk::SMapBlock<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
+			int64_t											getMapId							(::gpk::SMapTable<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
 		uint64_t													container							= 0;
 		::gpk::crcGenerate(sequenceToFind, container);
 		container												= container % mapBlocks.BlockConfig.Containers;
