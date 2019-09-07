@@ -15,11 +15,12 @@ namespace gpk
 					uint16_t									Low;
 					uint8_t										High;
 
+		constexpr												SInt24						()							noexcept	: Low(0), High(0)		{}
 		constexpr												SInt24						(int32_t value)				noexcept
 			: Low((uint16_t)(value & 0xFFFF))
 			, High((uint8_t)(((value & 0x7F0000) >> 16) | ((value & 0x80000000) >> 24)))
 			{ }
-		constexpr	operator									int32_t						()					const	noexcept		{ return (((uint32_t)Low) | ((High & 0x7F) << 16)) | ((High & 0x80) ? 0xFF800000 : 0); }
+		constexpr	operator									int32_t						()					const	noexcept	{ return (((uint32_t)Low) | ((High & 0x7F) << 16)) | ((High & 0x80) ? 0xFF800000 : 0); }
 	};
 
 	struct SBlockConfig {
