@@ -75,6 +75,32 @@ namespace gpk
 		return -1;
 	}
 
+	template<typename _tElement>
+						::gpk::error_t							split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											arrobaPos							= ::gpk::find(valueToFind, original);
+		if(0 > arrobaPos)
+			left														= original;
+		else {
+			left														= {original.begin(), (uint16_t)arrobaPos};
+			const uint32_t													offsetDomain						= arrobaPos + 1;
+			right														= {original.begin() + offsetDomain, (uint16_t)(original.size() - offsetDomain)};
+		}
+		return 0;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							splitAt								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											posFragment							= ::gpk::find(valueToFind, original);
+		if(0 > posFragment) { // Read until the end unless fragment is found.
+			left														= original;
+			right														= {};
+		}
+		else {
+			left														= {original.begin(), (uint32_t)posFragment};
+			right														= ::gpk::view_const_char{original.begin() + posFragment, original.size() - posFragment};
+		}
+		return 0;
+	}
 } // namespace
 
 #endif // GPK_FIND_H_2983749283742

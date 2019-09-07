@@ -2,9 +2,6 @@
 #include "gpk_find.h"
 #include "gpk_io.h"
 #include "gpk_string.h"
-#include "gpk_aes.h"
-#include "gpk_deflate.h"
-#include "gpk_noise.h"
 
 #include <new>
 
@@ -348,74 +345,3 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 		::gpk::max(indexOfStartOfFileName0, indexOfStartOfFileName1)
 		;
 }
-
-		::gpk::error_t									gpk::fileToMemorySecure								(::gpk::array_pod<char_t> & loadedBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate)								{
-	::gpk::array_pod<char_t>									read;
-	::gpk::array_pod<char_t>									decoded;
-	::gpk::view_const_string									strFilename											= {fileName.begin(), fileName.size()};
-	if(false == deflate && 0 == key.size()) {
-		gpk_necall(::gpk::fileToMemory(strFilename, loadedBytes), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-		gpk_necall(::gpk::crcVerifyAndRemove(loadedBytes), "%s", "CRC Check failed!");
-	}
-	else {
-		gpk_necall(::gpk::fileToMemory(strFilename, read), "Invalid record id: %llu. Block doesn't exist.", -1LL);
-		gpk_necall(::gpk::crcVerifyAndRemove(read), "%s", "CRC Check failed!");
-		if(false == deflate)
-			gpk_necall(::gpk::aesDecode(read, key, ::gpk::AES_LEVEL_256, loadedBytes), "Failed to decompress file! Corrupt file?");
-		else if(0 == key.size())
-			gpk_necall(::gpk::arrayInflate(read, loadedBytes), "Failed to decompress file! Corrupt file?");
-		else {
-			gpk_necall(::gpk::aesDecode(read, key, ::gpk::AES_LEVEL_256, decoded), "Failed to decompress file! Corrupt file?");
-			gpk_necall(::gpk::arrayInflate(decoded, loadedBytes), "Failed to decompress file! Corrupt file?");
-		}
-	}
-	return 0;
-}
-
-		::gpk::error_t									gpk::fileFromMemorySecure							(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate) {
-	::gpk::view_const_string									strFilename											= {fileName.begin(), fileName.size()};
-	::gpk::array_pod<char_t>									bytesToWrite;
-	if(false == deflate && 0 == key.size())
-		bytesToWrite											= blockBytes;
-	else if(false == deflate)
-		gpk_necall(::gpk::aesEncode(blockBytes, key, ::gpk::AES_LEVEL_256, bytesToWrite), "%s", "Failed to encrypt file!");
-	else if(0 == key.size())
-		gpk_necall(::gpk::arrayDeflate(blockBytes, bytesToWrite), "Failed to compress file!");
-	else {
-		::gpk::array_pod<char_t>									deflated;
-		gpk_necall(::gpk::arrayDeflate(blockBytes, deflated), "Failed to compress file! Corrupt file?");
-		gpk_necall(::gpk::aesEncode(deflated, key, ::gpk::AES_LEVEL_256, bytesToWrite), "Failed to encrypt file!");
-	}
-	gpk_necall(::gpk::crcGenerateAndAppend(bytesToWrite), "%s", "CRC Check failed!");
-	gpk_necall(::gpk::fileFromMemory(strFilename, bytesToWrite), "Failed to save file: %s.", ::gpk::toString(fileName).begin());
-	return 0;
-}
-
-static constexpr const uint32_t							GPK_BLOCK_CRC_SEED			= 18973;
-
-		::gpk::error_t									gpk::crcGenerate			(const ::gpk::view_const_byte & bytes, uint64_t & crc)	{
-	crc														= 0;
-	for(uint32_t i=0; i < bytes.size(); ++i)
-		crc														+= ::gpk::noise1DBase(bytes[i], ::GPK_BLOCK_CRC_SEED);
-	return 0;
-}
-
-		::gpk::error_t									gpk::crcVerifyAndRemove		(::gpk::array_pod<byte_t> & bytes)	{
-	ree_if(bytes.size() < 8, "Invalid input. No CRC can be found in an array of %u bytes.", bytes.size());
-	uint64_t													check						= 0;
-	const uint32_t												startOfCRC					= bytes.size() - 8;
-	::gpk::crcGenerate({bytes.begin(), startOfCRC}, check);
-	const uint64_t												found						= *(uint64_t*)&bytes[startOfCRC];
-	ree_if(check != found, "CRC Check failed: Stored: %llu. Calculated: %llu.", found, check);
-	gpk_necall(bytes.resize(bytes.size() - 8), "%s", "Out of memory?");
-	return 0;
-}
-
-		::gpk::error_t									gpk::crcGenerateAndAppend	(::gpk::array_pod<byte_t> & bytes)	{
-	uint64_t													crcToStore					= 0;
-	::gpk::crcGenerate(bytes, crcToStore);
-	gpk_necall(bytes.append((char*)&crcToStore, sizeof(uint64_t)), "%s", "Out of memory?");;
-	return 0;
-}
-
-
