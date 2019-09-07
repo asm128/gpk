@@ -1,6 +1,14 @@
 #include "gpk_block.h"
 #include "gpk_json_expression.h"
 #include "gpk_noise.h"
+::gpk::error_t								gpk::blockRecordIndices		(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
+	const uint32_t									recordCoord					= (uint32_t)(idRecord & 0xFFFFFFFFUL);
+	indices.IndexContainer						= (uint32_t)(idRecord & 0xFFFFFFFF00000000ULL);
+	indices.IdBlock								= (uint32_t)(recordCoord / blockSize);
+	indices.IndexRecord							= (uint32_t)(recordCoord % blockSize);
+	return 0;
+}
+
 
 ::gpk::error_t								gpk::blockConfigLoad		(::gpk::SBlockConfig& loaded, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault)	{
 	if(0 > ::gpk::jsonExpressionResolve("key", reader, iNode, loaded.Key))

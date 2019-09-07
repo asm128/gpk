@@ -1,7 +1,7 @@
 /// Copyright 2010-2018 - asm128
 #include "gpk_platform.h"
 
-#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+//#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 
 #ifndef GPK_DEBUG_H_97826389432654
 #define GPK_DEBUG_H_97826389432654

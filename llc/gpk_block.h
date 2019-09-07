@@ -32,6 +32,7 @@ namespace gpk
 
 	template<typename _tBlock>
 	struct SMapBlock {
+					::gpk::array_pod<uint32_t>		IdContainer;
 					::gpk::array_pod<uint32_t>		Id;
 					::gpk::array_obj<_tBlock>		Block;
 
@@ -45,14 +46,7 @@ namespace gpk
 					int32_t							IndexContainer				= -1;
 	};
 
-	inline			::gpk::error_t					blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
-		const uint32_t									recordCoord					= (uint32_t)(idRecord & 0xFFFFFFFFUL);
-		indices.IndexContainer						= (uint32_t)(idRecord & 0xFFFFFFFF00000000ULL);
-		indices.IdBlock								= (uint32_t)(recordCoord / blockSize);
-		indices.IndexRecord							= (uint32_t)(recordCoord % blockSize);
-		return 0;
-	}
-
+				::gpk::error_t					blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
 				::gpk::error_t					blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
 				::gpk::error_t					blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
 
@@ -69,7 +63,8 @@ namespace gpk
 				return iBlock;
 		}
 		::gpk::error_t									indexBlock					= mapBlock.Block.push_back({});
-		gpk_necall(mapBlock.Id.push_back(indexMap.IdBlock), "%s", "Out of memory?");
+		gpk_necall(mapBlock.Id			.push_back(indexMap.IdBlock			), "%s", "Out of memory?");
+		gpk_necall(mapBlock.IdContainer	.push_back(indexMap.IndexContainer	), "%s", "Out of memory?");
 		::gpk::array_pod<char_t>						finalPath					= dbPath;
 		if(finalPath.size())
 			finalPath.push_back('/');

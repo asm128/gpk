@@ -23,7 +23,7 @@
 			client.KeyPing												= message->Time;
 			info_printf("Key ping set: %llu.", client.KeyPing);
 		}
-		message->Payload.clear();
+		//message->Payload.clear();
 		message->Payload											= data;
 		gpk_necall(queue.Send.push_back(message), "%s", "Out of memory?");
 	}
@@ -51,8 +51,8 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		optimizedPayload->RetryCount								= 1;
 		bool															keyPing								= false;
 		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
-			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayloadMsg						= payloadsToSend[iPayload];
-			const ::gpk::view_byte											currentPayloadView						= currentPayloadMsg->Payload;
+			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayloadMsg					= payloadsToSend[iPayload];
+			const ::gpk::view_byte											currentPayloadView					= currentPayloadMsg->Payload;
 			if(0 == currentPayloadMsg)
 				continue;
 			if((currentPayloadMsg->Command.Packed & 1) || (0 != currentPayloadMsg->RetryCount) || currentPayloadMsg->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayloadMsg->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
