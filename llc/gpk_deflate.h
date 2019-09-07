@@ -44,7 +44,7 @@ namespace gpk
 	::gpk::error_t											crcGenerateAndAppend			(::gpk::array_pod<byte_t> & bytes);
 
 	::gpk::error_t											fileToMemorySecure				(::gpk::array_pod<char_t> & loadedBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate);
-	::gpk::error_t											fileFromMemorySecure			(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate);
+	::gpk::error_t											fileFromMemorySecure			(const ::gpk::view_const_char & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate);
 } // namespace
 
 #endif // GPK_DEFLATE_H_92173498234

@@ -232,7 +232,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	return 0;
 }
 
-		::gpk::error_t									gpk::fileFromMemorySecure							(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate) {
+		::gpk::error_t									gpk::fileFromMemorySecure							(const ::gpk::view_const_char & blockBytes, const ::gpk::view_const_char & fileName, const ::gpk::view_const_char & key, const bool deflate) {
 	::gpk::view_const_string									strFilename											= {fileName.begin(), fileName.size()};
 	::gpk::array_pod<char_t>									bytesToWrite;
 	if(false == deflate && 0 == key.size())
