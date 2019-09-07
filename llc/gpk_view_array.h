@@ -130,6 +130,19 @@ namespace gpk
 		return 0;
 	}
 
+	template<typename _tElement>
+						::gpk::error_t							split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											arrobaPos							= ::gpk::find(valueToFind, original);
+		if(0 > arrobaPos)
+			left														= original;
+		else {
+			left														= {original.begin(), (uint16_t)arrobaPos};
+			const uint32_t													offsetDomain						= arrobaPos + 1;
+			right														= {original.begin() + offsetDomain, (uint16_t)(original.size() - offsetDomain)};
+		}
+		return 0;
+	}
+
 						::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
 						::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
 						::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
