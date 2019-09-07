@@ -32,7 +32,7 @@ namespace gpk
 
 	template<typename _tBlock>
 	struct SMapBlock {
-					::gpk::array_pod<uint32_t>		IdContainer;
+					::gpk::array_pod<uint8_t>		IdContainer;
 					::gpk::array_pod<uint32_t>		Id;
 					::gpk::array_obj<_tBlock>		Block;
 
@@ -40,15 +40,19 @@ namespace gpk
 					::gpk::view_const_string		DBName;
 	};
 
+#pragma pack(push, 1)
 	struct SRecordMap {
 					int32_t							IdBlock						= -1;
-					int32_t							IndexRecord					= -1;
-					int32_t							IndexContainer				= -1;
+					SInt24							IndexRecord					= -1;
+					uint8_t							IndexContainer				= 0;
 	};
+#pragma pack(pop)
 
 				::gpk::error_t					blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
+				::gpk::error_t					blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
 				::gpk::error_t					blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
 				::gpk::error_t					blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
+				::gpk::error_t					blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint8_t indexContainer);
 
 				::gpk::error_t					crcGenerate					(const ::gpk::view_const_byte & bytes, uint64_t & crc);
 				::gpk::error_t					crcVerifyAndRemove			(::gpk::array_pod<byte_t> & bytes);
@@ -66,15 +70,7 @@ namespace gpk
 		gpk_necall(mapBlock.Id			.push_back(indexMap.IdBlock			), "%s", "Out of memory?");
 		gpk_necall(mapBlock.IdContainer	.push_back(indexMap.IndexContainer	), "%s", "Out of memory?");
 		::gpk::array_pod<char_t>						finalPath					= dbPath;
-		if(finalPath.size())
-			finalPath.push_back('/');
-		finalPath.append(dbName);
-		if(mapBlock.BlockConfig.Containers) {
-			finalPath.push_back('/');
-			char											temp[32]					= {};
-			sprintf_s(temp, "%u", indexMap.IndexContainer);
-			finalPath.append_string(temp);
-		}
+		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
 		::gpk::array_pod<char_t>						fileName					= {};
 		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
 		::gpk::array_pod<char_t>						encrypted;

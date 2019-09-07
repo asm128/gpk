@@ -1,9 +1,16 @@
 #include "gpk_block.h"
 #include "gpk_json_expression.h"
 #include "gpk_noise.h"
+
+::gpk::error_t								gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord)	{
+	idRecord									= ((uint64_t)indices.IndexContainer) << 32;
+	idRecord									|= ((uint64_t)indices.IdBlock * blockSize + (int32_t)indices.IndexRecord);
+	return 0;
+}
+
 ::gpk::error_t								gpk::blockRecordIndices		(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
 	const uint32_t									recordCoord					= (uint32_t)(idRecord & 0xFFFFFFFFUL);
-	indices.IndexContainer						= (uint32_t)(idRecord & 0xFFFFFFFF00000000ULL);
+	indices.IndexContainer						= (uint8_t)((idRecord & 0xFFFFFFFF00000000ULL) >> 32);
 	indices.IdBlock								= (uint32_t)(recordCoord / blockSize);
 	indices.IndexRecord							= (uint32_t)(recordCoord % blockSize);
 	return 0;
@@ -34,6 +41,20 @@
 	char											temp	[32]				= {};
 	sprintf_s(temp, ".%u.ubk", idBlock);
 	fileName.append(::gpk::view_const_string{temp});
+	return 0;
+}
+
+::gpk::error_t								gpk::blockFilePath			(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint8_t indexContainer) {
+	finalPath									= dbPath;
+	if(finalPath.size())
+		finalPath.push_back('/');
+	finalPath.append(dbName);
+	if(containers) {
+		finalPath.push_back('/');
+		char											temp[32]					= {};
+		sprintf_s(temp, "%u", indexContainer);
+		finalPath.append_string(temp);
+	}
 	return 0;
 }
 
