@@ -93,7 +93,7 @@ namespace gpk
 	}
 
 	template<typename _tMapBlock>
-			int64_t											getMapId							(::gpk::SMapTable<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
+			int64_t											mapTableMapId							(::gpk::SMapTable<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
 		uint64_t													container							= 0;
 		::gpk::crcGenerate(sequenceToFind, container);
 		container												= container % mapBlocks.BlockConfig.Containers;
@@ -157,6 +157,31 @@ namespace gpk
 			}
 		}
 		return -1;
+	}
+
+	template<typename _tMapBlock>
+			int64_t											mapTableMapAdd						(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToAdd)	{
+		int64_t														idRecord							= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
+		ree_if(0 <= idRecord, "E-mail address already registered.");
+		uint64_t													container							= 0;
+		::gpk::crcGenerate(sequenceToAdd, container);
+		container												= container % mapTable.BlockConfig.Containers;
+		if(-1 == mapTable.MaxBlockOnDisk) {
+			::gpk::ptr_obj<_tMapBlock>									newBlock;
+			newBlock.create();
+			newBlock->AddMap(sequenceToAdd);
+			::gpk::SRecordMap											newIndices;
+			newIndices.IndexRecord									= mapTable.Block.push_back(newBlock);
+			newIndices.IndexContainer								= (uint8_t)container;
+			newIndices.IdBlock										= 0;
+			mapTable.Id.push_back(newIndices.IdBlock);
+			mapTable.IdContainer.push_back(newIndices.IndexContainer);
+			++mapTable.MaxBlockOnDisk;
+			uint64_t													newIdRecord							= (uint64_t)-1LL;
+			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
+			return newIdRecord;
+		}
+		return idRecord;
 	}
 } // namespace
 
