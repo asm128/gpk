@@ -66,7 +66,6 @@
 
 static constexpr const uint32_t				GPK_BLOCK_CRC_SEED			= 18973;
 
-
 ::gpk::error_t								gpk::crcGenerate			(const ::gpk::view_const_byte & bytes, uint64_t & crc)	{
 	crc											= 0;
 	for(uint32_t i=0; i < bytes.size(); ++i)

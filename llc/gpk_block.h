@@ -2,6 +2,8 @@
 #include "gpk_storage.h"
 #include "gpk_deflate.h"
 #include "gpk_aes.h"
+#include "gpk_find.h"
+#include "gpk_parse.h"
 
 #ifndef GPK_BLOCK_H_9823749283749823
 #define GPK_BLOCK_H_9823749283749823
@@ -105,11 +107,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath)								{
-		::gpk::array_pod<char_t>									finalPath					= {};
-		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
-		::gpk::array_pod<char_t>									fileName					= {};
-		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
+				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & fileName)								{
 		::gpk::array_pod<char_t>									encrypted;
 		::gpk::array_pod<char_t>									deflated;
 		if(false == mapBlock.BlockConfig.Deflate && 0 == mapBlock.BlockConfig.Key.size()) {
@@ -134,6 +132,81 @@ namespace gpk
 			gpk_necall(::gpk::fileFromMemory({fileName.begin(), fileName.size()}, encrypted), "Failed to save block: {container: %u, block: %u}.", indexMap.IndexContainer, indexMap.IdBlock);
 		}
 		return 0;
+	}
+
+	template<typename _tElement>
+				::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
+		::gpk::array_pod<char_t>									finalPath					= {};
+		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
+		::gpk::array_pod<char_t>									fileName					= {};
+		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
+		return ::gpk::blockMapSave(blockBytes, mapBlock, indexMap, fileName);
+	}
+
+	template<typename _tMapBlock>
+			int64_t											getMapId							(::gpk::SMapBlock<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & email)	{
+		uint64_t													container							= 0;
+		::gpk::crcGenerate(email, container);
+		container												= container % mapBlocks.BlockConfig.Containers;
+		::gpk::array_pod<uint32_t>									idBlocks							= mapBlocks.Id;
+		::gpk::array_pod<uint32_t>									blocksToSkip;
+		for(uint32_t iBlock = 0; iBlock < mapBlocks.Block.size(); ++iBlock) {
+			if(mapBlocks.IdContainer[iBlock] != container)
+				continue;
+			const _tMapBlock											& block								= *mapBlocks.Block[iBlock];
+			const int32_t												idEmail								= block.GetMapId(email);
+			const uint32_t												idBlock								= mapBlocks.Id[iBlock];
+			if(0 <= idEmail) {
+				::gpk::SRecordMap											indices;
+				indices.IndexContainer									= mapBlocks.IdContainer[iBlock];
+				indices.IdBlock											= idBlock;
+				indices.IndexRecord										= idEmail;
+				uint64_t													result								= (uint64_t)-1LL;
+				::gpk::blockRecordId(indices, mapBlocks.BlockConfig.BlockSize, result);
+				return result;
+			}
+			blocksToSkip.push_back(idBlock);
+			(void)block;
+		}
+		::gpk::array_pod<char_t>									containerPath						= {};
+		::gpk::blockFilePath(containerPath, mapBlocks.DBName, dbPath, mapBlocks.BlockConfig.Containers, (uint8_t)container);
+		::gpk::array_obj<::gpk::array_pod<char_t>>					paths;
+		::gpk::pathList({containerPath.begin(), containerPath.size()}, paths, false);
+		const ::gpk::view_const_string								extension							= "ubk";
+		::gpk::array_pod<char_t>									loadedBytes;
+		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {
+			const ::gpk::array_pod<char_t>								fileNameCurrent						= paths[iFile];
+			if(5 >= fileNameCurrent.size())
+				continue;
+			::gpk::view_const_char										filePart							= {&fileNameCurrent[fileNameCurrent.size() - 3], 3};
+			if(filePart != extension)
+				continue;
+			filePart												= {fileNameCurrent.begin(), fileNameCurrent.size()-4};
+			::gpk::error_t												indexOfPrevDot						= ::gpk::rfind('.', filePart);
+			if(-1 == indexOfPrevDot)
+				continue;
+			filePart												= {&filePart[indexOfPrevDot], filePart.size() - indexOfPrevDot};
+			uint32_t													idBlock								= (uint32_t)-1;
+			::gpk::parseIntegerDecimal(filePart, &idBlock);
+			if(0 <= ::gpk::find(idBlock, ::gpk::view_array<const uint32_t>{blocksToSkip.begin(), blocksToSkip.size()}))
+				continue;
+			::gpk::SRecordMap											indexMap							= {};
+			indexMap.IdBlock										= idBlock;
+			indexMap.IndexContainer									= (uint8_t)container;
+			indexMap.IndexRecord									= -1;
+			loadedBytes.clear();
+			const ::gpk::error_t										indexBlock							= ::gpk::blockMapLoad(loadedBytes, mapBlocks, fileNameCurrent, indexMap);
+			_tMapBlock													& block								= *mapBlocks.Block[indexBlock];
+			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %s.", ::gpk::toString(fileNameCurrent).begin());
+			const int32_t												idEmail								= block.GetMapId(email);
+			if(0 <= idEmail) {
+				indexMap.IndexRecord									= idEmail;
+				uint64_t													result								= (uint64_t)-1LL;
+				::gpk::blockRecordId(indexMap, mapBlocks.BlockConfig.BlockSize, result);
+				return result;
+			}
+		}
+		return -1;
 	}
 } // namespace
 
