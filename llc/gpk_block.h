@@ -80,7 +80,7 @@ namespace gpk
 				::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
 		::gpk::array_pod<char_t>									fileName					= {};
 		::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, mapBlock.BlockConfig.Containers, dbName, dbPath);
-		return blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
+		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	template<typename _tElement>
@@ -93,9 +93,9 @@ namespace gpk
 	}
 
 	template<typename _tMapBlock>
-			int64_t											getMapId							(::gpk::SMapBlock<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & email)	{
+			int64_t											getMapId							(::gpk::SMapBlock<_tMapBlock> & mapBlocks, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
 		uint64_t													container							= 0;
-		::gpk::crcGenerate(email, container);
+		::gpk::crcGenerate(sequenceToFind, container);
 		container												= container % mapBlocks.BlockConfig.Containers;
 		::gpk::array_pod<uint32_t>									idBlocks							= mapBlocks.Id;
 		::gpk::array_pod<uint32_t>									blocksToSkip;
@@ -103,7 +103,7 @@ namespace gpk
 			if(mapBlocks.IdContainer[iBlock] != container)
 				continue;
 			const _tMapBlock											& block								= *mapBlocks.Block[iBlock];
-			const int32_t												idEmail								= block.GetMapId(email);
+			const int32_t												idEmail								= block.GetMapId(sequenceToFind);
 			const uint32_t												idBlock								= mapBlocks.Id[iBlock];
 			if(0 <= idEmail) {
 				::gpk::SRecordMap											indices;
@@ -124,7 +124,7 @@ namespace gpk
 		const ::gpk::view_const_string								extension							= "ubk";
 		::gpk::array_pod<char_t>									loadedBytes;
 		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {
-			const ::gpk::array_pod<char_t>								fileNameCurrent						= paths[iFile];
+			const ::gpk::view_const_char								fileNameCurrent						= paths[iFile];
 			if(5 >= fileNameCurrent.size())
 				continue;
 			::gpk::view_const_char										filePart							= {&fileNameCurrent[fileNameCurrent.size() - 3], 3};
@@ -148,7 +148,7 @@ namespace gpk
 			const ::gpk::error_t										indexBlock							= ::gpk::blockMapLoad(loadedBytes, mapBlocks, fileNameCurrent, indexMap);
 			_tMapBlock													& block								= *mapBlocks.Block[indexBlock];
 			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %s.", ::gpk::toString(fileNameCurrent).begin());
-			const int32_t												idEmail								= block.GetMapId(email);
+			const int32_t												idEmail								= block.GetMapId(sequenceToFind);
 			if(0 <= idEmail) {
 				indexMap.IndexRecord									= idEmail;
 				uint64_t													result								= (uint64_t)-1LL;
