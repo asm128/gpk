@@ -16,6 +16,12 @@
 	return 0;
 }
 
+::gpk::error_t								gpk::blockRecordPath		(::gpk::array_pod<char_t> & fileName, const ::gpk::SRecordMap & indices, uint32_t containers, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath)	{
+	::gpk::array_pod<char_t>						finalPath					= dbPath;
+	::gpk::blockFilePath(finalPath, dbName, dbPath, containers, indices.IndexContainer);
+	gpk_necall(::gpk::blockFileName(indices.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
+	return 0;
+}
 
 ::gpk::error_t								gpk::blockConfigLoad		(::gpk::SBlockConfig& loaded, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault)	{
 	if(0 > ::gpk::jsonExpressionResolve("key", reader, iNode, loaded.Key))

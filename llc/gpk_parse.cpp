@@ -3,7 +3,7 @@
 #include "gpk_safe.h"
 #include <ctype.h>
 
-::gpk::error_t													gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_string& symbolList, const ::gpk::view_const_string& sourceChars, uint64_t* number_)	{
+::gpk::error_t													gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_)	{
 	uint32_t															totalCharsProcessed							= 0;
 	::gpk::array_pod<char_t>											stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
