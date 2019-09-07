@@ -56,8 +56,9 @@ namespace gpk
 				::gpk::error_t					blockConfigLoad				(::gpk::SBlockConfig& out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig& configDefault = {{}, 65535, 0});
 				::gpk::error_t					blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
 
-				::gpk::error_t					crcVerifyAndRemove		(::gpk::array_pod<byte_t> & bytes);
-				::gpk::error_t					crcGenerateAndAppend	(::gpk::array_pod<byte_t> & bytes);
+				::gpk::error_t					crcGenerate					(const ::gpk::view_const_byte & bytes, uint64_t & crc);
+				::gpk::error_t					crcVerifyAndRemove			(::gpk::array_pod<byte_t> & bytes);
+				::gpk::error_t					crcGenerateAndAppend		(::gpk::array_pod<byte_t> & bytes);
 
 	template<typename _tElement>
 				::gpk::error_t					blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapBlock<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
