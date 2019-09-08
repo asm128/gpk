@@ -3,14 +3,14 @@
 #include "gpk_noise.h"
 
 ::gpk::error_t								gpk::blockRecordId			(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord)	{
-	idRecord									= ((uint64_t)indices.IndexContainer) << 32;
-	idRecord									|= ((uint64_t)indices.IdBlock * blockSize + (int32_t)indices.IndexRecord);
+	idRecord									= ((uint64_t)indices.IndexContainer) << 52;
+	idRecord									|= ((uint64_t)indices.IdBlock * blockSize + (uint64_t)indices.IndexRecord);
 	return 0;
 }
 
 ::gpk::error_t								gpk::blockRecordIndices		(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices)	{
-	const uint32_t									recordCoord					= (uint32_t)(idRecord & 0xFFFFFFFFUL);
-	indices.IndexContainer						= (uint8_t)((idRecord & 0xFFFFFFFF00000000ULL) >> 32);
+	const uint64_t									recordCoord					= (uint64_t)(idRecord & 0x000FFFFFFFFFFFFFULL);
+	indices.IndexContainer						= (uint8_t)((idRecord & 0xFFF0000000000000ULL) >> 52);
 	indices.IdBlock								= (uint32_t)(recordCoord / blockSize);
 	indices.IndexRecord							= (uint32_t)(recordCoord % blockSize);
 	return 0;

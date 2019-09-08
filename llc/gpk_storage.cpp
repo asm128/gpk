@@ -46,13 +46,18 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 #	include <sys/stat.h>
 #endif
 
-::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_string& pathName, const char separator) {
+::gpk::error_t						gpk::pathCreate				(const ::gpk::view_const_char& pathName, const char separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
 	int32_t									offsetBar					= -1;
 	do {
 		++offsetBar;
 		offsetBar							= ::gpk::find(separator, pathName, offsetBar);
+		if(0 == offsetBar) {
+			if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
+				break;
+			continue;
+		}
 		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
 		if(0 == strcmp(".", folder))
 			continue;
