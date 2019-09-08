@@ -26,6 +26,7 @@
 		//message->Payload.clear();
 		message->Payload											= data;
 		gpk_necall(queue.Send.push_back(message), "%s", "Out of memory?");
+		//::gpk::sleep(1);
 	}
 	return 0;
 }
@@ -55,7 +56,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			const ::gpk::view_byte											currentPayloadView					= currentPayloadMsg->Payload;
 			if(0 == currentPayloadMsg)
 				continue;
-			if((currentPayloadMsg->Command.Packed & 1) || (0 != currentPayloadMsg->RetryCount) || currentPayloadMsg->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayloadMsg->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
+			if((currentPayloadMsg->Command.Packed & 1) || currentPayloadMsg->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayloadMsg->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 				continue;
 			const bool														sizeEnough							= (serialized.size() + sizeof(uint16_t) + currentPayloadMsg->Payload.size()) < ::gpk::UDP_PAYLOAD_SIZE_LIMIT;
 			if(false == sizeEnough)
@@ -67,7 +68,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			gpk_necall(payloadSizes.push_back((uint16_t)currentPayloadView.size()), "Out of memory? Payload size: %u.", currentPayloadView.size());
 			gpk_necall(serialized.append(currentPayloadView.begin(), currentPayloadView.size()), "Failed to append payload! Payload size: %u.", currentPayloadView.size());
 			gpk_necall(payloadsToRemove.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size());
-			gpk_necall(messageCacheSent.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size());
+			gpk_necall(messageCacheSent.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size()); //
 		}
 		rni_if(0 == payloadSizes.size(), "No packets to optimize. Total packets searched: %u.", payloadsToSend.size());
 		info_printf("%u packets optimized.", payloadSizes.size());
@@ -114,12 +115,15 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			payloadHeader.MessageId										= messageToSend.Time;
 			ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
+			info_printf("Sent response to message id: %llx", payloadHeader.MessageId);
 		}
 		else {
 			ce_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
 			::gpk::view_stream<byte_t>										sendStream;
 			::gpk::array_pod<byte_t>										ardellEncoded;
 			payloadHeader.MessageId										= ::hashFromTime(messageToSend.Time);
+			messageToSend.Hashes.push_back(payloadHeader.MessageId);
+			info_printf("Sending message with id: %llx: %s.", payloadHeader.MessageId, ::gpk::toString(messageToSend.Payload).begin());
 			::gpk::array_pod<byte_t>										compressed;
 			if(0 == payloadHeader.Command.Compressed) {
 				if(0 == payloadHeader.Command.Encrypted)
@@ -177,7 +181,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage> messageSent = client.Queue.Sent[iSent];
 		if(0 == messageSent)
 			continue;
-		const uint64_t timeCurr = gpk::timeCurrentInUs();
+		uint64_t timeCurr = gpk::timeCurrentInUs();
 		const uint64_t timeSent = messageSent->Time;
 		const uint64_t timeDiff = timeCurr - timeSent;
 		if(timeDiff > ::UDP_PAYLOAD_SENT_LIFETIME) {
@@ -185,15 +189,17 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 			--iSent;
 			if(messageSent->RetryCount) {
 				--messageSent->RetryCount;
-				info_printf("A message sent didn't receive a confirmation on time. Retries left: %u.", (uint32_t)messageSent->RetryCount);
+				timeCurr	+= ::UDP_PAYLOAD_SENT_LIFETIME;
+				info_printf("A message sent didn't receive a confirmation on time: %llx (%llx). Setting current time: %llx, Retries left: %u. '%s.'", messageSent->Time, ::hashFromTime(messageSent->Time), timeCurr, (uint32_t)messageSent->RetryCount, ::gpk::toString(messageSent->Payload).begin());
 				if(messageSent->Time == client.KeyPing)
 					messageSent->Time	= client.KeyPing	= timeCurr;
 				else
 					messageSent->Time	= timeCurr;
 				queueToSend.push_back(messageSent);
 			}
-			else
-				info_printf("%s", "A message sent didn't receive a confirmation on time.");
+			else {
+				info_printf("A message sent didn't receive a confirmation on time: %llx. '%s'.", messageSent->Time, ::gpk::toString(messageSent->Payload).begin());
+			}
 		}
 	}
 
@@ -271,6 +277,8 @@ static	::gpk::error_t										postConfirmationResponse			(::gpk::SUDPClientQueu
 	return 0;
 }
 
+static constexpr const int64_t advantage = 1000000;
+
 static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, ::gpk::SUDPConnection& client, ::gpk::array_pod<byte_t> & receiveBuffer)		{
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
 		return 1;
@@ -303,7 +311,6 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 
 		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
 		if(client.KeyPing == 0) {
-			const int64_t advantage = 1000000;
 			for(int64_t iTime = 0, countLapse = 60000000; iTime < countLapse; ++iTime)
 				if(::hashFromTime(client.FirstPing - advantage + iTime) == header.MessageId) {
 					client.KeyPing												= client.FirstPing - advantage + iTime;
@@ -402,13 +409,33 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 	}
 	else { // Payload response. Remove from sent queue.
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
+		info_printf("Received response to message id: %llx", header.MessageId);
+		bool bFound = false;
 		for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
-			uint64_t														hashLocal							= ::hashFromTime(client.Queue.Sent[iSent]->Time);
-			if(hashLocal == header.MessageId) {
-				client.Queue.Sent.remove(iSent);
-				client.LastPing												= ::gpk::timeCurrentInUs();
-				break;
+			::gpk::SUDPConnectionMessage									& messageSent						= *client.Queue.Sent[iSent];
+			for(uint32_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
+				info_printf("Checking hash for message: %s : %llx.", ::gpk::toString(messageSent.Payload).begin(), messageSent.Hashes[iHash]);
+				if(::hashFromTime(messageSent.Time) == header.MessageId) {
+					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+					client.Queue.Sent.remove(iSent);
+					client.LastPing												= ::gpk::timeCurrentInUs();
+					bFound = true;
+					break;
+				}
+				uint64_t														hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
+				if(hashLocal == header.MessageId) {
+					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+					client.Queue.Sent.remove(iSent);
+					client.LastPing												= ::gpk::timeCurrentInUs();
+					bFound = true;
+					break;
+				}
 			}
+			if(bFound)
+				break;
+		}
+		if(false == bFound) {
+			info_printf("Response confirmation for message was not found: %llx.", header.MessageId);
 		}
 	}
 	return 0;

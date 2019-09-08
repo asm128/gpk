@@ -420,21 +420,22 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}	// move ctor
-														array_obj									(const array_obj<_tObj>& other)															{
-			if(other.Count) {
-				uint32_t											newSize										= other.Count;
+														array_obj									(const array_obj<_tObj>& other)	: array_obj((const view_array<const _tObj>&) other) {}
+														array_obj									(const view_array<const _tObj>& other)													{
+			if(other.size()) {
+				uint32_t											newSize										= other.size();
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
 				gthrow_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				gthrow_if(0 == newData		, "Failed to resize array. Requested size: %u. Current size: %u.", (uint32_t)newSize, (uint32_t)Size);
-				gthrow_if(0 == other.Data	, "%s", "other.Data is null!");
+				gthrow_if(0 == other.begin(), "%s", "other.Data is null!");
 				for(uint32_t i = 0; i < newSize; ++i)
-					new (&newData[i]) _tObj(other.Data[i]);
+					new (&newData[i]) _tObj(other.begin()[i]);
 				Data											= newData;
 				Size											= reserveSize;
-				Count											= other.Count;
+				Count											= other.size();
 				safeguard.Handle								= 0;
 			}
 		}

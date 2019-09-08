@@ -239,7 +239,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	do if(	0 != strcmp(fdFile.cFileName, curDir)
 		 &&	0 != strcmp(fdFile.cFileName, parDir)
 		) {
-		_CrtCheckMemory();
+		//_CrtCheckMemory();
 		sprintf_s(bufferFormat, "%%.%us/%%s", pathToList.size());
 		int32_t																			lenPath								= sprintf_s(sPath, bufferFormat, pathToList.begin(), fdFile.cFileName);
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -254,7 +254,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 			//pathContents.Files[indexFile].push_back(0);
 			verbose_printf("File %u: %s.", indexFile, sPath);
 		}
-		_CrtCheckMemory();
+		//_CrtCheckMemory();
 	}
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);

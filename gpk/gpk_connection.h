@@ -62,6 +62,7 @@ namespace gpk
 		uint64_t																Time			;
 		::gpk::SUDPCommand														Command			;
 		uint8_t																	RetryCount		;
+		::gpk::array_pod<uint64_t>												Hashes			;
 	};
 
 	struct SUDPClientQueue {

@@ -72,6 +72,9 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 			if(temp.Port == client.Address.Port)
 				::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer);
 		}
+		else {
+			info_printf("Data received fro invalid ip. Local: %u, %u, %u, %u, %u. Remote: %u, %u, %u, %u, %u", GPK_IPV4_EXPAND(temp), GPK_IPV4_EXPAND(client.Address));
+		}
 		received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 	}
 	return 0;
@@ -86,7 +89,8 @@ static	void												threadUpdateClient							(void* pClient)						{
 
 		::gpk::error_t										gpk::clientUpdate							(::gpk::SUDPClient & client)		{
 	ree_if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "Not connected. Current state: %s.", ::gpk::get_value_label(client.State).begin());
-	return ::gpk::connectionSendQueue(client, client.CacheSend, client.CacheSent);
+	client.CacheSent.clear(); client.CacheSend.clear();
+	return ::gpk::connectionSendQueue(client, client.CacheSent, client.CacheSend);
 }
 
 		::gpk::error_t										gpk::clientDisconnect						(::gpk::SUDPClient & client)		{

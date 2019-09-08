@@ -26,12 +26,12 @@
 			::gpk::mutex_guard												lock								(serverInstance.Mutex);
 			totalClientCount											= serverInstance.Clients.size();
 		}
-		timeval															wait_time							= {0, 1000};
+		timeval															wait_time							= {0, 10};
 		uint32_t														remainder							= totalClientCount % 64;
 		uint32_t														stageCount							= totalClientCount / 64 + one_if(remainder);
 		fd_set															sockets								= {};
 		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
-			uint32_t														offsetClient						= iStage * 64;
+			const uint32_t													offsetClient						= iStage * 64;
 			memset(&sockets, -1, sizeof(fd_set));
 			sockets.fd_count											= 0;
 			uint32_t														stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
@@ -50,7 +50,6 @@
 			}
 			if(false == serverInstance.Listen)
 				return 0;
-			::select(0, &sockets, 0, 0, &wait_time);
 			{
 				clientsToProcess.clear();
 				{
@@ -62,7 +61,7 @@
 							if(0 == pclient || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 								continue;
 							if(sockets.fd_array[sd] == pclient->Socket) {
-								gpk_necall(clientsToProcess.push_back(pclient), "Out of memory?");
+								gpk_necall(clientsToProcess.push_back(pclient), "%s", "Out of memory?");
 								break;
 							}
 						}
@@ -71,28 +70,38 @@
 				for(uint32_t iClient = 0; iClient < clientsToProcess.size(); ++iClient) {
 					if(false == serverInstance.Listen)
 						return 0;
-					sockaddr_in														sa_client							= {};						// Information about the client
-					int																sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
-					::gpk::SUDPCommand												command								= {};						// Where to store received data
-					int																bytes_received						= 0;
+					FD_ZERO(sockets.fd_array);
 					::gpk::SUDPConnection											& client							= *clientsToProcess[iClient];
-					if errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-						if(::WSAGetLastError() != WSAEMSGSIZE) {
-							warning_printf("Could not receive datagram.");
+					sockets.fd_array[0]											= client.Socket;
+					sockets.fd_count											= 1;
+					::select(0, &sockets, 0, 0, &wait_time);
+					while(sockets.fd_count > 0) {
+						sockaddr_in														sa_client							= {};						// Information about the client
+						int																sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
+						::gpk::SUDPCommand												command								= {};						// Where to store received data
+						int																bytes_received						= 0;
+						if errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
+							uint32_t lastError = ::WSAGetLastError();
+							if(lastError != WSAEMSGSIZE) {
+								warning_printf("%s", "Could not receive datagram.");
+								::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+								if(lastError == WSAENETRESET || lastError == WSAENOTSOCK)
+									client.State = ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+								break;
+							}
+						}
+						::gpk::SIPv4													address								= {{}, 9999};
+						::gpk::tcpipAddressFromSockaddr(sa_client, address);
+						if(client.Address != address) {
+							warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 							continue;
 						}
+						e_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+						if(INVALID_SOCKET != client.Socket)
+							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+						::select(0, &sockets, 0, 0, &wait_time);
 					}
-					::gpk::SIPv4													address								= {{}, 9999};
-					::gpk::tcpipAddressFromSockaddr(sa_client, address);
-					if(client.Address != address) {
-						warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
-						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
-						continue;
-					}
-					e_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
-					if(INVALID_SOCKET != client.Socket)
-						::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 				}
 			}
 		}
