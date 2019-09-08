@@ -185,7 +185,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		const uint64_t timeSent = messageSent->Time;
 		const uint64_t timeDiff = timeCurr - timeSent;
 		if(timeDiff > ::UDP_PAYLOAD_SENT_LIFETIME) {
-			client.Queue.Sent.remove(iSent);
+			client.Queue.Sent.remove_unordered(iSent);
 			--iSent;
 			if(messageSent->RetryCount) {
 				--messageSent->RetryCount;
@@ -251,7 +251,7 @@ static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand& co
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
 		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent)
 			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
-				client.Queue.Sent.remove(iSent);
+				client.Queue.Sent.remove_unordered(iSent);
 				break;
 			}
 
@@ -417,7 +417,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				info_printf("Checking hash for message: %s : %llx.", ::gpk::toString(messageSent.Payload).begin(), messageSent.Hashes[iHash]);
 				if(::hashFromTime(messageSent.Time) == header.MessageId) {
 					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
-					client.Queue.Sent.remove(iSent);
+					client.Queue.Sent.remove_unordered(iSent);
 					client.LastPing												= ::gpk::timeCurrentInUs();
 					bFound = true;
 					break;
@@ -425,7 +425,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 				uint64_t														hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
 				if(hashLocal == header.MessageId) {
 					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
-					client.Queue.Sent.remove(iSent);
+					client.Queue.Sent.remove_unordered(iSent);
 					client.LastPing												= ::gpk::timeCurrentInUs();
 					bFound = true;
 					break;

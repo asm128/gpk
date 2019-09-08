@@ -26,7 +26,7 @@
 			::gpk::mutex_guard												lock								(serverInstance.Mutex);
 			totalClientCount											= serverInstance.Clients.size();
 		}
-		timeval															wait_time							= {0, 10};
+		timeval															wait_time							= {0, 1};
 		uint32_t														remainder							= totalClientCount % 64;
 		uint32_t														stageCount							= totalClientCount / 64 + one_if(remainder);
 		fd_set															sockets								= {};
