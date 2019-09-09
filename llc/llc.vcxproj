@@ -129,6 +129,7 @@
     <ClCompile Include="gpk_keyval.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_log.cpp" />
+    <ClCompile Include="gpk_mapblock.cpp" />
     <ClCompile Include="gpk_noise.cpp" />
     <ClCompile Include="gpk_parse.cpp" />
     <ClCompile Include="gpk_png.cpp" />

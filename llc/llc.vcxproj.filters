@@ -306,11 +306,11 @@
     <ClInclude Include="gpk_http_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_block.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_manager.h">
+      <Filter>container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -432,6 +432,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_mapblock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

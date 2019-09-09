@@ -4,6 +4,7 @@
 #include "gpk_aes.h"
 #include "gpk_find.h"
 #include "gpk_parse.h"
+#include "gpk_view_manager.h"
 
 #ifndef GPK_BLOCK_H_9823749283749823
 #define GPK_BLOCK_H_9823749283749823
@@ -206,6 +207,20 @@ namespace gpk
 		}
 		return idRecord;
 	}
+
+	struct SMapBlock {
+						::gpk::CViewManager<byte_t, 1023U*64U>		Allocator					;
+
+		typedef			::gpk::SInt24								_tIndex;
+						::gpk::array_pod<_tIndex>					Indices						;
+
+						::gpk::error_t								Save						(::gpk::array_pod<byte_t> & output)								const;
+						::gpk::error_t								Load						(const ::gpk::view_const_byte & input);
+
+						::gpk::error_t								AddMap						(const ::gpk::view_const_char & dataToAdd);
+						::gpk::error_t								GetMapId					(const ::gpk::view_const_char & dataToAdd)						const;
+						::gpk::error_t								GetMap						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
+	};
 } // namespace
 
 #endif // GPK_BLOCK_H_9823749283749823

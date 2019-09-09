@@ -13,13 +13,13 @@ namespace gpk
 							::gpk::array_obj<ptr_block_type>							Blocks;
 							::gpk::array_pod<uint32_t>									RemainingSpace;
 	public:
-							::gpk::error_t												push_sequence				(const char* sequence, uint32_t length, ::gpk::view_array<const _tElement>& out_view)	{
+							::gpk::error_t												push_sequence				(const _tElement* sequence, uint32_t length, ::gpk::view_array<const _tElement>& out_view)	{
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t																			& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= length) {
-					char																				* sequenceStart				= &Blocks[iBlock]->operator[](_blockSize - blkRemainingSpace);
+					_tElement																			* sequenceStart				= &Blocks[iBlock]->operator[](_blockSize - blkRemainingSpace);
 					out_view																		= {sequenceStart, length};
-					memcpy(sequenceStart, sequence, length);
+					memcpy(sequenceStart, sequence, length * sizeof(_tElement));
 					blkRemainingSpace																-= length;
 					return 0;
 				}
@@ -28,7 +28,7 @@ namespace gpk
 			Blocks			.resize(Blocks.size() + 1);
 			RemainingSpace	.resize(Blocks.size(), _blockSize - length);
 			out_view																		= {&Blocks[indexNewBlock]->operator[](0), length};
-			memcpy(Blocks[indexNewBlock]->Storage, sequence, length);
+			memcpy(Blocks[indexNewBlock]->Storage, sequence, length * sizeof(_tElement));
 			return indexNewBlock;
 		}
 	};
@@ -54,7 +54,7 @@ namespace gpk
 				if(totalChars != Counts[iView])
 					continue;
 				const _tElement																		* pStored					= Views[iView];
-				if(0 == memcmp(pStored, elements, totalChars)) {
+				if(0 == memcmp(pStored, elements, totalChars * sizeof(_tElement))) {
 					out_view																	= {pStored, totalChars};
 					return iView;
 				}
