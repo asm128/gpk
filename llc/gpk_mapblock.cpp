@@ -2,8 +2,8 @@
 
 ::gpk::error_t									gpk::SMapBlock::GetMapId				(const ::gpk::view_const_char & dataToAdd)						const	{
 	for(uint32_t iMap = 0; iMap < Indices.size(); ++iMap) {
-		const int32_t										indexView							= Indices[iMap];
-		const uint16_t										currentViewLen						= (-1 == indexView) ? 0 : Allocator.Counts[indexView];
+		const int32_t										indexView								= Indices[iMap];
+		const uint16_t										currentViewLen							= (-1 == indexView) ? 0 : Allocator.Counts[indexView];
 		if(currentViewLen != dataToAdd.size())
 			continue;
 		if(currentViewLen && 0 == memcmp(Allocator.Views[indexView], dataToAdd.begin(), currentViewLen))
@@ -38,18 +38,18 @@
 ::gpk::error_t									gpk::SMapBlock::Load					(const ::gpk::view_const_byte & input)									{
 	if(0 == input.size())
 		return 0;
-	const uint32_t										countArrays								= *(const uint32_t*)input.begin();
+	const uint32_t										countViews								= *(const uint32_t*)input.begin();
 	uint32_t											offsetViewSize							= sizeof(uint32_t);
 	typedef												uint16_t								_tViewLen;
-	uint32_t											offsetViewData							= offsetViewSize + sizeof(_tViewLen) * countArrays;
-	for(uint32_t iView = 0; iView < countArrays; ++iView) {
-		const _tViewLen										currentArraySize						= *(_tViewLen*)&input[offsetViewSize];
-		Allocator.View(&input[offsetViewData], currentArraySize);
-		offsetViewData									+= currentArraySize;
+	uint32_t											offsetViewData							= offsetViewSize + sizeof(_tViewLen) * countViews;
+	for(uint32_t iView = 0; iView < countViews; ++iView) {
+		const _tViewLen										lenCurrentView							= *(_tViewLen*)&input[offsetViewSize];
+		Allocator.View(&input[offsetViewData], lenCurrentView);
+		offsetViewData									+= lenCurrentView;
 		offsetViewSize									+= sizeof(_tViewLen);
 	}
-	const uint32_t										countMaps								= *(const uint32_t*)&input[offsetViewData];
-	const uint32_t										offsetIndices							= offsetViewData + sizeof(uint32_t);
-	Indices											= ::gpk::view_array<_tIndex>{(_tIndex*)&input[offsetIndices], countMaps};
+	::gpk::view_array<const _tIndex>					inputView;
+	::gpk::viewRead(inputView, {&input[offsetViewData], input.size() - offsetViewData});
+	Indices											= inputView;
 	return 0;
 }
