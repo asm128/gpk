@@ -39,8 +39,8 @@ namespace gpk
 						::gpk::array_pod<uint32_t>					Id;
 						::gpk::array_obj<::gpk::ptr_obj<_tBlock>>	Block;
 
-						::gpk::SBlockConfig							BlockConfig;
-						::gpk::view_const_string					DBName;
+						::gpk::SBlockConfig							BlockConfig					= {::gpk::view_const_string{"01234567890123456789012345678901"}, 65535, 256, true};
+						::gpk::view_const_char						DBName						= {};
 						int32_t										MaxBlockOnDisk				= -1;
 	};
 
@@ -209,17 +209,17 @@ namespace gpk
 	}
 
 	struct SMapBlock {
-						::gpk::CViewManager<byte_t, 1024U*64U>		Allocator					;
+					::gpk::CViewManager<byte_t, 1024U*64U>			Allocator					;
 
-		typedef			::gpk::SInt24								_tIndex;
-						::gpk::array_pod<_tIndex>					Indices						;
+		typedef		::gpk::SInt24									_tIndex;
+					::gpk::array_pod<_tIndex>						Indices						;
 
-						::gpk::error_t								Save						(::gpk::array_pod<byte_t> & output)								const;
-						::gpk::error_t								Load						(const ::gpk::view_const_byte & input);
+					::gpk::error_t									Save						(::gpk::array_pod<byte_t> & output)								const;
+					::gpk::error_t									Load						(const ::gpk::view_const_byte & input);
 
-						::gpk::error_t								AddMap						(const ::gpk::view_const_char & dataToAdd);
-						::gpk::error_t								GetMapId					(const ::gpk::view_const_char & dataToAdd)						const;
-						::gpk::error_t								GetMap						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
+					::gpk::error_t									AddMap						(const ::gpk::view_const_char & dataToAdd);
+					::gpk::error_t									GetMapId					(const ::gpk::view_const_char & dataToAdd)						const;
+					::gpk::error_t									GetMap						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
 	};
 } // namespace
 
