@@ -209,7 +209,7 @@ namespace gpk
 	}
 
 	struct SMapBlock {
-						::gpk::CViewManager<byte_t, 1023U*64U>		Allocator					;
+						::gpk::CViewManager<byte_t, 1024U*64U>		Allocator					;
 
 		typedef			::gpk::SInt24								_tIndex;
 						::gpk::array_pod<_tIndex>					Indices						;

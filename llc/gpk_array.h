@@ -176,12 +176,12 @@ namespace gpk
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
 		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
-							::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{
-			gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
-			gpk_necall(this->push_back(0), "%s", "Failed!");
-			gpk_necall(this->resize(this->size() - 1), "%s", "Failed!");
-			return 0;
-		}
+		//					::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{
+		//	gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
+		//	gpk_necall(this->push_back(0), "%s", "Failed!");
+		//	gpk_necall(this->resize(this->size() - 1), "%s", "Failed!");
+		//	return 0;
+		//}
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
@@ -574,13 +574,6 @@ namespace gpk
 
 			return (int32_t)Count;
 		}
-		//// returns the index or -1 if not found.
-		//inline				int32_t						find										(const _tObj& valueToLookFor)										const				{
-		//	for(uint32_t i=0; i<Count; ++i)
-		//		if(Data[i] == valueToLookFor)
-		//			return i;
-		//	return -1;
-		//}
 	}; // array_obj
 
 	template<typename _tElement>
@@ -596,7 +589,7 @@ namespace gpk
 		}
 		if(lastOffset < target.size())
 			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
-		return 0;
+		return (int32_t)split.size();
 	}
 
 	template<typename _tElement>

@@ -66,6 +66,29 @@ namespace gpk
 			return newIndex;
 		}
 	};
-}
+
+	template<typename _tElement>
+			::gpk::error_t																viewManagerSave								(const ::gpk::CViewManager<_tElement, 0xFFFFU> & allocator, ::gpk::array_pod<byte_t> & output) {
+		gpk_necall(::gpk::viewWrite(::gpk::view_const_uint16{allocator.Counts.begin(), allocator.Counts.size()}, output), "%s", "Out of memory?");
+		for(uint32_t iArray = 0; iArray < allocator.Counts.size(); ++iArray)
+			gpk_necall(output.append((const char*)allocator.Views[iArray], sizeof(_tElement) * allocator.Counts[iArray]), "%s", "Out of memory?");
+		return 0;
+	}
+
+	template<typename _tElement>
+			::gpk::error_t																viewManagerLoad								(::gpk::CViewManager<_tElement, 0xFFFFU> & allocator, const ::gpk::view_const_byte & input) {
+		typedef																					uint16_t									_tViewLen;
+		const uint32_t																			countViewsChar								= *(const uint32_t*)&input[0];
+		uint32_t																				offsetArraySize								= sizeof(uint32_t);
+		uint32_t																				offsetArrayData								= offsetArraySize + sizeof(_tViewLen) * countViewsChar;
+		for(uint32_t iArray = 0; iArray < countViewsChar; ++iArray) {
+			const _tViewLen																			currentArraySize							= *(_tViewLen*)&input[offsetArraySize];
+			gpk_necall(allocator.View((const _tElement*)&input[offsetArrayData], currentArraySize), "%s", "Out of memory?");
+			offsetArrayData																		+= currentArraySize * sizeof(_tElement);
+			offsetArraySize																		+= sizeof(_tViewLen);
+		}
+		return offsetArrayData;
+	}
+} // namespace
 
 #endif // GPK_LABEL_MANAGER_H_29037492837
