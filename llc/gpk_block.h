@@ -96,7 +96,7 @@ namespace gpk
 	}
 
 	template<typename _tMapBlock>
-					::gpk::error_t								mapTableGetMap				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::view_const_char & dbPath, ::gpk::array_pod<char_t> & outputData) {
+					::gpk::error_t								mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::view_const_char & dbPath, ::gpk::array_pod<char_t> & outputData) {
 		::gpk::SRecordMap												recordMap;
 		::gpk::array_pod<char_t>										fileBytes;
 		::gpk::error_t													indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
@@ -105,7 +105,7 @@ namespace gpk
 		if(fileBytes.size())
 			gpk_necall(loadedBlock.Load(fileBytes), "Failed to load block data for record %llu.", idRecord);
 
-		return loadedBlock.GetMap(recordMap.IndexRecord, outputData);
+		return loadedBlock.MapGet(recordMap.IndexRecord, outputData);
 	}
 
 	static inline	int16_t										mapTableContainerFromData	(const ::gpk::view_const_char & sequenceToFind, const uint32_t countContainers)	{
@@ -125,7 +125,7 @@ namespace gpk
 			if(mapTable.IdContainer[iBlock] != container)
 				continue;
 			const _tMapBlock												& block						= *mapTable.Block[iBlock];
-			const int32_t													idEmail						= block.GetMapId(sequenceToFind);
+			const int32_t													idEmail						= block.MapId(sequenceToFind);
 			const uint32_t													idBlock						= mapTable.Id[iBlock];
 			if(0 <= idEmail) {
 				::gpk::SRecordMap												indices;
@@ -171,9 +171,9 @@ namespace gpk
 			const ::gpk::error_t											indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
 			_tMapBlock														& block						= *mapTable.Block[indexBlock];
 			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %s.", ::gpk::toString(fileNameCurrent).begin());
-			const int32_t													idEmail						= block.GetMapId(sequenceToFind);
-			if(0 <= idEmail) {
-				indexMap.IndexRecord										= idEmail;
+			const int32_t													indexRecord					= block.MapId(sequenceToFind);
+			if(0 <= indexRecord) {
+				indexMap.IndexRecord										= indexRecord;
 				uint64_t														result						= (uint64_t)-1LL;
 				::gpk::blockRecordId(indexMap, mapTable.BlockConfig.BlockSize, result);
 				return result;
@@ -190,20 +190,28 @@ namespace gpk
 		if(-1 == mapTable.MaxBlockOnDisk) {
 			::gpk::ptr_obj<_tMapBlock>										newBlock;
 			newBlock.create();
-			newBlock->AddMap(sequenceToAdd);
 			::gpk::SRecordMap												newIndices;
-			newIndices.IndexRecord										= mapTable.Block.push_back(newBlock);
+			gpk_necall(newIndices.IndexRecord = newBlock->MapAdd(sequenceToAdd), "%s", "Out of memory?");
 			newIndices.IndexContainer									= container;
 			newIndices.IdBlock											= 0;
-			mapTable.Id.push_back(newIndices.IdBlock);
+			mapTable.Block		.push_back(newBlock);
+			mapTable.Id			.push_back(newIndices.IdBlock);
 			mapTable.IdContainer.push_back(newIndices.IndexContainer);
 			++mapTable.MaxBlockOnDisk;
 			uint64_t														newIdRecord					= (uint64_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 			::gpk::array_pod<char_t>										bytesToWrite;
-			newBlock->Save(bytesToWrite);
-			::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath);
+			gpk_necall(newBlock->Save(bytesToWrite), "%s", "Out of memory?");
+			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
 			return newIdRecord;
+		}
+		for(uint32_t iBlock = 0, countBlocks = mapTable.Block.size(); iBlock < countBlocks; ++iBlock) {
+			const uint16_t													idContainerInMemory			= mapTable.IdContainer[iBlock];
+			const uint32_t													idBlockInMemory				= mapTable.Id[iBlock];
+			_tMapBlock														& blockInMemory				= *mapTable.Block[iBlock];
+			if(idContainerInMemory == container && idBlockInMemory == ((uint32_t)mapTable.MaxBlockOnDisk) && blockInMemory.Size() < 65535U) {
+				gpk_necall(blockInMemory.MapAdd(sequenceToAdd), "%s", "Out of memory?");
+			}
 		}
 		return idRecord;
 	}
@@ -214,12 +222,13 @@ namespace gpk
 		typedef		::gpk::SInt24									_tIndex;
 					::gpk::array_pod<_tIndex>						Indices						;
 
+		inline		::gpk::error_t									Size						()																const	{ return Indices.size(); }
 					::gpk::error_t									Save						(::gpk::array_pod<byte_t> & output)								const;
 					::gpk::error_t									Load						(const ::gpk::view_const_byte & input);
 
-					::gpk::error_t									AddMap						(const ::gpk::view_const_char & dataToAdd);
-					::gpk::error_t									GetMapId					(const ::gpk::view_const_char & dataToAdd)						const;
-					::gpk::error_t									GetMap						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
+					::gpk::error_t									MapAdd						(const ::gpk::view_const_char & dataToAdd);
+					::gpk::error_t									MapId						(const ::gpk::view_const_char & dataToAdd)						const;
+					::gpk::error_t									MapGet						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
 	};
 } // namespace
 
