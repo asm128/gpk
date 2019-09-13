@@ -64,12 +64,12 @@ namespace gpk
 					::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint32_t indexContainer);
 
 	template<typename _tElement>
-					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap)								{
-		loadedBytes.clear();
-		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock) {
-			if((uint32_t)indexMap.IdBlock == mapTable.Id[iBlock])
-				return iBlock;
-		}
+					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
+		(void)maxBlocksInMemory;
+						loadedBytes.clear();
+		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock)
+			rvi_if(iBlock, (uint32_t)indexMap.IdBlock == mapTable.Id[iBlock], "Block already loaded: %u.", iBlock);
+
 		::gpk::ptr_obj<_tElement>										newBlock;
 		newBlock.create();
 		::gpk::error_t													indexBlock					= mapTable.Block.push_back(newBlock);
@@ -209,7 +209,7 @@ namespace gpk
 	}
 
 	struct SMapBlock {
-					::gpk::CViewManager<byte_t, 1024U*64U>			Allocator					;
+					::gpk::CViewManager<byte_t>						Allocator					;
 
 		typedef		::gpk::SInt24									_tIndex;
 					::gpk::array_pod<_tIndex>						Indices						;

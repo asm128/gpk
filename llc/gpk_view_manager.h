@@ -33,9 +33,9 @@ namespace gpk
 		}
 	};
 
-	template<typename _tElement, size_t _blockSize>
+	template<typename _tElement>
 	class CViewManager	{
-		static constexpr	const uint32_t												BLOCK_SIZE					= (uint32_t)_blockSize;
+		static constexpr	const uint32_t												BLOCK_SIZE					= 0xFFFF;
 							::gpk::unshrinkable_view_container<_tElement, BLOCK_SIZE>	Elements;
 	public:
 							::gpk::array_pod<uint16_t>									Counts;
@@ -68,7 +68,7 @@ namespace gpk
 	};
 
 	template<typename _tElement>
-			::gpk::error_t																viewManagerSave								(const ::gpk::CViewManager<_tElement, 0xFFFFU> & allocator, ::gpk::array_pod<byte_t> & output) {
+			::gpk::error_t																viewManagerSave								(const ::gpk::CViewManager<_tElement> & allocator, ::gpk::array_pod<byte_t> & output) {
 		gpk_necall(::gpk::viewWrite(::gpk::view_const_uint16{allocator.Counts.begin(), allocator.Counts.size()}, output), "%s", "Out of memory?");
 		for(uint32_t iArray = 0; iArray < allocator.Counts.size(); ++iArray)
 			gpk_necall(output.append((const char*)allocator.Views[iArray], sizeof(_tElement) * allocator.Counts[iArray]), "%s", "Out of memory?");
@@ -76,7 +76,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-			::gpk::error_t																viewManagerLoad								(::gpk::CViewManager<_tElement, 0xFFFFU> & allocator, const ::gpk::view_const_byte & input) {
+			::gpk::error_t																viewManagerLoad								(::gpk::CViewManager<_tElement> & allocator, const ::gpk::view_const_byte & input) {
 		typedef																					uint16_t									_tViewLen;
 		const uint32_t																			countViewsChar								= *(const uint32_t*)&input[0];
 		uint32_t																				offsetArraySize								= sizeof(uint32_t);
