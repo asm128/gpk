@@ -6,7 +6,7 @@
 #include <string>
 
 ::gpk::array_pod<char_t>			gpk::toString				(const ::gpk::view_const_char& strToLog)	{
-	::gpk::array_pod<char_t>							sprintfable								= strToLog;
+	::gpk::array_pod<char_t>				sprintfable					= strToLog;
 	sprintfable.push_back(0);
 	return sprintfable;
 }

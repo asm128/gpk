@@ -37,8 +37,6 @@ namespace gpk
 
 			static const ::gpk::label								newName									= instanceHere.Name = enumName;
 			(void)newName;
-			//static const ::gpk::error_t								errDummy								= instanceHere.add_value(INVALID_VALUE, ::gpk::INVALID_ENUM_VALUE_STR);
-
 			return INVALID_VALUE;
 		}
 							::gpk::error_t						get_value								(const ::gpk::label& name, _tValue& value)			const			{
@@ -187,21 +185,21 @@ namespace gpk
 		inline constexpr										genum_value								(const genum_value& other)												= default;
 		inline													genum_value								(const _tValue& value)													: Value((_tValue)value), Name(::gpk::enum_definition<_tValue>::get().get_value_name(value))				{}
 		inline constexpr										genum_value								(const _tValue& value, const ::gpk::label& name)						: Value((_tValue)value), Name(name)		{ ::gpk::enum_definition<_tValue>::get().add_value(value, name);	}
-		inline constexpr			operator					const	_tValue&						()															const		{ return Value; }
+		inline constexpr			operator					const	_tValue&						()																const	{ return Value; }
 	};
 
 	template <typename _tEnum>	::gpk::label				get_value_label							(const _tEnum& statusBit				)								{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	int32_t						get_value_index							(const _tEnum& statusBit					)								{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
-	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel				)								{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
-	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::view_const_string& valueLabel	)								{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
+	template <typename _tEnum>	int32_t						get_value_index							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
+	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel				)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
+	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::view_const_string& valueLabel	)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																																											\
 	enum EnumName : IntType {};																																															\
 	static						const ::gpk::label			EnumName##_STR							= #EnumName;																										\
-	static constexpr			const EnumName				EnumName##_INVALID						= ::gpk::enum_definition<EnumName>::INVALID_VALUE;																\
-	static						const EnumName				__sei_##EnumName##_INVALID				= (EnumName)::gpk::enum_definition<EnumName>::init(EnumName##_STR);												\
+	static constexpr			const EnumName				EnumName##_INVALID						= ::gpk::enum_definition<EnumName>::INVALID_VALUE;																	\
+	static						const EnumName				__sei_##EnumName##_INVALID				= (EnumName)::gpk::enum_definition<EnumName>::init(EnumName##_STR);													\
 	static inline constexpr		EnumName					operator &								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
 	static inline constexpr		EnumName					operator ~								(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
 	static inline constexpr		EnumName					operator ^								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
@@ -218,9 +216,9 @@ namespace gpk
 	static constexpr			const EnumName				ValueName								= (EnumName)(EnumValue);														\
 	static						const EnumName				__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), #ValueName)
 
-#define GDEFINE_FLAG_TYPE							GDEFINE_ENUM_TYPE
-#define GDEFINE_FLAG_VALUE							GDEFINE_ENUM_VALUE
-#define GDEFINE_FLAG_VALUE_NOPREFIX					GDEFINE_ENUM_VALUE_NOPREFIX
+#define GDEFINE_FLAG_TYPE								GDEFINE_ENUM_TYPE
+#define GDEFINE_FLAG_VALUE								GDEFINE_ENUM_VALUE
+#define GDEFINE_FLAG_VALUE_NOPREFIX						GDEFINE_ENUM_VALUE_NOPREFIX
 
 #if defined(GPK_WINDOWS)
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4

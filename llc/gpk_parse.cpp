@@ -3,14 +3,14 @@
 #include "gpk_safe.h"
 #include <ctype.h>
 
-::gpk::error_t													gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_)	{
-	uint32_t															totalCharsProcessed							= 0;
-	::gpk::array_pod<char_t>											stringToParse								= {};
+::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_)	{
+	uint32_t										totalCharsProcessed							= 0;
+	::gpk::array_pod<char_t>						stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
-		bool																bSymbolProcessed							= false;
+		bool											bSymbolProcessed							= false;
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
 			if( symbolList[iSymbol] == sourceChars[iChar] ) {
-				bSymbolProcessed												= true;
+				bSymbolProcessed							= true;
 				gpk_necall(stringToParse.push_back((char_t)::tolower(sourceChars[iChar++])), "%s", "Failed to append character! Out of memory?");
 				++totalCharsProcessed;
 				break;
@@ -20,15 +20,14 @@
 			break;	// number ends with any character that is not a symbol
 	}
 	gpk_necall(::gpk::reverse(stringToParse), "%s", "Cannot reverse string for parsing! How could this ever happen?");		// we assigned the digits backwards so we need to reverse the string.
-	uint64_t															number										= 0;
-	totalCharsProcessed												= 0;
+	uint64_t										number										= 0;
+	totalCharsProcessed							= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
-		bool																bSymbolProcessed							= false;
+		bool											bSymbolProcessed							= false;
 		for( uint32_t iSymbol = 0; iSymbol < base; ++iSymbol )
 			if( symbolList[iSymbol] == stringToParse[iChar] ) {
-				number															+= iSymbol * ::gpk::powui(base, totalCharsProcessed);
-				bSymbolProcessed												= true;
-				//gpk_necall(stepResult.push_back(stringToParse[]), "Failed to append character! Out of memory?");
+				number										+= iSymbol * ::gpk::powui(base, totalCharsProcessed);
+				bSymbolProcessed							= true;
 				++iChar;
 				++totalCharsProcessed;
 				break;
@@ -116,7 +115,6 @@
 	}
 	return 0;
 }
-
 
 ::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
