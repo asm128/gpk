@@ -1,8 +1,8 @@
 {	"application": 
 	{	"gpk_cgi_interceptor": 
 		{	"process"		: 
-			{ "executable_path" 		: "../x64.Debug/itwapi_vehicle-model.exe"  
-			, "command_line_app_name" 	: "../x64.Debug/itwapi_vehicle-model.exe"   
+			{ "executable_path" 		: "../x64.Debug/vehicle-make.exe"  
+			, "command_line_app_name" 	: "../x64.Debug/vehicle-make.exe"   
 			, "command_line_params" 	: ""	     
 			}
 		}
