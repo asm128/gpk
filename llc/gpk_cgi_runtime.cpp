@@ -13,10 +13,12 @@
 		::gpk::writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		int32_t					offset = ::gpk::find("REQUEST_METHOD", ::gpk::view_array<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
+		const int32_t										offset							= ::gpk::find("REQUEST_METHOD", ::gpk::view_array<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
 		::gpk::array_pod<char_t>							enumValue						= gpk::view_const_string{"HTTP_METHOD_"};
-		enumValue.append(environViews[offset].Val);
+		enumValue.append((-1 == offset) ? "GET" : environViews[offset].Val);
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(::gpk::label{enumValue.begin(), enumValue.size()});//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
+		if(-1 == (int8_t)requestReceived.Method)
+			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
 		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
 		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
 		::gpk::find("REMOTE_ADDR"	, environViews, requestReceived.Ip);

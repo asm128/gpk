@@ -89,7 +89,7 @@ static	::gpk::error_t								loadConfig
 	::gpk::view_const_string								processFileName			= "";
 	::gpk::view_const_string								processMockPath			= "";
 	::gpk::view_const_string								processParams			= "";
-	::gpk::view_const_string								fileNameJSONConfig		= "gpk_config.json";
+	::gpk::view_const_string								fileNameJSONConfig		= "gpk_cgi_interceptor.json";
 	::gpk::array_pod<char_t>								jsonData				= {};
 	::gpk::SJSONReader										jsonReader				= {};
 	if(fileNameJSONConfig.size()) {	// Attempt to load config file.
