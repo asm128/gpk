@@ -635,6 +635,7 @@ namespace gpk
 	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstString> & output);
 	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_char& strToLog);
 	::gpk::error_t									join							(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_string> fields);
+	::gpk::error_t									append_quoted					(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text);
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837

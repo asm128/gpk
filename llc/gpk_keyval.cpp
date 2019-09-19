@@ -4,6 +4,12 @@
 #include "gpk_array.h"
 
 #include <string>
+::gpk::error_t						gpk::append_quoted			(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text)		{
+	gpk_necall(output.push_back('"')	, "%s", "Out of memory?");
+	gpk_necall(output.append(text)		, "%s", "Out of memory?");
+	gpk_necall(output.push_back('"')	, "%s", "Out of memory?");
+	return 0;
+}
 
 ::gpk::error_t						gpk::join					(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_string> fields)	{
 	for(uint32_t iField = 0; iField < fields.size(); ++iField) {
