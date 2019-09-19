@@ -243,9 +243,9 @@ static int											cgiMain					(int argc, char** argv, char**envv)		{
 		);
 	}
 	else {
-		printf("%s\r\n", "Content-Type: application/json"
-			"\r\nCache-Control: no-store"
-		);
+		//printf("%s\r\n", "Content-Type: application/json"
+		//	"\r\nCache-Control: no-store"
+		//);
 		appState.ReadBytes.push_back('\0');
 		OutputDebugStringA(appState.ReadBytes.begin());
 		printf("%s", appState.ReadBytes.begin());

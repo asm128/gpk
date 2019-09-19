@@ -77,9 +77,9 @@ namespace gpk
 							::gpk::error_t												jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
 							::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
 
-	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size() / 2; }
-	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONNode& node)		noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
-
+	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONNode& node)						noexcept	{ return node.Children.size() / 2; }
+	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONNode& node)						noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
+	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONReader& reader, uint32_t iNode)	noexcept	{ return ::gpk::jsonArraySize(*reader.Tree[iNode]); }
 							::gpk::error_t												jsonCompareNumber		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews);
 							::gpk::error_t												jsonCompareArray		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews);
 							::gpk::error_t												jsonCompareObject		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews);
