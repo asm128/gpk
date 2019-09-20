@@ -99,6 +99,10 @@ namespace gpk
 							::gpk::error_t												jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output);
 							::gpk::error_t												jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, const uint32_t blockSize, ::gpk::array_obj<::gpk::array_pod<char_t>> & outputJsons);
 
+	struct SFieldBinding {
+								const ::gpk::view_const_string								Field	;
+								const ::gpk::JSON_TYPE										Type	;
+	};
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923
