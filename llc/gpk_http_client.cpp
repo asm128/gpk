@@ -179,7 +179,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		buf[totalBytes]							= '\0';
 		buf.resize(totalBytes);	// this doesn't fail
 #if defined(GPK_WINDOWS)
-		//OutputDebugString(buf.begin());
+		OutputDebugString(buf.begin());
 #endif
 	}
 
@@ -210,7 +210,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 			::gpk::tolower(strLine);
 			info_printf("\n%s", ::gpk::toString(strLine).begin());
 			if(::gpk::view_const_string{"transfer-encoding"} == header.Key) {
-				if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, ::gpk::view_const_char{strLine}))
+				if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, header.Val))
 					bChunked								= true;
 			}
 		}
@@ -225,7 +225,9 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
 		contentReceived							= joined;
 	}
-	out_received.Body						= contentReceived;
+
+	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
+	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::view_const_char{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
