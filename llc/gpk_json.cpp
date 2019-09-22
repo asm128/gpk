@@ -7,14 +7,14 @@
 #define json_error_printf error_printf
 
 ::gpk::error_t												gpk::jsonFieldMaps
-(	::gpk::array_obj<::gpk::SFieldBinding>							& fieldsToAdd
-,	::gpk::array_pod<uint32_t>										& indicesOfFields
-,	const ::gpk::view_array<const ::gpk::SFieldBinding>				fields
-,	const ::gpk::view_array<const ::gpk::TKeyValConstString>		fieldMaps
+(	::gpk::array_obj<::gpk::SJSONFieldBinding>					& fieldsToAdd
+,	::gpk::array_pod<uint32_t>									& indicesOfFields
+,	const ::gpk::view_array<const ::gpk::SJSONFieldBinding>		fields
+,	const ::gpk::view_array<const ::gpk::TKeyValConstString>	fieldMaps
 ) {
 	for(uint32_t iMap = 0; iMap < fieldMaps.size(); ++iMap)
 	for(uint32_t iField = 0; iField < fields.size(); ++iField) {
-		const ::gpk::SFieldBinding					& fieldToAdd						= fields[iField];
+		const ::gpk::SJSONFieldBinding					& fieldToAdd						= fields[iField];
 		if(fieldToAdd.Field.size()) {
 			fieldsToAdd		.push_back(fieldToAdd);
 			indicesOfFields	.push_back(iField);
