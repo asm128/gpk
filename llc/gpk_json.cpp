@@ -279,19 +279,19 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 
 	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal({&jsonAsString[index], sizeNum}, &currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
-		currentElement.Type										= ::gpk::JSON_TYPE_DOUBLE;
-		double														finalValue											= (double)currentElement.Value;
+		currentElement.Type											= ::gpk::JSON_TYPE_DOUBLE;
+		double															finalValue											= (double)currentElement.Value;
 		info_printf("Integer part: %f.", finalValue);
 		++intCount;	// Skip dot.
-		const uint32_t												offsetStart											= currentElement.Span.Begin + sizeNum - (sizeNum - intCount);
-		const uint32_t												lenDec												= sizeNum - intCount;
+		const uint32_t													offsetStart											= currentElement.Span.Begin + sizeNum - (sizeNum - intCount);
+		const uint32_t													lenDec												= sizeNum - intCount;
 		if(lenDec) {
-			double														decValue											= 0;
-			::gpk::error_t												decCount											= ::gpk::parseIntegerDecimal({&jsonAsString[offsetStart], lenDec}, &decValue);
-			decValue												/= ::gpk::powui(10, decCount);
+			double															decValue											= 0;
+			::gpk::error_t													decCount											= ::gpk::parseIntegerDecimal({&jsonAsString[offsetStart], lenDec}, &decValue);
+			decValue													/= ::gpk::powui(10, decCount);
 			ree_if(errored(intCount), "%s", "Unknown error.");
 			info_printf("Decimal part: %f.", decValue);
-			finalValue												+= decValue;
+			finalValue													+= decValue;
 		}
 		memcpy((double*)&currentElement.Value, &finalValue, sizeof(uint64_t));
 	}
@@ -498,6 +498,27 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return 0;
 }
 
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, ::gpk::array_pod<int32_t> & indices)	{
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
+	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
+		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
+		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
+		gpk_necall(indices.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
+	}
+	return 0;
+}
+
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<::gpk::view_const_string> & keys)	{
+	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
+	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
+		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
+		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
+		const ::gpk::view_const_string									& view												= views[node->ObjectIndex];
+		gpk_necall(keys.push_back(view)				, "Failed! %s", "Too many nodes?");
+	}
+	return 0;
+}
+
 			::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string& key)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
@@ -524,20 +545,20 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	if(node.Children.size() == 0)
 		return 1;
 	for(uint32_t iChild = 0; iChild < node.Children.size(); ++iChild) {
-		const ::gpk::SJSONNode			& childNode		= *node	.Children[iChild];
-		const ::gpk::SJSONNode			& childOther	= *other.Children[iChild];
-		const ::gpk::JSON_TYPE			typeNode		= childNode	.Token->Type;
-		const ::gpk::JSON_TYPE			typeOther		= childOther.Token->Type;
+		const ::gpk::SJSONNode											& childNode					= *node	.Children[iChild];
+		const ::gpk::SJSONNode											& childOther				= *other.Children[iChild];
+		const ::gpk::JSON_TYPE											typeNode					= childNode	.Token->Type;
+		const ::gpk::JSON_TYPE											typeOther					= childOther.Token->Type;
 		if(typeNode != typeOther)
 			return 0;
-		::gpk::error_t					result			= -1;
+		::gpk::error_t													result						= -1;
 		switch(typeNode) {
 		case ::gpk::JSON_TYPE_ARRAY		: result = ::gpk::jsonCompareArray	(childNode, views, childOther, otherViews); break;
 		case ::gpk::JSON_TYPE_OBJECT	: result = ::gpk::jsonCompareObject	(childNode, views, childOther, otherViews); break;
 		case ::gpk::JSON_TYPE_DOUBLE	:
 		case ::gpk::JSON_TYPE_INTEGER	: result = ::gpk::jsonCompareNumber	(childNode, views, childOther, otherViews); break;
 		default:
-			result = views[node.ObjectIndex] == otherViews[other.ObjectIndex];
+			result														= views[node.ObjectIndex] == otherViews[other.ObjectIndex];
 		}
 		if(0 == result)
 			return 0;
