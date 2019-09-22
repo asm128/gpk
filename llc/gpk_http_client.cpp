@@ -107,28 +107,30 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
         }
         break;
     }
-    ree_if(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
+    ree_if(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
+	else
+		info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 
 	char										strAddress	[INET6_ADDRSTRLEN]	= {};
     inet_ntop(currentServinfo->ai_family, get_in_addr((struct sockaddr *)currentServinfo->ai_addr), strAddress, ::gpk::size(strAddress));
-    info_printf("client: connecting to %s\n", strAddress);
     freeaddrinfo(servinfo); // all done with this structure
 
     int											numbytes						= 0;
+	info_printf("Sending request: %s", ::gpk::toString(bytesRequest).begin());
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
 	::gpk::array_pod<char>						buf								= {};
-	gpk_necall(buf.resize(1024*1024*16), "%s", "Failed to resize buffer. Out of memory?");
+	gpk_necall(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
 	uint32_t									totalBytes						= 0;
 	uint32_t									stopOfHeader					= 0;
 	uint32_t									contentLength					= 0;
 	bool										bChunked						= false;
 	//const ::gpk::view_const_string				viewEndOfChunk					= "\r\n0\r\n\r\n";
-    while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], buf.size() - totalBytes - 1, 0)) && 0 != numbytes) {//buf.size() - totalBytes - 1, 0)) && 0 != numbytes) {
+    while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], ::gpk::min(buf.size() - totalBytes - 1, 1U), 0)) && 0 != numbytes) {
 		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), totalBytes});
+			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
