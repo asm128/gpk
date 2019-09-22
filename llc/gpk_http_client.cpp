@@ -182,14 +182,12 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 #endif
 	}
 
-	if(0 == stopOfHeader)
-		stopOfHeader							= (uint32_t)::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), buf.size()}) + 4;
-
 	::gpk::view_const_byte						httpheaderReceived				= buf;
 	::gpk::view_const_byte						contentReceived					= {};
-	if(stopOfHeader >= buf.size() - 4)
+	if(stopOfHeader >= buf.size() - 4) {
+		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
-	info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
+	}
 
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 		buf[iByte]								= (byte_t)tolower(buf[iByte]);
