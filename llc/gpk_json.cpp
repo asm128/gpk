@@ -277,7 +277,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	const uint32_t													sizeNum												= lengthJsonNumber(index, jsonAsString);
 	::gpk::SJSONToken												currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
 
-	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal({&jsonAsString[currentElement.Span.Begin], sizeNum}, &currentElement.Value);
+	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal({&jsonAsString[index], sizeNum}, &currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type										= ::gpk::JSON_TYPE_DOUBLE;
 		double														finalValue											= (double)currentElement.Value;
@@ -486,7 +486,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return ::jsonTreeRebuild(reader.Token, reader.Tree);
 }
 
-			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys)	{
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_pod<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];

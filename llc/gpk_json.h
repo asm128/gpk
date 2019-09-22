@@ -76,9 +76,13 @@ namespace gpk
 
 							::gpk::error_t												jsonObjectValueGet		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::view_const_string & key);
 	static inline			::gpk::error_t												jsonObjectValueGet		(const ::gpk::SJSONReader& reader, uint32_t iNode, const ::gpk::view_const_char& key)	noexcept	{ return ::gpk::jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
-							::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_obj<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
+							::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_pod<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys);
+	static inline			::gpk::error_t												jsonObjectKeyList		(const ::gpk::SJSONReader& reader, uint32_t iNode, const ::gpk::view_array<::gpk::view_const_string>& views, ::gpk::array_pod<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_string> & keys) {
+		return jsonObjectKeyList(*reader.Tree[iNode], views, indices, keys);
+	}
 
 	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONNode& node)						noexcept	{ return node.Children.size() / 2; }
+	static inline constexpr	::gpk::error_t												jsonObjectKeyCount		(const ::gpk::SJSONReader& reader, uint32_t iNode)	noexcept	{ return ::gpk::jsonObjectKeyCount(*reader.Tree[iNode]); }
 	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONNode& node)						noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
 	static inline constexpr	::gpk::error_t												jsonArraySize			(const ::gpk::SJSONReader& reader, uint32_t iNode)	noexcept	{ return ::gpk::jsonArraySize(*reader.Tree[iNode]); }
 							::gpk::error_t												jsonCompareNumber		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::view_const_string>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_string>& otherViews);
