@@ -1,6 +1,9 @@
 #include "gpk_stdsocket.h"
 #include "gpk_http.h"
 
+#ifndef GPK_HTTP_CLIENT_H_23482394
+#define GPK_HTTP_CLIENT_H_23482394
+
 namespace gpk
 {
 	struct SHTTPResponse {
@@ -39,3 +42,5 @@ namespace gpk
 		,	::gpk::array_pod<byte_t>		& out_received
 		);
 }
+
+#endif // GPK_HTTP_CLIENT_H_23482394
