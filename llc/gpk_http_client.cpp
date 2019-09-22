@@ -1,6 +1,7 @@
 #include "gpk_http_client.h"
 #include "gpk_find.h"
 #include "gpk_parse.h"
+#include "gpk_stdstring.h"
 
 #if defined(GPK_WINDOWS)
 #	include <WS2tcpip.h>
@@ -78,7 +79,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	,	const ::gpk::view_const_string		& path
 	,	const ::gpk::view_const_string		& contentType
 	,	const ::gpk::view_const_byte		& body
-	,	::gpk::array_pod<byte_t>			& out_received
+	,	::gpk::SHTTPResponse				& out_received
 	) {
 	::gpk::array_pod<byte_t>					bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
@@ -116,7 +117,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
     freeaddrinfo(servinfo); // all done with this structure
 
     int											numbytes						= 0;
-	info_printf("Sending request: %s", ::gpk::toString(bytesRequest).begin());
+	info_printf("Sending request: \n%s", ::gpk::toString(bytesRequest).begin());
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
 	::gpk::array_pod<char>						buf								= {};
@@ -137,7 +138,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 				info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
 
 				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-					buf[iByte]							= (byte_t)tolower(buf[iByte]);
+					buf[iByte]							= (byte_t)::tolower(buf[iByte]);
 
 				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, {buf.begin(), totalBytes});
 
@@ -182,7 +183,6 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 #endif
 	}
 
-	::gpk::view_const_byte						httpheaderReceived				= buf;
 	::gpk::view_const_byte						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
 		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
@@ -190,18 +190,30 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	}
 
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-		buf[iByte]								= (byte_t)tolower(buf[iByte]);
+		buf[iByte]								= (byte_t)::tolower(buf[iByte]);
 
 	::gpk::array_obj<::gpk::view_const_byte>	headerLines;
-	httpheaderReceived						= {buf.begin(), (uint32_t)stopOfHeader};
-	::gpk::split(httpheaderReceived, '\n', headerLines);
+	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
+
+	::gpk::split(::gpk::view_const_byte{out_received.HeaderData}, '\n', headerLines);
 	bChunked						= false;
+	out_received.Headers.resize(headerLines.size());
 	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
-		::gpk::array_pod<char_t>					strLine							= headerLines[iLine];
-		strLine.push_back(0);
-		info_printf("\n%s", strLine.begin());
-		if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, ::gpk::view_const_char{strLine}))
-			bChunked								= true;
+		::gpk::TKeyValConstString					& header						= out_received.Headers[iLine];
+		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
+			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};
+			//::gpk::view_char							strLine							= {(char_t*)header.Key.begin(), header.Key.size()};
+			//::gpk::tolower(strLine);
+		}
+		else {
+			::gpk::view_char							strLine							= {(char_t*)header.Key.begin(), header.Key.size()};
+			::gpk::tolower(strLine);
+			info_printf("\n%s", ::gpk::toString(strLine).begin());
+			if(::gpk::view_const_string{"transfer-encoding"} == header.Key) {
+				if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, ::gpk::view_const_char{strLine}))
+					bChunked								= true;
+			}
+		}
 	}
 
 	if(stopOfHeader < buf.size())
@@ -213,12 +225,32 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
 		contentReceived							= joined;
 	}
-
-	if(contentReceived.size())
-		out_received							= contentReceived;
+	out_received.Body						= contentReceived;
 	return 0;
 }
 
+::gpk::error_t							gpk::httpClientRequest
+	(	const ::gpk::SIPv4					& clientToConnect
+	,	::gpk::HTTP_METHOD					method
+	,	const ::gpk::view_const_string		& hostName
+	,	const ::gpk::view_const_string		& path
+	,	const ::gpk::view_const_string		& contentType
+	,	const ::gpk::view_const_byte		& body
+	,	::gpk::array_pod<byte_t>			& out_received
+	) {
+	::gpk::SHTTPResponse						response;
+	gpk_necall(::gpk::httpClientRequest
+		( clientToConnect
+		, method
+		, hostName
+		, path
+		, contentType
+		, body
+		, response
+		), "%s", "Request failed.");
+	out_received							= response.Body;
+	return 0;
+}
 // GET /hello.htm HTTP/1.1
 // User-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)
 // Host: www.tutorialspoint.com
