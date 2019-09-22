@@ -100,7 +100,7 @@ namespace gpk
 							::gpk::error_t												jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, const uint32_t blockSize, ::gpk::array_obj<::gpk::array_pod<char_t>> & outputJsons);
 
 	struct SJSONFieldBinding {
-								::gpk::view_const_string									Field			;
+								::gpk::view_const_char										Field			;
 								::gpk::JSON_TYPE											Type			;
 	};
 
