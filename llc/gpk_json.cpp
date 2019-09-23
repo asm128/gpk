@@ -14,7 +14,7 @@
 	for(uint32_t iMap = 0; iMap < fieldMaps.size(); ++iMap)
 	for(uint32_t iField = 0; iField < fields.size(); ++iField) {
 		const ::gpk::SJSONFieldBinding					& fieldToAdd						= fields[iField];
-		if(fieldToAdd.Field.size()) {
+		if(fieldToAdd.Field.size() && fields[iField].Field == fieldMaps[iMap].Key) {
 			indicesOfFields	.push_back(iField);
 			break;
 		}
