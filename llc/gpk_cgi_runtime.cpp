@@ -49,7 +49,7 @@
 		}
 	}
 	if(requestReceived.Path.size() && requestReceived.Path[0] == '/')
-		requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() -1};
+		requestReceived.Path							= {requestReceived.Path.begin() + 1, requestReceived.Path.size() - 1};
 	return isCGIEnviron ? 1 : 0;
 }
 
