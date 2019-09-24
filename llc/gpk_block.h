@@ -27,7 +27,6 @@ namespace gpk
 	struct SBlockConfig {
 						::gpk::view_const_string					Key;
 						uint32_t									BlockSize;
-						uint16_t									Containers;
 						bool										Deflate;
 	};
 #pragma pack(pop)
@@ -35,11 +34,10 @@ namespace gpk
 
 	template<typename _tBlock>
 	struct SMapTable {
-						::gpk::array_pod<uint16_t>					IdContainer;
 						::gpk::array_pod<uint32_t>					Id;
 						::gpk::array_obj<::gpk::ptr_obj<_tBlock>>	Block;
 
-						::gpk::SBlockConfig							BlockConfig					= {::gpk::view_const_string{"01234567890123456789012345678901"}, 65535, 256, true};
+						::gpk::SBlockConfig							BlockConfig					= {::gpk::view_const_string{"01234567890123456789012345678901"}, 65535, true};
 						::gpk::view_const_char						DBName						= {};
 						int32_t										MaxBlockOnDisk				= -1;
 	};
@@ -48,20 +46,19 @@ namespace gpk
 	struct SRecordMap {
 						int32_t										IdBlock						= -1;
 						int32_t										IndexRecord					= -1;
-						int16_t										IndexContainer				= -1;
 	};
 #pragma pack(pop)
 
 					::gpk::error_t								blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
 					::gpk::error_t								blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
-					::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, const ::gpk::SRecordMap & indices, uint32_t containers, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath);
-	inline			::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, uint32_t containers, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath) {
+					::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath);
+	inline			::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath) {
 		::gpk::blockRecordIndices(idRecord, blockSize, indices);
-		return ::gpk::blockRecordPath(fileName, indices, containers, dbName, dbPath);
+		return ::gpk::blockRecordPath(fileName, indices, dbName, dbPath);
 	}
 
 					::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
-					::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, const uint32_t containers, const uint32_t indexContainer);
+					::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath);
 
 	template<typename _tElement>
 					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
@@ -73,8 +70,7 @@ namespace gpk
 		::gpk::ptr_obj<_tElement>										newBlock;
 		newBlock.create();
 		::gpk::error_t													indexBlock					= mapTable.Block.push_back(newBlock);
-		gpk_necall(mapTable.Id			.push_back(indexMap.IdBlock			), "%s", "Out of memory?");
-		gpk_necall(mapTable.IdContainer	.push_back(indexMap.IndexContainer	), "%s", "Out of memory?");
+		gpk_necall(mapTable.Id.push_back(indexMap.IdBlock), "%s", "Out of memory?");
 		gpk_necall(::gpk::fileToMemorySecure(loadedBytes, fileName, mapTable.BlockConfig.Key, mapTable.BlockConfig.Deflate), "Failed to load block file: %s.", ::gpk::toString(fileName).begin());
 		return indexBlock;
 	}
@@ -82,15 +78,15 @@ namespace gpk
 	template<typename _tElement>
 					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
 		::gpk::array_pod<char_t>										fileName					= {};
-		::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, mapBlock.BlockConfig.Containers, dbName, dbPath);
+		::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath);
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	template<typename _tElement>
 					::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath)								{
 		::gpk::array_pod<char_t>										finalPath					= {};
-		::gpk::blockFilePath(finalPath, dbName, dbPath, mapBlock.BlockConfig.Containers, indexMap.IndexContainer);
-		::gpk::array_pod<char_t>									fileName					= {};
+		::gpk::blockFilePath(finalPath, dbName, dbPath);
+		::gpk::array_pod<char_t>										fileName					= {};
 		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
 		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
@@ -108,28 +104,24 @@ namespace gpk
 		return loadedBlock.MapGet(recordMap.IndexRecord, outputData);
 	}
 
-	static inline	int16_t										mapTableContainerFromData	(const ::gpk::view_const_char & sequenceToFind, const uint32_t countContainers)	{
-		uint64_t														container					= 0;
-		::gpk::crcGenerate(sequenceToFind, container);
-		return (int16_t)(container % countContainers);
-	}
+	//static inline	int16_t										mapTableContainerFromData	(const ::gpk::view_const_char & sequenceToFind, const uint32_t countContainers)	{
+	//	uint64_t														container					= 0;
+	//	::gpk::crcGenerate(sequenceToFind, container);
+	//	return (int16_t)(container % countContainers);
+	//}
 
 	//static inline	uint32_t									mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
 
 	template<typename _tMapBlock>
 					int64_t										mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
-		int16_t															container					= ::gpk::mapTableContainerFromData(sequenceToFind, mapTable.BlockConfig.Containers);
 		::gpk::array_pod<uint32_t>										idBlocks					= mapTable.Id;
 		::gpk::array_pod<uint32_t>										blocksToSkip;
 		for(uint32_t iBlock = 0; iBlock < mapTable.Block.size(); ++iBlock) {
-			if(mapTable.IdContainer[iBlock] != container)
-				continue;
 			const _tMapBlock												& block						= *mapTable.Block[iBlock];
 			const int32_t													idEmail						= block.MapId(sequenceToFind);
 			const uint32_t													idBlock						= mapTable.Id[iBlock];
 			if(0 <= idEmail) {
 				::gpk::SRecordMap												indices;
-				indices.IndexContainer										= mapTable.IdContainer[iBlock];
 				indices.IdBlock												= idBlock;
 				indices.IndexRecord											= idEmail;
 				uint64_t														result						= (uint64_t)-1LL;
@@ -140,7 +132,7 @@ namespace gpk
 			(void)block;
 		}
 		::gpk::array_pod<char_t>										containerPath				= {};
-		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath, mapTable.BlockConfig.Containers, container);
+		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
 		::gpk::array_obj<::gpk::array_pod<char_t>>						paths;
 		::gpk::pathCreate(containerPath);
 		::gpk::pathList({containerPath.begin(), containerPath.size()}, paths, false);
@@ -165,7 +157,6 @@ namespace gpk
 				continue;
 			::gpk::SRecordMap												indexMap					= {};
 			indexMap.IdBlock											= idBlock;
-			indexMap.IndexContainer										= container;
 			indexMap.IndexRecord										= -1;
 			loadedBytes.clear();
 			const ::gpk::error_t											indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
@@ -186,17 +177,14 @@ namespace gpk
 				int64_t											mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToAdd)	{
 		int64_t															idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
 		ree_if(0 <= idRecord, "Sequence already registered: %s.", ::gpk::toString(sequenceToAdd).begin());
-		int16_t															container					= ::gpk::mapTableContainerFromData(sequenceToAdd, mapTable.BlockConfig.Containers);
 		if(-1 == mapTable.MaxBlockOnDisk) {
 			::gpk::ptr_obj<_tMapBlock>										newBlock;
 			newBlock.create();
 			::gpk::SRecordMap												newIndices;
 			gpk_necall(newIndices.IndexRecord = newBlock->MapAdd(sequenceToAdd), "%s", "Out of memory?");
-			newIndices.IndexContainer									= container;
 			newIndices.IdBlock											= 0;
 			mapTable.Block		.push_back(newBlock);
 			mapTable.Id			.push_back(newIndices.IdBlock);
-			mapTable.IdContainer.push_back(newIndices.IndexContainer);
 			++mapTable.MaxBlockOnDisk;
 			uint64_t														newIdRecord					= (uint64_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
@@ -206,13 +194,36 @@ namespace gpk
 			return newIdRecord;
 		}
 		for(uint32_t iBlock = 0, countBlocks = mapTable.Block.size(); iBlock < countBlocks; ++iBlock) {
-			const uint16_t													idContainerInMemory			= mapTable.IdContainer[iBlock];
 			const uint32_t													idBlockInMemory				= mapTable.Id[iBlock];
 			_tMapBlock														& blockInMemory				= *mapTable.Block[iBlock];
-			if(idContainerInMemory == container && idBlockInMemory == ((uint32_t)mapTable.MaxBlockOnDisk) && blockInMemory.Size() < 65535U) {
-				gpk_necall(blockInMemory.MapAdd(sequenceToAdd), "%s", "Out of memory?");
+			if(idBlockInMemory == ((uint32_t)mapTable.MaxBlockOnDisk) && blockInMemory.Size() < (int32_t)mapTable.BlockConfig.BlockSize) {
+				::gpk::SRecordMap												newIndices;
+				gpk_necall(newIndices.IndexRecord = blockInMemory.MapAdd(sequenceToAdd), "Failed to add record! %s", "Out of memory?");
+				newIndices.IdBlock											= idBlockInMemory;
+				uint64_t														newIdRecord					= (uint64_t)-1LL;
+				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
+				::gpk::array_pod<char_t>										bytesToWrite;
+				gpk_necall(blockInMemory.Save(bytesToWrite), "%s", "Out of memory?");
+				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
+				return newIdRecord;
 			}
 		}
+
+		::gpk::SRecordMap												indexMap					= {};
+		indexMap.IdBlock											= mapTable.MaxBlockOnDisk;
+		::gpk::array_pod<char_t>										containerPath				= {};
+		::gpk::array_pod<char_t>										fileNameCurrent				= {};
+		::gpk::array_obj<::gpk::array_pod<char_t>>						paths;
+		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
+		::gpk::blockFileName(indexMap.IdBlock, mapTable.DBName, containerPath, fileNameCurrent);
+		::gpk::array_pod<char_t>										loadedBytes;
+		const ::gpk::error_t											indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
+		if(indexBlock >= 0) {
+			_tMapBlock														& block						= *mapTable.Block[indexBlock];
+			gpk_necall(block.Load(loadedBytes), "Failed to load block file: %s.", ::gpk::toString(fileNameCurrent).begin());
+		}
+
+		::gpk::pathCreate(containerPath);
 		return idRecord;
 	}
 
