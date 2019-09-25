@@ -6,20 +6,42 @@
 #define json_info_printf // info_printf
 #define json_error_printf error_printf
 
-::gpk::error_t												gpk::jsonFieldMaps
+::gpk::error_t												gpk::jsonMapToFields
 (	::gpk::array_pod<int32_t>									& indicesOfFields
 ,	const ::gpk::view_array<const ::gpk::SJSONFieldBinding>		fields
 ,	const ::gpk::view_array<const ::gpk::TKeyValConstString>	fieldMaps
 ) {
 	for(uint32_t iMap = 0; iMap < fieldMaps.size(); ++iMap)
 	for(uint32_t iField = 0; iField < fields.size(); ++iField) {
-		const ::gpk::SJSONFieldBinding					& fieldToAdd						= fields[iField];
-		if(fieldToAdd.Field.size() && fields[iField].Field == fieldMaps[iMap].Key) {
-			indicesOfFields	.push_back(iField);
+		const ::gpk::SJSONFieldBinding									& fieldToAdd						= fields[iField];
+		if(fieldToAdd.Field.size() && fieldToAdd.Field == fieldMaps[iMap].Key) {
+			indicesOfFields.push_back(iField);
 			break;
 		}
 	}
 	return indicesOfFields.size();
+}
+
+::gpk::error_t												gpk::jsonFieldsToMap
+(	::gpk::array_pod<int32_t>									& indicesOfMaps
+,	const ::gpk::view_array<const ::gpk::SJSONFieldBinding>		fields
+,	const ::gpk::view_array<const ::gpk::TKeyValConstString>	fieldMaps
+) {
+	uint32_t														countFields							= fields.size();
+	for(uint32_t iField = 0; iField < countFields; ++iField) {
+		bool															bNotAdded							= true;
+		for(uint32_t iMap = 0; iMap < fieldMaps.size(); ++iMap) {
+			const ::gpk::SJSONFieldBinding									& fieldToAdd						= fields[iField];
+			if(fieldToAdd.Field.size() && fieldToAdd.Field == fieldMaps[iMap].Key) {
+				indicesOfMaps.push_back(iMap);
+				bNotAdded													= false;
+				break;
+			}
+		}
+		if(bNotAdded)
+			indicesOfMaps.push_back(-1);
+	}
+	return indicesOfMaps.size();
 }
 
 ::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {

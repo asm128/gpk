@@ -110,7 +110,8 @@ namespace gpk
 								::gpk::JSON_TYPE											Type			;
 	};
 
-							::gpk::error_t												jsonFieldMaps			(::gpk::array_pod<int32_t> & indicesOfFields, const ::gpk::view_array<const ::gpk::SJSONFieldBinding> fields, const ::gpk::view_array<const ::gpk::TKeyValConstString> fieldMaps);
+							::gpk::error_t												jsonMapToFields			(::gpk::array_pod<int32_t> & indicesOfFields, const ::gpk::view_array<const ::gpk::SJSONFieldBinding> fields, const ::gpk::view_array<const ::gpk::TKeyValConstString> fieldMaps);
+							::gpk::error_t												jsonFieldsToMap			(::gpk::array_pod<int32_t> & indicesOfFields, const ::gpk::view_array<const ::gpk::SJSONFieldBinding> fields, const ::gpk::view_array<const ::gpk::TKeyValConstString> fieldMaps);
 } // namespace
 
 #endif // GPK_JSON_H_92749028348923
