@@ -18,6 +18,7 @@
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(::gpk::label{enumValue.begin(), enumValue.size()});//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
 			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
+		::gpk::find("SCRIPT_NAME"	, environViews, requestReceived.Script);
 		::gpk::find("PATH_INFO"		, environViews, requestReceived.Path);
 		::gpk::find("QUERY_STRING"	, environViews, requestReceived.QueryString);
 		::gpk::find("REMOTE_ADDR"	, environViews, requestReceived.Ip);
