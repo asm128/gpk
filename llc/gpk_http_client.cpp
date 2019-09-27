@@ -17,11 +17,14 @@
 ::gpk::error_t							gpk::urlDecode					(::gpk::view_const_char urlToDecode, ::gpk::array_pod<char_t> & decoded)		{
 	uint32_t									decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
-		if('%' != urlToDecode[iChar])
+		const char_t								currentChar						= urlToDecode[iChar];
+		if('%' != currentChar) {
+			gpk_necall(decoded.push_back((char_t)(uint8_t)currentChar), "%s", "Out of memory?");
 			continue;
+		}
 		uint64_t								decodedByte						= 0;
-		::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, &decodedByte);
-		decoded.push_back((char_t)(uint8_t)decodedByte);
+		gpk_necall(::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, &decodedByte), "%s", "Out of memory?");
+		gpk_necall(decoded.push_back((char_t)(uint8_t)decodedByte), "%s", "Out of memory?");
 		++iChar;
 		++decodedCharacters;
 	}
