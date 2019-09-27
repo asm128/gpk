@@ -41,6 +41,9 @@ namespace gpk
 		,	const ::gpk::view_const_byte	& body
 		,	::gpk::array_pod<byte_t>		& out_received
 		);
+
+	::gpk::error_t					urlDecode	(::gpk::view_const_char urlToDecode, ::gpk::array_pod<char_t> & decoded);
+
 }
 
 #endif // GPK_HTTP_CLIENT_H_23482394

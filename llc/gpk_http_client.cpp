@@ -14,6 +14,20 @@
 #	include <ctype.h>
 #endif
 
+::gpk::error_t							gpk::urlDecode					(::gpk::view_const_char urlToDecode, ::gpk::array_pod<char_t> & decoded)		{
+	uint32_t									decodedCharacters				= 0;
+	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
+		if('%' != urlToDecode[iChar])
+			continue;
+		uint64_t								decodedByte						= 0;
+		::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, &decodedByte);
+		decoded.push_back((char_t)(uint8_t)decodedByte);
+		++iChar;
+		++decodedCharacters;
+	}
+	return decodedCharacters;
+}
+
 static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::array_pod<byte_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
