@@ -9,6 +9,7 @@
 	const ::gpk::array_obj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::view_const_string							remoteAddr;
 	const bool											isCGIEnviron					= -1 != ::gpk::find("REMOTE_ADDR", environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
+	requestReceived.IsCGIEnviron					= isCGIEnviron;
 	if(bLogCGIEnviron && isCGIEnviron)
 		::gpk::writeCGIEnvironToFile(environViews);
 

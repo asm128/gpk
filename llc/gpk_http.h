@@ -160,6 +160,7 @@ namespace gpk
 		::gpk::view_const_char										QueryString					= {};
 		::gpk::view_const_char										ContentBody					= {};
 		::gpk::HTTP_METHOD											Method						= {};
+		bool														IsCGIEnviron				= false;
 	};
 #pragma pack(pop)
 } // namespace

@@ -4,7 +4,7 @@
 #define GPK_MODULE_H
 
 #if defined(GPK_WINDOWS)
-#	define GPK_STDCALL				__stdcall
+#	define GPK_STDCALL				//__stdcall
 #	define GPK_MODULE_API_EXPORT	__declspec(dllexport)
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
 #	include <Windows.h>
