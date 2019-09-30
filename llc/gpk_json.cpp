@@ -1,3 +1,4 @@
+#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 #include "gpk_json.h"
 #include "gpk_find.h"
 #include "gpk_storage.h"
@@ -303,7 +304,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type											= ::gpk::JSON_TYPE_DOUBLE;
 		double															finalValue											= (double)currentElement.Value;
-		info_printf("Integer part: %f.", finalValue);
+		//info_printf("Integer part: %f.", finalValue);
 		++intCount;	// Skip dot.
 		const uint32_t													offsetStart											= currentElement.Span.Begin + sizeNum - (sizeNum - intCount);
 		const uint32_t													lenDec												= sizeNum - intCount;
@@ -312,22 +313,22 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 			::gpk::error_t													decCount											= ::gpk::parseIntegerDecimal({&jsonAsString[offsetStart], lenDec}, &decValue);
 			decValue													/= ::gpk::powui(10, decCount);
 			ree_if(errored(intCount), "%s", "Unknown error.");
-			info_printf("Decimal part: %f.", decValue);
+			//info_printf("Decimal part: %f.", decValue);
 			finalValue													+= decValue;
 		}
 		memcpy((double*)&currentElement.Value, &finalValue, sizeof(uint64_t));
 	}
 	else {
-		info_printf("Integer part: %i.", currentElement.Value);
+		//info_printf("Integer part: %i.", currentElement.Value);
 	}
 	gpk_necall(tokens.push_back(currentElement), "%s", "Out of memory?");
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
-	info_printf("Number found: %s. Length: %u. Negative: %s. Float: %s."
-		, ::gpk::toString({&jsonAsString[index], sizeNum}).begin()
-		, sizeNum
-		, isNegative	? "true" : "false"
-		, isFloat		? "true" : "false"
-	);
+	//info_printf("Number found: %s. Length: %u. Negative: %s. Float: %s."
+	//	, ::gpk::toString({&jsonAsString[index], sizeNum}).begin()
+	//	, sizeNum
+	//	, isNegative	? "true" : "false"
+	//	, isFloat		? "true" : "false"
+	//);
 	stateReader.IndexCurrentChar								+= sizeNum + (index - offset) - 1;
 	if(stateReader.IndexCurrentChar + 1 < jsonAsString.size() - 1) {
 		charCurrent													= jsonAsString[stateReader.IndexCurrentChar+1];
