@@ -117,6 +117,7 @@ static	::gpk::error_t										jsonTreeRebuild										(::gpk::array_pod<::gpk:
 		nodeCurrent->Token											= &in_object[iObject];
 		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
+		nodeCurrent->Children.clear();
 	}
 
 	// -- Assign the children to every object of the hierarchy
@@ -502,9 +503,10 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		bi_if(reader.StateRead.DoneReading, "%i json characters read.", stateReader.IndexCurrentChar + 1);
 	}
 	ree_if(stateReader.NestLevel, "Nest level: %i (Needs to be zero).", stateReader.NestLevel);
+	reader.View.resize(reader.Token.size());
 	for(uint32_t iView = 0; iView < reader.Token.size(); ++iView) {
 		::gpk::SJSONToken												& currentElement									= reader.Token[iView];
-		gpk_necall(reader.View.push_back({&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin}), "Failed to push view! Out of memory? View count: %u. Index: %i.", reader.View.size(), iView);
+		reader.View[iView]											= ::gpk::view_const_string{&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin};
 	}
 	return ::jsonTreeRebuild(reader.Token, reader.Tree);
 }

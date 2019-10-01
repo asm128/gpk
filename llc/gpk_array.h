@@ -289,7 +289,7 @@ namespace gpk
 				for(i = 0					, maxCount = ::gpk::min(index, Count)					; i < maxCount; ++i) viewSafe[i]			= oldData[i];
 				for(i = 0					, maxCount = ::gpk::min(chainLength, newSize - index)	; i < maxCount; ++i) viewSafe[i + index]	= chainToInsert[i];
 				for(i = index + chainLength	, maxCount = ::gpk::min(index + 1, Count)				; i < maxCount; ++i) viewSafe[i + 1]		= oldData[i];
-				Data											= safeguard.Handle; //newData;
+				Data											= (_tPOD*)safeguard.Handle; //newData;
 				safeguard.Handle								= 0;
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
@@ -298,6 +298,8 @@ namespace gpk
 			}
 			return Count += chainLength;
 		}
+
+		inline				::gpk::error_t				insert										(uint32_t index, ::gpk::view_array<const _tPOD> chainToInsert)				noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 
 		template<size_t _chainLength>
 		inline				::gpk::error_t				insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])				noexcept	{ return insert(index, chainToInsert, _chainLength); }

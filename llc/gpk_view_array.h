@@ -123,6 +123,33 @@ namespace gpk
 	static inline		::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::rtrim	(trimmed, trimmed, characters); }
 	static inline		::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::ltrim	(trimmed, trimmed, characters); }
 	static inline		::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::trim	(trimmed, trimmed, characters); }
+
+	template<typename _tElement>
+						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement * result) {
+		if(0 == input.size())
+			return 0;
+		result														= &input[0];
+		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
+			const _tElement													& currentElement					= input[iElement];
+			if(*result > currentElement)
+				result														= &input[iElement];
+		}
+		return 0;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							min									(const ::gpk::view_array<const _tElement> & input, const _tElement * result) {
+		if(0 == input.size())
+			return 0;
+		result														= &input[0];
+		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
+			const _tElement													& currentElement					= input[iElement];
+			if(*result < currentElement)
+				result														= &input[iElement];
+		}
+		return 0;
+	}
+
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
