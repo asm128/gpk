@@ -293,8 +293,10 @@ namespace gpk
 				safeguard.Handle								= 0;
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
-				for(int32_t  i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index	; i >=	maxCount; --i)	Data[i + chainLength]	= Data[i];
-				for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, Count - index)				; i <	maxCount; ++i)	Data[i + index		]	= chainToInsert[i];
+				for(int32_t  i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index	; i >=	maxCount; --i)
+					Data[i + chainLength]	= Data[i];
+				for(uint32_t i = 0, maxCount = chainLength; i <	maxCount; ++i)
+					Data[i + index		]	= chainToInsert[i];
 			}
 			return Count += chainLength;
 		}

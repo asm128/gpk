@@ -62,7 +62,14 @@ namespace gpk
 								::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>			Tree;
 								::gpk::SJSONReaderState										StateRead;
 
-								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[]				(uint32_t index)	const { return Tree[index]; }
+								::gpk::error_t												Reset					()							{
+			Token	.clear();
+			View	.clear();
+			StateRead																			= {};
+			return 0;
+		}
+
+								const ::gpk::ptr_obj<::gpk::SJSONNode>&						operator[]				(uint32_t index)	const	{ return Tree[index]; }
 	};
 
 	// Reader functions: Populate a SJSONReader structure from an input JSON string.
