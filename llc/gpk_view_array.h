@@ -132,7 +132,7 @@ namespace gpk
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
 			if(currentElement > *result)
-				result														= &currentElement;
+				*result														= currentElement;
 		}
 		return 0;
 	}
@@ -145,7 +145,7 @@ namespace gpk
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
 			if(currentElement < *result)
-				result														= &currentElement;
+				*result														= currentElement;
 		}
 		return 0;
 	}
