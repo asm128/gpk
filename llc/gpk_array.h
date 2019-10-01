@@ -286,9 +286,9 @@ namespace gpk
 				ree_if(nullptr == (safeguard.Handle = ::gpk::gpk_malloc(mallocSize)), "Failed to allocate array for inserting new value. memory requesteD: %u.", mallocSize);
 				::gpk::view_array<_tPOD>							viewSafe									= {(_tPOD*)safeguard.Handle, newSize};
 				uint32_t											i, maxCount;
-				for(i = 0					, maxCount = ::gpk::min(index, Count)					; i < maxCount; ++i) viewSafe[i]			= oldData[i];
-				for(i = 0					, maxCount = ::gpk::min(chainLength, newSize - index)	; i < maxCount; ++i) viewSafe[i + index]	= chainToInsert[i];
-				for(i = index + chainLength	, maxCount = ::gpk::min(index + 1, Count)				; i < maxCount; ++i) viewSafe[i + 1]		= oldData[i];
+				for(i = 0, maxCount = ::gpk::min(index, Count)					; i < maxCount; ++i) viewSafe[i]						= oldData[i];
+				for(i = 0, maxCount = ::gpk::min(chainLength, newSize - index)	; i < maxCount; ++i) viewSafe[i + index]				= chainToInsert[i];
+				for(i = 0, maxCount = Count - index								; i < maxCount; ++i) viewSafe[i + index + chainLength]	= oldData[i + index];
 				Data											= (_tPOD*)safeguard.Handle; //newData;
 				safeguard.Handle								= 0;
 			}

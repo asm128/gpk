@@ -125,29 +125,53 @@ namespace gpk
 	static inline		::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::trim	(trimmed, trimmed, characters); }
 
 	template<typename _tElement>
-						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement * result) {
+						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
 			return 0;
-		result														= &input[0];
+		*result														= &input[0];
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
-			if(currentElement > *result)
-				*result														= currentElement;
+			if(currentElement > **result)
+				*result														= &currentElement;
 		}
 		return 0;
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							min									(const ::gpk::view_array<const _tElement> & input, const _tElement * result) {
+						::gpk::error_t							min									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
 			return 0;
-		result														= &input[0];
+		*result														= &input[0];
+		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
+			const _tElement													& currentElement					= input[iElement];
+			if(currentElement < **result)
+				*result														= &currentElement;
+		}
+		return 0;
+	}
+
+	template<typename _tElement>
+						const _tElement&						max									(const ::gpk::view_array<const _tElement> & input) {
+		gthrow_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
+		const _tElement													* result							= &input[0];
+		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
+			const _tElement													& currentElement					= input[iElement];
+			if(currentElement > *result)
+				result														= &currentElement;
+		}
+		return *result;
+	}
+
+	template<typename _tElement>
+						const _tElement&						min									(const ::gpk::view_array<const _tElement> & input) {
+		gthrow_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
+		const _tElement													* result							= &input[0];
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
 			if(currentElement < *result)
-				*result														= currentElement;
+				result														= &currentElement;
 		}
-		return 0;
+		return *result;
 	}
 
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
