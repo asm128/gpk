@@ -7,12 +7,14 @@ namespace gpk
 {
 	template<typename _tKey, typename _tVal>
 	struct SKeyVal {
-				_tKey									Key;
-				_tVal									Val;
+					_tKey									Key;
+					_tVal									Val;
 	};
 
 	typedef		::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>
-										TKeyValConstString;
+														TKeyValConstString;
+	typedef		::gpk::SKeyVal<::gpk::view_const_char, ::gpk::view_const_char>
+														TKeyValConstChar;
 
 				::gpk::error_t							token_split						(char token, const ::gpk::view_const_char& input_string, TKeyValConstString& output_views);
 	inline		::gpk::error_t							keyval_split					(const ::gpk::view_const_char& input_string, TKeyValConstString& out_keyval) { return ::gpk::token_split('=', input_string, out_keyval); }

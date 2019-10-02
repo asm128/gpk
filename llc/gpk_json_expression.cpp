@@ -291,7 +291,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	::gpk::error_t										jsonNodeResultOfEvaluation				= ::gpk::jsonExpressionResolve(results, reader, inputJSON, indexNodeJSON, output);
 	ree_if(-1 == jsonNodeResultOfEvaluation, "Failed to evaluate expression: %s.", reader.View.size() ? ::gpk::toString(reader.View[0]).begin() : "null");
 	for(uint32_t iResult = 0; iResult < results.Results.size(); ++iResult)
-		info_printf("Result %u: '%s' | '%s'", iResult, ::gpk::toString(results.Results[iResult].Expression).begin(), ::gpk::toString(results.Results[iResult].Output).begin());
+		gpk_jexpr_info_printf("Result %u: '%s' | '%s'", iResult, ::gpk::toString(results.Results[iResult].Expression).begin(), ::gpk::toString(results.Results[iResult].Output).begin());
 	return jsonNodeResultOfEvaluation;
 }
 
