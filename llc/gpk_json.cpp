@@ -72,11 +72,29 @@
 }
 
 ::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
+	if(node->Token->Type == ::gpk::JSON_TYPE_VALUE && node->Children.size())
+		node														= node->Children[0];
 	switch(node->Token->Type) {
-	case ::gpk::JSON_TYPE_NULL			:
-	case ::gpk::JSON_TYPE_INTEGER		:
-	case ::gpk::JSON_TYPE_DOUBLE		:
+	case ::gpk::JSON_TYPE_INTEGER		: {
+		char														temp[64];
+		sprintf_s(temp, "%lli"	, node->Token->Value);
+		output.append_string(temp);
+	}
+		break;
+	case ::gpk::JSON_TYPE_DOUBLE		: {
+		double														f = 0;
+		memcpy(&f, &node->Token->Value, sizeof(double));
+		char														temp[64];
+		uint32_t													lenNum								= sprintf_s(temp, "%.16f", f);
+		while(lenNum > 0 && (temp[lenNum] == 0 || temp[lenNum] == '0')) {
+			temp[lenNum] = 0;
+			--lenNum;
+		}
+		output.append_string(temp);
+	}
+		break;
 	case ::gpk::JSON_TYPE_BOOL			:
+	case ::gpk::JSON_TYPE_NULL			:
 		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
 		break;
 	case ::gpk::JSON_TYPE_STRING		:
@@ -265,13 +283,15 @@ static	::gpk::error_t										jsonParseKeyword									(const ::gpk::view_const
 static	::gpk::error_t										lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_string& jsonAsString)	{
 	const uint32_t													offset												= indexCurrentChar;
 	char															charCurrent											= jsonAsString[indexCurrentChar];
-	while((indexCurrentChar + 1) < jsonAsString.size() &&
+	while(indexCurrentChar < jsonAsString.size() &&
 		( ( charCurrent >= '1' && charCurrent <= '9')
 		 || charCurrent == '0'
 		 || charCurrent == '.'
 		 )
 		) {
 		++indexCurrentChar;
+		if(indexCurrentChar >= jsonAsString.size())
+			break;
 		charCurrent													= jsonAsString[indexCurrentChar];
 	}
 	return indexCurrentChar - offset;
