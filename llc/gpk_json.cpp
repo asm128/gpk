@@ -71,6 +71,8 @@
 	return 0;
 }
 
+static const ::gpk::view_const_string		gpk_json_str_true  = "true";
+static const ::gpk::view_const_string		gpk_json_str_false = "false";
 ::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, ::gpk::array_pod<char_t> & output)			{
 	if(node->Token->Type == ::gpk::JSON_TYPE_VALUE && node->Children.size())
 		node														= node->Children[0];
@@ -90,10 +92,12 @@
 			temp[lenNum] = 0;
 			--lenNum;
 		}
-		output.append_string(temp);
+		gpk_necall(output.append_string(temp), "%s", "Out of memory?");
 	}
 		break;
 	case ::gpk::JSON_TYPE_BOOL			:
+		gpk_necall(output.append(node->Token->Value ? gpk_json_str_true : gpk_json_str_false), "%s", "Out of memory?");
+		break;
 	case ::gpk::JSON_TYPE_NULL			:
 		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
 		break;
