@@ -48,7 +48,7 @@
 ::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {
 	info_printf("Loading json file: %s.", filename.begin());
 	gpk_necall(::gpk::fileToMemory(filename, file.Bytes), "Failed to load file: '%s'", filename.begin());
-	return ::gpk::jsonParse(file.Reader, {file.Bytes.begin(), file.Bytes.size()});
+	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
 ::gpk::error_t												gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view_array<::gpk::view_const_string> & jsonViews, const uint32_t blockSize, ::gpk::array_obj<::gpk::array_pod<char_t>> & outputJsons)		{
@@ -489,8 +489,8 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 			::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString)	{
 	reader.StateRead.CharCurrent								= jsonAsString[reader.StateRead.IndexCurrentChar];
 	::gpk::error_t													errVal												= (reader.StateRead.InsideString)
-		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, {jsonAsString.begin(), jsonAsString.size()})
-		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, {jsonAsString.begin(), jsonAsString.size()})
+		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
+		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, jsonAsString)
 		;
 	if errored(errVal) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
