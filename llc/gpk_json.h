@@ -73,8 +73,8 @@ namespace gpk
 	};
 
 	// Reader functions: Populate a SJSONReader structure from an input JSON string.
-							::gpk::error_t												jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
-							::gpk::error_t												jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString);
+							::gpk::error_t												jsonParse				(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString);
+							::gpk::error_t												jsonParseStep			(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString);
 
 
 

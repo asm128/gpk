@@ -220,7 +220,7 @@ static	bool												isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
-static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentChar, const ::gpk::view_const_string& expression)		{
+static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentChar, const ::gpk::view_const_char& expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::isSpaceCharacter(expression[indexCurrentChar]))
 			++indexCurrentChar;
@@ -230,7 +230,7 @@ static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentC
 	return 0;
 }
 
-static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_char& jsonAsString)	{
 	::gpk::SJSONToken												currentElement										= {};
 	::gpk::error_t													errVal												= 0;
 	switch(stateReader.CharCurrent) {
@@ -273,7 +273,7 @@ static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReade
 	return errVal;
 }
 
-static	::gpk::error_t										jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& object, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t										jsonParseKeyword									(const ::gpk::view_const_string& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& object, const ::gpk::view_const_char& jsonAsString)	{
 	ree_if(token.size() > jsonAsString.size() - stateReader.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
 	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateReader.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	json_info_printf("JSON token found: %s.", token.begin());
@@ -284,7 +284,7 @@ static	::gpk::error_t										jsonParseKeyword									(const ::gpk::view_const
 	return 0;
 }
 
-static	::gpk::error_t										lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t										lengthJsonNumber									(uint32_t indexCurrentChar, const ::gpk::view_const_char& jsonAsString)	{
 	const uint32_t													offset												= indexCurrentChar;
 	char															charCurrent											= jsonAsString[indexCurrentChar];
 	while(indexCurrentChar < jsonAsString.size() &&
@@ -301,7 +301,7 @@ static	::gpk::error_t										lengthJsonNumber									(uint32_t indexCurrentCh
 	return indexCurrentChar - offset;
 }
 
-static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_char& jsonAsString)	{
 	const uint32_t													offset												= stateReader.IndexCurrentChar;
 	uint32_t														index												= offset;
 
@@ -415,7 +415,7 @@ static	::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState&
 	return 0;
 }
 
-static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_string& jsonAsString)	{
+static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_char& jsonAsString)	{
 	static const ::gpk::view_const_string							tokenFalse											= "false"	;
 	static const ::gpk::view_const_string							tokenTrue											= "true"	;
 	static const ::gpk::view_const_string							tokenNull											= "null"	;
@@ -486,11 +486,11 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return errVal;
 }
 
-			::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString)	{
+			::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString)	{
 	reader.StateRead.CharCurrent								= jsonAsString[reader.StateRead.IndexCurrentChar];
 	::gpk::error_t													errVal												= (reader.StateRead.InsideString)
-		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
-		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, jsonAsString)
+		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, {jsonAsString.begin(), jsonAsString.size()})
+		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, {jsonAsString.begin(), jsonAsString.size()})
 		;
 	if errored(errVal) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
@@ -520,7 +520,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return errVal;
 }
 
-			::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader& reader, const ::gpk::view_const_string& jsonAsString)	{
+			::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString)	{
 	SJSONReaderState												& stateReader										= reader.StateRead;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::jsonParseStep(reader, jsonAsString), "%s", "Parse step failed.");
