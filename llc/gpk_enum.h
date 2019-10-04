@@ -192,6 +192,9 @@ namespace gpk
 	template <typename _tEnum>	int32_t						get_value_index							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
 	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::label& valueLabel				)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
 	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::view_const_string& valueLabel	)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
+	template <typename _tEnum>	_tEnum						get_value								(const ::gpk::view_const_char& valueLabel	)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(::gpk::view_const_string{valueLabel.begin(), valueLabel.size()});	}
+	template <typename _tEnum, size_t _sLen>
+								_tEnum						get_value								(const char (&valueLabel)[_sLen])										{ return ::gpk::enum_definition<_tEnum>::get().get_value		(::gpk::view_const_string{valueLabel});	}
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators

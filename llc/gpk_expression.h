@@ -50,14 +50,14 @@ namespace gpk
 
 	struct SExpressionReader {
 		::gpk::array_pod<::gpk::SExpressionToken>						Token;
-		::gpk::array_obj<::gpk::view_const_string>						View;
+		::gpk::array_obj<::gpk::view_const_char>						View;
 		::gpk::array_obj<::gpk::ptr_obj	<::gpk::SExpressionNode>>		Tree;
 		::gpk::SExpressionReaderState									StateRead;
 		::gpk::ptr_obj<::gpk::SExpressionReader>						SubExpressionCache;
 	};
 
-	::gpk::error_t													expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
-	::gpk::error_t													expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::view_const_string& expression);
+	::gpk::error_t													expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::view_const_char& expression);
+	::gpk::error_t													expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::view_const_char& expression);
 #pragma pack(pop)
 } // namespace
 

@@ -40,7 +40,7 @@
 	return totalCharsProcessed;
 }
 
-::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
+::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
 	in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -74,7 +74,7 @@
 	return 0;
 }
 
-::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
+::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
 	in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -102,7 +102,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
+::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
 	if(work_state.InsideToken)
 		::stripLiteralsParseToken(work_state, out_types, in_format);
 	else {
@@ -116,7 +116,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_string& in_format)		{
+::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
 		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "%s", "Parse step failed.");
@@ -124,7 +124,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::array_obj<::gpk::view_const_string>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::view_const_string & in_format)		{
+::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::array_obj<::gpk::view_const_char>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::view_const_char & in_format)		{
 	for(uint32_t iType = 0; iType < in_resultOfParser.size(); ++iType) {
 		const ::gpk::SStripLiteralType					& type						= in_resultOfParser[iType];
 		::gpk::view_const_string						view						= {};

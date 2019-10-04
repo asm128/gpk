@@ -36,8 +36,8 @@ static	::gpk::error_t								createChildProcess
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
-		( appPath.begin()	// Create the child process.
-		, commandLine.begin()		// command line
+		( ::gpk::toString(appPath		).begin()	// Create the child process.
+		, ::gpk::toString(commandLine	).begin()		// command line
 		, nullptr					// process security attributes
 		, nullptr					// primary thread security attributes
 		, true						// handles are inherited
@@ -47,7 +47,7 @@ static	::gpk::error_t								createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION
-	ree_if(false == bSuccess, "Failed to create process'%s'.", appPath.begin());
+	ree_if(false == bSuccess, "Failed to create process'%s'.", ::gpk::toString(appPath).begin());
 
 	::gpk::array_pod<char_t>								popupTitle						= {};
 	{
