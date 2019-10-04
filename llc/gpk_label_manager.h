@@ -44,7 +44,7 @@ namespace gpk
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 																		~CLabelManager				()																					{
 			for(uint32_t iText = 0; iText < Texts.size(); ++iText) {
-				info_printf("Label found: %s.", Texts[iText]);
+				verbose_printf("Label found: %s.", Texts[iText]);
 			}
 		}
 																		CLabelManager				()																					{ Characters.push_sequence("", 0U, Empty); }
