@@ -45,9 +45,9 @@
 	return indicesOfMaps.size();
 }
 
-::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_string & filename) {
+::gpk::error_t												gpk::jsonFileRead					(::gpk::SJSONFile & file, const ::gpk::view_const_char & filename) {
 	info_printf("Loading json file: %s.", filename.begin());
-	gpk_necall(::gpk::fileToMemory(filename, file.Bytes), "Failed to load file: '%s'", filename.begin());
+	gpk_necall(::gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
 	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
