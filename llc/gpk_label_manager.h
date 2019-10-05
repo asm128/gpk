@@ -36,10 +36,10 @@ namespace gpk
 	};
 
 	class CLabelManager	{
-		static constexpr	const uint32_t								BLOCK_SIZE					= 1024*32;
+		static constexpr	const uint32_t								BLOCK_SIZE					= 1024*64;
 							unshrinkable_string_container<BLOCK_SIZE>	Characters;
 							::gpk::view_const_char						Empty;
-							::gpk::array_pod<uint32_t>					Counts;
+							::gpk::array_pod<uint16_t>					Counts;
 							::gpk::array_pod<const char_t*>				Texts;
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 																		~CLabelManager				()																					{
@@ -68,8 +68,8 @@ namespace gpk
 				}
 			}
 			gpk_necall(Characters	.push_sequence(text, iChar, out_view)	, "%s", "Out of memory?");
-			gpk_necall(Counts		.push_back(out_view.size	())			, "%s", "Out of memory?");
-			gpk_necall(Texts		.push_back(out_view.begin	())			, "%s", "Out of memory?");
+			gpk_necall(Counts		.push_back((uint16_t)out_view.size())	, "%s", "Out of memory?");
+			gpk_necall(Texts		.push_back(out_view.begin())			, "%s", "Out of memory?");
 			return 0;
 		}
 	};

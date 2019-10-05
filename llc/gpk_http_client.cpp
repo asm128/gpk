@@ -44,7 +44,7 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 		else
 			break;
 		uint64_t									sizeChunk						= 0;
-		::gpk::parseArbitraryBaseInteger(16, "0123456789abcdef", strSize, &sizeChunk);
+		::gpk::parseIntegerHexadecimal(strSize, &sizeChunk);
 		if(0 == sizeChunk)
 			break;
 		joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
