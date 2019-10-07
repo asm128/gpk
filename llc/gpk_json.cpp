@@ -129,7 +129,7 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 	return 0;
 }
 
-static	::gpk::error_t										jsonTreeRebuild										(::gpk::array_pod<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
+::gpk::error_t												gpk::jsonTreeRebuild								(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
@@ -144,9 +144,9 @@ static	::gpk::error_t										jsonTreeRebuild										(::gpk::array_pod<::gpk:
 
 	// -- Assign the children to every object of the hierarchy
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
-		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
+		for(uint32_t iOther = iObject + 1; iOther < countNodes; ++iOther) {
 			const ::gpk::ptr_obj<::gpk::SJSONNode>						& nodeOther											= tree[iOther];
-			if(((uint32_t)nodeOther->Token->ParentIndex) == iObject)
+			if(((uint32_t)in_object[iOther].ParentIndex) == iObject)
 				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}
 	}
@@ -532,7 +532,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		::gpk::SJSONToken												& currentElement									= reader.Token[iView];
 		reader.View[iView]											= ::gpk::view_const_char{&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin};
 	}
-	return ::jsonTreeRebuild(reader.Token, reader.Tree);
+	return ::gpk::jsonTreeRebuild(reader.Token, reader.Tree);
 }
 
 			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_char>& views, ::gpk::array_pod<int32_t> & indices, ::gpk::array_obj<::gpk::view_const_char> & keys)	{

@@ -127,27 +127,33 @@ namespace gpk
 	template<typename _tElement>
 						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
-			return 0;
+			return -1;
 		*result														= &input[0];
+		int32_t															iMax								= 0;
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
-			if(currentElement > **result)
+			if(currentElement > **result) {
 				*result														= &currentElement;
+				iMax														= iElement;
+			}
 		}
-		return 0;
+		return iMax;
 	}
 
 	template<typename _tElement>
 						::gpk::error_t							min									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
-			return 0;
+			return -1;
 		*result														= &input[0];
+		int32_t															iMin								= 0;
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
 			const _tElement													& currentElement					= input[iElement];
-			if(currentElement < **result)
+			if(currentElement < **result) {
 				*result														= &currentElement;
+				iMin														= iElement;
+			}
 		}
-		return 0;
+		return iMin;
 	}
 
 	template<typename _tElement>

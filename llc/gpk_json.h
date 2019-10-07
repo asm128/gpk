@@ -102,6 +102,7 @@ namespace gpk
 	static inline			::gpk::error_t												jsonCompareObject		(const ::gpk::SJSONNode& node, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_char>& views) { return ::gpk::jsonCompareObject	(node, views, other, views); }
 	static inline			::gpk::error_t												jsonCompareNumber		(const ::gpk::SJSONNode& node, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_char>& views) { return ::gpk::jsonCompareNumber	(node, views, other, views); }
 
+							::gpk::error_t												jsonTreeRebuild			(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes);
 	struct SJSONFile {
 								::gpk::array_pod<char_t>									Bytes					= {};
 								::gpk::SJSONReader											Reader					= {};
