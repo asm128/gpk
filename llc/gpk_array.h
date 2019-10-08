@@ -291,6 +291,7 @@ namespace gpk
 				for(i = 0, maxCount = Count - index								; i < maxCount; ++i) viewSafe[i + index + chainLength]	= oldData[i + index];
 				Data											= (_tPOD*)safeguard.Handle; //newData;
 				safeguard.Handle								= 0;
+				::gpk::gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
 				for(int32_t  i = (int32_t)::gpk::min(index, Count - 1), maxCount = (int32_t)index	; i >=	maxCount; --i)
