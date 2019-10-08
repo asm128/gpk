@@ -183,6 +183,9 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	::gpk::array_obj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
+	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
+	//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
+
 	{
 		::gpk::view_const_string								querystring;
 		::gpk::find("QUERY_STRING", environViews, querystring);

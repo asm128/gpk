@@ -53,6 +53,8 @@
 		::gpk::fileFromMemory({tempName.begin(), tempName.size()}, temp);
 		::gpk::array_obj<::gpk::TKeyValConstString>				environViewsTest;
 		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
+		//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
+		//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
 		for(uint32_t iEnviron = 0; iEnviron < environViewsTest.size(); ++iEnviron)
 			info_printf("CGI Environ: '%s = %s'.", ::gpk::toString(environViewsTest[iEnviron].Key).begin(), ::gpk::toString(environViewsTest[iEnviron].Val).begin());
 	}
