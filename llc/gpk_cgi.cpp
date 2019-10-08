@@ -38,6 +38,8 @@
 		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)
 			if(environViews[iKey].Key == ::gpk::view_const_string{"REMOTE_ADDR"}) {
 				tempName											= environViews[iKey].Val;
+				if(0 == tempName.size() || tempName[0] == ':s')
+					tempName = ::gpk::view_const_string{"localhost"};
 				tempName.append(".trace");
 			}
 		if(0 == tempName.size())
