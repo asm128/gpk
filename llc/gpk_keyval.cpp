@@ -20,7 +20,6 @@
 	return 0;
 }
 
-
 ::gpk::error_t						gpk::join					(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char> fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(query.append(fields[iField]), "%s", "Out of memory?");

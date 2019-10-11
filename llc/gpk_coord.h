@@ -120,7 +120,7 @@ namespace gpk
 		constexpr								double					Dot						(const TCoord3& other)												const	noexcept	{ return x * other.x + y * other.y + z * other.z;																		}
 		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y + z * z;																							}
 		constexpr								double					Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;												}
-		constexpr								double					AngleWith				(const TCoord3& other)												const				{ double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;	}
+		constexpr								double					AngleWith				(const TCoord3& other)												const				{ const double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;	}
 												void					AddScaled				(const TCoord3& vectorToScaleAndAdd, float scale)										{
 			x																+= vectorToScaleAndAdd.x * scale;
 			y																+= vectorToScaleAndAdd.y * scale;
