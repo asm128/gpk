@@ -354,7 +354,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 	::gpk::array_pod<::gpk::color_bgr<uint8_t>>									& palette										= pngData.Palette;
 	for(uint32_t iChunk = 0; iChunk < pngData.Chunks.size(); ++iChunk) {
 		const ::gpk::SPNGChunk														& newChunk										= pngData.Chunks[iChunk];
-		info_printf("Found chunk of type: %c%c%c%c. Data size: %u.", newChunk.Type[0], newChunk.Type[1], newChunk.Type[2], newChunk.Type[3], (uint32_t)newChunk.Data.size());
+		verbose_printf("Found chunk of type: %c%c%c%c. Data size: %u.", newChunk.Type[0], newChunk.Type[1], newChunk.Type[2], newChunk.Type[3], (uint32_t)newChunk.Data.size());
 			 if(0 == memcmp(newChunk.Type, "IDAT", 4)) { indicesIDAT.push_back(iChunk); }
 		else if(0 == memcmp(newChunk.Type, "IHDR", 4)) {
 			imageHeader																= *(const ::gpk::SPNGIHDR*)newChunk.Data.begin();
@@ -364,7 +364,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		else if(0 == memcmp(newChunk.Type, "PLTE", 4)) {
 			uint32_t																		colorCount									= newChunk.Data.size() / 3;
 			if(colorCount) {
-				info_printf("Loading palette of %u colors.", colorCount);
+				verbose_printf("Loading palette of %u colors.", colorCount);
 				gpk_necall(palette.resize(colorCount), "%s", "Out of memory or corrupt file.");
 				::gpk::color_rgb<uint8_t>														* pngPalette								= (::gpk::color_rgb<uint8_t>*)newChunk.Data.begin();
 				for(uint32_t iColor = 0; iColor < colorCount; ++iColor) {
@@ -375,14 +375,14 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 			}
 		}
 		else if(0 == memcmp(newChunk.Type, "tEXt", 4)) { 	// Can store text that can be represented in ISO/IEC 8859-1, with one key-value pair for each chunk. The "key" must be between 1 and 79 characters long. Separator is a null character. The "value" can be any length, including zero up to the maximum permissible chunk size minus the length of the keyword and separator. Neither "key" nor "value" can contain null character. Leading or trailing spaces are also disallowed.
-			info_printf("Text Key: %s.", newChunk.Data.begin());
+			verbose_printf("Text Key: %s.", newChunk.Data.begin());
 			uint32_t																	keyLength										= (uint32_t)strlen((const char*)newChunk.Data.begin());
 			uint32_t																	valueLength										= newChunk.Data.size() - (keyLength + 1);
 			::gpk::array_pod<char_t>													value;
 			gpk_necall(value.resize(valueLength + 1), "%s", "Out of memory or corrupt file.");
 			value[valueLength]														= 0;
 			memcpy(&value[0], &newChunk.Data[keyLength + 1], valueLength);
-			info_printf("Text: %s.", value.begin());
+			verbose_printf("Text: %s.", value.begin());
 			if(-1 == pngData.Feature[::gpk::PNG_TAG_tEXt])
 				pngData.Feature[::gpk::PNG_TAG_tEXt] = iChunk;
 
@@ -405,7 +405,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		else if(0 == memcmp(newChunk.Type, "tRNS", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_tRNS]) pngData.Feature[::gpk::PNG_TAG_tRNS] = iChunk; }	// Contains transparency information. For indexed images, it stores alpha channel values for one or more palette entries. For truecolor and grayscale images, it stores a single pixel value that is to be regarded as fully transparent.
 		else if(0 == memcmp(newChunk.Type, "fcTL", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_fcTL]) pngData.Feature[::gpk::PNG_TAG_fcTL] = iChunk; }	// The frame control chunk contains several bits of information, the most important of which is the display time of the following frame.
 		else if(0 == memcmp(newChunk.Type, "fdAT", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_fdAT]) pngData.Feature[::gpk::PNG_TAG_fdAT] = iChunk; }	// The frame data chunks have the same structure as the IDAT chunks, except preceded by a sequence number.
-		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_acTL]) pngData.Feature[::gpk::PNG_TAG_acTL] = iChunk; info_printf("%s", "This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png.
+		else if(0 == memcmp(newChunk.Type, "acTL", 4)) { if(-1 == pngData.Feature[::gpk::PNG_TAG_acTL]) pngData.Feature[::gpk::PNG_TAG_acTL] = iChunk; verbose_printf("%s", "This is an animated PNG."); }	// The animation control chunk is a kind of "marker" chunk, telling the parser that this is an animated png.
 	}
 	return 0;
 }
@@ -524,12 +524,12 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 	ree_if(errored(bytesPerPixel), "Invalid format! ColorType: %u. Bit Depth: %u.", bytesPerPixel);
 	for(uint32_t iImage = 0; iImage < 7; ++iImage) {
 		uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
-		info_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
+		verbose_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
 		const ::gpk::SCoord2<uint32_t>												currentImageSize								= imageSizes[iImage];
 		for(uint32_t y = 0; y < currentImageSize.y; ++y) {
 			const int32_t																currentScanline									= offsetScanline + y;
 			pngData.Filters[currentScanline]										= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];
-			info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[currentScanline]);
+			verbose_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[currentScanline]);
 			gpk_necall	(scanlines[currentScanline].resize(widthScanlineCurrent), "%s", "Out of memory or corrupt file.");
 			memcpy		(scanlines[currentScanline].begin(), &pngData.Inflated[offsetByte + y * widthScanlineCurrent + y + 1], widthScanlineCurrent);
 		}
@@ -576,7 +576,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 	}
 	inflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)inflated.begin()));
 	ret																			= ::inflateEnd(&strm);
-	info_printf("inflateEnd: %u.", (uint32_t)ret);
+	verbose_printf("inflateEnd: %u.", (uint32_t)ret);
 	return 0;
 }
 
@@ -609,10 +609,10 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 	pngData.Filters.clear();
 	scanlines.resize(imageHeader.Size.y);
 	uint32_t																	widthScanline									= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-	info_printf("Scanline size: %u.", widthScanline);
+	verbose_printf("Scanline size: %u.", widthScanline);
 	for(uint32_t y = 0; y < imageHeader.Size.y; ++y) {
 		pngData.Filters.push_back(pngData.Inflated[y * widthScanline + y]);
-		info_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[y]);
+		verbose_printf("Filter for scanline %u: %u", y, (uint32_t)pngData.Filters[y]);
 		gpk_necall(scanlines[y].resize(widthScanline), "%s", "Out of memory or corrupt file.");
 		memcpy(scanlines[y].begin(), &pngData.Inflated[y * widthScanline + y + 1], widthScanline);
 	}

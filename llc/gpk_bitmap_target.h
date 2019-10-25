@@ -117,19 +117,23 @@ namespace gpk
 
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawCircle									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle2D<_tCoord>& circle)			{
-		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)bitmapTarget.metrics().x);
+		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius + 2), (int32_t)bitmapTarget.metrics().x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
-		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
+		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
-			 	for(const int32_t xLimit = ::gpk::min((int32_t)circle.Center.x + ((int32_t)circle.Center.x - x), (int32_t)bitmapTarget.metrics().x); x < xLimit; ++x) {
+				if(circle.Center.x - circle.Radius < 0)
 					bitmapTarget[y][x]														= value;
-					++pixelsDrawn;
+				else {
+				 	for(const int32_t xLimit = ::gpk::min((int32_t)circle.Center.x + (int32_t)(circle.Center.x - x), (int32_t)bitmapTarget.metrics().x); x < xLimit; ++x) {
+						bitmapTarget[y][x]														= value;
+						++pixelsDrawn;
+					}
+					break;
 				}
-				break;
 			}
 		}
 		return pixelsDrawn;
@@ -145,11 +149,15 @@ namespace gpk
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
-			 	for(const int32_t xLimit = ::gpk::min((int32_t)circle.Center.x + ((int32_t)circle.Center.x - x), (int32_t)targetMetrics.x); x < xLimit; ++x) {
+				if(circle.Center.x - circle.Radius < 0)
 					out_Points.push_back({x, y});
-					++pixelsDrawn;
+				else {
+			 		for(const int32_t xLimit = ::gpk::min((int32_t)circle.Center.x + ((int32_t)circle.Center.x - x), (int32_t)targetMetrics.x); x < xLimit; ++x) {
+						out_Points.push_back({x, y});
+						++pixelsDrawn;
+					}
+					break;
 				}
-				break;
 			}
 		}
 		return pixelsDrawn;
@@ -266,7 +274,7 @@ namespace gpk
 	template<typename _tCoord>
 	static	inline			::gpk::error_t									drawTriangleIndexed
 		( ::gpk::view_grid<uint32_t>						& targetDepth
-		, const ::gpk::SNearFar						& fNearFar // fFar
+		, const ::gpk::SNearFar								& fNearFar // fFar
 		//, double											fNear
 		, uint32_t											baseIndex
 		, uint32_t											baseVertexIndex
