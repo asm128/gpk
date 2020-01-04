@@ -367,7 +367,18 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 			controlMetrics.Client	.Global.Offset.x						= (int32_t)(controlMetrics.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
 	}
-	if(dockToControl.Bottom	!= -1) { gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom	), "Invalid control id: %i.", dockToControl.Bottom	); const ::gpk::SControl & other = gui.Controls.Controls[dockToControl.Bottom	]; const ::gpk::SControlMetrics & otherMetrics = gui.Controls.Metrics[dockToControl.Bottom	]; if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) { controlMetrics.Total.Global.Offset.y = otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y; controlMetrics.Client.Global.Offset.y = (int32_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top ); } else { controlMetrics.Total.Global.Offset.y = otherMetrics.Total.Global.Offset.y + otherMetrics.Total.Global.Size.y; controlMetrics.Client.Global.Offset.y = (int32_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top ); } }
+	if(dockToControl.Bottom	!= -1) {
+		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom	), "Invalid control id: %i.", dockToControl.Bottom	);
+		const ::gpk::SControl												& other													= gui.Controls.Controls[dockToControl.Bottom];
+		const ::gpk::SControlMetrics										& otherMetrics											= gui.Controls.Metrics[dockToControl.Bottom	];
+		if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
+			controlMetrics.Total.Global.Offset.y							= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
+			controlMetrics.Client.Global.Offset.y							= (int32_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top);
+		} else {
+			controlMetrics.Total.Global.Offset.y							= otherMetrics.Total.Global.Offset.y + otherMetrics.Total.Global.Size.y;
+			controlMetrics.Client.Global.Offset.y							= (int32_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top);
+		}
+	}
 	if(dockToControl.Left	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Left	), "Invalid control id: %i.", dockToControl.Left);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Left, targetSize.Cast<uint32_t>(), true);
@@ -382,8 +393,19 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 			controlMetrics.Client	.Global.Offset.x						= (int32_t)(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
 	}
-	//if(dockToControl.Top	!= -1) { gpk_necall(::controlInvalid(gui, dockToControl.Top		), "Invalid control id: %i.", dockToControl.Top		); const ::gpk::SControl & other = gui.Controls.Controls[dockToControl.Top		]; const ::gpk::SControlMetrics & otherMetrics = gui.Controls.Metrics[dockToControl.Bottom	]; if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) { controlMetrics.Total.Global.Offset.y = otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y; controlMetrics.Client.Global.Offset.y = controlMetrics.Total.Global.Offset.y + ncSizes.Top ; } else { controlMetrics.Total.Global.Offset.y = otherMetrics.Total.Global.Offset.y + otherMetrics.Total.Global.Size.y; controlMetrics.Client.Global.Offset.y = controlMetrics.Total.Global.Offset.y + ncSizes.Top ; } }
-
+	if(dockToControl.Top	!= -1) {
+		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Top), "Invalid control id: %i.", dockToControl.Top);
+		const ::gpk::SControl												& other													= gui.Controls.Controls	[dockToControl.Top ];
+		const ::gpk::SControlMetrics										& otherMetrics											= gui.Controls.Metrics	[dockToControl.Top ];
+		if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
+			controlMetrics.Total.Global.Offset.y							= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
+			controlMetrics.Client.Global.Offset.y							= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
+		}
+		else {
+			controlMetrics.Total.Global.Offset.y							= otherMetrics.Total.Global.Offset.y + controlMetrics.Total.Global.Offset.y;
+			controlMetrics.Client.Global.Offset.y							= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
+		}
+	}
 	{ // calculate text rectangle
 		const ::gpk::SRectangle2D<int32_t>									& targetRect											= controlMetrics.Client.Global;
 		controlMetrics.Text.Offset										= {};

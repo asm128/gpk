@@ -32,47 +32,45 @@
 #	define GPK_SYSTEM_OS_DEBUG_INIT_FLAGS() do {} while(0)
 #endif
 
-
 #if defined(GPK_WINDOWS)
-#	define GPK_SYSTEM_OS_ENTRY_POINT()										\
-	static	::gpk::error_t													rtMain							(::gpk::SRuntimeValues& runtimeValues);													\
-			int																main							(int argc, char *argv[], char *envp[])												{	\
-		::gpk::SRuntimeValues														runtimeValues					= {};																			\
-		runtimeValues.PlatformDetail.EntryPointArgsWin							= {GetModuleHandle(NULL), 0, 0, SW_SHOW};																						\
+#	define GPK_SYSTEM_OS_ENTRY_POINT()																													\
+	static	::gpk::error_t													rtMain							(::gpk::SRuntimeValues& runtimeValues);		\
+			int																main							(int argc, char *argv[], char *envp[])	{	\
+		::gpk::SRuntimeValues														runtimeValues					= {};								\
+		runtimeValues.PlatformDetail.EntryPointArgsWin							= {GetModuleHandle(NULL), 0, 0, SW_SHOW};								\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= {(const char**)argv, (uint32_t)argc};	\
 		(void)envp;\
 		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
-		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
-	}																																																							\
-																																																								\
-			int	WINAPI														WinMain																																\
-		(	_In_		::HINSTANCE		hInstance																																												\
-		,	_In_opt_	::HINSTANCE		hPrevInstance																																											\
-		,	_In_		::LPSTR			lpCmdLine																																												\
-		,	_In_		::INT			nShowCmd																																												\
-		)																																																						\
-	{																																																							\
-		const uint32_t																argc							= __argc;										\
-		const char																	** argv							= (const char**)__argv;							\
-		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																				\
-		::gpk::SRuntimeValues														runtimeValues					= {};																						\
-		runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance				= hInstance		;																												\
-		runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance			= hPrevInstance	;																												\
-		runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine				= lpCmdLine		;																												\
-		runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd					= nShowCmd		;																												\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{argv, argc};														\
-		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
-		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																			\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																	\
+	}																																					\
+			int	WINAPI														WinMain																		\
+		(	_In_		::HINSTANCE		hInstance																										\
+		,	_In_opt_	::HINSTANCE		hPrevInstance																									\
+		,	_In_		::LPSTR			lpCmdLine																										\
+		,	_In_		::INT			nShowCmd																										\
+		)																																				\
+	{																																					\
+		const uint32_t																argc							= __argc;							\
+		const char																	** argv							= (const char**)__argv;				\
+		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																						\
+		::gpk::SRuntimeValues														runtimeValues					= {};								\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance				= hInstance		;														\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance			= hPrevInstance	;														\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.lpCmdLine				= lpCmdLine		;														\
+		runtimeValues.PlatformDetail.EntryPointArgsWin.nShowCmd					= nShowCmd		;														\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{argv, argc};							\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);											\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																	\
 	}
 #else
-#	define GPK_SYSTEM_OS_ENTRY_POINT()																																															\
-			int																main							(int argc, char *argv[], char *envp[])												{	\
-		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																			\
-		::gpk::SRuntimeValues														runtimeValues					= {};					\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{(const char**)argv, (uint32_t)argc};				\
-		(void)envp;\
-		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
-		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																																						\
+#	define GPK_SYSTEM_OS_ENTRY_POINT()																													\
+			int																main							(int argc, char *argv[], char *envp[])	{	\
+		ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																						\
+		::gpk::SRuntimeValues														runtimeValues					= {};								\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view_array<const char*>{(const char**)argv, (uint32_t)argc};	\
+		(void)envp;																																		\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);											\
+		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																	\
 	}
 #endif
 

@@ -19,7 +19,7 @@ namespace gpk
 																				SImage										(const ::gpk::SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
 							::gpk::SImage<_tTexel>&								operator=									(const ::gpk::view_grid<_tTexel>& other)						{
-			Texels																	= {other.begin(), other.size()};
+			Texels																	= view_array<const _tTexel>{other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this;
 		}

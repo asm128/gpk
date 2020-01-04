@@ -33,7 +33,7 @@ namespace gpk
 		GPKMFND(, gpk_moduleRender	, Render	)				= 0;
 		GPKMFND(, gpk_moduleUpdate	, Update	)				= 0;
 
-		void													* Application;
+		void													* Application					= 0;
 		GPKM_REGISTRY
 			(	GPKM_NAME(Title		)
 			,	GPKM_NAME(Version	)
@@ -47,9 +47,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t												loadRuntimeModule			(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
-
-
+	::gpk::error_t											loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
 }
 
 #endif // GPK_RUNTIME_MODULE_H_23084728934

@@ -88,6 +88,8 @@
     <ClInclude Include="..\..\gpk\llc\gpk_view_grid.h" />
     <ClInclude Include="..\..\gpk\llc\gpk_view_layered.h" />
     <ClInclude Include="..\..\gpk\llc\gpk_view_stream.h" />
+    <ClInclude Include="..\llc\gpk_base64.h" />
+    <ClInclude Include="..\llc\gpk_block.h" />
     <ClInclude Include="..\llc\gpk_geometry.h" />
     <ClInclude Include="..\llc\gpk_grid_static.h" />
     <ClInclude Include="..\llc\gpk_http_client.h" />
@@ -116,6 +118,8 @@
     <ClCompile Include="..\..\gpk\llc\gpk_storage.cpp" />
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp" />
     <ClCompile Include="..\llc\gpk_ascii_target.cpp" />
+    <ClCompile Include="..\llc\gpk_base64.cpp" />
+    <ClCompile Include="..\llc\gpk_block.cpp" />
     <ClCompile Include="..\llc\gpk_cgi.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_module.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_runtime.cpp" />
