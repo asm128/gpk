@@ -219,7 +219,13 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<uint32_t>& targetDepth, const ::gpk::SNearFar & fNearFar, const ::gpk::STriangle3D<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points, ::gpk::array_pod<::gpk::STriangleWeights<double>>& triangleWeigths)		{
+	static					::gpk::error_t									drawTriangle
+		( ::gpk::view_grid<uint32_t>						& targetDepth
+		, const ::gpk::SNearFar								& fNearFar
+		, const ::gpk::STriangle3D<_tCoord>					& triangle
+		, ::gpk::array_pod<::gpk::SCoord2<int32_t>>			& out_Points
+		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeigths
+		) {
 		int32_t																		pixelsDrawn									= 0;
 		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
 		::gpk::SCoord2	<float>														areaMin										= {(float)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (float)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
@@ -246,12 +252,12 @@ namespace gpk
 				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
 				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
 				};
-			double																		proportABC									= proportions.A + proportions.B + proportions.C;
+			double																		proportABC									= proportions.A + proportions.B + proportions.C; //(w0, w1, w2)
 			if(proportABC == 0)
 				continue;
 			proportions.A															/= proportABC;
 			proportions.B															/= proportABC;
-			proportions.C															/= proportABC;
+			proportions.C															= 1.0 - (proportions.A + proportions.B);
 			double																		finalZ
 				= triangle.A.z * proportions.A
 				+ triangle.B.z * proportions.B
@@ -436,7 +442,6 @@ namespace gpk
 		}
 		return pixelsDrawn;
 	}
-
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>

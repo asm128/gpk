@@ -54,10 +54,10 @@ namespace gpk
 		inline									TCoord2&				InPlaceScale			(double			scalar)														noexcept	{ return *this *= scalar;																																				}
 		inline									TCoord2&				InPlaceScale			(double scalarx, double scalary)											noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																										}
 		inline									TCoord2&				InPlaceScale			(const SCoord2<double>& other)												noexcept	{ return InPlaceScale(other.x, other.y);																																}
-		inline									TCoord2&				InPlaceNormalize		()																						{ const _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::gpk::sqrt_safe	(sqLen) : *this;																	}
+		inline									TCoord2&				InPlaceNormalize		()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;																	}
 		inline constexpr						TCoord2					GetScaled				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
 		inline constexpr						TCoord2					GetScaled				(double scalarx, double scalary)									const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
-		inline									TCoord2					GetNormalized			()																	const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::gpk::sqrt_safe	(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	}
+		inline									TCoord2					GetNormalized			()																	const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::sqrt(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	}
 		constexpr								double					Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																																		}
 		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y;																																					}
 		constexpr								double					Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;																								}
@@ -116,7 +116,7 @@ namespace gpk
 		inline constexpr 						SCoord3<_t>				Cast					()																	const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
 		inline									TCoord3&				Scale					(double scalar)																noexcept	{ return *this *= scalar;																								}
 		inline									TCoord3&				Scale					(const TCoord3& other)														noexcept	{ x *= other.x; y *= other.y; z *= other.z; return *this;																}
-		inline									TCoord3&				Normalize				()																						{ const _tBase sqLen = LengthSquared(); return (sqLen) ? *this /= ::gpk::sqrt_safe(sqLen) : *this;						}
+		inline									TCoord3&				Normalize				()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;								}
 		constexpr								double					Dot						(const TCoord3& other)												const	noexcept	{ return x * other.x + y * other.y + z * other.z;																		}
 		constexpr								_tBase					LengthSquared			()																	const	noexcept	{ return x * x + y * y + z * z;																							}
 		constexpr								double					Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;												}
@@ -164,7 +164,7 @@ namespace gpk
 			x																= (_tBase)px;
 			return *this;
 		}
-	};	// struct SCoord2
+	};	// struct SCoord3
 
 	template<typename _tBase>
 	struct SQuaternion {
@@ -211,7 +211,7 @@ namespace gpk
 		template<typename _t>
 		constexpr inline	SQuaternion<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};																					}
 		inline				void			Identity				()																	noexcept	{ x = y = z = 0.0f; w = 1.0f;																							}
-		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); if(sqLen ) return *this /= ::gpk::sqrt_safe(sqLen); Identity(); return *this;		}
+		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); if(sqLen) return *this /= ::sqrt(sqLen); Identity(); return *this;		}
 		constexpr			double			Dot						(const TQuat& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w;																	}
 		constexpr inline	_tBase			LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;																					}
 		inline constexpr	double			Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;												}
@@ -336,6 +336,14 @@ namespace gpk
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				? 1 : 0;
 		}
+		template<typename _tOther>
+		STriangle3D<_tOther>											Cast							()						const	noexcept		{
+			return
+				{ A.template Cast<_tOther>()
+				, B.template Cast<_tOther>()
+				, C.template Cast<_tOther>()
+				};
+		}
 	};
 
 	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
@@ -370,7 +378,6 @@ namespace gpk
 		triangle.C.Scale(scale);
 		return triangle;
 	}
-
 #pragma pack(pop)
 
 	// ---- Line

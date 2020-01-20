@@ -17,17 +17,14 @@ namespace gpk
 								,				_41, _42, _43, _44
 								;
 
-		//inline				const _tBase&		operator[]					(uint32_t index)																const				{ return ()&_11;//gthrow_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
-		//inline				_tBase&				operator[]					(uint32_t index)																					{ return ()&_11;//gthrow_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
-
-		inline				TCoord3&			operator[]					(uint32_t index)																					{ return *(TCoord3*)((&_11) + 4 * index); }		//gthrow_if(index > 15, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+		inline				TCoord3&			operator[]					(uint32_t index)																					{ return *(TCoord3*)((&_11) + 4 * index); }
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
 
-		constexpr			_tMat4				operator +					(const _tMat4& other)															const	noexcept	{												return {_11 + other._11	, _12 + other._12	, _13 + other._13	, _14 + other._14	, _21 + other._21	, _22 + other._22	, _23 + other._23	, _24 + other._24	, _31 + other._31	, _32 + other._32	, _33 + other._33	, _34 + other._34	, _41 + other._41	, _42 + other._42	, _43 + other._43	, _44 + other._44	}; }
-		constexpr			_tMat4				operator -					(const _tMat4& other)															const	noexcept	{												return {_11 - other._11	, _12 - other._12	, _13 - other._13	, _14 - other._14	, _21 - other._21	, _22 - other._22	, _23 - other._23	, _24 - other._24	, _31 - other._31	, _32 - other._32	, _33 - other._33	, _34 - other._34	, _41 - other._41	, _42 - other._42	, _43 - other._43	, _44 - other._44	}; }
-		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{												return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
-							_tMat4				operator /					(double scalar)																	const				{ gerror_if(0 == scalar, "%s", "Division by zero.");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
+		constexpr			_tMat4				operator +					(const _tMat4& other)															const	noexcept	{ return {_11 + other._11, _12 + other._12, _13 + other._13, _14 + other._14, _21 + other._21	, _22 + other._22, _23 + other._23, _24 + other._24, _31 + other._31, _32 + other._32, _33 + other._33, _34 + other._34, _41 + other._41, _42 + other._42, _43 + other._43, _44 + other._44}; }
+		constexpr			_tMat4				operator -					(const _tMat4& other)															const	noexcept	{ return {_11 - other._11, _12 - other._12, _13 - other._13, _14 - other._14, _21 - other._21	, _22 - other._22, _23 - other._23, _24 - other._24, _31 - other._31, _32 - other._32, _33 - other._33, _34 - other._34, _41 - other._41, _42 - other._42, _43 - other._43, _44 - other._44}; }
+		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{								return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
+							_tMat4				operator /					(double scalar)																	const				{ if(0 == scalar) throw("");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
 		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept	{
 			return
 				{ _11*right._11 + _12*right._21 + _13*right._31 + _14*right._41, _11*right._12 + _12*right._22 + _13*right._32 + _14*right._42, _11*right._13 + _12*right._23 + _13*right._33 + _14*right._43, _11*right._14 + _12*right._24 + _13*right._34 + _14*right._44
@@ -84,12 +81,21 @@ namespace gpk
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-		inline				void				Viewport					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, const ::gpk::SNearFar & nearFar)	noexcept	{ Viewport(offscreenMetrics, nearFar.Far, nearFar.Near); }
-							void				Viewport					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =												_14 =
-			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =												_24 =
-			_31 =										_32 = (_tBase)0;							_33 = (_tBase)(1.0f / (fFar - fNear));				_34 =
-			_41 =										_42 = (_tBase)0;							_43 = (_tBase)(-fNear * (1.0f / (fFar - fNear)));	_44 = (_tBase)1;
+							void				ViewportRH				(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
+			(void)fFar, (void)fNear;
+			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =																_14 =
+			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =																_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;/*(_tBase)(1.0f / (fFar - fNear));				*/	_34 =
+			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;/*(_tBase)(-fNear * (1.0f / (fFar - fNear)));	*/	_44 = (_tBase)1;
+			_33 = 1;
+			_43 = 0;
+		}
+							void				ViewportLH					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
+			(void)fFar, (void)fNear;
+			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =																_14 =
+			_21 = (_tBase)0;							_22 = -(_tBase)(2.0 / offscreenMetrics.y);	_23 =																_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;/*(_tBase)(1.0f / (fFar - fNear));				*/	_34 =
+			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;/*(_tBase)(-fNear * (1.0f / (fFar - fNear)));	*/	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
 		}
@@ -159,8 +165,8 @@ namespace gpk
 		} // FoV
 							void				LookAt						(const TCoord3& vPosition, const TCoord3& vTarget, const TCoord3& vUp)							{
 			TCoord3										F							= TCoord3{vTarget - vPosition}.Normalize();
-			TCoord3										R							= vUp	.Cross(F)		.Normalize();
-			TCoord3										U							= F		.Cross(R)		.Normalize();
+			TCoord3										R							= vUp	.Cross(F).Normalize();
+			TCoord3										U							= F		.Cross(R).Normalize();
 
 			_11 = R.x;	_12 = U.x;	_13 = F.x;	_14 = (_tBase)0;
 			_21 = R.y;	_22 = U.y;	_23 = F.y;	_24 = (_tBase)0;
@@ -270,11 +276,10 @@ namespace gpk
 			_22										= (_tBase)(1.0 - (xx + zz)	);
 			_32										= (_tBase)(yz - wx			);
 
-			_13											= (_tBase)(xz - wy			);
-			_23											= (_tBase)(yz + wx			);
-			_33											= (_tBase)(1.0 - (xx + yy)	);
+			_13										= (_tBase)(xz - wy			);
+			_23										= (_tBase)(yz + wx			);
+			_33										= (_tBase)(1.0 - (xx + yy)	);
 		}
-
 
 		constexpr			_tMat4				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
 		inline constexpr	TCoord3				GetTranslation				()																				const	noexcept	{ return { _41, _42, _43 }; }
@@ -449,9 +454,7 @@ namespace gpk
 
 			return fDet;
 		}
-
 	};	// struct
-
 	template<typename _tElement>
 							STriangle3D<_tElement>&						transform								(::gpk::STriangle3D<_tElement>& triangle, const ::gpk::SMatrix4<_tElement>& transform)									{
 		triangle.A															= transform.Transform(triangle.A);
