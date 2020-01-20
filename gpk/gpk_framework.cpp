@@ -56,7 +56,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
-	::gpk::error_t																				updateResult								= ::gpk::displayUpdateTick(mainWindow);
+	::gpk::error_t																				updateResult								= ::gpk::displayUpdate(mainWindow);
 	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
 	rvi_if(1, 1 == updateResult, "%s", "Application exiting because the WM_QUIT message was processed.");
@@ -231,6 +231,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	::UpdateWindow	(displayDetail.WindowHandle);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
+	mainWindow.Resized																		= true;
 	return 0;
 }
 #endif

@@ -4,24 +4,27 @@
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	int																									counter										= 0;
+	bool																								quit	= false;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (100 > counter++)) {
 		::TranslateMessage	(&msg);
 		::DispatchMessage	(&msg);
 		if(msg.message == WM_QUIT)
-			return 1;
+			quit = true;
 	}
 #endif
-	return 0;
+	return quit ? 1 : 0;
 }
 
 		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{
+	displayInstance.Resized																			= false;
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
+	bool																								quit	= false;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == displayUpdateTick(displayInstance))
-			return 1;
+			quit = true;
 #endif
-	return 0;
+	return quit ? 1 : 0;
 }
 
 #if defined(GPK_WINDOWS)
