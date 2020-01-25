@@ -165,7 +165,7 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2D<_tCoord>& triangle)										{
+	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
@@ -192,7 +192,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2D<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)		{
+	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)		{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
@@ -222,7 +222,7 @@ namespace gpk
 	static					::gpk::error_t									drawTriangle
 		( ::gpk::view_grid<uint32_t>						& targetDepth
 		, const ::gpk::SNearFar								& fNearFar
-		, const ::gpk::STriangle3D<_tCoord>					& triangle
+		, const ::gpk::STriangle3<_tCoord>					& triangle
 		, ::gpk::array_pod<::gpk::SCoord2<int32_t>>			& out_Points
 		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeigths
 		) {
@@ -234,7 +234,7 @@ namespace gpk
 		for(float y = ::gpk::max(areaMin.y, 0.f), yStop = ::gpk::min(areaMax.y, (float)_targetMetrics.y); y < yStop; ++y)
 		for(float x = ::gpk::max(areaMin.x, 0.f); x < xStop; ++x) {
 			const ::gpk::SCoord2<int32_t>												cellCurrent									= {(int32_t)x, (int32_t)y};
-			const ::gpk::STriangle2D<int32_t>											triangle2D									=
+			const ::gpk::STriangle2<int32_t>											triangle2D									=
 				{ {(int32_t)triangle.A.x, (int32_t)triangle.A.y}
 				, {(int32_t)triangle.B.x, (int32_t)triangle.B.y}
 				, {(int32_t)triangle.C.x, (int32_t)triangle.C.y}
@@ -296,7 +296,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									rasterLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line, gpk_raster_callback callback)				{
+	static					::gpk::error_t									rasterLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2<_tCoord>& line, gpk_raster_callback callback)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -344,7 +344,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SLine2D<_tCoord>& line)				{
+	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SLine2<_tCoord>& line)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		if(line.A.x == line.B.x)
@@ -397,7 +397,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine2D<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -445,8 +445,8 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine3D<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
-		return drawLine(targetMetrics, ::gpk::SLine2D<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
+		return drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace
 

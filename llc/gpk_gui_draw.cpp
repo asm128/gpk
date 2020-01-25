@@ -131,7 +131,7 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 		fillColorTableOld(gui, colorMode, control, controlState, mode, disabled, colors);
 	return 0;
 }
-static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2D<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2D<int32_t>> triangles)					{
+static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2D<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2<int32_t>> triangles)					{
 	::gpk::SRectLimits<int32_t>											scaledBorders											= {};
 	const ::gpk::SCoord2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left												= (int32_t)(control.Border.Left		* scaleFinal.x);
@@ -176,7 +176,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	::fillColorTable(gui, iControl, disabled, colors);
-	::gpk::STriangle2D<int32_t>											triangles	[8]											= {};
+	::gpk::STriangle2<int32_t>											triangles	[8]											= {};
 	::gpk::SRectangle2D<int32_t>										rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
 	const ::gpk::SControlMetrics										& controlMetrics										= gui.Controls.Metrics[iControl];
 	::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);

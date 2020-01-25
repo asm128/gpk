@@ -306,16 +306,25 @@ namespace gpk
 	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits	<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); };
 	template<typename _tElement>	struct SRange			{ _tElement									Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
 	template<typename _tElement>	struct SSlice			{ _tElement									Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice		<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
-	template<typename _tElement>	struct SLine2D			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2D		<_tElement>, A		== other.A		&& B		== other.B						); };
-	template<typename _tElement>	struct STriangle2D		{ ::gpk::SCoord2<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle2D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
+	template<typename _tElement>	struct SLine2			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct STriangle2		{ ::gpk::SCoord2<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle2	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
+		template<typename _tOther>
+		STriangle2<_tOther>											Cast							()						const	noexcept		{
+			return
+				{ A.template Cast<_tOther>()
+				, B.template Cast<_tOther>()
+				, C.template Cast<_tOther>()
+				};
+		}
+	};
 	template<typename _tElement>	struct SCircle2D		{ double Radius; ::gpk::SCoord2<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SCircle2D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 	template<typename _tElement>	struct SSphere2D		{ double Radius; ::gpk::SCoord2<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SSphere2D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
-	template<typename _tElement>	struct SLine3D			{ ::gpk::SCoord3<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine3D		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
 	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size			; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
 	template<typename _tElement>	struct SCircle3D		{ double Radius; ::gpk::SCoord3<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SCircle3D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 	template<typename _tElement>	struct SSphere3D		{ double Radius; ::gpk::SCoord3<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SSphere3D		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
-	template<typename _tElement>	struct STriangle3D		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
+	template<typename _tElement>	struct STriangle3		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
 		::gpk::error_t													CulledZSpecial					(const ::gpk::SMinMax<_tElement>& minMax)		{
 			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
@@ -337,7 +346,7 @@ namespace gpk
 				? 1 : 0;
 		}
 		template<typename _tOther>
-		STriangle3D<_tOther>											Cast							()						const	noexcept		{
+		STriangle3<_tOther>											Cast							()						const	noexcept		{
 			return
 				{ A.template Cast<_tOther>()
 				, B.template Cast<_tOther>()
@@ -346,7 +355,7 @@ namespace gpk
 		}
 	};
 
-	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3D	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
+	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
 
 	template<typename _tElement>	struct SRectangle2D		{
 							::gpk::SCoord2<_tElement>					Offset, Size;
@@ -357,7 +366,7 @@ namespace gpk
 	};
 
 	template<typename _tElement>
-							STriangle2D<_tElement>&						translate								(::gpk::STriangle2D<_tElement>& triangle, const ::gpk::SCoord2<_tElement>& translation)									{
+							STriangle2<_tElement>&						translate								(::gpk::STriangle2<_tElement>& triangle, const ::gpk::SCoord2<_tElement>& translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
@@ -365,14 +374,14 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-							STriangle3D<_tElement>&						translate								(::gpk::STriangle3D<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& translation)									{
+							STriangle3<_tElement>&						translate								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
 		return triangle;
 	}
 	template<typename _tElement>
-							STriangle3D<_tElement>&						scale								(::gpk::STriangle3D<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& scale)									{
+							STriangle3<_tElement>&						scale								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& scale)									{
 		triangle.A.Scale(scale);
 		triangle.B.Scale(scale);
 		triangle.C.Scale(scale);
@@ -381,11 +390,11 @@ namespace gpk
 #pragma pack(pop)
 
 	// ---- Line
-	template<typename _tElement>	static inline constexpr	_tElement				rise					(const SLine2D<_tElement>& line)													noexcept	{ return line.B.y - line.A.y;		}
-	template<typename _tElement>	static inline constexpr	_tElement				run						(const SLine2D<_tElement>& line)													noexcept	{ return line.B.x - line.A.x;		}
-	template<typename _tElement>	static inline constexpr	_tElement				slope					(const SLine2D<_tElement>& line)																{ return rise(line) / run(line);	}
-	template<typename _tElement>	static		  constexpr	_tElement				orient2d				(const ::gpk::SLine2D<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	template<typename _tElement>	static		  constexpr	_tElement				orient2d3d				(const ::gpk::SLine3D<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	static inline constexpr	_tElement				rise					(const SLine2<_tElement>& line)													noexcept	{ return line.B.y - line.A.y;		}
+	template<typename _tElement>	static inline constexpr	_tElement				run						(const SLine2<_tElement>& line)													noexcept	{ return line.B.x - line.A.x;		}
+	template<typename _tElement>	static inline constexpr	_tElement				slope					(const SLine2<_tElement>& line)																{ return rise(line) / run(line);	}
+	template<typename _tElement>	static		  constexpr	_tElement				orient2d				(const ::gpk::SLine2<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	static		  constexpr	_tElement				orient2d3d				(const ::gpk::SLine3<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 
 	// ---- Collision
 	//template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{
@@ -522,7 +531,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static inline		double														determinant		(const ::gpk::SLine2D<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
+	static inline		double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 }
 
 #endif // GPK_COORD_H_928374982364923322

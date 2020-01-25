@@ -12,8 +12,8 @@ namespace gpk
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
 					::gpk::error_t											line_line_intersect
-		( const ::gpk::SLine2D<_tCoord>	& line1
-		, const ::gpk::SLine2D<_tCoord>	& line2
+		( const ::gpk::SLine2<_tCoord>	& line1
+		, const ::gpk::SLine2<_tCoord>	& line2
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
 		)
 	{
@@ -44,7 +44,7 @@ namespace gpk
 
 	template<typename _tCoord>
 					::gpk::error_t											point_in_segment
-		( const ::gpk::SLine2D<_tCoord>	& segment
+		( const ::gpk::SLine2<_tCoord>	& segment
 		, const ::gpk::SCoord2<_tCoord>	& point
 		)
 	{
@@ -57,8 +57,8 @@ namespace gpk
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
 					::gpk::error_t											line_segment_intersect
-		( const ::gpk::SLine2D<_tCoord>	& line
-		, const ::gpk::SLine2D<_tCoord>	& segment
+		( const ::gpk::SLine2<_tCoord>	& line
+		, const ::gpk::SLine2<_tCoord>	& segment
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
 		)
 	{
@@ -69,8 +69,8 @@ namespace gpk
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
 					::gpk::error_t											segment_segment_intersect
-		( const ::gpk::SLine2D<_tCoord>	& segment1
-		, const ::gpk::SLine2D<_tCoord>	& segment2
+		( const ::gpk::SLine2<_tCoord>	& segment1
+		, const ::gpk::SLine2<_tCoord>	& segment2
 		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
 		)
 	{
@@ -83,10 +83,10 @@ namespace gpk
 						::gpk::error_t										buildAABBSegments
 		( const ::gpk::SCoord2<_tCoord> & center
 		, const _tCoord					halfSizeBox
-		,		::gpk::SLine2D<_tCoord>	& left
-		,		::gpk::SLine2D<_tCoord>	& top
-		,		::gpk::SLine2D<_tCoord>	& right
-		,		::gpk::SLine2D<_tCoord>	& bottom
+		,		::gpk::SLine2<_tCoord>	& left
+		,		::gpk::SLine2<_tCoord>	& top
+		,		::gpk::SLine2<_tCoord>	& right
+		,		::gpk::SLine2<_tCoord>	& bottom
 		)
 	{
 		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
@@ -100,10 +100,10 @@ namespace gpk
 	template<typename _tCoord>
 						::gpk::error_t										buildAABBSegments
 		( const ::gpk::SRectangle2D<_tCoord>	& rect
-		,		::gpk::SLine2D<_tCoord>			& left
-		,		::gpk::SLine2D<_tCoord>			& top
-		,		::gpk::SLine2D<_tCoord>			& right
-		,		::gpk::SLine2D<_tCoord>			& bottom
+		,		::gpk::SLine2<_tCoord>			& left
+		,		::gpk::SLine2<_tCoord>			& top
+		,		::gpk::SLine2<_tCoord>			& right
+		,		::gpk::SLine2<_tCoord>			& bottom
 		)
 	{
 		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
