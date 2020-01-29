@@ -81,21 +81,19 @@ namespace gpk
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-							void				ViewportRH				(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
-			(void)fFar, (void)fNear;
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =																_14 =
-			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =																_24 =
-			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;/*(_tBase)(1.0f / (fFar - fNear));				*/	_34 =
-			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;/*(_tBase)(-fNear * (1.0f / (fFar - fNear)));	*/	_44 = (_tBase)1;
+							void				ViewportRH				(const ::gpk::SCoord2<uint32_t> & offscreenMetrics)			noexcept	{
+			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
+			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
+			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
 		}
-							void				ViewportLH					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics, double fFar, double fNear)			noexcept	{
-			(void)fFar, (void)fNear;
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =																_14 =
-			_21 = (_tBase)0;							_22 = -(_tBase)(2.0 / offscreenMetrics.y);	_23 =																_24 =
-			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;/*(_tBase)(1.0f / (fFar - fNear));				*/	_34 =
-			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;/*(_tBase)(-fNear * (1.0f / (fFar - fNear)));	*/	_44 = (_tBase)1;
+							void				ViewportLH					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics)			noexcept	{
+			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
+			_21 = (_tBase)0;							_22 = -(_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
+			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
 		}
@@ -462,6 +460,228 @@ namespace gpk
 		triangle.C															= transform.Transform(triangle.C);
 		return triangle;
 	}
+
+	template<typename _tBase>
+	struct SMatrix3 {
+		typedef				SMatrix3<_tBase>	_tMat3;
+		typedef				SCoord3<_tBase>		_TCoord3D;
+
+							_tBase				_11, _12, _13
+								,				_21, _22, _23
+								,				_31, _32, _33
+								;
+
+		inline				const _tBase&		operator[]					(uint32_t index)																const				{ gthrow_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+		inline				_tBase&				operator[]					(uint32_t index)																					{ gthrow_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
+
+		constexpr			bool				operator ==					(const _tMat3& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _31 == other._31 && _32 == other._32 && _33 == other._33; }
+		constexpr inline	bool				operator !=					(const _tMat3& other)															const	noexcept	{ return !operator==(other); }
+
+		constexpr			_tMat3				operator +					(const _tMat3& other)															const	noexcept	{ return {_11 + other._11, _12 + other._12, _13 + other._13, _21 + other._21, _22 + other._22, _23 + other._23, _31 + other._31, _32 + other._32, _33 + other._33}; }
+		constexpr			_tMat3				operator -					(const _tMat3& other)															const	noexcept	{ return {_11 - other._11, _12 - other._12, _13 - other._13, _21 - other._21, _22 - other._22, _23 - other._23, _31 - other._31, _32 - other._32, _33 - other._33}; }
+		constexpr			_tMat3				operator *					(double scalar)																	const	noexcept	{												return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar)}; }
+							_tMat3				operator /					(double scalar)																	const				{ gerror_if(0 == scalar, "Division by zero.");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar)}; }
+		constexpr			_tMat3				operator *					(const _tMat3& right)															const	noexcept	{
+			return
+				{ _11*right._11 + _12*right._21 + _13*right._31, _11*right._12 + _12*right._22 + _13*right._32, _11*right._13 + _12*right._23 + _13*right._33
+				, _21*right._11 + _22*right._21 + _23*right._31, _21*right._12 + _22*right._22 + _23*right._32, _21*right._13 + _22*right._23 + _23*right._33
+				, _31*right._11 + _32*right._21 + _33*right._31, _31*right._12 + _32*right._22 + _33*right._32, _31*right._13 + _32*right._23 + _33*right._33
+				};
+		}
+
+		inline				_tMat3&				operator +=					(const _tMat3& other)																	noexcept	{ return *this = operator+(other	);	}
+		inline				_tMat3&				operator -=					(const _tMat3& other)																	noexcept	{ return *this = operator-(other	);	}
+		inline				_tMat3&				operator *=					(double scalar)																			noexcept	{ return *this = operator*(scalar	);	}
+		inline				_tMat3&				operator /=					(double scalar)																						{ return *this = operator/(scalar	);	}
+		inline				_tMat3&				operator *=					(const _tMat3& right)																	noexcept	{ return *this = operator*(right	);	}
+
+							void				SetTranspose				(const _tMat3& m)																		noexcept	{ *this = m.GetTranspose();				}
+							void				SetInverse					(const _tMat3& m)																					{ *this = m.GetInverse();				}
+							void				Transpose					(const _tMat3& m)																		noexcept	{ *this = GetTranspose();				}
+							void				Invert						()																									{ *this = GetInverse();					}
+
+		inline				_tMat3&				LinearInterpolate			(const _tMat3&p, const _tMat3&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
+		constexpr			double				GetDeterminant				()																				const	noexcept	{ return _11*(_22*_33-_23*_32) + _12*(_23*_31-_33*_21) + _13*(_21*_32-_22*_31); }
+		constexpr			_tMat3				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _12, _22, _32, _13, _23, _33};	}
+							_tMat3				GetInverse					()																				const				{
+			_tBase										A, B, C, D, E, F, G, H, I;
+
+			A										= (_22*_33 - _23*_32);/**/ B = (_23*_31 - _21*_33);/**/ C = (_21*_32 - _22*_31);
+			D										= (_13*_32 - _12*_33);/**/ E = (_11*_33 - _13*_31);/**/ F = (_12*_31 - _11*_32);
+			G										= (_12*_23 - _13*_22);/**/ H = (_13*_21 - _11*_23);/**/ I = (_11*_22 - _12*_21);
+
+			const double								det
+				=	_11*(_22*_33-_23*_32)
+				+	_12*(_23*_31-_33*_21)
+				+	_13*(_21*_32-_22*_31)
+				;
+
+			_tMat3										result;
+			if(0 == det) {
+				error_printf("%s", "Matrix determinant is zero.");
+				result									=
+					{	1, 0, 0
+					,	0, 1, 0
+					,	0, 0, 1
+					};
+			}
+			else {
+				result									=
+					{	(_tBase)(A/det), (_tBase)(D/det), (_tBase)(G/det)
+					,	(_tBase)(B/det), (_tBase)(E/det), (_tBase)(H/det)
+					,	(_tBase)(C/det), (_tBase)(F/det), (_tBase)(I/det)
+					};
+			}
+
+			return result;
+		}
+
+
+		constexpr			_TCoord3D			Transform					(const _TCoord3D& vector)														const	noexcept	{
+			return
+				{	vector.x * _11 + vector.y * _21 + vector.z * _31
+				,	vector.x * _12 + vector.y * _22 + vector.z * _32
+				,	vector.x * _13 + vector.y * _23 + vector.z * _33
+				};
+		}
+
+		constexpr			_TCoord3D			TransformInverse			(const _TCoord3D& _v)															const	noexcept	{
+			return
+				{	_v.x * _11 + _v.y * _12 + _v.z * _13
+				,	_v.x * _21 + _v.y * _22 + _v.z * _23
+				,	_v.x * _31 + _v.y * _32 + _v.z * _33
+				};
+		}
+							void				Identity					()																						noexcept	{
+			*this =
+				{	(_tBase)1,  (_tBase)0,  (_tBase)0
+				,	(_tBase)0,  (_tBase)1,  (_tBase)0
+				,	(_tBase)0,  (_tBase)0,  (_tBase)1
+				};
+		}
+							void				RotationX					(double angle)																			noexcept	{
+			::gpk::SPairSinCos							angleSinCos					= {sin(angle), cos(angle)};
+			_11 = (_tBase)1;	_12 =							_13 =
+			_31 = (_tBase)0;	_32 = -(_tBase)angleSinCos.Sin;	_33 = (_tBase)angleSinCos.Cos;
+			_21 = (_tBase)0;	_22 =  (_tBase)angleSinCos.Cos;	_23 = (_tBase)angleSinCos.Sin;
+		}
+							void				RotationY					(double angle)																			noexcept	{
+			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
+			_21 = (_tBase)0;				_22 = (_tBase)1;	_23 =  (_tBase)0;
+			_31 = (_tBase)angleSinCos.Sin;	_32 = (_tBase)0;	_33 =  (_tBase)angleSinCos.Cos;
+		}
+							void				RotationZ					(double angle)																			noexcept	{
+			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
+			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 =
+			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
+		}
+		inline				void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
+							void				Scale						(const _TCoord3D& ypr, bool bEraseContent)												noexcept	{
+			if( bEraseContent ) {
+				_11 = (_tBase)ypr.x;		_12 =					_13 =
+				_21 = (_tBase)0;			_22 = (_tBase)ypr.y;	_23 =
+				_31 =						_32 = (_tBase)0;		_33 = (_tBase)ypr.z;
+			}
+			else {
+				_11 = (_tBase)(_11*ypr.x); _22 = (_tBase)(_22*ypr.y); _33 = (_tBase)(_33*ypr.z);
+			}
+		}
+		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)															noexcept	{ return Rotation({x, y, z}); }
+							void				Rotation					(const _TCoord3D &vc)																	noexcept	{
+			::gpk::SPairSinCos							yaw							= ::gpk::getSinCos(vc.z);
+			::gpk::SPairSinCos							pitch						= ::gpk::getSinCos(vc.y);
+			::gpk::SPairSinCos							roll						= ::gpk::getSinCos(vc.x);
+
+			_11										= (_tBase)(pitch.Cos * yaw.Cos									);
+			_12										= (_tBase)(pitch.Cos * yaw.Sin									);
+			_13										= (_tBase)(-pitch.Sin											);
+
+			_21										= (_tBase)(roll.Sin * pitch.Sin * yaw.Cos + roll.Cos *-yaw.Sin	);
+			_22										= (_tBase)(roll.Sin * pitch.Sin * yaw.Sin + roll.Cos * yaw.Cos	);
+			_23										= (_tBase)(roll.Sin * pitch.Cos  		 	 					);
+
+			_31										= (_tBase)(roll.Cos * pitch.Sin * yaw.Cos +-roll.Sin *-yaw.Sin	);
+			_32										= (_tBase)(roll.Cos * pitch.Sin * yaw.Sin +-roll.Sin * yaw.Cos	);
+			_33										= (_tBase)(roll.Cos * pitch.Cos									);
+		} // Rota
+							void				RotationArbitraryAxis		(const _TCoord3D& _vcAxis, _tBase a)																{
+			::gpk::SPairSinCos							pairSinCos					= ::gpk::getSinCos(a);
+			_TCoord3D									vcAxis						= _vcAxis;
+			double										fSum						= 1.0 - pairSinCos.Cos;
+
+			if( vcAxis.LengthSquared() != 1.0 )
+				vcAxis.Normalize();
+
+			_11										= (_tBase)(	(vcAxis.x * vcAxis.x) * fSum + pairSinCos.Cos				);
+			_12										= (_tBase)(	(vcAxis.x * vcAxis.y) * fSum - (vcAxis.z * pairSinCos.Sin)	);
+			_13										= (_tBase)(	(vcAxis.x * vcAxis.z) * fSum + (vcAxis.y * pairSinCos.Sin)	);
+
+			_21										= (_tBase)(	(vcAxis.y * vcAxis.x) * fSum + (vcAxis.z * pairSinCos.Sin)	);
+			_22										= (_tBase)(	(vcAxis.y * vcAxis.y) * fSum + pairSinCos.Cos 				);
+			_23										= (_tBase)(	(vcAxis.y * vcAxis.z) * fSum - (vcAxis.x * pairSinCos.Sin)	);
+
+			_31										= (_tBase)(	(vcAxis.z * vcAxis.x) * fSum - (vcAxis.y * pairSinCos.Sin)	);
+			_32										= (_tBase)(	(vcAxis.z * vcAxis.y) * fSum + (vcAxis.x * pairSinCos.Sin)	);
+			_33										= (_tBase)(	(vcAxis.z * vcAxis.z) * fSum + pairSinCos.Cos				);
+		}
+
+							void				SetOrientation				(const ::gpk::SQuaternion<_tBase>& qo)														noexcept	{
+			double										wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
+
+			x2										= qo.x + qo.x;
+			y2										= qo.y + qo.y;
+			z2										= qo.z + qo.z;
+
+			xx										= qo.x * x2;
+			xy										= qo.x * y2;
+			xz										= qo.x * z2;
+
+			yy										= qo.y * y2;
+			yz										= qo.y * z2;
+			zz										= qo.z * z2;
+
+			wx										= qo.w * x2;
+			wy										= qo.w * y2;
+			wz										= qo.w * z2;
+
+			_11										= (_tBase)(1.0 - (yy + zz)	);
+			_21										= (_tBase)(xy - wz			);
+			_31										= (_tBase)(xz + wy			);
+
+			_12										= (_tBase)(xy + wz			);
+			_22										= (_tBase)(1.0 - (xx + zz)	);
+			_32										= (_tBase)(yz - wx			);
+
+			_13										= (_tBase)(xz - wy			);
+			_23										= (_tBase)(yz + wx			);
+			_33										= (_tBase)(1.0 - (xx + yy)	);
+		}
+
+		 // Sets the value of the matrix from inertia tensor values.
+		 //
+							void				SetCoeffsAngularMass		(double ix, double iy, double iz, double ixy, double ixz, double iyz)					noexcept	{
+			_11 =		(_tBase) ix		;
+			_21 = _12 =	(_tBase)-ixy	;
+			_31 = _13 =	(_tBase)-ixz	;
+			_22 =		(_tBase) iy		;
+			_32 = _23 =	(_tBase)-iyz	;
+			_33 =		(_tBase) iz		;
+		}
+
+		// Sets the value of the matrix as an inertia tensor of a rectangular block aligned with the body's coordinate system with the given axis half-sizes and mass.
+							void				SetBlockAngularMass			(const _TCoord3D &halfSizes, double mass)												noexcept	{
+			_TCoord3D									squares						= halfSizes;
+			squares.x								*= halfSizes.x; squares.y *= halfSizes.y; squares.z *= halfSizes.z;
+			SetCoeffsAngularMass
+				( 0.3f * mass * (squares.y + squares.z)
+				, 0.3f * mass * (squares.x + squares.z)
+				, 0.3f * mass * (squares.x + squares.y)
+				);
+		}
+	};
+
 #pragma pack(pop)
 }
 
