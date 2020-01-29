@@ -88,6 +88,9 @@ namespace gpk
 			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
+			*this										= GetInverse();
+			_41											+= offscreenMetrics.x / 2;
+			_42											+= offscreenMetrics.y / 2;
 		}
 							void				ViewportLH					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics)			noexcept	{
 			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
@@ -96,6 +99,9 @@ namespace gpk
 			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
 			_33 = 1;
 			_43 = 0;
+			*this										= GetInverse();
+			_41											+= offscreenMetrics.x / 2;
+			_42											+= offscreenMetrics.y / 2;
 		}
 							void				Identity					()																						noexcept	{
 			*this									=
