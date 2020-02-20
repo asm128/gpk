@@ -180,9 +180,15 @@ namespace gpk
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
+#		if !defined(GPK_WINDOWS)
+#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#		else
 #			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
 #			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
 #			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#		endif
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 //#	pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
