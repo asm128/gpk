@@ -28,6 +28,8 @@ namespace gpk
 		// Operators
 							::gpk::view_array<_tElement>			operator[]					(uint32_t row)																			{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::view_array<_tElement		>(&Data[row * Size.x], Size.x); }
 							::gpk::view_array<const _tElement>		operator[]					(uint32_t row)														const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::view_array<const _tElement	>(&Data[row * Size.x], Size.x); }
+							_tElement		&						operator[]					(const ::gpk::SCoord2<uint32_t> & cell)													{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+							const _tElement	&						operator[]					(const ::gpk::SCoord2<uint32_t> & cell)								const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
 
 		// Methods
 		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;						}
@@ -37,7 +39,8 @@ namespace gpk
 		inline constexpr	_tElement*								end							()																			noexcept	{ return Data + size();				}
 
 		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics						()																	const	noexcept	{ return Size;						}
-		inline constexpr	uint32_t								size						()																	const	noexcept	{ return Size.x * Size.y;			}
+		inline constexpr	uint32_t								size						()																	const	noexcept	{ return area();					}
+		inline constexpr	uint32_t								area						()																	const	noexcept	{ return Size.x * Size.y;			}
 	};
 #pragma pack(pop)
 

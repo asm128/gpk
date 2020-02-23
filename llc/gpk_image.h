@@ -37,7 +37,14 @@ namespace gpk
 		inline				::gpk::view_array<_tTexel>							operator[]									(uint32_t index)																	{ return View[index]; }
 		inline				const ::gpk::view_array<const _tTexel>				operator[]									(uint32_t index)												const				{ return View[index]; }
 
-		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()																const	noexcept	{ return View.metrics(); }
+		inline constexpr	const _tTexel*										begin										()																	const	noexcept	{ return View.begin		();	}
+		inline constexpr	const _tTexel*										end											()																	const	noexcept	{ return View.end		();	}
+		inline constexpr	_tTexel*											begin										()																			noexcept	{ return View.begin		();	}
+		inline constexpr	_tTexel*											end											()																			noexcept	{ return View.end		();	}
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&						metrics										()																	const	noexcept	{ return View.metrics	();	}
+		inline constexpr	uint32_t											size										()																	const	noexcept	{ return View.size		();	}
+		inline constexpr	uint32_t											area										()																	const	noexcept	{ return View.area		();	}
+
 		inline				::gpk::error_t										resize										(const ::gpk::SCoord2<uint32_t>& newSize)								noexcept	{ return resize(newSize.x, newSize.y); }
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY)									noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize? Requested size: %u.", (uint32_t)(newSizeX * newSizeY)); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
 
