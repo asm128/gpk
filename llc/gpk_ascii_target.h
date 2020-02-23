@@ -25,7 +25,7 @@ namespace gpk
 	};
 #pragma pack( pop )
 
-	static inline			::gpk::error_t									drawRectangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SRectangle2D<int32_t>& rectangle)	{
+	static inline			::gpk::error_t									drawRectangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SRectangle2<int32_t>& rectangle)	{
 		for(int32_t y = (int32_t)::gpk::max(0, rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = (int32_t)::gpk::max(0, rectangle.Offset.x), xStop = ::gpk::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;
@@ -34,7 +34,7 @@ namespace gpk
 		return 0;
 	}
 
-	static inline			::gpk::error_t									drawCircle									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SCircle2D<int32_t>& circle)			{
+	static inline			::gpk::error_t									drawCircle									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SCircle<int32_t>& circle)			{
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};

@@ -42,6 +42,35 @@ namespace gpk
 		return 1; //All OK
 	}
 
+	// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
+	// returns t value of intersection and intersection point q
+	template<typename _tAxis>
+	int32_t																	intersectRaySphere
+		( const ::gpk::SCoord3<_tAxis>	& position
+		, const ::gpk::SCoord3<_tAxis>	& direction
+		, const ::gpk::SSphere<_tAxis>	& sphere
+		, float							& t
+		, ::gpk::SCoord3<_tAxis>		& q
+		) {
+		const ::gpk::SCoord3<_tAxis>							m						= position - sphere.Center;
+		double													b						= m.Dot(direction);
+		double													c						= m.Dot(m) - sphere.Radius * sphere.Radius;
+
+		if (c > 0.0f && b > 0.0f)	// Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
+			return 0;
+		double													discr					= b * b - c;
+
+		if (discr < 0.0f)	// A negative discriminant corresponds to ray missing sphere
+			return 0;
+
+		t													= (float)(-b - sqrt(discr));	// Ray now found to intersect sphere, compute smallest t value of intersection
+		if (t < 0.0f)	// If t is negative, ray started inside sphere so clamp t to zero
+			t													= 0.0f;
+
+		q													= position + direction * t;
+		return 1;
+	}
+
 	template<typename _tCoord>
 					::gpk::error_t											point_in_segment
 		( const ::gpk::SLine2<_tCoord>	& segment
@@ -99,7 +128,7 @@ namespace gpk
 
 	template<typename _tCoord>
 						::gpk::error_t										buildAABBSegments
-		( const ::gpk::SRectangle2D<_tCoord>	& rect
+		( const ::gpk::SRectangle2<_tCoord>	& rect
 		,		::gpk::SLine2<_tCoord>			& left
 		,		::gpk::SLine2<_tCoord>			& top
 		,		::gpk::SLine2<_tCoord>			& right

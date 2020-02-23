@@ -58,6 +58,12 @@
     <Filter Include="script">
       <UniqueIdentifier>{43572fcd-2b7d-4170-8b67-05cbc99e2451}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{992ffe49-5b11-4efb-9bbb-bbf6ff0cf398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{e8645092-4536-4b63-a21f-b579b831c1f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -134,12 +140,6 @@
     </ClInclude>
     <ClInclude Include="gpk_memory.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ascii_target.h">
-      <Filter>image</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_ascii_color.h">
-      <Filter>image</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
       <Filter>image</Filter>
@@ -255,9 +255,6 @@
     <ClInclude Include="gpk_geometry.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_bitmap_target.h">
-      <Filter>image</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_particle.h">
       <Filter>geometry</Filter>
     </ClInclude>
@@ -312,6 +309,27 @@
     <ClInclude Include="gpk_view_manager.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_model.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rigidbody.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry_lh.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_raster_lh.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bitmap_target.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_target.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_color.h">
+      <Filter>raster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -324,9 +342,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_adam7.cpp">
-      <Filter>image</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_ascii_target.cpp">
       <Filter>image</Filter>
     </ClCompile>
     <ClCompile Include="gpk_label.cpp">
@@ -436,6 +451,18 @@
     </ClCompile>
     <ClCompile Include="gpk_mapblock.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rigidbody.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry_lh.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_raster_lh.cpp">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ascii_target.cpp">
+      <Filter>raster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

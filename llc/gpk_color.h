@@ -178,6 +178,7 @@ namespace gpk
 	};	// struct
 
 
+
 	static constexpr	const ::gpk::SColorFloat	BLACK			= {0.0f, 0.0f, 0.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	WHITE			= {1.0f, 1.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	RED				= {1.0f, 0.0f, 0.0f, 1.0f					};
@@ -187,7 +188,10 @@ namespace gpk
 	static constexpr	const ::gpk::SColorFloat	MAGENTA			= {1.0f, 0.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	CYAN			= {0.0f, 1.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	ORANGE			= {1.0f, 0.647f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	BROWN			= ::gpk::SColorBGRA{0xFF, 0x00, 0x4B, 0x96};
+	static constexpr	const ::gpk::SColorFloat	PANOCHE			= {0.25f, 0.5f, 1.0f, 1.0f					};
+	static constexpr	const ::gpk::SColorFloat	PURPLE			= {0.5f, 0.1f, 1.0f, 1.0f					};
+	static constexpr	const ::gpk::SColorFloat	TURQUOISE		= {0.2f, 1.0, 0.65f, 1.0f					};
+	static constexpr	const ::gpk::SColorFloat	BROWN			= {0.4f, 0.223f, 0.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	GRAY			= {0.5f, 0.5f, 0.5f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	DARKGRAY		= {0.25f, 0.25f, 0.25f, 1.0f				};
 	static constexpr	const ::gpk::SColorFloat	DARKRED			= {0.5f, 0.0f, 0.0f, 1.0f					};
@@ -199,12 +203,13 @@ namespace gpk
 	static constexpr	const ::gpk::SColorFloat	DARKORANGE		= {1.0f, 0.5490196078431373f, 0.0f, 1.0f	};
 	static constexpr	const ::gpk::SColorFloat	LIGHTGRAY		= {0.75f, 0.75f, 0.75f, 1.0f				};
 	static constexpr	const ::gpk::SColorFloat	LIGHTRED		= {1.0f, 0.25f, 0.25f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTGREEN		= {0.25f, 1.0f, 0.25f, 1.0f					};
+	static constexpr	const ::gpk::SColorFloat	LIGHTGREEN		= {0.5f,  1.0f, 0.5f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTBLUE		= {0.25f, 0.25f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTYELLOW		= {1.0f, 1.0f, 0.25f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTMAGENTA	= {1.0f, 0.25f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTCYAN		= {0.25f, 1.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTORANGE		= {1.0f, 0.780f, 0.25f, 1.0f				};
+
 #pragma pack( pop )
 } // namespace
 

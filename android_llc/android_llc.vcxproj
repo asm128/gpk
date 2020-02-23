@@ -91,9 +91,11 @@
     <ClInclude Include="..\llc\gpk_base64.h" />
     <ClInclude Include="..\llc\gpk_block.h" />
     <ClInclude Include="..\llc\gpk_geometry.h" />
+    <ClInclude Include="..\llc\gpk_geometry_lh.h" />
     <ClInclude Include="..\llc\gpk_grid_static.h" />
     <ClInclude Include="..\llc\gpk_http_client.h" />
     <ClInclude Include="..\llc\gpk_particle.h" />
+    <ClInclude Include="..\llc\gpk_raster_lh.h" />
     <ClInclude Include="..\llc\gpk_scene.h" />
     <ClInclude Include="..\llc\gpk_type_registry.h" />
   </ItemGroup>
@@ -124,11 +126,13 @@
     <ClCompile Include="..\llc\gpk_cgi_module.cpp" />
     <ClCompile Include="..\llc\gpk_cgi_runtime.cpp" />
     <ClCompile Include="..\llc\gpk_geometry.cpp" />
+    <ClCompile Include="..\llc\gpk_geometry_lh.cpp" />
     <ClCompile Include="..\llc\gpk_gui.cpp" />
     <ClCompile Include="..\llc\gpk_gui_draw.cpp" />
     <ClCompile Include="..\llc\gpk_https_client.cpp" />
     <ClCompile Include="..\llc\gpk_http_client.cpp" />
     <ClCompile Include="..\llc\gpk_keyval.cpp" />
+    <ClCompile Include="..\llc\gpk_raster_lh.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_tcpip.cpp" />
     <ClCompile Include="..\llc\gpk_type_registry.cpp" />

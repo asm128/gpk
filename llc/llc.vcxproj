@@ -43,6 +43,7 @@
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_deflate.h" />
+    <ClInclude Include="gpk_raster_lh.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
     <ClInclude Include="gpk_error.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="gpk_find.h" />
     <ClInclude Include="gpk_frameinfo.h" />
     <ClInclude Include="gpk_geometry.h" />
+    <ClInclude Include="gpk_geometry_lh.h" />
     <ClInclude Include="gpk_grid_copy.h" />
     <ClInclude Include="gpk_grid_scale.h" />
     <ClInclude Include="gpk_grid_static.h" />
@@ -71,6 +73,7 @@
     <ClInclude Include="gpk_matrix.h" />
     <ClInclude Include="gpk_member_registry.h" />
     <ClInclude Include="gpk_memory.h" />
+    <ClInclude Include="gpk_model.h" />
     <ClInclude Include="gpk_module.h" />
     <ClInclude Include="gpk_noise.h" />
     <ClInclude Include="gpk_parse.h" />
@@ -79,6 +82,7 @@
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_ptr.h" />
+    <ClInclude Include="gpk_rigidbody.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_runtime.h" />
     <ClInclude Include="gpk_runtime_module.h" />
@@ -117,9 +121,11 @@
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
+    <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />
     <ClCompile Include="gpk_geometry.cpp" />
+    <ClCompile Include="gpk_geometry_lh.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />
     <ClCompile Include="gpk_https_client.cpp" />
@@ -135,6 +141,7 @@
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_process.cpp" />
+    <ClCompile Include="gpk_rigidbody.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_stdstring.cpp" />

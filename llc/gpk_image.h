@@ -18,6 +18,9 @@ namespace gpk
 																				SImage										(const ::gpk::view_grid<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																				SImage										(const ::gpk::SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
+		inline constexpr	operator											view_grid<const _tTexel>					()											const	noexcept	{ return View; }
+		inline				operator											view_grid<_tTexel>							()													noexcept	{ return View; }
+
 							::gpk::SImage<_tTexel>&								operator=									(const ::gpk::view_grid<_tTexel>& other)						{
 			Texels																	= view_array<const _tTexel>{other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
@@ -42,7 +45,7 @@ namespace gpk
 							::gpk::error_t										resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel & newValue)		noexcept	{
 			gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize? Requested size: %u.", newSizeX * newSizeY);
 			View																	= {Texels.begin(), newSizeX, newSizeY};
-			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::SRectangle2D<int32_t>{{}, View.metrics().template Cast<int32_t>()}), "Unknown error setting value to rectangle of size: %u x %u.", newSizeX, newSizeY);
+			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::SRectangle2<int32_t>{{}, View.metrics().template Cast<int32_t>()}), "Unknown error setting value to rectangle of size: %u x %u.", newSizeX, newSizeY);
 			return 0;
 		}
 	}; // struct

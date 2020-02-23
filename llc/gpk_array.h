@@ -207,6 +207,23 @@ namespace gpk
 			return newCount;
 		}
 
+		int32_t											reserve										(uint32_t newCount)								{
+			if(newCount > Size) {
+				uint32_t											newSize										= ::gpk::max(4U, newCount + (newCount / 4));
+				_tPOD												* newData									= (_tPOD*)::gpk::gpk_malloc(newSize * sizeof(_tPOD));
+				if(0 == newData)
+					return -1;
+				for(uint32_t iElement = 0; iElement < Count; ++iElement)
+					new (&newData[iElement]) _tPOD(Data[iElement]);
+				_tPOD								* oldData			= Data;
+				Size								= newSize;
+				Data								= newData;
+				for(uint32_t iElement = 0; iElement < Count; ++iElement)
+					oldData[iElement].~_tPOD();
+				::gpk::gpk_free(oldData);
+			}
+			return Count;
+		}
 		// Returns the new size of the array.
 							::gpk::error_t				resize										(uint32_t newSize)															noexcept	{
 			const uint32_t										oldCount									= Count;
@@ -542,6 +559,23 @@ namespace gpk
 				new (&Data[index]) _tObj(newValue);
 			}
 			return ++Count;
+		}
+		int32_t									reserve				(uint32_t newCount)								{
+			if(newCount > Size) {
+				uint32_t									newSize				= ::gpk::max(4U, newCount + (newCount / 4));
+				_tObj										* newData			= (_tObj*)::gpk::gpk_malloc(newSize * sizeof(_tObj));
+				if(0 == newData)
+					return -1;
+				for(uint32_t iElement = 0; iElement < Count; ++iElement)
+					new (&newData[iElement]) _tObj(Data[iElement]);
+				_tObj								* oldData			= Data;
+				Size								= newSize;
+				Data								= newData;
+				for(uint32_t iElement = 0; iElement < Count; ++iElement)
+					oldData[iElement].~_tObj();
+				::gpk::gpk_free(oldData);
+			}
+			return Count;
 		}
 		// Returns the new size of the array or -1 if failed.
 		template <typename... _tArgs>

@@ -29,14 +29,14 @@ namespace gpk
 	};
 
 	struct SControlRectangle {
-		::gpk::SRectangle2D<int32_t>							Local;
-		::gpk::SRectangle2D<int32_t>							Global;
+		::gpk::SRectangle2<int32_t>							Local;
+		::gpk::SRectangle2<int32_t>							Global;
 	};
 
 	struct SControlMetrics {
 		::gpk::SControlRectangle								Total;
 		::gpk::SControlRectangle								Client;
-		::gpk::SRectangle2D<int16_t>							Text;
+		::gpk::SRectangle2<int16_t>							Text;
 	};
 
 	struct SControlAttachId {
@@ -119,7 +119,7 @@ namespace gpk
 	};
 
 	struct SControl {
-		::gpk::SRectangle2D<int16_t>							Area													= {{}, {16, 16}};
+		::gpk::SRectangle2<int16_t>							Area													= {{}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};

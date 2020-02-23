@@ -49,7 +49,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	}
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];
-	::gpk::SRectangle2D<int16_t>										rectText												= controlMetrics.Text;
+	::gpk::SRectangle2<int16_t>										rectText												= controlMetrics.Text;
 	if(false == gui.Controls.Modes[iControl].NoHoverEffect && (controlState.Pressed || controlState.Hover)) { // shift text offset by one pixel to give the effect of being pushed.
 		rectText.Offset													+= ::gpk::SCoord2<int16_t>{1, 1};
 		rectText.Size													-= ::gpk::SCoord2<int16_t>{1, 1};
@@ -131,7 +131,7 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 		fillColorTableOld(gui, colorMode, control, controlState, mode, disabled, colors);
 	return 0;
 }
-static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2D<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2<int32_t>> triangles)					{
+static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2<int32_t>> finalRects, ::gpk::view_array<::gpk::STriangle2<int32_t>> triangles)					{
 	::gpk::SRectLimits<int32_t>											scaledBorders											= {};
 	const ::gpk::SCoord2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left												= (int32_t)(control.Border.Left		* scaleFinal.x);
@@ -139,7 +139,7 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 	scaledBorders.Right												= (int32_t)(control.Border.Right	* scaleFinal.x);
 	scaledBorders.Bottom											= (int32_t)(control.Border.Bottom	* scaleFinal.y);
 
-	const ::gpk::SRectangle2D<int32_t>									& rectTotal												= controlMetrics.Total.Global;
+	const ::gpk::SRectangle2<int32_t>									& rectTotal												= controlMetrics.Total.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal;
 	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]			= controlMetrics.Client.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]			= {rectTotal.Offset , ::gpk::SCoord2<int32_t>{control.Border.Left, rectTotal.Size.y}};
@@ -177,7 +177,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	::fillColorTable(gui, iControl, disabled, colors);
 	::gpk::STriangle2<int32_t>											triangles	[8]											= {};
-	::gpk::SRectangle2D<int32_t>										rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
+	::gpk::SRectangle2<int32_t>										rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
 	const ::gpk::SControlMetrics										& controlMetrics										= gui.Controls.Metrics[iControl];
 	::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);
 
@@ -200,7 +200,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 
 	if(control.Image.metrics().x > 0 && control.Image.metrics().y > 0) {
 		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
-		::gpk::SRectangle2D<int32_t>									rectImage							=
+		::gpk::SRectangle2<int32_t>									rectImage							=
 			{ controlMetrics.Client.Global.Offset
 			, controlMetrics.Client.Global.Size
 				+ ::gpk::SCoord2<int32_t>

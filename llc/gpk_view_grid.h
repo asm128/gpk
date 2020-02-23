@@ -42,7 +42,7 @@ namespace gpk
 #pragma pack(pop)
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t						drawRectangle				(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2D<_tCoord>& rectangle)		{
+	static					::gpk::error_t						drawRectangle				(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
 		const int32_t													xCount						= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, 0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, 0));
 		const int32_t													yCount						= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, 0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, 0));
 		const int32_t													yStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);

@@ -98,7 +98,7 @@ namespace gpk
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawRectangleBorder							(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2D<_tCoord>& rectangle)		{
+	static					::gpk::error_t									drawRectangleBorder							(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
 		int32_t																		yStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
 		int32_t																		yStop										= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
 		int32_t																		xStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
@@ -116,7 +116,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawCircle									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle2D<_tCoord>& circle)			{
+	static					::gpk::error_t									drawCircle									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle<_tCoord>& circle)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius + 2), (int32_t)bitmapTarget.metrics().x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
@@ -140,7 +140,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle2D<_tCoord>& circle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)			{
+	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle<_tCoord>& circle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;

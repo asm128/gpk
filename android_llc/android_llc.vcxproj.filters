@@ -213,6 +213,12 @@
     <ClInclude Include="..\llc\gpk_block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\llc\gpk_geometry_lh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\llc\gpk_raster_lh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\gpk\llc\llc_header_checkingg.cpp">
@@ -315,6 +321,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_geometry_lh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_raster_lh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

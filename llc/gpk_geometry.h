@@ -38,18 +38,6 @@ namespace gpk
 					::gpk::SCoord3		<_tUnit>						Position									;
 	};
 
-	template <typename _tUnit>
-	struct SModelTransform {
-					::gpk::SMatrix4		<_tUnit>						World										;
-					::gpk::SMatrix4		<_tUnit>						WorldInverse								;
-	};
-
-	template <typename _tUnit>
-	struct SModelBase {
-					::gpk::SModelGeometry	<_tUnit>					Geometry									= {};
-					::gpk::SModelPivot		<_tUnit>					Pivot										= {};
-	};
-
 	// --- Geometry generation: Cube.
 				::gpk::error_t										generateCubePositions					(::gpk::array_pod<::gpk::STriangle3<float>>& out_Positions	);
 				::gpk::error_t										generateCubeNormalsTriangle				(::gpk::array_pod<::gpk::SCoord3	<float>>& out_Normals	);

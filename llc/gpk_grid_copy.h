@@ -66,7 +66,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-						::gpk::error_t							grid_raster_alpha_bit			(const ::gpk::SCoord2<uint32_t>& dstMetrics, const ::gpk::view_bit<uint32_t>& src, const ::gpk::SCoord2<uint32_t>& srcMetrics, const ::gpk::SRectangle2D<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)		{
+						::gpk::error_t							grid_raster_alpha_bit			(const ::gpk::SCoord2<uint32_t>& dstMetrics, const ::gpk::view_bit<uint32_t>& src, const ::gpk::SCoord2<uint32_t>& srcMetrics, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)		{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= (int32_t)(srcMetrics.y) + ::gpk::min(0, (int32_t)dstRect.Offset.y) - ::gpk::min(srcOffset.y, 0);
@@ -78,7 +78,7 @@ namespace gpk
 
 	// -----------------------------------------------
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2D<_tCoord>& srcRect, const _tCell& comparand)		{
+						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2<_tCoord>& srcRect, const _tCell& comparand)		{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcRect.Offset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
 		const int32_t													stopYDst						= (int32_t)(src.metrics().y) + ::gpk::min(0, (int32_t)dstOffset.y);
@@ -89,7 +89,7 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2D<_tCoord>& srcRect)									{
+						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2<_tCoord>& srcRect)									{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcRect.Offset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
 		const int32_t													stopYDst						= (int32_t)(src.metrics().y) + ::gpk::min(0, (int32_t)dstOffset.y);
@@ -100,8 +100,8 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2D<_tCoord>& srcRect)									{
-		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcRect.Offset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
+						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SCoord2<_tCoord>& dstOffset, const ::gpk::SRectangle2<_tCoord>& srcRect)									{
+		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcRect.Offset.template Cast<int32_t>() + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
 		const int32_t													stopYDst						= (int32_t)(src.metrics().y) + ::gpk::min(0, (int32_t)dstOffset.y);
 		const int32_t													stopXDst						= (int32_t)(src.metrics().x) + ::gpk::min(0, (int32_t)dstOffset.x);
@@ -112,7 +112,7 @@ namespace gpk
 
 	// -----------------------------------------------
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, const _tCell& comparand)		{
+						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, const _tCell& comparand)		{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= (int32_t)(src.metrics().y) + ::gpk::min(0, (int32_t)dstRect.Offset.y);
@@ -123,7 +123,7 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset)									{
+						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset)									{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= ((int32_t)src.metrics().y) + ::gpk::min(0, (int32_t)dstRect.Offset.y);
@@ -134,8 +134,8 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset)									{
-		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
+						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset)									{
+		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset.template Cast<int32_t>() + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= ((int32_t)src.metrics().y) + ::gpk::min(0, (int32_t)dstRect.Offset.y);
 		const int32_t													stopXDst						= ((int32_t)src.metrics().x) + ::gpk::min(0, (int32_t)dstRect.Offset.x);
@@ -180,7 +180,7 @@ namespace gpk
 
 	// -----------------------------------------------
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect, const _tCell& comparand)													{
+						::gpk::error_t							grid_copy_alpha					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect, const _tCell& comparand)													{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= {-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= { ::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= (int32_t)src.metrics().y + ::gpk::min(0, (int32_t)dstRect.Offset.y);
@@ -191,7 +191,7 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect)																			{
+						::gpk::error_t							grid_copy_blend					(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect)																			{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= {-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= { ::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= (int32_t)src.metrics().y + ::gpk::min(0, (int32_t)dstRect.Offset.y);
@@ -202,7 +202,7 @@ namespace gpk
 	}
 
 	template<typename _tCell, typename _tCoord>
-						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2D<_tCoord>& dstRect)																			{
+						::gpk::error_t							grid_copy						(::gpk::view_grid<_tCell>& dst, const ::gpk::view_grid<_tCell>& src, const ::gpk::SRectangle2<_tCoord>& dstRect)																			{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= {-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		::gpk::SCoord2<int32_t>											offsetDst						= { ::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
 		const int32_t													stopYDst						= (int32_t)src.metrics().y + ::gpk::min(0, (int32_t)dstRect.Offset.y);
@@ -281,7 +281,6 @@ namespace gpk
 				memcpy(&dst[y][0], &src[srcMaxY - y][0], sizeof(_tCell) * metrics.x);
 		return metrics.y * metrics.x;
 	}
-
 } // namespace
 
 #endif // GPK_GRID_COPY_20983429834
