@@ -2,7 +2,6 @@
 #include "gpk_storage.h"
 
 #include <ctime>
-#include <string>
 
 ::gpk::error_t										gpk::querystring_split	(const ::gpk::view_const_string& input_string, ::gpk::array_obj<::gpk::view_const_string>& output_views)		{
 	if(0 == input_string.size())

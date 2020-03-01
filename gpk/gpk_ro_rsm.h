@@ -2,8 +2,6 @@
 #include "gpk_coord.h"
 #include "gpk_array_static.h"
 
-#include <string>
-
 #ifndef GPK_RSM_H_02938402983
 #define GPK_RSM_H_02938402983
 

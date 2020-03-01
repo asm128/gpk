@@ -5,7 +5,6 @@
 #include "gpk_image.h"
 #include "gpk_array_static.h"
 #include "gpk_ascii_color.h"
-#include <string>
 
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
