@@ -47,13 +47,13 @@ namespace gpk
 	class view_bit {
 	protected:
 		// Properties / Member Variables
-		static constexpr	const uint32_t								ELEMENT_BITS				= sizeof(_tElement) * 8;
-
 							_tElement									* Data						= 0;
 							uint32_t									Count						= 0;
 	public:
 		typedef				_tElement									TElement;
 		typedef				view_bit_iterator<_tElement>				iterator;
+
+		static constexpr	const uint32_t								ELEMENT_BITS				= sizeof(_tElement) * 8;
 
 		// Constructors
 		inline constexpr												view_bit					()																			noexcept	= default;

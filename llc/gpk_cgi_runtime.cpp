@@ -16,7 +16,7 @@
 	{	// Try to load query from querystring and request body
 		const int32_t										offset							= ::gpk::find("REQUEST_METHOD", ::gpk::view_array<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
 		::gpk::array_pod<char_t>							enumValue						= (-1 == offset) ? ::gpk::view_const_string{"GET"} : environViews[offset].Val;
-		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(::gpk::label{enumValue.begin(), enumValue.size()});//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
+		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
 			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
 		::gpk::find("SCRIPT_NAME"	, environViews, requestReceived.Script);

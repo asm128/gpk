@@ -442,8 +442,8 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 }
 
 ::gpk::error_t												gpk::connectionHandleCommand		(::gpk::SUDPConnection& client, ::gpk::SUDPCommand& command, ::gpk::array_pod<byte_t> & receiveBuffer)		{
-	::gpk::label													labelCommand						= ::gpk::get_value_label(command.Command);
-	::gpk::label													labelType							= ::gpk::get_value_label(command.Type	);
+	::gpk::view_const_char											labelCommand						= ::gpk::get_value_label(command.Command);
+	::gpk::view_const_char											labelType							= ::gpk::get_value_label(command.Type	);
 	(void)labelCommand	;
 	(void)labelType		;
 	info_printf("Command: %s. Type: %s."

@@ -108,6 +108,7 @@ namespace gpk
 				gthrow_if(0 == Data				, "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
 				gthrow_if(0 == other.begin()	, "%s", "other.Data is null!");
 				memcpy(Data, other.begin(), newSize * sizeof(_tPOD));
+				memset(&Data[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 				//for(uint32_t i = 0, count = newSize; i<count; ++i)
 				//	Data[i]											= other[i];
 				Size											= (uint32_t)reserveSize;
@@ -126,26 +127,27 @@ namespace gpk
 			Data											= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 			gthrow_if(0 == Data, "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
 			memcpy(Data, other, newSize * sizeof(_tPOD));
-			//for(uint32_t i = 0, count = newSize; i < count; ++i)
-			//	Data[i]											= other[i];
+			memset(&Data[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 			Size											= (uint32_t)reserveSize;
 			Count											= _otherCount;
 			safeguard.Handle								= 0;
-			*(uint16_t*)(&Data[Count])						= 0;
+			//*(uint16_t*)(&Data[Count])						= 0;
 		}
+		inline constexpr	operator					view_array<const _tPOD>						()								const	noexcept	{ return {Data, Count}; }
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view_array<_tPOD>&) other); }
 							array_pod<_tPOD>&			operator =									(const view_array<_tPOD>& other)														{
 			gthrow_if(resize(other.size()) != (int32_t)other.size(), "%s", "Failed to assign array.");
 			if(Count)
 				memcpy(Data, other.begin(), Count * sizeof(_tPOD));
-			//for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
-			//	operator[](iElement)							= other[iElement];
+			if(Data)
+				*(uint16_t*)(&Data[Count])						= 0;
 			return *this;
 		}
 		template<size_t sizeStatic>
 							array_pod<_tPOD>&			operator =									(const _tPOD (&init)[sizeStatic])														{
 			gthrow_if(resize(sizeStatic) != sizeStatic, "Failed to resize array! Why? Size requested: %u.", (uint32_t)sizeStatic);
 			memcpy(Data, init, Count * sizeof(_tPOD));
+			*(uint16_t*)(&Data[Count])						= 0;
 			return *this;
 		}
 
@@ -179,23 +181,16 @@ namespace gpk
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
 		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
-		//					::gpk::error_t				append										(const ::gpk::view_const_string& newChain)									noexcept	{
-		//	gpk_necall(this->append(newChain.begin(), newChain.size()), "%s", "Failed to append. Array too long?");
-		//	gpk_necall(this->push_back(0), "%s", "Failed!");
-		//	gpk_necall(this->resize(this->size() - 1), "%s", "Failed!");
-		//	return 0;
-		//}
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
 			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
 			const int32_t										newSize										= resize(requestedSize);
 			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested size: %u.", requestedSize);
-
-			//for(uint32_t i = 0, maxCount = ::gpk::min(chainLength, newSize - startIndex); i < maxCount; ++i)
-				//Data[startIndex + i]							= chainToAppend[i];
-			if(chainLength)
+			if(chainLength) {
 				memcpy(&Data[startIndex], chainToAppend, sizeof(_tPOD) * chainLength);
+				*(uint16_t*)(&Data[Count])						= 0;
+			}
 			return startIndex;
 		}
 
@@ -206,7 +201,6 @@ namespace gpk
 			ree_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
 			for( int32_t i = oldCount; i < newCount; ++i )
 				Data[i]											= newValue;
-				//::gpk::podcpy(&Data[i], &newValue);
 			return newCount;
 		}
 
@@ -237,15 +231,11 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD) + 2), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
-
 				//TArrayView											safe_data									= {newData, reserveSize};
-				if(oldData) {
-					memcpy(newData, Data, ::gpk::min(newSize, oldCount) * sizeof(_tPOD));
-					//for(uint32_t i = 0, count = ::gpk::min(newSize, oldCount); i<count; ++i)
-					//	safe_data[i]									= operator[](i);
-				}
+				if(oldData)
+					memcpy(newData, oldData, ::gpk::min(newSize, oldCount) * sizeof(_tPOD));
+				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 				Size											= (uint32_t)reserveSize;
 				Count											= newSize;
 				Data											= newData;
@@ -273,11 +263,7 @@ namespace gpk
 
 				TArrayView											viewSafe									= {newData, Count+1};
 				memcpy(viewSafe.begin(), oldData, ::gpk::min(index, Count) * sizeof(_tPOD));
-				//for(uint32_t i = 0, maxCount = ::gpk::min(index, Count); i < maxCount; ++i)
-				//	viewSafe[i]										= oldData[i];
 				viewSafe[index]									= newValue;
-				//if(index < Count)
-				//	memcpy(&viewSafe[index + 1], oldData, (Count - index) * sizeof(_tPOD));
 				for(uint32_t i = index, maxCount = Count; i < maxCount; ++i)
 					viewSafe[i + 1]									= oldData[i];
 				Data											= newData;
@@ -425,14 +411,14 @@ namespace gpk
 	//------------------------------------------------------------------------------------------------------------
 	template<typename _tObj>
 	struct array_obj : public array_base<_tObj> {
-		typedef				array_base<_tObj>			_TVectorBase;
+		typedef				array_base<_tObj>			TVectorBase;
 
-		using											_TVectorBase::Count;
-		using											_TVectorBase::Data;
-		using											_TVectorBase::Size;
-		using											_TVectorBase::calc_reserve_size;
-		using											_TVectorBase::calc_malloc_size;
-		using											_TVectorBase::operator[];
+		using											TVectorBase::Count;
+		using											TVectorBase::Data;
+		using											TVectorBase::Size;
+		using											TVectorBase::calc_reserve_size;
+		using											TVectorBase::calc_malloc_size;
+		using											TVectorBase::operator[];
 
 		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_gpk_free(Data); }	// dtor
 		inline constexpr								array_obj									()																						= default;
@@ -464,6 +450,7 @@ namespace gpk
 				safeguard.Handle								= 0;
 			}
 		}
+		inline constexpr	operator					view_array<const _tObj>						()								const	noexcept	{ return {Data, Count}; }
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			gthrow_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)

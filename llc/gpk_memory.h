@@ -38,11 +38,16 @@ namespace gpk
 	static inline constexpr	const uintptr_t															calc_align_address_64		(uintptr_t address)									noexcept	{ return calc_align_address(64, address); }
 
 #if defined(GPK_WINDOWS)
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN);	if(p)(p[size] = 0); return p; }
 	static inline			void																	gpk_free					(void* ptr)											noexcept	{ _aligned_free(ptr);									}
-#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ return ::memalign(GPK_MALLOC_ALIGN, size);			}
+#else
 	static inline			void																	gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
+#endif
+#if defined(GPK_WINDOWS)
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); if(p) (p[size] = 0); return p; }
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size); if(p) (p[size] = 0); return p; }
+#else
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::malloc(size + GPK_MALLOC_ALIGN); int offset = calc_align_address(GPK_MALLOC_ALIGN, p); if(p) (p[size] = 0); return p; }
 #endif
 
 	template<typename _typePtr>
@@ -88,7 +93,7 @@ namespace gpk
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)
 			return 0x7FFFFFFF;
-			
+
 		return memcmp(pA, pB, sizeof(_tBase));
 	}
 
