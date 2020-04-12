@@ -38,8 +38,8 @@ namespace gpk
 
 #define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
 
-	template<const size_t _sizePrefix, typename... TArgs>
-	void															_gpk_debug_printf								(int severity, const char (&prefix)[_sizePrefix], uint32_t prefixLength, const char* format, const TArgs... args)			{
+	template<typename... TArgs>
+	void															_gpk_debug_printf								(int severity, const char * prefix, uint32_t prefixLength, const char* format, const TArgs... args)			{
 #if defined(GPK_CONSOLE_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
@@ -58,35 +58,25 @@ namespace gpk
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
 	}
-
-#if defined(GPK_WINDOWS)
-	template<size_t _sizePrefix, typename... TArgs>
-	void															gpk_debug_printf								(int severity, int32_t line, const char (&prefixFormat)[_sizePrefix], const char * format, const TArgs... args)		{
-		static char															prefixString	[_sizePrefix + 8]	= {};
-		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, line);
-		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, args...);
-	}
-#else
-	template<size_t _sizePrefix, typename... TArgs>
-	void															gpk_debug_printf								(int severity, int32_t line, const char (&prefixFormat)[_sizePrefix], const char * function, const char * format, const TArgs... args)		{
-		static char															prefixString	[_sizePrefix + 1024]			= {};
-		static const int 													prefixLength									= ::sprintf(prefixString, prefixFormat, severity, __LINE__, function);
-		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, args...);
-	}
-#endif
-	template<typename... _tArgs>	inline	constexpr	void		dummy		(_tArgs...)		{}
+	template<typename... _tArgs>	inline	constexpr	void		dummy		(_tArgs&&...)		{}
 }
 
 
 
 #if !defined(GPK_WINDOWS)
-#	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, ## __VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)			do {																																\
+		static constexpr	const char										prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){%s}:";								\
+		static char															prefixString	[sizeof(prefixFormat) + 8]		= {};																		\
+		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__, __func__);	\
+		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);		\
+	} while(0)
+//#	define debug_printf(severity, severityStr, format, ...)			::gpk::gpk_debug_printf(severity, __LINE__, ":%u:" severityStr ":" __FILE__ "(%u){%s}:", __func__, format, ## __VA_ARGS__)
 #else
 #	define debug_printf(severity, severityStr, format, ...)			do {																													\
 		static constexpr	const char										prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){" __FUNCTION__ "}:";	\
 		static char															prefixString	[sizeof(prefixFormat) + 8]		= {};															\
 		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__);	\
-		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);																		\
+		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);		\
 	} while(0)
 #endif
 
@@ -106,7 +96,7 @@ namespace gpk
 #		define error_printf(format, ...)								do { debug_printf(1, "error"	, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #endif
 #	else
-#		define error_printf(format, ...)								do { ; GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)								do { ::gpk::dummy(__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #	endif
 #endif
 

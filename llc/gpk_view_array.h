@@ -19,7 +19,7 @@ namespace gpk
 
 		// Constructors
 		inline constexpr							view_array					()																			noexcept	= default;
-		inline constexpr							view_array					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
+		inline										view_array					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
 			gthrow_if(0 == dataElements && 0 != elementCount, "Invalid parameters: %p, %u.", dataElements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
