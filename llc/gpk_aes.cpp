@@ -335,7 +335,7 @@ static	void									Cipher									(state_t* state, uint8_t* RoundKey, ::gpk::AE
 }
 
 // Decrypts the PlainText with the Key using AES algorithm.
-static	void									InvCipher							(state_t* state, uint8_t* RoundKey, ::gpk::AES_LEVEL level)					{
+static	void									InvCipher							(state_t* state, uint8_t* RoundKey, ::gpk::AES_LEVEL level)			{
 	uint8_t												Nr									= 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nr = 10; break;
@@ -355,14 +355,14 @@ static	void									InvCipher							(state_t* state, uint8_t* RoundKey, ::gpk::A
 	AddRoundKey(0, state, RoundKey);
 }
 
-static	void									XorWithIv							(uint8_t* buf, uint8_t* Iv)													{
+static	void									XorWithIv							(uint8_t* buf, uint8_t* Iv)											{
 	for (uint8_t i = 0; i < ::gpk::AES_SIZEBLOCK; ++i) // The block in AES is always 128bit no matter the key size
 		buf[i]											^= Iv[i];
 }
 
 /* Public functions:                                                         */
-void											gpk::aesECBEncrypt					(::gpk::SAESContext *ctx, uint8_t* buf)										{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesECBDecrypt					(::gpk::SAESContext* ctx, uint8_t* buf)										{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesECBEncrypt					(::gpk::SAESContext *ctx, uint8_t* buf)								{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesECBDecrypt					(::gpk::SAESContext* ctx, uint8_t* buf)								{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
 void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf, uint32_t length)	{
 	uint8_t												* Iv								= ctx->Iv;
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
@@ -375,7 +375,7 @@ void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf,
 	memcpy(ctx->Iv, Iv, ::gpk::AES_SIZEBLOCK);	// store Iv in ctx for next call */
 }
 
-void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)	{
+void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)			{
 	uint8_t												storeNextIv	[::gpk::AES_SIZEBLOCK];
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		memcpy(storeNextIv, buf, ::gpk::AES_SIZEBLOCK);
@@ -387,7 +387,7 @@ void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf
 }
 
 // Symmetrical operation: same function for encrypting as for decrypting. Note any IV/nonce should never be reused with the same key
-void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)	{
+void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)			{
 	uint8_t												buffer	[::gpk::AES_SIZEBLOCK];
 	int													bi									= ::gpk::AES_SIZEBLOCK;
 	for (uint32_t i = 0; i < length; ++i, ++bi) {
@@ -408,39 +408,47 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	}
 }
 
-::gpk::error_t										gpk::aesEncode							(const byte_t* messageToEncrypt, uint32_t dataLength, const ::gpk::view_array<const byte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted)	{
-	ree_if(0 == messageToEncrypt, "Cannot encode a null input. Data length: %u.", dataLength);
-	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageToEncrypt);
-	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
-	int8_t													excedent								= dataLength % ::gpk::AES_SIZEBLOCK;
-	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
-	outputEncrypted.clear();
-	gpk_necall(outputEncrypted.resize(dataLength + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "%s", "Out of memory?");
-	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
-		outputEncrypted[dataLength + iPad]					= paddingRequired;
-	memcpy(outputEncrypted.begin(), messageToEncrypt, dataLength);
-
+::gpk::error_t										gpk::aesEncode							(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted)	{
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
 	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
 		iv[iVal]											= (uint8_t)(::gpk::noise1DBase(::gpk::timeCurrentInUs()) * fraction);
-	::gpk::SAESContext										aes;
-	::gpk::aesInitCtxIV(&aes, (const uint8_t*)encryptionKey.begin(), level, iv);
-	::gpk::aesCBCEncryptBuffer(&aes, (uint8_t*)outputEncrypted.begin(), outputEncrypted.size());
+
+	gpk_necall(::gpk::aesEncode(messageToEncrypt, iv, encryptionKey, level, outputEncrypted), "%s", "Failed to encrypt message.");
 	gpk_necall(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV), "%s", "Out of memory?");
 	memcpy(&outputEncrypted[outputEncrypted.size() - ::gpk::AES_SIZEIV], iv, ::gpk::AES_SIZEIV);
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode							(const byte_t* messageEncrypted, uint32_t dataLength, const ::gpk::view_array<const byte_t>& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted)	{
-	ree_if(0 == messageEncrypted, "Cannot decode a null input. Data length: %u.", dataLength);
-	ree_if(0 == dataLength		, "Cannot encode empty message at address %p.", messageEncrypted);
-	ree_if(dataLength % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", dataLength);
+::gpk::error_t										gpk::aesDecode							(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted)	{
+	return ::gpk::aesDecode({messageEncrypted.begin(), messageEncrypted.size() - ::gpk::AES_SIZEIV}, {(uint8_t*)&messageEncrypted[messageEncrypted.size() - ::gpk::AES_SIZEIV], ::gpk::AES_SIZEIV}, encryptionKey, level, outputDecrypted);
+}
+
+::gpk::error_t										gpk::aesEncode						(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted) {
+	ree_if(0 == messageToEncrypt.size(), "Cannot encode empty message at address %p.", messageToEncrypt);
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
-	gpk_necall(outputDecrypted.resize(dataLength - ::gpk::AES_SIZEIV), "%s", "Out of memory?");
-	memcpy(outputDecrypted.begin(), messageEncrypted, outputDecrypted.size());
+	int8_t													excedent								= messageToEncrypt.size() % ::gpk::AES_SIZEBLOCK;
+	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
+	outputEncrypted.clear();
+	gpk_necall(outputEncrypted.resize(messageToEncrypt.size() + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "%s", "Out of memory?");
+	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
+		outputEncrypted[messageToEncrypt.size() + iPad]		= paddingRequired;
+	memcpy(outputEncrypted.begin(), messageToEncrypt.begin(), messageToEncrypt.size());
+
 	::gpk::SAESContext										aes;
-	::gpk::aesInitCtxIV(&aes, (const uint8_t*)encryptionKey.begin(), level, (uint8_t*)&messageEncrypted[outputDecrypted.size()]);
+	::gpk::aesInitCtxIV(&aes, (const uint8_t*)encryptionKey.begin(), level, iv.begin());
+	::gpk::aesCBCEncryptBuffer(&aes, (uint8_t*)outputEncrypted.begin(), outputEncrypted.size());
+	return 0;
+}
+
+::gpk::error_t										gpk::aesDecode						(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted) {
+	ree_if(0 == messageEncrypted.size(), "Cannot encode empty message at address %p.", messageEncrypted.begin());
+	ree_if(messageEncrypted.size() % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", messageEncrypted.size());
+	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
+	gpk_necall(outputDecrypted.resize(messageEncrypted.size()), "%s", "Out of memory?");
+	memcpy(outputDecrypted.begin(), messageEncrypted.begin(), outputDecrypted.size());
+	::gpk::SAESContext										aes;
+	::gpk::aesInitCtxIV(&aes, (const uint8_t*)encryptionKey.begin(), level, iv.begin());
 	::gpk::aesCBCDecryptBuffer(&aes, (uint8_t*)outputDecrypted.begin(), outputDecrypted.size());
 	if(outputDecrypted[outputDecrypted.size() - 1] == 0)
 		gpk_necall(outputDecrypted.resize(outputDecrypted.size() - ::gpk::AES_SIZEBLOCK), "%s", "Out of memory?");
