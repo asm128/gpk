@@ -92,8 +92,8 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	uint32_t										offset								= decrypted.size();
 	uint32_t										i									= 0;
 	gpk_necall(decrypted.resize(offset + encrypted.size() + 1), "%s", "Out of memory?");
-	byte_t											* pDecrypted						= &decrypted[offset];pDecrypted;
-	const uint64_t									* pEncrypted						= encrypted.begin();pEncrypted;
+	byte_t											* pDecrypted						= &decrypted[offset];
+	const uint64_t									* pEncrypted						= encrypted.begin();
 	while(i < encrypted.size()) {
 		uint64_t										ct									= pEncrypted[i];
 		uint64_t										k									= 1;

@@ -7,6 +7,7 @@
 #	define GPK_STDCALL				//__stdcall
 #	define GPK_MODULE_API_EXPORT	__declspec(dllexport)
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
+#	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
 #elif defined(GPK_LINUX)
 #	define GPK_STDCALL

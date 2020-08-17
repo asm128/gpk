@@ -8,7 +8,7 @@
 namespace gpk
 {
 	static				const ::gpk::view_const_string				INVALID_ENUM_VALUE_STR					= "INVALID";
-	//static				const ::gpk::view_const_string				UNDEFINED_ENUM_TYPE_STR					= "Undefined enumeration type.";
+	//static constexpr	const ::gpk::view_const_string				UNDEFINED_ENUM_TYPE_STR					= "Undefined enumeration type.";
 	static				const ::gpk::view_const_string				UNDEFINED_ENUM_VALUE_STR				= "Undefined enumeration value";
 	static				const ::gpk::view_const_string				UNRESOLVED_ENUM_LABEL_STR				= "Unresolved enumeration value name";
 

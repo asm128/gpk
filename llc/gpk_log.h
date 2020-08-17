@@ -1,4 +1,5 @@
 #include "gpk_error.h"
+#include "gpk_eval.h"
 #include "gpk_debug.h"
 #include "gpk_size.h"
 #include "gpk_string.h"
@@ -33,8 +34,10 @@
 
 namespace gpk
 {
+  typedef	void													(*debug_print_t)								(const char* text, uint32_t textLen);
+
 	void															_gpk_print_system_errors						(const char* prefix, uint32_t prefixLen);
-	void															_base_debug_print								(const char* prefix, uint32_t prefixLen);
+	void															_base_debug_print								(const char* text, uint32_t textLen);
 
 #define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
 
@@ -44,29 +47,28 @@ namespace gpk
 		printf("%s", prefix);
 #endif
 		base_debug_print(prefix, prefixLength);
-		char																customDynamicString	[8192]						= {0};
+		char																customDynamicString	[8192]						= {};
 #if !defined(GPK_WINDOWS)
-		const size_t														stringLength									= sprintf(customDynamicString, format, args...);
+		const size_t														stringLength									= snprintf(customDynamicString, sizeof(customDynamicString), format, args...);
 #else
-		const size_t														stringLength									= sprintf_s(customDynamicString, format, args...);
+		const size_t														stringLength									= snprintf(customDynamicString, sizeof(customDynamicString), format, args...);//sprintf_s(customDynamicString, format, args...);
 #endif
+		const size_t														actualLen										= ::gpk::min(stringLength, sizeof(customDynamicString)-1);
+		customDynamicString[actualLen ? actualLen - 1 : 0] = '\n';
 #if defined(GPK_CONSOLE_LOG_ENABLED)
-		printf("%s\n", customDynamicString);
+		printf("%s", customDynamicString);
 #endif
 		base_debug_print(customDynamicString, (int)stringLength);
-		base_debug_print("\n", 1);
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
 	}
 	template<typename... _tArgs>	inline	constexpr	void		dummy		(_tArgs&&...)		{}
 }
 
-
-
 #if !defined(GPK_WINDOWS)
 #	define debug_printf(severity, severityStr, format, ...)			do {																																\
 		static constexpr	const char										prefixFormat	[]								= ":%u:" severityStr ":" __FILE__ "(%u){%s}:";								\
-		static char															prefixString	[sizeof(prefixFormat) + 8]		= {};																		\
+		static char															prefixString	[sizeof(prefixFormat) + 256]	= {};																		\
 		static const int 													prefixLength									= ::sprintf_s(prefixString, prefixFormat, severity, __LINE__, __func__);	\
 		::gpk::_gpk_debug_printf(severity, prefixString, prefixLength == -1 ? 0 : prefixLength, format, __VA_ARGS__);		\
 	} while(0)
@@ -157,9 +159,9 @@ namespace gpk
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
 #if !defined(GPK_WINDOWS)
-#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#		define gthrow_if(condition, format, ...)						if(condition) { error_printf(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
 #	else
-#		define gthrow_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#		define gthrow_if(condition, format, ...)						if(condition) { error_printf(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
 #	endif
 #	else
 //#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
@@ -171,13 +173,13 @@ namespace gpk
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
 #		if !defined(GPK_WINDOWS)
-#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
-#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
-#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
 #		else
-#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
-#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
-#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 						}
+#			define gerror_if(condition, format, ...)						if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 		}
+#			define gwarn_if(condition, format, ...)							if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 		}
+#			define ginfo_if(condition, format, ...)							if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 		}
 #		endif
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.

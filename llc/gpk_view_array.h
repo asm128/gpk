@@ -15,29 +15,38 @@ namespace gpk
 							_tElement				* Data						= 0;
 							uint32_t				Count						= 0;
 	public:
-		typedef				_tElement				TElement;
+		typedef				_tElement					TElement;
+		typedef				view_array<const _tElement>	TConstView;
+		typedef				view_array<_tElement>		TView;
 
 		// Constructors
-		inline constexpr							view_array					()																			noexcept	= default;
-		inline										view_array					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
-			gthrow_if(0 == dataElements && 0 != elementCount, "Invalid parameters: %p, %u.", dataElements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+		inline constexpr							view_array					()																		noexcept	= default;
+		inline										view_array					(_tElement* elements, uint32_t elementCount)										: Data(elements), Count(elementCount)										{
+			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
-		inline constexpr							view_array					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount)										{}
+		inline constexpr							view_array					(_tElement (&_elements)[_elementCount])									noexcept	: Data(_elements), Count(_elementCount)										{}
 
 		template <size_t _elementCount>
-		inline										view_array					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)_elementCount, elementCount))			{
+		inline										view_array					(_tElement (&_elements)[_elementCount], uint32_t elementCount)						: Data(_elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{
 			gthrow_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
 		}
 
 		// Operators
-		inline constexpr	operator				view_array<const _tElement>	()																	const	noexcept	{ return {Data, Count}; }
-							_tElement&				operator[]					(uint32_t index)																		{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %i.", index); return Data[index]; }
-							const _tElement&		operator[]					(uint32_t index)													const				{ gthrow_if(0 == Data, "%s", "Uninitialized array pointer."); gthrow_if(index >= Count, "Invalid index: %i.", index); return Data[index]; }
-
-							bool					operator					!=(const ::gpk::view_array<const _tElement>& other)					const				{ return !operator==(other); }
-							bool					operator					==(const ::gpk::view_array<const _tElement>& other)					const				{
+		inline constexpr	operator				view_array<const _tElement>	()																const	noexcept	{ return {Data, Count}; }
+							_tElement&				operator[]					(uint32_t index)																	{
+			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
+			gthrow_if(index >= Count, "Invalid index: %i.", index);
+			return Data[index];
+		}
+							const _tElement&		operator[]					(uint32_t index)												const				{
+			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
+			gthrow_if(index >= Count, "Invalid index: %i.", index);
+			return Data[index];
+		}
+							bool					operator					!=(const TConstView& other)										const				{ return !operator==(other); }
+							bool					operator					==(const TConstView& other)										const				{
 			if(this->size() != other.size())
 				return false;
 			if(this->begin() == other.begin())
@@ -46,13 +55,22 @@ namespace gpk
 		}
 
 		// Methods
-		inline				_tElement*				begin						()																			noexcept	{ return Data;			}
-		inline				_tElement*				end							()																			noexcept	{ return Data + Count;	}
+		inline				_tElement*				begin						()																		noexcept	{ return Data;			}
+		inline				_tElement*				end							()																		noexcept	{ return Data + Count;	}
 
-		inline constexpr	const _tElement*		begin						()																	const	noexcept	{ return Data;			}
-		inline constexpr	const _tElement*		end							()																	const	noexcept	{ return Data + Count;	}
+		inline constexpr	const _tElement*		begin						()																const	noexcept	{ return Data;			}
+		inline constexpr	const _tElement*		end							()																const	noexcept	{ return Data + Count;	}
 
-		inline constexpr	const uint32_t&			size						()																	const	noexcept	{ return Count;			}
+		inline constexpr	const uint32_t&			size						()																const	noexcept	{ return Count;			}
+
+							gpk::error_t			slice						(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)	const				{
+			ree_if(offset > Count, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)Count, offset);
+			const uint32_t									newSize						= Count - offset;
+			if(count != (uint32_t)-1)
+				ree_if(count > newSize, "Out of range. Max size: %u. Requested: %u.", (uint32_t)newSize, count);
+			out = {&Data[offset], ::gpk::min(newSize, count)};
+			return out.size();
+		}
 	};
 
 	// view_array common typedefs
@@ -104,7 +122,6 @@ namespace gpk
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])							: view_array(inputString, _stringLength)	{ Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);																			}
 		//constexpr		operator									const view_const_char&			()															const	noexcept	{ return *(const view_const_string*)this; }
 	};
-
 
 	template <typename _tCell>
 						::gpk::error_t							reverse								(::gpk::view_array<_tCell> elements)																			{
