@@ -41,13 +41,10 @@ namespace gpk
 
 #if defined(GPK_WINDOWS)
 	static inline			void																	gpk_free					(void* ptr)											noexcept	{ _aligned_free(ptr);									}
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
 #else
 	static inline			void																	gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
-#endif
-#if defined(GPK_WINDOWS)
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); if(p) (p[size] = 0); return p; }
-#else
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); if(p) (p[size] = 0); return p; }
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #endif
 
 	template<typename _typePtr>
