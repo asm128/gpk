@@ -44,21 +44,15 @@ namespace gpk
 #endif
 #if defined(GPK_WINDOWS)
 	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); if(p) (p[size] = 0); return p; }
-#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size); if(p) (p[size] = 0); return p; }
 #else
-	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::malloc(size + GPK_MALLOC_ALIGN); int offset = calc_align_address(GPK_MALLOC_ALIGN, p); if(p) (p[size] = 0); return p; }
+	static inline			void*																	gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); if(p) (p[size] = 0); return p; }
 #endif
 
 	template<typename _typePtr>
 	static inline			void																	safe_gpk_free				(_typePtr &p)										noexcept	{
 		_typePtr																							_pepe						= p;
 		p																								= 0;
-#if defined(GPK_WINDOWS)
-		_aligned_free((void*)_pepe);
-#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
-		free((void*)_pepe);
-#endif
+		gpk_free((void*)_pepe);
 	}
 
 	struct auto_gpk_free : public ::gpk::auto_handler<void*, nullptr>					{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
