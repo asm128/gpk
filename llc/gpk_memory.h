@@ -8,20 +8,13 @@
 #define GPK_MEMORY_H__92836409283642038462309846
 
 #ifndef GPK_MALLOC_CUSTOM_ALIGN
-#	define GPK_MALLOC_CUSTOM_ALIGN					16
+#	define GPK_MALLOC_CUSTOM_ALIGN	16
 #endif
 #ifdef GPK_MALLOC_CUSTOM_ALIGN
-#	define GPK_MALLOC_ALIGN						GPK_MALLOC_CUSTOM_ALIGN
+#	define GPK_MALLOC_ALIGN			GPK_MALLOC_CUSTOM_ALIGN
 #else
-#	define GPK_MALLOC_ALIGN						sizeof(void*)
+#	define GPK_MALLOC_ALIGN			sizeof(void*)
 #endif
-
-//#define GREF_CUSTOM_ALIGN						16
-//#ifdef GREF_CUSTOM_ALIGN
-//#	define BASETYPE_ALIGN						GREF_CUSTOM_ALIGN
-//#else
-//#	define BASETYPE_ALIGN						sizeof(void*)
-//#endif
 
 //#define	gpk_calc_align_address		(alignment, address)	((alignment - ((alignment - 1) & (uintptr_t)address)) & (alignment - 1))	// returns the difference between an origin address and the next aligned addres. The alignment must always be a power of two.
 //#define	gpk_calc_align_address_4	(address)				gpk_calc_align_address( 4, address)	// (0x04 - (0x03 & (uintptr_t)address) & 0x03)
@@ -32,7 +25,7 @@
 
 namespace gpk
 {
-	static constexpr		const uintptr_t															calc_align_address			(uintptr_t alignment, uintptr_t address)			noexcept	{ return ((alignment - ((alignment - 1) & address)) & (alignment - 1)); }
+	static constexpr		const uintptr_t															calc_align_address			(uintptr_t alignment, uintptr_t address)			noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
 	static inline constexpr	const uintptr_t															calc_align_address_4		(uintptr_t address)									noexcept	{ return calc_align_address( 4, address); }
 	static inline constexpr	const uintptr_t															calc_align_address_8		(uintptr_t address)									noexcept	{ return calc_align_address( 8, address); }
 	static inline constexpr	const uintptr_t															calc_align_address_16		(uintptr_t address)									noexcept	{ return calc_align_address(16, address); }

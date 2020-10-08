@@ -324,8 +324,9 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	ree_if(index < jsonAsString.size() && (charCurrent != '0' && (charCurrent < '1' || charCurrent > '9')), "Character '%c' at index %i is not a number.", charCurrent, index);
 	const uint32_t													sizeNum												= lengthJsonNumber(index, jsonAsString);
 	::gpk::SJSONToken												currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
-
-	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal({&jsonAsString[index], sizeNum}, &currentElement.Value);
+	::gpk::view_const_char											numString											= {};
+	gpk_necall(jsonAsString.slice(numString, index, sizeNum), "%s", "");
+	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal(numString, &currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type											= ::gpk::JSON_TYPE_DOUBLE;
 		double															finalValue											= (double)currentElement.Value;
@@ -335,9 +336,10 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 		const uint32_t													lenDec												= sizeNum - intCount;
 		if(lenDec) {
 			double															decValue											= 0;
-			::gpk::error_t													decCount											= ::gpk::parseIntegerDecimal({&jsonAsString[offsetStart], lenDec}, &decValue);
+			gpk_necall(jsonAsString.slice(numString, offsetStart, lenDec), "%s", "");
+			const ::gpk::error_t											decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
+			ree_if(errored(decCount), "%s", "Unknown error.");
 			decValue													/= ::gpk::powui(10, decCount);
-			ree_if(errored(intCount), "%s", "Unknown error.");
 			//info_printf("Decimal part: %f.", decValue);
 			finalValue													+= decValue;
 		}
@@ -529,8 +531,8 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	ree_if(stateReader.NestLevel, "Nest level: %i (Needs to be zero).", stateReader.NestLevel);
 	reader.View.resize(reader.Token.size());
 	for(uint32_t iView = 0; iView < reader.Token.size(); ++iView) {
-		::gpk::SJSONToken												& currentElement									= reader.Token[iView];
-		reader.View[iView]											= ::gpk::view_const_char{&jsonAsString[currentElement.Span.Begin], currentElement.Span.End - currentElement.Span.Begin};
+		const ::gpk::SJSONToken											& currentElement									= reader.Token[iView];
+		gpk_necall(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin), "%s", "");
 	}
 	return ::gpk::jsonTreeRebuild(reader.Token, reader.Tree);
 }

@@ -76,13 +76,13 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	gpk_jexpr_info_printf("Processing expression: '%s'", ::gpk::toString(readerExpression.View[indexNodeExpression]).begin());
 	::gpk::SEvaluationStepResult						lastResult								= {indexNodeJSON,};
 	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < nodeExpression->Children.size(); ++iFirstLevelExpression) {
-		const ::gpk::SExpressionNode						& childToSolve								= *nodeExpression->Children[iFirstLevelExpression];
-		const ::gpk::SJSONNode								* currentJSON								= (0 <= (int32_t)indexNodeJSON) ? inputJSON.Tree[indexNodeJSON] : 0;
-		//const ::gpk::SExpressionNode						* currentLiteral							= (0 <= (int32_t)indexNodeJSON) ? 0 : readerExpression.Tree[(((int32_t)indexNodeJSON) + 0xF) * -1];
-		const ::gpk::view_const_char						currentView									= lastResult.Output;
-		const ::gpk::view_const_char						currentExpressionView						= readerExpression.View[childToSolve.ObjectIndex];
-		const ::gpk::JSON_TYPE								currentType									= currentJSON ? currentJSON->Token->Type : ::gpk::JSON_TYPE_UNKNOWN;
-		const ::gpk::EXPRESSION_READER_TYPE					expressionType								= childToSolve.Token->Type;
+		const ::gpk::SExpressionNode						& childToSolve							= *nodeExpression->Children[iFirstLevelExpression];
+		const ::gpk::SJSONNode								* currentJSON							= (0 <= (int32_t)indexNodeJSON) ? inputJSON.Tree[indexNodeJSON] : 0;
+		//const ::gpk::SExpressionNode						* currentLiteral						= (0 <= (int32_t)indexNodeJSON) ? 0 : readerExpression.Tree[(((int32_t)indexNodeJSON) + 0xF) * -1];
+		const ::gpk::view_const_char						currentView								= lastResult.Output;
+		const ::gpk::view_const_char						currentExpressionView					= readerExpression.View[childToSolve.ObjectIndex];
+		const ::gpk::JSON_TYPE								currentType								= currentJSON ? currentJSON->Token->Type : ::gpk::JSON_TYPE_UNKNOWN;
+		const ::gpk::EXPRESSION_READER_TYPE					expressionType							= childToSolve.Token->Type;
 		lastResult.Expression							= currentExpressionView;
 		gpk_jexpr_info_printf("Reading first-level expression: %u.", iFirstLevelExpression);
 		gpk_jexpr_info_printf("Current json view  (%u): '%s'", ::gpk::toString(currentView).begin());
