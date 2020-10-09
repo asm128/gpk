@@ -63,7 +63,7 @@ namespace gpk
 			const uint32_t													offsetDomain						= arrobaPos + 1;
 			gpk_necall(original.slice(right, offsetDomain, original.size() - offsetDomain), "%s", "Invalid slice");
 		}
-		return 0;
+		return arrobaPos;
 	}
 
 	template<typename _tElement>
@@ -77,7 +77,7 @@ namespace gpk
 			gpk_necall(original.slice(left, 0, (uint32_t)posFragment), "%s", "Invalid slice");
 			gpk_necall(original.slice(right, posFragment, (uint32_t)original.size() - posFragment), "%s", "Invalid slice");
 		}
-		return 0;
+		return posFragment;
 	}
 
 	template<typename _tElement>
@@ -92,7 +92,7 @@ namespace gpk
 			const uint32_t													offsetDomain						= arrobaPos + sequenceToFind.size();
 			gpk_necall(original.slice(right, offsetDomain, original.size() - offsetDomain), "%s", "Invalid slice");
 		}
-		return 0;
+		return arrobaPos;
 	}
 
 	template<typename _tElement>
@@ -106,7 +106,7 @@ namespace gpk
 			gpk_necall(original.slice(left, 0, (uint32_t)posFragment), "%s", "Invalid slice");
 			gpk_necall(original.slice(right, posFragment, (uint32_t)original.size() - posFragment), "%s", "Invalid slice");
 		}
-		return 0;
+		return posFragment;
 	}
 } // namespace
 
