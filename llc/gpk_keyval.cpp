@@ -44,8 +44,8 @@
 		? ::gpk::view_const_string{&input_string[indexToken + 1], input_string.size() - (indexToken + 1)}
 		: ::gpk::view_const_string{}	// empty view if there's no data after the separator.
 		;
-	::gpk::trim(output_views.Key);
-	::gpk::trim(output_views.Val);
+	::gpk::trim(output_views.Key, output_views.Key);
+	::gpk::trim(output_views.Val, output_views.Val);
 	return 0;
 }
 

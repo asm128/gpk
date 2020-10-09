@@ -133,13 +133,9 @@ namespace gpk
 		return 0;
 	}
 
-						::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
-						::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
-						::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_string & characters = " \t\b\n\r");
-
-	static inline		::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::rtrim	(trimmed, trimmed, characters); }
-	static inline		::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::ltrim	(trimmed, trimmed, characters); }
-	static inline		::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_string & characters = " \t\b\n\r")	{ return ::gpk::trim	(trimmed, trimmed, characters); }
+						::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
+						::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
+						::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
 
 	template<typename _tElement>
 						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
