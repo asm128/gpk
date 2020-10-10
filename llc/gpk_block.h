@@ -142,10 +142,12 @@ namespace gpk
 			const ::gpk::view_const_char									fileNameCurrent				= paths[iFile];
 			if(5 >= fileNameCurrent.size())
 				continue;
-			::gpk::view_const_char											filePart					= {&fileNameCurrent[fileNameCurrent.size() - 3], 3};
+			::gpk::view_const_char											filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
+			gpk_necall(fileNameCurrent.slice(filePart, fileNameCurrent.size() - extension.size(), extension.size()), "%s", "");
 			if(filePart != extension)
 				continue;
-			filePart													= {fileNameCurrent.begin(), fileNameCurrent.size()-4};
+			//filePart													= {fileNameCurrent.begin(), fileNameCurrent.size() - extension.size() -1};
+			gpk_necall(fileNameCurrent.slice(filePart, 0, fileNameCurrent.size() - extension.size() - 1), "%s", "");
 			::gpk::error_t													indexOfPrevDot				= ::gpk::rfind('.', filePart);
 			if(-1 == indexOfPrevDot)
 				continue;
@@ -153,7 +155,7 @@ namespace gpk
 			uint32_t														idBlock						= (uint32_t)-1;
 			::gpk::parseIntegerDecimal(filePart, &idBlock);
 			mapTable.MaxBlockOnDisk										= ::gpk::max(mapTable.MaxBlockOnDisk, (int32_t)idBlock);
-			if(0 <= ::gpk::find(idBlock, ::gpk::view_array<const uint32_t>{blocksToSkip.begin(), blocksToSkip.size()}))
+			if(0 <= ::gpk::find(idBlock, ::gpk::view_const_uint32{blocksToSkip.begin(), blocksToSkip.size()}))
 				continue;
 			::gpk::SRecordMap												indexMap					= {};
 			indexMap.IdBlock											= idBlock;

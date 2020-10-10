@@ -34,8 +34,8 @@
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
 	//char													buffer[4096]					= {};
 	::gpk::SCGIModule										module;
-	::std::string											moduleName						= {framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)};
-	::gpk::loadCGIModule(module, {moduleName.data(), (uint32_t)moduleName.size()});
+	::gpk::array_pod<char_t>								moduleName						= gpk::toString({framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)});
+	::gpk::loadCGIModule(module, moduleName);
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
 	module.Update	(module.Application, false);
@@ -56,7 +56,7 @@ static constexpr	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>& keyVal)	{
+::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 	try { // retrieve width and height
@@ -99,14 +99,14 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
 		::gpk::view_const_string								querystring;
-		::gpk::find("QUERY_STRING", framework.RuntimeValues.QueryStringKeyVals, querystring);
+		::gpk::find(::gpk::vcs{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= runtimeValues.QueryStringElements;
+		const ::gpk::view_array<::gpk::view_const_char>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
-			const ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::view_const_string>	& keyval		= runtimeValues.QueryStringKeyVals[iChar];
+			const ::gpk::TKeyValConstChar	& keyval		= runtimeValues.QueryStringKeyVals[iChar];
 			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
 			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
@@ -115,10 +115,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		::gpk::view_const_string								remoteIP	;
 		::gpk::view_const_string								remotePORT	;
 		::gpk::view_const_string								contentLength;
-		::gpk::find("CONTENT_TYPE"	, runtimeValues.QueryStringKeyVals, contentype);
-		::gpk::find("REMOTE_IP"		, runtimeValues.QueryStringKeyVals, remoteIP	);
-		::gpk::find("REMOTE_PORT"	, runtimeValues.QueryStringKeyVals, remotePORT	);
-		::gpk::find("CONTENT_LENGTH", runtimeValues.QueryStringKeyVals, contentLength);
+		::gpk::find({"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
+		::gpk::find({"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
+		::gpk::find({"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);
+		::gpk::find({"CONTENT_LENGTH"}, runtimeValues.QueryStringKeyVals, contentLength);
 		output.append(buffer, ::gpk::formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
 		output.append(buffer, ::gpk::formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
@@ -172,7 +172,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
-	const ::gpk::array_obj<::gpk::view_const_string>		& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	const ::gpk::array_obj<::gpk::view_const_char>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 

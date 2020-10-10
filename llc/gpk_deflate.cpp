@@ -180,7 +180,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
-		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::view_const_string{finalPathName.begin(), uint32_t(-1)});
+		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::vcs{finalPathName.begin(), uint32_t(-1)});
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]				= 0;
 			lenPath									= (uint32_t)strlen(finalPathName.begin());

@@ -38,14 +38,14 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 	::gpk::array_pod<char_t>								fileJSONConfig					= {};
 	::gpk::SJSONReader										jsonConfig						= {};
 	{	// Attempt to load config file.
-		::gpk::view_const_string								fileNameJSONConfig			= "gpk_config.json";
+		::gpk::view_const_string								fileNameJSONConfig				= "gpk_config.json";
 		rew_if(errored(::gpk::fileToMemory(fileNameJSONConfig, fileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
 		gwarn_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // attempt to load address from config file.
 		{ //
 			::gpk::view_const_string								jsonIP							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_ip", jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
+			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
 			else {
 				info_printf("Remote IP: %s.", jsonIP.begin());
 				gerror_if(errored(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect)), "Failed to read IP address from JSON config file: %s.", jsonIP.begin());	// turn the string into a SIPv4 struct.
@@ -54,7 +54,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		{ // load port from config file
 			bestClient.AddressConnect.Port						= 9998;
 			::gpk::view_const_string								jsonPort							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve("application.gpk_cgi_rest.remote_port"	, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				uint64_t												port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, &port);
@@ -100,7 +100,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 		}
 		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
 		gpk_necall(::gpk::clientDisconnect(bestClient), "%s", "error");
-		output									= responseRemote;
+		output												= responseRemote;
 	}
 	return 0;
 }

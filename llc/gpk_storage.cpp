@@ -15,7 +15,7 @@
 #	include <string>
 #endif
 
-int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)								{
+int64_t								gpk::fileSize					(const ::gpk::view_const_char	& fileNameSrc)								{
 	FILE									* fp							= 0;
 	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
 	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
@@ -79,7 +79,7 @@ int64_t								gpk::fileSize					(const ::gpk::view_const_string	& fileNameSrc)	
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static ::gpk::error_t				fileSplitSmall					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
+static ::gpk::error_t				fileSplitSmall					(const ::gpk::view_const_char	& fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	::gpk::array_pod<byte_t>				fileInMemory;
 	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
@@ -103,7 +103,7 @@ static ::gpk::error_t				fileSplitSmall					(const ::gpk::view_const_string	& fi
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
+static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	int64_t									sizeFile						= ::gpk::fileSize(fileNameSrc);
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
@@ -134,7 +134,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 }
 
 // Splits a file into file.## parts.
-::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_string	& fileNameSrc, const uint32_t sizePartMax) {
+::gpk::error_t						gpk::fileSplit					(const ::gpk::view_const_char	& fileNameSrc, const uint32_t sizePartMax) {
 	// -- Get file size to determine which algorithm to use.
 	// -- For files smaller than 3gb, we use a fast algorithm that loads the entire file in memory.
 	// -- For files of, or larger than, 3gb, we use a fast algorithm that loads chunks of 1gb in memory for writing the parts.
@@ -146,7 +146,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 }
 
 // Joins a file split into file.## parts.
-::gpk::error_t						gpk::fileJoin					(const ::gpk::view_const_string	& fileNameDst)	{
+::gpk::error_t						gpk::fileJoin					(const ::gpk::view_const_char	& fileNameDst)	{
 	char									fileNameSrc	[1024]				= {};
 	uint32_t								iFile							= 0;
 	gpk_necall(sprintf_s(fileNameSrc, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
@@ -165,7 +165,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return iFile - 1;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_string>& output)					{
+		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_char>& output)					{
 	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	)
 		gpk_necall(output.push_back({input.Files[iFile].begin(), input.Files[iFile].size()}), "%s", "Out of memory?");
 	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	)
@@ -181,7 +181,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
@@ -224,7 +224,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_string& pathToList, ::gpk::SPathContents& pathContents)						{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::SPathContents& pathContents)						{
 	char																			sPath[4096];
 	char																			bufferFormat[36];
 	sprintf_s(bufferFormat, "%%.%us/*.*", pathToList.size());
@@ -282,7 +282,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
     return 0;
 }
 
-		::gpk::error_t									gpk::fileToMemory									(const ::gpk::view_const_string& fileName, ::gpk::array_pod<byte_t>& fileInMemory)		{
+		::gpk::error_t									gpk::fileToMemory									(const ::gpk::view_const_char& fileName, ::gpk::array_pod<byte_t>& fileInMemory)		{
 	FILE														* fp												= 0;
 	int32_t														fileErr												= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
 	rvw_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
@@ -304,7 +304,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return result;
 }
 
-		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_string& fileName, const ::gpk::view_const_byte& fileInMemory)	{
+		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::view_const_char& fileName, const ::gpk::view_const_byte& fileInMemory)	{
 	FILE														* fp												= 0;
 	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
@@ -317,7 +317,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return result;
 }
 
-		::gpk::error_t									gpk::pathNameCompose								(::gpk::view_const_string path, ::gpk::view_const_string fileName, ::gpk::array_pod<char_t> & out_composed)		{
+		::gpk::error_t									gpk::pathNameCompose								(::gpk::view_const_char path, ::gpk::view_const_char fileName, ::gpk::array_pod<char_t> & out_composed)		{
 	if(path.size()) {
 		for(uint32_t iChar = 0; iChar < path.size(); ++iChar) {
 			const char curChar = path[iChar];
@@ -341,7 +341,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_string	& fi
 	return 0;
 }
 
-		::gpk::error_t									gpk::findLastSlash									(const ::gpk::view_const_string & path)		{
+		::gpk::error_t									gpk::findLastSlash									(const ::gpk::view_const_char & path)		{
 	int32_t														indexOfStartOfFileName0								= ::gpk::rfind('\\', path);
 	int32_t														indexOfStartOfFileName1								= ::gpk::rfind('/', path);
 	return

@@ -9,50 +9,50 @@
 
 namespace gpk
 {
-	static	const ::gpk::view_const_string							cgi_environ	[]		=
-		{	"AUTH_PASSWORD"
-		,	"AUTH_TYPE"
-		,	"AUTH_USER"
-		,	"CERT_COOKIE"
-		,	"CERT_FLAGS"
-		,	"CERT_ISSUER"
-		,	"CERT_KEYSIZE"
-		,	"CERT_SECRETKEYSIZE"
-		,	"CERT_SERIALNUMBER"
-		,	"CERT_SERVER_ISSUER"
-		,	"CERT_SERVER_SUBJECT"
-		,	"CERT_SUBJECT"
-		,	"CF_TEMPLATE_PATH"
-		,	"CONTENT_LENGTH"
-		,	"CONTENT_TYPE"
-		,	"CONTEXT_PATH"
-		,	"GATEWAY_INTERFACE"
-		,	"HTTPS"
-		,	"HTTPS_KEYSIZE"
-		,	"HTTPS_SECRETKEYSIZE"
-		,	"HTTPS_SERVER_ISSUER"
-		,	"HTTPS_SERVER_SUBJECT"
-		,	"HTTP_ACCEPT"
-		,	"HTTP_ACCEPT_ENCODING"
-		,	"HTTP_ACCEPT_LANGUAGE"
-		,	"HTTP_CONNECTION"
-		,	"HTTP_COOKIE"
-		,	"HTTP_HOST"
-		,	"HTTP_REFERER"
-		,	"HTTP_USER_AGENT"
-		,	"PATH_INFO"
-		,	"QUERY_STRING"
-		,	"REMOTE_ADDR"
-		,	"REMOTE_HOST"
-		,	"REMOTE_USER"
-		,	"REQUEST_METHOD"
-		,	"SCRIPT_NAME"
-		,	"SERVER_NAME"
-		,	"SERVER_PORT"
-		,	"SERVER_PORT_SECURE"
-		,	"SERVER_PROTOCOL"
-		,	"SERVER_SOFTWARE"
-		,	"WEB_SERVER_API"
+	static	const ::gpk::view_const_char							cgi_environ	[]		=
+		{	::gpk::view_const_string{"AUTH_PASSWORD"		}
+		,	::gpk::view_const_string{"AUTH_TYPE"			}
+		,	::gpk::view_const_string{"AUTH_USER"			}
+		,	::gpk::view_const_string{"CERT_COOKIE"			}
+		,	::gpk::view_const_string{"CERT_FLAGS"			}
+		,	::gpk::view_const_string{"CERT_ISSUER"			}
+		,	::gpk::view_const_string{"CERT_KEYSIZE"			}
+		,	::gpk::view_const_string{"CERT_SECRETKEYSIZE"	}
+		,	::gpk::view_const_string{"CERT_SERIALNUMBER"	}
+		,	::gpk::view_const_string{"CERT_SERVER_ISSUER"	}
+		,	::gpk::view_const_string{"CERT_SERVER_SUBJECT"	}
+		,	::gpk::view_const_string{"CERT_SUBJECT"			}
+		,	::gpk::view_const_string{"CF_TEMPLATE_PATH"		}
+		,	::gpk::view_const_string{"CONTENT_LENGTH"		}
+		,	::gpk::view_const_string{"CONTENT_TYPE"			}
+		,	::gpk::view_const_string{"CONTEXT_PATH"			}
+		,	::gpk::view_const_string{"GATEWAY_INTERFACE"	}
+		,	::gpk::view_const_string{"HTTPS"				}
+		,	::gpk::view_const_string{"HTTPS_KEYSIZE"		}
+		,	::gpk::view_const_string{"HTTPS_SECRETKEYSIZE"	}
+		,	::gpk::view_const_string{"HTTPS_SERVER_ISSUER"	}
+		,	::gpk::view_const_string{"HTTPS_SERVER_SUBJECT"	}
+		,	::gpk::view_const_string{"HTTP_ACCEPT"			}
+		,	::gpk::view_const_string{"HTTP_ACCEPT_ENCODING"	}
+		,	::gpk::view_const_string{"HTTP_ACCEPT_LANGUAGE"	}
+		,	::gpk::view_const_string{"HTTP_CONNECTION"		}
+		,	::gpk::view_const_string{"HTTP_COOKIE"			}
+		,	::gpk::view_const_string{"HTTP_HOST"			}
+		,	::gpk::view_const_string{"HTTP_REFERER"			}
+		,	::gpk::view_const_string{"HTTP_USER_AGENT"		}
+		,	::gpk::view_const_string{"PATH_INFO"			}
+		,	::gpk::view_const_string{"QUERY_STRING"			}
+		,	::gpk::view_const_string{"REMOTE_ADDR"			}
+		,	::gpk::view_const_string{"REMOTE_HOST"			}
+		,	::gpk::view_const_string{"REMOTE_USER"			}
+		,	::gpk::view_const_string{"REQUEST_METHOD"		}
+		,	::gpk::view_const_string{"SCRIPT_NAME"			}
+		,	::gpk::view_const_string{"SERVER_NAME"			}
+		,	::gpk::view_const_string{"SERVER_PORT"			}
+		,	::gpk::view_const_string{"SERVER_PORT_SECURE"	}
+		,	::gpk::view_const_string{"SERVER_PROTOCOL"		}
+		,	::gpk::view_const_string{"SERVER_SOFTWARE"		}
+		,	::gpk::view_const_string{"WEB_SERVER_API"		}
 		};
 
 	enum CGI_MEDIA_TYPE
@@ -92,7 +92,7 @@ namespace gpk
 	};
 
 	struct SCGIRuntimeValues {
-		::gpk::array_obj<::gpk::view_const_string>												QueryStringElements			= {};
+		::gpk::array_obj<::gpk::view_const_char>												QueryStringElements			= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>												QueryStringKeyVals			= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>												FormKeyVals					= {};
 		::gpk::array_obj<::gpk::TKeyValConstString>												EnvironViews				= {};
@@ -106,7 +106,7 @@ namespace gpk
 	::gpk::error_t																			cgiMain						(int argc, char** argv, char**envv);
 
 	struct SCGIFramework {
-		::gpk::view_const_string																ModuleName					= "";
+		::gpk::view_const_char																	ModuleName					= {};
 		::gpk::SCGIRuntimeValues																RuntimeValues				= {};
 		::gpk::SCoord2<int32_t>																	TargetSize					= {};
 		bool																					Bootstrapped				= false;

@@ -11,15 +11,6 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::join					(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_string> fields)	{
-	for(uint32_t iField = 0; iField < fields.size();) {
-		gpk_necall(query.append(fields[iField]), "%s", "Out of memory?");
-		if(++iField < fields.size())
-			gpk_necall(query.push_back(separator), "%s", "Out of memory?");
-	}
-	return 0;
-}
-
 ::gpk::error_t						gpk::join					(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char> fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(query.append(fields[iField]), "%s", "Out of memory?");
@@ -41,21 +32,21 @@
 	rvi_if(-1, errored(indexToken), "'%c' Token not found.", token);
 	output_views.Key					= {input_string.begin(), (uint32_t)indexToken};
 	output_views.Val					= (indexToken + 1 < (int32_t)input_string.size())
-		? ::gpk::view_const_string{&input_string[indexToken + 1], input_string.size() - (indexToken + 1)}
-		: ::gpk::view_const_string{}	// empty view if there's no data after the separator.
+		? ::gpk::view_const_char{&input_string[indexToken + 1], input_string.size() - (indexToken + 1)}
+		: ::gpk::view_const_char{}	// empty view if there's no data after the separator.
 		;
 	::gpk::trim(output_views.Key, output_views.Key);
 	::gpk::trim(output_views.Val, output_views.Val);
 	return 0;
 }
 
-::gpk::error_t						gpk::find					(const ::gpk::view_const_string & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals, ::gpk::view_const_string& out_val)		{
+::gpk::error_t						gpk::find					(const ::gpk::view_const_char & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals, ::gpk::view_const_char& out_val)		{
 	::gpk::error_t							index						= ::gpk::find(keyToFind, keyvals);
 	out_val								= (-1 == index) ? ::gpk::view_const_string{} : keyvals[index].Val;
 	return index;
 }
 
-::gpk::error_t						gpk::keyvalNumeric			(const ::gpk::view_const_string & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
+::gpk::error_t						gpk::keyvalNumeric			(const ::gpk::view_const_char & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	::gpk::error_t							indexKey					= ::gpk::find(key, keyVals);
 	if(-1 != indexKey) {
@@ -73,7 +64,7 @@
 	return indexKey;
 }
 
-::gpk::error_t						gpk::keyValVerify	(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_string & keyToVerify, const ::gpk::view_const_string & valueToVerify)	{
+::gpk::error_t						gpk::keyValVerify	(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::view_const_char & keyToVerify, const ::gpk::view_const_char & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
 			return (environViews[iKey].Val == valueToVerify) ? iKey : -1;
@@ -81,12 +72,12 @@
 	return -1;
 }
 
-::gpk::error_t										gpk::keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_string> & keysToSave, ::gpk::array_pod<byte_t> & output)	{
-	::gpk::array_pod<::gpk::TKeyValConstString>				keyValsToSave						= {};
+::gpk::error_t									gpk::keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_char> & keysToSave, ::gpk::array_pod<byte_t> & output)	{
+	::gpk::array_pod<::gpk::TKeyValConstString>			keyValsToSave						= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
-			const ::gpk::TKeyValConstString							& kvToCheck							= keyVals[iKey];
-			const ::gpk::view_const_string							& keyToSave							= keysToSave[iRef];
+			const ::gpk::TKeyValConstString						& kvToCheck							= keyVals[iKey];
+			const ::gpk::view_const_char						& keyToSave							= keysToSave[iRef];
 			if(kvToCheck.Key == keyToSave)
 				keyValsToSave.push_back(kvToCheck);
 		}

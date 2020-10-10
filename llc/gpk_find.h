@@ -71,60 +71,60 @@ namespace gpk
 
 	template<typename _tElement>
 						::gpk::error_t							split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
-		const ::gpk::error_t											arrobaPos							= ::gpk::find(valueToFind, original);
-		if(0 > arrobaPos) {
+		const ::gpk::error_t											iValue								= ::gpk::find(valueToFind, original);
+		if(0 > iValue) {
 			left														= original;
 			right														= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, arrobaPos), "%s", "Invalid slice");
-			const uint32_t													offsetDomain						= arrobaPos + 1;
-			gpk_necall(original.slice(right, offsetDomain, original.size() - offsetDomain), "%s", "Invalid slice");
+			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			const uint32_t													offsetRight							= iValue + 1;
+			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
 		}
-		return arrobaPos;
+		return iValue;
 	}
 
 	template<typename _tElement>
 						::gpk::error_t							splitAt								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
-		const ::gpk::error_t											posFragment							= ::gpk::find(valueToFind, original);
-		if(0 > posFragment) { // Read until the end unless fragment is found.
+		const ::gpk::error_t											iValue								= ::gpk::find(valueToFind, original);
+		if(0 > iValue) { // Read until the end unless fragment is found.
 			left														= original;
 			right														= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, (uint32_t)posFragment), "%s", "Invalid slice");
-			gpk_necall(original.slice(right, posFragment, (uint32_t)original.size() - posFragment), "%s", "Invalid slice");
+			gpk_necall(original.slice(left, 0, (uint32_t)iValue), "%s", "Invalid slice");
+			gpk_necall(original.slice(right, iValue, (uint32_t)original.size() - iValue), "%s", "Invalid slice");
 		}
-		return posFragment;
+		return iValue;
 	}
 
 	template<typename _tElement>
 						::gpk::error_t							split								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
-		const ::gpk::error_t											arrobaPos							= ::gpk::find_sequence_pod(sequenceToFind, original);
-		if(0 > arrobaPos) {
+		const ::gpk::error_t											iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
+		if(0 > iValue) {
 			left														= original;
 			right														= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, arrobaPos), "%s", "Invalid slice");
-			const uint32_t													offsetDomain						= arrobaPos + sequenceToFind.size();
-			gpk_necall(original.slice(right, offsetDomain, original.size() - offsetDomain), "%s", "Invalid slice");
+			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			const uint32_t													offsetRight							= iValue + sequenceToFind.size();
+			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
 		}
-		return arrobaPos;
+		return iValue;
 	}
 
 	template<typename _tElement>
 						::gpk::error_t							splitAt								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
-		const ::gpk::error_t											posFragment							= ::gpk::find_sequence_pod(sequenceToFind, original);
-		if(0 > posFragment) { // Read until the end unless fragment is found.
+		const ::gpk::error_t											iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
+		if(0 > iValue) { // Read until the end unless fragment is found.
 			left														= original;
 			right														= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, (uint32_t)posFragment), "%s", "Invalid slice");
-			gpk_necall(original.slice(right, posFragment, (uint32_t)original.size() - posFragment), "%s", "Invalid slice");
+			gpk_necall(original.slice(left, 0, (uint32_t)iValue), "%s", "Invalid slice");
+			gpk_necall(original.slice(right, iValue, (uint32_t)original.size() - iValue), "%s", "Invalid slice");
 		}
-		return posFragment;
+		return iValue;
 	}
 } // namespace
 

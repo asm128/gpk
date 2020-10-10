@@ -115,6 +115,8 @@ namespace gpk
 		// This constructor generates ambiguities so discourage its use	view_const_string					(const ::gpk::view_array<char_t>& inputString)					: view_array(inputString.begin(), inputString.size())	{}
 	};
 
+	typedef view_const_string vcs;
+
 	struct view_string : public view_array<char_t> {
 		inline constexpr											view_string							()																= default;
 																	view_string							(char* inputString, uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;																}

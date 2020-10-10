@@ -148,7 +148,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {buf.begin(), totalBytes}, totalBytes - 4);
+			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
@@ -157,15 +157,15 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 					buf[iByte]							= (byte_t)::tolower(buf[iByte]);
 
-				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, {buf.begin(), totalBytes});
+				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, {buf.begin(), totalBytes});
 
-				int32_t									offsetContentLength				= ::gpk::find_sequence_pod(::gpk::view_const_string{"content-length"}, {buf.begin(), totalBytes});
+				int32_t									offsetContentLength				= ::gpk::find_sequence_pod(::gpk::vcs{"content-length"}, {buf.begin(), totalBytes});
 				if(-1 == offsetContentLength) // no content
 					continue;
-				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', ::gpk::view_const_string{buf.begin(), totalBytes}, offsetContentLength);
-				int32_t									offsetEndLine					= (uint32_t)::gpk::find('\r', ::gpk::view_const_string{buf.begin(), totalBytes}, offsetCristobal);
+				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);
+				int32_t									offsetEndLine					= (uint32_t)::gpk::find('\r', {buf.begin(), totalBytes}, offsetCristobal);
 				if(0 > offsetEndLine)
-					offsetEndLine						= (uint32_t)::gpk::find('\n', ::gpk::view_const_string{buf.begin(), totalBytes}, offsetCristobal);
+					offsetEndLine						= (uint32_t)::gpk::find('\n', {buf.begin(), totalBytes}, offsetCristobal);
 
 				int32_t digitsLengthStart	= 0;
 				int32_t digitsLengthStop	= offsetEndLine;
@@ -226,8 +226,8 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 			::gpk::view_char							strLine							= {(char_t*)header.Key.begin(), header.Key.size()};
 			::gpk::tolower(strLine);
 			info_printf("\n%s", ::gpk::toString(strLine).begin());
-			if(::gpk::view_const_string{"transfer-encoding"} == header.Key) {
-				if(0 <= ::gpk::find_sequence_pod(::gpk::view_const_string{"chunked"}, header.Val))
+			if(::gpk::vcs{"transfer-encoding"} == header.Key) {
+				if(0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, header.Val))
 					bChunked								= true;
 			}
 		}
@@ -243,7 +243,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		contentReceived							= joined;
 	}
 
-	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::view_const_string{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
+	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
 	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::view_const_char{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
@@ -301,4 +301,3 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 //
 // <?xml version="1.0" encoding="utf-8"?>
 // <string xmlns="http://clearforest.com/">string</string>
-

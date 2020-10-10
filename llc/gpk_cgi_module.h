@@ -24,16 +24,16 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SCGIModule : public SModuleBase {
-		GPKMFND(, gpk_moduleTitle	, Title		)				= 0;
-		GPKMFND(, gpk_moduleVersion	, Version	)				= 0;
-		GPKMFND(, gpk_moduleCreate	, Create	)				= 0;
-		GPKMFND(, gpk_moduleDelete	, Delete	)				= 0;
-		GPKMFND(, gpk_moduleSetup	, Setup		)				= 0;
-		GPKMFND(, gpk_moduleCleanup	, Cleanup	)				= 0;
-		GPKMFND(, gpk_moduleRender	, Render	)				= 0;
-		GPKMFND(, gpk_moduleUpdate	, Update	)				= 0;
+		GPKMFND(, gpk_moduleTitle	, Title		)	= 0;
+		GPKMFND(, gpk_moduleVersion	, Version	)	= 0;
+		GPKMFND(, gpk_moduleCreate	, Create	)	= 0;
+		GPKMFND(, gpk_moduleDelete	, Delete	)	= 0;
+		GPKMFND(, gpk_moduleSetup	, Setup		)	= 0;
+		GPKMFND(, gpk_moduleCleanup	, Cleanup	)	= 0;
+		GPKMFND(, gpk_moduleRender	, Render	)	= 0;
+		GPKMFND(, gpk_moduleUpdate	, Update	)	= 0;
 
-		void														* Application;
+		void											* Application;
 		GPKM_REGISTRY
 			(	GPKM_NAME(Title		)
 			,	GPKM_NAME(Version	)
@@ -47,7 +47,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t												loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::view_const_string& moduleName);
+	::gpk::error_t									loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::view_const_char& moduleName);
 
 
 }

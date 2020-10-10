@@ -22,6 +22,16 @@ int									main							(int , char ** )		{
 		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
 	}
 
+	info_printf("%u:%s.", text1.size(), text1.begin());
+	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
+		const ::gpk::view_const_char word = words[iWord];
+
+		::gpk::view_const_char left, right;
+		const int32_t iPos = ::gpk::split(word, text1, left, right);
+		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
+		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
+	}
+
 	::gpk::view_const_char trimmed;
 	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
 	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());

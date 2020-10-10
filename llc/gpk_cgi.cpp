@@ -3,7 +3,7 @@
 
 #include <ctime>
 
-::gpk::error_t										gpk::querystring_split	(const ::gpk::view_const_string& input_string, ::gpk::array_obj<::gpk::view_const_string>& output_views)		{
+::gpk::error_t										gpk::querystring_split	(const ::gpk::view_const_char& input_string, ::gpk::array_obj<::gpk::view_const_char>& output_views)		{
 	if(0 == input_string.size())
 		return 0;
 	uint32_t												start				= 0;
@@ -20,7 +20,7 @@
 		const ::gpk::SSlice<uint32_t>							& slice				= slices[iSlice];
 		const uint32_t											slicelen			= slice.End - slice.Begin;
 		if(slicelen) {
-			const ::gpk::view_const_string							keyval				= {&input_string[slice.Begin], slicelen};
+			const ::gpk::view_const_char							keyval				= {&input_string[slice.Begin], slicelen};
 			output_views.push_back(keyval);
 		}
 	}
