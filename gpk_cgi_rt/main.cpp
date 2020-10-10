@@ -115,10 +115,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		::gpk::view_const_string								remoteIP	;
 		::gpk::view_const_string								remotePORT	;
 		::gpk::view_const_string								contentLength;
-		::gpk::find({"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
-		::gpk::find({"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
-		::gpk::find({"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);
-		::gpk::find({"CONTENT_LENGTH"}, runtimeValues.QueryStringKeyVals, contentLength);
+		::gpk::find(::gpk::vcs{"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
+		::gpk::find(::gpk::vcs{"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
+		::gpk::find(::gpk::vcs{"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);
+		::gpk::find(::gpk::vcs{"CONTENT_LENGTH"}, runtimeValues.QueryStringKeyVals, contentLength);
 		output.append(buffer, ::gpk::formatForSize({contentLength	.begin(), contentLength	.size()}, buffer, "\n<h2>CONTENT_LENGTH: "	, "</h2>"));
 		output.append(buffer, ::gpk::formatForSize({contentype		.begin(), contentype	.size()}, buffer, "\n<h2>CONTENT_TYPE: "	, "</h2>"));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h2>Client area size: %u x %u</h2>", (uint32_t)framework.TargetSize.x, (uint32_t)framework.TargetSize.y));
