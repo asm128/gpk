@@ -5,9 +5,9 @@
 #include "gpk_parse.h"
 
 ::gpk::error_t							gpk::append_quoted					(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text)		{
-	gpk_necall(output.push_back('"')	, "%s", "Out of memory?");
-	gpk_necall(output.append(text)		, "%s", "Out of memory?");
-	gpk_necall(output.push_back('"')	, "%s", "Out of memory?");
+	gpk_necall(output.push_back('"'), "%s", "Out of memory?");
+	gpk_necall(output.append(text)	, "%s", "Out of memory?");
+	gpk_necall(output.push_back('"'), "%s", "Out of memory?");
 	return 0;
 }
 
@@ -22,9 +22,9 @@
 
 ::gpk::array_pod<char_t>				gpk::toString						(const ::gpk::view_const_char& strToLog)	{
 	::gpk::array_pod<char_t>					sprintfable							= strToLog;
-	e_if(sprintfable.push_back(0), "%s", "Out of memory?")
+	e_if(::gpk::failed(sprintfable.push_back(0)), "%s", "Out of memory?")
 	else
-		e_if(sprintfable.resize(sprintfable.size()-1), "%s", "Out of memory?");
+		e_if(::gpk::failed(sprintfable.resize(sprintfable.size()-1)), "%s", "Out of memory?");
 	return sprintfable;
 }
 
