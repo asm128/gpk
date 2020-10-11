@@ -24,7 +24,6 @@
 #include "gpk_error.h"
 #include "gpk_eval.h"
 #include "gpk_expression.h"
-#include "gpk_find.h"
 #include "gpk_frameinfo.h"
 #include "gpk_grid_copy.h"
 #include "gpk_grid_scale.h"

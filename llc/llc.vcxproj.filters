@@ -165,9 +165,6 @@
     <ClInclude Include="gpk_label.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_find.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_adam7.h">
       <Filter>image</Filter>
     </ClInclude>

@@ -4,7 +4,6 @@
 #define GPK_INFO_PRINTF_ENABLED
 
 #include "gpk_deflate.h"
-#include "gpk_find.h"
 
 int										main							(int argc, char ** argv)						{
 	ree_if(2 > argc, "Usage:\n\t%s [input file name] [output folder (optional)]", argv[0]);

@@ -1,5 +1,4 @@
 #include "gpk_keyval.h"
-#include "gpk_find.h"
 #include "gpk_safe.h"
 #include "gpk_array.h"
 #include "gpk_parse.h"

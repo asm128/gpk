@@ -49,7 +49,6 @@
     <ClInclude Include="gpk_error.h" />
     <ClInclude Include="gpk_eval.h" />
     <ClInclude Include="gpk_expression.h" />
-    <ClInclude Include="gpk_find.h" />
     <ClInclude Include="gpk_frameinfo.h" />
     <ClInclude Include="gpk_geometry.h" />
     <ClInclude Include="gpk_geometry_lh.h" />

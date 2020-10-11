@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "gpk_cgi_runtime.h"
 #include "gpk_process.h"
-#include "gpk_find.h"
 #include "gpk_parse.h"
 
 ::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{

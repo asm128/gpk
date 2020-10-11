@@ -3,7 +3,6 @@
 #include "gpk_coord.h"
 #include "gpk_safe.h"
 #include "deflate.h"
-#include "gpk_find.h"
 #include "gpk_io.h"
 #include "gpk_aes.h"
 #include "gpk_noise.h"

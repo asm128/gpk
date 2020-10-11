@@ -1,5 +1,4 @@
 #include "gpk_process.h"
-#include "gpk_find.h"
 #include "gpk_keyval.h"
 
 #ifdef GPK_WINDOWS

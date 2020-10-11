@@ -5,7 +5,6 @@
 
 #include "gpk_log.h"
 #include "gpk_storage.h"
-#include "gpk_find.h"
 
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{

@@ -138,7 +138,143 @@ namespace gpk
 
 						::gpk::error_t							rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
 						::gpk::error_t							ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
-						::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
+	static inline		::gpk::error_t							trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r") 	{
+		const uint32_t countChars = ::gpk::ltrim(trimmed, original, characters);
+		return countChars + ::gpk::rtrim(trimmed, trimmed, characters);
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							find								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, uint32_t offset = 0)				{
+		for(int32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
+			if(element == target[iOffset])
+				return iOffset;
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							rfind								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, int32_t offset = 0)				{
+		for(int32_t iOffset = target.size() - 1 - offset; iOffset >= 0; --iOffset)
+			if(element == target[iOffset])
+				return iOffset;
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							find_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
+			bool															equal								= true;
+			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
+				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement]) {
+					equal														= false;
+					break;
+				}
+			}
+			if(equal)
+				return iOffset;
+		}
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							rfind_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)						{
+		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
+			bool															equal								= true;
+			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
+				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement]) {
+					equal														= false;
+					break;
+				}
+			}
+			if(equal)
+				return iOffset;
+		}
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							find_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset)
+			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement)))
+				return iOffset;
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							rfind_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)
+			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement)))
+				return iOffset;
+		return -1;
+	}
+
+	static inline	::gpk::error_t	find_string		(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::find_sequence_pod(sequence, target, offset); }
+	static inline	::gpk::error_t	rfind_string	(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(sequence, target, offset); }
+
+	template<typename _tElement>
+	static inline	::gpk::error_t	is_any_of		(const ::gpk::view_array<const _tElement>& valuesToFind, const _tElement & valueToTest)	{
+		for(uint32_t iCharacter = 0; iCharacter < valuesToFind.size(); ++iCharacter)
+			if(valueToTest == valuesToFind[iCharacter])
+				return iCharacter;
+		return -1;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											iValue								= ::gpk::find(valueToFind, original);
+		if(0 > iValue) {
+			left														= original;
+			right														= {};
+		}
+		else {
+			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			const uint32_t													offsetRight							= iValue + 1;
+			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
+		}
+		return iValue;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							splitAt								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											iValue								= ::gpk::find(valueToFind, original);
+		if(0 > iValue) { // Read until the end unless fragment is found.
+			left														= original;
+			right														= {};
+		}
+		else {
+			gpk_necall(original.slice(left, 0, (uint32_t)iValue), "%s", "Invalid slice");
+			gpk_necall(original.slice(right, iValue, (uint32_t)original.size() - iValue), "%s", "Invalid slice");
+		}
+		return iValue;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							split								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
+		if(0 > iValue) {
+			left														= original;
+			right														= {};
+		}
+		else {
+			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			const uint32_t													offsetRight							= iValue + sequenceToFind.size();
+			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
+		}
+		return iValue;
+	}
+
+	template<typename _tElement>
+						::gpk::error_t							splitAt								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+		const ::gpk::error_t											iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
+		if(0 > iValue) { // Read until the end unless fragment is found.
+			left														= original;
+			right														= {};
+		}
+		else {
+			gpk_necall(original.slice(left, 0, (uint32_t)iValue), "%s", "Invalid slice");
+			gpk_necall(original.slice(right, iValue, (uint32_t)original.size() - iValue), "%s", "Invalid slice");
+		}
+		return iValue;
+	}
 
 	template<typename _tElement>
 						::gpk::error_t							max									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
