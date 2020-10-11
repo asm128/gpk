@@ -117,12 +117,12 @@ namespace gpk
 
 	typedef view_const_string vcs;
 
-	struct view_string : public view_array<char_t> {
+	struct view_string : public view_const_string {
 		inline constexpr											view_string							()																= default;
-		inline constexpr											view_string							(const view_char & other)										: view_array(other)							{}
-																	view_string							(char* inputString, uint32_t length)							: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;																}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)			: view_array(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strnlen(inputString, (uint32_t)_stringLength) : ::gpk::min(length, (uint32_t)_stringLength);	}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])							: view_array(inputString, _stringLength)	{ Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);																			}
+		inline constexpr											view_string							(const view_char & other)										: view_const_string(other)						{}
+																	view_string							(char* inputString, uint32_t length)							: view_const_string(inputString, length)		{}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)			: view_const_string(inputString, length)		{}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])							: view_const_string(inputString, _stringLength)	{}
 		//constexpr		operator									const view_const_char&			()															const	noexcept	{ return *(const view_const_string*)this; }
 	};
 
