@@ -1,7 +1,6 @@
 #include "application.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_tcpip.h"
-#include "gpk_find.h"
 #include "gpk_process.h"
 
 #include "gpk_parse.h"
