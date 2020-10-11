@@ -4,8 +4,6 @@
 #include "gpk_io.h"
 #include "gpk_storage.h"
 
-#include <string>
-
 #pragma pack(push, 1)
 struct SRSMHeader {	// RSM Header
 	char										filecode[4];

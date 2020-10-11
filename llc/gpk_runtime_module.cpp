@@ -1,5 +1,4 @@
 #include "gpk_runtime_module.h"
-#include <string>
 
 			::gpk::error_t						gpk::loadRuntimeModule					(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName)				{
 	loadedModule.Handle								= GPK_LOAD_MODULE(moduleName.begin());

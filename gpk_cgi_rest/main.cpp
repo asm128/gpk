@@ -8,24 +8,17 @@
 
 #include "gpk_udp_client.h"
 
-#include <string>		// for ::std::stoi()
-
 ::gpk::error_t										metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::SCoord2<int32_t>& output_metrics)												{
 	uint32_t												iChar					= 0;
 	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 		if('x' == input_string[iChar]) {
 			::gpk::array_pod<char>									sx						= {};
 			::gpk::array_pod<char>									sy						= {};
+			output_metrics										= {};
 			gpk_necall(sy.append((char*)input_string.begin(), iChar), "%s", "");
 			gpk_necall(sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1)), "%s", "");
-			try {
-				output_metrics.x									= ::std::stoi(::std::string{sy.begin(), sy.size()});
-				output_metrics.y									= ::std::stoi(::std::string{sy.begin(), sy.size()});
-			}
-			catch (...) {
-				output_metrics										= {};
-				return -1;
-			}
+			::gpk::parseIntegerDecimal(sx, &output_metrics.x);
+			::gpk::parseIntegerDecimal(sy, &output_metrics.y);
 			break;
 		}
 	}

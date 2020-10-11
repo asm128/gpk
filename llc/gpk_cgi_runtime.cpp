@@ -2,8 +2,7 @@
 #include "gpk_cgi_runtime.h"
 #include "gpk_process.h"
 #include "gpk_find.h"
-
-#include <string>
+#include "gpk_parse.h"
 
 ::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
 	const ::gpk::array_obj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
@@ -118,19 +117,9 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{
-	if(strRemotePort.size()) {
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-		remoteIP.Port										= (uint16_t)::std::stoi(strRemotePort.begin());
-#else
-		try {
-			remoteIP.Port										= (uint16_t)::std::stoi(strRemotePort.begin());
-		}
-		catch(...) {
-			remoteIP.Port										= 0;
-		}
-#endif
-	}
+::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_const_char& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{
+	remoteIP.Port										= 0;
+	::gpk::parseIntegerDecimal(strRemotePort, &remoteIP.Port);
 
 	if(strRemoteIP.size()) {
 		uint32_t												iOffset						= 0;
@@ -146,16 +135,8 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 					break;
 				++iEnd;
 			}
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-			remoteIP.IP[iVal]									= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
-#else
-			try {
-				remoteIP.IP[iVal]									= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
-			}
-			catch(...) {
-				remoteIP.IP[iVal]									= 0;
-			}
-#endif
+			remoteIP.IP[iVal]									= 0;
+			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, &remoteIP.IP[iVal]);
 			iOffset												= iEnd + 1;
 			iEnd												= iOffset;
 		}
@@ -212,16 +193,8 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	{
 		::gpk::view_const_string								contentLength;
 		::gpk::find(::gpk::vcs{"CONTENT_LENGTH"}	, environViews, contentLength);
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-		cgiRuntimeValues.Content.Length						= contentLength.size() ? (uint32_t)::std::stoi(contentLength.begin()) : 0;
-#else
-		try {
-			cgiRuntimeValues.Content.Length						= contentLength.size() ? (uint32_t)::std::stoi(contentLength.begin()) : 0;
-		}
-		catch(...) {
-			cgiRuntimeValues.Content.Length						= 0;
-		}
-#endif
+		cgiRuntimeValues.Content.Length						= 0;
+		::gpk::parseIntegerDecimal(contentLength, &cgiRuntimeValues.Content.Length);
 	}
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
 	memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());

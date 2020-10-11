@@ -3,8 +3,7 @@
 #include "gpk_string_helper.h"
 
 #include "gpk_udp_client.h"
-
-#include <string>
+#include "gpk_parse.h"
 
 #include <Windows.h>
 //
@@ -59,21 +58,14 @@ static constexpr	const char						html_script	[]			=
 ::gpk::error_t										processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
-	try { // retrieve width and height
-			 if(keyVal.Key == ::gpk::view_const_string("w")) framework.TargetSize.x = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-		else if(keyVal.Key == ::gpk::view_const_string("h")) framework.TargetSize.y = (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()});
-	}
-	catch(...){
-		framework.TargetSize								= {123, 456};
-		return -1;
-	}
-	try {
-		if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) if(1 == (uint16_t)::std::stoi(::std::string{keyVal.Val.begin(), keyVal.Val.size()}))
-			framework.Bootstrapped								= true;
-	}
-	catch(...){
-		framework.Bootstrapped								= false;
-		return -1;
+
+	framework.TargetSize								= {123, 456};
+
+		 if(keyVal.Key == ::gpk::vcs("w")) ::gpk::parseIntegerDecimal(keyVal.Val, &framework.TargetSize.x);
+	else if(keyVal.Key == ::gpk::vcs("h")) ::gpk::parseIntegerDecimal(keyVal.Val, &framework.TargetSize.y);
+
+	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) {
+		::gpk::parseIntegerDecimal(keyVal.Val, &framework.Bootstrapped);
 	}
 	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1))
 		framework.ModuleName								= keyVal.Val;
@@ -98,7 +90,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		));
 		output.append(buffer, ::sprintf_s(buffer, "\n<body style=\"width:100%%; height:100%%; background-color:#4040C0; \" %s>", framework.Bootstrapped ? "" : "onload=\"bootstrap()\"" ));
 		output.append(buffer, ::sprintf_s(buffer, "\n<h4>Booting %s...</h4>", framework.ModuleName.begin()));
-		::gpk::view_const_string								querystring;
+		::gpk::view_const_string							querystring;
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
@@ -106,15 +98,15 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
-			const ::gpk::TKeyValConstChar	& keyval		= runtimeValues.QueryStringKeyVals[iChar];
+			const ::gpk::TKeyValConstChar						& keyval			= runtimeValues.QueryStringKeyVals[iChar];
 			output.append(buffer, ::gpk::formatForSize(keyval.Key, buffer, "\n<h3>Key: ", "</h3>"));
 			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
 
-		::gpk::view_const_string								contentype	;
-		::gpk::view_const_string								remoteIP	;
-		::gpk::view_const_string								remotePORT	;
-		::gpk::view_const_string								contentLength;
+		::gpk::view_const_string							contentype	;
+		::gpk::view_const_string							remoteIP	;
+		::gpk::view_const_string							remotePORT	;
+		::gpk::view_const_string							contentLength;
 		::gpk::find(::gpk::vcs{"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
 		::gpk::find(::gpk::vcs{"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
 		::gpk::find(::gpk::vcs{"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);

@@ -31,12 +31,10 @@ namespace gpk
 	gnd_stream.read_pod(nTextureCount		);
 	gnd_stream.read_pod(nTextureStringSize	);
 	loaded.TextureNames.resize(nTextureCount);
-	for(uint32_t iTexture = 0; iTexture < nTextureCount; ++iTexture)
+	for(uint32_t iTexture = 0; iTexture < nTextureCount; ++iTexture) {
 		loaded.TextureNames[iTexture].resize(nTextureStringSize);
-
-	for(uint32_t iTexture = 0; iTexture < nTextureCount; ++iTexture)
 		gnd_stream.read_pod(&loaded.TextureNames[iTexture][0], nTextureStringSize);
-
+	}
 	uint32_t														tileCountBrightness								= 0;
 	gnd_stream.read_pod(tileCountBrightness		);
 	gnd_stream.read_pod(loaded.LightmapSize.x	);

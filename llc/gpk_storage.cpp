@@ -12,7 +12,6 @@
 #	include <Windows.h>
 #elif defined(GPK_ANDROID) || defined(GPK_LINUX)
 #	include <dirent.h>
-#	include <string>
 #endif
 
 int64_t								gpk::fileSize					(const ::gpk::view_const_char	& fileNameSrc)								{
@@ -211,7 +210,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
     dirent																			* drnt								= 0;
     dir																			= opendir(pathToList.begin());
     while ((drnt = readdir(dir)) != NULL) {
-        ::std::string																	name								(drnt->d_name);
+		::gpk::array_pod<char_t>														name							= ::gpk::vcs{drnt->d_name, (uint32_t)-1};
         if (name != curDir && name != parDir) {
 			if(drnt->d_type == DT_DIR && false == listFolders)
 				continue;
@@ -263,7 +262,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
     struct dirent																	* drnt;
     dir																			= opendir(pathToList.begin());
     while ((drnt = readdir(dir)) != NULL) {
-        ::std::string																	name								(drnt->d_name);
+		::gpk::array_pod<char_t>														name							= ::gpk::vcs{drnt->d_name, (uint32_t)-1};
         if (name != curDir && name != parDir) {
 			int32_t																			lenPath								= sprintf_s(sPath, "%s/%s", pathToList.begin(), drnt->d_name);
 			if(drnt->d_type == DT_DIR) {

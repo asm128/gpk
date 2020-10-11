@@ -1,8 +1,6 @@
 #include "gpk_color.h"
 #include "gpk_image.h"
 
-#include <string>
-
 #ifndef TERRAIN_H_289374982374
 #define TERRAIN_H_289374982374
 
@@ -63,7 +61,7 @@ namespace gpk
 
 	struct SGNDFileContents {
 				STiledTerrainMetricsGND								Metrics;
-				::gpk::array_obj<::std::string>						TextureNames;
+				::gpk::array_obj<::gpk::array_obj<char_t>>			TextureNames;
 				uint32_t											LightmapTiles;		// ??
 				::gpk::SCoord2<uint32_t>							LightmapSize;
 				::gpk::array_pod<STileBrightnessGND	>				lstTileBrightnessData;

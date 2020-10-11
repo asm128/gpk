@@ -2,6 +2,7 @@
 #include "gpk_log.h"
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
+#include "gpk_parse.h"
 
 #if defined(GPK_WINDOWS)
 #	include <WS2tcpip.h>
@@ -9,9 +10,6 @@
 #	include <netdb.h>
 #	include <arpa/inet.h>
 #endif
-
-#include <string>
-
 
 ::gpk::error_t								gpk::tcpipInitialize						()																										{
 #if defined(GPK_WINDOWS)
@@ -190,19 +188,7 @@
 }
 
 ::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
-	if(strRemotePort.size()) {
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-		remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
-#else
-		try {
-			remoteIP.Port									= (uint16_t)::std::stoi(strRemotePort.begin());
-		}
-		catch(...) {
-			remoteIP.Port									= 0;
-		}
-#endif
-	}
-
+	::gpk::parseIntegerDecimal(strRemotePort, &(remoteIP.Port = 0));
 	if(strRemoteIP.size()) {
 		uint32_t											iOffset						= 0;
 		uint32_t											iEnd						= 0;
@@ -217,31 +203,13 @@
 					break;
 				++iEnd;
 			}
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-			remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
-#else
-			try {
-				remoteIP.IP[iVal]								= (ubyte_t)::std::stoi({&strRemoteIP[iOffset], iEnd - iOffset});
-			}
-			catch(...) {
-				remoteIP.IP[iVal]								= 0;
-			}
-#endif
+			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, &(remoteIP.IP[iVal] = 0));
 			iOffset											= iEnd + 1;
 			iEnd											= iOffset;
 		}
 		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
 			if(strRemotePort.size()) {
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-				remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
-#else
-				try {
-					remoteIP.Port									= (uint16_t)::std::stoi({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset});
-				}
-				catch(...) {
-					remoteIP.Port									= 0;
-				}
-#endif
+				::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, &remoteIP.Port);
 			}
 		}
 	}

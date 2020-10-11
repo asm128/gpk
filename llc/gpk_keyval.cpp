@@ -2,8 +2,8 @@
 #include "gpk_find.h"
 #include "gpk_safe.h"
 #include "gpk_array.h"
+#include "gpk_parse.h"
 
-#include <string>
 ::gpk::error_t						gpk::append_quoted			(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text)		{
 	gpk_necall(output.push_back('"')	, "%s", "Out of memory?");
 	gpk_necall(output.append(text)		, "%s", "Out of memory?");
@@ -50,16 +50,7 @@
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	::gpk::error_t							indexKey					= ::gpk::find(key, keyVals);
 	if(-1 != indexKey) {
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-		gpk_safe_assign(outputNumber, ::std::stoull(keyVals[indexKey].Val.begin()));
-#else
-		try {
-			gpk_safe_assign(outputNumber, ::std::stoull(keyVals[indexKey].Val.begin()));
-		}
-		catch(...) {
-			return -1;
-		}
-#endif
+		::gpk::parseIntegerDecimal(keyVals[indexKey].Val, outputNumber);
 	}
 	return indexKey;
 }

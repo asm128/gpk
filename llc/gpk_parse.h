@@ -7,8 +7,8 @@
 namespace gpk
 {
 										::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_);
-	template<typename _tInt>	inline	::gpk::error_t			parseIntegerDecimal				(const ::gpk::view_const_char& sourceChars, _tInt* number_)	{ uint64_t number; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(10, ::gpk::view_const_string{"0123456789"		}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); *number_ = (_tInt)number; return countDigits; };
-	template<typename _tInt>	inline	::gpk::error_t			parseIntegerHexadecimal			(const ::gpk::view_const_char& sourceChars, _tInt* number_)	{ uint64_t number; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(16, ::gpk::view_const_string{"0123456789abcdef"	}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); *number_ = (_tInt)number; return countDigits; };
+	template<typename _tInt>	inline	::gpk::error_t			parseIntegerDecimal				(const ::gpk::view_const_char& sourceChars, _tInt* number_)	{ uint64_t number = 0; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(10, ::gpk::view_const_string{"0123456789"		}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); gpk_safe_assign(number_, (_tInt)number); return countDigits; }
+	template<typename _tInt>	inline	::gpk::error_t			parseIntegerHexadecimal			(const ::gpk::view_const_char& sourceChars, _tInt* number_)	{ uint64_t number = 0; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(16, ::gpk::view_const_string{"0123456789abcdef"	}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); gpk_safe_assign(number_, (_tInt)number); return countDigits; }
 
 	GDEFINE_ENUM_TYPE(STRIP_LITERAL_TYPE, int8_t);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, LITERAL	, 0);

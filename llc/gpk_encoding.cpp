@@ -2,8 +2,8 @@
 #include "gpk_view_bit.h"
 #include "gpk_noise.h"
 #include "gpk_chrono.h"
+#include "gpk_parse.h"
 
-#include <string>
 #include <ctime>
 #include <random>
 
@@ -36,42 +36,14 @@ static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)	
 }
 
 static		::gpk::error_t								hexToByte														(const char* s, uint8_t& byte)															{
-	char														temp [3]														= {};
-	temp[0]													= s[0];
-	temp[1]													= s[1];
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
-		byte													= (char)hex;
-#else
-	try {
-		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
-		byte													= (char)hex;
-	}
-	catch (...) {
-		byte													= '?';
-		return -1;	// we should never get here
-	}
-#endif
+	char														temp [3]														= {s[0], s[1]};
+	gpk_necall(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte), "%s", "");
 	return 0;
 }
 
 static		::gpk::error_t								hexToByte														(const char* s, byte_t& byte)															{
-	char														temp [3]														= {};
-	temp[0]													= s[0];
-	temp[1]													= s[1];
-#if defined(GPK_DISABLE_CPP_EXCEPTIONS)
-	int32_t														hex																= ::std::stoi(temp, nullptr, 16);
-	byte													= (char)hex;
-#else
-	try {
-		int32_t														hex																= ::std::stoi(temp, nullptr, 16);
-		byte													= (char)hex;
-	}
-	catch (...) {
-		byte													= '?';
-		return -1;	// we should never get here
-	}
-#endif
+	char														temp [3]														= {s[0], s[1]};
+	gpk_necall(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte), "%s", "");
 	return 0;
 }
 
