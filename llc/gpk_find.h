@@ -38,8 +38,8 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							rfind_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)						{
-		for(int32_t iOffset = (int32_t)(target.size() - sequence.size()); iOffset >= 0; --iOffset) {
+						::gpk::error_t							rfind_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)						{
+		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
 			bool															equal								= true;
 			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
 				if(sequence[iSequenceElement] != target[iOffset + iSequenceElement]) {
