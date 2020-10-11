@@ -14,7 +14,7 @@ namespace gpk
 	typedef		::gpk::SKeyVal<::gpk::view_const_char, ::gpk::view_const_char>
 														TKeyValConstChar, TKeyValConstString;
 
-				::gpk::error_t							token_split						(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views);
+				::gpk::error_t							token_split						(char token, const ::gpk::view_const_string& input_string, TKeyValConstChar& output_views);
 	inline		::gpk::error_t							keyval_split					(const ::gpk::view_const_string& input_string, TKeyValConstString& out_keyval) { return ::gpk::token_split('=', input_string, out_keyval); }
 
 	template<typename _tVal>

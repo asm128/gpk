@@ -16,8 +16,9 @@ static	bool			isAnyOfCharacters						(const ::gpk::view_const_char& charactersTo
 	uint32_t					iChar					= original.size() - 1;
 	while(iChar < original.size() && ::isAnyOfCharacters(characters, original[iChar]))
 		--iChar;
-	trimmed					= {original.begin(), original.size() - (original.size() - iChar) + 1};
-	return iChar;
+	const uint32_t				trimmedCount			= original.size() - iChar;
+	trimmed					= {original.begin(), original.size() - trimmedCount + 1};
+	return trimmedCount;
 }
 
 ::gpk::error_t			gpk::ltrim				(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters)	{

@@ -28,7 +28,7 @@
 	return sprintfable;
 }
 
-::gpk::error_t							gpk::token_split					(char token, const ::gpk::view_const_string& input_string, TKeyValConstString& output_views)	{
+::gpk::error_t							gpk::token_split					(char token, const ::gpk::view_const_string& input_string, TKeyValConstChar& output_views)	{
 	int32_t										indexToken							= ::gpk::find(token, input_string);
 	rvi_if(-1, errored(indexToken), "'%c' Token not found.", token);
 	output_views.Key						= {input_string.begin(), (uint32_t)indexToken};
