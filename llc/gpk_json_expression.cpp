@@ -280,7 +280,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	return jsonNodeResultOfEvaluation;
 }
 
-::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::view_const_char & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output)								{
+::gpk::error_t									gpk::jsonExpressionResolve				(const ::gpk::view_const_string & expression, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output)								{
 	::gpk::SExpressionReader							reader;
 	gpk_necall(::gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", ::gpk::toString(expression).begin());
 	return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, output);
@@ -295,7 +295,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	return jsonNodeResultOfEvaluation;
 }
 
-::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_char& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
+::gpk::error_t									gpk::jsonStringFormat					(const ::gpk::view_const_string& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output)					{
 	::gpk::SStripLiteralState							stateLiteralStripper					= {};
 	::gpk::array_pod<::gpk::SStripLiteralType>			typesLiteral							= {};
 	gpk_necall(::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format), "%s", "Unknown error.");	// strip root literals

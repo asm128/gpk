@@ -41,10 +41,10 @@ namespace gpk
 
 					::gpk::error_t				jsonExpressionResolve		(::gpk::SJSONExpressionSolver	& results	, const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output);
 					::gpk::error_t				jsonExpressionResolve		(const ::gpk::SExpressionReader & reader	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output);
-					::gpk::error_t				jsonExpressionResolve		(const ::gpk::view_const_char	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output);
+					::gpk::error_t				jsonExpressionResolve		(const ::gpk::view_const_string	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::view_const_char& output);
 	static inline	::gpk::error_t				jsonExpressionResolve		(const ::gpk::SExpressionReader & reader	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON) { ::gpk::view_const_char dead; return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, dead); }
-	static inline	::gpk::error_t				jsonExpressionResolve		(const ::gpk::view_const_char	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON) { ::gpk::view_const_char dead; return ::gpk::jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
-					::gpk::error_t				jsonStringFormat			(const ::gpk::view_const_char	& format	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output);
+	static inline	::gpk::error_t				jsonExpressionResolve		(const ::gpk::view_const_string	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON) { ::gpk::view_const_char dead; return ::gpk::jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
+					::gpk::error_t				jsonStringFormat			(const ::gpk::view_const_string	& format	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::array_pod<char_t>& output);
 } // namespace
 
 #endif // GPK_JSON_EXPRESSION_9238749283744
