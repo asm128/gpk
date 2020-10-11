@@ -122,7 +122,7 @@ namespace gpk
 		inline constexpr											view_string							(const view_char & other)										: view_const_string(other)						{}
 																	view_string							(char* inputString, uint32_t length)							: view_const_string(inputString, length)		{}
 		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength], uint32_t length)			: view_const_string(inputString, length)		{}
-		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])							: view_const_string(inputString, _stringLength)	{}
+		template<size_t _stringLength>								view_string							(char (&inputString)[_stringLength])							: view_const_string(inputString)				{}
 		//constexpr		operator									const view_const_char&			()															const	noexcept	{ return *(const view_const_string*)this; }
 	};
 
