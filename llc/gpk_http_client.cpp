@@ -148,7 +148,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
 		if(0 == stopOfHeader && totalBytes >= 4) {
-			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {buf.begin(), totalBytes}, totalBytes - 4);
+			::gpk::error_t							offsetStopOfHeader				= ::gpk::find_string("\r\n\r\n", {buf.begin(), totalBytes}, totalBytes - 4);
 			if(0 <= offsetStopOfHeader) {
 				// here we should do something in order to detect the content size
 				stopOfHeader						= offsetStopOfHeader;
@@ -159,7 +159,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 
 				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, {buf.begin(), totalBytes});
 
-				int32_t									offsetContentLength				= ::gpk::find_sequence_pod(::gpk::vcs{"content-length"}, {buf.begin(), totalBytes});
+				int32_t									offsetContentLength				= ::gpk::find_string("content-length", {buf.begin(), totalBytes});
 				if(-1 == offsetContentLength) // no content
 					continue;
 				int32_t									offsetCristobal					= (uint32_t)::gpk::find(':', {buf.begin(), totalBytes}, offsetContentLength);

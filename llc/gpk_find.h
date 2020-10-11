@@ -62,12 +62,15 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							rfind_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target)						{
-		for(int32_t iOffset = (int32_t)(target.size() - sequence.size()); iOffset >= 0; --iOffset)
+						::gpk::error_t							rfind_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement)))
 				return iOffset;
 		return -1;
 	}
+
+	static inline	::gpk::error_t	find_string		(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::find_sequence_pod(sequence, target, offset); }
+	static inline	::gpk::error_t	rfind_string	(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(sequence, target, offset); }
 
 	template<typename _tElement>
 						::gpk::error_t							split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
