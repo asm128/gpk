@@ -19,7 +19,7 @@
 #	define GPK_LINUX
 #elif (!defined(GPK_WINDOWS)) && (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64))
 #	define GPK_WINDOWS
-#else
+#elif !defined(GPK_ST) && !defined(GPK_CMSIS) && !defined(GPK_ESP32)
 #	error "Unsupported platform."
 #	define GPK_UNKNOWN
 #endif

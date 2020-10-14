@@ -19,8 +19,23 @@ void							gpk::STimer::Frame											()				noexcept				{
 	PrevTimeStamp					= CurrentTimeStamp;
 }
 
-#else
+#elif defined(GPK_CMSIS)
+void							gpk::STimer::Reset											()				noexcept				{
+	CountsPerSecond					= osKernelGetTickFreq();
+	SecondsPerCount					= (1.0 / (CountsPerSecond));
+	MicrosecondsPerCount			= (1.0 / (CountsPerSecond / 1000000.0));
+	PrevTimeStamp					= osKernelGetTickCount();
+	LastTimeSeconds					= 0;
+	LastTimeMicroseconds			= 0;
+}
 
+void							gpk::STimer::Frame											()				noexcept				{
+	CurrentTimeStamp				= osKernelGetTickCount();
+	LastTimeSeconds					= double	(( CurrentTimeStamp - PrevTimeStamp ) * SecondsPerCount);
+	LastTimeMicroseconds			= uint64_t	(( CurrentTimeStamp - PrevTimeStamp ) / (CountsPerSecond / 1000000.0));
+	PrevTimeStamp					= CurrentTimeStamp;
+}
+#else
 void							gpk::STimer::Reset											()				noexcept				{
 	//SecondsPerCount					= (1.0 / (CountsPerSecond ? CountsPerSecond : 1));
 	PrevTimeStamp					= ::std::chrono::high_resolution_clock::now();
