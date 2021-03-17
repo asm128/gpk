@@ -1,9 +1,14 @@
 #include "gpk_keyval.h"
 #include "gpk_memory.h"
 #include "gpk_safe.h"
+#include "gpk_eval.h"
 
-#include <initializer_list>
-#include <new>
+#if defined(GPK_ATMEL)
+#	include "initializer_list.h"
+#else
+#	include <initializer_list>
+#	include <new>
+#endif
 
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
@@ -40,8 +45,8 @@ namespace gpk
 							array_base<_tCell>&			operator =									(const array_base<_tCell>&	other)														= delete;
 							array_base<_tCell>&			operator =									(const array_base<_tCell>&&	other)														= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize, newSize + ::gpk::max(newSize >> 1, 4U));					}
-		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize*(uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
+		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize, uint32_t(newSize + ::gpk::max(newSize >> 1, 4U)));			}
+		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
 	}; // array_base
 
 	// This class is optimized to contain POD instances and won't work for C++ objects that require calling constructors/destructors.
@@ -649,12 +654,27 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()};
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
+	}
+
+	template<typename _tElement>
+	::gpk::error_t									viewRead							(::gpk::view_array<_tElement> & headerToRead, const ::gpk::view_byte	& input	)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (_tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
 	static inline	::gpk::error_t					viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? &input[sizeof(uint32_t)] : 0, *(uint32_t*)input.begin()};
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if(elementCount > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount);
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? &input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size();
 	}
 

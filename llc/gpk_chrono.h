@@ -1,4 +1,8 @@
-#include <cstdint>
+#ifdef GPK_ATMEL
+#	include <stdint.h>
+#else
+#	include <cstdint>
+#endif
 
 #ifndef GPK_CHRONO_H_2983742893
 #define GPK_CHRONO_H_2983742893

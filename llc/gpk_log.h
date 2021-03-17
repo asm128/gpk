@@ -1,10 +1,14 @@
+#include "gpk_debug.h"
 #include "gpk_error.h"
 #include "gpk_eval.h"
-#include "gpk_debug.h"
 #include "gpk_size.h"
 #include "gpk_string.h"
 
-#include <cstdio>
+#ifdef GPK_ATMEL
+#	include <stdio.h>
+#else
+#	include <cstdio>
+#endif
 
 #ifndef GPK_LOG_H_8927349654687654365
 #define GPK_LOG_H_8927349654687654365
@@ -49,12 +53,11 @@ namespace gpk
 		base_debug_print(prefix, prefixLength);
 		char													customDynamicString	[8192]						= {};
 #if !defined(GPK_WINDOWS)
-		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString), format, args...);
+		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 #else
-		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString), format, args...);//sprintf_s(customDynamicString, format, args...);
+		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);//sprintf_s(customDynamicString, format, args...);
 #endif
-		const size_t											actualLen										= ::gpk::min(stringLength, sizeof(customDynamicString)-1);
-		customDynamicString[actualLen ? actualLen - 1 : 0] = '\n';
+		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #if defined(GPK_CONSOLE_LOG_ENABLED)
 		printf("%s", customDynamicString);
 #endif
@@ -146,7 +149,7 @@ namespace gpk
 #if defined (GPK_WINDOWS)
 #	define gpk_throw(...)								throw(__VA_ARGS__)
 #else
-#	define gpk_throw(...)								do { char * nulp = 0; int i = 0; while(++i) nulp[i] = (char)i; ::gpk::dummy(__VA_ARGS__); } while(0)
+#	define gpk_throw(...)								do { char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
 #ifndef gthrow_if

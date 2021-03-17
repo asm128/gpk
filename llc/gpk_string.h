@@ -1,6 +1,11 @@
 /// Copyright 2016-2017 - asm128
 #include "gpk_platform.h"
-#include <cstring>
+
+#if defined GPK_ATMEL
+#	include <string.h>
+#else
+#	include <cstring>
+#endif
 
 #ifndef GPK_STRING_H_56847984984
 #define GPK_STRING_H_56847984984

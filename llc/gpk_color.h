@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-#pragma pack( push, 1 )
+#pragma pack(push, 1)
 	template <typename _tBase> struct color_bgr		{ _tBase b, g, r;		};
 	template <typename _tBase> struct color_rgb		{ _tBase r, g, b;		};
 	template <typename _tBase> struct color_bgra	{ _tBase b, g, r, a;	};
@@ -210,8 +210,7 @@ namespace gpk
 	static constexpr	const ::gpk::SColorFloat	LIGHTCYAN		= {0.25f, 1.0f, 1.0f, 1.0f					};
 	static constexpr	const ::gpk::SColorFloat	LIGHTORANGE		= {1.0f, 0.780f, 0.25f, 1.0f				};
 
-#pragma pack( pop )
+#pragma pack(pop)
 } // namespace
-
 
 #endif // GPK_COLOR_H_29734982734

@@ -85,8 +85,6 @@
 #include "gpk_aes.h"
 #include "gpk_noise.h"
 #include "gpk_chrono.h"
-#include <random>
-//#include <ctime>
 
 // Defines: The number of columns comprising a state in AES. This is a constant in AES. Value=4
 static constexpr	const uint32_t				AES_Nb									= 4;

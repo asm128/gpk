@@ -18,12 +18,12 @@ namespace gpk
 							::gpk::error_t									asciiTargetClear							(::gpk::SASCIITarget& target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
 
 	// ------------------------------------------------------
-#pragma pack( push, 1 )
+#pragma pack(push, 1)
 	struct SASCIICell {
 								uint8_t											Character	;
 								uint16_t										Color		;
 	};
-#pragma pack( pop )
+#pragma pack(pop)
 
 	static inline			::gpk::error_t									drawRectangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SRectangle2<int32_t>& rectangle)	{
 		for(int32_t y = (int32_t)::gpk::max(0, rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)

@@ -9,6 +9,18 @@ namespace gpk
 
 	static inline constexpr		bool					failed					(const error_t errorCode)		noexcept	{ return errorCode < 0;		}
 	static inline constexpr		bool					succeeded				(const error_t errorCode)		noexcept	{ return 0 <= errorCode;	}
+
+	static constexpr ::gpk::error_t OS_OK                = 0;
+	static constexpr ::gpk::error_t OS_ERROR             = -1;
+	static constexpr ::gpk::error_t OS_BUSY              = -2;
+	static constexpr ::gpk::error_t OS_TIMEOUT           = -3;
+	static constexpr ::gpk::error_t OS_FULL              = -4;
+	static constexpr ::gpk::error_t OS_EMPTY             = -5;
+	static constexpr ::gpk::error_t OS_OVERRUN           = -6;
+	static constexpr ::gpk::error_t OS_NOT_AVAILABLE     = -7;
+	static constexpr ::gpk::error_t OS_NOT_FOUND         = -8;
+	static constexpr ::gpk::error_t OS_INVALID_PARAMETER = -9;
+	static constexpr ::gpk::error_t OS_FORBIDDEN         = -10;
 }
 
 #if !defined(errored)

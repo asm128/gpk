@@ -23,7 +23,7 @@ namespace gpk
 							::gpk::array_pod<_tValue>					Values									= {};
 							::gpk::array_pod<::gpk::view_const_char>	Names									= {};
 
-		inline															enum_definition							()																		: Name(::gpk::view_const_string{"Enum definition name not set."})	{}
+		inline															enum_definition							()																		: Name(::gpk::vcs{"Enum definition name not set."})	{}
 		inline static		enum_definition<_tValue>&					get										()																		{
 			static	enum_definition<_tValue>									valueRegistry;
 			return valueRegistry;

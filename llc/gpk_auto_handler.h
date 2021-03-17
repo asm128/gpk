@@ -21,8 +21,9 @@ namespace gpk
 		inline constexpr	TWrapper										operator=						(const _tHandle& other)					noexcept	= delete;
 
 		inline constexpr	_tHandle*										operator&						()										noexcept	{ return &Handle;		}
+#if !defined(GPK_ATMEL)
 		inline constexpr	const _tHandle*									operator&						()								const	noexcept	{ return &Handle;		}
-
+#endif
 	};
 } // namespace
 

@@ -15,7 +15,7 @@
 #	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 #		define GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
 #	endif
-#	if defined(GPK_ANDROID) || defined(GPK_LINUX)
+#	if defined(GPK_ANDROID) || defined(GPK_LINUX) 
 #		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
 #	elif defined(GPK_WINDOWS)
@@ -27,7 +27,7 @@
 #		endif
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory
 #	else
-#		error "Platform not supported."
+#		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #	endif
 #else
 #	define GPK_PLATFORM_CRT_BREAKPOINT()		do {} while(0)

@@ -19,7 +19,7 @@
 #	define GPK_LINUX
 #elif (!defined(GPK_WINDOWS)) && (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64))
 #	define GPK_WINDOWS
-#elif !defined(GPK_ST) && !defined(GPK_CMSIS) && !defined(GPK_ESP32)
+#elif !defined(GPK_ST) && !defined(GPK_CMSIS) && !defined(GPK_ESP32) && !defined(GPK_ATMEL)
 #	error "Unsupported platform."
 #	define GPK_UNKNOWN
 #endif
@@ -68,5 +68,9 @@ namespace gpk
 #endif // GPK_PLATFORM_GLOBALS_H_298365465465
 
 #if !defined(GPK_WINDOWS)
-#	include <cstddef>
+	#if defined(GPK_ATMEL)
+	#	include <stddef.h>
+	#else
+	#	include <cstddef>
+	#endif
 #endif
