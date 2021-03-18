@@ -23,3 +23,5 @@
 /udp_client/x64/Debug
 /udp_client/x64/Release
 /udp_server/x64/Release
+/llc/Debug
+/llc/.vs/llc/v14
