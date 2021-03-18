@@ -1,6 +1,10 @@
 #include "gpk_platform.h"
 
-#include <cstdint>
+#if defined(GPK_ATMEL)
+#	include <stdint.h>
+#else
+#	include <cstdint>
+#endif
 
 #ifndef GPK_TYPEINT_H_29873490827342
 #define GPK_TYPEINT_H_29873490827342

@@ -211,7 +211,7 @@ namespace gpk
 
 		int32_t											reserve										(uint32_t newCount)								{
 			if(newCount > Size) {
-				uint32_t											newSize										= ::gpk::max(4U, newCount + (newCount / 4));
+				uint32_t											newSize										= ::gpk::max(4U, (uint32_t)(newCount + (newCount / 4)));
 				_tPOD												* newData									= (_tPOD*)::gpk::gpk_malloc(newSize * sizeof(_tPOD) + 2);
 				if(0 == newData)
 					return -1;

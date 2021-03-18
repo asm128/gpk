@@ -1,6 +1,11 @@
 #include "gpk_log.h"
 #include "gpk_eval.h"
-#include <cstring>
+
+#if defined(GPK_ATMEL)
+#	include <string.h>
+#else
+#	include <cstring>
+#endif
 
 #ifndef GPK_ARRAY_VIEW_H_2398472395543
 #define GPK_ARRAY_VIEW_H_2398472395543

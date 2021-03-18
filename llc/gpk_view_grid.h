@@ -32,9 +32,10 @@ namespace gpk
 							const _tElement	&						operator[]					(const ::gpk::SCoord2<uint32_t> & cell)								const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
 
 		// Methods
+#if !defined(GPK_ATMEL)
 		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;						}
 		inline constexpr	const _tElement*						end							()																	const	noexcept	{ return Data + size();				}
-
+#endif
 		inline constexpr	_tElement*								begin						()																			noexcept	{ return Data;						}
 		inline constexpr	_tElement*								end							()																			noexcept	{ return Data + size();				}
 
@@ -46,10 +47,10 @@ namespace gpk
 
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t						drawRectangle				(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
-		const int32_t													xCount						= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, 0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, 0));
-		const int32_t													yCount						= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, 0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, 0));
-		const int32_t													yStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
-		const int32_t													xStart						= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
+		const int32_t													xCount						= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, (int32_t)0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, (int32_t)0));
+		const int32_t													yCount						= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, (int32_t)0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, (int32_t)0));
+		const int32_t													yStart						= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y);
+		const int32_t													xStart						= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.x);
 		if(xStart >= (int32_t)target.metrics().x || yStart >= (int32_t)target.metrics().y)
 			return 0;
 		if(xCount <= 0 || yCount <= 0)
