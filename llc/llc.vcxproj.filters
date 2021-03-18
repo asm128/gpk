@@ -474,5 +474,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="gpk_cgi_interceptor.json" />
+    <None Include="Makefile" />
   </ItemGroup>
 </Project>

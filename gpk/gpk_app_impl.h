@@ -38,9 +38,9 @@
 			int																main							(int argc, char *argv[], char *envp[])	{	\
 		::gpk::SRuntimeValues														runtimeValues					= {};								\
 		runtimeValues.PlatformDetail.EntryPointArgsWin							= {GetModuleHandle(NULL), 0, 0, SW_SHOW};								\
-		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= {(const char**)argv, (uint32_t)argc};	\
-		(void)envp;\
-		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);\
+		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= {(const char**)argv, (uint32_t)argc};									\
+		(void)envp;																																		\
+		::gpk::environmentBlockFromEnviron(runtimeValues.PlatformDetail.EntryPointArgsStd.EnvironmentBlock);											\
 		return ::gpk::failed(::rtMain(runtimeValues)) ? EXIT_FAILURE : EXIT_SUCCESS;																	\
 	}																																					\
 			int	WINAPI														WinMain																		\

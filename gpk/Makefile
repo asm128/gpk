@@ -1,6 +1,6 @@
-Platform=Linux.x64
+Platform:=Linux.x64
 ProjectName:=gpk
-Configuration=Release
+Configuration:=Release
 OPT=3
 ifeq ($(DEBUG), 1)
 	Configuration=Debug
@@ -22,7 +22,7 @@ $(IntDir)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 build: $(OBJDIRS) $(OBJ)
-	ar rcs $(OutDir)/lib$(LIB_NAME).a $(OBJ)
+	ar rcs $(OutDir)/$(ProjectName).a $(OBJ)
 
 $(OBJDIRS):
 	mkdir -p $@ 
