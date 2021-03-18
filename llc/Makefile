@@ -1,5 +1,5 @@
 Platform:=Linux.x64
-ProjectName:=gpk
+ProjectName:=llc
 Configuration:=Release
 OPT=3
 ifeq ($(DEBUG), 1)
