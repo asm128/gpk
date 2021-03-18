@@ -24,7 +24,7 @@ $(IntDir)/%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 build: $(OBJDIRS) $(OBJ)
-	ar rcs $(OutDir)/$(LIB_NAME).a $(OBJ)
+	ar rcs $(OutDir)/$(ProjectName).a $(OBJ)
 
 $(OBJDIRS):
 	mkdir -p $@ 
