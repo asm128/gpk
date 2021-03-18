@@ -257,8 +257,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 	while(FindNextFile(hFind, &fdFile));
 	FindClose(hFind);
 #elif defined(GPK_ANDROID) || defined(GPK_LINUX)
-    DIR																				* dir;
-    struct dirent																	* drnt;
+    DIR																				* dir	= nullptr;
+    struct dirent																	* drnt	= nullptr;
     dir																			= opendir(pathToList.begin());
     while ((drnt = readdir(dir)) != NULL) {
 		::gpk::array_pod<char_t>														name							= ::gpk::vcs{drnt->d_name, (uint32_t)-1};

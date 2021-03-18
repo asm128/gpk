@@ -33,7 +33,7 @@
 static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::array_pod<byte_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
-	while(iBegin < (int32_t)body.size()) {
+	while(iBegin < body.size()) {
 		iBegin									= iStop;
 		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n

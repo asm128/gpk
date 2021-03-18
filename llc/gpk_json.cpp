@@ -3,7 +3,7 @@
 #include "gpk_storage.h"
 #include "gpk_parse.h"
 
-#define json_info_printf // info_printf
+#define json_info_printf(...) // info_printf
 #define json_error_printf error_printf
 
 ::gpk::error_t												gpk::jsonMapToFields
@@ -307,6 +307,8 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	char															charCurrent											= jsonAsString[index];
 	bool															isNegative											= false;
 	bool															isFloat												= false;
+	(void)isNegative;
+	(void)isFloat	;
 	if(index < jsonAsString.size() && jsonAsString[index] == '+')
 		++index;
 	if(index < jsonAsString.size() && jsonAsString[index] == '-') {
@@ -400,6 +402,7 @@ static	::gpk::error_t									jsonCloseContainer									(::gpk::SJSONReaderStat
 	::gpk::error_t													errVal												= 0;
 	gpk_necall(::jsonCloseOrDiscardIfEmptyKeyOrVal(stateReader, tokens, (::gpk::JSON_TYPE_ARRAY == containerType) ? ::gpk::JSON_TYPE_VALUE : ::gpk::JSON_TYPE_KEY), "Failed to close container at index %i (%s).", stateReader.IndexCurrentElement, ::gpk::get_value_label(containerType).begin());
 	errVal														= ::jsonCloseElement(stateReader, tokens, stateReader.IndexCurrentChar, containerType);
+	(void)errVal;
 	stateReader.ExpectingSeparator								= false;
 	if(stateReader.NestLevel > 0) // Root container isn't inside a value. Every other container is.
 		::jsonTestAndCloseValue(stateReader, tokens);
@@ -411,6 +414,7 @@ static	::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState&
 	gpk_necall(stateReader.IndexCurrentElement = tokens.push_back(currentElement), "Failed to push element. %s", "Out of memory?");
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 	const ::gpk::view_const_char									labelType											= ::gpk::get_value_label(currentElement.Type);
+	(void)labelType;
 	++stateReader.NestLevel;
 	json_info_printf("%s open. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i.", labelType.begin(), stateReader.IndexCurrentElement, stateReader.NestLevel, currentElement.ParentIndex, currentElement.Type, currentElement.Span.Begin);
 	return 0;
@@ -523,7 +527,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 
 			::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader& reader, const ::gpk::view_const_char& jsonAsString)	{
 	SJSONReaderState												& stateReader										= reader.StateRead;
-	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < (int32_t)jsonAsString.size(); ++stateReader.IndexCurrentChar) {
+	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < jsonAsString.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::jsonParseStep(reader, jsonAsString), "%s", "Parse step failed.");
 		bi_if(reader.StateRead.DoneReading, "%i json characters read.", stateReader.IndexCurrentChar + 1);
 	}

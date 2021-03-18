@@ -659,7 +659,7 @@ static			::gpk::error_t											pngProcess										(::gpk::SPNGData& pngData,
 }
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_const_ubyte& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
-	::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
+	//::gpk::view_stream<const ubyte_t>											png_stream										= {source.begin(), source.size()};
 	::gpk::array_pod<uint32_t>													indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");
 	::gpk::array_pod<ubyte_t>													& imageDeflated									= pngData.Deflated;

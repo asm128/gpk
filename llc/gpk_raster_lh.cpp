@@ -118,7 +118,7 @@ int								gpk::drawLine
 		}
 	}
 
-	bool								outside				= true;
+	//bool								outside				= true;
 	const double						factorUnit			= 1.0 / (yAxis ? fabs(yDiff) : xDiff);
 	while (true) {   /* loop */
 		if (line.A.x == line.B.x && line.A.y == line.B.y)
@@ -143,8 +143,8 @@ int								gpk::drawLine
 				depthCell						= intZ;
 				pixelCoords.push_back({(float)line.A.x, (float)line.A.y, (float)finalZ});
 			}
-			else
-				outside							= true;
+			//else
+			//	outside							= true;
 		}
 		if (e2 <= xDiff) { /* e_xy+e_y < 0 */
 			err								+= xDiff;
@@ -165,8 +165,8 @@ int								gpk::drawLine
 				depthCell						= intZ;
 				pixelCoords.push_back({(float)line.A.x, (float)line.A.y, (float)finalZ});
 			}
-			else
-				outside							= true;
+			//else
+			//	outside							= true;
 		}
 
 	}

@@ -124,7 +124,7 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
-	::gpk::GUI_COLOR_MODE												colorMode												= (mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode;
+	::gpk::GUI_COLOR_MODE												colorMode												= (::gpk::GUI_COLOR_MODE)((mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode);
 	if(mode.UseNewPalettes)
 		fillColorTableNew(gui, colorMode, control, controlState, mode, disabled, colors);
 	else
@@ -138,6 +138,7 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 	scaledBorders.Top												= (int32_t)(control.Border.Top		* scaleFinal.y);
 	scaledBorders.Right												= (int32_t)(control.Border.Right	* scaleFinal.x);
 	scaledBorders.Bottom											= (int32_t)(control.Border.Bottom	* scaleFinal.y);
+	(void)scaledBorders;
 
 	const ::gpk::SRectangle2<int32_t>									& rectTotal												= controlMetrics.Total.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal;

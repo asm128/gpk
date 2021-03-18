@@ -4,7 +4,7 @@
 #include "gpk_expression.h"
 #include "gpk_parse.h"
 
-#define gpk_jexpr_info_printf // info_printf
+#define gpk_jexpr_info_printf(...) // info_printf
 
 //#define GPK_JSON_EXPRESSION_DEBUG
 
@@ -65,7 +65,7 @@ static ::gpk::error_t							evaluateExpressionAndBoolResult			(::gpk::SJSONExpre
 	::gpk::view_const_char								viewOfExpressionResult					= {};
 	const int32_t										indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, indexExpressionToken, jsonInput, indexJSONNode, viewOfExpressionResult);
 	ree_if(-1 == indexOfResolvedSubExpression, "Failed to resolve subexpression: '%s'.", ::gpk::toString(readerExpression.View[indexExpressionToken]).begin());
-	return ::evaluateBoolResult((indexOfResolvedSubExpression >= 0) ? jsonInput[indexOfResolvedSubExpression] : 0, indexOfResolvedSubExpression, viewOfExpressionResult);
+	return ::evaluateBoolResult((indexOfResolvedSubExpression >= 0) ? (const ::gpk::SJSONNode*)jsonInput[indexOfResolvedSubExpression] : 0, indexOfResolvedSubExpression, viewOfExpressionResult);
 }
 
 
@@ -77,7 +77,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	::gpk::SEvaluationStepResult						lastResult								= {indexNodeJSON,};
 	for(uint32_t iFirstLevelExpression = 0; iFirstLevelExpression < nodeExpression->Children.size(); ++iFirstLevelExpression) {
 		const ::gpk::SExpressionNode						& childToSolve							= *nodeExpression->Children[iFirstLevelExpression];
-		const ::gpk::SJSONNode								* currentJSON							= (0 <= (int32_t)indexNodeJSON) ? inputJSON.Tree[indexNodeJSON] : 0;
+		const ::gpk::SJSONNode								* currentJSON							= (0 <= (int32_t)indexNodeJSON) ? (const ::gpk::SJSONNode*)inputJSON.Tree[indexNodeJSON] : 0;
 		//const ::gpk::SExpressionNode						* currentLiteral						= (0 <= (int32_t)indexNodeJSON) ? 0 : readerExpression.Tree[(((int32_t)indexNodeJSON) + 0xF) * -1];
 		const ::gpk::view_const_char						currentView								= lastResult.Output;
 		const ::gpk::view_const_char						currentExpressionView					= readerExpression.View[childToSolve.ObjectIndex];
@@ -262,6 +262,7 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 	for(uint32_t iView = 0; iView < expressionViews.size(); ++iView) {
 		const ::gpk::view_const_char						& viewExpression						= expressionViews[iView];
 		const ::gpk::SExpressionToken						& typeExpression						= reader.Token[iView];
+		(void)typeExpression;
 		if(viewExpression.size())
 			gpk_jexpr_info_printf("Expression element: %s. Type: %s. Parent: %i. Begin: %u. End: %u.", ::gpk::toString(viewExpression).begin(), ::gpk::get_value_label(typeExpression.Type).begin(), typeExpression.ParentIndex, typeExpression.Span.Begin, typeExpression.Span.End);
 	}

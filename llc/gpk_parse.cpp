@@ -41,7 +41,7 @@
 }
 
 ::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
-	in_format;
+	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
 	case '{'	:
@@ -75,7 +75,7 @@
 }
 
 ::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
-	in_format;
+	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
 	case '{'	:

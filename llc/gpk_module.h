@@ -47,10 +47,10 @@
 #	define GPK_MODULE_EXTENSION "so"
 #endif
 
-//#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 																	\
+/*#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 															\
 //	extern "C"	::gpk::error_t		 GPK_MODULE_API_EXPORT	functionName									(__VA_ARGS__);	\
-//	typedef		::gpk::error_t		(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
-//
+//	typedef		::gpk::error_t		(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);
+*/
 namespace gpk
 {
 #pragma pack(push, 1)

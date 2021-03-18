@@ -20,7 +20,7 @@ namespace gpk
 		};
 
 	struct SControlMode {
-		GUI_COLOR_MODE											ColorMode								: 2;
+		uint8_t													ColorMode								: 2;
 		uint8_t													UseNewPalettes							: 1;
 		uint8_t													NoHoverEffect							: 1;
 		uint8_t													FrameOut								: 1;

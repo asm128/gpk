@@ -113,7 +113,7 @@ namespace gpk
 				gthrow_if(0 == Data				, "Failed to allocate array. Requested size: %u. ", (uint32_t)newSize);
 				gthrow_if(0 == other.begin()	, "%s", "other.Data is null!");
 				memcpy(Data, other.begin(), newSize * sizeof(_tPOD));
-				memset(&Data[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
+				memset(&((char*)safeguard.Handle)[newSize * sizeof(_tPOD)], 0, mallocSize - newSize * sizeof(_tPOD));
 				//for(uint32_t i = 0, count = newSize; i<count; ++i)
 				//	Data[i]											= other[i];
 				Size											= (uint32_t)reserveSize;
@@ -237,10 +237,10 @@ namespace gpk
 				::gpk::auto_gpk_free								safeguard;
 				_tPOD												* newData									= (_tPOD*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, (uint32_t)Size);
+				memset(&((char*)safeguard.Handle)[newSize * sizeof(_tPOD)], 0, mallocSize - newSize * sizeof(_tPOD));
 				//TArrayView											safe_data									= {newData, reserveSize};
 				if(oldData)
 					memcpy(newData, oldData, ::gpk::min(newSize, oldCount) * sizeof(_tPOD));
-				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tPOD));
 				Size											= (uint32_t)reserveSize;
 				Count											= newSize;
 				Data											= newData;
@@ -583,7 +583,7 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
-				memset(&newData[newSize], 0, mallocSize - newSize * sizeof(_tObj));
+				memset(&((char*)safeguard.Handle)[newSize * sizeof(_tObj)], 0, mallocSize - newSize * sizeof(_tObj));
 				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", newSize, Size);
 				if(oldData) {
 					for(uint32_t i = 0, copyCount = ::gpk::min(oldCount, newSize); i < copyCount; ++i)
