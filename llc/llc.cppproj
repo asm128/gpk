@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.AVRGCC8.CPP</ToolchainName>
+    <ProjectGuid>{ac9b569a-4dcb-44bb-816e-7d592a45e994}</ProjectGuid>
+    <avrdevice>ATtiny85</avrdevice>
+    <avrdeviceseries>none</avrdeviceseries>
+    <OutputType>StaticLibrary</OutputType>
+    <Language>CPP</Language>
+    <OutputFileName>lib$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.a</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AvrGccProjectExtensions>
+    </AvrGccProjectExtensions>
+    <AssemblyName>llc</AssemblyName>
+    <Name>llc</Name>
+    <RootNamespace>llc</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress />
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue />
+    <BootSegment>2</BootSegment>
+    <ResetRule>0</ResetRule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <EraseKey />
+    <AsfFrameworkConfig>
+      <framework-data xmlns="">
+  <options />
+  <configurations />
+  <files />
+  <documentation help="" />
+  <offline-documentation help="" />
+  <dependencies>
+    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.49.1" />
+  </dependencies>
+</framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <AvrGccCpp>
+  <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+  <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+  <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+  <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
+  <avrgcc.common.outputfiles.usersignatures>False</avrgcc.common.outputfiles.usersignatures>
+  <avrgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>GPK_ATMEL</Value>
+    </ListValues>
+  </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcccpp.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>GPK_ATMEL</Value>
+    </ListValues>
+  </avrgcccpp.compiler.symbols.DefSymbols>
+  <avrgcccpp.compiler.miscellaneous.OtherFlags>-std=c++11</avrgcccpp.compiler.miscellaneous.OtherFlags>
+</AvrGccCpp>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="gpk_adam7.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_adam7.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_aes.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_aes.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_array.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_array_static.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_ascii_color.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_ascii_target.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_ascii_target.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_auto_handler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_base64.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_base64.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_bit.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_bitmap_target.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_block.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_block.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_camera.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_app_impl.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_app_impl_v2.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_module.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_module.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_runtime.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_cgi_runtime.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_chrono.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_chrono.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_collision.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_color.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_coord.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_datatype.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_datatype.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_debug.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_deflate.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_deflate.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_encoding.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_encoding.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_enum.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_error.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_eval.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_expression.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_expression.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_frameinfo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_geometry.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_geometry.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_geometry_lh.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_geometry_lh.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_grid_copy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_grid_scale.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_grid_static.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_gui.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_gui.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_gui_draw.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_gui_text.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_http.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_https_client.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_http_client.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_http_client.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_i2c.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_i2c.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_image.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_input.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_io.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_json.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_json.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_json_expression.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_json_expression.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_keyval.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_keyval.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_label.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_label.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_label_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_log.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_log.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_mapblock.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_math.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_matrix.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_member_registry.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_memory.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_model.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_module.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_noise.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_noise.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_parse.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_parse.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_particle.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_platform.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_platform_error.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_platform_error.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_png.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_png.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_png_write.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_process.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_process.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_ptr.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_raster_lh.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_raster_lh.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_rigidbody.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_rigidbody.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_rsa.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_rsa.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_runtime.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_runtime_module.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_runtime_module.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_safe.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_scene.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_size.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_spi.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_spi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_stdsocket.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_stdstring.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_stdstring.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_storage.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_storage.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_string.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_string_helper.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_string_helper.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_sync.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_tcpip.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_tcpip.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_timer.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_timer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_typeint.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_type_identifier.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_type_registry.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_type_registry.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_array.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_array.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_bit.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_grid.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_layered.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_manager.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_view_stream.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_windows.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="gpk_windows.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="initializer_list.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="llc_header_checkingg.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>

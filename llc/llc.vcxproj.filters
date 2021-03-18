@@ -327,6 +327,9 @@
     <ClInclude Include="gpk_ascii_color.h">
       <Filter>raster</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_stl.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -460,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="gpk_ascii_target.cpp">
       <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stl.cpp">
+      <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

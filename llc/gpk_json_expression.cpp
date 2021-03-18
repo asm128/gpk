@@ -263,8 +263,9 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 		const ::gpk::view_const_char						& viewExpression						= expressionViews[iView];
 		const ::gpk::SExpressionToken						& typeExpression						= reader.Token[iView];
 		(void)typeExpression;
-		if(viewExpression.size())
+		if(viewExpression.size()) {
 			gpk_jexpr_info_printf("Expression element: %s. Type: %s. Parent: %i. Begin: %u. End: %u.", ::gpk::toString(viewExpression).begin(), ::gpk::get_value_label(typeExpression.Type).begin(), typeExpression.ParentIndex, typeExpression.Span.Begin, typeExpression.Span.End);
+		}
 	}
 	::gpk::view_const_char								evaluated								= {};
 	int32_t												jsonNodeResultOfEvaluation				= -1;
@@ -276,8 +277,9 @@ static ::gpk::error_t							evaluateExpression						(::gpk::SJSONExpressionSolve
 		ree_if(-1 == jsonNodeResultOfEvaluation, "Failed to evaluate expression: %s.", ::gpk::toString(reader.View[0]).begin());
 		evaluated										= output;
 	}
-	if(evaluated.size())
+	if(evaluated.size()) {
 		gpk_jexpr_info_printf("Result of expression evaluation: %s.", ::gpk::toString(evaluated).begin());
+	}
 	return jsonNodeResultOfEvaluation;
 }
 
