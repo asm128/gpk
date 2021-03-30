@@ -90,7 +90,7 @@ namespace gpk
 			Controls[index]->Dialog												= this;
 			Controls[index]->IdGUIControl										= ::gpk::controlCreate(*GUI);
 			gui.Controls.Modes[Controls[index]->IdGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes, ColorsControl.Storage);
+			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes.Storage, ColorsControl.Storage);
 			//gpk_necall(::gpk::controlSetParent(gui, Controls[index]->IdGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;

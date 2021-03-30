@@ -28,14 +28,14 @@ namespace gpk
 	};
 
 	struct SControlRectangle {
-		::gpk::SRectangle2<int32_t>							Local;
-		::gpk::SRectangle2<int32_t>							Global;
+		::gpk::SRectangle2<int32_t>								Local;
+		::gpk::SRectangle2<int32_t>								Global;
 	};
 
 	struct SControlMetrics {
 		::gpk::SControlRectangle								Total;
 		::gpk::SControlRectangle								Client;
-		::gpk::SRectangle2<int16_t>							Text;
+		::gpk::SRectangle2<int16_t>								Text;
 	};
 
 	struct SControlAttachId {
@@ -114,20 +114,20 @@ namespace gpk
 		};
 
 	struct SControlImage {
-		::gpk::SImage<::gpk::SColorBGRA>						Temp												= {};
+		::gpk::SImage<::gpk::SColorBGRA>								Temp												= {};
 	};
 
 	struct SControl {
-		::gpk::SRectangle2<int16_t>							Area													= {{}, {16, 16}};
-		::gpk::SRectLimits<uint16_t>							Border													= {1, 1, 1, 1};
-		::gpk::SRectLimits<uint16_t>							Margin													= {1, 1, 1, 1};
-		::gpk::view_grid<::gpk::SColorBGRA>						Image													= {};
-		::gpk::SCoord2<int32_t>									ImageOffset												= {};
+		::gpk::SRectangle2<int16_t>										Area													= {{}, {16, 16}};
+		::gpk::SRectLimits<uint16_t>									Border													= {1, 1, 1, 1};
+		::gpk::SRectLimits<uint16_t>									Margin													= {1, 1, 1, 1};
+		::gpk::view_grid<::gpk::SColorBGRA>								Image													= {};
+		::gpk::SCoord2<int32_t>											ImageOffset												= {};
 
-		int32_t													ColorTheme												= 0;
-		int32_t													Palettes	[::gpk::GUI_CONTROL_PALETTE_COUNT]			= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,};
-		int32_t													IndexParent												= -1;
-		::gpk::ALIGN											Align													= ::gpk::ALIGN_TOP_LEFT;
+		int32_t															ColorTheme												= 0;
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	Palettes										= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
+		int32_t															IndexParent												= -1;
+		::gpk::ALIGN													Align													= ::gpk::ALIGN_TOP_LEFT;
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
@@ -175,13 +175,13 @@ namespace gpk
 	};
 
 	struct SGUI {
-		::gpk::SCoord2<uint32_t>								LastSize							= {};
-		::gpk::SCoord2<float>									CursorPos							= {};
-		::gpk::SGUIControlTable									Controls							= {};
-		::gpk::array_pod<::gpk::SColorBGRA>						Palette								= {};
-		::gpk::array_pod<::gpk::SControlTheme>					ControlThemes						= {};
+		::gpk::SCoord2<uint32_t>										LastSize							= {};
+		::gpk::SCoord2<float>											CursorPos							= {};
+		::gpk::SGUIControlTable											Controls							= {};
+		::gpk::array_pod<::gpk::SColorBGRA>								Palette								= {};
+		::gpk::array_pod<::gpk::SControlTheme>							ControlThemes						= {};
 
-		int32_t													DefaultColors	[::gpk::GUI_CONTROL_PALETTE_COUNT];
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors	= {};
 
 		::gpk::array_pod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>

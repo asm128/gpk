@@ -69,7 +69,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
 	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
-	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
+	::gpk::memcpy_s(controlTable.Controls[checkBox->IdGUIControl].Palettes.Storage, dialog.ColorsCheckBox.Storage);
 	return index;
 }
 		::gpk::error_t												gpk::checkBoxUpdate							(::gpk::SDialogCheckBox	& checkbox)								{
@@ -107,7 +107,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
 		::gpk::SControl															& controlButton								= controlTable.Controls[iControl];
 		controlButton.Align													= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
-		::gpk::memcpy_s(controlButton.Palettes, dialog.ColorsButton.Storage);
+		::gpk::memcpy_s(controlButton.Palettes.Storage, dialog.ColorsButton.Storage);
 		controlTable.Text			[iControl].Text							= (iControl == tuner->IdDecrease) ? "-" : "+";
 		controlTable.Modes			[iControl].UseNewPalettes				= true;
 		controlTable.Modes			[iControl].ColorMode					= ::gpk::GUI_COLOR_MODE_3D;
@@ -151,8 +151,8 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	controlTable.Constraints[slider->IdButton].AttachSizeToControl.y	= slider->IdButton;
 	controlTable.Modes		[slider->IdButton].UseNewPalettes			= true;
 	controlTable.Modes		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
-	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes, dialog.ColorsButton		.Storage);
-	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes, dialog.ColorsCheckBox	.Storage);
+	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes.Storage, dialog.ColorsButton		.Storage);
+	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes.Storage, dialog.ColorsCheckBox	.Storage);
 	return index;
 }
 		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value)				{
@@ -231,7 +231,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
 	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
 	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;
-	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes, dialog.ColorsCheckBox.Storage);
+	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes.Storage, dialog.ColorsCheckBox.Storage);
 	return index;
 }
 		::gpk::error_t												gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)								{
@@ -249,7 +249,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	controlTable.Modes[viewport->IdGUIControl].FrameOut					= true;
 	controlTable.Modes[viewport->IdGUIControl].NoHoverEffect			= true;
 	controlTable.Controls[viewport->IdGUIControl].Margin				= {};
-	::gpk::memcpy_s(controlTable.Controls[viewport->IdGUIControl].Palettes, dialog.ColorsViewport.Storage);
+	::gpk::memcpy_s(controlTable.Controls[viewport->IdGUIControl].Palettes.Storage, dialog.ColorsViewport.Storage);
 	{ // Create field group
 		// Set up client area control
 		int32_t																	idControl							= ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl);
@@ -263,7 +263,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 
 		::gpk::SControlMode														& modes								= controlTable.Modes[idControl];
 		modes																= dialog.DefaultControlModes;
-		::gpk::memcpy_s(control.Palettes, dialog.ColorsViewport.Storage);
+		::gpk::memcpy_s(control.Palettes.Storage, dialog.ColorsViewport.Storage);
 	}
 	{ // Create section title
 		int32_t																	idControl							= ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl);
@@ -280,7 +280,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		::gpk::SControlMode														& modes								= controlTable.Modes[idControl];
 		modes																= dialog.DefaultControlModes;
 		controlTable.Text[idControl].Text									= "Viewport";
-		::gpk::memcpy_s(control.Palettes, dialog.ColorsViewportTitle.Storage);
+		::gpk::memcpy_s(control.Palettes.Storage, dialog.ColorsViewportTitle.Storage);
 	}
 	viewport->Settings.Unfolded											= true;
 	return index;
