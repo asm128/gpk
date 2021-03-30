@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
+    <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_ascii_color.h" />
