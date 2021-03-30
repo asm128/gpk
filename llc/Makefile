@@ -1,27 +1,31 @@
-Platform:=Linux.x64
-ProjectName:=llc
-Configuration:=Release
-OPT=3
-ifeq ($(DEBUG), 1)
-	Configuration=Debug
-	OPT=0
+IncDir			:= ../../zlib 
+Platform		:= Linux.x64
+ProjectName		:= smart
+Configuration	:= Release
 
+C_DEFS			:= -DNOMINMAX
+OPT				:= 3
+
+ifeq ($(DEBUG), 1)
+	Configuration	= Debug
+	OPT				= 0
+	C_DEFS			+= -DDEBUG
 endif
 
-OutDir =../../$(Platform).$(Configuration)
-IntDir =../../obj/$(Platform).$(Configuration)/$(ProjectName)
-IncDir =../../zlib
+OutDir	= ../../$(Platform).$(Configuration)
+IntDir	= ../../obj/$(Platform).$(Configuration)/$(ProjectName)
 
-OBJDIRS := $(patsubst %, $(IntDir), $(ProjectName))
+OBJDIRS	:= $(patsubst %, $(IntDir), $(ProjectName))
+INCDIR	:= $(patsubst %,-I%,$(IncDir))
 
-CFLAGS=-std=c++17 -Wall -O$(OPT) -I$(IncDir)
-CC=g++
+CFLAGS	:= -std=c++17 -Wall -Werror -O$(OPT) $(INCDIR) 
+CC		:= g++
 
-_OBJ = $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 
-OBJ = $(patsubst %,$(IntDir)/%,$(_OBJ))
+_OBJ	:= $(patsubst %.cpp,%.o,$(wildcard *.cpp)) 
+OBJ		:= $(patsubst %,$(IntDir)/%,$(_OBJ))
 
 $(IntDir)/%.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(C_DEFS) -c -o $@ $<
 
 build: $(OBJDIRS) $(OBJ)
 	ar rcs $(OutDir)/$(ProjectName).a $(OBJ)
