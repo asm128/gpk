@@ -333,6 +333,9 @@
     <ClInclude Include="gpk_app_impl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_display.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -469,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="gpk_stl.cpp">
       <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_display.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
