@@ -1,10 +1,11 @@
 #include "gpk_display.h"
 
 		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{
+	bool																								quit	= false;
+	(void)displayInstance;
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	int																									counter										= 0;
-	bool																								quit	= false;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (100 > counter++)) {
 		::TranslateMessage	(&msg);
 		::DispatchMessage	(&msg);
@@ -76,6 +77,7 @@
 #endif
 
 		::gpk::error_t																			gpk::displayPresentTarget					(::gpk::SDisplay& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent)		{
+	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;
 	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
