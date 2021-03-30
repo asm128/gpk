@@ -17,9 +17,9 @@
 
 		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{
 	displayInstance.Resized																			= false;
+	bool																								quit	= false;
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
-	bool																								quit	= false;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == displayUpdateTick(displayInstance))
 			quit = true;
