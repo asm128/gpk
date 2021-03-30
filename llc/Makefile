@@ -1,6 +1,6 @@
 IncDir			:= ../../zlib 
 Platform		:= Linux.x64
-ProjectName		:= smart
+ProjectName		:= llc
 Configuration	:= Release
 
 C_DEFS			:= -DNOMINMAX
@@ -28,6 +28,7 @@ $(IntDir)/%.o: %.cpp
 	$(CC) $(CFLAGS) $(C_DEFS) -c -o $@ $<
 
 build: $(OBJDIRS) $(OBJ)
+	mkdir -p $(OutDir)
 	ar rcs $(OutDir)/$(ProjectName).a $(OBJ)
 
 $(OBJDIRS):
