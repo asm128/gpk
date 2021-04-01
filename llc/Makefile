@@ -3,7 +3,7 @@ Platform		:= Linux.x64
 ProjectName		:= llc
 Configuration	:= Release
 
-C_DEFS			:= -DNOMINMAX
+C_DEFS			:= -DNOMINMAX -DGPK_XCB
 OPT				:= 3
 
 ifeq ($(DEBUG), 1)
