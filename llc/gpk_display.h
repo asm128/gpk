@@ -26,7 +26,7 @@ namespace gpk
 							xcb_drawable_t						IdDrawableBackPixmap						= {};
 
 																~SDisplayPlatformDetail						() {
-			if(-1 != GC) {
+			if(uint32_t(-1) != GC) {
 				xcb_free_gc(Connection, GC);
 				info_printf("%s.", "Window graphics context freed");
 			}
