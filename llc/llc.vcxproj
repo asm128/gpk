@@ -45,6 +45,7 @@
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_display.h" />
+    <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_raster_lh.h" />
     <ClInclude Include="gpk_encoding.h" />
     <ClInclude Include="gpk_enum.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_display.cpp" />
+    <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />

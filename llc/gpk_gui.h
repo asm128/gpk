@@ -185,18 +185,18 @@ namespace gpk
 
 		::gpk::array_pod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
-		>														Palettes;
+		>																Palettes;
 
 		// Font
-		::gpk::SImageMonochrome<uint32_t>						FontTexture							= {};
-		::gpk::SCoord2<uint16_t>								FontCharSize						= {9, 16};
+		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
+		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
 
-		::gpk::SGUIZoom											LastZoom							= {};
-		::gpk::SGUIZoom											Zoom								= {};
-		uint32_t												ThemeDefault						= 0;
-		::gpk::GUI_COLOR_MODE									ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
+		::gpk::SGUIZoom													LastZoom							= {};
+		::gpk::SGUIZoom													Zoom								= {};
+		uint32_t														ThemeDefault						= 0;
+		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
 
-																SGUI								();
+																		SGUI								();
 	};
 
 	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
