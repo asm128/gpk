@@ -17,8 +17,9 @@ namespace gpk
 #if defined(GPK_XCB)
 							xcb_connection_t											* XCBConnection								= {};
 							xcb_screen_t												* XCBScreen									= {};
-																						~SXCBFramework								() {
-			if(XCBConnection){
+
+																						~SFrameworkDetail							() {
+			if(XCBConnection) {
 				xcb_disconnect(XCBConnection);
 				info_printf("%s.", "XCB disconnected");
 			}
