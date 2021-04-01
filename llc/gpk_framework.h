@@ -13,6 +13,19 @@
 
 namespace gpk
 {
+	struct SFrameworkDetail {
+#if defined(GPK_XCB)
+							xcb_connection_t											* XCBConnection								= {};
+							xcb_screen_t												* XCBScreen									= {};
+																						~SXCBFramework								() {
+			if(XCBConnection){
+				xcb_disconnect(XCBConnection);
+				info_printf("%s.", "XCB disconnected");
+			}
+		}
+#endif
+	};
+
 	struct SFrameworkSettings {
 							bool														GUIZoom										: 1;
 	};
@@ -22,6 +35,7 @@ namespace gpk
 		typedef				::gpk::SImage<TTexel>										TOffscreen;
 
 							::gpk::SRuntimeValues										& RuntimeValues								;
+							::gpk::SFrameworkDetail										Detail										= {};
 							::gpk::SDisplay												MainDisplay									= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>		MainDisplayOffscreen						= {};
 							::gpk::ptr_obj<::gpk::SInput>								Input										= {};
