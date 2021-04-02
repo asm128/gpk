@@ -64,6 +64,9 @@
     <Filter Include="raster">
       <UniqueIdentifier>{e8645092-4536-4b63-a21f-b579b831c1f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{00e9e4fa-dc46-4283-8be5-c9bbb75f37c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -330,14 +333,14 @@
     <ClInclude Include="gpk_stl.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_app_impl.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_framework.h">
+      <Filter>framework</Filter>
     </ClInclude>
     <ClInclude Include="gpk_display.h">
-      <Filter>Header Files</Filter>
+      <Filter>framework</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_framework.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_app_impl.h">
+      <Filter>framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -452,9 +455,6 @@
     <ClCompile Include="gpk_https_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_view_array.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -476,11 +476,14 @@
     <ClCompile Include="gpk_stl.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_framework.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_display.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_view_array.cpp">
+      <Filter>view</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

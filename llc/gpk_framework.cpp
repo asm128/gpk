@@ -213,6 +213,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{
 	if(0 == displayInput)
 		displayInput.create();
+
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
