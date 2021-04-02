@@ -204,7 +204,7 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	if(0 == window.PlatformDetail.Connection) {
 		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
-	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.XCBConnection)).data;
+	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
 	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
 	xcb_create_pixmap(window.PlatformDetail.Connection, xcbScreen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, xcbScreen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
