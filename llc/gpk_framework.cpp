@@ -277,6 +277,7 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	}
 	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
 	mainWindow.Size																			= {geometry->width, geometry->height};
+	gpk_necall(xcbWindowCreate(mainWindow), "%s", "Failed to create main window.");
 	(void)runtimeValues;
 #else
 	(void)runtimeValues;
