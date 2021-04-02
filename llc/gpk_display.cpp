@@ -2,7 +2,6 @@
 
 		::gpk::error_t																			gpk::displayUpdateTick						(::gpk::SDisplay& displayInstance)											{
 	bool																								quit	= false;
-	(void)displayInstance;
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
 	int																									counter										= 0;
@@ -12,6 +11,10 @@
 		if(msg.message == WM_QUIT)
 			quit = true;
 	}
+#elif defined(GPK_XCB)
+	(void)displayInstance;
+#else
+	(void)displayInstance;
 #endif
 	return quit ? 1 : 0;
 }
@@ -24,6 +27,8 @@
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == displayUpdateTick(displayInstance))
 			quit = true;
+#elif defined(GPK_XCB)
+
 #endif
 	return quit ? 1 : 0;
 }
@@ -85,6 +90,10 @@
 	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
 	e_if(errored(::drawBuffer(dc, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
+#elif defined(GPK_XCB)
+	(void)displayInstance; (void)targetToPresent;
+#else
+	(void)displayInstance; (void)targetToPresent;
 #endif
 	return 0;
 }

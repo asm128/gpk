@@ -199,6 +199,43 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	wndClassToInit.lpszClassName															= className;
 	wndClassToInit.style																	= CS_DBLCLKS;
 }
+#elif defined(GPK_XCB)
+static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & window) {
+	if(0 == window.PlatformDetail.XCBConnection) {
+		window.PlatformDetail.XCBConnection														= xcb_connect(NULL, NULL);
+	}
+	xcb_screen_t																				* XCBScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.XCBConnection)).data;
+	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
+	xcb_create_pixmap(window.PlatformDetail.Connection, screen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, screen->root, window.Size.x, window.Size.y);
+	{	// create graphics context
+		window.PlatformDetail.GC																= xcb_generate_id(window.PlatformDetail.Connection);
+		const uint32_t																				mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+		const uint32_t																				values[3]	= {screen->black_pixel, screen->white_pixel, 0};
+		xcb_create_gc(window.PlatformDetail.Connection, window.PlatformDetail.GC, screen->root, mask, values);
+	}
+	{	// create the window
+		window.PlatformDetail.IdDrawable																		= xcb_generate_id(window.PlatformDetail.Connection);
+		const uint32_t																				mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
+		const uint32_t																				values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
+			, XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+			| XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_KEY_PRESS  | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
+		};
+		xcb_create_window
+			( window.PlatformDetail.Connection			// connection
+			, window.PlatformDetail.Screen->root_depth	// depth
+			, window.PlatformDetail.IdDrawable			// window Id
+			, window.PlatformDetail.Screen->root		// parent window
+			, 0, 0										// x, y
+			, window.Size.x, window.Size.y				// width, height
+			, 0											// border_width
+			, XCB_WINDOW_CLASS_INPUT_OUTPUT				// class
+			, window.PlatformDetail.Screen->root_visual	// visual
+			, mask, values								// masks
+			);
+		xcb_map_window(window.PlatformDetail.XCBConnection, window.PlatformDetail.IdDrawable);
+	}
+	return 0;
+}
 #endif
 
 					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{
@@ -233,10 +270,17 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	::UpdateWindow	(displayDetail.WindowHandle);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
-	mainWindow.Resized																		= true;
+#elif defined(GPK_XCB)
+	if(0 == mainWindow.PlatformDetail.Connection) {
+		mainWindow.PlatformDetail.Connection													= xcb_connect(0, 0);
+		Xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.XCBConnection)).data;
+	}
+	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(xcbconnection, xcb_get_geometry(xcbconnection, xcbScreen->root), nullptr), free);
+	mainWindow.Size																			= {geometry->width, geometry->height};
+	(void)runtimeValues;
 #else
-	(void)mainWindow;
 	(void)runtimeValues;
 #endif
+	mainWindow.Resized																		= true;
 	return 0;
 }
