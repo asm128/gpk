@@ -201,16 +201,17 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 }
 #elif defined(GPK_XCB)
 static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & window) {
-	if(0 == window.PlatformDetail.XCBConnection) {
-		window.PlatformDetail.XCBConnection														= xcb_connect(NULL, NULL);
+	if(0 == window.PlatformDetail.Connection) {
+		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
+	Xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.XCBConnection)).data;
 	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
-	xcb_create_pixmap(window.PlatformDetail.Connection, screen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, screen->root, window.Size.x, window.Size.y);
+	xcb_create_pixmap(window.PlatformDetail.Connection, xcbScreen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, xcbScreen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
 		window.PlatformDetail.GC																= xcb_generate_id(window.PlatformDetail.Connection);
 		const uint32_t																				mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-		const uint32_t																				values[3]	= {screen->black_pixel, screen->white_pixel, 0};
-		xcb_create_gc(window.PlatformDetail.Connection, window.PlatformDetail.GC, screen->root, mask, values);
+		const uint32_t																				values[3]	= {xcbScreen->black_pixel, xcbScreen->white_pixel, 0};
+		xcb_create_gc(window.PlatformDetail.Connection, window.PlatformDetail.GC, xcbScreen->root, mask, values);
 	}
 	{	// create the window
 		window.PlatformDetail.IdDrawable																		= xcb_generate_id(window.PlatformDetail.Connection);
@@ -221,17 +222,17 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 		};
 		xcb_create_window
 			( window.PlatformDetail.Connection			// connection
-			, window.PlatformDetail.Screen->root_depth	// depth
+			, xcbScreen->root_depth	// depth
 			, window.PlatformDetail.IdDrawable			// window Id
-			, window.PlatformDetail.Screen->root		// parent window
+			, xcbScreen->root		// parent window
 			, 0, 0										// x, y
 			, window.Size.x, window.Size.y				// width, height
 			, 0											// border_width
 			, XCB_WINDOW_CLASS_INPUT_OUTPUT				// class
-			, window.PlatformDetail.Screen->root_visual	// visual
+			, xcbScreen->root_visual	// visual
 			, mask, values								// masks
 			);
-		xcb_map_window(window.PlatformDetail.XCBConnection, window.PlatformDetail.IdDrawable);
+		xcb_map_window(window.PlatformDetail.Connection, window.PlatformDetail.IdDrawable);
 	}
 	return 0;
 }
