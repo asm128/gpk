@@ -21,7 +21,7 @@ namespace gpk
 																					SFrameworkDetail		() {
 			if(0 == XCBConnection) {
 				XCBConnection		= xcb_connect(NULL, NULL);
-				throw_if(0 == XCBConnection, "%s", "Failed to connect to X Server!");
+				gthrow_if(0 == XCBConnection, "%s", "Failed to connect to X Server!");
 				XCBScreen			= xcb_setup_roots_iterator(xcb_get_setup(XCBConnection)).data;
 			}
 		}
