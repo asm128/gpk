@@ -273,8 +273,8 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 #elif defined(GPK_XCB)
 	if(0 == mainWindow.PlatformDetail.Connection) {
 		mainWindow.PlatformDetail.Connection													= xcb_connect(0, 0);
-		xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
 	}
+	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
 	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
 	mainWindow.Size																			= {geometry->width, geometry->height};
 	gpk_necall(xcbWindowCreate(mainWindow), "%s", "Failed to create main window.");
