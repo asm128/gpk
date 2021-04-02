@@ -98,12 +98,9 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_WINDOWS)
 #	include <Windowsx.h>
 
-static constexpr	const uint32_t														BMP_SCREEN_WIDTH							= 1280;
-static constexpr	const uint32_t														BMP_SCREEN_HEIGHT							= uint32_t(::BMP_SCREEN_WIDTH * (9.0 / 16.0));
 static				::RECT																minClientRect								= {100, 100, 100 + 320, 100 + 200};
 
 //extern				::SApplication														* g_ApplicationInstance						;
-#if defined(GPK_WINDOWS)
 static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
 	//::SApplication																				& applicationInstance						= *g_ApplicationInstance;
 	static	const int																			adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
@@ -205,15 +202,19 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 #endif
 
 					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{
+#if defined(GPK_WINDOWS)
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::displayUpdate(mainWindow);
+#else
+	(void)mainWindow;
+#endif
 	return 0;
 }
 
-					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)				{
+					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)	{
 	if(0 == displayInput)
 		displayInput.create();
-
+#if defined(GPK_WINDOWS)
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
@@ -233,6 +234,9 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	::UpdateWindow	(displayDetail.WindowHandle);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
 	mainWindow.Resized																		= true;
+#else
+	(void)mainWindow;
+	(void)runtimeValues;
+#endif
 	return 0;
 }
-#endif

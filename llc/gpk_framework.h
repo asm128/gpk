@@ -68,7 +68,7 @@ namespace gpk
 	}; // struct
 
 						::gpk::error_t											updateFramework			(::gpk::SFramework& framework);
-						::gpk::error_t											mainWindowCreate		(::gpk::SDisplay& mainWindow, SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
+						::gpk::error_t											mainWindowCreate		(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
 						::gpk::error_t											mainWindowDestroy		(::gpk::SDisplay& mainWindow);
 } // namespace
 
