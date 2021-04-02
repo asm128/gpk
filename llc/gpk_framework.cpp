@@ -204,7 +204,6 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	if(0 == window.PlatformDetail.XCBConnection) {
 		window.PlatformDetail.XCBConnection														= xcb_connect(NULL, NULL);
 	}
-	xcb_screen_t																				* XCBScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.XCBConnection)).data;
 	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
 	xcb_create_pixmap(window.PlatformDetail.Connection, screen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, screen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
@@ -275,7 +274,7 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 		mainWindow.PlatformDetail.Connection													= xcb_connect(0, 0);
 		Xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.XCBConnection)).data;
 	}
-	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(xcbconnection, xcb_get_geometry(xcbconnection, xcbScreen->root), nullptr), free);
+	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.XCBConnection, xcbScreen->root), nullptr), free);
 	mainWindow.Size																			= {geometry->width, geometry->height};
 	(void)runtimeValues;
 #else
