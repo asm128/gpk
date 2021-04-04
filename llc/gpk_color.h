@@ -13,6 +13,8 @@ namespace gpk
 	template <typename _tBase> struct color_bgra	{ _tBase b, g, r, a;	};
 	template <typename _tBase> struct color_rgba	{ _tBase r, g, b, a;	};
 
+	typedef						uint16_t		SColor16;
+
 	// Stores RGBA color channels
 	struct SColorRGBA : public ::gpk::color_rgba<uint8_t> {
 		constexpr									SColorRGBA		(const SColorRGBA& other)											noexcept	= default;
@@ -65,9 +67,10 @@ namespace gpk
 									SColorBGRA&		operator /=		(float scalar)																{ b = (uint8_t)::gpk::clamp(b / scalar, 0.0f, 255.0f); g = (uint8_t)::gpk::clamp(g / scalar, 0.0f, 255.0f); r = (uint8_t)::gpk::clamp(r / scalar, 0.0f, 255.0f);	return *this; }
 									SColorBGRA&		operator *=		(double scalar)													noexcept	{ b = (uint8_t)::gpk::clamp(b * scalar, 0.0,  255.0 ); g = (uint8_t)::gpk::clamp(g * scalar, 0.0 , 255.0 ); r = (uint8_t)::gpk::clamp(r * scalar, 0.0, 255.0);		return *this; }
 									SColorBGRA&		operator /=		(double scalar)																{ b = (uint8_t)::gpk::clamp(b / scalar, 0.0,  255.0 ); g = (uint8_t)::gpk::clamp(g / scalar, 0.0 , 255.0 ); r = (uint8_t)::gpk::clamp(r / scalar, 0.0, 255.0);		return *this; }
-	};	// struct
 
-	typedef						uint16_t		SColor16;
+									SColorBGRA&		FromBGR16		(const SColor16& other)											noexcept	{ b = uint8_t((other & 0x1F) / float(0x1F) * 255); g = uint8_t(((other & 0x07E0) >> 5) / float(0x3F) * 255); r = uint8_t(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
+									SColorBGRA&		FromRGB16		(const SColor16& other)											noexcept	{ r = uint8_t((other & 0x1F) / float(0x1F) * 255); g = uint8_t(((other & 0x07E0) >> 5) / float(0x3F) * 255); b = uint8_t(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
+	};	// struct
 
 	// Stores BGR color channels
 	struct SColorBGR {
@@ -98,6 +101,9 @@ namespace gpk
 		constexpr					SColorBGR		operator +		(const SColorBGR& color)								const	noexcept	{ return ::gpk::SColorBGR {(uint8_t)::gpk::clamp(b + (uint16_t)color.b, 0, 255) , (uint8_t)::gpk::clamp(g + (uint16_t)color.g, 0, 255)	, (uint8_t)::gpk::clamp(r + (uint16_t)color.r, 0, 255)};			}
 		constexpr					SColorBGRA		operator *		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorBGRA{(uint8_t)::gpk::clamp(b * (uint16_t)color.b, 0, 255) , (uint8_t)::gpk::clamp(g * (uint16_t)color.g, 0, 255)	, (uint8_t)::gpk::clamp(r * (uint16_t)color.r, 0, 255), color.a};	}
 		constexpr					SColorBGRA		operator +		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorBGRA{(uint8_t)::gpk::clamp(b + (uint16_t)color.b, 0, 255) , (uint8_t)::gpk::clamp(g + (uint16_t)color.g, 0, 255)	, (uint8_t)::gpk::clamp(r + (uint16_t)color.r, 0, 255), color.a};	}
+
+									SColorBGR&		FromBGR16		(const SColor16& other)											noexcept	{ b = uint8_t((other & 0x1F) / float(0x1F) * 255); g = uint8_t(((other & 0x07E0) >> 5) / float(0x3F) * 255); r = uint8_t(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
+									SColorBGR&		FromRGB16		(const SColor16& other)											noexcept	{ r = uint8_t((other & 0x1F) / float(0x1F) * 255); g = uint8_t(((other & 0x07E0) >> 5) / float(0x3F) * 255); b = uint8_t(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
 	};	// struct
 
 	// Stores RGB color channels

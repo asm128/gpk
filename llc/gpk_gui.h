@@ -114,64 +114,64 @@ namespace gpk
 		};
 
 	struct SControlImage {
-		::gpk::SImage<::gpk::SColorBGRA>								Temp												= {};
+		::gpk::SImage<::gpk::SColorBGRA>								Temp								= {};
 	};
 
 	struct SControl {
-		::gpk::SRectangle2<int16_t>										Area													= {{}, {16, 16}};
-		::gpk::SRectLimits<uint16_t>									Border													= {1, 1, 1, 1};
-		::gpk::SRectLimits<uint16_t>									Margin													= {1, 1, 1, 1};
-		::gpk::view_grid<::gpk::SColorBGRA>								Image													= {};
-		::gpk::SCoord2<int32_t>											ImageOffset												= {};
+		::gpk::SRectangle2<int16_t>										Area								= {{}, {16, 16}};
+		::gpk::SRectLimits<uint16_t>									Border								= {1, 1, 1, 1};
+		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
+		::gpk::view_grid<::gpk::SColorBGRA>								Image								= {};
+		::gpk::SCoord2<int32_t>											ImageOffset							= {};
 
-		int32_t															ColorTheme												= 0;
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	Palettes										= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
-		int32_t															IndexParent												= -1;
-		::gpk::ALIGN													Align													= ::gpk::ALIGN_TOP_LEFT;
+		int32_t															ColorTheme							= 0;
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	Palettes							= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
+		int32_t															IndexParent							= -1;
+		::gpk::ALIGN													Align								= ::gpk::ALIGN_TOP_LEFT;
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
-	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	constexpr	void										controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
-	constexpr	::gpk::SRectLimits	<int16_t>				controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	constexpr	::gpk::SCoord2		<int16_t>				controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	constexpr	void												controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	constexpr	void												controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	constexpr	::gpk::SRectLimits	<int16_t>						controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	constexpr	::gpk::SCoord2		<int16_t>						controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
 
 	struct SGUIZoom {
-		::gpk::SCoord2<double>									DPI									= {1.0, 1.0};
-		::gpk::SMinMax<double>									ZoomLimits							= {0.1, 10.0};
-		double													ZoomLevel							= 1.0;
+		::gpk::SCoord2<double>											DPI									= {1.0, 1.0};
+		::gpk::SMinMax<double>											ZoomLimits							= {0.1, 10.0};
+		double															ZoomLevel							= 1.0;
 
-		bool													operator ==							(const ::gpk::SGUIZoom& other)		const	noexcept	{
+		bool															operator ==							(const ::gpk::SGUIZoom& other)		const	noexcept	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inline	bool											operator!=							(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+		inline	bool													operator!=							(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
 
 	};
 
 	struct SControlText {
-		::gpk::view_const_string								Text								= {};
-		::gpk::ALIGN											Align								= ::gpk::ALIGN_CENTER;
-		::gpk::SMinMax<uint32_t>								Selection							= {0, 1};
+		::gpk::view_const_string										Text								= {};
+		::gpk::ALIGN													Align								= ::gpk::ALIGN_CENTER;
+		::gpk::SMinMax<uint32_t>										Selection							= {0, 1};
 	};
 
 	struct SControlTheme {
 		::gpk::array_static
 			<::gpk::array_static
 				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
-			, ::gpk::GUI_CONTROL_PALETTE_COUNT>					ColorCombos							= {};
+			, ::gpk::GUI_CONTROL_PALETTE_COUNT>							ColorCombos							= {};
 	};
 
 	struct SGUIControlTable {
-		::gpk::array_pod<::gpk::SControl			>			Controls							= {};
-		::gpk::array_pod<::gpk::SControlState		>			States								= {};
-		::gpk::array_pod<::gpk::SControlMetrics		>			Metrics								= {};
-		::gpk::array_obj<::gpk::SControlText		>			Text								= {};
-		::gpk::array_pod<::gpk::SControlConstraints	>			Constraints							= {};
-		::gpk::array_obj<::gpk::SControlMode		>			Modes								= {};
-		::gpk::array_obj<::gpk::array_pod<int32_t>	>			Children							= {};
-		::gpk::array_obj<::gpk::SControlImage		>			Images								= {};
+		::gpk::array_pod<::gpk::SControl			>					Controls							= {};
+		::gpk::array_pod<::gpk::SControlState		>					States								= {};
+		::gpk::array_pod<::gpk::SControlMetrics		>					Metrics								= {};
+		::gpk::array_obj<::gpk::SControlText		>					Text								= {};
+		::gpk::array_pod<::gpk::SControlConstraints	>					Constraints							= {};
+		::gpk::array_obj<::gpk::SControlMode		>					Modes								= {};
+		::gpk::array_obj<::gpk::array_pod<int32_t>	>					Children							= {};
+		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
 	};
 
 	struct SGUI {

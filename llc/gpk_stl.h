@@ -13,12 +13,13 @@ namespace gpk {
 	};
 	struct SSTLFile {
 		::gpk::array_pod<byte_t>				Raw			= {};
-		::gpk::view_array<uint8_t>				Header		= {};
+		::gpk::view_byte						Header		= {};
 		::gpk::view_array<::gpk::SSTLTriangle>	Triangles	= {};
 	};
 #pragma pack(pop)
 
-	::gpk::error_t							stlFileLoad						(::gpk::view_const_char filename, ::gpk::SSTLFile& file);
+	::gpk::error_t			stlFileLoad			(::gpk::view_const_char filename, ::gpk::SSTLFile& file);
+	::gpk::error_t			stlFileLoad			(::gpk::view_byte fileInMemory, ::gpk::view_byte & out_Header, ::gpk::view_array<::gpk::SSTLTriangle>	& out_Triangles);
 }
 
 #endif // GPK_STL_H

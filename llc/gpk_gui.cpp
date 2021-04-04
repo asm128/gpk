@@ -333,8 +333,8 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 	controlMetrics.Client	.Local									= {{(int32_t)ncSizesScaled.Left, (int32_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).Cast<int32_t>()};
 	::gpk::SCoord2<double> minSizeScaled = (controlConstraints.SizeMinMax.Min.Cast<double>().InPlaceScale(scale.x, scale.y));
 	::gpk::SCoord2<double> maxSizeScaled = (controlConstraints.SizeMinMax.Max.Cast<double>().InPlaceScale(scale.x, scale.y));
-	scaledSize.x = ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
-	scaledSize.y = ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
+	scaledSize.x													= ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
+	scaledSize.y													= ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
 	::gpk::realignRectangle(targetSize.Cast<uint32_t>(), ::gpk::SRectangle2<int32_t>{scaledPosition.Cast<int32_t>(), scaledSize.Cast<int32_t>()}, controlMetrics.Total.Local, control.Align);
 	controlMetrics.Total	.Global									= controlMetrics.Total	.Local;
 	controlMetrics.Client	.Global									= controlMetrics.Client	.Local;
@@ -564,7 +564,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 }
 
 			::gpk::error_t										gpk::controlTextSet										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text)				{
-	::gpk::view_const_string												& oldText												= gui.Controls.Text[iControl].Text;
+	::gpk::view_const_string											& oldText												= gui.Controls.Text[iControl].Text;
 	if(text.begin	() != oldText.begin()
 	 || text.size	() != oldText.size()
 	 ) {

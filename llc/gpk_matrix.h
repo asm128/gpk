@@ -103,7 +103,15 @@ namespace gpk
 			_41											+= offscreenMetrics.x / 2;
 			_42											+= offscreenMetrics.y / 2;
 		}
-							void				Identity					()																						noexcept	{
+		static	constexpr	_tMat4				GetIdentity					()																						noexcept	{
+			return
+				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
+				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
+				, (_tBase)0,  (_tBase)0,  (_tBase)1,  (_tBase)0
+				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
+				};
+		}
+							void				SetIdentity					()																						noexcept	{
 			*this									=
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
@@ -111,6 +119,7 @@ namespace gpk
 				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
+		inline				void				Identity					()																						noexcept	{ SetIdentity(); }
 							void				RotationX					(double angle)																			noexcept	{
 			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)1;	_12 =							_13 =

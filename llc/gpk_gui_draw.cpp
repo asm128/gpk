@@ -199,7 +199,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	for(uint32_t iTri = 0; iTri < 8; ++iTri)
 		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
 
-	if(control.Image.metrics().x > 0 && control.Image.metrics().y > 0) {
+	if(control.Image.metrics().x && control.Image.metrics().y) {
 		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
 		::gpk::SRectangle2<int32_t>									rectImage							=
 			{ controlMetrics.Client.Global.Offset
