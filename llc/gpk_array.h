@@ -627,6 +627,24 @@ namespace gpk
 	}
 
 	template<typename _tElement>
+	::gpk::error_t									split					(const ::gpk::view_array<const _tElement> & target, const ::gpk::view_array<const _tElement>& separators, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
+		uint32_t											lastOffset				= 0;
+		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
+			for(uint32_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
+				if(target[iChar] == separators[iSeparator]) {
+					const ::gpk::view_array<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
+					++iChar;
+					gpk_necall(split.push_back(newView), "%s", "Out of memory?");
+					lastOffset										= iChar;
+				}
+			}
+		}
+		if(lastOffset < target.size())
+			gpk_necall(split.push_back({&target[lastOffset], target.size() - lastOffset}), "%s", "Out of memory?");
+		return (int32_t)split.size();
+	}
+
+	template<typename _tElement>
 	::gpk::error_t									split					(const ::gpk::view_const_string & target, const _tElement& separator, ::gpk::array_obj<view_const_string> & split)	{
 		int32_t												lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
