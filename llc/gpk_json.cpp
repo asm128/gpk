@@ -337,7 +337,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 		const uint32_t													lenDec												= sizeNum - intCount;
 		if(lenDec) {
 			double															decValue											= 0;
-			gpk_necall(jsonAsString.slice(numString, offsetStart, lenDec), "%s", "");
+			gpk_necall(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1), "%s", "");
 			const ::gpk::error_t											decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
 			ree_if(errored(decCount), "%s", "Unknown error.");
 			decValue													/= ::gpk::powui(10, decCount);
@@ -373,7 +373,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	return 0;
 }
 
-static	::gpk::error_t										jsonTestAndCloseKey									(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens) {
+static	::gpk::error_t									jsonTestAndCloseKey									(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens) {
 	if(stateReader.CurrentElement && ::gpk::JSON_TYPE_KEY == stateReader.CurrentElement->Type) {
 		stateReader.ExpectingSeparator								= true;	// actually we expect the separator AFTER calling jsonCloseElement(). However, such function doesn't care about this value, so we can simplify the code by reversing the operations.
 		return ::jsonCloseElement(stateReader, tokens, stateReader.IndexCurrentChar);
@@ -393,8 +393,8 @@ static	::gpk::error_t									jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSO
 	}
 	else {
 		json_info_printf("Closing container at index %i (%s).", tokens.size() - 1, ::gpk::get_value_label(containerType).begin());
-			 if(::gpk::JSON_TYPE_VALUE	== containerType) errVal		= ::jsonTestAndCloseValue	(stateReader, tokens);
-		else if(::gpk::JSON_TYPE_KEY	== containerType) errVal		= ::jsonTestAndCloseKey	(stateReader, tokens);
+			 if(::gpk::JSON_TYPE_VALUE	== containerType) errVal = ::jsonTestAndCloseValue	(stateReader, tokens);
+		else if(::gpk::JSON_TYPE_KEY	== containerType) errVal = ::jsonTestAndCloseKey	(stateReader, tokens);
 	}
 	return errVal;
 }
