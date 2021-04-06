@@ -22,6 +22,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(JSON_TYPE, CODEPOINT	,  9);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, COUNT		, 10);
 	GDEFINE_ENUM_VALUE(JSON_TYPE, UNKNOWN	, -1);
+
 	struct SJSONToken {
 								int32_t														ParentIndex;
 								JSON_TYPE													Type;

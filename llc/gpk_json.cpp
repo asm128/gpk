@@ -337,7 +337,10 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 		const uint32_t													lenDec												= sizeNum - intCount;
 		if(lenDec) {
 			double															decValue											= 0;
-			gpk_necall(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1), "%s", "");
+			if(numString[0] == '.')
+				gpk_necall(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1), "%s", "");
+			else
+				gpk_necall(jsonAsString.slice(numString, offsetStart, lenDec), "%s", "");
 			const ::gpk::error_t											decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
 			ree_if(errored(decCount), "%s", "Unknown error.");
 			decValue													/= ::gpk::powui(10, decCount);
