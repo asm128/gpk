@@ -12,7 +12,7 @@ int								gpk::setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::S
 int								gpk::drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
 	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
 	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)
-		::gpk::setPixel(pixels, {rectangle.Offset.x + x, rectangle.Offset.y + y}, color);
+		::gpk::setPixel(pixels, {(int16_t)(rectangle.Offset.x + x), (int16_t)(rectangle.Offset.y + y)}, color);
 	return 0;
 }
 
@@ -21,7 +21,7 @@ int								gpk::drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk:
 	for(int16_t x = (int16_t)-circle.Radius; x < (int16_t)circle.Radius; ++x) {
 		::gpk::SCoord2<int16_t>						position			= {x, y};
 		if(position.Length() <= circle.Radius)
-			::gpk::setPixel(pixels, {circle.Center.x + x, circle.Center.y + y}, color);
+			::gpk::setPixel(pixels, {int16_t(circle.Center.x + x), int16_t(circle.Center.y + y)}, color);
 	}
 	return 0;
 }
