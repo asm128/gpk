@@ -168,6 +168,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	::gpk::controlSetParent(gui, idControl, iParent);
 	return idControl;
 }
+
 			::gpk::error_t										gpk::controlCreate										(::gpk::SGUI& gui)										{
 	static constexpr	const uint32_t									iShades													= 16;
 	if(0 == gui.Palette.size()) {
@@ -532,6 +533,20 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 		//}
 	}
 	return controlHovered;
+}
+
+			::gpk::error_t										gpk::guiDeselect										(::gpk::SGUI& gui)	{
+	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		gui.Controls.States[iControl].Selected						= false;
+	}
+	return 0;
+}
+
+			::gpk::error_t										gpk::guiSelect											(::gpk::SGUI& gui, int32_t controlToSelect)	{
+	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
+		gui.Controls.States[iControl].Selected						= (controlToSelect == iControl) ? true : false;
+	}
+	return 0;
 }
 
 			::gpk::error_t										gpk::controlHidden										(const ::gpk::SGUI& gui, int32_t iControl)	{

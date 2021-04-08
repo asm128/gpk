@@ -49,7 +49,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	}
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];
-	::gpk::SRectangle2<int16_t>										rectText												= controlMetrics.Text;
+	::gpk::SRectangle2<int16_t>											rectText												= controlMetrics.Text;
 	if(false == gui.Controls.Modes[iControl].NoHoverEffect && (controlState.Pressed || controlState.Hover)) { // shift text offset by one pixel to give the effect of being pushed.
 		rectText.Offset													+= ::gpk::SCoord2<int16_t>{1, 1};
 		rectText.Size													-= ::gpk::SCoord2<int16_t>{1, 1};

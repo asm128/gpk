@@ -203,6 +203,8 @@ namespace gpk
 	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
 	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
+	::gpk::error_t											guiDeselect							(::gpk::SGUI& gui);
+	::gpk::error_t											guiSelect							(::gpk::SGUI& gui, int32_t controlToSelect);
 
 	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
 	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);
