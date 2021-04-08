@@ -544,7 +544,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 
 			::gpk::error_t										gpk::guiSelect											(::gpk::SGUI& gui, int32_t controlToSelect)	{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		gui.Controls.States[iControl].Selected						= (controlToSelect == iControl) ? true : false;
+		gui.Controls.States[iControl].Selected						= controlToSelect == (int32_t)iControl;
 	}
 	return 0;
 }
