@@ -174,9 +174,9 @@ int								gpk::drawLine
 }
 
 //https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
-double									orient2d				(const ::gpk::SLine2<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-double									orient2d				(const ::gpk::SLine3<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-double									orient2d				(const ::gpk::SLine3<float>		& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+double									orient2d				(const ::gpk::SLine2<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::SLine3<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::SLine3<float>		& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 
 template <typename _tValue>	_tValue 	max3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 template <typename _tValue>	_tValue 	min3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
