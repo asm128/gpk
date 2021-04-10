@@ -488,10 +488,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_config.json" />
-    <None Include="copy_gpk_config.bat">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="gpk_cgi_interceptor.json" />
     <None Include="Makefile" />
+    <None Include="copy_gpk_config.bat" />
   </ItemGroup>
 </Project>

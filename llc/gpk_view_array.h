@@ -67,7 +67,6 @@ namespace gpk
 		inline constexpr	const _tElement*		end							()																const	noexcept	{ return Data + Count;	}
 		inline constexpr	const uint32_t&			size						()																const	noexcept	{ return Count;			}
 
-		template<typename _tElement>
 		inline				::gpk::error_t			fill						(const _tElement& value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			for(uint32_t i = offset; i < ::gpk::min(Count, count); ++i)
 				Data[i]									= value;
