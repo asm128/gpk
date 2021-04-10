@@ -201,14 +201,19 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 
 	if(control.Image.metrics().x && control.Image.metrics().y) {
 		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
-		::gpk::SRectangle2<int32_t>									rectImage							=
-			{ controlMetrics.Client.Global.Offset
-			, controlMetrics.Client.Global.Size
-				+ ::gpk::SCoord2<int32_t>
-					{ ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x))
-					, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
-					}
-			};
+		//::gpk::SRectangle2<int32_t>										rectImage							=
+		//	{ controlMetrics.Client.Global.Offset
+		//	, controlMetrics.Client.Global.Size
+		//		+ ::gpk::SCoord2<int32_t>
+		//			{ ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x))
+		//			, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
+		//			}
+		//	};
+		::gpk::SRectangle2<int32_t>										rectImage							= {{}, control.Image.metrics().Cast<int32_t>()};
+		::gpk::realignRectangle(controlMetrics.Client.Global.Size.Cast<uint32_t>(), rectImage, rectImage, control.ImageAlign);
+		rectImage.Offset += controlMetrics.Client.Global.Offset;
+		if(state.Hover)
+			rectImage.Offset += {1, 1};
 		if(0 == state.ImageInvertY)
 			::gpk::grid_copy_blend(target, control.Image, rectImage, control.ImageOffset);
 		else {
