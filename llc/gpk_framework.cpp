@@ -43,10 +43,8 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 					::gpk::error_t														gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.Input)
 		framework.Input.create();
-
 	if(0 == framework.GUI)
 		framework.GUI.create();
-
 	::gpk::SInput																				& input										= *framework.Input;
 	input.KeyboardPrevious																	= input.KeyboardCurrent;
 	input.MousePrevious																		= input.MouseCurrent;
@@ -115,35 +113,42 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 	int32_t																						zDelta										= {};
 	switch(uMsg) {
 	default: break;
+	case WM_SHOWWINDOW		: mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
 	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
-	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; return 0;
-	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; return 0;
-	case WM_LBUTTONDOWN		: info_printf("%s", "L Down"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
-	case WM_LBUTTONDBLCLK	: info_printf("%s", "L DClck"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; return 0;
-	case WM_LBUTTONUP		: info_printf("%s", "L Up"		); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; return 0;
-	case WM_RBUTTONDOWN		: info_printf("%s", "R Down"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
-	case WM_RBUTTONDBLCLK	: info_printf("%s", "R DClck"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; return 0;
-	case WM_RBUTTONUP		: info_printf("%s", "R Up"		); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; return 0;
-	case WM_MBUTTONDOWN		: info_printf("%s", "M Down"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
-	case WM_MBUTTONDBLCLK	: info_printf("%s", "M DClck"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; return 0;
-	case WM_MBUTTONUP		: info_printf("%s", "M Up"		); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; return 0;
+	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
+	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONDOWN		: info_printf("%s", "L Down"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONDBLCLK	: info_printf("%s", "L DClck"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONUP		: info_printf("%s", "L Up"		); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONDOWN		: info_printf("%s", "R Down"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONDBLCLK	: info_printf("%s", "R DClck"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONUP		: info_printf("%s", "R Up"		); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONDOWN		: info_printf("%s", "M Down"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONDBLCLK	: info_printf("%s", "M DClck"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONUP		: info_printf("%s", "M Up"		); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; mainDisplay.Repaint = true; return 0;
 	case WM_MOUSEWHEEL		:
+		info_printf("%s", "WM_MOUSEWHEEL");
 		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z																= zDelta;
+		mainDisplay.Repaint																		= true;
 		return 0;
 	case WM_MOUSEMOVE		: {
+		verbose_printf("%s", "WM_MOUSEMOVE");
 		int32_t																						xPos										= GET_X_LPARAM(lParam);
 		int32_t																						yPos										= GET_Y_LPARAM(lParam);
 		input.MouseCurrent.Position.x															= ::gpk::clamp(xPos, 0, (int32_t)mainDisplay.Size.x);
 		input.MouseCurrent.Position.y															= ::gpk::clamp(yPos, 0, (int32_t)mainDisplay.Size.y);
 		input.MouseCurrent.Deltas.x																= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 		input.MouseCurrent.Deltas.y																= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
+		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
+			mainDisplay.Repaint = true;
 		return 0;
 	}
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
 		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
 	case WM_SIZE			:
+		info_printf("%s", "WM_SIZE");
 		if(lParam) {
 			::gpk::SCoord2<uint32_t>																	newMetrics									= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint32_t>();
 			if(newMetrics != mainDisplay.Size) {
@@ -177,7 +182,10 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 			mainDisplay.MinOrMaxed = mainDisplay.NoDraw												= false;
 		}
 		break;
-	case WM_PAINT			: break;
+	case WM_PAINT			:
+		info_printf("%s", "WM_PAINT");
+		mainDisplay.Repaint																		= true;
+		break;
 	case WM_DESTROY			:
 		::SDisplayInput																				* oldInput									= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;

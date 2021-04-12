@@ -21,6 +21,7 @@
 
 		::gpk::error_t																			gpk::displayUpdate							(::gpk::SDisplay& displayInstance)											{
 	displayInstance.Resized																			= false;
+	displayInstance.Repaint																			= false;
 	bool																								quit	= false;
 #if defined(GPK_WINDOWS)
 	::MSG																								msg											= {};
