@@ -196,6 +196,7 @@ namespace gpk
 #	define break_gerror_if(condition, format, ...)			if(condition) { error_printf	(format, __VA_ARGS__); break;			}
 #	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	(format, __VA_ARGS__); break;			}
 #	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		(format, __VA_ARGS__); break;			}
+#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	(format, __VA_ARGS__); break;			}
 #endif
 
 #ifndef continue_gerror_if

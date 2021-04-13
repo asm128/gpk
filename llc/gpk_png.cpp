@@ -347,7 +347,7 @@ static			::gpk::error_t											pngActualFileLoad								(const ::gpk::view_ar
 		uint32_t																	crcGenerated									= ::gpk::get_crc({&source[crcDataStart], sizeChunk + 4});
 		gerror_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
 		gpk_necall(pngData.Chunks.push_back(chunkRead), "%s", "Out of memory?");
-		break_ginfo_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
+		break_gverbose_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
 	}
 
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
