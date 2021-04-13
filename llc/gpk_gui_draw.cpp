@@ -61,8 +61,11 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	::gpk::SControlText													& controlText											= gui.Controls.Text		[iControl];
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>							dstCoords;
 	::gpk::textLineRaster(target.metrics(), gui.FontCharSize, rectText, gui.FontTexture, controlText.Text, dstCoords);
-	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
-		::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
+	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
+		const ::gpk::SCoord2<int32_t>										dstCoord												= dstCoords[iCoord];
+		target[dstCoord.y][dstCoord.x]									= colorFace;
+		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
+	}
 	return 0;
 }
 static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool disabled, const ::gpk::SControlState& controlState)					{
