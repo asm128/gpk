@@ -25,6 +25,7 @@ namespace gpk
 		uint8_t													NoHoverEffect							: 1;
 		uint8_t													FrameOut								: 1;
 		uint8_t													Design									: 1;
+		uint8_t													NoBackgroundRect						: 1;
 	};
 
 	struct SControlRectangle {

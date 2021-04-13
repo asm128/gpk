@@ -120,8 +120,10 @@ namespace gpk
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius + 2), (int32_t)bitmapTarget.metrics().x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
-		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
+		const int32_t																startY										= ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius));
+		const int32_t																startX										= ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius));
+		for(int32_t y = startY, yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
+		for(int32_t x = startX; x < xStop; ++x) {
 			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {

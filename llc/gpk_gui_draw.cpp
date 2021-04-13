@@ -174,6 +174,7 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 }
 static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
+	const ::gpk::SControlMode											& controlMode											= gui.Controls.Modes	[iControl];
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	::fillColorTable(gui, iControl, disabled, colors);
@@ -183,7 +184,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);
 
 	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_COUNT; ++iElement)
-		if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT)
+		if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT && (iElement != ::gpk::GUI_CONTROL_AREA_BACKGROUND || false == controlMode.NoBackgroundRect))
 			::gpk::drawRectangle(target, colors[iElement], rectangles[iElement]);
 
 	int32_t																colorIndices [8]										=
