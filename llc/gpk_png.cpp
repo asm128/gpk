@@ -582,7 +582,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 
 static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
-	info_printf("----- PNG File Info summary: "
+	verbose_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."
 		"\nBit Depth            : 0x%X."
 		"\nColor Type           : 0x%X."
