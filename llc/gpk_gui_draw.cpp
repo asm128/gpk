@@ -181,28 +181,29 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	::fillColorTable(gui, iControl, disabled, colors);
-	::gpk::STriangle2<int32_t>											triangles	[8]											= {};
-	::gpk::SRectangle2<int32_t>										rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
 	const ::gpk::SControlMetrics										& controlMetrics										= gui.Controls.Metrics[iControl];
-	::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);
+	if(false == controlMode.Design) {
+		::gpk::STriangle2<int32_t>											triangles	[8]											= {};
+		::gpk::SRectangle2<int32_t>											rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
+		::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);
 
-	for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_COUNT; ++iElement)
-		if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT && (iElement != ::gpk::GUI_CONTROL_AREA_BACKGROUND || false == controlMode.NoBackgroundRect))
-			::gpk::drawRectangle(target, colors[iElement], rectangles[iElement]);
+		for(uint32_t iElement = 0; iElement < ::gpk::GUI_CONTROL_AREA_COUNT; ++iElement)
+			if(iElement != ::gpk::GUI_CONTROL_AREA_CLIENT && (iElement != ::gpk::GUI_CONTROL_AREA_BACKGROUND || false == controlMode.NoBackgroundRect))
+				::gpk::drawRectangle(target, colors[iElement], rectangles[iElement]);
 
-	int32_t																colorIndices [8]										=
-		{ ::gpk::GUI_CONTROL_AREA_BORDER_TOP
-		, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT
-		, ::gpk::GUI_CONTROL_AREA_BORDER_TOP
-		, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT
-		, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT
-		, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM
-		, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT
-		, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM
-		};
-	for(uint32_t iTri = 0; iTri < 8; ++iTri)
-		::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
-
+		int32_t																colorIndices [8]										=
+			{ ::gpk::GUI_CONTROL_AREA_BORDER_TOP
+			, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT
+			, ::gpk::GUI_CONTROL_AREA_BORDER_TOP
+			, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT
+			, ::gpk::GUI_CONTROL_AREA_BORDER_LEFT
+			, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM
+			, ::gpk::GUI_CONTROL_AREA_BORDER_RIGHT
+			, ::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM
+			};
+		for(uint32_t iTri = 0; iTri < 8; ++iTri)
+			::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
+	}
 	if(control.Image.metrics().x && control.Image.metrics().y) {
 		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
 		//::gpk::SRectangle2<int32_t>										rectImage							=
@@ -240,8 +241,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
 		::gpk::SControlMode													controlModes										= gui.Controls.Modes[iControl];
-		if(false == controlModes.Design)
-			gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
+		gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
 		::gpk::view_array<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			gpk_necall(::gpk::controlDrawHierarchy(gui, children[iChild], target), "%s", "Unknown issue!");
