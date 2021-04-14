@@ -120,7 +120,7 @@ namespace gpk
 
 	struct SControl {
 		::gpk::SRectangle2<int16_t>										Area								= {{}, {16, 16}};
-		::gpk::SRectLimits<uint16_t>									Border								= {1, 1, 1, 1};
+		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>								Image								= {};
 		::gpk::SCoord2<int32_t>											ImageOffset							= {};
