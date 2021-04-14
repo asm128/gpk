@@ -7,7 +7,7 @@
 	GUI.create();
 	::gpk::SGUI																& gui										= *GUI;
 	gthrow_if(-1 == (Root = ::gpk::controlCreate(gui)), "%s", "Out of memory?");
-	gui.Controls.Controls		[Root].Margin							=
+	gui.Controls.Controls		[Root].Margin							= {};
 	gui.Controls.Controls		[Root].Border							= {};
 	gui.Controls.Constraints	[Root].AttachSizeToControl				= {Root, Root};
 	gui.Controls.Modes			[Root].Design							= true;

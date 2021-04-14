@@ -5,7 +5,7 @@
 			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
 	menu																	= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
-	gui.Controls.Controls		[menu.IdControl].Border						=
+	gui.Controls.Controls		[menu.IdControl].Border						= {};
 	gui.Controls.Controls		[menu.IdControl].Margin						= {};
 	gui.Controls.Text			[menu.IdControl].Text						= " ";
 	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText			= {false, false};
@@ -147,7 +147,8 @@
 		::gpk::SControl																& control								= gui.Controls.Controls		[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
 		controlText.Align														= ::gpk::ALIGN_CENTER_TOP;
-		control.Border = control.Margin											= {};
+		control.Border															= {};
+		control.Margin															= {};
 		control.Area.Size														= targetSize.Cast<int16_t>();
 		//control.Area.Offset.y													= heightTitleBar;
 		control.ColorTheme														= 60;
@@ -221,7 +222,7 @@
 		const uint32_t															paletteElemIndex						= linearIndex;
 		palette.IdControls[paletteElemIndex]								= ::gpk::controlCreate(gui);
 		::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
-		control.ColorTheme													= themeIndex + 1;
+		control.ColorTheme													= int16_t(themeIndex + 1);
 		control.Area.Offset													= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
 		control.Area.Size													= controlSize.Cast<int16_t>();
 		::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl);
