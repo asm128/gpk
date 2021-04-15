@@ -48,7 +48,7 @@ namespace gpk
 		::gpk::SControlRectangle								Client;
 		::gpk::SRectangle2<int16_t>								Text;
 		::gpk::SRectangle2<int16_t>								Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
-
+		::gpk::STriangle2<int16_t>								Triangles	[8]								= {};
 	};
 
 	struct SControlAttachId {

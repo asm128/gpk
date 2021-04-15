@@ -300,6 +300,48 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 	return 0;
 }
 
+static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view_array<::gpk::SRectangle2<int16_t>> finalRects, ::gpk::view_array<::gpk::STriangle2<int16_t>> triangles)					{
+	::gpk::SRectLimits<int16_t>											scaledBorders											= {};
+	const ::gpk::SCoord2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
+	scaledBorders.Left												= (int16_t)(control.Border.Left		* scaleFinal.x);
+	scaledBorders.Top												= (int16_t)(control.Border.Top		* scaleFinal.y);
+	scaledBorders.Right												= (int16_t)(control.Border.Right	* scaleFinal.x);
+	scaledBorders.Bottom											= (int16_t)(control.Border.Bottom	* scaleFinal.y);
+	(void)scaledBorders;
+
+	const ::gpk::SRectangle2<int16_t>									& rectTotal												= controlMetrics.Total.Global;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal;
+	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]			= controlMetrics.Client.Global;
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]			= {rectTotal.Offset , ::gpk::SCoord2<int16_t>{control.Border.Left, rectTotal.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_TOP		]			= {rectTotal.Offset , ::gpk::SCoord2<int16_t>{rectTotal.Size.x, control.Border.Top}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_RIGHT		]			= {rectTotal.Offset + ::gpk::SCoord2<int16_t>{int16_t(rectTotal.Size.x - control.Border.Right), 0}, ::gpk::SCoord2<int16_t>{control.Border.Right, controlMetrics.Total.Global.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]			= {rectTotal.Offset + ::gpk::SCoord2<int16_t>{0, int16_t(rectTotal.Size.y - control.Border.Bottom)}, ::gpk::SCoord2<int16_t>{rectTotal.Size.x, control.Border.Bottom}};
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Offset.x	+= control.Border.Left	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Offset.y	+= control.Border.Top	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Size	.x	-= control.Border.Left	+ control.Border.Right	;
+	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		].Size	.y	-= control.Border.Top	+ control.Border.Bottom	;
+
+	// --- Draw control corners
+	::gpk::SCoord2<int16_t>												startOffset												= controlMetrics.Total.Global.Offset;
+	triangles[0]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Left, control.Border.Top}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Left, 0}	};
+	triangles[1]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Left, control.Border.Top}	};
+
+	int16_t																startOffsetX											= startOffset.x + controlMetrics.Total.Global.Size.x - control.Border.Right;
+	startOffset														= {startOffsetX, controlMetrics.Total.Global.Offset.y};
+	triangles[2]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, 0}	};
+	triangles[3]													= {startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, control.Border.Top}	};
+
+	int16_t																startOffsetY											= startOffset.y + controlMetrics.Total.Global.Size.y - control.Border.Bottom;
+	startOffset														= {controlMetrics.Total.Global.Offset.x, startOffsetY};
+	triangles[4]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Left, 0}	};
+	triangles[5]													= {startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, 0}, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Top}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, control.Border.Top}	};
+
+	startOffset														= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::SCoord2<int16_t>{control.Border.Right, control.Border.Bottom};
+	triangles[6]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, 0}	};
+	triangles[7]													= {startOffset, startOffset + ::gpk::SCoord2<int16_t>{0, control.Border.Bottom}, startOffset + ::gpk::SCoord2<int16_t>{control.Border.Right, control.Border.Bottom}	};
+	return 0;
+}
+
 static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & _targetSize)					{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
@@ -414,6 +456,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 		::gpk::realignRectangle(targetRect.Size.Cast<uint32_t>(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
 		controlMetrics.Text.Offset										+= controlMetrics.Client.Global.Offset.Cast<int16_t>();
 	}
+	::buildControlGeometry(control, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
 	controlState.Updated											= true;
 	return 0;
 }
