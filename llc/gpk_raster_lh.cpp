@@ -177,6 +177,7 @@ int								gpk::drawLine
 double									orient2d				(const ::gpk::SLine2<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 double									orient2d				(const ::gpk::SLine3<int16_t>	& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 double									orient2d				(const ::gpk::SLine3<float>		& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::SLine2<float>		& segment, const ::gpk::SCoord2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 
 template <typename _tValue>	_tValue 	max3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 template <typename _tValue>	_tValue 	min3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
@@ -262,6 +263,50 @@ int								gpk::drawTriangle
 			continue;
 
 		currentDepth					= intZ;
+		pixelCoords.push_back(p.Cast<int16_t>());
+		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
+
+	}
+	return 0;
+}
+
+int								gpk::drawTriangle
+	( const ::gpk::SCoord2<uint32_t>					targetSize
+	, const ::gpk::STriangle2<float>					triangle
+	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions
+	)	{
+	// Compute triangle bounding box
+	int16_t								minX					= (int16_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
+	int16_t								minY					= (int16_t)::min3(triangle.A.y, triangle.B.y, triangle.C.y);
+	int16_t								maxX					= (int16_t)::max3(triangle.A.x, triangle.B.x, triangle.C.x);
+	int16_t								maxY					= (int16_t)::max3(triangle.A.y, triangle.B.y, triangle.C.y);
+
+	// Clip against screen bounds
+	minX							= ::std::max(minX, (int16_t)0);
+	minY							= ::std::max(minY, (int16_t)0);
+	maxX							= ::std::min(maxX, (int16_t)((int32_t)targetSize.x - 1));
+	maxY							= ::std::min(maxY, (int16_t)((int32_t)targetSize.y - 1));
+
+	// Rasterize
+	::gpk::SCoord2<int16_t> p;
+	for (p.y = minY; p.y <= maxY; ++p.y)
+	for (p.x = minX; p.x <= maxX; ++p.x) {
+		// Determine barycentric coordinates
+		double								w0						= ::orient2d({triangle.B, triangle.C}, p);
+		double								w1						= ::orient2d({triangle.C, triangle.A}, p);
+		double								w2						= ::orient2d({triangle.A, triangle.B}, p);
+		// If p is on or inside all edges, render pixel.
+		if (w0 < 0 || w1 < 0 || w2 < 0)
+			continue;
+
+		double								proportionABC			= w0 + w1 + w2;
+		if(proportionABC == 0)
+			continue;
+		double								proportionA				= w0 / proportionABC;
+		double								proportionB				= w1 / proportionABC;
+		double								proportionC				= 1.0 - (proportionA + proportionB);
+
 		pixelCoords.push_back(p.Cast<int16_t>());
 		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
 

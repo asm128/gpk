@@ -182,7 +182,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	const bool															disabled												= ::gpk::controlDisabled(gui, iControl);
 	::fillColorTable(gui, iControl, disabled, colors);
 	const ::gpk::SControlMetrics										& controlMetrics										= gui.Controls.Metrics[iControl];
-	if(false == controlMode.Design) {
+	//if(false == controlMode.Design) {
 		::gpk::STriangle2<int32_t>											triangles	[8]											= {};
 		::gpk::SRectangle2<int32_t>											rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]				= {};
 		::buildControlGeometry(control, controlMetrics, gui.Zoom, rectangles, triangles);
@@ -203,7 +203,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 			};
 		for(uint32_t iTri = 0; iTri < 8; ++iTri)
 			::gpk::drawTriangle(target, colors[colorIndices[iTri]], triangles[iTri]);
-	}
+	//}
 	if(control.Image.metrics().x && control.Image.metrics().y) {
 		const ::gpk::SControlState										& state								= gui.Controls.States[iControl];
 		//::gpk::SRectangle2<int32_t>										rectImage							=
