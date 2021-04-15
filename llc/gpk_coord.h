@@ -566,8 +566,8 @@ namespace gpk
 
 	template<typename _tValue>
 	static constexpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& pointToTest, const ::gpk::SRectangle2<_tValue>& area)	noexcept	{
-		return	::gpk::in_range(pointToTest.x, area.Offset.x, area.Offset.x + area.Size.x)
-			&&	::gpk::in_range(pointToTest.y, area.Offset.y, area.Offset.y + area.Size.y)
+		return	::gpk::in_range(pointToTest.x, area.Offset.x, (_tValue)(area.Offset.x + area.Size.x))
+			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (_tValue)(area.Offset.y + area.Size.y))
 			;
 	}
 
