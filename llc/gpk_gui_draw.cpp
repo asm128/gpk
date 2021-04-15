@@ -240,7 +240,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		gui.LastSize													= target.metrics();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
-		::gpk::SControlMode													controlModes										= gui.Controls.Modes[iControl];
+		//::gpk::SControlMode													controlModes										= gui.Controls.Modes[iControl];
 		gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
 		::gpk::view_array<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
