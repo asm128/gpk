@@ -174,7 +174,7 @@ namespace gpk
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
-			const ::gpk::SCoord2<int32_t>												cellCurrent									= {x, y};
+			const ::gpk::SCoord2<int16_t>												cellCurrent									= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
 			int																			w0											= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
 			int																			w1											= ::gpk::orient2d({triangle.C, triangle.B}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);

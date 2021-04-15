@@ -29,14 +29,26 @@ namespace gpk
 	};
 
 	struct SControlRectangle {
-		::gpk::SRectangle2<int32_t>								Local;
-		::gpk::SRectangle2<int32_t>								Global;
+		::gpk::SRectangle2<int16_t>								Local;
+		::gpk::SRectangle2<int16_t>								Global;
 	};
+
+	enum GUI_CONTROL_AREA : uint8_t
+		{ GUI_CONTROL_AREA_BACKGROUND							= 0
+		, GUI_CONTROL_AREA_CLIENT
+		, GUI_CONTROL_AREA_BORDER_LEFT
+		, GUI_CONTROL_AREA_BORDER_TOP
+		, GUI_CONTROL_AREA_BORDER_RIGHT
+		, GUI_CONTROL_AREA_BORDER_BOTTOM
+		, GUI_CONTROL_AREA_COUNT
+		};
 
 	struct SControlMetrics {
 		::gpk::SControlRectangle								Total;
 		::gpk::SControlRectangle								Client;
 		::gpk::SRectangle2<int16_t>								Text;
+		::gpk::SRectangle2<int16_t>								Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
+
 	};
 
 	struct SControlAttachId {
@@ -65,16 +77,6 @@ namespace gpk
 		bool													ImageInvertY							: 1;
 		bool													Unused									: 1;
 	};
-
-	enum GUI_CONTROL_AREA : uint8_t
-		{ GUI_CONTROL_AREA_BACKGROUND							= 0
-		, GUI_CONTROL_AREA_CLIENT
-		, GUI_CONTROL_AREA_BORDER_LEFT
-		, GUI_CONTROL_AREA_BORDER_TOP
-		, GUI_CONTROL_AREA_BORDER_RIGHT
-		, GUI_CONTROL_AREA_BORDER_BOTTOM
-		, GUI_CONTROL_AREA_COUNT
-		};
 
 	enum GUI_CONTROL_COLOR : uint8_t
 		{ GUI_CONTROL_COLOR_BACKGROUND							= 0
@@ -123,7 +125,7 @@ namespace gpk
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
 		::gpk::view_grid<::gpk::SColorBGRA>								Image								= {};
-		::gpk::SCoord2<int32_t>											ImageOffset							= {};
+		::gpk::SCoord2<int16_t>											ImageOffset							= {};
 		::gpk::ALIGN													ImageAlign							= ::gpk::ALIGN_CENTER;
 
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_TOP_LEFT;
