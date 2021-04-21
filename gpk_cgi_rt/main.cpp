@@ -2,7 +2,6 @@
 #include "gpk_cgi_module.h"
 #include "gpk_string_helper.h"
 
-#include "gpk_udp_client.h"
 #include "gpk_parse.h"
 
 #include <Windows.h>
