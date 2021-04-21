@@ -8,6 +8,7 @@
 #include "gpk_storage.h"
 #include "gpk_base64.h"
 #include "gpk_parse.h"
+#include "gpk_stdstring.h"
 
 ::gpk::error_t											pngToFont
 	( ::gpk::SImage<::gpk::SColorBGRA>	& imageCache
@@ -66,41 +67,43 @@ int														main					() {
 	::gpk::SImage<::gpk::SColorBGRA>							verticalAtlas			= {};
 	::gpk::SImageMonochrome<uint32_t>							fontTexture				= {};
 	::gpk::array_pod<char_t>									filenameOutput			= {};
+	::gpk::vcc													extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcc													filenameInput			= fontFiles[iFile];
-		if(filenameInput.size() <= 4)
+		ci_if(errored(filenameInput.slice(extension, extension.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
+		::gpk::array_pod<char_t>									lowercaseExtension		= ::gpk::toString(extension);
+		::gpk::tolower(lowercaseExtension);
+		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
+		ce_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput											= filenameInput;
 		filenameOutput.append_string("fix.png");
-		gerror_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "")
-		else {
-			::gpk::array_obj<::gpk::vcc>								splitFileName;
-			::gpk::split(filenameInput, '_', splitFileName);
-			::gpk::array_obj<::gpk::vcc>								splitFontMetrics;
-			::gpk::split(splitFileName[3], 'x', splitFontMetrics);
-			::gpk::SCoord2<uint32_t>									fontCharSize			= {};
-			::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
-			::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
-			imageFixed.resize
-				( imageCache.metrics().x / 3
-				, imageCache.metrics().y
-				);
-			for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
-			for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-				const uint32_t										offsetX					= fontCharSize.x + fontCharSize.x * 3 * (x / fontCharSize.x);
-				const uint32_t										dstX					= offsetX + (x % fontCharSize.x);
-				::gpk::SColorBGRA									& dstPixel				= imageFixed[y][x];
-				dstPixel										= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
-			}
-			::gpk::array_pod<ubyte_t> pngBytes;
-			::gpk::pngFileWrite(imageFixed, pngBytes);
-			::gpk::fileFromMemory(filenameOutput, {(const byte_t*)pngBytes.begin(), pngBytes.size()});
-
-			filenameOutput[filenameOutput.size() - 3]		= 'b';
-			filenameOutput[filenameOutput.size() - 2]		= '6';
-			filenameOutput[filenameOutput.size() - 1]		= '4';
-			::pngToFont(imageFixed, verticalAtlas, fontTexture, filenameOutput, fontCharSize, false);
+		::gpk::array_obj<::gpk::vcc>								splitFileName;
+		::gpk::split(filenameInput, '_', splitFileName);
+		::gpk::array_obj<::gpk::vcc>								splitFontMetrics;
+		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
+		::gpk::SCoord2<uint32_t>									fontCharSize			= {};
+		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
+		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
+		imageFixed.resize
+			( imageCache.metrics().x / 3
+			, imageCache.metrics().y
+			);
+		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
+		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
+			const uint32_t										offsetX					= fontCharSize.x + fontCharSize.x * 3 * (x / fontCharSize.x);
+			const uint32_t										dstX					= offsetX + (x % fontCharSize.x);
+			::gpk::SColorBGRA									& dstPixel				= imageFixed[y][x];
+			dstPixel										= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}
+		::gpk::array_pod<ubyte_t> pngBytes;
+		::gpk::pngFileWrite(imageFixed, pngBytes);
+		::gpk::fileFromMemory(filenameOutput, {(const byte_t*)pngBytes.begin(), pngBytes.size()});
+
+		filenameOutput[filenameOutput.size() - 3]		= 'b';
+		filenameOutput[filenameOutput.size() - 2]		= '6';
+		filenameOutput[filenameOutput.size() - 1]		= '4';
+		::pngToFont(imageFixed, verticalAtlas, fontTexture, filenameOutput, fontCharSize, false);
 	}
 	return 0;
 }
