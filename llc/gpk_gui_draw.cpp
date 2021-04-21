@@ -171,7 +171,9 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		//	};
 		::gpk::SRectangle2<int16_t>										rectImage							= {{}, control.Image.metrics().Cast<int16_t>()};
 		::gpk::realignRectangle(controlMetrics.Client.Global.Size.Cast<uint32_t>(), rectImage, rectImage, control.ImageAlign);
-		rectImage.Offset += controlMetrics.Client.Global.Offset;
+		rectImage.Offset											+= controlMetrics.Client.Global.Offset;
+		rectImage.Size.x											= ::gpk::min(rectImage.Limit().x, controlMetrics.Client.Global.Limit().x) - rectImage.Offset.x;
+		rectImage.Size.y											= ::gpk::min(rectImage.Limit().y, controlMetrics.Client.Global.Limit().y) - rectImage.Offset.y;
 		if(state.Hover)
 			rectImage.Offset += {1, 1};
 		if(0 == state.ImageInvertY)
