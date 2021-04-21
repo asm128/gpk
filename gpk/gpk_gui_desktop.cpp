@@ -145,9 +145,9 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
 				::gpk::SCoord2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 				const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-				::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled.Cast<int16_t>();
-				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled.Cast<int16_t>();
+				::gpk::SCoord2<int16_t>														deltasScaled									= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).Cast<int16_t>();
+				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled;
+				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled;
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
 			//}
 		}
