@@ -176,9 +176,9 @@ namespace gpk
 		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
 			const ::gpk::SCoord2<int16_t>												cellCurrent									= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
-			int																			w0											= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int																			w1											= ::gpk::orient2d({triangle.C, triangle.B}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int																			w2											= ::gpk::orient2d({triangle.A, triangle.C}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int																			w0											= ::gpk::orient2d({triangle.B.Cast<int16_t>(), triangle.A.Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int																			w1											= ::gpk::orient2d({triangle.C.Cast<int16_t>(), triangle.B.Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int																			w2											= ::gpk::orient2d({triangle.A.Cast<int16_t>(), triangle.C.Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if(w0 < 0)
 				continue;
 			if(w1 < 0)

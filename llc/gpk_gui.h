@@ -13,28 +13,28 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	enum GUI_COLOR_MODE : uint8_t
-		{ GUI_COLOR_MODE_DEFAULT		= 0
+		{ GUI_COLOR_MODE_DEFAULT				= 0
 		, GUI_COLOR_MODE_3D
 		, GUI_COLOR_MODE_FLAT
 		, GUI_COLOR_MODE_COUNT
 		};
 
 	struct SControlMode {
-		uint8_t													ColorMode								: 2;
-		uint8_t													UseNewPalettes							: 1;
-		uint8_t													NoHoverEffect							: 1;
-		uint8_t													FrameOut								: 1;
-		uint8_t													Design									: 1;
-		uint8_t													NoBackgroundRect						: 1;
+		uint8_t									ColorMode								: 2;
+		uint8_t									UseNewPalettes							: 1;
+		uint8_t									NoHoverEffect							: 1;
+		uint8_t									FrameOut								: 1;
+		uint8_t									Design									: 1;
+		uint8_t									NoBackgroundRect						: 1;
 	};
 
 	struct SControlRectangle {
-		::gpk::SRectangle2<int16_t>								Local;
-		::gpk::SRectangle2<int16_t>								Global;
+		::gpk::SRectangle2<int16_t>				Local;
+		::gpk::SRectangle2<int16_t>				Global;
 	};
 
 	enum GUI_CONTROL_AREA : uint8_t
-		{ GUI_CONTROL_AREA_BACKGROUND							= 0
+		{ GUI_CONTROL_AREA_BACKGROUND			= 0
 		, GUI_CONTROL_AREA_CLIENT
 		, GUI_CONTROL_AREA_BORDER_LEFT
 		, GUI_CONTROL_AREA_BORDER_TOP
@@ -44,42 +44,42 @@ namespace gpk
 		};
 
 	struct SControlMetrics {
-		::gpk::SControlRectangle								Total;
-		::gpk::SControlRectangle								Client;
-		::gpk::SRectangle2<int16_t>								Text;
-		::gpk::SRectangle2<int16_t>								Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
-		::gpk::STriangle2<int16_t>								Triangles	[8]								= {};
+		::gpk::SControlRectangle				Total;
+		::gpk::SControlRectangle				Client;
+		::gpk::SRectangle2<int16_t>				Text;
+		::gpk::SRectangle2<int16_t>				Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
+		::gpk::STriangle2<int16_t>				Triangles	[8]								= {};
 	};
 
 	struct SControlAttachId {
-		int32_t													IdControl								: 31;
-		int32_t													Total									: 1;
+		int32_t									IdControl								: 31;
+		int32_t									Total									: 1;
 	};
 
 	struct SControlConstraints {
-		::gpk::SCoord2<int32_t>									AttachSizeToControl						;
-		::gpk::SCoord2<bool>									AttachSizeToText						;
-		::gpk::SRectLimits<int32_t>								DockToControl							;
-		::gpk::SMinMax<::gpk::SCoord2<int16_t>>					SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
+		::gpk::SCoord2<int32_t>					AttachSizeToControl						;
+		::gpk::SCoord2<bool>					AttachSizeToText						;
+		::gpk::SRectLimits<int32_t>				DockToControl							;
+		::gpk::SMinMax<::gpk::SCoord2<int16_t>>	SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlState {
-		bool													Disabled								: 1;
-		bool													Hover									: 1;
-		bool													UnHover									: 1;
-		bool													Pressed									: 1;
-		bool													Released								: 1;
-		bool													Selected								: 1;
-		bool													Execute									: 1;
-		bool													Updated									: 1;
+		bool									Disabled								: 1;
+		bool									Hover									: 1;
+		bool									UnHover									: 1;
+		bool									Pressed									: 1;
+		bool									Released								: 1;
+		bool									Selected								: 1;
+		bool									Execute									: 1;
+		bool									Updated									: 1;
 
-		bool													Hidden									: 1;
-		bool													ImageInvertY							: 1;
-		bool													Unused									: 1;
+		bool									Hidden									: 1;
+		bool									ImageInvertY							: 1;
+		bool									Unused									: 1;
 	};
 
 	enum GUI_CONTROL_COLOR : uint8_t
-		{ GUI_CONTROL_COLOR_BACKGROUND							= 0
+		{ GUI_CONTROL_COLOR_BACKGROUND			= 0
 		, GUI_CONTROL_COLOR_BORDER_LEFT
 		, GUI_CONTROL_COLOR_BORDER_TOP
 		, GUI_CONTROL_COLOR_BORDER_RIGHT
@@ -103,7 +103,7 @@ namespace gpk
 		};
 
 	enum GUI_CONTROL_PALETTE
-		{ GUI_CONTROL_PALETTE_NORMAL						= 0
+		{ GUI_CONTROL_PALETTE_NORMAL			= 0
 		, GUI_CONTROL_PALETTE_DISABLED
 		, GUI_CONTROL_PALETTE_HOVER
 		, GUI_CONTROL_PALETTE_PRESSED
@@ -151,7 +151,6 @@ namespace gpk
 				;
 		}
 		inline	bool													operator!=							(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
-
 	};
 
 	struct SControlText {
@@ -178,6 +177,11 @@ namespace gpk
 		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
 	};
 
+	struct SGUIFont {
+		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
+		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
+	};
+
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>										LastSize							= {};
 		::gpk::SCoord2<float>											CursorPos							= {};
@@ -192,6 +196,7 @@ namespace gpk
 		>																Palettes;
 
 		// Font
+		::gpk::array_pod<::gpk::SGUIFont>								Fonts								= {};
 		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
 		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
 

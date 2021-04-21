@@ -67,17 +67,17 @@ namespace gpk
 							uint32_t											Pitch										= 0;
 
 		constexpr																SImageMonochrome							()													noexcept	= default;
-																				SImageMonochrome							(const ::gpk::view_bit<_tTexel>& other)							{
-			Texels																	= {other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS)};
-			View																	= {Texels.begin(), other.size()};
-			Pitch																	= other.Pitch;
-		}
+																				SImageMonochrome							(const ::gpk::view_bit<_tTexel>& other)
+			:	Texels	(other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS))
+			,	View	(Texels.begin(), other.size())
+			,	Pitch	(other.Pitch)
+			{}
 
-																				SImageMonochrome							(const ::gpk::SImageMonochrome<_tTexel>& other)				{
-			Texels																	= other.Texels;
-			View																	= {Texels.begin(), other.View.size()};
-			Pitch																	= other.Pitch;
-		}
+																				SImageMonochrome							(const ::gpk::SImageMonochrome<_tTexel>& other)
+			: Texels	(other.Texels)
+			, View		(Texels.begin(), other.View.size())
+			, Pitch		(other.Pitch)
+			{}
 
 							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::view_bit<_tTexel>& other)							{
 			Texels																	= {other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS)};
@@ -86,7 +86,7 @@ namespace gpk
 			return *this;
 		}
 
-							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::SImageMonochrome<_tTexel>& other)				{
+							::gpk::SImageMonochrome<_tTexel>&					operator=									(const ::gpk::SImageMonochrome<_tTexel>& other)					{
 			Texels																	= other.Texels;
 			View																	= {Texels.begin(), other.View.size()};
 			Pitch																	= other.Pitch;
