@@ -15,6 +15,7 @@
 	, ::gpk::SImageMonochrome<uint32_t>	& fontTexture
 	, ::gpk::vcc						filenameOutput
 	, const ::gpk::SCoord2<uint32_t>	fontCharSize
+	, bool								negateBit
 	) {
 	verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
 	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
@@ -34,11 +35,14 @@
 	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
 		const ::gpk::SColorBGRA										& srcColor				= verticalAtlas.View[y][x];//app.TextureFont.View[y][x];
-		fontTexture.View[y * textureFontMetrics.x + x]
+		const uint32_t												linearIndex				= y * textureFontMetrics.x + x;
+		fontTexture.View[linearIndex]
 			=	0 != srcColor.r
 			||	0 != srcColor.g
 			||	0 != srcColor.b
 			;
+		if(negateBit)
+			fontTexture.View[linearIndex] = !fontTexture.View[linearIndex];
 	}
 
 	::gpk::array_pod<char_t>	encoded;
@@ -83,17 +87,19 @@ int														main					() {
 				);
 			for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
 			for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-				uint32_t													offsetX					= fontCharSize.x + fontCharSize.x * 3 * (x / fontCharSize.x);
-				imageFixed[y][x]										= imageCache[y][offsetX + (x % fontCharSize.x)];
+				const uint32_t										offsetX					= fontCharSize.x + fontCharSize.x * 3 * (x / fontCharSize.x);
+				const uint32_t										dstX					= offsetX + (x % fontCharSize.x);
+				::gpk::SColorBGRA									& dstPixel				= imageFixed[y][x];
+				dstPixel										= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 			}
 			::gpk::array_pod<ubyte_t> pngBytes;
 			::gpk::pngFileWrite(imageFixed, pngBytes);
 			::gpk::fileFromMemory(filenameOutput, {(const byte_t*)pngBytes.begin(), pngBytes.size()});
 
-			filenameOutput[filenameOutput.size() - 3]				= 'b';
-			filenameOutput[filenameOutput.size() - 2]				= '6';
-			filenameOutput[filenameOutput.size() - 1]				= '4';
-			::pngToFont(imageFixed, verticalAtlas, fontTexture, filenameOutput, fontCharSize);
+			filenameOutput[filenameOutput.size() - 3]		= 'b';
+			filenameOutput[filenameOutput.size() - 2]		= '6';
+			filenameOutput[filenameOutput.size() - 1]		= '4';
+			::pngToFont(imageFixed, verticalAtlas, fontTexture, filenameOutput, fontCharSize, false);
 		}
 	}
 	return 0;
