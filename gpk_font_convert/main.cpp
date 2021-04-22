@@ -70,7 +70,7 @@ int														main					() {
 	::gpk::vcc													extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcc													filenameInput			= fontFiles[iFile];
-		ci_if(errored(filenameInput.slice(extension, extension.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
+		ci_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
 		::gpk::array_pod<char_t>									lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
