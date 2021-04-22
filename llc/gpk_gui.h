@@ -165,7 +165,6 @@ namespace gpk
 				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
 			, ::gpk::GUI_CONTROL_PALETTE_COUNT>							ColorCombos							= {};
 	};
-
 	struct SGUIControlTable {
 		::gpk::array_pod<::gpk::SControl			>					Controls							= {};
 		::gpk::array_pod<::gpk::SControlState		>					States								= {};
@@ -176,10 +175,11 @@ namespace gpk
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>					Children							= {};
 		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
 	};
+#pragma pack(pop)
 
 	struct SGUIFont {
-		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
-		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
+		::gpk::SCoord2<uint8_t>											CharSize;
+		::gpk::SImageMonochrome<uint32_t>								Texture	;
 	};
 
 	struct SGUI {
@@ -196,7 +196,7 @@ namespace gpk
 		>																Palettes;
 
 		// Font
-		::gpk::array_pod<::gpk::SGUIFont>								Fonts								= {};
+		::gpk::array_obj<::gpk::SGUIFont>								Fonts								= {};
 		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
 		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
 
@@ -228,7 +228,6 @@ namespace gpk
 	::gpk::error_t											controlDisabled						(const ::gpk::SGUI& gui, int32_t iControl);
 	::gpk::error_t											controlInvalid						(const ::gpk::SGUI& gui, int32_t iControl);
 
-#pragma pack(pop)
 } // namespace
 
 #endif // GPK_GUI_H_2903874982374
