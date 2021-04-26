@@ -285,6 +285,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 		::gpk::array_pod<int32_t>											& children												= gui.Controls.Children[oldParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
 			if(children[iChild] == iControl) {
+				gui.Controls.States[oldParent].Updated	= false;
 				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
 				break;
 			}
@@ -296,6 +297,8 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 		if(children[iChild] == iControl)
 			return 0;
 
+	gui.Controls.States[iParent].Updated							= false;
+	gui.Controls.States[iControl].Updated							= false;
 	gpk_necall(children.push_back(iControl), "%s", "Out of memory?");
 	return 0;
 }
