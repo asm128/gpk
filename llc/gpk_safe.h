@@ -25,16 +25,16 @@
 
 #ifndef gpk_safe_closesocket
 #	if defined(GPK_WINDOWS)
-#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != INVALID_SOCKET) { closesocket(p); p = INVALID_SOCKET; } } while(0)
-#	else									 
-#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != INVALID_SOCKET) { ::close(p); p = INVALID_SOCKET; } } while(0)
+#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != INVALID_SOCKET) { closesocket(p); (p) = INVALID_SOCKET; } } while(0)
+#	else
+#		define gpk_safe_closesocket(p) do { if((p) != 0 && (p) != INVALID_SOCKET) { ::close(p); (p) = INVALID_SOCKET; } } while(0)
 #	endif
 #endif
 
 
 #if defined(GPK_WINDOWS)
 #	ifndef gpk_safe_closehandle
-#		define gpk_safe_closehandle(p) do { if(INVALID_HANDLE_VALUE == (p)) { CloseHandle(p); p = INVALID_HANDLE_VALUE; } } while(0)
+#		define gpk_safe_closehandle(p) do { if(INVALID_HANDLE_VALUE != (p)) { CloseHandle(p); (p) = INVALID_HANDLE_VALUE; } } while(0)
 #	endif
 #endif
 
