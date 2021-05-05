@@ -54,7 +54,37 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
+#if defined(GPK_XCB)
+	while (xcb_generic_event_t * ev = xcb_poll_for_event(framework.PlatformDetail.XCBConnection)) {
+		switch (ev->response_type & ~0x80) {
+		default					: break;
+		case XCB_EXPOSE			: {
+			//xcb_expose_event_t												* x					= (xcb_expose_event_t *)ev;
+			framework.MainDisplay.Repaint	= true;
+			break;
+		}
+		case XCB_KEY_PRESS		: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Down"	, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 1; break;	}
+		case XCB_KEY_RELEASE	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Up"		, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 0; break;	}
+		case XCB_BUTTON_PRESS	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Down"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 1; break;	}
+		case XCB_BUTTON_RELEASE	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Up"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 0; break;	}
+		case XCB_MOTION_NOTIFY	: {
+			xcb_motion_notify_event_t			* mev				= (xcb_motion_notify_event_t*)ev;
+			int32_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
+			int32_t								yPos				= mev->same_screen ? mev->event_y : mev->root_y;
+			input.MouseCurrent.Position.x	= ::gpk::clamp(xPos, 0, (int32_t)mainWindow.Size.x);
+			input.MouseCurrent.Position.y	= ::gpk::clamp(yPos, 0, (int32_t)mainWindow.Size.y);
+			input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
+			input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
+			//info_printf("Mouse position: %i, %i", input.MouseCurrent.Position.x, input.MouseCurrent.Position.y);
+			framework.MainDisplay.Repaint	= true;
+			break;
+		}
+		}
+	}
+	::gpk::error_t																				updateResult								= 0;
+#else
 	::gpk::error_t																				updateResult								= ::gpk::displayUpdate(mainWindow);
+#endif
 	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
 	rvi_if(1, 1 == updateResult, "%s", "Application exiting because the WM_QUIT message was processed.");
