@@ -6,6 +6,8 @@
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #	include <ShellScalingApi.h>	// for GetDpiForMonitor()
+#elif defined(GPK_XCB)
+#	include <xcb/xcb_image.h>
 #endif
 
 struct SDisplayInput {
@@ -40,21 +42,42 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #endif
 	return 0;
 }
-					::gpk::error_t														gpk::updateFramework						(::gpk::SFramework& framework)													{
+					::gpk::error_t		gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.Input)
 		framework.Input.create();
 	if(0 == framework.GUI)
 		framework.GUI.create();
-	::gpk::SInput																				& input										= *framework.Input;
-	input.KeyboardPrevious																	= input.KeyboardCurrent;
-	input.MousePrevious																		= input.MouseCurrent;
-	input.MouseCurrent.Deltas																= {};
-	::gpk::SFrameInfo																			& frameInfo									= framework.FrameInfo;
-	::gpk::STimer																				& timer										= framework.Timer;
+	::gpk::SInput								& input										= *framework.Input;
+	input.KeyboardPrevious					= input.KeyboardCurrent;
+	input.MousePrevious						= input.MouseCurrent;
+	input.MouseCurrent.Deltas				= {};
+	::gpk::SFrameInfo							& frameInfo									= framework.FrameInfo;
+	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
-	::gpk::SDisplay																				& mainWindow								= framework.MainDisplay;
+	::gpk::SDisplay								& mainWindow								= framework.MainDisplay;
 #if defined(GPK_XCB)
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
+												& guiRenderTarget			= framework.MainDisplayOffscreen;
+	if(framework.MainDisplay.Repaint) {
+		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
+		const ::gpk::SCoord2<uint32_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		xcb_image_t									* image						= xcb_image_create_native
+			( framework.PlatformDetail.XCBConnection
+			, guiRenderTargetMetrics.x
+			, guiRenderTargetMetrics.y
+			, format
+			, framework.PlatformDetail.XCBScreen->root_depth
+			, (uint8_t*)guiRenderTarget->Color.View.begin()
+			, guiRenderTarget->Color.View.size() * 4
+			, (uint8_t*)guiRenderTarget->Color.View.begin()
+			);
+		xcb_image_put(framework.PlatformDetail.XCBConnection, framework.MainDisplay.PlatformDetail.IdDrawable, framework.MainDisplay.PlatformDetail.GC, image, 0, 0, 0);
+		image->base						= 0;
+		xcb_image_destroy(image);
+		xcb_flush(framework.PlatformDetail.XCBConnection);
+		framework.MainDisplay.Repaint	= false;
+	}
 	while (xcb_generic_event_t * ev = xcb_poll_for_event(framework.PlatformDetail.XCBConnection)) {
 		switch (ev->response_type & ~0x80) {
 		default					: break;
@@ -280,6 +303,8 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 #if defined(GPK_WINDOWS)
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::displayUpdate(mainWindow);
+#elif defined(GPK_XCB)
+
 #else
 	(void)mainWindow;
 #endif
@@ -309,9 +334,11 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	::UpdateWindow	(displayDetail.WindowHandle);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
 #elif defined(GPK_XCB)
-	if(0 == mainWindow.PlatformDetail.Connection) {
-		mainWindow.PlatformDetail.Connection													= xcb_connect(0, 0);
-	}
+	//if(0 == mainWindow.PlatformDetail.Connection) {
+	//	if(0 == framework.PlatformDetail.XCBConnection)
+	//		framework.PlatformDetail.XCBConnection													= xcb_connect(0, 0);
+	//	mainWindow.PlatformDetail.Connection													= framework.PlatformDetail.XCBConnection;
+	//}
 	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
 	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
 	mainWindow.Size																			= {geometry->width, geometry->height};
