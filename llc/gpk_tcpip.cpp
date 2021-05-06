@@ -74,8 +74,8 @@
 }
 
 ::gpk::error_t								gpk::tcpipAddress							(const char_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
-	char_t											portString			[8]							= {};
-	::sprintf_s(portString, "%u", portRequested);
+	char_t											portString			[16]					= {};
+	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
 	::addrinfo										hints											= {};

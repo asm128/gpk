@@ -106,8 +106,8 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
     hints.ai_socktype						= SOCK_STREAM;
 	char										addr[32]						= {};
 	char										port[32]						= {};
-	sprintf_s(addr, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
-	sprintf_s(port, "%u", (0 == address.Port) ? 80 : address.Port);
+	snprintf(addr, ::gpk::size(addr) - 2, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
+	snprintf(port, ::gpk::size(port) - 2, "%u", (0 == address.Port) ? 80 : address.Port);
 	addrinfo									* servinfo						= 0;
     int32_t										rv								= getaddrinfo(addr, port, &hints, &servinfo);
 	ree_if(0 != rv, "getaddrinfo: %s", gai_strerror(rv));

@@ -81,7 +81,7 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
 			fileName														= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
 		char																mainModuleName	[512]			= {};
-		sprintf_s(mainModuleName, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
+		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule												mainModule						= {};
 		gpk_necall(::gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
 		info_printf("%s", "Created main module. %s.", mainModuleName);

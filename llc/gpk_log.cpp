@@ -78,7 +78,7 @@ static	::gpk::error_t			getSystemErrorAsString			(const uint64_t lastError, char
 		strcpy_s(bufferError, ::strerror((int)lastSystemError));
 #endif
 		char								bufferError2[4096]				= {};
-		size_t								stringLength					= ::sprintf_s(bufferError2, "Last system error: 0x%llX '%s'.", lastSystemError, bufferError);
+		size_t								stringLength					= ::snprintf(bufferError2, ::gpk::size(bufferError2) - 2, "Last system error: 0x%llX '%s'.", lastSystemError, bufferError);
 		base_debug_print(prefix, prefixLen);
 		base_debug_print(bufferError2, (uint32_t)stringLength);
 		base_debug_print("\n", 1);

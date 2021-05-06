@@ -59,31 +59,32 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_XCB)
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
 												& guiRenderTarget			= framework.MainDisplayOffscreen;
-	if(framework.MainDisplay.Repaint) {
+	if(mainWindow.Repaint) {
+		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
 		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
 		const ::gpk::SCoord2<uint32_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t									* image						= xcb_image_create_native
-			( framework.PlatformDetail.XCBConnection
+			( mainWindow.PlatformDetail.Connection
 			, guiRenderTargetMetrics.x
 			, guiRenderTargetMetrics.y
 			, format
-			, framework.PlatformDetail.XCBScreen->root_depth
+			, xcbScreen->root_depth
 			, (uint8_t*)guiRenderTarget->Color.View.begin()
 			, guiRenderTarget->Color.View.size() * 4
 			, (uint8_t*)guiRenderTarget->Color.View.begin()
 			);
-		xcb_image_put(framework.PlatformDetail.XCBConnection, framework.MainDisplay.PlatformDetail.IdDrawable, framework.MainDisplay.PlatformDetail.GC, image, 0, 0, 0);
+		xcb_image_put(mainWindow.PlatformDetail.Connection, mainWindow.PlatformDetail.IdDrawable, mainWindow.PlatformDetail.GC, image, 0, 0, 0);
 		image->base						= 0;
 		xcb_image_destroy(image);
-		xcb_flush(framework.PlatformDetail.XCBConnection);
+		xcb_flush(mainWindow.PlatformDetail.Connection);
 		framework.MainDisplay.Repaint	= false;
 	}
-	while (xcb_generic_event_t * ev = xcb_poll_for_event(framework.PlatformDetail.XCBConnection)) {
+	while (xcb_generic_event_t * ev = xcb_poll_for_event(mainWindow.PlatformDetail.Connection)) {
 		switch (ev->response_type & ~0x80) {
 		default					: break;
 		case XCB_EXPOSE			: {
 			//xcb_expose_event_t												* x					= (xcb_expose_event_t *)ev;
-			framework.MainDisplay.Repaint	= true;
+			mainWindow.Repaint	= true;
 			break;
 		}
 		case XCB_KEY_PRESS		: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Down"	, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 1; break;	}
@@ -210,8 +211,8 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 				mainDisplay.Resized																		= true;
 				mainDisplay.Repaint																		= true;
 				char																						buffer		[256]							= {};
-				//sprintf_s(buffer, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, applicationInstance.Framework.Timer.LastTimeSeconds);
-				sprintf_s(buffer, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
+				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, applicationInstance.Framework.Timer.LastTimeSeconds);
+				snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
 #if defined(UNICODE)
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
@@ -339,6 +340,9 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	//		framework.PlatformDetail.XCBConnection													= xcb_connect(0, 0);
 	//	mainWindow.PlatformDetail.Connection													= framework.PlatformDetail.XCBConnection;
 	//}
+	if(0 == mainWindow.PlatformDetail.Connection) {
+		mainWindow.PlatformDetail.Connection													= xcb_connect(0, 0);
+	}
 	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
 	::std::shared_ptr<xcb_get_geometry_reply_t>													geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
 	mainWindow.Size																			= {geometry->width, geometry->height};

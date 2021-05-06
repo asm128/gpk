@@ -135,7 +135,7 @@
 		static	int32_t																counterVPs								= 0;
 		++counterVPs;
 		char																		buffer [256];
-		const int32_t																titleLen								= sprintf_s(buffer, "Viewport #%i", counterVPs);
+		const int32_t																titleLen								= snprintf(buffer, ::gpk::size(buffer) - 2, "Viewport #%i", counterVPs);
 		controlText.Text														= {::gpk::label(buffer).begin(), (uint32_t)titleLen};
 		controlText.Align														= ::gpk::ALIGN_CENTER;
 		control.Area.Offset.x													= heightTitleBar;

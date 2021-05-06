@@ -40,7 +40,7 @@
 	gpk_necall(fileName.append(::gpk::vcs{"db."}), "%s", "Out of memory?");
 	gpk_necall(fileName.append(dbName), "%s", "Out of memory?");
 	char											temp	[32]				= {};
-	sprintf_s(temp, ".%u.ubk", idBlock);
+	snprintf(temp, ::gpk::size(temp) - 2, ".%u.ubk", idBlock);
 	gpk_necall(fileName.append(::gpk::vcs{temp}), "%s", "Out of memory?");
 	return 0;
 }

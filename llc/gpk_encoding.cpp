@@ -29,7 +29,7 @@
 
 static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)																{
 	char														converted [0x20]												= {};
-	sprintf_s(converted, "%*.2X", 2, i);
+	snprintf(converted, ::gpk::size(converted) - 1, "%*.2X", 2, i);
 	hexed[0]												= converted[0];
 	hexed[1]												= converted[1];
 	return 0;
@@ -246,7 +246,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 	}
 	char												temp		[32]				= {};
 	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), 8U); ++i) {
-		sprintf_s(temp, "%i", filtered[i]);
+		snprintf(temp, ::gpk::size(temp) - 2, "%i", filtered[i]);
 		digest.append_string(temp);
 	}
 	return 0;

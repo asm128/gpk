@@ -114,7 +114,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		controlTable.Constraints	[iControl].AttachSizeToControl.y		= iControl;
 	}
 	::gpk::SControlText														& tunerText									= controlTable.Text[tuner->IdGUIControl];
-	tunerText.Text														= {tuner->ValueString, (uint32_t)sprintf_s(tuner->ValueString, "%lli", tuner->ValueCurrent)};
+	tunerText.Text														= {tuner->ValueString, (uint32_t)snprintf(tuner->ValueString, ::gpk::size(tuner->ValueString) - 2, "%lli", tuner->ValueCurrent)};
 	tunerText.Align														= ::gpk::ALIGN_CENTER;
 	return index;
 }
@@ -124,7 +124,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	else if(value > control.ValueLimits.Max)
 		value																= control.ValueLimits.Max;
 	control.ValueCurrent												= value;
-	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)sprintf_s(control.ValueString, "%lli", control.ValueCurrent)};
+	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, "%lli", control.ValueCurrent)};
 	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
 	return 0;
 }

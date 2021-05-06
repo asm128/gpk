@@ -78,7 +78,7 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 	switch(node->Token->Type) {
 	case ::gpk::JSON_TYPE_INTEGER		: {
 		char														temp[64];
-		sprintf_s(temp, "%lli"	, node->Token->Value);
+		snprintf(temp, ::gpk::size(temp) - 2, "%lli"	, node->Token->Value);
 		output.append_string(temp);
 	}
 		break;
@@ -86,7 +86,7 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 		double														f = 0;
 		memcpy(&f, &node->Token->Value, sizeof(double));
 		char														temp[64];
-		uint32_t													lenNum								= sprintf_s(temp, "%.16f", f);
+		uint32_t													lenNum								= snprintf(temp, ::gpk::size(temp) - 2, "%.16f", f);
 		while(lenNum > 0 && (temp[lenNum] == 0 || temp[lenNum] == '0')) {
 			temp[lenNum] = 0;
 			--lenNum;

@@ -175,8 +175,8 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 		gpk_safe_fclose(fp);
 		const ::gpk::view_const_string				& fileName					= virtualFolder.Names		[iFile];
 		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
-		sprintf_s(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
-		sprintf_s(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
+		snprintf(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
+		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t									lenPath						= (uint32_t)strlen(finalPathName.begin());
 		::gpk::error_t								indexSlash					= ::gpk::findLastSlash(::gpk::vcs{finalPathName.begin(), uint32_t(-1)});

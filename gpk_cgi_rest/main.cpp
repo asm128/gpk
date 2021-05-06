@@ -123,7 +123,7 @@ static int											cgiMain				(int argc, char** argv, char**envv)	{
 		OutputDebugStringA(html.begin());
 #endif
 	}
-	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why??!?");
+	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why!?");
 	return 0;
 }
 
