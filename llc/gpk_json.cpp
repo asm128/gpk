@@ -78,7 +78,11 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 	switch(node->Token->Type) {
 	case ::gpk::JSON_TYPE_INTEGER		: {
 		char														temp[64];
-		snprintf(temp, ::gpk::size(temp) - 2, "%lli"	, node->Token->Value);
+#if defined(GPK_WINDOWS)
+		snprintf(temp, ::gpk::size(temp) - 2, "%lli", (uint64_t)node->Token->Value);
+#else
+		snprintf(temp, ::gpk::size(temp) - 2, "%lli", (long long)node->Token->Value);
+#endif
 		output.append_string(temp);
 	}
 		break;
