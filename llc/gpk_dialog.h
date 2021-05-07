@@ -1,5 +1,6 @@
 #include "gpk_ptr.h"
 #include "gpk_gui.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_DIALOG_H_67383889976
 #define GPK_DIALOG_H_67383889976
@@ -14,6 +15,7 @@ namespace gpk
 		, DIALOG_CONTROL_Slider
 		, DIALOG_CONTROL_ScrollBar
 		, DIALOG_CONTROL_EditBox
+		, DIALOG_CONTROL_VirtualKeyboard
 		, DIALOG_CONTROL_COUNT
 		};
 

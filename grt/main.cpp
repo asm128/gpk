@@ -38,7 +38,11 @@ static	int														threadRenderStart				(::SRuntimeState& runtimeState)				
 }
 
 static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
+#if defined(GPK_WINDOWS)
 	::gpk::error_t														updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+#else
+	::gpk::error_t														updateResult					= mainModule.Update(mainModule.Application, false);
+#endif
 	if(1 == updateResult || errored(updateResult)) {
 		ginfo_if(1 == updateResult, "%s", "Application requested termination.");
 		gerror_if(errored(updateResult), "%s", "update() returned error.");
@@ -48,7 +52,11 @@ static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRun
 		gpk_necall(::threadRenderStart(runtimeState), "%s", "Unknown error");
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
+#if defined(GPK_WINDOWS)
 			updateResult												= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+#else
+			updateResult												= mainModule.Update(mainModule.Application, false);
+#endif
 			break_ginfo_if(1 == updateResult, "Application requested termination.");
 			break_gerror_if(errored(updateResult), "update() returned error.");
 			//gerror_if(mainModule.Render(applicationInstance), "Why would this ever happen?");

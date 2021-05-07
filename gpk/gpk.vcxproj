@@ -20,14 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_connection.h" />
-    <ClInclude Include="gpk_dialog.h" />
-    <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_udp_client.h" />
     <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
-    <ClInclude Include="gpk_gui_control.h" />
-    <ClInclude Include="gpk_gui_desktop.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
     <ClInclude Include="gpk_ro_rsw.h" />
@@ -35,9 +31,6 @@
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
     <ClCompile Include="gpk_connection.cpp" />
-    <ClCompile Include="gpk_dialog.cpp" />
-    <ClCompile Include="gpk_gui_control.cpp" />
-    <ClCompile Include="gpk_gui_desktop.cpp" />
     <ClCompile Include="gpk_ro_gnd.cpp" />
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />

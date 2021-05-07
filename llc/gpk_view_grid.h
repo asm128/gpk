@@ -42,6 +42,13 @@ namespace gpk
 		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics						()																	const	noexcept	{ return Size;						}
 		inline constexpr	uint32_t								size						()																	const	noexcept	{ return area();					}
 		inline constexpr	uint32_t								area						()																	const	noexcept	{ return Size.x * Size.y;			}
+
+		inline				::gpk::error_t							fill						(const _tElement& value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
+			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
+			for(uint32_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
+				Data[i]									= value;
+			return 0;
+		}
 	};
 #pragma pack(pop)
 

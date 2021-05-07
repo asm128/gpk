@@ -67,6 +67,9 @@
     <Filter Include="framework">
       <UniqueIdentifier>{00e9e4fa-dc46-4283-8be5-c9bbb75f37c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dialog">
+      <UniqueIdentifier>{6a2f53ea-3719-45cb-bb6a-7d0fbac6c6fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -342,6 +345,18 @@
     <ClInclude Include="gpk_app_impl.h">
       <Filter>framework</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_desktop.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog_controls.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -484,6 +499,15 @@
     </ClCompile>
     <ClCompile Include="gpk_view_array.cpp">
       <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_desktop.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_dialog.cpp">
+      <Filter>dialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
