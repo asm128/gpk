@@ -114,7 +114,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		controlTable.Constraints	[iControl].AttachSizeToControl.y		= iControl;
 	}
 	::gpk::SControlText														& tunerText									= controlTable.Text[tuner->IdGUIControl];
-	tunerText.Text														= {tuner->ValueString, (uint32_t)snprintf(tuner->ValueString, ::gpk::size(tuner->ValueString) - 2, "%lli", tuner->ValueCurrent)};
+	tunerText.Text														= {tuner->ValueString, (uint32_t)snprintf(tuner->ValueString, ::gpk::size(tuner->ValueString) - 2, "%lli", (long long int)tuner->ValueCurrent)};
 	tunerText.Align														= ::gpk::ALIGN_CENTER;
 	return index;
 }

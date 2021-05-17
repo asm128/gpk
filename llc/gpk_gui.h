@@ -204,6 +204,7 @@ namespace gpk
 		::gpk::SGUIZoom													Zoom								= {};
 		uint32_t														ThemeDefault						= 0;
 		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
+		bool															InputModeTouch						= true;
 
 																		SGUI								();
 	};

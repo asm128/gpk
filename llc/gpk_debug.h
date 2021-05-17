@@ -1,7 +1,7 @@
 /// Copyright 2010-2018 - asm128
 #include "gpk_platform.h"
 
-//#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 
 #ifndef GPK_DEBUG_H_97826389432654
 #define GPK_DEBUG_H_97826389432654
@@ -15,7 +15,7 @@
 #	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 #		define GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
 #	endif
-#	if defined(GPK_ANDROID) || defined(GPK_LINUX) 
+#	if defined(GPK_ANDROID) || defined(GPK_LINUX)
 #		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
 #	elif defined(GPK_WINDOWS)
