@@ -70,6 +70,9 @@
     <Filter Include="dialog">
       <UniqueIdentifier>{6a2f53ea-3719-45cb-bb6a-7d0fbac6c6fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{fcec14f7-f260-444f-a061-ed6786ff2ec2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -357,6 +360,9 @@
     <ClInclude Include="gpk_dialog_controls.h">
       <Filter>dialog</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_component_scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -508,6 +514,12 @@
     </ClCompile>
     <ClCompile Include="gpk_dialog.cpp">
       <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_component_scene_draw.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_component_scene.cpp">
+      <Filter>scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

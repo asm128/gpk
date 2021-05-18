@@ -124,7 +124,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	else if(value > control.ValueLimits.Max)
 		value																= control.ValueLimits.Max;
 	control.ValueCurrent												= value;
-	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, "%lli", control.ValueCurrent)};
+	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, "%lli", (long long int)control.ValueCurrent)};
 	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
 	return 0;
 }
