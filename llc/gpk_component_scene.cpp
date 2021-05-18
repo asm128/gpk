@@ -201,6 +201,7 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 		}
 	}
 
+	info_printf("%s", "Loading geometries...");
 	for(uint32_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
 		::gpk::view_const_char						& line					= objFileLines[iLine];
 		::gpk::trim(line, line);
@@ -243,8 +244,10 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 		}
 		else if(command == ::gpk::vcs{"usemtl"}) {
 			::gpk::vcc									materialName	= lineValues[1];
+			info_printf("Setting material: %s", ::gpk::toString(materialName).begin());
 			for(uint32_t iMaterial = 0; iMaterial < materialIndices.size(); ++iMaterial)
 				if(materialIndices.Names[iMaterial] == materialName) {
+					info_printf("Setting material: %s", ::gpk::toString(materialName).begin());
 					scene.Renderer.Nodes[newGroup.RenderNodes[0]].Material = materialIndices.Values[iMaterial];
 					break;
 				}
