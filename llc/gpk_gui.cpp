@@ -172,7 +172,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::controlCreate										(::gpk::SGUI& gui)										{
 	static constexpr	const uint32_t									iShades													= 16;
 	if(0 == gui.Palette.size()) {
-		static constexpr	const SColorBGRA								paletteColors []										=
+		static				const SColorBGRA								paletteColors []										=
 			// 16 Base colors
 			{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}
 			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	}

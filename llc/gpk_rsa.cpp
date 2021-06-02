@@ -1,12 +1,12 @@
 #include "gpk_rsa.h"
 #include "gpk_encoding.h"
 #include "gpk_noise.h"
-#include <cmath>
+#include "gpk_math.h"
 
 #define RSA_ARDELL_KEY	1079150697//117515017//1054987632
 
 static	int									primalityTest						(uint64_t number)						{
-	uint64_t										j									= (uint64_t)sqrt((double)number);
+	uint64_t										j									= (uint64_t)::gpk::sqrt((double)number);
 	if(0 == (number & 1))
 		return 0;
 	if(number > 1 && number < 9)
@@ -37,7 +37,7 @@ static	uint64_t							commonDivisor						(const uint64_t t, const uint64_t a)			
 	for(uint64_t i = offset; i < t; ++i) {
 		if(t % i == 0)
 			continue;
-		j											= (uint64_t)sqrt((double)i);
+		j											= (uint64_t)::gpk::sqrt((double)i);
 		unsigned int									isPrime								= ::primalityTest(i);
 		if(isPrime == 1 && i != prime1 && i != prime2) {
 			if(keys.size() > k)

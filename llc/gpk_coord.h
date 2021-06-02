@@ -298,23 +298,23 @@ namespace gpk
 		// just in case you need that function also
 		TQuat&								CreateFromAxisAngle		(const ::gpk::SCoord3<float> & axis, double angle)	{
 			const double							halfAngle				= angle * .5;
-			const double							s						= ::std::sin(halfAngle);
+			const double							s						= ::gpk::sin(halfAngle);
 			x									= (_tBase)(axis.x * s);
 			y									= (_tBase)(axis.y * s);
 			z									= (_tBase)(axis.z * s);
-			w									= (_tBase)::std::cos(halfAngle);
+			w									= (_tBase)::gpk::cos(halfAngle);
 			return *this;
 		}
 		/// Evaluates a rotation needed to be applied to an object positioned at sourcePoint to face destPoint
 		TQuat&								LookAt					(const ::gpk::SCoord3<float> & sourcePoint, const ::gpk::SCoord3<float> & destPoint, const ::gpk::SCoord3<float> & up = {0, 1, 0}, const ::gpk::SCoord3<float> & front = {1, 0, 0})	{
 			::gpk::SCoord3<float>					forwardVector			= (destPoint - sourcePoint).Normalize();
 			const double							dot						= front.Dot(forwardVector);
-			if (::std::abs(dot - (-1.0)) < 0.000001)
+			if (::gpk::abs(dot - (-1.0)) < 0.000001)
 				return *this = TQuat{up.x, up.y, up.z, -(_tBase)::gpk::math_pi}.Normalize();
-			if (::std::abs(dot - (1.0)) < 0.000001)
+			if (::gpk::abs(dot - (1.0)) < 0.000001)
 				return *this = {0, 0, 0, 1};
 
-			const double							rotAngle				= ::std::acos(dot);
+			const double							rotAngle				= ::gpk::acos(dot);
 			::gpk::SCoord3<float>					rotAxis					= front.Cross(forwardVector);
 			rotAxis.Normalize();
 			return CreateFromAxisAngle(rotAxis, rotAngle);
@@ -454,7 +454,7 @@ namespace gpk
 	template<typename _tElement>	static					double					sphereSize				(const SSphere<_tElement> &sphere)										noexcept	{ return 1.3333333333333333 * ::gpk::math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
 
 
-#pragma pack(push)
+#pragma pack(push, 1)
 	enum AXIS : uint8_t
 		{	AXIS_XPOSITIVE			= 0x1
 		,	AXIS_XNEGATIVE			= 0x2

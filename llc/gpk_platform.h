@@ -74,3 +74,11 @@ namespace gpk
 	#	include <cstddef>
 	#endif
 #endif
+
+#if defined(GPK_ATMEL)
+#	include "initializer_list.h"
+#else
+#	include <initializer_list>
+#	include <new>
+#endif
+

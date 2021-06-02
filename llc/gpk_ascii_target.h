@@ -1,6 +1,7 @@
 #include "gpk_ascii_color.h"
 #include "gpk_image.h"
 #include "gpk_color.h"
+
 #include <memory> // this is required for ::std::swap()
 
 #ifndef GPK_ASCII_TARGET_H_29874982734

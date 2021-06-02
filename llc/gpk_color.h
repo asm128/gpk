@@ -185,36 +185,36 @@ namespace gpk
 
 
 
-	static constexpr	const ::gpk::SColorFloat	BLACK			= {0.0f, 0.0f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	WHITE			= {1.0f, 1.0f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	RED				= {1.0f, 0.0f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	GREEN			= {0.0f, 1.0f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	BLUE			= {0.0f, 0.0f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	YELLOW			= {1.0f, 1.0f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	MAGENTA			= {1.0f, 0.0f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	CYAN			= {0.0f, 1.0f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	ORANGE			= {1.0f, 0.647f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	PANOCHE			= {0.25f, 0.5f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	PURPLE			= {0.5f, 0.1f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	TURQUOISE		= {0.2f, 1.0, 0.65f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	BROWN			= {0.4f, 0.223f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	GRAY			= {0.5f, 0.5f, 0.5f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKGRAY		= {0.25f, 0.25f, 0.25f, 1.0f				};
-	static constexpr	const ::gpk::SColorFloat	DARKRED			= {0.5f, 0.0f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKGREEN		= {0.0f, 0.5f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKBLUE		= {0.0f, 0.0f, 0.5f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKYELLOW		= {0.5f, 0.5f, 0.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKMAGENTA		= {0.5f, 0.0f, 0.5f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKCYAN		= {0.0f, 0.5f, 0.5f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	DARKORANGE		= {1.0f, 0.5490196078431373f, 0.0f, 1.0f	};
-	static constexpr	const ::gpk::SColorFloat	LIGHTGRAY		= {0.75f, 0.75f, 0.75f, 1.0f				};
-	static constexpr	const ::gpk::SColorFloat	LIGHTRED		= {1.0f, 0.25f, 0.25f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTGREEN		= {0.5f,  1.0f, 0.5f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTBLUE		= {0.25f, 0.25f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTYELLOW		= {1.0f, 1.0f, 0.25f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTMAGENTA	= {1.0f, 0.25f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTCYAN		= {0.25f, 1.0f, 1.0f, 1.0f					};
-	static constexpr	const ::gpk::SColorFloat	LIGHTORANGE		= {1.0f, 0.780f, 0.25f, 1.0f				};
+	static	const ::gpk::SColorFloat	BLACK			= ::gpk::SColorFloat(0.0f, 0.0f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	WHITE			= ::gpk::SColorFloat(1.0f, 1.0f, 1.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	RED				= ::gpk::SColorFloat(1.0f, 0.0f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	GREEN			= ::gpk::SColorFloat(0.0f, 1.0f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	BLUE			= ::gpk::SColorFloat(0.0f, 0.0f, 1.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	YELLOW			= ::gpk::SColorFloat(1.0f, 1.0f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	MAGENTA			= ::gpk::SColorFloat(1.0f, 0.0f, 1.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	CYAN			= ::gpk::SColorFloat(0.0f, 1.0f, 1.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	ORANGE			= ::gpk::SColorFloat(1.0f, 0.647f, 0.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	PANOCHE			= ::gpk::SColorFloat(0.25f, 0.5f, 1.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	PURPLE			= ::gpk::SColorFloat(0.5f, 0.1f, 1.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	TURQUOISE		= ::gpk::SColorFloat(0.2f, 1.0, 0.65f, 1.0f					);
+	static	const ::gpk::SColorFloat	BROWN			= ::gpk::SColorFloat(0.4f, 0.223f, 0.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	GRAY			= ::gpk::SColorFloat(0.5f, 0.5f, 0.5f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKGRAY		= ::gpk::SColorFloat(0.25f, 0.25f, 0.25f, 1.0f				);
+	static	const ::gpk::SColorFloat	DARKRED			= ::gpk::SColorFloat(0.5f, 0.0f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKGREEN		= ::gpk::SColorFloat(0.0f, 0.5f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKBLUE		= ::gpk::SColorFloat(0.0f, 0.0f, 0.5f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKYELLOW		= ::gpk::SColorFloat(0.5f, 0.5f, 0.0f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKMAGENTA		= ::gpk::SColorFloat(0.5f, 0.0f, 0.5f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKCYAN		= ::gpk::SColorFloat(0.0f, 0.5f, 0.5f, 1.0f					);
+	static	const ::gpk::SColorFloat	DARKORANGE		= ::gpk::SColorFloat(1.0f, 0.5490196078431373f, 0.0f, 1.0f	);
+	static	const ::gpk::SColorFloat	LIGHTGRAY		= ::gpk::SColorFloat(0.75f, 0.75f, 0.75f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTRED		= ::gpk::SColorFloat(1.0f, 0.25f, 0.25f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTGREEN		= ::gpk::SColorFloat(0.5f,  1.0f, 0.5f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTBLUE		= ::gpk::SColorFloat(0.25f, 0.25f, 1.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTYELLOW		= ::gpk::SColorFloat(1.0f, 1.0f, 0.25f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTMAGENTA	= ::gpk::SColorFloat(1.0f, 0.25f, 1.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTCYAN		= ::gpk::SColorFloat(0.25f, 1.0f, 1.0f, 1.0f				);
+	static	const ::gpk::SColorFloat	LIGHTORANGE		= ::gpk::SColorFloat(1.0f, 0.780f, 0.25f, 1.0f				);
 
 #pragma pack(pop)
 } // namespace

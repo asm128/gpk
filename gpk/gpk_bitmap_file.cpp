@@ -7,7 +7,39 @@
 
 #include <Windows.h>
 
+// Minuto	Vistas
+// 5		11
+// 10		22
+// 15		31
+// 20		41
+// 25		48
+// 30		51
+// 33		56
+// 34		59
+// 35		65
+// 36		75
+// 38		75
+// 39		81
+// 40		90
+// 41		95
+// 42		98
+// 43		106
+// 44		110
+// 46		124
+// 47		128
+// 48		138
+// 49		143
+// 50		151
+// 51		155
+// 52		158
+// 54		162
+// 55		169
+// 56		178
+// 59		183
+// 60		189
+// 61		194
 #pragma pack(push, 1)
+
 
 static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::view_const_string& szFileName, ::gpk::array_pod<::gpk::SColorBGRA>& out_Colors, ::gpk::view_grid<::gpk::SColorBGRA>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
 	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection

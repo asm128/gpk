@@ -3,6 +3,8 @@
 
 #if defined(GPK_ATMEL)
 #	include <math.h>
+#elif defined(GPK_WINDOWS)
+#	include <math.h>
 #else
 #	include <cmath>
 #endif
@@ -43,16 +45,29 @@ namespace gpk
 	static inline int		abs		(int	f) { return ::abs	(f); }
 	static inline double	fabs	(double	f) { return ::fabs	(f); }
 	static inline double	atan	(double	f) { return ::atan	(f); }
+	static inline double	cos		(double	f) { return ::cos	(f); }
+8	static inline double	acos	(double	f) { return ::acos	(f); }
+	static inline double	sin		(double	f) { return ::sin	(f); }
+	static inline double	asin	(double	f) { return ::asin	(f); }
+	static inline double	sqrt	(double	f) { return ::sqrt	(f); }
+#elif defined(GPK_WINDOWS)
+	static inline int		abs		(int	f) { return ::abs	(f); }
+	static inline double	fabs	(double	f) { return ::fabs	(f); }
+	static inline double	atan	(double	f) { return ::atan	(f); }
+	static inline double	cos		(double	f) { return ::cos	(f); }
 	static inline double	acos	(double	f) { return ::acos	(f); }
 	static inline double	sin		(double	f) { return ::sin	(f); }
 	static inline double	asin	(double	f) { return ::asin	(f); }
+	static inline double	sqrt	(double	f) { return ::sqrt	(f); }
 #else
 	using	std::abs	;
 	using	std::fabs	;
 	using	std::atan	;
+	using	std::cos	;
 	using	std::acos	;
 	using	std::sin	;
 	using	std::asin	;
+	using	std::sqrt	;
 #endif
 #pragma pack(pop)
 }

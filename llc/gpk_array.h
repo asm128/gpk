@@ -3,13 +3,6 @@
 #include "gpk_safe.h"
 #include "gpk_eval.h"
 
-#if defined(GPK_ATMEL)
-#	include "initializer_list.h"
-#else
-#	include <initializer_list>
-#	include <new>
-#endif
-
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
 
