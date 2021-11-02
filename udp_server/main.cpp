@@ -8,7 +8,7 @@ int main() {
 	::gpk::SIPv4			addrLocal				= {{}, 9898};
 	::gpk::tcpipAddress(0, 9898, 1, ::gpk::TRANSPORT_PROTOCOL_UDP, addrLocal);
 	::gpk::tcpipAddressToSockaddr(addrLocal, sa_server);
-
+	 
 	SOCKET					handle					= socket(AF_INET, SOCK_DGRAM, 0);
 	ree_if(INVALID_SOCKET == handle, "Failed to create socket.");
 	gpk_necall(::bind(handle, (sockaddr *)&sa_server, sizeof(sockaddr_in)), "Failed to bind listener to address");
