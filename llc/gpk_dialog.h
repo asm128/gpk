@@ -34,50 +34,50 @@ namespace gpk
 	};
 	//template<typename _TDialogControl>
 	//::gpk::error_t										dialogCreate										(::gpk::SGUI & gui, ::gpk::ptr_nco<_TDialogControl>& createdControl)	{
-	//	::gpk::gpk_ref<_TDialogControl>							* newRef							= 0;
+	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
 	//	ree_if(0 == ::gpk::ref_create(&newRef), "%s", "Out of memory?");
 	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
-	//	createdControl->Dialog								= this;
-	//	createdControl->IdGUIControl						= ::gpk::controlCreate(gui);
+	//	createdControl->Dialog									= this;
+	//	createdControl->IdGUIControl							= ::gpk::controlCreate(gui);
 	//	return 0;
 	//}
 #pragma pack(pop)
 
 	struct SDialog {
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsControl										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsButton										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsCheckBox										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsViewport										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>		ColorsViewportTitle									= {};
-		int32_t																FocusedCurrent										= -1;
-		int32_t																FocusedPrevious										= -1;
-		int32_t																SelectedCurrent										= -1;
-		int32_t																SelectedPrevious									= -1;
-		::gpk::SCoord2<uint32_t>											LastSize											= {};
-		int32_t																Root												= -1;
-		::gpk::SControlMode													DefaultControlModes									= {};
+		::gpk::array_pod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	ColorsPerControlType;
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsControl										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsButton										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsCheckBox										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsViewport										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsViewportTitle									= {};
+		int32_t																				FocusedCurrent										= -1;
+		int32_t																				FocusedPrevious										= -1;
+		int32_t																				SelectedCurrent										= -1;
+		int32_t																				SelectedPrevious									= -1;
+		::gpk::SCoord2<uint32_t>															LastSize											= {};
+		int32_t																				Root												= -1;
+		::gpk::SControlMode																	DefaultControlModes									= {};
 
+		::gpk::ptr_obj<::gpk::SInput>														Input												= {};
+		::gpk::ptr_obj<::gpk::SGUI>															GUI													= {};
+		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
+		::gpk::SImage<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
+		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 
-		::gpk::ptr_obj<::gpk::SInput>										Input												= {};
-		::gpk::ptr_obj<::gpk::SGUI>											GUI													= {};
-		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>					Controls											= {};
-		::gpk::SImage<::gpk::SColorBGRA>									ImageCrossBGRA										= {};
-		::gpk::SImageMonochrome<uint32_t>									ImageCross											= {};
+																							SDialog												();
 
-																			SDialog												();
-
-		::gpk::error_t														Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }
-		::gpk::error_t														Focused												()													{ return FocusedCurrent; }
+		::gpk::error_t																		Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }
+		::gpk::error_t																		Focused												()													{ return FocusedCurrent; }
 
 		template<typename _TDialogControl>
-		::gpk::error_t														Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
+		::gpk::error_t																		Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
 			if(0 == GUI)
 				GUI.create();
-			::gpk::SGUI																& gui												= *GUI;
-			int32_t																	index												= -1;
+			::gpk::SGUI																				& gui												= *GUI;
+			int32_t																					index												= -1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl]) {
-					index																= iControl;
+					index																		= iControl;
 					break;
 				}
 
