@@ -43,6 +43,7 @@ namespace gpk
 
 #if defined(GPK_ATMEL)
 	static inline int		abs		(int	f) { return ::abs	(f); }
+	static inline double	abs		(double	f) { return ::abs	(f); }
 	static inline double	fabs	(double	f) { return ::fabs	(f); }
 	static inline double	atan	(double	f) { return ::atan	(f); }
 	static inline double	cos		(double	f) { return ::cos	(f); }
@@ -52,6 +53,7 @@ namespace gpk
 	static inline double	sqrt	(double	f) { return ::sqrt	(f); }
 #elif defined(GPK_WINDOWS)
 	static inline int		abs		(int	f) { return ::abs	(f); }
+	static inline double	abs		(double	f) { return ::abs	(f); }
 	static inline double	fabs	(double	f) { return ::fabs	(f); }
 	static inline double	atan	(double	f) { return ::atan	(f); }
 	static inline double	cos		(double	f) { return ::cos	(f); }

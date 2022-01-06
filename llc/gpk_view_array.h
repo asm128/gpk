@@ -1,5 +1,4 @@
 #include "gpk_log.h"
-#include "gpk_eval.h"
 
 #if defined(GPK_ATMEL)
 #	include <string.h>

@@ -346,13 +346,13 @@ int													gpk::drawPixels
 			const double											distanceToLight			= lightToPoint.LengthSquared();
 			if(distanceToLight > rangeLightSquared)
 				continue;
-			fragmentColor										+= (texelColor / (10.0 * lightPoints.size()));
+			fragmentColor										+= texelColor / (10.0 * lightPoints.size());
 			if(lightFactor <= 0)
 				continue;
 			const double											invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
-			fragmentColor										+= (texelColor * lightColors[iLight]) * (invAttenuation * .5);
+			fragmentColor										+= (texelColor * lightColors[iLight]) * (invAttenuation);
 		}
-		::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .1) + (texelColor * (lightFactorDirectional * .5)) + fragmentColor);
+		::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
 	}
 	return 0;
 }
@@ -509,7 +509,7 @@ int													gpk::drawTriangle
 		texCoord												+= triangleTexCoords.B * vertexWeights.B;
 		texCoord												+= triangleTexCoords.C * vertexWeights.C;
 		::gpk::SColorBGRA											texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y)][(uint32_t)(texCoord.x * imageUnit.x)];
-		::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .3) + texelColor * lightFactor);
+		::gpk::setPixel(targetPixels, pixelCoord, (::gpk::SColorFloat(texelColor) * .3 + ::gpk::SColorFloat(texelColor) * lightFactor).Clamp());
 	}
 	return 0;
 }
@@ -566,12 +566,12 @@ int													gpk::drawTriangle
 			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
 				continue;
 			double														invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
-			fragmentColor											+= ::gpk::SColorFloat{texelColor * lightColors[iLight] * invAttenuation * .5};
+			fragmentColor											+= ::gpk::SColorFloat{texelColor * lightColors[iLight] * invAttenuation * .5}.Clamp();
 		}
 		 (void)lightColor;
 		 (void)lightFactorDirectional ;
 
-		::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .1) + texelColor * lightColor * lightFactorDirectional + fragmentColor);
+		::gpk::setPixel(targetPixels, pixelCoord, ((texelColor * .1) + texelColor * lightColor * lightFactorDirectional + fragmentColor).Clamp());
 	}
 	return 0;
 }

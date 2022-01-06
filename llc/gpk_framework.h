@@ -41,7 +41,7 @@ namespace gpk
 
 	struct SFramework {
 		typedef				::gpk::SColorBGRA										TTexel;
-		typedef				::gpk::SImage<TTexel>									TOffscreen;
+		typedef				::gpk::SRenderTarget<TTexel, uint32_t>					TOffscreen;
 
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};

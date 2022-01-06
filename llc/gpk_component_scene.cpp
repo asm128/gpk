@@ -147,7 +147,7 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 
 static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::view_const_char filename)  {
 	::gpk::array_pod<byte_t>					rawObj					= {};
-	::gpk::fileToMemory(filename, rawObj);
+	gpk_necall(::gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
 

@@ -103,7 +103,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 	{																																											\
 		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																		\
 		{																																										\
-			::gpk::ptr_obj<_mainClass>													applicationInstance				= {};													\
+			::gpk::ptr_obj<_mainClass>													applicationInstance;																	\
 			reterr_gerror_if(0 == applicationInstance.create(runtimeValues), "%s", "Failed to create application instance. Out of memory?");									\
 			info_printf("%s", "Initializing application instance.");																											\
 			gpk_necall(::setup(*applicationInstance), "%s", "User reported error. Execution stopped.");																			\

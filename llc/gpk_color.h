@@ -143,44 +143,44 @@ namespace gpk
 
 		constexpr									SColorFloat		()																noexcept	= default;
 		constexpr									SColorFloat		(const SColorFloat& color)										noexcept	= default;
-		constexpr									SColorFloat		(float _r, float _g, float _b, float _a=1.0f)					noexcept	: r(::gpk::clamp(_r, 0.0f, 1.0f)) ,g(::gpk::clamp(_g, 0.0f, 1.0f)) ,b(::gpk::clamp(_b, 0.0f, 1.0f)) ,a(::gpk::clamp(_a, 0.0f, 1.0f))																{}
-		//constexpr									SColorFloat		(uint16_t Color)												noexcept	: SColorFloat(SColorBGR(Color))																																										{}
-		//constexpr									SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))							{}
-		constexpr									SColorFloat		(SColorBGRA Color)												noexcept	: r(Color.r * (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(Color.a * (1/255.0f))																								{}
-		//constexpr									SColorFloat		(SColorBGR Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(1.0f)																												{}
-		constexpr									SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																																{}
+		constexpr									SColorFloat		(float _r, float _g, float _b, float _a=1.0f)					noexcept	: r(_r), g(_g), b(_b), a(_a) {} // r(::gpk::clamp(_r, 0.0f, 1.0f)) ,g(::gpk::clamp(_g, 0.0f, 1.0f)) ,b(::gpk::clamp(_b, 0.0f, 1.0f)) ,a(::gpk::clamp(_a, 0.0f, 1.0f))		{}
+		//constexpr									SColorFloat		(uint16_t Color)												noexcept	: SColorFloat(SColorBGR(Color))																																				{}
+		//constexpr									SColorFloat		(uint32_t Color)												noexcept	: r(((Color & 0x00FF0000L)>>16)	*(1/255.0f)), g(((Color & 0x0000FF00L)>>8)*(1/255.0f)), b(((Color & 0x000000FFL)>>0)*(1/255.0f)), a(((Color & 0xFF000000L)>>24)*(1/255.0f))	{}
+		constexpr									SColorFloat		(SColorBGRA Color)												noexcept	: r(Color.r * (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(Color.a * (1/255.0f))																		{}
+		//constexpr									SColorFloat		(SColorBGR Color)												noexcept	: r(Color.r	* (1/255.0f)), g(Color.g * (1/255.0f)), b(Color.b * (1/255.0f)), a(1.0f)																						{}
+		constexpr									SColorFloat		(const float* rgbaColor)													: r(rgbaColor[0]), g(rgbaColor[1]), b(rgbaColor[2]), a(rgbaColor[3])																										{}
 
 									SColorFloat&	operator=		(const SColorFloat& color)													= default;
-		//constexpr					operator		uint32_t		()														const	noexcept	{ return (((uint32_t)(a * 255.0f)) << 24) | (((uint32_t)(r * 255.0f)) << 16) | (((uint32_t)(g * 255.0f)) << 8) | ((uint32_t)(b*255.0f));															}
-		constexpr					operator		SColorBGRA		()														const	noexcept	{ return {(uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255), (uint8_t)(a * 255)};																											}
-		//constexpr					operator		SColorBGR		()														const	noexcept	{ return SColorBGR ((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));																													}
-		//constexpr					operator		SColor16		()														const	noexcept	{ return ((((uint16_t)(r * 0x1F)) << 11) | (((uint16_t)(g * 0x3F)) << 5) | (((uint16_t)(b * 0x1F)) << 0));																							}
-		constexpr					operator		const float*	()														const	noexcept	{ return &r;																																														}
-		constexpr					bool			operator ==		(const SColorFloat& color)								const	noexcept	{ return SColorBGR((uint8_t)(color.b * 255), (uint8_t)(color.g * 255), (uint8_t)(color.r * 255)) == SColorBGR((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));											}
-		constexpr					bool			operator !=		(const SColorFloat& color)								const	noexcept	{ return SColorBGR((uint8_t)(color.b * 255), (uint8_t)(color.g * 255), (uint8_t)(color.r * 255)) != SColorBGR((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));											}
-									SColorFloat&	operator +=		(const SColorFloat& color)										noexcept	{ r = r + color.r;					g = g + color.g;				b = b + color.b;				return Clamp();																					}
-									SColorFloat&	operator *=		(const SColorFloat& color)										noexcept	{ r = r * color.r;					g = g * color.g;				b = b * color.b;				return Clamp();																					}
-									SColorFloat&	operator *=		(double scalar)													noexcept	{ r = (float)(r * scalar);			g = (float)(g * scalar);		b = (float)(b * scalar);		return Clamp();																					}
-									SColorFloat&	operator /=		(double scalar)																{ r = (float)(r / scalar);			g = (float)(g / scalar);		b = (float)(b / scalar);		return Clamp();																					}
-									SColorFloat&	operator *=		(float scalar)													noexcept	{ r = r * scalar;					g = g * scalar;					b = b * scalar;					return Clamp();																					}
-									SColorFloat&	operator /=		(float scalar)																{ r = r / scalar;					g = g / scalar;					b = b / scalar;					return Clamp();																					}
-									SColorFloat&	operator *=		(const SColorBGRA& color)										noexcept	{ r = r * (color.r * (1/255.0f));	g = g * (color.g * (1/255.0f));	b = b * (color.b * (1/255.0f));	return Clamp();																					}
-									SColorFloat&	operator +=		(const SColorBGRA& color)										noexcept	{ r = r + (color.r * (1/255.0f));	g = g + (color.g * (1/255.0f));	b = b + (color.b * (1/255.0f));	return Clamp();																					}
-									SColorFloat&	operator *=		(const SColorBGR& color)										noexcept	{ r = r * (color.r * (1/255.0f));	g = g * (color.g * (1/255.0f));	b = b * (color.b * (1/255.0f));	return Clamp();																					}
-									SColorFloat&	operator +=		(const SColorBGR& color)										noexcept	{ r = r + (color.r * (1/255.0f));	g = g + (color.g * (1/255.0f));	b = b + (color.b * (1/255.0f));	return Clamp();																					}
-									SColorFloat		operator *		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorFloat{r * (color.r * (1/255.0f)), g * (color.g * (1/255.0f)), b * (color.b * (1/255.0f)), a};																				}
-									SColorFloat		operator +		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorFloat{r + (color.r * (1/255.0f)), g + (color.g * (1/255.0f)), b + (color.b * (1/255.0f)), a};																				}
-									SColorFloat		operator *		(const SColorBGR& color)								const	noexcept	{ return ::gpk::SColorFloat{r * (color.r * (1/255.0f)), g * (color.g * (1/255.0f)), b * (color.b * (1/255.0f)), a};																				}
-									SColorFloat		operator +		(const SColorBGR& color)								const	noexcept	{ return ::gpk::SColorFloat{r + (color.r * (1/255.0f)), g + (color.g * (1/255.0f)), b + (color.b * (1/255.0f)), a};																				}
-		constexpr					SColorFloat		operator *		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat{r * color.r, g * color.g, b * color.b, a};	}
-		constexpr					SColorFloat		operator +		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat{r + color.r, g + color.g, b + color.b, a};	}
-		constexpr					SColorFloat		operator -		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat(r - color.r, g - color.g, b - color.b, a);	}
-		constexpr					SColorFloat		operator *		(double scalar)											const	noexcept	{ return ::gpk::SColorFloat{(float)(r * scalar), (float)(g * scalar), (float)(b * scalar), a};											}
-		constexpr					SColorFloat		operator *		(float scalar)											const	noexcept	{ return ::gpk::SColorFloat{(r * scalar), (g * scalar),	(b * scalar)};													}
-		constexpr					SColorFloat		operator /		(double scalar)											const				{ return ::gpk::SColorFloat{(float)(r / scalar), (float)(g / scalar), (float)(b / scalar), a};	}
-		constexpr					SColorFloat		operator /		(float scalar)											const				{ return ::gpk::SColorFloat(r / scalar,	g / scalar,	b / scalar);								}
+		//constexpr					operator		uint32_t		()														const	noexcept	{ return (((uint32_t)(a * 255.0f)) << 24) | (((uint32_t)(r * 255.0f)) << 16) | (((uint32_t)(g * 255.0f)) << 8) | ((uint32_t)(b*255.0f));									}
+		constexpr					operator		SColorBGRA		()														const	noexcept	{ return {(uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255), (uint8_t)(a * 255)};																					}
+		//constexpr					operator		SColorBGR		()														const	noexcept	{ return SColorBGR ((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));																							}
+		//constexpr					operator		SColor16		()														const	noexcept	{ return ((((uint16_t)(r * 0x1F)) << 11) | (((uint16_t)(g * 0x3F)) << 5) | (((uint16_t)(b * 0x1F)) << 0));																	}
+		constexpr					operator		const float*	()														const	noexcept	{ return &r;																																								}
+		constexpr					bool			operator ==		(const SColorFloat& color)								const	noexcept	{ return SColorBGR((uint8_t)(color.b * 255), (uint8_t)(color.g * 255), (uint8_t)(color.r * 255)) == SColorBGR((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));	}
+		constexpr					bool			operator !=		(const SColorFloat& color)								const	noexcept	{ return SColorBGR((uint8_t)(color.b * 255), (uint8_t)(color.g * 255), (uint8_t)(color.r * 255)) != SColorBGR((uint8_t)(b * 255), (uint8_t)(g * 255), (uint8_t)(r * 255));	}
+									SColorFloat&	operator +=		(const SColorFloat& color)										noexcept	{ r = r + color.r;					g = g + color.g;				b = b + color.b;				return *this;	}
+									SColorFloat&	operator *=		(const SColorFloat& color)										noexcept	{ r = r * color.r;					g = g * color.g;				b = b * color.b;				return *this;	}
+									SColorFloat&	operator *=		(double scalar)													noexcept	{ r = (float)(r * scalar);			g = (float)(g * scalar);		b = (float)(b * scalar);		return *this;	}
+									SColorFloat&	operator /=		(double scalar)																{ r = (float)(r / scalar);			g = (float)(g / scalar);		b = (float)(b / scalar);		return *this;	}
+									SColorFloat&	operator *=		(float scalar)													noexcept	{ r = r * scalar;					g = g * scalar;					b = b * scalar;					return *this;	}
+									SColorFloat&	operator /=		(float scalar)																{ r = r / scalar;					g = g / scalar;					b = b / scalar;					return *this;	}
+									SColorFloat&	operator *=		(const SColorBGRA& color)										noexcept	{ r = r * (color.r * (1/255.0f));	g = g * (color.g * (1/255.0f));	b = b * (color.b * (1/255.0f));	return *this;	}
+									SColorFloat&	operator +=		(const SColorBGRA& color)										noexcept	{ r = r + (color.r * (1/255.0f));	g = g + (color.g * (1/255.0f));	b = b + (color.b * (1/255.0f));	return *this;	}
+									SColorFloat&	operator *=		(const SColorBGR& color)										noexcept	{ r = r * (color.r * (1/255.0f));	g = g * (color.g * (1/255.0f));	b = b * (color.b * (1/255.0f));	return *this;	}
+									SColorFloat&	operator +=		(const SColorBGR& color)										noexcept	{ r = r + (color.r * (1/255.0f));	g = g + (color.g * (1/255.0f));	b = b + (color.b * (1/255.0f));	return *this;	}
+									SColorFloat		operator *		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorFloat{r * (color.r * (1/255.0f)), g * (color.g * (1/255.0f)), b * (color.b * (1/255.0f)), a};	}
+									SColorFloat		operator +		(const SColorBGRA& color)								const	noexcept	{ return ::gpk::SColorFloat{r + (color.r * (1/255.0f)), g + (color.g * (1/255.0f)), b + (color.b * (1/255.0f)), a};	}
+									SColorFloat		operator *		(const SColorBGR& color)								const	noexcept	{ return ::gpk::SColorFloat{r * (color.r * (1/255.0f)), g * (color.g * (1/255.0f)), b * (color.b * (1/255.0f)), a};	}
+									SColorFloat		operator +		(const SColorBGR& color)								const	noexcept	{ return ::gpk::SColorFloat{r + (color.r * (1/255.0f)), g + (color.g * (1/255.0f)), b + (color.b * (1/255.0f)), a};	}
+		constexpr					SColorFloat		operator *		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat{r * color.r, g * color.g, b * color.b, a};												}
+		constexpr					SColorFloat		operator +		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat{r + color.r, g + color.g, b + color.b, a};												}
+		constexpr					SColorFloat		operator -		(const SColorFloat& color)								const	noexcept	{ return ::gpk::SColorFloat(r - color.r, g - color.g, b - color.b, a);												}
+		constexpr					SColorFloat		operator *		(double scalar)											const	noexcept	{ return ::gpk::SColorFloat{(float)(r * scalar), (float)(g * scalar), (float)(b * scalar), a};						}
+		constexpr					SColorFloat		operator *		(float scalar)											const	noexcept	{ return ::gpk::SColorFloat{(r * scalar), (g * scalar),	(b * scalar)};												}
+		constexpr					SColorFloat		operator /		(double scalar)											const				{ return ::gpk::SColorFloat{(float)(r / scalar), (float)(g / scalar), (float)(b / scalar), a};						}
+		constexpr					SColorFloat		operator /		(float scalar)											const				{ return ::gpk::SColorFloat(r / scalar,	g / scalar,	b / scalar);													}
 
-		SColorFloat&	Clamp			()																noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;																				}
+									SColorFloat&	Clamp			()																noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
 	};	// struct
 
 

@@ -171,6 +171,7 @@
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="character_codes.json" />
     <None Include="copy_gpk_config.bat" />
     <None Include="gpk_cgi_interceptor.json" />
     <None Include="gpk_config.json" />

@@ -7,8 +7,9 @@ namespace gpk
 #pragma pack(push, 1)
 	template<typename _tCell, uint32_t _sizeArray>
 	struct array_static	{
-							_tCell						Storage	[_sizeArray]		;
 		static constexpr	const uint32_t				SIZE						= _sizeArray;
+
+							_tCell						Storage	[_sizeArray]		;
 
 							operator					view_array<_tCell>			()																	{ return {Storage, _sizeArray}; }
 							operator					view_array<const _tCell>	()												const	noexcept	{ return {Storage, _sizeArray}; }
