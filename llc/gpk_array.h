@@ -1,6 +1,7 @@
 #include "gpk_keyval.h"
 #include "gpk_memory.h"
 #include "gpk_safe.h"
+#include "gpk_size.h"
 
 #ifndef GPK_ARRAY_H_29837498237498237429837
 #define GPK_ARRAY_H_29837498237498237429837
@@ -690,8 +691,8 @@ namespace gpk
 
 	typedef ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::array_obj<::gpk::view_const_string>>	TKeyValConstStringArray;
 
-	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::view_const_char> & keysToSave, ::gpk::array_pod<byte_t> & output);
-	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstString> & output);
+	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view_array<const ::gpk::view_const_char> & keysToSave, ::gpk::array_pod<byte_t> & output);
+	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstChar> & output);
 	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_char& strToLog);
 	::gpk::error_t									join							(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char>	fields);
 	::gpk::error_t									append_quoted					(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text);

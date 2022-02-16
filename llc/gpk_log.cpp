@@ -1,5 +1,6 @@
 #include "gpk_log.h"
 #include "gpk_string.h"
+#include "gpk_size.h"
 
 
 #if defined(GPK_ANDROID)

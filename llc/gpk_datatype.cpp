@@ -3,6 +3,7 @@
 
 #include "gpk_io.h"
 #include "gpk_string.h"
+#include "gpk_size.h"
 
 //
 uint32_t								gpk::getStringFromDataType		( ::gpk::DATA_TYPE dataType, char* string ) {

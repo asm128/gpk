@@ -1,8 +1,6 @@
 #include "gpk_debug.h"
 #include "gpk_error.h"
 #include "gpk_eval.h"
-#include "gpk_size.h"
-#include "gpk_string.h"
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -47,23 +45,25 @@ namespace gpk
 
 	template<size_t prefixLength, typename... TArgs>
 	void												_gpk_debug_printf								(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
-#if defined(GPK_CONSOLE_LOG_ENABLED)
+#if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
 		base_debug_print(prefix, prefixLength);
 		char													customDynamicString	[8192]						= {};
+
 #if !defined(GPK_WINDOWS)
 		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 #else
-		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);//sprintf_s(customDynamicString, format, args...);
+		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 #endif
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
-#if defined(GPK_CONSOLE_LOG_ENABLED)
+#if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);
 #endif
 		base_debug_print(customDynamicString, (int)stringLength);
-		if(2 >= severity)
+		if(2 >= severity) {
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
+		}
 	}
 	template<typename... _tArgs>
 	inline	constexpr	void							dummy		(_tArgs&&...)		{}
