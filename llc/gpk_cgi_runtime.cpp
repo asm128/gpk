@@ -38,7 +38,7 @@
 				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
 				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
 
-				::gpk::view_const_string								querystring;
+				//::gpk::view_const_string								querystring;
 				::gpk::querystring_split(requestReceived.QueryString, requestReceived.QueryStringElements);
 				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
 				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
