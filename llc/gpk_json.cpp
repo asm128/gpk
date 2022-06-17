@@ -214,25 +214,6 @@ static	::gpk::error_t										jsonTestAndCloseValue								(::gpk::SJSONReaderS
 		json_error_printf(format, __VA_ARGS__);		\
 	}
 
-static	bool												isSpaceCharacter						(const char characterToTest)		{
-	switch(characterToTest) {
-	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
-		return true;
-	default:
-		return false;
-	}
-}
-
-static	::gpk::error_t										skipToNextCharacter						(uint32_t& indexCurrentChar, const ::gpk::view_const_char& expression)		{
-	while(indexCurrentChar < expression.size()) {
-		if(::isSpaceCharacter(expression[indexCurrentChar]))
-			++indexCurrentChar;
-		else
-			break;
-	}
-	return 0;
-}
-
 static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReaderState& stateReader, ::gpk::array_pod<::gpk::SJSONToken>& tokens, const ::gpk::view_const_char& jsonAsString)	{
 	::gpk::SJSONToken												currentElement										= {};
 	::gpk::error_t													errVal												= 0;
@@ -242,7 +223,7 @@ static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReade
 		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
-		::skipToNextCharacter(stateReader.IndexCurrentChar, jsonAsString);
+		::gpk::skipToNextCharacter(stateReader.IndexCurrentChar, jsonAsString);
 		--stateReader.IndexCurrentChar;
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':

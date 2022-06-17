@@ -24,7 +24,7 @@ static			::gpk::error_t											pngScanLineSizeFromFormat						(int32_t colorT
 	}
 }
 
-static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_2_8							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -39,7 +39,7 @@ static			::gpk::error_t											pngScanlineDecode_2_8							(const ::gpk::view
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_0_8							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -53,7 +53,7 @@ static			::gpk::error_t											pngScanlineDecode_0_8							(const ::gpk::view
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_2_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -75,7 +75,7 @@ static			::gpk::error_t											pngScanlineDecode_2_16							(const ::gpk::vie
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_0_16							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -92,7 +92,7 @@ static			::gpk::error_t											pngScanlineDecode_0_16							(const ::gpk::vie
 	}
 	return 0;
 }
-static			::gpk::error_t											pngScanlineDecode_6_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_6_8							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -107,7 +107,7 @@ static			::gpk::error_t											pngScanlineDecode_6_8							(const ::gpk::view
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_6_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -130,7 +130,7 @@ static			::gpk::error_t											pngScanlineDecode_6_16							(const ::gpk::vie
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_4_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_4_8							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -146,7 +146,7 @@ static			::gpk::error_t											pngScanlineDecode_4_8							(const ::gpk::view
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_4_16							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines)		{
 	static constexpr const double												unitGreyscale									= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -167,7 +167,7 @@ static			::gpk::error_t											pngScanlineDecode_4_16							(const ::gpk::vie
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_3_8							(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)		{
+static			::gpk::error_t											pngScanlineDecode_3_8							(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette)		{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -182,7 +182,7 @@ static			::gpk::error_t											pngScanlineDecode_3_8							(const ::gpk::view
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_3_bits						(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette, uint32_t bitDepth, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)	{
+static			::gpk::error_t											pngScanlineDecode_3_bits						(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, const ::gpk::view_array<::gpk::color_bgr<uint8_t>>& palette, uint32_t bitDepth)	{
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -202,7 +202,7 @@ static			::gpk::error_t											pngScanlineDecode_3_bits						(const ::gpk::vi
 	return 0;
 }
 
-static			::gpk::error_t											pngScanlineDecode_0_bits						(const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, uint32_t bitDepth, ::gpk::view_grid<::gpk::SColorBGRA>& out_View)	{
+static			::gpk::error_t											pngScanlineDecode_0_bits						(::gpk::view_grid<::gpk::SColorBGRA>& out_View, const ::gpk::view_array<const ::gpk::array_pod<uint8_t>> & scanlines, uint32_t bitDepth)	{
 	double																		unitGrayscale									= 1.0 / ((1 << bitDepth) - 1) * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::array_pod<uint8_t>												& scanline										= scanlines[iScanline];
@@ -234,15 +234,15 @@ static			::gpk::error_t											pngDecode
 	) {
 	switch(colorType) {
 	default: error_printf("Invalid color type: %u.", colorType); return -1;
-	case  2: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_2_8(scanlines, out_View)			: ::pngScanlineDecode_2_16(scanlines, out_View);
-	case  4: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_4_8(scanlines, out_View)			: ::pngScanlineDecode_4_16(scanlines, out_View);
-	case  6: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_6_8(scanlines, out_View)			: ::pngScanlineDecode_6_16(scanlines, out_View);
-	case  3: ree_if(bitDepth != 1 && bitDepth != 2 && bitDepth != 4 && bitDepth != 8, "Invalid bit depth: %u.", bitDepth);	return (bitDepth == 8) ? ::pngScanlineDecode_3_8(scanlines, palette, out_View)	: ::pngScanlineDecode_3_bits(scanlines, palette, bitDepth, out_View);
+	case  2: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_2_8(out_View, scanlines)			: ::pngScanlineDecode_2_16  (out_View, scanlines);
+	case  4: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_4_8(out_View, scanlines)			: ::pngScanlineDecode_4_16  (out_View, scanlines);
+	case  6: ree_if(bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);									return (bitDepth == 8) ? ::pngScanlineDecode_6_8(out_View, scanlines)			: ::pngScanlineDecode_6_16  (out_View, scanlines);
+	case  3: ree_if(bitDepth != 1 && bitDepth != 2 && bitDepth != 4 && bitDepth != 8, "Invalid bit depth: %u.", bitDepth);	return (bitDepth == 8) ? ::pngScanlineDecode_3_8(out_View, scanlines, palette)	: ::pngScanlineDecode_3_bits(out_View, scanlines, palette, bitDepth);
 	case  0: ree_if(bitDepth != 1 && bitDepth != 2 && bitDepth != 4 && bitDepth != 8 && bitDepth != 16, "Invalid bit depth: %u.", bitDepth);
 		 if(bitDepth == 8)
-			return ::pngScanlineDecode_0_8(scanlines, out_View);
+			return ::pngScanlineDecode_0_8(out_View, scanlines);
 		else
-			return (bitDepth == 16) ? ::pngScanlineDecode_0_16(scanlines, out_View) : ::pngScanlineDecode_0_bits(scanlines, bitDepth, out_View);
+			return (bitDepth == 16) ? ::pngScanlineDecode_0_16(out_View, scanlines) : ::pngScanlineDecode_0_bits(out_View, scanlines, bitDepth);
 	} // switch(colorType
 }
 
@@ -254,46 +254,46 @@ static			::gpk::error_t											pngDecodeInterlaced
 	, const ::gpk::view_array<const ::gpk::SCoord2<uint32_t>>	& imageSizes
 	, ::gpk::view_grid<::gpk::SColorBGRA>						& out_View
 	) {
-	::gpk::SImage<::gpk::SColorBGRA>												adam7			[7]						= {};
-	uint32_t																		offsetScanline							= 0;
+	::gpk::SImage<::gpk::SColorBGRA>											adam7			[7]						= {};
+	uint32_t																	offsetScanline							= 0;
 	for(uint32_t iImage = 0; iImage < imageSizes.size(); ++iImage) {
-		const ::gpk::SCoord2<uint32_t>													currentImageSize						= imageSizes[iImage];
+		const ::gpk::SCoord2<uint32_t>												currentImageSize						= imageSizes[iImage];
 		adam7[iImage].resize(currentImageSize);
 		if(0 == adam7[iImage].Texels.size())
 			continue;
-		const ::gpk::view_array<const::gpk::array_pod<uint8_t>>							currentScanlineSet						= {&scanlines[offsetScanline], currentImageSize.y};
+		const ::gpk::view_array<const::gpk::array_pod<uint8_t>>						currentScanlineSet						= {&scanlines[offsetScanline], currentImageSize.y};
 		switch(colorType) {
 		case 0: // grayscale
 			 if(bitDepth == 8)
-				 gpk_necall(::pngScanlineDecode_0_8(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				 gpk_necall(::pngScanlineDecode_0_8(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			else if(bitDepth == 16)
-				gpk_necall(::pngScanlineDecode_0_16(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_0_16(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			else  if(bitDepth == 4 || bitDepth == 2 || bitDepth == 1)
-				gpk_necall(::pngScanlineDecode_0_bits(currentScanlineSet, bitDepth, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_0_bits(adam7[iImage].View, currentScanlineSet, bitDepth), "%s", "Corrupt file?");
 			break;
 		case 2: // RGB
 			if(bitDepth == 8)
-				gpk_necall(::pngScanlineDecode_2_8(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_2_8(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			else if(bitDepth == 16)
-				gpk_necall(::pngScanlineDecode_2_16(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_2_16(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			break;
 		case 3: // Palette
 			if(bitDepth == 8)
-				gpk_necall(::pngScanlineDecode_3_8(currentScanlineSet, palette, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_3_8(adam7[iImage].View, currentScanlineSet, palette), "%s", "Corrupt file?");
 			else if(bitDepth == 4 || bitDepth == 2 || bitDepth == 1)
-				gpk_necall(::pngScanlineDecode_3_bits(currentScanlineSet, palette, bitDepth, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_3_bits(adam7[iImage].View, currentScanlineSet, palette, bitDepth), "%s", "Corrupt file?");
 			break;
 		case 4: // Grayscale + Alpha
 			if(bitDepth == 8)
-				gpk_necall(::pngScanlineDecode_4_8(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_4_8(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			else if(bitDepth == 16)
-				gpk_necall(::pngScanlineDecode_4_16(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_4_16(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			break;
 		case 6: // RGBA
 			if(bitDepth == 8)
-				gpk_necall(::pngScanlineDecode_6_8(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_6_8(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			else if(bitDepth == 16)
-				gpk_necall(::pngScanlineDecode_6_16(currentScanlineSet, adam7[iImage].View), "%s", "Corrupt file?");
+				gpk_necall(::pngScanlineDecode_6_16(adam7[iImage].View, currentScanlineSet), "%s", "Corrupt file?");
 			break;
 		} // switch(colorType)
 		offsetScanline															+= currentImageSize.y;

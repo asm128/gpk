@@ -10,18 +10,18 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SPNGChunk {
-						uint8_t													Type				[4]			= {};
-						uint32_t												CRC								= {};
-						::gpk::array_pod<uint8_t>								Data							= {};
+						uint8_t						Type				[4]	= {};
+						uint32_t					CRC						= {};
+						::gpk::array_pod<uint8_t>	Data					= {};
 	};
 
 	struct SPNGIHDR {
-						::gpk::SCoord2<uint32_t>								Size							= {};
-						int8_t													BitDepth						= 0;
-						int8_t													ColorType						= 0;
-						int8_t													MethodCompression				= 0;
-						int8_t													MethodFilter					= 0;
-						int8_t													MethodInterlace					= 0;
+						::gpk::SCoord2<uint32_t>	Size					= {};
+						int8_t						BitDepth				= 0;
+						int8_t						ColorType				= 0;
+						int8_t						MethodCompression		= 0;
+						int8_t						MethodFilter			= 0;
+						int8_t						MethodInterlace			= 0;
 	};
 
 	enum PNG_TAG
@@ -49,29 +49,29 @@ namespace gpk
 		};
 
 	struct SPNGData {
-						char													Signature			[8]			= {};
-						::gpk::array_obj<SPNGChunk>								Chunks							;
-						::gpk::array_pod<ubyte_t>								Deflated						;
-						::gpk::array_pod<ubyte_t>								Inflated						;
-						::gpk::array_pod<ubyte_t>								Filters							;
-						::gpk::array_obj<::gpk::array_pod<ubyte_t>>				Scanlines						;
-						::gpk::array_pod<::gpk::color_bgr<uint8_t>>				Palette							;
-						::gpk::SCoord2<uint32_t>								Adam7Sizes			[7]			= {};
-						//::gpk::SPNGFeature										Feature							= {};
-						::gpk::SPNGIHDR											Header							= {};
-						::gpk::array_static<int32_t, PNG_TAG_COUNT>				Feature							;
+						char											Signature			[8]			= {};
+						::gpk::array_obj<SPNGChunk>						Chunks							;
+						::gpk::array_pod<ubyte_t>						Deflated						;
+						::gpk::array_pod<ubyte_t>						Inflated						;
+						::gpk::array_pod<ubyte_t>						Filters							;
+						::gpk::array_obj<::gpk::array_pod<ubyte_t>>		Scanlines						;
+						::gpk::array_pod<::gpk::color_bgr<uint8_t>>		Palette							;
+						::gpk::SCoord2<uint32_t>						Adam7Sizes			[7]			= {};
+						//::gpk::SPNGFeature								Feature							= {};
+						::gpk::SPNGIHDR									Header							= {};
+						::gpk::array_static<int32_t, PNG_TAG_COUNT>		Feature							;
 	};
 #pragma pack(pop)
 
-					uint32_t												update_crc						(const ::gpk::view_array<const ubyte_t>& buf, uint32_t crc)		;
-	static inline	uint32_t												get_crc							(const ::gpk::view_array<const ubyte_t>& buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
+					uint32_t										update_crc						(const ::gpk::view_array<const ubyte_t>& buf, uint32_t crc)		;
+	static inline	uint32_t										get_crc							(const ::gpk::view_array<const ubyte_t>& buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
-					::gpk::error_t											pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
-					::gpk::error_t											pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
-					::gpk::error_t											pngFileWrite					(const ::gpk::view_grid<::gpk::SColorBGRA> & out_ImageView, ::gpk::array_pod<ubyte_t>& out_Bytes);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
+					::gpk::error_t									pngFileWrite					(const ::gpk::view_grid<::gpk::SColorBGRA> & out_ImageView, ::gpk::array_pod<ubyte_t>& out_Bytes);
 
-	static inline	::gpk::error_t											pngFileLoad						(const ::gpk::view_const_string	& filename	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
-	static inline	::gpk::error_t											pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_string	& filename	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 
 #endif // GPK_PNG_H_0928374982374

@@ -43,9 +43,9 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	return 0;
 }
 					::gpk::error_t		gpk::updateFramework						(::gpk::SFramework& framework)													{
-	if(0 == framework.Input)
+	if(0 == framework.Input.get_ref())
 		framework.Input.create();
-	if(0 == framework.GUI)
+	if(0 == framework.GUI.get_ref())
 		framework.GUI.create();
 	::gpk::SInput								& input										= *framework.Input;
 	input.KeyboardPrevious					= input.KeyboardCurrent;
@@ -313,7 +313,7 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 }
 
 					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)	{
-	if(0 == displayInput)
+	if(0 == displayInput.get_ref())
 		displayInput.create();
 #if defined(GPK_WINDOWS)
 	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;

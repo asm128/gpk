@@ -3,6 +3,25 @@
 #include "gpk_safe.h"
 #include <ctype.h>
 
+bool										gpk::isSpaceCharacter						(const char characterToTest)		{
+	switch(characterToTest) {
+	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
+		return true;
+	default:
+		return false;
+	}
+}
+
+::gpk::error_t								gpk::skipToNextCharacter					(uint32_t& indexCurrentChar, const ::gpk::view_const_char& expression)		{
+	while(indexCurrentChar < expression.size()) {
+		if(::gpk::isSpaceCharacter(expression[indexCurrentChar]))
+			++indexCurrentChar;
+		else
+			break;
+	}
+	return 0;
+}
+
 ::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
 	::gpk::array_pod<char_t>						stringToParse								= {};

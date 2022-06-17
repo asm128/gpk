@@ -71,12 +71,12 @@ namespace gpk
 
 		template<typename _TDialogControl>
 		::gpk::error_t																		Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
-			if(0 == GUI)
+			if(0 == GUI.get_ref())
 				GUI.create();
 			::gpk::SGUI																				& gui												= *GUI;
 			int32_t																					index												= -1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
-				if(0 == Controls[iControl]) {
+				if(0 == Controls[iControl].get_ref()) {
 					index																		= iControl;
 					break;
 				}
@@ -99,11 +99,11 @@ namespace gpk
 		}
 
 		::gpk::error_t														Update												()													{
-			if(0 == GUI)
+			if(0 == GUI.get_ref())
 				GUI.create();
 			::gpk::SGUI																& gui												= *GUI;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
-				if(0 == Controls[iControl] || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
+				if(0 == Controls[iControl].get_ref() || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
 					Controls.remove_unordered(iControl);
 					--iControl;
 					continue;

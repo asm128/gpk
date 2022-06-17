@@ -36,6 +36,10 @@ namespace gpk
 	::gpk::error_t												stripLiteralParse				(::gpk::SStripLiteralState	& stateReading	, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format);
 	::gpk::error_t												stripLiteralParseStep			(::gpk::SStripLiteralState	& work_state	, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format);
 	::gpk::error_t												stripLiteralGetViews			(::gpk::array_obj<::gpk::view_const_char>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::view_const_char & in_format);
+
+	bool														isSpaceCharacter				(const char characterToTest);
+	::gpk::error_t												skipToNextCharacter				(uint32_t& indexCurrentChar, const ::gpk::view_const_char& expression);
+
 } // namespace
 
 #endif // GPK_PARSE_H_298374298347

@@ -124,13 +124,13 @@ namespace gpk
 				);
 		}
 		inline constexpr	bool						operator==		(const DATA_TYPE& other)	const				{
-			return	SizeInBits		==			(GTYPEID_ELEMENTSIZE	(other))
-				&&	ElementPad		==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
-				&&	ElementCount	== (uint32_t)GTYPEID_ELEMENTCOUNT	(other)
-				&&	IsBigEndian		==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
-				&&	IsFloat			==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
-				&&	IsNorm			==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)
-				&&	IsSigned		==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
+			return	SizeInBits		+ 1	==			(GTYPEID_ELEMENTSIZE	(other))
+				&&	ElementPad			==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
+				&&	ElementCount	+ 1	== (uint32_t)GTYPEID_ELEMENTCOUNT	(other)
+				&&	IsBigEndian			==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
+				&&	IsFloat				==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
+				&&	IsNorm				==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)
+				&&	IsSigned			==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
 		inline constexpr	bool						operator==		(const SDataTypeID& other)	const				{

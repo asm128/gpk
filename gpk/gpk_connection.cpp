@@ -54,7 +54,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 			::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					currentPayloadMsg					= payloadsToSend[iPayload];
 			const ::gpk::view_byte											currentPayloadView					= currentPayloadMsg->Payload;
-			if(0 == currentPayloadMsg)
+			if(0 == currentPayloadMsg.get_ref())
 				continue;
 			if((currentPayloadMsg->Command.Packed & 1) || currentPayloadMsg->Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE || currentPayloadMsg->Command.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 				continue;
@@ -105,7 +105,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 	for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= payloadsToSend[iPayload];
-		if(0 == pMessageToSend)
+		if(0 == pMessageToSend.get_ref())
 			continue;
 		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
 		::gpk::SUDPPayloadHeader										payloadHeader						= {};
@@ -179,7 +179,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
 	for(int32_t iSent = 0; iSent < (int32_t)client.Queue.Sent.size(); ++iSent) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage> messageSent = client.Queue.Sent[iSent];
-		if(0 == messageSent)
+		if(0 == messageSent.get_ref())
 			continue;
 		uint64_t timeCurr = gpk::timeCurrentInUs();
 		const uint64_t timeSent = messageSent->Time;
@@ -209,7 +209,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 	messageCacheSent.clear();
 	for(uint32_t iSend = 0; iSend < queueToSend.size(); ++iSend) {
 		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					 pMessageToSend						= queueToSend[iSend];
-		if(0 == pMessageToSend)
+		if(0 == pMessageToSend.get_ref())
 			continue;
 		::gpk::SUDPConnectionMessage									& messageToSend						= *pMessageToSend;
 //		int64_t															currentTime							= ::gpk::timeCurrentInUs();
