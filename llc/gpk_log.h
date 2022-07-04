@@ -1,6 +1,7 @@
 #include "gpk_debug.h"
 #include "gpk_error.h"
 #include "gpk_eval.h"
+//#include "gpk_chrono.h" please implement timestamp for log messages
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -48,6 +49,7 @@ namespace gpk
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
+		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
 		base_debug_print(prefix, prefixLength);
 		char													customDynamicString	[8192]						= {};
 
