@@ -1,9 +1,11 @@
-// These sources are best viewed in Visual Studio 2017 with a screen of at least 1920x1080 screen and the zoom set to 81 %.
-// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2016-2017 - Distributed under the MIT License.
+// These sources are best viewed in Visual Studio 2017 or newer with a screen of at least 1920x1080 screen, Consolas font and zoom set to 81 %.
+// Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2016-2022 - Distributed under the MIT License.
 #include "gpk_array.h"
 
 #ifndef GPK_ENUM_H_982364987234987234
 #define GPK_ENUM_H_982364987234987234
+
+#define gpk_enum_warning_printf // warning_printf
 
 namespace gpk
 {
@@ -71,12 +73,12 @@ namespace gpk
 				value															= Values[index];
 				return 0;
 			}
-			error_printf("Enumeration index out of range! Index: 0x%u.", index);
+			gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
 			value															= INVALID_VALUE;
 			return -1;
 		}
 							_tValue										get_value_by_index						(uint32_t index)										const			{
-			retval_gerror_if(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
+			retval_gwarn_if(INVALID_VALUE, index >= Values.size(), "Enumeration index out of range! Index: 0x%u.", index)
 			return Values[index];
 		}
 							::gpk::error_t								get_label_by_index						(uint32_t index, ::gpk::view_const_char& value)			const			{
@@ -85,7 +87,7 @@ namespace gpk
 				return 0;
 			}
 			value													= ::gpk::UNDEFINED_ENUM_VALUE_STR;
-			error_printf("Enumeration index out of range! Index: 0x%u.", index);
+			gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
 			return -1;
 		}
 							::gpk::view_const_char						get_label_by_index						(uint32_t index)										const			{
@@ -93,7 +95,7 @@ namespace gpk
 				return Names[index];
 			}
 			else {
-				error_printf("Enumeration index out of range! Index: 0x%u.", index);
+				gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
 				return ::gpk::UNDEFINED_ENUM_VALUE_STR;
 			}
 		}
@@ -120,7 +122,7 @@ namespace gpk
 					index													= (int32_t)i;
 					return 0;
 				}
-			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return index											= -1;
 		}
 							int32_t								get_value_index							(const _tValue& value)									const			{
@@ -128,7 +130,7 @@ namespace gpk
 				if(value == Values[i])
 					return (int32_t)i;
 
-			error_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
+			gpk_enum_warning_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
 			return -1;
 		}
 							::gpk::error_t						get_value_label							(const _tValue& value, ::gpk::view_const_char& name)	const			{
@@ -137,7 +139,7 @@ namespace gpk
 					name													= Names[i];
 					return 0;
 				}
-			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			name													= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
@@ -146,7 +148,7 @@ namespace gpk
 				if(value == Values[i])
 					return Names[i];
 
-			error_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 							::gpk::error_t						add_value								(const _tValue& value, const ::gpk::view_const_char& name)				{

@@ -1,7 +1,7 @@
 #include "gpk_debug.h"
 #include "gpk_error.h"
 #include "gpk_eval.h"
-//#include "gpk_chrono.h" please implement timestamp for log messages
+#include "gpk_chrono.h" 
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -49,15 +49,17 @@ namespace gpk
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
+
+		char													timeString			[64]						= {};
+		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
+#if defined(GPK_STDOUT_LOG_ENABLED)
+		printf("%s", timeString);
+#endif
+		base_debug_print(timeString, (int)stringLength);
 		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
 		base_debug_print(prefix, prefixLength);
 		char													customDynamicString	[8192]						= {};
-
-#if !defined(GPK_WINDOWS)
-		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
-#else
-		const size_t											stringLength									= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
-#endif
+		stringLength										= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);

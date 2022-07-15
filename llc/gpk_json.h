@@ -1,7 +1,6 @@
-#include "gpk_array.h"
+#include "gpk_enum.h"
 #include "gpk_coord.h"
 #include "gpk_ptr.h"
-#include "gpk_enum.h"
 
 #ifndef GPK_JSON_H_92749028348923
 #define GPK_JSON_H_92749028348923

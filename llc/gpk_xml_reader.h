@@ -46,6 +46,14 @@ namespace gpk
 
 	::gpk::error_t				xmlParse			(SXMLReader& reader, ::gpk::vcc xmlDoc);
 	::gpk::error_t				xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
+
+	struct SXMLFile {
+		::gpk::array_pod<char_t>	Bytes				= {};
+		::gpk::SXMLReader			Reader				= {};
+	};
+
+	::gpk::error_t				xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::view_const_char & filename);
+
 }
 
 #endif // GPK_XML_READER_H_20220702

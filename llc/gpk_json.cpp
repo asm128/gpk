@@ -1,10 +1,12 @@
 #define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+
 #include "gpk_json.h"
 #include "gpk_storage.h"
 #include "gpk_parse.h"
 
 #define json_info_printf(...) // info_printf
 #define json_error_printf error_printf
+#define json_bi_if(condition, format, ...) if(condition) break; //
 
 ::gpk::error_t												gpk::jsonMapToFields
 (	::gpk::array_pod<int32_t>									& indicesOfFields
@@ -517,7 +519,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	SJSONReaderState												& stateReader										= reader.StateRead;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < jsonAsString.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::jsonParseStep(reader, jsonAsString), "%s", "Parse step failed.");
-		bi_if(reader.StateRead.DoneReading, "%i json characters read.", stateReader.IndexCurrentChar + 1);
+		json_bi_if(reader.StateRead.DoneReading, "%i json characters read.", stateReader.IndexCurrentChar + 1);
 	}
 	ree_if(stateReader.NestLevel, "Nest level: %i (Needs to be zero).", stateReader.NestLevel);
 	reader.View.resize(reader.Token.size());
