@@ -537,8 +537,9 @@ static			::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPN
 		if(currentImageSize.y) {
 			gpk_necall(::pngScanlineDefilter({&pngData.Filters[offsetScanline], currentImageSize.y}, currentImageSize, bytesPerPixel, {&scanlines[offsetScanline], currentImageSize.y}), "%s", "Corrupt file?");
 			if(imageHeader.BitDepth < 8 && (imageHeader.ColorType == 3 || imageHeader.ColorType == 0)) // Decode pixel ordering for bit depths of 1, 2 and 4 bits
-				if(widthScanlineCurrent)
+				if(widthScanlineCurrent) {
 					::scanlineBitDecodeOrder(imageHeader.BitDepth, {&scanlines[offsetScanline], currentImageSize.y});
+				}
 			if(widthScanlineCurrent)
 				offsetByte																+= (widthScanlineCurrent + 1) * currentImageSize.y;
 			offsetScanline															+= currentImageSize.y;
@@ -553,8 +554,8 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view_array<u
 	if (ret != Z_OK)
 		return ret;
 
-	strm.avail_in															= (uint32_t)deflated.size();
-	strm.avail_out															= (uint32_t)inflated.size();
+	strm.avail_in															= deflated.size();
+	strm.avail_out															= inflated.size();
 	strm.next_in															= (Bytef *)deflated.begin();
 	strm.next_out															= (Bytef *)inflated.begin();
 	ret																		= ::inflate(&strm, Z_NO_FLUSH);
