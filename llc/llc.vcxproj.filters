@@ -73,6 +73,9 @@
     <Filter Include="scene">
       <UniqueIdentifier>{fcec14f7-f260-444f-a061-ed6786ff2ec2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{975efb15-1710-468b-9a48-cd974da95602}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -363,6 +366,9 @@
     <ClInclude Include="gpk_component_scene.h">
       <Filter>scene</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_xml_reader.h">
+      <Filter>xml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -520,6 +526,9 @@
     </ClCompile>
     <ClCompile Include="gpk_component_scene.cpp">
       <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_xml_reader.cpp">
+      <Filter>xml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

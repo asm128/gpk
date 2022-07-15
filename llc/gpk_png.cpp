@@ -1,5 +1,5 @@
 #include "gpk_view_stream.h"
-#include "zlib.h"
+#include "deflate.h"
 #include "gpk_png.h"
 #include "gpk_adam7.h"
 #include "gpk_io.h"

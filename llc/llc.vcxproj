@@ -115,6 +115,7 @@
     <ClInclude Include="gpk_view_manager.h" />
     <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_windows.h" />
+    <ClInclude Include="gpk_xml_reader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_view_array.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
+    <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>
