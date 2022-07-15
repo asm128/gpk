@@ -145,16 +145,10 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
 		nodeCurrent->Children.clear();
+		if(nodeCurrent->Parent)
+			nodeCurrent->Parent->Children.push_back(nodeCurrent);
 	}
 
-	// -- Assign the children to every object of the hierarchy
-	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
-		for(uint32_t iOther = iObject + 1; iOther < countNodes; ++iOther) {
-			const ::gpk::ptr_obj<::gpk::SJSONNode>						& nodeOther											= tree[iOther];
-			if(((uint32_t)in_object[iOther].ParentIndex) == iObject)
-				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
-		}
-	}
 
 	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {

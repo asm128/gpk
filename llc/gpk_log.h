@@ -51,7 +51,11 @@ namespace gpk
 #endif
 
 		char													timeString			[64]						= {};
+#if defined(GPK_WINDOWS)
 		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
+#else
+		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%lu:", ::gpk::timeCurrentInMs());
+#endif
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", timeString);
 #endif
