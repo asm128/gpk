@@ -113,13 +113,14 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_VALUE, reader.StateRead.IndexCurrentChar + 1), "%s", "");
 		break;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
-		ree_if(reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_NODE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_OPEN
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_CLOSE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_OPENCLOSE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_NAME
-			, "Invalid character: %c", currentChar
-		);
+		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
+			{ ::gpk::XML_TOKEN_TAG_NODE
+			, ::gpk::XML_TOKEN_TAG_OPEN
+			, ::gpk::XML_TOKEN_TAG_CLOSE
+			, ::gpk::XML_TOKEN_TAG_OPENCLOSE
+			, ::gpk::XML_TOKEN_TAG_NAME
+			};
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		{
 			bool				closeNode				= reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_CLOSE || reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPENCLOSE;
 			gpk_necall(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 1), "Invalid nest level: %i", reader.StateRead.NestLevel); // close TAG_OPEN, TAG_CLOSE or TAG_OPENCLOSE elements
@@ -191,13 +192,14 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 		}
 		return -1;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
-		ree_if(reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_NODE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_OPEN
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_CLOSE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_OPENCLOSE
-			&& reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_TAG_NAME
-			, "Invalid character: %c", currentChar
-		);
+		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
+			{ ::gpk::XML_TOKEN_TAG_NODE
+			, ::gpk::XML_TOKEN_TAG_OPEN
+			, ::gpk::XML_TOKEN_TAG_CLOSE
+			, ::gpk::XML_TOKEN_TAG_OPENCLOSE
+			, ::gpk::XML_TOKEN_TAG_NAME
+			};
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		{
 			gpk_necall(xmlCloseElement(reader), "Invalid nest level: %i", reader.StateRead.NestLevel); // close TAG_NAME
 			bool					isClose					= reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_CLOSE || reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPENCLOSE;
@@ -221,7 +223,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	switch(currentChar) {
 	default: {
-		::gpk::array_pod<::gpk::XML_TOKEN>	validScopes		=
+		::gpk::array_static<const ::gpk::XML_TOKEN, 9>	validScopes		=
 			{ ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_PI
@@ -232,7 +234,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 			, ::gpk::XML_TOKEN_ATTR_VALUE
 			, ::gpk::XML_TOKEN_TAG_TEXT
 			};
-		gpk_necall(validScopes.find(reader.StateRead.CurrentElement->Type), "Invalid type: %s", ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		if( reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_DOCUMENT) {
 			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT), "Invalid nest level: %i", reader.StateRead.NestLevel);
 		}
@@ -246,7 +248,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '\r': case '\n': case '\t': case '\b': case ' ': {
-		constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
+		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
 			{ ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_PI
@@ -259,7 +261,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 			, ::gpk::XML_TOKEN_ATTR
 			, ::gpk::XML_TOKEN_ATTR_VALUE
 			};
-		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid type: %s", ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		if( reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_DOCUMENT) {
 			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT), "Invalid nest level: %i", reader.StateRead.NestLevel);
 		}
@@ -268,13 +270,13 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '<': {
-		constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
+		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
 			{ ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_TAG_TEXT
 			, ::gpk::XML_TOKEN_TAG_NODE
 			};
-		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid type: %s", ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_TEXT)
 			gpk_necall(xmlCloseElement(reader), "%s", "");
 		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NODE), "%s", "");
@@ -288,7 +290,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 			, ::gpk::XML_TOKEN_TAG_CLOSE
 			, ::gpk::XML_TOKEN_TAG_OPENCLOSE
 			};
-		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid type: %s", ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
+		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 
 		{
 			bool isClose =	reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_CLOSE || reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPENCLOSE;
