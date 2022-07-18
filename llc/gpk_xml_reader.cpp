@@ -113,6 +113,7 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_VALUE, reader.StateRead.IndexCurrentChar + 1), "%s", "");
 		break;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
+	{
 		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
 			{ ::gpk::XML_TOKEN_TAG_NODE
 			, ::gpk::XML_TOKEN_TAG_OPEN
@@ -128,6 +129,7 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 				gpk_necall(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 1), "Invalid nest level: %i", reader.StateRead.NestLevel);
 			}
 		}
+	}
 		break;
 	case '?': // close tag if TOKEN_PI
 		if(reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_PI)
