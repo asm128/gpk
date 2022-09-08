@@ -10,8 +10,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 			::gpk::error_t											setup						(::gme::SApplication & app)						{
 	::gpk::STimer															timer;
 	::gpk::SFramework														& framework					= app.Framework;
-	::gpk::SDisplay															& mainWindow				= framework.MainDisplay;
-	framework.Input.create();
+	::gpk::SWindow															& mainWindow				= framework.MainDisplay;
 	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?!");
 	::gpk::SGUI																& gui						= *framework.GUI;
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;

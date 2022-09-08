@@ -1,4 +1,6 @@
-#ifdef GPK_ATMEL
+#include "gpk_platform.h"
+
+#if defined(GPK_ATMEL) || defined(GPK_WINDOWS)
 #	include <stdint.h>
 #else
 #	include <cstdint>

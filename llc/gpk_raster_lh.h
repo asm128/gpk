@@ -26,9 +26,9 @@ namespace gpk
 		, ::gpk::array_pod<::gpk::SCoord3<float>>		& pixelCoords
 		, ::gpk::view_grid<uint32_t>					depthBuffer
 		);
-	int								drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::STriangle2	<int16_t>	triangle	, ::gpk::SColorBGRA color);
-	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, ::gpk::STriangle3	<float>		triangle	, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions, ::gpk::view_grid<uint32_t> depthBuffer);
-	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, ::gpk::STriangle2	<float>		triangle	, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions);
+	int								drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels	, const ::gpk::STriangle2<int16_t>	& triangle	, ::gpk::SColorBGRA color);
+	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle3<float>	& triangle, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions, ::gpk::view_grid<uint32_t> depthBuffer);
+	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle2<float>	& triangle	, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions);
 	int								drawQuadTriangle
 		( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
 		, const ::gpk::SGeometryQuads						& geometry

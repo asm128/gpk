@@ -188,6 +188,7 @@ namespace gpk
 		inline constexpr			operator						const	_tValue&						()															const	{ return Value; }
 	};
 
+	template <typename _tEnum>	uint32_t						get_value_count							()																		{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
 	template <typename _tEnum>	const ::gpk::view_const_char &	get_value_label							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
 	template <typename _tEnum>	int32_t							get_value_index							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
 	template <typename _tEnum>	_tEnum							get_value								(const ::gpk::view_const_char & valueLabel	)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
@@ -199,8 +200,8 @@ namespace gpk
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																																											\
 	enum EnumName : IntType {};																																															\
 	static						const ::gpk::view_const_string	EnumName##_STR							= #EnumName;																										\
-	static constexpr			const EnumName					EnumName##_INVALID						= ::gpk::enum_definition<EnumName>::INVALID_VALUE;																	\
-	static						const EnumName					__sei_##EnumName##_INVALID				= (EnumName)::gpk::enum_definition<EnumName>::init(EnumName##_STR);													\
+	/*static constexpr			const EnumName					EnumName##_INVALID						= ::gpk::enum_definition<EnumName>::INVALID_VALUE;																	*/\
+	/*static						const EnumName					__sei_##EnumName##_INVALID				= (EnumName)::gpk::enum_definition<EnumName>::init(EnumName##_STR);													*/\
 	static inline constexpr		EnumName						operator &								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
 	static inline constexpr		EnumName						operator ~								(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
 	static inline constexpr		EnumName						operator ^								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\

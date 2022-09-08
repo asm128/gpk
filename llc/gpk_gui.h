@@ -1,3 +1,4 @@
+#include "gpk_sysevent.h"
 #include "gpk_array.h"
 #include "gpk_color.h"
 #include "gpk_input.h"
@@ -202,6 +203,7 @@ namespace gpk
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};
+		uint32_t														SelectedFont						= 7;
 		uint32_t														ThemeDefault						= 0;
 		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool															InputModeTouch						= true;
@@ -209,7 +211,29 @@ namespace gpk
 																		SGUI								();
 	};
 
-	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, ::gpk::SInput& input);
+	#pragma pack(push, 1)
+		struct SControlParams {
+			::gpk::GUI_COLOR_MODE						ColorMode		;
+			int32_t										Id				;
+			int32_t										IdParent		;
+			bool										Design			;
+			bool										NoBackground	;
+			bool										NoHoverEffect	;
+			bool										FrameOut		;
+			::gpk::ALIGN								Align			;
+			::gpk::SRectangle2<int16_t>					Area			;
+			::gpk::SRectLimits<uint8_t>					Border			;
+			::gpk::SRectLimits<uint16_t>				Margin			;
+			::gpk::view_const_string					Text			;
+			::gpk::ALIGN								TextAlign		;
+			::gpk::ALIGN								IconAlign		;
+			::gpk::view_const_string					IconPathOff		;
+			::gpk::view_const_string					IconPathOn		;
+			::gpk::SCoord2<bool>						AdjustToText	;
+		};
+	#pragma pack(pop)
+
+	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents = {});
 	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
 	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);

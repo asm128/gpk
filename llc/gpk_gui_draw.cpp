@@ -29,14 +29,15 @@ static const SB64RasterFont		fontsDefault [] =
 
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI& gui)																						{
 	for(uint32_t iFont = 0; iFont < ::gpk::size(fontsDefault); ++iFont) {
-		::gpk::SGUIFont														& loadedFont		= gui.Fonts[gui.Fonts.push_back(::gpk::SGUIFont{fontsDefault[iFont].Metrics,})];
-		loadedFont.Texture.resize(loadedFont.CharSize.x, loadedFont.CharSize.y * 256);
 		::gpk::array_pod<byte_t>											decoded;
 		gpk_necall(::gpk::base64Decode(fontsDefault[iFont].Base64String, decoded), "%s", "Maybe the decode function got broken?");
+
+		::gpk::SGUIFont														& loadedFont		= gui.Fonts[gui.Fonts.push_back(::gpk::SGUIFont{fontsDefault[iFont].Metrics,})];
+		loadedFont.Texture.resize(loadedFont.CharSize.x, loadedFont.CharSize.y * 256);
 		memcpy(loadedFont.Texture.Texels.begin(), decoded.begin(), decoded.size());
 	}
-	gui.FontCharSize												= gui.Fonts[7].CharSize.Cast<uint16_t>();
-	gui.FontTexture													= gui.Fonts[7].Texture;
+	gui.FontCharSize												= gui.Fonts[gui.SelectedFont].CharSize.Cast<uint16_t>();
+	gui.FontTexture													= gui.Fonts[gui.SelectedFont].Texture;
 	::gpk::guiUpdateMetrics(gui, gui.LastSize, true);
 	return 0;
 }

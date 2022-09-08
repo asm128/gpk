@@ -499,7 +499,7 @@ static		::gpk::error_t										updateGUIControlHovered									(::gpk::SControl
 	return one_if(controlFlags.Hover);
 }
 
-static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, ::gpk::SInput& input, int32_t iControl)														{
+static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, const ::gpk::SInput& input, int32_t iControl)														{
 	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
@@ -534,13 +534,13 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, ::gpk::SInput& input)																		{
+			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents)	{
 	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
-	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	::gpk::error_t														controlHovered											= -1;
 	::gpk::array_pod<uint32_t>											rootControlsToProcess									= {};
 	rootControlsToProcess.resize(1000);
 	rootControlsToProcess.clear();
+	(void)sysEvents;
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || controlState.Disabled)
@@ -557,6 +557,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 		rootControlsToProcess.push_back(iControl);
 	}
 
+	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	for(uint32_t iControl = 0, countControls = rootControlsToProcess.size(); iControl < countControls; ++iControl) {
 		if(::gpk::controlHidden(gui, rootControlsToProcess[iControl]))
 			continue;

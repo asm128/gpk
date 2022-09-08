@@ -67,7 +67,7 @@ int													gpk::createOrbiter
 	, double				orbital_inclination
 	, double				distance_scale
 	) {
-	const int32_t											indexFirstBody						= bodies.Spawn(2);
+	const int32_t											indexFirstBody						= bodies.Create(2);
 	{
 		::gpk::STransform3										& orbitTransform					= bodies.Transforms	[indexFirstBody]		= {};
 		::gpk::SForce3											& orbitForces						= bodies.Forces		[indexFirstBody]		= {};

@@ -47,7 +47,8 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
-    <ClInclude Include="gpk_display.h" />
+    <ClInclude Include="gpk_sysevent.h" />
+    <ClInclude Include="gpk_window.h" />
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_gui_control.h" />
     <ClInclude Include="gpk_gui_desktop.h" />
@@ -133,7 +134,7 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
-    <ClCompile Include="gpk_display.cpp" />
+    <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />
     <ClCompile Include="gpk_gui_desktop.cpp" />
@@ -263,7 +264,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\zlib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -289,7 +290,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\zlib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -317,7 +318,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\zlib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -347,7 +348,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\zlib\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>

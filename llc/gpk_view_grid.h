@@ -33,15 +33,16 @@ namespace gpk
 
 		// Methods
 #if !defined(GPK_ATMEL)
-		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;						}
-		inline constexpr	const _tElement*						end							()																	const	noexcept	{ return Data + size();				}
+		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;							}
+		inline constexpr	const _tElement*						end							()																	const	noexcept	{ return Data + size();					}
 #endif
-		inline constexpr	_tElement*								begin						()																			noexcept	{ return Data;						}
-		inline constexpr	_tElement*								end							()																			noexcept	{ return Data + size();				}
+		inline constexpr	_tElement*								begin						()																			noexcept	{ return Data;							}
+		inline constexpr	_tElement*								end							()																			noexcept	{ return Data + size();					}
 
-		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics						()																	const	noexcept	{ return Size;						}
-		inline constexpr	uint32_t								size						()																	const	noexcept	{ return area();					}
-		inline constexpr	uint32_t								area						()																	const	noexcept	{ return Size.x * Size.y;			}
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics						()																	const	noexcept	{ return Size;							}
+		inline constexpr	uint32_t								size						()																	const	noexcept	{ return area();						}
+		inline constexpr	uint32_t 								byte_count					()																	const	noexcept	{ return area() * sizeof(_tElement);	}
+		inline constexpr	uint32_t								area						()																	const	noexcept	{ return Size.x * Size.y;				}
 
 		inline				::gpk::error_t							fill						(const _tElement& value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);

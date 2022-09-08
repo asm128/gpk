@@ -17,7 +17,7 @@ static constexpr ::gpk::array_static<const char_t, 5> RESERVED_XML_CHARACTERS = 
 
 static ::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
 	const int32_t			parentIndex					= reader.StateRead.IndexCurrentElement;
-	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : ::gpk::XML_TOKEN_INVALID;
+	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	const uint32_t			offsetChar					= (iStartCharacter == -1) ? reader.StateRead.IndexCurrentChar : iStartCharacter;
 	gpk_necall(reader.StateRead.IndexCurrentElement	= reader.Token.push_back({token, {offsetChar, 0}, parentIndex}), "%s", "Out of memory?");
 	xml_info_printf("Opening element type: %i (%s) at index %i."
@@ -38,7 +38,7 @@ static ::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_
 static ::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
 	const ::gpk::XML_TOKEN	token						= reader.StateRead.CurrentElement->Type;
 	const int32_t			parentIndex					= reader.StateRead.CurrentElement->IndexParent;
-	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : ::gpk::XML_TOKEN_INVALID;
+	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	xml_info_printf("Closing element type %i (%s) at index %i."
 		"\nNest level: %i"
 		"\nParent index: %i"

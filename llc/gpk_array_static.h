@@ -41,6 +41,9 @@ namespace gpk
 	};
 #pragma pack(pop)
 
+	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::array_static<tElement, nSize> viewToTest)	noexcept	{ return (uint32_t)(nSize);					}
+	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	byte_count	(::gpk::array_static<tElement, nSize> viewToTest)	noexcept	{ return (uint32_t)(sizeof(tElement) * nSize);	}
+
 	template<typename _tElement, size_t _nSize>
 						::gpk::error_t			find						(const _tElement& element, const ::gpk::array_static<const _tElement, _nSize>& target, uint32_t offset = 0)	{
 		return ::gpk::find(element, ::gpk::view_array<const _tElement>{target}, offset);

@@ -2,6 +2,7 @@
 #include "gpk_color.h"
 #include "gpk_image.h"
 #include "gpk_array_static.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_PNG_H_0928374982374
 #define GPK_PNG_H_0928374982374
@@ -14,6 +15,16 @@ namespace gpk
 						uint32_t					CRC						= {};
 						::gpk::array_pod<uint8_t>	Data					= {};
 	};
+
+	GDEFINE_ENUM_TYPE(COLOR_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE		, 0); // Grayscale
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, RGB				, 2); // Red Green Blue 
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, PALETTE			, 3); // Palette
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE_ALPHA	, 4); // Grayscale Alpha 
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, RGBA				, 6); // Red Green Blue Alpha
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, BGR				, 7); // Blue Green Red
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, BGRA				, 8); // Blue Green Red Alpha
+	GDEFINE_ENUM_VALUE(COLOR_TYPE, FILE				, 255); // Defined by file on load
 
 	struct SPNGIHDR {
 						::gpk::SCoord2<uint32_t>	Size					= {};
@@ -63,15 +74,21 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-					uint32_t										update_crc						(const ::gpk::view_array<const ubyte_t>& buf, uint32_t crc)		;
-	static inline	uint32_t										get_crc							(const ::gpk::view_array<const ubyte_t>& buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
+					uint32_t										update_crc						(const ::gpk::view_array<const ubyte_t> & buf, uint32_t crc)		;
+	static inline	uint32_t										get_crc							(const ::gpk::view_array<const ubyte_t> & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData& pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	;
-					::gpk::error_t									pngFileWrite					(const ::gpk::view_grid<::gpk::SColorBGRA> & out_ImageView, ::gpk::array_pod<ubyte_t>& out_Bytes);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_string	& filename	);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source	);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
+																													 
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<::gpk::SColorBGRA> & out_Texture);
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint16_t> & out_Texture);
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint8_t> & out_Texture);
+					::gpk::error_t									pngFileWrite					(const ::gpk::view_grid<::gpk::SColorBGRA> & out_ImageView, ::gpk::array_pod<ubyte_t> & out_Bytes);
 
-	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_string	& filename	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
-	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA>& out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_string	& filename	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 
 #endif // GPK_PNG_H_0928374982374

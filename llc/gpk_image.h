@@ -128,6 +128,8 @@ namespace gpk
 			gpk_necall(DepthStencil	.resize(newSizeX, newSizeY), "cannot resize? Size requested: %u x %u.", newSizeX, newSizeY);
 			return 0;
 		}
+		inline				::gpk::error_t							resize										(const ::gpk::SCoord2<uint8_t > & newSize)														noexcept	{ return resize(newSize.x, newSize.y); }
+		inline				::gpk::error_t							resize										(const ::gpk::SCoord2<uint16_t> & newSize)														noexcept	{ return resize(newSize.x, newSize.y); }
 		inline				::gpk::error_t							resize										(const ::gpk::SCoord2<uint32_t> & newSize)														noexcept	{ return resize(newSize.x, newSize.y); }
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel& color, const _tDepthStencil& depth)		noexcept	{
 			gpk_necall(Color		.resize(newSizeX, newSizeY, color), "cannot resize? Size requested: %u x %u.", newSizeX, newSizeY);

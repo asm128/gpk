@@ -10,11 +10,6 @@
 #	include <xcb/xcb_image.h>
 #endif
 
-struct SDisplayInput {
-						::gpk::SDisplay														& Display;
-						::gpk::ptr_obj<::gpk::SInput>										Input;
-};
-
 static				::gpk::error_t														updateDPI									(::gpk::SFramework& framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
@@ -55,7 +50,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
-	::gpk::SDisplay								& mainWindow								= framework.MainDisplay;
+	::gpk::SWindow								& mainWindow								= framework.MainDisplay;
 #if defined(GPK_XCB)
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
 												& guiRenderTarget			= framework.MainDisplayOffscreen;
@@ -105,9 +100,9 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		}
 		}
 	}
-	::gpk::error_t																				updateResult								= 0;
+	::gpk::error_t				updateResult		= 0;
 #else
-	::gpk::error_t																				updateResult								= ::gpk::displayUpdate(mainWindow);
+	::gpk::error_t				updateResult		= ::gpk::windowUpdate(mainWindow);
 #endif
 	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
@@ -116,13 +111,13 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())
-			gerror_if(errored(::gpk::displayPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
+			gerror_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 #endif
 	::gpk::SGUI																					& gui										= *framework.GUI;
 	{
 		::gpk::mutex_guard																			lock										(framework.LockGUI);
-		::gpk::guiProcessInput(gui, *framework.Input);
+		::gpk::guiProcessInput(gui, *framework.Input, mainWindow.EventQueue);
 	}
 
 	if(framework.Settings.GUIZoom) {
@@ -150,64 +145,77 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_WINDOWS)
 #	include <Windowsx.h>
 
-static				::RECT																minClientRect								= {100, 100, 100 + 320, 100 + 200};
+static				::RECT									minClientRect								= {100, 100, 100 + 320, 100 + 200};
 
-//extern				::SApplication														* g_ApplicationInstance						;
-static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
-	//::SApplication																				& applicationInstance						= *g_ApplicationInstance;
-	static	const int																			adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
+//extern				::SApplication							* g_ApplicationInstance						;
+static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
+	//::SApplication													& applicationInstance						= *g_ApplicationInstance;
+	static	const int												adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
+	if(0 == ::GetWindowLongPtrA(hWnd, GWLP_USERDATA))
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	::gpk::SWindow													& mainDisplay								= *(::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
+	
+	if(!mainDisplay.Input)
+		mainDisplay.Input.create();
+	::gpk::SInput													& input										= *mainDisplay.Input;
+	::gpk::SWindowPlatformDetail									& displayDetail								= mainDisplay.PlatformDetail;
 
-	::SDisplayInput																				* actualMainDisplay							= (::SDisplayInput*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
-	::gpk::SDisplay																				dummyDisplay								= {};	// we need this to create the reference in case the display pointer isn't there.
-	::gpk::SInput																				dummyInput									= {};
-	::gpk::SDisplay																				& mainDisplay								= (actualMainDisplay) ? actualMainDisplay->Display : dummyDisplay;
-	::gpk::SInput																				& input										= (actualMainDisplay && actualMainDisplay->Input) ? *actualMainDisplay->Input : dummyInput;
-	::gpk::SDisplayPlatformDetail																& displayDetail								= mainDisplay.PlatformDetail;
-
-	int32_t																						zDelta										= {};
+	::gpk::SSysEvent												newEvent;
 	switch(uMsg) {
 	default: break;
-	case WM_SHOWWINDOW		: mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
-	case WM_CLOSE			: ::DestroyWindow(hWnd); return 0;
-	case WM_KEYDOWN			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
-	case WM_KEYUP			: if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;
-	case WM_LBUTTONDOWN		: info_printf("%s", "L Down"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_LBUTTONDBLCLK	: info_printf("%s", "L DClck"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_LBUTTONUP		: info_printf("%s", "L Up"		); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; mainDisplay.Repaint = true; return 0;
-	case WM_RBUTTONDOWN		: info_printf("%s", "R Down"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_RBUTTONDBLCLK	: info_printf("%s", "R DClck"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_RBUTTONUP		: info_printf("%s", "R Up"		); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; mainDisplay.Repaint = true; return 0;
-	case WM_MBUTTONDOWN		: info_printf("%s", "M Down"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_MBUTTONDBLCLK	: info_printf("%s", "M DClck"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
-	case WM_MBUTTONUP		: info_printf("%s", "M Up"		); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; mainDisplay.Repaint = true; return 0;
-	case WM_MOUSEWHEEL		:
+	case WM_SHOWWINDOW		: newEvent.Type = ::gpk::SYSEVENT_SHOW			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
+	case WM_CLOSE			: newEvent.Type = ::gpk::SYSEVENT_CLOSE			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); ::DestroyWindow(hWnd); return 0;
+	case WM_KEYDOWN			: newEvent.Type = ::gpk::SYSEVENT_KEY_DOWN		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
+	case WM_KEYUP			: newEvent.Type = ::gpk::SYSEVENT_KEY_UP		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;
+	case WM_SYSKEYDOWN		: newEvent.Type = ::gpk::SYSEVENT_SYSKEY_DOWN	; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
+	case WM_SYSKEYUP		: newEvent.Type = ::gpk::SYSEVENT_SYSKEY_UP		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONDOWN		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DOWN	; newEvent.Data.push_back(0); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "L Down"		); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONDBLCLK	: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DBLCLK	; newEvent.Data.push_back(0); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "L DClck"	); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_LBUTTONUP		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_UP		; newEvent.Data.push_back(0); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "L Up"		); if(0 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[0] =  0; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONDOWN		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DOWN	; newEvent.Data.push_back(1); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "R Down"		); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONDBLCLK	: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DBLCLK	; newEvent.Data.push_back(1); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "R DClck"	); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_RBUTTONUP		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_UP		; newEvent.Data.push_back(1); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "R Up"		); if(1 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[1] =  0; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONDOWN		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DOWN	; newEvent.Data.push_back(2); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "M Down"		); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONDBLCLK	: newEvent.Type = ::gpk::SYSEVENT_MOUSE_DBLCLK	; newEvent.Data.push_back(2); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "M DClck"	); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  1; mainDisplay.Repaint = true; return 0;
+	case WM_MBUTTONUP		: newEvent.Type = ::gpk::SYSEVENT_MOUSE_UP		; newEvent.Data.push_back(2); mainDisplay.EventQueue.push_back(newEvent); info_printf("%s", "M Up"		); if(2 > ::gpk::size(input.MouseCurrent.ButtonState)) break; input.MouseCurrent.ButtonState[2] =  0; mainDisplay.Repaint = true; return 0;
+	case WM_MOUSEWHEEL		: {
 		info_printf("%s", "WM_MOUSEWHEEL");
-		zDelta																					= GET_WHEEL_DELTA_WPARAM(wParam);
-		input.MouseCurrent.Deltas.z																= zDelta;
-		mainDisplay.Repaint																		= true;
+		int32_t														zDelta				= GET_WHEEL_DELTA_WPARAM(wParam);
+		input.MouseCurrent.Deltas.z								= zDelta;
+		mainDisplay.Repaint										= true;
+
+		newEvent.Type											= ::gpk::SYSEVENT_MOUSE_WHEEL; 
+		newEvent.Data.resize(sizeof(double)); 
+		*(int32_t*)&newEvent.Data[0]								= zDelta;
+		mainDisplay.EventQueue.push_back(newEvent); 
 		return 0;
+		}
 	case WM_MOUSEMOVE		: {
 		verbose_printf("%s", "WM_MOUSEMOVE");
-		int32_t																						xPos										= GET_X_LPARAM(lParam);
-		int32_t																						yPos										= GET_Y_LPARAM(lParam);
-		input.MouseCurrent.Position.x															= ::gpk::clamp(xPos, 0, (int32_t)mainDisplay.Size.x);
-		input.MouseCurrent.Position.y															= ::gpk::clamp(yPos, 0, (int32_t)mainDisplay.Size.y);
-		input.MouseCurrent.Deltas.x																= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
-		input.MouseCurrent.Deltas.y																= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
+		::gpk::SCoord2<int16_t>									mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+		input.MouseCurrent.Position.x						= ::gpk::clamp(mousePos.x, (int16_t)0, (int16_t)mainDisplay.Size.x);
+		input.MouseCurrent.Position.y						= ::gpk::clamp(mousePos.y, (int16_t)0, (int16_t)mainDisplay.Size.y);
+		input.MouseCurrent.Deltas.x							= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
+		input.MouseCurrent.Deltas.y							= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
 			mainDisplay.Repaint = true;
+
+		newEvent.Type										= ::gpk::SYSEVENT_MOUSE_POSITION; 
+		newEvent.Data.resize(sizeof(::gpk::SCoord2<int16_t>)); 
+		*(::gpk::SCoord2<int16_t>*)&newEvent.Data[0]		= mousePos;
+		mainDisplay.EventQueue.push_back(newEvent); 
 		return 0;
-	}
+		}
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
 		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
 	case WM_SIZE			:
 		info_printf("%s", "WM_SIZE");
 		if(lParam) {
-			::gpk::SCoord2<uint32_t>																	newMetrics									= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint32_t>();
-			if(newMetrics != mainDisplay.Size) {
+			::gpk::SCoord2<uint16_t>																			newMetrics									= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint16_t>();
+			if(newMetrics != mainDisplay.Size.Cast<uint16_t>()) {
 				mainDisplay.PreviousSize																= mainDisplay.Size;
-				mainDisplay.Size																		= newMetrics;
+				mainDisplay.Size																		= newMetrics.Cast<uint32_t>();
 				mainDisplay.Resized																		= true;
 				mainDisplay.Repaint																		= true;
 				char																						buffer		[256]							= {};
@@ -217,6 +225,10 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
 #endif
+				newEvent.Type										= ::gpk::SYSEVENT_RESIZE; 
+				newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>)); 
+				*(::gpk::SCoord2<uint16_t>*)&newEvent.Data[0]		= newMetrics;
+				mainDisplay.EventQueue.push_back(newEvent); 
 			}
 		}
 		if( wParam == SIZE_MINIMIZED ) {
@@ -241,10 +253,8 @@ static				LRESULT WINAPI														mainWndProc									(HWND hWnd, UINT uMsg,
 		mainDisplay.Repaint																		= true;
 		break;
 	case WM_DESTROY			:
-		::SDisplayInput																				* oldInput									= (::SDisplayInput*)::SetWindowLongPtrA(displayDetail.WindowHandle, GWLP_USERDATA, 0);
 		displayDetail.WindowHandle																= 0;
 		mainDisplay.Closed																		= true;
-		gpk_safe_delete(oldInput);
 		::PostQuitMessage(0);
 		return 0;
 	}
@@ -262,7 +272,7 @@ static				void																initWndClass								(::HINSTANCE hInstance, const 
 	wndClassToInit.style																	= CS_DBLCLKS;
 }
 #elif defined(GPK_XCB)
-static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & window) {
+static				::gpk::error_t														xcbWindowCreate								(::gpk::SWindow & window) {
 	if(0 == window.PlatformDetail.Connection) {
 		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
@@ -300,10 +310,10 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 }
 #endif
 
-					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SDisplay& mainWindow)				{
+					::gpk::error_t														gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 #if defined(GPK_WINDOWS)
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
-	::gpk::displayUpdate(mainWindow);
+	::gpk::windowUpdate(mainWindow);
 #elif defined(GPK_XCB)
 
 #else
@@ -312,11 +322,11 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 	return 0;
 }
 
-					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)	{
+					::gpk::error_t														gpk::mainWindowCreate						(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
 #if defined(GPK_WINDOWS)
-	::gpk::SDisplayPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
+	::gpk::SWindowPlatformDetail																& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE																					hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, displayDetail.WindowClassName, ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
@@ -330,10 +340,10 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SDisplay & 
 		, finalClientRect.bottom	- finalClientRect.top
 		, 0, 0, displayDetail.WindowClass.hInstance, 0
 		);
-	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)new SDisplayInput{mainWindow, displayInput});
-	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
-	::UpdateWindow	(displayDetail.WindowHandle);
+	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)&mainWindow);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
+	::ShowWindow	(displayDetail.WindowHandle, SW_SHOWMAXIMIZED);
+	//::UpdateWindow	(displayDetail.WindowHandle);
 #elif defined(GPK_XCB)
 	//if(0 == mainWindow.PlatformDetail.Connection) {
 	//	if(0 == framework.PlatformDetail.XCBConnection)

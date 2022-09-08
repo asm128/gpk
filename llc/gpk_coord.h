@@ -75,6 +75,14 @@ namespace gpk
 			x														= (_tBase)px;
 			return *this;
 		}
+												TCoord2&		InPlaceClamp					(const TCoord2 & min, const TCoord2 & max)		noexcept		{
+			x = ::gpk::clamp(x, min.x, max.x);
+			y = ::gpk::clamp(y, min.y, max.y);
+			return *this;
+		}
+												TCoord2			Clamp							(const TCoord2 & min, const TCoord2 & max)		const	noexcept		{
+			return {::gpk::clamp(x, min.x, max.x), ::gpk::clamp(y, min.y, max.y)};
+		}
 	};	// struct SCoord2
 
 	template<typename _tBase>

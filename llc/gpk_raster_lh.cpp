@@ -182,7 +182,7 @@ double									orient2d				(const ::gpk::SLine2<float>		& segment, const ::gpk::
 template <typename _tValue>	_tValue 	max3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 template <typename _tValue>	_tValue 	min3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
 
-int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::STriangle2<int16_t> triangle, ::gpk::SColorBGRA color){
+int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, const ::gpk::STriangle2<int16_t> & triangle, ::gpk::SColorBGRA color){
 	// Compute triangle bounding box
 	int16_t								minX					= ::min3(triangle.A.x, triangle.B.x, triangle.C.x);
 	int16_t								minY					= ::min3(triangle.A.y, triangle.B.y, triangle.C.y);
@@ -214,7 +214,7 @@ int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk
 
 int								gpk::drawTriangle
 	( const ::gpk::SCoord2<uint32_t>					targetSize
-	, const ::gpk::STriangle3<float>					triangle
+	, const ::gpk::STriangle3<float>					& triangle
 	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
 	, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions
 	, ::gpk::view_grid<uint32_t>						depthBuffer
@@ -272,7 +272,7 @@ int								gpk::drawTriangle
 
 int								gpk::drawTriangle
 	( const ::gpk::SCoord2<uint32_t>					targetSize
-	, const ::gpk::STriangle2<float>					triangle
+	, const ::gpk::STriangle2<float>					& triangle
 	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
 	, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions
 	)	{

@@ -1,6 +1,6 @@
 #include "gpk_gui.h"
 #include "gpk_runtime.h"
-#include "gpk_display.h"
+#include "gpk_window.h"
 #include "gpk_input.h"
 #include "gpk_timer.h"
 #include "gpk_frameinfo.h"
@@ -45,7 +45,7 @@ namespace gpk
 
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};
-							::gpk::SDisplay											MainDisplay				= {};
+							::gpk::SWindow											MainDisplay				= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>	MainDisplayOffscreen	= {};
 							::gpk::ptr_obj<::gpk::SInput>							Input					= {};
 							::gpk::STimer											Timer					= {};
@@ -61,6 +61,7 @@ namespace gpk
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
 		{
 			Input.create();
+			MainDisplay.Input = Input;
 			GUI.create();
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
 				rw_if(errored(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
@@ -68,8 +69,8 @@ namespace gpk
 	}; // struct
 
 						::gpk::error_t											updateFramework			(::gpk::SFramework& framework);
-						::gpk::error_t											mainWindowCreate		(::gpk::SDisplay& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
-						::gpk::error_t											mainWindowDestroy		(::gpk::SDisplay& mainWindow);
+						::gpk::error_t											mainWindowCreate		(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
+						::gpk::error_t											mainWindowDestroy		(::gpk::SWindow& mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928

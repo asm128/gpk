@@ -65,6 +65,7 @@ namespace gpk
 		inline constexpr	const _tElement*		begin						()																const	noexcept	{ return Data;			}
 		inline constexpr	const _tElement*		end							()																const	noexcept	{ return Data + Count;	}
 		inline constexpr	const uint32_t&			size						()																const	noexcept	{ return Count;			}
+		inline constexpr	const uint32_t			byte_count					()																const	noexcept	{ return (uint32_t)(Count * sizeof(_tElement));	}
 
 		inline				::gpk::error_t			fill						(const _tElement& value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			for(uint32_t i = offset; i < ::gpk::min(Count, count); ++i)
@@ -138,12 +139,15 @@ namespace gpk
 	template <typename _tCell>
 						::gpk::error_t			reverse								(::gpk::view_array<_tCell> elements)																			{
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
-			uint8_t											old									= elements[i];
+			_tCell											old									= elements[i];
 			elements[i]									= elements[elements.size() - 1 - i];
 			elements[elements.size() - 1 - i]			= old;
 		}
 		return 0;
 	}
+
+	template <typename _t>	static inline constexpr uint32_t	size		(::gpk::view_array<_t> viewToTest)	noexcept	{ return viewToTest.size();					}
+	template <typename _t>	static inline constexpr uint32_t	byte_count	(::gpk::view_array<_t> viewToTest)	noexcept	{ return sizeof(_t) * viewToTest.size();	}
 
 						::gpk::error_t			rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
 						::gpk::error_t			ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");

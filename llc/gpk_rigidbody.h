@@ -72,7 +72,7 @@ namespace gpk
 			Transforms				.clear();
 			return TransformsLocal	.clear();
 		}
-		int32_t 										Spawn							()	{
+		int32_t 										Create							()	{
 			BodyFrames				.push_back({});
 			BodyFlags				.push_back({});
 			Forces					.push_back({});
@@ -81,7 +81,7 @@ namespace gpk
 			return TransformsLocal	.push_back(MatrixIdentity4);
 		}
 
-		int32_t 										Spawn							(uint32_t bodyCount)	{
+		int32_t 										Create							(uint32_t bodyCount)	{
 			const uint32_t										indexFirstBody					= BodyFrames.size();
 			BodyFrames		.resize(indexFirstBody + bodyCount, {});
 			BodyFlags		.resize(indexFirstBody + bodyCount, {});

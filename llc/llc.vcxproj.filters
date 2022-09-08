@@ -345,7 +345,7 @@
     <ClInclude Include="gpk_framework.h">
       <Filter>framework</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_display.h">
+    <ClInclude Include="gpk_window.h">
       <Filter>framework</Filter>
     </ClInclude>
     <ClInclude Include="gpk_app_impl.h">
@@ -368,6 +368,9 @@
     </ClInclude>
     <ClInclude Include="gpk_xml_reader.h">
       <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sysevent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -506,7 +509,7 @@
     <ClCompile Include="gpk_framework.cpp">
       <Filter>framework</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_display.cpp">
+    <ClCompile Include="gpk_window.cpp">
       <Filter>framework</Filter>
     </ClCompile>
     <ClCompile Include="gpk_view_array.cpp">
