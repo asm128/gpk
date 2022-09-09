@@ -175,6 +175,7 @@ namespace gpk
 		::gpk::array_obj<::gpk::SControlMode		>					Modes								= {};
 		::gpk::array_obj<::gpk::array_pod<int32_t>	>					Children							= {};
 		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
+		::gpk::array_pod<::gpk::SSysEvent			>					Events								= {};
 	};
 #pragma pack(pop)
 
@@ -207,6 +208,7 @@ namespace gpk
 		uint32_t														ThemeDefault						= 0;
 		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool															InputModeTouch						= true;
+
 
 																		SGUI								();
 	};

@@ -1,6 +1,5 @@
 #include "gpk_sync.h"
-#include "gpk_log.h"
-#include "gpk_memory.h"
+#include "gpk_array.h"
 
 #ifndef GPK_PTR_H_0297349827348923
 #define GPK_PTR_H_0297349827348923
@@ -142,6 +141,10 @@ namespace gpk
 		inline				_tPOD*								create								(_tArgsConstructor&&... argsConstructor)					noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
 		inline				_tPOD*								allocate							()															noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
+
+
+	template <typename T>
+	using array_pobj = ::gpk::array_obj<::gpk::ptr_obj<T>>;
 } // namespace
 
 #endif // GPK_PTR_H_0297349827348923

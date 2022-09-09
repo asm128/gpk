@@ -280,7 +280,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		::gpk::SControlMode														& modes								= controlTable.Modes[idControl];
 		modes																= dialog.DefaultControlModes;
 		controlTable.Text[idControl].Text									= "Viewport";
-		::gpk::memcpy_s(control.Palettes.Storage, dialog.ColorsViewportTitle.Storage);
+		control.Palettes													= dialog.ColorsViewportTitle;
 	}
 	viewport->Settings.Unfolded											= true;
 	return index;
@@ -336,7 +336,7 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 	if(controlTitle.Pressed) {
 		::gpk::SCoord2<bool>													locked										= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
-			::gpk::SCoord2<int32_t>													mouseDeltas									= {dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
+			::gpk::SCoord2<int32_t>													mouseDeltas									= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
 				::viewportDrag(control, controlMain, dialog, locked, mouseDeltas);
 		}

@@ -98,6 +98,12 @@ namespace gpk
 			return index;
 		}
 
+		template<typename _TDialogControl>
+		::gpk::error_t														Get												(int32_t index, ::gpk::ptr_nco<_TDialogControl>& control)	{
+			Controls[index].as(control);
+			return index;
+		}
+
 		::gpk::error_t														Update												()													{
 			if(0 == GUI.get_ref())
 				GUI.create();

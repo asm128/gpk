@@ -209,6 +209,25 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
 		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
+	case WM_CREATE			: {
+			RECT rect = {};
+			GetClientRect(hWnd, &rect);
+			::gpk::SCoord2<uint16_t>								newMetrics		= ::gpk::SCoord2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.Cast<uint16_t>();
+			newEvent.Type										= ::gpk::SYSEVENT_RESIZE; 
+			newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>)); 
+			*(::gpk::SCoord2<uint16_t>*)&newEvent.Data[0]		= newMetrics;
+			mainDisplay.EventQueue.push_back(newEvent); 
+			break;
+	}
+	case WM_ACTIVATE: {
+		switch(wParam) {
+		case WA_ACTIVE		: newEvent.Type = ::gpk::SYSEVENT_ACTIVATE  ; break; //Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+		case WA_CLICKACTIVE	: newEvent.Type = ::gpk::SYSEVENT_ACTIVATE  ; break;  // Activated by a mouse click.
+		case WA_INACTIVE	: newEvent.Type = ::gpk::SYSEVENT_DEACTIVATE; break; 
+		}
+		mainDisplay.EventQueue.push_back(newEvent); 
+		break;
+	}
 	case WM_SIZE			:
 		info_printf("%s", "WM_SIZE");
 		if(lParam) {

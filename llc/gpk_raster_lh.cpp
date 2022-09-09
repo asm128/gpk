@@ -4,30 +4,36 @@
 int								gpk::setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
-	)
-		pixels[position.y][position.x]	= color;
-	return 0;
-}
-
-int								gpk::drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
-	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
-	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)
-		::gpk::setPixel(pixels, {(int16_t)(rectangle.Offset.x + x), (int16_t)(rectangle.Offset.y + y)}, color);
-	return 0;
-}
-
-int								gpk::drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCircle<int16_t> circle, ::gpk::SColorBGRA color)	{
-	for(int16_t y = (int16_t)-circle.Radius; y < (int16_t)circle.Radius; ++y)
-	for(int16_t x = (int16_t)-circle.Radius; x < (int16_t)circle.Radius; ++x) {
-		::gpk::SCoord2<int16_t>						position			= {x, y};
-		if(position.Length() <= circle.Radius)
-			::gpk::setPixel(pixels, {int16_t(circle.Center.x + x), int16_t(circle.Center.y + y)}, color);
+	) {
+		::gpk::SColorBGRA					& targetPixel = pixels[position.y][position.x];
+		targetPixel						= {color.b, color.g, color.r, (uint8_t)::gpk::clamp(targetPixel.a + (uint32_t)color.a, 0U, 255U)};
+		return 1;
 	}
 	return 0;
 }
 
+int								gpk::drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
+	int32_t								countPixels				= 0;
+	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
+	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)
+		countPixels += ::gpk::setPixel(pixels, {(int16_t)(rectangle.Offset.x + x), (int16_t)(rectangle.Offset.y + y)}, color);
+	return countPixels;
+}
+
+int								gpk::drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCircle<int16_t> circle, ::gpk::SColorBGRA color)	{
+	int32_t								countPixels				= 0;
+	for(int16_t y = (int16_t)-circle.Radius; y < (int16_t)circle.Radius; ++y)
+	for(int16_t x = (int16_t)-circle.Radius; x < (int16_t)circle.Radius; ++x) {
+		::gpk::SCoord2<int16_t>						position			= {x, y};
+		if(position.Length() <= circle.Radius)
+			countPixels += ::gpk::setPixel(pixels, {int16_t(circle.Center.x + x), int16_t(circle.Center.y + y)}, color);
+	}
+	return countPixels;
+}
+
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2<int16_t> line, ::gpk::SColorBGRA color)	{
+	int32_t								countPixels				= 0;
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
 	int32_t								dy						= (int32_t)-fabs(line.B.y - line.A.y);
@@ -40,16 +46,16 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 		if (e2 >= dy) {
 			err								+= dy; /* e_xy+e_x > 0 */
 			line.A.x						+= (int16_t)sx;
-			setPixel(pixels, {line.A.x, line.A.y}, color);
+			countPixels += setPixel(pixels, {line.A.x, line.A.y}, color);
 		}
 		if (e2 <= dx) { /* e_xy+e_y < 0 */
 			err								+= dx;
 			line.A.y						+= (int16_t)sy;
-			setPixel(pixels, {line.A.x, line.A.y}, color);
+			countPixels += setPixel(pixels, {line.A.x, line.A.y}, color);
 		}
 
 	}
-	return 0;
+	return countPixels;
 }
 
 
@@ -196,6 +202,7 @@ int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, const
 	maxY							= ::std::min(maxY, int16_t(int16_t(pixels.metrics().y)	- 1));
 
 	// Rasterize
+	int32_t								countPixels				= 0;
 	::gpk::SCoord2<int16_t>				p;
 	for (p.y = minY; p.y <= maxY; ++p.y) {
 		for (p.x = minX; p.x <= maxX; ++p.x) {
@@ -206,10 +213,10 @@ int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, const
 			// If p is on or inside all edges, render pixel.
 			if (w0 < 0 || w1 < 0 || w2 < 0)
 				continue;
-			::gpk::setPixel(pixels, p, color);
+			countPixels += ::gpk::setPixel(pixels, p, color);
 		}
 	}
-	return 0;
+	return countPixels;
 }
 
 int								gpk::drawTriangle
@@ -329,6 +336,7 @@ int													gpk::drawPixels
 	const ::gpk::SCoord2<float>								imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	double													lightFactorDirectional	= normal.Dot(lightVector);
 	(void)lightFactorDirectional;
+	int32_t								countPixels				= 0;
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		::gpk::SCoord2<int16_t>									pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::STriangleWeights<float>					& vertexWeights			= pixelVertexWeights[iPixelCoord];
@@ -352,9 +360,9 @@ int													gpk::drawPixels
 			const double											invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
 			fragmentColor										+= (texelColor * lightColors[iLight]) * (invAttenuation);
 		}
-		::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
 	}
-	return 0;
+	return countPixels;
 }
 
 int													gpk::drawQuadTriangle
@@ -432,12 +440,13 @@ int													gpk::drawQuadTriangle
 
 	double													lightFactor			= normal.Dot(lightVector);
 
+	int32_t								countPixels				= 0;
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		::gpk::SCoord2<int16_t>									pixelCoord			= pixelCoords[iPixelCoord];
-		::gpk::setPixel(targetPixels, pixelCoord, (color * 0.1) + color * lightFactor);
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (color * 0.1) + color * lightFactor);
 	}
-	return 0;
+	return countPixels;
 }
 
 int													gpk::drawTriangle
@@ -462,15 +471,16 @@ int													gpk::drawTriangle
 		return 0;
 
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
+	int32_t								countPixels				= 0;
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
 		const ::gpk::SCoord2<int16_t>							pixelCoord				= pixelCoords		[iPixelCoord];
 		const ::gpk::STriangleWeights<float>					& vertexWeights			= pixelVertexWeights[iPixelCoord];
 		::gpk::SCoord3<float>									normal				= ::gpk::triangleWeight(vertexWeights, triangleNormals);
 		normal												= matrixTransform.TransformDirection(normal).Normalize();
 		double													lightFactor			= normal.Dot(lightVector);
-		::gpk::setPixel(targetPixels, pixelCoord, color * lightFactor);
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, color * lightFactor);
 	}
-	return 0;
+	return countPixels;
 }
 
 int													gpk::drawTriangle
@@ -495,6 +505,7 @@ int													gpk::drawTriangle
 	)
 		return 0;
 
+	int32_t								countPixels				= 0;
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 	const ::gpk::SCoord2<float>									imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
@@ -509,9 +520,9 @@ int													gpk::drawTriangle
 		texCoord												+= triangleTexCoords.B * vertexWeights.B;
 		texCoord												+= triangleTexCoords.C * vertexWeights.C;
 		::gpk::SColorBGRA											texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y)][(uint32_t)(texCoord.x * imageUnit.x)];
-		::gpk::setPixel(targetPixels, pixelCoord, (::gpk::SColorFloat(texelColor) * .3 + ::gpk::SColorFloat(texelColor) * lightFactor).Clamp());
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (::gpk::SColorFloat(texelColor) * .3 + ::gpk::SColorFloat(texelColor) * lightFactor).Clamp());
 	}
-	return 0;
+	return countPixels;
 }
 
 int													gpk::drawTriangle
@@ -538,6 +549,7 @@ int													gpk::drawTriangle
 	)
 		return 0;
 
+	int32_t								countPixels				= 0;
 	::gpk::transform(triangleWorld, matrixTransform);
 	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
 
@@ -571,8 +583,8 @@ int													gpk::drawTriangle
 		 (void)lightColor;
 		 (void)lightFactorDirectional ;
 
-		::gpk::setPixel(targetPixels, pixelCoord, ((texelColor * .1) + texelColor * lightColor * lightFactorDirectional + fragmentColor).Clamp());
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, ((texelColor * .1) + texelColor * lightColor * lightFactorDirectional + fragmentColor).Clamp());
 	}
-	return 0;
+	return countPixels;
 }
 

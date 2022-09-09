@@ -67,10 +67,10 @@ namespace gpk
 		::gpk::view_array<_tColor>										firstRow					= target[yStart];
 		if constexpr(1 == sizeof(_tColor))
 			memset(&firstRow[xStart], *((ubyte_t*)&value), xCount);
-		else
+		else {
 			for(int32_t x = 0; x < xCount; ++x)
 				firstRow[xStart + x]										= value;
-
+		}
 		for(int32_t y = 1; y < yCount; ++y)
 			memcpy(&target[yStart + y][xStart], &target[yStart][xStart], xCount * sizeof(_tColor));
 

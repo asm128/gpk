@@ -1,0 +1,1602 @@
+File name: gpk_adam7.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 37
+File directive lines: 1
+File comment lines: 0
+File blank lines: 14
+File bytes: 2245
+
+File name: gpk_adam7.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 21
+File directive lines: 4
+File comment lines: 1
+File blank lines: 10
+File bytes: 1434
+
+File name: gpk_aes.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 256
+File directive lines: 3
+File comment lines: 98
+File blank lines: 102
+File bytes: 24544
+
+File name: gpk_aes.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 38
+File directive lines: 4
+File comment lines: 8
+File blank lines: 21
+File bytes: 4541
+
+File name: gpk_app_impl.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 96
+File directive lines: 19
+File comment lines: 1
+File blank lines: 8
+File bytes: 10529
+
+File name: gpk_array.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Mon Aug 29 03:02:04 2022
+File code lines: 504
+File directive lines: 7
+File comment lines: 53
+File blank lines: 137
+File bytes: 32850
+
+File name: gpk_ascii_color.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 39
+File directive lines: 4
+File comment lines: 6
+File blank lines: 10
+File bytes: 2574
+
+File name: gpk_ascii_target.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 7
+File directive lines: 1
+File comment lines: 0
+File blank lines: 3
+File bytes: 464
+
+File name: gpk_ascii_target.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 20:44:14 2022
+File code lines: 79
+File directive lines: 9
+File comment lines: 4
+File blank lines: 35
+File bytes: 5641
+
+File name: gpk_auto_handler.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 13
+File directive lines: 5
+File comment lines: 3
+File blank lines: 9
+File bytes: 1197
+
+File name: gpk_base64.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 79
+File directive lines: 2
+File comment lines: 2
+File blank lines: 22
+File bytes: 6342
+
+File name: gpk_base64.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 9
+File directive lines: 4
+File comment lines: 0
+File blank lines: 7
+File bytes: 1629
+
+File name: gpk_bit.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 16
+File directive lines: 9
+File comment lines: 6
+File blank lines: 11
+File bytes: 2892
+
+File name: gpk_bitmap_target.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 333
+File directive lines: 9
+File comment lines: 12
+File blank lines: 101
+File bytes: 23005
+
+File name: gpk_block.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 38
+File directive lines: 3
+File comment lines: 0
+File blank lines: 13
+File bytes: 2899
+
+File name: gpk_block.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 178
+File directive lines: 13
+File comment lines: 7
+File blank lines: 49
+File bytes: 12622
+
+File name: gpk_camera.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 11
+File directive lines: 4
+File comment lines: 1
+File blank lines: 9
+File bytes: 463
+
+File name: gpk_cgi.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 45
+File directive lines: 3
+File comment lines: 1
+File blank lines: 12
+File bytes: 2531
+
+File name: gpk_cgi.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 3
+File directive lines: 6
+File comment lines: 1
+File blank lines: 4
+File bytes: 412
+
+File name: gpk_cgi_app_impl.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 22
+File directive lines: 10
+File comment lines: 0
+File blank lines: 6
+File bytes: 1689
+
+File name: gpk_cgi_app_impl_v2.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 10
+File directive lines: 10
+File comment lines: 0
+File blank lines: 5
+File bytes: 821
+
+File name: gpk_cgi_main.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 10
+File directive lines: 1
+File comment lines: 0
+File blank lines: 2
+File bytes: 530
+
+File name: gpk_cgi_module.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 13
+File directive lines: 5
+File comment lines: 0
+File blank lines: 6
+File bytes: 1024
+
+File name: gpk_cgi_module.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 29
+File directive lines: 13
+File comment lines: 0
+File blank lines: 13
+File bytes: 1798
+
+File name: gpk_cgi_runtime.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 160
+File directive lines: 4
+File comment lines: 3
+File blank lines: 40
+File bytes: 13885
+
+File name: gpk_cgi_runtime.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 110
+File directive lines: 9
+File comment lines: 1
+File blank lines: 15
+File bytes: 8505
+
+File name: gpk_chrono.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 9
+File directive lines: 2
+File comment lines: 4
+File blank lines: 8
+File bytes: 1111
+
+File name: gpk_chrono.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Wed Aug 24 07:35:40 2022
+File code lines: 4
+File directive lines: 9
+File comment lines: 1
+File blank lines: 5
+File bytes: 367
+
+File name: gpk_collision.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 95
+File directive lines: 5
+File comment lines: 8
+File blank lines: 41
+File bytes: 5691
+
+File name: gpk_color.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 165
+File directive lines: 7
+File comment lines: 21
+File blank lines: 29
+File bytes: 27711
+
+File name: gpk_component_scene.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 242
+File directive lines: 4
+File comment lines: 1
+File blank lines: 61
+File bytes: 14560
+
+File name: gpk_component_scene.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 218
+File directive lines: 12
+File comment lines: 10
+File blank lines: 66
+File bytes: 13856
+
+File name: gpk_component_scene_draw.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 95
+File directive lines: 2
+File comment lines: 0
+File blank lines: 31
+File bytes: 5745
+
+File name: gpk_datatype.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 20
+File directive lines: 4
+File comment lines: 1
+File blank lines: 6
+File bytes: 1285
+
+File name: gpk_datatype.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 427
+File directive lines: 48
+File comment lines: 31
+File blank lines: 42
+File bytes: 41172
+
+File name: gpk_debug.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 0
+File directive lines: 32
+File comment lines: 6
+File blank lines: 4
+File bytes: 1420
+
+File name: gpk_deflate.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 215
+File directive lines: 8
+File comment lines: 4
+File blank lines: 54
+File bytes: 15275
+
+File name: gpk_deflate.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 37
+File directive lines: 4
+File comment lines: 1
+File blank lines: 16
+File bytes: 3687
+
+File name: gpk_dialog.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 20:44:14 2022
+File code lines: 288
+File directive lines: 3
+File comment lines: 3
+File blank lines: 65
+File bytes: 24433
+
+File name: gpk_dialog.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Aug 28 00:16:22 2022
+File code lines: 80
+File directive lines: 8
+File comment lines: 13
+File blank lines: 26
+File bytes: 5217
+
+File name: gpk_dialog_controls.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 63
+File directive lines: 6
+File comment lines: 0
+File blank lines: 29
+File bytes: 4807
+
+File name: gpk_encoding.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 194
+File directive lines: 7
+File comment lines: 2
+File blank lines: 50
+File bytes: 10885
+
+File name: gpk_encoding.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 39
+File directive lines: 4
+File comment lines: 2
+File blank lines: 16
+File bytes: 3876
+
+File name: gpk_error.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 15
+File directive lines: 11
+File comment lines: 0
+File blank lines: 9
+File bytes: 1373
+
+File name: gpk_eval.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 24
+File directive lines: 41
+File comment lines: 1
+File blank lines: 17
+File bytes: 3505
+
+File name: gpk_expression.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 313
+File directive lines: 6
+File comment lines: 6
+File blank lines: 59
+File bytes: 25178
+
+File name: gpk_expression.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 42
+File directive lines: 8
+File comment lines: 1
+File blank lines: 13
+File bytes: 2424
+
+File name: gpk_frameinfo.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 28
+File directive lines: 4
+File comment lines: 6
+File blank lines: 13
+File bytes: 1702
+
+File name: gpk_framework.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 11:11:36 2022
+File code lines: 40
+File directive lines: 14
+File comment lines: 2
+File blank lines: 20
+File bytes: 2461
+
+File name: gpk_geometry.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 105
+File directive lines: 1
+File comment lines: 3
+File blank lines: 40
+File bytes: 8054
+
+File name: gpk_geometry.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 66
+File directive lines: 5
+File comment lines: 2
+File blank lines: 28
+File bytes: 4206
+
+File name: gpk_geometry_lh.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 487
+File directive lines: 1
+File comment lines: 21
+File blank lines: 133
+File bytes: 30682
+
+File name: gpk_geometry_lh.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Mon Aug 29 17:43:06 2022
+File code lines: 124
+File directive lines: 14
+File comment lines: 2
+File blank lines: 47
+File bytes: 7951
+
+File name: gpk_grid_scale.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 42
+File directive lines: 4
+File comment lines: 0
+File blank lines: 20
+File bytes: 3198
+
+File name: gpk_grid_static.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 28
+File directive lines: 5
+File comment lines: 0
+File blank lines: 17
+File bytes: 1636
+
+File name: gpk_gui.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Tue Aug 30 01:54:34 2022
+File code lines: 463
+File directive lines: 9
+File comment lines: 35
+File blank lines: 130
+File bytes: 40498
+
+File name: gpk_gui_control.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 179
+File directive lines: 2
+File comment lines: 9
+File blank lines: 41
+File bytes: 14242
+
+File name: gpk_gui_control.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 53
+File directive lines: 6
+File comment lines: 0
+File blank lines: 25
+File bytes: 2821
+
+File name: gpk_gui_desktop.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 222
+File directive lines: 3
+File comment lines: 5
+File blank lines: 67
+File bytes: 17994
+
+File name: gpk_gui_desktop.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 33
+File directive lines: 5
+File comment lines: 1
+File blank lines: 17
+File bytes: 2712
+
+File name: gpk_gui_draw.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Aug 28 03:18:32 2022
+File code lines: 184
+File directive lines: 5
+File comment lines: 13
+File blank lines: 45
+File bytes: 74390
+
+File name: gpk_gui_text.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 50
+File directive lines: 9
+File comment lines: 6
+File blank lines: 17
+File bytes: 7458
+
+File name: gpk_http.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 96
+File directive lines: 6
+File comment lines: 51
+File blank lines: 15
+File bytes: 28244
+
+File name: gpk_https_client.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 0
+File directive lines: 0
+File comment lines: 73
+File blank lines: 23
+File bytes: 5638
+
+File name: gpk_http_client.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 189
+File directive lines: 15
+File comment lines: 40
+File blank lines: 58
+File bytes: 11855
+
+File name: gpk_http_client.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 30
+File directive lines: 5
+File comment lines: 0
+File blank lines: 14
+File bytes: 1358
+
+File name: gpk_i2c.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 25
+File directive lines: 8
+File comment lines: 0
+File blank lines: 8
+File bytes: 1941
+
+File name: gpk_i2c.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 12
+File directive lines: 7
+File comment lines: 1
+File blank lines: 9
+File bytes: 663
+
+File name: gpk_image.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Aug 28 20:35:04 2022
+File code lines: 106
+File directive lines: 6
+File comment lines: 4
+File blank lines: 36
+File bytes: 8786
+
+File name: gpk_input.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 24
+File directive lines: 7
+File comment lines: 1
+File blank lines: 10
+File bytes: 1690
+
+File name: gpk_io.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 4
+File directive lines: 8
+File comment lines: 0
+File blank lines: 6
+File bytes: 475
+
+File name: gpk_json.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 497
+File directive lines: 14
+File comment lines: 19
+File blank lines: 122
+File bytes: 39042
+
+File name: gpk_json.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 85
+File directive lines: 8
+File comment lines: 3
+File blank lines: 30
+File bytes: 8898
+
+File name: gpk_json_expression.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 239
+File directive lines: 9
+File comment lines: 3
+File blank lines: 65
+File bytes: 22330
+
+File name: gpk_json_expression.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 30
+File directive lines: 7
+File comment lines: 1
+File blank lines: 12
+File bytes: 2533
+
+File name: gpk_keyval.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 64
+File directive lines: 4
+File comment lines: 0
+File blank lines: 27
+File bytes: 4418
+
+File name: gpk_keyval.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 38
+File directive lines: 4
+File comment lines: 2
+File blank lines: 20
+File bytes: 3020
+
+File name: gpk_label.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 12
+File directive lines: 2
+File comment lines: 0
+File blank lines: 6
+File bytes: 854
+
+File name: gpk_label.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 28
+File directive lines: 4
+File comment lines: 1
+File blank lines: 16
+File bytes: 1873
+
+File name: gpk_label_manager.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 54
+File directive lines: 6
+File comment lines: 0
+File blank lines: 18
+File bytes: 3137
+
+File name: gpk_log.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 38
+File directive lines: 36
+File comment lines: 1
+File blank lines: 16
+File bytes: 2757
+
+File name: gpk_mapblock.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 41
+File directive lines: 1
+File comment lines: 0
+File blank lines: 13
+File bytes: 2622
+
+File name: gpk_math.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 42
+File directive lines: 18
+File comment lines: 3
+File blank lines: 14
+File bytes: 3163
+
+File name: gpk_matrix.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 527
+File directive lines: 7
+File comment lines: 19
+File blank lines: 150
+File bytes: 36559
+
+File name: gpk_member_registry.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 33
+File directive lines: 19
+File comment lines: 3
+File blank lines: 8
+File bytes: 6012
+
+File name: gpk_memory.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 69
+File directive lines: 24
+File comment lines: 8
+File blank lines: 28
+File bytes: 7008
+
+File name: gpk_model.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 13
+File directive lines: 6
+File comment lines: 1
+File blank lines: 9
+File bytes: 630
+
+File name: gpk_module.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 6
+File directive lines: 42
+File comment lines: 3
+File blank lines: 13
+File bytes: 2086
+
+File name: gpk_module_exports.def
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 10
+File directive lines: 0
+File comment lines: 0
+File blank lines: 0
+File bytes: 142
+
+File name: gpk_noise.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 8
+File directive lines: 1
+File comment lines: 9
+File blank lines: 0
+File bytes: 1900
+
+File name: gpk_noise.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 62
+File directive lines: 6
+File comment lines: 1
+File blank lines: 14
+File bytes: 4701
+
+File name: gpk_parse.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 122
+File directive lines: 4
+File comment lines: 1
+File blank lines: 39
+File bytes: 6724
+
+File name: gpk_parse.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 27
+File directive lines: 7
+File comment lines: 1
+File blank lines: 10
+File bytes: 2742
+
+File name: gpk_particle.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 100
+File directive lines: 12
+File comment lines: 11
+File blank lines: 42
+File bytes: 8311
+
+File name: gpk_platform.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 2
+File directive lines: 64
+File comment lines: 3
+File blank lines: 15
+File bytes: 2331
+
+File name: gpk_platform_error.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 9
+File directive lines: 4
+File comment lines: 0
+File blank lines: 4
+File bytes: 496
+
+File name: gpk_platform_error.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 3
+File directive lines: 7
+File comment lines: 1
+File blank lines: 4
+File bytes: 326
+
+File name: gpk_png.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Mon Aug 29 03:41:30 2022
+File code lines: 66
+File directive lines: 10
+File comment lines: 2
+File blank lines: 16
+File bytes: 3765
+
+File name: gpk_png_write.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 109
+File directive lines: 2
+File comment lines: 2
+File blank lines: 21
+File bytes: 6081
+
+File name: gpk_process.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 22
+File directive lines: 7
+File comment lines: 6
+File blank lines: 9
+File bytes: 1950
+
+File name: gpk_process.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 3
+File directive lines: 5
+File comment lines: 1
+File blank lines: 4
+File bytes: 428
+
+File name: gpk_ptr.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Wed Aug 24 07:36:46 2022
+File code lines: 103
+File directive lines: 6
+File comment lines: 1
+File blank lines: 37
+File bytes: 6887
+
+File name: gpk_raster_lh.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 18:13:46 2022
+File code lines: 430
+File directive lines: 2
+File comment lines: 26
+File blank lines: 120
+File bytes: 26160
+
+File name: gpk_raster_lh.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 18:13:20 2022
+File code lines: 101
+File directive lines: 8
+File comment lines: 1
+File blank lines: 18
+File bytes: 6046
+
+File name: gpk_rigidbody.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 05:21:36 2022
+File code lines: 63
+File directive lines: 1
+File comment lines: 6
+File blank lines: 20
+File bytes: 5569
+
+File name: gpk_rigidbody.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 05:21:36 2022
+File code lines: 126
+File directive lines: 7
+File comment lines: 3
+File blank lines: 36
+File bytes: 7104
+
+File name: gpk_rsa.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 203
+File directive lines: 5
+File comment lines: 14
+File blank lines: 64
+File bytes: 13067
+
+File name: gpk_rsa.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 11
+File directive lines: 4
+File comment lines: 1
+File blank lines: 7
+File bytes: 1395
+
+File name: gpk_runtime.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 33
+File directive lines: 16
+File comment lines: 1
+File blank lines: 16
+File bytes: 1530
+
+File name: gpk_runtime_module.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 13
+File directive lines: 1
+File comment lines: 0
+File blank lines: 5
+File bytes: 956
+
+File name: gpk_runtime_module.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 29
+File directive lines: 13
+File comment lines: 0
+File blank lines: 11
+File bytes: 1834
+
+File name: gpk_safe.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 0
+File directive lines: 31
+File comment lines: 0
+File blank lines: 10
+File bytes: 1243
+
+File name: gpk_scene.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 85
+File directive lines: 6
+File comment lines: 1
+File blank lines: 37
+File bytes: 3689
+
+File name: gpk_spi.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 25
+File directive lines: 8
+File comment lines: 0
+File blank lines: 8
+File bytes: 1863
+
+File name: gpk_spi.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 12
+File directive lines: 7
+File comment lines: 1
+File blank lines: 9
+File bytes: 676
+
+File name: gpk_stdsocket.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 12
+File directive lines: 17
+File comment lines: 1
+File blank lines: 9
+File bytes: 1783
+
+File name: gpk_stdstring.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 8
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 485
+
+File name: gpk_stdstring.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 3
+File directive lines: 5
+File comment lines: 0
+File blank lines: 3
+File bytes: 327
+
+File name: gpk_stl.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 9
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 766
+
+File name: gpk_stl.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 11
+File directive lines: 7
+File comment lines: 0
+File blank lines: 7
+File bytes: 671
+
+File name: gpk_storage.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 243
+File directive lines: 27
+File comment lines: 16
+File blank lines: 64
+File bytes: 16205
+
+File name: gpk_storage.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 21
+File directive lines: 5
+File comment lines: 3
+File blank lines: 9
+File bytes: 2481
+
+File name: gpk_string.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 50
+File directive lines: 15
+File comment lines: 9
+File blank lines: 24
+File bytes: 3194
+
+File name: gpk_string_helper.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 6
+File directive lines: 1
+File comment lines: 0
+File blank lines: 3
+File bytes: 489
+
+File name: gpk_string_helper.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 5
+File directive lines: 4
+File comment lines: 0
+File blank lines: 7
+File bytes: 553
+
+File name: gpk_sync.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 5
+File directive lines: 93
+File comment lines: 1
+File blank lines: 9
+File bytes: 5436
+
+File name: gpk_sysevent.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sun Aug 28 08:24:53 2022
+File modification date: Sun Aug 28 08:28:32 2022
+File code lines: 28
+File directive lines: 4
+File comment lines: 1
+File blank lines: 7
+File bytes: 1336
+
+File name: gpk_tcpip.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 117
+File directive lines: 28
+File comment lines: 35
+File blank lines: 37
+File bytes: 9190
+
+File name: gpk_tcpip.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 43
+File directive lines: 10
+File comment lines: 1
+File blank lines: 23
+File bytes: 3038
+
+File name: gpk_timer.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 35
+File directive lines: 6
+File comment lines: 1
+File blank lines: 12
+File bytes: 2137
+
+File name: gpk_timer.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 15
+File directive lines: 10
+File comment lines: 1
+File blank lines: 9
+File bytes: 1403
+
+File name: gpk_typeint.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 20
+File directive lines: 18
+File comment lines: 0
+File blank lines: 9
+File bytes: 1810
+
+File name: gpk_type_identifier.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 7
+File directive lines: 4
+File comment lines: 3
+File blank lines: 7
+File bytes: 674
+
+File name: gpk_type_registry.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 3
+File directive lines: 1
+File comment lines: 0
+File blank lines: 2
+File bytes: 184
+
+File name: gpk_type_registry.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 26
+File directive lines: 9
+File comment lines: 0
+File blank lines: 16
+File bytes: 2453
+
+File name: gpk_view_array.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 13
+File directive lines: 1
+File comment lines: 0
+File blank lines: 4
+File bytes: 814
+
+File name: gpk_view_bit.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 74
+File directive lines: 5
+File comment lines: 5
+File blank lines: 32
+File bytes: 5971
+
+File name: gpk_view_layered.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 53
+File directive lines: 6
+File comment lines: 6
+File blank lines: 18
+File bytes: 4341
+
+File name: gpk_view_manager.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 66
+File directive lines: 6
+File comment lines: 1
+File blank lines: 21
+File bytes: 4268
+
+File name: gpk_view_stream.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 25
+File directive lines: 4
+File comment lines: 3
+File blank lines: 12
+File bytes: 3713
+
+File name: gpk_window.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 27 19:06:40 2022
+File code lines: 63
+File directive lines: 14
+File comment lines: 2
+File blank lines: 16
+File bytes: 4979
+
+File name: gpk_windows.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 10
+File directive lines: 7
+File comment lines: 0
+File blank lines: 6
+File bytes: 834
+
+File name: gpk_windows.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 2
+File directive lines: 6
+File comment lines: 1
+File blank lines: 4
+File bytes: 303
+
+File name: gpk_xml_reader.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 37
+File directive lines: 5
+File comment lines: 1
+File blank lines: 16
+File bytes: 1718
+
+File name: llc_header_checkingg.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Aug 20 03:01:06 2022
+File code lines: 0
+File directive lines: 74
+File comment lines: 1
+File blank lines: 0
+File bytes: 2007
+
+File name: gpk_window.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Sep  3 07:50:20 2022
+File code lines: 33
+File directive lines: 21
+File comment lines: 1
+File blank lines: 17
+File bytes: 1850
+
+File name: gpk_framework.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Sep  3 11:10:00 2022
+File code lines: 260
+File directive lines: 34
+File comment lines: 16
+File blank lines: 56
+File bytes: 21458
+
+File name: gpk_xml_reader.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Sep  3 18:00:36 2022
+File code lines: 278
+File directive lines: 6
+File comment lines: 2
+File blank lines: 78
+File bytes: 17711
+
+File name: gpk_png.cpp
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Sep  3 18:51:30 2022
+File code lines: 905
+File directive lines: 6
+File comment lines: 9
+File blank lines: 248
+File bytes: 65550
+
+File name: gpk_gui.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sat Sep  3 20:24:50 2022
+File code lines: 185
+File directive lines: 15
+File comment lines: 4
+File blank lines: 54
+File bytes: 10462
+
+File name: gpk_enum.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Sep  4 03:10:38 2022
+File code lines: 155
+File directive lines: 14
+File comment lines: 8
+File blank lines: 52
+File bytes: 11626
+
+File name: gpk_coord.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Sep  4 06:36:50 2022
+File code lines: 441
+File directive lines: 12
+File comment lines: 21
+File blank lines: 118
+File bytes: 38037
+
+File name: gpk_grid_copy.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Sun Sep  4 18:20:42 2022
+File code lines: 216
+File directive lines: 8
+File comment lines: 6
+File blank lines: 56
+File bytes: 25832
+
+File name: gpk_size.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Wed Sep  7 06:38:24 2022
+File code lines: 5
+File directive lines: 4
+File comment lines: 0
+File blank lines: 5
+File bytes: 900
+
+File name: gpk_array_static.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Wed Sep  7 06:49:10 2022
+File code lines: 30
+File directive lines: 6
+File comment lines: 2
+File blank lines: 15
+File bytes: 2426
+
+File name: gpk_log.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Thu Sep  8 00:56:02 2022
+File code lines: 101
+File directive lines: 245
+File comment lines: 23
+File blank lines: 54
+File bytes: 18874
+
+File name: gpk_view_grid.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Thu Sep  8 02:29:22 2022
+File code lines: 76
+File directive lines: 9
+File comment lines: 6
+File blank lines: 20
+File bytes: 6902
+
+File name: gpk_view_array.h
+File folder: E:\asm128\gpk\llc\
+File creation date: Sat Aug 20 03:01:04 2022
+File modification date: Thu Sep  8 02:30:40 2022
+File code lines: 244
+File directive lines: 12
+File comment lines: 9
+File blank lines: 88
+File bytes: 16342
+
+
+----------------------------- Total Files: 158
+----------------------------- Total Lines: 22156
+
+Comments: 958
+Code: 14863
+Compiler directives: 1785
+Blanks: 4550
+Total bytes: 1247690
+
+----------------------------- Stats: 
+
+Average lines per file: 140.22784810126583
+Average lines of comments per file: 6.063291139240507
+Average lines of code per file: 94.06962025316456
+Average lines of compiler directives per file: 11.29746835443038
+Average blank lines per file: 28.79746835443038
+
+Comments: 4.323885177829933%
+Code: 67.08340855750134%
+Compiler directives: 8.05650839501715%
+Blanks: 20.53619786965156%
