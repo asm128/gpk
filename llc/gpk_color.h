@@ -183,8 +183,6 @@ namespace gpk
 									SColorFloat&	Clamp			()																noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
 	};	// struct
 
-
-
 	static	const ::gpk::SColorFloat	BLACK			= ::gpk::SColorFloat(0.0f, 0.0f, 0.0f, 1.0f					);
 	static	const ::gpk::SColorFloat	WHITE			= ::gpk::SColorFloat(1.0f, 1.0f, 1.0f, 1.0f					);
 	static	const ::gpk::SColorFloat	RED				= ::gpk::SColorFloat(1.0f, 0.0f, 0.0f, 1.0f					);

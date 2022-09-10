@@ -9,6 +9,11 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
+	template<typename _tAxis, typename _tColor> struct SLightPoint2{ ::gpk::SCoord2<float> Position; _tColor Color; };
+	template<typename _tAxis, typename _tColor> struct SLightPoint3{ ::gpk::SCoord3<float> Position; _tColor Color; };
+#pragma pack(pop)
+
 	template<typename _tElement>
 	struct SKeyedContainer {
 		::gpk::array_obj<_tElement>					Elements	= {};

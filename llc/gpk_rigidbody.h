@@ -154,6 +154,27 @@ namespace gpk
 			bodyFlags.OutdatedTransform						=
 			bodyFlags.OutdatedTensorWorld					= true;
 		}
+
+		::gpk::error_t										Save(::gpk::array_pod<byte_t> & output) const { 
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::SRigidBodyFrame	>{BodyFrames		}, output);
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::SRigidBodyFlags	>{BodyFlags			}, output);
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::SForce3			>{Forces			}, output);
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::SMass3			>{Masses			}, output);
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::STransform3		>{Transforms		}, output);
+			::gpk::viewWrite(::gpk::view_array<const ::gpk::SMatrix4<float>	>{TransformsLocal	}, output);
+			return 0; 
+		}
+		::gpk::error_t										Load(::gpk::view_array<const byte_t> & input) { 
+			uint32_t												bytesRead				= 0;
+			::gpk::view_array<const ::gpk::SRigidBodyFrame	> readBodyFrames		= {}; bytesRead	= ::gpk::viewRead(readBodyFrames		, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFrames			= readBodyFrames		;
+			::gpk::view_array<const ::gpk::SRigidBodyFlags	> readBodyFlags			= {}; bytesRead	= ::gpk::viewRead(readBodyFlags			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFlags			= readBodyFlags			;
+			::gpk::view_array<const ::gpk::SForce3			> readForces			= {}; bytesRead	= ::gpk::viewRead(readForces			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Forces				= readForces			;
+			::gpk::view_array<const ::gpk::SMass3			> readMasses			= {}; bytesRead	= ::gpk::viewRead(readMasses			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Masses				= readMasses			;
+			::gpk::view_array<const ::gpk::STransform3		> readTransforms		= {}; bytesRead	= ::gpk::viewRead(readTransforms		, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Transforms			= readTransforms		;
+			::gpk::view_array<const ::gpk::SMatrix4<float>	> readTransformsLocal	= {}; bytesRead	= ::gpk::viewRead(readTransformsLocal	, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; TransformsLocal	= readTransformsLocal	;
+			return 0;
+		}
+
 	};
 
 	int												createOrbiter

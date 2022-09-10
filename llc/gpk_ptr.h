@@ -142,7 +142,6 @@ namespace gpk
 		inline				_tPOD*								allocate							()															noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
 
-
 	template <typename T>
 	using array_pobj = ::gpk::array_obj<::gpk::ptr_obj<T>>;
 } // namespace
