@@ -503,7 +503,7 @@ namespace gpk
 			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index].~_tObj();							// Destroy old
-			if(1 == Count)
+			if(1 == Count || index == (Count - 1))
 				--Count;
 			else {
 				new (&Data[index]) _tObj(Data[--Count]);	// Placement new
