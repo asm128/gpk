@@ -178,22 +178,23 @@ namespace gpk
 	// This type is used to initialize an enumeration value.
 	template <typename _tValue>
 	struct genum_value {
-									_tValue							Value									= ::gpk::enum_definition<_tValue>::INVALID_VALUE;
-									::gpk::view_const_char			Name									= INVALID_ENUM_VALUE_STR;
+									_tValue							Value					= ::gpk::enum_definition<_tValue>::INVALID_VALUE;
+									::gpk::view_const_char			Name					= INVALID_ENUM_VALUE_STR;
 		//
-		inline														genum_value								()																	= default;
-		inline constexpr											genum_value								(const genum_value& other)											= default;
-		inline														genum_value								(const _tValue& value)												: Value((_tValue)value), Name(::gpk::enum_definition<_tValue>::get().get_value_name(value))				{}
-		inline constexpr											genum_value								(const _tValue& value, const ::gpk::view_const_char& name)			: Value((_tValue)value), Name(name)	{ ::gpk::enum_definition<_tValue>::get().add_value(value, name);	}
-		inline constexpr			operator						const	_tValue&						()															const	{ return Value; }
+		inline														genum_value				()																	= default;
+		inline constexpr											genum_value				(const genum_value& other)											= default;
+		inline														genum_value				(const _tValue& value)												: Value((_tValue)value), Name(::gpk::enum_definition<_tValue>::get().get_value_name(value))				{}
+		inline constexpr											genum_value				(const _tValue& value, const ::gpk::view_const_char& name)			: Value((_tValue)value), Name(name)	{ ::gpk::enum_definition<_tValue>::get().add_value(value, name);	}
+		inline constexpr			operator						const	_tValue&		()															const	{ return Value; }
 	};
 
-	template <typename _tEnum>	uint32_t						get_value_count							()																		{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
-	template <typename _tEnum>	const ::gpk::view_const_char &	get_value_label							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	int32_t							get_value_index							(const _tEnum& statusBit					)							{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
-	template <typename _tEnum>	_tEnum							get_value								(const ::gpk::view_const_char & valueLabel	)							{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
+	template <typename _tEnum>	uint32_t											get_value_count			()												{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
+	template <typename _tEnum>	const ::gpk::view_const_char &						get_value_label			(const _tEnum& statusBit					)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
+	template <typename _tEnum>	const ::gpk::array_pod<::gpk::view_const_char> &	get_value_labels		()												{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
+	template <typename _tEnum>	int32_t												get_value_index			(const _tEnum& statusBit					)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
+	template <typename _tEnum>	_tEnum												get_value				(const ::gpk::view_const_char & valueLabel	)	{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
 	template <typename _tEnum, size_t _sLen>
-								_tEnum							get_value								(const char (&valueLabel)[_sLen])										{ return ::gpk::enum_definition<_tEnum>::get().get_value		(::gpk::view_const_string{valueLabel});	}
+								_tEnum												get_value				(const char (&valueLabel)[_sLen])				{ return ::gpk::enum_definition<_tEnum>::get().get_value(::gpk::view_const_string{valueLabel});	}
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
