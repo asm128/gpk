@@ -65,8 +65,10 @@
 	offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
 	uint32_t												* ppvBits									= 0;
 	ree_if(0 == (offscreenDetail.IntermediateBitmap = ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &ppvBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::SColorBGRA);
+	const uint32_t lastLine		= metricsSource.y - 1;
 	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
-		memcpy(&ppvBits[y * metricsSource.x], colorArray[metricsSource.y - 1 - y].begin(), metricsSource.x * sizeof(::gpk::SColorBGRA));
+		memcpy(&ppvBits[y * metricsSource.x], colorArray[lastLine - y].begin(), lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
 	//gerror_if(FALSE == ::BitBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
