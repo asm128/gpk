@@ -658,8 +658,8 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{
-		output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)});
-		output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)});
+		gpk_necall(output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
+		gpk_necall(output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 

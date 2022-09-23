@@ -76,6 +76,9 @@
     <Filter Include="xml">
       <UniqueIdentifier>{975efb15-1710-468b-9a48-cd974da95602}</UniqueIdentifier>
     </Filter>
+    <Filter Include="voxel">
+      <UniqueIdentifier>{3cc94a17-96ef-470b-b56b-d437dad4a752}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -371,6 +374,9 @@
     </ClInclude>
     <ClInclude Include="gpk_sysevent.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_vox.h">
+      <Filter>voxel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

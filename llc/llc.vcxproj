@@ -48,6 +48,7 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_sysevent.h" />
+    <ClInclude Include="gpk_vox.h" />
     <ClInclude Include="gpk_window.h" />
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_gui_control.h" />
