@@ -50,44 +50,24 @@ def getFileLines( fullpath, filename ):
 
 # loop through subdirs
 for subdir, dirs, files in os.walk(rootdir):
-	if( (not( subdir.lower().find( 'Win32.Release' ) >= 0 )) 
-		and (not( subdir.lower().find( 'Win32.Debug' ) >= 0 )) 
-		and (not( subdir.lower().find( 'x64.Release' ) >= 0 )) 
-		and (not( subdir.lower().find( 'x64.Debug' ) >= 0 )) 
-		and (not( subdir.lower().find( 'dxut' ) >= 0 )) 
-		#and (not( subdir.lower().find( 'gunz' ) >= 0 ))
-		and (not( subdir.lower().find( 'sha' ) >= 0 )) 
-		and (not( subdir.lower().find( 'crypto' ) >= 0 )) 
-		and (not( subdir.lower().find( 'gzip' ) >= 0 )) 
-		#and (not( subdir.lower().find( 'rest' ) >= 0 ))
-		and (not( subdir.lower().find( 'graphingcalculator' ) >= 0 )) 
-		and (not( subdir.lower().find( 'boost' ) >= 0 )) 
-		and (not( subdir.lower().find( 'obj' ) >= 0 )) 
-		and (not( subdir.lower().find( 'zlib' ) >= 0 )) 
-		and (not( subdir.lower().find( 'basiclock' ) >= 0 )) 
-		and (not( subdir.lower().find( 'snippets' ) >= 0 )) 
-		and (not( subdir.lower().find( 'external' ) >= 0 )) 
-		and (not( subdir.lower().find( 'unittest' ) >= 0 )) 
-		):
-		
-		for filename in files:
-			# only count lines of code files
-			newNode = { 'name' : '', 'folder' : '', 'blank lines' : 0, 'comment lines' : 0, 'code lines' : 0, 'directive lines' : 0,'bytes' : 0,
-		 				'creation date':0, 'modification date': 0 }
-			if( checkFileExt(filename, ".h") or checkFileExt(filename, ".cpp") or checkFileExt(filename, ".def") or checkFileExt(filename, ".c") or checkFileExt(filename, ".hpp") or checkFileExt(filename, ".fx") ):
-				print(filename) # let me know the current file name for if it crashes
-				fullpath 			= subdir+"\\"+filename
-				newNode 			= filenode.copy()
-				newNode['name'] 	= filename
-				newNode['folder'] 	= subdir
-				newNode['creation date']		= time.asctime( gmtime( os.path.getctime(fullpath) ) )
-				newNode['modification date']	= time.asctime( gmtime( os.path.getmtime(fullpath) ) )
-				lines = getFileLines( fullpath, filename )
+	for filename in files:
+		# only count lines of code files
+		newNode = { 'name' : '', 'folder' : '', 'blank lines' : 0, 'comment lines' : 0, 'code lines' : 0, 'directive lines' : 0,'bytes' : 0,
+		 			'creation date':0, 'modification date': 0 }
+		if([checkFileExt(filename, ext) for ext in [".h", ".cpp", ".def", ".c", ".hpp", ".fx", ".ts", ".js", ".html"]].count(True)):
+			print(filename) # let me know the current file name for if it crashes
+			fullpath 			= subdir+"\\"+filename
+			newNode 			= filenode.copy()
+			newNode['name'] 	= filename
+			newNode['folder'] 	= subdir
+			newNode['creation date']		= time.asctime( gmtime( os.path.getctime(fullpath) ) )
+			newNode['modification date']	= time.asctime( gmtime( os.path.getmtime(fullpath) ) )
+			lines = getFileLines( fullpath, filename )
 	
-				for line in lines:
-					newNode=parseLine( newNode, line.replace("\0", "").strip() )
+			for line in lines:
+				newNode=parseLine( newNode, line.replace("\0", "").strip() )
 				
-				allnodes.append( newNode )
+			allnodes.append( newNode )
 
 outString = '';
 

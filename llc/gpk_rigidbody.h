@@ -156,25 +156,31 @@ namespace gpk
 		}
 
 		::gpk::error_t										Save(::gpk::array_pod<byte_t> & output) const { 
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::SRigidBodyFrame	>{BodyFrames		}, output);
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::SRigidBodyFlags	>{BodyFlags			}, output);
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::SForce3			>{Forces			}, output);
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::SMass3			>{Masses			}, output);
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::STransform3		>{Transforms		}, output);
-			::gpk::viewWrite(::gpk::view_array<const ::gpk::SMatrix4<float>	>{TransformsLocal	}, output);
+			gpk_necs(::gpk::viewWrite(BodyFrames		, output));
+			gpk_necs(::gpk::viewWrite(BodyFlags			, output));
+			gpk_necs(::gpk::viewWrite(Forces			, output));
+			gpk_necs(::gpk::viewWrite(Masses			, output));
+			gpk_necs(::gpk::viewWrite(Transforms		, output));
+			gpk_necs(::gpk::viewWrite(TransformsLocal	, output));
+
+			info_printf("Saved %s, %i", "BodyFrames"		, BodyFrames		.size());
+			info_printf("Saved %s, %i", "BodyFlags"			, BodyFlags			.size());
+			info_printf("Saved %s, %i", "Forces"			, Forces			.size());
+			info_printf("Saved %s, %i", "Masses"			, Masses			.size());
+			info_printf("Saved %s, %i", "Transforms"		, Transforms		.size());
+			info_printf("Saved %s, %i", "TransformsLocal"	, TransformsLocal	.size());
 			return 0; 
 		}
 		::gpk::error_t										Load(::gpk::view_array<const byte_t> & input) { 
 			uint32_t												bytesRead				= 0;
-			::gpk::view_array<const ::gpk::SRigidBodyFrame	> readBodyFrames		= {}; bytesRead	= ::gpk::viewRead(readBodyFrames		, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFrames			= readBodyFrames		;
-			::gpk::view_array<const ::gpk::SRigidBodyFlags	> readBodyFlags			= {}; bytesRead	= ::gpk::viewRead(readBodyFlags			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFlags			= readBodyFlags			;
-			::gpk::view_array<const ::gpk::SForce3			> readForces			= {}; bytesRead	= ::gpk::viewRead(readForces			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Forces				= readForces			;
-			::gpk::view_array<const ::gpk::SMass3			> readMasses			= {}; bytesRead	= ::gpk::viewRead(readMasses			, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Masses				= readMasses			;
-			::gpk::view_array<const ::gpk::STransform3		> readTransforms		= {}; bytesRead	= ::gpk::viewRead(readTransforms		, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; Transforms			= readTransforms		;
-			::gpk::view_array<const ::gpk::SMatrix4<float>	> readTransformsLocal	= {}; bytesRead	= ::gpk::viewRead(readTransformsLocal	, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; TransformsLocal	= readTransformsLocal	;
-			return 0;
+			::gpk::view_array<const ::gpk::SRigidBodyFrame	> readBodyFrames		= {}; gpk_necs(bytesRead = ::gpk::viewRead(readBodyFrames		, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFrames		= readBodyFrames		;
+			::gpk::view_array<const ::gpk::SRigidBodyFlags	> readBodyFlags			= {}; gpk_necs(bytesRead = ::gpk::viewRead(readBodyFlags		, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; BodyFlags			= readBodyFlags			;
+			::gpk::view_array<const ::gpk::SForce3			> readForces			= {}; gpk_necs(bytesRead = ::gpk::viewRead(readForces			, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; Forces			= readForces			;
+			::gpk::view_array<const ::gpk::SMass3			> readMasses			= {}; gpk_necs(bytesRead = ::gpk::viewRead(readMasses			, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; Masses			= readMasses			;
+			::gpk::view_array<const ::gpk::STransform3		> readTransforms		= {}; gpk_necs(bytesRead = ::gpk::viewRead(readTransforms		, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; Transforms		= readTransforms		;
+			::gpk::view_array<const ::gpk::SMatrix4<float>	> readTransformsLocal	= {}; gpk_necs(bytesRead = ::gpk::viewRead(readTransformsLocal	, input)); input = {input.begin() + bytesRead, input.size() - bytesRead}; TransformsLocal	= readTransformsLocal	;
+			return 0;																	  
 		}
-
 	};
 
 	int												createOrbiter

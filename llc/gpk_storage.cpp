@@ -163,23 +163,30 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 	return iFile - 1;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_char>& output)					{
-	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	)
-		gpk_necall(output.push_back({input.Files[iFile].begin(), input.Files[iFile].size()}), "%s", "Out of memory?");
+		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::view_const_char>& output, const ::gpk::vcc extension)					{
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) {
+		const ::gpk::vcc						& fileName				= input.Files[iFile];
+		if(0 == extension.size() || (extension.size() < fileName.size() && 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()))))
+			gpk_necall(output.push_back(fileName), "%s", "Out of memory?");
+	}
+
 	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	)
-		gpk_necall(::gpk::pathList(input.Folders	[iFolder], output), "%s", "Unknown error!");
+		gpk_necall(::gpk::pathList(input.Folders	[iFolder], output, extension), "%s", "Unknown error!");
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::array_pod<char_t>>& output)					{
-	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	)
-		gpk_necall(output.push_back(input.Files[iFile]), "%s", "Out of memory?");
+		::gpk::error_t														gpk::pathList						(const ::gpk::SPathContents& input, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, const ::gpk::vcc extension)					{
+	for(uint32_t iFile   = 0; iFile   < input.Files		.size(); ++iFile	) {
+		const ::gpk::vcc						& fileName				= input.Files[iFile];
+		if(0 == extension.size() || (extension.size() < fileName.size() && 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()))))
+			gpk_necall(output.push_back(fileName), "%s", "Out of memory?");
+	}
 	for(uint32_t iFolder = 0; iFolder < input.Folders	.size(); ++iFolder	)
-		gpk_necall(::gpk::pathList(input.Folders[iFolder], output), "%s", "Unknown error!");
+		gpk_necall(::gpk::pathList(input.Folders[iFolder], output, extension), "%s", "Unknown error!");
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders)	{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders, const ::gpk::vcc extension)	{
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
@@ -198,8 +205,12 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 		int32_t																			lenPath								= snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, pathToList.begin(), fdFile.cFileName);
 		if((fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) && false == listFolders)
 			continue;
-		verbose_printf("Path: %s.", sPath);
-		gpk_necall(output.push_back(::gpk::view_const_string{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+
+		const ::gpk::vcs viewPath = sPath;
+		if(0 == extension.size() || (extension.size() < viewPath.size() && 0 == strncmp(viewPath.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), viewPath.size())))) {
+			verbose_printf("Path: %s.", sPath);
+			gpk_necall(output.push_back(::gpk::view_const_string{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+		}
 		//output.push_back(0)
 	}
 	while(FindNextFile(hFind, &fdFile));
@@ -222,7 +233,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::SPathContents& pathContents)						{
+		::gpk::error_t														gpk::pathList						(const ::gpk::view_const_char& pathToList, ::gpk::SPathContents& pathContents, const gpk::vcc extension)						{
 	char																			sPath[4096];
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", pathToList.size());
@@ -243,7 +254,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 			gpk_necall(newFolderIndex, "%s", "Out of memory?");
-			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unknown error!");
+			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unknown error!");
 			verbose_printf("Directory: %s.", sPath);
 		}
 		else {
@@ -267,7 +278,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::view_const_char	& file
 			if(drnt->d_type == DT_DIR) {
 				::gpk::error_t																	newFolderIndex						= pathContents.Folders.push_back({});
 				gpk_necall(newFolderIndex, "%s", "Out of memory?");
-				gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex]), "%s", "Unkown error!");
+				gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unkown error!");
 				info_printf("Directory: %s.", sPath);
 			}
 			else {

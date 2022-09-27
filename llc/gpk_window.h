@@ -21,10 +21,22 @@ namespace gpk
 {
 
 #pragma pack(push, 1)
+
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
 							::HWND										WindowHandle								= {};
 							::WNDCLASSEX								WindowClass									= {};
+							uint32_t									BitmapInfoSize								= 0;
+							::BITMAPINFO								BitmapInfo									= {sizeof(::BITMAPINFO)};
+							::HDC										IntermediateDeviceContext					= 0;    // <- note, we're creating, so it needs to be destroyed
+							::HBITMAP									IntermediateBitmap							= 0;
+							uint32_t									* PixelBits									= 0;
+
+																		~SWindowPlatformDetail						()							{
+								if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
+								if(IntermediateDeviceContext	) ::DeleteDC		(IntermediateDeviceContext	);
+								if(WindowHandle					) ::DestroyWindow	(WindowHandle);
+							}
 
 		static constexpr	const TCHAR									WindowClassName	[256]						= TEXT("GPK_WINDOW");
 #elif defined(GPK_XCB)

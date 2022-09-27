@@ -13,8 +13,10 @@
 
 namespace gpk
 {
+
 	struct SFrameworkDetail {
-#if defined(GPK_XCB)
+#if defined(GPK_WINDOWS)
+#elif defined(GPK_XCB)
 							xcb_connection_t										* XCBConnection			= {};
 							xcb_screen_t											* XCBScreen				= {};
 

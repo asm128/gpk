@@ -134,7 +134,7 @@ namespace gpk
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
 		::gpk::array_obj<::gpk::array_pod<char_t>>						paths;
 		::gpk::pathCreate(containerPath);
-		::gpk::pathList({containerPath.begin(), containerPath.size()}, paths, false);
+		::gpk::pathList(containerPath, paths, false, {});
 		const ::gpk::view_const_string									extension					= "ubk";
 		::gpk::array_pod<char_t>										loadedBytes;
 		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {

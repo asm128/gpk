@@ -1,3 +1,4 @@
+#include "gpk_virtual_keyboard.h"
 #include "gpk_gui.h"
 
 #ifndef GPK_GUI_CONTROL_H_2903749802374
@@ -70,15 +71,30 @@ namespace gpk
 				::gpk::view_grid<::gpk::SColorBGRA>								Colors										= {};
 	};
 
-	struct SVirtualKeyboard {
-				int32_t															IdControl									= -1;
-				::gpk::array_pod<int32_t>										IdControls									= {};
-	};
+
+			::gpk::error_t			paletteGridInitialize		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette);
+			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view_grid<::gpk::SColorBGRA>& colors);
 
 
-			::gpk::error_t													paletteGridInitialize						(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette);
-			::gpk::error_t													paletteGridColorsSet						(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view_grid<::gpk::SColorBGRA>& colors);
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText);
 
+	static inline
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {
+				return ::gpk::guiSetupButtonList(gui, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign, buttonText); 
+			}
+
+	template<typename _tUIEnum>
+	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
+		gpk_necall(::gpk::guiSetupButtonList(gui, iParent, buttonWidth, yOffset, controlAlign, textAlign, ::gpk::get_value_labels<_tUIEnum>()), "%s", ::gpk::toString(::gpk::enum_definition<_tUIEnum>::get().Name).begin());
+		return 0; 
+	}
+
+	template<typename _tUIEnum>
+	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
+		gpk_necall(::gpk::guiSetupButtonList(gui, iParent, buttonWidth, offset, controlAlign, textAlign, ::gpk::get_value_labels<_tUIEnum>()), "%s", ::gpk::toString(::gpk::enum_definition<_tUIEnum>::get().Name).begin());
+		return 0; 
+	}
+	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view_array<const uint16_t> & keys);
 }
 
 #endif

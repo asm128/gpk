@@ -48,6 +48,7 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_sysevent.h" />
+    <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
     <ClInclude Include="gpk_window.h" />
     <ClInclude Include="gpk_framework.h" />
@@ -122,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
+    <ClCompile Include="gpk_array.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_base64.cpp" />
     <ClCompile Include="gpk_block.cpp" />
@@ -135,6 +137,7 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />

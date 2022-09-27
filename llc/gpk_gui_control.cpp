@@ -20,11 +20,12 @@
 		::gpk::SControl																& control								= gui.Controls.Controls		[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[idControl];
 		const uint32_t																iPrevItem								= iItem - 1;
-		control.Area.Size.y														= gui.FontCharSize.y + ::gpk::controlNCSpacing(control).y;
+		const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
+		control.Area.Size.y														= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
 		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
-			control.Area.Size.x														= int16_t(gui.FontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
+			control.Area.Size.x														= int16_t(fontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
 			if(menu.IdControls.size() > iPrevItem)
 				control.Area.Offset.x													= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
@@ -38,6 +39,7 @@
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
+	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
@@ -50,7 +52,7 @@
 			break;
 		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
 			controlMenu.Area.Size.y													+= gui.Controls.Controls[idControl].Area.Size.y;
-			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * gui.FontCharSize.x + ::gpk::controlNCSpacing(control).x));
+			controlMenu.Area.Size.x													= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * fontCharSize.x + ::gpk::controlNCSpacing(control).x));
 			break;
 		}
 	}
@@ -78,7 +80,8 @@
 }
 
 			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI& gui, ::gpk::SViewport& viewport)																				{
-	int16_t																		heightTitleBar							= gui.FontCharSize.y + 4;
+	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
+	int16_t																		heightTitleBar							= fontCharSize.y + 4;
 	uint32_t																	widthTarget								= 800;
 	const ::gpk::SCoord2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
 
@@ -225,7 +228,58 @@
 		control.ColorTheme													= int16_t(themeIndex + 1);
 		control.Area.Offset													= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
 		control.Area.Size													= controlSize.Cast<int16_t>();
-		::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl);
+		gpk_necs(::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
 	}
+	return 0;
+}
+
+::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {
+	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
+		int32_t								idControl						= ::gpk::controlCreate(gui);
+		::gpk::SControl						& control						= gui.Controls.Controls[idControl];
+		control.Area					= {{offset.x, (int16_t)(20 * iButton + offset.y)}, {(int16_t)buttonWidth, 20}};
+		control.Border					= {1, 1, 1, 1};//{10, 10, 10, 10};
+		control.Margin					= {1, 1, 1, 1};
+		control.Align					= controlAlign;
+		::gpk::SControlText					& controlText					= gui.Controls.Text[idControl];
+		controlText.Text				= buttonText[iButton];
+		controlText.Align				= textAlign;
+		gpk_necall(::gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a template and macro for this pattern
+	}
+	return 0;
+}
+
+::gpk::error_t					gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view_array<const uint16_t> & keys) {
+	vk.Keys							= keys;
+
+	vk.IdRoot						= ::gpk::controlCreate(gui);
+	const ::gpk::SCoord2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont].CharSize;
+	const ::gpk::SCoord2<int16_t>		sizeKey						= (charSize + ::gpk::SCoord2<uint8_t>{4, 4}).Cast<int16_t>();
+	static constexpr uint16_t			SIZE_BUTTON					= 96;
+	const ::gpk::SCoord2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
+
+	{
+		::gpk::SControl						& controlRoot				= gui.Controls.Controls[vk.IdRoot];
+		controlRoot.Area.Size			= sizeKeypad;
+		controlRoot.Align				= ::gpk::ALIGN_CENTER_BOTTOM;
+	}
+	for(uint32_t iKey = 0; iKey < vk.Keys.size(); ++iKey) {
+		char								text[8]		= {};
+		sprintf_s(text, "%c", vk.Keys[iKey]);
+
+		int32_t								idKey			= ::gpk::controlCreate(gui);
+		::gpk::SControl						& controlKey	= gui.Controls.Controls[idKey];
+		controlKey.Area.Size			= sizeKey;
+		controlKey.Area.Offset.x		= (int16_t)((iKey % rowWidth) * sizeKey.x);
+		controlKey.Area.Offset.y		= (int16_t)((iKey / rowWidth) * sizeKey.y);
+		controlKey.Border				= {1, 1, 1, 1};
+
+		gui.Controls.Text[idKey].Text	= ::gpk::label(text);
+		gui.Controls.Text[idKey].Align	= ::gpk::ALIGN_CENTER;
+
+		gpk_necs(::gpk::controlSetParent(gui, idKey, vk.IdRoot));
+	}
+
+	gpk_necs(::gpk::guiSetupButtonList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT));
 	return 0;
 }

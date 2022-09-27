@@ -512,6 +512,41 @@ namespace gpk
 
 			return Count;
 		}
+		template<size_t _Length>
+		inline				::gpk::error_t				append										(const _tObj (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
+		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tObj>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
+							::gpk::error_t				append										(const _tObj* chainToAppend, uint32_t chainLength)							noexcept	{
+			const uint32_t										startIndex									= Count;
+			const uint32_t										requestedSize								= Count + chainLength;
+			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
+			if(requestedSize > Size) {
+				_tObj												* oldData									= Data;
+				uint32_t											reserveSize									= calc_reserve_size(requestedSize);
+				uint32_t											mallocSize									= calc_malloc_size(reserveSize);
+				ree_if(mallocSize != (reserveSize*(uint32_t)sizeof(_tObj)), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
+				::gpk::auto_gpk_free								safeguard;
+				_tObj												* newData									= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
+				memset(&((char*)safeguard.Handle)[requestedSize * sizeof(_tObj)], 0, mallocSize - requestedSize * sizeof(_tObj));
+				ree_if(nullptr == newData, "Failed to resize array. Requested size: %u. Current size: %u.", requestedSize, Size);
+				if(oldData) {
+					for(uint32_t i = 0, copyCount = ::gpk::min(Count, requestedSize); i < copyCount; ++i)
+						new (&newData[i]) _tObj{oldData[i]};
+					for(uint32_t i = 0; i < Count; ++i)
+						oldData[i].~_tObj();
+				}
+				Data											= newData;
+				Size											= reserveSize;
+				Count											= (uint32_t)requestedSize;
+				safeguard.Handle								= 0;
+				if(oldData)
+					::gpk::gpk_free(oldData);
+			}
+			for(uint32_t iEl = 0; iEl < chainLength; ++iEl) {
+				new (&Data[startIndex + iEl]) _tObj(chainToAppend[iEl]);
+			}
+			return startIndex;
+		}
+
 		// returns the new size of the list or -1 on failure.
 							int32_t						insert										(uint32_t index, const _tObj& newValue)													{
 			ree_if(index >= Count, "Invalid index: %u.", index);
@@ -657,7 +692,7 @@ namespace gpk
 
 
 	template<typename _tElement>
-	::gpk::error_t									viewWrite							(const ::gpk::view_array<const _tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{
+	::gpk::error_t									viewWrite							(const ::gpk::view_array<_tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{
 		gpk_necall(output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
 		gpk_necall(output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
@@ -696,6 +731,12 @@ namespace gpk
 	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_char& strToLog);
 	::gpk::error_t									join							(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char>	fields);
 	::gpk::error_t									append_quoted					(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text);
+
+
+	::gpk::error_t									filterPrefix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
+	::gpk::error_t									filterPostfix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
+
+
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837

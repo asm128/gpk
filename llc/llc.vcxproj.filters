@@ -378,6 +378,9 @@
     <ClInclude Include="gpk_vox.h">
       <Filter>voxel</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_virtual_keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -538,6 +541,12 @@
     </ClCompile>
     <ClCompile Include="gpk_xml_reader.cpp">
       <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_virtual_keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_array.cpp">
+      <Filter>container</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

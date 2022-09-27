@@ -36,43 +36,45 @@
 }
 
 #if defined(GPK_WINDOWS)
-		::gpk::error_t					drawBuffer									(::HDC hdc, int width, int height, const ::gpk::view_grid<::gpk::SColorBGRA>& colorArray)				{
-	struct SOffscreenDetail { // raii destruction of resources
-		uint32_t									BitmapInfoSize								= 0;
-		::BITMAPINFO								BitmapInfo									= {sizeof(::BITMAPINFO)};
-		::HDC										IntermediateDeviceContext					= 0;    // <- note, we're creating, so it needs to be destroyed
-		::HBITMAP									IntermediateBitmap							= 0;
-
-													~SOffscreenDetail							()							{
-			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
-			if(IntermediateDeviceContext	) ::DeleteDC		(IntermediateDeviceContext	);
-		}
-	}											offscreenDetail								= {};
-
+		::gpk::error_t					drawBuffer									(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::view_grid<::gpk::SColorBGRA>& colorArray)				{
 	const uint32_t								bytesToCopy									= sizeof(::RGBQUAD) * colorArray.size();
-	offscreenDetail.BitmapInfoSize			= sizeof(::BITMAPINFO) + bytesToCopy;
-	const ::gpk::SCoord2<uint32_t>				metricsSource								= colorArray.metrics();
-	//memcpy(&offscreenDetail.BitmapInfo->bmiColors[1], colorArray[0].begin(), metricsSource.x * metricsSource.y * sizeof(::gpk::SColorBGRA));
+	const ::gpk::SCoord2<uint16_t>				metricsSource								= colorArray.metrics().Cast<uint16_t>();
+	const ::gpk::SCoord2<uint16_t>				prevSize									= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
+	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
+	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight
+	 || width  != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
+	 || height != offscreenDetail.BitmapInfo.bmiHeader.biHeight
+	 || 0 == offscreenDetail.IntermediateDeviceContext
+	 || 0 == offscreenDetail.IntermediateBitmap
+	) {
+		offscreenDetail.BitmapInfoSize			= sizeof(::BITMAPINFO);
+		//memcpy(&offscreenDetail.BitmapInfo->bmiColors[1], colorArray[0].begin(), metricsSource.x * metricsSource.y * sizeof(::gpk::SColorBGRA));
 
-	offscreenDetail.BitmapInfo.bmiHeader				= {sizeof(::BITMAPINFO)};
-	offscreenDetail.BitmapInfo.bmiHeader.biWidth		= colorArray.metrics().x;
-	offscreenDetail.BitmapInfo.bmiHeader.biHeight		= colorArray.metrics().y;
-	offscreenDetail.BitmapInfo.bmiHeader.biPlanes		= 1;
-	offscreenDetail.BitmapInfo.bmiHeader.biBitCount		= 32;
-	offscreenDetail.BitmapInfo.bmiHeader.biCompression	= BI_RGB;
-	offscreenDetail.BitmapInfo.bmiHeader.biSizeImage	= bytesToCopy;
+		offscreenDetail.BitmapInfo.bmiHeader				= {sizeof(::BITMAPINFO)};
+		offscreenDetail.BitmapInfo.bmiHeader.biWidth		= colorArray.metrics().x;
+		offscreenDetail.BitmapInfo.bmiHeader.biHeight		= colorArray.metrics().y;
+		offscreenDetail.BitmapInfo.bmiHeader.biPlanes		= 1;
+		offscreenDetail.BitmapInfo.bmiHeader.biBitCount		= 32;
+		offscreenDetail.BitmapInfo.bmiHeader.biCompression	= BI_RGB;
+		offscreenDetail.BitmapInfo.bmiHeader.biSizeImage	= bytesToCopy;
 
-	offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
-	uint32_t												* ppvBits									= 0;
-	ree_if(0 == (offscreenDetail.IntermediateBitmap = ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &ppvBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+		if(offscreenDetail.IntermediateBitmap)
+			DeleteObject(offscreenDetail.IntermediateBitmap);
+
+		if(offscreenDetail.IntermediateDeviceContext)
+			DeleteDC(offscreenDetail.IntermediateDeviceContext);
+
+		offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
+		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &offscreenDetail.PixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+	}
 	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::SColorBGRA);
 	const uint32_t lastLine		= metricsSource.y - 1;
 	const ::gpk::SColorBGRA									* dest										= colorArray.begin();
 	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
-		memcpy(&ppvBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
+		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
-	//gerror_if(FALSE == ::BitBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
+	//e_if(FALSE == ::BitBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
 	::SetStretchBltMode(hdc, COLORONCOLOR);
 	e_if(FALSE == ::StretchBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, colorArray.metrics().x, colorArray.metrics().y, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
@@ -87,7 +89,7 @@
 	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
 	::HDC																								dc											= ::GetDC(windowHandle);
 	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
-	e_if(errored(::drawBuffer(dc, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
+	e_if(errored(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
 #elif defined(GPK_XCB)
 	(void)displayInstance; (void)targetToPresent;

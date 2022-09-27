@@ -199,8 +199,6 @@ namespace gpk
 
 		// Font
 		::gpk::array_obj<::gpk::SGUIFont>								Fonts								= {};
-		::gpk::SImageMonochrome<uint32_t>								FontTexture							= {};
-		::gpk::SCoord2<uint16_t>										FontCharSize						= {9, 16};
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};
@@ -235,25 +233,27 @@ namespace gpk
 		};
 	#pragma pack(pop)
 
-	::gpk::error_t											guiProcessInput						(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents = {});
-	::gpk::error_t											guiUpdateMetrics					(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t											guiDraw								(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
-	::gpk::error_t											guiGetProcessableControls			(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
-	::gpk::error_t											guiDeselect							(::gpk::SGUI& gui);
-	::gpk::error_t											guiSelect							(::gpk::SGUI& gui, int32_t controlToSelect);
+	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents = {});
+	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
+	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
+	::gpk::error_t			guiGetProcessableControls		(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
+	::gpk::error_t			guiDeselect						(::gpk::SGUI& gui);
+	::gpk::error_t			guiSelect						(::gpk::SGUI& gui, int32_t controlToSelect);
 
-	::gpk::error_t											controlDelete						(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
-	::gpk::error_t											controlCreate						(::gpk::SGUI& gui);
-	::gpk::error_t											controlCreateChild					(::gpk::SGUI& gui, int32_t iParent);
-	::gpk::error_t											controlSetParent					(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
-	::gpk::error_t											controlDrawHierarchy				(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target);
-	::gpk::error_t											controlTextSet						(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
-	//::gpk::error_t											controlUpdateMetrics				(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
-	::gpk::error_t											controlUpdateMetricsTopToDown		(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t											controlMetricsInvalidate			(::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t											controlHidden						(const ::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t											controlDisabled						(const ::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t											controlInvalid						(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t			controlDelete					(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
+	::gpk::error_t			controlCreate					(::gpk::SGUI& gui);
+	::gpk::error_t			controlCreateChild				(::gpk::SGUI& gui, int32_t iParent);
+	::gpk::error_t			controlSetParent				(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target);
+	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
+	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
+	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
+	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t			controlHidden					(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t			controlDisabled					(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t			controlInvalid					(const ::gpk::SGUI& gui, int32_t iControl);
+
+
 
 } // namespace
 
