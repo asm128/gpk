@@ -76,7 +76,13 @@ namespace gpk
 			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view_grid<::gpk::SColorBGRA>& colors);
 
 
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText);
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText);
+
+	static inline
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {
+				return ::gpk::guiSetupButtonList(gui, iParent, {buttonWidth, (uint16_t)20}, offset, controlAlign, textAlign, buttonText); 
+			}
+
 
 	static inline
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {

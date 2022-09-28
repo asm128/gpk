@@ -1,6 +1,18 @@
 #include "gpk_raster_lh.h"
 #include <algorithm>
 
+int								gpk::pixelBlend			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
+	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
+	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
+	) {
+		::gpk::SColorBGRA					& targetPixel	= pixels[position.y][position.x];
+		::gpk::SColorFloat					srcPixel		= targetPixel;
+		targetPixel						= ::gpk::interpolate_linear(srcPixel, ::gpk::SColorFloat(color), color.a / 255.0f);
+		return 1;
+	}
+	return 0;
+}
+
 int								gpk::setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)

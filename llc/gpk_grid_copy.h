@@ -66,6 +66,15 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
+						::gpk::error_t							grid_raster_alpha_bit_ex		(const ::gpk::view_bit<uint32_t>& src, const ::gpk::SCoord2<uint16_t>& srcMetrics, const ::gpk::SCoord2<int16_t>& size_, const ::gpk::SCoord2<_tCoord>& offsetDst, const ::gpk::SCoord2<_tCoord>& offsetSrc, ::gpk::array_pod<::gpk::SCoord2<uint16_t>> & dstCoords)	{
+		for(int32_t y = 0; y < size_.y; ++y)
+			for(int32_t x = 0; x < size_.x; ++x)
+				if(src[(y + offsetSrc.y) * srcMetrics.x + (x + offsetSrc.x)])
+					dstCoords.push_back({(uint16_t)(x + offsetDst.x), (uint16_t)(y + offsetDst.y)});
+		return ::gpk::max(size_.x * size_.y, 0);
+	}
+
+	template<typename _tCoord>
 						::gpk::error_t							grid_raster_alpha_bit			(const ::gpk::SCoord2<uint32_t>& dstMetrics, const ::gpk::view_bit<uint32_t>& src, const ::gpk::SCoord2<uint32_t>& srcMetrics, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, ::gpk::array_pod<::gpk::SCoord2<int32_t>> & dstCoords)		{
 		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset.template Cast<int32_t>()  + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
 		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
@@ -74,6 +83,17 @@ namespace gpk
 		const int32_t													maxY							= ::gpk::min(::gpk::min(stopYDst - (int32_t)srcOffset.y, (int32_t)dstMetrics.y - offsetDst.y), (int32_t)(dstRect.Size.y/* - dstRect.Offset.y*/));
 		const int32_t													maxX							= ::gpk::min(::gpk::min(stopXDst - (int32_t)srcOffset.x, (int32_t)dstMetrics.x - offsetDst.x), (int32_t)(dstRect.Size.x/* - dstRect.Offset.x*/));
 		return (maxX > 0) ? ::gpk::grid_raster_alpha_bit_ex(src, srcMetrics, ::gpk::SCoord2<int32_t>{maxX, maxY}, offsetDst, offsetSrc, dstCoords) : 0;
+	}
+
+	template<typename _tCoord>
+						::gpk::error_t							grid_raster_alpha_bit			(const ::gpk::SCoord2<uint16_t>& dstMetrics, const ::gpk::view_bit<uint32_t>& src, const ::gpk::SCoord2<uint16_t>& srcMetrics, const ::gpk::SRectangle2<_tCoord>& dstRect, const ::gpk::SCoord2<_tCoord>& srcOffset, ::gpk::array_pod<::gpk::SCoord2<uint16_t>> & dstCoords)		{
+		const ::gpk::SCoord2<int32_t>									offsetSrc						= srcOffset.template Cast<int32_t>()  + ::gpk::SCoord2<int32_t>{-::gpk::min(0, (int32_t)dstRect.Offset.x), -::gpk::min(0, (int32_t)dstRect.Offset.y)};
+		const ::gpk::SCoord2<int32_t>									offsetDst						= {::gpk::max(0, (int32_t)dstRect.Offset.x),  ::gpk::max(0, (int32_t)dstRect.Offset.y)};
+		const int32_t													stopYDst						= (int32_t)(srcMetrics.y) + ::gpk::min(0, (int32_t)dstRect.Offset.y) - ::gpk::min(srcOffset.y, 0);
+		const int32_t													stopXDst						= (int32_t)(srcMetrics.x) + ::gpk::min(0, (int32_t)dstRect.Offset.x) - ::gpk::min(srcOffset.x, 0);
+		const int32_t													maxY							= ::gpk::min(::gpk::min(stopYDst - (int32_t)srcOffset.y, (int32_t)dstMetrics.y - offsetDst.y), (int32_t)(dstRect.Size.y/* - dstRect.Offset.y*/));
+		const int32_t													maxX							= ::gpk::min(::gpk::min(stopXDst - (int32_t)srcOffset.x, (int32_t)dstMetrics.x - offsetDst.x), (int32_t)(dstRect.Size.x/* - dstRect.Offset.x*/));
+		return (maxX > 0) ? ::gpk::grid_raster_alpha_bit_ex(src, srcMetrics, ::gpk::SCoord2<int16_t>{int16_t(maxX), int16_t(maxY)}, offsetDst, offsetSrc, dstCoords) : 0;
 	}
 
 	// -----------------------------------------------

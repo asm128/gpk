@@ -164,6 +164,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 	switch(uMsg) {
 	default: break;
 	case WM_SHOWWINDOW		: newEvent.Type = ::gpk::SYSEVENT_SHOW			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
+	case WM_CHAR			: newEvent.Type = ::gpk::SYSEVENT_CHAR			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; return 0;
 	case WM_CLOSE			: newEvent.Type = ::gpk::SYSEVENT_CLOSE			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); ::DestroyWindow(hWnd); return 0;
 	case WM_KEYDOWN			: newEvent.Type = ::gpk::SYSEVENT_KEY_DOWN		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
 	case WM_KEYUP			: newEvent.Type = ::gpk::SYSEVENT_KEY_UP		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;

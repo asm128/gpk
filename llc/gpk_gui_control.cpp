@@ -233,11 +233,11 @@
 	return 0;
 }
 
-::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {
+::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view_array<::gpk::vcc> buttonText) {
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		int32_t								idControl						= ::gpk::controlCreate(gui);
 		::gpk::SControl						& control						= gui.Controls.Controls[idControl];
-		control.Area					= {{offset.x, (int16_t)(20 * iButton + offset.y)}, {(int16_t)buttonWidth, 20}};
+		control.Area					= {{offset.x, (int16_t)(20 * iButton + offset.y)}, buttonSize.Cast<int16_t>()};
 		control.Border					= {1, 1, 1, 1};//{10, 10, 10, 10};
 		control.Margin					= {1, 1, 1, 1};
 		control.Align					= controlAlign;

@@ -15,11 +15,12 @@ namespace gpk
 		float							Range;
 	};
 
-	int								setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::SCoord2	<int16_t>	position	, ::gpk::SColorBGRA color);
-	int								drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::SRectangle2<int16_t>	rectangle	, ::gpk::SColorBGRA color);
-	int								drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::SCircle	<int16_t>	circle		, ::gpk::SColorBGRA color);
-	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::SLine2		<int16_t>	line		, ::gpk::SColorBGRA color);
-	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels	, ::gpk::SLine2		<int16_t>	line		, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords);
+	int								pixelBlend			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2		<int16_t> position	, ::gpk::SColorBGRA color);
+	int								setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2		<int16_t> position	, ::gpk::SColorBGRA color);
+	int								drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2	<int16_t> rectangle	, ::gpk::SColorBGRA color);
+	int								drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCircle		<int16_t> circle	, ::gpk::SColorBGRA color);
+	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2		<int16_t> line		, ::gpk::SColorBGRA color);
+	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2		<int16_t> line		, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords);
 	int								drawLine
 		( const ::gpk::view_grid<::gpk::SColorBGRA>		pixels
 		, const ::gpk::SLine3<float>					& lineFloat
