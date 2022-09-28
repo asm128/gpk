@@ -1,4 +1,4 @@
-#include "gpk_typeint.h"
+#include "gpk_array.h"
 #include "gpk_coord.h"
 
 #ifndef GPK_INPUT_H_2890374982734

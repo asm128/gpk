@@ -1,11 +1,11 @@
-#include "gpk_sysevent.h"
-#include "gpk_array.h"
-#include "gpk_color.h"
 #include "gpk_input.h"
-#include "gpk_view_grid.h"
 #include "gpk_image.h"
+#include "gpk_color.h"
 #include "gpk_array_static.h"
 #include "gpk_ascii_color.h"
+#include "gpk_font.h"
+
+#include "gpk_sysevent.h"
 
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
@@ -179,10 +179,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	struct SGUIFont {
-		::gpk::SCoord2<uint8_t>											CharSize;
-		::gpk::SImageMonochrome<uint32_t>								Texture	;
-	};
+	typedef SRasterFont SGUIFont;
 
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>										LastSize							= {};

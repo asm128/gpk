@@ -47,6 +47,7 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_font.h" />
     <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="gpk_view_array.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
+    <ClCompile Include="gpk_font.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>

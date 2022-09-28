@@ -381,6 +381,9 @@
     <ClInclude Include="gpk_virtual_keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -547,6 +550,9 @@
     </ClCompile>
     <ClCompile Include="gpk_array.cpp">
       <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_font.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
