@@ -155,6 +155,9 @@ namespace gpk
 		const uint32_t countChars = ::gpk::ltrim(trimmed, original, characters);
 		return countChars + ::gpk::rtrim(trimmed, trimmed, characters);
 	}
+	static inline		::gpk::error_t			trim								(::gpk::view_const_char & trimmed) 	{
+		return trim(trimmed, trimmed, " \t\b\n\r");
+	}
 
 	template<typename _tElement>
 						::gpk::error_t			find								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, uint32_t offset = 0)				{
