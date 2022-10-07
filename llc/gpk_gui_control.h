@@ -86,24 +86,22 @@ namespace gpk
 
 	static inline
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-				return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign); 
-			}
+		return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign); 
+	}
 
 	template<typename _tUIEnum>
 	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		gpk_necall(::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, yOffset, controlAlign, textAlign), "%s", ::gpk::toString(::gpk::enum_definition<_tUIEnum>::get().Name).begin());
-		return 0; 
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, yOffset, controlAlign, textAlign);
 	}
 
 	template<typename _tUIEnum>
 	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		gpk_necall(::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, offset, controlAlign, textAlign), "%s", ::gpk::toString(::gpk::enum_definition<_tUIEnum>::get().Name).begin());
-		return 0; 
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, offset, controlAlign, textAlign);
 	}
+
 	template<typename _tUIEnum>
 	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		gpk_necall(::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign), "%s", ::gpk::toString(::gpk::enum_definition<_tUIEnum>::get().Name).begin());
-		return 0; 
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign);
 	}
 	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view_array<const uint16_t> & keys);
 }

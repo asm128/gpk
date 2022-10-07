@@ -5,6 +5,8 @@
 
 #include "gpk_array.h"
 
+#include <functional>
+
 #ifndef CED_DRAW_H_29837429837
 #define CED_DRAW_H_29837429837
 
@@ -55,6 +57,22 @@ namespace gpk
 		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
 		, ::gpk::view_grid<uint32_t>						depthBuffer
+		);
+
+	int								drawQuadTriangle
+		( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+		, const ::gpk::SGeometryQuads						& geometry
+		, const int											iTriangle
+		, const ::gpk::SMatrix4<float>						& matrixTransform
+		, const ::gpk::SMatrix4<float>						& matrixTransformView
+		, const ::gpk::SCoord3<float>						& lightVector
+		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
+		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+		, ::gpk::view_grid<uint32_t>						depthBuffer
+		, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
 		);
 
 	int								drawQuadTriangle
@@ -110,6 +128,20 @@ namespace gpk
 		, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
 		, ::gpk::view_grid<uint32_t>						depthBuffer
+		);
+
+	int													drawPixels
+		( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+		, const ::gpk::STriangle3	<float>					& triangleWorld
+		, const ::gpk::SCoord3		<float>					& normal
+		, const ::gpk::STriangle2	<float>					& triangleTexCoords
+		, const ::gpk::SCoord3		<float>					& lightVector
+		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
+		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+		, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
 		);
 
 	int													drawPixels

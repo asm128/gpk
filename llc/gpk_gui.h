@@ -158,6 +158,7 @@ namespace gpk
 		::gpk::view_const_string										Text								= {};
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_CENTER;
 		::gpk::SMinMax<uint32_t>										Selection							= {0, 1};
+		int16_t															FontSelected						= -1;
 	};
 
 	struct SControlTheme {
@@ -243,6 +244,7 @@ namespace gpk
 	::gpk::error_t			controlSetParent				(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
 	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target);
 	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
+	::gpk::error_t			controlFontSet					(::gpk::SGUI& gui, int32_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI& gui, int32_t iControl);

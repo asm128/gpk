@@ -1,5 +1,7 @@
 #include "gpk_dialog.h"
 
+#include <functional>
+
 #ifndef GPK_DIALOG_CONTROLS_H_209837402937
 #define GPK_DIALOG_CONTROLS_H_209837402937
 
@@ -13,7 +15,7 @@ namespace gpk
 	struct SDialogTuner;
 	::gpk::error_t										tunerCreate							(::gpk::SDialog					& dialog);
 	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner			& control);
-	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner			& control, int64_t value);
+	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner			& control, int64_t value, ::gpk::vcs formatString = {});
 
 	struct SDialogCheckBox;
 	::gpk::error_t										checkBoxCreate						(::gpk::SDialog					& dialog);
@@ -88,7 +90,10 @@ namespace gpk
 
 				::gpk::SMinMax<int64_t>						ValueLimits							= {(int32_t)0xC0000001, (int32_t)0x3fFFffFF};
 				int64_t										ValueCurrent						= -1;
+				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value)>	
+															FuncValueFormat						= {};
 				char_t										ValueString	[32]					= {};
+
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
 	};

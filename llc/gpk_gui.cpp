@@ -399,7 +399,8 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI& gui, 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics[iControl];
 	::gpk::SRectangle2<double>											rectText												= {};
 	::gpk::SControlText													& controlText											= gui.Controls.Text[iControl];
-	const ::gpk::SCoord2<uint8_t>										fontCharSize											= gui.Fonts[gui.SelectedFont].CharSize;
+	::gpk::SRasterFont													selectedFont											= gui.Fonts[::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont];
+	const ::gpk::SCoord2<uint8_t>										fontCharSize											= selectedFont.CharSize;
 	rectText.Size													= {(double)(fontCharSize.x * controlText.Text.size()), (double)fontCharSize.y};
 	rectText.Size.InPlaceScale(scale.x, scale.y);
 
@@ -675,3 +676,13 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	}
 	return 0;
 }
+
+			::gpk::error_t										gpk::controlFontSet										(::gpk::SGUI& gui, int32_t iControl, int16_t iFont)				{
+	int16_t																& oldText												= gui.Controls.Text[iControl].FontSelected;
+	if(iFont != oldText) {
+		oldText															= iFont;
+		gui.Controls.States[iControl].Updated							= false;
+	}
+	return 0;
+}
+

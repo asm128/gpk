@@ -344,6 +344,7 @@ int													gpk::drawPixels
 	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+	, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
 	) {
 	const ::gpk::SCoord2<float>								imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	double													lightFactorDirectional	= normal.Dot(lightVector);
@@ -372,9 +373,25 @@ int													gpk::drawPixels
 			const double											invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
 			fragmentColor										+= (texelColor * lightColors[iLight]) * (invAttenuation);
 		}
-		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
+		countPixels += funcSetPixel(targetPixels, pixelCoord, (texelColor * .2 + (texelColor * lightFactorDirectional).Clamp() + fragmentColor.Clamp()).Clamp());
 	}
 	return countPixels;
+}
+
+int													gpk::drawPixels
+	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	, const ::gpk::STriangle3	<float>					& triangleWorld
+	, const ::gpk::SCoord3		<float>					& normal
+	, const ::gpk::STriangle2	<float>					& triangleTexCoords
+	, const ::gpk::SCoord3		<float>					& lightVector
+	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+	) {
+
+	return gpk::drawPixels(targetPixels, triangleWorld, normal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, setPixel);
 }
 
 int													gpk::drawQuadTriangle
@@ -418,6 +435,24 @@ int													gpk::drawQuadTriangle
 	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
 	, ::gpk::view_grid<uint32_t>						depthBuffer
 	) {
+	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
+}
+
+int													gpk::drawQuadTriangle
+	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	, const ::gpk::SGeometryQuads						& geometry
+	, const int											iTriangle
+	, const ::gpk::SMatrix4<float>						& matrixTransform
+	, const ::gpk::SMatrix4<float>						& matrixTransformVP
+	, const ::gpk::SCoord3<float>						& lightVector
+	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
+	) {
 	const ::gpk::STriangle3	<float>							& triangle			= geometry.Triangles	[iTriangle];;
 	const ::gpk::STriangle2	<float>							& triangleTexCoords	= geometry.TextureCoords[iTriangle];
 	const ::gpk::SCoord3	<float>							& normal			= geometry.Normals		[iTriangle / 2];
@@ -425,7 +460,7 @@ int													gpk::drawQuadTriangle
 	const ::gpk::SCoord3	<float>							xnormal				= matrixTransform.TransformDirection(normal).Normalize();
 	::gpk::STriangle3		<float>							triangleWorld		= triangle;
 	::gpk::transform(triangleWorld, matrixTransform);
-	return ::gpk::drawPixels(targetPixels, triangleWorld, xnormal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors);
+	return ::gpk::drawPixels(targetPixels, triangleWorld, xnormal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, funcSetPixel);
 }
 
 int													gpk::drawQuadTriangle

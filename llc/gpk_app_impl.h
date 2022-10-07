@@ -162,9 +162,9 @@ static	void													threadRender					(void* pRuntimeState)												{					
 	re_if(!runtimeState.Application, "Main module is null!");																																						\
 	gpk_sync_increment(runtimeState.RenderThreadUsers);																																								\
 	int32_t																result								= 0;																									\
+	/*::gpk::sleep(1);*/																																																\
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {																											\
 		::draw(*runtimeState.Application);																																											\
-		/*::Sleep(1);*/																																																\
 	}																																																				\
 	info_printf("Render thread done.");																																												\
 }																																																					\

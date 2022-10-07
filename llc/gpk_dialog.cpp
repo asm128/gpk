@@ -118,13 +118,22 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	tunerText.Align														= ::gpk::ALIGN_CENTER;
 	return index;
 }
-		::gpk::error_t												gpk::tunerSetValue							(::gpk::SDialogTuner	& control, int64_t value)				{
+		::gpk::error_t												gpk::tunerSetValue							(::gpk::SDialogTuner	& control, int64_t value, ::gpk::vcs formatString)				{
 	if(value < control.ValueLimits.Min)
 		value																= control.ValueLimits.Min;
 	else if(value > control.ValueLimits.Max)
 		value																= control.ValueLimits.Max;
+
 	control.ValueCurrent												= value;
-	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, "%lli", (long long int)control.ValueCurrent)};
+	::gpk::vcc																valueString;
+	if(formatString.size())
+		valueString			= formatString;
+	else if(control.FuncValueFormat)
+		control.FuncValueFormat(valueString, value);
+	else 
+		valueString			= ::gpk::vcs("%lli");
+
+	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, ::gpk::toString(valueString).begin(), (long long int)control.ValueCurrent)};
 	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
 	return 0;
 }
@@ -263,7 +272,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 
 		::gpk::SControlMode														& modes								= controlTable.Modes[idControl];
 		modes																= dialog.DefaultControlModes;
-		::gpk::memcpy_s(control.Palettes.Storage, dialog.ColorsViewport.Storage);
+		control.Palettes = dialog.ColorsViewport;
 	}
 	{ // Create section title
 		int32_t																	idControl							= ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl);

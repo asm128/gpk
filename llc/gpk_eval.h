@@ -25,6 +25,7 @@ namespace gpk
 #pragma pack(push, 1)
 	template<typename _tValue>		static inline constexpr		const _tValue&	min			(const _tValue& a, const _tValue& b)												noexcept	{ return (a < b) ? a : b; }
 	template<typename _tValue>		static inline constexpr		const _tValue&	max			(const _tValue& a, const _tValue& b)												noexcept	{ return (a > b) ? a : b; }
+	// excluding the stop value
 	template<typename _tValue>		static inline constexpr		bool			in_range	(const _tValue& valueToTest, const _tValue& rangeStart, const _tValue& rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
 
 

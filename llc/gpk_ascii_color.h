@@ -26,6 +26,25 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
+	static constexpr uint32_t ASCII_PALETTE [] = 
+		{	0xFF000000		// BLACK
+		,	0xFF800000	 	// DARKBLUE
+		,	0xFF008000	 	// DARKGREEN
+		,	0xFF808000	 	// DARKCYAN
+		,	0xFF000080	 	// DARKRED
+		,	0xFF800080	 	// DARKMAGENTA
+		,	0xFF008080	 	// DARKYELLOW
+		,	0xFFC0C0C0	 	// LIGHTGREY
+		,	0xFF808080	 	// DARKGREY
+		,	0xFFFF0000	 	// BLUE
+		,	0xFF00FF00		// GREEN
+		,	0xFFFFFF00		// CYAN
+		,	0xFF0000FF		// RED
+		,	0xFFFF00FF		// MAGENTA
+		,	0xFF00FFFF		// YELLOW
+		,	0xFFFFFFFF		// WHITE
+		};
+
 	// 3-Channel color array with a max value of 0xFF each. This means we use 24 bit for each color but as there is no fundamental type of 24-bit in C++ we gpkose the next larger, in this case an unsigned int of 32-bit size.
 	// This particular channel arrangement has the red channel stored in the first 8 bits (the first byte), the green channel in the next 8 bits (the second byte), and the blue channel in the last 8 bits (the third byte) of the channel array.
 	// The remaining 8 bits must be set to 0 and I don't remember if they have an actual meaning for the console system. More complex graphics systems may use those remaining bits to represent transparency (the alpha channel) or other rendering-related information.

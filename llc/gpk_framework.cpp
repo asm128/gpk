@@ -211,7 +211,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
 	case WM_CREATE			: {
-			RECT rect = {};
+			RECT													rect			= {};
 			GetClientRect(hWnd, &rect);
 			::gpk::SCoord2<uint16_t>								newMetrics		= ::gpk::SCoord2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.Cast<uint16_t>();
 			newEvent.Type										= ::gpk::SYSEVENT_RESIZE; 
