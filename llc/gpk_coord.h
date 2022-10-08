@@ -335,7 +335,11 @@ namespace gpk
 		inline constexpr									bool						operator==				(const _otherType		& other)											const	noexcept	{ return __VA_ARGS__;			}
 
 	// ---- Geometric figures and other coord-related POD structs.
-	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits	<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); };
+	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits	<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); 
+		constexpr inline _tElement				Width		()	const { return Right - Left; }
+		constexpr inline _tElement				Height		()	const { return Bottom - Top; }
+		constexpr ::gpk::SCoord2<_tElement>		Dimensions	()	const { return {Width(), Height()}; }
+	};
 	template<typename _tElement>	struct SRange			{ _tElement									Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
 	template<typename _tElement>	struct SSlice			{ _tElement									Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice		<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
 	template<typename _tElement>	struct SLine2			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2		<_tElement>, A		== other.A		&& B		== other.B						); };

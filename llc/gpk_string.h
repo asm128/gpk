@@ -10,11 +10,13 @@
 #ifndef GPK_STRING_H_56847984984
 #define GPK_STRING_H_56847984984
 
-#if defined(GPK_ANDROID) || defined(GPK_LINUX)
-#	include <cstddef>
-#	include <cstdarg>
-#	include <cstdio>
+#include <cstddef>
+#include <cstdarg>
+#include <cstdio>
 
+namespace gpk
+{
+#pragma warning(disable: 4996)
 	static inline							int	strcat_s		(char *dst, size_t bufferSize, const char *src)										{
 		if((uint32_t)strlen(dst)+(uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
 			return -1;
@@ -39,7 +41,7 @@
 	static inline							int	_snprintf_s		(char* buffer, size_t bufferSize, size_t count, const char* format, ...)			{
 		va_list args;
 		va_start(args, format);
-		const int									result			= vsnprintf( buffer, count, format, args );
+		const int									result			= vsnprintf( buffer, ::gpk::max(count, bufferSize - 1), format, args );
 		va_end(args);
 		return result;
 	}
@@ -64,7 +66,7 @@
 	static inline							int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
 		va_list args;
 		va_start(args, format);
-		const int									result			= std::vsprintf(buffer, format, args);
+		const int									result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}
@@ -89,10 +91,9 @@
 	template<size_t _Size> static inline	int	strcat_s		( char (&dst)[_Size], const char *src )												{ return strcat_s	(dst, _Size, src);				}
 	template<size_t _Size> static inline	int	strcpy_s		( char (&dst)[_Size], const char *src )												{ return strcpy_s	(dst, _Size, src);				}
 	template<size_t _Size> static inline	int	strncpy_s		( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
-	static inline							int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, count, format, args);	}
-	static inline							int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsprintf	(buffer, format, args);			}
-#else
-
-#endif
+	static inline							int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
+	static inline							int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
+#pragma warning(default: 4996)
+} // namespace
 
 #endif // GPK_STRING_H_56847984984
