@@ -234,7 +234,7 @@
 	return 0;
 }
 
-::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign) {
+::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign) {
 	int32_t								result							= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		int32_t								idControl						= ::gpk::controlCreate(gui);

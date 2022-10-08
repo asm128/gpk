@@ -16,7 +16,9 @@
 
 namespace gpk
 {
-#pragma warning(disable: 4996)
+#if defined(GPK_WINDOWS)
+#	pragma warning(disable : 4996)
+#endif
 	static inline							int	strcat_s		(char *dst, size_t bufferSize, const char *src)										{
 		if((uint32_t)strlen(dst)+(uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
 			return -1;
@@ -93,7 +95,9 @@ namespace gpk
 	template<size_t _Size> static inline	int	strncpy_s		( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
 	static inline							int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
 	static inline							int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
-#pragma warning(default: 4996)
+#if defined(GPK_WINDOWS)
+#	pragma warning(default: 4996)
+#endif
 } // namespace
 
 #endif // GPK_STRING_H_56847984984

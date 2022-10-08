@@ -55,16 +55,19 @@ namespace gpk
 	};
 
 	struct SWindow {
-							::gpk::SWindowPlatformDetail			PlatformDetail	= {};
-							::gpk::array_obj<::gpk::SSysEvent>		EventQueue		= {};
-							::gpk::ptr_obj<::gpk::SInput>			Input			= {};
-							::gpk::SCoord2<uint32_t>				PreviousSize	= {};
-							::gpk::SCoord2<uint32_t>				Size			= {320, 200};
-							bool									Resized			: 1;
-							bool									Repaint			: 1;
-							bool									NoDraw			: 1;
-							bool									MinOrMaxed		: 1;
-							bool									Closed			: 1;
+							::gpk::SWindowPlatformDetail			PlatformDetail		= {};
+							::gpk::array_obj<::gpk::SSysEvent>		EventQueue			= {};
+							::gpk::ptr_obj<::gpk::SInput>			Input				= {};
+							::gpk::SCoord2<uint32_t>				PreviousSize		= {};
+							::gpk::SCoord2<uint32_t>				Size				= {320, 200};
+							::gpk::SRectLimits<int32_t>				WindowedWindowRect	= {0, 0, 320, 200};
+
+							bool									Resized				: 1;
+							bool									Repaint				: 1;
+							bool									NoDraw				: 1;
+							bool									MinOrMaxed			: 1;
+							bool									Closed				: 1;
+							bool									FullScreen			: 1;
 
 																	SWindow			()		noexcept
 			: Resized		(true)
@@ -76,9 +79,13 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t												windowPresentTarget						(::gpk::SWindow& displayInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent);
-	::gpk::error_t												windowUpdate							(::gpk::SWindow& applicationInstance);
-	::gpk::error_t												windowUpdateTick						(::gpk::SWindow& displayInstance);
+	::gpk::error_t												windowPresentTarget						(::gpk::SWindow & windowInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent);
+	::gpk::error_t												windowUpdate							(::gpk::SWindow & windowInstance);
+	::gpk::error_t												windowUpdateTick						(::gpk::SWindow & windowInstance);
+	::gpk::error_t												fullScreenExit							(::gpk::SWindow & windowInstance);
+	::gpk::error_t												fullScreenEnter							(::gpk::SWindow & windowInstance);
+	static inline ::gpk::error_t								fullScreenToggle						(::gpk::SWindow & windowInstance) { return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); }
+
 } // namespace
 
 #endif // GPK_DISPLAY_H_293874928374

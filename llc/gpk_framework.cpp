@@ -128,7 +128,6 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 					++gui.Zoom.ZoomLevel;
 				else
 					gui.Zoom.ZoomLevel																		*= 2;
-
 			}
 			else {
 				if(gui.Zoom.ZoomLevel > 1)

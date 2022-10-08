@@ -1,5 +1,58 @@
 #include "gpk_window.h"
 
+::gpk::error_t							gpk::fullScreenExit				(::gpk::SWindow & framework) {
+	if(false == framework.FullScreen)
+		return 0;
+
+	framework.Size							= framework.WindowedWindowRect.Dimensions().Cast<uint32_t>();
+
+	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
+	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
+	SetWindowLong(windowHandle, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
+	SetWindowPos(windowHandle, NULL, framework.WindowedWindowRect.Left, framework.WindowedWindowRect.Top
+		, framework.WindowedWindowRect.Right  - framework.WindowedWindowRect.Left
+		, framework.WindowedWindowRect.Bottom - framework.WindowedWindowRect.Top
+		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+	);
+
+	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_RESIZE, };
+	newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>));
+	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
+	framework.EventQueue.push_back(newEvent);
+	framework.FullScreen					= false;
+	return 0;
+}
+
+::gpk::error_t							gpk::fullScreenEnter			(::gpk::SWindow & framework) {
+	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
+	if(framework.FullScreen)
+		return 1;
+
+	MONITORINFO									monitor_info					= {sizeof(monitor_info)};
+	ree_if(FALSE == GetWindowRect(windowHandle, (LPRECT)&framework.WindowedWindowRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
+	ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
+
+	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
+	SetWindowLong(windowHandle, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
+	SetWindowPos(windowHandle, HWND_TOP, monitor_info.rcMonitor.left, monitor_info.rcMonitor.top
+		, monitor_info.rcMonitor.right - monitor_info.rcMonitor.left
+		, monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top
+		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
+	);
+
+	framework.FullScreen					= true;
+	framework.Size							= 
+		{ uint32_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
+		, uint32_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
+		};
+
+	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_RESIZE, };
+	newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>));
+	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
+	framework.EventQueue.push_back(newEvent);
+	return 0;
+}
+
 		::gpk::error_t					gpk::windowUpdateTick						(::gpk::SWindow& displayInstance)											{
 	bool										quit	= false;
 #if defined(GPK_WINDOWS)

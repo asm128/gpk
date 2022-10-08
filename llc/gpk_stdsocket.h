@@ -9,15 +9,18 @@
 	#include <sys/socket.h>
     #include <netinet/in.h>
     #include <unistd.h>
-
-	typedef int SOCKET;
-#	ifndef INVALID_SOCKET
-#		define INVALID_SOCKET -1
-#	endif
 #endif
 
 #ifndef GPK_STDSOCKET_H_9287349823
 #define GPK_STDSOCKET_H_9287349823
+
+
+#if !defined(GPK_WINDOWS)
+typedef int SOCKET;
+#	ifndef INVALID_SOCKET
+#		define INVALID_SOCKET -1
+#	endif
+#endif
 
 namespace gpk
 {

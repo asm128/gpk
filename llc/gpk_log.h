@@ -176,6 +176,9 @@ namespace gpk
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
+#		define gserror_if(condition)							if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#		define gswarn_if(condition)								if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#		define gsinfo_if(condition)								if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
 #		if !defined(GPK_WINDOWS)
 #			define gerror_if(condition, format, ...)				if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
 #			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
@@ -191,6 +194,9 @@ namespace gpk
 #		define gerror_if(condition, format, ...)				if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
 #		define gwarn_if(condition, format, ...)					if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
 #		define ginfo_if(condition, format, ...)					if(condition) { do{ ::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define gserror_if(condition)							if(condition) { do{} while(0); }
+#		define gswarn_if(condition)								if(condition) { do{} while(0); }
+#		define gsinfo_if(condition)								if(condition) { do{} while(0); }
 #	endif
 #endif
 
@@ -376,6 +382,9 @@ namespace gpk
 #	define e_if														gerror_if
 #	define w_if														gwarn_if
 #	define i_if														ginfo_if
+#	define es_if													gserror_if
+#	define ws_if													gswarn_if
+#	define is_if													gsinfo_if
 #endif
 
 #ifndef re_if
