@@ -7,6 +7,8 @@
 
 #include "gpk_sysevent.h"
 
+#include <functional>
+
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
 
@@ -231,10 +233,10 @@ namespace gpk
 		};
 	#pragma pack(pop)
 
-	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents = {});
+	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
 	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
-	::gpk::error_t			guiGetProcessableControls		(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
+	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI& gui);
 	::gpk::error_t			guiSelect						(::gpk::SGUI& gui, int32_t controlToSelect);
 
@@ -253,7 +255,8 @@ namespace gpk
 	::gpk::error_t			controlInvalid					(const ::gpk::SGUI& gui, int32_t iControl);
 
 
-
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI& gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI& gui, ::gpk::view_array<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
 } // namespace
 
 #endif // GPK_GUI_H_2903874982374

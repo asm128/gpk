@@ -104,6 +104,78 @@ namespace gpk
 		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign);
 	}
 	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view_array<const uint16_t> & keys);
+	::gpk::error_t					virtualKeyboardSetup437		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
+
+	struct SUIInputBox {
+		int32_t							IdRoot				= {};
+		int32_t							IdText				= {};
+		::gpk::SVirtualKeyboard			VirtualKeyboard		= {};
+		::gpk::array_pod<char>			Text				= {};
+		bool							Editing				= false;
+
+		::gpk::error_t					SetText				(::gpk::SGUI & gui, ::gpk::vcs text) { 
+			return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text});
+		}
+		::gpk::error_t					Edit				(::gpk::SGUI & gui, bool editing) { 
+			Editing							= editing;
+			gui.Controls.States[IdRoot].Hidden	= false == Editing;
+			return one_if(Editing);
+		}
+
+		::gpk::error_t					Update				(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::SSysEvent> frameEvents, ::gpk::view_array<const uint32_t> processableControls) { 
+			if(false == Editing)
+				return 0;
+
+			int32_t								handledControl		= 0;
+			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](int32_t iControl) {
+				if(::gpk::virtualKeyboardHandleEvent(VirtualKeyboard, iControl))
+					handledControl = iControl;
+				return 0;
+			}));
+
+			::gpk::array_obj<::gpk::SSysEvent>	sysEvents			= frameEvents;
+			const ::gpk::SVirtualKeyboard		& vk				= VirtualKeyboard;
+			for(uint32_t iEvent = 0; iEvent < VirtualKeyboard.Events.size(); ++iEvent) {
+				switch(vk.Events[iEvent].Type) {
+				case ::gpk::VK_EVENT_RELEASE:
+					Text.push_back((char)vk.Events[iEvent].ScanCode);
+					::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+					break;
+				case ::gpk::VK_EVENT_EDIT:
+						 if(vk.Events[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(VK_BACK)	; sysEvents.push_back(evt); } 
+					else if(vk.Events[iEvent].ScanCode == gpk::VK_SCANCODE_Enter	) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(VK_RETURN)	; sysEvents.push_back(evt); } 
+					else if(vk.Events[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(VK_CANCEL)	; sysEvents.push_back(evt); } 
+					else if(vk.Events[iEvent].ScanCode == gpk::VK_SCANCODE_Clear	) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(VK_CLEAR)	; sysEvents.push_back(evt); } 
+				}
+			}
+			VirtualKeyboard.Events.clear();
+			frameEvents						= sysEvents;
+			bool								enterKeyPressed		= false;
+			for(uint32_t iEvent = 0; iEvent < frameEvents.size(); ++iEvent) {
+				switch(frameEvents[iEvent].Type) {
+				default						: break;
+				case ::gpk::SYSEVENT_CHAR	:
+					if(frameEvents[iEvent].Data[0] >= 0x20 && frameEvents[iEvent].Data[0] <= 0x7F) {
+						Text.push_back(frameEvents[iEvent].Data[0]);
+						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+					}
+					break;
+				case ::gpk::SYSEVENT_KEY_DOWN:
+					switch(frameEvents[iEvent].Data[0]) {
+					case VK_RETURN	: enterKeyPressed = true; break; 
+					case VK_BACK	: Text.pop_back(0)	; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+					case VK_CLEAR	: Text.clear()		; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+					case VK_ESCAPE	: Edit(gui, false); 
+						break;
+					}
+				}
+			}
+			return enterKeyPressed ? INT_MAX : handledControl ? handledControl : 0;
+		}
+
+	};
+
+	::gpk::error_t					inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent = -1);
 }
 
 #endif

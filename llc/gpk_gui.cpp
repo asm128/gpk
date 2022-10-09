@@ -575,7 +575,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, const ::gpk::SInput& input, const ::gpk::view_array<::gpk::SSysEvent> & sysEvents)	{
+			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents)	{
 	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
 	::gpk::error_t														controlHovered											= -1;
 	::gpk::array_pod<uint32_t>											rootControlsToProcess									= {};
@@ -595,6 +595,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 		::gpk::SControl														& control												= gui.Controls.Controls[iControl];
 		if(false == ::gpk::controlInvalid(gui, control.IndexParent))
 			continue;
+
 		rootControlsToProcess.push_back(iControl);
 	}
 
@@ -656,7 +657,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return 0;
 }
 
-			::gpk::error_t										gpk::guiGetProcessableControls							(::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
+			::gpk::error_t										gpk::guiGetProcessableControls							(const ::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || gui.Controls.Modes[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
@@ -682,6 +683,25 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	if(iFont != oldText) {
 		oldText															= iFont;
 		gui.Controls.States[iControl].Updated							= false;
+	}
+	return 0;
+}
+
+::gpk::error_t						gpk::guiProcessControls		(const ::gpk::SGUI& gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute) {
+	::gpk::array_pod<uint32_t>				controlsToProcess			= {};
+	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
+	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
+}
+
+::gpk::error_t						gpk::guiProcessControls		(const ::gpk::SGUI& gui, ::gpk::view_array<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute) {
+	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
+		uint32_t								idControl					= controlsToProcess[iControl];
+		const ::gpk::SControlState				& controlState				= gui.Controls.States[idControl];
+		if(controlState.Execute) {
+			info_printf("Executed control %i (0x%x).", idControl, idControl);
+			gpk_necall(funcOnExecute(idControl), "idControl: %i (0x%x).", idControl, idControl);
+			break;
+		}
 	}
 	return 0;
 }

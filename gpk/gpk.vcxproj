@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="gpk_connection.h" />
     <ClInclude Include="gpk_http_server.h" />
+    <ClInclude Include="gpk_lobby.h" />
     <ClInclude Include="gpk_udp_client.h" />
     <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_bitmap_file.h" />

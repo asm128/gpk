@@ -17,15 +17,18 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Escape		, 0);
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Enter		, 1);
 	GDEFINE_ENUM_VALUE(VK_SCANCODE, Backspace	, 2);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Left		, 3);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Right		, 4);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Up			, 5);
-	GDEFINE_ENUM_VALUE(VK_SCANCODE, Down		, 6);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Clear		, 3);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Left		, 4);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Right		, 5);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Up			, 6);
+	GDEFINE_ENUM_VALUE(VK_SCANCODE, Down		, 7);
 
+#pragma pack(push, 1)
 	struct SVirtualKeyboardEvent {
 		VK_EVENT		Type;
 		VK_SCANCODE		ScanCode;
 	};
+#pragma pack(pop)
 
 	struct SVirtualKeyboard {
 		int32_t											IdRoot;
@@ -34,7 +37,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SVirtualKeyboardEvent>	Events;
 	};
 
-	::gpk::error_t				virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, int32_t iControl);
+	::gpk::error_t				virtualKeyboardHandleEvent		(::gpk::SVirtualKeyboard & vk, int32_t iControl);
 } // namespace 
 
 #endif GPK_VIRTUAL_KEYBOARD_H_293874239874

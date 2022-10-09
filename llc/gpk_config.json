@@ -30,12 +30,16 @@
 		,	"remote_ip"		: "192.168.0.2"
 		},
 		"test_udp_client": 
-		{	"remote_ip"		: "192.168.0.3"
+		{	"remote_ip"		: "192.168.0.188"
 		,	"remote_port"	: "9898"
+		},
+		"gpk_lobby": 
+		{	"listen_port"	: "9898"
+		,	"adapter"			: "0"
 		},
 		"test_udp_server": 
 		{	"listen_port"	: "9898"
-		,	"adapter"		: "0"
+		,	"adapter"			: "0"
 		},
 		"test_gontrill" : 
 		{	"images" :

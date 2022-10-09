@@ -64,6 +64,7 @@ namespace gpk
 		::gpk::SImage<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 
+																							SDialog												(const ::gpk::ptr_obj<::gpk::SGUI> & gui);
 																							SDialog												();
 
 		::gpk::error_t																		Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }

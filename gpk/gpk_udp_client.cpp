@@ -11,6 +11,7 @@ typedef	int			socklen_t;
 #endif
 
 static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & client)		{
+	client.FirstPing = client.KeyPing							= 0;
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_CONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	/* Data to send */
 	sockaddr_in														sa_server									= {};				/* Information about the server */
 	socklen_t														sa_length									= sizeof(struct sockaddr_in);
@@ -62,6 +63,10 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 				continue;
 			if(wsae == WSAENOTSOCK || wsae == WSANOTINITIALISED)
 				return 0;
+			if(wsae == WSAECONNRESET) {
+				client.State = ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+				return 0;
+			}
 			warning_printf("Failed to receive message! Error: 0x%x.", wsae);
 			received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 			continue;
@@ -70,7 +75,7 @@ static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & cl
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 		if(*(uint32_t*)temp.IP == *(uint32_t*)client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			if(temp.Port == client.Address.Port)
-				::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer);
+				es_if(errored(::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer)));
 		}
 		else {
 			info_printf("Data received fro invalid ip. Local: %u, %u, %u, %u, %u. Remote: %u, %u, %u, %u, %u", GPK_IPV4_EXPAND(temp), GPK_IPV4_EXPAND(client.Address));
@@ -100,16 +105,19 @@ static	void												threadUpdateClient							(void* pClient)						{
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	// Data to send */
 	{
 		::gpk::mutex_guard												lock										(client.Queue.MutexSend);
-		sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
+		for(uint32_t i = 0; i < 2; ++i)
+			sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.close();
 	}
 	client.KeyPing												= 0;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+	::gpk::sleep(10);
 	return 0;
 }
 
 		::gpk::error_t										gpk::clientConnect							(::gpk::SUDPClient & client)		{
 	uint32_t														attempts									= 0;
+	static constexpr uint32_t										MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
 		::gpk::mutex_guard												lock										(client.Queue.MutexSend);
@@ -129,7 +137,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 			if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE)
 				break;
 		}
-	} while(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE && ++attempts < 10);
+	} while(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE && ++attempts < MAX_ATTEMPTS);
 	if(client.State == ::gpk::UDP_CONNECTION_STATE_IDLE) {
 		info_printf("Client connected in %u attempt%s", attempts + 1, (attempts) ? "s" : "");
 		_beginthread(::threadUpdateClient, 0, &client);
