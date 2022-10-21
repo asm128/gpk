@@ -111,7 +111,9 @@ namespace gpk
 		int32_t							IdText				= {};
 		::gpk::SVirtualKeyboard			VirtualKeyboard		= {};
 		::gpk::array_pod<char>			Text				= {};
+		uint32_t						MaxLength			= 16;
 		bool							Editing				= false;
+
 
 		::gpk::error_t					SetText				(::gpk::SGUI & gui, ::gpk::vcs text) { 
 			return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text});
@@ -138,8 +140,10 @@ namespace gpk
 			for(uint32_t iEvent = 0; iEvent < VirtualKeyboard.Events.size(); ++iEvent) {
 				switch(vk.Events[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
-					Text.push_back((char)vk.Events[iEvent].ScanCode);
-					::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+					if(Text.size() < MaxLength) {
+						Text.push_back((char)vk.Events[iEvent].ScanCode);
+						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+					}
 					break;
 				case ::gpk::VK_EVENT_EDIT:
 						 if(vk.Events[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(VK_BACK)	; sysEvents.push_back(evt); } 
@@ -155,10 +159,11 @@ namespace gpk
 				switch(frameEvents[iEvent].Type) {
 				default						: break;
 				case ::gpk::SYSEVENT_CHAR	:
-					if(frameEvents[iEvent].Data[0] >= 0x20 && frameEvents[iEvent].Data[0] <= 0x7F) {
-						Text.push_back(frameEvents[iEvent].Data[0]);
-						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
-					}
+					if(Text.size() < MaxLength)
+						if(frameEvents[iEvent].Data[0] >= 0x20 && frameEvents[iEvent].Data[0] <= 0x7F) {
+							Text.push_back(frameEvents[iEvent].Data[0]);
+							::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+						}
 					break;
 				case ::gpk::SYSEVENT_KEY_DOWN:
 					switch(frameEvents[iEvent].Data[0]) {

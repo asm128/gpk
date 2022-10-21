@@ -51,6 +51,14 @@ static constexpr const ::gpk::SCoord3<int8_t>		geometryNormals	[6]		=
 	, { 0, 1, 0} // Top
 	};
 
+int													gpk::geometryBuildCube	(SGeometryQuads & geometry, const ::gpk::SCoord3<float> & scale, const ::gpk::SCoord3<float> & translation)	{
+	const uint32_t											firstTriangle					= geometry.Triangles.size(); 
+	gpk_necs(::gpk::geometryBuildCube(geometry, scale));
+	for(uint32_t iTri = firstTriangle; iTri < geometry.Triangles.size(); ++iTri) 
+		geometry.Triangles[iTri].Translate(translation);
+	return 0;
+}
+
 int													gpk::geometryBuildCube	(SGeometryQuads & geometry, const ::gpk::SCoord3<float> & scale)	{
 	const uint32_t											triangleOffset			= geometry.Triangles.size();
 	geometry.Triangles		.resize(triangleOffset + (uint32_t)::gpk::size(geometryCube));

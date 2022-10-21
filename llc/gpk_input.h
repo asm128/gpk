@@ -7,12 +7,17 @@
 namespace gpk
 {
 #pragma pack(push, 1)
+	struct SInputJoystick {
+		::gpk::SCoord2<int32_t>				Position					= {};
+		::gpk::SCoord3<int32_t>				Deltas						= {};
+		uint32_t							ButtonState					= 0;
+	};
 	struct SInputMouse {
-							::gpk::SCoord2<int32_t>				Position					= {};
-							::gpk::SCoord3<int32_t>				Deltas						= {};
-							uint8_t								ButtonState			[32]	= {};
-							double								ButtonTime			[32]	= {};
-							int64_t								ButtonStrength		[32]	= {};
+		::gpk::SCoord2<int32_t>				Position					= {};
+		::gpk::SCoord3<int32_t>				Deltas						= {};
+		uint8_t								ButtonState			[32]	= {};
+		double								ButtonTime			[32]	= {};
+		int64_t								ButtonStrength		[32]	= {};
 	};
 
 	struct SInputKeyboard {
@@ -26,6 +31,9 @@ namespace gpk
 							::gpk::array_pod<SInputMouse	>	StateMouse					= {};
 							::gpk::array_pod<float>				TimeStampKeyboard			= {};
 							::gpk::array_pod<float>				TimeStampMouse				= {};
+
+							::gpk::array_pod<SInputJoystick>	JoystickPrevious			= {};
+							::gpk::array_pod<SInputJoystick>	JoystickCurrent				= {};
 
 							SInputKeyboard						KeyboardPrevious			= {};
 							SInputKeyboard						KeyboardCurrent				= {};

@@ -372,9 +372,6 @@
     <ClInclude Include="gpk_xml_reader.h">
       <Filter>xml</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_sysevent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_vox.h">
       <Filter>voxel</Filter>
     </ClInclude>
@@ -383,6 +380,9 @@
     </ClInclude>
     <ClInclude Include="gpk_font.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sysevent.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
