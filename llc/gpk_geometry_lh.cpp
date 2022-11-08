@@ -331,56 +331,54 @@ int													gpk::geometryBuildSphere	(SGeometryQuads & geometry, uint32_t st
 
 
 //
-int													gpk::geometryBuildCylinder	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale)	{
+int													gpk::geometryBuildCylinder	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale)	{
 	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
-	for(uint32_t y = 0; y < stacks; ++y)
-	for(uint32_t z = 0; z < slices; ++z)
-	{
-		{
-			::gpk::SCoord2<float>									texcoords	[4]				=
-				{ {(z		) * texCoordUnits.x, (y		) * texCoordUnits.y}
-				, {(z + 1	) * texCoordUnits.x, (y		) * texCoordUnits.y}
-				, {(z		) * texCoordUnits.x, (y	+ 1	) * texCoordUnits.y}
-				, {(z + 1	) * texCoordUnits.x, (y + 1	) * texCoordUnits.y}
+	const double											radiusUnit					= 1.0 / stacks;
+	for(uint32_t y = 0; y < stacks; ++y) {
+		double													radius						= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * y);
+		double													radiusNext					= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * (y + 1));
+		for(uint32_t z = 0; z < slices; ++z) {
+			{
+				::gpk::SCoord2<float>									texcoords	[4]				=
+					{ {(z		) * texCoordUnits.x, (y		) * texCoordUnits.y}
+					, {(z + 1	) * texCoordUnits.x, (y		) * texCoordUnits.y}
+					, {(z		) * texCoordUnits.x, (y	+ 1	) * texCoordUnits.y}
+					, {(z + 1	) * texCoordUnits.x, (y + 1	) * texCoordUnits.y}
+					};
+				geometry.TextureCoords.push_back(
+					{ texcoords[0]
+					, texcoords[2]
+					, texcoords[1]
+					});
+				geometry.TextureCoords.push_back(
+					{ texcoords[1]
+					, texcoords[2]
+					, texcoords[3]
+					});
+			}
+			::gpk::SCoord3<double>									coords	[4]				=
+				{ {1 * radius, (double)(y		)}
+				, {1 * radius, (double)(y		)}
+				, {1 * radiusNext, (double)(y + 1	)}
+				, {1 * radiusNext, (double)(y + 1	)}
 				};
-			geometry.TextureCoords.push_back(
-				{ texcoords[0]
-				, texcoords[2]
-				, texcoords[1]
-				});
-			geometry.TextureCoords.push_back(
-				{ texcoords[1]
-				, texcoords[2]
-				, texcoords[3]
-				});
-		}
-		//const ::gpk::SPairSinCos									pairSinCos				= ::gpk::getSinCos(::gpk::math_2pi * z / slices);
-		//const double												px						= x * pairSinCos.Cos - z * pairSinCos.Sin;
-		//z														= (x * pairSinCos.Sin + z * pairSinCos.Cos);
-		//x														= px;
-		(void)radius;
-		::gpk::SCoord3<double>									coords	[4]				=
-			{ {1 * radius, (double)(y		)}
-			, {1 * radius, (double)(y		)}
-			, {1 * radius, (double)(y + 1	)}
-			, {1 * radius, (double)(y + 1	)}
-			};
-		coords[0].RotateY(::gpk::math_2pi / slices * (z + 0));
-		coords[1].RotateY(::gpk::math_2pi / slices * (z + 1));
-		coords[2].RotateY(::gpk::math_2pi / slices * (z + 0));
-		coords[3].RotateY(::gpk::math_2pi / slices * (z + 1));
+			coords[0].RotateY(::gpk::math_2pi / slices * (z + 0));
+			coords[1].RotateY(::gpk::math_2pi / slices * (z + 1));
+			coords[2].RotateY(::gpk::math_2pi / slices * (z + 0));
+			coords[3].RotateY(::gpk::math_2pi / slices * (z + 1));
 
-		{
-			::gpk::STriangle3<float>								triangleA			= {coords[0].Cast<float>(), coords[2].Cast<float>(), coords[1].Cast<float>()};
-			::gpk::STriangle3<float>								triangleB			= {coords[1].Cast<float>(), coords[2].Cast<float>(), coords[3].Cast<float>()};
-			triangleA.Scale(scale);
-			triangleB.Scale(scale);
-			triangleA.Translate(gridCenter * -1);
-			triangleB.Translate(gridCenter * -1);
+			{
+				::gpk::STriangle3<float>								triangleA			= {coords[0].Cast<float>(), coords[2].Cast<float>(), coords[1].Cast<float>()};
+				::gpk::STriangle3<float>								triangleB			= {coords[1].Cast<float>(), coords[2].Cast<float>(), coords[3].Cast<float>()};
+				triangleA.Scale(scale);
+				triangleB.Scale(scale);
+				triangleA.Translate(gridCenter * -1);
+				triangleB.Translate(gridCenter * -1);
 
-			geometry.Triangles	.push_back(triangleA);
-			geometry.Triangles	.push_back(triangleB);
-			geometry.Normals	.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().Cast<float>());
+				geometry.Triangles	.push_back(triangleA);
+				geometry.Triangles	.push_back(triangleB);
+				geometry.Normals	.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().Cast<float>());
+			}
 		}
 	}
 	return 0;

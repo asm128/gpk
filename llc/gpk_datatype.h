@@ -38,14 +38,14 @@ namespace gpk
 // 32th bit		: 0 = Signed / 1 = Unsigned
 //
 #define GTYPEID_MAKE( IsSigned, IsNorm, IsFloat, IsBigEndian, ElementCount, ElementPad, SizeInBits )	\
-	(::gpk::DATA_TYPE(																				\
-			((IsSigned)			? 0 : ::gpk::DATA_TYPE_IS_SIGNED)										\
-		|	((IsNorm)			? ::gpk::DATA_TYPE_IS_NORMALIZED		 : 0)							\
-		|	((IsFloat)			? ::gpk::DATA_TYPE_IS_FLOAT			 : 0)							\
-		|	((IsBigEndian)		? ::gpk::DATA_TYPE_IS_BIG_ENDIAN		 : 0)							\
-		|	((((ElementCount)-1) & 0xFFFFF) << 8)														\
-		|	((ElementPad)		? ::gpk::DATA_TYPE_HAS_INNER_PADDING	 : 0)							\
-		|	(((SizeInBits)-1)	& 0x0000007F	)														\
+	( ::gpk::DATA_TYPE																					\
+		( ((IsSigned)			? 0 : ::gpk::DATA_TYPE_IS_SIGNED)										\
+		| ((IsNorm)				? ::gpk::DATA_TYPE_IS_NORMALIZED		: 0)							\
+		| ((IsFloat)			? ::gpk::DATA_TYPE_IS_FLOAT				: 0)							\
+		| ((IsBigEndian)		? ::gpk::DATA_TYPE_IS_BIG_ENDIAN		: 0)							\
+		| ((((ElementCount)-1)	& 0xFFFFF) << 8)														\
+		| ((ElementPad)			? ::gpk::DATA_TYPE_HAS_INNER_PADDING	: 0)							\
+		| (((SizeInBits)-1)		& 0x0000007F	)														\
 	))
 
 #define	GTYPEID_ISSIGNED(		_dataTypeID )	(0U == ( ::gpk::DATA_TYPE_IS_SIGNED			& _dataTypeID ))		// returns true if signed

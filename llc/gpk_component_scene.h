@@ -287,7 +287,7 @@ namespace gpk {
 		);
 
 	struct SComponentData {
-		int32_t													IndexParent				= -1;
+		int32_t													Parent				= -1;
 		::gpk::array_pod<int32_t>								RenderNodes				= {};
 		::gpk::array_pod<::gpk::SRenderNodeTransform>			LocalTransforms			= {};
 	};

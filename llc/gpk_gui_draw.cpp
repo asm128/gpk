@@ -200,7 +200,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	}
 	gpk_necall(::gpk::guiUpdateMetrics(gui, gui.LastSize, false), "%s", "Unknown issue!");;
 	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
-		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].IndexParent))
+		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent))
 			gerror_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)),"%s",  "Unknown issue!");
 	return 0;
 }

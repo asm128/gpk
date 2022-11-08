@@ -698,32 +698,6 @@ namespace gpk
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
-	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{
-		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t										elementCount						= *(uint32_t*)input.begin();
-		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
-		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
-	}
-
-	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<_tElement> & headerToRead, const ::gpk::view_byte	& input	)	{
-		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t										elementCount						= *(uint32_t*)input.begin();
-		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (_tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
-		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
-	}
-
-	static inline	::gpk::error_t					viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{
-		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t										elementCount						= *(uint32_t*)input.begin();
-		ree_if(elementCount > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount);
-		headerToRead									= {(input.size() > sizeof(uint32_t)) ? &input[sizeof(uint32_t)] : 0, elementCount};
-		return sizeof(uint32_t) + headerToRead.size();
-	}
-
 	typedef ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::array_obj<::gpk::view_const_string>>	TKeyValConstStringArray;
 
 	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view_array<const ::gpk::view_const_char> & keysToSave, ::gpk::array_pod<byte_t> & output);
@@ -736,6 +710,24 @@ namespace gpk
 	::gpk::error_t									filterPrefix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
 	::gpk::error_t									filterPostfix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
 
+
+	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::view_array<const byte_t> & input, _tPOD & output) { 
+		::gpk::view_array<const _tPOD>					readView		= {}; 
+		uint32_t										bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
+		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output										= readView[0]; 
+		return 0;
+	}
+
+	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::view_array<const byte_t> & input, ::gpk::array_pod<_tPOD> & output) { 
+		::gpk::view_array<const _tPOD>					readView		= {}; 
+		uint32_t										bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
+		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output										= readView; 
+		return 0;
+	}
 
 }
 

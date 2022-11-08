@@ -351,6 +351,32 @@ namespace gpk
 #define be2le_16(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
-}
+
+	template<typename _tElement>
+	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (const _tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
+	}
+
+	template<typename _tElement>
+	::gpk::error_t									viewRead							(::gpk::view_array<_tElement> & headerToRead, const ::gpk::view_byte	& input	)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? (_tElement*)&input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
+	}
+
+	static inline	::gpk::error_t					viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t										elementCount						= *(uint32_t*)input.begin();
+		ree_if(elementCount > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount);
+		headerToRead									= {(input.size() > sizeof(uint32_t)) ? &input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size();
+	}
+} // namespace
 
 #endif // GPK_ARRAY_VIEW_H_2398472395543

@@ -27,7 +27,7 @@ namespace gpk
 	struct SXMLToken {
 		XML_TOKEN					Type;
 		::gpk::SRange<uint32_t>		Range;
-		int32_t						IndexParent;	// -1 for root element
+		int32_t						Parent;	// -1 for root element
 	};
 
 	struct SXMLReaderState {

@@ -83,6 +83,7 @@ namespace gpk
 												TCoord2			Clamp							(const TCoord2 & min, const TCoord2 & max)		const	noexcept		{
 			return {::gpk::clamp(x, min.x, max.x), ::gpk::clamp(y, min.y, max.y)};
 		}
+		constexpr inline						_tBase			Area					()										const											{ return x * y; }
 	};	// struct SCoord2
 
 	template<typename _tBase>
@@ -175,6 +176,7 @@ namespace gpk
 			x														= (_tBase)px;
 			return *this;
 		}
+		constexpr inline						_tBase			Area					()										const											{ return x * y * z; }
 	};	// struct SCoord3
 
 	template<typename _tBase>
@@ -327,12 +329,13 @@ namespace gpk
 			rotAxis.Normalize();
 			return CreateFromAxisAngle(rotAxis, rotAngle);
 		}
+
 	}; // struct SQuaternion
 
 
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
-		inline constexpr									bool						operator!=				(const _otherType		& other)											const	noexcept	{ return !operator==(other);	}	\
-		inline constexpr									bool						operator==				(const _otherType		& other)											const	noexcept	{ return __VA_ARGS__;			}
+		inline constexpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
+		inline constexpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
 
 	// ---- Geometric figures and other coord-related POD structs.
 	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits	<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); 
@@ -343,6 +346,14 @@ namespace gpk
 	template<typename _tElement>	struct SRange			{ _tElement									Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
 	template<typename _tElement>	struct SSlice			{ _tElement									Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice		<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
 	template<typename _tElement>	struct SLine2			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2		<_tElement>, A		== other.A		&& B		== other.B						); };
+
+
+	template<typename _tDim>		
+	struct STriangle { 
+		_tDim			A, B, C; 
+		GPK_DEFAULT_OPERATOR_NE(STriangle<_tDim>, A == other.A && B == other.B && C == other.C);
+	};
+
 	template<typename _tElement>	struct STriangle2		{ ::gpk::SCoord2<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle2	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
 		template<typename _tOther>
 		STriangle2<_tOther>											Cast							()						const	noexcept		{
@@ -353,12 +364,15 @@ namespace gpk
 				};
 		}
 	};
-	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
+	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
-	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
-	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size			; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
-	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center					; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
-	template<typename _tElement>	struct STriangle3		{ ::gpk::SCoord3<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
+	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
+	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad2			{ ::gpk::SCoord2<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad3			{ ::gpk::SCoord3<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
+	template<typename _tElement>	struct STriangle3		{ ::gpk::SCoord3<_tElement>					A, B, C			; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
 		::gpk::error_t												CulledZSpecial					(const ::gpk::SMinMax<_tElement>& minMax)	const	noexcept		{
 			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))

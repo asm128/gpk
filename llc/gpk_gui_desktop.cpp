@@ -71,7 +71,7 @@ static		::gpk::error_t												displace										(::gpk::SGUI& gui, int32_t i
 }
 
 static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI& gui, int32_t iControl, ::gpk::SInput& input)							{
-	const int32_t																parentControlId									= gui.Controls.Controls[iControl].IndexParent;
+	const int32_t																parentControlId									= gui.Controls.Controls[iControl].Parent;
 	for(uint32_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
 		if(gui.Controls.Children[parentControlId][iChild] == iControl) {
 			gpk_necall(gui.Controls.Children[parentControlId].remove(iChild)		, "%s", "Unknown issue!");
@@ -88,7 +88,7 @@ static		::gpk::error_t												unhideMenuHierarchy						(::gpk::SGUI& gui, ::
 		::unhideMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
 
 	gui.Controls.States[menu.IdControl].Hidden								= false;
-	const int32_t																parentControlIndex						= gui.Controls.Controls[menu.IdControl].IndexParent;
+	const int32_t																parentControlIndex						= gui.Controls.Controls[menu.IdControl].Parent;
 	if(-1 != parentControlIndex) {
 		::gpk::array_pod<int32_t> & parentChildren = gui.Controls.Children[parentControlIndex];
 		for(uint32_t iChild = 0; iChild < parentChildren.size(); ++iChild) {

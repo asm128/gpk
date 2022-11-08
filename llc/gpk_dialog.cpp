@@ -329,8 +329,8 @@ static constexpr	const uint32_t									heightOfField								= 18;
 			::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];
 			controlMain.Area.Size.y												= controlClient.Area.Size.y + controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y + 1;
 		}
-		if(-1 != controlMain.IndexParent)
-			::gpk::controlMetricsInvalidate(*dialog.GUI, controlMain.IndexParent);
+		if(-1 != controlMain.Parent)
+			::gpk::controlMetricsInvalidate(*dialog.GUI, controlMain.Parent);
 		else
 			::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
 		stateClient.Hidden													= fold;

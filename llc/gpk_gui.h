@@ -134,7 +134,7 @@ namespace gpk
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_TOP_LEFT;
 		int16_t															ColorTheme							= 0;
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	Palettes							= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
-		int32_t															IndexParent							= -1;
+		int32_t															Parent							= -1;
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .

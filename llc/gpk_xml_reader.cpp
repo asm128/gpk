@@ -37,7 +37,7 @@ static ::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_
 
 static ::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
 	const ::gpk::XML_TOKEN	token						= reader.StateRead.CurrentElement->Type;
-	const int32_t			parentIndex					= reader.StateRead.CurrentElement->IndexParent;
+	const int32_t			parentIndex					= reader.StateRead.CurrentElement->Parent;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	xml_info_printf("Closing element type %i (%s) at index %i."
 		"\nNest level: %i"
@@ -174,7 +174,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 			else {
 				const uint32_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
 				if(nextIdx < xmlDoc.size() && xmlDoc[nextIdx] == '>') // maybe it's an open tag that is also a close tag
-					reader.Token[reader.StateRead.CurrentElement->IndexParent].Type		= ::gpk::XML_TOKEN_TAG_OPENCLOSE;
+					reader.Token[reader.StateRead.CurrentElement->Parent].Type		= ::gpk::XML_TOKEN_TAG_OPENCLOSE;
 			}
 		}
 		else if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_OPEN) {
@@ -188,7 +188,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 		break;
 	case '?':
 		if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_NAME && reader.StateRead.CurrentElement->Range.Offset == reader.StateRead.IndexCurrentChar) {
-			reader.Token[reader.StateRead.CurrentElement->IndexParent].Type		= ::gpk::XML_TOKEN_PI;
+			reader.Token[reader.StateRead.CurrentElement->Parent].Type		= ::gpk::XML_TOKEN_PI;
 			reader.StateRead.CurrentElement->Type								= ::gpk::XML_TOKEN_PI_NAME;
 			break;
 		}
@@ -353,7 +353,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 				, reader.StateRead.CurrentElement	? ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin() : ""
 				, reader.StateRead.CurrentElement	? reader.StateRead.CurrentElement->Range.Offset : 0
 				, reader.StateRead.CurrentElement	? reader.StateRead.CurrentElement->Range.Count  : 0
-				, reader.StateRead.CurrentElement	? reader.StateRead.CurrentElement->IndexParent  : 0
+				, reader.StateRead.CurrentElement	? reader.StateRead.CurrentElement->Parent  : 0
 				);
 			break;
 		}

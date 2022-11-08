@@ -33,12 +33,18 @@
 #	define GPK_SYSTEM_OS_DEBUG_INIT_FLAGS() do {} while(0)
 #endif
 
-#if defined(GPK_WINDOWS)
+#if defined(GPK_WINRT)
 #	include <wrl.h>
+#	define GPK_RO_INIT_MULTITHREADED Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+#else
+#	define GPK_RO_INIT_MULTITHREADED ;
+#endif
+
+#if defined(GPK_WINDOWS)
 #	define GPK_SYSTEM_OS_ENTRY_POINT()																													\
 	static	::gpk::error_t													rtMain							(::gpk::SRuntimeValues& runtimeValues);		\
 			int																main							(int argc, char *argv[], char *envp[])	{	\
-		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);																\
+		GPK_RO_INIT_MULTITHREADED;																														\
 		::gpk::SRuntimeValues														runtimeValues					= {};								\
 		runtimeValues.PlatformDetail.EntryPointArgsWin							= {GetModuleHandle(NULL), 0, 0, SW_SHOW};								\
 		runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= {(const char**)argv, (uint32_t)argc};									\

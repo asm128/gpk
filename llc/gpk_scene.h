@@ -63,7 +63,7 @@ namespace gpk
 	struct SSceneObject {
 							::gpk::SCENE_OBJECT_TYPE								Type;
 							int32_t													IndexTransform;
-							int32_t													IndexGeometry;
+							int32_t													Geometry;
 	};
 
 	struct SSceneTransforms {

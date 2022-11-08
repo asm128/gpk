@@ -67,7 +67,7 @@ static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk
 		bufferVertices[iVertex]					-= boundingVolume.Center;
 
 	::gpk::SComponentData						newComponentGroup		= {};
-	newComponentGroup.IndexParent			= -1;
+	newComponentGroup.Parent			= -1;
 	newComponentGroup.RenderNodes.push_back(indexNewNode);
 	return scene.Components.push_back(componentName, newComponentGroup);
 }
