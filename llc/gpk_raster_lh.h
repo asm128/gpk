@@ -129,6 +129,21 @@ namespace gpk
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
+	int								drawTriangle
+		( ::gpk::view_grid<::gpk::SColorBGRA>			targetPixels
+		, const ::gpk::SGeometryIndexedTriangles			& geometry
+		, const int											iTriangle
+		, const ::gpk::SMatrix4<float>						& matrixTransform
+		, const ::gpk::SMatrix4<float>						& matrixTransformView
+		, const ::gpk::SCoord3<float>						& lightVector
+		, const ::gpk::SColorFloat							& lightColor
+		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+		, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
+		, ::gpk::array_pod<::gpk::SColorFloat>				& lightColors
+		, ::gpk::view_grid<uint32_t>						depthBuffer
+		);
 
 	int													drawPixels
 		( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels

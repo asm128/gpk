@@ -267,9 +267,6 @@
     <ClInclude Include="gpk_geometry.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_particle.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_frameinfo.h">
       <Filter>time</Filter>
     </ClInclude>
@@ -383,6 +380,9 @@
     </ClInclude>
     <ClInclude Include="gpk_sysevent.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_particle.h">
+      <Filter>physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

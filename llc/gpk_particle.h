@@ -160,6 +160,52 @@ namespace gpk
 	static inline			::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
+
+	// simple particle force integrator
+	struct SParticles3 {
+		::gpk::array_pod<::gpk::SCoord3<float>>		Position			= {};
+		::gpk::array_pod<::gpk::SCoord3<float>>		Direction			= {};
+		::gpk::array_pod<float>						Speed				= {};
+
+		int											IntegrateSpeed		(double secondsLastFrame)	{
+			for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
+				::gpk::SCoord3<float>							& direction			= Direction	[iShot];
+				::gpk::SCoord3<float>							& position			= Position	[iShot];
+				float											& speed				= Speed		[iShot];
+				position									+= direction * speed * secondsLastFrame;
+			}
+			return 0;
+		}
+
+		int											Remove				(int32_t iParticle)	{
+			Position	.remove_unordered(iParticle);
+			Direction	.remove_unordered(iParticle);
+			return Speed.remove_unordered(iParticle);
+		}
+
+		int											Create				(const ::gpk::SCoord3<float> & position, const ::gpk::SCoord3<float> & direction, float speed)	{
+			Position	.push_back(position);
+			Direction	.push_back(direction);
+			return Speed.push_back(speed);
+		}
+
+		::gpk::error_t										Save(::gpk::array_pod<byte_t> & output) const { 
+			gpk_necs(::gpk::viewWrite(Position	, output)); 
+			gpk_necs(::gpk::viewWrite(Direction	, output)); 
+			gpk_necs(::gpk::viewWrite(Speed		, output)); 
+			info_printf("Saved %s, %i", "Position	", Position		.size()); 
+			info_printf("Saved %s, %i", "Direction	", Direction	.size()); 
+			info_printf("Saved %s, %i", "Speed		", Speed		.size()); 
+			return 0; 
+		}
+
+		::gpk::error_t										Load(::gpk::view_array<const byte_t> & input) { 
+			gpk_necs(::gpk::loadView(input, Position	));
+			gpk_necs(::gpk::loadView(input, Direction	));
+			gpk_necs(::gpk::loadView(input, Speed		));
+			return 0;
+		}
+	};
 } // namespace
 
 #endif // GPK_PARTICLE_H_29384923874

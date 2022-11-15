@@ -533,7 +533,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		gpk_necall(indices	.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
 		gpk_necall(keys		.push_back(view)				, "Failed! %s", "Too many nodes?");
 	}
-	return 0;
+	return indices.size();
 }
 
 			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, ::gpk::array_pod<int32_t> & indices)	{
@@ -543,7 +543,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		gpk_necall(indices.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
 	}
-	return 0;
+	return indices.size();
 }
 
 			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_char>& views, ::gpk::array_obj<::gpk::view_const_char> & keys)	{
@@ -554,7 +554,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		const ::gpk::view_const_char									& view												= views[node->ObjectIndex];
 		gpk_necall(keys.push_back(view)				, "Failed! %s", "Too many nodes?");
 	}
-	return 0;
+	return keys.size();
 }
 
 			::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::view_const_char>& views, const ::gpk::view_const_string& key)	{

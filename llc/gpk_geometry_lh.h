@@ -98,6 +98,13 @@ namespace gpk
 		::gpk::array_pod<::gpk::STriangle2<float>>			TextureCoords;
 	};
 
+	struct SGeometryIndexedTriangles {
+		::gpk::array_pod<::gpk::SCoord3<float>>				Positions;
+		::gpk::array_pod<::gpk::SCoord3<float>>				Normals;
+		::gpk::array_pod<::gpk::SCoord2<float>>				TextureCoords;
+		::gpk::array_pod<::gpk::STriangle<uint16_t>>		PositionIndices;
+	};
+
 	struct SBufferManager {
 		::gpk::SKeyedContainer<::gpk::ptr_obj<::gpk::SGeometryQuads		>>	Quads				= {};
 		::gpk::SKeyedContainer<::gpk::ptr_obj<::gpk::SGeometryTriangles	>>	Triangles			= {};
@@ -122,7 +129,7 @@ namespace gpk
 	};
 
 	struct SGeometryGroup {
-		int16_t												Image				;
+		int16_t												Images				;
 		::gpk::SGeometryGroupModes							Modes				;
 		::gpk::SRange<uint16_t>								Slice				;
 		//::gpk::array_pod<uint16_t>	IndicesPointLightCache	;
@@ -175,6 +182,7 @@ namespace gpk
 	int													geometryBuildFigure1			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter);
 
 	int													geometryBuildSphere				(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter);
+	int													geometryBuildSphere				(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter);
 
 	int													geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::SCoord3<float> & scale, const ::gpk::SCoord3<float> & translation);
 #pragma pack(push, 1)

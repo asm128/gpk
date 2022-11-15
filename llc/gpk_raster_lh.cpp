@@ -635,3 +635,78 @@ int													gpk::drawTriangle
 	return countPixels;
 }
 
+
+int													gpk::drawTriangle
+	( const ::gpk::view_grid<::gpk::SColorBGRA>			targetPixels
+	, const ::gpk::SGeometryIndexedTriangles			& geometry
+	, const int											iTriangle
+	, const ::gpk::SMatrix4<float>						& matrixTransform
+	, const ::gpk::SMatrix4<float>						& matrixTransformView
+	, const ::gpk::SCoord3<float>						& lightVector
+	, const ::gpk::SColorFloat							& lightColor
+	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
+	, ::gpk::array_pod<::gpk::SColorFloat>				& lightColors
+	, ::gpk::view_grid<uint32_t>						depthBuffer
+	) {
+	::gpk::STriangle		<uint16_t>							triangleIndices			= geometry.PositionIndices		[iTriangle];
+	::gpk::STriangle3		<float>								triangleWorld			= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};
+	::gpk::STriangle3		<float>								triangle				= triangleWorld;
+	::gpk::transform(triangle, matrixTransformView);
+	if( triangle.A.z < 0 || triangle.A.z >= 1
+	 || triangle.B.z < 0 || triangle.B.z >= 1
+	 || triangle.C.z < 0 || triangle.C.z >= 1
+	)
+		return 0;
+
+	if( (triangle.A.x < 0 && triangle.B.x < 0 && triangle.C.x < 0)
+	 || (triangle.A.y < 0 && triangle.B.y < 0 && triangle.C.y < 0)
+	)
+		return 0;
+
+	if( (triangle.A.x >= targetPixels.metrics().x && triangle.B.x >= targetPixels.metrics().x && triangle.C.x >= targetPixels.metrics().x)
+	 || (triangle.A.y >= targetPixels.metrics().y && triangle.B.y >= targetPixels.metrics().y && triangle.C.y >= targetPixels.metrics().y)
+	)
+		return 0;
+
+	int32_t								countPixels				= 0;
+	::gpk::transform(triangleWorld, matrixTransform);
+	::gpk::drawTriangle(targetPixels.metrics(), triangle, pixelCoords, pixelVertexWeights, depthBuffer);
+
+	const ::gpk::STriangle3	<float>								triangleNormals			= {geometry.Normals[triangleIndices.A], geometry.Normals[triangleIndices.B], geometry.Normals[triangleIndices.C]};
+	const ::gpk::STriangle2	<float>								triangleTexCoords		= {geometry.TextureCoords[triangleIndices.A], geometry.TextureCoords[triangleIndices.B], geometry.TextureCoords[triangleIndices.C]};
+	const ::gpk::SCoord2<float>									imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
+	for(uint32_t iPixelCoord = 0; iPixelCoord < pixelCoords.size(); ++iPixelCoord) {
+		const ::gpk::SCoord2<int16_t>								pixelCoord				= pixelCoords		[iPixelCoord];
+		const ::gpk::STriangleWeights<float>						& vertexWeights			= pixelVertexWeights[iPixelCoord];
+
+		::gpk::SCoord3<float>										normal					= ::gpk::triangleWeight(vertexWeights, triangleNormals);
+		normal													= matrixTransform.TransformDirection(normal).Normalize();
+		double														lightFactorDirectional	= normal.Dot(lightVector);
+		::gpk::SCoord3<float>										position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
+		::gpk::SCoord2<float>										texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
+		::gpk::SColorFloat											texelColor				= textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x];
+		::gpk::SColorFloat											fragmentColor			= {};
+
+		for(uint32_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
+			const ::gpk::SLight3										& light					= lightPoints[iLight];
+
+			::gpk::SCoord3<float>										lightToPoint			= light.Position - position;
+			::gpk::SCoord3<float>										vectorToLight			= lightToPoint;
+			vectorToLight.Normalize();
+			double														lightFactorPoint		= vectorToLight.Dot(normal);
+			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
+				continue;
+			double														invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
+			fragmentColor											+= (texelColor * lightColors[iLight] * invAttenuation).Clamp();
+		}
+		 (void)lightColor;
+		 (void)lightFactorDirectional ;
+
+		countPixels += ::gpk::setPixel(targetPixels, pixelCoord, ((texelColor * .1) + texelColor * lightColor * lightFactorDirectional + fragmentColor).Clamp());
+	}
+	return countPixels;
+}
+

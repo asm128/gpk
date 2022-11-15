@@ -1,5 +1,24 @@
 #include "gpk_geometry_lh.h"
 
+//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquarePositions		[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
+//static constexpr const int8_t					geometryIndexedSquareIndices		[]						= {0, 1, 2, 1, 3, 2};
+//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareNormal			[]						= {{0, 0, 1}};
+//static constexpr const int8_t					geometryIndexedSquareNormalIndices	[]						= {0};
+//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareUV				[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
+//
+//static constexpr const int8_t					geometryIndexedSquareUVIndices		[]						= {0, 1, 2, 1, 3, 2};
+//
+//// Vertex coordinates for cube faces
+//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedCubePositions	[8]						=
+//	{ {0, 0, 0}, {0, 1, 0}, {1, 0, 0}, {1, 1, 0}
+//	, {0, 0, 1}, {0, 1, 1}, {1, 0, 1}, {1, 1, 1}
+//	};
+//
+//static constexpr const int8_t					geometryIndexedCubeIndices		[12 * 3]				=
+//	{ 0, 2, 1, 1, 2, 3 //
+//	, 
+//	};
+
 // Vertex coordinates for cube faces
 static constexpr const ::gpk::STriangle3<int8_t>	geometryCube	[12]						=
 	{ {{0, 0, 0}, {0, 1, 0}, {1, 0, 0}}	// Right	- first
@@ -442,6 +461,49 @@ int													gpk::geometryBuildTender	(SGeometryQuads & geometry, uint32_t st
 	return 0;
 }
 
+int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter)	{
+	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
+	for(uint32_t y = 0; y < stacks; ++y)
+	for(uint32_t x = 0; x < slices; ++x)  {
+		uint32_t vertexOffset = geometry.Positions.size();
+		geometry.PositionIndices.push_back({(uint16_t)(vertexOffset + 0), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 1)});
+		geometry.PositionIndices.push_back({(uint16_t)(vertexOffset + 1), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 3)});
+		{
+			::gpk::SCoord2<float>									texcoords	[4]				=
+				{ {(y		) * texCoordUnits.y, (x		) * texCoordUnits.x}
+				, {(y		) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
+				, {(y + 1	) * texCoordUnits.y, (x		) * texCoordUnits.x}
+				, {(y + 1	) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
+				};
+
+			geometry.TextureCoords.push_back(texcoords[0]);
+			geometry.TextureCoords.push_back(texcoords[1]);
+			geometry.TextureCoords.push_back(texcoords[2]);
+			geometry.TextureCoords.push_back(texcoords[3]);
+		}
+		{
+			::gpk::SCoord3<double>									coords		[4]				=
+				{ {sin(::gpk::math_pi * x		/slices) * cos(::gpk::math_2pi * y			/ stacks), cos(::gpk::math_pi * x		/slices), sin(::gpk::math_pi * x		/ slices) * sin(::gpk::math_2pi * y			/ stacks)}
+				, {sin(::gpk::math_pi * (x + 1)	/slices) * cos(::gpk::math_2pi * y			/ stacks), cos(::gpk::math_pi * (x + 1) /slices), sin(::gpk::math_pi * (x + 1)	/ slices) * sin(::gpk::math_2pi * y			/ stacks)}
+				, {sin(::gpk::math_pi * x		/slices) * cos(::gpk::math_2pi * (y + 1)	/ stacks), cos(::gpk::math_pi * x		/slices), sin(::gpk::math_pi * x		/ slices) * sin(::gpk::math_2pi * (y + 1)	/ stacks)}
+				, {sin(::gpk::math_pi * (x + 1)	/slices) * cos(::gpk::math_2pi * (y + 1)	/ stacks), cos(::gpk::math_pi * (x + 1)	/slices), sin(::gpk::math_pi * (x + 1)	/ slices) * sin(::gpk::math_2pi * (y + 1)	/ stacks)}
+				};
+
+			geometry.Positions.push_back((coords[0] * radius).Cast<float>() - gridCenter);
+			geometry.Positions.push_back((coords[1] * radius).Cast<float>() - gridCenter);
+			geometry.Positions.push_back((coords[2] * radius).Cast<float>() - gridCenter);
+			geometry.Positions.push_back((coords[3] * radius).Cast<float>() - gridCenter);
+
+			geometry.Normals.push_back(coords[0].Normalize().Cast<float>());
+			geometry.Normals.push_back(coords[1].Normalize().Cast<float>());
+			geometry.Normals.push_back(coords[2].Normalize().Cast<float>());
+			geometry.Normals.push_back(coords[3].Normalize().Cast<float>());
+		}
+	}
+	return 0;
+}
+
+
 int													gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter)	{
 	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
 	for(uint32_t z = 0; z < stacks; ++z)
@@ -493,7 +555,6 @@ int													gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_
 	}
 	return 0;
 }
-
 
 int													gpk::geometryBuildTileListFromImage		(::gpk::view_grid<const ::gpk::SColorBGRA> image, ::gpk::array_pod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
 	{
