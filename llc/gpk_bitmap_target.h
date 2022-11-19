@@ -194,7 +194,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)		{
+	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)		{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
@@ -213,7 +213,7 @@ namespace gpk
 			if(w2 < 0)
 				continue;
 			//if (w0 >= 0 && w1 >= 0 && w2 >= 0) { // If p is on or inside all edges, render pixel.
-			out_Points.push_back({x, y});
+			out_Points.push_back({(int16_t)x, (int16_t)y});
 			++pixelsDrawn;
 			//}
 		}
@@ -225,8 +225,8 @@ namespace gpk
 		( ::gpk::view_grid<uint32_t>						& targetDepth
 		, const ::gpk::SNearFar								& fNearFar
 		, const ::gpk::STriangle3<_tCoord>					& triangle
-		, ::gpk::array_pod<::gpk::SCoord2<int32_t>>			& out_Points
-		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeigths
+		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& out_Points
+		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeights
 		) {
 		int32_t																		pixelsDrawn									= 0;
 		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
@@ -266,32 +266,32 @@ namespace gpk
 				+ triangle.C.z * proportions.C
 				;
 			double																		depth										= ((finalZ - fNearFar.Near) / (fNearFar.Far - fNearFar.Near));
-			if(depth > 1 || depth < 0) // discard from depth planes
+			if(depth >= 1 || depth <= 0) // discard from depth planes
 				continue;
 			uint32_t																	finalDepth									= (uint32_t)(depth * 0x00FFFFFFU);
 			if (targetDepth[(uint32_t)y][(uint32_t)x] > (uint32_t)finalDepth) { // check against depth buffer
 				targetDepth[(uint32_t)y][(uint32_t)x]									= finalDepth;
-				triangleWeigths.push_back(proportions);
-				out_Points.push_back(cellCurrent);
+				triangleWeights.push_back(proportions);
+				out_Points.push_back(cellCurrent.Cast<int16_t>());
 				++pixelsDrawn;
 			}
 		}
 		return pixelsDrawn;
 	}
 
-	template<typename _tCoord>
+	template<typename _tCoord, typename _tIndex>
 	static	inline			::gpk::error_t									drawTriangleIndexed
-		( ::gpk::view_grid<uint32_t>						& targetDepth
-		, const ::gpk::SNearFar								& fNearFar // fFar
-		//, double											fNear
-		, uint32_t											baseIndex
-		, uint32_t											baseVertexIndex
-		, const ::gpk::view_array<::gpk::SCoord3<_tCoord>>	& coordList
-		, const ::gpk::view_array<uint32_t>					& indices
-		, ::gpk::array_pod<::gpk::SCoord2<int32_t>>			& out_Points
-		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeigths
+		( ::gpk::view_grid<uint32_t>							& targetDepth
+		, const ::gpk::SNearFar									& fNearFar // fFar
+		//, double												fNear
+		, uint32_t												baseIndex
+		, uint32_t												baseVertexIndex
+		, ::gpk::view_array<const ::gpk::SCoord3<_tCoord>>		coordList
+		, ::gpk::view_array<const _tIndex>						indices
+		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>				& out_Points
+		, ::gpk::array_pod<::gpk::STriangleWeights<double>>		& triangleWeights
 		) {
-		return drawTriangle(targetDepth, fNearFar.Far, fNearFar.Near, {coordList[indices[baseIndex + 0]], coordList[indices[baseIndex + 1]], coordList[indices[baseIndex + 2]]}, out_Points, triangleWeigths);
+		return drawTriangle(targetDepth, fNearFar, ::gpk::STriangle3<_tCoord>{coordList[baseVertexIndex + indices[baseIndex + 0]], coordList[baseVertexIndex + indices[baseIndex + 1]], coordList[baseVertexIndex + indices[baseIndex + 2]]}, out_Points, triangleWeights);
 	}
 
 	typedef		::gpk::error_t												(*gpk_raster_callback)						(void* bitmapTarget, const ::gpk::SCoord2<uint32_t>& bitmapMetrics, const ::gpk::SCoord2<uint32_t>& cellPos, const void* value);

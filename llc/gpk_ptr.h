@@ -144,6 +144,9 @@ namespace gpk
 
 	template <typename T>
 	using array_pobj = ::gpk::array_obj<::gpk::ptr_obj<T>>;
+
+	template <typename T>
+	using array_ppod = ::gpk::array_obj<::gpk::ptr_pod<T>>;
 } // namespace
 
 #endif // GPK_PTR_H_0297349827348923

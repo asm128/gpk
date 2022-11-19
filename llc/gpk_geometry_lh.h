@@ -129,6 +129,7 @@ namespace gpk
 	};
 
 	struct SGeometryGroup {
+		int32_t												Geometry			;
 		int16_t												Images				;
 		::gpk::SGeometryGroupModes							Modes				;
 		::gpk::SRange<uint16_t>								Slice				;

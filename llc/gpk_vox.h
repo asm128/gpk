@@ -1,12 +1,14 @@
 #include "gpk_array_static.h"
 #include "gpk_storage.h"
 #include "gpk_parse.h"
+#include "gpk_color.h"
 
 #ifndef GPK_VOX_H_9832347982
 #define GPK_VOX_H_9832347982
 
 namespace gpk 
 {
+#define gpk_vox_info_printf info_printf
 	::gpk::array_static<uint32_t, 256> VOX_PALETTE_DEFAULT = {
 		0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
 		0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
@@ -62,6 +64,10 @@ namespace gpk
 		::gpk::array_static<char, 4>						Type					= {};
 		uint32_t											ChunkSize				= 0;	// | num bytes of chunk content (N)
 		uint32_t											ChildChunks				= 0;	// | num bytes of children chunks (M)
+
+		inline	bool										IsType					(::gpk::vcs riff)	const	{
+			return riff == Type;
+		} 
 	};
 
 	struct SVOXTransformFrame { // DICT	: frame attributes
@@ -69,6 +75,14 @@ namespace gpk
 		::gpk::SCoord3<int32_t>								Translation				= {};
 		uint32_t											IndexFrame				= {};
 	}; 
+
+	struct SVOXVoxel {
+		uint8_t												x;
+		uint8_t												y;
+		uint8_t												z;
+		uint8_t												i;
+	};
+
 #pragma pack(pop)
 
 	struct SVOXChunk {
@@ -78,7 +92,7 @@ namespace gpk
 
 	struct SVOXChunkXYZI {
 		SVOXChunkHeader										Header					= {};
-		::gpk::array_pod<uint32_t>							Data					= {};
+		::gpk::array_pod<SVOXVoxel>							Data					= {};
 	};
 
 	typedef ::gpk::array_obj<::gpk::SKeyVal<::gpk::array_pod<char>, ::gpk::array_pod<char>>>	SVOXDict;
@@ -126,7 +140,7 @@ namespace gpk
 		SVOXChunkHeader										Header					= {};
 		int32_t												Id						= 0;
 		SVOXDict											Attributes				= {};
-		::gpk::array_pod<::gpk::SVOXShapeModel>				Models					= {};
+		::gpk::array_obj<::gpk::SVOXShapeModel>				Models					= {};
 	};
 
 	struct SVOXChunkLayer {
@@ -169,8 +183,36 @@ namespace gpk
 		::gpk::array_obj<::gpk::SVOXChunkShape>				ChunksShape				= {};
 		::gpk::array_obj<::gpk::SVOXChunkNote>				ChunksNote				= {};
 
-		::gpk::error_t										Load				(::gpk::view_array<const byte_t> & input) { 
-			uint32_t												bytesRead			= sizeof(SVOXFileHeader); 
+		::gpk::SCoord3<uint16_t>							GetDimensions			()	const	{
+			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
+				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
+					const ::gpk::SCoord3<uint32_t> coord = *(::gpk::SCoord3<uint32_t>*)Chunks[iChunk].Data.begin();
+					return ::gpk::SCoord3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint16_t>();
+				}
+
+			return {};
+		}
+
+		::gpk::view_array<const ::gpk::SVOXVoxel>					GetXYZI					()	const	{
+			for(uint32_t iChunk = 0; iChunk < ChunksCoord.size(); ++iChunk)
+				if(0 == memcmp(ChunksCoord[iChunk].Header.Type.Storage, "XYZI", 4)) {
+					return {ChunksCoord[iChunk].Data.begin(), ChunksCoord[iChunk].Data.size()};
+				}
+
+			return {};
+		}
+		
+		::gpk::view_array<const uint32_t>							GetRGBA					()	const	{
+			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
+				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4)) {
+					return {(const uint32_t*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
+				}
+
+			return {};
+		}
+		
+		::gpk::error_t										Load					(::gpk::view_array<const byte_t> & input) { 
+			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
 
@@ -180,7 +222,7 @@ namespace gpk
 				input												= {input.begin() + bytesRead, input.size() - bytesRead};
 
 				const ::gpk::vcs										CHUNK_TAGS_STATIC[]	= {"MAIN", "SIZE", "PACK", "RGBA"};
-				info_printf("Chunk type: %s.", gpk::toString(readChunkHeader.Type).begin());
+				gpk_vox_info_printf("Chunk type: %s.", gpk::toString(readChunkHeader.Type).begin());
 				if(-1 != ::gpk::find(::gpk::vcs{readChunkHeader.Type}, ::gpk::view_array<const ::gpk::vcs>{CHUNK_TAGS_STATIC})) {
 					::gpk::SVOXChunk										newChunk				= {};
 					newChunk.Header										= readChunkHeader;
@@ -188,7 +230,17 @@ namespace gpk
 						 if(0 == strncmp(newChunk.Header.Type.Storage, "MAIN", 4)) { }
 					else if(0 == strncmp(newChunk.Header.Type.Storage, "SIZE", 4)) { bytesRead = sizeof(::gpk::SCoord3<uint32_t>)	; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
 					else if(0 == strncmp(newChunk.Header.Type.Storage, "PACK", 4)) { bytesRead = sizeof(uint32_t)					; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
-					else if(0 == strncmp(newChunk.Header.Type.Storage, "RGBA", 4)) { bytesRead = sizeof(uint32_t) * 256				; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
+					else if(0 == strncmp(newChunk.Header.Type.Storage, "RGBA", 4)) { 
+						bytesRead = sizeof(uint32_t) * 256; 
+						newChunk.Data.append({input.begin(), bytesRead}); 
+						input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+						::gpk::view_array<::gpk::SColorBGRA>	bgraView = {(::gpk::SColorBGRA*)newChunk.Data.begin(), 256};
+						for(uint32_t iColor = 0; iColor < bgraView.size(); ++iColor) {
+							::gpk::SColorBGRA									& bgra				= bgraView[iColor];
+							std::swap(bgra.r, bgra.b);
+						}
+
+					}
 
 					Chunks.push_back(newChunk);
 				}
@@ -224,10 +276,14 @@ namespace gpk
 					else if(0 == strncmp(readChunkHeader.Type.Storage, "XYZI", 4)) { 
 						::gpk::SVOXChunkXYZI								newChunk			= {}; 
 		 				newChunk.Header									= readChunkHeader;
-						::gpk::view_array<const uint32_t>					readChunkData		= {};
+						::gpk::view_array<const SVOXVoxel>					readChunkData		= {};
 						bytesRead										= ::gpk::viewRead(readChunkData, input); 
 						input											= {input.begin() + bytesRead, input.size() - bytesRead}; 
 						newChunk.Data									= readChunkData;
+						for(uint32_t iVoxel = 0; iVoxel < newChunk.Data.size(); ++iVoxel) {
+							::gpk::SVOXVoxel									& voxel				= newChunk.Data[iVoxel];
+							voxel											= {voxel.y, voxel.z, voxel.x, voxel.i};
+						}
 						ChunksCoord.push_back(newChunk);
 					}
 					else if(0 == strncmp(readChunkHeader.Type.Storage, "NOTE", 4)) { 
@@ -288,17 +344,12 @@ namespace gpk
 								bytesRead = ::gpk::viewRead(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 								bytesRead = ::gpk::viewRead(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 
-									 if(readKey == ::gpk::vcs{"_r"}) { newFrame.Rotation	= readVal[0]; }
+								// Welcome to the amazing fucked up way to store a transform in a binary file
+									 if(readKey == ::gpk::vcs{"_r"}) { newFrame.Rotation = readVal[0]; }
 								else if(readKey == ::gpk::vcs{"_t"}) {
-									int32_t			value			= 0; // Welcome to the amazing fucked up way to store a transform in a binary file
-									uint32_t		charsProcessed	= ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed};
-									newFrame.Translation.x	= value; 
-									value			= 0;
-									charsProcessed	= ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed};
-									newFrame.Translation.y	= value; 
-									value			= 0;
-									charsProcessed	= ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed};
-									newFrame.Translation.z	= value; 
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.x = value; }
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.z = value; }
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.y = value; }
 								}
 								else if(readKey == ::gpk::vcs{"_f"}) { newFrame.IndexFrame	= *(const int32_t*)readVal.begin(); }; 
 							}

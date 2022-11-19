@@ -412,7 +412,7 @@ static				::gpk::error_t														xcbWindowCreate								(::gpk::SWindow & w
 		);
 	::SetWindowLongPtrA(mainWindow.PlatformDetail.WindowHandle, GWLP_USERDATA, (LONG_PTR)&mainWindow);
 	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
-	::ShowWindow	(displayDetail.WindowHandle, SW_SHOWMAXIMIZED);
+	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	//::UpdateWindow	(displayDetail.WindowHandle);
 #elif defined(GPK_XCB)
 	//if(0 == mainWindow.PlatformDetail.Connection) {
