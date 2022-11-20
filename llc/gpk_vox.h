@@ -9,7 +9,7 @@
 namespace gpk 
 {
 #define gpk_vox_info_printf info_printf
-	::gpk::array_static<uint32_t, 256> VOX_PALETTE_DEFAULT = {
+	::gpk::array_static<::gpk::SColorBGRA, 256> VOX_PALETTE_DEFAULT = {
 		0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
 		0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
 		0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
@@ -183,11 +183,11 @@ namespace gpk
 		::gpk::array_obj<::gpk::SVOXChunkShape>				ChunksShape				= {};
 		::gpk::array_obj<::gpk::SVOXChunkNote>				ChunksNote				= {};
 
-		::gpk::SCoord3<uint16_t>							GetDimensions			()	const	{
+		::gpk::SCoord3<uint8_t>								GetDimensions			()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
 					const ::gpk::SCoord3<uint32_t> coord = *(::gpk::SCoord3<uint32_t>*)Chunks[iChunk].Data.begin();
-					return ::gpk::SCoord3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint16_t>();
+					return ::gpk::SCoord3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint8_t>();
 				}
 
 			return {};
@@ -202,10 +202,10 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::view_array<const uint32_t>							GetRGBA					()	const	{
+		::gpk::view_array<const ::gpk::SColorBGRA>					GetBGRA					()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4)) {
-					return {(const uint32_t*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
+					return {(const ::gpk::SColorBGRA*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
 				}
 
 			return {};

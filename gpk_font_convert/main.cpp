@@ -18,13 +18,14 @@
 	, const ::gpk::SCoord2<uint32_t>	fontCharSize
 	, bool								negateBit
 	) {
+	const uint32_t ROW_WIDTH = (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
 	verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
 	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
-		const uint32_t												srcOffsetY				= iChar / 32 * fontCharSize.y;
+		const uint32_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
 		const uint32_t												dstOffsetY				= iChar * fontCharSize.y;
 		for(uint32_t y = 0; y < fontCharSize.y; ++y) {
 			for(uint32_t x = 0; x < fontCharSize.x; ++x) {
-				const uint32_t											srcOffsetX				= iChar % 32 * fontCharSize.x;
+				const uint32_t											srcOffsetX				= iChar % ROW_WIDTH * fontCharSize.x;
 				const uint32_t											dstOffsetX				= 0;
 				const ::gpk::SColorBGRA									& srcColor				= imageCache.View[srcOffsetY + y][srcOffsetX + x];
 				verticalAtlas.View[dstOffsetY + y][dstOffsetX + x]	= srcColor;
@@ -86,12 +87,12 @@ int														main					() {
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
 		imageFixed.resize
-			( imageCache.metrics().x / 3
+			( imageCache.metrics().x
 			, imageCache.metrics().y
 			);
 		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
 		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-			const uint32_t										offsetX					= fontCharSize.x + fontCharSize.x * 3 * (x / fontCharSize.x);
+			const uint32_t										offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
 			const uint32_t										dstX					= offsetX + (x % fontCharSize.x);
 			::gpk::SColorBGRA									& dstPixel				= imageFixed[y][x];
 			dstPixel										= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;

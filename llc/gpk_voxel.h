@@ -1,5 +1,7 @@
 #include "gpk_coord.h"
 #include "gpk_enum.h"
+#include "gpk_ptr.h"
+#include "gpk_color.h"
 
 #ifndef GPK_VOXEL_H_098273498237423
 #define GPK_VOXEL_H_098273498237423
@@ -8,10 +10,10 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	static constexpr ::gpk::SCoord3<float>				VOXEL_VERTICES		[]			= 
-			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}
-			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}
+			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
+			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 
-
+														
 	GDEFINE_ENUM_TYPE(VOXEL_FACE, uint8_t);
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, TOP		, 0);
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, FRONT	, 1);
@@ -21,21 +23,21 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(VOXEL_FACE, LEFT		, 5);
 
 	static constexpr ::gpk::SQuad3<float>				VOXEL_FACE_VERTICES		[]	= 
-		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}
-		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}
-		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}
-		, {{0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}}
-		, {{0, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 1, 1}}
-		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}
+		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
+		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
+		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
+		, {{0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}}  // Bottom	(y = -1)
+		, {{0, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 1, 1}}	// Back		(x = -1)
+		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = -1)
 		}; 
 
 	constexpr ::gpk::SCoord3<float>						VOXEL_FACE_NORMALS			[6]	= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
 
 	constexpr uint8_t									VOXEL_FACE_INDICES			[6][6]	= 
-		{ {0, 2, 1, 1, 2, 3}
+		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
 		, {0, 1, 2, 1, 3, 2}
-		, {0, 1, 2, 1, 3, 2}
+		, {0, 1, 2, 1, 3, 2} // Bottom
 		, {0, 2, 1, 1, 2, 3}
 		, {0, 2, 1, 1, 2, 3}
 		}; 
@@ -49,6 +51,14 @@ namespace gpk
 		_tCell											Cells	[DEPTH][WIDTH]		= {};
 	};
 
+	template <typename _uIndex>
+	struct SVoxel {
+		::gpk::SCoord3<_uIndex>							Position;
+		_uIndex											ColorIndex;
+	};
+
+#pragma pack(pop)
+
 	template<typename _tCell>
 	struct SVoxelChunk {
 		::gpk::array_pobj<::gpk::SVoxelLayer<_tCell>>	Layers						= {};
@@ -56,20 +66,23 @@ namespace gpk
 
 	template<typename _tCell>
 	struct SVoxelMap {
+		::gpk::SCoord3<uint8_t>							Dimensions;
+		::gpk::array_pod<::gpk::SColorBGRA>				Palette;
+		::gpk::array_pod<::gpk::SVoxel<uint8_t>>		Voxels;
 		::gpk::array_obj<::gpk::SVoxelChunk<_tCell>>	Chunks;
-		::gpk::array_pod<::gpk::SCoord2<uint16_t>>		ChunkPositions;
+		::gpk::array_pod<::gpk::SCoord2<uint8_t>>		ChunkPositions;
 
-		int32_t											GetChunkForVoxel			(const ::gpk::SCoord3<uint32_t> & voxelPosition) const	{ 
-			const ::gpk::SCoord3<uint16_t>						floor						= voxelPosition / SVoxelLayer<_tCell>::WIDTH; 
-			return ::gpk::find({floor.x, floor.z}, ::gpk::view_array<const ::gpk::SCoord2<uint16_t>>{ChunkPositions}); 
+		int32_t											GetChunk					(const ::gpk::SCoord2<uint8_t> & chunkCoords) const	{ 
+			return ::gpk::find(chunkCoords, ::gpk::view_array<const ::gpk::SCoord2<uint8_t>>{ChunkPositions}); 
 		}
 
-		int32_t											GetChunk					(const ::gpk::SCoord2<uint16_t> & chunkCoords) const	{ 
-			return ::gpk::find(chunkCoords, ::gpk::view_array<const ::gpk::SCoord2<uint16_t>>{ChunkPositions}); 
+		int32_t											GetChunkForVoxel			(const ::gpk::SCoord3<uint8_t> & voxelPosition) const	{ 
+			const ::gpk::SCoord3<uint8_t>						floor						= voxelPosition / SVoxelLayer<_tCell>::WIDTH; 
+			return GetChunk({floor.x, floor.z}); 
 		}
 
-		int32_t											SetValue					(const ::gpk::SCoord3<uint32_t> & voxelPosition, const _tCell & cellValue) 	{ 
-			const ::gpk::SCoord3<uint16_t>						floor						= (voxelPosition / SVoxelLayer<_tCell>::WIDTH).Cast<uint16_t>(); 
+		int32_t											SetValue					(const ::gpk::SCoord3<uint8_t> & voxelPosition, const _tCell & cellValue) 	{ 
+			const ::gpk::SCoord3<uint8_t>						floor						= voxelPosition / SVoxelLayer<_tCell>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) {
 				indexChunk										= Chunks.push_back({});
@@ -77,26 +90,56 @@ namespace gpk
 			}
 
 			::gpk::SVoxelChunk<_tCell>							& chunk						= Chunks[indexChunk];
-			if(chunk.Layers.size() < (voxelPosition.y + 1))
+			if(chunk.Layers.size() < uint32_t(voxelPosition.y) + 1)
 				chunk.Layers.resize(voxelPosition.y + 1);
 
-			chunk.Layers[voxelPosition.y]->Cells[voxelPosition.z % SVoxelLayer<_tCell>::DEPTH][voxelPosition.x % SVoxelLayer<_tCell>::WIDTH] = cellValue;
+			_tCell												& cell						= chunk.Layers[voxelPosition.y]->Cells[voxelPosition.z % SVoxelLayer<_tCell>::DEPTH][voxelPosition.x % SVoxelLayer<_tCell>::WIDTH];
+			if(cell != cellValue) {
+				if(0 == cell) 
+					Voxels.push_back({voxelPosition.x, voxelPosition.y, voxelPosition.z, cellValue});
+				else {
+					uint32_t											foundVoxel					= (uint32_t)-1;
+					for(uint32_t iVoxel = 0; iVoxel < Voxels.size(); ++iVoxel) {
+						::gpk::SVoxel<uint8_t>								& voxel						= Voxels[iVoxel];
+						if(voxel.Position == voxelPosition) {
+							if(0 == cellValue)
+								Voxels.remove_unordered(foundVoxel);
+							else {
+								foundVoxel										= iVoxel;
+								Voxels[foundVoxel].ColorIndex = cellValue;
+							}
+							break;
+						}
+
+					}
+					if(foundVoxel >= Voxels.size()) {
+						warning_printf("Voxel not found! Voxel value: %i", (int32_t)cellValue);
+						Voxels.push_back({{voxelPosition.x, voxelPosition.y, voxelPosition.z}, cellValue});
+					}
+				}
+				cell		= cellValue;
+			}
 			return indexChunk;
 		}
 
-		int32_t											GetValue					(const ::gpk::SCoord3<uint32_t> & voxelPosition, _tCell & cellValue) const	{ 
-			const ::gpk::SCoord3<uint16_t>						floor						= (voxelPosition / SVoxelLayer<_tCell>::WIDTH).Cast<uint16_t>(); 
+		int32_t											GetValue					(const ::gpk::SCoord3<uint8_t> & voxelPosition, _tCell & cellValue) const	{ 
+			const ::gpk::SCoord3<uint8_t>						floor						= voxelPosition / SVoxelLayer<_tCell>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) 
 				return -1;
+
 			const ::gpk::SVoxelChunk<_tCell>				 	& chunk						= Chunks[indexChunk];
-			if(voxelPosition.y >= chunk.Layers.size() || 0 == chunk.Layers[voxelPosition.y].get_ref())
+			if(voxelPosition.y >= chunk.Layers.size()) 
 				return -1;
-			cellValue										= chunk.Layers[voxelPosition.y]->Cells[voxelPosition.z % SVoxelLayer<_tCell>::DEPTH][voxelPosition.x % SVoxelLayer<_tCell>::WIDTH];
+
+			const ::gpk::ptr_obj<::gpk::SVoxelLayer<_tCell>>	& layer						= chunk.Layers[voxelPosition.y];
+			if(0 == layer.get_ref())
+				return -1;
+
+			cellValue										= layer->Cells[voxelPosition.z % SVoxelLayer<_tCell>::DEPTH][voxelPosition.x % SVoxelLayer<_tCell>::WIDTH];
 			return 0;
 		}
 	};
-#pragma pack(pop)
 } // namespace
 
 #endif // GPK_VOXEL_H_098273498237423
