@@ -198,7 +198,7 @@ namespace gpk {
 	typedef	::gpk::array_pod<::gpk::SCoord2<float			>>	TTexCoordBuffer			;
 	typedef	::gpk::array_pod<::gpk::SBlendIndices			>	TBlendIndicesBuffer		;
 	typedef	::gpk::array_pod<::gpk::SCoord2<int16_t>		>	TPixelCoordBuffer		;
-	typedef	::gpk::array_pod<::gpk::STriangleWeights<float>	>	TTriangleWeightBuffer	;
+	typedef	::gpk::array_pod<::gpk::STriangle<float>	>	TTriangleWeightBuffer	;
 
 	struct SRendererCache {
 		::gpk::array_pod<uint32_t>						NodesToRender					= {};

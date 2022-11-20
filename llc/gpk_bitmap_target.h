@@ -226,7 +226,7 @@ namespace gpk
 		, const ::gpk::SNearFar								& fNearFar
 		, const ::gpk::STriangle3<_tCoord>					& triangle
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& out_Points
-		, ::gpk::array_pod<::gpk::STriangleWeights<double>>	& triangleWeights
+		, ::gpk::array_pod<::gpk::STriangle<double>>	& triangleWeights
 		) {
 		int32_t																		pixelsDrawn									= 0;
 		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
@@ -249,7 +249,7 @@ namespace gpk
 					continue;
 			}
 			const ::gpk::SCoord2<double>												cellCurrentF								= {x, y};
-			::gpk::STriangleWeights<double>												proportions									=
+			::gpk::STriangle<double>												proportions									=
 				{ ::gpk::orient2d3d({triangle.C.template Cast<double>(), triangle.B.template Cast<double>()}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
 				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
 				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
@@ -307,7 +307,7 @@ namespace gpk
 					continue;
 			}
 			const ::gpk::SCoord2<double>												cellCurrentF								= {x, y};
-			::gpk::STriangleWeights<double>												proportions									=
+			::gpk::STriangle<double>												proportions									=
 				{ ::gpk::orient2d3d({triangle.C.template Cast<double>(), triangle.B.template Cast<double>()}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
 				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
 				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
@@ -346,7 +346,7 @@ namespace gpk
 		, ::gpk::view_array<const ::gpk::SCoord3<_tCoord>>		coordList
 		, ::gpk::view_array<const _tIndex>						indices
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>				& out_Points
-		, ::gpk::array_pod<::gpk::STriangleWeights<double>>		& triangleWeights
+		, ::gpk::array_pod<::gpk::STriangle<double>>		& triangleWeights
 		) {
 		return drawTriangle(targetDepth, fNearFar, ::gpk::STriangle3<_tCoord>{coordList[baseVertexIndex + indices[baseIndex + 0]], coordList[baseVertexIndex + indices[baseIndex + 1]], coordList[baseVertexIndex + indices[baseIndex + 2]]}, out_Points, triangleWeights);
 	}

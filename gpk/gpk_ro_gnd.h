@@ -78,7 +78,7 @@ namespace gpk
 				::gpk::array_pod<::gpk::SCoord3<float>>				Normals			;
 				::gpk::array_pod<::gpk::SCoord3<float>>				Vertices		;
 				::gpk::array_pod<::gpk::SCoord2<float>>				UVs				;
-				::gpk::array_pod<::gpk::STriangleWeights<uint32_t>>	VertexIndices	;
+				::gpk::array_pod<::gpk::STriangle<uint32_t>>		VertexIndices	;
 				//::gpk::array_pod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 

@@ -466,8 +466,8 @@ int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, 
 	for(uint32_t y = 0; y < stacks; ++y)
 	for(uint32_t x = 0; x < slices; ++x)  {
 		uint32_t vertexOffset = geometry.Positions.size();
-		geometry.PositionIndices.push_back({(uint16_t)(vertexOffset + 0), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 1)});
-		geometry.PositionIndices.push_back({(uint16_t)(vertexOffset + 1), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 3)});
+		geometry.PositionIndices.append({(uint16_t)(vertexOffset + 0), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 1)});
+		geometry.PositionIndices.append({(uint16_t)(vertexOffset + 1), (uint16_t)(vertexOffset + 2), (uint16_t)(vertexOffset + 3)});
 		{
 			::gpk::SCoord2<float>									texcoords	[4]				=
 				{ {(y		) * texCoordUnits.y, (x		) * texCoordUnits.x}

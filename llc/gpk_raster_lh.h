@@ -30,8 +30,8 @@ namespace gpk
 		, ::gpk::view_grid<uint32_t>					depthBuffer
 		);
 	int								drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels	, const ::gpk::STriangle2<int16_t>	& triangle	, ::gpk::SColorBGRA color);
-	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle3<float>	& triangle, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions, ::gpk::view_grid<uint32_t> depthBuffer);
-	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle2<float>	& triangle	, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangleWeights<float>> & proportions);
+	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle3<float>	& triangle, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangle<float>> & proportions, ::gpk::view_grid<uint32_t> depthBuffer);
+	int								drawTriangle		(::gpk::SCoord2<uint32_t> targetSize		, const ::gpk::STriangle2<float>	& triangle	, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords, ::gpk::array_pod<::gpk::STriangle<float>> & proportions);
 	int								drawQuadTriangle
 		( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
 		, const ::gpk::SGeometryQuads						& geometry
@@ -41,7 +41,7 @@ namespace gpk
 		, const ::gpk::SCoord3<float>						& lightVector
 		, const ::gpk::SColorBGRA							color
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
 	int								drawQuadTriangle
@@ -52,7 +52,7 @@ namespace gpk
 		, const ::gpk::SMatrix4<float>						& matrixTransformView
 		, const ::gpk::SCoord3<float>						& lightVector
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
@@ -67,7 +67,7 @@ namespace gpk
 		, const ::gpk::SMatrix4<float>						& matrixTransformView
 		, const ::gpk::SCoord3<float>						& lightVector
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
@@ -80,14 +80,14 @@ namespace gpk
 		, ::gpk::STriangle3			<float>					triangle
 		, const ::gpk::SMatrix4<float>						& matrixTransformView
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
 	int								drawQuadTriangle
 		( const ::gpk::SCoord2<uint32_t>					& targetSize
 		, const ::gpk::STriangle3	<float>					& triangleScreen
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
 	int								drawTriangle
@@ -99,7 +99,7 @@ namespace gpk
 		, const ::gpk::SCoord3<float>						& lightVector
 		, ::gpk::SColorBGRA									color
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
 	int								drawTriangle
@@ -110,7 +110,7 @@ namespace gpk
 		, const ::gpk::SMatrix4<float>						& matrixTransformView
 		, const ::gpk::SCoord3<float>						& lightVector
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::view_grid<uint32_t>						depthBuffer
 		);
@@ -123,7 +123,7 @@ namespace gpk
 		, const ::gpk::SCoord3<float>						& lightVector
 		, const ::gpk::SColorFloat							& lightColor
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
@@ -138,7 +138,7 @@ namespace gpk
 		, const ::gpk::SCoord3<float>						& lightVector
 		, const ::gpk::SColorFloat							& lightColor
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
 		, ::gpk::array_pod<::gpk::SColorFloat>				& lightColors
@@ -152,7 +152,7 @@ namespace gpk
 		, const ::gpk::STriangle2	<float>					& triangleTexCoords
 		, const ::gpk::SCoord3		<float>					& lightVector
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
@@ -166,7 +166,7 @@ namespace gpk
 		, const ::gpk::STriangle2	<float>					& triangleTexCoords
 		, const ::gpk::SCoord3		<float>					& lightVector
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-		, ::gpk::array_pod<::gpk::STriangleWeights<float>>	& pixelVertexWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
 		, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
 		, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
 		, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors

@@ -387,6 +387,9 @@
     <ClInclude Include="gpk_voxel.h">
       <Filter>voxel</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_voxel_geometry.h">
+      <Filter>voxel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -556,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="gpk_font.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_voxel_geometry.cpp">
+      <Filter>voxel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

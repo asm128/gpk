@@ -186,28 +186,25 @@ namespace gpk
 		::gpk::SCoord3<uint8_t>								GetDimensions			()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
-					const ::gpk::SCoord3<uint32_t> coord = *(::gpk::SCoord3<uint32_t>*)Chunks[iChunk].Data.begin();
+					const ::gpk::SCoord3<uint32_t>							coord					= *(::gpk::SCoord3<uint32_t>*)Chunks[iChunk].Data.begin();
 					return ::gpk::SCoord3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint8_t>();
 				}
-
 			return {};
 		}
 
-		::gpk::view_array<const ::gpk::SVOXVoxel>					GetXYZI					()	const	{
-			for(uint32_t iChunk = 0; iChunk < ChunksCoord.size(); ++iChunk)
-				if(0 == memcmp(ChunksCoord[iChunk].Header.Type.Storage, "XYZI", 4)) {
-					return {ChunksCoord[iChunk].Data.begin(), ChunksCoord[iChunk].Data.size()};
-				}
-
+		::gpk::view_array<const ::gpk::SVOXVoxel>				GetXYZI				()	const	{
+			for(uint32_t iChunk = 0; iChunk < ChunksCoord.size(); ++iChunk) {
+				if(0 == memcmp(ChunksCoord[iChunk].Header.Type.Storage, "XYZI", 4))
+					return ChunksCoord[iChunk].Data;
+			}
 			return {};
 		}
 		
-		::gpk::view_array<const ::gpk::SColorBGRA>					GetBGRA					()	const	{
-			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
-				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4)) {
+		::gpk::view_array<const ::gpk::SColorBGRA>			GetBGRA					()	const	{
+			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk) {
+				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4))
 					return {(const ::gpk::SColorBGRA*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
-				}
-
+			}
 			return {};
 		}
 		
@@ -239,7 +236,6 @@ namespace gpk
 							::gpk::SColorBGRA									& bgra				= bgraView[iColor];
 							std::swap(bgra.r, bgra.b);
 						}
-
 					}
 
 					Chunks.push_back(newChunk);

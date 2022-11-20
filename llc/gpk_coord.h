@@ -422,8 +422,6 @@ namespace gpk
 		}
 	};
 
-	template<typename _tElement>	struct STriangleWeights	{ _tElement									A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	); };
-
 	template<typename _tElement>	struct SRectangle2		{
 							::gpk::SCoord2<_tElement>					Offset, Size;
 
@@ -601,9 +599,9 @@ namespace gpk
 	static inline		double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 
 	template<typename _tValue>
-	::gpk::SCoord3<_tValue>				triangleWeight		(const STriangleWeights<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	::gpk::SCoord3<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 	template<typename _tValue>
-	::gpk::SCoord2<_tValue>				triangleWeight		(const STriangleWeights<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	::gpk::SCoord2<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 
 }
 

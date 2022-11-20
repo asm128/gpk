@@ -102,7 +102,8 @@ namespace gpk
 		::gpk::array_pod<::gpk::SCoord3<float>>				Positions;
 		::gpk::array_pod<::gpk::SCoord3<float>>				Normals;
 		::gpk::array_pod<::gpk::SCoord2<float>>				TextureCoords;
-		::gpk::array_pod<::gpk::STriangle<uint16_t>>		PositionIndices;
+		//::gpk::array_pod<::gpk::STriangle<uint16_t>>		PositionIndices;
+		::gpk::array_pod<uint32_t>							PositionIndices;
 	};
 
 	struct SBufferManager {
@@ -110,30 +111,60 @@ namespace gpk
 		::gpk::SKeyedContainer<::gpk::ptr_obj<::gpk::SGeometryTriangles	>>	Triangles			= {};
 	};
 
+	GDEFINE_ENUM_TYPE (MODEL_NODE_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, FILE		, 0);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, FUNCTION	, 1);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, COMMAND		, 2);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, POINT		, 3);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, SEGMENT		, 4);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, RECTANGLE	, 5);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, TRIANGLE	, 6);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, CIRCLE		, 7);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, BOX			, 8);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, SPHERE		, 9);
+	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, CYLINDER	, 10);
+
+	GDEFINE_ENUM_TYPE (PRIMITIVE_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(PRIMITIVE_TYPE, POINT		, 0);
+	GDEFINE_ENUM_VALUE(PRIMITIVE_TYPE, SEGMENT		, 1);
+	GDEFINE_ENUM_VALUE(PRIMITIVE_TYPE, TRIANGLE		, 2);
+	GDEFINE_ENUM_VALUE(PRIMITIVE_TYPE, RECTANGLE	, 3);
+
+	GDEFINE_ENUM_TYPE (INDEX_MODE, uint8_t);
+	GDEFINE_ENUM_VALUE(INDEX_MODE, LIST			, 0);
+	GDEFINE_ENUM_VALUE(INDEX_MODE, STRIP		, 1);
+	GDEFINE_ENUM_VALUE(INDEX_MODE, FAN			, 2);
+
+	GDEFINE_ENUM_TYPE (BUFFER_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(BUFFER_TYPE, VERTEX		, 0);
+	GDEFINE_ENUM_VALUE(BUFFER_TYPE, POLYGON		, 1);
 #pragma pack(push, 1)
 	struct SGeometryGroupModes {
+		PRIMITIVE_TYPE										PrimitiveType		;
+		INDEX_MODE											IndexMode			;
+
 		uint16_t											Transparent			: 1;
 		uint16_t											SkipSpecular		: 1;
 		uint16_t											SkipAmbient			: 1;
 		uint16_t											SkipDiffuse			: 1;
 	};
+
+	struct SGeometryGroup {
+		uint32_t											Geometry			= (uint32_t)-1;
+		uint32_t											Image				= (uint32_t)-1;
+		uint32_t											Material			= (uint32_t)-1;
+		::gpk::SGeometryGroupModes							Modes				= {};
+		::gpk::SRange<uint32_t>								Slice				= {};
+	};
 #pragma pack(pop)
 
 	struct SModelNode {
-		int32_t												IndexBuffer		= -1;
 		::gpk::array_pod<int32_t>							VertexBuffers	= {};
 		::gpk::array_pod<int32_t>							Images			= {};
+		int32_t												IndexBuffer		= -1;
+		::gpk::SGeometryGroupModes							Modes			= {};
 		::gpk::SRange<uint16_t>								RangeIndex		= {};
 		::gpk::SRange<uint16_t>								RangeVertex		= {};
-		::gpk::SGeometryGroupModes							Modes			= {};
-	};
-
-	struct SGeometryGroup {
-		int32_t												Geometry			;
-		int16_t												Images				;
-		::gpk::SGeometryGroupModes							Modes				;
-		::gpk::SRange<uint16_t>								Slice				;
-		//::gpk::array_pod<uint16_t>	IndicesPointLightCache	;
 	};
 
 	struct SModelQuads {
@@ -150,27 +181,6 @@ namespace gpk
 		::gpk::array_pod<::gpk::SGeometryGroup>				GeometryGroups;
 	};
 
-	GDEFINE_ENUM_TYPE (MODEL_NODE_TYPE, uint8_t);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, FILE		, 0);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, FUNCTION	, 1);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, COMMAND		, 2);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, POINT		, 3);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, SEGMENT		, 4);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, RECTANGLE	, 5);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, TRIANGLE	, 6);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, CIRCLE		, 7);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, BOX			, 8);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, SPHERE		, 9);
-	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, CYLINDER	, 10);
-
-	GDEFINE_ENUM_TYPE (INDEX_MODE, uint8_t);
-	GDEFINE_ENUM_VALUE(INDEX_MODE, LIST			, 0);
-	GDEFINE_ENUM_VALUE(INDEX_MODE, STRIP		, 1);
-	GDEFINE_ENUM_VALUE(INDEX_MODE, FAN			, 2);
-
-	GDEFINE_ENUM_TYPE (BUFFER_TYPE, uint8_t);
-	GDEFINE_ENUM_VALUE(BUFFER_TYPE, POLYGON		, 0);
-	GDEFINE_ENUM_VALUE(BUFFER_TYPE, VERTEX		, 1);
 
 	int													geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::SCoord3<float> & scale);
 	int													geometryBuildGrid				(::gpk::SGeometryQuads & geometry, ::gpk::SCoord2<uint32_t> gridSize, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale);
@@ -197,6 +207,18 @@ namespace gpk
 #pragma pack(pop)
 	int													geometryBuildTileListFromImage	(::gpk::view_grid<const ::gpk::SColorBGRA> image, ::gpk::array_pod<STile> & out_tiles, uint32_t imagePitch = 0);
 	int													geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view_grid<const ::gpk::STile> image, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale);
+
+#pragma pack(push, 1)
+	struct SRenderMaterial {
+		::gpk::SColorFloat								Diffuse		;
+		uint16_t										Color		;
+		uint16_t										Palette		;
+	};
+
+	struct SAABBGeometry {
+		::gpk::SCoord3<float>							Vertices	[8]			= {};
+	};
+#pragma pack(pop)
 
 } // namespace
 

@@ -51,6 +51,7 @@
     <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
+    <ClInclude Include="gpk_voxel_geometry.h" />
     <ClInclude Include="gpk_window.h" />
     <ClInclude Include="gpk_framework.h" />
     <ClInclude Include="gpk_gui_control.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
+    <ClCompile Include="gpk_voxel_geometry.cpp" />
     <ClCompile Include="gpk_window.cpp" />
     <ClCompile Include="gpk_framework.cpp" />
     <ClCompile Include="gpk_gui_control.cpp" />
