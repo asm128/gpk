@@ -15,24 +15,40 @@ namespace gpk
 			}; 
 														
 	GDEFINE_ENUM_TYPE(VOXEL_FACE, uint8_t);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, TOP		, 0);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, FRONT	, 1);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, RIGHT	, 2);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, BOTTOM	, 3);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, BACK		, 4);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, LEFT		, 5);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Top		, 0);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Front	, 1);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Right	, 2);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Bottom	, 3);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Back		, 4);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Left		, 5);
+
+	struct SVoxelFaceBits {
+		bool		 Top			: 1;
+		bool		 Front			: 1;
+		bool		 Right			: 1;
+		bool		 Bottom			: 1;
+		bool		 Back			: 1;
+		bool		 Left			: 1;
+	};
 
 	static constexpr ::gpk::SQuad3<float>				VOXEL_FACE_VERTICES		[]	= 
 		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
 		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
 		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
-		, {{0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}}  // Bottom	(y = -1)
-		, {{0, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 1, 1}}	// Back		(x = -1)
-		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = -1)
+		, {{0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}}  // Bottom	(y = 0)
+		, {{0, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 1, 1}}	// Back		(x = 0)
+		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = 0)
 		}; 
 
 	constexpr ::gpk::SCoord3<float>						VOXEL_FACE_NORMALS			[6]	= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
-
+	constexpr ::gpk::SCoord3<int8_t>					VOXEL_DELTAS				[6]	= 
+		{ { 0, 1, 0} // Top		(y = 1)
+		, { 1, 0, 0} // Front	(x = 1)
+		, { 0, 0, 1} // Right	(z = 1)
+		, { 0,-1, 0} // Bottom	(y = -1)
+		, {-1, 0, 0} // Back	(x = -1)
+		, { 0, 0,-1} // Left	(z = -1)
+		};
 	constexpr uint8_t									VOXEL_FACE_INDICES			[6][6]	= 
 		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
@@ -55,6 +71,18 @@ namespace gpk
 	struct SVoxel {
 		::gpk::SCoord3<_uIndex>							Position;
 		_uIndex											ColorIndex;
+
+		bool											Limits						(::gpk::VOXEL_FACE face)	const	{
+			switch(face) {
+			case ::gpk::VOXEL_FACE_Top		: return Position.y == 255;
+			case ::gpk::VOXEL_FACE_Front	: return Position.x == 255;
+			case ::gpk::VOXEL_FACE_Right	: return Position.z == 255;
+			case ::gpk::VOXEL_FACE_Bottom	: return Position.y ==   0;
+			case ::gpk::VOXEL_FACE_Back		: return Position.x ==   0;
+			case ::gpk::VOXEL_FACE_Left		: return Position.z ==   0;
+			}
+			return false;
+		}
 	};
 
 #pragma pack(pop)
