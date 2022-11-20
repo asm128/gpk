@@ -120,6 +120,7 @@
     <ClInclude Include="gpk_view_stream.h" />
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_xml_reader.h" />
+    <ClInclude Include="gpk_voxel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
