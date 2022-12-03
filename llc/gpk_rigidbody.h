@@ -95,23 +95,21 @@ namespace gpk
 		int32_t 										GetTransform					(uint32_t iBody, ::gpk::SMatrix4<float>	& transform)	{
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags			[iBody];
 			::gpk::SMatrix4<float>								& bodyTransformLocal			= TransformsLocal	[iBody];
-			const bool											requiresUpdate					= bodyFlags.OutdatedTransform || bodyFlags.OutdatedTensorWorld;
-			if(requiresUpdate) {
-				if(bodyFlags.OutdatedTransform) {
-					::gpk::STransform3									& bodyTransform					= Transforms[iBody];
-					::gpk::updateTransform(bodyTransform, bodyTransformLocal);
-					bodyFlags.OutdatedTransform						= false;
-				}
-				if(bodyFlags.OutdatedTensorWorld) {
-					::gpk::SRigidBodyFrame								& bodyFrame						= BodyFrames[iBody];
-					::gpk::SMass3										& bodyMass						= Masses	[iBody];
-					::gpk::transformInertiaTensor(bodyFrame.InverseInertiaTensorWorld, bodyMass.InverseAngularMassTensor, bodyTransformLocal);
-					bodyFlags.OutdatedTensorWorld					= false;
-				}
+			if(bodyFlags.OutdatedTransform) {
+				::gpk::STransform3									& bodyTransform					= Transforms[iBody];
+				::gpk::updateTransform(bodyTransform, bodyTransformLocal);
+				bodyFlags.OutdatedTransform						= false;
+			}
+			if(bodyFlags.OutdatedTensorWorld) {
+				::gpk::SRigidBodyFrame								& bodyFrame						= BodyFrames[iBody];
+				::gpk::SMass3										& bodyMass						= Masses	[iBody];
+				::gpk::transformInertiaTensor(bodyFrame.InverseInertiaTensorWorld, bodyMass.InverseAngularMassTensor, bodyTransformLocal);
+				bodyFlags.OutdatedTensorWorld					= false;
 			}
 			transform										= bodyTransformLocal;
-			return requiresUpdate ? 1 : 0;
+			return 0;
 		}
+
 		void											AddForceAtPoint					(uint32_t iBody, const ::gpk::SCoord3<float>& force, ::gpk::SCoord3<float> point)			{
 			::gpk::STransform3									& bodyTransform					= Transforms[iBody];
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags	[iBody];
