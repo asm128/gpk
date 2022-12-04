@@ -106,13 +106,13 @@ namespace gpk
 		, {0, 2, 1, 1, 2, 3}
 		}; 
 
-	static constexpr uint8_t							VOXEL_FACE_INDICES_16	[6][6]	= 
-		{ {0, 2, 1, 1, 2, 3} // Top
-		, {0, 1, 2, 1, 3, 2}
-		, {0, 1, 2, 1, 3, 2}
-		, {0, 1, 2, 1, 3, 2} // Bottom
-		, {0, 2, 1, 1, 2, 3}
-		, {0, 2, 1, 1, 2, 3}
+	static constexpr uint16_t							VOXEL_FACE_INDICES_16	[6][6]	= 
+		{ {4 * 0 + 0, 4 * 0 + 2, 4 * 0 + 1, 4 * 0 + 1, 4 * 0 + 2, 4 * 0 + 3} // Top
+		, {4 * 1 + 0, 4 * 1 + 1, 4 * 1 + 2, 4 * 1 + 1, 4 * 1 + 3, 4 * 1 + 2}
+		, {4 * 2 + 0, 4 * 2 + 1, 4 * 2 + 2, 4 * 2 + 1, 4 * 2 + 3, 4 * 2 + 2}
+		, {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
+		, {4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 1, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 3}
+		, {4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 1, 4 * 5 + 2, 4 * 5 + 3}
 		}; 
 
 	static constexpr float								VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
