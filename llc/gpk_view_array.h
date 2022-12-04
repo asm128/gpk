@@ -11,7 +11,7 @@
 
 namespace gpk
 {
-
+#pragma pack(push, 1)
 	template <typename _tElement>
 	class view_array {
 	protected:
@@ -82,6 +82,7 @@ namespace gpk
 			return out.size();
 		}
 	};
+#pragma pack(pop)
 
 	// view_array common typedefs
 	//typedef				::gpk::view_array<char_t			>	view_string			;

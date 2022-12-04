@@ -47,7 +47,7 @@ static ::gpk::error_t								geometryVoxelFace
 		::gpk::view_array<const ::gpk::SCoord3<float>>			rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
 		::gpk::view_array<const ::gpk::SCoord2<float>>			rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
-		geometry.Normals.push_back(::gpk::VOXEL_FACE_NORMALS[iFace]);
+		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);
 		for(uint32_t iValue = 0; iValue < rgba.size(); ++iValue) {
 			::gpk::SGeometryGroup						newGroup					= {};

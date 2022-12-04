@@ -69,8 +69,26 @@ namespace gpk
 		, {{0, 0}, {0, 1}, {1, 0}, {1, 1}}	// Left		
 		};
 
-	static constexpr ::gpk::SCoord3<float>				VOXEL_FACE_NORMALS	[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
-	static constexpr ::gpk::SCoord3<int8_t>				VOXEL_DELTAS		[6]		= 
+	static constexpr ::gpk::SQuad3<float>				VOXEL_FACE_NORMALS	[6]		= 
+		{ {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}	// Top		
+		, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}}	// Front	
+		, {{0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}}	// Right	
+		, {{0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}}	// Bottom	
+		, {{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}}	// Back		
+		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
+		};
+
+	static constexpr ::gpk::SCoord3<float>				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
+	static constexpr ::gpk::SQuad2<uint8_t>				VOXEL_FACE_NORMAL_INDICES	[6]		= 
+		{ {0, 0, 0, 0}	// Top		
+		, {1, 1, 1, 1}	// Front	
+		, {2, 2, 2, 2}	// Right	
+		, {3, 3, 3, 3}	// Bottom	
+		, {4, 4, 4, 4}	// Back		
+		, {5, 5, 5, 5}	// Left		
+		};
+
+	static constexpr ::gpk::SCoord3<int8_t>				VOXEL_DELTAS				[6]		= 
 		{ { 0, 1, 0} // Top		(y = 1)
 		, { 1, 0, 0} // Front	(x = 1)
 		, { 0, 0, 1} // Right	(z = 1)
@@ -79,7 +97,16 @@ namespace gpk
 		, { 0, 0,-1} // Left	(z = -1)
 		};
 
-	static constexpr uint8_t							VOXEL_FACE_INDICES	[6][6]	= 
+	static constexpr uint8_t							VOXEL_FACE_INDICES		[6][6]	= 
+		{ {0, 2, 1, 1, 2, 3} // Top
+		, {0, 1, 2, 1, 3, 2}
+		, {0, 1, 2, 1, 3, 2}
+		, {0, 1, 2, 1, 3, 2} // Bottom
+		, {0, 2, 1, 1, 2, 3}
+		, {0, 2, 1, 1, 2, 3}
+		}; 
+
+	static constexpr uint8_t							VOXEL_FACE_INDICES_16	[6][6]	= 
 		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
 		, {0, 1, 2, 1, 3, 2}

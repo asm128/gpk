@@ -168,7 +168,7 @@ static				::RECT									minClientRect								= {100, 100, 100 + 320, 100 + 200}
 
 //extern				::SApplication							* g_ApplicationInstance						;
 static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
-	//::SApplication													& applicationInstance						= *g_ApplicationInstance;
+	//::SApplication													& app						= *g_ApplicationInstance;
 	static	const int												adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	if(0 == ::GetWindowLongPtrA(hWnd, GWLP_USERDATA))
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -289,7 +289,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 				mainDisplay.Resized																		= true;
 				mainDisplay.Repaint																		= true;
 				char																						buffer		[256]							= {};
-				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, applicationInstance.Framework.Timer.LastTimeSeconds);
+				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, app.Framework.Timer.LastTimeSeconds);
 				snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
 #if defined(UNICODE)
 #else

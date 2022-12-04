@@ -59,7 +59,7 @@ static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRun
 #endif
 			break_ginfo_if(1 == updateResult, "Application requested termination.");
 			break_gerror_if(errored(updateResult), "update() returned error.");
-			//gerror_if(mainModule.Render(applicationInstance), "Why would this ever happen?");
+			//gerror_if(mainModule.Render(app), "Why would this ever happen?");
 			//Sleep(1);
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
@@ -93,21 +93,21 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 		::gpk::SRuntimeModule												mainModule						= {};
 		gpk_necall(::gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
 		info_printf("Created main module: '%s'.", mainModuleName);
-		void																* applicationInstance;
-		gpk_necall(mainModule.Create(&applicationInstance, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
-		mainModule.Application											= applicationInstance;
+		void																* app;
+		gpk_necall(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
+		mainModule.Application											= app;
 		info_printf("%s", "Initializing application instance.");
-		if errored(mainModule.Setup(applicationInstance)) {
+		if errored(mainModule.Setup(app)) {
 			error_printf("%s", "Setup() Failed!");
-			gpk_necall(mainModule.Delete(&applicationInstance), "Failed to create main module. %s.");
+			gpk_necall(mainModule.Delete(&app), "Failed to create main module. %s.");
 			return -1;
 		}
 		runtimeState.MainModule											= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		gerror_if(errored(mainModule.Cleanup(applicationInstance)), "%s", "Failed.");
+		gerror_if(errored(mainModule.Cleanup(app)), "%s", "Failed.");
 		info_printf("%s", "Application instance destroyed.");
-		gpk_necall(mainModule.Delete(&applicationInstance), "");
+		gpk_necall(mainModule.Delete(&app), "");
 	}
 	return 0;
 }

@@ -324,10 +324,10 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 			const ::gpk::STileMapping											& tileMapping2										= rowNextTileMapping	[x + 0];
 			const ::gpk::STileMapping											& tileMapping3										= rowNextTileMapping	[x + 1];
 
-			const bool															processTile0										= (tileGeometry0.SkinMapping.SkinIndexTop != -1);// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex != -1);
-			const bool															processTile1										= (tileGeometry1.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexFront == -1;// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex != -1);
-			const bool															processTile2										= (tileGeometry2.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexRight == -1;// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex != -1);
-			const bool															processTile3										= (tileGeometry3.SkinMapping.SkinIndexTop != -1) && (tileGeometry0.SkinMapping.SkinIndexFront == -1 && tileGeometry0.SkinMapping.SkinIndexRight == -1);// && (applicationInstance.GNDData.lstTileTextureData[tileGeometry3.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile0										= (tileGeometry0.SkinMapping.SkinIndexTop != -1);// && (app.GNDData.lstTileTextureData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile1										= (tileGeometry1.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexFront == -1;// && (app.GNDData.lstTileTextureData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile2										= (tileGeometry2.SkinMapping.SkinIndexTop != -1) && tileGeometry0.SkinMapping.SkinIndexRight == -1;// && (app.GNDData.lstTileTextureData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex != -1);
+			const bool															processTile3										= (tileGeometry3.SkinMapping.SkinIndexTop != -1) && (tileGeometry0.SkinMapping.SkinIndexFront == -1 && tileGeometry0.SkinMapping.SkinIndexRight == -1);// && (app.GNDData.lstTileTextureData[tileGeometry3.SkinMapping.SkinIndexTop].TextureIndex != -1);
 			const int32_t														texIndex0											= processTile0 ? lstTileSkinData[tileGeometry0.SkinMapping.SkinIndexTop].TextureIndex : -1;
 			const int32_t														texIndex1											= processTile1 ? lstTileSkinData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex : -1;
 			const int32_t														texIndex2											= processTile2 ? lstTileSkinData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex : -1;
