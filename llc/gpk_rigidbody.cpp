@@ -22,14 +22,14 @@ void												gpk::transformInertiaTensor			(::gpk::SMatrix3<float> & iitWorld
 	iitWorld._33										= t52*rotmat._13 + t57*rotmat._23 + t62*rotmat._33;
 }
 
-void												gpk::updateTransform				(::gpk::STransform3 & bodyTransform, ::gpk::SMatrix4<float> & transformLocal)	{
+void												gpk::updateTransform				(::gpk::SBodyCenter & bodyTransform, ::gpk::SMatrix4<float> & transformLocal)	{
 	//transformLocal.Scale( bodyTransform.Scale, true );
 	bodyTransform.Orientation.Normalize();
 	transformLocal.SetOrientation( bodyTransform.Orientation );
 	transformLocal.SetTranslation( bodyTransform.Position, false );
 }
 
-int32_t												gpk::integrateForces				(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SForce3 & bodyForce, const ::gpk::SMass3 & bodyMass) {
+int32_t												gpk::integrateForces				(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass) {
 	// -- Calculate linear acceleration from force inputs.
 	bodyFrame.LastFrameAcceleration						= bodyForce.Acceleration;
 	bodyFrame.LastFrameAcceleration.AddScaled(bodyFrame.AccumulatedForce, bodyMass.InverseMass);
@@ -48,7 +48,7 @@ int32_t												gpk::integrateForces				(double duration, ::gpk::SRigidBodyFr
 }
 
 // ------------- Adjust positions
-int32_t												gpk::integratePosition				(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::STransform3 & bodyTransform, const ::gpk::SForce3 & bodyForces) {
+int32_t												gpk::integratePosition				(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces) {
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, duration);
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, durationHalfSquared);
 	bodyTransform.Orientation	.AddScaled(bodyForces.Rotation, duration);	// Update angular position.
@@ -57,27 +57,27 @@ int32_t												gpk::integratePosition				(double duration, double durationHa
 }
 
 int													gpk::createOrbiter
-	( ::gpk::SIntegrator3	& bodies
-	, double				mass
-	, double				distance
-	, double				axialTilt
-	, double				rotation_period
-	, double				rotation_unit
-	, double				orbital_period
-	, double				orbital_inclination
-	, double				distance_scale
+	( ::gpk::SRigidBodyIntegrator	& bodies
+	, double						mass
+	, double						distance
+	, double						axialTilt
+	, double						rotation_period
+	, double						rotation_unit
+	, double						orbital_period
+	, double						orbital_inclination
+	, double						distance_scale
 	) {
 	const int32_t											indexFirstBody						= bodies.Create(2);
 	{
-		::gpk::STransform3										& orbitTransform					= bodies.Transforms	[indexFirstBody]		= {};
-		::gpk::SForce3											& orbitForces						= bodies.Forces		[indexFirstBody]		= {};
+		::gpk::SBodyCenter										& orbitTransform					= bodies.Centers[indexFirstBody]		= {};
+		::gpk::SBodyForces											& orbitForces						= bodies.Forces		[indexFirstBody]		= {};
 		orbitForces.Rotation								= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
 		orbitTransform.Orientation.MakeFromEulerTaitBryan( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
 	}
 	{
-		::gpk::SMass3											& planetMass						= bodies.Masses		[indexFirstBody + 1]	= {};
-		::gpk::STransform3										& planetTransform					= bodies.Transforms	[indexFirstBody + 1]	= {};
-		::gpk::SForce3											& planetForces						= bodies.Forces		[indexFirstBody + 1]	= {};
+		::gpk::SBodyMass										& planetMass						= bodies.Masses		[indexFirstBody + 1]	= {};
+		::gpk::SBodyCenter										& planetTransform					= bodies.Centers[indexFirstBody + 1]	= {};
+		::gpk::SBodyForces										& planetForces						= bodies.Forces		[indexFirstBody + 1]	= {};
 		planetMass.InverseMass								= float(1.0 / mass);
 		planetTransform.Position.x							= float(distance_scale * distance);
 
