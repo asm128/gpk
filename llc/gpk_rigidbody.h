@@ -88,7 +88,7 @@ namespace gpk
 			BodyFlags		.resize(indexFirstBody + bodyCount, {});
 			Forces			.resize(indexFirstBody + bodyCount, {});
 			Masses			.resize(indexFirstBody + bodyCount, {});
-			Centers		.resize(indexFirstBody + bodyCount, {});
+			Centers			.resize(indexFirstBody + bodyCount, {});
 			TransformsLocal	.resize(indexFirstBody + bodyCount, MatrixIdentity4);
 			return indexFirstBody;
 		}

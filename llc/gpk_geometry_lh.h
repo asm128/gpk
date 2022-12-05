@@ -209,7 +209,7 @@ namespace gpk
 	int													geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view_grid<const ::gpk::STile> image, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale);
 
 #pragma pack(push, 1)
-	struct SRenderMaterial {
+	struct SRenderMaterialPaletted {
 		::gpk::SColorFloat								Diffuse		;
 		uint16_t										Color		;
 		uint16_t										Palette		;

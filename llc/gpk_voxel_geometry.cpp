@@ -25,7 +25,7 @@ static ::gpk::error_t								geometryVoxelFace
 	const ::gpk::SCoord3<uint8_t>							dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryIndexedTriangles						& geometry				= output.Geometry;
-	::gpk::array_pod<::gpk::SRenderMaterial>				& materials				= output.Materials;
+	::gpk::array_pod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
 
 	::gpk::SAABBGeometry									& aabbModel				= output.AABBModel;
 	for(uint32_t i = 0; i < 8; ++i) {
