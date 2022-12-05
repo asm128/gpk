@@ -226,7 +226,7 @@ namespace gpk
 		, const ::gpk::SNearFar								& fNearFar
 		, const ::gpk::STriangle3<_tCoord>					& triangle
 		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& out_Points
-		, ::gpk::array_pod<::gpk::STriangle<double>>	& triangleWeights
+		, ::gpk::array_pod<::gpk::STriangle<float>>			& triangleWeights
 		) {
 		int32_t																		pixelsDrawn									= 0;
 		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
@@ -271,7 +271,7 @@ namespace gpk
 			uint32_t																	finalDepth									= (uint32_t)(depth * 0x00FFFFFFU);
 			if (targetDepth[(uint32_t)y][(uint32_t)x] > (uint32_t)finalDepth) { // check against depth buffer
 				targetDepth[(uint32_t)y][(uint32_t)x]									= finalDepth;
-				triangleWeights.push_back(proportions);
+				triangleWeights.push_back({(float)proportions.A, (float)proportions.B, (float)proportions.C});
 				out_Points.push_back(cellCurrent.Cast<int16_t>());
 				++pixelsDrawn;
 			}
@@ -469,7 +469,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -483,12 +483,12 @@ namespace gpk
 		}
 		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
-		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
-		int32_t																		y											= (int32_t)A.y;
+		const int16_t																ystep										= (A.y < B.y) ? 1 : -1;
+		int16_t																		y											= (int16_t)A.y;
 		int32_t																		pixelsDrawn									= 0;
 		if(steep) {
-			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(x, 0, (int32_t)targetMetrics.y) && ::gpk::in_range(y, 0, (int32_t)targetMetrics.x)) {
+			for(int16_t x = (int16_t)A.x, xStop = (int16_t)B.x; x < xStop; ++x) {
+				if(::gpk::in_range(x, (int16_t)0, (int16_t)targetMetrics.y) && ::gpk::in_range(y, (int16_t)50, (int16_t)targetMetrics.x)) {
 					out_Points.push_back({y, x});
 					++pixelsDrawn;
 				}
@@ -500,8 +500,8 @@ namespace gpk
 			}
 		}
 		else {
-			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(y, 0, (int32_t)targetMetrics.y) && ::gpk::in_range(x, 0, (int32_t)targetMetrics.x)) {
+			for(int16_t x = (int16_t)A.x, xStop = (int16_t)B.x; x < xStop; ++x) {
+				if(::gpk::in_range(y, (int16_t)0, (int16_t)targetMetrics.y) && ::gpk::in_range(x, (int16_t)0, (int16_t)targetMetrics.x)) {
 					out_Points.push_back({x, y});
 					++pixelsDrawn;
 				}
@@ -517,7 +517,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)				{
 		return drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace
