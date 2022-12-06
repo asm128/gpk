@@ -16,8 +16,8 @@ namespace gpk
 					::gpk::error_t									pathList				(const ::gpk::view_const_char& pathToList, SPathContents & out_Contents, const ::gpk::vcc extension = {});		// Recursive
 	static inline	::gpk::error_t									pathList				(const ::gpk::view_const_char& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, const ::gpk::vcc extension = {}) {
 		::gpk::SPathContents												tree					= {};
-		gpk_necall(::gpk::pathList(pathToList, tree, extension), "%s", "?");
-		gpk_necall(::gpk::pathList(tree, output, extension), "%s", "?");
+		int32_t error = ::gpk::pathList(pathToList, tree, extension);
+		gpk_necs(error |= ::gpk::pathList(tree, output, extension));
 		return 0;
 	}	// Recursive
 					::gpk::error_t									pathList				(const ::gpk::view_const_char& pathToList, ::gpk::array_obj<::gpk::array_pod<char_t>>& output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
