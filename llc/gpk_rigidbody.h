@@ -64,6 +64,12 @@ namespace gpk
 		static constexpr const ::gpk::SMatrix4<float>	MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
 		static constexpr const ::gpk::SMatrix3<float>	MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
 
+		int32_t 										ZeroForces						()	{
+			for(uint32_t iForce = 0; iForce < Forces.size(); ++iForce)
+				Forces[iForce] = {};
+			return 0;
+		}
+
 		int32_t 										Clear							()	{
 			BodyFrames				.clear();
 			BodyFlags				.clear();
