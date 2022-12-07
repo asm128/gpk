@@ -141,6 +141,8 @@ namespace gpk
 				::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
 				::gpk::integrateForces	(duration, bodyFrame, bodyForces, bodyMass);
 				::gpk::integratePosition(duration, durationHalfSquared, bodyFlags, bodyCenter, bodyForces);
+				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .01)
+					bodyFlags.Active								= false;
 			}
 			return 0;
 		}
@@ -161,6 +163,14 @@ namespace gpk
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.OutdatedTransform						=
 			bodyFlags.OutdatedTensorWorld					= true;
+		}
+		void											SetVelocity						(uint32_t iBody, const ::gpk::SCoord3<float>& newVelocity)			{
+			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
+			if( 0 == memcmp( &newVelocity.x, &bodyCenter.Velocity.x, sizeof( ::gpk::SCoord3<float> ) ) )
+				return;
+			bodyCenter.Velocity								= newVelocity;
+			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
+			bodyFlags.Active								= true;
 		}
 
 		::gpk::error_t									Save(::gpk::array_pod<byte_t> & output) const { 
