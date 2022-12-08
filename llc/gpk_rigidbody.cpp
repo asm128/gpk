@@ -52,6 +52,7 @@ int32_t												gpk::integratePosition				(double duration, double durationHa
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, duration);
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, durationHalfSquared);
 	bodyTransform.Orientation	.AddScaled(bodyForces.Rotation, duration);	// Update angular position.
+	bodyTransform.Orientation.Normalize();
 	bodyFlags.OutdatedTransform = bodyFlags.OutdatedTensorWorld	= true;	// Normalize the orientation, and update the matrices with the new position and orientation.
 	return 0;
 }

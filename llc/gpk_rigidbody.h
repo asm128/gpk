@@ -140,10 +140,14 @@ namespace gpk
 
 		int32_t											Integrate						(double duration)	{
 			const double										durationHalfSquared				= duration * duration * 0.5;
+			::gpk::SMatrix4<float>								dummy;
 			for(uint32_t iBody = 0; iBody < BodyFlags.size(); ++iBody) {
 				::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 				if(false == bodyFlags.Active)
 					continue;
+
+				GetTransform(iBody, dummy); // ensures tensor matrix is up to date
+
 				::gpk::SRigidBodyFrame								& bodyFrame						= BodyFrames[iBody];
 				::gpk::SBodyForces									& bodyForces					= Forces	[iBody];
 				::gpk::SBodyMass									& bodyMass						= Masses	[iBody];
