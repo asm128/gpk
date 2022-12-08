@@ -475,11 +475,7 @@ int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, 
 				, {(y + 1	) * texCoordUnits.y, (x		) * texCoordUnits.x}
 				, {(y + 1	) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
 				};
-
-			geometry.TextureCoords.push_back(texcoords[0]);
-			geometry.TextureCoords.push_back(texcoords[1]);
-			geometry.TextureCoords.push_back(texcoords[2]);
-			geometry.TextureCoords.push_back(texcoords[3]);
+			geometry.TextureCoords.append(texcoords);
 		}
 		{
 			::gpk::SCoord3<double>									coords		[4]				=

@@ -182,6 +182,15 @@ namespace gpk
 			bodyFlags.Active								= true;
 		}
 
+		void											SetRotation						(uint32_t iBody, const ::gpk::SCoord3<float>& newRotation)			{
+			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
+			if( 0 == memcmp( &newRotation.x, &bodyCenter.Rotation.x, sizeof( ::gpk::SCoord3<float> ) ) )
+				return;
+			bodyCenter.Rotation								= newRotation;
+			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
+			bodyFlags.Active								= true;
+		}
+
 		::gpk::error_t									Save(::gpk::array_pod<byte_t> & output) const { 
 			gpk_necs(::gpk::viewWrite(BodyFrames		, output));
 			gpk_necs(::gpk::viewWrite(BodyFlags			, output));
