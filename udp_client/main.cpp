@@ -6,9 +6,9 @@ int main() {
 	::gpk::tcpipInitialize();
 	sockaddr_in			sa_server			= {AF_INET};
 	while(true) {
-//#define MAKE_IT_WORK
+#define MAKE_IT_WORK
 #if defined MAKE_IT_WORK
-		::gpk::tcpipAddressToSockaddr({{192,168,0,2}, 9898}, sa_server);
+		::gpk::tcpipAddressToSockaddr({{192,168,0,188}, 9898}, sa_server);
 #else
 		::gpk::tcpipAddressToSockaddr({{201,235,131,233}, 9898}, sa_server);
 #endif

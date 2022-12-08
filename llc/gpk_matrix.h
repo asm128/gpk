@@ -481,7 +481,28 @@ namespace gpk
 			return fDet;
 		}
 
+		_tMat4&								FromRotationDir(const ::gpk::SCoord3<float> & direction, const ::gpk::SCoord3<float> & up = {0,1,0}) {
+			::gpk::SCoord3<float> xaxis = up.Cross(direction);
+			xaxis.Normalize();
 
+			::gpk::SCoord3<float> yaxis = direction.Cross(xaxis);
+			yaxis.Normalize();
+
+			_11 = xaxis.x;
+			_21 = yaxis.x;
+			_31 = direction.x;
+			_12 = xaxis.y;
+			_22 = yaxis.y;
+			_32 = direction.y;
+			_13 = xaxis.z;
+			_23 = yaxis.z;
+			_33 = direction.z;
+
+			_41 = _42 = _43 = _14 = _24 = _34		= (_tBase)0;
+			_44										= (_tBase)1;
+
+			return *this;
+		}
 	};	// struct
 	template<typename _tElement>
 							STriangle3<_tElement>&						transform								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SMatrix4<_tElement>& transform)									{
