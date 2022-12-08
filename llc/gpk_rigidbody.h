@@ -79,6 +79,15 @@ namespace gpk
 			return TransformsLocal	.clear();
 		}
 
+		int32_t 										Clone							(uint32_t iBody)	{
+			BodyFrames				.push_back(::gpk::SRigidBodyFrame	{BodyFrames			[iBody]});
+			BodyFlags				.push_back(::gpk::SRigidBodyFlags	{BodyFlags			[iBody]});
+			Forces					.push_back(::gpk::SBodyForces		{Forces				[iBody]});
+			Masses					.push_back(::gpk::SBodyMass			{Masses				[iBody]});
+			Centers					.push_back(::gpk::SBodyCenter		{Centers			[iBody]});
+			return TransformsLocal	.push_back(::gpk::SMatrix4<float>	{TransformsLocal	[iBody]});
+		}
+
 		int32_t 										Create							()	{
 			BodyFrames				.push_back({});
 			BodyFlags				.push_back({});

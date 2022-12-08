@@ -651,7 +651,7 @@ int													gpk::drawTriangle
 	, ::gpk::array_pod<::gpk::SColorFloat>				& lightColors
 	, ::gpk::view_grid<uint32_t>						depthBuffer
 	) {
-	::gpk::STriangle		<uint16_t>							triangleIndices			= *(const ::gpk::STriangle<uint16_t>*)&geometry.PositionIndices[iTriangle * 3];
+	::gpk::STriangle		<uint32_t>							triangleIndices			= *(const ::gpk::STriangle<uint32_t>*)&geometry.PositionIndices[iTriangle * 3];
 	::gpk::STriangle3		<float>								triangleWorld			= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};
 	::gpk::STriangle3		<float>								triangle				= triangleWorld;
 	::gpk::transform(triangle, matrixTransformView);

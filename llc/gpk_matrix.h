@@ -81,7 +81,7 @@ namespace gpk
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-							void				ViewportRH				(const ::gpk::SCoord2<uint32_t> & offscreenMetrics)			noexcept	{
+							void				ViewportRH				(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
 			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
 			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
 			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
@@ -92,7 +92,7 @@ namespace gpk
 			_41											+= offscreenMetrics.x / 2;
 			_42											+= offscreenMetrics.y / 2;
 		}
-							void				ViewportLH					(const ::gpk::SCoord2<uint32_t> & offscreenMetrics)			noexcept	{
+							void				ViewportLH					(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
 			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
 			_21 = (_tBase)0;							_22 = -(_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
 			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
@@ -103,6 +103,19 @@ namespace gpk
 			_41											+= offscreenMetrics.x / 2;
 			_42											+= offscreenMetrics.y / 2;
 		}
+
+							void				ViewportLH					(const ::gpk::SCoord2<uint16_t> & screenMetrics, const ::gpk::SNearFar & nearFar)			noexcept	{
+			*this									= {};
+			_11										= 2.0f / screenMetrics.x;
+			_22										= 2.0f / screenMetrics.y;
+			_33										= 1.0f / (float)(nearFar.Far - nearFar.Near);
+			_41										= -1.0f;
+			_42										= -1.0f;
+			_43										= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
+			_44										= 1.0f;
+			*this									= GetInverse();
+		}
+
 		static	constexpr	_tMat4				GetIdentity					()																						noexcept	{
 			return
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
@@ -467,6 +480,8 @@ namespace gpk
 
 			return fDet;
 		}
+
+
 	};	// struct
 	template<typename _tElement>
 							STriangle3<_tElement>&						transform								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SMatrix4<_tElement>& transform)									{
