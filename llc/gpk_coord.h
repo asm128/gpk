@@ -139,6 +139,7 @@ namespace gpk
 			z														+= (_tBase)(vectorToScaleAndAdd.z * scale);
 		}
 
+		constexpr								TCoord3			Reflect					(const TCoord3& direction)											const	noexcept	{ return direction - *this * 2 * Dot(direction);	}
 		constexpr								TCoord3			Cross					(const TCoord3& right)												const	noexcept	{ return {y * right.z - z * right.y, z * right.x - x * right.z, x * right.y - y * right.x };	}
 												TCoord3&		Cross					(const TCoord3& vector1, const TCoord3& vector2)							noexcept	{
 			x														= vector1.y * vector2.z - vector1.z * vector2.y;
