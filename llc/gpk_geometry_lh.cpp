@@ -500,6 +500,65 @@ int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, 
 }
 
 
+//
+int													gpk::geometryBuildCylinder	(SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale)	{
+	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
+	const double											radiusUnit					= 1.0 / stacks;
+	for(uint32_t y = 0; y < stacks; ++y) {
+		double													radius						= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * y);
+		double													radiusNext					= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * (y + 1));
+		for(uint32_t z = 0; z < slices; ++z) {
+			geometry.PositionIndices.append(
+				{ geometry.Positions.size() + 0
+				, geometry.Positions.size() + 2
+				, geometry.Positions.size() + 1
+				, geometry.Positions.size() + 1
+				, geometry.Positions.size() + 2
+				, geometry.Positions.size() + 3
+				});
+			{
+				::gpk::SCoord2<float>									texcoords	[4]				=
+					{ {(z		) * texCoordUnits.x, (y		) * texCoordUnits.y}
+					, {(z + 1	) * texCoordUnits.x, (y		) * texCoordUnits.y}
+					, {(z		) * texCoordUnits.x, (y	+ 1	) * texCoordUnits.y}
+					, {(z + 1	) * texCoordUnits.x, (y + 1	) * texCoordUnits.y}
+					};
+				geometry.TextureCoords.append(texcoords);
+			}
+			::gpk::SCoord3<double>									coords	[4]				=
+				{ {1 * radius, (double)(y		)}
+				, {1 * radius, (double)(y		)}
+				, {1 * radiusNext, (double)(y + 1	)}
+				, {1 * radiusNext, (double)(y + 1	)}
+				};
+			coords[0].RotateY(::gpk::math_2pi / slices * (z + 0)); 
+			coords[1].RotateY(::gpk::math_2pi / slices * (z + 1)); 
+			coords[2].RotateY(::gpk::math_2pi / slices * (z + 0)); 
+			coords[3].RotateY(::gpk::math_2pi / slices * (z + 1)); 
+
+			{
+				//::gpk::STriangle3<float>								triangleA			= {coords[0].Cast<float>(), coords[2].Cast<float>(), coords[1].Cast<float>()};
+				//::gpk::STriangle3<float>								triangleB			= {coords[1].Cast<float>(), coords[2].Cast<float>(), coords[3].Cast<float>()};
+				geometry.Normals	.push_back(coords[0].Cast<float>().Normalize());
+				geometry.Normals	.push_back(coords[1].Cast<float>().Normalize());
+				geometry.Normals	.push_back(coords[2].Cast<float>().Normalize());
+				geometry.Normals	.push_back(coords[3].Cast<float>().Normalize());
+
+				coords[0].Scale(scale.Cast<double>()); coords[0] += (gridCenter.Cast<double>() * -1);
+				coords[1].Scale(scale.Cast<double>()); coords[1] += (gridCenter.Cast<double>() * -1);
+				coords[2].Scale(scale.Cast<double>()); coords[2] += (gridCenter.Cast<double>() * -1);
+				coords[3].Scale(scale.Cast<double>()); coords[3] += (gridCenter.Cast<double>() * -1);
+				geometry.Positions	.push_back(coords[0].Cast<float>());
+				geometry.Positions	.push_back(coords[1].Cast<float>());
+				geometry.Positions	.push_back(coords[2].Cast<float>());
+				geometry.Positions	.push_back(coords[3].Cast<float>());
+			}
+		}
+	}
+	return 0;
+}
+
+
 int													gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter)	{
 	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
 	for(uint32_t z = 0; z < stacks; ++z)
