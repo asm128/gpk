@@ -1,5 +1,6 @@
 #include "gpk_matrix.h"
 #include "gpk_array.h"
+#include "gpk_enum.h"
 
 #ifndef GPK_RIGIDBODY_H_234872398472341
 #define GPK_RIGIDBODY_H_234872398472341
@@ -28,15 +29,10 @@ namespace gpk
 	};
 
 	struct SRigidBodyFlags {
-		bool											OutdatedTransform				: 1;
-		bool											OutdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
+		bool											UpdatedTransform				: 1;
+		bool											UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
 		bool											Active							: 1;
-
-		constexpr										SRigidBodyFlags					()
-			: OutdatedTransform		(true)
-			, OutdatedTensorWorld	(true)
-			, Active				(true)
-		{}
+		bool											Collides						: 1;
 	};
 
 	struct SRigidBodyFrame {
@@ -47,11 +43,21 @@ namespace gpk
 
 		int32_t											ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
 	};
+
+
+	GDEFINE_ENUM_TYPE(BOUNDING_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Sphere, 0);
+
+	struct SBoundingVolume {
+		BOUNDING_TYPE									Type							= ::gpk::BOUNDING_TYPE_Sphere;
+		::gpk::SCoord3<float>							HalfSizes						= {.5f, .5f, .5f};
+	};
 #pragma pack(pop)
 	void											updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::SMatrix4<float> & transformLocal);
 	int32_t											integrateForces					(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
 	int32_t											integratePosition				(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
 	void											transformInertiaTensor			(::gpk::SMatrix3<float> & iitWorld, const ::gpk::SMatrix3<float> &iitBody, const ::gpk::SMatrix4<float> &rotmat);
+
 
 	struct SRigidBodyIntegrator {
 		::gpk::array_pod<::gpk::SRigidBodyFrame	>		BodyFrames						= {};
@@ -59,6 +65,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SBodyForces		>		Forces							= {};
 		::gpk::array_pod<::gpk::SBodyMass		>		Masses							= {};
 		::gpk::array_pod<::gpk::SBodyCenter		>		Centers							= {};
+		::gpk::array_pod<::gpk::SBoundingVolume	>		BoundingVolumes					= {};
 		::gpk::array_pod<::gpk::SMatrix4<float>	>		TransformsLocal					= {};
 
 		static constexpr const ::gpk::SMatrix4<float>	MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
@@ -76,6 +83,7 @@ namespace gpk
 			Forces					.clear();
 			Masses					.clear();
 			Centers					.clear();
+			BoundingVolumes			.clear();
 			return TransformsLocal	.clear();
 		}
 
@@ -85,6 +93,7 @@ namespace gpk
 			Forces					.push_back(::gpk::SBodyForces		{Forces				[iBody]});
 			Masses					.push_back(::gpk::SBodyMass			{Masses				[iBody]});
 			Centers					.push_back(::gpk::SBodyCenter		{Centers			[iBody]});
+			BoundingVolumes			.push_back(::gpk::SBoundingVolume	{BoundingVolumes	[iBody]});
 			return TransformsLocal	.push_back(::gpk::SMatrix4<float>	{TransformsLocal	[iBody]});
 		}
 
@@ -93,7 +102,8 @@ namespace gpk
 			BodyFlags				.push_back({});
 			Forces					.push_back({});
 			Masses					.push_back({});
-			Centers				.push_back({});
+			Centers					.push_back({});
+			BoundingVolumes			.push_back({});
 			return TransformsLocal	.push_back(MatrixIdentity4);
 		}
 
@@ -111,17 +121,18 @@ namespace gpk
 		int32_t 										GetTransform					(uint32_t iBody, ::gpk::SMatrix4<float>	& transform)	{
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags			[iBody];
 			::gpk::SMatrix4<float>								& bodyTransformLocal			= TransformsLocal	[iBody];
-			if(bodyFlags.OutdatedTransform || bodyFlags.OutdatedTensorWorld) {
-				if(bodyFlags.OutdatedTransform) {
+			if(false == bodyFlags.UpdatedTransform || false == bodyFlags.UpdatedTensorWorld) {
+				if(false == bodyFlags.UpdatedTransform) {
 					::gpk::SBodyCenter									& bodyCenter					= Centers		[iBody];
 					::gpk::updateTransform(bodyCenter, bodyTransformLocal);
-					bodyFlags.OutdatedTransform						= false;
+					bodyFlags.UpdatedTransform						= true;
+					bodyFlags.UpdatedTensorWorld					= false;
 				}
-				if(bodyFlags.OutdatedTensorWorld) {
+				if(false == bodyFlags.UpdatedTensorWorld) {
 					::gpk::SRigidBodyFrame								& bodyFrame						= BodyFrames[iBody];
 					::gpk::SBodyMass									& bodyMass						= Masses	[iBody];
 					::gpk::transformInertiaTensor(bodyFrame.InverseInertiaTensorWorld, bodyMass.InverseAngularMassTensor, bodyTransformLocal);
-					bodyFlags.OutdatedTensorWorld					= false;
+					bodyFlags.UpdatedTensorWorld					= true;
 				}
 			}
 			transform										= bodyTransformLocal;
@@ -167,8 +178,8 @@ namespace gpk
 				return;
 			bodyCenter.Position								= newPosition;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
-			bodyFlags.OutdatedTransform						=
-			bodyFlags.OutdatedTensorWorld					= true;
+			bodyFlags.UpdatedTransform						= false;
+			bodyFlags.UpdatedTensorWorld					= false;
 		}
 		void											SetOrientation					(uint32_t iBody, const ::gpk::SQuaternion<float>& newOrientation )	{
 			::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
@@ -176,8 +187,8 @@ namespace gpk
 				return;
 			bodyCenter.Orientation							= newOrientation;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
-			bodyFlags.OutdatedTransform						=
-			bodyFlags.OutdatedTensorWorld					= true;
+			bodyFlags.UpdatedTransform						= false;
+			bodyFlags.UpdatedTensorWorld					= false;
 		}
 		void											SetVelocity						(uint32_t iBody, const ::gpk::SCoord3<float>& newVelocity)			{
 			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
