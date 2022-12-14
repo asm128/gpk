@@ -184,6 +184,12 @@ namespace gpk
 
 	typedef SRasterFont SGUIFont;
 
+	struct SPaletteManager {
+		::gpk::array_pod<
+			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
+		>																Palettes;
+	};
+
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>										LastSize							= {};
 		::gpk::SCoord2<float>											CursorPos							= {};
@@ -198,7 +204,7 @@ namespace gpk
 		>																Palettes;
 
 		// Font
-		::gpk::array_obj<::gpk::SGUIFont>								Fonts								= {};
+		::gpk::array_pobj<::gpk::SGUIFont>								Fonts								= {};
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};

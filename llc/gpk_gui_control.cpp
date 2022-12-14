@@ -14,13 +14,14 @@
 }
 
 			::gpk::error_t												gpk::controlListArrange					(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
+	const ::gpk::SRasterFont													& selectedFont							= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls[iItem];
 		::gpk::SControlConstraints													& controlConstraints					= gui.Controls.Constraints	[idControl];
 		::gpk::SControl																& control								= gui.Controls.Controls		[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[idControl];
 		const uint32_t																iPrevItem								= iItem - 1;
-		const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
+		const ::gpk::SCoord2<uint8_t>												fontCharSize							= selectedFont.CharSize;
 		control.Area.Size.y														= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
@@ -39,8 +40,7 @@
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
-	::gpk::SRasterFont															selectedFont	= gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
-	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
+	const ::gpk::SCoord2<uint8_t>												fontCharSize							= selectedFont.CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
@@ -81,7 +81,7 @@
 }
 
 			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI& gui, ::gpk::SViewport& viewport)																				{
-	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont].CharSize;
+	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont]->CharSize;
 	int16_t																		heightTitleBar							= fontCharSize.y + 4;
 	uint32_t																	widthTarget								= 800;
 	const ::gpk::SCoord2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
@@ -271,7 +271,7 @@
 	vk.Keys							= keys;
 
 	vk.IdRoot						= ::gpk::controlCreate(gui);
-	const ::gpk::SCoord2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont].CharSize;
+	const ::gpk::SCoord2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
 	const ::gpk::SCoord2<int16_t>		sizeKey						= (charSize + ::gpk::SCoord2<uint8_t>{6, 6}).Cast<int16_t>();
 	static constexpr uint16_t			SIZE_BUTTON					= 88;
 	const ::gpk::SCoord2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
