@@ -33,6 +33,7 @@ namespace gpk
 		bool											UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
 		bool											Active							: 1;
 		bool											Collides						: 1;
+		bool											Falling							: 1;
 	};
 
 	struct SRigidBodyFrame {
@@ -195,6 +196,15 @@ namespace gpk
 			if( 0 == memcmp( &newVelocity.x, &bodyCenter.Velocity.x, sizeof( ::gpk::SCoord3<float> ) ) )
 				return;
 			bodyCenter.Velocity								= newVelocity;
+			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
+			bodyFlags.Active								= true;
+		}
+
+		void											SetAcceleration					(uint32_t iBody, const ::gpk::SCoord3<float>& acceleration)			{
+			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
+			if( 0 == memcmp( &acceleration.x, &bodyCenter.Acceleration.x, sizeof( ::gpk::SCoord3<float> ) ) )
+				return;
+			bodyCenter.Acceleration							= acceleration;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
 		}
