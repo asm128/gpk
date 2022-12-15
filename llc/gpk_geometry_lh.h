@@ -194,7 +194,7 @@ namespace gpk
 
 	int													geometryBuildSphere				(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter);
 	int													geometryBuildSphere				(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter);
-	int													geometryBuildCylinder			(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale, bool negateNormals);
+	int													geometryBuildCylinder			(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale, bool negateNormals, float diameterRatio = 1.0f);
 
 	int													geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::SCoord3<float> & scale, const ::gpk::SCoord3<float> & translation);
 #pragma pack(push, 1)

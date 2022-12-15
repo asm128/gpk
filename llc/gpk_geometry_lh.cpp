@@ -492,7 +492,7 @@ int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, 
 }
 
 //
-int													gpk::geometryBuildCylinder	(SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale, bool negateNormals)	{
+int													gpk::geometryBuildCylinder	(SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::SCoord3<float> & gridCenter, const ::gpk::SCoord3<float> & scale, bool negateNormals, float diameterRatio)	{
 	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / (slices), 1.0f / (stacks)};
 	const double											radiusUnit					= 1.0 / (stacks);
 	uint32_t												vertexOffset				= geometry.Positions.size();
@@ -503,7 +503,7 @@ int													gpk::geometryBuildCylinder	(SGeometryIndexedTriangles & geometry
 			geometry.TextureCoords.push_back(texcoord);
 
 			::gpk::SCoord3<double>									coord						= {1.0 * radius, (double)y};
-			coord.RotateY(::gpk::math_2pi * texCoordUnits.x * z); 
+			coord.RotateY(::gpk::math_2pi * texCoordUnits.x * z * diameterRatio); 
 			coord.Scale(scale.Cast<double>()); 
 			geometry.Normals  .push_back(coord.Cast<float>().Normalize() * (negateNormals ? -1.0f : 1.0f));
 			geometry.Positions.push_back(coord.Cast<float>() - gridCenter);
