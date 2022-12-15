@@ -248,30 +248,30 @@ namespace gpk
 				if(w0 <= -1 || w1 <= -1 || w2 <= -1) // ---- If p is on or inside all edges, render pixel.
 					continue;
 			}
-			const ::gpk::SCoord2<double>												cellCurrentF								= {x, y};
-			::gpk::STriangle<double>												proportions									=
-				{ ::gpk::orient2d3d({triangle.C.template Cast<double>(), triangle.B.template Cast<double>()}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
-				, ::gpk::orient2d3d({triangle.A.template Cast<double>(), triangle.C.template Cast<double>()}, cellCurrentF)
-				, ::gpk::orient2d3d({triangle.B.template Cast<double>(), triangle.A.template Cast<double>()}, cellCurrentF)	// Determine barycentric coordinates
+			const ::gpk::SCoord2<float>											cellCurrentF								= {x, y};
+			::gpk::STriangle<float>												proportions									=
+				{ ::gpk::orient2d3d({triangle.C, triangle.B}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
+				, ::gpk::orient2d3d({triangle.A, triangle.C}, cellCurrentF)
+				, ::gpk::orient2d3d({triangle.B, triangle.A}, cellCurrentF)	// Determine barycentric coordinates
 				};
-			double																		proportABC									= proportions.A + proportions.B + proportions.C; //(w0, w1, w2)
-			if(proportABC == 0)
+			float																proportABC									= proportions.A + proportions.B + proportions.C; //(w0, w1, w2)
+			if(proportABC <= 0)
 				continue;
 			proportions.A															/= proportABC;
 			proportions.B															/= proportABC;
-			proportions.C															= 1.0 - (proportions.A + proportions.B);
-			double																		finalZ
+			proportions.C															= 1.0f - (proportions.A + proportions.B);
+			float																finalZ
 				= triangle.A.z * proportions.A
 				+ triangle.B.z * proportions.B
 				+ triangle.C.z * proportions.C
 				;
-			double																		depth										= ((finalZ - fNearFar.Near) / (fNearFar.Far - fNearFar.Near));
+			float																depth										= float((finalZ - fNearFar.Near) / (fNearFar.Far - fNearFar.Near));
 			if(depth >= 1 || depth <= 0) // discard from depth planes
 				continue;
-			uint32_t																	finalDepth									= (uint32_t)(depth * 0x00FFFFFFU);
+			uint32_t															finalDepth									= (uint32_t)(depth * 0x00FFFFFFU);
 			if (targetDepth[(uint32_t)y][(uint32_t)x] > (uint32_t)finalDepth) { // check against depth buffer
-				targetDepth[(uint32_t)y][(uint32_t)x]									= finalDepth;
-				triangleWeights.push_back({(float)proportions.A, (float)proportions.B, (float)proportions.C});
+				targetDepth[(uint32_t)y][(uint32_t)x]							= finalDepth;
+				triangleWeights.push_back({proportions.A, proportions.B, proportions.C});
 				out_Points.push_back(cellCurrent.Cast<int16_t>());
 				++pixelsDrawn;
 			}
