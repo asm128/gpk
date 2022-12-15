@@ -5,8 +5,8 @@
 
 namespace gpk
 {
-	static			const ::gpk::view_const_string	b64Symbols													= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	static			const ::gpk::view_const_string	b64SymbolsFS												= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+	static			constexpr ::gpk::vcc			b64Symbols													= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	static			constexpr ::gpk::vcc			b64SymbolsFS												= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 					::gpk::error_t					base64Encode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_byte & inputBinary	, ::gpk::array_pod<char_t> & out_base64	);
 					::gpk::error_t					base64Decode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_char & in_base64		, ::gpk::array_pod<byte_t> & outputBinary);

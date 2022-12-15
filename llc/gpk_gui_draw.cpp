@@ -45,7 +45,8 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 
 	::gpk::SControlText													& controlText											= gui.Controls.Text		[iControl];
 	::gpk::array_pod<::gpk::SCoord2<int32_t>>							dstCoords;
-	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont];
+	const uint32_t														iFont													= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
+	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[iFont];
 	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize.Cast<uint16_t>(), rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		const ::gpk::SCoord2<int32_t>										dstCoord												= dstCoords[iCoord];
