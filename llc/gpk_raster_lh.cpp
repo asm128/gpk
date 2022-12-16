@@ -235,7 +235,7 @@ int								gpk::drawTriangle
 	( const ::gpk::SCoord2<uint32_t>					targetSize
 	, const ::gpk::STriangle3<float>					& triangle
 	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>> & proportions
+	, ::gpk::array_pod<::gpk::STriangle<float>>			& proportions
 	, ::gpk::view_grid<uint32_t>						depthBuffer
 	)	{
 	// Compute triangle bounding box

@@ -82,38 +82,18 @@ namespace gpk
 		//	};
 		//}
 							void				ViewportRH				(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
-			_21 = (_tBase)0;							_22 = (_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
+			_11 = (_tBase)(offscreenMetrics.x * .5f);	_12 =										_13 =				_14 =
+			_21 = (_tBase)0;							_22 = (_tBase)(offscreenMetrics.y * .5f);	_23 =				_24 =
 			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
 			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
-			_33 = 1;
-			_43 = 0;
-			*this										= GetInverse();
-			_41											+= offscreenMetrics.x / 2;
-			_42											+= offscreenMetrics.y / 2;
+			_41											+= offscreenMetrics.x * .5f;
+			_42											+= offscreenMetrics.y * .5f;
 		}
 							void				ViewportLH					(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
-			_11 = (_tBase)(2.0 / offscreenMetrics.x);	_12 =										_13 =				_14 =
-			_21 = (_tBase)0;							_22 = -(_tBase)(2.0 / offscreenMetrics.y);	_23 =				_24 =
-			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
-			_41 =										_42 = (_tBase)0;							_43 = (_tBase)0;	_44 = (_tBase)1;
-			_33 = 1;
-			_43 = 0;
-			*this										= GetInverse();
-			_41											+= offscreenMetrics.x / 2;
-			_42											+= offscreenMetrics.y / 2;
-		}
-
-							void				ViewportLH					(const ::gpk::SCoord2<uint16_t> & screenMetrics, const ::gpk::SNearFar & nearFar)			noexcept	{
-			*this									= {};
-			_11										= 2.0f / screenMetrics.x;
-			_22										= 2.0f / screenMetrics.y;
-			_33										= 1.0f / (float)(nearFar.Far - nearFar.Near);
-			_41										= -1.0f;
-			_42										= -1.0f;
-			_43										= (float)(-nearFar.Near * ( 1.0f / (nearFar.Far - nearFar.Near) ));
-			_44										= 1.0f;
-			*this									= GetInverse();
+			_11 = (_tBase)(offscreenMetrics.x * .5f);	_12 =										_13 =				_14 =
+			_21 = (_tBase)0;							_22 = -(_tBase)(offscreenMetrics.y * .5f);	_23 =				_24 =
+			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 = 0;
+			_41 = (_tBase)(offscreenMetrics.x * .5f);	_42 = (_tBase)(offscreenMetrics.y * .5f);	_43 = (_tBase)0;	_44 = (_tBase)1;
 		}
 
 		static	constexpr	_tMat4				GetIdentity					()																						noexcept	{

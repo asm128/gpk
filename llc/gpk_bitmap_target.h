@@ -219,65 +219,6 @@ namespace gpk
 		}
 		return pixelsDrawn;
 	}
-	
-	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle
-		( ::gpk::view_grid<uint32_t>						& targetDepth
-		, const ::gpk::SNearFar								& fNearFar
-		, const ::gpk::STriangle3<_tCoord>					& triangle
-		, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& out_Points
-		, ::gpk::array_pod<::gpk::STriangle<float>>			& triangleWeights
-		) {
-		int32_t																		pixelsDrawn									= 0;
-		const ::gpk::SCoord2<uint32_t>												& _targetMetrics							= targetDepth.metrics();
-		::gpk::SCoord2	<float>														areaMin										= {(float)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (float)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::SCoord2	<float>														areaMax										= {(float)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (float)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
-		const float																	xStop										= ::gpk::min(areaMax.x, (float)_targetMetrics.x);
-		for(float y = ::gpk::max(areaMin.y, 0.f), yStop = ::gpk::min(areaMax.y, (float)_targetMetrics.y); y < yStop; ++y)
-		for(float x = ::gpk::max(areaMin.x, 0.f); x < xStop; ++x) {
-			const ::gpk::SCoord2<int32_t>												cellCurrent									= {(int32_t)x, (int32_t)y};
-			const ::gpk::STriangle2<int32_t>											triangle2D									=
-				{ {(int32_t)triangle.A.x, (int32_t)triangle.A.y}
-				, {(int32_t)triangle.B.x, (int32_t)triangle.B.y}
-				, {(int32_t)triangle.C.x, (int32_t)triangle.C.y}
-				};
-			{
-				int32_t																		w0											= ::gpk::orient2d({triangle2D.B, triangle2D.A}, cellCurrent);	// Determine barycentric coordinates
-				int32_t																		w1											= ::gpk::orient2d({triangle2D.C, triangle2D.B}, cellCurrent);
-				int32_t																		w2											= ::gpk::orient2d({triangle2D.A, triangle2D.C}, cellCurrent);
-				if(w0 <= -1 || w1 <= -1 || w2 <= -1) // ---- If p is on or inside all edges, render pixel.
-					continue;
-			}
-			const ::gpk::SCoord2<float>											cellCurrentF								= {x, y};
-			::gpk::STriangle<float>												proportions									=
-				{ ::gpk::orient2d3d({triangle.C, triangle.B}, cellCurrentF)	// notice how having to type "template" every time before "Cast" totally defeats the purpose of the template. I really find this rule very stupid and there is no situation in which the compiler is unable to resolve it from the code it already has.
-				, ::gpk::orient2d3d({triangle.A, triangle.C}, cellCurrentF)
-				, ::gpk::orient2d3d({triangle.B, triangle.A}, cellCurrentF)	// Determine barycentric coordinates
-				};
-			float																proportABC									= proportions.A + proportions.B + proportions.C; //(w0, w1, w2)
-			if(proportABC <= 0)
-				continue;
-			proportions.A															/= proportABC;
-			proportions.B															/= proportABC;
-			proportions.C															= 1.0f - (proportions.A + proportions.B);
-			float																finalZ
-				= triangle.A.z * proportions.A
-				+ triangle.B.z * proportions.B
-				+ triangle.C.z * proportions.C
-				;
-			float																depth										= float((finalZ - fNearFar.Near) / (fNearFar.Far - fNearFar.Near));
-			if(depth >= 1 || depth <= 0) // discard from depth planes
-				continue;
-			uint32_t															finalDepth									= (uint32_t)(depth * 0x00FFFFFFU);
-			if (targetDepth[(uint32_t)y][(uint32_t)x] > (uint32_t)finalDepth) { // check against depth buffer
-				targetDepth[(uint32_t)y][(uint32_t)x]							= finalDepth;
-				triangleWeights.push_back({proportions.A, proportions.B, proportions.C});
-				out_Points.push_back(cellCurrent.Cast<int16_t>());
-				++pixelsDrawn;
-			}
-		}
-		return pixelsDrawn;
-	}
 
 	template<typename _tCoord>
 	static					::gpk::error_t									drawTriangle
