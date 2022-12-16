@@ -228,7 +228,7 @@ namespace gpk
 			gpk_necs(::gpk::viewWrite(BodyFlags			, output));
 			gpk_necs(::gpk::viewWrite(Forces			, output));
 			gpk_necs(::gpk::viewWrite(Masses			, output));
-			gpk_necs(::gpk::viewWrite(Centers		, output));
+			gpk_necs(::gpk::viewWrite(Centers			, output));
 			gpk_necs(::gpk::viewWrite(TransformsLocal	, output));
 
 			info_printf("Saved %s, %i", "BodyFrames"		, BodyFrames		.size());
