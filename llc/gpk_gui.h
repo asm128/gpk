@@ -182,15 +182,7 @@ namespace gpk
 		::gpk::array_pod<::gpk::SSysEvent			>					Events								= {};
 	};
 
-	struct SPaletteManager {
-		::gpk::array_pod<::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>>
-																		Palettes;
-	};
-
-	struct SGUI {
-		::gpk::SCoord2<uint32_t>										LastSize							= {};
-		::gpk::SCoord2<float>											CursorPos							= {};
-		::gpk::SGUIControlTable											Controls							= {};
+	struct SGUIColors {
 		::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>		>		Palette								= {};
 		::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>	>		ControlThemes						= {};
 
@@ -199,7 +191,13 @@ namespace gpk
 		::gpk::array_pod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
 		>																Palettes;
+	};
 
+	struct SGUI {
+		::gpk::SCoord2<uint32_t>										LastSize							= {};
+		::gpk::SCoord2<float>											CursorPos							= {};
+		::gpk::SGUIControlTable											Controls							= {};
+		::gpk::ptr_obj<::gpk::SGUIColors>								Colors;
 		// Font
 		::gpk::array_pobj<::gpk::SRasterFont>							Fonts								= {};
 

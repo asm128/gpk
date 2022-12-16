@@ -24,16 +24,6 @@
 // GUI_CONTROL_COLOR_CLIENT
 
 																gpk::SGUI::SGUI												()	{
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED			]	= Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED			]	= Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED			]	= Palettes.push_back({{::gpk::ORANGE	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED	]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_EXECUTE			]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED			]	= Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 }
 
 			::gpk::error_t										gpk::controlInvalid										(const ::gpk::SGUI& gui, int32_t iControl)				{
@@ -193,6 +183,7 @@ static		::gpk::error_t										initDefaults				(::gpk::ptr_obj<::gpk::array_pod
 		gpk_necs(::themeSetupDefault(*palette, *controlThemes.create(), iShades));
 	return 0;
 }
+
 static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes)	{
 	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
 	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
@@ -204,6 +195,32 @@ static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::ptr_obj
 	controlThemes = globalDefaultTheme;
 	return 0;
 }
+
+static		::gpk::error_t										uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED				]	= guiColors.Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= guiColors.Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= guiColors.Palettes.push_back({{::gpk::RED			, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED				]	= guiColors.Palettes.push_back({{::gpk::ORANGE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	return 0;
+}
+static		::gpk::error_t										uiColorsSetupDefault (::gpk::ptr_obj<::gpk::SGUIColors> & guiColors) {
+	if(!guiColors) {
+		static ::gpk::ptr_obj<::gpk::SGUIColors>	globalDefaultColors			= {};
+		if(!globalDefaultColors) {
+			gpk_necs(::uiColorsSetupDefault(*globalDefaultColors.create()));
+			gpk_necs(::paletteSetupDefaultColors(globalDefaultColors->Palette, globalDefaultColors->ControlThemes));
+		}
+		guiColors = globalDefaultColors;
+	}
+	return 0;
+}
+
 
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI & gui)																						{
 	static ::gpk::SRasterFontManager								g_managedFonts;
@@ -230,7 +247,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	control.Parent														= -1;
 	control.Align															= ::gpk::ALIGN_TOP_LEFT;
 	control.Area															= {{0, 0}, {16, 16}};
-	::gpk::memcpy_s(control.Palettes.Storage, gui.DefaultColors.Storage);
+	::gpk::memcpy_s(control.Palettes.Storage, gui.Colors->DefaultColors.Storage);
 	controlConstraints.AttachSizeToControl									= {-1, -1};
 	controlConstraints.AttachSizeToText										= {};
 	controlConstraints.DockToControl										= {-1, -1, -1, -1};
@@ -245,7 +262,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 }
 
 			::gpk::error_t										gpk::controlCreate										(::gpk::SGUI& gui)										{
-	gpk_necall(::paletteSetupDefaultColors(gui.Palette, gui.ControlThemes), "%s", "Unknown issue!");
+	gpk_necall(::uiColorsSetupDefault(gui.Colors), "%s", "Unknown issue!");
 
 	if(0 == gui.Fonts.size())
 		gpk_necall(::setupDefaultFontTexture(gui), "%s", "Failed to set up default texture!");

@@ -195,15 +195,15 @@
 		uint32_t																iFoundColor								= 0;
 		int32_t																	themeIndex								= -1;
 		const ::gpk::SColorBGRA													& gridCellColor							= colors[y][x];
-		for(; iFoundColor < gui.Palette->size(); ++iFoundColor)
-			if((*gui.Palette)[iFoundColor] == gridCellColor) {
+		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
+			if((*gui.Colors->Palette)[iFoundColor] == gridCellColor) {
 				themeIndex															= iFoundColor;
 				break;
 			}
-		if(iFoundColor >= gui.Palette->size()) {
-			int32_t																	indexColor								= gui.Palette->push_back(gridCellColor);
-			themeIndex															= gui.ControlThemes->push_back({});
-			::gpk::SControlTheme													& theme									= (*gui.ControlThemes)[themeIndex];
+		if(iFoundColor >= gui.Colors->Palette->size()) {
+			int32_t																	indexColor								= gui.Colors->Palette->push_back(gridCellColor);
+			themeIndex															= gui.Colors->ControlThemes->push_back({});
+			::gpk::SControlTheme													& theme									= (*gui.Colors->ControlThemes)[themeIndex];
 			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboDisabled					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	] = {};
 			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboPressed 					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	] = {};
 			::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>			& colorComboSelected					= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	] = {};

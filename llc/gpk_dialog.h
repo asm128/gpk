@@ -43,6 +43,9 @@ namespace gpk
 	//}
 #pragma pack(pop)
 
+	struct SDialogColors {
+
+	};
 	struct SDialog {
 		::gpk::array_pod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	ColorsPerControlType;
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsControl										= {};
