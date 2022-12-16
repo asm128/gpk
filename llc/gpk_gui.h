@@ -169,6 +169,7 @@ namespace gpk
 				<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>
 			, ::gpk::GUI_CONTROL_PALETTE_COUNT>							ColorCombos							= {};
 	};
+#pragma pack(pop)
 	struct SGUIControlTable {
 		::gpk::array_pod<::gpk::SControl			>					Controls							= {};
 		::gpk::array_pod<::gpk::SControlState		>					States								= {};
@@ -180,22 +181,18 @@ namespace gpk
 		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
 		::gpk::array_pod<::gpk::SSysEvent			>					Events								= {};
 	};
-#pragma pack(pop)
-
-	typedef SRasterFont SGUIFont;
 
 	struct SPaletteManager {
-		::gpk::array_pod<
-			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
-		>																Palettes;
+		::gpk::array_pod<::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>>
+																		Palettes;
 	};
 
 	struct SGUI {
 		::gpk::SCoord2<uint32_t>										LastSize							= {};
 		::gpk::SCoord2<float>											CursorPos							= {};
 		::gpk::SGUIControlTable											Controls							= {};
-		::gpk::array_pod<::gpk::SColorBGRA>								Palette								= {};
-		::gpk::array_pod<::gpk::SControlTheme>							ControlThemes						= {};
+		::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>		>		Palette								= {};
+		::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>	>		ControlThemes						= {};
 
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors	= {};
 
@@ -204,7 +201,7 @@ namespace gpk
 		>																Palettes;
 
 		// Font
-		::gpk::array_pobj<::gpk::SGUIFont>								Fonts								= {};
+		::gpk::array_pobj<::gpk::SRasterFont>							Fonts								= {};
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};

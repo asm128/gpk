@@ -142,11 +142,72 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::array_p
 	return 0;
 }
 
-static ::gpk::SPaletteManager									g_managedPalettes;
-static ::gpk::SRasterFontManager								g_managedFonts;
-static const uint32_t											g_resultFontsLoaded										= ::gpk::rasterFontDefaults(g_managedFonts);
+static		::gpk::error_t										initDefaults				(::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes) {
+	static constexpr	const uint32_t									iShades													= 16;
+	static				const ::gpk::SColorBGRA							paletteColors []										=
+		// 16 Base colors
+		{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_2	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_3	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_4	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_5	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_6	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_7	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_8	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_9	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_10	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_11	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_12	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_13	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_14	}
+		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_15	}
+		// 16 Extended colors
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_14	+ ::gpk::ASCII_COLOR_INDEX_1}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_13	+ ::gpk::ASCII_COLOR_INDEX_2}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_12	+ ::gpk::ASCII_COLOR_INDEX_3}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_11	+ ::gpk::ASCII_COLOR_INDEX_4}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_10	+ ::gpk::ASCII_COLOR_INDEX_5}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_9 	+ ::gpk::ASCII_COLOR_INDEX_6}
+		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_8 	+ ::gpk::ASCII_COLOR_INDEX_7}
+		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
+		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
+		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
+		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4)}
+		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7)}
+		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8)}
+		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_4 + ::gpk::ASCII_COLOR_INDEX_7)}
+
+		, ::gpk::SColorBGRA{::gpk::BROWN}
+		, ::gpk::SColorBGRA{::gpk::LIGHTORANGE}
+	};
+
+	if(palette && 0 == palette->size())
+		gpk_necs(::paletteSetupDefault(*palette, paletteColors, iShades));
+	else if(!palette) 
+		gpk_necs(::paletteSetupDefault(*palette.create(), paletteColors, iShades));
+
+	if(controlThemes && 0 == controlThemes->size())
+		gpk_necs(::themeSetupDefault(*palette, *controlThemes, iShades));
+	else if(!controlThemes)
+		gpk_necs(::themeSetupDefault(*palette, *controlThemes.create(), iShades));
+	return 0;
+}
+static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes)	{
+	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
+	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
+	
+	if(!globalDefaultPalette || 0 == globalDefaultPalette->size()) 
+		initDefaults(globalDefaultPalette, globalDefaultTheme);
+
+	palette = globalDefaultPalette;
+	controlThemes = globalDefaultTheme;
+	return 0;
+}
 
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI & gui)																						{
+	static ::gpk::SRasterFontManager								g_managedFonts;
+	static const uint32_t											g_resultFontsLoaded										= ::gpk::rasterFontDefaults(g_managedFonts);
 	gui.Fonts.resize(g_managedFonts.Fonts.size());
 	for(uint32_t iFont = 0; iFont < g_managedFonts.Fonts.size(); ++iFont)
 		gui.Fonts[iFont] = g_managedFonts.Fonts[iFont];
@@ -184,49 +245,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 }
 
 			::gpk::error_t										gpk::controlCreate										(::gpk::SGUI& gui)										{
-	static constexpr	const uint32_t									iShades													= 16;
-	if(0 == gui.Palette.size()) {
-		static				const SColorBGRA								paletteColors []										=
-			// 16 Base colors
-			{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_2	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_3	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_4	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_5	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_6	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_7	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_8	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_9	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_10	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_11	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_12	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_13	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_14	}
-			, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_15	}
-			// 16 Extended colors
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_14	+ ::gpk::ASCII_COLOR_INDEX_1}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_13	+ ::gpk::ASCII_COLOR_INDEX_2}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_12	+ ::gpk::ASCII_COLOR_INDEX_3}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_11	+ ::gpk::ASCII_COLOR_INDEX_4}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_10	+ ::gpk::ASCII_COLOR_INDEX_5}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_9 	+ ::gpk::ASCII_COLOR_INDEX_6}
-			, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_8 	+ ::gpk::ASCII_COLOR_INDEX_7}
-			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
-			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
-			, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4)}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7)}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8)}
-			, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_4 + ::gpk::ASCII_COLOR_INDEX_7)}
-
-			, ::gpk::SColorBGRA{::gpk::BROWN}
-			, ::gpk::SColorBGRA{::gpk::LIGHTORANGE}
-		};
-		gpk_necall(::paletteSetupDefault(gui.Palette, paletteColors, iShades), "%s", "Unknown issue!");
-	}
-	if(0 == gui.ControlThemes.size())
-		gpk_necall(::themeSetupDefault(gui.Palette, gui.ControlThemes, iShades), "%s", "Unknown issue! Maybe the palette system got broken?");
+	gpk_necall(::paletteSetupDefaultColors(gui.Palette, gui.ControlThemes), "%s", "Unknown issue!");
 
 	if(0 == gui.Fonts.size())
 		gpk_necall(::setupDefaultFontTexture(gui), "%s", "Failed to set up default texture!");
