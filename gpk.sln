@@ -123,6 +123,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_font_convert", "gpk_fon
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_raster_font_ripper", "gpk_raster_font_ripper\gpk_raster_font_ripper.vcxproj", "{84163324-D6D3-45B4-9650-9DDD680BAD11}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_engine", "gpk_engine\gpk_engine.vcxproj", "{976FE3EA-9FD1-4066-9003-0E8513F9D900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -561,6 +563,30 @@ Global
 		{84163324-D6D3-45B4-9650-9DDD680BAD11}.ReleaseWithoutAsm|x64.Build.0 = Release|x64
 		{84163324-D6D3-45B4-9650-9DDD680BAD11}.ReleaseWithoutAsm|x86.ActiveCfg = Release|Win32
 		{84163324-D6D3-45B4-9650-9DDD680BAD11}.ReleaseWithoutAsm|x86.Build.0 = Release|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|ARM.ActiveCfg = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|ARM.Build.0 = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|ARM64.ActiveCfg = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|ARM64.Build.0 = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|x64.ActiveCfg = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|x64.Build.0 = Debug|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|x86.ActiveCfg = Debug|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Debug|x86.Build.0 = Debug|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|ARM.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|ARM.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|ARM64.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|ARM64.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|x64.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|x64.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|x86.ActiveCfg = Release|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.Release|x86.Build.0 = Release|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|ARM.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|ARM.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|ARM64.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|ARM64.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|x64.ActiveCfg = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|x64.Build.0 = Release|x64
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|x86.ActiveCfg = Release|Win32
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900}.ReleaseWithoutAsm|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

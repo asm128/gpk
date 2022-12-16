@@ -128,7 +128,7 @@ int								gpk::drawLine
 	) {
 		depthBufferRow					= depthBuffer[line.A.y];
 		uint32_t							& depthCell				= depthBufferRow[line.A.x];
-		uint32_t							intZ					= uint32_t(0xFFFFFFFFU * lineFloat.A.z);
+		uint32_t							intZ					= uint32_t((double)0xFFFFFFFFU * lineFloat.A.z);
 		if( depthCell > intZ ) {
 			depthCell						= intZ;
 			//pixelCoords.push_back({(int32_t)line.A.x, (int32_t)line.A.y});

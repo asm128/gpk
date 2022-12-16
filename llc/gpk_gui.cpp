@@ -225,6 +225,7 @@ static		::gpk::error_t										uiColorsSetupDefault (::gpk::ptr_obj<::gpk::SGUI
 static		::gpk::error_t										setupDefaultFontTexture									(::gpk::SGUI & gui)																						{
 	static ::gpk::SRasterFontManager								g_managedFonts;
 	static const uint32_t											g_resultFontsLoaded										= ::gpk::rasterFontDefaults(g_managedFonts);
+	(void)g_resultFontsLoaded;
 	gui.Fonts.resize(g_managedFonts.Fonts.size());
 	for(uint32_t iFont = 0; iFont < g_managedFonts.Fonts.size(); ++iFont)
 		gui.Fonts[iFont] = g_managedFonts.Fonts[iFont];
