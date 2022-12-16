@@ -28,12 +28,22 @@ namespace gpk
 		::gpk::SQuaternion	<float>						Orientation						= {0, 0, 0, 1};
 	};
 
+	GDEFINE_ENUM_TYPE(BOUNDING_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Sphere			, 0);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, AABB				, 1);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Cylinder			, 2);
+
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardSphere		, 4);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardAABB		, 5);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardCylinder	, 6);
+
 	struct SRigidBodyFlags {
-		bool											UpdatedTransform				: 1;
-		bool											UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
-		bool											Active							: 1;
-		bool											Collides						: 1;
-		bool											Falling							: 1;
+		uint8_t											UpdatedTransform				: 1;
+		uint8_t											UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
+		uint8_t											Active							: 1;
+		uint8_t											Collides						: 1;
+		uint8_t											Falling							: 1;
+		uint8_t											BVType							: 3;
 	};
 
 	struct SRigidBodyFrame {
@@ -45,12 +55,7 @@ namespace gpk
 		int32_t											ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
 	};
 
-
-	GDEFINE_ENUM_TYPE(BOUNDING_TYPE, uint8_t);
-	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Sphere, 0);
-
 	struct SBoundingVolume {
-		BOUNDING_TYPE									Type							= ::gpk::BOUNDING_TYPE_Sphere;
 		::gpk::SCoord3<float>							HalfSizes						= {.5f, .5f, .5f};
 	};
 #pragma pack(pop)
