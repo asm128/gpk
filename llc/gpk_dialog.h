@@ -44,15 +44,17 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogColors {
-
+		::gpk::array_pod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType										= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Control												= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Button												= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						CheckBox											= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Viewport											= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ViewportTitle										= {};
 	};
+
 	struct SDialog {
-		::gpk::array_pod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	ColorsPerControlType;
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsControl										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsButton										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsCheckBox										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsViewport										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ColorsViewportTitle									= {};
+		::gpk::ptr_obj<::gpk::SDialogColors>												Colors												= {};
+		
 		int32_t																				FocusedCurrent										= -1;
 		int32_t																				FocusedPrevious										= -1;
 		int32_t																				SelectedCurrent										= -1;
@@ -96,7 +98,7 @@ namespace gpk
 			Controls[index]->Dialog												= this;
 			Controls[index]->IdGUIControl										= ::gpk::controlCreate(*GUI);
 			gui.Controls.Modes[Controls[index]->IdGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes.Storage, ColorsControl.Storage);
+			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes.Storage, Colors->Control.Storage);
 			//gpk_necall(::gpk::controlSetParent(gui, Controls[index]->IdGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
