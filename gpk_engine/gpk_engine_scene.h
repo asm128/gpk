@@ -4,8 +4,8 @@
 #include "gpk_engine_rendersurface.h"
 #include "gpk_engine_container.h"
 
-#include "gpk_bitmap_target.h"
 #include "gpk_font.h"
+#include "gpk_raster_lh.h"
 
 #include <functional>
 
@@ -82,12 +82,6 @@ namespace gpk
 		, const ::gpk::SEngineSceneConstants		& constants
 		);
 
-	template<typename _tCoord>
-	static	::gpk::error_t						drawLine		(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, const ::gpk::SMatrix4<float> & mWVP, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points) {
-		::gpk::SCoord3<_tCoord>							vA				= mWVP.Transform(line.A); 
-		::gpk::SCoord3<_tCoord>							vB				= mWVP.Transform(line.B);
-		return ::gpk::drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{vA.x, vA.y}, {vB.x, vB.y}}, out_Points);
-	}
 } // namespace
 
 #endif // GPK_ENGINE_SCENE_H

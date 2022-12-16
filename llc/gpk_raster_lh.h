@@ -22,9 +22,9 @@ namespace gpk
 	int								drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2	<int16_t> rectangle	, ::gpk::SColorBGRA color);
 	int								drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCircle		<int16_t> circle	, ::gpk::SColorBGRA color);
 	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2		<int16_t> line		, ::gpk::SColorBGRA color);
-	int								drawLine			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2		<int16_t> line		, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords);
+	int								drawLine			(const ::gpk::SCoord2<uint16_t>	offscreenMetrics, ::gpk::SLine2		<int16_t> line		, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords);
 	int								drawLine
-		( const ::gpk::view_grid<::gpk::SColorBGRA>		pixels
+		( const ::gpk::SCoord2<uint16_t>				offscreenMetrics
 		, const ::gpk::SLine3<float>					& lineFloat
 		, ::gpk::array_pod<::gpk::SCoord3<float>>		& pixelCoords
 		, ::gpk::view_grid<uint32_t>					depthBuffer

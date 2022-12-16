@@ -72,7 +72,7 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2<int16_t> line, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords)	{
+int								gpk::drawLine       	(const ::gpk::SCoord2<uint16_t>	offscreenMetrics, ::gpk::SLine2<int16_t> line, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords)	{
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
 	int32_t								dy						= (int32_t)-fabs(line.B.y - line.A.y );
@@ -86,8 +86,8 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 		if (e2 >= dy) {
 			err								+= dy; /* e_xy+e_x > 0 */
 			line.A.x						+= (int16_t)sx;
-			if( line.A.x >= 0 && line.A.x < (int32_t)pixels.metrics().x
-			 && line.A.y >= 0 && line.A.y < (int32_t)pixels.metrics().y
+			if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
+			 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 			)
 				pixelCoords.push_back({line.A.x, line.A.y});
 
@@ -95,8 +95,8 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 		if (e2 <= dx) { /* e_xy+e_y < 0 */
 			err								+= dx;
 			line.A.y						+= (int16_t)sy;
-			if( line.A.x >= 0 && line.A.x < (int32_t)pixels.metrics().x
-			 && line.A.y >= 0 && line.A.y < (int32_t)pixels.metrics().y
+			if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
+			 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 			)
 				pixelCoords.push_back({line.A.x, line.A.y});
 		}
@@ -108,7 +108,7 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 int								gpk::drawLine
-	( ::gpk::view_grid<::gpk::SColorBGRA>			pixels
+	( const ::gpk::SCoord2<uint16_t>				offscreenMetrics
 	, const ::gpk::SLine3<float>					& lineFloat
 	, ::gpk::array_pod<::gpk::SCoord3<float>>		& pixelCoords
 	, ::gpk::view_grid<uint32_t>					depthBuffer
@@ -122,13 +122,13 @@ int								gpk::drawLine
 
 	bool								yAxis					= fabs(yDiff) > xDiff;
 	::gpk::view_array<uint32_t>			depthBufferRow			= {};
-	if( line.A.x >= 0 && line.A.x < (int32_t)pixels.metrics().x
-	 && line.A.y >= 0 && line.A.y < (int32_t)pixels.metrics().y
+	if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
+	 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 	 && lineFloat.A.z >= 0 && lineFloat.A.z <= 1
 	) {
 		depthBufferRow					= depthBuffer[line.A.y];
 		uint32_t							& depthCell				= depthBufferRow[line.A.x];
-		uint32_t							intZ					= uint32_t((double)0xFFFFFFFFU * lineFloat.A.z);
+		uint32_t							intZ					= uint32_t((double)0xFFFFFFFU * lineFloat.A.z);
 		if( depthCell > intZ ) {
 			depthCell						= intZ;
 			//pixelCoords.push_back({(int32_t)line.A.x, (int32_t)line.A.y});
@@ -145,15 +145,15 @@ int								gpk::drawLine
 		if (e2 >= yDiff) {
 			err								+= yDiff; /* e_xy+e_x > 0 */
 			line.A.x						+= sx;
-			if( line.A.x >= 0 && line.A.x < (int32_t)pixels.metrics().x
-			 && line.A.y >= 0 && line.A.y < (int32_t)pixels.metrics().y
+			if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
+			 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 			) {
 				depthBufferRow				= depthBuffer[line.A.y];
 				const double						factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
 				const double						finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
-				const uint32_t						intZ					= uint32_t(0xFFFFFFFFU * finalZ);
+				const uint32_t						intZ					= uint32_t(0xFFFFFFFU * finalZ);
 				uint32_t							& depthCell				= depthBufferRow[line.A.x];
 				if(depthCell <= intZ)
 					continue;
@@ -167,15 +167,15 @@ int								gpk::drawLine
 		if (e2 <= xDiff) { /* e_xy+e_y < 0 */
 			err								+= xDiff;
 			line.A.y						+= sy;
-			if( line.A.x >= 0 && line.A.x < (int32_t)pixels.metrics().x
-			 && line.A.y >= 0 && line.A.y < (int32_t)pixels.metrics().y
+			if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
+			 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 			) {
 				depthBufferRow					= depthBuffer[line.A.y];
 				const double						factor					= 1.0 / (yAxis ? factorUnit * line.A.y : factorUnit * line.A.x);
 				const double						finalZ					= ::gpk::interpolate_linear(lineFloat.A.z, lineFloat.B.z, factor);// lineFloat.B.z * factor + (lineFloat.A.z * (1.0 - factor));
 				if (finalZ <= 0 || finalZ >= 1)
 					continue;
-				const uint32_t						intZ					= uint32_t(0xFFFFFFFFU * finalZ);
+				const uint32_t						intZ					= uint32_t(0xFFFFFFFU * finalZ);
 				uint32_t							& depthCell				= depthBufferRow[line.A.x];
 				if(depthCell <= intZ)
 					continue;
@@ -276,7 +276,7 @@ int								gpk::drawTriangle
 		if(finalZ >= 1.0 || finalZ <= 0)
 			continue;
 
-		uint32_t							intZ					= uint32_t(0xFFFFFFFFU * finalZ);
+		uint32_t							intZ					= uint32_t(0xFFFFFFFU * finalZ);
 		uint32_t							& currentDepth			= depthBuffer[p.y][p.x];
 		if(currentDepth <= intZ)
 			continue;

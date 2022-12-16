@@ -70,7 +70,7 @@ namespace gpk
 	struct SVSCache {
 		::gpk::array_pod<::gpk::STriangle<float>>	TriangleWeights			= {};
 		::gpk::array_pod<::gpk::SCoord2<int16_t>>	SolidPixelCoords		= {};
-		::gpk::array_pod<::gpk::SCoord2<int16_t>>	WireframePixelCoords	= {};
+		::gpk::array_pod<::gpk::SCoord3<float>>	WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {

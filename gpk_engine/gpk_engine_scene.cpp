@@ -2,6 +2,7 @@
 #include "gpk_engine_shader.h"
 #include "gpk_noise.h"
 #include "gpk_ascii_color.h"
+#include "gpk_raster_lh.h"
 
 ::gpk::error_t										gpk::drawScene									
 	( ::gpk::view_grid<::gpk::SColorBGRA>	& backBufferColors
@@ -35,7 +36,7 @@
 	}
 
 	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
-	::gpk::array_pod<::gpk::SCoord2<int16_t>>		& wireframePixelCoords	= renderCache.CacheVertexShader.WireframePixelCoords;
+	::gpk::array_pod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.CacheVertexShader.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
 	constexpr ::gpk::SCoord3<float>					xyz	[3]					= 
@@ -51,9 +52,9 @@
 
 	for(uint32_t iVector = 0; iVector < 3; ++iVector) {
 		wireframePixelCoords.clear();
-		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<float>{{}, xyz[iVector]}, constants.Projection, wireframePixelCoords);
+		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<float>{{}, xyz[iVector]}, constants.Projection, wireframePixelCoords, backBufferDepth);
 		for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
-			::gpk::SCoord2<int16_t>					coord		= wireframePixelCoords[iCoord];
+			::gpk::SCoord3<uint32_t>				coord		= wireframePixelCoords[iCoord].Cast<uint32_t>();
 			backBufferColors[coord.y][coord.x]	= colorXYZ[iVector];
 		}
 	}

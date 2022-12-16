@@ -59,7 +59,7 @@ static	::gpk::error_t							transformTrianglesWireframe
 
 static	::gpk::error_t								drawBuffersWireframe
 	( ::gpk::view_grid<::gpk::SColorBGRA>					& backBufferColors
-	, ::gpk::view_grid<uint32_t>							& /*backBufferDepth*/
+	, ::gpk::view_grid<uint32_t>							& backBufferDepth
 	, ::gpk::SVSOutput										& inVS
 	, ::gpk::SVSCache										& cacheVS
 	, ::gpk::view_array<const uint16_t>						indices		
@@ -82,12 +82,12 @@ static	::gpk::error_t								drawBuffersWireframe
 			continue;
 		//const ::gpk::STriangle3<float>								& triNormals				= inVS.Normals			[iTriangle];
 		cacheVS.WireframePixelCoords.clear();
-		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<int32_t>{triPositions.A.Cast<int32_t>(), triPositions.B.Cast<int32_t>()}, cacheVS.WireframePixelCoords);
-		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<int32_t>{triPositions.B.Cast<int32_t>(), triPositions.C.Cast<int32_t>()}, cacheVS.WireframePixelCoords);
-		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<int32_t>{triPositions.C.Cast<int32_t>(), triPositions.A.Cast<int32_t>()}, cacheVS.WireframePixelCoords);
+		::gpk::drawLine(offscreenMetrics, {triPositions.A, triPositions.B}, cacheVS.WireframePixelCoords, backBufferDepth);
+		::gpk::drawLine(offscreenMetrics, {triPositions.B, triPositions.C}, cacheVS.WireframePixelCoords, backBufferDepth);
+		::gpk::drawLine(offscreenMetrics, {triPositions.C, triPositions.A}, cacheVS.WireframePixelCoords, backBufferDepth);
 		const ::gpk::SColorBGRA										wireColor					= material.Color.Diffuse;
 		for(uint32_t iCoord = 0; iCoord < cacheVS.WireframePixelCoords.size(); ++iCoord) {
-			::gpk::SCoord2<int16_t>								coord		= cacheVS.WireframePixelCoords[iCoord];
+			::gpk::SCoord3<int16_t>								coord		= cacheVS.WireframePixelCoords[iCoord].Cast<int16_t>();
 			backBufferColors[coord.y][coord.x]		= wireColor;
 		}
 	}
