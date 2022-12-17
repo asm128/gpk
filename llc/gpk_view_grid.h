@@ -106,6 +106,15 @@ namespace gpk
 	typedef				::gpk::view_grid<const int16_t	>		view2d_const_int16	;
 	typedef				::gpk::view_grid<const int32_t	>		view2d_const_int32	;
 	typedef				::gpk::view_grid<const int64_t	>		view2d_const_int64	;
+
+
+	enum GRID_ROTATION : uint8_t {
+		GRID_ROTATION_DEFAULT	= 0,
+		GRID_ROTATION_0			= 0x1,
+		GRID_ROTATION_90		= 0x2,
+		GRID_ROTATION_180		= 0x4,
+		GRID_ROTATION_270		= 0x8,
+	};
 }
 
 #endif // GPK_GRID_VIEW_H_3423423
