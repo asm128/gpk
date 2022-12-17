@@ -244,8 +244,8 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 	case WM_MOUSEMOVE		: {
 		verbose_printf("%s", "WM_MOUSEMOVE");
 		::gpk::SCoord2<int16_t>									mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
-		input.MouseCurrent.Position.x						= ::gpk::clamp(mousePos.x, (int16_t)0, (int16_t)mainDisplay.Size.x);
-		input.MouseCurrent.Position.y						= ::gpk::clamp(mousePos.y, (int16_t)0, (int16_t)mainDisplay.Size.y);
+		input.MouseCurrent.Position.x						= ::gpk::clamp(mousePos.x, (int16_t)0, (int16_t)(mainDisplay.Size.x - 1));
+		input.MouseCurrent.Position.y						= ::gpk::clamp(mousePos.y, (int16_t)0, (int16_t)(mainDisplay.Size.y - 1));
 		input.MouseCurrent.Deltas.x							= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 		input.MouseCurrent.Deltas.y							= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
@@ -258,7 +258,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 		return 0;
 		}
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
-		((::MINMAXINFO*)lParam)->ptMinTrackSize													= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
+		((::MINMAXINFO*)lParam)->ptMinTrackSize				= {minClientRect.right - minClientRect.left, minClientRect.bottom - minClientRect.top};
 		return 0;
 	case WM_CREATE			: {
 			RECT													rect			= {};
