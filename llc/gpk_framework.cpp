@@ -283,6 +283,9 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 		info_printf("%s", "WM_SIZE");
 		if(lParam) {
 			::gpk::SCoord2<uint16_t>																			newMetrics									= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint16_t>();
+			RECT													windowrect	= {};
+			GetClientRect(hWnd, &windowrect);
+			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
 			if(newMetrics != mainDisplay.Size.Cast<uint16_t>()) {
 				mainDisplay.PreviousSize																= mainDisplay.Size;
 				mainDisplay.Size																		= newMetrics.Cast<uint32_t>();
