@@ -390,6 +390,9 @@
     <ClInclude Include="gpk_voxel_geometry.h">
       <Filter>voxel</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_complus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
