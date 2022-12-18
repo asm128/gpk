@@ -41,23 +41,21 @@ namespace gpk
 		inline constexpr	TRef*								get									()													const	noexcept	{ return Reference;	}
 
 		template<typename _tNCOOther>
-		inline				_tNCOOther*							as									(_tNCOOther** other)										noexcept	{ 
+		inline				::gpk::error_t						as									(_tNCOOther** other)										noexcept	{ 
 			_tNCOOther*													old									= *other;
 			*other													= {};
-			if(Reference)
-				Reference->QueryInterface(__uuidof(_tNCOOther), (void**)other);
+			HRESULT														hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)other) : 0;
 			if(old)
 				old->Release();
-			return *other;
+			return hr;
 		}
 
 		template<typename _tNCOOther>
-		inline				_tNCOOther*							as									(::gpk::ptr_com<_tNCOOther>& other)							noexcept	{ 
+		inline				::gpk::error_t						as									(::gpk::ptr_com<_tNCOOther>& other)							noexcept	{ 
 			::gpk::ptr_com<_tNCOOther>									old									= other;
 			other													= {};
-			if(Reference)
-				Reference->QueryInterface(__uuidof(_tNCOOther), (void**)&other);
-			return other.get();
+			HRESULT														hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)&other) : 0;
+			return hr;
 		}
 	};
 
