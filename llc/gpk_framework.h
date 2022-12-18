@@ -47,7 +47,7 @@ namespace gpk
 
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};
-							::gpk::SWindow											MainDisplay				= {};
+							::gpk::SWindow											RootWindow				= {};
 							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>	BackBuffer				= {};
 							::gpk::ptr_obj<::gpk::SInput>							Input					= {};
 							::gpk::STimer											Timer					= {};
@@ -63,7 +63,7 @@ namespace gpk
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
 		{
 			Input.create();
-			MainDisplay.Input = Input;
+			RootWindow.Input = Input;
 			GUI.create();
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
 				rw_if(errored(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());

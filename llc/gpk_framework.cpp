@@ -16,9 +16,9 @@
 
 static				::gpk::error_t														updateDPI									(::gpk::SFramework& framework)													{
 #if defined(GPK_WINDOWS)
-	if(0 != framework.MainDisplay.PlatformDetail.WindowHandle) {
+	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
 		RECT																						rcWindow									= {};
-		::GetWindowRect(framework.MainDisplay.PlatformDetail.WindowHandle, &rcWindow);
+		::GetWindowRect(framework.RootWindow.PlatformDetail.WindowHandle, &rcWindow);
 		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
 		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
@@ -70,7 +70,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
-	::gpk::SWindow								& mainWindow								= framework.MainDisplay;
+	::gpk::SWindow								& mainWindow								= framework.RootWindow;
 #if defined(GPK_XCB)
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
 												& guiRenderTarget			= framework.BackBuffer;
@@ -92,7 +92,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		image->base						= 0;
 		xcb_image_destroy(image);
 		xcb_flush(mainWindow.PlatformDetail.Connection);
-		framework.MainDisplay.Repaint	= false;
+		framework.RootWindow.Repaint	= false;
 	}
 	while (xcb_generic_event_t * ev = xcb_poll_for_event(mainWindow.PlatformDetail.Connection)) {
 		switch (ev->response_type & ~0x80) {
@@ -102,10 +102,10 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 			mainWindow.Repaint	= true;
 			break;
 		}
-		case XCB_KEY_PRESS		: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Down"	, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 1; break;	}
-		case XCB_KEY_RELEASE	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Up"		, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 0; break;	}
-		case XCB_BUTTON_PRESS	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Down"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 1; break;	}
-		case XCB_BUTTON_RELEASE	: { framework.MainDisplay.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Up"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 0; break;	}
+		case XCB_KEY_PRESS		: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Down"	, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 1; break;	}
+		case XCB_KEY_RELEASE	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Key %i Up"		, iev->detail); input.KeyboardCurrent.KeyState		[iev->detail]		= 0; break;	}
+		case XCB_BUTTON_PRESS	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Down"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 1; break;	}
+		case XCB_BUTTON_RELEASE	: { framework.RootWindow.Repaint = true; const xcb_key_press_event_t * iev = (xcb_key_press_event_t *)ev; info_printf("Button %i Up"	, iev->detail); input.MouseCurrent   .ButtonState	[iev->detail - 1]	= 0; break;	}
 		case XCB_MOTION_NOTIFY	: {
 			xcb_motion_notify_event_t			* mev				= (xcb_motion_notify_event_t*)ev;
 			int32_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
@@ -115,7 +115,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 			input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			//info_printf("Mouse position: %i, %i", input.MouseCurrent.Position.x, input.MouseCurrent.Position.y);
-			framework.MainDisplay.Repaint	= true;
+			framework.RootWindow.Repaint	= true;
 			break;
 		}
 		}
@@ -155,7 +155,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 				else
 					gui.Zoom.ZoomLevel																		*= .5;
 			}
-			::gpk::guiUpdateMetrics(gui, framework.MainDisplay.Size, true);
+			::gpk::guiUpdateMetrics(gui, framework.RootWindow.Size, true);
 		}
 	}
 	return ::updateDPI(framework);
