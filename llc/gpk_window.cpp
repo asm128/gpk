@@ -1,25 +1,25 @@
 #include "gpk_window.h"
 
-::gpk::error_t							gpk::fullScreenExit				(::gpk::SWindow & framework) {
-	if(false == framework.FullScreen)
+::gpk::error_t							gpk::fullScreenExit				(::gpk::SWindow & window) {
+	if(false == window.FullScreen)
 		return 0;
 
-	framework.Size							= framework.WindowedWindowRect.Dimensions().Cast<uint32_t>();
+	window.Size								= window.WindowedWindowRect.Dimensions().Cast<uint32_t>();
 
-	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
+	HWND										windowHandle					= window.PlatformDetail.WindowHandle;
 	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
-	SetWindowPos(windowHandle, NULL, framework.WindowedWindowRect.Left, framework.WindowedWindowRect.Top
-		, framework.WindowedWindowRect.Right  - framework.WindowedWindowRect.Left
-		, framework.WindowedWindowRect.Bottom - framework.WindowedWindowRect.Top
+	SetWindowPos(windowHandle, NULL, window.WindowedWindowRect.Left, window.WindowedWindowRect.Top
+		, window.WindowedWindowRect.Right  - window.WindowedWindowRect.Left
+		, window.WindowedWindowRect.Bottom - window.WindowedWindowRect.Top
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 
-	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_RESIZE, };
+	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>));
-	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
-	framework.EventQueue.push_back(newEvent);
-	framework.FullScreen					= false;
+	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= window.Size.Cast<uint16_t>();
+	window.EventQueue[window.EventQueue.push_back({})] = newEvent;
+	window.FullScreen					= false;
 	return 0;
 }
 
@@ -46,7 +46,7 @@
 		, uint32_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 
-	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_RESIZE, };
+	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>));
 	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
 	framework.EventQueue.push_back(newEvent);

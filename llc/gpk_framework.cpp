@@ -213,9 +213,9 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 	//
 	//	break;// Joystick JOYSTICKID2 changed position in the z-direction.
 	//}
-	case WM_SHOWWINDOW		: newEvent.Type = ::gpk::SYSEVENT_SHOW				; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
+	case WM_SHOWWINDOW		: newEvent.Type = ::gpk::SYSEVENT_WINDOW_SHOW		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; info_printf("%s", "ShowWindow"); break;
 	case WM_CHAR			: newEvent.Type = ::gpk::SYSEVENT_CHAR				; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; return 0;
-	case WM_CLOSE			: newEvent.Type = ::gpk::SYSEVENT_CLOSE				; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); ::DestroyWindow(hWnd); return 0;
+	case WM_CLOSE			: newEvent.Type = ::gpk::SYSEVENT_WINDOW_CLOSE		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); ::DestroyWindow(hWnd); return 0;
 	case WM_KEYDOWN			: newEvent.Type = ::gpk::SYSEVENT_KEY_DOWN			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
 	case WM_KEYUP			: newEvent.Type = ::gpk::SYSEVENT_KEY_UP			; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 0; mainDisplay.Repaint = true; return 0;
 	case WM_SYSKEYDOWN		: newEvent.Type = ::gpk::SYSEVENT_SYSKEY_DOWN		; newEvent.Data.resize(sizeof(WPARAM)); *(WPARAM*)&newEvent.Data[0] = wParam; mainDisplay.EventQueue.push_back(newEvent); if(wParam > ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[wParam] = 1; mainDisplay.Repaint = true; return 0;
@@ -264,7 +264,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 			RECT													rect			= {};
 			GetClientRect(hWnd, &rect);
 			::gpk::SCoord2<uint16_t>								newMetrics		= ::gpk::SCoord2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.Cast<uint16_t>();
-			newEvent.Type										= ::gpk::SYSEVENT_RESIZE; 
+			newEvent.Type										= ::gpk::SYSEVENT_WINDOW_RESIZE; 
 			newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>)); 
 			*(::gpk::SCoord2<uint16_t>*)&newEvent.Data[0]		= newMetrics;
 			mainDisplay.EventQueue.push_back(newEvent); 
@@ -272,9 +272,9 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 	}
 	case WM_ACTIVATE: {
 		switch(wParam) {
-		case WA_ACTIVE		: newEvent.Type = ::gpk::SYSEVENT_ACTIVATE  ; /*XInputEnable(1); */break; //Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
-		case WA_CLICKACTIVE	: newEvent.Type = ::gpk::SYSEVENT_ACTIVATE  ; /*XInputEnable(1); */break;  // Activated by a mouse click.
-		case WA_INACTIVE	: newEvent.Type = ::gpk::SYSEVENT_DEACTIVATE; /*XInputEnable(0); */break; 
+		case WA_ACTIVE		: newEvent.Type = ::gpk::SYSEVENT_WINDOW_ACTIVATE  ; /*XInputEnable(1); */break; //Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+		case WA_CLICKACTIVE	: newEvent.Type = ::gpk::SYSEVENT_WINDOW_ACTIVATE  ; /*XInputEnable(1); */break;  // Activated by a mouse click.
+		case WA_INACTIVE	: newEvent.Type = ::gpk::SYSEVENT_WINDOW_DEACTIVATE; /*XInputEnable(0); */break; 
 		}
 		mainDisplay.EventQueue.push_back(newEvent); 
 		break;
@@ -298,7 +298,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
 #endif
-				newEvent.Type										= ::gpk::SYSEVENT_RESIZE; 
+				newEvent.Type										= ::gpk::SYSEVENT_WINDOW_RESIZE; 
 				newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>)); 
 				*(::gpk::SCoord2<uint16_t>*)&newEvent.Data[0]		= newMetrics;
 				mainDisplay.EventQueue.push_back(newEvent); 
