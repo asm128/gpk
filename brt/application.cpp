@@ -162,7 +162,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
 		::gpk::mutex_guard														lock						(app.LockRender);
-		app.Framework.BackBuffer									= app.Offscreen;
+		app.Framework.RootWindow.BackBuffer									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");

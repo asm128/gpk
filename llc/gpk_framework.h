@@ -42,13 +42,9 @@ namespace gpk
 	};
 
 	struct SFramework {
-		typedef				::gpk::SColorBGRA										TTexel;
-		typedef				::gpk::SRenderTarget<TTexel, uint32_t>					TOffscreen;
-
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};
 							::gpk::SWindow											RootWindow				= {};
-							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>	BackBuffer				= {};
 							::gpk::ptr_obj<::gpk::SInput>							Input					= {};
 							::gpk::STimer											Timer					= {};
 							::gpk::SFrameInfo										FrameInfo				= {};
