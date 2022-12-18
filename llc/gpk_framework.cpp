@@ -264,7 +264,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 			RECT													rect			= {};
 			GetClientRect(hWnd, &rect);
 			::gpk::SCoord2<uint16_t>								newMetrics		= ::gpk::SCoord2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.Cast<uint16_t>();
-			newEvent.Type										= ::gpk::SYSEVENT_WINDOW_RESIZE; 
+			newEvent.Type										= ::gpk::SYSEVENT_WINDOW_CREATE;
 			newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>)); 
 			*(::gpk::SCoord2<uint16_t>*)&newEvent.Data[0]		= newMetrics;
 			mainDisplay.EventQueue.push_back(newEvent); 
