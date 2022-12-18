@@ -25,7 +25,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 #if defined(GPK_WINDOWS7_COMPAT)
 		if((framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
+			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 #else
@@ -33,7 +33,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
 		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
+			::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 #endif
@@ -73,7 +73,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	::gpk::SWindow								& mainWindow								= framework.MainDisplay;
 #if defined(GPK_XCB)
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
-												& guiRenderTarget			= framework.MainDisplayOffscreen;
+												& guiRenderTarget			= framework.BackBuffer;
 	if(mainWindow.Repaint) {
 		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
 		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
@@ -127,7 +127,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
 	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
 	rvi_if(1, 1 == updateResult, "%s", "Application exiting because the WM_QUIT message was processed.");
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.MainDisplayOffscreen;
+	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.BackBuffer;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())

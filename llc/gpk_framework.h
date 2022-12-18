@@ -48,7 +48,7 @@ namespace gpk
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};
 							::gpk::SWindow											MainDisplay				= {};
-							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>	MainDisplayOffscreen	= {};
+							::gpk::ptr_obj<::gpk::SRenderTarget<TTexel, uint32_t>>	BackBuffer				= {};
 							::gpk::ptr_obj<::gpk::SInput>							Input					= {};
 							::gpk::STimer											Timer					= {};
 							::gpk::SFrameInfo										FrameInfo				= {};

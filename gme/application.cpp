@@ -56,7 +56,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
 		::gpk::mutex_guard														lock						(app.LockRender);
-		app.Framework.MainDisplayOffscreen									= app.Offscreen;
+		app.Framework.BackBuffer									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
