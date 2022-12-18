@@ -21,12 +21,17 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterSource		, 11);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterDestination	, 12);
 
+	GDEFINE_ENUM_TYPE(ELEMENT_FREQUENCY, uint8_t);
+	GDEFINE_ENUM_VALUE(ELEMENT_FREQUENCY, Element	,  0);
+	GDEFINE_ENUM_VALUE(ELEMENT_FREQUENCY, Instance	,  1);
+
 #pragma pack(push, 1)
 	struct SRenderBufferDescription {
-		::gpk::DATA_TYPE							Format			= {};
-		BUFFER_USAGE								Usage			= {};
-		uint8_t										Stride			= {};
-		uint16_t									Pitch			= {};
+		::gpk::DATA_TYPE							Format				= {};
+		BUFFER_USAGE								Usage				= {};
+		uint8_t										PitchStride			= {};
+		uint16_t									PitchRow			: 15;
+		uint16_t									Frequency			: 1;
 	};
 #pragma pack(pop)
 
