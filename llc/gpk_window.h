@@ -20,7 +20,8 @@ namespace gpk
 
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
-	static constexpr		const TCHAR								DefaultRootWindowClassName	[256]			= TEXT("GPK_WINDOW");
+		typedef				::gpk::SColorBGRA						TOSWindowNativeTexel;
+		static constexpr	const TCHAR								DefaultRootWindowClassName	[256]			= TEXT("GPK_WINDOW");
 
 							::HWND									WindowHandle								= {};
 							::WNDCLASSEX							WindowClass									= {sizeof(::WNDCLASSEX), CS_DBLCLKS, 0, 0, 0, 0, 0, 0, 0, 0, DefaultRootWindowClassName, 0};
@@ -28,7 +29,7 @@ namespace gpk
 							::BITMAPINFO							BitmapInfo									= {sizeof(::BITMAPINFO)};
 							::HDC									IntermediateDeviceContext					= 0;    // <- note, we're creating, so it needs to be destroyed
 							::HBITMAP								IntermediateBitmap							= 0;
-							uint32_t								* PixelBits									= 0;
+							::gpk::view_array<TOSWindowNativeTexel>	* PixelBits									= 0;
 
 																	~SWindowPlatformDetail						()							{
 			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);
@@ -36,6 +37,7 @@ namespace gpk
 			if(WindowHandle					) ::DestroyWindow	(WindowHandle);
 		}
 #elif defined(GPK_XCB)
+		typedef				::gpk::SColorBGRA						TOSWindowNativeTexel;
 							xcb_connection_t						* Connection								= {};
 							xcb_gcontext_t							GC											= {};
 							xcb_drawable_t							IdDrawable									= {};
