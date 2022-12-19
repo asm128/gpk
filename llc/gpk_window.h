@@ -29,7 +29,7 @@ namespace gpk
 							::BITMAPINFO							BitmapInfo									= {sizeof(::BITMAPINFO)};
 							::HDC									IntermediateDeviceContext					= 0;    // <- note, we're creating, so it needs to be destroyed
 							::HBITMAP								IntermediateBitmap							= 0;
-							::gpk::view_array<TOSWindowNativeTexel>	* PixelBits									= 0;
+							::gpk::view_array<TOSWindowNativeTexel>	PixelBits									= {};
 
 																	~SWindowPlatformDetail						()							{
 			if(IntermediateBitmap			) ::DeleteObject	(IntermediateBitmap			);

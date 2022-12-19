@@ -117,8 +117,10 @@
 		if(offscreenDetail.IntermediateDeviceContext)
 			DeleteDC(offscreenDetail.IntermediateDeviceContext);
 
+		::gpk::SWindowPlatformDetail::TOSWindowNativeTexel		* pixelBits						= 0;
 		offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
-		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &offscreenDetail.PixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
 	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::SColorBGRA);
 	const uint32_t lastLine		= metricsSource.y - 1;
