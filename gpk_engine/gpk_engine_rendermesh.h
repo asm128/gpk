@@ -37,7 +37,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	struct SRenderMesh {
+	struct SGeometryMesh {
 		::gpk::SMeshDescription						Desc;
 		::gpk::array_pod<uint32_t>					GeometryBuffers;
 		::gpk::array_pod<uint32_t>					ConstantBuffers;

@@ -27,7 +27,7 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SRenderBufferDescription {
-		::gpk::DATA_TYPE							Format				= {};
+		::gpk::SDataTypeID							Format				= {};
 		BUFFER_USAGE								Usage				= {};
 		uint8_t										PitchStride			= {};
 		uint16_t									PitchRow			: 15;

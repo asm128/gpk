@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE(SYSEVENT, uint16_t);
+	GDEFINE_ENUM_TYPE(SYSEVENT, uint32_t);
 	GDEFINE_ENUM_VALUE(SYSEVENT, NOOP				,  0);
 	GDEFINE_ENUM_VALUE(SYSEVENT, WINDOW_DESTROY		,  1);
 	GDEFINE_ENUM_VALUE(SYSEVENT, WINDOW_CLOSE		,  2);
@@ -37,7 +37,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSEVENT, JOY_MOVE			, 28);
 
 	struct SSysEvent {
-		::gpk::SYSEVENT				Type;
+		uint32_t					Type	: 24;
+		//uint32_t					Handled : 1;
 		::gpk::array_pod<uint8_t>	Data;
 	};
 

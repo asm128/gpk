@@ -79,16 +79,16 @@ namespace gpk
 							uint32_t					IsSigned		:  1	;
 
 		inline constexpr	uint32_t					ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
-		inline constexpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * ElementCount : SizeInBits * ElementCount / 8 + one_if( SizeInBits * ElementCount % 8 ); }
+		inline constexpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
 		inline constexpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
 		inline constexpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
 		inline constexpr	bool						IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
 
 		inline constexpr								SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
-			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId))
+			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId) - 1)
 			, ElementPad	(GTYPEID_ELEMENTPAD		(typeId))
-			, ElementCount	(GTYPEID_ELEMENTCOUNT	(typeId))
+			, ElementCount	(GTYPEID_ELEMENTCOUNT	(typeId) - 1)
 			, IsBigEndian	(GTYPEID_ISBIGENDIAN	(typeId))
 			, IsFloat		(GTYPEID_ISFLOAT		(typeId))
 			, IsNorm		(GTYPEID_ISNORMALIZED	(typeId))
@@ -104,9 +104,9 @@ namespace gpk
 			, bool		elementPad		= false
 			, bool		isBigEndian		= false
 			)																								noexcept
-			: SizeInBits	(sizeInBits		-1)
+			: SizeInBits	(sizeInBits		- 1)
 			, ElementPad	(elementPad		? 1 : 0)
-			, ElementCount	(elementCount	-1)
+			, ElementCount	(elementCount	- 1)
 			, IsBigEndian	(isBigEndian	? 1 : 0)
 			, IsFloat		(isFloat		? 1 : 0)
 			, IsNorm		(isNorm			? 1 : 0)

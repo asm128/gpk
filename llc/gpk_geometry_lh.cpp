@@ -464,16 +464,18 @@ int													gpk::geometryBuildTender	(SGeometryQuads & geometry, uint32_t st
 int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::SCoord3<float> & gridCenter)	{
 	::gpk::SCoord2<float>									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
 	uint32_t												vertexOffset				= geometry.Positions.size();
-	for(uint32_t y = 0; y < stacks + 1; ++y)
-	for(uint32_t x = 0; x < slices + 1; ++x)  {
-		::gpk::SCoord2<float>									texcoord				= {y * texCoordUnits.y, x * texCoordUnits.x};
-		geometry.TextureCoords.push_back(texcoord);
-
-		::gpk::SCoord3<double>									coord 				= {sin(::gpk::math_pi * x / slices) * cos(::gpk::math_2pi * y / stacks), cos(::gpk::math_pi * x / slices), sin(::gpk::math_pi * x / slices) * sin(::gpk::math_2pi * y / stacks)};
-		geometry.Positions	.push_back((coord * radius).Cast<float>() - gridCenter);
-		geometry.Normals	.push_back(coord.Normalize().Cast<float>());
+	for(uint32_t y = 0; y < stacks + 1; ++y) {
+		const double											currentY					= ::gpk::math_pi * y / slices;
+		const double											currentRadius				= sin(currentY);
+		for(uint32_t x = 0; x < slices + 1; ++x)  {
+			::gpk::SCoord2<float>									texcoord				= {x * texCoordUnits.x, y * texCoordUnits.y};
+			geometry.TextureCoords.push_back(texcoord);
+			const double											currentX				= ::gpk::math_2pi * x / stacks;
+			::gpk::SCoord3<double>									coord 					= {currentRadius * cos(currentX), cos(currentY), currentRadius * sin(currentX)};
+			geometry.Positions	.push_back((coord * radius).Cast<float>() - gridCenter);
+			geometry.Normals	.push_back(coord.Normalize().Cast<float>());
+		}
 	}
-
 	for(uint32_t y = 0; y < stacks; ++y) {
 		for(uint32_t z = 0; z < slices; ++z) {
 			uint32_t												indices		[4]				= {vertexOffset + 0, vertexOffset + 1, (vertexOffset + slices + 1), (vertexOffset + slices + 2)};

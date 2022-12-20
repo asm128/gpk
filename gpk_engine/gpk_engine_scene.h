@@ -55,7 +55,7 @@ namespace gpk
 	typedef	::gpk::SLinearMap<::gpk::SSkin>					SSkinManager;
 	typedef	::gpk::SLinearMap<::gpk::SRenderBuffer>			SRenderBufferManager;
 	typedef	::gpk::SLinearMap<::gpk::SSurface>				SSurfaceManager;
-	typedef	::gpk::SLinearMap<::gpk::SRenderMesh>			SMeshManager;
+	typedef	::gpk::SLinearMap<::gpk::SGeometryMesh>			SMeshManager;
 	typedef	::gpk::SLinearMap<::std::function<TFuncEffect>>	SShaderManager;
 
 	struct SEngineGraphics {

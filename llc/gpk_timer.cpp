@@ -3,10 +3,13 @@
 #if defined(GPK_WINDOWS)
 #include <Windows.h>
 
+static constexpr double			MICROSECOND_SCALE											= 0.000001;
+
+
 void							gpk::STimer::Reset											()				noexcept				{
 	QueryPerformanceFrequency( ( ::LARGE_INTEGER* )&CountsPerSecond );
 	SecondsPerCount					= (1.0 / (CountsPerSecond));
-	MicrosecondsPerCount			= (1.0 / (CountsPerSecond / 1000000.0));
+	MicrosecondsPerCount			= (1.0 / (CountsPerSecond * MICROSECOND_SCALE));
 	QueryPerformanceCounter( ( ::LARGE_INTEGER* )&PrevTimeStamp );
 	LastTimeSeconds					= 0;
 	LastTimeMicroseconds			= 0;
@@ -14,8 +17,8 @@ void							gpk::STimer::Reset											()				noexcept				{
 
 void							gpk::STimer::Frame											()				noexcept				{
 	QueryPerformanceCounter( ( ::LARGE_INTEGER* ) &CurrentTimeStamp );
-	LastTimeSeconds					=  (double)	(( CurrentTimeStamp - PrevTimeStamp ) * SecondsPerCount);
-	LastTimeMicroseconds			=  uint64_t	(( CurrentTimeStamp - PrevTimeStamp ) / (CountsPerSecond / 1000000.0));
+	LastTimeSeconds					= (CurrentTimeStamp - PrevTimeStamp) * SecondsPerCount;
+	LastTimeMicroseconds			= uint64_t((CurrentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
 	PrevTimeStamp					= CurrentTimeStamp;
 }
 

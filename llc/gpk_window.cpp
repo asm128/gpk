@@ -19,7 +19,7 @@
 	newEvent.Data.resize(sizeof(::gpk::SCoord2<uint16_t>));
 	(*(::gpk::SCoord2<uint16_t>*)newEvent.Data.begin())	= window.Size.Cast<uint16_t>();
 	window.EventQueue[window.EventQueue.push_back({})] = newEvent;
-	window.FullScreen					= false;
+	window.FullScreen						= false;
 	return 0;
 }
 

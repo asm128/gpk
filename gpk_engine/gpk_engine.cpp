@@ -124,7 +124,7 @@ int												gpk::updateEntityTransforms
 
 	uint32_t							iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Box"};
-	::gpk::ptr_obj<::gpk::SRenderMesh>	& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::ptr_obj<::gpk::SGeometryMesh>	& mesh					= Scene->Graphics->Meshes[iMesh];
 
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -196,7 +196,7 @@ int												gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateSphere			()	{ 
 	SGeometryIndexedTriangles				geometry;
-	::gpk::geometryBuildSphere(geometry, 24, 32, .5f, {});
+	::gpk::geometryBuildSphere(geometry, 16, 16, 1, {});
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"Sphere"};
@@ -241,7 +241,7 @@ int												gpk::updateEntityTransforms
 	uint32_t									iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
 
 	uint32_t									iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::ptr_obj<::gpk::SRenderMesh>			& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::ptr_obj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Sphere"};
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -337,7 +337,7 @@ int												gpk::updateEntityTransforms
 	uint32_t									iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
 
 	uint32_t									iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::ptr_obj<::gpk::SRenderMesh>			& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::ptr_obj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Sphere"};
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
