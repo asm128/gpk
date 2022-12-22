@@ -173,7 +173,6 @@
   <ItemGroup>
     <ClInclude Include="gpk_engine.h" />
     <ClInclude Include="gpk_engine_container.h" />
-    <ClInclude Include="gpk_engine_d3d_shader.h" />
     <ClInclude Include="gpk_engine_entity.h" />
     <ClInclude Include="gpk_engine_renderbuffer.h" />
     <ClInclude Include="gpk_engine_rendercolor.h" />
@@ -185,7 +184,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp" />
-    <ClCompile Include="gpk_engine_d3d_shader.cpp" />
     <ClCompile Include="gpk_engine_scene.cpp" />
     <ClCompile Include="gpk_engine_shader.cpp" />
   </ItemGroup>
