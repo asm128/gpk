@@ -33,6 +33,7 @@ namespace gpk
 		::gpk::SVSCache							CacheVertexShader		= {};
 	};
 	
+#pragma pack(push, 1)
 	struct SEngineSceneConstants {
 		::gpk::SMatrix4<float>					View					= {}; 
 		::gpk::SMatrix4<float>					Perspective				= {}; 
@@ -40,11 +41,17 @@ namespace gpk
 		::gpk::SMatrix4<float>					VP						= {}; 
 		::gpk::SMatrix4<float>					VPS						= {}; 
 		::gpk::SCoord3<float>					CameraPosition			= {}; 
+		float a = 0;
 		::gpk::SCoord3<float>					CameraFront				= {}; 
+		float b = 0;
 		::gpk::SCoord3<float>					LightPosition			= {}; 
+		float c = 0;
 		::gpk::SCoord3<float>					LightDirection			= {}; 
+		float d = 0;
 		::gpk::SNearFar							NearFar 				= {.0001f, 10.0f}; 
+		::gpk::SNearFar							Padding					= {.0001f, 10.0f}; 
 	};
+#pragma pack(pop)
 
 	struct SEngineScene;
 
