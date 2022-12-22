@@ -29,44 +29,44 @@ namespace gpk
 	};
 
 	struct SEngineRenderCache {
-		::gpk::SVSOutput						OutputVertexShader		= {};
-		::gpk::SVSCache							CacheVertexShader		= {};
+		::gpk::SVSOutput							OutputVertexShader		= {};
+		::gpk::SVSCache								CacheVertexShader		= {};
 	};
 	
 #pragma pack(push, 1)
 	struct SEngineSceneConstants {
-		::gpk::SMatrix4<float>					View					= {}; 
-		::gpk::SMatrix4<float>					Perspective				= {}; 
-		::gpk::SMatrix4<float>					Screen					= {}; 
-		::gpk::SMatrix4<float>					VP						= {}; 
-		::gpk::SMatrix4<float>					VPS						= {}; 
-		::gpk::SCoord3<float>					CameraPosition			= {}; 
+		::gpk::SMatrix4<float>						View					= {}; 
+		::gpk::SMatrix4<float>						Perspective				= {}; 
+		::gpk::SMatrix4<float>						Screen					= {}; 
+		::gpk::SMatrix4<float>						VP						= {}; 
+		::gpk::SMatrix4<float>						VPS						= {}; 
+		::gpk::SCoord3<float>						CameraPosition			= {}; 
 		float a = 0;
-		::gpk::SCoord3<float>					CameraFront				= {}; 
+		::gpk::SCoord3<float>						CameraFront				= {}; 
 		float b = 0;
-		::gpk::SCoord3<float>					LightPosition			= {}; 
+		::gpk::SCoord3<float>						LightPosition			= {}; 
 		float c = 0;
-		::gpk::SCoord3<float>					LightDirection			= {}; 
+		::gpk::SCoord3<float>						LightDirection			= {}; 
 		float d = 0;
-		::gpk::SNearFar							NearFar 				= {.0001f, 10.0f}; 
-		::gpk::SNearFar							Padding					= {.0001f, 10.0f}; 
+		::gpk::SNearFar								NearFar 				= {.0001f, 10.0f}; 
+		::gpk::SNearFar								Padding					= {.0001f, 10.0f}; 
 	};
 #pragma pack(pop)
 
 	struct SEngineScene;
 
-	typedef int32_t							(TFuncEffect)
-		( ::gpk::view_grid<::gpk::SColorBGRA>	backBufferColors
-		, ::gpk::view_grid<uint32_t>			backBufferDepth
-		, ::gpk::SEngineRenderCache				& renderCache
-		, const ::gpk::SEngineScene				& scene
-		, const ::gpk::SEngineSceneConstants	& constants
-		, int32_t								iRenderNode
+	typedef int32_t								(TFuncEffect)
+		( ::gpk::view_grid<::gpk::SColorBGRA>		backBufferColors
+		, ::gpk::view_grid<uint32_t>				backBufferDepth
+		, ::gpk::SEngineRenderCache					& renderCache
+		, const ::gpk::SEngineScene					& scene
+		, const ::gpk::SEngineSceneConstants		& constants
+		, int32_t									iRenderNode
 		);
 
 	struct SRenderMaterial {
-		::gpk::SRenderColor						Color;
-		float									SpecularPower;
+		::gpk::SRenderColor							Color;
+		float										SpecularPower;
 	};
 
 	struct SPSIn {
@@ -84,35 +84,35 @@ namespace gpk
 		);
 
 	struct SSkin {
-		::gpk::SRenderMaterial					Material;
-		::gpk::array_pod<uint32_t>				Textures;
+		::gpk::SRenderMaterial						Material;
+		::gpk::array_pod<uint32_t>					Textures;
 	};
 
 	typedef	::gpk::SLinearMap<::gpk::SSkin>							SSkinManager;
 	typedef	::gpk::SLinearMap<::std::function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
-		::gpk::SRenderBufferManager				Buffers					= {};
-		::gpk::SSurfaceManager					Surfaces				= {};
-		::gpk::SMeshManager						Meshes					= {};
-		::gpk::SSkinManager						Skins					= {};
-		::gpk::SShaderManager					Shaders					= {};
+		::gpk::SRenderBufferManager					Buffers					= {};
+		::gpk::SSurfaceManager						Surfaces				= {};
+		::gpk::SMeshManager							Meshes					= {};
+		::gpk::SSkinManager							Skins					= {};
+		::gpk::SShaderManager						Shaders					= {};
 
-		::gpk::SRasterFontManager				Fonts					= {};
+		::gpk::SRasterFontManager					Fonts					= {};
 	};
 
 	struct SEngineScene {
-		::gpk::ptr_obj<::gpk::SEngineGraphics>	Graphics				= {};
-		::gpk::SRenderNodeManager				ManagedRenderNodes		= {};
-		::gpk::SEngineRenderCache				RenderCache				= {};
+		::gpk::ptr_obj<::gpk::SEngineGraphics>		Graphics				= {};
+		::gpk::SRenderNodeManager					ManagedRenderNodes		= {};
+		::gpk::SEngineRenderCache					RenderCache				= {};
 	};
 
-	::gpk::error_t							drawScene
-		( ::gpk::view_grid<::gpk::SColorBGRA>	& backBufferColors
-		, ::gpk::view_grid<uint32_t>			& backBufferDepth
-		, ::gpk::SEngineRenderCache				& renderCache
-		, const ::gpk::SEngineScene				& scene
-		, const ::gpk::SEngineSceneConstants	& constants
+	::gpk::error_t								drawScene
+		( ::gpk::view_grid<::gpk::SColorBGRA>		& backBufferColors
+		, ::gpk::view_grid<uint32_t>				& backBufferDepth
+		, ::gpk::SEngineRenderCache					& renderCache
+		, const ::gpk::SEngineScene					& scene
+		, const ::gpk::SEngineSceneConstants		& constants
 		);
 
 } // namespace
