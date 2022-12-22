@@ -43,6 +43,7 @@
     <ClInclude Include="gpk_complus.h" />
     <ClInclude Include="gpk_component_scene.h" />
     <ClInclude Include="gpk_coord.h" />
+    <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
     <ClInclude Include="gpk_deflate.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_component_scene.cpp" />
     <ClCompile Include="gpk_component_scene_draw.cpp" />
+    <ClCompile Include="gpk_d3d.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
