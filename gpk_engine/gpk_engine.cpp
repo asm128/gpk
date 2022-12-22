@@ -196,7 +196,7 @@ int												gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateSphere			()	{ 
 	SGeometryIndexedTriangles				geometry;
-	::gpk::geometryBuildSphere(geometry, 16, 16, 1, {});
+	::gpk::geometryBuildSphere(geometry, 16, 16, .5f, {});
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"Sphere"};

@@ -48,21 +48,21 @@ namespace gpk
 		::gpk::SVirtualEntityManager		ManagedEntities		;
 		::gpk::SRigidBodyIntegrator			Integrator			;
 
-		::gpk::error_t						Clone				(uint32_t iEntitySource, bool cloneSkin, bool cloneSurfaces) {
-			const ::gpk::SVirtualEntity				entitySource		= ManagedEntities.Entities[iEntitySource];
-			int32_t									iEntityNew			= ManagedEntities.Create();
-			::gpk::SVirtualEntity					& entityNew			= ManagedEntities.Entities[iEntityNew];
+		::gpk::error_t						Clone							(uint32_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+			const ::gpk::SVirtualEntity				entitySource					= ManagedEntities.Entities[iEntitySource];
+			int32_t									iEntityNew						= ManagedEntities.Create();
+			::gpk::SVirtualEntity					& entityNew						= ManagedEntities.Entities[iEntityNew];
 			entityNew.RenderNode				= Scene->ManagedRenderNodes	.Clone(entitySource.RenderNode);
 			entityNew.RigidBody					= ((uint32_t)entitySource.RigidBody < Integrator.BodyFlags.size()) ? Integrator.Clone(entitySource.RigidBody) : (uint32_t)-1;
 			entityNew.Parent					= entitySource.Parent;
 
-			uint32_t								idSkinSource		= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin;
+			uint32_t								idSkinSource					= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin;
 			if(cloneSkin && idSkinSource < Scene->Graphics->Skins.size()) {
-				uint32_t								idSkin						= Scene->Graphics->Skins.Clone(idSkinSource);
+				uint32_t								idSkin							= Scene->Graphics->Skins.Clone(idSkinSource);
 				Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin	= idSkin;
 				if(cloneSurfaces) {
 					if(Scene->Graphics->Skins[idSkin]) {
-						::gpk::SSkin							& newSkin					= *Scene->Graphics->Skins[idSkin];
+						::gpk::SSkin							& newSkin						= *Scene->Graphics->Skins[idSkin];
 						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
 							newSkin.Textures[iTexture]			= Scene->Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
 						}
@@ -74,7 +74,7 @@ namespace gpk
 			if(childrenSource && childrenSource->size()) {
 				::gpk::ptr_obj<::gpk::array_pod<uint32_t>>			childrenNew		= ManagedEntities.Children[iEntityNew];
 				for(uint32_t iChild = 0; iChild < childrenSource->size(); ++iChild) {
-					uint32_t entityChild = Clone((*childrenSource)[iChild], cloneSkin, cloneSurfaces);
+					uint32_t											entityChild		= Clone((*childrenSource)[iChild], cloneSkin, cloneSurfaces, cloneShaders);
 					ManagedEntities.Entities[entityChild].Parent	= iEntityNew;
 					childrenNew->push_back(entityChild);
 				}

@@ -67,20 +67,6 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	struct SVSCache {
-		::gpk::array_pod<::gpk::STriangle<float>>	TriangleWeights			= {};
-		::gpk::array_pod<::gpk::SCoord2<int16_t>>	SolidPixelCoords		= {};
-		::gpk::array_pod<::gpk::SCoord3<float>>		WireframePixelCoords	= {};
-	};
-
-	struct SVSOutput {
-		::gpk::array_pod<::gpk::STriangle3<float>>	PositionsWorld			= {};
-		::gpk::array_pod<::gpk::STriangle3<float>>	PositionsScreen			= {};
-		::gpk::array_pod<::gpk::STriangle3<float>>	Normals					= {};
-		::gpk::array_pod<::gpk::STriangle3<float>>	NormalsScreen			= {};
-		::gpk::array_pod<::gpk::STriangle2<float>>	UVs						= {};
-	};
-
 	struct SRenderNodeManager {
 		::gpk::array_pod <::gpk::SRenderNode					>		RenderNodes			= {};
 		::gpk::array_pod <::gpk::SRenderNodeFlags				>		Flags				= {};
@@ -107,9 +93,9 @@ namespace gpk
 			Transforms			.push_back(::gpk::SRenderNodeTransforms							{Transforms		[iNode]});
 			BaseTransforms		.push_back(::gpk::SRenderNodeTransforms							{BaseTransforms	[iNode]});
 			Lights				.push_back(::gpk::ptr_obj<::gpk::array_pod<::gpk::SLight	>>	{Lights			[iNode]});
-			Cameras				.push_back(::gpk::ptr_obj<::gpk::array_pod<::gpk::SCamera	>>	{Cameras			[iNode]});
+			Cameras				.push_back(::gpk::ptr_obj<::gpk::array_pod<::gpk::SCamera	>>	{Cameras		[iNode]});
 			Flags				.push_back(::gpk::SRenderNodeFlags								{Flags			[iNode]});
-			return RenderNodes	.push_back(::gpk::SRenderNode									{RenderNodes				[iNode]});
+			return RenderNodes	.push_back(::gpk::SRenderNode									{RenderNodes	[iNode]});
 		}
 
 		::gpk::error_t											Delete		(uint32_t indexNode)	{

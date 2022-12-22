@@ -480,11 +480,11 @@ int													gpk::geometryBuildSphere	(SGeometryIndexedTriangles & geometry, 
 		for(uint32_t z = 0; z < slices; ++z) {
 			uint32_t												indices		[4]				= {vertexOffset + 0, vertexOffset + 1, (vertexOffset + slices + 1), (vertexOffset + slices + 2)};
 			geometry.PositionIndices.push_back(indices[0]);
-			geometry.PositionIndices.push_back(indices[2]);
-			geometry.PositionIndices.push_back(indices[1]);
 			geometry.PositionIndices.push_back(indices[1]);
 			geometry.PositionIndices.push_back(indices[2]);
+			geometry.PositionIndices.push_back(indices[1]);
 			geometry.PositionIndices.push_back(indices[3]);
+			geometry.PositionIndices.push_back(indices[2]);
 			++vertexOffset;
 		}
 		++vertexOffset;
