@@ -71,9 +71,9 @@ static	::gpk::error_t								drawBuffersWireframe
 	) {	// 
 	inVS												= {};
 	::transformTrianglesWireframe(inVS, indices, positions, normals, constants.Projection, worldTransform, constants.CameraFront);
-	const ::gpk::SCoord2<uint16_t>								offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
+	const ::gpk::SCoord2<uint16_t>							offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
 	for(uint32_t iTriangle = 0; iTriangle < inVS.PositionsScreen.size(); ++iTriangle) {
-		const ::gpk::STriangle3<float>								& triPositions				= inVS.PositionsScreen	[iTriangle];
+		const ::gpk::STriangle3<float>							& triPositions				= inVS.PositionsScreen	[iTriangle];
 		if(triPositions.CulledZ({0, 0xFFFFFF}))
 			continue;
 		if(triPositions.CulledX({0, (float)offscreenMetrics.x}))

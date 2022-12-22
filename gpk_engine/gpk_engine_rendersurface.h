@@ -1,5 +1,6 @@
 #include "gpk_color.h"
 #include "gpk_coord.h"
+#include "gpk_engine_container.h"
 
 #ifndef GPK_ENGINE_RENDERIMAGE_H
 #define GPK_ENGINE_RENDERIMAGE_H
@@ -21,6 +22,8 @@ namespace gpk
 		::gpk::SSurfaceDescription					Desc;
 		::gpk::array_pod<uint8_t>					Data;
 	};
+
+	typedef	::gpk::SLinearMap<::gpk::SSurface>				SSurfaceManager;
 } // namespace
 
 #endif

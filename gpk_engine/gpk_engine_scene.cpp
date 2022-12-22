@@ -28,7 +28,6 @@
 
 		if(renderNode.Shader >= scene.Graphics->Shaders.size()) 
 			::gpk::shaderWireframe(backBufferColors, backBufferDepth, renderCache, scene, constants, iRenderNode); 
-			//::the1::shaderBall(backBufferColors, backBufferDepth, renderCache, scene, constants, iRenderNode); 
 		else {
 			const ::std::function<TFuncEffect>				& fx					= *scene.Graphics->Shaders[renderNode.Shader];
 			fx(backBufferColors, backBufferDepth, renderCache, scene, constants, iRenderNode);
@@ -54,7 +53,7 @@
 		wireframePixelCoords.clear();
 		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<float>{{}, xyz[iVector]}, constants.Projection, wireframePixelCoords, backBufferDepth);
 		for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
-			::gpk::SCoord3<uint32_t>				coord		= wireframePixelCoords[iCoord].Cast<uint32_t>();
+			::gpk::SCoord3<uint32_t>						coord					= wireframePixelCoords[iCoord].Cast<uint32_t>();
 			backBufferColors[coord.y][coord.x]	= colorXYZ[iVector];
 		}
 	}

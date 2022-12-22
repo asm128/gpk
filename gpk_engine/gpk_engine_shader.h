@@ -2,8 +2,8 @@
 #include "gpk_engine_scene.h"
 #include "gpk_raster_lh.h"
 
-#ifndef GPK_ENGINE_SHADER_H
-#define GPK_ENGINE_SHADER_H
+#ifndef GPK_ENGINE_SHADER_FUNC_H
+#define GPK_ENGINE_SHADER_FUNC_H
 
 namespace gpk
 {
@@ -18,6 +18,7 @@ namespace gpk
 		, const ::gpk::SEngineSceneConstants	& constants
 		, int32_t								iRenderNode
 		);
+
 	::gpk::error_t				shaderHidden
 		( ::gpk::view_grid<::gpk::SColorBGRA>	backBufferColors
 		, ::gpk::view_grid<uint32_t>			backBufferDepth
@@ -28,13 +29,13 @@ namespace gpk
 		);
 
 	template<typename _tCoord>
-	static	::gpk::error_t						drawLine		(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, const ::gpk::SMatrix4<float> & mWVP, ::gpk::array_pod<::gpk::SCoord3<float>>& out_Points, ::gpk::view2d_uint32 depth) {
-		::gpk::SCoord3<_tCoord>							vA				= mWVP.Transform(line.A); 
-		::gpk::SCoord3<_tCoord>							vB				= mWVP.Transform(line.B);
+	static	::gpk::error_t		drawLine				(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, const ::gpk::SMatrix4<float> & mWVP, ::gpk::array_pod<::gpk::SCoord3<float>>& out_Points, ::gpk::view2d_uint32 depth) {
+		::gpk::SCoord3<_tCoord>			vA						= mWVP.Transform(line.A); 
+		::gpk::SCoord3<_tCoord>			vB						= mWVP.Transform(line.B);
 		return ::gpk::drawLine(targetMetrics, ::gpk::SLine3<_tCoord>{vA, vB}, out_Points, depth);
 	}
 
 }  // namespace
 
 
-#endif // GPK_ENGINE_SHADER_H
+#endif // GPK_ENGINE_SHADER_FUNC_H

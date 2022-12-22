@@ -83,8 +83,10 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncEffect> & shader) {
-			Scene->Graphics->Shaders[Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Shader].create(shader);
+		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncEffect> & shader, ::gpk::vcc name) {
+			const uint32_t							iShader				= Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Shader;
+			Scene->Graphics->Shaders[iShader].create(shader);
+			Scene->Graphics->Shaders.Names[iShader] = name;
 			return 0;
 		}
 		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::SCoord3<float> & scale) {

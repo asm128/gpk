@@ -1,5 +1,6 @@
 #include "gpk_datatype.h"
 #include "gpk_enum.h"
+#include "gpk_engine_container.h"
 
 #ifndef GPK_ENGINE_RENDERBUFFER_H
 #define GPK_ENGINE_RENDERBUFFER_H
@@ -51,6 +52,8 @@ namespace gpk
 			return 0;
 		}
 	};
+
+	typedef		::gpk::SLinearMap<::gpk::SRenderBuffer>		SRenderBufferManager;
 } // namespace
 
 #endif
