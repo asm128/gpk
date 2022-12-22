@@ -19,65 +19,22 @@
 	return lightFactor ? diffuserMaterial * (float)lightFactor : ::gpk::BLACK;
 }
 
-static	::gpk::error_t								drawBuffersWireframe
-	( ::gpk::view_grid<::gpk::SColorBGRA>					& backBufferColors
-	, ::gpk::view_grid<uint32_t>							& backBufferDepth
-	, ::gpk::SVSOutput										& inVS
-	, ::gpk::SVSCache										& cacheVS
-	, const ::gpk::SRenderMaterial							& material
-	) {	// 
-	const ::gpk::SCoord2<uint16_t>							offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
-	for(uint32_t iTriangle = 0; iTriangle < inVS.PositionsScreen.size(); ++iTriangle) {
-		const ::gpk::STriangle3<float>							& triPositions				= inVS.PositionsScreen	[iTriangle];
-		if(triPositions.CulledZ({0, 0xFFFFFF}))
-			continue;
-		if(triPositions.CulledX({0, (float)offscreenMetrics.x}))
-			continue;
-		if(triPositions.CulledY({0, (float)offscreenMetrics.y}))
-			continue;
-		//const ::gpk::STriangle3<float>								& triNormals				= inVS.Normals			[iTriangle];
-		cacheVS.WireframePixelCoords.clear();
-		::gpk::drawLine(offscreenMetrics, {triPositions.A, triPositions.B}, cacheVS.WireframePixelCoords, backBufferDepth);
-		::gpk::drawLine(offscreenMetrics, {triPositions.B, triPositions.C}, cacheVS.WireframePixelCoords, backBufferDepth);
-		::gpk::drawLine(offscreenMetrics, {triPositions.C, triPositions.A}, cacheVS.WireframePixelCoords, backBufferDepth);
-		const ::gpk::SColorBGRA										wireColor					= material.Color.Diffuse;
-		for(uint32_t iCoord = 0; iCoord < cacheVS.WireframePixelCoords.size(); ++iCoord) {
-			::gpk::SCoord3<int16_t>								coord		= cacheVS.WireframePixelCoords[iCoord].Cast<int16_t>();
-			backBufferColors[coord.y][coord.x]		= wireColor;
-		}
-	}
+int32_t												gpk::psSolid
+	( const ::gpk::SEngineSceneConstants	& constants
+	, const ::gpk::SPSIn					& inPS
+	, ::gpk::SColorBGRA						& outputPixel
+	) {
+	const ::gpk::SCoord3<float>							lightVecW					= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+	const ::gpk::SColorFloat							diffuse						= ::gpk::lightCalcDiffuse(::gpk::DARKGREEN, inPS.WeightedNormal, lightVecW);
+	outputPixel										= ::gpk::SColorFloat(diffuse).Clamp();
 	return 0;
 }
 
-int32_t												gpk::shaderWireframe
-	( ::gpk::view_grid<::gpk::SColorBGRA>	backBufferColors
-	, ::gpk::view_grid<uint32_t>			backBufferDepth
-	, ::gpk::SEngineRenderCache				& renderCache
-	, const ::gpk::SEngineScene				& scene
-	, const ::gpk::SEngineSceneConstants	& /*constants*/
-	, int32_t								iRenderNode
+int32_t												gpk::psHidden
+	( const ::gpk::SEngineSceneConstants	& /*constants*/
+	, const ::gpk::SPSIn					& /*inPS*/
+	, ::gpk::SColorBGRA						& /*outputPixel*/
 	) {
-	const ::gpk::SRenderNode								& renderNode			= scene.ManagedRenderNodes.RenderNodes[iRenderNode];
-	const ::gpk::SGeometryMesh								& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
-
-	const ::gpk::view_array<const uint16_t>					indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::view_array<const uint16_t>					{(const uint16_t				*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)}					: ::gpk::view_array<const uint16_t>					{};
-	const ::gpk::view_array<const ::gpk::SCoord3<float>>	positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
-	const ::gpk::view_array<const ::gpk::SCoord3<float>>	normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
-	const ::gpk::SSkin										& skin						= *scene.Graphics->Skins.Elements[renderNode.Skin];
-	const ::gpk::SRenderMaterial							& material					= skin.Material;
-	const ::gpk::SGeometrySlice								slice						= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
-
-	return drawBuffersWireframe(backBufferColors, backBufferDepth, renderCache.OutputVertexShader, renderCache.CacheVertexShader, material);
-}
-
-int32_t												gpk::shaderHidden
-	( ::gpk::view_grid<::gpk::SColorBGRA>	/*backBufferColors*/
-	, ::gpk::view_grid<uint32_t>			/*backBufferDepth*/
-	, ::gpk::SEngineRenderCache				& /*renderCache*/
-	, const ::gpk::SEngineScene				& /*scene*/
-	, const ::gpk::SEngineSceneConstants	& /*constants*/
-	, int32_t								/*iRenderNode*/
-	) {
-	//info_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iRenderNode, renderNode.Mesh, renderNode.Slice, meshName.begin());
 	return 0;
 }
+

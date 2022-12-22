@@ -181,7 +181,7 @@ int												gpk::updateEntityTransforms
 		faceRenderNode.Mesh				= iMesh;
 		faceRenderNode.Slice			= iFace;
 		faceRenderNode.Skin				= iSkin;
-		Scene->Graphics->Shaders[faceRenderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::shaderWireframe);
+		Scene->Graphics->Shaders[faceRenderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
 
 		//faceEntity.RigidBody			= Integrator.Create();
 		faceEntity.Parent				= iEntity;
@@ -283,7 +283,7 @@ int												gpk::updateEntityTransforms
 	renderNode.Skin							= iSkin;
 	renderNode.Mesh							= iMesh;
 	renderNode.Slice						= 0;
-	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::shaderWireframe);
+	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
 	return iEntity;
 }
 
@@ -379,7 +379,7 @@ int												gpk::updateEntityTransforms
 	renderNode.Skin							= iSkin;
 	renderNode.Mesh							= iMesh;
 	renderNode.Slice						= 0;
-	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::shaderWireframe);
+	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
 
 	return iEntity;
 }

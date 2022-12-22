@@ -56,6 +56,12 @@ namespace gpk
 			entityNew.RigidBody					= ((uint32_t)entitySource.RigidBody < Integrator.BodyFlags.size()) ? Integrator.Clone(entitySource.RigidBody) : (uint32_t)-1;
 			entityNew.Parent					= entitySource.Parent;
 
+			uint32_t								idShaderSource					= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Shader;
+			if(cloneSkin && idShaderSource < Scene->Graphics->Shaders.size()) {
+				uint32_t								idShader						= Scene->Graphics->Shaders.Clone(idShaderSource);
+				Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Shader	= idShader;
+			}
+
 			uint32_t								idSkinSource					= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin;
 			if(cloneSkin && idSkinSource < Scene->Graphics->Skins.size()) {
 				uint32_t								idSkin							= Scene->Graphics->Skins.Clone(idSkinSource);
@@ -83,7 +89,7 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncEffect> & shader, ::gpk::vcc name) {
+		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcc name) {
 			const uint32_t							iShader				= Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Shader;
 			Scene->Graphics->Shaders[iShader].create(shader);
 			Scene->Graphics->Shaders.Names[iShader] = name;

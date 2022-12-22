@@ -81,8 +81,8 @@ namespace gpk
 		::gpk::array_pod<uint32_t>				Textures;
 	};
 
-	typedef	::gpk::SLinearMap<::gpk::SSkin>					SSkinManager;
-	typedef	::gpk::SLinearMap<::std::function<TFuncEffect>>	SShaderManager;
+	typedef	::gpk::SLinearMap<::gpk::SSkin>							SSkinManager;
+	typedef	::gpk::SLinearMap<::std::function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
 		::gpk::SRenderBufferManager				Buffers					= {};

@@ -4,42 +4,42 @@
 #include "gpk_ascii_color.h"
 #include "gpk_raster_lh.h"
 
-static	::gpk::error_t							transformTriangles					
-	( ::gpk::SVSOutput									& output
-	, ::gpk::view_array<const uint16_t>					indices			
-	, ::gpk::view_array<const ::gpk::SCoord3<float>>	positions	
-	, ::gpk::view_array<const ::gpk::SCoord3<float>>	normals		
-	, ::gpk::view_array<const ::gpk::SCoord2<float>>	uv			
-	, const ::gpk::SMatrix4<float>						& projection		
-	, const ::gpk::SMatrix4<float>						& worldTransform	
-	, const ::gpk::SCoord3<float>						& cameraFront
+static	::gpk::error_t								transformTriangles					
+	( ::gpk::SVSOutput										& output
+	, ::gpk::view_array<const uint16_t>						indices			
+	, ::gpk::view_array<const ::gpk::SCoord3<float>>		positions	
+	, ::gpk::view_array<const ::gpk::SCoord3<float>>		normals		
+	, ::gpk::view_array<const ::gpk::SCoord2<float>>		uv			
+	, const ::gpk::SMatrix4<float>							& projection		
+	, const ::gpk::SMatrix4<float>							& worldTransform	
+	, const ::gpk::SCoord3<float>							& cameraFront
 )	{ 
-	::gpk::view_array<const ::gpk::STriangle<uint16_t>>		view_indices		= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
+	::gpk::view_array<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
 
-	const ::gpk::SMatrix4<float>							mWVPS				= worldTransform * projection;
+	const ::gpk::SMatrix4<float>							mWVPS						= worldTransform * projection;
 	for(uint32_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {
-		const ::gpk::STriangle<uint16_t>											vertexIndices								= view_indices[iTriangle];
-		::gpk::STriangle3<float>													transformedNormals							= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
+		const ::gpk::STriangle<uint16_t>						vertexIndices				= view_indices[iTriangle];
+		::gpk::STriangle3<float>								transformedNormals			= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
 		::gpk::transformDirection(transformedNormals, worldTransform);
 		transformedNormals.A.Normalize();
 		transformedNormals.B.Normalize();
 		transformedNormals.C.Normalize();
-		double																		directionFactorA							= transformedNormals.A.Dot(cameraFront);
-		double																		directionFactorB							= transformedNormals.B.Dot(cameraFront);
-		double																		directionFactorC							= transformedNormals.C.Dot(cameraFront);
+		double													directionFactorA			= transformedNormals.A.Dot(cameraFront);
+		double													directionFactorB			= transformedNormals.B.Dot(cameraFront);
+		double													directionFactorC			= transformedNormals.C.Dot(cameraFront);
 		if(directionFactorA > .35 && directionFactorB > .35 && directionFactorC > .35)
 			continue;
 
 		output.Normals.push_back(transformedNormals);
 
-		::gpk::STriangle3<float>													transformedPositions						= {positions[vertexIndices.A], positions[vertexIndices.B], positions[vertexIndices.C]};
+		::gpk::STriangle3<float>								transformedPositions		= {positions[vertexIndices.A], positions[vertexIndices.B], positions[vertexIndices.C]};
 		::gpk::transform(transformedPositions, worldTransform);
 		output.PositionsWorld.push_back(transformedPositions);
 		
 		::gpk::transform(transformedPositions, projection);
 		output.PositionsScreen.push_back(transformedPositions);
 		
-		::gpk::STriangle2<float>													transformedUVs								= {uv[vertexIndices.A], uv[vertexIndices.B], uv[vertexIndices.C]};
+		::gpk::STriangle2<float>								transformedUVs				= {uv[vertexIndices.A], uv[vertexIndices.B], uv[vertexIndices.C]};
 		if( transformedUVs.A.x > 1.0f
 		 || transformedUVs.A.y > 1.0f
 		 || transformedUVs.B.x > 1.0f
@@ -53,7 +53,7 @@ static	::gpk::error_t							transformTriangles
 	return 0; 
 }
 
-static	::gpk::error_t							transformTriangles
+static	::gpk::error_t								transformTriangles
 	( ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants
@@ -77,6 +77,53 @@ static	::gpk::error_t							transformTriangles
 	return 0;
 }
 
+
+static	::gpk::error_t								drawBuffers
+	( ::gpk::view_grid<::gpk::SColorBGRA>				& backBufferColors
+	, ::gpk::view2d_uint32								backBufferDepth
+	, ::gpk::SVSOutput									& outVS
+	, ::gpk::SVSCache									& cacheVS
+	, const ::gpk::SRenderMaterial						& material
+	, ::gpk::view_grid<const ::gpk::SColorBGRA>			surface
+	, const ::gpk::SEngineSceneConstants				& constants
+	, const ::std::function<::gpk::TFuncPixelShader>	& ps
+	) {	// 
+	::gpk::array_pod<::gpk::STriangle<float>>				& triangleWeights			= cacheVS.TriangleWeights		;
+	::gpk::array_pod<::gpk::SCoord2<int16_t>>				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
+	const ::gpk::SCoord2<uint16_t>							offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
+	const ::gpk::SCoord3<float>								lightDirectionNormalized	= ::gpk::SCoord3<float>{constants.LightDirection}.Normalize();
+	::gpk::SPSIn											inPS						= {};
+	inPS.Surface										= surface;
+	inPS.Material										= material;
+
+	for(uint32_t iTriangle = 0; iTriangle < outVS.PositionsScreen.size(); ++iTriangle) {
+		const ::gpk::STriangle3<float>							& triPositions				= outVS.PositionsScreen	[iTriangle];
+		if( (triPositions.CulledZ({0, 0xFFFFFF}))
+		 || (triPositions.CulledX({0, (float)offscreenMetrics.x}))
+		 || (triPositions.CulledY({0, (float)offscreenMetrics.y}))
+		)
+			continue;
+
+		const ::gpk::STriangle3<float>							& triPositionsWorld			= outVS.PositionsWorld	[iTriangle];
+		const ::gpk::STriangle3<float>							& triNormals				= outVS.Normals			[iTriangle];
+		const ::gpk::STriangle2<float>							& triUVs					= outVS.UVs				[iTriangle];
+
+		trianglePixelCoords.clear();
+		triangleWeights.clear();
+		gerror_if(errored(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)), "Not sure if these functions could ever fail");
+		//const bool													stripped					= surface[0][0] == ::gpk::SColorBGRA{gpk::WHITE};
+		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
+			const ::gpk::STriangle<float>							& vertexWeights				= triangleWeights[iCoord];
+			inPS.WeightedPosition								= triPositionsWorld.A * vertexWeights.A + triPositionsWorld.B * vertexWeights.B + triPositionsWorld.C * vertexWeights.C;
+			inPS.WeightedNormal									= (triNormals.A * vertexWeights.A + triNormals.B * vertexWeights.B + triNormals.C * vertexWeights.C).Normalize();
+			inPS.WeightedUV										= triUVs.A * vertexWeights.A + triUVs.B * vertexWeights.B + triUVs.C * vertexWeights.C;
+			const ::gpk::SCoord2<uint16_t>							coord						= trianglePixelCoords[iCoord].Cast<uint16_t>();
+			ps(constants, inPS, backBufferColors[coord.y][coord.x]);
+		}
+	}
+	return 0;
+}
+
 ::gpk::error_t										gpk::drawScene									
 	( ::gpk::view_grid<::gpk::SColorBGRA>	& backBufferColors
 	, ::gpk::view_grid<uint32_t>			& backBufferDepth
@@ -84,7 +131,7 @@ static	::gpk::error_t							transformTriangles
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants
 ) {	//
-
+	static ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
 	for(uint32_t iRenderNode = 0, countNodes = scene.ManagedRenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
 		const ::gpk::SRenderNodeFlags					& renderNodeFlags		= scene.ManagedRenderNodes.Flags[iRenderNode];
 		if(renderNodeFlags.NoDraw)
@@ -101,12 +148,14 @@ static	::gpk::error_t							transformTriangles
 
 		ce_if(errored(::transformTriangles(renderCache, scene, constants, iRenderNode)), "iRenderNode %i", iRenderNode);
 
-		if(renderNode.Shader >= scene.Graphics->Shaders.size()) 
-			::gpk::shaderWireframe(backBufferColors, backBufferDepth, renderCache, scene, constants, iRenderNode); 
-		else {
-			const ::std::function<TFuncEffect>				& fx					= *scene.Graphics->Shaders[renderNode.Shader];
-			fx(backBufferColors, backBufferDepth, renderCache, scene, constants, iRenderNode);
-		}
+		const ::gpk::SSkin										& skin						= *scene.Graphics->Skins.Elements[renderNode.Skin];
+		const ::gpk::SRenderMaterial							& material					= skin.Material;
+		const uint32_t											tex							= skin.Textures[0];
+		const ::gpk::SSurface									& surface					= *scene.Graphics->Surfaces[tex];
+		const ::std::function<::gpk::TFuncPixelShader>			& fx
+			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
+
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.OutputVertexShader, renderCache.CacheVertexShader, material, {(const ::gpk::SColorBGRA*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
 	}
 
 	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
