@@ -171,7 +171,7 @@ namespace gpk
 				::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
 				::gpk::integrateForces	(duration, bodyFrame, bodyForces, bodyMass);
 				::gpk::integratePosition(duration, durationHalfSquared, bodyFlags, bodyCenter, bodyForces);
-				if(bodyForces.Acceleration.LengthSquared() < .1 && bodyForces.Velocity.LengthSquared() < .1 && bodyForces.Rotation.LengthSquared() < .1) {
+				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .01) {
 					bodyFlags.Active								= false;
 					bodyForces										= {};
 				}
