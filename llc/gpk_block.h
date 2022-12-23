@@ -34,7 +34,7 @@ namespace gpk
 	template<typename _tBlock>
 	struct SMapTable {
 						::gpk::array_pod<uint32_t>					Id;
-						::gpk::array_obj<::gpk::ptr_obj<_tBlock>>	Block;
+						::gpk::array_obj<::gpk::pobj<_tBlock>>	Block;
 
 						::gpk::SBlockConfig							BlockConfig					= {::gpk::view_const_string{"01234567890123456789012345678901"}, 65535, true};
 						::gpk::view_const_char						DBName						= {};
@@ -66,7 +66,7 @@ namespace gpk
 		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock)
 			rvi_if(iBlock, (uint32_t)indexMap.IdBlock == mapTable.Id[iBlock], "Block already loaded: %u.", iBlock);
 
-		::gpk::ptr_obj<_tElement>										newBlock;
+		::gpk::pobj<_tElement>										newBlock;
 		newBlock.create();
 		::gpk::error_t													indexBlock					= mapTable.Block.push_back(newBlock);
 		gpk_necall(mapTable.Id.push_back(indexMap.IdBlock), "%s", "Out of memory?");
@@ -179,7 +179,7 @@ namespace gpk
 		int64_t															idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
 		ree_if(0 <= idRecord, "Sequence already registered: %s.", ::gpk::toString(sequenceToAdd).begin());
 		if(-1 == mapTable.MaxBlockOnDisk) {
-			::gpk::ptr_obj<_tMapBlock>										newBlock;
+			::gpk::pobj<_tMapBlock>										newBlock;
 			newBlock.create();
 			::gpk::SRecordMap												newIndices;
 			gpk_necall(newIndices.IndexRecord = newBlock->MapAdd(sequenceToAdd), "%s", "Out of memory?");

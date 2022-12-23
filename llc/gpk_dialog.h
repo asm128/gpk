@@ -53,7 +53,7 @@ namespace gpk
 	};
 
 	struct SDialog {
-		::gpk::ptr_obj<::gpk::SDialogColors>												Colors												= {};
+		::gpk::pobj<::gpk::SDialogColors>												Colors												= {};
 		
 		int32_t																				FocusedCurrent										= -1;
 		int32_t																				FocusedPrevious										= -1;
@@ -63,13 +63,13 @@ namespace gpk
 		int32_t																				Root												= -1;
 		::gpk::SControlMode																	DefaultControlModes									= {};
 
-		::gpk::ptr_obj<::gpk::SInput>														Input												= {};
-		::gpk::ptr_obj<::gpk::SGUI>															GUI													= {};
+		::gpk::pobj<::gpk::SInput>														Input												= {};
+		::gpk::pobj<::gpk::SGUI>															GUI													= {};
 		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
 		::gpk::SImage<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 
-																							SDialog												(const ::gpk::ptr_obj<::gpk::SGUI> & gui);
+																							SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);
 																							SDialog												();
 
 		::gpk::error_t																		Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }

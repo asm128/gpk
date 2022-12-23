@@ -6,17 +6,17 @@
 
 ::gpk::error_t								gpk::d3dCreateBuffersFromEngineMeshes		(ID3D11Device* pDevice, const ::gpk::SMeshManager & engineMeshes, const ::gpk::SRenderBufferManager & engineBuffers, ::gpk::array_com<ID3D11Buffer> & indexBuffers, ::gpk::array_com<ID3D11Buffer> & vertexBuffers)	{
 	for(uint32_t iMesh = 0; iMesh < engineMeshes.size(); ++iMesh) {
-		const ::gpk::ptr_obj<::gpk::SGeometryMesh>		& mesh									= engineMeshes[iMesh];
+		const ::gpk::pobj<::gpk::SGeometryMesh>		& mesh									= engineMeshes[iMesh];
 		if(!mesh)
 			continue;
 
-		::gpk::ptr_obj<::gpk::SRenderBuffer>			engineBufferIndices;
+		::gpk::pobj<::gpk::SRenderBuffer>			engineBufferIndices;
 		::gpk::array_pobj<::gpk::SRenderBuffer>			engineBufferVertices;
 		::gpk::array_pod<uint32_t>						layoutOffsets;
 
 		uint32_t										vertexSize					= 0;
 		for(uint32_t iBuffer = 0; iBuffer < mesh->GeometryBuffers.size(); ++iBuffer) {
-			const ::gpk::ptr_obj<::gpk::SRenderBuffer>		& buffer								= engineBuffers[mesh->GeometryBuffers[iBuffer]];
+			const ::gpk::pobj<::gpk::SRenderBuffer>		& buffer								= engineBuffers[mesh->GeometryBuffers[iBuffer]];
 			if(buffer->Desc.Usage == ::gpk::BUFFER_USAGE_Index) {
 				engineBufferIndices							= buffer;
 				continue;

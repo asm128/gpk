@@ -7,7 +7,7 @@ namespace gpk
 {
 	struct SUDPServer {
 		::gpk::auto_socket_close												Socket;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnection>>					Clients;
+		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnection>>					Clients;
 		::std::mutex															Mutex;
 		::gpk::SIPv4															Address								= {};
 		int16_t																	AdapterIndex;

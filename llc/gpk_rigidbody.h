@@ -84,13 +84,8 @@ namespace gpk
 		}
 
 		int32_t 										Clear							()	{
-			BodyFrames				.clear();
-			BodyFlags				.clear();
-			Forces					.clear();
-			Masses					.clear();
-			Centers					.clear();
-			BoundingVolumes			.clear();
-			return TransformsLocal	.clear();
+			::gpk::clear(BodyFrames, BodyFlags, Forces, Masses, Centers, BoundingVolumes, TransformsLocal);
+			return 0;
 		}
 
 		int32_t 										Clone							(uint32_t iBody)	{
@@ -178,9 +173,12 @@ namespace gpk
 			}
 			return 0;
 		}
+
+		bool											Active							(uint32_t iBody)													{ return BodyFlags[iBody].Active; }
+		void											SetActive						(uint32_t iBody, bool active)										{ BodyFlags[iBody].Active = active; }
 		void											SetPosition						(uint32_t iBody, const ::gpk::SCoord3<float>& newPosition )			{
 			::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
-			if( 0 == memcmp( &newPosition.x, &bodyCenter.Position.x, sizeof( ::gpk::SCoord3<float> ) ) )
+			if(0 == memcmp(&newPosition.x, &bodyCenter.Position.x, sizeof(::gpk::SCoord3<float>)))
 				return;
 			bodyCenter.Position								= newPosition;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
@@ -189,7 +187,7 @@ namespace gpk
 		}
 		void											SetOrientation					(uint32_t iBody, const ::gpk::SQuaternion<float>& newOrientation )	{
 			::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
-			if( 0 == memcmp( &newOrientation.x, &bodyCenter.Orientation.x, sizeof(::gpk::SQuaternion<float>) ) )
+			if(0 == memcmp(&newOrientation.x, &bodyCenter.Orientation.x, sizeof(::gpk::SQuaternion<float>)))
 				return;
 			bodyCenter.Orientation							= newOrientation;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
@@ -198,25 +196,23 @@ namespace gpk
 		}
 		void											SetVelocity						(uint32_t iBody, const ::gpk::SCoord3<float>& newVelocity)			{
 			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if( 0 == memcmp( &newVelocity.x, &bodyCenter.Velocity.x, sizeof( ::gpk::SCoord3<float> ) ) )
+			if(0 == memcmp(&newVelocity.x, &bodyCenter.Velocity.x, sizeof(::gpk::SCoord3<float>)))
 				return;
 			bodyCenter.Velocity								= newVelocity;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
 		}
-
 		void											SetAcceleration					(uint32_t iBody, const ::gpk::SCoord3<float>& acceleration)			{
 			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if( 0 == memcmp( &acceleration.x, &bodyCenter.Acceleration.x, sizeof( ::gpk::SCoord3<float> ) ) )
+			if(0 == memcmp(&acceleration.x, &bodyCenter.Acceleration.x, sizeof(::gpk::SCoord3<float>)))
 				return;
 			bodyCenter.Acceleration							= acceleration;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
 		}
-
 		void											SetRotation						(uint32_t iBody, const ::gpk::SCoord3<float>& newRotation)			{
 			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if( 0 == memcmp( &newRotation.x, &bodyCenter.Rotation.x, sizeof( ::gpk::SCoord3<float> ) ) )
+			if(0 == memcmp(&newRotation.x, &bodyCenter.Rotation.x, sizeof(::gpk::SCoord3<float>)))
 				return;
 			bodyCenter.Rotation								= newRotation;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];

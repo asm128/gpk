@@ -220,7 +220,7 @@ namespace gpk
 			if(voxelPosition.y >= chunk.Layers.size()) 
 				return -1;
 
-			const ::gpk::ptr_obj<::gpk::SVoxelLayer<_tCell>>	& layer						= chunk.Layers[voxelPosition.y];
+			const ::gpk::pobj<::gpk::SVoxelLayer<_tCell>>	& layer						= chunk.Layers[voxelPosition.y];
 			if(0 == layer.get_ref())
 				return -1;
 

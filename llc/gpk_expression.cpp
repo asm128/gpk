@@ -14,13 +14,13 @@ static	::gpk::error_t										expressionReaderViews					(::gpk::array_pod<::gpk
 	return 0;
 }
 
-static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gpk::SExpressionToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionNode>> & out_nodes)								{
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SExpressionNode>>		& tree									= out_nodes;
+static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gpk::SExpressionToken>& in_object, ::gpk::array_obj<::gpk::pobj<::gpk::SExpressionNode>> & out_nodes)								{
+	::gpk::array_obj<::gpk::pobj<::gpk::SExpressionNode>>		& tree									= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
 	// -- Build all nodes linearly, without assigning the children
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
-		::gpk::ptr_obj<::gpk::SExpressionNode>							& nodeCurrent										= tree[iObject];
+		::gpk::pobj<::gpk::SExpressionNode>							& nodeCurrent										= tree[iObject];
 		nodeCurrent->Token											= &in_object[iObject];
 		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SExpressionNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
@@ -29,7 +29,7 @@ static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gp
 	// -- Assign the children to every object of the hierarchy
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
 		for(uint32_t iOther = 0; iOther < countNodes; ++iOther) {
-			const ::gpk::ptr_obj<::gpk::SExpressionNode>					& nodeOther											= tree[iOther];
+			const ::gpk::pobj<::gpk::SExpressionNode>					& nodeOther											= tree[iOther];
 			if(((uint32_t)nodeOther->Token->ParentIndex) == iObject)
 				gpk_necall(tree[iObject]->Children.push_back(nodeOther), "%s", "Failed to push tree node. Out of memory?");
 		}

@@ -132,7 +132,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::array_p
 	return 0;
 }
 
-static		::gpk::error_t										initDefaults				(::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes) {
+static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes) {
 	static constexpr	const uint32_t									iShades													= 16;
 	static				const ::gpk::SColorBGRA							paletteColors []										=
 		// 16 Base colors
@@ -184,9 +184,9 @@ static		::gpk::error_t										initDefaults				(::gpk::ptr_obj<::gpk::array_pod
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes)	{
-	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
-	static ::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
+static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes)	{
+	static ::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
+	static ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
 	
 	if(!globalDefaultPalette || 0 == globalDefaultPalette->size()) 
 		initDefaults(globalDefaultPalette, globalDefaultTheme);
@@ -209,9 +209,9 @@ static		::gpk::error_t										uiColorsSetupDefault (::gpk::SGUIColors & guiCol
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	return 0;
 }
-static		::gpk::error_t										uiColorsSetupDefault (::gpk::ptr_obj<::gpk::SGUIColors> & guiColors) {
+static		::gpk::error_t										uiColorsSetupDefault (::gpk::pobj<::gpk::SGUIColors> & guiColors) {
 	if(!guiColors) {
-		static ::gpk::ptr_obj<::gpk::SGUIColors>	globalDefaultColors			= {};
+		static ::gpk::pobj<::gpk::SGUIColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
 			gpk_necs(::uiColorsSetupDefault(*globalDefaultColors.create()));
 			gpk_necs(::paletteSetupDefaultColors(globalDefaultColors->Palette, globalDefaultColors->ControlThemes));

@@ -183,8 +183,8 @@ namespace gpk
 	};
 
 	struct SGUIColors {
-		::gpk::ptr_obj<::gpk::array_pod<::gpk::SColorBGRA>		>		Palette								= {};
-		::gpk::ptr_obj<::gpk::array_pod<::gpk::SControlTheme>	>		ControlThemes						= {};
+		::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>		>		Palette								= {};
+		::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>	>		ControlThemes						= {};
 
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors	= {};
 
@@ -197,7 +197,7 @@ namespace gpk
 		::gpk::SCoord2<uint32_t>										LastSize							= {};
 		::gpk::SCoord2<float>											CursorPos							= {};
 		::gpk::SGUIControlTable											Controls							= {};
-		::gpk::ptr_obj<::gpk::SGUIColors>								Colors;
+		::gpk::pobj<::gpk::SGUIColors>								Colors;
 		// Font
 		::gpk::array_pobj<::gpk::SRasterFont>							Fonts								= {};
 
@@ -236,7 +236,7 @@ namespace gpk
 
 	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA>& target);
+	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA> target);
 	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI& gui);
 	::gpk::error_t			guiSelect						(::gpk::SGUI& gui, int32_t controlToSelect);
@@ -245,7 +245,7 @@ namespace gpk
 	::gpk::error_t			controlCreate					(::gpk::SGUI& gui);
 	::gpk::error_t			controlCreateChild				(::gpk::SGUI& gui, int32_t iParent);
 	::gpk::error_t			controlSetParent				(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
-	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA> target);
 	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI& gui, int32_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);

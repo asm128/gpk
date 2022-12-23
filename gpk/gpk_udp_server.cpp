@@ -15,10 +15,10 @@
 #endif
 
 ::gpk::error_t												updateClients						(gpk::SUDPServer& serverInstance)		{
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnection>>			clientsToProcess;
+	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnection>>			clientsToProcess;
 	::gpk::array_pod<byte_t>										receiveBuffer;
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
+	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
+	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
 		uint32_t														totalClientCount					= serverInstance.Clients.size();
@@ -38,7 +38,7 @@
 			{
 				::gpk::mutex_guard												lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < actualCount; ++iClient) {
-					::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
+					::gpk::pobj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
@@ -57,7 +57,7 @@
 					break_ginfo_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
-							::gpk::ptr_obj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
+							::gpk::pobj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
 							if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 								continue;
 							if(sockets.fd_array[sd] == pclient->Socket) {
@@ -109,7 +109,7 @@
 	return 0;
 }
 
-static	::gpk::error_t										recycleClient						(::gpk::SUDPServer& serverInstance, ::gpk::ptr_obj<::gpk::SUDPConnection> & pClient)		{
+static	::gpk::error_t										recycleClient						(::gpk::SUDPServer& serverInstance, ::gpk::pobj<::gpk::SUDPConnection> & pClient)		{
 	for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 		pClient														= serverInstance.Clients[iClient];
 		::gpk::SUDPConnection											& client							= *pClient;
@@ -139,13 +139,13 @@ static	::gpk::error_t										recycleClient						(::gpk::SUDPServer& serverInst
 }
 
 static	::gpk::error_t										serverAcceptClient					(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
-	::gpk::ptr_obj<::gpk::SUDPConnection>							pClient								= {};
+	::gpk::pobj<::gpk::SUDPConnection>							pClient								= {};
 	{ // accept
 		::gpk::mutex_guard												lock								(serverInstance.Mutex);
 		int32_t															found								= ::recycleClient(serverInstance, pClient);
 		::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
 		command.Type												= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
-		::gpk::ptr_obj<::gpk::SUDPConnectionMessage>					connectResponse								= {};
+		::gpk::pobj<::gpk::SUDPConnectionMessage>					connectResponse								= {};
 		connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
 		gpk_necall(pClient->Queue.Send.push_back(connectResponse), "Out of memory?");
 		pClient->LastPing											=

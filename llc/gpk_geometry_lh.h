@@ -50,11 +50,11 @@ namespace gpk
 	struct SImageManager {
 		::gpk::SKeyedContainer<::gpk::SImageTag>								ImageRegistry			= {};
 
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SImage<::gpk::SColorBGR>		>>	BGR						= {};
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SImage<::gpk::SColorBGRA>	>>	BGRA					= {};
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SImage<uint8_t>				>>	Grayscale8				= {};
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SImage<uint16_t>				>>	Grayscale16				= {};
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SImageMonochrome<uint64_t>	>>	Monochrome				= {};
+		::gpk::array_obj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGR>		>>	BGR						= {};
+		::gpk::array_obj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGRA>	>>	BGRA					= {};
+		::gpk::array_obj<::gpk::pobj<::gpk::SImage<uint8_t>				>>	Grayscale8				= {};
+		::gpk::array_obj<::gpk::pobj<::gpk::SImage<uint16_t>				>>	Grayscale16				= {};
+		::gpk::array_obj<::gpk::pobj<::gpk::SImageMonochrome<uint64_t>	>>	Monochrome				= {};
 
 		::gpk::error_t															CreateImage				(const ::gpk::vcs & filename, const ::gpk::vcs & keyName, COLOR_TYPE colorType)	{
 			::gpk::error_t	found =	ImageRegistry.GetElementIndex(keyName);
@@ -107,8 +107,8 @@ namespace gpk
 	};
 
 	struct SBufferManager {
-		::gpk::SKeyedContainer<::gpk::ptr_obj<::gpk::SGeometryQuads		>>	Quads				= {};
-		::gpk::SKeyedContainer<::gpk::ptr_obj<::gpk::SGeometryTriangles	>>	Triangles			= {};
+		::gpk::SKeyedContainer<::gpk::pobj<::gpk::SGeometryQuads		>>	Quads				= {};
+		::gpk::SKeyedContainer<::gpk::pobj<::gpk::SGeometryTriangles	>>	Triangles			= {};
 	};
 
 	GDEFINE_ENUM_TYPE (MODEL_NODE_TYPE, uint8_t);

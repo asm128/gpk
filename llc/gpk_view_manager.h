@@ -9,7 +9,7 @@ namespace gpk
 {
 	template<typename _tElement, size_t _blockSize>
 	class unshrinkable_view_container {
-		typedef				::gpk::ptr_obj<::gpk::array_static<_tElement, _blockSize>>	ptr_block_type;
+		typedef				::gpk::pobj<::gpk::array_static<_tElement, _blockSize>>	ptr_block_type;
 							::gpk::array_obj<ptr_block_type>							Blocks;
 							::gpk::array_pod<uint32_t>									RemainingSpace;
 	public:

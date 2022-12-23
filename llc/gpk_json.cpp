@@ -134,13 +134,13 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 	return 0;
 }
 
-::gpk::error_t												gpk::jsonTreeRebuild								(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes)								{
-	::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				& tree												= out_nodes;
+::gpk::error_t												gpk::jsonTreeRebuild								(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::pobj<::gpk::SJSONNode>> & out_nodes)								{
+	::gpk::array_obj<::gpk::pobj<::gpk::SJSONNode>>				& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
 	// -- Build all nodes linearly, without assigning the children
 	for(uint32_t iObject = 0; iObject < tree.size(); ++iObject) {
-		::gpk::ptr_obj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
+		::gpk::pobj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
 		nodeCurrent->Token											= &in_object[iObject];
 		nodeCurrent->Parent											= ((uint32_t)nodeCurrent->Token->ParentIndex < tree.size()) ? (gpk::SJSONNode*)tree[nodeCurrent->Token->ParentIndex] : nullptr;
 		nodeCurrent->ObjectIndex									= iObject;
@@ -152,12 +152,12 @@ static const ::gpk::view_const_string		gpk_json_str_false = "false";
 
 	// -- Remove the key/value wrappers from objects.
 	for(uint32_t iObject = 0, countNodes = tree.size(); iObject < countNodes; ++iObject) {
-		::gpk::ptr_obj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
+		::gpk::pobj<::gpk::SJSONNode>								& nodeCurrent										= tree[iObject];
 		if( ::gpk::JSON_TYPE_ARRAY	!= nodeCurrent->Token->Type
 		 && ::gpk::JSON_TYPE_OBJECT	!= nodeCurrent->Token->Type
 		)
 			continue;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>				newChildren;
+		::gpk::array_obj<::gpk::pobj<::gpk::SJSONNode>>				newChildren;
 		gpk_necall(newChildren.resize(nodeCurrent->Children.size()), "%s", "Out of memory?");
 		for(uint32_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild)
 			newChildren[iChild]											= nodeCurrent->Children[iChild]->Children[0];

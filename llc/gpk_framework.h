@@ -45,10 +45,10 @@ namespace gpk
 							::gpk::SRuntimeValues									& RuntimeValues			;
 							::gpk::SFrameworkDetail									PlatformDetail			= {};
 							::gpk::SWindow											RootWindow				= {};
-							::gpk::ptr_obj<::gpk::SInput>							Input					= {};
+							::gpk::pobj<::gpk::SInput>							Input					= {};
 							::gpk::STimer											Timer					= {};
 							::gpk::SFrameInfo										FrameInfo				= {};
-							::gpk::ptr_obj<::gpk::SGUI>								GUI						= {};
+							::gpk::pobj<::gpk::SGUI>								GUI						= {};
 							::gpk::SFrameworkSettings								Settings				= {1, };
 							::gpk::SJSONFile										JSONConfig				= {};
 							::gpk::view_const_string								FileNameJSONConfig		= "gpk_config.json";
@@ -67,7 +67,7 @@ namespace gpk
 	}; // struct
 
 	::gpk::error_t			updateFramework			(::gpk::SFramework& framework);
-	::gpk::error_t			mainWindowCreate		(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::ptr_obj<SInput>& displayInput);
+	::gpk::error_t			mainWindowCreate		(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput);
 	::gpk::error_t			mainWindowDestroy		(::gpk::SWindow& mainWindow);
 } // namespace
 

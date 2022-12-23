@@ -12,7 +12,7 @@ int												gpk::updateEntityTransforms
 	, ::gpk::SRenderNodeManager				& renderNodes
 	)
 {
-	const ::gpk::ptr_obj<::gpk::array_pod<uint32_t>>	& children						= managedEntities.Children[iEntity];
+	const ::gpk::pobj<::gpk::array_pod<uint32_t>>	& children						= managedEntities.Children[iEntity];
 	if(-1 != entity.RenderNode) {
 		::gpk::SRenderNodeTransforms						& transforms					= renderNodes.Transforms[entity.RenderNode];
 		::gpk::SMatrix4<float>								& worldTransform				= transforms.World;
@@ -100,10 +100,10 @@ int												gpk::updateEntityTransforms
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
 
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pIndicesVertex;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pVertices;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pNormals;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pUV;
+	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex;
+	::gpk::pobj<::gpk::SRenderBuffer>	pVertices;
+	::gpk::pobj<::gpk::SRenderBuffer>	pNormals;
+	::gpk::pobj<::gpk::SRenderBuffer>	pUV;
 	pIndicesVertex	->Desc.Format	= ::gpk::DATA_TYPE_UINT16;
 	pIndicesVertex	->Desc.Usage	= ::gpk::BUFFER_USAGE_Index;
 
@@ -124,7 +124,7 @@ int												gpk::updateEntityTransforms
 
 	uint32_t							iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Box"};
-	::gpk::ptr_obj<::gpk::SGeometryMesh>	& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::pobj<::gpk::SGeometryMesh>	& mesh					= Scene->Graphics->Meshes[iMesh];
 
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -151,7 +151,7 @@ int												gpk::updateEntityTransforms
 	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
 		uint32_t							iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
 		uint32_t							iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
-		::gpk::ptr_obj<::gpk::SSkin>		& skin					= Scene->Graphics->Skins.Elements[iSkin];
+		::gpk::pobj<::gpk::SSkin>		& skin					= Scene->Graphics->Skins.Elements[iSkin];
 		skin->Textures.push_back(iSurface);
 		skin->Material.Color.Ambient	= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[1 + iFace]);
 		skin->Material.Color.Diffuse	= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[1 + iFace]);
@@ -160,7 +160,7 @@ int												gpk::updateEntityTransforms
 
 		skin->Material.Color.Ambient	*= .1f;
 
-		::gpk::ptr_obj<::gpk::SSurface>		& surface				= Scene->Graphics->Surfaces[iSurface];
+		::gpk::pobj<::gpk::SSurface>		& surface				= Scene->Graphics->Surfaces[iSurface];
 		surface->Desc.ColorType			= ::gpk::COLOR_TYPE_BGRA;
 		surface->Desc.MethodCompression	= 0;
 		surface->Desc.MethodFilter		= 0;
@@ -204,10 +204,10 @@ int												gpk::updateEntityTransforms
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();;
 	Integrator.BoundingVolumes[entity.RigidBody = this->Integrator.Create()].HalfSizes = {0.5f, 0.5f, 0.5f};
 
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pIndicesVertex;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pVertices;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pNormals;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pUV;
+	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex;
+	::gpk::pobj<::gpk::SRenderBuffer>	pVertices;
+	::gpk::pobj<::gpk::SRenderBuffer>	pNormals;
+	::gpk::pobj<::gpk::SRenderBuffer>	pUV;
 
 	pIndicesVertex	->Desc.Format		= ::gpk::DATA_TYPE_UINT16;
 	pIndicesVertex	->Desc.Usage		= ::gpk::BUFFER_USAGE_Index;
@@ -241,7 +241,7 @@ int												gpk::updateEntityTransforms
 	uint32_t									iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
 
 	uint32_t									iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::ptr_obj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::pobj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Sphere"};
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -250,7 +250,7 @@ int												gpk::updateEntityTransforms
 	mesh->Desc.NormalMode					= ::gpk::NORMAL_MODE_Point;
 
 	uint32_t									iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
-	::gpk::ptr_obj<::gpk::SSkin>				& skin					= Scene->Graphics->Skins.Elements[iSkin];
+	::gpk::pobj<::gpk::SSkin>				& skin					= Scene->Graphics->Skins.Elements[iSkin];
 	skin->Material.Color.Ambient			= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[3]);
 	skin->Material.Color.Diffuse			= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[3]);
 	skin->Material.Color.Specular			= ::gpk::WHITE;
@@ -261,7 +261,7 @@ int												gpk::updateEntityTransforms
 
 	skin->Material.Color.Ambient			*= .1f;
 
-	::gpk::ptr_obj<::gpk::SSurface>				& surface				= Scene->Graphics->Surfaces[iSurface];
+	::gpk::pobj<::gpk::SSurface>				& surface				= Scene->Graphics->Surfaces[iSurface];
 	surface->Desc.ColorType					= ::gpk::COLOR_TYPE_BGRA;
 	surface->Desc.MethodCompression			= 0;
 	surface->Desc.MethodFilter				= 0;
@@ -300,10 +300,10 @@ int												gpk::updateEntityTransforms
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
 
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pIndicesVertex;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pVertices;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pNormals;
-	::gpk::ptr_obj<::gpk::SRenderBuffer>	pUV;
+	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex;
+	::gpk::pobj<::gpk::SRenderBuffer>	pVertices;
+	::gpk::pobj<::gpk::SRenderBuffer>	pNormals;
+	::gpk::pobj<::gpk::SRenderBuffer>	pUV;
 
 	pIndicesVertex	->Desc.Format		= ::gpk::DATA_TYPE_UINT16;
 	pIndicesVertex	->Desc.Usage		= ::gpk::BUFFER_USAGE_Index;
@@ -337,7 +337,7 @@ int												gpk::updateEntityTransforms
 	uint32_t									iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
 
 	uint32_t									iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::ptr_obj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
+	::gpk::pobj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
 	Scene->Graphics->Meshes.Names[iMesh]	= ::gpk::vcs{"Sphere"};
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -346,7 +346,7 @@ int												gpk::updateEntityTransforms
 	mesh->Desc.NormalMode					= ::gpk::NORMAL_MODE_Point;
 
 	uint32_t									iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
-	::gpk::ptr_obj<::gpk::SSkin>				& skin					= Scene->Graphics->Skins.Elements[iSkin];
+	::gpk::pobj<::gpk::SSkin>				& skin					= Scene->Graphics->Skins.Elements[iSkin];
 	skin->Material.Color.Ambient			= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[3]);
 	skin->Material.Color.Diffuse			= ::gpk::SColorBGRA(::gpk::ASCII_PALETTE[3]);
 	skin->Material.Color.Specular			= ::gpk::WHITE;
@@ -357,7 +357,7 @@ int												gpk::updateEntityTransforms
 
 	skin->Material.Color.Ambient			*= .1f;
 
-	::gpk::ptr_obj<::gpk::SSurface>				& surface				= Scene->Graphics->Surfaces[iSurface];
+	::gpk::pobj<::gpk::SSurface>				& surface				= Scene->Graphics->Surfaces[iSurface];
 	surface->Desc.ColorType					= ::gpk::COLOR_TYPE_BGRA;
 	surface->Desc.MethodCompression			= 0;
 	surface->Desc.MethodFilter				= 0;

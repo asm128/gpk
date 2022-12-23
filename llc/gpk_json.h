@@ -32,7 +32,7 @@ namespace gpk
 	struct SJSONNode {
 								SJSONToken												* Token					= 0;
 								SJSONNode												* Parent				= 0;
-								::gpk::array_obj<::gpk::ptr_obj<SJSONNode>>				Children				= 0;
+								::gpk::array_obj<::gpk::pobj<SJSONNode>>				Children				= 0;
 								int32_t													ObjectIndex				= -1;
 	};
 
@@ -59,7 +59,7 @@ namespace gpk
 	struct SJSONReader {
 								::gpk::array_pod<::gpk::SJSONToken>						Token;
 								::gpk::array_obj<::gpk::view_const_char>				View;
-								::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>>		Tree;
+								::gpk::array_obj<::gpk::pobj<::gpk::SJSONNode>>		Tree;
 								::gpk::SJSONReaderState									StateRead;
 
 								::gpk::error_t											Reset					()							{
@@ -69,7 +69,7 @@ namespace gpk
 			return 0;
 		}
 
-								const ::gpk::ptr_obj<::gpk::SJSONNode>&					operator[]				(uint32_t index)	const	{ return Tree[index]; }
+								const ::gpk::pobj<::gpk::SJSONNode>&					operator[]				(uint32_t index)	const	{ return Tree[index]; }
 	};
 
 	// Reader functions: Populate a SJSONReader structure from an input JSON string.
@@ -102,7 +102,7 @@ namespace gpk
 	static inline			::gpk::error_t											jsonCompareObject		(const ::gpk::SJSONNode& node, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_char>& views) { return ::gpk::jsonCompareObject	(node, views, other, views); }
 	static inline			::gpk::error_t											jsonCompareNumber		(const ::gpk::SJSONNode& node, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::view_const_char>& views) { return ::gpk::jsonCompareNumber	(node, views, other, views); }
 
-							::gpk::error_t											jsonTreeRebuild			(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SJSONNode>> & out_nodes);
+							::gpk::error_t											jsonTreeRebuild			(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::array_obj<::gpk::pobj<::gpk::SJSONNode>> & out_nodes);
 	struct SJSONFile {
 								::gpk::array_pod<char_t>								Bytes					= {};
 								::gpk::SJSONReader										Reader					= {};

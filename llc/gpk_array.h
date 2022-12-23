@@ -638,6 +638,9 @@ namespace gpk
 		}
 	}; // array_obj
 
+	template <typename T>							using aobj				= ::gpk::array_obj<T>; 
+	template <typename T>							using apod				= ::gpk::array_pod<T>;
+
 	template<typename _tElement>
 	::gpk::error_t									split					(const ::gpk::view_array<const _tElement> & target, const _tElement& separator, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
 		uint32_t											lastOffset				= 0;

@@ -66,9 +66,9 @@ namespace gpk
 	};
 
 	struct SUDPClientQueue {
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Received		;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Send			;
-		::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>			Sent			;
+		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Received		;
+		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Send			;
+		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Sent			;
 		::std::mutex															MutexSend		;
 		::std::mutex															MutexReceive	;
 	};
@@ -95,7 +95,7 @@ namespace gpk
 
 	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024 * 128;
 
-	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
+	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
 	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true, bool bCompress = false, uint8_t retryCount = 0);
 }

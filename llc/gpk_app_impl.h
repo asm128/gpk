@@ -112,7 +112,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 	{																																											\
 		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																		\
 		{																																										\
-			::gpk::ptr_obj<_mainClass>													app;																	\
+			::gpk::pobj<_mainClass>													app;																	\
 			reterr_gerror_if(0 == app.create(runtimeValues), "%s", "Failed to create application instance. Out of memory?");									\
 			info_printf("%s", "Initializing application instance.");																											\
 			gpk_necall(::setup(*app), "%s", "User reported error. Execution stopped.");																			\
@@ -159,7 +159,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 																																																					\
 struct SRuntimeState {																																																\
 			::gpk::refcount_t										RenderThreadUsers				= 0;																											\
-			::gpk::ptr_obj<_mainClass>								Application						= {};																											\
+			::gpk::pobj<_mainClass>								Application						= {};																											\
 			bool													Running							= false;																										\
 			bool													RequestedExit					= false;																										\
 			bool													Exit							= false;																										\

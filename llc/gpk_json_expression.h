@@ -20,7 +20,7 @@ namespace gpk
 		uint32_t									IndexRootJSONNode						;
 		int32_t										IndexJSONResult							;
 		uint64_t									LastValue								;
-		::gpk::ptr_obj<::gpk::SJSONReader>			JSONReader								;
+		::gpk::pobj<::gpk::SJSONReader>			JSONReader								;
 		::gpk::view_const_char						Output									;
 		::gpk::view_const_char						Expression								;
 		bool										LastValueCarry							;

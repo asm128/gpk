@@ -58,8 +58,8 @@ namespace gpk
 
 							::gpk::SWindowPlatformDetail			PlatformDetail		= {};
 							::gpk::array_obj<::gpk::SSysEvent>		EventQueue			= {};
-							::gpk::ptr_obj<TOffscreen>				BackBuffer			= {};
-							::gpk::ptr_obj<::gpk::SInput>			Input				= {};
+							::gpk::pobj<TOffscreen>				BackBuffer			= {};
+							::gpk::pobj<::gpk::SInput>			Input				= {};
 							::gpk::SCoord2<uint32_t>				PreviousSize		= {};
 							::gpk::SCoord2<uint32_t>				Size				= {320, 200};
 							::gpk::SRectLimits<int32_t>				WindowedWindowRect	= {0, 0, 320, 200};

@@ -64,7 +64,7 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 	dialog.DefaultControlModes.FrameOut			= 1;
 	dialog.DefaultControlModes.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
-		static ::gpk::ptr_obj<::gpk::SDialogColors>	globalDefaultColors			= {};
+		static ::gpk::pobj<::gpk::SDialogColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
 			gpk_necs(::dialogInitializeColors(*globalDefaultColors.create(), gui.Colors->Palettes));
 		}
@@ -80,7 +80,7 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 	::dialogInitialize(*this);
 }
 
-								::gpk::SDialog::SDialog			(const ::gpk::ptr_obj<::gpk::SGUI> & pgui)						{
+								::gpk::SDialog::SDialog			(const ::gpk::pobj<::gpk::SGUI> & pgui)						{
 	GUI								= pgui;
 	if(!GUI)
 		GUI.create();
@@ -90,7 +90,7 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 static constexpr	const uint32_t									heightOfField								= 18;
 		::gpk::error_t												gpk::checkBoxCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogCheckBox>									checkBox;
+	::gpk::pobj<::gpk::SDialogCheckBox>									checkBox;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
 	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
@@ -122,7 +122,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 		::gpk::error_t												gpk::tunerCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogTuner>										tuner;
+	::gpk::pobj<::gpk::SDialogTuner>										tuner;
 	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
 	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
 	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
@@ -175,7 +175,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 		::gpk::error_t												gpk::sliderCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogSlider>									slider;
+	::gpk::pobj<::gpk::SDialogSlider>									slider;
 	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
 	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
@@ -260,7 +260,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 		::gpk::error_t												gpk::editBoxCreate							(::gpk::SDialog			& dialog )								{
 	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogEditBox>									editBox;
+	::gpk::pobj<::gpk::SDialogEditBox>									editBox;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
 	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
@@ -276,7 +276,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 		::gpk::error_t												gpk::viewportCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
-	::gpk::ptr_obj<::gpk::SDialogViewport>									viewport;
+	::gpk::pobj<::gpk::SDialogViewport>									viewport;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(viewport), "%s", "Out of memory?");
 	controlTable.Modes[viewport->IdGUIControl].UseNewPalettes			= true;

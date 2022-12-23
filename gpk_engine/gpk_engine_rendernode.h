@@ -92,8 +92,8 @@ namespace gpk
 		::gpk::error_t											Clone		(uint32_t iNode)	{
 			Transforms			.push_back(::gpk::SRenderNodeTransforms							{Transforms		[iNode]});
 			BaseTransforms		.push_back(::gpk::SRenderNodeTransforms							{BaseTransforms	[iNode]});
-			Lights				.push_back(::gpk::ptr_obj<::gpk::array_pod<::gpk::SLight	>>	{Lights			[iNode]});
-			Cameras				.push_back(::gpk::ptr_obj<::gpk::array_pod<::gpk::SCamera	>>	{Cameras		[iNode]});
+			Lights				.push_back(::gpk::pobj<::gpk::array_pod<::gpk::SLight	>>	{Lights			[iNode]});
+			Cameras				.push_back(::gpk::pobj<::gpk::array_pod<::gpk::SCamera	>>	{Cameras		[iNode]});
 			Flags				.push_back(::gpk::SRenderNodeFlags								{Flags			[iNode]});
 			return RenderNodes	.push_back(::gpk::SRenderNode									{RenderNodes	[iNode]});
 		}

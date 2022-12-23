@@ -41,33 +41,28 @@ namespace gpk
 		::gpk::SMatrix4<float>						VP						= {}; 
 		::gpk::SMatrix4<float>						VPS						= {}; 
 		::gpk::SCoord3<float>						CameraPosition			= {}; 
-		float a = 0;
+		float										CameraAngle				= 0;	// this padding is necessary because GPU shader apis require aligned members
 		::gpk::SCoord3<float>						CameraFront				= {}; 
-		float b = 0;
+		float										PaddingB				= 0;
 		::gpk::SCoord3<float>						LightPosition			= {}; 
-		float c = 0;
+		float										PaddingC				= 0;
 		::gpk::SCoord3<float>						LightDirection			= {}; 
-		float d = 0;
-		::gpk::SNearFar								NearFar 				= {.0001f, 10.0f}; 
-		::gpk::SNearFar								Padding					= {.0001f, 10.0f}; 
+		float										LightSpotPower			= 0;
 	};
-#pragma pack(pop)
-
-	struct SEngineScene;
-
-	typedef int32_t								(TFuncEffect)
-		( ::gpk::view_grid<::gpk::SColorBGRA>		backBufferColors
-		, ::gpk::view_grid<uint32_t>				backBufferDepth
-		, ::gpk::SEngineRenderCache					& renderCache
-		, const ::gpk::SEngineScene					& scene
-		, const ::gpk::SEngineSceneConstants		& constants
-		, int32_t									iRenderNode
-		);
-
+	static constexpr size_t SEngineSceneConstants_SIze = sizeof(SEngineSceneConstants);
 	struct SRenderMaterial {
 		::gpk::SRenderColor							Color;
+		::gpk::SCoord3<float>						Emission;
 		float										SpecularPower;
 	};
+
+	struct SRenderNodeConstants {
+		::gpk::SMatrix4<float>						Model;
+		::gpk::SMatrix4<float>						ModelInverseTranspose;
+		::gpk::SMatrix4<float>						MVP;
+		::gpk::SRenderMaterial						Material;
+	};
+#pragma pack(pop)
 
 	struct SPSIn {
 		::gpk::SCoord3<float>						WeightedPosition	;
@@ -85,7 +80,7 @@ namespace gpk
 
 	struct SSkin {
 		::gpk::SRenderMaterial						Material;
-		::gpk::array_pod<uint32_t>					Textures;
+		::gpk::apod<uint32_t>						Textures;
 	};
 
 	typedef	::gpk::SLinearMap<::gpk::SSkin>							SSkinManager;
@@ -102,12 +97,12 @@ namespace gpk
 	};
 
 	struct SEngineScene {
-		::gpk::ptr_obj<::gpk::SEngineGraphics>		Graphics				= {};
+		::gpk::pobj<::gpk::SEngineGraphics>			Graphics				= {};
 		::gpk::SRenderNodeManager					ManagedRenderNodes		= {};
 		::gpk::SEngineRenderCache					RenderCache				= {};
 	};
 
-	::gpk::error_t								drawScene
+	::gpk::error_t							drawScene
 		( ::gpk::view_grid<::gpk::SColorBGRA>		& backBufferColors
 		, ::gpk::view_grid<uint32_t>				& backBufferDepth
 		, ::gpk::SEngineRenderCache					& renderCache
