@@ -72,8 +72,8 @@ static	::gpk::error_t								transformTriangles
 
 	const ::gpk::SGeometrySlice								slice						= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 
-	renderCache.OutputVertexShader						= {};
-	::transformTriangles(renderCache.OutputVertexShader, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
+	renderCache.VertexShaderOutput						= {};
+	::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
 	return 0;
 }
 
@@ -98,9 +98,9 @@ static	::gpk::error_t								drawBuffers
 
 	for(uint32_t iTriangle = 0; iTriangle < outVS.PositionsScreen.size(); ++iTriangle) {
 		const ::gpk::STriangle3<float>							& triPositions				= outVS.PositionsScreen	[iTriangle];
-		if( (triPositions.CulledZ({0, 0xFFFFFF}))
-		 || (triPositions.CulledX({0, (float)offscreenMetrics.x}))
-		 || (triPositions.CulledY({0, (float)offscreenMetrics.y}))
+		if( triPositions.CulledZ({0, 0xFFFFFF})
+		 || triPositions.CulledX({0, (float)offscreenMetrics.x})
+		 || triPositions.CulledY({0, (float)offscreenMetrics.y})
 		)
 			continue;
 
@@ -155,11 +155,11 @@ static	::gpk::error_t								drawBuffers
 		const ::std::function<::gpk::TFuncPixelShader>			& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
-		drawBuffers(backBufferColors, backBufferDepth, renderCache.OutputVertexShader, renderCache.CacheVertexShader, material, {(const ::gpk::SColorBGRA*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::SColorBGRA*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
 	}
 
 	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
-	::gpk::array_pod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.CacheVertexShader.WireframePixelCoords;
+	::gpk::array_pod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
 	constexpr ::gpk::SCoord3<float>					xyz	[3]					= 

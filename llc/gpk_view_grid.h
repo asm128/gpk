@@ -107,6 +107,8 @@ namespace gpk
 	typedef				::gpk::view_grid<const int32_t	>		view2d_const_int32	;
 	typedef				::gpk::view_grid<const int64_t	>		view2d_const_int64	;
 
+	template <typename T>
+	using view2	= ::gpk::view_grid<T>; 
 
 	enum GRID_ROTATION : uint8_t {
 		GRID_ROTATION_DEFAULT	= 0,

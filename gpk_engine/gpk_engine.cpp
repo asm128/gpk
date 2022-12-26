@@ -196,7 +196,7 @@ int												gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateSphere			()	{ 
 	SGeometryIndexedTriangles				geometry;
-	::gpk::geometryBuildSphere(geometry, 16, 16, .5f, {});
+	::gpk::geometryBuildSphere(geometry, 24, 24, .5f, {});
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"Sphere"};
@@ -266,7 +266,7 @@ int												gpk::updateEntityTransforms
 	surface->Desc.MethodCompression			= 0;
 	surface->Desc.MethodFilter				= 0;
 	surface->Desc.MethodInterlace			= 0;
-	surface->Desc.Dimensions				= {44, 22};
+	surface->Desc.Dimensions				= {32, 32};
 	surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::SColorBGRA));
 	memset(surface->Data.begin(), 0xFF, surface->Data.size());
 	::gpk::view_grid<::gpk::SColorBGRA>			view	= {(::gpk::SColorBGRA*)surface->Data.begin(), surface->Desc.Dimensions.Cast<uint32_t>()};
