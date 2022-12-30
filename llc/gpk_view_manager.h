@@ -76,7 +76,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-			::gpk::error_t																viewManagerLoad								(::gpk::CViewManager<_tElement> & allocator, const ::gpk::view_const_byte & input) {
+			::gpk::error_t																viewManagerLoad								(::gpk::CViewManager<_tElement> & allocator, const ::gpk::vcb & input) {
 		typedef																					uint16_t									_tViewLen;
 		const uint32_t																			countViewsChar								= *(const uint32_t*)&input[0];
 		uint32_t																				offsetArraySize								= sizeof(uint32_t);

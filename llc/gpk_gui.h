@@ -120,7 +120,7 @@ namespace gpk
 		};
 
 	struct SControlImage {
-		::gpk::SImage<::gpk::SColorBGRA>								Temp								= {};
+		::gpk::img<::gpk::SColorBGRA>								Temp								= {};
 	};
 
 	struct SControl {

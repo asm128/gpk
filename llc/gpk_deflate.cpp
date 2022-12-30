@@ -7,7 +7,7 @@
 #include "gpk_aes.h"
 #include "gpk_noise.h"
 
-		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::view_const_byte	& inflated, ::gpk::apod<byte_t>& deflated, const uint32_t chunkSize)	{
+		::gpk::error_t									gpk::arrayDeflate								(const ::gpk::vcb	& inflated, ::gpk::apod<byte_t>& deflated, const uint32_t chunkSize)	{
     int															ret;
 	z_stream													strm											= {};
     ret																											= deflateInit(&strm, Z_BEST_COMPRESSION);
@@ -36,7 +36,7 @@
 	return 0;
 }
 
-		::gpk::error_t									gpk::arrayInflate								(const ::gpk::view_const_byte & deflated, ::gpk::apod<byte_t>& inflated, const uint32_t chunkSize)	{
+		::gpk::error_t									gpk::arrayInflate								(const ::gpk::vcb & deflated, ::gpk::apod<byte_t>& inflated, const uint32_t chunkSize)	{
 	z_stream													strm											= {};
 	int															ret												= inflateInit(&strm);	 // allocate inflate state
 	if (ret != Z_OK)
@@ -117,7 +117,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	return 0;
 }
 
-::gpk::error_t								gpk::folderUnpack			(::gpk::SFolderInMemory& out_loaded, const ::gpk::view_const_byte & rawFileInMemory)		{
+::gpk::error_t								gpk::folderUnpack			(::gpk::SFolderInMemory& out_loaded, const ::gpk::vcb & rawFileInMemory)		{
 	const ::gpk::SPackHeader						& header				= *(::gpk::SPackHeader*)&rawFileInMemory[0];
 	out_loaded.Names		.resize(header.TotalFileCount);
 	out_loaded.Contents		.resize(header.TotalFileCount);
@@ -174,7 +174,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk_safe_fclose(fp);
 		const ::gpk::vcs				& fileName					= virtualFolder.Names		[iFile];
-		const ::gpk::view_const_byte				& fileContent				= virtualFolder.Contents	[iFile];
+		const ::gpk::vcb				& fileContent				= virtualFolder.Contents	[iFile];
 		snprintf(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
 		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
@@ -250,7 +250,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 
 static constexpr const uint32_t							GPK_CRC_CRC_SEED			= 18973;
 
-		::gpk::error_t									gpk::crcGenerate			(const ::gpk::view_const_byte & bytes, uint64_t & crc)	{
+		::gpk::error_t									gpk::crcGenerate			(const ::gpk::vcb & bytes, uint64_t & crc)	{
 	crc														= 0;
 	const uint32_t												lastPos						= bytes.size() - 1;
 	for(uint32_t i=0; i < bytes.size(); ++i) {

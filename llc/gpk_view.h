@@ -358,7 +358,7 @@ namespace gpk
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
 
 	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::view_const_byte	& input	)	{
+	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::vcb	& input	)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
@@ -375,7 +375,7 @@ namespace gpk
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
-	static inline	::gpk::error_t					viewRead							(::gpk::vcs & headerToRead, const ::gpk::view_const_byte	& input	)	{
+	static inline	::gpk::error_t					viewRead							(::gpk::vcs & headerToRead, const ::gpk::vcb	& input	)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if(elementCount > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount);

@@ -30,7 +30,7 @@
 	return decodedCharacters;
 }
 
-static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::apod<byte_t> & joined)		{
+static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcb & body, ::gpk::apod<byte_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -46,7 +46,7 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 		::gpk::parseIntegerHexadecimal(strSize, &sizeChunk);
 		if(0 == sizeChunk)
 			break;
-		joined.append(::gpk::view_const_byte{&body[iStop], (uint32_t)sizeChunk});
+		joined.append(::gpk::vcb{&body[iStop], (uint32_t)sizeChunk});
 		iStop									+= (uint32_t)sizeChunk;
 		iStop									+= 2;	// skip \n
 	}
@@ -58,7 +58,7 @@ static	::gpk::error_t					httpClientRequestConstruct
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::view_const_byte		& body
+	,	const ::gpk::vcb		& body
 	,	::gpk::apod<byte_t>			& out_request
 	) {
 	::gpk::vcc						strMethod						= ::gpk::get_value_label(method);
@@ -94,7 +94,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::view_const_byte		& body
+	,	const ::gpk::vcb		& body
 	,	::gpk::SHTTPResponse				& out_received
 	) {
 	::gpk::apod<byte_t>					bytesRequest;
@@ -199,7 +199,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 #endif
 	}
 
-	::gpk::view_const_byte						contentReceived					= {};
+	::gpk::vcb						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
 		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
@@ -208,10 +208,10 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 		buf[iByte]								= (byte_t)::tolower(buf[iByte]);
 
-	::gpk::aobj<::gpk::view_const_byte>	headerLines;
+	::gpk::aobj<::gpk::vcb>	headerLines;
 	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
 
-	::gpk::split(::gpk::view_const_byte{out_received.HeaderData}, '\n', headerLines);
+	::gpk::split(::gpk::vcb{out_received.HeaderData}, '\n', headerLines);
 	bChunked						= false;
 	out_received.Headers.resize(headerLines.size());
 	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
@@ -253,7 +253,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::view_const_byte		& body
+	,	const ::gpk::vcb		& body
 	,	::gpk::apod<byte_t>			& out_received
 	) {
 	::gpk::SHTTPResponse						response;

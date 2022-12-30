@@ -29,17 +29,17 @@ namespace gpk
 	static constexpr const uint32_t							DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
 	static constexpr const uint32_t							INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
 
-	::gpk::error_t											arrayDeflate					(const ::gpk::view_const_byte	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);
-	::gpk::error_t											arrayInflate					(const ::gpk::view_const_byte	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE);
+	::gpk::error_t											arrayDeflate					(const ::gpk::vcb	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);
+	::gpk::error_t											arrayInflate					(const ::gpk::vcb	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE);
 	::gpk::error_t											folderPack						(::gpk::SFolderPackage	& out_packed, const ::gpk::vcs nameFolderSrc);
-	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::view_const_byte & rawFileInMemory);
+	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcb & rawFileInMemory);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcs nameFileSrc);
 	::gpk::error_t											folderToDisk					(const ::gpk::SFolderInMemory & virtualFolder, const ::gpk::vcs destinationPath);
 	::gpk::error_t											folderToDisk					(const ::gpk::SFolderPackage & folderPackage, const ::gpk::vcs nameFileDst);
 	::gpk::error_t											folderPackToDisk				(const ::gpk::vcs nameFileDst, const ::gpk::vcs nameFolderSrc);
 	::gpk::error_t											folderUnpackToDisk				(const ::gpk::vcs namePathDst, const ::gpk::vcs nameFileSrc);
 
-	::gpk::error_t											crcGenerate						(const ::gpk::view_const_byte & bytes, uint64_t & crc);
+	::gpk::error_t											crcGenerate						(const ::gpk::vcb & bytes, uint64_t & crc);
 	::gpk::error_t											crcVerifyAndRemove				(::gpk::apod<byte_t> & bytes);
 	::gpk::error_t											crcGenerateAndAppend			(::gpk::apod<byte_t> & bytes);
 

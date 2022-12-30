@@ -10,8 +10,8 @@
 namespace gpk
 {
 	struct SASCIITarget {
-								::gpk::SImage<uint8_t>						Characters									= {};
-								::gpk::SImage<uint16_t>						Colors										= {};
+								::gpk::img<uint8_t>						Characters									= {};
+								::gpk::img<uint16_t>						Colors										= {};
 
 		inline constexpr		::gpk::SCoord2<uint32_t>					metrics										()																	const	noexcept	{ return Characters.metrics(); }
 	};

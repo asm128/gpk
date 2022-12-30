@@ -687,7 +687,7 @@ static			::gpk::error_t											pngDecodeInterlaced
 	, const ::gpk::view_array<const ::gpk::SCoord2<uint32_t>>	& imageSizes
 	, ::gpk::view2d<_tPixel>									& out_View
 	) {
-	::gpk::SImage<_tPixel>														adam7			[7]						= {};
+	::gpk::img<_tPixel>														adam7			[7]						= {};
 	uint32_t																	offsetScanline							= 0;
 	for(uint32_t iImage = 0; iImage < imageSizes.size(); ++iImage) {
 		const ::gpk::SCoord2<uint32_t>												currentImageSize						= imageSizes[iImage];
@@ -731,7 +731,7 @@ static			::gpk::error_t											pngDecodeInterlaced
 		} // switch(colorType)
 		offsetScanline															+= currentImageSize.y;
 	}
-	::gpk::adam7Interlace(::gpk::view_array<::gpk::SImage<_tPixel>>{adam7}, out_View);
+	::gpk::adam7Interlace(::gpk::view_array<::gpk::img<_tPixel>>{adam7}, out_View);
 	return 0;
 }
 
@@ -1057,7 +1057,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 	return 0;
 }
 
-				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
+				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::img<::gpk::SColorBGRA>& out_Texture) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
 	if(imageHeader.MethodInterlace)
@@ -1079,7 +1079,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 			);
 }
 
-				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::SImage<uint16_t>& out_Texture) {
+				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::img<uint16_t>& out_Texture) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
 	if(imageHeader.MethodInterlace)
@@ -1101,7 +1101,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 			);
 }
 
-				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::SImage<uint8_t>& out_Texture) {
+				::gpk::error_t											gpk::pngDecode									(::gpk::SPNGData& pngData, ::gpk::img<uint8_t>& out_Texture) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
 	if(imageHeader.MethodInterlace)
@@ -1123,12 +1123,12 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 			);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::vcs& filename, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData & pngData, const ::gpk::vcs& filename, ::gpk::img<::gpk::SColorBGRA>& out_Texture)	{
 	gpk_necall(::gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
 	return ::gpk::pngDecode(pngData, out_Texture);
 }
 
-				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::view_const_ubyte& source, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture) {
+				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::vcub& source, ::gpk::img<::gpk::SColorBGRA>& out_Texture) {
 	gpk_necall(::gpk::pngFileLoad(pngData, source), "%s", "");
 	return ::gpk::pngDecode(pngData, out_Texture);
 }
@@ -1139,7 +1139,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 	return ::gpk::pngFileLoad(pngData, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});
 }
 
-			::gpk::error_t									gpk::pngFileLoad						(::gpk::SPNGData& pngData, const ::gpk::view_const_ubyte	& source	)	{
+			::gpk::error_t									gpk::pngFileLoad						(::gpk::SPNGData& pngData, const ::gpk::vcub	& source	)	{
 	::gpk::apod<uint32_t>													indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");
 	::gpk::apod<ubyte_t>													& imageDeflated									= pngData.Deflated;

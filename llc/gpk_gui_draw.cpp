@@ -166,7 +166,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 		if(0 == state.ImageInvertY)
 			::gpk::grid_copy_blend(target, control.Image, rectImage, control.ImageOffset);
 		else {
-			::gpk::SImage<::gpk::SColorBGRA>								& inverted							= gui.Controls.Images[iControl].Temp;
+			::gpk::img<::gpk::SColorBGRA>								& inverted							= gui.Controls.Images[iControl].Temp;
 			inverted.resize(control.Image.metrics());
 			::gpk::grid_mirror_y(inverted.View, control.Image);
 			::gpk::grid_copy_blend(target, inverted.View, rectImage, control.ImageOffset);

@@ -1,4 +1,4 @@
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 
 #ifndef GPK_ARRAY_STATIC_H_2983749823749826534465243
 #define GPK_ARRAY_STATIC_H_2983749823749826534465243

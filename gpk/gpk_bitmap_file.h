@@ -11,9 +11,9 @@ namespace gpk
 					::gpk::error_t	bmpFileLoad	(FILE							* source	, ::gpk::apod<::gpk::SColorBGRA>& out_Colors, ::gpk::view2d<::gpk::SColorBGRA>& out_ImageView);
 					::gpk::error_t	bmpFileLoad	(const ::gpk::vcs	& filename	, ::gpk::apod<::gpk::SColorBGRA>& out_Colors, ::gpk::view2d<::gpk::SColorBGRA>& out_ImageView);
 
-	static inline	::gpk::error_t	bmpFileLoad	(const byte_t					* source	, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	static inline	::gpk::error_t	bmpFileLoad	(FILE							* source	, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
-	static inline	::gpk::error_t	bmpFileLoad	(const ::gpk::vcs	& filename	, ::gpk::SImage<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
+	static inline	::gpk::error_t	bmpFileLoad	(const byte_t					* source	, ::gpk::img<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
+	static inline	::gpk::error_t	bmpFileLoad	(FILE							* source	, ::gpk::img<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(source		, out_Texture.Texels, out_Texture.View); }
+	static inline	::gpk::error_t	bmpFileLoad	(const ::gpk::vcs	& filename	, ::gpk::img<::gpk::SColorBGRA>& out_Texture)	{ return bmpFileLoad(filename	, out_Texture.Texels, out_Texture.View); }
 #endif
 }
 

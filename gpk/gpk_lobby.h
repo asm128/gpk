@@ -189,7 +189,7 @@ namespace gpk
 				Client.Queue.Received.clear();
 			}
 			for(uint32_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
-				::gpk::view_const_byte							viewPayload					= MessagesToProcess[iMessage]->Payload;
+				::gpk::vcb							viewPayload					= MessagesToProcess[iMessage]->Payload;
 				info_printf("Client received: %s.", viewPayload.begin());
 			}
 			return 0;

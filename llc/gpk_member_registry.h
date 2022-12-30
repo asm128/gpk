@@ -1,7 +1,7 @@
 /// Copyright 2016-2017 - asm128
 #include "gpk_type_identifier.h"
 #include "gpk_datatype.h"
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 #include "gpk_module.h"
 
 #ifndef GPK_MEMBER_REGISTRY_H_9214982364982734

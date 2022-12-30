@@ -114,9 +114,6 @@
     <ClInclude Include="gpk_view_stream.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_array.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view_bit.h">
       <Filter>view</Filter>
     </ClInclude>
@@ -396,6 +393,9 @@
     <ClInclude Include="gpk_d3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_deflate.cpp">
@@ -536,7 +536,7 @@
     <ClCompile Include="gpk_window.cpp">
       <Filter>framework</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_view_array.cpp">
+    <ClCompile Include="gpk_view.cpp">
       <Filter>view</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui_control.cpp">

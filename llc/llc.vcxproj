@@ -115,7 +115,7 @@
     <ClInclude Include="gpk_typeint.h" />
     <ClInclude Include="gpk_type_identifier.h" />
     <ClInclude Include="gpk_type_registry.h" />
-    <ClInclude Include="gpk_view_array.h" />
+    <ClInclude Include="gpk_view.h" />
     <ClInclude Include="gpk_view_bit.h" />
     <ClInclude Include="gpk_view_grid.h" />
     <ClInclude Include="gpk_view_layered.h" />
@@ -179,7 +179,7 @@
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
     <ClCompile Include="gpk_type_registry.cpp" />
-    <ClCompile Include="gpk_view_array.cpp" />
+    <ClCompile Include="gpk_view.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />

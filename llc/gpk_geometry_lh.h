@@ -50,10 +50,10 @@ namespace gpk
 	struct SImageManager {
 		::gpk::SKeyedContainer<::gpk::SImageTag>								ImageRegistry			= {};
 
-		::gpk::aobj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGR>		>>	BGR						= {};
-		::gpk::aobj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGRA>	>>	BGRA					= {};
-		::gpk::aobj<::gpk::pobj<::gpk::SImage<uint8_t>				>>	Grayscale8				= {};
-		::gpk::aobj<::gpk::pobj<::gpk::SImage<uint16_t>				>>	Grayscale16				= {};
+		::gpk::aobj<::gpk::pobj<::gpk::img<::gpk::SColorBGR>		>>	BGR						= {};
+		::gpk::aobj<::gpk::pobj<::gpk::img<::gpk::SColorBGRA>	>>	BGRA					= {};
+		::gpk::aobj<::gpk::pobj<::gpk::img<uint8_t>				>>	Grayscale8				= {};
+		::gpk::aobj<::gpk::pobj<::gpk::img<uint16_t>				>>	Grayscale16				= {};
 		::gpk::aobj<::gpk::pobj<::gpk::SImageMonochrome<uint64_t>	>>	Monochrome				= {};
 
 		::gpk::error_t															CreateImage				(const ::gpk::vcs & filename, const ::gpk::vcs & keyName, COLOR_TYPE colorType)	{

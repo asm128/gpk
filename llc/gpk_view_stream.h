@@ -1,4 +1,4 @@
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 
 #ifndef GPK_STREAM_VIEW_H_992834928749283
 #define GPK_STREAM_VIEW_H_992834928749283

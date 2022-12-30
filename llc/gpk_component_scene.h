@@ -254,7 +254,7 @@ namespace gpk {
 		::gpk::SKeyedArrayOBJ<TVertexColorBuffer				>	VertexColors			= {};
 		::gpk::SKeyedArrayOBJ<TTexCoordBuffer					>	TexCoords				= {};
 		::gpk::SKeyedArrayOBJ<TBlendIndicesBuffer				>	BlendIndices			= {};
-		::gpk::SKeyedArrayOBJ<::gpk::SImage<::gpk::SColorBGRA>	>	Textures				= {};
+		::gpk::SKeyedArrayOBJ<::gpk::img<::gpk::SColorBGRA>	>	Textures				= {};
 
 		::gpk::SKeyedArrayPOD<::gpk::SColorBGRA					>	Colors					= {};
 		::gpk::SKeyedArrayPOD<::gpk::SMaterial					>	Materials				= {};

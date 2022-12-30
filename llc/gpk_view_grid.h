@@ -1,4 +1,4 @@
-#include "gpk_view_array.h"		// for gpk::view_array<>
+#include "gpk_view.h"		// for gpk::view_array<>
 #include "gpk_coord.h"
 
 #ifndef GPK_GRID_VIEW_H_3423423
@@ -82,34 +82,34 @@ namespace gpk
 	}
 
 	// view_array common typedefs
-	typedef				::gpk::view2d<char_t			>		view2d_char			;
-	typedef				::gpk::view2d<ubyte_t		>		view2d_ubyte		;
-	typedef				::gpk::view2d<byte_t			>		view2d_byte			;
-	typedef				::gpk::view2d<float			>		view2d_float32		;
-	typedef				::gpk::view2d<double			>		view2d_float64		;
-	typedef				::gpk::view2d<uint8_t		>		view2d_uint8		;
-	typedef				::gpk::view2d<uint16_t		>		view2d_uint16		;
-	typedef				::gpk::view2d<uint32_t		>		view2d_uint32		;
-	typedef				::gpk::view2d<uint64_t		>		view2d_uint64		;
-	typedef				::gpk::view2d<int8_t			>		view2d_int8			;
-	typedef				::gpk::view2d<int16_t		>		view2d_int16		;
-	typedef				::gpk::view2d<int32_t		>		view2d_int32		;
-	typedef				::gpk::view2d<int64_t		>		view2d_int64		;
+	typedef	::gpk::view2d<char_t			>		view2d_char			, v2c		;
+	typedef	::gpk::view2d<ubyte_t			>		view2d_ubyte		, v2ub		;
+	typedef	::gpk::view2d<byte_t			>		view2d_byte			, v2b		;
+	typedef	::gpk::view2d<float				>		view2d_float32		, v2f32		;
+	typedef	::gpk::view2d<double			>		view2d_float64		, v2f64		;
+	typedef	::gpk::view2d<uint8_t			>		view2d_uint8		, v2ui8		;
+	typedef	::gpk::view2d<uint16_t			>		view2d_uint16		, v2ui16	;
+	typedef	::gpk::view2d<uint32_t			>		view2d_uint32		, v2ui32	;
+	typedef	::gpk::view2d<uint64_t			>		view2d_uint64		, v2ui64	;
+	typedef	::gpk::view2d<int8_t			>		view2d_int8			, v2i8		;
+	typedef	::gpk::view2d<int16_t			>		view2d_int16		, v2i16		;
+	typedef	::gpk::view2d<int32_t			>		view2d_int32		, v2i32		;
+	typedef	::gpk::view2d<int64_t			>		view2d_int64		, v2i64		;
 
 	// view_array<const> common typedefs
-	typedef				::gpk::view2d<const char_t	>		view2d_const_char	;
-	typedef				::gpk::view2d<const ubyte_t	>		view2d_const_ubyte	;
-	typedef				::gpk::view2d<const byte_t	>		view2d_const_byte	;
-	typedef				::gpk::view2d<const float	>		view2d_const_float32;
-	typedef				::gpk::view2d<const double	>		view2d_const_float64;
-	typedef				::gpk::view2d<const uint8_t	>		view2d_const_uint8	;
-	typedef				::gpk::view2d<const uint16_t	>		view2d_const_uint16	;
-	typedef				::gpk::view2d<const uint32_t	>		view2d_const_uint32	;
-	typedef				::gpk::view2d<const uint64_t	>		view2d_const_uint64	;
-	typedef				::gpk::view2d<const int8_t	>		view2d_const_int8	;
-	typedef				::gpk::view2d<const int16_t	>		view2d_const_int16	;
-	typedef				::gpk::view2d<const int32_t	>		view2d_const_int32	;
-	typedef				::gpk::view2d<const int64_t	>		view2d_const_int64	;
+	typedef	::gpk::view2d<const char_t		>		view2d_const_char	, v2cc		;
+	typedef	::gpk::view2d<const ubyte_t		>		view2d_const_ubyte	, v2cub		;
+	typedef	::gpk::view2d<const byte_t		>		view2d_const_byte	, v2cb		;
+	typedef	::gpk::view2d<const float		>		view2d_const_float32, v2cf32	;
+	typedef	::gpk::view2d<const double		>		view2d_const_float64, v2cf64	;
+	typedef	::gpk::view2d<const uint8_t		>		view2d_const_uint8	, v2cui8	;
+	typedef	::gpk::view2d<const uint16_t	>		view2d_const_uint16	, v2cui16	;
+	typedef	::gpk::view2d<const uint32_t	>		view2d_const_uint32	, v2cui32	;
+	typedef	::gpk::view2d<const uint64_t	>		view2d_const_uint64	, v2cui64	;
+	typedef	::gpk::view2d<const int8_t		>		view2d_const_int8	, v2ci8		;
+	typedef	::gpk::view2d<const int16_t		>		view2d_const_int16	, v2ci16	;
+	typedef	::gpk::view2d<const int32_t		>		view2d_const_int32	, v2ci32	;
+	typedef	::gpk::view2d<const int64_t		>		view2d_const_int64	, v2ci64	;
 
 	enum GRID_ROTATION : uint8_t {
 		GRID_ROTATION_DEFAULT	= 0,

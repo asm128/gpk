@@ -1,7 +1,7 @@
 #include "gpk_base64.h"
 #include "gpk_view_bit.h"
 
-static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_const_byte & base64Symbols, ::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<char_t> out_base64) {
+static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::vcb & base64Symbols, ::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<char_t> out_base64) {
 	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputTriplet[iSingleIn], 8};
 		::gpk::reverse_bits(inputBits);
@@ -25,7 +25,7 @@ static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_
 	}
 	return 0;
 }
-			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_byte & inputBytes, ::gpk::apod<char_t> & out_base64)	{
+			::gpk::error_t								gpk::base64Encode												(const ::gpk::vcb & base64Symbols, char_t base64PadSymbol, const ::gpk::vcb & inputBytes, ::gpk::apod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t													iOutput64														= out_base64.size(); //
@@ -72,7 +72,7 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uin
 	return 0;
 }
 
-			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::vcc & in_base64, ::gpk::apod<byte_t> & outputBytes)	{
+			::gpk::error_t								gpk::base64Decode												(const ::gpk::vcb & base64Symbols, char_t base64PadSymbol, const ::gpk::vcc & in_base64, ::gpk::apod<byte_t> & outputBytes)	{
 	rni_if(0 == in_base64.size(), "%s", "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {

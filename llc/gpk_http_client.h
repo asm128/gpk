@@ -18,7 +18,7 @@ namespace gpk
 		,	const ::gpk::vcs	& hostName
 		,	const ::gpk::vcs	& path
 		,	const ::gpk::vcs	& contentType
-		,	const ::gpk::view_const_byte	& body
+		,	const ::gpk::vcb	& body
 		,	::gpk::apod<byte_t>		& out_received
 		);
 
@@ -28,7 +28,7 @@ namespace gpk
 		,	const ::gpk::vcs	& hostName
 		,	const ::gpk::vcs	& path
 		,	const ::gpk::vcs	& contentType
-		,	const ::gpk::view_const_byte	& body
+		,	const ::gpk::vcb	& body
 		,	::gpk::SHTTPResponse			& out_received
 		);
 
@@ -38,7 +38,7 @@ namespace gpk
 		,	const ::gpk::vcs	& hostName
 		,	const ::gpk::vcs	& path
 		,	const ::gpk::vcs	& contentType
-		,	const ::gpk::view_const_byte	& body
+		,	const ::gpk::vcb	& body
 		,	::gpk::apod<byte_t>		& out_received
 		);
 

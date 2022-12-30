@@ -101,14 +101,14 @@ namespace gpk
 	template<typename _tCell>	using vbit					= ::gpk::view_bit<_tCell>;
 
 	template<typename _tField>
-	::gpk::error_t												reverse_bits				(::gpk::view_bit<_tField> toReverse)													{
-		const uint32_t													countBits					= toReverse.size() / 2;
-		const uint32_t													lastBitIndex				= toReverse.size() - 1;
+	::gpk::error_t											reverse_bits				(::gpk::view_bit<_tField> toReverse)													{
+		const uint32_t												countBits					= toReverse.size() / 2;
+		const uint32_t												lastBitIndex				= toReverse.size() - 1;
 		for(uint32_t iBit = 0; iBit < countBits; ++iBit) {
-			const uint32_t													iRev						= lastBitIndex - iBit;
-			const bool														current						= toReverse[iBit];
-			toReverse[iBit]												= (bool)toReverse[iRev];
-			toReverse[iRev]												= current;
+			const uint32_t												iRev						= lastBitIndex - iBit;
+			const bool													current						= toReverse[iBit];
+			toReverse[iBit]											= (bool)toReverse[iRev];
+			toReverse[iRev]											= current;
 		}
 		return 0;
 	}

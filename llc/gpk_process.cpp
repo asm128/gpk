@@ -7,7 +7,7 @@
 #	include <unistd.h>
 #endif
 
-::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::view_const_byte & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
+::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::vcb & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
 	uint32_t					offsetEndVar					= 0;
 	while(offsetEndVar < environmentBlock.size() - 1) {
 		uint32_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);

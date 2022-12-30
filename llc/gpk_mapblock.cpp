@@ -35,7 +35,7 @@
 	return 0;
 }
 
-::gpk::error_t									gpk::SMapBlock::Load					(const ::gpk::view_const_byte & input)									{
+::gpk::error_t									gpk::SMapBlock::Load					(const ::gpk::vcb & input)									{
 	if(0 == input.size())
 		return 0;
 	const uint32_t										countViews								= *(const uint32_t*)input.begin();

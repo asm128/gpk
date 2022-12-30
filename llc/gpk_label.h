@@ -1,4 +1,4 @@
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 
 #ifndef GPK_LABEL_H_2908742983
 #define GPK_LABEL_H_2908742983

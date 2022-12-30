@@ -69,17 +69,17 @@ namespace gpk
 	static inline	uint32_t										get_crc							(const ::gpk::view_array<const ubyte_t> & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
 					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename	);
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source	);
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcub	& source	);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename		, ::gpk::img	<::gpk::SColorBGRA> & out_Texture)	;
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcub	& source		, ::gpk::img	<::gpk::SColorBGRA> & out_Texture)	;
 																													 
-					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<::gpk::SColorBGRA> & out_Texture);
-					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint16_t> & out_Texture);
-					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint8_t> & out_Texture);
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<::gpk::SColorBGRA> & out_Texture);
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<uint16_t> & out_Texture);
+					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<uint8_t> & out_Texture);
 					::gpk::error_t									pngFileWrite					(const ::gpk::view2d<::gpk::SColorBGRA> & out_ImageView, ::gpk::apod<ubyte_t> & out_Bytes);
 
-	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::vcs	& filename	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
-	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::vcs	& filename	, ::gpk::img	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::vcub	& source	, ::gpk::img	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 
 #endif // GPK_PNG_H_0928374982374

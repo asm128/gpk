@@ -82,7 +82,7 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
+::gpk::error_t							gpk::keyValConstStringDeserialize	(const ::gpk::vcb & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
 	uint32_t									offset								= 0;
 	const uint32_t								keysToRead							= *(const uint32_t*)input.begin();
 	offset									+= (uint32_t)sizeof(uint32_t);

@@ -51,7 +51,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::SImage<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{
+	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
@@ -66,7 +66,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
+	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::img<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

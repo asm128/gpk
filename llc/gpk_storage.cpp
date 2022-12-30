@@ -282,7 +282,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 				info_printf("Directory: %s.", sPath);
 			}
 			else {
-				gpk_necall(pathContents.Files.push_back(::gpk::view_const_byte{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+				gpk_necall(pathContents.Files.push_back(::gpk::vcb{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 				info_printf("File: %s.", sPath);
 			}
 		}
@@ -313,7 +313,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	return result;
 }
 
-		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::vcc& fileName, const ::gpk::view_const_byte& fileInMemory)	{
+		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::vcc& fileName, const ::gpk::vcb& fileInMemory)	{
 	FILE														* fp												= 0;
 	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());

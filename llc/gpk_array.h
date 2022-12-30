@@ -696,15 +696,15 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									viewWrite							(const ::gpk::view1d<_tElement>& headerToWrite, ::gpk::apod<byte_t>	& output)	{
-		gpk_necall(output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
-		gpk_necall(output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
+		gpk_necall(output.append(::gpk::vcb{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
+		gpk_necall(output.append(::gpk::vcb{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
 	typedef ::gpk::SKeyVal<::gpk::vcs, ::gpk::aobj<::gpk::vcs>>	TKeyValConstStringArray;
 
 	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view1d<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view1d<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output);
-	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
+	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::vcb & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
 	::gpk::apod<char_t>								toString						(const ::gpk::vcc& strToLog);
 	::gpk::error_t									join							(::gpk::apod<char_t> & query, char separator, ::gpk::view1d<const gpk::view_const_char>	fields);
 	::gpk::error_t									append_quoted					(::gpk::apod<char_t>& output, ::gpk::vcc text);

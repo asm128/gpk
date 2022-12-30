@@ -67,7 +67,7 @@
 #include "gpk_typeint.h"
 #include "gpk_type_identifier.h"
 #include "gpk_type_registry.h"
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 #include "gpk_view_bit.h"
 #include "gpk_view_grid.h"
 #include "gpk_view_layered.h"

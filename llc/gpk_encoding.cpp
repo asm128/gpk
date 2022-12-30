@@ -7,7 +7,7 @@
 #include <ctime>
 #include <random>
 
-			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::view_const_byte& binary, ::gpk::apod<byte_t> & salted)				{
+			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::vcb& binary, ::gpk::apod<byte_t> & salted)				{
 	gpk_necall(salted.resize(binary.size() * 2), "%s", "Out of memory?");
 	byte_t														* pSalted														= salted.begin();
 	const byte_t												* pBinary														= binary.begin();
@@ -18,7 +18,7 @@
 	return 0;
 }
 
-			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::view_const_byte& salted, ::gpk::apod<byte_t> & binary)				{
+			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::vcb& salted, ::gpk::apod<byte_t> & binary)				{
 	gpk_necall(binary.resize(salted.size() / 2), "%s", "Out of memory?");
 	const byte_t												* pSalted														= salted.begin();
 	byte_t														* pBinary														= binary.begin();
@@ -177,7 +177,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 	return 0;
 }
 
-::gpk::error_t									gpk::digest													(const ::gpk::view_const_byte & input, ::gpk::apod<uint32_t> & digest)		{
+::gpk::error_t									gpk::digest													(const ::gpk::vcb & input, ::gpk::apod<uint32_t> & digest)		{
 	uint32_t											x								= 0;
 	::gpk::apod<uint32_t>							filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
@@ -213,7 +213,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 }
 
 
-::gpk::error_t									gpk::digest													(const ::gpk::view_const_byte & input, ::gpk::apod<byte_t> & digest)		{
+::gpk::error_t									gpk::digest													(const ::gpk::vcb & input, ::gpk::apod<byte_t> & digest)		{
 	uint32_t											x								= 0;
 	::gpk::apod<uint32_t>							filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {

@@ -66,7 +66,7 @@ namespace gpk
 		::gpk::pobj<::gpk::SInput>														Input												= {};
 		::gpk::pobj<::gpk::SGUI>															GUI													= {};
 		::gpk::aobj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
-		::gpk::SImage<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
+		::gpk::img<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 
 																							SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);

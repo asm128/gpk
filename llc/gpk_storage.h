@@ -22,7 +22,7 @@ namespace gpk
 	}	// Recursive
 					::gpk::error_t									pathList				(const ::gpk::vcc& pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
 					::gpk::error_t									fileToMemory			(const ::gpk::vcc& fileName, ::gpk::apod<byte_t>& fileInMemory);
-					::gpk::error_t									fileFromMemory			(const ::gpk::vcc& fileName, const ::gpk::view_const_byte& fileInMemory);
+					::gpk::error_t									fileFromMemory			(const ::gpk::vcc& fileName, const ::gpk::vcb& fileInMemory);
 					::gpk::error_t									fileJoin				(const ::gpk::vcc& fileNameDst);	// Joins a file split into file.split.## parts.
 					::gpk::error_t									fileSplit				(const ::gpk::vcc& fileNameSrc, const uint32_t partSize);	// Splits a file into file.split.## parts.
 					int64_t											fileSize				(const ::gpk::vcc& fileNameSrc);

@@ -30,7 +30,7 @@
 		for(uint32_t iValue = 0, valueCount = engineBufferVertices[0]->Data.size() / engineBufferVertices[0]->Desc.Format.TotalBytes(); iValue < valueCount; ++iValue) {
 			for(uint32_t iBuffer = 0; iBuffer < engineBufferVertices.size(); ++iBuffer) {
 				const ::gpk::SRenderBuffer						& buffer					= *engineBufferVertices[iBuffer];
-				::gpk::view_const_ubyte							value						= {&buffer.Data[iValue * buffer.Desc.Format.TotalBytes()], buffer.Desc.Format.TotalBytes()};
+				::gpk::vcub							value						= {&buffer.Data[iValue * buffer.Desc.Format.TotalBytes()], buffer.Desc.Format.TotalBytes()};
 				packed.append(value);
 			}
 		}

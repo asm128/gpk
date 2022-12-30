@@ -94,7 +94,7 @@ namespace gpk
 
 	struct SModelGND {
 				::gpk::aobj<::gpk::SModelNodeGND>				Nodes;
-				::gpk::SImage<::gpk::STileMapping>					TileMapping;
+				::gpk::img<::gpk::STileMapping>					TileMapping;
 
 //																	SModelGND						()							= default;
 //																	SModelGND						(const SModelGND& other)	= default;

@@ -1,4 +1,4 @@
-#include "gpk_view_array.h"
+#include "gpk_view.h"
 #include "gpk_safe.h"
 
 #ifndef GPK_STDSTRING_H_982137498237

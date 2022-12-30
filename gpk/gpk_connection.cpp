@@ -336,7 +336,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand& command, 
 		messageReceived->Command									= header.Command;
 		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
 		if(header.Size > 0) {
-			const ::gpk::view_const_byte									viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
+			const ::gpk::vcb									viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
 			if(0 != command.Compressed) {
 				if(0 != command.Encrypted) {
 					::gpk::apod<byte_t>										inflated;

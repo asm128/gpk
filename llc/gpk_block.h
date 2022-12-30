@@ -236,7 +236,7 @@ namespace gpk
 
 		inline		::gpk::error_t									Size						()																const	{ return Indices.size(); }
 					::gpk::error_t									Save						(::gpk::apod<byte_t> & output)								const;
-					::gpk::error_t									Load						(const ::gpk::view_const_byte & input);
+					::gpk::error_t									Load						(const ::gpk::vcb & input);
 
 					::gpk::error_t									MapAdd						(const ::gpk::vcc & dataToAdd);
 					::gpk::error_t									MapId						(const ::gpk::vcc & dataToAdd)						const;
