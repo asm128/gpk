@@ -68,17 +68,17 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SRenderNodeManager {
-		::gpk::array_pod <::gpk::SRenderNode					>		RenderNodes			= {};
-		::gpk::array_pod <::gpk::SRenderNodeFlags				>		Flags				= {};
-		::gpk::array_pod <::gpk::SRenderNodeTransforms			>		Transforms			= {};
-		::gpk::array_pod <::gpk::SRenderNodeTransforms			>		BaseTransforms		= {};
-		::gpk::array_pobj<::gpk::array_pod<::gpk::SLight	>	>		Lights				= {};
-		::gpk::array_pobj<::gpk::array_pod<::gpk::SCamera	>	>		Cameras				= {};
+		::gpk::apod <::gpk::SRenderNode					>		RenderNodes			= {};
+		::gpk::apod <::gpk::SRenderNodeFlags				>		Flags				= {};
+		::gpk::apod <::gpk::SRenderNodeTransforms			>		Transforms			= {};
+		::gpk::apod <::gpk::SRenderNodeTransforms			>		BaseTransforms		= {};
+		::gpk::array_pobj<::gpk::apod<::gpk::SLight	>	>		Lights				= {};
+		::gpk::array_pobj<::gpk::apod<::gpk::SCamera	>	>		Cameras				= {};
 
 		// 
-		::gpk::array_pobj<::gpk::array_pod<::gpk::SLightDirectional	>>	LightsDirectional	= {};
-		::gpk::array_pobj<::gpk::array_pod<::gpk::SLightPoint		>>	LightsPoint			= {};
-		::gpk::array_pobj<::gpk::array_pod<::gpk::SLightSpot		>>	LightsSpot			= {};
+		::gpk::array_pobj<::gpk::apod<::gpk::SLightDirectional	>>	LightsDirectional	= {};
+		::gpk::array_pobj<::gpk::apod<::gpk::SLightPoint		>>	LightsPoint			= {};
+		::gpk::array_pobj<::gpk::apod<::gpk::SLightSpot		>>	LightsSpot			= {};
 
 		::gpk::error_t											Create		()	{
 			Transforms			.push_back({});
@@ -92,8 +92,8 @@ namespace gpk
 		::gpk::error_t											Clone		(uint32_t iNode)	{
 			Transforms			.push_back(::gpk::SRenderNodeTransforms							{Transforms		[iNode]});
 			BaseTransforms		.push_back(::gpk::SRenderNodeTransforms							{BaseTransforms	[iNode]});
-			Lights				.push_back(::gpk::pobj<::gpk::array_pod<::gpk::SLight	>>	{Lights			[iNode]});
-			Cameras				.push_back(::gpk::pobj<::gpk::array_pod<::gpk::SCamera	>>	{Cameras		[iNode]});
+			Lights				.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]});
+			Cameras				.push_back(::gpk::pobj<::gpk::apod<::gpk::SCamera	>>	{Cameras		[iNode]});
 			Flags				.push_back(::gpk::SRenderNodeFlags								{Flags			[iNode]});
 			return RenderNodes	.push_back(::gpk::SRenderNode									{RenderNodes	[iNode]});
 		}

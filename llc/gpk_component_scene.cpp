@@ -21,7 +21,7 @@ static ::gpk::error_t					jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::
 static inline	::gpk::error_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
 static inline	::gpk::error_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, int32_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
 
-static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::view_const_string componentName)  {
+static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcs componentName)  {
 	::gpk::SNodeRenderer						& renderer				= scene.Renderer;
 	int32_t										indexNewNode			= renderer.Nodes.push_back(componentName, {});
 	::gpk::SRenderNode							& newNode				= renderer.Nodes[indexNewNode];
@@ -72,29 +72,29 @@ static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk
 	return scene.Components.push_back(componentName, newComponentGroup);
 }
 
-static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk::view_const_char filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
-	::gpk::array_pod<byte_t>					rawMat					= {};
+static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcc filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
+	::gpk::apod<byte_t>					rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
 	::gpk::SJSONReader							numberReader			= {};
-	::gpk::array_obj<::gpk::view_const_char>	matFileLines			= {};
+	::gpk::aobj<::gpk::vcc>	matFileLines			= {};
 	::gpk::split(::gpk::vcc{rawMat}, '\n', matFileLines);
 
 	int32_t										countMaterials			= 0;
-	::gpk::array_pod<char_t>					materialPath			= {};
+	::gpk::apod<char_t>					materialPath			= {};
 	::gpk::label								materialName			= {};
 	::gpk::SMaterial							newMaterial				= {};
 	for(uint32_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
-		::gpk::view_const_char & line = matFileLines[iLine];
+		::gpk::vcc & line = matFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
 		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
 
-		::gpk::array_obj<::gpk::view_const_char>	lineValues				= {};
+		::gpk::aobj<::gpk::vcc>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
 		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
-			::gpk::view_const_char						& value					= lineValues[iValue];
+			::gpk::vcc						& value					= lineValues[iValue];
 			::gpk::trim(value, value);
 			if(0 == value.size())
 				lineValues.remove(iValue--);
@@ -145,8 +145,8 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 	return 0;
 }
 
-static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::view_const_char filename)  {
-	::gpk::array_pod<byte_t>					rawObj					= {};
+static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcc filename)  {
+	::gpk::apod<byte_t>					rawObj					= {};
 	gpk_necall(::gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
@@ -155,28 +155,28 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::SComponentData						newGroup				= {};
 	uint32_t									countObjects			= 0;
 	uint32_t									countGroups				= 0;
-	::gpk::array_pod<int16_t>					objectIndices			= {};
-	::gpk::array_pod<char_t>					objectPath				= {};
+	::gpk::apod<int16_t>					objectIndices			= {};
+	::gpk::apod<char_t>					objectPath				= {};
 	::gpk::label								objectName				= {};
 	::gpk::label								groupName				= {};
-	::gpk::array_pod<char_t>					groupPath				= {};
+	::gpk::apod<char_t>					groupPath				= {};
 
 
-	::gpk::array_obj<::gpk::view_const_char>	objFileLines			= {};
+	::gpk::aobj<::gpk::vcc>	objFileLines			= {};
 	::gpk::split(::gpk::vcc{rawObj}, '\n', objFileLines);
 	::gpk::SJSONReader							numberReader			= {};
 	info_printf("%s", "Preloading materials...");
 	for(uint32_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
-		::gpk::view_const_char						& line					= objFileLines[iLine];
+		::gpk::vcc						& line					= objFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
 		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
-		::gpk::array_obj<::gpk::view_const_char>	lineValues				= {};
+		::gpk::aobj<::gpk::vcc>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
 
 		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
-			::gpk::view_const_char						& value					= lineValues[iValue];
+			::gpk::vcc						& value					= lineValues[iValue];
 			::gpk::ltrim(value, value);
 			::gpk::rtrim(value, value);
 			if(0 == value.size())
@@ -184,14 +184,14 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 		}
 		const ::gpk::vcc							command					= lineValues[0];
 		if(command == ::gpk::vcs{"mtllib"}) {
-			::gpk::array_pod<char_t>					matFilename				= {};
+			::gpk::apod<char_t>					matFilename				= {};
 			int32_t										pathStop				= ::gpk::rfind('/', filename);
 			if(pathStop == -1) {
 				matFilename.append_string("./");
 				matFilename.append_string(lineValues[1]);
 			}
 			else {
-				::gpk::view_const_char						filepath				= {};
+				::gpk::vcc						filepath				= {};
 				gpk_necall(filename.slice(filepath, 0, pathStop), "%s", "");
 				matFilename.append(filepath);
 				matFilename.push_back('/');
@@ -203,16 +203,16 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 
 	info_printf("%s", "Loading geometries...");
 	for(uint32_t iLine = 0; iLine < objFileLines.size(); ++iLine) {
-		::gpk::view_const_char						& line					= objFileLines[iLine];
+		::gpk::vcc						& line					= objFileLines[iLine];
 		::gpk::trim(line, line);
 		if(0 == line.size() || line[0] == '#')
 			continue;
 		info_printf("Line %u: '%s'.", iLine, ::gpk::toString(line).begin());
 
-		::gpk::array_obj<::gpk::view_const_char>	lineValues				= {};
+		::gpk::aobj<::gpk::vcc>	lineValues				= {};
 		::gpk::split(line, ::gpk::vcs{" \t"}, lineValues);
 		for(uint32_t iValue = 0; iValue < lineValues.size(); ++iValue) {
-			::gpk::view_const_char						& value					= lineValues[iValue];
+			::gpk::vcc						& value					= lineValues[iValue];
 			::gpk::ltrim(value, value);
 			::gpk::rtrim(value, value);
 			if(0 == value.size())
@@ -284,9 +284,9 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	return 0;
 }
 
-::gpk::error_t	gpk::SComponentScene::CreateFromFile		(::gpk::view_const_string filename)		{
-	::gpk::view_const_char					extension				= {};
-	::gpk::array_pod<char_t>				ext_lwr					= {};
+::gpk::error_t	gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
+	::gpk::vcc					extension				= {};
+	::gpk::apod<char_t>				ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necall(ext_lwr.append(extension), "%s", "");
 	::gpk::tolower(ext_lwr);

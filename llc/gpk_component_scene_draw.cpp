@@ -5,8 +5,8 @@ static	::gpk::error_t					drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::SMatrix4<float>				matrixWVP
-	, ::gpk::view_grid<::gpk::SColorBGRA>	target_image
-	, ::gpk::view_grid<uint32_t>			target_depth
+	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<uint32_t>			target_depth
 	) {
 
 	::gpk::STriangle3<float>					triangleTransformed		= {};
@@ -17,8 +17,8 @@ static	::gpk::error_t					drawOrderedVertices
 			::gpk::drawTriangle(target_image, triangleFinal, nodeColor);
 		}
 		else if(nodeToDraw.PerFaceColor) {
-			::gpk::array_pod<::gpk::SCoord3<float>>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
-			::gpk::array_pod<::gpk::SCoord3<float>>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
+			::gpk::apod<::gpk::SCoord3<float>>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
+			::gpk::apod<::gpk::SCoord3<float>>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
 			for(uint32_t iTriangle = 0; iTriangle < nodeVertices.size() / 3; ++iTriangle) {
 				::gpk::SColorBGRA							triangleColor			= (nodeToDraw.VertexColor >= 0) ? renderer.VertexColors[nodeToDraw.VertexColor][iTriangle] : nodeColor;
 				;
@@ -58,8 +58,8 @@ static	::gpk::error_t					drawOrderedVertices
 	, const ::gpk::SMatrix4<float>			& view
 	, const ::gpk::SMatrix4<float>			& projection
 	, const ::gpk::SMatrix4<float>			& viewProjection
-	, ::gpk::view_grid<::gpk::SColorBGRA>	target_image
-	, ::gpk::view_grid<uint32_t>			target_depth
+	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<uint32_t>			target_depth
 	) {
 	if(0 == target_image.size())
 		return 1;
@@ -87,8 +87,8 @@ static	::gpk::error_t					drawOrderedVertices
 ::gpk::error_t							gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, int32_t								iCamera
-	, ::gpk::view_grid<::gpk::SColorBGRA>	target_image
-	, ::gpk::view_grid<uint32_t>			target_depth
+	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<uint32_t>			target_depth
 	, bool									drawHidden
 	) {
 	if(0 == target_image.size())
@@ -108,7 +108,7 @@ static	::gpk::error_t					drawOrderedVertices
 		const ::gpk::SRenderNode					& nodeToRender			= renderer.Nodes[iNode];
 		if(drawHidden || false == nodeToRender.Hidden) {
 			renderer.RenderCache.NodesToRender.push_back(iNode);
-			::gpk::array_pod<uint32_t>					& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
+			::gpk::apod<uint32_t>					& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
 			::gpk::SCoord3<float>						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::SCoord3<float>{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
 			for(uint32_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
 				const ::gpk::SLight							& light					= renderer.Lights[iLight];

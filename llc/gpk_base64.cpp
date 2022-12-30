@@ -25,7 +25,7 @@ static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::view_
 	}
 	return 0;
 }
-			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_byte & inputBytes, ::gpk::array_pod<char_t> & out_base64)	{
+			::gpk::error_t								gpk::base64Encode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_byte & inputBytes, ::gpk::apod<char_t> & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
 	const uint32_t												packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t													iOutput64														= out_base64.size(); //
@@ -72,7 +72,7 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uin
 	return 0;
 }
 
-			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::view_const_char & in_base64, ::gpk::array_pod<byte_t> & outputBytes)	{
+			::gpk::error_t								gpk::base64Decode												(const ::gpk::view_const_byte & base64Symbols, char_t base64PadSymbol, const ::gpk::vcc & in_base64, ::gpk::apod<byte_t> & outputBytes)	{
 	rni_if(0 == in_base64.size(), "%s", "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {

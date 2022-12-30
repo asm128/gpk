@@ -9,7 +9,7 @@
 
 static constexpr ::gpk::array_static<const char_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 
-::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, const ::gpk::view_const_char & filename) {
+::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, const ::gpk::vcc & filename) {
 	xml_info_printf("Loading xml file: %s.", filename.begin());
 	gpk_necall(::gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
 	return ::gpk::xmlParse(file.Reader, file.Bytes);

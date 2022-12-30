@@ -127,7 +127,7 @@ namespace gpk
 		::gpk::SRectangle2<int16_t>										Area								= {{}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
-		::gpk::view_grid<::gpk::SColorBGRA>								Image								= {};
+		::gpk::view2d<::gpk::SColorBGRA>								Image								= {};
 		::gpk::SCoord2<int16_t>											ImageOffset							= {};
 		::gpk::ALIGN													ImageAlign							= ::gpk::ALIGN_CENTER;
 
@@ -157,7 +157,7 @@ namespace gpk
 	};
 
 	struct SControlText {
-		::gpk::view_const_string										Text								= {};
+		::gpk::vcs										Text								= {};
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_CENTER;
 		::gpk::SMinMax<uint32_t>										Selection							= {0, 1};
 		int16_t															FontSelected						= -1;
@@ -171,24 +171,24 @@ namespace gpk
 	};
 #pragma pack(pop)
 	struct SGUIControlTable {
-		::gpk::array_pod<::gpk::SControl			>					Controls							= {};
-		::gpk::array_pod<::gpk::SControlState		>					States								= {};
-		::gpk::array_pod<::gpk::SControlMetrics		>					Metrics								= {};
-		::gpk::array_obj<::gpk::SControlText		>					Text								= {};
-		::gpk::array_pod<::gpk::SControlConstraints	>					Constraints							= {};
-		::gpk::array_obj<::gpk::SControlMode		>					Modes								= {};
-		::gpk::array_obj<::gpk::array_pod<int32_t>	>					Children							= {};
-		::gpk::array_obj<::gpk::SControlImage		>					Images								= {};
-		::gpk::array_pod<::gpk::SSysEvent			>					Events								= {};
+		::gpk::apod<::gpk::SControl			>					Controls							= {};
+		::gpk::apod<::gpk::SControlState		>					States								= {};
+		::gpk::apod<::gpk::SControlMetrics		>					Metrics								= {};
+		::gpk::aobj<::gpk::SControlText		>					Text								= {};
+		::gpk::apod<::gpk::SControlConstraints	>					Constraints							= {};
+		::gpk::aobj<::gpk::SControlMode		>					Modes								= {};
+		::gpk::aobj<::gpk::apod<int32_t>	>					Children							= {};
+		::gpk::aobj<::gpk::SControlImage		>					Images								= {};
+		::gpk::apod<::gpk::SSysEvent			>					Events								= {};
 	};
 
 	struct SGUIColors {
-		::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>		>		Palette								= {};
-		::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>	>		ControlThemes						= {};
+		::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>		>		Palette								= {};
+		::gpk::pobj<::gpk::apod<::gpk::SControlTheme>	>		ControlThemes						= {};
 
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors	= {};
 
-		::gpk::array_pod<
+		::gpk::apod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
 		>																Palettes;
 	};
@@ -225,19 +225,19 @@ namespace gpk
 			::gpk::SRectangle2<int16_t>					Area			;
 			::gpk::SRectLimits<uint8_t>					Border			;
 			::gpk::SRectLimits<uint16_t>				Margin			;
-			::gpk::view_const_string					Text			;
+			::gpk::vcs					Text			;
 			::gpk::ALIGN								TextAlign		;
 			::gpk::ALIGN								IconAlign		;
-			::gpk::view_const_string					IconPathOff		;
-			::gpk::view_const_string					IconPathOn		;
+			::gpk::vcs					IconPathOff		;
+			::gpk::vcs					IconPathOn		;
 			::gpk::SCoord2<bool>						AdjustToText	;
 		};
 	#pragma pack(pop)
 
 	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA> target);
-	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices);
+	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view2d<::gpk::SColorBGRA> target);
+	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI& gui, ::gpk::apod<uint32_t>& controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI& gui);
 	::gpk::error_t			guiSelect						(::gpk::SGUI& gui, int32_t controlToSelect);
 
@@ -245,8 +245,8 @@ namespace gpk
 	::gpk::error_t			controlCreate					(::gpk::SGUI& gui);
 	::gpk::error_t			controlCreateChild				(::gpk::SGUI& gui, int32_t iParent);
 	::gpk::error_t			controlSetParent				(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
-	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA> target);
-	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view2d<::gpk::SColorBGRA> target);
+	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::vcs& text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI& gui, int32_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
 	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);

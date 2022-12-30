@@ -32,9 +32,9 @@ namespace gpk
 
 	struct SVirtualKeyboard {
 		int32_t											IdRoot;
-		::gpk::array_pod<uint16_t>						Keys;
+		::gpk::apod<uint16_t>						Keys;
 
-		::gpk::array_pod<::gpk::SVirtualKeyboardEvent>	Events;
+		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
 	};
 
 	::gpk::error_t				virtualKeyboardHandleEvent		(::gpk::SVirtualKeyboard & vk, int32_t iControl);

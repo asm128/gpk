@@ -13,7 +13,7 @@ static	::gpk::CLabelManager*				labelManagerSingleton						()													noexce
 	return (LabelManager == other.LabelManager) ? false : 0 == memcmp(Data, other.Data, Count);
 }
 
-		bool								::gpk::label::operator==					(const ::gpk::view_const_string& other)		const	noexcept	{
+		bool								::gpk::label::operator==					(const ::gpk::vcs& other)		const	noexcept	{
 	if(Data == other.begin())
 		return true;
 	return (Count != other.size()) ? false : 0 == memcmp(Data, other.begin(), Count);

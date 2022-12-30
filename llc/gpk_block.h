@@ -24,7 +24,7 @@ namespace gpk
 	};
 
 	struct SBlockConfig {
-						::gpk::view_const_string					Key;
+						::gpk::vcs					Key;
 						uint32_t									BlockSize;
 						bool										Deflate;
 	};
@@ -33,11 +33,11 @@ namespace gpk
 
 	template<typename _tBlock>
 	struct SMapTable {
-						::gpk::array_pod<uint32_t>					Id;
-						::gpk::array_obj<::gpk::pobj<_tBlock>>	Block;
+						::gpk::apod<uint32_t>						Id;
+						::gpk::aobj<::gpk::pobj<_tBlock>>			Block;
 
-						::gpk::SBlockConfig							BlockConfig					= {::gpk::view_const_string{"01234567890123456789012345678901"}, 65535, true};
-						::gpk::view_const_char						DBName						= {};
+						::gpk::SBlockConfig							BlockConfig					= {::gpk::vcs{"01234567890123456789012345678901"}, 65535, true};
+						::gpk::vcc						DBName						= {};
 						int32_t										MaxBlockOnDisk				= -1;
 	};
 
@@ -50,17 +50,17 @@ namespace gpk
 
 					::gpk::error_t								blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
 					::gpk::error_t								blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
-					::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath);
-	inline			::gpk::error_t								blockRecordPath				(::gpk::array_pod<char_t> & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath) {
+					::gpk::error_t								blockRecordPath				(::gpk::apod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath);
+	inline			::gpk::error_t								blockRecordPath				(::gpk::apod<char_t> & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath) {
 		::gpk::blockRecordIndices(idRecord, blockSize, indices);
 		return ::gpk::blockRecordPath(fileName, indices, dbName, dbPath);
 	}
 
-					::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName);
-					::gpk::error_t								blockFilePath				(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath);
+					::gpk::error_t								blockFileName				(const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName, ::gpk::apod<char_t> & fileName);
+					::gpk::error_t								blockFilePath				(::gpk::apod<char_t> & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath);
 
 	template<typename _tElement>
-					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::view_const_char & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
+					::gpk::error_t								blockMapLoad				(::gpk::apod<char_t> & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::vcc & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
 		(void)maxBlocksInMemory;
 						loadedBytes.clear();
 		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock)
@@ -75,25 +75,25 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-					::gpk::error_t								blockMapLoad				(::gpk::array_pod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath, uint64_t idRecord)								{
-		::gpk::array_pod<char_t>										fileName					= {};
+					::gpk::error_t								blockMapLoad				(::gpk::apod<char_t> & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath, uint64_t idRecord)								{
+		::gpk::apod<char_t>										fileName					= {};
 		::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath);
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	template<typename _tElement>
-					::gpk::error_t								blockMapSave				(const ::gpk::array_pod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath)								{
-		::gpk::array_pod<char_t>										finalPath					= {};
+					::gpk::error_t								blockMapSave				(const ::gpk::apod<char_t> & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)								{
+		::gpk::apod<char_t>												finalPath					= {};
 		::gpk::blockFilePath(finalPath, dbName, dbPath);
-		::gpk::array_pod<char_t>										fileName					= {};
+		::gpk::apod<char_t>												fileName					= {};
 		gpk_necall(::gpk::blockFileName(indexMap.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
 		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
 
 	template<typename _tMapBlock>
-					::gpk::error_t								mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::view_const_char & dbPath, ::gpk::array_pod<char_t> & outputData) {
+					::gpk::error_t								mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::vcc & dbPath, ::gpk::apod<char_t> & outputData) {
 		::gpk::SRecordMap												recordMap;
-		::gpk::array_pod<char_t>										fileBytes;
+		::gpk::apod<char_t>												fileBytes;
 		::gpk::error_t													indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
 		gpk_necall(indexBlock, "Invalid record id: %llu.", idRecord);
 		_tMapBlock														& loadedBlock				= *mapTable.Block[indexBlock];
@@ -103,7 +103,7 @@ namespace gpk
 		return loadedBlock.MapGet(recordMap.IndexRecord, outputData);
 	}
 
-	//static inline	int16_t										mapTableContainerFromData	(const ::gpk::view_const_char & sequenceToFind, const uint32_t countContainers)	{
+	//static inline	int16_t										mapTableContainerFromData	(const ::gpk::vcc & sequenceToFind, const uint32_t countContainers)	{
 	//	uint64_t														container					= 0;
 	//	::gpk::crcGenerate(sequenceToFind, container);
 	//	return (int16_t)(container % countContainers);
@@ -112,9 +112,9 @@ namespace gpk
 	//static inline	uint32_t									mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
 
 	template<typename _tMapBlock>
-					int64_t										mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToFind)	{
-		::gpk::array_pod<uint32_t>										idBlocks					= mapTable.Id;
-		::gpk::array_pod<uint32_t>										blocksToSkip;
+					int64_t										mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToFind)	{
+		::gpk::apod<uint32_t>										idBlocks					= mapTable.Id;
+		::gpk::apod<uint32_t>										blocksToSkip;
 		for(uint32_t iBlock = 0; iBlock < mapTable.Block.size(); ++iBlock) {
 			const _tMapBlock												& block						= *mapTable.Block[iBlock];
 			const int32_t													idEmail						= block.MapId(sequenceToFind);
@@ -130,18 +130,18 @@ namespace gpk
 			blocksToSkip.push_back(idBlock);
 			(void)block;
 		}
-		::gpk::array_pod<char_t>										containerPath				= {};
+		::gpk::apod<char_t>										containerPath				= {};
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
-		::gpk::array_obj<::gpk::array_pod<char_t>>						paths;
+		::gpk::aobj<::gpk::apod<char_t>>						paths;
 		::gpk::pathCreate(containerPath);
 		::gpk::pathList(containerPath, paths, false, {});
-		const ::gpk::view_const_string									extension					= "ubk";
-		::gpk::array_pod<char_t>										loadedBytes;
+		const ::gpk::vcs									extension					= "ubk";
+		::gpk::apod<char_t>										loadedBytes;
 		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {
-			const ::gpk::view_const_char									fileNameCurrent				= paths[iFile];
+			const ::gpk::vcc									fileNameCurrent				= paths[iFile];
 			if(5 >= fileNameCurrent.size())
 				continue;
-			::gpk::view_const_char											filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
+			::gpk::vcc											filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
 			gpk_necall(fileNameCurrent.slice(filePart, fileNameCurrent.size() - extension.size(), extension.size()), "%s", "");
 			if(filePart != extension)
 				continue;
@@ -175,7 +175,7 @@ namespace gpk
 	}
 
 	template<typename _tMapBlock>
-				int64_t											mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::view_const_char & dbPath, const ::gpk::view_const_char & sequenceToAdd)	{
+				int64_t											mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToAdd)	{
 		int64_t															idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
 		ree_if(0 <= idRecord, "Sequence already registered: %s.", ::gpk::toString(sequenceToAdd).begin());
 		if(-1 == mapTable.MaxBlockOnDisk) {
@@ -189,7 +189,7 @@ namespace gpk
 			++mapTable.MaxBlockOnDisk;
 			uint64_t														newIdRecord					= (uint64_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
-			::gpk::array_pod<char_t>										bytesToWrite;
+			::gpk::apod<char_t>										bytesToWrite;
 			gpk_necall(newBlock->Save(bytesToWrite), "%s", "Out of memory?");
 			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
 			return newIdRecord;
@@ -203,7 +203,7 @@ namespace gpk
 				newIndices.IdBlock											= idBlockInMemory;
 				uint64_t														newIdRecord					= (uint64_t)-1LL;
 				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
-				::gpk::array_pod<char_t>										bytesToWrite;
+				::gpk::apod<char_t>										bytesToWrite;
 				gpk_necall(blockInMemory.Save(bytesToWrite), "%s", "Out of memory?");
 				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
 				return newIdRecord;
@@ -212,12 +212,12 @@ namespace gpk
 
 		::gpk::SRecordMap												indexMap					= {};
 		indexMap.IdBlock											= mapTable.MaxBlockOnDisk;
-		::gpk::array_pod<char_t>										containerPath				= {};
-		::gpk::array_pod<char_t>										fileNameCurrent				= {};
-		::gpk::array_obj<::gpk::array_pod<char_t>>						paths;
+		::gpk::apod<char_t>										containerPath				= {};
+		::gpk::apod<char_t>										fileNameCurrent				= {};
+		::gpk::aobj<::gpk::apod<char_t>>						paths;
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
 		::gpk::blockFileName(indexMap.IdBlock, mapTable.DBName, containerPath, fileNameCurrent);
-		::gpk::array_pod<char_t>										loadedBytes;
+		::gpk::apod<char_t>										loadedBytes;
 		const ::gpk::error_t											indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
 		if(indexBlock >= 0) {
 			_tMapBlock														& block						= *mapTable.Block[indexBlock];
@@ -232,15 +232,15 @@ namespace gpk
 					::gpk::CViewManager<byte_t>						Allocator					;
 
 		typedef		::gpk::SInt24									_tIndex;
-					::gpk::array_pod<_tIndex>						Indices						;
+					::gpk::apod<_tIndex>						Indices						;
 
 		inline		::gpk::error_t									Size						()																const	{ return Indices.size(); }
-					::gpk::error_t									Save						(::gpk::array_pod<byte_t> & output)								const;
+					::gpk::error_t									Save						(::gpk::apod<byte_t> & output)								const;
 					::gpk::error_t									Load						(const ::gpk::view_const_byte & input);
 
-					::gpk::error_t									MapAdd						(const ::gpk::view_const_char & dataToAdd);
-					::gpk::error_t									MapId						(const ::gpk::view_const_char & dataToAdd)						const;
-					::gpk::error_t									MapGet						(int32_t index, ::gpk::array_pod<char_t> & data)				const;
+					::gpk::error_t									MapAdd						(const ::gpk::vcc & dataToAdd);
+					::gpk::error_t									MapId						(const ::gpk::vcc & dataToAdd)						const;
+					::gpk::error_t									MapGet						(int32_t index, ::gpk::apod<char_t> & data)				const;
 	};
 } // namespace
 

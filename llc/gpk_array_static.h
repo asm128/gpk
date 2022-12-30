@@ -39,6 +39,9 @@ namespace gpk
 
 		inline constexpr	const uint32_t&			size						()												const	noexcept	{ return SIZE; }
 	};
+
+	template<typename _tCell, uint32_t _sizeArray>	using astatic				= ::gpk::array_static<_tCell, _sizeArray>;
+
 #pragma pack(pop)
 
 	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::array_static<tElement, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}

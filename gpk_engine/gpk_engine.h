@@ -89,6 +89,7 @@ namespace gpk
 			return iEntityNew;
 		}
 
+		::gpk::error_t						SetColorDiffuse		(uint32_t iEntity, const ::gpk::SColorFloat & diffuse)				{ Scene->Graphics->Skins[Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Skin]->Material.Color.Diffuse = diffuse; return 0; }
 		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::SCoord3<float> & scale)				{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities.Entities[iEntity].RenderNode].World.Scale(scale, false); return 0; }
 		::gpk::error_t						SetMeshPosition		(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities.Entities[iEntity].RenderNode].World.SetTranslation(position, false); return 0; }
 		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcc name) {
@@ -98,15 +99,16 @@ namespace gpk
 			return 0;
 		}
 		::gpk::error_t						IsPhysicsActive		(uint32_t iEntity)													{ return Integrator.BodyFlags[ManagedEntities.Entities[iEntity].RigidBody].Active ? 1 : 0; }
-		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.BodyFlags[ManagedEntities.Entities[iEntity].RigidBody].Active = active; return 0; }
-		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Integrator.SetPosition(ManagedEntities.Entities[iEntity].RigidBody, position); return 0; }
-		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetVelocity(ManagedEntities.Entities[iEntity].RigidBody, velocity); return 0; }
-		::gpk::error_t						SetAcceleration		(uint32_t iEntity, const ::gpk::SCoord3<float> & acceleration)		{ Integrator.SetAcceleration(ManagedEntities.Entities[iEntity].RigidBody, acceleration); return 0; }
-		::gpk::error_t						SetRotation			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetRotation(ManagedEntities.Entities[iEntity].RigidBody, velocity); return 0; }
-		::gpk::error_t						SetDampingLinear	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].LinearDamping = damping; return 0; }
-		::gpk::error_t						SetDampingAngular	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].AngularDamping = damping; return 0; }
-		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::SQuaternion<float> & orientation)	{ Integrator.SetOrientation(ManagedEntities.Entities[iEntity].RigidBody, orientation); return 0; }
-		::gpk::error_t						SetHidden			(uint32_t iEntity, bool hidden)										{ Scene->ManagedRenderNodes.Flags[ManagedEntities.Entities[iEntity].RenderNode].NoDraw = hidden; return 0; }
+		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.BodyFlags[ManagedEntities.Entities[iEntity].RigidBody].Active = active;				return 0; }
+		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities.Entities[iEntity].RigidBody, mass);				return 0; }
+		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Integrator.SetPosition		(ManagedEntities.Entities[iEntity].RigidBody, position);			return 0; }
+		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetVelocity		(ManagedEntities.Entities[iEntity].RigidBody, velocity);			return 0; }
+		::gpk::error_t						SetAcceleration		(uint32_t iEntity, const ::gpk::SCoord3<float> & acceleration)		{ Integrator.SetAcceleration	(ManagedEntities.Entities[iEntity].RigidBody, acceleration);		return 0; }
+		::gpk::error_t						SetRotation			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetRotation		(ManagedEntities.Entities[iEntity].RigidBody, velocity);			return 0; }
+		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::SQuaternion<float> & orientation)	{ Integrator.SetOrientation		(ManagedEntities.Entities[iEntity].RigidBody, orientation);			return 0; }
+		::gpk::error_t						SetDampingLinear	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].LinearDamping = damping;			return 0; }
+		::gpk::error_t						SetDampingAngular	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].AngularDamping = damping;			return 0; }
+		::gpk::error_t						SetHidden			(uint32_t iEntity, bool hidden)										{ Scene->ManagedRenderNodes.Flags[ManagedEntities.Entities[iEntity].RenderNode].NoDraw = hidden;	return 0; }	
 
 		::gpk::error_t						ToggleHidden			(uint32_t iEntity) {
 			::gpk::SRenderNodeFlags					& flags					= Scene->ManagedRenderNodes.Flags[ManagedEntities.Entities[iEntity].RenderNode];
@@ -116,7 +118,7 @@ namespace gpk
 
 		::gpk::error_t						CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t						CreateCamera		();
-
+		::gpk::error_t						CreateTableCushion	();
 		::gpk::error_t						CreateSphere		();
 		::gpk::error_t						CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio);
 		::gpk::error_t						CreateBox			();
@@ -137,7 +139,7 @@ namespace gpk
 		}
 	};
 
-	::gpk::error_t						collisionDetect		(const ::gpk::SEngine & engine, ::gpk::array_pod<::gpk::SContact> & contactsDetected);
+	::gpk::error_t						collisionDetect		(const ::gpk::SEngine & engine, ::gpk::apod<::gpk::SContact> & contactsDetected);
 } // namespace
 
 #endif

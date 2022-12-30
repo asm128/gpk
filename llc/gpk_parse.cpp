@@ -12,7 +12,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
-::gpk::error_t								gpk::skipToNextCharacter					(uint32_t& indexCurrentChar, const ::gpk::view_const_char& expression)		{
+::gpk::error_t								gpk::skipToNextCharacter					(uint32_t& indexCurrentChar, const ::gpk::vcc & expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::gpk::isSpaceCharacter(expression[indexCurrentChar]))
 			++indexCurrentChar;
@@ -22,9 +22,9 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::view_const_char& symbolList, const ::gpk::view_const_char& sourceChars, uint64_t* number_)	{
+::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
-	::gpk::array_pod<char_t>						stringToParse								= {};
+	::gpk::apod<char_t>						stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
 		bool											bSymbolProcessed							= false;
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
@@ -59,7 +59,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return totalCharsProcessed;
 }
 
-::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
+::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -93,7 +93,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
+::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -121,7 +121,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
+::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	if(work_state.InsideToken)
 		::stripLiteralsParseToken(work_state, out_types, in_format);
 	else {
@@ -135,7 +135,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::array_pod<::gpk::SStripLiteralType> & out_types, const ::gpk::view_const_char& in_format)		{
+::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
 		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "%s", "Parse step failed.");
@@ -143,10 +143,10 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::array_obj<::gpk::view_const_char>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::view_const_char & in_format)		{
+::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format)		{
 	for(uint32_t iType = 0; iType < in_resultOfParser.size(); ++iType) {
 		const ::gpk::SStripLiteralType					& type						= in_resultOfParser[iType];
-		::gpk::view_const_string						view						= {};
+		::gpk::vcs						view						= {};
 		uint32_t										offsetView					= 0;
 		uint32_t										lenView						= 0;
 		if(type.Type == ::gpk::STRIP_LITERAL_TYPE_TOKEN) {

@@ -63,7 +63,7 @@ namespace gpk
 
 	struct SDialogEditBox : public ::gpk::IDialogControl {
 				::gpk::SMinMax<uint32_t>					Selection							= {};
-				::gpk::array_pod<char_t>					String								= {};
+				::gpk::apod<char_t>					String								= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::editBoxUpdate(*this); }
 	};

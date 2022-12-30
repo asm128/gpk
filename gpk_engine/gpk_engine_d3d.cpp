@@ -11,8 +11,8 @@
 			continue;
 
 		::gpk::pobj<::gpk::SRenderBuffer>			engineBufferIndices;
-		::gpk::array_pobj<::gpk::SRenderBuffer>			engineBufferVertices;
-		::gpk::array_pod<uint32_t>						layoutOffsets;
+		::gpk::apobj<::gpk::SRenderBuffer>			engineBufferVertices;
+		::gpk::apod<uint32_t>						layoutOffsets;
 
 		uint32_t										vertexSize					= 0;
 		for(uint32_t iBuffer = 0; iBuffer < mesh->GeometryBuffers.size(); ++iBuffer) {
@@ -26,7 +26,7 @@
 			vertexSize									+= buffer->Desc.Format.TotalBytes();
 
 		}
-		::gpk::array_pod<ubyte_t>						packed;
+		::gpk::apod<ubyte_t>						packed;
 		for(uint32_t iValue = 0, valueCount = engineBufferVertices[0]->Data.size() / engineBufferVertices[0]->Desc.Format.TotalBytes(); iValue < valueCount; ++iValue) {
 			for(uint32_t iBuffer = 0; iBuffer < engineBufferVertices.size(); ++iBuffer) {
 				const ::gpk::SRenderBuffer						& buffer					= *engineBufferVertices[iBuffer];
@@ -88,7 +88,7 @@
 		// After the pixel shader file is loaded, create the shader.
 		char											shaderFileName	[1024]	= {};
 		sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
-		::gpk::array_pod<byte_t>						filePS;
+		::gpk::apod<byte_t>						filePS;
 		gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 		::gpk::ptr_com<ID3D11PixelShader>				pixelShader;

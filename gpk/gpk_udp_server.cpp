@@ -15,10 +15,10 @@
 #endif
 
 ::gpk::error_t												updateClients						(gpk::SUDPServer& serverInstance)		{
-	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnection>>			clientsToProcess;
-	::gpk::array_pod<byte_t>										receiveBuffer;
-	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
-	::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
+	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnection>>			clientsToProcess;
+	::gpk::apod<byte_t>										receiveBuffer;
+	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSent						= {};
+	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>	cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
 		uint32_t														totalClientCount					= serverInstance.Clients.size();

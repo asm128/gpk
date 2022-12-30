@@ -10,6 +10,6 @@
 	return 0;
 }
 
-::gpk::error_t									gpk::stoull							(const ::gpk::view_const_char & input, uint64_t * outputNumber)	{
+::gpk::error_t									gpk::stoull							(const ::gpk::vcc & input, uint64_t * outputNumber)	{
 	return ::gpk::parseIntegerDecimal(input, outputNumber);
 }

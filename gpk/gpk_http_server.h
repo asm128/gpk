@@ -7,7 +7,7 @@ namespace gpk
 {
 	struct SHTTPServer {
 		::gpk::auto_socket_close												Socket;
-		::gpk::array_obj<::gpk::pobj<::gpk::STCPConnection>>					Clients;
+		::gpk::aobj<::gpk::pobj<::gpk::STCPConnection>>					Clients;
 		::std::mutex															Mutex;
 		::gpk::SIPv4															Address								= {};
 		bool																	Listen								= false;

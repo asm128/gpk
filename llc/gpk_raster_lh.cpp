@@ -1,7 +1,7 @@
 #include "gpk_raster_lh.h"
 #include <algorithm>
 
-int								gpk::pixelBlend			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
+int								gpk::pixelBlend			(::gpk::view2d<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
@@ -13,7 +13,7 @@ int								gpk::pixelBlend			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk:
 	return 0;
 }
 
-int								gpk::setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
+int								gpk::setPixel			(::gpk::view2d<::gpk::SColorBGRA> pixels, ::gpk::SCoord2<int16_t> position, ::gpk::SColorBGRA color)	{
 	if( (position.x >= 0 && position.x < (int32_t)pixels.metrics().x)
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
@@ -24,7 +24,7 @@ int								gpk::setPixel			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::S
 	return 0;
 }
 
-int								gpk::drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
+int								gpk::drawRectangle		(::gpk::view2d<::gpk::SColorBGRA> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
 	int32_t								countPixels				= 0;
 	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
 	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)
@@ -32,7 +32,7 @@ int								gpk::drawRectangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gp
 	return countPixels;
 }
 
-int								gpk::drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SCircle<int16_t> circle, ::gpk::SColorBGRA color)	{
+int								gpk::drawCircle			(::gpk::view2d<::gpk::SColorBGRA> pixels, ::gpk::SCircle<int16_t> circle, ::gpk::SColorBGRA color)	{
 	int32_t								countPixels				= 0;
 	for(int16_t y = (int16_t)-circle.Radius; y < (int16_t)circle.Radius; ++y)
 	for(int16_t x = (int16_t)-circle.Radius; x < (int16_t)circle.Radius; ++x) {
@@ -44,7 +44,7 @@ int								gpk::drawCircle			(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk:
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::gpk::SLine2<int16_t> line, ::gpk::SColorBGRA color)	{
+int								gpk::drawLine       	(::gpk::view2d<::gpk::SColorBGRA> pixels, ::gpk::SLine2<int16_t> line, ::gpk::SColorBGRA color)	{
 	int32_t								countPixels				= 0;
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
@@ -72,7 +72,7 @@ int								gpk::drawLine       	(::gpk::view_grid<::gpk::SColorBGRA> pixels, ::g
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-int								gpk::drawLine       	(const ::gpk::SCoord2<uint16_t>	offscreenMetrics, ::gpk::SLine2<int16_t> line, ::gpk::array_pod<::gpk::SCoord2<int16_t>> & pixelCoords)	{
+int								gpk::drawLine       	(const ::gpk::SCoord2<uint16_t>	offscreenMetrics, ::gpk::SLine2<int16_t> line, ::gpk::apod<::gpk::SCoord2<int16_t>> & pixelCoords)	{
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
 	int32_t								dy						= (int32_t)-fabs(line.B.y - line.A.y );
@@ -110,8 +110,8 @@ int								gpk::drawLine       	(const ::gpk::SCoord2<uint16_t>	offscreenMetrics
 int								gpk::drawLine
 	( const ::gpk::SCoord2<uint16_t>				offscreenMetrics
 	, const ::gpk::SLine3<float>					& lineFloat
-	, ::gpk::array_pod<::gpk::SCoord3<float>>		& pixelCoords
-	, ::gpk::view_grid<uint32_t>					depthBuffer
+	, ::gpk::apod<::gpk::SCoord3<float>>		& pixelCoords
+	, ::gpk::view2d<uint32_t>					depthBuffer
 	) {
 	::gpk::SLine2<int32_t>				line					= {{(int32_t)lineFloat.A.x, (int32_t)lineFloat.A.y}, {(int32_t)lineFloat.B.x, (int32_t)lineFloat.B.y}};
 	int32_t								xDiff					= (int32_t)fabs(line.B.x - line.A.x);
@@ -200,7 +200,7 @@ double									orient2d				(const ::gpk::SLine2<float>		& segment, const ::gpk::
 template <typename _tValue>	_tValue 	max3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 template <typename _tValue>	_tValue 	min3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
 
-int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, const ::gpk::STriangle2<int16_t> & triangle, ::gpk::SColorBGRA color){
+int								gpk::drawTriangle		(::gpk::view2d<::gpk::SColorBGRA> pixels, const ::gpk::STriangle2<int16_t> & triangle, ::gpk::SColorBGRA color){
 	// Compute triangle bounding box
 	int16_t								minX					= ::min3(triangle.A.x, triangle.B.x, triangle.C.x);
 	int16_t								minY					= ::min3(triangle.A.y, triangle.B.y, triangle.C.y);
@@ -234,9 +234,9 @@ int								gpk::drawTriangle		(::gpk::view_grid<::gpk::SColorBGRA> pixels, const
 int								gpk::drawTriangle
 	( const ::gpk::SCoord2<uint32_t>					targetSize
 	, const ::gpk::STriangle3<float>					& triangle
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>			& proportions
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>			& proportions
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	)	{
 	// Compute triangle bounding box
 	int16_t								minX					= (int16_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
@@ -292,8 +292,8 @@ int								gpk::drawTriangle
 int								gpk::drawTriangle
 	( const ::gpk::SCoord2<uint32_t>					targetSize
 	, const ::gpk::STriangle2<float>					& triangle
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>> & proportions
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>> & proportions
 	)	{
 	// Compute triangle bounding box
 	int16_t								minX					= (int16_t)::min3(triangle.A.x, triangle.B.x, triangle.C.x);
@@ -334,17 +334,17 @@ int								gpk::drawTriangle
 }
 
 int													gpk::drawPixels
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::STriangle3	<float>					& triangleWorld
 	, const ::gpk::SCoord3		<float>					& normal
 	, const ::gpk::STriangle2	<float>					& triangleTexCoords
 	, const ::gpk::SCoord3		<float>					& lightVector
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
-	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
-	, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::apod<::gpk::SColorBGRA>				& lightColors
+	, const ::std::function<::gpk::error_t(::gpk::view2d<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
 	) {
 	const ::gpk::SCoord2<float>								imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	double													lightFactorDirectional	= normal.Dot(lightVector);
@@ -379,16 +379,16 @@ int													gpk::drawPixels
 }
 
 int													gpk::drawPixels
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::STriangle3	<float>					& triangleWorld
 	, const ::gpk::SCoord3		<float>					& normal
 	, const ::gpk::STriangle2	<float>					& triangleTexCoords
 	, const ::gpk::SCoord3		<float>					& lightVector
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
-	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::apod<::gpk::SColorBGRA>				& lightColors
 	) {
 
 	return gpk::drawPixels(targetPixels, triangleWorld, normal, triangleTexCoords, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, setPixel);
@@ -397,9 +397,9 @@ int													gpk::drawPixels
 int													gpk::drawQuadTriangle
 	( const ::gpk::SCoord2<uint32_t>					& targetSize
 	, const ::gpk::STriangle3	<float>					& triangleScreen
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	return ::gpk::drawTriangle(targetSize, triangleScreen, pixelCoords, pixelVertexWeights, depthBuffer);
 }
@@ -408,9 +408,9 @@ int													gpk::drawQuadTriangle
 	( const ::gpk::SCoord2<uint32_t>					& targetSize
 	, ::gpk::STriangle3			<float>					triangle
 	, const ::gpk::SMatrix4<float>						& matrixTransformVP
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::transform(triangle, matrixTransformVP);
 	if( triangle.A.z <= 0 || triangle.A.z >= 1
@@ -422,36 +422,36 @@ int													gpk::drawQuadTriangle
 }
 
 int													gpk::drawQuadTriangle
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::SGeometryQuads						& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformVP
 	, const ::gpk::SCoord3<float>						& lightVector
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
-	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::apod<::gpk::SColorBGRA>				& lightColors
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	return ::gpk::drawQuadTriangle(targetPixels, geometry, iTriangle, matrixTransform, matrixTransformVP, lightVector, pixelCoords, pixelVertexWeights, textureImage, lightPoints, lightColors, depthBuffer, setPixel);
 }
 
 int													gpk::drawQuadTriangle
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::SGeometryQuads						& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformVP
 	, const ::gpk::SCoord3<float>						& lightVector
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SCoord3<float>>			& lightPoints
-	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
-	, ::gpk::view_grid<uint32_t>						depthBuffer
-	, const ::std::function<::gpk::error_t(::gpk::view_grid<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SCoord3<float>>			& lightPoints
+	, ::gpk::apod<::gpk::SColorBGRA>				& lightColors
+	, ::gpk::view2d<uint32_t>						depthBuffer
+	, const ::std::function<::gpk::error_t(::gpk::view2d<::gpk::SColorBGRA> targetPixels, const ::gpk::SCoord2<int16_t> & pixelCoord, const ::gpk::SColorBGRA & color)> & funcSetPixel
 	) {
 	const ::gpk::STriangle3	<float>							& triangle			= geometry.Triangles	[iTriangle];;
 	const ::gpk::STriangle2	<float>							& triangleTexCoords	= geometry.TextureCoords[iTriangle];
@@ -464,16 +464,16 @@ int													gpk::drawQuadTriangle
 }
 
 int													gpk::drawQuadTriangle
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::SGeometryQuads						& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformView
 	, const ::gpk::SCoord3<float>						& lightVector
 	, const ::gpk::SColorBGRA							color
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::STriangle3	<float>								triangle			= geometry.Triangles	[iTriangle];
 	::gpk::SCoord3		<float>								normal				= geometry.Normals		[iTriangle / 2];
@@ -497,16 +497,16 @@ int													gpk::drawQuadTriangle
 }
 
 int													gpk::drawTriangle
-	( ::gpk::view_grid<::gpk::SColorBGRA>				targetPixels
+	( ::gpk::view2d<::gpk::SColorBGRA>				targetPixels
 	, const ::gpk::SGeometryTriangles					& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformView
 	, const ::gpk::SCoord3<float>						& lightVector
 	, const ::gpk::SColorBGRA							color
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::STriangle3		<float>								triangle			= geometry.Triangles	[iTriangle];
 	const ::gpk::STriangle3	<float>								& triangleNormals	= geometry.Normals		[iTriangle];
@@ -531,16 +531,16 @@ int													gpk::drawTriangle
 }
 
 int													gpk::drawTriangle
-	( const ::gpk::view_grid<::gpk::SColorBGRA>			targetPixels
+	( const ::gpk::view2d<::gpk::SColorBGRA>			targetPixels
 	, const ::gpk::SGeometryTriangles					& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformView
 	, const ::gpk::SCoord3<float>						& lightVector
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::STriangle3		<float>								triangle			= geometry.Triangles		[iTriangle];
 	const ::gpk::STriangle3	<float>								& triangleNormals	= geometry.Normals			[iTriangle];
@@ -573,19 +573,19 @@ int													gpk::drawTriangle
 }
 
 int													gpk::drawTriangle
-	( const ::gpk::view_grid<::gpk::SColorBGRA>			targetPixels
+	( const ::gpk::view2d<::gpk::SColorBGRA>			targetPixels
 	, const ::gpk::SGeometryTriangles					& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformView
 	, const ::gpk::SCoord3<float>						& lightVector
 	, const ::gpk::SColorFloat							& lightColor
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
-	, ::gpk::array_pod<::gpk::SColorBGRA>				& lightColors
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SLight3>					& lightPoints
+	, ::gpk::apod<::gpk::SColorBGRA>				& lightColors
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::STriangle3		<float>								triangleWorld			= geometry.Triangles		[iTriangle];
 	::gpk::STriangle3		<float>								triangle				= triangleWorld;
@@ -637,19 +637,19 @@ int													gpk::drawTriangle
 
 
 int													gpk::drawTriangle
-	( const ::gpk::view_grid<::gpk::SColorBGRA>			targetPixels
+	( const ::gpk::view2d<::gpk::SColorBGRA>			targetPixels
 	, const ::gpk::SGeometryIndexedTriangles			& geometry
 	, const int											iTriangle
 	, const ::gpk::SMatrix4<float>						& matrixTransform
 	, const ::gpk::SMatrix4<float>						& matrixTransformView
 	, const ::gpk::SCoord3<float>						& lightVector
 	, const ::gpk::SColorFloat							& lightColor
-	, ::gpk::array_pod<::gpk::SCoord2<int16_t>>			& pixelCoords
-	, ::gpk::array_pod<::gpk::STriangle<float>>	& pixelVertexWeights
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			textureImage
-	, ::gpk::array_pod<::gpk::SLight3>					& lightPoints
-	, ::gpk::array_pod<::gpk::SColorFloat>				& lightColors
-	, ::gpk::view_grid<uint32_t>						depthBuffer
+	, ::gpk::apod<::gpk::SCoord2<int16_t>>			& pixelCoords
+	, ::gpk::apod<::gpk::STriangle<float>>	& pixelVertexWeights
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			textureImage
+	, ::gpk::apod<::gpk::SLight3>					& lightPoints
+	, ::gpk::apod<::gpk::SColorFloat>				& lightColors
+	, ::gpk::view2d<uint32_t>						depthBuffer
 	) {
 	::gpk::STriangle		<uint32_t>							triangleIndices			= *(const ::gpk::STriangle<uint32_t>*)&geometry.PositionIndices[iTriangle * 3];
 	::gpk::STriangle3		<float>								triangleWorld			= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};

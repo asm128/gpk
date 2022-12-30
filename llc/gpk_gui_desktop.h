@@ -9,8 +9,8 @@ namespace gpk
 	template <typename _tElement>
 	struct SRecyclableElementContainer {
 							::gpk::view_bit<uint32_t>							Unused;
-							::gpk::array_obj<_tElement>							Elements;
-							::gpk::array_pod<uint32_t>							UnusedData;
+							::gpk::aobj<_tElement>							Elements;
+							::gpk::apod<uint32_t>							UnusedData;
 
 		inline constexpr	const _tElement&									operator[]									(uint32_t index)			const				{ return Elements[index]; }
 		inline constexpr	_tElement&											operator[]									(uint32_t index)								{ return Elements[index]; }
@@ -38,7 +38,7 @@ namespace gpk
 	struct SDesktop {
 				int32_t															IdControl									= -1;
 				::gpk::SDesktopItems											Items										= {};
-				::gpk::array_obj<::gpk::array_pod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
+				::gpk::aobj<::gpk::apod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
 	};
 
 			::gpk::error_t													desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);

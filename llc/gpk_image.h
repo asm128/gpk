@@ -11,17 +11,17 @@ namespace gpk
 	struct SImage {
 		typedef				_tTexel									TTexel;
 
-							::gpk::array_pod<_tTexel>				Texels										;
-							::gpk::view_grid<_tTexel>				View										;
+							::gpk::apod<_tTexel>				Texels										;
+							::gpk::view2d<_tTexel>				View										;
 
 		constexpr													SImage										()															= default;
-																	SImage										(const ::gpk::view_grid<_tTexel>& other)					: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																	SImage										(const ::gpk::view2d<_tTexel>& other)					: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																	SImage										(const ::gpk::SImage<_tTexel>& other)						: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-		inline constexpr	operator								view_grid<const _tTexel>					()										const	noexcept	{ return View; }
-		inline				operator								view_grid<_tTexel>							()												noexcept	{ return View; }
+		inline constexpr	operator								view2d<const _tTexel>					()										const	noexcept	{ return View; }
+		inline				operator								view2d<_tTexel>							()												noexcept	{ return View; }
 
-							::gpk::SImage<_tTexel>&					operator=									(const ::gpk::view_grid<_tTexel>& other)						{
+							::gpk::SImage<_tTexel>&					operator=									(const ::gpk::view2d<_tTexel>& other)						{
 			Texels																	= view_array<const _tTexel>{other.begin(), other.size()};
 			View																	= {Texels.begin(), other.metrics()};
 			return *this;
@@ -34,8 +34,8 @@ namespace gpk
 		}
 
 
-		inline				::gpk::view_array<_tTexel>				operator[]									(uint32_t index)																	{ return View[index]; }
-		inline				const ::gpk::view_array<const _tTexel>	operator[]									(uint32_t index)												const				{ return View[index]; }
+		inline				::gpk::view1d<_tTexel>				operator[]									(uint32_t index)																	{ return View[index]; }
+		inline				const ::gpk::view1d<const _tTexel>	operator[]									(uint32_t index)												const				{ return View[index]; }
 
 		inline constexpr	const _tTexel*							begin										()																const	noexcept	{ return View.begin		();	}
 		inline constexpr	const _tTexel*							end											()																const	noexcept	{ return View.end		();	}
@@ -57,12 +57,14 @@ namespace gpk
 		}
 	}; // struct
 
+	template<typename _tCell>	using img				= ::gpk::SImage<_tCell>;
+
 	template<typename _tTexel>
 	struct SImageMonochrome {
 		typedef				_tTexel									TTexel;
 		typedef				::gpk::view_bit	<_tTexel>				TView;
 
-							::gpk::array_pod<_tTexel>				Texels										;
+							::gpk::apod<_tTexel>					Texels										;
 							::gpk::view_bit	<_tTexel>				View										;
 							uint32_t								Pitch										= 0;
 
@@ -78,25 +80,25 @@ namespace gpk
 			, Pitch		(other.Pitch)
 			{}
 							::gpk::SImageMonochrome<_tTexel>&		operator=									(const ::gpk::view_bit<_tTexel>& other)							{
-			Texels																	= {other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS)};
-			View																	= {Texels.begin(), other.size()};
-			Pitch																	= other.Pitch;
+			Texels														= {other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS)};
+			View														= {Texels.begin(), other.size()};
+			Pitch														= other.Pitch;
 			return *this;
 		}
 							::gpk::SImageMonochrome<_tTexel>&		operator=									(const ::gpk::SImageMonochrome<_tTexel>& other)					{
-			Texels																	= other.Texels;
-			View																	= {Texels.begin(), other.View.size()};
-			Pitch																	= other.Pitch;
+			Texels														= other.Texels;
+			View														= {Texels.begin(), other.View.size()};
+			Pitch														= other.Pitch;
 			return *this;
 		}
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics										()											const	noexcept	{ return {Pitch, View.size() / Pitch}; }
 		inline				::gpk::error_t							resize										(const ::gpk::SCoord2<uint32_t> & newSize)			noexcept	{ return resize(newSize.x, newSize.y); }
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{
 			gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1), "cannot resize? Size requested: %u.", (uint32_t)((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1));
-			View																	= {Texels.begin(), newSizeX * newSizeY};
-			Pitch																	= newSizeX;
+			View														= {Texels.begin(), newSizeX * newSizeY};
+			Pitch														= newSizeX;
 			return 0;
 		}
-		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics										()											const	noexcept	{ return {Pitch, View.size() / Pitch}; }
 	}; // struct
 
 	template<typename _tTexel>
@@ -112,16 +114,16 @@ namespace gpk
 							::gpk::SImage<_tTexel>					Color										= {};
 							::gpk::SImage<_tDepthStencil>			DepthStencil								= {};
 
-		inline				::gpk::view_array<_tTexel>				operator[]									(uint32_t index)																							{ return Color[index]; }
-		inline				const ::gpk::view_array<const _tTexel>	operator[]									(uint32_t index)																		const				{ return Color[index]; }
+		inline				::gpk::view1d<_tTexel>					operator[]									(uint32_t index)												{ return Color[index]; }
+		inline				const ::gpk::view1d<const _tTexel>		operator[]									(uint32_t index)							const				{ return Color[index]; }
 
-		inline constexpr	const _tTexel*							begin										()																						const	noexcept	{ return Color.begin	();	}
-		inline constexpr	const _tTexel*							end											()																						const	noexcept	{ return Color.end		();	}
-		inline constexpr	_tTexel*								begin										()																								noexcept	{ return Color.begin	();	}
-		inline constexpr	_tTexel*								end											()																								noexcept	{ return Color.end		();	}
-		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics										()																						const	noexcept	{ return Color.metrics	();	}
-		inline constexpr	const uint32_t&							size										()																						const	noexcept	{ return Color.size		();	}
-		inline constexpr	uint32_t								area										()																						const	noexcept	{ return Color.area		();	}
+		inline constexpr	const _tTexel*							begin										()											const	noexcept	{ return Color.begin	();	}
+		inline constexpr	const _tTexel*							end											()											const	noexcept	{ return Color.end		();	}
+		inline constexpr	_tTexel*								begin										()													noexcept	{ return Color.begin	();	}
+		inline constexpr	_tTexel*								end											()													noexcept	{ return Color.end		();	}
+		inline constexpr	const ::gpk::SCoord2<uint32_t>&			metrics										()											const	noexcept	{ return Color.metrics	();	}
+		inline constexpr	const uint32_t&							size										()											const	noexcept	{ return Color.size		();	}
+		inline constexpr	uint32_t								area										()											const	noexcept	{ return Color.area		();	}
 
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY)															noexcept	{
 			gpk_necall(Color		.resize(newSizeX, newSizeY), "cannot resize? Size requested: %u x %u.", newSizeX, newSizeY);
@@ -141,8 +143,8 @@ namespace gpk
 
 	template<typename _tTexel, typename _tDepthStencil>
 							::gpk::error_t						clearTarget									(::gpk::SRenderTarget<_tTexel, _tDepthStencil>& targetToClear)		{
-		::gpk::SImage<_tTexel>													& offscreen									= targetToClear.Color;
-		::gpk::SImage<_tDepthStencil>											& offscreenDepth							= targetToClear.DepthStencil;
+		::gpk::SImage<_tTexel>											& offscreen									= targetToClear.Color;
+		::gpk::SImage<_tDepthStencil>									& offscreenDepth							= targetToClear.DepthStencil;
 		::memset(offscreenDepth	.Texels.begin(), -1, sizeof(_tDepthStencil)	* offscreenDepth	.Texels.size());	// Clear target.
 		::memset(offscreen		.Texels.begin(),  0, sizeof(_tTexel)		* offscreen			.Texels.size());	// Clear target.
 		return 0;

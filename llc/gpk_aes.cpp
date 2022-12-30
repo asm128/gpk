@@ -406,7 +406,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	}
 }
 
-::gpk::error_t										gpk::aesEncode							(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted)	{
+::gpk::error_t										gpk::aesEncode							(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputEncrypted)	{
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
 	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
@@ -418,11 +418,11 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode							(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted)	{
+::gpk::error_t										gpk::aesDecode							(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputDecrypted)	{
 	return ::gpk::aesDecode({messageEncrypted.begin(), messageEncrypted.size() - ::gpk::AES_SIZEIV}, {(uint8_t*)&messageEncrypted[messageEncrypted.size() - ::gpk::AES_SIZEIV], ::gpk::AES_SIZEIV}, encryptionKey, level, outputDecrypted);
 }
 
-::gpk::error_t										gpk::aesEncode						(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputEncrypted) {
+::gpk::error_t										gpk::aesEncode						(const ::gpk::view_const_byte& messageToEncrypt, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputEncrypted) {
 	ree_if(0 == messageToEncrypt.size(), "Cannot encode empty message at address %p.", messageToEncrypt);
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
 	int8_t													excedent								= messageToEncrypt.size() % ::gpk::AES_SIZEBLOCK;
@@ -439,7 +439,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode						(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::array_pod<byte_t>& outputDecrypted) {
+::gpk::error_t										gpk::aesDecode						(const ::gpk::view_const_byte& messageEncrypted, const ::gpk::view_const_ubyte& iv, const ::gpk::view_const_byte& encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputDecrypted) {
 	ree_if(0 == messageEncrypted.size(), "Cannot encode empty message at address %p.", messageEncrypted.begin());
 	ree_if(messageEncrypted.size() % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", messageEncrypted.size());
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());

@@ -17,7 +17,7 @@ GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void** customApplication, ::gpk::
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void** customApplication										);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleSetup		, void*	 customApplication										);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCleanup	, void*	 customApplication										);
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void*	 customApplication, ::gpk::array_pod<char_t> & output	);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleRender	, void*	 customApplication, ::gpk::apod<char_t> & output	);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleUpdate	, void*	 customApplication, bool requestedExit					);
 
 namespace gpk
@@ -47,7 +47,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t									loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::view_const_char& moduleName);
+	::gpk::error_t									loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::vcc& moduleName);
 
 
 }

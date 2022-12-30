@@ -10,10 +10,10 @@ namespace gpk
 	template<size_t _blockSize>
 	class unshrinkable_string_container {
 		typedef	::gpk::pobj<::gpk::array_static<char_t, _blockSize>>	ptr_block_type;
-				::gpk::array_obj<ptr_block_type>						Blocks;
-				::gpk::array_pod<uint32_t>								RemainingSpace;
+				::gpk::aobj<ptr_block_type>						Blocks;
+				::gpk::apod<uint32_t>								RemainingSpace;
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-				::gpk::error_t											push_sequence				(const char* sequence, uint32_t length, ::gpk::view_const_char& out_view)	{
+				::gpk::error_t											push_sequence				(const char* sequence, uint32_t length, ::gpk::vcc & out_view)	{
 			const uint32_t														lengthPlusOne				= length + 1;
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t															& blkRemainingSpace			= RemainingSpace[iBlock];
@@ -38,9 +38,9 @@ namespace gpk
 	class CLabelManager	{
 		static constexpr	const uint32_t								BLOCK_SIZE					= 1024*64;
 							unshrinkable_string_container<BLOCK_SIZE>	Characters;
-							::gpk::view_const_char						Empty;
-							::gpk::array_pod<uint16_t>					Counts;
-							::gpk::array_pod<const char_t*>				Texts;
+							::gpk::vcc						Empty;
+							::gpk::apod<uint16_t>					Counts;
+							::gpk::apod<const char_t*>				Texts;
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 																		~CLabelManager				()																					{
 			for(uint32_t iText = 0; iText < Texts.size(); ++iText) {
@@ -49,7 +49,7 @@ namespace gpk
 		}
 																		CLabelManager				()																					{ Characters.push_sequence("", 0U, Empty); }
 
-							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::view_const_char& out_view)		{
+							::gpk::error_t								ArrayView					(const char* text, uint32_t textLen, ::gpk::vcc & out_view)		{
 			if(0 == textLen || 0 == text || 0 == text[0]) {
 				out_view														= Empty;
 				return 0;

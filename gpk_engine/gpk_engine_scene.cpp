@@ -79,17 +79,17 @@ static	::gpk::error_t								transformTriangles
 
 
 static	::gpk::error_t								drawBuffers
-	( ::gpk::view_grid<::gpk::SColorBGRA>				& backBufferColors
+	( ::gpk::view2d<::gpk::SColorBGRA>				& backBufferColors
 	, ::gpk::view2d_uint32								backBufferDepth
 	, ::gpk::SVSOutput									& outVS
 	, ::gpk::SVSCache									& cacheVS
 	, const ::gpk::SRenderMaterial						& material
-	, ::gpk::view_grid<const ::gpk::SColorBGRA>			surface
+	, ::gpk::view2d<const ::gpk::SColorBGRA>			surface
 	, const ::gpk::SEngineSceneConstants				& constants
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
-	::gpk::array_pod<::gpk::STriangle<float>>				& triangleWeights			= cacheVS.TriangleWeights		;
-	::gpk::array_pod<::gpk::SCoord2<int16_t>>				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
+	::gpk::apod<::gpk::STriangle<float>>				& triangleWeights			= cacheVS.TriangleWeights		;
+	::gpk::apod<::gpk::SCoord2<int16_t>>				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::SCoord2<uint16_t>							offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
 	const ::gpk::SCoord3<float>								lightDirectionNormalized	= ::gpk::SCoord3<float>{constants.LightDirection}.Normalize();
 	::gpk::SPSIn											inPS						= {};
@@ -125,8 +125,8 @@ static	::gpk::error_t								drawBuffers
 }
 
 ::gpk::error_t										gpk::drawScene									
-	( ::gpk::view_grid<::gpk::SColorBGRA>	& backBufferColors
-	, ::gpk::view_grid<uint32_t>			& backBufferDepth
+	( ::gpk::view2d<::gpk::SColorBGRA>	& backBufferColors
+	, ::gpk::view2d<uint32_t>			& backBufferDepth
 	, ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants
@@ -159,7 +159,7 @@ static	::gpk::error_t								drawBuffers
 	}
 
 	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
-	::gpk::array_pod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
+	::gpk::apod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
 	constexpr ::gpk::SCoord3<float>					xyz	[3]					= 

@@ -14,8 +14,8 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::blockRecordPath		(::gpk::array_pod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath)	{
-	::gpk::array_pod<char_t>						finalPath					= dbPath;
+::gpk::error_t								gpk::blockRecordPath		(::gpk::apod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)	{
+	::gpk::apod<char_t>						finalPath					= dbPath;
 	gpk_necall(::gpk::blockFilePath(finalPath, dbName, dbPath), "%s", "Out of memory?");
 	gpk_necall(::gpk::blockFileName(indices.IdBlock, dbName, finalPath, fileName), "%s", "Out of memory?");
 	return 0;
@@ -31,12 +31,12 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::blockFileName			(const uint32_t idBlock, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & folderName, ::gpk::array_pod<char_t> & fileName)	{
+::gpk::error_t								gpk::blockFileName			(const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName, ::gpk::apod<char_t> & fileName)	{
 	if(folderName.size()) {
 		gpk_necall(fileName.append(folderName), "%s", "Out of memory?");
 		gpk_necall(fileName.push_back('/'), "%s", "Out of memory?");
 	}
-	::gpk::array_pod<char_t>						tablePath;
+	::gpk::apod<char_t>						tablePath;
 	gpk_necall(fileName.append(::gpk::vcs{"db."}), "%s", "Out of memory?");
 	gpk_necall(fileName.append(dbName), "%s", "Out of memory?");
 	char											temp	[32]				= {};
@@ -45,7 +45,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::blockFilePath			(::gpk::array_pod<char_t> & finalPath, const ::gpk::view_const_char & dbName, const ::gpk::view_const_char & dbPath) {
+::gpk::error_t								gpk::blockFilePath			(::gpk::apod<char_t> & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath) {
 	finalPath									= dbPath;
 	if(finalPath.size())
 		gpk_necall(finalPath.push_back('/'), "%s", "Out of memory?");

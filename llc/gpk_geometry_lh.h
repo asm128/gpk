@@ -16,10 +16,10 @@ namespace gpk
 
 	template<typename _tElement>
 	struct SKeyedContainer {
-		::gpk::array_obj<_tElement>					Elements	= {};
-		::gpk::array_pod<::gpk::view_const_char>	Keys		= {};
+		::gpk::aobj<_tElement>					Elements	= {};
+		::gpk::apod<::gpk::vcc>	Keys		= {};
 
-		const ::gpk::error_t						SetElement				(const ::gpk::view_const_char & keyName, const _tElement & elementValue) {
+		const ::gpk::error_t						SetElement				(const ::gpk::vcc & keyName, const _tElement & elementValue) {
 			const ::gpk::error_t							elementIndex			= GetElementIndex(); 
 			if(elementIndex >= 0 && elementIndex < Keys.size())
 				Elements[elementIndex]						= elementValue;
@@ -30,8 +30,8 @@ namespace gpk
 			return 0;
 		}
 
-		const ::gpk::error_t						GetElementIndex			(const ::gpk::view_const_char & keyName) const { return ::gpk::find(keyName, ::gpk::view_array<const ::gpk::vcc>{Keys}); }
-		const _tElement								GetElementValue			(const ::gpk::view_const_char & keyName) const { 
+		const ::gpk::error_t						GetElementIndex			(const ::gpk::vcc & keyName) const { return ::gpk::find(keyName, ::gpk::view_array<const ::gpk::vcc>{Keys}); }
+		const _tElement								GetElementValue			(const ::gpk::vcc & keyName) const { 
 			const ::gpk::error_t							elementIndex			= GetElementIndex(); 
 			if(elementIndex >= 0 && elementIndex < Keys.size()) 
 				return Keys[elementIndex];
@@ -50,11 +50,11 @@ namespace gpk
 	struct SImageManager {
 		::gpk::SKeyedContainer<::gpk::SImageTag>								ImageRegistry			= {};
 
-		::gpk::array_obj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGR>		>>	BGR						= {};
-		::gpk::array_obj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGRA>	>>	BGRA					= {};
-		::gpk::array_obj<::gpk::pobj<::gpk::SImage<uint8_t>				>>	Grayscale8				= {};
-		::gpk::array_obj<::gpk::pobj<::gpk::SImage<uint16_t>				>>	Grayscale16				= {};
-		::gpk::array_obj<::gpk::pobj<::gpk::SImageMonochrome<uint64_t>	>>	Monochrome				= {};
+		::gpk::aobj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGR>		>>	BGR						= {};
+		::gpk::aobj<::gpk::pobj<::gpk::SImage<::gpk::SColorBGRA>	>>	BGRA					= {};
+		::gpk::aobj<::gpk::pobj<::gpk::SImage<uint8_t>				>>	Grayscale8				= {};
+		::gpk::aobj<::gpk::pobj<::gpk::SImage<uint16_t>				>>	Grayscale16				= {};
+		::gpk::aobj<::gpk::pobj<::gpk::SImageMonochrome<uint64_t>	>>	Monochrome				= {};
 
 		::gpk::error_t															CreateImage				(const ::gpk::vcs & filename, const ::gpk::vcs & keyName, COLOR_TYPE colorType)	{
 			::gpk::error_t	found =	ImageRegistry.GetElementIndex(keyName);
@@ -87,23 +87,23 @@ namespace gpk
 	};
 
 	struct SGeometryQuads {
-		::gpk::array_pod<::gpk::STriangle3	<float>>		Triangles;
-		::gpk::array_pod<::gpk::SCoord3		<float>>		Normals;
-		::gpk::array_pod<::gpk::STriangle2	<float>>		TextureCoords;
+		::gpk::apod<::gpk::STriangle3	<float>>		Triangles;
+		::gpk::apod<::gpk::SCoord3		<float>>		Normals;
+		::gpk::apod<::gpk::STriangle2	<float>>		TextureCoords;
 	};
 
 	struct SGeometryTriangles {
-		::gpk::array_pod<::gpk::STriangle3<float>>			Triangles;
-		::gpk::array_pod<::gpk::STriangle3<float>>			Normals;
-		::gpk::array_pod<::gpk::STriangle2<float>>			TextureCoords;
+		::gpk::apod<::gpk::STriangle3<float>>			Triangles;
+		::gpk::apod<::gpk::STriangle3<float>>			Normals;
+		::gpk::apod<::gpk::STriangle2<float>>			TextureCoords;
 	};
 
 	struct SGeometryIndexedTriangles {
-		::gpk::array_pod<::gpk::SCoord3<float>>				Positions;
-		::gpk::array_pod<::gpk::SCoord3<float>>				Normals;
-		::gpk::array_pod<::gpk::SCoord2<float>>				TextureCoords;
-		//::gpk::array_pod<::gpk::STriangle<uint16_t>>		PositionIndices;
-		::gpk::array_pod<uint32_t>							PositionIndices;
+		::gpk::apod<::gpk::SCoord3<float>>				Positions;
+		::gpk::apod<::gpk::SCoord3<float>>				Normals;
+		::gpk::apod<::gpk::SCoord2<float>>				TextureCoords;
+		//::gpk::apod<::gpk::STriangle<uint16_t>>		PositionIndices;
+		::gpk::apod<uint32_t>							PositionIndices;
 	};
 
 	struct SBufferManager {
@@ -159,8 +159,8 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SModelNode {
-		::gpk::array_pod<int32_t>							VertexBuffers	= {};
-		::gpk::array_pod<int32_t>							Images			= {};
+		::gpk::apod<int32_t>							VertexBuffers	= {};
+		::gpk::apod<int32_t>							Images			= {};
 		int32_t												IndexBuffer		= -1;
 		::gpk::SGeometryGroupModes							Modes			= {};
 		::gpk::SRange<uint16_t>								RangeIndex		= {};
@@ -168,17 +168,17 @@ namespace gpk
 	};
 
 	struct SModelQuads {
-		::gpk::array_pod<::gpk::STriangle3	<float>>		Triangles;
-		::gpk::array_pod<::gpk::SCoord3		<float>>		Normals;
-		::gpk::array_pod<::gpk::STriangle2	<float>>		TextureCoords;
-		::gpk::array_pod<::gpk::SGeometryGroup>				GeometryGroups;
+		::gpk::apod<::gpk::STriangle3	<float>>		Triangles;
+		::gpk::apod<::gpk::SCoord3		<float>>		Normals;
+		::gpk::apod<::gpk::STriangle2	<float>>		TextureCoords;
+		::gpk::apod<::gpk::SGeometryGroup>				GeometryGroups;
 	};
 
 	struct SModelTriangles {
-		::gpk::array_pod<::gpk::STriangle3<float>>			Triangles;
-		::gpk::array_pod<::gpk::STriangle3<float>>			Normals;
-		::gpk::array_pod<::gpk::STriangle2<float>>			TextureCoords;
-		::gpk::array_pod<::gpk::SGeometryGroup>				GeometryGroups;
+		::gpk::apod<::gpk::STriangle3<float>>			Triangles;
+		::gpk::apod<::gpk::STriangle3<float>>			Normals;
+		::gpk::apod<::gpk::STriangle2<float>>			TextureCoords;
+		::gpk::apod<::gpk::SGeometryGroup>				GeometryGroups;
 	};
 
 
@@ -206,8 +206,8 @@ namespace gpk
 		int16_t												Flags		;
 	};
 #pragma pack(pop)
-	int													geometryBuildTileListFromImage	(::gpk::view_grid<const ::gpk::SColorBGRA> image, ::gpk::array_pod<STile> & out_tiles, uint32_t imagePitch = 0);
-	int													geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view_grid<const ::gpk::STile> image, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale);
+	int													geometryBuildTileListFromImage	(::gpk::view2d<const ::gpk::SColorBGRA> image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
+	int													geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> image, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale);
 
 #pragma pack(push, 1)
 	struct SRenderMaterialPaletted {

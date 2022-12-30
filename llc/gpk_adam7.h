@@ -13,7 +13,7 @@ namespace gpk
 		);
 
 	template<typename _tTexel>
-	static			::gpk::error_t							adam7Interlace					(::gpk::view_array<::gpk::SImage<_tTexel>> images, ::gpk::view_grid<_tTexel> & out_View)				{
+	static			::gpk::error_t							adam7Interlace					(::gpk::view_array<::gpk::SImage<_tTexel>> images, ::gpk::view2d<_tTexel> & out_View)				{
 		for(uint32_t iImage = 0; iImage < images.size(); ++iImage) {
 			::gpk::SCoord2<uint32_t>									offsetMultiplier				= {1, 1};
 			::gpk::SCoord2<uint32_t>									offsetBase						= {0, 0};

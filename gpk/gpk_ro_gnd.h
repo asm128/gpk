@@ -61,25 +61,25 @@ namespace gpk
 
 	struct SGNDFileContents {
 				STiledTerrainMetricsGND								Metrics;
-				::gpk::array_obj<::gpk::array_obj<char_t>>			TextureNames;
+				::gpk::aobj<::gpk::aobj<char_t>>			TextureNames;
 				uint32_t											LightmapTiles;		// ??
 				::gpk::SCoord2<uint32_t>							LightmapSize;
-				::gpk::array_pod<STileBrightnessGND	>				lstTileBrightnessData;
-				::gpk::array_pod<STileSkinGND		>				lstTileTextureData;
-				::gpk::array_pod<STileGeometryGND	>				lstTileGeometryData;
+				::gpk::apod<STileBrightnessGND	>				lstTileBrightnessData;
+				::gpk::apod<STileSkinGND		>				lstTileTextureData;
+				::gpk::apod<STileGeometryGND	>				lstTileGeometryData;
 	};
 
 	//709655609
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_const_string	& input);
+			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::vcs	& input);
 
 	struct SModelNodeGND {
-				::gpk::array_pod<::gpk::SCoord3<float>>				Normals			;
-				::gpk::array_pod<::gpk::SCoord3<float>>				Vertices		;
-				::gpk::array_pod<::gpk::SCoord2<float>>				UVs				;
-				::gpk::array_pod<::gpk::STriangle<uint32_t>>		VertexIndices	;
-				//::gpk::array_pod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
+				::gpk::apod<::gpk::SCoord3<float>>				Normals			;
+				::gpk::apod<::gpk::SCoord3<float>>				Vertices		;
+				::gpk::apod<::gpk::SCoord2<float>>				UVs				;
+				::gpk::apod<::gpk::STriangle<uint32_t>>		VertexIndices	;
+				//::gpk::apod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct STileMapping {
@@ -93,7 +93,7 @@ namespace gpk
 	};
 
 	struct SModelGND {
-				::gpk::array_obj<::gpk::SModelNodeGND>				Nodes;
+				::gpk::aobj<::gpk::SModelNodeGND>				Nodes;
 				::gpk::SImage<::gpk::STileMapping>					TileMapping;
 
 //																	SModelGND						()							= default;
@@ -132,16 +132,16 @@ namespace gpk
 		};
 
 			::gpk::error_t										gndGenerateFaceGeometry
-	( const ::gpk::array_pod<STileSkinGND		>	lstTileTextureData
-	, const ::gpk::array_pod<STileGeometryGND	>	lstTileGeometryData
+	( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
+	, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
 	, const ::gpk::STiledTerrainMetricsGND			tileMapMetrics
 	, TILE_FACE_FACING								facing_direction
 	, int32_t										textureIndex
 	, ::gpk::SModelNodeGND							& generated
-	, ::gpk::view_grid<::gpk::STileMapping>			& out_mapping
+	, ::gpk::view2d<::gpk::STileMapping>			& out_mapping
 	);
 
-				::gpk::error_t									blendGNDNormals							(const ::gpk::view_grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view_grid<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
+				::gpk::error_t									blendGNDNormals							(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

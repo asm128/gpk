@@ -82,16 +82,20 @@ namespace gpk
 			return out.size();
 		}
 	};
+
+	template<typename _tCell>	using view1d				= ::gpk::view_array<_tCell>;
+	template<typename _tCell>	using v1d					= ::gpk::view_array<_tCell>;
+
 #pragma pack(pop)
 
 	// view_array common typedefs
 	//typedef				::gpk::view_array<char_t			>	view_string			;
-	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			;
-	typedef				::gpk::view_array<byte_t			>	view_byte			;
+	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			, vub;
+	typedef				::gpk::view_array<byte_t			>	view_byte			, vb;
 	typedef				::gpk::view_array<uchar_t			>	view_uchar			, vuc;
 	typedef				::gpk::view_array<char_t			>	view_char			, vc;
-	typedef				::gpk::view_array<float				>	view_float32		, vf;
-	typedef				::gpk::view_array<double			>	view_float64		, vd;
+	typedef				::gpk::view_array<float				>	view_float32		, vf32, vf;
+	typedef				::gpk::view_array<double			>	view_float64		, vf64, vd;
 	typedef				::gpk::view_array<uint8_t			>	view_uint8			, vu8;
 	typedef				::gpk::view_array<uint16_t			>	view_uint16			, vu16;
 	typedef				::gpk::view_array<uint32_t			>	view_uint32			, vu32;
@@ -103,12 +107,12 @@ namespace gpk
 
 	// view_array<const> common typedefs
 	//typedef				::gpk::view_array<const char_t		>	view_const_string	;
-	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	;
-	typedef				::gpk::view_array<const byte_t		>	view_const_byte		;
+	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	, vcub;
+	typedef				::gpk::view_array<const byte_t		>	view_const_byte		, vcb;
 	typedef				::gpk::view_array<const uchar_t		>	view_const_uchar	, vcuc;
 	typedef				::gpk::view_array<const char_t		>	view_const_char		, vcc;
-	typedef				::gpk::view_array<const float		>	view_const_float32	, vcf;
-	typedef				::gpk::view_array<const double		>	view_const_float64	, vcd;
+	typedef				::gpk::view_array<const float		>	view_const_float32	, vcf32, vcf;
+	typedef				::gpk::view_array<const double		>	view_const_float64	, vcf64, vcd;
 	typedef				::gpk::view_array<const uint8_t		>	view_const_uint8	, vcu8;
 	typedef				::gpk::view_array<const uint16_t	>	view_const_uint16	, vcu16;
 	typedef				::gpk::view_array<const uint32_t	>	view_const_uint32	, vcu32;
@@ -150,13 +154,13 @@ namespace gpk
 	template <typename _t>	static inline constexpr uint32_t	size		(::gpk::view_array<_t> viewToTest)	noexcept	{ return viewToTest.size();					}
 	template <typename _t>	static inline constexpr uint32_t	byte_count	(::gpk::view_array<_t> viewToTest)	noexcept	{ return sizeof(_t) * viewToTest.size();	}
 
-						::gpk::error_t			rtrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
-						::gpk::error_t			ltrim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r");
-	static inline		::gpk::error_t			trim								(::gpk::view_const_char & trimmed, const ::gpk::view_const_char & original, const ::gpk::view_const_char & characters = " \t\b\n\r") 	{
+						::gpk::error_t			rtrim								(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = " \t\b\n\r");
+						::gpk::error_t			ltrim								(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = " \t\b\n\r");
+	static inline		::gpk::error_t			trim								(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = " \t\b\n\r") 	{
 		const uint32_t countChars = ::gpk::ltrim(trimmed, original, characters);
 		return countChars + ::gpk::rtrim(trimmed, trimmed, characters);
 	}
-	static inline		::gpk::error_t			trim								(::gpk::view_const_char & trimmed) 	{
+	static inline		::gpk::error_t			trim								(::gpk::vcc & trimmed) 	{
 		return trim(trimmed, trimmed, " \t\b\n\r");
 	}
 
@@ -224,8 +228,8 @@ namespace gpk
 		return -1;
 	}
 
-	static inline		::gpk::error_t			find_string							(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::find_sequence_pod(sequence, target, offset); }
-	static inline		::gpk::error_t			rfind_string						(const ::gpk::vcs& sequence, const ::gpk::vcc& target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(sequence, target, offset); }
+	static inline		::gpk::error_t			find_string							(const ::gpk::vcs& sequence, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::find_sequence_pod(sequence, target, offset); }
+	static inline		::gpk::error_t			rfind_string						(const ::gpk::vcs& sequence, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(sequence, target, offset); }
 
 	template<typename _tElement>
 	static inline		::gpk::error_t			is_any_of							(const ::gpk::view_array<const _tElement>& valuesToFind, const _tElement & valueToTest)	{
@@ -371,7 +375,7 @@ namespace gpk
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tElement);
 	}
 
-	static inline	::gpk::error_t					viewRead							(::gpk::view_const_string & headerToRead, const ::gpk::view_const_byte	& input	)	{
+	static inline	::gpk::error_t					viewRead							(::gpk::vcs & headerToRead, const ::gpk::view_const_byte	& input	)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if(elementCount > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount);

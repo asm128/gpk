@@ -16,16 +16,16 @@ namespace gpk
 			::gpk::CONTROL_LIST_DIRECTION										Orientation									= ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL;
 			int32_t																IndexParentList								= -1;
 			int32_t																IndexParentItem								= -1;
-			::gpk::array_pod<int32_t>											IdControls									= {};
+			::gpk::apod<int32_t>											IdControls									= {};
 			int32_t																IdSelected									= -1;
-			::gpk::array_pod<int32_t>											IdMultiselect								= {};
-			::gpk::array_pod<int64_t>											Events										= {};
+			::gpk::apod<int32_t>											IdMultiselect								= {};
+			::gpk::apod<int64_t>											Events										= {};
 	};
 
 #pragma pack(push, 1)
 		::gpk::error_t														controlListInitialize						(::gpk::SGUI& gui, ::gpk::SControlList& menu);
 		::gpk::error_t														controlListArrange							(::gpk::SGUI& gui, ::gpk::SControlList& menu);
-		::gpk::error_t														controlListPush								(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::view_const_string& text, int64_t eventCode = -1);
+		::gpk::error_t														controlListPush								(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode = -1);
 
 	enum VIEWPORT_CONTROL : int8_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
@@ -61,19 +61,19 @@ namespace gpk
 
 	struct SPaletteGrid {
 				int32_t															IdControl									= -1;
-				::gpk::array_pod<int32_t>										IdControls									= {};
-				::gpk::view_grid<::gpk::SColorBGRA>								Colors										= {};
+				::gpk::apod<int32_t>										IdControls									= {};
+				::gpk::view2d<::gpk::SColorBGRA>								Colors										= {};
 	};
 
 	struct SEditBox {
 				int32_t															IdControl									= -1;
-				::gpk::array_pod<int32_t>										IdControls									= {};
-				::gpk::view_grid<::gpk::SColorBGRA>								Colors										= {};
+				::gpk::apod<int32_t>										IdControls									= {};
+				::gpk::view2d<::gpk::SColorBGRA>								Colors										= {};
 	};
 
 
 			::gpk::error_t			paletteGridInitialize		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette);
-			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view_grid<::gpk::SColorBGRA>& colors);
+			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
 
 
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER);
@@ -110,7 +110,7 @@ namespace gpk
 		int32_t							IdRoot				= {};
 		int32_t							IdText				= {};
 		::gpk::SVirtualKeyboard			VirtualKeyboard		= {};
-		::gpk::array_pod<char>			Text				= {};
+		::gpk::apod<char>			Text				= {};
 		uint32_t						MaxLength			= 16;
 		bool							Editing				= false;
 
@@ -135,7 +135,7 @@ namespace gpk
 				return 0;
 			}));
 
-			::gpk::array_obj<::gpk::SSysEvent>	sysEvents			= frameEvents;
+			::gpk::aobj<::gpk::SSysEvent>	sysEvents			= frameEvents;
 			const ::gpk::SVirtualKeyboard		& vk				= VirtualKeyboard;
 			for(uint32_t iEvent = 0; iEvent < VirtualKeyboard.Events.size(); ++iEvent) {
 				switch(vk.Events[iEvent].Type) {

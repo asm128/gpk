@@ -66,13 +66,13 @@ namespace gpk
 
 
 	struct SRigidBodyIntegrator {
-		::gpk::array_pod<::gpk::SRigidBodyFrame	>		BodyFrames						= {};
-		::gpk::array_pod<::gpk::SRigidBodyFlags	>		BodyFlags						= {};
-		::gpk::array_pod<::gpk::SBodyForces		>		Forces							= {};
-		::gpk::array_pod<::gpk::SBodyMass		>		Masses							= {};
-		::gpk::array_pod<::gpk::SBodyCenter		>		Centers							= {};
-		::gpk::array_pod<::gpk::SBoundingVolume	>		BoundingVolumes					= {};
-		::gpk::array_pod<::gpk::SMatrix4<float>	>		TransformsLocal					= {};
+		::gpk::apod<::gpk::SRigidBodyFrame	>		BodyFrames						= {};
+		::gpk::apod<::gpk::SRigidBodyFlags	>		BodyFlags						= {};
+		::gpk::apod<::gpk::SBodyForces		>		Forces							= {};
+		::gpk::apod<::gpk::SBodyMass		>		Masses							= {};
+		::gpk::apod<::gpk::SBodyCenter		>		Centers							= {};
+		::gpk::apod<::gpk::SBoundingVolume	>		BoundingVolumes					= {};
+		::gpk::apod<::gpk::SMatrix4<float>	>		TransformsLocal					= {};
 
 		static constexpr const ::gpk::SMatrix4<float>	MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
 		static constexpr const ::gpk::SMatrix3<float>	MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
@@ -176,6 +176,7 @@ namespace gpk
 
 		bool											Active							(uint32_t iBody)													{ return BodyFlags[iBody].Active; }
 		void											SetActive						(uint32_t iBody, bool active)										{ BodyFlags[iBody].Active = active; }
+		void											SetMass							(uint32_t iBody, float mass)										{ Masses[iBody].InverseMass = 1.0f / mass; }
 		void											SetPosition						(uint32_t iBody, const ::gpk::SCoord3<float>& newPosition )			{
 			::gpk::SBodyCenter									& bodyCenter					= Centers[iBody];
 			if(0 == memcmp(&newPosition.x, &bodyCenter.Position.x, sizeof(::gpk::SCoord3<float>)))
@@ -219,7 +220,7 @@ namespace gpk
 			bodyFlags.Active								= true;
 		}
 
-		::gpk::error_t									Save(::gpk::array_pod<byte_t> & output) const { 
+		::gpk::error_t									Save(::gpk::apod<byte_t> & output) const { 
 			gpk_necs(::gpk::viewWrite(BodyFrames		, output));
 			gpk_necs(::gpk::viewWrite(BodyFlags			, output));
 			gpk_necs(::gpk::viewWrite(Forces			, output));

@@ -4,8 +4,8 @@
 #include "gpk_parse.h"
 
 ::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
-	const ::gpk::array_obj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
-	::gpk::view_const_char								remoteAddr;
+	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
+	::gpk::vcc								remoteAddr;
 	const bool											isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
 	requestReceived.IsCGIEnviron					= isCGIEnviron;
 	if(bLogCGIEnviron && isCGIEnviron)
@@ -13,7 +13,7 @@
 
 	{	// Try to load query from querystring and request body
 		const int32_t										offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view_array<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
-		::gpk::array_pod<char_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
+		::gpk::apod<char_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
 			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
@@ -28,7 +28,7 @@
 		requestReceived.QueryStringKeyVals				= runtimeValues.QueryStringKeyVals;
 	}
 	if(false == isCGIEnviron && runtimeValues.EntryPointArgs.ArgsCommandLine.size() > 1) {	// Get query from command line instead of CGI environ
-		requestReceived.Path							= ::gpk::view_const_string{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
+		requestReceived.Path							= ::gpk::vcs{runtimeValues.EntryPointArgs.ArgsCommandLine[1], (uint32_t)-1};
 		if(requestReceived.Path.size() > 2) {
 			if('"' == requestReceived.Path[0])
 				requestReceived.Path							= {&requestReceived.Path[1], requestReceived.Path.size() - 2};
@@ -38,7 +38,7 @@
 				requestReceived.QueryString						= {&requestReceived.Path[queryStringStart + 1], requestReceived.Path.size() - (uint32_t)queryStringStart - 1};
 				requestReceived.Path							= {&requestReceived.Path[0], (uint32_t)queryStringStart};
 
-				//::gpk::view_const_string								querystring;
+				//::gpk::vcs								querystring;
 				::gpk::querystring_split(requestReceived.QueryString, requestReceived.QueryStringElements);
 				requestReceived.QueryStringKeyVals.resize(requestReceived.QueryStringElements.size());
 				for(uint32_t iKeyVal = 0; iKeyVal < requestReceived.QueryStringKeyVals.size(); ++iKeyVal) {
@@ -55,7 +55,7 @@
 
 static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view_array<const char> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
-	static	const ::gpk::view_const_char					content_types []			=
+	static	const ::gpk::vcc					content_types []			=
 		{ ::gpk::vcs{"application/javascript"													}
 		, ::gpk::vcs{"application/json"															}
 		, ::gpk::vcs{"application/x-www-form-urlencoded"										}
@@ -116,7 +116,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::view_const_char& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{
+::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view_array<const char>& strRemotePort)	{
 	remoteIP.Port										= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, &remoteIP.Port);
 
@@ -160,14 +160,14 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 
 ::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
-	::gpk::array_obj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
+	::gpk::aobj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
 	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
 	//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
 
 	{
-		::gpk::view_const_string								querystring;
+		::gpk::vcs								querystring;
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, environViews, querystring);
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
@@ -177,20 +177,20 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 		}
 	}
 	{
-		::gpk::view_const_string								contentype;
+		::gpk::vcs								contentype;
 		::gpk::find(::gpk::vcs{"CONTENT_TYPE"}, environViews, contentype);
 		if(contentype.size())
 			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
 	}
 	{
-		::gpk::view_const_string								remoteIP	;
-		::gpk::view_const_string								remotePORT	;
+		::gpk::vcs								remoteIP	;
+		::gpk::vcs								remotePORT	;
 		::gpk::find(::gpk::vcs{"REMOTE_IP"	}, environViews, remoteIP	);
 		::gpk::find(::gpk::vcs{"REMOTE_PORT"}, environViews, remotePORT	);
 		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
 	}
 	{
-		::gpk::view_const_string								contentLength;
+		::gpk::vcs								contentLength;
 		::gpk::find(::gpk::vcs{"CONTENT_LENGTH"}	, environViews, contentLength);
 		cgiRuntimeValues.Content.Length						= 0;
 		::gpk::parseIntegerDecimal(contentLength, &cgiRuntimeValues.Content.Length);

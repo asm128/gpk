@@ -4,7 +4,7 @@
 #include "gpk_bitmap_target.h"
 
 
-static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target, bool bDisabled)				{
+static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int32_t iControl, ::gpk::view2d<::gpk::SColorBGRA>& target, bool bDisabled)				{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	::gpk::SControlState												& controlState											= gui.Controls.States	[iControl];
 	::gpk::SColorBGRA													colorFace												= {0xFF, 0x00, 0xFF, 0xFF};
@@ -44,7 +44,7 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI& gui, int
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	::gpk::SControlText													& controlText											= gui.Controls.Text		[iControl];
-	::gpk::array_pod<::gpk::SCoord2<int32_t>>							dstCoords;
+	::gpk::apod<::gpk::SCoord2<int32_t>>							dstCoords;
 	const uint32_t														iFont													= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[iFont];
 	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize.Cast<uint16_t>(), rectText, selectedFont.Texture, controlText.Text, dstCoords));
@@ -121,7 +121,7 @@ static		::gpk::error_t										fillColorTable											(::gpk::SGUI& gui, int3
 		fillColorTableOld(gui, colorMode, control, controlState, mode, disabled, colors);
 	return 0;
 }
-static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA>& target)					{
+static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, int32_t iControl, ::gpk::view2d<::gpk::SColorBGRA>& target)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	const ::gpk::SControlMode											& controlMode											= gui.Controls.Modes	[iControl];
 	::gpk::SColorBGRA													colors			[::gpk::GUI_CONTROL_AREA_COUNT]			= {}; // -- Fill color table
@@ -176,7 +176,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	gerror_if(errored(::controlTextDraw(gui, iControl, target, disabled)), "%s", "Why would this ever happen?");
 	return 0;
 }
-			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::view_grid<::gpk::SColorBGRA> target)								{
+			::gpk::error_t										gpk::controlDrawHierarchy								(::gpk::SGUI& gui, int32_t iControl, ::gpk::view2d<::gpk::SColorBGRA> target)								{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
@@ -192,7 +192,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI& gui, in
 	}
 	return 0;
 }
-			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::view_grid<::gpk::SColorBGRA> target)													{
+			::gpk::error_t										gpk::guiDraw											(::gpk::SGUI& gui, ::gpk::view2d<::gpk::SColorBGRA> target)													{
 	if(gui.LastSize != target.metrics() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
 			gui.Controls.States[iOutdated].Updated							= false;

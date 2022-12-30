@@ -25,7 +25,7 @@ static ::gpk::error_t								geometryVoxelFace
 	const ::gpk::SCoord3<uint8_t>							dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryIndexedTriangles						& geometry				= output.Geometry;
-	::gpk::array_pod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
+	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
 
 	::gpk::SAABBGeometry									& aabbModel				= output.AABBModel;
 	for(uint32_t i = 0; i < 8; ++i) {
@@ -39,7 +39,7 @@ static ::gpk::error_t								geometryVoxelFace
 
 	const ::gpk::view_array<const ::gpk::SVoxel<uint8_t>>	voxels					= voxelMap.Voxels;
 	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
-		::gpk::array_pod<::gpk::SGeometryGroup>					& faceSlices			= output.GeometrySlices[iFace];
+		::gpk::apod<::gpk::SGeometryGroup>					& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry									& aabbSlice				= output.AABBSlices[iFace];
 
 		const ::gpk::SCoord3<int8_t>							faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];

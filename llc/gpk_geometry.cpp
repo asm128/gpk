@@ -78,15 +78,15 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 	, {{0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}}	// Top		- second
 	};
 
-					::gpk::error_t									gpk::generateCubePositions							(::gpk::array_pod<::gpk::STriangle3<float>>& out_Positions	) { out_Positions	= geometryCubePositions			; return 0; }
-					::gpk::error_t									gpk::generateCubeNormalsTriangle					(::gpk::array_pod<::gpk::SCoord3	<float>>& out_Normals	) { out_Normals		= geometryCubeNormalsTriangle	; return 0; }
-					::gpk::error_t									gpk::generateCubeNormalsVertex						(::gpk::array_pod<::gpk::STriangle3<float>>& out_Normals	) { out_Normals		= geometryCubeNormalsVertex		; return 0; }
-					::gpk::error_t									gpk::generateCubeUV									(::gpk::array_pod<::gpk::STriangle2<float>>& out_UV		) { out_UV			= geometryCubeUV				; return 0; }
+					::gpk::error_t									gpk::generateCubePositions							(::gpk::apod<::gpk::STriangle3<float>>& out_Positions	) { out_Positions	= geometryCubePositions			; return 0; }
+					::gpk::error_t									gpk::generateCubeNormalsTriangle					(::gpk::apod<::gpk::SCoord3	<float>>& out_Normals	) { out_Normals		= geometryCubeNormalsTriangle	; return 0; }
+					::gpk::error_t									gpk::generateCubeNormalsVertex						(::gpk::apod<::gpk::STriangle3<float>>& out_Normals	) { out_Normals		= geometryCubeNormalsVertex		; return 0; }
+					::gpk::error_t									gpk::generateCubeUV									(::gpk::apod<::gpk::STriangle2<float>>& out_UV		) { out_UV			= geometryCubeUV				; return 0; }
 					::gpk::error_t									gpk::generateCubeGeometry
-	( ::gpk::array_pod<::gpk::STriangle3	<float>> & out_Positions
-	, ::gpk::array_pod<::gpk::SCoord3		<float>> & out_Normals
-	, ::gpk::array_pod<::gpk::STriangle3	<float>> & out_NormalsVertex
-	, ::gpk::array_pod<::gpk::STriangle2	<float>> & out_UV
+	( ::gpk::apod<::gpk::STriangle3	<float>> & out_Positions
+	, ::gpk::apod<::gpk::SCoord3		<float>> & out_Normals
+	, ::gpk::apod<::gpk::STriangle3	<float>> & out_NormalsVertex
+	, ::gpk::apod<::gpk::STriangle2	<float>> & out_UV
 	)
 {
 	gpk_necall(::gpk::generateCubePositions			(out_Positions		), "%s", "Some nasty problem caused this to fail.");
@@ -97,7 +97,7 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 }
 
 
-					::gpk::error_t									gpk::generateGridPositions						(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::STriangle3	<float>>& out_Positions	) {
+					::gpk::error_t									gpk::generateGridPositions						(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle3	<float>>& out_Positions	) {
 	for(uint32_t z = 0; z < gridMetrics.y; ++z)
 		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
 			out_Positions.push_back({{(float)x, 0, (float)z}, {(float)x		, 0, (float)z + 1}, {(float)x + 1, 0, (float)z + 1}});
@@ -105,7 +105,7 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 		}
 	return 0;
 }
-					::gpk::error_t									gpk::generateGridNormalsTriangle				(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::SCoord3		<float>>& out_Normals	) {
+					::gpk::error_t									gpk::generateGridNormalsTriangle				(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::SCoord3		<float>>& out_Normals	) {
 	for(uint32_t z = 0; z < gridMetrics.y; ++z)
 		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({0, 1, 0});
@@ -113,7 +113,7 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 		}
 	return 0;
 }
-					::gpk::error_t									gpk::generateGridNormalsVertex					(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::STriangle3	<float>>& out_Normals	) {
+					::gpk::error_t									gpk::generateGridNormalsVertex					(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle3	<float>>& out_Normals	) {
 	for(uint32_t z = 0; z < gridMetrics.y; ++z)
 		for(uint32_t x = 0; x < gridMetrics.x; ++x) {
 			out_Normals.push_back({{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
@@ -121,7 +121,7 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 		}
 	return 0;
 }
-					::gpk::error_t									gpk::generateGridUV								(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::array_pod<::gpk::STriangle2	<float>>& out_UV		) {
+					::gpk::error_t									gpk::generateGridUV								(const ::gpk::SCoord2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle2	<float>>& out_UV		) {
 	const ::gpk::SCoord2<double>											gridUnit										= {1.0 / gridMetrics.x, 1.0 / gridMetrics.y};
 	const ::gpk::SCoord2<double>											gridMetricsF									= gridMetrics.Cast<double>();
 	for(uint32_t z = 0; z < gridMetrics.y; ++z)
@@ -135,10 +135,10 @@ static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]					
 }
 					::gpk::error_t									gpk::generateGridGeometry
 	( const ::gpk::SCoord2<uint32_t>					& gridMetrics
-	, ::gpk::array_pod<::gpk::STriangle3	<float>>	& out_Positions
-	, ::gpk::array_pod<::gpk::SCoord3		<float>>	& out_Normals
-	, ::gpk::array_pod<::gpk::STriangle3	<float>>	& out_NormalsVertex
-	, ::gpk::array_pod<::gpk::STriangle2	<float>>	& out_UV
+	, ::gpk::apod<::gpk::STriangle3	<float>>	& out_Positions
+	, ::gpk::apod<::gpk::SCoord3		<float>>	& out_Normals
+	, ::gpk::apod<::gpk::STriangle3	<float>>	& out_NormalsVertex
+	, ::gpk::apod<::gpk::STriangle2	<float>>	& out_UV
 	)
 {
 	gpk_necall(::gpk::generateGridPositions			(gridMetrics, out_Positions		), "%s", "Some nasty problem caused this to fail.");

@@ -87,15 +87,15 @@ namespace gpk
 
 	struct SVOXChunk {
 		SVOXChunkHeader										Header					= {};
-		::gpk::array_pod<byte_t>							Data					= {};
+		::gpk::apod<byte_t>							Data					= {};
 	};
 
 	struct SVOXChunkXYZI {
 		SVOXChunkHeader										Header					= {};
-		::gpk::array_pod<SVOXVoxel>							Data					= {};
+		::gpk::apod<SVOXVoxel>							Data					= {};
 	};
 
-	typedef ::gpk::array_obj<::gpk::SKeyVal<::gpk::array_pod<char>, ::gpk::array_pod<char>>>	SVOXDict;
+	typedef ::gpk::aobj<::gpk::SKeyVal<::gpk::apod<char>, ::gpk::apod<char>>>	SVOXDict;
 
 	struct SVOXChunkTransform {
 		SVOXChunkHeader										Header					= {};
@@ -104,14 +104,14 @@ namespace gpk
 		int32_t 											IdChild					= 0;
 		int32_t 											IdReserved				= -1; // (must be -1)
 		int32_t												IdLayer					= -1;
-		::gpk::array_pod<::gpk::SVOXTransformFrame>			Frames					= {};
+		::gpk::apod<::gpk::SVOXTransformFrame>			Frames					= {};
 	};
 
 	struct SVOXChunkNode {
 		SVOXChunkHeader										Header					= {};
 		int32_t												Id						= 0;
 		SVOXDict											Attributes				= {};
-		::gpk::array_pod<int32_t>							IdChildren				= {};
+		::gpk::apod<int32_t>							IdChildren				= {};
 	};
 
 	struct SVOXChunkMaterial {
@@ -140,7 +140,7 @@ namespace gpk
 		SVOXChunkHeader										Header					= {};
 		int32_t												Id						= 0;
 		SVOXDict											Attributes				= {};
-		::gpk::array_obj<::gpk::SVOXShapeModel>				Models					= {};
+		::gpk::aobj<::gpk::SVOXShapeModel>				Models					= {};
 	};
 
 	struct SVOXChunkLayer {
@@ -152,7 +152,7 @@ namespace gpk
 
 	struct SVOXChunkNote {
 		SVOXChunkHeader										Header					= {};
-		::gpk::array_obj<::gpk::array_pod<char>>			ColorNames				= {};
+		::gpk::aobj<::gpk::apod<char>>			ColorNames				= {};
 	};
 
 	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view_array<const byte_t> & input) 						{
@@ -172,16 +172,16 @@ namespace gpk
 	
 	struct SVOXData {
 		SVOXFileHeader										Header					= {};
-		::gpk::array_obj<::gpk::SVOXChunk>					Chunks					= {};
-		::gpk::array_obj<::gpk::SVOXChunkXYZI>				ChunksCoord				= {};
-		::gpk::array_obj<::gpk::SVOXChunkTransform>			ChunksTransform			= {};
-		::gpk::array_obj<::gpk::SVOXChunkNode>				ChunksNode				= {};
-		::gpk::array_obj<::gpk::SVOXChunkMaterial>			ChunksMaterial			= {};
-		::gpk::array_obj<::gpk::SVOXChunkRenderAttributes>	ChunksRenderAttributes	= {};
-		::gpk::array_obj<::gpk::SVOXChunkCamera>			ChunksCamera			= {};
-		::gpk::array_obj<::gpk::SVOXChunkLayer>				ChunksLayer				= {};
-		::gpk::array_obj<::gpk::SVOXChunkShape>				ChunksShape				= {};
-		::gpk::array_obj<::gpk::SVOXChunkNote>				ChunksNote				= {};
+		::gpk::aobj<::gpk::SVOXChunk>					Chunks					= {};
+		::gpk::aobj<::gpk::SVOXChunkXYZI>				ChunksCoord				= {};
+		::gpk::aobj<::gpk::SVOXChunkTransform>			ChunksTransform			= {};
+		::gpk::aobj<::gpk::SVOXChunkNode>				ChunksNode				= {};
+		::gpk::aobj<::gpk::SVOXChunkMaterial>			ChunksMaterial			= {};
+		::gpk::aobj<::gpk::SVOXChunkRenderAttributes>	ChunksRenderAttributes	= {};
+		::gpk::aobj<::gpk::SVOXChunkCamera>			ChunksCamera			= {};
+		::gpk::aobj<::gpk::SVOXChunkLayer>				ChunksLayer				= {};
+		::gpk::aobj<::gpk::SVOXChunkShape>				ChunksShape				= {};
+		::gpk::aobj<::gpk::SVOXChunkNote>				ChunksNote				= {};
 
 		::gpk::SCoord3<uint8_t>								GetDimensions			()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)

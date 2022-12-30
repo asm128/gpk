@@ -69,7 +69,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										integrate									(const ::gpk::view_array<::gpk::SParticle2<_tElement>>& particles, ::gpk::array_pod<::gpk::SParticle2State>& particleStates, ::gpk::view_array<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
+						::gpk::error_t										integrate									(const ::gpk::view_array<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view_array<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
 		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
@@ -86,9 +86,9 @@ namespace gpk
 		typedef				::gpk::SParticle2	<_tElement>						TParticle;
 		typedef				::gpk::SCoord2		<_tElement>						TCoord;
 
-							::gpk::array_pod<::gpk::SParticle2State>			ParticleState								= {};
-							::gpk::array_pod<TParticle>							Particle									= {};
-							::gpk::array_pod<TParticle>							ParticleNext								= {};
+							::gpk::apod<::gpk::SParticle2State>			ParticleState								= {};
+							::gpk::apod<TParticle>							Particle									= {};
+							::gpk::apod<TParticle>							ParticleNext								= {};
 		// -----------------------------------------------------------------	---
 		inline				::gpk::error_t										Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
 							::gpk::error_t										Integrate									(::gpk::view_array<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
@@ -136,7 +136,7 @@ namespace gpk
 	template<typename _tParticleType, typename _tCoord>
 							::gpk::error_t									addParticle
 		(	const _tParticleType										& particleType
-		,	::gpk::array_pod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
+		,	::gpk::apod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
 		,	const ::gpk::SParticle2<_tCoord>							& particleDefinition
 		)
@@ -152,7 +152,7 @@ namespace gpk
 		typedef					::gpk::SParticleBinding<_tParticleType>			TParticleInstance;
 		typedef					::gpk::SParticle2Integrator<_tCoord>			TIntegrator;
 
-								::gpk::array_pod<TParticleInstance>				Instances									= {};
+								::gpk::apod<TParticleInstance>				Instances									= {};
 								TIntegrator										Integrator									= {};
 	};
 
@@ -163,9 +163,9 @@ namespace gpk
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::array_pod<::gpk::SCoord3<float>>		Position			= {};
-		::gpk::array_pod<::gpk::SCoord3<float>>		Direction			= {};
-		::gpk::array_pod<float>						Speed				= {};
+		::gpk::apod<::gpk::SCoord3<float>>		Position			= {};
+		::gpk::apod<::gpk::SCoord3<float>>		Direction			= {};
+		::gpk::apod<float>						Speed				= {};
 
 		int											IntegrateSpeed		(double secondsLastFrame)	{
 			for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
@@ -189,7 +189,7 @@ namespace gpk
 			return Speed.push_back(speed);
 		}
 
-		::gpk::error_t										Save(::gpk::array_pod<byte_t> & output) const { 
+		::gpk::error_t										Save(::gpk::apod<byte_t> & output) const { 
 			gpk_necs(::gpk::viewWrite(Position	, output)); 
 			gpk_necs(::gpk::viewWrite(Direction	, output)); 
 			gpk_necs(::gpk::viewWrite(Speed		, output)); 

@@ -8,36 +8,36 @@
 namespace gpk
 {
 	struct SColorsMaterial {
-							::gpk::array_pod<::gpk::SColorBGRA>						Ambient										= {};
-							::gpk::array_pod<::gpk::SColorBGRA>						Diffuse										= {};
-							::gpk::array_pod<::gpk::SColorBGRA>						Specular									= {};
+							::gpk::apod<::gpk::SColorBGRA>						Ambient										= {};
+							::gpk::apod<::gpk::SColorBGRA>						Diffuse										= {};
+							::gpk::apod<::gpk::SColorBGRA>						Specular									= {};
 	};
 
 	struct SLightsDirectional {
-							::gpk::array_pod<::gpk::SCoord3<float>>					Directions									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsPoint {
-							::gpk::array_pod<::gpk::SCoord3<float>>					Directions									= {};
-							::gpk::array_pod<::gpk::SCoord3<float>>					Positions									= {};
-							::gpk::array_pod<::gpk::SCoord3<float>>					Attenuation									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Positions									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Attenuation									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsSpot {
-							::gpk::array_pod<::gpk::SCoord3<float>>					Directions									= {};
-							::gpk::array_pod<::gpk::SCoord3<float>>					Positions									= {};
-							::gpk::array_pod<::gpk::SCoord3<float>>					Attenuation									= {};
-							::gpk::array_pod<float>									SpotPower									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Positions									= {};
+							::gpk::apod<::gpk::SCoord3<float>>					Attenuation									= {};
+							::gpk::apod<float>									SpotPower									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SSceneGeometries {
-							::gpk::array_pod<::gpk::SModelGeometry	<float>>		Polyhedron									= {};
+							::gpk::apod<::gpk::SModelGeometry	<float>>		Polyhedron									= {};
 							::gpk::SModelGeometry					<float>			Box											= {};
-							::gpk::array_pod<::gpk::SModelGeometry	<float>>		Grid										= {};
-							::gpk::array_pod<::gpk::SModelGeometry	<float>>		Models										= {};
+							::gpk::apod<::gpk::SModelGeometry	<float>>		Grid										= {};
+							::gpk::apod<::gpk::SModelGeometry	<float>>		Models										= {};
 	};
 
 	struct SSceneLights	{
@@ -77,15 +77,15 @@ namespace gpk
 	};
 
 	struct SScene {
-							::gpk::array_pod<::gpk::SSceneObject>					Objects										= {};
+							::gpk::apod<::gpk::SSceneObject>					Objects										= {};
 							::gpk::SSceneGeometries									Geometries									= {};
 							::gpk::SSceneLights										Lights										= {};
 							::gpk::SSceneTransforms									Transforms									= {};
 
-							::gpk::array_pod<::gpk::SModelPivot	<float>>			ObjectPivots								= {};
-							::gpk::array_pod<::gpk::SMatrix4	<float>>			ObjectTransform								= {};
-							::gpk::array_pod<::gpk::SMatrix4	<float>>			ObjectOrientations							= {};
-							::gpk::array_pod<::gpk::SMatrix4	<float>>			ObjectOrientationsInverse					= {};
+							::gpk::apod<::gpk::SModelPivot	<float>>			ObjectPivots								= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectTransform								= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectOrientations							= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectOrientationsInverse					= {};
 
 							::gpk::SSceneCamera										Camera										=
 								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}

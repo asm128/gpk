@@ -39,7 +39,7 @@ namespace gpk
 	struct SSysEvent {
 		uint32_t					Type	: 24;
 		//uint32_t					Handled : 1;
-		::gpk::array_pod<uint8_t>	Data;
+		::gpk::apod<uint8_t>	Data;
 	};
 
 } // namespace 

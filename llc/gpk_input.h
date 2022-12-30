@@ -27,13 +27,13 @@ namespace gpk
 	};
 #pragma pack(pop)
 	struct SInput {
-							::gpk::array_pod<SInputKeyboard	>	StateKeyboard				= {};
-							::gpk::array_pod<SInputMouse	>	StateMouse					= {};
-							::gpk::array_pod<float>				TimeStampKeyboard			= {};
-							::gpk::array_pod<float>				TimeStampMouse				= {};
+							::gpk::apod<SInputKeyboard	>	StateKeyboard				= {};
+							::gpk::apod<SInputMouse	>	StateMouse					= {};
+							::gpk::apod<float>				TimeStampKeyboard			= {};
+							::gpk::apod<float>				TimeStampMouse				= {};
 
-							::gpk::array_pod<SInputJoystick>	JoystickPrevious			= {};
-							::gpk::array_pod<SInputJoystick>	JoystickCurrent				= {};
+							::gpk::apod<SInputJoystick>	JoystickPrevious			= {};
+							::gpk::apod<SInputJoystick>	JoystickCurrent				= {};
 
 							SInputKeyboard						KeyboardPrevious			= {};
 							SInputKeyboard						KeyboardCurrent				= {};

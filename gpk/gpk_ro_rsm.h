@@ -44,15 +44,15 @@ namespace gpk
 	};
 #pragma pack(pop)
 	struct SRSMNode {
-					::gpk::array_pod<int32_t>								TextureIndices;
-					::gpk::array_pod<::gpk::SCoord3<float>>					Vertices;
-					::gpk::array_pod<::gpk::SRSMTexCoord>					UVs;
-					::gpk::array_pod<::gpk::SRSMFace>						Faces;
+					::gpk::apod<int32_t>								TextureIndices;
+					::gpk::apod<::gpk::SCoord3<float>>					Vertices;
+					::gpk::apod<::gpk::SRSMTexCoord>					UVs;
+					::gpk::apod<::gpk::SRSMFace>						Faces;
 					char_t													Name		[40];
 					char_t													ParentName	[40];
 					::gpk::SRSMNodeTransform								Transform;
-					::gpk::array_pod<SRSMFrameRotation>						RotationKeyframes;
-					::gpk::array_pod<SRSMFramePosition>						PositionKeyframes;
+					::gpk::apod<SRSMFrameRotation>						RotationKeyframes;
+					::gpk::apod<SRSMFramePosition>						PositionKeyframes;
 	};
 
 	struct SRSMFileContents {
@@ -61,28 +61,28 @@ namespace gpk
 					uint8_t													Alpha;
 					char_t													Unknown[16];
 
-					::gpk::array_obj<::gpk::array_static<char_t, 40>>		TextureNames;
+					::gpk::aobj<::gpk::array_static<char_t, 40>>		TextureNames;
 
 					char_t													RootNodeName[40];
-					::gpk::array_obj<::gpk::SRSMNode>						Nodes;
+					::gpk::aobj<::gpk::SRSMNode>						Nodes;
 	};
 				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
 				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, FILE								* input);
-				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input);
+				::gpk::error_t											rsmFileLoad								(::gpk::SRSMFileContents& loaded, const ::gpk::vcs	& input);
 
 	struct SModelNodeRSM {
-					::gpk::array_pod<::gpk::SCoord3<float>>					Normals			;
-					::gpk::array_pod<::gpk::SCoord3<float>>					Vertices		;
-					::gpk::array_pod<::gpk::SCoord2<float>>					UVs				;
-					::gpk::array_pod<::gpk::STriangle<uint32_t>>		VertexIndices	;
+					::gpk::apod<::gpk::SCoord3<float>>					Normals			;
+					::gpk::apod<::gpk::SCoord3<float>>					Vertices		;
+					::gpk::apod<::gpk::SCoord2<float>>					UVs				;
+					::gpk::apod<::gpk::STriangle<uint32_t>>		VertexIndices	;
 					int32_t													TextureIndex	;
 					int32_t													RSMNodeIndex	;
-					//::gpk::array_pod<int32_t>								SkinIndices		; // one per triangle (VertexIndices.size() / 3)
+					//::gpk::apod<int32_t>								SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct SModelHierarchyNodeRSM {
 					int32_t													IdParent		;
-					::gpk::array_pod<int32_t>								IdChildren		;
+					::gpk::apod<int32_t>								IdChildren		;
 	};
 
 				::gpk::error_t											rsmGeometryGenerate						(const ::gpk::SRSMFileContents& input, ::gpk::view_array<::gpk::SModelNodeRSM>& out_generated);

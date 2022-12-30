@@ -58,17 +58,17 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SUDPConnectionMessage {
-		::gpk::array_pod<byte_t>												Payload			;
+		::gpk::apod<byte_t>												Payload			;
 		uint64_t																Time			;
 		::gpk::SUDPCommand														Command			;
 		uint8_t																	RetryCount		;
-		::gpk::array_pod<uint64_t>												Hashes			;
+		::gpk::apod<uint64_t>												Hashes			;
 	};
 
 	struct SUDPClientQueue {
-		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Received		;
-		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Send			;
-		::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Sent			;
+		::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Received		;
+		::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Send			;
+		::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			Sent			;
 		::std::mutex															MutexSend		;
 		::std::mutex															MutexReceive	;
 	};
@@ -95,8 +95,8 @@ namespace gpk
 
 	static constexpr	const uint32_t										UDP_PAYLOAD_SIZE_LIMIT				= 1024 * 128;
 
-	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::array_obj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
-	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::array_pod<byte_t> & receiveBuffer);
+	::gpk::error_t															connectionSendQueue					(::gpk::SUDPConnection & client, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
+	::gpk::error_t															connectionHandleCommand				(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer);
 	::gpk::error_t															connectionPushData					(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::view_array<const byte_t> & data, bool bEncrypted = true, bool bCompress = false, uint8_t retryCount = 0);
 }
 

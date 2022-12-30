@@ -98,6 +98,8 @@ namespace gpk
 		inline constexpr	uint32_t							size						()																	const	noexcept	{ return Count;																	}
 	};
 
+	template<typename _tCell>	using vbit					= ::gpk::view_bit<_tCell>;
+
 	template<typename _tField>
 	::gpk::error_t												reverse_bits				(::gpk::view_bit<_tField> toReverse)													{
 		const uint32_t													countBits					= toReverse.size() / 2;

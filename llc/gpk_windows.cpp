@@ -6,7 +6,7 @@
 #	endif
 #	include <Windows.h>
 
-::gpk::array_pod<char_t>				gpk::getWindowsErrorAsString		(const int32_t lastError)					{	// Get the error message, if any.
+::gpk::apod<char_t>				gpk::getWindowsErrorAsString		(const int32_t lastError)					{	// Get the error message, if any.
 	if(0 == lastError)
 		return {};
 	char_t										* messageBuffer						= nullptr;
@@ -14,13 +14,13 @@
 
 	retval_gerror_if({}, nullptr == messageBuffer, "FormatMessage() failed.")
 	else {
-		const ::gpk::array_pod<char_t>				message								= ::gpk::view_array<const char_t>{messageBuffer, size >= 2 ? size - 2 : size};
+		const ::gpk::apod<char_t>				message								= ::gpk::view_array<const char_t>{messageBuffer, size >= 2 ? size - 2 : size};
 		LocalFree(messageBuffer);
 		return message;
 	}
 }
 
-::gpk::error_t							gpk::wcstombs						(::gpk::array_pod<char_t> & output, const ::gpk::view_array<wchar_t> input)	{
+::gpk::error_t							gpk::wcstombs						(::gpk::apod<char_t> & output, const ::gpk::view_array<wchar_t> input)	{
 	if(0 == input.size())
 		return 0;
 
@@ -28,18 +28,18 @@
 	if(0 == sizeNeededForMultiByte)
 		return 0;
 
-	::gpk::array_pod<char_t>					converted;
+	::gpk::apod<char_t>					converted;
 	converted.resize(sizeNeededForMultiByte);
 	WideCharToMultiByte(CP_UTF8, 0, input.begin(), input.size(), &converted[0], int(converted.size()), nullptr, nullptr);
 	output.append(converted);
 	return 0;
 }
 
-::gpk::error_t							gpk::mbstowcs						(::gpk::array_pod<wchar_t> & output, const ::gpk::view_const_char input)	{
+::gpk::error_t							gpk::mbstowcs						(::gpk::apod<wchar_t> & output, const ::gpk::vcc input)	{
 	if(0 == input.size())
 		return 0;
 
-	::gpk::array_pod<wchar_t>					converted;
+	::gpk::apod<wchar_t>					converted;
 	converted.resize(input.size());
 	gpk_hrcall(MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, &input[0], input.size(), &converted[0], converted.size()));
 	converted.resize((uint32_t)wcslen(converted.begin()));

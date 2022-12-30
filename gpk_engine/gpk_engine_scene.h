@@ -50,7 +50,7 @@ namespace gpk
 		::gpk::SCoord3<float>					WeightedNormal		;
 		::gpk::SCoord2<float>					WeightedUV			;
 		::gpk::SRenderMaterial					Material			;
-		::gpk::view2<const ::gpk::SColorBGRA>	Surface				; 
+		::gpk::view2d<const ::gpk::SColorBGRA>	Surface				; 
 	};
 
 	typedef ::gpk::error_t					(TFuncPixelShader)
@@ -103,8 +103,8 @@ namespace gpk
 	};
 
 	::gpk::error_t							drawScene
-		( ::gpk::view_grid<::gpk::SColorBGRA>	& backBufferColors
-		, ::gpk::view_grid<uint32_t>			& backBufferDepth
+		( ::gpk::view2d<::gpk::SColorBGRA>	& backBufferColors
+		, ::gpk::view2d<uint32_t>			& backBufferDepth
 		, ::gpk::SEngineRenderCache				& renderCache
 		, const ::gpk::SEngineScene				& scene
 		, const ::gpk::SEngineSceneConstants	& constants

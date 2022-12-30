@@ -154,10 +154,10 @@ namespace gpk
 	template<typename _tCell>
 	struct SVoxelMap {
 		::gpk::SCoord3<uint8_t>							Dimensions;
-		::gpk::array_pod<::gpk::SColorBGRA>				Palette;
-		::gpk::array_pod<::gpk::SVoxel<uint8_t>>		Voxels;
-		::gpk::array_obj<::gpk::SVoxelChunk<_tCell>>	Chunks;
-		::gpk::array_pod<::gpk::SCoord2<uint8_t>>		ChunkPositions;
+		::gpk::apod<::gpk::SColorBGRA>				Palette;
+		::gpk::apod<::gpk::SVoxel<uint8_t>>		Voxels;
+		::gpk::aobj<::gpk::SVoxelChunk<_tCell>>	Chunks;
+		::gpk::apod<::gpk::SCoord2<uint8_t>>		ChunkPositions;
 
 		int32_t											GetChunk					(const ::gpk::SCoord2<uint8_t> & chunkCoords) const	{ 
 			return ::gpk::find(chunkCoords, ::gpk::view_array<const ::gpk::SCoord2<uint8_t>>{ChunkPositions}); 

@@ -51,11 +51,11 @@ namespace gpk
 							::gpk::pobj<::gpk::SGUI>								GUI						= {};
 							::gpk::SFrameworkSettings								Settings				= {1, };
 							::gpk::SJSONFile										JSONConfig				= {};
-							::gpk::view_const_string								FileNameJSONConfig		= "gpk_config.json";
+							::gpk::vcs								FileNameJSONConfig		= "gpk_config.json";
 
 							::std::mutex											LockGUI;
 
-		inline																		SFramework				(::gpk::SRuntimeValues& runtimeValues, ::gpk::view_const_string	fileNameJSONConfig = "gpk_config.json")			noexcept
+		inline																		SFramework				(::gpk::SRuntimeValues& runtimeValues, ::gpk::vcs	fileNameJSONConfig = "gpk_config.json")			noexcept
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
 		{
 			Input.create();

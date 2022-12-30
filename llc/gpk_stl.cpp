@@ -1,7 +1,7 @@
 #include "gpk_stl.h"
 #include "gpk_storage.h"
 
-::gpk::error_t		gpk::stlFileLoad		(::gpk::view_const_char filename, ::gpk::SSTLFile& file) {
+::gpk::error_t		gpk::stlFileLoad		(::gpk::vcc filename, ::gpk::SSTLFile& file) {
 	gpk_necall(::gpk::fileToMemory(filename, file.Raw), "Failed to load file '%s'.", ::gpk::toString(filename).begin());
 	return ::gpk::stlFileLoad(file.Raw, file.Header, file.Triangles);
 }

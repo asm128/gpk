@@ -74,7 +74,7 @@
 //	//BIO_puts(out, "\n");
 //
 //	int							len							= 0;
-//	::gpk::array_pod<byte_t>	response;
+//	::gpk::apod<byte_t>	response;
 //	do {
 //		char						buff	[1536]				= {};
 //		len						= BIO_read(web, buff, ::gpk::size(buff));

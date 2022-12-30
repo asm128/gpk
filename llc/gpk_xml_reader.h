@@ -36,23 +36,23 @@ namespace gpk
 		SXMLToken					* CurrentElement	= 0;
 		uint32_t					NestLevel			= 0;
 		char						CharCurrent			= 0;
-		::gpk::array_pod<SXMLToken>	Token				= {};
+		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
 	struct SXMLReader {
 		SXMLReaderState				StateRead;
-		::gpk::array_pod<SXMLToken>	Token				= {};
+		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
 	::gpk::error_t				xmlParse			(SXMLReader& reader, ::gpk::vcc xmlDoc);
 	::gpk::error_t				xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
 
 	struct SXMLFile {
-		::gpk::array_pod<char_t>	Bytes				= {};
+		::gpk::apod<char_t>	Bytes				= {};
 		::gpk::SXMLReader			Reader				= {};
 	};
 
-	::gpk::error_t				xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::view_const_char & filename);
+	::gpk::error_t				xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::vcc & filename);
 
 }
 

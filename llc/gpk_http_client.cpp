@@ -13,7 +13,7 @@
 #	include <ctype.h>
 #endif
 
-::gpk::error_t							gpk::urlDecode					(::gpk::view_const_char urlToDecode, ::gpk::array_pod<char_t> & decoded)		{
+::gpk::error_t							gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char_t> & decoded)		{
 	uint32_t									decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const char_t								currentChar						= urlToDecode[iChar];
@@ -30,14 +30,14 @@
 	return decodedCharacters;
 }
 
-static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::array_pod<byte_t> & joined)		{
+static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte & body, ::gpk::apod<byte_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
 		iBegin									= iStop;
 		iStop									= (uint32_t)::gpk::find('\n', body, iBegin);
 		++iStop;	// skip \n
-		::gpk::view_const_string					strSize;
+		::gpk::vcs					strSize;
 		if(iStop <= body.size())
 			strSize								= {&body[iBegin], (uint32_t)iStop - iBegin};
 		else
@@ -55,27 +55,27 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::view_const_byte
 
 static	::gpk::error_t					httpClientRequestConstruct
 	(	::gpk::HTTP_METHOD					method
-	,	const ::gpk::view_const_string		& hostName
-	,	const ::gpk::view_const_string		& path
-	,	const ::gpk::view_const_string		& contentType
+	,	const ::gpk::vcs		& hostName
+	,	const ::gpk::vcs		& path
+	,	const ::gpk::vcs		& contentType
 	,	const ::gpk::view_const_byte		& body
-	,	::gpk::array_pod<byte_t>			& out_request
+	,	::gpk::apod<byte_t>			& out_request
 	) {
-	::gpk::view_const_char						strMethod						= ::gpk::get_value_label(method);
+	::gpk::vcc						strMethod						= ::gpk::get_value_label(method);
 	out_request								= strMethod;
 	out_request.push_back(' ');
 	out_request.append(path);
-	out_request.append(::gpk::view_const_string{
+	out_request.append(::gpk::vcs{
 		" HTTP/1.1"
 		//"\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE5.01; Windows NT)"
 		"\r\nHost: "
 		});
 	out_request.append(hostName);
 	if((method != ::gpk::HTTP_METHOD_GET) && contentType.size()) {
-		out_request.append(::gpk::view_const_string{"\r\nContent-Type: "});
+		out_request.append(::gpk::vcs{"\r\nContent-Type: "});
 		out_request.append(contentType);// 		application/x-www-form-urlencoded
 	}
-	out_request.append(::gpk::view_const_string{
+	out_request.append(::gpk::vcs{
 		"\r\nAccept-Language: en-us"
 		//"\r\nAccept-Encoding: gzip, deflate"
 		//"\r\nConnection: Keep-Alive"
@@ -91,13 +91,13 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 ::gpk::error_t							gpk::httpClientRequest
 	(	const ::gpk::SIPv4					& clientToConnect
 	,	::gpk::HTTP_METHOD					method
-	,	const ::gpk::view_const_string		& hostName
-	,	const ::gpk::view_const_string		& path
-	,	const ::gpk::view_const_string		& contentType
+	,	const ::gpk::vcs		& hostName
+	,	const ::gpk::vcs		& path
+	,	const ::gpk::vcs		& contentType
 	,	const ::gpk::view_const_byte		& body
 	,	::gpk::SHTTPResponse				& out_received
 	) {
-	::gpk::array_pod<byte_t>					bytesRequest;
+	::gpk::apod<byte_t>					bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
 	const ::gpk::SIPv4							& address						= clientToConnect;
 
@@ -136,13 +136,13 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	info_printf("Sending request: \n%s", ::gpk::toString(bytesRequest).begin());
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
-	::gpk::array_pod<char>						buf								= {};
+	::gpk::apod<char>						buf								= {};
 	gpk_necall(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
 	uint32_t									totalBytes						= 0;
 	uint32_t									stopOfHeader					= 0;
 	uint32_t									contentLength					= 0;
 	bool										bChunked						= false;
-	//const ::gpk::view_const_string				viewEndOfChunk					= "\r\n0\r\n\r\n";
+	//const ::gpk::vcs				viewEndOfChunk					= "\r\n0\r\n\r\n";
     while(-1 != (numbytes = recv(sockfd, &buf[totalBytes], ::gpk::min(buf.size() - totalBytes - 1, 1U), 0)) && 0 != numbytes) {
 		ree_if((totalBytes + numbytes) > buf.size(), "%s", "Rquest too big.");
 		totalBytes								+= numbytes;
@@ -178,7 +178,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 					if(0 == digitsLengthStart)
 						digitsLengthStart	= iOffset;
 				}
-				::gpk::view_const_string				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
+				::gpk::vcs				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
 				::gpk::parseIntegerDecimal(strContentLength, &contentLength);
 			}
 		}
@@ -208,7 +208,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 		buf[iByte]								= (byte_t)::tolower(buf[iByte]);
 
-	::gpk::array_obj<::gpk::view_const_byte>	headerLines;
+	::gpk::aobj<::gpk::view_const_byte>	headerLines;
 	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
 
 	::gpk::split(::gpk::view_const_byte{out_received.HeaderData}, '\n', headerLines);
@@ -235,7 +235,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	if(stopOfHeader < buf.size())
 		contentReceived							= {&buf[stopOfHeader], totalBytes - stopOfHeader};
 
-	::gpk::array_pod<byte_t>					joined;
+	::gpk::apod<byte_t>					joined;
 	if(bChunked) {
 		info_printf("\nChunked: %s", bChunked ? "true" : "false");
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
@@ -243,18 +243,18 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	}
 
 	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
-	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::view_const_char{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
+	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcc{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
 ::gpk::error_t							gpk::httpClientRequest
 	(	const ::gpk::SIPv4					& clientToConnect
 	,	::gpk::HTTP_METHOD					method
-	,	const ::gpk::view_const_string		& hostName
-	,	const ::gpk::view_const_string		& path
-	,	const ::gpk::view_const_string		& contentType
+	,	const ::gpk::vcs		& hostName
+	,	const ::gpk::vcs		& path
+	,	const ::gpk::vcs		& contentType
 	,	const ::gpk::view_const_byte		& body
-	,	::gpk::array_pod<byte_t>			& out_received
+	,	::gpk::apod<byte_t>			& out_received
 	) {
 	::gpk::SHTTPResponse						response;
 	gpk_necall(::gpk::httpClientRequest

@@ -44,20 +44,20 @@ namespace gpk
 	struct SExpressionNode {
 		SExpressionToken												* Token							= 0;
 		SExpressionNode													* Parent						= 0;
-		::gpk::array_obj<::gpk::pobj<SExpressionNode>>				Children						= {};
+		::gpk::aobj<::gpk::pobj<SExpressionNode>>				Children						= {};
 		int32_t															ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::array_pod<::gpk::SExpressionToken>						Token;
-		::gpk::array_obj<::gpk::view_const_char>						View;
-		::gpk::array_obj<::gpk::pobj	<::gpk::SExpressionNode>>		Tree;
+		::gpk::apod<::gpk::SExpressionToken>						Token;
+		::gpk::aobj<::gpk::vcc>						View;
+		::gpk::aobj<::gpk::pobj	<::gpk::SExpressionNode>>		Tree;
 		::gpk::SExpressionReaderState									StateRead;
 		::gpk::pobj<::gpk::SExpressionReader>						SubExpressionCache;
 	};
 
-	::gpk::error_t													expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::view_const_char& expression);
-	::gpk::error_t													expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::view_const_char& expression);
+	::gpk::error_t													expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression);
+	::gpk::error_t													expressionReaderParseStep		(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression);
 #pragma pack(pop)
 } // namespace
 

@@ -582,7 +582,7 @@ int													gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_
 	return 0;
 }
 
-int													gpk::geometryBuildTileListFromImage		(::gpk::view_grid<const ::gpk::SColorBGRA> image, ::gpk::array_pod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
+int													gpk::geometryBuildTileListFromImage		(::gpk::view2d<const ::gpk::SColorBGRA> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
 	{
 		::gpk::STile											newTile;
 		for(uint32_t z = 0, maxZ = image.metrics().y; z < maxZ ; ++z)
@@ -615,7 +615,7 @@ int													gpk::geometryBuildTileListFromImage		(::gpk::view_grid<const ::g
 	return 0;
 }
 
-int													gpk::geometryBuildGridFromTileList		(::gpk::SGeometryQuads & geometry, ::gpk::view_grid<const ::gpk::STile> tiles, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale) {
+int													gpk::geometryBuildGridFromTileList		(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> tiles, ::gpk::SCoord2<float> gridCenter, const ::gpk::SCoord3<float> & scale) {
 	::gpk::SCoord2<float>									texCoordUnits						= {1.0f / tiles.metrics().x, 1.0f / tiles.metrics().y};
 	for(uint32_t z = 0; z < tiles.metrics().y; ++z)
 	for(uint32_t x = 0; x < tiles.metrics().x; ++x) {

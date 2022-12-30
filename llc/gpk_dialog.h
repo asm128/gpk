@@ -44,7 +44,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogColors {
-		::gpk::array_pod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType										= {};
+		::gpk::apod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType										= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Control												= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Button												= {};
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						CheckBox											= {};
@@ -65,7 +65,7 @@ namespace gpk
 
 		::gpk::pobj<::gpk::SInput>														Input												= {};
 		::gpk::pobj<::gpk::SGUI>															GUI													= {};
-		::gpk::array_obj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
+		::gpk::aobj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
 		::gpk::SImage<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 

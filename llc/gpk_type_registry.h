@@ -7,8 +7,8 @@
 namespace gpk
 {
 	struct STypeRegistry {
-		::gpk::array_pod<::gpk::label>					Names;
-		::gpk::array_pod<uint32_t>						MemberCount;
+		::gpk::apod<::gpk::label>					Names;
+		::gpk::apod<uint32_t>						MemberCount;
 	};
 
 	::gpk::STypeRegistry&							typeRegistrySingleton					()		noexcept;

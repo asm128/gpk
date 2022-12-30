@@ -90,10 +90,10 @@ namespace gpk
 	};
 
 	struct SRSWFileContents {
-					::gpk::array_pod<SModelInfoRSW	>						RSWModels		;
-					::gpk::array_pod<SLightInfoRSW	>						RSWLights		;
-					::gpk::array_pod<SEffectInfoRSW	>						RSWEffects		;
-					::gpk::array_pod<SSoundInfoRSW	>						RSWSounds		;
+					::gpk::apod<SModelInfoRSW	>						RSWModels		;
+					::gpk::apod<SLightInfoRSW	>						RSWLights		;
+					::gpk::apod<SEffectInfoRSW	>						RSWEffects		;
+					::gpk::apod<SSoundInfoRSW	>						RSWSounds		;
 
 					char_t													INIFilename		[40];
 					char_t													GNDFilename		[40];
@@ -108,7 +108,7 @@ namespace gpk
 
 				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
 				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, FILE								* input);
-				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::view_const_string	& input);
+				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input);
 }
 
 #endif // GPK_RO_RSW_H_9283742893742893

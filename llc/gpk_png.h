@@ -13,7 +13,7 @@ namespace gpk
 	struct SPNGChunk {
 						uint8_t						Type				[4]	= {};
 						uint32_t					CRC						= {};
-						::gpk::array_pod<uint8_t>	Data					= {};
+						::gpk::apod<uint8_t>	Data					= {};
 	};
 
 
@@ -52,12 +52,12 @@ namespace gpk
 
 	struct SPNGData {
 						char											Signature			[8]			= {};
-						::gpk::array_obj<SPNGChunk>						Chunks							;
-						::gpk::array_pod<ubyte_t>						Deflated						;
-						::gpk::array_pod<ubyte_t>						Inflated						;
-						::gpk::array_pod<ubyte_t>						Filters							;
-						::gpk::array_obj<::gpk::array_pod<ubyte_t>>		Scanlines						;
-						::gpk::array_pod<::gpk::color_bgr<uint8_t>>		Palette							;
+						::gpk::aobj<SPNGChunk>						Chunks							;
+						::gpk::apod<ubyte_t>						Deflated						;
+						::gpk::apod<ubyte_t>						Inflated						;
+						::gpk::apod<ubyte_t>						Filters							;
+						::gpk::aobj<::gpk::apod<ubyte_t>>		Scanlines						;
+						::gpk::apod<::gpk::color_bgr<uint8_t>>		Palette							;
 						::gpk::SCoord2<uint32_t>						Adam7Sizes			[7]			= {};
 						//::gpk::SPNGFeature								Feature							= {};
 						::gpk::SPNGIHDR									Header							= {};
@@ -68,17 +68,17 @@ namespace gpk
 					uint32_t										update_crc						(const ::gpk::view_array<const ubyte_t> & buf, uint32_t crc)		;
 	static inline	uint32_t										get_crc							(const ::gpk::view_array<const ubyte_t> & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_string	& filename	);
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename	);
 					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source	);
-					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_string	& filename		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
+					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
 					::gpk::error_t									pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::view_const_ubyte	& source		, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	;
 																													 
 					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<::gpk::SColorBGRA> & out_Texture);
 					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint16_t> & out_Texture);
 					::gpk::error_t									pngDecode						(::gpk::SPNGData & pngData, ::gpk::SImage<uint8_t> & out_Texture);
-					::gpk::error_t									pngFileWrite					(const ::gpk::view_grid<::gpk::SColorBGRA> & out_ImageView, ::gpk::array_pod<ubyte_t> & out_Bytes);
+					::gpk::error_t									pngFileWrite					(const ::gpk::view2d<::gpk::SColorBGRA> & out_ImageView, ::gpk::apod<ubyte_t> & out_Bytes);
 
-	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_string	& filename	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::vcs	& filename	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
 	static inline	::gpk::error_t									pngFileLoad						(const ::gpk::view_const_ubyte	& source	, ::gpk::SImage	<::gpk::SColorBGRA> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 

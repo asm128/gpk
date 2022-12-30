@@ -20,7 +20,7 @@ namespace gpk
 
 	struct SSurface {
 		::gpk::SSurfaceDescription					Desc;
-		::gpk::array_pod<uint8_t>					Data;
+		::gpk::apod<uint8_t>					Data;
 	};
 
 	typedef	::gpk::SLinearMap<::gpk::SSurface>				SSurfaceManager;

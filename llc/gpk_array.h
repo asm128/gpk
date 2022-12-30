@@ -25,9 +25,9 @@ namespace gpk
 
 	// Base for arrays that keeps track of its actual size.
 	template<typename _tCell>
-	struct array_base : public view_array<_tCell> {
+	struct array_base : public view1d<_tCell> {
 	protected:
-		using				view_array<_tCell>::		Count;
+		using				view1d<_tCell>::			Count;
 //							uint32_t					Offset										= 0;
 							uint32_t					Size										= 0;
 
@@ -46,7 +46,7 @@ namespace gpk
 	template<typename _tPOD>
 	struct array_pod : public array_base<_tPOD> {
 		typedef				array_base<_tPOD>			TArrayBase									;
-		typedef				view_array<_tPOD>			TArrayView									;
+		typedef				view1d<_tPOD>				TArrayView									;
 
 		using				TArrayBase::				Count										;
 		using				TArrayBase::				Data										;
@@ -68,7 +68,7 @@ namespace gpk
 		//	gthrow_if(errored(resize(sizeStatic)), "Failed to resize array! Why?");
 		//	memcpy(Data, init, Count * sizeof(_tPOD));
 		//}
-		//												array_pod									(const view_array<const _tPOD>& other)													{
+		//												array_pod									(const view1d<const _tPOD>& other)													{
 		//	if(other.Count) {
 		//		const uint32_t										newSize										= other.Count;
 		//		const uint32_t										reserveSize									= calc_reserve_size(newSize);
@@ -94,8 +94,8 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}
-		inline											array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view_array<const _tPOD>&) other) {}
-														array_pod									(const view_array<const _tPOD>& other)													{
+		inline											array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view1d<const _tPOD>&) other) {}
+														array_pod									(const view1d<const _tPOD>& other)														{
 			if(other.size()) {
 				const uint32_t										newSize										= other.size();
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
@@ -131,9 +131,9 @@ namespace gpk
 			safeguard.Handle								= 0;
 			//*(uint16_t*)(&Data[Count])						= 0;
 		}
-		inline constexpr	operator					view_array<const _tPOD>						()								const	noexcept	{ return {Data, Count}; }
-							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view_array<_tPOD>&) other); }
-							array_pod<_tPOD>&			operator =									(const view_array<_tPOD>& other)														{
+		inline constexpr	operator					view1d<const _tPOD>						()								const	noexcept	{ return {Data, Count}; }
+							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view1d<_tPOD>&) other); }
+							array_pod<_tPOD>&			operator =									(const view1d<_tPOD>& other)															{
 			gthrow_if(resize(other.size()) != (int32_t)other.size(), "%s", "Failed to assign array.");
 			if(Count)
 				memcpy(Data, other.begin(), Count * sizeof(_tPOD));
@@ -175,10 +175,10 @@ namespace gpk
 		// Returns the index of the pushed value
 		template<size_t _Length>
 		inline				::gpk::error_t				append_string								(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)strnlen(newChain, (uint32_t)_Length)); }
-		inline				::gpk::error_t				append_string								(const ::gpk::view_const_string & newChain)									noexcept	{ return append(newChain.begin(), newChain.size()); }
+		inline				::gpk::error_t				append_string								(const ::gpk::vcs & newChain)									noexcept	{ return append(newChain.begin(), newChain.size()); }
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
-		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
+		inline				::gpk::error_t				append										(const ::gpk::view1d<const _tPOD>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
@@ -288,7 +288,7 @@ namespace gpk
 				ree_if(mallocSize != (reserveSize * (uint32_t)sizeof(_tPOD) + 2), "Alloc size overflow. Requested size: %u. malloc size: %u.", reserveSize, mallocSize);
 				::gpk::auto_gpk_free								safeguard;
 				ree_if(nullptr == (safeguard.Handle = ::gpk::gpk_malloc(mallocSize)), "Failed to allocate array for inserting new value. memory requesteD: %u.", mallocSize);
-				::gpk::view_array<_tPOD>							viewSafe									= {(_tPOD*)safeguard.Handle, newSize};
+				::gpk::view1d<_tPOD>							viewSafe									= {(_tPOD*)safeguard.Handle, newSize};
 				uint32_t											i, maxCount;
 				for(i = 0, maxCount = ::gpk::min(index, Count)					; i < maxCount; ++i) viewSafe[i]						= oldData[i];
 				for(i = 0, maxCount = ::gpk::min(chainLength, newSize - index)	; i < maxCount; ++i) viewSafe[i + index]				= chainToInsert[i];
@@ -306,7 +306,7 @@ namespace gpk
 			return Count += chainLength;
 		}
 
-		inline				::gpk::error_t				insert										(uint32_t index, ::gpk::view_array<const _tPOD> chainToInsert)				noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
+		inline				::gpk::error_t				insert										(uint32_t index, ::gpk::view1d<const _tPOD> chainToInsert)				noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 
 		template<size_t _chainLength>
 		inline				::gpk::error_t				insert										(uint32_t index, const _tPOD* (&chainToInsert)[_chainLength])				noexcept	{ return insert(index, chainToInsert, _chainLength); }
@@ -362,7 +362,7 @@ namespace gpk
 				return 0;
 			}
 
-			::gpk::view_array<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead + 2), elementsToRead};
+			::gpk::view1d<_tPOD>							newStorage									= {(_tPOD*)::gpk::gpk_malloc(sizeof(_tPOD) * elementsToRead + 2), elementsToRead};
 			ree_if(0 == newStorage.begin(), "Failed to allocate array for storing read %u elements.", elementsToRead);
 			if(0 == input) {
 				for(uint32_t i = 0; i < Count; ++i)
@@ -393,7 +393,7 @@ namespace gpk
 			input											+= sizeof(uint32_t);
 			*inout_bytesWritten								+= sizeof(uint32_t);
 
-			::gpk::view_array<_tPOD>							newStorage									= {input, Count};
+			::gpk::view1d<_tPOD>							newStorage									= {input, Count};
 			for(uint32_t i = 0; i < Count; ++i) {
 				::gpk::podcpy(&newStorage[i], &Data[i]);
 				input											+= sizeof(_tPOD);
@@ -409,7 +409,7 @@ namespace gpk
 	//------------------------------------------------------------------------------------------------------------
 	template<typename _tObj>
 	struct array_obj : public array_base<_tObj> {
-		typedef				array_base<_tObj>			TVectorBase;
+		typedef											array_base<_tObj>							TVectorBase;
 
 		using											TVectorBase::Count;
 		using											TVectorBase::Data;
@@ -429,8 +429,8 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}	// move ctor
-														array_obj									(const array_obj<_tObj>& other)	: array_obj((const view_array<const _tObj>&) other) {}
-														array_obj									(const view_array<const _tObj>& other)													{
+														array_obj									(const array_obj<_tObj>& other)	: array_obj((const view1d<const _tObj>&) other) {}
+														array_obj									(const view1d<const _tObj>& other)												{
 			if(other.size()) {
 				uint32_t											newSize										= other.size();
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
@@ -448,7 +448,7 @@ namespace gpk
 				safeguard.Handle								= 0;
 			}
 		}
-		inline constexpr	operator					view_array<const _tObj>						()								const	noexcept	{ return {Data, Count}; }
+		inline constexpr	operator					view1d<const _tObj>						()								const	noexcept	{ return {Data, Count}; }
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			gthrow_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)
@@ -514,7 +514,7 @@ namespace gpk
 		}
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tObj (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
-		inline				::gpk::error_t				append										(const ::gpk::view_array<const _tObj>& newChain)							noexcept	{ return append(newChain.begin(), newChain.size());	}
+		inline				::gpk::error_t				append										(const ::gpk::view1d<const _tObj>& newChain)								noexcept	{ return append(newChain.begin(), newChain.size());	}
 							::gpk::error_t				append										(const _tObj* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
@@ -559,7 +559,7 @@ namespace gpk
 				::gpk::auto_gpk_free								safeguard;
 				_tObj												* newData								= (_tObj*)(safeguard.Handle = ::gpk::gpk_malloc(mallocSize));
 				ree_if(0 == newData, "Failed to allocate for inserting new element into array! current size: %u. new size: %u.", Size, mallocSize);
-				::gpk::view_array<_tObj>							viewSafe								= {newData, Count+1};
+				::gpk::view1d<_tObj>							viewSafe								= {newData, Count+1};
 				for(uint32_t i = 0, maxCount = ::gpk::min(index, Count); i < maxCount; ++i) {
 					new (&viewSafe[i]) _tObj(oldData[i]);
 					oldData[i].~_tObj();
@@ -642,11 +642,11 @@ namespace gpk
 	template <typename T>							using apod				= ::gpk::array_pod<T>;
 
 	template<typename _tElement>
-	::gpk::error_t									split					(const ::gpk::view_array<const _tElement> & target, const _tElement& separator, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
+	::gpk::error_t									split					(const ::gpk::view1d<const _tElement> & target, const _tElement& separator, ::gpk::aobj<::gpk::view1d<const _tElement>> & split)	{
 		uint32_t											lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view_array<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
+				const ::gpk::view1d<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
 				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
@@ -658,12 +658,12 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									split					(const ::gpk::view_array<const _tElement> & target, const ::gpk::view_array<const _tElement>& separators, ::gpk::array_obj<::gpk::view_array<const _tElement>> & split)	{
+	::gpk::error_t									split					(const ::gpk::view1d<const _tElement> & target, const ::gpk::view1d<const _tElement>& separators, ::gpk::aobj<::gpk::view1d<const _tElement>> & split)	{
 		uint32_t											lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			for(uint32_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
 				if(target[iChar] == separators[iSeparator]) {
-					const ::gpk::view_array<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
+					const ::gpk::view1d<const _tElement>			newView					= {&target[lastOffset], iChar - lastOffset};
 					++iChar;
 					gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 					lastOffset										= iChar;
@@ -676,11 +676,11 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									split					(const ::gpk::view_const_string & target, const _tElement& separator, ::gpk::array_obj<view_const_string> & split)	{
+	::gpk::error_t									split					(const ::gpk::vcs & target, const _tElement& separator, ::gpk::aobj<::gpk::vcs> & split)	{
 		int32_t												lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view_const_string					newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset)};
+				const ::gpk::vcs					newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset)};
 				++iChar;
 				gpk_necall(split.push_back(newView), "%s", "Out of memory?");
 				lastOffset										= iChar;
@@ -695,27 +695,27 @@ namespace gpk
 
 
 	template<typename _tElement>
-	::gpk::error_t									viewWrite							(const ::gpk::view_array<_tElement>& headerToWrite, ::gpk::array_pod<byte_t>	& output)	{
+	::gpk::error_t									viewWrite							(const ::gpk::view1d<_tElement>& headerToWrite, ::gpk::apod<byte_t>	& output)	{
 		gpk_necall(output.append(::gpk::view_const_byte{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
 		gpk_necall(output.append(::gpk::view_const_byte{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
-	typedef ::gpk::SKeyVal<::gpk::view_const_string, ::gpk::array_obj<::gpk::view_const_string>>	TKeyValConstStringArray;
+	typedef ::gpk::SKeyVal<::gpk::vcs, ::gpk::aobj<::gpk::vcs>>	TKeyValConstStringArray;
 
-	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view_array<const ::gpk::view_const_char> & keysToSave, ::gpk::array_pod<byte_t> & output);
-	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::array_obj<::gpk::TKeyValConstChar> & output);
-	::gpk::array_pod<char_t>						toString						(const ::gpk::view_const_char& strToLog);
-	::gpk::error_t									join							(::gpk::array_pod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char>	fields);
-	::gpk::error_t									append_quoted					(::gpk::array_pod<char_t>& output, ::gpk::view_const_char text);
-
-
-	::gpk::error_t									filterPrefix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
-	::gpk::error_t									filterPostfix					(::gpk::view_array<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::array_obj<::gpk::vcc> & filtered, bool nullIncluded = false);
+	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view1d<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view1d<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output);
+	::gpk::error_t									keyValConstStringDeserialize	(const ::gpk::view_const_byte & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
+	::gpk::apod<char_t>								toString						(const ::gpk::vcc& strToLog);
+	::gpk::error_t									join							(::gpk::apod<char_t> & query, char separator, ::gpk::view1d<const gpk::view_const_char>	fields);
+	::gpk::error_t									append_quoted					(::gpk::apod<char_t>& output, ::gpk::vcc text);
 
 
-	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::view_array<const byte_t> & input, _tPOD & output) { 
-		::gpk::view_array<const _tPOD>					readView		= {}; 
+	::gpk::error_t									filterPrefix					(::gpk::view1d<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
+	::gpk::error_t									filterPostfix					(::gpk::view1d<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
+
+
+	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::view1d<const byte_t> & input, _tPOD & output) { 
+		::gpk::view1d<const _tPOD>					readView		= {}; 
 		uint32_t										bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
 		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -723,8 +723,8 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::view_array<const byte_t> & input, ::gpk::array_pod<_tPOD> & output) { 
-		::gpk::view_array<const _tPOD>					readView		= {}; 
+	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::view1d<const byte_t> & input, ::gpk::apod<_tPOD> & output) { 
+		::gpk::view1d<const _tPOD>						readView		= {}; 
 		uint32_t										bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
 		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 

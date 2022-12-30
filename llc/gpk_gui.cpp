@@ -32,7 +32,7 @@
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefault										(::gpk::array_pod<::gpk::SColorBGRA>& palette, const ::gpk::view_array<const ::gpk::SColorBGRA>& colors, uint32_t iShades)	{
+static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk::SColorBGRA>& palette, const ::gpk::view_array<const ::gpk::SColorBGRA>& colors, uint32_t iShades)	{
 	const uint32_t														newPaletteSize											= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		gpk_necall(palette.resize(newPaletteSize), "%s", "Out of memory?");
@@ -123,7 +123,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::view_ar
 	return 0;
 }
 
-static		::gpk::error_t										themeSetupDefault										(const ::gpk::array_pod<::gpk::SColorBGRA>& palette, ::gpk::array_pod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
+static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::gpk::SColorBGRA>& palette, ::gpk::apod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
 	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {
 		const int32_t														indexTheme												= themes.push_back({});
 		::gpk::SControlTheme												& theme													= themes[indexTheme];
@@ -132,7 +132,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::array_p
 	return 0;
 }
 
-static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes) {
+static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
 	static constexpr	const uint32_t									iShades													= 16;
 	static				const ::gpk::SColorBGRA							paletteColors []										=
 		// 16 Base colors
@@ -184,9 +184,9 @@ static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::array_pod<::
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>> & controlThemes)	{
-	static ::gpk::pobj<::gpk::array_pod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
-	static ::gpk::pobj<::gpk::array_pod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
+static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes)	{
+	static ::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
+	static ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
 	
 	if(!globalDefaultPalette || 0 == globalDefaultPalette->size()) 
 		initDefaults(globalDefaultPalette, globalDefaultTheme);
@@ -296,7 +296,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	info_printf("Deleting control id: %i.", iControl);
 	if(recursive) { // Delete children first.
-		::gpk::array_pod<int32_t>											children												= gui.Controls.Children[iControl];
+		::gpk::apod<int32_t>											children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			gerror_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
 	}
@@ -306,7 +306,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	int32_t																childrenRemoved											= 0;
 #endif
 	if(indexParent < gui.Controls.Controls.size() && false == gui.Controls.States[indexParent].Unused) {
-		::gpk::array_pod<int32_t>											& children												= gui.Controls.Children[indexParent];
+		::gpk::apod<int32_t>											& children												= gui.Controls.Children[indexParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
 			if(children[iChild] == iControl) {
 				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
@@ -340,7 +340,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	}
 
 	if(oldParent < gui.Controls.Controls.size() && false == gui.Controls.States[oldParent].Unused) {
-		::gpk::array_pod<int32_t>											& children												= gui.Controls.Children[oldParent];
+		::gpk::apod<int32_t>											& children												= gui.Controls.Children[oldParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
 			if(children[iChild] == iControl) {
 				gui.Controls.States[oldParent].Updated	= false;
@@ -350,7 +350,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	}
 
 	// Set iControl to parent's children array.
-	::gpk::array_pod<int32_t>											& children												= gui.Controls.Children[iParent];
+	::gpk::apod<int32_t>											& children												= gui.Controls.Children[iParent];
 	for(int32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 		if(children[iChild] == iControl)
 			return 0;
@@ -597,7 +597,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents)	{
 	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
 	::gpk::error_t														controlHovered											= -1;
-	::gpk::array_pod<uint32_t>											rootControlsToProcess									= {};
+	::gpk::apod<uint32_t>											rootControlsToProcess									= {};
 	rootControlsToProcess.resize(1000);
 	rootControlsToProcess.clear();
 	(void)sysEvents;
@@ -676,7 +676,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return 0;
 }
 
-			::gpk::error_t										gpk::guiGetProcessableControls							(const ::gpk::SGUI& gui, ::gpk::array_pod<uint32_t>& controlIndices)													{
+			::gpk::error_t										gpk::guiGetProcessableControls							(const ::gpk::SGUI& gui, ::gpk::apod<uint32_t>& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || gui.Controls.Modes[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
@@ -686,8 +686,8 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 	return controlIndices.size();
 }
 
-			::gpk::error_t										gpk::controlTextSet										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::view_const_string& text)				{
-	::gpk::view_const_string											& oldText												= gui.Controls.Text[iControl].Text;
+			::gpk::error_t										gpk::controlTextSet										(::gpk::SGUI& gui, int32_t iControl, const ::gpk::vcs& text)				{
+	::gpk::vcs											& oldText												= gui.Controls.Text[iControl].Text;
 	if(text.begin	() != oldText.begin()
 	 || text.size	() != oldText.size()
 	 ) {
@@ -707,7 +707,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI& gui, 
 }
 
 ::gpk::error_t						gpk::guiProcessControls		(const ::gpk::SGUI& gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute) {
-	::gpk::array_pod<uint32_t>				controlsToProcess			= {};
+	::gpk::apod<uint32_t>				controlsToProcess			= {};
 	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
 }

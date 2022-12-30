@@ -41,9 +41,9 @@ namespace gpk
 
 	struct SGeometryMesh {
 		::gpk::SMeshDescription						Desc;
-		::gpk::array_pod<uint32_t>					GeometryBuffers;
-		::gpk::array_pod<uint32_t>					ConstantBuffers;
-		::gpk::array_pod<::gpk::SGeometrySlice>		GeometrySlices;
+		::gpk::apod<uint32_t>					GeometryBuffers;
+		::gpk::apod<uint32_t>					ConstantBuffers;
+		::gpk::apod<::gpk::SGeometrySlice>		GeometrySlices;
 	};	
 
 	typedef	::gpk::SLinearMap<::gpk::SGeometryMesh>			SMeshManager;

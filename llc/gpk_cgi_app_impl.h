@@ -19,12 +19,12 @@
 #endif
 
 #define GPK_CGI_JSON_APP_IMPL()																																			\
-			::gpk::error_t								generate_output			(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char_t> & output);			\
+			::gpk::error_t								generate_output			(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char_t> & output);			\
 			::gpk::error_t								cgiMain							(int argc, char** argv, char**envv)		{										\
 		(void)(envv);																																					\
 		::gpk::SCGIRuntimeValues								runtimeValues;																							\
 		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc});																				\
-		::gpk::array_pod<char_t>								output;																									\
+		::gpk::apod<char_t>								output;																									\
 		output.append_string("Content-type: application/json\r\n");																										\
 		::generate_output(runtimeValues, output);																														\
 		output.push_back('\0');																																			\

@@ -20,8 +20,8 @@ namespace gpk
 
 	struct SLobbyRoom {
 		::gpk::vcc									Name;
-		::gpk::array_pod<int64_t>					Moderators;
-		::gpk::array_pod<int64_t>					Users;
+		::gpk::apod<int64_t>					Moderators;
+		::gpk::apod<int64_t>					Users;
 	};
 
 	struct SLobbyUser {
@@ -37,19 +37,19 @@ namespace gpk
 		typedef	::gpk::array_pobj<::gpk::SUDPConnectionMessage> 
 													TMessageQueue;
 
-		::gpk::array_pod<uint64_t>					IdListRoom			= {};
-		::gpk::array_pod<uint64_t>					IdListUsers			= {};
+		::gpk::apod<uint64_t>					IdListRoom			= {};
+		::gpk::apod<uint64_t>					IdListUsers			= {};
 
 		::gpk::SUDPServer							Server				= {};
 
-		::gpk::array_obj<::gpk::SLobbyUser		>	Credentials			= {};
-		::gpk::array_obj<::gpk::SLobbyUserInfo	>	InfoUser			= {};
-		::gpk::array_obj<::gpk::SLobbyRoom		>	InfoRoom			= {};
+		::gpk::aobj<::gpk::SLobbyUser		>	Credentials			= {};
+		::gpk::aobj<::gpk::SLobbyUserInfo	>	InfoUser			= {};
+		::gpk::aobj<::gpk::SLobbyRoom		>	InfoRoom			= {};
 
 		::gpk::SDialog								Dialog				= {};
 		::gpk::SVirtualKeyboard						VirtualKeyboard		= {};
 
-		::gpk::array_obj<TMessageQueue>				MessagesToProcess	= {};	// A queue per client.
+		::gpk::aobj<TMessageQueue>				MessagesToProcess	= {};	// A queue per client.
 
 		::gpk::error_t								Stop				()												{ return ::gpk::serverStop(Server); }
 		::gpk::error_t								Start				(uint16_t portNumber, int16_t adapterIndex=0)	{ 
@@ -142,7 +142,7 @@ namespace gpk
 
 			gpk_necs(::gpk::guiProcessInput(gui, *inputState, frameEvents));
 
-			::gpk::array_pod<uint32_t>				controlsToProcess			= {};
+			::gpk::apod<uint32_t>				controlsToProcess			= {};
 			gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 			if(const int32_t result = InputBox.Update(gui, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
@@ -195,7 +195,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Draw				(::gpk::view_grid<::gpk::SColorBGRA> target) { 
+		::gpk::error_t								Draw				(::gpk::view2d<::gpk::SColorBGRA> target) { 
 			return ::gpk::guiDraw(*Dialog.GUI, target);
 		}
 	};

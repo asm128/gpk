@@ -33,7 +33,7 @@ struct SRSMHeader {	// RSM Header
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
 	uint32_t													keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
@@ -45,7 +45,7 @@ static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stre
 }
 
 // >= v1.5 Read position keyframes
-static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::array_pod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t													positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
 	GPK_PLATFORM_CRT_BREAKPOINT();
@@ -105,7 +105,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(texMappingCount);
 			info_printf("Texture index count: %u.", texMappingCount);
 			if(texMappingCount) {
-				::gpk::array_pod<int32_t>									& modelTextures												= newNode.TextureIndices;
+				::gpk::apod<int32_t>									& modelTextures												= newNode.TextureIndices;
 				modelTextures.resize(texMappingCount);
 				rsm_stream.read_pod(modelTextures.begin(), texMappingCount);
 			}
@@ -125,7 +125,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
-				::gpk::array_pod<::gpk::SCoord3<float>>						& modelVertices												= newNode.Vertices;
+				::gpk::apod<::gpk::SCoord3<float>>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
 				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
 			}
@@ -135,7 +135,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(texVtxCount);
 			info_printf("UV coord count: %u.", texVtxCount);
 			if(texVtxCount) {
-				::gpk::array_pod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;
+				::gpk::apod<::gpk::SRSMTexCoord>						& modelUNKs													= newNode.UVs;
 				modelUNKs.resize(texVtxCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || header.versionMajor > 1) //{ >= v1.2
 					rsm_stream.read_pod(modelUNKs.begin(), texVtxCount);
@@ -154,7 +154,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(faceCount);
 			info_printf("Face count: %u.", faceCount);
 			if(faceCount) {
-				::gpk::array_pod<SRSMFace>									& modelFaces												= newNode.Faces;
+				::gpk::apod<SRSMFace>									& modelFaces												= newNode.Faces;
 				modelFaces.resize(faceCount);
 				if((header.versionMajor == 1 && header.versionMinor >= 2) || (header.versionMajor > 1))
 					rsm_stream.read_pod(modelFaces.begin(), faceCount);
@@ -194,8 +194,8 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_const_string	& input)							{
-	::gpk::array_pod<byte_t>									fileInMemory												= {};
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::vcs	& input)							{
+	::gpk::apod<byte_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;

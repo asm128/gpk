@@ -22,11 +22,11 @@ namespace gpk
 
 		template<size_t _stringLength>
 		inline 								label						(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)			noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
-		inline 								label						(const ::gpk::view_const_string& other)										noexcept	: label(other.begin(), other.size())							{}
+		inline 								label						(const ::gpk::vcs& other)										noexcept	: label(other.begin(), other.size())							{}
 
-		inline	operator					::gpk::view_const_string	()																	const				{ return {Data, Count}; }
+		inline	operator					::gpk::vcs	()																	const				{ return {Data, Count}; }
 
-				bool						operator==					(const ::gpk::view_const_string& other)								const	noexcept;
+				bool						operator==					(const ::gpk::vcs& other)								const	noexcept;
 				bool						operator==					(const label& other)												const	noexcept;
 		inline	bool						operator!=					(const label& other)												const	noexcept	{ return !operator==(other); }
 	};

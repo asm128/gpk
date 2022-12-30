@@ -28,7 +28,7 @@
 			::gpk::error_t												gpk::desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement)						{
 	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "%s", "Invalid control list.");
 	::gpk::SControlList															controlListToDelete								= desktop.Items.ControlLists[iElement];
-	::gpk::array_pod<int32_t>													childLists										= desktop.Children[iElement];
+	::gpk::apod<int32_t>													childLists										= desktop.Children[iElement];
 	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
 		int32_t																		childControlListIndex							= childLists[iOption];
 		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
@@ -90,7 +90,7 @@ static		::gpk::error_t												unhideMenuHierarchy						(::gpk::SGUI& gui, ::
 	gui.Controls.States[menu.IdControl].Hidden								= false;
 	const int32_t																parentControlIndex						= gui.Controls.Controls[menu.IdControl].Parent;
 	if(-1 != parentControlIndex) {
-		::gpk::array_pod<int32_t> & parentChildren = gui.Controls.Children[parentControlIndex];
+		::gpk::apod<int32_t> & parentChildren = gui.Controls.Children[parentControlIndex];
 		for(uint32_t iChild = 0; iChild < parentChildren.size(); ++iChild) {
 			if(parentChildren[iChild] == menu.IdControl) {
 				parentChildren.remove(iChild);
@@ -161,7 +161,7 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 		::viewportUpdate(gui, desktop, input, iViewport);
 	}
 
-	::gpk::array_pod<uint32_t>													controlsToProcess						= {};
+	::gpk::apod<uint32_t>													controlsToProcess						= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 
 	bool																			inControlArea						= false;
@@ -262,7 +262,7 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI& gui, ::g
 		if(desktop.Children.size() > (uint32_t)oldParentList && desktop.Children[oldParentList].size() > (uint32_t)oldParentItem)
 			desktop.Children[oldParentList][oldParentItem]							= -1;
 
-		::gpk::array_pod<int32_t>													& parentChildren										= desktop.Children[iParentControlList];
+		::gpk::apod<int32_t>													& parentChildren										= desktop.Children[iParentControlList];
 		if(parentChildren.size() < parentControlList.IdControls.size())
 			parentChildren.resize(parentControlList.IdControls.size(), -1);
 

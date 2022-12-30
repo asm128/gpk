@@ -7,13 +7,13 @@
 #	include <unistd.h>
 #endif
 
-::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::view_const_byte & environmentBlock, ::gpk::array_obj<::gpk::TKeyValConstString> & out_Views)	{
+::gpk::error_t			gpk::environmentBlockViews		(const ::gpk::view_const_byte & environmentBlock, ::gpk::aobj<::gpk::TKeyValConstString> & out_Views)	{
 	uint32_t					offsetEndVar					= 0;
 	while(offsetEndVar < environmentBlock.size() - 1) {
 		uint32_t					offsetBeginVar					= offsetEndVar + (offsetEndVar ? 1 : 0);
 		if(environmentBlock.size() - 1 == (offsetEndVar = ::gpk::find('\0', environmentBlock, offsetBeginVar)))
 			break;
-		::gpk::view_const_char		viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
+		::gpk::vcc		viewEnvironVar					= {}; // {&environmentBlock[offsetBeginVar], offsetEndVar - offsetBeginVar};
 		gpk_necall(environmentBlock.slice(viewEnvironVar, offsetBeginVar, offsetEndVar - offsetBeginVar), "%s", "");
 		::gpk::TKeyValConstString	newKeyVal						= {};
 		if(-1 != ::gpk::keyval_split({viewEnvironVar.begin(), viewEnvironVar.size()}, newKeyVal))
@@ -29,7 +29,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::environmentBlockFromEnviron(::gpk::array_pod<byte_t> & environmentBlock)	{
+::gpk::error_t			gpk::environmentBlockFromEnviron(::gpk::apod<byte_t> & environmentBlock)	{
     for (char **env = environ; *env; ++env)
 		environmentBlock.append(*env, (uint32_t)strlen(*env) + 1);
 	environmentBlock.push_back(0);

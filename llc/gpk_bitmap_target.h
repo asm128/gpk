@@ -11,7 +11,7 @@
 namespace gpk
 {
 	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelBrightness								(::gpk::view_grid<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+					::gpk::error_t											drawPixelBrightness								(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::SCoord2<double>														maxRange										= {range, range};
 		double																		rangeUnit										= 1.0 / maxRange.Length();
 		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates
@@ -34,7 +34,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelLight									(::gpk::view_grid<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+					::gpk::error_t											drawPixelLight									(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		if( ((uint32_t)sourcePosition.x) < viewOffscreen.metrics().x
 		 && ((uint32_t)sourcePosition.y) < viewOffscreen.metrics().y
 		 )
@@ -43,7 +43,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTarget					(::gpk::array_pod<_tElement>& out_colors, ::gpk::view_grid<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
+						::gpk::error_t										updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
 		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
 		if( out_view.metrics() != newSize)
 			out_view																= {out_colors.begin(), newSize};
@@ -55,7 +55,7 @@ namespace gpk
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTexture					(::gpk::array_pod<_tElement>& out_scaled, ::gpk::view_grid<_tElement>& out_view, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
+						::gpk::error_t										updateSizeDependentTexture					(::gpk::apod<_tElement>& out_scaled, ::gpk::view2d<_tElement>& out_view, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
 		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
 		if( out_view.metrics() != newSize ) {
 			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
@@ -66,12 +66,12 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view_grid<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
+	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::SImage<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
 		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 
 	template<typename _tColor>
-						::gpk::error_t										drawLineVertical							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t x, int32_t y1, int32_t y2)	{
+						::gpk::error_t										drawLineVertical							(::gpk::view2d<_tColor>& target, const _tColor& value, int32_t x, int32_t y1, int32_t y2)	{
 		if(x < 0 || x >= (int32_t)target.metrics().x)
 			return 0;
 		const int32_t																yMin										= ::gpk::min(y1, y2);
@@ -84,7 +84,7 @@ namespace gpk
 	}
 
 	template<typename _tColor>
-						::gpk::error_t										drawLineHorizontal							(::gpk::view_grid<_tColor>& target, const _tColor& value, int32_t y, int32_t x1, int32_t x2)	{
+						::gpk::error_t										drawLineHorizontal							(::gpk::view2d<_tColor>& target, const _tColor& value, int32_t y, int32_t x1, int32_t x2)	{
 		if(y < 0 || y >= (int32_t)target.metrics().y)
 			return 0;
 		const int32_t																xMin										= ::gpk::min(x1, x2);
@@ -98,7 +98,7 @@ namespace gpk
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawRectangleBorder							(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
+	static					::gpk::error_t									drawRectangleBorder							(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
 		int32_t																		yStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
 		int32_t																		yStop										= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
 		int32_t																		xStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
@@ -116,7 +116,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawCircle									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle<_tCoord>& circle)			{
+	static					::gpk::error_t									drawCircle									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SCircle<_tCoord>& circle)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius + 2), (int32_t)bitmapTarget.metrics().x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
@@ -142,7 +142,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle<_tCoord>& circle, ::gpk::array_pod<::gpk::SCoord2<int32_t>>& out_Points)			{
+	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle<_tCoord>& circle, ::gpk::apod<::gpk::SCoord2<int32_t>>& out_Points)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
@@ -167,7 +167,7 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawTriangle								(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
+	static					::gpk::error_t									drawTriangle								(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
@@ -194,7 +194,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)		{
+	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)		{
 		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
@@ -224,7 +224,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									rasterLine									(::gpk::view_grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2<_tCoord>& line, gpk_raster_callback callback)				{
+	static					::gpk::error_t									rasterLine									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2<_tCoord>& line, gpk_raster_callback callback)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -272,7 +272,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawLine									(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SLine2<_tCoord>& line)				{
+	static					::gpk::error_t									drawLine									(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::SLine2<_tCoord>& line)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		if(line.A.x == line.B.x)
@@ -325,7 +325,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)				{
 		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
 		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -373,7 +373,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::array_pod<::gpk::SCoord2<int16_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)				{
 		return drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace

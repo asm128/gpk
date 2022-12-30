@@ -57,7 +57,7 @@ namespace gpk
 		typedef				::gpk::SRenderTarget<TTexel, uint32_t>	TOffscreen;
 
 							::gpk::SWindowPlatformDetail			PlatformDetail		= {};
-							::gpk::array_obj<::gpk::SSysEvent>		EventQueue			= {};
+							::gpk::aobj<::gpk::SSysEvent>		EventQueue			= {};
 							::gpk::pobj<TOffscreen>				BackBuffer			= {};
 							::gpk::pobj<::gpk::SInput>			Input				= {};
 							::gpk::SCoord2<uint32_t>				PreviousSize		= {};
@@ -72,7 +72,7 @@ namespace gpk
 							bool									FullScreen			: 1;
 	};
 
-	::gpk::error_t												windowPresentTarget						(::gpk::SWindow & windowInstance, const ::gpk::view_grid<::gpk::SColorBGRA>& targetToPresent);
+	::gpk::error_t												windowPresentTarget						(::gpk::SWindow & windowInstance, const ::gpk::view2d<::gpk::SColorBGRA>& targetToPresent);
 	::gpk::error_t												windowUpdate							(::gpk::SWindow & windowInstance);
 	::gpk::error_t												windowUpdateTick						(::gpk::SWindow & windowInstance);
 	::gpk::error_t												fullScreenExit							(::gpk::SWindow & windowInstance);

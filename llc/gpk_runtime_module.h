@@ -47,7 +47,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t											loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::view_const_string& moduleName);
+	::gpk::error_t											loadRuntimeModule				(::gpk::SRuntimeModule& loadedModule, const ::gpk::vcs& moduleName);
 }
 
 #endif // GPK_RUNTIME_MODULE_H_23084728934

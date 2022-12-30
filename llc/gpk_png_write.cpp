@@ -30,7 +30,7 @@ static			int32_t											make_crc_table							()																									{
 	return c;
 }
 
-static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const ubyte_t>& inflated, ::gpk::array_pod<ubyte_t>& deflated)		{
+static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const ubyte_t>& inflated, ::gpk::apod<ubyte_t>& deflated)		{
     int				ret;
 	z_stream		strm												= {};
     ret																	= deflateInit(&strm, Z_BEST_COMPRESSION);
@@ -55,9 +55,9 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 	return 0;
 }
 
-						::gpk::error_t							gpk::pngFileWrite						(const ::gpk::view_grid<::gpk::SColorBGRA>& in_imageView, ::gpk::array_pod<ubyte_t>& out_Bytes)		{
+						::gpk::error_t							gpk::pngFileWrite						(const ::gpk::view2d<::gpk::SColorBGRA>& in_imageView, ::gpk::apod<ubyte_t>& out_Bytes)		{
 	static constexpr const ubyte_t										signature	[8]							= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
-	::gpk::array_pod<ubyte_t>											safe_Bytes								= {};
+	::gpk::apod<ubyte_t>											safe_Bytes								= {};
 	safe_Bytes.append((ubyte_t*)signature, 8);
 
 	uint32_t															chunkSize								= sizeof(::gpk::SPNGIHDR);
@@ -94,7 +94,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const
 		colorDst.b														= colorSrc.b;
 		colorDst.a														= colorSrc.a;
 	}
-	::gpk::array_pod<ubyte_t>											deflated;
+	::gpk::apod<ubyte_t>											deflated;
 	::gpk::SImage<uint8_t>											filtered								= {};
 	filtered.resize({convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
 	const uint32_t														scanlineWidthUnfiltered					= convertedScanlines.View.metrics().x * 4;

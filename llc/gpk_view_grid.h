@@ -51,10 +51,14 @@ namespace gpk
 			return 0;
 		}
 	};
+
+	template <typename T>
+	using view2d	= ::gpk::view_grid<T>; 
+
 #pragma pack(pop)
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t						drawRectangle				(::gpk::view_grid<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
+	static					::gpk::error_t						drawRectangle				(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
 		const int32_t													xCount						= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, (int32_t)0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, (int32_t)0));
 		const int32_t													yCount						= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, (int32_t)0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, (int32_t)0));
 		const int32_t													yStart						= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y);
@@ -78,37 +82,34 @@ namespace gpk
 	}
 
 	// view_array common typedefs
-	typedef				::gpk::view_grid<char_t			>		view2d_char			;
-	typedef				::gpk::view_grid<ubyte_t		>		view2d_ubyte		;
-	typedef				::gpk::view_grid<byte_t			>		view2d_byte			;
-	typedef				::gpk::view_grid<float			>		view2d_float32		;
-	typedef				::gpk::view_grid<double			>		view2d_float64		;
-	typedef				::gpk::view_grid<uint8_t		>		view2d_uint8		;
-	typedef				::gpk::view_grid<uint16_t		>		view2d_uint16		;
-	typedef				::gpk::view_grid<uint32_t		>		view2d_uint32		;
-	typedef				::gpk::view_grid<uint64_t		>		view2d_uint64		;
-	typedef				::gpk::view_grid<int8_t			>		view2d_int8			;
-	typedef				::gpk::view_grid<int16_t		>		view2d_int16		;
-	typedef				::gpk::view_grid<int32_t		>		view2d_int32		;
-	typedef				::gpk::view_grid<int64_t		>		view2d_int64		;
+	typedef				::gpk::view2d<char_t			>		view2d_char			;
+	typedef				::gpk::view2d<ubyte_t		>		view2d_ubyte		;
+	typedef				::gpk::view2d<byte_t			>		view2d_byte			;
+	typedef				::gpk::view2d<float			>		view2d_float32		;
+	typedef				::gpk::view2d<double			>		view2d_float64		;
+	typedef				::gpk::view2d<uint8_t		>		view2d_uint8		;
+	typedef				::gpk::view2d<uint16_t		>		view2d_uint16		;
+	typedef				::gpk::view2d<uint32_t		>		view2d_uint32		;
+	typedef				::gpk::view2d<uint64_t		>		view2d_uint64		;
+	typedef				::gpk::view2d<int8_t			>		view2d_int8			;
+	typedef				::gpk::view2d<int16_t		>		view2d_int16		;
+	typedef				::gpk::view2d<int32_t		>		view2d_int32		;
+	typedef				::gpk::view2d<int64_t		>		view2d_int64		;
 
 	// view_array<const> common typedefs
-	typedef				::gpk::view_grid<const char_t	>		view2d_const_char	;
-	typedef				::gpk::view_grid<const ubyte_t	>		view2d_const_ubyte	;
-	typedef				::gpk::view_grid<const byte_t	>		view2d_const_byte	;
-	typedef				::gpk::view_grid<const float	>		view2d_const_float32;
-	typedef				::gpk::view_grid<const double	>		view2d_const_float64;
-	typedef				::gpk::view_grid<const uint8_t	>		view2d_const_uint8	;
-	typedef				::gpk::view_grid<const uint16_t	>		view2d_const_uint16	;
-	typedef				::gpk::view_grid<const uint32_t	>		view2d_const_uint32	;
-	typedef				::gpk::view_grid<const uint64_t	>		view2d_const_uint64	;
-	typedef				::gpk::view_grid<const int8_t	>		view2d_const_int8	;
-	typedef				::gpk::view_grid<const int16_t	>		view2d_const_int16	;
-	typedef				::gpk::view_grid<const int32_t	>		view2d_const_int32	;
-	typedef				::gpk::view_grid<const int64_t	>		view2d_const_int64	;
-
-	template <typename T>
-	using view2	= ::gpk::view_grid<T>; 
+	typedef				::gpk::view2d<const char_t	>		view2d_const_char	;
+	typedef				::gpk::view2d<const ubyte_t	>		view2d_const_ubyte	;
+	typedef				::gpk::view2d<const byte_t	>		view2d_const_byte	;
+	typedef				::gpk::view2d<const float	>		view2d_const_float32;
+	typedef				::gpk::view2d<const double	>		view2d_const_float64;
+	typedef				::gpk::view2d<const uint8_t	>		view2d_const_uint8	;
+	typedef				::gpk::view2d<const uint16_t	>		view2d_const_uint16	;
+	typedef				::gpk::view2d<const uint32_t	>		view2d_const_uint32	;
+	typedef				::gpk::view2d<const uint64_t	>		view2d_const_uint64	;
+	typedef				::gpk::view2d<const int8_t	>		view2d_const_int8	;
+	typedef				::gpk::view2d<const int16_t	>		view2d_const_int16	;
+	typedef				::gpk::view2d<const int32_t	>		view2d_const_int32	;
+	typedef				::gpk::view2d<const int64_t	>		view2d_const_int64	;
 
 	enum GRID_ROTATION : uint8_t {
 		GRID_ROTATION_DEFAULT	= 0,

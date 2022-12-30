@@ -144,12 +144,12 @@ namespace gpk
 
 	template <typename T> using pobj		= ::gpk::ptr_obj<T>; 
 	template <typename T> using ppod		= ::gpk::ptr_pod<T>;
-	template <typename T> using array_pobj	= ::gpk::array_obj<::gpk::pobj<T>>; 
-	template <typename T> using array_ppod	= ::gpk::array_obj<::gpk::ppod<T>>;
-	template <typename T> using apobj		= ::gpk::array_obj<::gpk::pobj<T>>; 
-	template <typename T> using appod		= ::gpk::array_obj<::gpk::ppod<T>>;
-	template <typename T> using paobj		= ::gpk::pobj<::gpk::array_obj<T>>; 
-	template <typename T> using papod		= ::gpk::pobj<::gpk::array_pod<T>>;
+	template <typename T> using array_pobj	= ::gpk::aobj<::gpk::pobj<T>>; 
+	template <typename T> using array_ppod	= ::gpk::aobj<::gpk::ppod<T>>;
+	template <typename T> using apobj		= ::gpk::aobj<::gpk::pobj<T>>; 
+	template <typename T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
+	template <typename T> using paobj		= ::gpk::pobj<::gpk::aobj<T>>; 
+	template <typename T> using papod		= ::gpk::pobj<::gpk::apod<T>>;
 } // namespace
 
 #endif // GPK_PTR_H_0297349827348923
