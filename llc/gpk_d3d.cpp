@@ -32,4 +32,29 @@
 	return 1;
 }
 
+
+::gpk::error_t				gpk::d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2d<const ::gpk::SColorBGRA> initData) {
+	D3D11_TEXTURE2D_DESC						desc				= {initData.metrics().x, initData.metrics().y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE};
+	D3D11_SUBRESOURCE_DATA						d3dInitData			= {};
+	d3dInitData.pSysMem						= initData.begin();
+	d3dInitData.SysMemPitch					= initData.metrics().x * 4;
+
+	::gpk::ptr_com<ID3D11Texture2D>				pTex2D				= {};
+	gpk_hrcall(pDevice->CreateTexture2D(&desc, &d3dInitData, &pTex2D));
+	if(!pTex2D) 
+		return -1;
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC				srvDesc				= {};
+	srvDesc.Format							= desc.Format;
+	srvDesc.ViewDimension					= D3D_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels				= desc.MipLevels;
+
+	::gpk::ptr_com<ID3D11ShaderResourceView>	pSRV;
+	gpk_hrcall(pDevice->CreateShaderResourceView(pTex2D, &srvDesc, &pSRV));
+
+	texture									= pTex2D;
+	shaderResourceView						= pSRV;
+	return 0;
+}
+
 #endif

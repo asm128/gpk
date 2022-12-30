@@ -100,7 +100,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		::gpk::error_t												gpk::checkBoxUpdate							(::gpk::SDialogCheckBox	& checkbox)								{
 	::gpk::SDialog															& dialog									= *checkbox.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	::gpk::img<::gpk::SColorBGRA>										& imageCross								= dialog.ImageCrossBGRA;
+	::gpk::img<::gpk::SColorBGRA>											& imageCross								= dialog.ImageCrossBGRA;
 	if(controlTable.States[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);

@@ -79,6 +79,9 @@
     <Filter Include="voxel">
       <UniqueIdentifier>{3cc94a17-96ef-470b-b56b-d437dad4a752}</UniqueIdentifier>
     </Filter>
+    <Filter Include="d3d">
+      <UniqueIdentifier>{ea9dc06f-264e-4565-a096-4c11804cfff7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_deflate.h">
@@ -390,11 +393,11 @@
     <ClInclude Include="gpk_complus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_d3d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_d3d.h">
+      <Filter>d3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -570,7 +573,7 @@
       <Filter>voxel</Filter>
     </ClCompile>
     <ClCompile Include="gpk_d3d.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>d3d</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

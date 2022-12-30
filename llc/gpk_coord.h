@@ -19,11 +19,6 @@ namespace gpk
 		typedef									SCoord2<_tBase>	TCoord2;
 		_tBase									x, y;
 
-		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
-		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
-		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
-		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
-
 		//
 		constexpr								TCoord2			operator+				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x + other.x), (_tBase)(y + other.y)};				}
 		constexpr								TCoord2			operator-				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x - other.x), (_tBase)(y - other.y)};				}
@@ -54,6 +49,13 @@ namespace gpk
 		constexpr								bool			operator==				(const TCoord2& other)												const	noexcept	{ return x == other.x && y == other.y;									}
 		inline constexpr						bool			operator!=				(const TCoord2& other)												const	noexcept	{ return !operator==(other);											}
 		constexpr								TCoord2			operator-				()																	const	noexcept	{ return {x*-1, y*-1};													}
+
+		//
+		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
+		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
+		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
+		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
+
 		//
 		template<typename _t>
 		constexpr inline						SCoord2<_t>		Cast					()																	const	noexcept	{ return {(_t)x, (_t)y};																																				}
@@ -96,6 +98,7 @@ namespace gpk
 	struct SCoord3 {
 		typedef									SCoord3<_tBase>	TCoord3;
 		_tBase									x, y, z;
+
 		inline									const _tBase&	operator[]				(uint32_t index)											const				{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		inline									_tBase&			operator[]				(uint32_t index)																{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		//
@@ -129,6 +132,7 @@ namespace gpk
 		inline constexpr						bool			operator!=				(const TCoord3& other)												const	noexcept	{ return !operator==(other);																	}
 		constexpr								TCoord3			operator-				()																	const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
 
+		//
 		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
 		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
 		inline constexpr SCoord2<_tBase>		xz				()						{ return {x, z}; }
@@ -139,6 +143,7 @@ namespace gpk
 		inline constexpr SCoord2<_tBase>		zy				()						{ return {z, y}; }
 		inline constexpr SCoord2<_tBase>		zz				()						{ return {z, z}; }
 
+		//
 		inline constexpr SCoord3<_tBase>		xxx				()						{ return {x, x, x}; }
 		inline constexpr SCoord3<_tBase>		xxy				()						{ return {x, x, y}; }
 		inline constexpr SCoord3<_tBase>		xxz				()						{ return {x, x, z}; }

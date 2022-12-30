@@ -110,7 +110,7 @@ namespace gpk
 		int32_t							IdRoot				= {};
 		int32_t							IdText				= {};
 		::gpk::SVirtualKeyboard			VirtualKeyboard		= {};
-		::gpk::apod<char>			Text				= {};
+		::gpk::apod<char>				Text				= {};
 		uint32_t						MaxLength			= 16;
 		bool							Editing				= false;
 

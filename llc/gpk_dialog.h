@@ -63,10 +63,10 @@ namespace gpk
 		int32_t																				Root												= -1;
 		::gpk::SControlMode																	DefaultControlModes									= {};
 
-		::gpk::pobj<::gpk::SInput>														Input												= {};
+		::gpk::pobj<::gpk::SInput>															Input												= {};
 		::gpk::pobj<::gpk::SGUI>															GUI													= {};
-		::gpk::aobj<::gpk::ptr_nco<IDialogControl>>									Controls											= {};
-		::gpk::img<::gpk::SColorBGRA>													ImageCrossBGRA										= {};
+		::gpk::aobj<::gpk::ptr_nco<IDialogControl>>											Controls											= {};
+		::gpk::img<::gpk::SColorBGRA>														ImageCrossBGRA										= {};
 		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
 
 																							SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);

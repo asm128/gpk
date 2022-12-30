@@ -5,14 +5,14 @@
 #include "gpk_raster_lh.h"
 
 static	::gpk::error_t								transformTriangles					
-	( ::gpk::SVSOutput						& output
-	, ::gpk::vcu16							indices			
-	, ::gpk::v1n3f32							positions	
-	, ::gpk::v1n3f32							normals		
-	, ::gpk::v1n2f32							uv			
-	, const ::gpk::SMatrix4<float>			& projection		
-	, const ::gpk::SMatrix4<float>			& worldTransform	
-	, const ::gpk::SCoord3<float>			& cameraFront
+	( ::gpk::SVSOutput				& output
+	, ::gpk::vcu16					indices			
+	, ::gpk::v1c3f					positions	
+	, ::gpk::v1c3f					normals		
+	, ::gpk::v1c2f					uv			
+	, const ::gpk::SMatrix4<float>	& projection		
+	, const ::gpk::SMatrix4<float>	& worldTransform	
+	, const ::gpk::SCoord3<float>	& cameraFront
 )	{ 
 	::gpk::v1d<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
 
@@ -66,9 +66,9 @@ static	::gpk::error_t								transformTriangles
 	const ::gpk::SRenderNodeTransforms						& transforms				= scene.ManagedRenderNodes.Transforms[iRenderNode];
 	const ::gpk::SMatrix4<float>							& worldTransform			= transforms.World;
 	const ::gpk::vcu16										indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::view_array<const uint16_t>					{(const uint16_t				*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)}				: ::gpk::view_array<const uint16_t>					{};
-	const ::gpk::v1d<const ::gpk::SCoord3<float>>			positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
-	const ::gpk::v1d<const ::gpk::SCoord3<float>>			normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
-	const ::gpk::v1d<const ::gpk::SCoord2<float>>			uv							= (mesh.GeometryBuffers.size() > 3) ? ::gpk::view_array<const ::gpk::SCoord2<float>>	{(const ::gpk::SCoord2<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::SCoord2<float>)}	: ::gpk::view_array<const ::gpk::SCoord2<float>>	{};
+	const ::gpk::v1c3f										positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
+	const ::gpk::v1c3f										normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::view_array<const ::gpk::SCoord3<float>>	{(const ::gpk::SCoord3<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::SCoord3<float>)}	: ::gpk::view_array<const ::gpk::SCoord3<float>>	{};
+	const ::gpk::v1c2f										uv							= (mesh.GeometryBuffers.size() > 3) ? ::gpk::view_array<const ::gpk::SCoord2<float>>	{(const ::gpk::SCoord2<float>	*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::SCoord2<float>)}	: ::gpk::view_array<const ::gpk::SCoord2<float>>	{};
 
 	const ::gpk::SGeometrySlice								slice						= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 
@@ -88,8 +88,8 @@ static	::gpk::error_t								drawBuffers
 	, const ::gpk::SEngineSceneConstants				& constants
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
-	::gpk::apod<::gpk::STriangle<float>>				& triangleWeights			= cacheVS.TriangleWeights		;
-	::gpk::apod<::gpk::SCoord2<int16_t>>				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
+	::gpk::apod<::gpk::STriangle<float>>					& triangleWeights			= cacheVS.TriangleWeights		;
+	::gpk::apod<::gpk::SCoord2<int16_t>>					& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::SCoord2<uint16_t>							offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
 	const ::gpk::SCoord3<float>								lightDirectionNormalized	= ::gpk::SCoord3<float>{constants.LightDirection}.Normalize();
 	::gpk::SPSIn											inPS						= {};

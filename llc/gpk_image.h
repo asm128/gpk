@@ -11,25 +11,25 @@ namespace gpk
 	struct SImage {
 		typedef				_tTexel									TTexel;
 
-							::gpk::apod<_tTexel>				Texels										;
-							::gpk::view2d<_tTexel>				View										;
+							::gpk::apod<_tTexel>					Texels										;
+							::gpk::view2d<_tTexel>					View										;
 
-		constexpr													SImage										()															= default;
-																	SImage										(const ::gpk::view2d<_tTexel>& other)					: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-																	SImage										(const SImage<_tTexel>& other)						: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+		constexpr													SImage										()														= default;
+																	SImage										(const ::gpk::v2d<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																	SImage										(const SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
 		inline constexpr	operator								view2d<const _tTexel>					()										const	noexcept	{ return View; }
 		inline				operator								view2d<_tTexel>							()												noexcept	{ return View; }
 
-							SImage&									operator=									(const ::gpk::view2d<_tTexel>& other)						{
-			Texels															= view_array<const _tTexel>{other.begin(), other.size()};
-			View															= {Texels.begin(), other.metrics()};
+							SImage&									operator=									(const ::gpk::v2d<_tTexel>& other)						{
+			Texels														= view_array<const _tTexel>{other.begin(), other.size()};
+			View														= {Texels.begin(), other.metrics()};
 			return *this;
 		}
 
 							SImage&									operator=									(const SImage<_tTexel>& other)							{
-			Texels															= other.Texels;
-			View															= {Texels.begin(), other.View.metrics()};
+			Texels														= other.Texels;
+			View														= {Texels.begin(), other.View.metrics()};
 			return *this;
 		}
 
@@ -57,7 +57,7 @@ namespace gpk
 		}
 	}; // struct
 
-	template<typename _tCell>	using img				= ::gpk::SImage<_tCell>;
+	template<typename _tCell>	using img							= ::gpk::SImage<_tCell>;
 
 	template<typename _tTexel>
 	struct SImageMonochrome {
@@ -99,14 +99,6 @@ namespace gpk
 			Pitch														= newSizeX;
 			return 0;
 		}
-	}; // struct
-
-	template<typename _tTexel>
-	struct SImageProcessable {
-		typedef				_tTexel									TTexel;
-
-							::gpk::img<_tTexel>						Original;
-							::gpk::img<_tTexel>						Processed;
 	}; // struct
 
 	template<typename _tTexel, typename _tDepthStencil>
