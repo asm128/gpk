@@ -12,6 +12,7 @@
 typedef					signed char						schar_t	, sbyte_t	;
 typedef					char							char_t	, byte_t	;
 typedef					unsigned char					uchar_t	, ubyte_t	;
+
 namespace gpk
 {
 	typedef					double							float64_t;

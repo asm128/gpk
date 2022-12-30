@@ -74,7 +74,7 @@ namespace gpk
 		}
 	}
 	template<typename... _tArgs>
-	inline	constexpr	void							dummy		(_tArgs&&...)		{}
+	static	inline	constexpr	void					dummy		(_tArgs&&...)		{}
 }
 
 #define	GPK_STRINGIFY(x) #x

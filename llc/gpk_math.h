@@ -1,4 +1,3 @@
-#include "gpk_typeint.h"
 #include "gpk_eval.h"
 
 #if defined(GPK_ATMEL)

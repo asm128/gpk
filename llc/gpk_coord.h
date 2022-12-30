@@ -407,26 +407,26 @@ namespace gpk
 	};
 
 	template<typename _tDimension>	struct STriangle2 : public STriangle<::gpk::SCoord2<_tDimension>>		{ 
-		using STriangle<::gpk::SCoord2<_tDimension>>::				A;
-		using STriangle<::gpk::SCoord2<_tDimension>>::				B;
-		using STriangle<::gpk::SCoord2<_tDimension>>::				C;
+		using STriangle<::gpk::SCoord2<_tDimension>>::	A;
+		using STriangle<::gpk::SCoord2<_tDimension>>::	B;
+		using STriangle<::gpk::SCoord2<_tDimension>>::	C;
 
-		using STriangle<::gpk::SCoord2<_tDimension>>::				STriangle;
+		using STriangle<::gpk::SCoord2<_tDimension>>::	STriangle;
 
-		template<typename _tDimension>
-		STriangle2<_tDimension>										Cast							()											const	noexcept		{
+		template<typename _tOther>
+		STriangle2<_tOther>								Cast							()											const	noexcept		{
 			return
-				{ A.template Cast<_tDimension>()
-				, B.template Cast<_tDimension>()
-				, C.template Cast<_tDimension>()
+				{ A.template Cast<_tOther>()
+				, B.template Cast<_tOther>()
+				, C.template Cast<_tOther>()
 				};
 		}
-		::gpk::error_t												CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				? 1 : 0;
 		}
-		::gpk::error_t												CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				? 1 : 0;
@@ -434,47 +434,47 @@ namespace gpk
 	};
 
 	template<typename _tDimension>	struct STriangle3 : public STriangle<::gpk::SCoord3<_tDimension>>		{ 
-		using STriangle<::gpk::SCoord3<_tDimension>>::				A;
-		using STriangle<::gpk::SCoord3<_tDimension>>::				B;
-		using STriangle<::gpk::SCoord3<_tDimension>>::				C;
+		using STriangle<::gpk::SCoord3<_tDimension>>::	A;
+		using STriangle<::gpk::SCoord3<_tDimension>>::	B;
+		using STriangle<::gpk::SCoord3<_tDimension>>::	C;
 
-		using STriangle<::gpk::SCoord3<_tDimension>>::				STriangle;
+		using STriangle<::gpk::SCoord3<_tDimension>>::	STriangle;
 		template<typename _tOther>
-		STriangle3<_tOther>											Cast							()		const	noexcept		{
+		STriangle3<_tOther>								Cast							()		const	noexcept		{
 			return
 				{ A.template Cast<_tOther>()
 				, B.template Cast<_tOther>()
 				, C.template Cast<_tOther>()
 				};
 		}
-		::gpk::error_t												CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				? 1 : 0;
 		}
-		::gpk::error_t												CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				? 1 : 0;
 		}
-		::gpk::error_t												CulledZ							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledZ							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				? 1 : 0;
 		}
-		::gpk::error_t												CulledZSpecial					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		::gpk::error_t									CulledZSpecial					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				? 1 : 0;
 		}
-		bool														ClipZ							()		const	noexcept		{
+		bool											ClipZ							()		const	noexcept		{
 			if(A.z < 0 || A.z >= 1) return true;
 			if(B.z < 0 || B.z >= 1) return true;
 			if(C.z < 0 || C.z >= 1) return true;
 			return false;
 		}
 
-		STriangle3<_tDimension>&									Scale					(const SCoord3<_tDimension> & scale)		noexcept		{
+		STriangle3<_tDimension>&						Scale					(const SCoord3<_tDimension> & scale)		noexcept		{
 			A.Scale(scale);
 			B.Scale(scale);
 			C.Scale(scale);

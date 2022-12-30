@@ -83,6 +83,7 @@ namespace gpk
 		}
 	};
 
+	template<typename _tCell>	using view					= ::gpk::view_array<_tCell>;
 	template<typename _tCell>	using view1d				= ::gpk::view_array<_tCell>;
 	template<typename _tCell>	using v1d					= ::gpk::view_array<_tCell>;
 

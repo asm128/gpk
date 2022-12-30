@@ -1,6 +1,7 @@
 /// Copyright 2009-2017 - asm128
 #include "gpk_math.h"
 #include "gpk_enum.h"
+#include "gpk_view_grid.h"
 
 #ifndef GPK_COLOR_H_29734982734
 #define GPK_COLOR_H_29734982734
@@ -182,6 +183,30 @@ namespace gpk
 
 									SColorFloat&	Clamp			()																noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
 	};	// struct
+
+	typedef	::gpk::view1d<	::gpk::SColorFloat	>			v1rgbaf	;
+	typedef	::gpk::view1d<	::gpk::SColorBGRA	>			v1bgra	;
+	typedef	::gpk::view1d<	::gpk::SColorBGR	>			v1bgr	;
+	typedef	::gpk::view1d<	::gpk::SColorRGBA	>			v1rgba	;
+	typedef	::gpk::view1d<	::gpk::SColorRGB	>			v1rgb	;
+
+	typedef	::gpk::view1d<const	::gpk::SColorFloat	>		v1crgbaf;
+	typedef	::gpk::view1d<const	::gpk::SColorBGRA	>		v1cbgra	;
+	typedef	::gpk::view1d<const	::gpk::SColorBGR	>		v1cbgr	;
+	typedef	::gpk::view1d<const	::gpk::SColorRGBA	>		v1crgba	;
+	typedef	::gpk::view1d<const	::gpk::SColorRGB	>		v1crgb	;
+
+	typedef	::gpk::view2d<	::gpk::SColorFloat	>			v2rgbaf	;
+	typedef	::gpk::view2d<	::gpk::SColorBGRA	>			v2bgra	;
+	typedef	::gpk::view2d<	::gpk::SColorBGR	>			v2bgr	;
+	typedef	::gpk::view2d<	::gpk::SColorRGBA	>			v2rgba	;
+	typedef	::gpk::view2d<	::gpk::SColorRGB	>			v2rgb	;
+
+	typedef	::gpk::view2d<const	::gpk::SColorFloat	>		v2crgbaf;
+	typedef	::gpk::view2d<const	::gpk::SColorBGRA	>		v2cbgra	;
+	typedef	::gpk::view2d<const	::gpk::SColorBGR	>		v2cbgr	;
+	typedef	::gpk::view2d<const	::gpk::SColorRGBA	>		v2crgba	;
+	typedef	::gpk::view2d<const	::gpk::SColorRGB	>		v2crgb	;
 
 	static	constexpr	::gpk::SColorFloat	BLACK			= ::gpk::SColorFloat(0.0f, 0.0f, 0.0f, 1.0f					);
 	static	constexpr	::gpk::SColorFloat	WHITE			= ::gpk::SColorFloat(1.0f, 1.0f, 1.0f, 1.0f					);
