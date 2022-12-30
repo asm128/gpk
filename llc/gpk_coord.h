@@ -17,7 +17,13 @@ namespace gpk
 	template<typename _tBase>
 	struct SCoord2 {
 		typedef									SCoord2<_tBase>	TCoord2;
-												_tBase			x, y;
+		_tBase									x, y;
+
+		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
+		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
+		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
+		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
+
 		//
 		constexpr								TCoord2			operator+				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x + other.x), (_tBase)(y + other.y)};				}
 		constexpr								TCoord2			operator-				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x - other.x), (_tBase)(y - other.y)};				}
@@ -89,8 +95,7 @@ namespace gpk
 	template<typename _tBase>
 	struct SCoord3 {
 		typedef									SCoord3<_tBase>	TCoord3;
-												_tBase			x, y, z;
-
+		_tBase									x, y, z;
 		inline									const _tBase&	operator[]				(uint32_t index)											const				{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		inline									_tBase&			operator[]				(uint32_t index)																{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		//
@@ -123,6 +128,47 @@ namespace gpk
 		constexpr								bool			operator==				(const TCoord3& other)												const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
 		inline constexpr						bool			operator!=				(const TCoord3& other)												const	noexcept	{ return !operator==(other);																	}
 		constexpr								TCoord3			operator-				()																	const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
+
+		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
+		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
+		inline constexpr SCoord2<_tBase>		xz				()						{ return {x, z}; }
+		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
+		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
+		inline constexpr SCoord2<_tBase>		yz				()						{ return {y, z}; }
+		inline constexpr SCoord2<_tBase>		zx				()						{ return {z, x}; }
+		inline constexpr SCoord2<_tBase>		zy				()						{ return {z, y}; }
+		inline constexpr SCoord2<_tBase>		zz				()						{ return {z, z}; }
+
+		inline constexpr SCoord3<_tBase>		xxx				()						{ return {x, x, x}; }
+		inline constexpr SCoord3<_tBase>		xxy				()						{ return {x, x, y}; }
+		inline constexpr SCoord3<_tBase>		xxz				()						{ return {x, x, z}; }
+		inline constexpr SCoord3<_tBase>		xyx				()						{ return {x, y, x}; }
+		inline constexpr SCoord3<_tBase>		xyy				()						{ return {x, y, y}; }
+		inline constexpr SCoord3<_tBase>		xyz				()						{ return {x, y, z}; }
+		inline constexpr SCoord3<_tBase>		xzx				()						{ return {x, z, x}; }
+		inline constexpr SCoord3<_tBase>		xzy				()						{ return {x, z, y}; }
+		inline constexpr SCoord3<_tBase>		xzz				()						{ return {x, z, z}; }
+
+		inline constexpr SCoord3<_tBase>		yxx				()						{ return {y, x, x}; }
+		inline constexpr SCoord3<_tBase>		yxy				()						{ return {y, x, y}; }
+		inline constexpr SCoord3<_tBase>		yxz				()						{ return {y, x, z}; }
+		inline constexpr SCoord3<_tBase>		yyx				()						{ return {y, y, x}; }
+		inline constexpr SCoord3<_tBase>		yyy				()						{ return {y, y, y}; }
+		inline constexpr SCoord3<_tBase>		yyz				()						{ return {y, y, z}; }
+		inline constexpr SCoord3<_tBase>		yzx				()						{ return {y, z, x}; }
+		inline constexpr SCoord3<_tBase>		yzy				()						{ return {y, z, y}; }
+		inline constexpr SCoord3<_tBase>		yzz				()						{ return {y, z, z}; }
+
+		inline constexpr SCoord3<_tBase>		zxx				()						{ return {z, x, x}; }
+		inline constexpr SCoord3<_tBase>		zxy				()						{ return {z, x, y}; }
+		inline constexpr SCoord3<_tBase>		zxz				()						{ return {z, x, z}; }
+		inline constexpr SCoord3<_tBase>		zyx				()						{ return {z, y, x}; }
+		inline constexpr SCoord3<_tBase>		zyy				()						{ return {z, y, y}; }
+		inline constexpr SCoord3<_tBase>		zyz				()						{ return {z, y, z}; }
+		inline constexpr SCoord3<_tBase>		zzx				()						{ return {z, z, x}; }
+		inline constexpr SCoord3<_tBase>		zzy				()						{ return {z, z, y}; }
+		inline constexpr SCoord3<_tBase>		zzz				()						{ return {z, z, z}; }
+
 		//
 		template<typename _t>
 		inline constexpr 						SCoord3<_t>		Cast					()																	const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
@@ -349,51 +395,50 @@ namespace gpk
 	template<typename _tElement>	struct SLine2			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2		<_tElement>, A		== other.A		&& B		== other.B						); };
 
 
-	template<typename _tDim>		
+	template<typename _tVertex>		
 	struct STriangle { 
-		_tDim			A, B, C; 
-		GPK_DEFAULT_OPERATOR_NE(STriangle<_tDim>, A == other.A && B == other.B && C == other.C);
+		_tVertex			A, B, C; 
+
+		constexpr			STriangle		()																= default;
+		constexpr			STriangle		(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
+		constexpr			STriangle		(const STriangle & other)										= default;
+
+		GPK_DEFAULT_OPERATOR_NE(STriangle<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
 
-	template<typename _tElement>	struct STriangle2		{ ::gpk::SCoord2<_tElement>					A, B, C					; GPK_DEFAULT_OPERATOR_NE(STriangle2	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
-		template<typename _tOther>
-		STriangle2<_tOther>											Cast							()						const	noexcept		{
+	template<typename _tDimension>	struct STriangle2 : public STriangle<::gpk::SCoord2<_tDimension>>		{ 
+		using STriangle<::gpk::SCoord2<_tDimension>>::				A;
+		using STriangle<::gpk::SCoord2<_tDimension>>::				B;
+		using STriangle<::gpk::SCoord2<_tDimension>>::				C;
+
+		using STriangle<::gpk::SCoord2<_tDimension>>::				STriangle;
+
+		template<typename _tDimension>
+		STriangle2<_tDimension>										Cast							()											const	noexcept		{
 			return
-				{ A.template Cast<_tOther>()
-				, B.template Cast<_tOther>()
-				, C.template Cast<_tOther>()
+				{ A.template Cast<_tDimension>()
+				, B.template Cast<_tDimension>()
+				, C.template Cast<_tDimension>()
 				};
 		}
-	};
-	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
-
-	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
-	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
-	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad2			{ ::gpk::SCoord2<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad3			{ ::gpk::SCoord3<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
-	template<typename _tElement>	struct STriangle3		{ ::gpk::SCoord3<_tElement>					A, B, C			; GPK_DEFAULT_OPERATOR_NE(STriangle3	<_tElement>, A		== other.A		&& B		== other.B		&& C == other.C	);
-		::gpk::error_t												CulledZSpecial					(const ::gpk::SMinMax<_tElement>& minMax)	const	noexcept		{
-			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
-				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
-				? 1 : 0;
-		}
-		::gpk::error_t												CulledZ							(const ::gpk::SMinMax<_tElement>& minMax)	const	noexcept		{
-			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min))
-				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
-				? 1 : 0;
-		}
-		::gpk::error_t												CulledX							(const ::gpk::SMinMax<_tElement>& minMax)	const	noexcept		{
+		::gpk::error_t												CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				? 1 : 0;
 		}
-		::gpk::error_t												CulledY							(const ::gpk::SMinMax<_tElement>& minMax)	const	noexcept		{
+		::gpk::error_t												CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				? 1 : 0;
 		}
+	};
+
+	template<typename _tDimension>	struct STriangle3 : public STriangle<::gpk::SCoord3<_tDimension>>		{ 
+		using STriangle<::gpk::SCoord3<_tDimension>>::				A;
+		using STriangle<::gpk::SCoord3<_tDimension>>::				B;
+		using STriangle<::gpk::SCoord3<_tDimension>>::				C;
+
+		using STriangle<::gpk::SCoord3<_tDimension>>::				STriangle;
 		template<typename _tOther>
 		STriangle3<_tOther>											Cast							()		const	noexcept		{
 			return
@@ -402,6 +447,26 @@ namespace gpk
 				, C.template Cast<_tOther>()
 				};
 		}
+		::gpk::error_t												CulledX							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
+				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
+				? 1 : 0;
+		}
+		::gpk::error_t												CulledY							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
+				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
+				? 1 : 0;
+		}
+		::gpk::error_t												CulledZ							(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min))
+				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
+				? 1 : 0;
+		}
+		::gpk::error_t												CulledZSpecial					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
+				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
+				? 1 : 0;
+		}
 		bool														ClipZ							()		const	noexcept		{
 			if(A.z < 0 || A.z >= 1) return true;
 			if(B.z < 0 || B.z >= 1) return true;
@@ -409,19 +474,28 @@ namespace gpk
 			return false;
 		}
 
-		STriangle3<_tElement>&				Scale					(const SCoord3<_tElement> & scale)		noexcept		{
+		STriangle3<_tDimension>&									Scale					(const SCoord3<_tDimension> & scale)		noexcept		{
 			A.Scale(scale);
 			B.Scale(scale);
 			C.Scale(scale);
 			return *this;
 		}
-		STriangle3<_tElement>&				Translate				(const SCoord3<_tElement> & translation)	noexcept		{
-			A									+= translation;
-			B									+= translation;
-			C									+= translation;
+		STriangle3<_tDimension>&									Translate				(const SCoord3<_tDimension> & translation)	noexcept		{
+			A															+= translation;
+			B															+= translation;
+			C															+= translation;
 			return *this;
 		}
 	};
+
+	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
+
+	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
+	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad2			{ ::gpk::SCoord2<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad3			{ ::gpk::SCoord3<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
 	template<typename _tElement>	struct SRectangle2		{
 							::gpk::SCoord2<_tElement>					Offset, Size;
@@ -607,6 +681,9 @@ namespace gpk
 	template<typename _tValue>
 	::gpk::SCoord2<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 
+	template<typename _tDimension>		using n2d			= SCoord2<_tDimension>;
+	template<typename _tDimension>		using n3d			= SCoord3<_tDimension>;
+	template<typename _tDimension>		using quat			= SQuaternion<_tDimension>;
 }
 
 #endif // GPK_COORD_H_928374982364923322

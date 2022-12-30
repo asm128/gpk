@@ -142,7 +142,10 @@ namespace gpk
 	};
 
 	template<typename _tTexel, typename _tDepthStencil>
-							::gpk::error_t						clearTarget									(::gpk::SRenderTarget<_tTexel, _tDepthStencil>& targetToClear)		{
+	using					rt									= SRenderTarget<_tTexel, _tDepthStencil>;
+
+	template<typename _tTexel, typename _tDepthStencil>
+							::gpk::error_t						clearTarget									(::gpk::rt<_tTexel, _tDepthStencil>& targetToClear)		{
 		::gpk::img<_tTexel>												& offscreen									= targetToClear.Color;
 		::gpk::img<_tDepthStencil>										& offscreenDepth							= targetToClear.DepthStencil;
 		::memset(offscreenDepth	.Texels.begin(), -1, sizeof(_tDepthStencil)	* offscreenDepth	.Texels.size());	// Clear target.

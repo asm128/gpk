@@ -54,12 +54,12 @@ namespace gpk
 
 	struct SWindow {
 		typedef				::gpk::SColorBGRA						TTexel;
-		typedef				::gpk::SRenderTarget<TTexel, uint32_t>	TOffscreen;
+		typedef				::gpk::rt<TTexel, uint32_t>				TOffscreen;
 
 							::gpk::SWindowPlatformDetail			PlatformDetail		= {};
-							::gpk::aobj<::gpk::SSysEvent>		EventQueue			= {};
-							::gpk::pobj<TOffscreen>				BackBuffer			= {};
-							::gpk::pobj<::gpk::SInput>			Input				= {};
+							::gpk::aobj<::gpk::SSysEvent>			EventQueue			= {};
+							::gpk::pobj<TOffscreen>					BackBuffer			= {};
+							::gpk::pobj<::gpk::SInput>				Input				= {};
 							::gpk::SCoord2<uint32_t>				PreviousSize		= {};
 							::gpk::SCoord2<uint32_t>				Size				= {320, 200};
 							::gpk::SRectLimits<int32_t>				WindowedWindowRect	= {0, 0, 320, 200};

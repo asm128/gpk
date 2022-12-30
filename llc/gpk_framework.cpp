@@ -33,7 +33,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
 		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
-			::gpk::pobj<::gpk::SRenderTarget<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
+			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
 		}
 #endif
@@ -72,7 +72,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
 	::gpk::SWindow								& mainWindow								= framework.RootWindow;
 #if defined(GPK_XCB)
-	::gpk::pobj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
+	::gpk::pobj<::gpk::rt<::gpk::SColorBGRA, uint32_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
 	if(mainWindow.Repaint) {
 		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
