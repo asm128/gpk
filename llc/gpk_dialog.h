@@ -53,7 +53,7 @@ namespace gpk
 	};
 
 	struct SDialog {
-		::gpk::pobj<::gpk::SDialogColors>												Colors												= {};
+		::gpk::pobj<::gpk::SDialogColors>													Colors												= {};
 		
 		int32_t																				FocusedCurrent										= -1;
 		int32_t																				FocusedPrevious										= -1;

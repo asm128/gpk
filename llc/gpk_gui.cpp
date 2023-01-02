@@ -310,7 +310,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 		::gpk::apod<int32_t>											& children												= gui.Controls.Children[indexParent];
 		for(int32_t iChild = 0; iChild < (int32_t)children.size(); ++iChild)
 			if(children[iChild] == iControl) {
-				gpk_necall(children.remove(iChild), "Failed to remove child at index: %u.", iChild);
+				gpk_necall(children.remove_unordered(iChild), "Failed to remove child at index: %u.", iChild);
 #if defined(GPK_DEBUG_ENABLED)
 				--iChild;
 				++childrenRemoved;
