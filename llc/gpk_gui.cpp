@@ -23,9 +23,6 @@
 // GUI_CONTROL_COLOR_CORNER_RIGHT_BOTTOM_BOTTOM
 // GUI_CONTROL_COLOR_CLIENT
 
-																gpk::SGUI::SGUI												()	{
-}
-
 			::gpk::error_t										gpk::controlInvalid										(const ::gpk::SGUI& gui, int32_t iControl)				{
 	if(gui.Controls.Controls.size() <= uint32_t(iControl)	) return -1;
 	if(gui.Controls.States[iControl].Unused					) return -1;
@@ -53,6 +50,7 @@ static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk:
 			const ::gpk::SColorBGRA												& baseColor												= colors[iTone];
 			::gpk::SColorBGRA													& paletteItem											= palette[toneIndex + iShade];
 			paletteItem														= ::gpk::SColorFloat(baseColor) / (float)iShades * (iShades - (float)iShade);
+			paletteItem.a = 1;
 			verbose_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
 			verbose_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);
 		}
@@ -118,8 +116,9 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::view_ar
 	colorComboNormal	[::gpk::GUI_CONTROL_COLOR_CLIENT			]	= colorComboNormal		[::gpk::GUI_CONTROL_COLOR_BACKGROUND];
 
 	for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
-		for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
+		for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea) {
 			theme.ColorCombos[iState][iArea]							= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], palette.size() - 1);
+		}
 	return 0;
 }
 
@@ -134,7 +133,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::
 
 static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
 	static constexpr	const uint32_t									iShades													= 16;
-	static				const ::gpk::SColorBGRA							paletteColors []										=
+	static				::gpk::SColorBGRA								paletteColors []										=
 		// 16 Base colors
 		{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}
 		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	}
@@ -171,6 +170,8 @@ static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::
 		, ::gpk::SColorBGRA{::gpk::BROWN}
 		, ::gpk::SColorBGRA{::gpk::LIGHTORANGE}
 	};
+	for(uint32_t iColor = 0; iColor < ::gpk::size(paletteColors); ++iColor) 
+		paletteColors[iColor].a = 255;
 
 	if(palette && 0 == palette->size())
 		gpk_necs(::paletteSetupDefault(*palette, paletteColors, iShades));

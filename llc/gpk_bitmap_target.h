@@ -1,7 +1,6 @@
 #include "gpk_image.h"
 #include "gpk_color.h"
 #include "gpk_coord.h"
-#include "gpk_grid_scale.h"
 #include "gpk_camera.h"
 #include <memory> // this is required for ::std::swap()
 
@@ -40,34 +39,6 @@ namespace gpk
 		 )
 			viewOffscreen[(uint32_t)sourcePosition.y][(uint32_t)sourcePosition.x]	= colorLight;
 		return drawPixelBrightness(viewOffscreen, sourcePosition, colorLight, maxFactor, range);
-	}
-
-	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
-		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize)
-			out_view																= {out_colors.begin(), newSize};
-		return 0;
-	}
-
-	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{
-		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
-	}
-	template<typename _tElement>
-						::gpk::error_t										updateSizeDependentTexture					(::gpk::apod<_tElement>& out_scaled, ::gpk::view2d<_tElement>& out_view, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
-		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize ) {
-			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
-			if(in_view.size())
-				gerror_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
-		}
-		return 0;
-	}
-
-	template<typename _tElement>
-	static inline		::gpk::error_t										updateSizeDependentTexture					(::gpk::img<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
-		return updateSizeDependentTexture(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 
 	template<typename _tColor>

@@ -59,7 +59,6 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 	gui.Controls.Controls		[dialog.Root].Border					= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
 	gui.Controls.Modes			[dialog.Root].Design					= true;
-	dialog.DefaultControlModes.ColorMode		= ::gpk::GUI_COLOR_MODE_3D;
 	dialog.DefaultControlModes.NoHoverEffect	= 1;
 	dialog.DefaultControlModes.FrameOut			= 1;
 	dialog.DefaultControlModes.UseNewPalettes	= 1;
@@ -74,13 +73,14 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 	return 0;
 }
 
-								::gpk::SDialog::SDialog			() {
-	GUI->ColorModeDefault			= ::gpk::GUI_COLOR_MODE_3D;
-	GUI->ThemeDefault				= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+								::gpk::SDialog::SDialog			()										{ GUI.create(); ::dialogInitialize(*this); }
+								::gpk::SDialog::SDialog			(::gpk::pobj<::gpk::SGUI> & pgui)	{
+	if(!pgui)
+		pgui.create();
+	GUI								= pgui;
 	::dialogInitialize(*this);
 }
-
-								::gpk::SDialog::SDialog			(const ::gpk::pobj<::gpk::SGUI> & pgui)						{
+								::gpk::SDialog::SDialog			(const ::gpk::pobj<::gpk::SGUI> & pgui)	{
 	GUI								= pgui;
 	if(!GUI)
 		GUI.create();

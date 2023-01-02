@@ -48,6 +48,7 @@
 	srvDesc.Format							= desc.Format;
 	srvDesc.ViewDimension					= D3D_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels				= desc.MipLevels;
+	//srvDesc.
 
 	::gpk::ptr_com<ID3D11ShaderResourceView>	pSRV;
 	gpk_hrcall(pDevice->CreateShaderResourceView(pTex2D, &srvDesc, &pSRV));

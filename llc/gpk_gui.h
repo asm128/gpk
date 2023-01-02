@@ -197,19 +197,16 @@ namespace gpk
 		::gpk::SCoord2<uint32_t>										LastSize							= {};
 		::gpk::SCoord2<float>											CursorPos							= {};
 		::gpk::SGUIControlTable											Controls							= {};
-		::gpk::pobj<::gpk::SGUIColors>								Colors;
+		::gpk::pobj<::gpk::SGUIColors>									Colors;
 		// Font
 		::gpk::array_pobj<::gpk::SRasterFont>							Fonts								= {};
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};
 		uint32_t														SelectedFont						= 7;
-		uint32_t														ThemeDefault						= 0;
-		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_FLAT;//::gpk::GUI_COLOR_MODE_DEFAULT;
+		uint32_t														ThemeDefault						= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool															InputModeTouch						= true;
-
-
-																		SGUI								();
 	};
 
 	#pragma pack(push, 1)

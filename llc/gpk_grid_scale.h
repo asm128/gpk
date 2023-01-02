@@ -1,4 +1,5 @@
 #include "gpk_view_grid.h"
+#include "gpk_color.h"
 
 #ifndef GPK_GRID_SCALE_20654834
 #define GPK_GRID_SCALE_20654834
