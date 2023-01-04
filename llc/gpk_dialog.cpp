@@ -232,7 +232,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 
 			::gpk::SCoord2<float>													currentValue								= input.MouseCurrent.Position.Cast<float>();
 			const ::gpk::SCoord2<float>												valueUnit									= {1.0f / effectiveSize.x, 1.0f / effectiveSize.y};
-			currentValue														-= controlSliderPos;// + controlTable.Controls[slider.IdButton].Area.Size.Cast<float>() / 2;
+			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.Cast<float>() / 2;
 			currentValue.x														*= valueUnit.x;
 			currentValue.y														*= valueUnit.y;
 
