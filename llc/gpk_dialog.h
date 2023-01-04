@@ -26,7 +26,7 @@ namespace gpk
 		int32_t												IdParent											= -1;
 		uint64_t											DeleteControl										: 1;
 
-															IDialogControl										()													: DeleteControl(0) {}
+		constexpr											IDialogControl										()													: DeleteControl(0) {}
 		virtual												~IDialogControl										();
 
 		virtual	::gpk::error_t								Resize												(::gpk::SCoord2<uint32_t>& newSize)					{ (void)newSize; return 0; }

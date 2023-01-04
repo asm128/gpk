@@ -198,10 +198,8 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
 	::gpk::SControl															& controlSlider								= controlTable.Controls[slider.IdGUIControl];
 	::gpk::SCoord2<double>													ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
-	if(slider.Vertical)
-		controlButton.Area.Offset.y											= (int16_t)int32_t((controlSlider.Area.Size.y - 16 - ncSpacing.y) * proportion);
-	else
-		controlButton.Area.Offset.x											= (int16_t)int32_t((controlSlider.Area.Size.x - 16 - ncSpacing.x) * proportion);
+	if(slider.Vertical)	controlButton.Area.Offset.y						= (int16_t)int32_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
+	else				controlButton.Area.Offset.x						= (int16_t)int32_t((controlSlider.Area.Size.x - controlButton.Area.Size.x - ncSpacing.x) * proportion);
 
 	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
 	if(slider.Vertical) {
@@ -227,19 +225,18 @@ static constexpr	const uint32_t									heightOfField								= 18;
 				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 				};
-			const ::gpk::SCoord2<int16_t>											& controlSliderSize							= controlTable.Controls[slider.IdGUIControl].Area.Size;
+			const ::gpk::SCoord2<float>												controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<float>();
+			const ::gpk::SCoord2<float>												controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<float>();
+			::gpk::SCoord2<float>													effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<float>();;
+			//
 
-			::gpk::SCoord2<double>													valueDisplacement							=
-				{ input.MouseCurrent.Deltas.x * scale.x * (valueRange * (1.0 / controlSliderSize.x))
-				, input.MouseCurrent.Deltas.y * scale.y * (valueRange * (1.0 / controlSliderSize.y))
-				};
+			::gpk::SCoord2<float>													currentValue								= input.MouseCurrent.Position.Cast<float>();
+			const ::gpk::SCoord2<float>												valueUnit									= {1.0f / effectiveSize.x, 1.0f / effectiveSize.y};
+			currentValue														-= controlSliderPos;// + controlTable.Controls[slider.IdButton].Area.Size.Cast<float>() / 2;
+			currentValue.x														*= valueUnit.x;
+			currentValue.y														*= valueUnit.y;
 
-			if (valueDisplacement.y > 0 && valueDisplacement.y <  1) valueDisplacement.y	=  1;
-			if (valueDisplacement.y < 0 && valueDisplacement.y > -1) valueDisplacement.y	= -1;
-			if (valueDisplacement.x > 0 && valueDisplacement.x <  1) valueDisplacement.x	=  1;
-			if (valueDisplacement.x < 0 && valueDisplacement.x > -1) valueDisplacement.x	= -1;
-
-			::gpk::sliderSetValue(slider, slider.ValueCurrent + (int64_t)(slider.Vertical ? valueDisplacement.y : valueDisplacement.x));
+			::gpk::sliderSetValue(slider, (int64_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min));
 		}
 	}
 	else
