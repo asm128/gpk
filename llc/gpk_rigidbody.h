@@ -175,6 +175,13 @@ namespace gpk
 		}
 
 		bool											Active							(uint32_t iBody)													{ return BodyFlags[iBody].Active; }
+		float											GetMass							(uint32_t iBody)													{ return 1.0f / Masses[iBody].InverseMass; }
+		void											GetPosition						(uint32_t iBody, ::gpk::n3d<float>& position)						{ position		= Centers[iBody].Position; }
+		void											GetOrientation					(uint32_t iBody, ::gpk::quat<float>& orientation)					{ orientation	= Centers[iBody].Orientation; }
+		void											GetRotation						(uint32_t iBody, ::gpk::n3d<float>& rotation)						{ rotation		= Forces[iBody].Rotation;		}
+		void											GetAcceleration					(uint32_t iBody, ::gpk::n3d<float>& acceleration)					{ acceleration	= Forces[iBody].Acceleration;	}
+		void											GetVelocity						(uint32_t iBody, ::gpk::n3d<float>& velocity)						{ velocity		= Forces[iBody].Velocity;		}
+
 		void											SetActive						(uint32_t iBody, bool active)										{ BodyFlags[iBody].Active = active; }
 		void											SetMass							(uint32_t iBody, float mass)										{ Masses[iBody].InverseMass = 1.0f / mass; }
 		void											SetPosition						(uint32_t iBody, const ::gpk::SCoord3<float>& newPosition )			{
