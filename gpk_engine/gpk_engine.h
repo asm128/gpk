@@ -49,23 +49,23 @@ namespace gpk
 		::gpk::SRigidBodyIntegrator			Integrator			;
 
 		::gpk::error_t						Clone							(uint32_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
-			const ::gpk::SVirtualEntity				entitySource					= ManagedEntities.Entities[iEntitySource];
+			const ::gpk::SVirtualEntity				entitySource					= ManagedEntities[iEntitySource];
 			int32_t									iEntityNew						= ManagedEntities.Create();
-			::gpk::SVirtualEntity					& entityNew						= ManagedEntities.Entities[iEntityNew];
-			entityNew.RenderNode				= Scene->ManagedRenderNodes	.Clone(entitySource.RenderNode);
+			::gpk::SVirtualEntity					& entityNew						= ManagedEntities[iEntityNew];
+			entityNew.RenderNode				= Scene->ManagedRenderNodes.Clone(entitySource.RenderNode);
 			entityNew.RigidBody					= ((uint32_t)entitySource.RigidBody < Integrator.BodyFlags.size()) ? Integrator.Clone(entitySource.RigidBody) : (uint32_t)-1;
 			entityNew.Parent					= entitySource.Parent;
 
-			uint32_t								idShaderSource					= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Shader;
+			uint32_t								idShaderSource					= Scene->ManagedRenderNodes[entityNew.RenderNode].Shader;
 			if(cloneSkin && idShaderSource < Scene->Graphics->Shaders.size()) {
 				uint32_t								idShader						= Scene->Graphics->Shaders.Clone(idShaderSource);
-				Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Shader	= idShader;
+				Scene->ManagedRenderNodes[entityNew.RenderNode].Shader	= idShader;
 			}
 
-			uint32_t								idSkinSource					= Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin;
+			uint32_t								idSkinSource					= Scene->ManagedRenderNodes[entityNew.RenderNode].Skin;
 			if(cloneSkin && idSkinSource < Scene->Graphics->Skins.size()) {
 				uint32_t								idSkin							= Scene->Graphics->Skins.Clone(idSkinSource);
-				Scene->ManagedRenderNodes.RenderNodes[entityNew.RenderNode].Skin	= idSkin;
+				Scene->ManagedRenderNodes[entityNew.RenderNode].Skin	= idSkin;
 				if(cloneSurfaces) {
 					if(Scene->Graphics->Skins[idSkin]) {
 						::gpk::SSkin							& newSkin						= *Scene->Graphics->Skins[idSkin];
@@ -89,29 +89,29 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		::gpk::error_t						SetColorDiffuse		(uint32_t iEntity, const ::gpk::SColorFloat & diffuse)				{ Scene->Graphics->Skins[Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Skin]->Material.Color.Diffuse = diffuse; return 0; }
-		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::SCoord3<float> & scale)				{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities.Entities[iEntity].RenderNode].World.Scale(scale, false); return 0; }
-		::gpk::error_t						SetMeshPosition		(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities.Entities[iEntity].RenderNode].World.SetTranslation(position, false); return 0; }
+		::gpk::error_t						SetColorDiffuse		(uint32_t iEntity, const ::gpk::SColorFloat & diffuse)				{ Scene->Graphics->Skins[Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Skin]->Material.Color.Diffuse = diffuse; return 0; }
+		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::SCoord3<float> & scale)				{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.Scale(scale, false); return 0; }
+		::gpk::error_t						SetMeshPosition		(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.SetTranslation(position, false); return 0; }
 		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcc name) {
-			const uint32_t							iShader				= Scene->ManagedRenderNodes.RenderNodes[ManagedEntities.Entities[iEntity].RenderNode].Shader;
+			const uint32_t							iShader				= Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Shader;
 			Scene->Graphics->Shaders[iShader].create(shader);
 			Scene->Graphics->Shaders.Names[iShader] = name;
 			return 0;
 		}
-		::gpk::error_t						IsPhysicsActive		(uint32_t iEntity)													{ return Integrator.BodyFlags[ManagedEntities.Entities[iEntity].RigidBody].Active ? 1 : 0; }
-		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.BodyFlags[ManagedEntities.Entities[iEntity].RigidBody].Active = active;				return 0; }
-		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities.Entities[iEntity].RigidBody, mass);				return 0; }
-		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Integrator.SetPosition		(ManagedEntities.Entities[iEntity].RigidBody, position);			return 0; }
-		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetVelocity		(ManagedEntities.Entities[iEntity].RigidBody, velocity);			return 0; }
-		::gpk::error_t						SetAcceleration		(uint32_t iEntity, const ::gpk::SCoord3<float> & acceleration)		{ Integrator.SetAcceleration	(ManagedEntities.Entities[iEntity].RigidBody, acceleration);		return 0; }
-		::gpk::error_t						SetRotation			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetRotation		(ManagedEntities.Entities[iEntity].RigidBody, velocity);			return 0; }
-		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::SQuaternion<float> & orientation)	{ Integrator.SetOrientation		(ManagedEntities.Entities[iEntity].RigidBody, orientation);			return 0; }
-		::gpk::error_t						SetDampingLinear	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].LinearDamping = damping;			return 0; }
-		::gpk::error_t						SetDampingAngular	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities.Entities[iEntity].RigidBody].AngularDamping = damping;			return 0; }
-		::gpk::error_t						SetHidden			(uint32_t iEntity, bool hidden)										{ Scene->ManagedRenderNodes.Flags[ManagedEntities.Entities[iEntity].RenderNode].NoDraw = hidden;	return 0; }	
+		::gpk::error_t						IsPhysicsActive		(uint32_t iEntity)													{ return Integrator.Active(ManagedEntities[iEntity].RigidBody) ? 1 : 0; }
+		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.SetActive			(ManagedEntities[iEntity].RigidBody, active);				return 0; }
+		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities[iEntity].RigidBody, mass);				return 0; }
+		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::SCoord3<float> & position)			{ Integrator.SetPosition		(ManagedEntities[iEntity].RigidBody, position);			return 0; }
+		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
+		::gpk::error_t						SetAcceleration		(uint32_t iEntity, const ::gpk::SCoord3<float> & acceleration)		{ Integrator.SetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);		return 0; }
+		::gpk::error_t						SetRotation			(uint32_t iEntity, const ::gpk::SCoord3<float> & velocity)			{ Integrator.SetRotation		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
+		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::SQuaternion<float> & orientation)	{ Integrator.SetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);			return 0; }
+		::gpk::error_t						SetDampingLinear	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities[iEntity].RigidBody].LinearDamping = damping;			return 0; }
+		::gpk::error_t						SetDampingAngular	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities[iEntity].RigidBody].AngularDamping = damping;			return 0; }
+		::gpk::error_t						SetHidden			(uint32_t iEntity, bool hidden)										{ Scene->ManagedRenderNodes.Flags[ManagedEntities[iEntity].RenderNode].NoDraw = hidden;	return 0; }	
 
 		::gpk::error_t						ToggleHidden			(uint32_t iEntity) {
-			::gpk::SRenderNodeFlags					& flags					= Scene->ManagedRenderNodes.Flags[ManagedEntities.Entities[iEntity].RenderNode];
+			::gpk::SRenderNodeFlags					& flags					= Scene->ManagedRenderNodes.Flags[ManagedEntities[iEntity].RenderNode];
 			flags.NoDraw						= !flags.NoDraw;
 			return 0;
 		}
@@ -128,8 +128,8 @@ namespace gpk
 		::gpk::error_t						CreateTriangle		();
 		::gpk::error_t						Update				(double secondsLastFrame)			{
 			Integrator.Integrate(secondsLastFrame);
-			for(uint32_t iEntity = 0; iEntity < ManagedEntities.Entities.size(); ++iEntity) {
-				::gpk::SVirtualEntity					& entity			= ManagedEntities.Entities[iEntity];
+			for(uint32_t iEntity = 0; iEntity < ManagedEntities.size(); ++iEntity) {
+				::gpk::SVirtualEntity					& entity			= ManagedEntities[iEntity];
 				if(entity.Parent != -1)
 					continue;
 

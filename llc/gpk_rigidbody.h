@@ -196,28 +196,32 @@ namespace gpk
 			bodyFlags.UpdatedTensorWorld					= false;
 		}
 		void											SetVelocity						(uint32_t iBody, const ::gpk::SCoord3<float>& newVelocity)			{
-			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if(0 == memcmp(&newVelocity.x, &bodyCenter.Velocity.x, sizeof(::gpk::SCoord3<float>)))
+			::gpk::SBodyForces									& bodyForces					= Forces[iBody];
+			if(0 == memcmp(&newVelocity.x, &bodyForces.Velocity.x, sizeof(::gpk::SCoord3<float>)))
 				return;
-			bodyCenter.Velocity								= newVelocity;
+			bodyForces.Velocity								= newVelocity;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
+			if(newVelocity.y) 
+				bodyFlags.Falling								= true; 
 		}
 		void											SetAcceleration					(uint32_t iBody, const ::gpk::SCoord3<float>& acceleration)			{
-			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if(0 == memcmp(&acceleration.x, &bodyCenter.Acceleration.x, sizeof(::gpk::SCoord3<float>)))
+			::gpk::SBodyForces									& bodyForces					= Forces[iBody];
+			if(0 == memcmp(&acceleration.x, &bodyForces.Acceleration.x, sizeof(::gpk::SCoord3<float>)))
 				return;
-			bodyCenter.Acceleration							= acceleration;
+			bodyForces.Acceleration							= acceleration;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
 		}
 		void											SetRotation						(uint32_t iBody, const ::gpk::SCoord3<float>& newRotation)			{
-			::gpk::SBodyForces									& bodyCenter					= Forces[iBody];
-			if(0 == memcmp(&newRotation.x, &bodyCenter.Rotation.x, sizeof(::gpk::SCoord3<float>)))
+			::gpk::SBodyForces									& bodyForces					= Forces[iBody];
+			if(0 == memcmp(&newRotation.x, &bodyForces.Rotation.x, sizeof(::gpk::SCoord3<float>)))
 				return;
-			bodyCenter.Rotation								= newRotation;
+			bodyForces.Rotation								= newRotation;
 			::gpk::SRigidBodyFlags								& bodyFlags						= BodyFlags[iBody];
 			bodyFlags.Active								= true;
+			if(newRotation.z || newRotation.x) 
+				bodyFlags.Falling								= true; 
 		}
 
 		::gpk::error_t									Save(::gpk::apod<byte_t> & output) const { 

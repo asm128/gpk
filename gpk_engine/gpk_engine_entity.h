@@ -19,6 +19,11 @@ namespace gpk
 
 		::gpk::apobj<::gpk::apod<uint32_t>>	Children		= {};
 
+		const ::gpk::SVirtualEntity&		operator[]		(uint32_t index)							const	{ return Entities[index]; }
+		SVirtualEntity&						operator[]		(uint32_t index)									{ return Entities[index]; }
+
+		uint32_t							size			()											const	{ return Names.size(); }
+
 		::gpk::error_t						Create			() {
 			Children.push_back({});
 			Names.push_back({});
