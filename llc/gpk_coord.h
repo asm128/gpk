@@ -389,9 +389,7 @@ namespace gpk
 	template<typename _tDimension>		using quat = SQuaternion<_tDimension>;
 
 	typedef n2<float>		n2f32, n2f;
-	typedef n2<float>		n2f32, n2f;
-	typedef n2<float>		n2f64, n2d;
-	typedef n2<float>		n2f64, n2d;
+	typedef n2<double>		n2f64, n2d;
 	typedef n2<uint8_t>		n2u8;
 	typedef n2<uint16_t>	n2u16;
 	typedef n2<uint32_t>	n2u32;
@@ -402,9 +400,7 @@ namespace gpk
 	typedef n2<int64_t>		n2i64;
 
 	typedef n3<float>		n3f32, n3f;
-	typedef n3<float>		n3f32, n3f;
-	typedef n3<float>		n3f64, n3d;
-	typedef n3<float>		n3f64, n3d;
+	typedef n3<double>		n3f64, n3d;
 	typedef n3<uint8_t>		n3u8;
 	typedef n3<uint16_t>	n3u16;
 	typedef n3<uint32_t>	n3u32;
