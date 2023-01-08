@@ -16,13 +16,13 @@ namespace gpk
 							::gpk::view2d<_tTexel>					View										;
 
 		constexpr													SImage										()														= default;
-																	SImage										(const ::gpk::v2d<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+																	SImage										(const ::gpk::v2<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																	SImage										(const SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
 		inline constexpr	operator								view2d<const _tTexel>					()										const	noexcept	{ return View; }
 		inline				operator								view2d<_tTexel>							()												noexcept	{ return View; }
 
-							SImage&									operator=									(const ::gpk::v2d<_tTexel>& other)						{
+							SImage&									operator=									(const ::gpk::v2<_tTexel>& other)						{
 			Texels														= view_array<const _tTexel>{other.begin(), other.size()};
 			View														= {Texels.begin(), other.metrics()};
 			return *this;

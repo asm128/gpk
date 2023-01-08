@@ -14,7 +14,7 @@ static	::gpk::error_t								transformTriangles
 	, const ::gpk::SMatrix4<float>	& worldTransform	
 	, const ::gpk::SCoord3<float>	& cameraFront
 )	{ 
-	::gpk::v1d<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
+	::gpk::v1<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
 
 	const ::gpk::SMatrix4<float>							mWVPS						= worldTransform * projection;
 	for(uint32_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {

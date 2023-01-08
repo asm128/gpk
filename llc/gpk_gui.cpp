@@ -595,7 +595,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 	return controlHovered;
 }
 
-			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI & gui, const ::gpk::SInput& input, ::gpk::v1d<const ::gpk::SSysEvent> sysEvents)	{
+			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI & gui, const ::gpk::SInput& input, ::gpk::v1<const ::gpk::SSysEvent> sysEvents)	{
 	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
 	::gpk::error_t														controlHovered											= -1;
 	::gpk::apod<uint32_t>											rootControlsToProcess									= {};

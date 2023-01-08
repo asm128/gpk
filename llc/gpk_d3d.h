@@ -13,7 +13,7 @@
 namespace gpk
 {
 	::gpk::error_t				d3dDeviceValidate			(::gpk::ptr_com<::ID3D11Device3> & d3dDevice);
-	::gpk::error_t				d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2d<const ::gpk::SColorBGRA> initData); 
+	::gpk::error_t				d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2<const ::gpk::SColorBGRA> initData); 
 } // namespace
 
 #endif // GPK_D3D_H_982734
