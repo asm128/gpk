@@ -23,9 +23,9 @@ namespace gpk
 	};
 
 #pragma pack(push, 1)
-		::gpk::error_t														controlListInitialize						(::gpk::SGUI& gui, ::gpk::SControlList& menu);
-		::gpk::error_t														controlListArrange							(::gpk::SGUI& gui, ::gpk::SControlList& menu);
-		::gpk::error_t														controlListPush								(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode = -1);
+		::gpk::error_t														controlListInitialize						(::gpk::SGUI & gui, ::gpk::SControlList& menu);
+		::gpk::error_t														controlListArrange							(::gpk::SGUI & gui, ::gpk::SControlList& menu);
+		::gpk::error_t														controlListPush								(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode = -1);
 
 	enum VIEWPORT_CONTROL : int8_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
@@ -56,7 +56,7 @@ namespace gpk
 				GUI_CONTROL_TYPE												ControlType									= (GUI_CONTROL_TYPE)-1;
 	};
 
-			::gpk::error_t													viewportInitialize							(::gpk::SGUI& gui, ::gpk::SViewport& viewport);
+			::gpk::error_t													viewportInitialize							(::gpk::SGUI & gui, ::gpk::SViewport& viewport);
 #pragma pack(pop)
 
 	struct SPaletteGrid {
@@ -72,8 +72,8 @@ namespace gpk
 	};
 
 
-			::gpk::error_t			paletteGridInitialize		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette);
-			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
+			::gpk::error_t			paletteGridInitialize		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette);
+			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
 
 
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER);

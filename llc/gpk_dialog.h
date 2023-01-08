@@ -29,7 +29,7 @@ namespace gpk
 		constexpr											IDialogControl										()													: DeleteControl(0) {}
 		virtual												~IDialogControl										();
 
-		virtual	::gpk::error_t								Resize												(::gpk::SCoord2<uint32_t>& newSize)					{ (void)newSize; return 0; }
+		virtual	::gpk::error_t								Resize												(::gpk::SCoord2<uint16_t>& newSize)					{ (void)newSize; return 0; }
 		virtual	::gpk::error_t								Update												()													= 0;
 	};
 	//template<typename _TDialogControl>
@@ -59,7 +59,7 @@ namespace gpk
 		int32_t																				FocusedPrevious										= -1;
 		int32_t																				SelectedCurrent										= -1;
 		int32_t																				SelectedPrevious									= -1;
-		::gpk::SCoord2<uint32_t>															LastSize											= {};
+		::gpk::SCoord2<uint16_t>															LastSize											= {};
 		int32_t																				Root												= -1;
 		::gpk::SControlMode																	DefaultControlModes									= {};
 

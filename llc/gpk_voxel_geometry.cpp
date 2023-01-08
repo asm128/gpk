@@ -42,10 +42,10 @@ static ::gpk::error_t								geometryVoxelFace
 		::gpk::apod<::gpk::SGeometryGroup>					& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry									& aabbSlice				= output.AABBSlices[iFace];
 
-		const ::gpk::SCoord3<int8_t>							faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
+		const ::gpk::n3<int8_t>									faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
 		::gpk::view_array<const uint8_t>						rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
-		::gpk::view_array<const ::gpk::SCoord3<float>>			rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
-		::gpk::view_array<const ::gpk::SCoord2<float>>			rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
+		::gpk::view_array<const ::gpk::n3<float>>				rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
+		::gpk::view_array<const ::gpk::n2<float>>				rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
 		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);

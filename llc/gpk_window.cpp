@@ -4,7 +4,7 @@
 	if(false == window.FullScreen)
 		return 0;
 
-	window.Size								= window.WindowedWindowRect.Dimensions().Cast<uint32_t>();
+	window.Size								= window.WindowedWindowRect.Dimensions();
 
 	HWND										windowHandle					= window.PlatformDetail.WindowHandle;
 	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
@@ -42,8 +42,8 @@
 
 	framework.FullScreen					= true;
 	framework.Size							= 
-		{ uint32_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
-		, uint32_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
+		{ uint16_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
+		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };

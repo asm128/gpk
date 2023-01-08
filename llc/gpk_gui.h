@@ -60,10 +60,10 @@ namespace gpk
 	};
 
 	struct SControlConstraints {
-		::gpk::SCoord2<int32_t>					AttachSizeToControl						;
-		::gpk::SCoord2<bool>					AttachSizeToText						;
+		::gpk::n2<int32_t>						AttachSizeToControl						;
+		::gpk::n2<bool>						AttachSizeToText						;
 		::gpk::SRectLimits<int32_t>				DockToControl							;
-		::gpk::SMinMax<::gpk::SCoord2<int16_t>>	SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
+		::gpk::SMinMax<::gpk::n2<int16_t>>		SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlState {
@@ -120,7 +120,7 @@ namespace gpk
 		};
 
 	struct SControlImage {
-		::gpk::img<::gpk::SColorBGRA>								Temp								= {};
+		::gpk::img<::gpk::SColorBGRA>									Temp								= {};
 	};
 
 	struct SControl {
@@ -128,27 +128,27 @@ namespace gpk
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
 		::gpk::view2d<::gpk::SColorBGRA>								Image								= {};
-		::gpk::SCoord2<int16_t>											ImageOffset							= {};
+		::gpk::n2<int16_t>												ImageOffset							= {};
 		::gpk::ALIGN													ImageAlign							= ::gpk::ALIGN_CENTER;
 
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_TOP_LEFT;
 		int16_t															ColorTheme							= 0;
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	Palettes							= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
-		int32_t															Parent							= -1;
+		int32_t															Parent								= -1;
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
-	constexpr	void												controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	constexpr	void												controlNCSpacing					(const ::gpk::SControl& ctl, ::gpk::SCoord2		<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
-	constexpr	::gpk::SRectLimits	<int16_t>						controlNCRect						(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	constexpr	::gpk::SCoord2		<int16_t>						controlNCSpacing					(const ::gpk::SControl& ctl)											noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	constexpr	void												controlNCSpacing					(const ::gpk::SControl & ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	constexpr	void												controlNCSpacing					(const ::gpk::SControl & ctl, ::gpk::n2			<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	constexpr	::gpk::SRectLimits	<int16_t>						controlNCRect						(const ::gpk::SControl & ctl)												noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	constexpr	::gpk::n2			<int16_t>						controlNCSpacing					(const ::gpk::SControl & ctl)												noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
 
 	struct SGUIZoom {
-		::gpk::SCoord2<double>											DPI									= {1.0, 1.0};
+		::gpk::n2<double>												DPI									= {1.0, 1.0};
 		::gpk::SMinMax<double>											ZoomLimits							= {0.1, 10.0};
 		double															ZoomLevel							= 1.0;
 
-		bool															operator ==							(const ::gpk::SGUIZoom& other)		const	noexcept	{
+		bool															operator==							(const ::gpk::SGUIZoom & other)		const	noexcept	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
@@ -157,7 +157,7 @@ namespace gpk
 	};
 
 	struct SControlText {
-		::gpk::vcs										Text								= {};
+		::gpk::vcs														Text								= {};
 		::gpk::ALIGN													Align								= ::gpk::ALIGN_CENTER;
 		::gpk::SMinMax<uint32_t>										Selection							= {0, 1};
 		int16_t															FontSelected						= -1;
@@ -171,22 +171,22 @@ namespace gpk
 	};
 #pragma pack(pop)
 	struct SGUIControlTable {
-		::gpk::apod<::gpk::SControl			>					Controls							= {};
-		::gpk::apod<::gpk::SControlState		>					States								= {};
-		::gpk::apod<::gpk::SControlMetrics		>					Metrics								= {};
-		::gpk::aobj<::gpk::SControlText		>					Text								= {};
-		::gpk::apod<::gpk::SControlConstraints	>					Constraints							= {};
-		::gpk::aobj<::gpk::SControlMode		>					Modes								= {};
-		::gpk::aobj<::gpk::apod<int32_t>	>					Children							= {};
-		::gpk::aobj<::gpk::SControlImage		>					Images								= {};
-		::gpk::apod<::gpk::SSysEvent			>					Events								= {};
+		::gpk::apod<::gpk::SControl				>						Controls							= {};
+		::gpk::apod<::gpk::SControlState		>						States								= {};
+		::gpk::apod<::gpk::SControlMetrics		>						Metrics								= {};
+		::gpk::aobj<::gpk::SControlText			>						Text								= {};
+		::gpk::apod<::gpk::SControlConstraints	>						Constraints							= {};
+		::gpk::aobj<::gpk::SControlMode			>						Modes								= {};
+		::gpk::aobj<::gpk::apod<int32_t>		>						Children							= {};
+		::gpk::aobj<::gpk::SControlImage		>						Images								= {};
+		::gpk::apod<::gpk::SSysEvent			>						Events								= {};
 	};
 
 	struct SGUIColors {
-		::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>		>		Palette								= {};
-		::gpk::pobj<::gpk::apod<::gpk::SControlTheme>	>		ControlThemes						= {};
+		::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>		>				Palette								= {};
+		::gpk::pobj<::gpk::apod<::gpk::SControlTheme>	>				ControlThemes						= {};
 
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors	= {};
+		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors						= {};
 
 		::gpk::apod<
 			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
@@ -194,12 +194,12 @@ namespace gpk
 	};
 
 	struct SGUI {
-		::gpk::SCoord2<uint32_t>										LastSize							= {};
-		::gpk::SCoord2<float>											CursorPos							= {};
+		::gpk::n2<uint16_t>											LastSize							= {};
+		::gpk::n2<float>												CursorPos							= {};
 		::gpk::SGUIControlTable											Controls							= {};
 		::gpk::pobj<::gpk::SGUIColors>									Colors;
 		// Font
-		::gpk::array_pobj<::gpk::SRasterFont>							Fonts								= {};
+		::gpk::apobj<::gpk::SRasterFont>								Fonts								= {};
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};
@@ -209,52 +209,52 @@ namespace gpk
 		bool															InputModeTouch						= true;
 	};
 
-	#pragma pack(push, 1)
+#pragma pack(push, 1)
 		struct SControlParams {
-			::gpk::GUI_COLOR_MODE						ColorMode		;
-			int32_t										Id				;
-			int32_t										IdParent		;
-			bool										Design			;
-			bool										NoBackground	;
-			bool										NoHoverEffect	;
-			bool										FrameOut		;
-			::gpk::ALIGN								Align			;
-			::gpk::SRectangle2<int16_t>					Area			;
-			::gpk::SRectLimits<uint8_t>					Border			;
-			::gpk::SRectLimits<uint16_t>				Margin			;
-			::gpk::vcs					Text			;
-			::gpk::ALIGN								TextAlign		;
-			::gpk::ALIGN								IconAlign		;
-			::gpk::vcs					IconPathOff		;
-			::gpk::vcs					IconPathOn		;
-			::gpk::SCoord2<bool>						AdjustToText	;
+			::gpk::GUI_COLOR_MODE										ColorMode		;
+			int32_t														Id				;
+			int32_t														IdParent		;
+			bool														Design			;
+			bool														NoBackground	;
+			bool														NoHoverEffect	;
+			bool														FrameOut		;
+			::gpk::ALIGN												Align			;
+			::gpk::SRectangle2<int16_t>									Area			;
+			::gpk::SRectLimits<uint8_t>									Border			;
+			::gpk::SRectLimits<uint16_t>								Margin			;
+			::gpk::vcs													Text			;
+			::gpk::ALIGN												TextAlign		;
+			::gpk::ALIGN												IconAlign		;
+			::gpk::vcs													IconPathOff		;
+			::gpk::vcs													IconPathOn		;
+			::gpk::n2<bool>											AdjustToText	;
 		};
-	#pragma pack(pop)
+#pragma pack(pop)
 
-	::gpk::error_t			guiProcessInput					(::gpk::SGUI& gui, const ::gpk::SInput& input, ::gpk::view_array<const ::gpk::SSysEvent> sysEvents = {});
-	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI& gui, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t			guiDraw							(::gpk::SGUI& gui, ::gpk::view2d<::gpk::SColorBGRA> target);
-	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI& gui, ::gpk::apod<uint32_t>& controlIndices);
-	::gpk::error_t			guiDeselect						(::gpk::SGUI& gui);
-	::gpk::error_t			guiSelect						(::gpk::SGUI& gui, int32_t controlToSelect);
+	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::v1d<const ::gpk::SSysEvent> sysEvents = {});
+	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2<uint16_t> & targetSize, bool forceUpdate);
+	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::v2d<::gpk::SColorBGRA> target);
+	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::apod<uint32_t> & controlIndices);
+	::gpk::error_t			guiDeselect						(::gpk::SGUI & gui);
+	::gpk::error_t			guiSelect						(::gpk::SGUI & gui, int32_t controlToSelect);
 
-	::gpk::error_t			controlDelete					(::gpk::SGUI& gui, int32_t iControl, bool recursive = true);
-	::gpk::error_t			controlCreate					(::gpk::SGUI& gui);
-	::gpk::error_t			controlCreateChild				(::gpk::SGUI& gui, int32_t iParent);
-	::gpk::error_t			controlSetParent				(::gpk::SGUI& gui, int32_t iControl, int32_t iParent);
-	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI& gui, int32_t iControl, ::gpk::view2d<::gpk::SColorBGRA> target);
-	::gpk::error_t			controlTextSet					(::gpk::SGUI& gui, int32_t iControl, const ::gpk::vcs& text);
-	::gpk::error_t			controlFontSet					(::gpk::SGUI& gui, int32_t iControl, int16_t iFont);
-	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize);
-	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI& gui, int32_t iControl, const ::gpk::SCoord2<uint32_t> & targetSize, bool forceUpdate);
-	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t			controlHidden					(const ::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t			controlDisabled					(const ::gpk::SGUI& gui, int32_t iControl);
-	::gpk::error_t			controlInvalid					(const ::gpk::SGUI& gui, int32_t iControl);
+	::gpk::error_t			controlDelete					(::gpk::SGUI & gui, int32_t iControl, bool recursive = true);
+	::gpk::error_t			controlCreate					(::gpk::SGUI & gui);
+	::gpk::error_t			controlCreateChild				(::gpk::SGUI & gui, int32_t iParent);
+	::gpk::error_t			controlSetParent				(::gpk::SGUI & gui, int32_t iControl, int32_t iParent);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2d<::gpk::SColorBGRA> target);
+	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, int32_t iControl, const ::gpk::vcs& text);
+	::gpk::error_t			controlFontSet					(::gpk::SGUI & gui, int32_t iControl, int16_t iFont);
+	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);
+	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint16_t> & targetSize, bool forceUpdate);
+	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI & gui, int32_t iControl);
+	::gpk::error_t			controlHidden					(const ::gpk::SGUI & gui, int32_t iControl);
+	::gpk::error_t			controlDisabled					(const ::gpk::SGUI & gui, int32_t iControl);
+	::gpk::error_t			controlInvalid					(const ::gpk::SGUI & gui, int32_t iControl);
 
 
-	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI& gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
-	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI& gui, ::gpk::view_array<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::view_array<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute);
 } // namespace
 
 #endif // GPK_GUI_H_2903874982374

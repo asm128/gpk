@@ -41,15 +41,15 @@ namespace gpk
 				::gpk::aobj<::gpk::apod<int32_t>>						Children									= {}; // Keep track of control list hierarchy.
 	};
 
-			::gpk::error_t													desktopCreatePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);
-			::gpk::error_t													desktopCreateControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);
-			::gpk::error_t													desktopCreateViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop);
-			::gpk::error_t													desktopDeletePaletteGrid					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement);
-			::gpk::error_t													desktopDeleteControlList					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement);
-			::gpk::error_t													desktopDeleteViewport						(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iElement);
+			::gpk::error_t													desktopCreatePaletteGrid					(::gpk::SGUI & gui, ::gpk::SDesktop& desktop);
+			::gpk::error_t													desktopCreateControlList					(::gpk::SGUI & gui, ::gpk::SDesktop& desktop);
+			::gpk::error_t													desktopCreateViewport						(::gpk::SGUI & gui, ::gpk::SDesktop& desktop);
+			::gpk::error_t													desktopDeletePaletteGrid					(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, int32_t iElement);
+			::gpk::error_t													desktopDeleteControlList					(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, int32_t iElement);
+			::gpk::error_t													desktopDeleteViewport						(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, int32_t iElement);
 
-			::gpk::error_t													desktopControlListSetParent					(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, int32_t iControlList, int32_t iParentControlList, int32_t iParentListItem);
-			int64_t															desktopUpdate								(::gpk::SGUI& gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input);
+			::gpk::error_t													desktopControlListSetParent					(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, int32_t iControlList, int32_t iParentControlList, int32_t iParentListItem);
+			int64_t															desktopUpdate								(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, ::gpk::SInput& input);
 
 } // namespace
 

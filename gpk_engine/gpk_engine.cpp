@@ -59,7 +59,7 @@ int									gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateLight			(::gpk::LIGHT_TYPE type) {
 	int32_t									iEntity								= this->ManagedEntities.Create();
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 
 	uint16_t								indexLight							= (uint16_t)-1;
@@ -78,7 +78,7 @@ int									gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateCamera			() {
 	int32_t									iEntity								= this->ManagedEntities.Create();
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
 
@@ -96,7 +96,7 @@ int									gpk::updateEntityTransforms
 ::gpk::error_t						gpk::SEngine::CreateBox				()	{
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]		= ::gpk::vcs{"Box"};
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
 
@@ -175,7 +175,7 @@ int									gpk::updateEntityTransforms
 
 		int32_t								iFaceEntity						= this->ManagedEntities.Create();
 		uint32_t							iFaceRenderNode					= Scene->ManagedRenderNodes.Create();
-		::gpk::SVirtualEntity				& faceEntity					= this->ManagedEntities.Entities[iFaceEntity];
+		::gpk::SVirtualEntity				& faceEntity					= this->ManagedEntities[iFaceEntity];
 		::gpk::SRenderNode					& faceRenderNode				= this->Scene->ManagedRenderNodes.RenderNodes[iFaceRenderNode];
 
 		faceRenderNode.Mesh				= iMesh;
@@ -232,7 +232,7 @@ static ::gpk::error_t				geometryBuildTableCushion			(::gpk::SGeometryIndexedTri
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"TableCushion"};
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();;
 	Integrator.BoundingVolumes[entity.RigidBody = this->Integrator.Create()].HalfSizes = {0.5f, 0.5f, 0.5f};
 
@@ -325,7 +325,7 @@ static ::gpk::error_t				geometryBuildTableCushion			(::gpk::SGeometryIndexedTri
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"Sphere"};
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();;
 	Integrator.BoundingVolumes[entity.RigidBody = this->Integrator.Create()].HalfSizes = {0.5f, 0.5f, 0.5f};
 
@@ -421,7 +421,7 @@ static ::gpk::error_t				geometryBuildTableCushion			(::gpk::SGeometryIndexedTri
 
 	int32_t									iEntity								= this->ManagedEntities.Create();
 	ManagedEntities.Names[iEntity]	= ::gpk::vcs{"Cylinder"};
-	::gpk::SVirtualEntity					& entity							= ManagedEntities.Entities[iEntity];
+	::gpk::SVirtualEntity					& entity							= ManagedEntities[iEntity];
 	entity.RenderNode					= Scene->ManagedRenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
 

@@ -2,7 +2,7 @@
 #include "gpk_label.h"
 
 
-			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
+			::gpk::error_t												gpk::controlListInitialize				(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu																	= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
 	gui.Controls.Controls		[menu.IdControl].Border						= {};
@@ -13,7 +13,7 @@
 	return 0;
 }
 
-			::gpk::error_t												gpk::controlListArrange					(::gpk::SGUI& gui, ::gpk::SControlList& menu)													{
+			::gpk::error_t												gpk::controlListArrange					(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	const ::gpk::SRasterFont													& selectedFont							= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls[iItem];
@@ -62,7 +62,7 @@
 	return 0;
 }
 
-			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI& gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
+			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
 	if(menu.IdControl == -1)
 		gpk_necall(::gpk::controlListInitialize(gui, menu), "%s", "");
 
@@ -80,7 +80,7 @@
 	return 0;
 }
 
-			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI& gui, ::gpk::SViewport& viewport)																				{
+			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI & gui, ::gpk::SViewport& viewport)																				{
 	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont]->CharSize;
 	int16_t																		heightTitleBar							= fontCharSize.y + 4;
 	uint32_t																	widthTarget								= 800;
@@ -165,7 +165,7 @@
 	return 0;
 }
 
-			::gpk::error_t											gpk::paletteGridInitialize				(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette)				{
+			::gpk::error_t											gpk::paletteGridInitialize				(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::SCoord2<double>											targetSize								= {256.0, 256.0};
 	palette.IdControl													= ::gpk::controlCreate(gui);
 	::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControl];
@@ -176,7 +176,7 @@
 	return 0;
 }
 
-			::gpk::error_t											gpk::paletteGridColorsSet				(::gpk::SGUI& gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors)			{
+			::gpk::error_t											gpk::paletteGridColorsSet				(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors)			{
 	if(-1 == palette.IdControl)
 		::gpk::paletteGridInitialize(gui, palette);
 

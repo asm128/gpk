@@ -384,20 +384,23 @@ namespace gpk
 
 	}; // struct SQuaternion
 
+	template<typename _tDimension>		using n2 = SCoord2<_tDimension>;
+	template<typename _tDimension>		using n3 = SCoord3<_tDimension>;
+	template<typename _tDimension>		using quat = SQuaternion<_tDimension>;
 
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
 		inline constexpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
 		inline constexpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
 
 	// ---- Geometric figures and other coord-related POD structs.
-	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits	<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); 
-		constexpr inline _tElement				Width		()	const { return Right - Left; }
-		constexpr inline _tElement				Height		()	const { return Bottom - Top; }
-		constexpr ::gpk::SCoord2<_tElement>		Dimensions	()	const { return {Width(), Height()}; }
+	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); 
+		constexpr inline _tElement			Width		()	const { return Right - Left; }
+		constexpr inline _tElement			Height		()	const { return Bottom - Top; }
+		constexpr ::gpk::n2<_tElement>		Dimensions	()	const { return {Width(), Height()}; }
 	};
-	template<typename _tElement>	struct SRange			{ _tElement									Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
-	template<typename _tElement>	struct SSlice			{ _tElement									Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice		<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
-	template<typename _tElement>	struct SLine2			{ ::gpk::SCoord2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SRange			{ _tElement								Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
+	template<typename _tElement>	struct SSlice			{ _tElement								Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
+	template<typename _tElement>	struct SLine2			{ ::gpk::n2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2<_tElement>, A		== other.A		&& B		== other.B						); };
 
 
 	template<typename _tVertex>		
@@ -411,12 +414,12 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR_NE(STriangle<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
 
-	template<typename _tDimension>	struct STriangle2 : public STriangle<::gpk::SCoord2<_tDimension>>		{ 
-		using STriangle<::gpk::SCoord2<_tDimension>>::	A;
-		using STriangle<::gpk::SCoord2<_tDimension>>::	B;
-		using STriangle<::gpk::SCoord2<_tDimension>>::	C;
+	template<typename _tDimension>	struct STriangle2 : public STriangle<::gpk::n2<_tDimension>>		{
+		using STriangle<::gpk::n2<_tDimension>>::			A;
+		using STriangle<::gpk::n2<_tDimension>>::			B;
+		using STriangle<::gpk::n2<_tDimension>>::			C;
 
-		using STriangle<::gpk::SCoord2<_tDimension>>::	STriangle;
+		using STriangle<::gpk::n2<_tDimension>>::			STriangle;
 
 		template<typename _tOther>
 		STriangle2<_tOther>								Cast							()											const	noexcept		{
@@ -438,12 +441,12 @@ namespace gpk
 		}
 	};
 
-	template<typename _tDimension>	struct STriangle3 : public STriangle<::gpk::SCoord3<_tDimension>>		{ 
-		using STriangle<::gpk::SCoord3<_tDimension>>::	A;
-		using STriangle<::gpk::SCoord3<_tDimension>>::	B;
-		using STriangle<::gpk::SCoord3<_tDimension>>::	C;
+	template<typename _tDimension>	struct STriangle3 : public STriangle<::gpk::n3<_tDimension>>		{
+		using STriangle<::gpk::n3<_tDimension>>::		A;
+		using STriangle<::gpk::n3<_tDimension>>::		B;
+		using STriangle<::gpk::n3<_tDimension>>::		C;
 
-		using STriangle<::gpk::SCoord3<_tDimension>>::	STriangle;
+		using STriangle<::gpk::n3<_tDimension>>::		STriangle;
 		template<typename _tOther>
 		STriangle3<_tOther>								Cast							()		const	noexcept		{
 			return
@@ -479,39 +482,39 @@ namespace gpk
 			return false;
 		}
 
-		STriangle3<_tDimension>&						Scale					(const SCoord3<_tDimension> & scale)		noexcept		{
+		STriangle3<_tDimension>&						Scale							(const n3<_tDimension> & scale)		noexcept		{
 			A.Scale(scale);
 			B.Scale(scale);
 			C.Scale(scale);
 			return *this;
 		}
-		STriangle3<_tDimension>&									Translate				(const SCoord3<_tDimension> & translation)	noexcept		{
-			A															+= translation;
-			B															+= translation;
-			C															+= translation;
+		STriangle3<_tDimension>&						Translate				(const n3<_tDimension> & translation)	noexcept		{
+			A												+= translation;
+			B												+= translation;
+			C												+= translation;
 			return *this;
 		}
 	};
 
 	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
-	template<typename _tElement>	struct SLine3			{ ::gpk::SCoord3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
-	template<typename _tElement>	struct SRectangle3D		{ ::gpk::SCoord3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
-	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad2			{ ::gpk::SCoord2<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad3			{ ::gpk::SCoord3<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SLine3			{ ::gpk::n3<_tElement>						A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SRectangle3D		{ ::gpk::n3<_tElement>						Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
+	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>		, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad2			{ ::gpk::n2<_tElement>						A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad3			{ ::gpk::n3<_tElement>						A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
 	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
 	template<typename _tElement>	struct SRectangle2		{
-							::gpk::SCoord2<_tElement>					Offset, Size;
+							::gpk::n2<_tElement>					Offset, Size;
 
 				GPK_DEFAULT_OPERATOR_NE(SRectangle2<_tElement>, Offset	== other.Offset	&& Size == other.Size);
 
-		inline				::gpk::SCoord2<_tElement>					Limit									()																			const	noexcept	{ return Offset + Size; }
+		inline				::gpk::n2<_tElement>					Limit									()																			const	noexcept	{ return Offset + Size; }
 	};
 
 	template<typename _tElement>
-							STriangle2<_tElement>&						translate								(::gpk::STriangle2<_tElement>& triangle, const ::gpk::SCoord2<_tElement>& translation)									{
+							STriangle2<_tElement>&						translate								(::gpk::STriangle2<_tElement>& triangle, const ::gpk::n2<_tElement>& translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
@@ -519,14 +522,14 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-							STriangle3<_tElement>&						translate								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& translation)									{
+							STriangle3<_tElement>&						translate								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::n3<_tElement>& translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
 		return triangle;
 	}
 	template<typename _tElement>
-							STriangle3<_tElement>&						scale								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SCoord3<_tElement>& scale)									{
+							STriangle3<_tElement>&						scale								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::n3<_tElement>& scale)									{
 		triangle.A.Scale(scale);
 		triangle.B.Scale(scale);
 		triangle.C.Scale(scale);
@@ -686,9 +689,6 @@ namespace gpk
 	template<typename _tValue>
 	::gpk::SCoord2<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 
-	template<typename _tDimension>		using n2d			= SCoord2<_tDimension>;
-	template<typename _tDimension>		using n3d			= SCoord3<_tDimension>;
-	template<typename _tDimension>		using quat			= SQuaternion<_tDimension>;
 }
 
 #endif // GPK_COORD_H_928374982364923322

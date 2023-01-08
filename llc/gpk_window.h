@@ -60,9 +60,9 @@ namespace gpk
 							::gpk::aobj<::gpk::SSysEvent>			EventQueue			= {};
 							::gpk::pobj<TOffscreen>					BackBuffer			= {};
 							::gpk::pobj<::gpk::SInput>				Input				= {};
-							::gpk::SCoord2<uint32_t>				PreviousSize		= {};
-							::gpk::SCoord2<uint32_t>				Size				= {320, 200};
-							::gpk::SRectLimits<int32_t>				WindowedWindowRect	= {0, 0, 320, 200};
+							::gpk::n2<uint16_t>					PreviousSize		= {};
+							::gpk::n2<uint16_t>					Size				= {320, 200};
+							::gpk::SRectLimits<uint16_t>			WindowedWindowRect	= {0, 0, 320, 200};
 
 							bool									Resized				: 1;
 							bool									Repaint				: 1;

@@ -14,7 +14,7 @@
 
 #pragma warning(disable: 4995)
 
-static				::gpk::error_t														updateDPI									(::gpk::SFramework& framework)													{
+static				::gpk::error_t														updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
 		RECT																						rcWindow									= {};
@@ -26,7 +26,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework& fram
 		if((framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::SWindow::TOffscreen>												offscreen									= framework.RootWindow.BackBuffer;
-			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().Cast<uint16_t>(), true);
 		}
 #else
 		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
@@ -288,7 +288,7 @@ static				LRESULT WINAPI							mainWndProc									(HWND hWnd, UINT uMsg, WPARAM
 			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
 			if(newMetrics != mainDisplay.Size.Cast<uint16_t>()) {
 				mainDisplay.PreviousSize																= mainDisplay.Size;
-				mainDisplay.Size																		= newMetrics.Cast<uint32_t>();
+				mainDisplay.Size																		= newMetrics;
 				mainDisplay.Resized																		= true;
 				mainDisplay.Repaint																		= true;
 				char																						buffer		[256]							= {};
