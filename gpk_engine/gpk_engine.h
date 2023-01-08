@@ -102,7 +102,6 @@ namespace gpk
 
 		::gpk::error_t						CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t						CreateCamera		();
-		::gpk::error_t						CreateTableCushion	();
 		::gpk::error_t						CreateSphere		();
 		::gpk::error_t						CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio);
 		::gpk::error_t						CreateBox			();
