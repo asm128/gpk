@@ -388,6 +388,33 @@ namespace gpk
 	template<typename _tDimension>		using n3 = SCoord3<_tDimension>;
 	template<typename _tDimension>		using quat = SQuaternion<_tDimension>;
 
+	typedef n2<float>		n2f32, n2f;
+	typedef n2<float>		n2f32, n2f;
+	typedef n2<float>		n2f64, n2d;
+	typedef n2<float>		n2f64, n2d;
+	typedef n2<uint8_t>		n2u8;
+	typedef n2<uint16_t>	n2u16;
+	typedef n2<uint32_t>	n2u32;
+	typedef n2<uint64_t>	n2u64;
+	typedef n2<int8_t>		n2i8;
+	typedef n2<int16_t>		n2i16;
+	typedef n2<int32_t>		n2i32;
+	typedef n2<int64_t>		n2i64;
+
+	typedef n3<float>		n3f32, n3f;
+	typedef n3<float>		n3f32, n3f;
+	typedef n3<float>		n3f64, n3d;
+	typedef n3<float>		n3f64, n3d;
+	typedef n3<uint8_t>		n3u8;
+	typedef n3<uint16_t>	n3u16;
+	typedef n3<uint32_t>	n3u32;
+	typedef n3<uint64_t>	n3u64;
+	typedef n3<int8_t>		n3i8;
+	typedef n3<int16_t>		n3i16;
+	typedef n3<int32_t>		n3i32;
+	typedef n3<int64_t>		n3i64;
+
+
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
 		inline constexpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
 		inline constexpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
@@ -498,12 +525,12 @@ namespace gpk
 
 	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
-	template<typename _tElement>	struct SLine3			{ ::gpk::n3<_tElement>						A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
-	template<typename _tElement>	struct SRectangle3D		{ ::gpk::n3<_tElement>						Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
-	template<typename _tDim>		struct SQuad			{ _tDim										A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad<_tDim>		, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad2			{ ::gpk::n2<_tElement>						A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SQuad3			{ ::gpk::n3<_tElement>						A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
-	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::SCoord3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
+	template<typename _tElement>	struct SLine3			{ ::gpk::n3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
+	template<typename _tElement>	struct SRectangle3D		{ ::gpk::n3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
+	template<typename _tDim>		struct SQuad			{ _tDim									A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad			<_tDim>		, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad2			{ ::gpk::n2<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad2		<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SQuad3			{ ::gpk::n3<_tElement>					A, B, C, D		; GPK_DEFAULT_OPERATOR_NE(SQuad3		<_tElement>	, A == other.A	&& B == other.B	&& C == other.C	&& D == other.D); };
+	template<typename _tElement>	struct SSphere			{ double Radius; ::gpk::n3<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SSphere		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
 	template<typename _tElement>	struct SRectangle2		{
 							::gpk::n2<_tElement>					Offset, Size;

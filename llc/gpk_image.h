@@ -150,26 +150,26 @@ namespace gpk
 
 
 	template<typename _tElement>
-						::gpk::error_t							updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
+						::gpk::error_t							updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::n2<uint16_t>& newSize)											{
 		ree_if(errored(out_colors.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize)
-			out_view																= {out_colors.begin(), newSize};
+		if( out_view.metrics().template Cast<uint16_t>() != newSize)
+			out_view																= {out_colors.begin(), newSize.Cast<uint32_t>() };
 		return 0;
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::SCoord2<uint32_t>& newSize, const _tElement & newValue)											{
+						::gpk::error_t							updateSizeDependentTarget					(::gpk::apod<_tElement>& out_colors, ::gpk::view2d<_tElement>& out_view, const ::gpk::n2<uint16_t>& newSize, const _tElement & newValue)											{
 		ree_if(errored(out_colors.resize(newSize.x * newSize.y, newValue)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize)
+		if( out_view.metrics().template Cast<uint16_t>() != newSize)
 			out_view																= {out_colors.begin(), newSize};
 
 		return 0;
 	}
 
 	template<typename _tElement>
-						::gpk::error_t							updateSizeDependentImage					(::gpk::apod<_tElement>& out_scaled, ::gpk::view2d<_tElement>& out_view, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)											{
+						::gpk::error_t							updateSizeDependentImage					(::gpk::apod<_tElement>& out_scaled, ::gpk::view2d<_tElement>& out_view, const ::gpk::view2d<_tElement>& in_view, const ::gpk::n2<uint16_t>& newSize)											{
 		ree_if(errored(out_scaled.resize(newSize.x * newSize.y)), "%s", "Out of memory?");		// Update size-dependent resources.
-		if( out_view.metrics() != newSize ) {
+		if( out_view.metrics().template Cast<uint16_t>() != newSize ) {
 			out_view																= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
 				gerror_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
@@ -178,15 +178,15 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	static inline		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize)																					{
+	static inline		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::n2<uint16_t>& newSize)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
-	static inline		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::SCoord2<uint32_t>& newSize, const _tElement & newValue)																					{
+	static inline		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement>& out_texture, const ::gpk::n2<uint16_t>& newSize, const _tElement & newValue)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
 	template<typename _tElement>
-	static inline		::gpk::error_t							updateSizeDependentImage					(::gpk::img<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::SCoord2<uint32_t>& newSize)																					{
+	static inline		::gpk::error_t							updateSizeDependentImage					(::gpk::img<_tElement>& out_texture, const ::gpk::view2d<_tElement>& in_view, const ::gpk::n2<uint16_t>& newSize)																					{
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 
