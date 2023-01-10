@@ -276,15 +276,15 @@ namespace gpk
 		constexpr inline	TQuat			operator~				()															const	noexcept	{ return {-x, -y, -z, w};																								}
 		template<typename _t>
 		constexpr inline	SQuaternion<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};																					}
-		inline				void			Identity				()																	noexcept	{ x = y = z = 0.0f; w = 1.0f;																							}
-		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); if(sqLen) return *this /= ::sqrt(sqLen); Identity(); return *this;		}
+		inline				TQuat&			Identity				()																	noexcept	{ x = y = z = 0.0f; w = 1.0f;															return *this;		}
+		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); if(sqLen) return *this /= ::sqrt(sqLen); Identity();	return *this;		}
 		constexpr			double			Dot						(const TQuat& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w;																	}
-		constexpr inline	_tBase			LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;																					}
+		constexpr			_tBase			LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;																					}
 		inline constexpr	double			Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;												}
 		inline				TQuat&			LinearInterpolate		(const TQuat &p, const TQuat &q, double fTime)						noexcept	{ return *this = ((q-p)*fTime)+p;																						}
 							//void			AddScaled				(const TCoord4& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
 							void			AddScaled				(const TCoord3& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
-		inline				void			SetRotation				(const TQuat& q1, const TQuat& q2)									noexcept	{ return *this = q1 * q2 * ~q1;																							}
+		inline				TQuat&			SetRotation				(const TQuat& q, const TQuat& p)									noexcept	{ return *this = q * p * ~q;																							}
 							TCoord3			RotateVector			(const TCoord3 &v)											const	noexcept	{
 			const TQuat								t						= {x, y, z, w};
 			const TQuat								r						= t * v * (~t);
