@@ -63,7 +63,7 @@ namespace gpk
 		}
 
 		::gpk::error_t						SetColorDiffuse		(uint32_t iEntity, const ::gpk::SColorFloat & diffuse)				{ Scene->Graphics->Skins[Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Skin]->Material.Color.Diffuse = diffuse; return 0; }
-		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::n3<float> & scale)					{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.Scale(scale, false); return 0; }
+		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::n3<float> & scale)					{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.Scale(scale, true); return 0; }
 		::gpk::error_t						SetMeshPosition		(uint32_t iEntity, const ::gpk::n3<float> & position)				{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.SetTranslation(position, false); return 0; }
 		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcc name) {
 			const uint32_t							iShader				= Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Shader;
@@ -78,10 +78,10 @@ namespace gpk
 		::gpk::error_t						GetRenderNode		(uint32_t iEntity)													{ return ManagedEntities[iEntity].RenderNode; }
 		::gpk::error_t						GetParentIndex		(uint32_t iEntity)													{ return ManagedEntities[iEntity].Parent; }
 
-		::gpk::error_t						GetPosition			(uint32_t iEntity, ::gpk::n3<float> & position)					{ Integrator.GetPosition		(ManagedEntities[iEntity].RigidBody, position);				return 0; }
-		::gpk::error_t						GetVelocity			(uint32_t iEntity, ::gpk::n3<float> & velocity)					{ Integrator.GetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
-		::gpk::error_t						GetAcceleration		(uint32_t iEntity, ::gpk::n3<float> & acceleration)				{ Integrator.GetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);				return 0; }
-		::gpk::error_t						GetRotation			(uint32_t iEntity, ::gpk::n3<float> & velocity)					{ Integrator.GetRotation		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
+		::gpk::error_t						GetPosition			(uint32_t iEntity, ::gpk::n3<float> & position)						{ Integrator.GetPosition		(ManagedEntities[iEntity].RigidBody, position);				return 0; }
+		::gpk::error_t						GetVelocity			(uint32_t iEntity, ::gpk::n3<float> & velocity)						{ Integrator.GetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
+		::gpk::error_t						GetAcceleration		(uint32_t iEntity, ::gpk::n3<float> & acceleration)					{ Integrator.GetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);				return 0; }
+		::gpk::error_t						GetRotation			(uint32_t iEntity, ::gpk::n3<float> & velocity)						{ Integrator.GetRotation		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
 		::gpk::error_t						GetOrientation		(uint32_t iEntity, ::gpk::SQuaternion<float> & orientation)			{ Integrator.GetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);				return 0; }
 		::gpk::error_t						GetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.SetActive			(ManagedEntities[iEntity].RigidBody, active);				return 0; }
 		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities[iEntity].RigidBody, mass);				return 0; }
