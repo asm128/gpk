@@ -184,60 +184,66 @@ namespace gpk
 									SColorFloat&	Clamp			()																noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
 	};	// struct
 
-	typedef	::gpk::view1d<	::gpk::SColorFloat	>			v1rgbaf	;
-	typedef	::gpk::view1d<	::gpk::SColorBGRA	>			v1bgra	;
-	typedef	::gpk::view1d<	::gpk::SColorBGR	>			v1bgr	;
-	typedef	::gpk::view1d<	::gpk::SColorRGBA	>			v1rgba	;
-	typedef	::gpk::view1d<	::gpk::SColorRGB	>			v1rgb	;
+	typedef ::gpk::SColorFloat							rgbaf	;
+	typedef ::gpk::SColorBGRA							bgra	;
+	typedef ::gpk::SColorBGR							bgr		;
+	typedef ::gpk::SColorRGBA							rgba	;
+	typedef ::gpk::SColorRGB							rgb		;
 
-	typedef	::gpk::view1d<const	::gpk::SColorFloat	>		v1crgbaf;
-	typedef	::gpk::view1d<const	::gpk::SColorBGRA	>		v1cbgra	;
-	typedef	::gpk::view1d<const	::gpk::SColorBGR	>		v1cbgr	;
-	typedef	::gpk::view1d<const	::gpk::SColorRGBA	>		v1crgba	;
-	typedef	::gpk::view1d<const	::gpk::SColorRGB	>		v1crgb	;
+	typedef	::gpk::view1d<::gpk::rgbaf	>				v1rgbaf	;
+	typedef	::gpk::view1d<::gpk::bgra	>				v1bgra	;
+	typedef	::gpk::view1d<::gpk::bgr	>				v1bgr	;
+	typedef	::gpk::view1d<::gpk::rgba	>				v1rgba	;
+	typedef	::gpk::view1d<::gpk::rgb	>				v1rgb	;
 
-	typedef	::gpk::view2d<	::gpk::SColorFloat	>			v2rgbaf	;
-	typedef	::gpk::view2d<	::gpk::SColorBGRA	>			v2bgra	;
-	typedef	::gpk::view2d<	::gpk::SColorBGR	>			v2bgr	;
-	typedef	::gpk::view2d<	::gpk::SColorRGBA	>			v2rgba	;
-	typedef	::gpk::view2d<	::gpk::SColorRGB	>			v2rgb	;
+	typedef	::gpk::view1d<const	::gpk::rgbaf	>		v1crgbaf;
+	typedef	::gpk::view1d<const	::gpk::bgra		>		v1cbgra	;
+	typedef	::gpk::view1d<const	::gpk::bgr		>		v1cbgr	;
+	typedef	::gpk::view1d<const	::gpk::rgba		>		v1crgba	;
+	typedef	::gpk::view1d<const	::gpk::rgb		>		v1crgb	;
 
-	typedef	::gpk::view2d<const	::gpk::SColorFloat	>		v2crgbaf;
-	typedef	::gpk::view2d<const	::gpk::SColorBGRA	>		v2cbgra	;
-	typedef	::gpk::view2d<const	::gpk::SColorBGR	>		v2cbgr	;
-	typedef	::gpk::view2d<const	::gpk::SColorRGBA	>		v2crgba	;
-	typedef	::gpk::view2d<const	::gpk::SColorRGB	>		v2crgb	;
+	typedef	::gpk::view2d<::gpk::rgbaf	>				v2rgbaf	;
+	typedef	::gpk::view2d<::gpk::bgra	>				v2bgra	;
+	typedef	::gpk::view2d<::gpk::bgr	>				v2bgr	;
+	typedef	::gpk::view2d<::gpk::rgba	>				v2rgba	;
+	typedef	::gpk::view2d<::gpk::rgb	>				v2rgb	;
 
-	static	constexpr	::gpk::SColorFloat	BLACK			= ::gpk::SColorFloat(0.0f, 0.0f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	WHITE			= ::gpk::SColorFloat(1.0f, 1.0f, 1.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	RED				= ::gpk::SColorFloat(1.0f, 0.0f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	GREEN			= ::gpk::SColorFloat(0.0f, 1.0f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	BLUE			= ::gpk::SColorFloat(0.0f, 0.0f, 1.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	YELLOW			= ::gpk::SColorFloat(1.0f, 1.0f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	MAGENTA			= ::gpk::SColorFloat(1.0f, 0.0f, 1.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	CYAN			= ::gpk::SColorFloat(0.0f, 1.0f, 1.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	ORANGE			= ::gpk::SColorFloat(1.0f, 0.647f, 0.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	PANOCHE			= ::gpk::SColorFloat(0.25f, 0.5f, 1.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	PURPLE			= ::gpk::SColorFloat(0.5f, 0.1f, 1.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	TURQUOISE		= ::gpk::SColorFloat(0.2f, 1.0, 0.65f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	BROWN			= ::gpk::SColorFloat(0.4f, 0.223f, 0.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	GRAY			= ::gpk::SColorFloat(0.5f, 0.5f, 0.5f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKGRAY		= ::gpk::SColorFloat(0.25f, 0.25f, 0.25f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	DARKRED			= ::gpk::SColorFloat(0.5f, 0.0f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKGREEN		= ::gpk::SColorFloat(0.0f, 0.5f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKBLUE		= ::gpk::SColorFloat(0.0f, 0.0f, 0.5f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKYELLOW		= ::gpk::SColorFloat(0.5f, 0.5f, 0.0f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKMAGENTA		= ::gpk::SColorFloat(0.5f, 0.0f, 0.5f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKCYAN		= ::gpk::SColorFloat(0.0f, 0.5f, 0.5f, 1.0f					);
-	static	constexpr	::gpk::SColorFloat	DARKORANGE		= ::gpk::SColorFloat(1.0f, 0.5490196078431373f, 0.0f, 1.0f	);
-	static	constexpr	::gpk::SColorFloat	LIGHTGRAY		= ::gpk::SColorFloat(0.75f, 0.75f, 0.75f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTRED		= ::gpk::SColorFloat(1.0f, 0.25f, 0.25f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTGREEN		= ::gpk::SColorFloat(0.5f,  1.0f, 0.5f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTBLUE		= ::gpk::SColorFloat(0.25f, 0.25f, 1.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTYELLOW		= ::gpk::SColorFloat(1.0f, 1.0f, 0.25f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTMAGENTA	= ::gpk::SColorFloat(1.0f, 0.25f, 1.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTCYAN		= ::gpk::SColorFloat(0.25f, 1.0f, 1.0f, 1.0f				);
-	static	constexpr	::gpk::SColorFloat	LIGHTORANGE		= ::gpk::SColorFloat(1.0f, 0.780f, 0.25f, 1.0f				);
+	typedef	::gpk::view2d<const	::gpk::rgbaf	>		v2crgbaf;
+	typedef	::gpk::view2d<const	::gpk::bgra		>		v2cbgra	;
+	typedef	::gpk::view2d<const	::gpk::bgr		>		v2cbgr	;
+	typedef	::gpk::view2d<const	::gpk::rgba		>		v2crgba	;
+	typedef	::gpk::view2d<const	::gpk::rgb		>		v2crgb	;
+
+	static	constexpr	::gpk::rgbaf	BLACK			= ::gpk::rgbaf(0.0f, 0.0f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	WHITE			= ::gpk::rgbaf(1.0f, 1.0f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	RED				= ::gpk::rgbaf(1.0f, 0.0f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	GREEN			= ::gpk::rgbaf(0.0f, 1.0f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	BLUE			= ::gpk::rgbaf(0.0f, 0.0f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	YELLOW			= ::gpk::rgbaf(1.0f, 1.0f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	MAGENTA			= ::gpk::rgbaf(1.0f, 0.0f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	CYAN			= ::gpk::rgbaf(0.0f, 1.0f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	ORANGE			= ::gpk::rgbaf(1.0f, 0.647f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	PANOCHE			= ::gpk::rgbaf(0.25f, 0.5f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	PURPLE			= ::gpk::rgbaf(0.5f, 0.1f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	TURQUOISE		= ::gpk::rgbaf(0.2f, 1.0, 0.65f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	BROWN			= ::gpk::rgbaf(0.4f, 0.223f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	GRAY			= ::gpk::rgbaf(0.5f, 0.5f, 0.5f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKGRAY		= ::gpk::rgbaf(0.25f, 0.25f, 0.25f, 1.0f				);
+	static	constexpr	::gpk::rgbaf	DARKRED			= ::gpk::rgbaf(0.5f, 0.0f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKGREEN		= ::gpk::rgbaf(0.0f, 0.5f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKBLUE		= ::gpk::rgbaf(0.0f, 0.0f, 0.5f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKYELLOW		= ::gpk::rgbaf(0.5f, 0.5f, 0.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKMAGENTA		= ::gpk::rgbaf(0.5f, 0.0f, 0.5f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKCYAN		= ::gpk::rgbaf(0.0f, 0.5f, 0.5f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	DARKORANGE		= ::gpk::rgbaf(1.0f, 0.5490196078431373f, 0.0f, 1.0f	);
+	static	constexpr	::gpk::rgbaf	LIGHTGRAY		= ::gpk::rgbaf(0.75f, 0.75f, 0.75f, 1.0f				);
+	static	constexpr	::gpk::rgbaf	LIGHTRED		= ::gpk::rgbaf(1.0f, 0.25f, 0.25f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTGREEN		= ::gpk::rgbaf(0.5f,  1.0f, 0.5f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTBLUE		= ::gpk::rgbaf(0.25f, 0.25f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTYELLOW		= ::gpk::rgbaf(1.0f, 1.0f, 0.25f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTMAGENTA	= ::gpk::rgbaf(1.0f, 0.25f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTCYAN		= ::gpk::rgbaf(0.25f, 1.0f, 1.0f, 1.0f					);
+	static	constexpr	::gpk::rgbaf	LIGHTORANGE		= ::gpk::rgbaf(1.0f, 0.780f, 0.25f, 1.0f				);
 
 	GDEFINE_ENUM_TYPE(COLOR_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE		, 0); // Grayscale

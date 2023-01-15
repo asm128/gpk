@@ -720,6 +720,31 @@ namespace gpk
 		}
 	};
 
+	template<typename _tDimension>		using m3	= SMatrix3<_tDimension>;
+	template<typename _tDimension>		using m4	= SMatrix4<_tDimension>;
+
+	typedef m3<float>		m3f32, m3f;
+	typedef m3<double>		m3f64, m3d;
+	typedef m3<uint8_t>		m3u8;
+	typedef m3<uint16_t>	m3u16;
+	typedef m3<uint32_t>	m3u32;
+	typedef m3<uint64_t>	m3u64;
+	typedef m3<int8_t>		m3i8;
+	typedef m3<int16_t>		m3i16;
+	typedef m3<int32_t>		m3i32;
+	typedef m3<int64_t>		m3i64;
+
+	typedef m4<float>		m4f32, m4f;
+	typedef m4<double>		m4f64, m4d;
+	typedef m4<uint8_t>		m4u8;
+	typedef m4<uint16_t>	m4u16;
+	typedef m4<uint32_t>	m4u32;
+	typedef m4<uint64_t>	m4u64;
+	typedef m4<int8_t>		m4i8;
+	typedef m4<int16_t>		m4i16;
+	typedef m4<int32_t>		m4i32;
+	typedef m4<int64_t>		m4i64;
+
 #pragma pack(pop)
 }
 
