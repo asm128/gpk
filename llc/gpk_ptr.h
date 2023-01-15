@@ -142,6 +142,7 @@ namespace gpk
 		inline				_tPOD*								allocate							()															noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
 
+	template <typename T> using pnco		= ::gpk::ptr_nco<T>; 
 	template <typename T> using pobj		= ::gpk::ptr_obj<T>; 
 	template <typename T> using ppod		= ::gpk::ptr_pod<T>;
 	template <typename T> using array_pobj	= ::gpk::aobj<::gpk::pobj<T>>; 
