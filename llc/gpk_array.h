@@ -702,7 +702,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewSave							(::gpk::apod<ubyte_t> & output, const ::gpk::view1d<_tElement>& headerToWrite)	{
+	::gpk::error_t									viewSave						(::gpk::apod<ubyte_t> & output, const ::gpk::view1d<_tElement>& headerToWrite)	{
 		gpk_necall(output.append({(const ubyte_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
 		gpk_necall(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
@@ -720,6 +720,9 @@ namespace gpk
 	::gpk::error_t									filterPrefix					(::gpk::view1d<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
 	::gpk::error_t									filterPostfix					(::gpk::view1d<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
 
+	template<typename _tPOD> ::gpk::error_t		savePOD			(::gpk::apod<ubyte_t> & output, const _tPOD & input) { 
+		return ::gpk::viewSave(output, ::gpk::v1<const _tPOD>{&input, 1});
+	}
 
 	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::vcb & input, _tPOD & output) { 
 		::gpk::view1d<const _tPOD>					readView		= {}; 

@@ -41,8 +41,8 @@ namespace gpk
 		::gpk::apod<uint8_t>						Data			= {};
 
 		::gpk::error_t								Save			(::gpk::apod<ubyte_t> & output)	const	{ 			
-			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SRenderBufferDescription>{&Desc, 1}));
-			gpk_necs(::gpk::viewSave(output, ::gpk::vcu8{Data}));
+			gpk_necs(::gpk::savePOD	(output, Desc));
+			gpk_necs(::gpk::viewSave(output, Data));
 			return 0; 
 		}
 

@@ -91,37 +91,37 @@ namespace gpk
 
 	// view_array common typedefs
 	//typedef				::gpk::view_array<char_t			>	view_string			;
-	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			, vub;
-	typedef				::gpk::view_array<byte_t			>	view_byte			, vb;
-	typedef				::gpk::view_array<uchar_t			>	view_uchar			, vuc;
-	typedef				::gpk::view_array<char_t			>	view_char			, vc;
-	typedef				::gpk::view_array<float				>	view_float32		, vf32, vf;
-	typedef				::gpk::view_array<double			>	view_float64		, vf64, vd;
-	typedef				::gpk::view_array<uint8_t			>	view_uint8			, vu8;
-	typedef				::gpk::view_array<uint16_t			>	view_uint16			, vu16;
-	typedef				::gpk::view_array<uint32_t			>	view_uint32			, vu32;
-	typedef				::gpk::view_array<uint64_t			>	view_uint64			, vu64;
-	typedef				::gpk::view_array<int8_t			>	view_int8			, vi8;
-	typedef				::gpk::view_array<int16_t			>	view_int16			, vi16;
-	typedef				::gpk::view_array<int32_t			>	view_int32			, vi32;
-	typedef				::gpk::view_array<int64_t			>	view_int64			, vi64;
+	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			, v1ub, vub;
+	typedef				::gpk::view_array<byte_t			>	view_byte			, v1b, vb;
+	typedef				::gpk::view_array<uchar_t			>	view_uchar			, v1uc, vuc;
+	typedef				::gpk::view_array<char_t			>	view_char			, v1c, vc;
+	typedef				::gpk::view_array<float				>	view_float32		, v1f32, v1f, vf32, vf;
+	typedef				::gpk::view_array<double			>	view_float64		, v1f64, v1d, vf64, vd;
+	typedef				::gpk::view_array<uint8_t			>	view_uint8			, v1u8, vu8;
+	typedef				::gpk::view_array<uint16_t			>	view_uint16			, v1u16, vu16;
+	typedef				::gpk::view_array<uint32_t			>	view_uint32			, v1u32, vu32;
+	typedef				::gpk::view_array<uint64_t			>	view_uint64			, v1u64, vu64;
+	typedef				::gpk::view_array<int8_t			>	view_int8			, v1i8, vi8;
+	typedef				::gpk::view_array<int16_t			>	view_int16			, v1i16, vi16;
+	typedef				::gpk::view_array<int32_t			>	view_int32			, v1i32, vi32;
+	typedef				::gpk::view_array<int64_t			>	view_int64			, v1i64, vi64;
 
 	// view_array<const> common typedefs
 	//typedef				::gpk::view_array<const char_t		>	view_const_string	;
-	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	, vcub;
-	typedef				::gpk::view_array<const byte_t		>	view_const_byte		, vcb;
-	typedef				::gpk::view_array<const uchar_t		>	view_const_uchar	, vcuc;
-	typedef				::gpk::view_array<const char_t		>	view_const_char		, vcc;
-	typedef				::gpk::view_array<const float		>	view_const_float32	, vcf32, vcf;
-	typedef				::gpk::view_array<const double		>	view_const_float64	, vcf64, vcd;
-	typedef				::gpk::view_array<const uint8_t		>	view_const_uint8	, vcu8;
-	typedef				::gpk::view_array<const uint16_t	>	view_const_uint16	, vcu16;
-	typedef				::gpk::view_array<const uint32_t	>	view_const_uint32	, vcu32;
-	typedef				::gpk::view_array<const uint64_t	>	view_const_uint64	, vcu64;
-	typedef				::gpk::view_array<const int8_t		>	view_const_int8		, vci8;
-	typedef				::gpk::view_array<const int16_t		>	view_const_int16	, vci16;
-	typedef				::gpk::view_array<const int32_t		>	view_const_int32	, vci32;
-	typedef				::gpk::view_array<const int64_t		>	view_const_int64	, vci64;
+	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	, v1cub, vcub;
+	typedef				::gpk::view_array<const byte_t		>	view_const_byte		, v1cb, vcb;
+	typedef				::gpk::view_array<const uchar_t		>	view_const_uchar	, v1cuc, vcuc;
+	typedef				::gpk::view_array<const char_t		>	view_const_char		, v1cc, vcc;
+	typedef				::gpk::view_array<const float		>	view_const_float32	, v1cf32, v1cf, vcf32, vcf;
+	typedef				::gpk::view_array<const double		>	view_const_float64	, v1cf64, v1cd, vcf64, vcd;
+	typedef				::gpk::view_array<const uint8_t		>	view_const_uint8	, v1cu8, vcu8;
+	typedef				::gpk::view_array<const uint16_t	>	view_const_uint16	, v1cu16, vcu16;
+	typedef				::gpk::view_array<const uint32_t	>	view_const_uint32	, v1cu32, vcu32;
+	typedef				::gpk::view_array<const uint64_t	>	view_const_uint64	, v1cu64, vcu64;
+	typedef				::gpk::view_array<const int8_t		>	view_const_int8		, v1ci8, vci8;
+	typedef				::gpk::view_array<const int16_t		>	view_const_int16	, v1ci16, vci16;
+	typedef				::gpk::view_array<const int32_t		>	view_const_int32	, v1ci32, vci32;
+	typedef				::gpk::view_array<const int64_t		>	view_const_int64	, v1ci64, vci64;
 
 	struct view_const_string : public view_array<const char_t> {
 		inline constexpr							view_const_string					()																= default;

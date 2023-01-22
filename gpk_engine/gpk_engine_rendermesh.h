@@ -46,7 +46,7 @@ namespace gpk
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
 		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
-			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SMeshDescription>{&Desc, 1}));
+			gpk_necs(::gpk::savePOD(output, Desc));
 			gpk_necs(::gpk::viewSave(output, GeometryBuffers));
 			gpk_necs(::gpk::viewSave(output, ConstantBuffers));
 			gpk_necs(::gpk::viewSave(output, GeometrySlices));

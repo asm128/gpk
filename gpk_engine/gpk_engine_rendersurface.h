@@ -23,7 +23,7 @@ namespace gpk
 		::gpk::apod<uint8_t>				Data;
 
 		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
-			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SSurfaceDescription>{&Desc, 1}));
+			gpk_necs(::gpk::savePOD(output, Desc));
 			gpk_necs(::gpk::viewSave(output, Data));
 			return 0;
 		}

@@ -421,6 +421,7 @@ namespace gpk
 		constexpr inline _tElement			Height		()	const { return Bottom - Top; }
 		constexpr ::gpk::n2<_tElement>		Dimensions	()	const { return {Width(), Height()}; }
 	};
+	template<typename _tElement>	struct SOrigin			{ ::gpk::n3<_tElement>					Front, Up, Right		; GPK_DEFAULT_OPERATOR_NE(SOrigin<_tElement>, Front	== other.Front	&& Up		== other.Up		&& Right == other.Right); };
 	template<typename _tElement>	struct SRange			{ _tElement								Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };
 	template<typename _tElement>	struct SSlice			{ _tElement								Begin, End				; GPK_DEFAULT_OPERATOR_NE(SSlice<_tElement>, Begin	== other.Begin	&& End		== other.End					); };
 	template<typename _tElement>	struct SLine2			{ ::gpk::n2<_tElement>					A, B					; GPK_DEFAULT_OPERATOR_NE(SLine2<_tElement>, A		== other.A		&& B		== other.B						); };
@@ -519,7 +520,7 @@ namespace gpk
 		}
 	};
 
-	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::SCoord2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
+	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::n2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
 	template<typename _tElement>	struct SLine3			{ ::gpk::n3<_tElement>					A, B			; GPK_DEFAULT_OPERATOR_NE(SLine3		<_tElement>, A		== other.A		&& B		== other.B						); };
 	template<typename _tElement>	struct SRectangle3D		{ ::gpk::n3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
