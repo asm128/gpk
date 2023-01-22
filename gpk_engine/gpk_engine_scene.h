@@ -81,6 +81,17 @@ namespace gpk
 	struct SSkin {
 		::gpk::SRenderMaterial					Material;
 		::gpk::apod<uint32_t>					Textures;
+
+		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
+			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SRenderMaterial>{&Material, 1}));
+			gpk_necs(::gpk::viewSave(output, Textures));
+			return 0;
+		}
+		::gpk::error_t						Load			(::gpk::vcub & input) {
+			gpk_necs(::gpk::loadPOD(input, Material));
+			gpk_necs(::gpk::loadView(input, Textures));
+			return 0;
+		}
 	};
 
 	typedef	::gpk::SLinearMap<::gpk::SSkin>							SSkinManager;
@@ -91,15 +102,48 @@ namespace gpk
 		::gpk::SSurfaceManager					Surfaces				= {};
 		::gpk::SMeshManager						Meshes					= {};
 		::gpk::SSkinManager						Skins					= {};
-		::gpk::SShaderManager					Shaders					= {};
 
+		::gpk::SShaderManager					Shaders					= {};
 		::gpk::SRasterFontManager				Fonts					= {};
+
+		::gpk::error_t							Save				(::gpk::apod<ubyte_t> & output)		const	{
+			gpk_necs(Buffers	.Save(output));
+			gpk_necs(Surfaces	.Save(output));
+			gpk_necs(Meshes		.Save(output));
+			gpk_necs(Skins		.Save(output));
+			//gpk_necs(Shaders	.Save(output));
+			//gpk_necs(Fonts		.Save(output));
+			return 0;
+		}
+		::gpk::error_t							Load				(::gpk::vcub & input) {
+			gpk_necs(Buffers	.Load(input));
+			gpk_necs(Surfaces	.Load(input));
+			gpk_necs(Meshes		.Load(input));
+			gpk_necs(Skins		.Load(input));
+			//gpk_necs(Shaders	.Load(input));
+			//gpk_necs(Fonts		.Load(input));
+			return 0;
+		}
 	};
 
 	struct SEngineScene {
 		::gpk::pobj<::gpk::SEngineGraphics>		Graphics				= {};
 		::gpk::SRenderNodeManager				ManagedRenderNodes		= {};
 		::gpk::SEngineRenderCache				RenderCache				= {};
+
+
+		::gpk::error_t						Save				(::gpk::apod<ubyte_t> & output)		const	{
+			gpk_necs(Graphics			->Save(output));
+			gpk_necs(ManagedRenderNodes	 .Save(output));
+			//gpk_necs(RenderCache		 .Save(output));
+			return 0;
+		}
+		::gpk::error_t						Load				(::gpk::vcub & input) {
+			gpk_necs(Graphics			->Load(input));
+			gpk_necs(ManagedRenderNodes	 .Load(input));
+			//gpk_necs(RenderCache		 .Load(input));
+			return 0;
+		}
 	};
 
 	::gpk::error_t							drawScene

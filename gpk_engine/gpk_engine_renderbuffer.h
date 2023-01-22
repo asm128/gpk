@@ -38,15 +38,15 @@ namespace gpk
 
 	struct SRenderBuffer {
 		SRenderBufferDescription					Desc			= {};
-		::gpk::apod<uint8_t>					Data			= {};
+		::gpk::apod<uint8_t>						Data			= {};
 
-		::gpk::error_t								Save			(::gpk::apod<byte_t> & output)		{ 			
-			gpk_necs(::gpk::viewWrite(::gpk::view_array<const ::gpk::SRenderBufferDescription>{&Desc, 1}, output));
-			gpk_necs(::gpk::viewWrite(::gpk::view_const_uint8{Data}, output));
+		::gpk::error_t								Save			(::gpk::apod<ubyte_t> & output)	const	{ 			
+			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SRenderBufferDescription>{&Desc, 1}));
+			gpk_necs(::gpk::viewSave(output, ::gpk::vcu8{Data}));
 			return 0; 
 		}
 
-		::gpk::error_t								Load			(::gpk::view_array<const byte_t> & input)	{ 
+		::gpk::error_t								Load			(::gpk::vcub & input)	{ 
 			gpk_necs(::gpk::loadPOD (input, Desc));
 			gpk_necs(::gpk::loadView(input, Data));
 			return 0;

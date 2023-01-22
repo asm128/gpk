@@ -701,6 +701,13 @@ namespace gpk
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
+	template<typename _tElement>
+	::gpk::error_t									viewSave							(::gpk::apod<ubyte_t> & output, const ::gpk::view1d<_tElement>& headerToWrite)	{
+		gpk_necall(output.append({(const ubyte_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
+		gpk_necall(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
+		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
+	}
+
 	typedef ::gpk::SKeyVal<::gpk::vcs, ::gpk::aobj<::gpk::vcs>>	TKeyValConstStringArray;
 
 	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view1d<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view1d<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output);
@@ -714,7 +721,7 @@ namespace gpk
 	::gpk::error_t									filterPostfix					(::gpk::view1d<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
 
 
-	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::view1d<const byte_t> & input, _tPOD & output) { 
+	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::vcb & input, _tPOD & output) { 
 		::gpk::view1d<const _tPOD>					readView		= {}; 
 		uint32_t										bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
@@ -723,10 +730,28 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::view1d<const byte_t> & input, ::gpk::apod<_tPOD> & output) { 
+	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::vcb & input, ::gpk::apod<_tPOD> & output) { 
 		::gpk::view1d<const _tPOD>						readView		= {}; 
 		uint32_t										bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
+		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output										= readView; 
+		return 0;
+	}
+
+	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::vcub & input, _tPOD & output) { 
+		::gpk::view1d<const _tPOD>					readView		= {}; 
+		uint32_t										bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(readView, input)); 
+		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output										= readView[0]; 
+		return 0;
+	}
+
+	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::vcub & input, ::gpk::apod<_tPOD> & output) { 
+		::gpk::view1d<const _tPOD>						readView		= {}; 
+		uint32_t										bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(readView, input)); 
 		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		output										= readView; 
 		return 0;

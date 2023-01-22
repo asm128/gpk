@@ -231,13 +231,13 @@ namespace gpk
 				bodyFlags.Falling								= true; 
 		}
 
-		::gpk::error_t									Save(::gpk::apod<byte_t> & output) const { 
-			gpk_necs(::gpk::viewWrite(BodyFrames		, output));
-			gpk_necs(::gpk::viewWrite(BodyFlags			, output));
-			gpk_necs(::gpk::viewWrite(Forces			, output));
-			gpk_necs(::gpk::viewWrite(Masses			, output));
-			gpk_necs(::gpk::viewWrite(Centers			, output));
-			gpk_necs(::gpk::viewWrite(TransformsLocal	, output));
+		::gpk::error_t									Save(::gpk::apod<ubyte_t> & output) const { 
+			gpk_necs(::gpk::viewSave(output, BodyFrames		));
+			gpk_necs(::gpk::viewSave(output, BodyFlags		));
+			gpk_necs(::gpk::viewSave(output, Forces			));
+			gpk_necs(::gpk::viewSave(output, Masses			));
+			gpk_necs(::gpk::viewSave(output, Centers		));
+			gpk_necs(::gpk::viewSave(output, TransformsLocal));
 
 			info_printf("Saved %s, %i", "BodyFrames"		, BodyFrames		.size());
 			info_printf("Saved %s, %i", "BodyFlags"			, BodyFlags			.size());
@@ -247,14 +247,20 @@ namespace gpk
 			info_printf("Saved %s, %i", "TransformsLocal"	, TransformsLocal	.size());
 			return 0; 
 		}
-		::gpk::error_t									Load(::gpk::view_array<const byte_t> & input) { 
+		::gpk::error_t									Load(::gpk::vcub & input) { 
 			gpk_necs(::gpk::loadView(input, BodyFrames		));
 			gpk_necs(::gpk::loadView(input, BodyFlags		));
 			gpk_necs(::gpk::loadView(input, Forces			));
 			gpk_necs(::gpk::loadView(input, Masses			));
-			gpk_necs(::gpk::loadView(input, Centers		));
+			gpk_necs(::gpk::loadView(input, Centers			));
 			gpk_necs(::gpk::loadView(input, TransformsLocal	));
 			return 0;																	  
+		}
+		::gpk::error_t									Save(::gpk::apod<byte_t> & output) const { 
+			return Save(*((::gpk::apod<ubyte_t>*)&output));
+		}
+		::gpk::error_t									Load(::gpk::vcb & input) { 
+			return Load(*((::gpk::vcub*)& input));
 		}
 	};
 

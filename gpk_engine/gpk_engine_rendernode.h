@@ -85,6 +85,70 @@ namespace gpk
 
 		uint32_t												size			()											const	{ return RenderNodes.size(); }
 
+		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
+			gpk_necs(::gpk::viewSave(output, RenderNodes	));
+			gpk_necs(::gpk::viewSave(output, Flags			));
+			gpk_necs(::gpk::viewSave(output, Transforms		));
+			gpk_necs(::gpk::viewSave(output, BaseTransforms	));
+			for(uint32_t iEntity = 0; iEntity < RenderNodes.size(); ++iEntity) {
+				gpk_necall(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SLight >{*Lights	[iEntity]}), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SCamera>{*Cameras	[iEntity]}), "iEntity: %i", iEntity);
+			}
+			gpk_necs(output.append({(const ubyte_t*)&LightsDirectional.size(), 4}));
+			for(uint32_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity)
+				gpk_necall(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SLightDirectional>{*LightsDirectional[iEntity]}), "iEntity: %i", iEntity);
+
+			gpk_necs(output.append({(const ubyte_t*)&LightsPoint.size(), 4}));
+			for(uint32_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity)
+				gpk_necall(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SLightPoint>{*LightsPoint[iEntity]}), "iEntity: %i", iEntity);
+
+			gpk_necs(output.append({(const ubyte_t*)&LightsSpot.size(), 4}));
+			for(uint32_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity)
+				gpk_necall(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SLightSpot>{*LightsSpot[iEntity]}), "iEntity: %i", iEntity);
+
+			info_printf("Saved %s, %i", "RenderNodes", RenderNodes.size());
+			return 0;
+		}
+
+		::gpk::error_t						Load			(::gpk::vcub & input) {
+			gpk_necs(::gpk::loadView(input, RenderNodes		));
+			gpk_necs(::gpk::loadView(input, Flags			));
+			gpk_necs(::gpk::loadView(input, Transforms		));
+			gpk_necs(::gpk::loadView(input, BaseTransforms	));
+			gpk_necall(Lights	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
+			gpk_necall(Cameras	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
+			for(uint32_t iEntity = 0; iEntity < RenderNodes.size(); ++iEntity) {
+				if(!Lights	[iEntity]) Lights	[iEntity].create();
+				if(!Cameras	[iEntity]) Cameras	[iEntity].create();
+				gpk_necall(::gpk::loadView(input, *Lights	[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::loadView(input, *Cameras	[iEntity]), "iEntity: %i", iEntity);
+			}
+
+			gpk_necs(LightsDirectional.resize(*(uint32_t*)input.begin()));
+			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			for(uint32_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity) {
+				if(!LightsDirectional[iEntity])
+					LightsDirectional[iEntity].create();
+				gpk_necall(::gpk::loadView(input, *LightsDirectional[iEntity]), "iEntity: %i", iEntity);
+			}
+
+			gpk_necs(LightsPoint.resize(*(uint32_t*)input.begin()));
+			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			for(uint32_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity) {
+				if(!LightsPoint[iEntity])
+					LightsPoint[iEntity].create();
+				gpk_necall(::gpk::loadView(input, *LightsPoint[iEntity]), "iEntity: %i", iEntity);
+			}
+
+			gpk_necs(LightsSpot.resize(*(uint32_t*)input.begin()));
+			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			for(uint32_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity) {
+				if(!LightsSpot[iEntity])
+					LightsSpot[iEntity].create();
+				gpk_necall(::gpk::loadView(input, *LightsSpot[iEntity]), "iEntity: %i", iEntity);
+			}
+			return 0;
+		}
 		::gpk::error_t											Create		()	{
 			Transforms			.push_back({});
 			BaseTransforms		.push_back({});

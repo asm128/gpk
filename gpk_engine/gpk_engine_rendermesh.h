@@ -10,7 +10,7 @@ namespace gpk
 	// ------------------ Geometry Mesh
 #pragma pack(push, 1)
 	struct SGeometrySlice {
-		::gpk::SRange<uint32_t>						Slice;
+		::gpk::SRange<uint32_t>				Slice;
 	};
 #pragma pack(pop)
 
@@ -33,17 +33,32 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SMeshDescription {
-		::gpk::GEOMETRY_TYPE						Type;
-		::gpk::MESH_MODE							Mode;
-		::gpk::NORMAL_MODE							NormalMode;
+		::gpk::GEOMETRY_TYPE				Type;
+		::gpk::MESH_MODE					Mode;
+		::gpk::NORMAL_MODE					NormalMode;
 	};
 #pragma pack(pop)
 
 	struct SGeometryMesh {
-		::gpk::SMeshDescription						Desc;
-		::gpk::apod<uint32_t>					GeometryBuffers;
-		::gpk::apod<uint32_t>					ConstantBuffers;
-		::gpk::apod<::gpk::SGeometrySlice>		GeometrySlices;
+		::gpk::SMeshDescription				Desc;
+		::gpk::apod<uint32_t>				GeometryBuffers;
+		::gpk::apod<uint32_t>				ConstantBuffers;
+		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
+
+		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
+			gpk_necs(::gpk::viewSave(output, ::gpk::v1<const ::gpk::SMeshDescription>{&Desc, 1}));
+			gpk_necs(::gpk::viewSave(output, GeometryBuffers));
+			gpk_necs(::gpk::viewSave(output, ConstantBuffers));
+			gpk_necs(::gpk::viewSave(output, GeometrySlices));
+			return 0;
+		}
+		::gpk::error_t						Load			(::gpk::vcub & input) {
+			gpk_necs(::gpk::loadPOD(input, Desc));
+			gpk_necs(::gpk::loadView(input, GeometryBuffers));
+			gpk_necs(::gpk::loadView(input, ConstantBuffers));
+			gpk_necs(::gpk::loadView(input, GeometrySlices));
+			return 0;
+		}
 	};	
 
 	typedef	::gpk::SLinearMap<::gpk::SGeometryMesh>			SMeshManager;

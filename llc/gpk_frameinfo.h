@@ -5,6 +5,7 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	struct SFrameSeconds {
 				double															Total												;
 				double															LastFrame											;
@@ -49,6 +50,9 @@ namespace gpk
 					//}
 				}
 	};
+#pragma pack(pop)
+
+
 } // namespace
 
 #endif // GPK_FRAMEINFO_H_928374654
