@@ -724,6 +724,10 @@ namespace gpk
 		return ::gpk::viewSave(output, ::gpk::v1<const _tPOD>{&input, 1});
 	}
 
+	template<typename _tPOD> ::gpk::error_t		savePOD			(::gpk::apod<byte_t> & output, const _tPOD & input) { 
+		return ::gpk::viewWrite(::gpk::v1<const _tPOD>{&input, 1}, output);
+	}
+
 	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::vcb & input, _tPOD & output) { 
 		::gpk::view1d<const _tPOD>					readView		= {}; 
 		uint32_t										bytesRead		= 0;
