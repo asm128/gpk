@@ -42,9 +42,8 @@ namespace gpk
 			entityNew.Parent					= entitySource.Parent;
 
 			uint32_t								idShaderSource					= Scene->ManagedRenderNodes[entityNew.RenderNode].Shader;
-			if(cloneSkin && idShaderSource < Scene->Graphics->Shaders.size()) {
-				uint32_t								idShader						= Scene->Graphics->Shaders.Clone(idShaderSource);
-				Scene->ManagedRenderNodes[entityNew.RenderNode].Shader	= idShader;
+			if(cloneShaders && idShaderSource < Scene->Graphics->Shaders.size()) {
+				Scene->ManagedRenderNodes[entityNew.RenderNode].Shader	= Scene->Graphics->Shaders.Clone(idShaderSource);
 			}
 
 			uint32_t								idSkinSource					= Scene->ManagedRenderNodes[entityNew.RenderNode].Skin;

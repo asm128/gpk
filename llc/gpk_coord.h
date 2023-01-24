@@ -410,6 +410,17 @@ namespace gpk
 	typedef n3<int32_t>		n3i32;
 	typedef n3<int64_t>		n3i64;
 
+	typedef quat<float>		quatf32, quatf;
+	typedef quat<double>	quatf64, quatd;
+	typedef quat<uint8_t>	quatu8;
+	typedef quat<uint16_t>	quatu16;
+	typedef quat<uint32_t>	quatu32;
+	typedef quat<uint64_t>	quatu64;
+	typedef quat<int8_t>	quati8;
+	typedef quat<int16_t>	quati16;
+	typedef quat<int32_t>	quati32;
+	typedef quat<int64_t>	quati64;
+
 
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
 		inline constexpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
