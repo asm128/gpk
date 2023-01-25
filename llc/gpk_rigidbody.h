@@ -10,9 +10,9 @@ namespace gpk
 #pragma pack(push, 1)
 	// The following structure stores forces information for a 3D rigid body. These change almost every frame during runtime
 	struct SBodyForces {
-		::gpk::SCoord3<float>							Velocity						= {};
-		::gpk::SCoord3<float>							Acceleration					= {};
-		::gpk::SCoord3<float>							Rotation						= {};
+		::gpk::n3f										Velocity						= {};
+		::gpk::n3f										Acceleration					= {};
+		::gpk::n3f										Rotation						= {};
 	};
 
 	// The following structure stores mass information for a 3D rigid body. These almost never change during runtime
@@ -20,12 +20,12 @@ namespace gpk
 		float											LinearDamping					= 1.0f;
 		float											AngularDamping					= 1.0f;
 		float											InverseMass						= 0;
-		::gpk::SMatrix3<float>							InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
+		::gpk::m3f										InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
 	};
 
 	struct SBodyCenter {
-		::gpk::SCoord3		<float>						Position						= {};
-		::gpk::SQuaternion	<float>						Orientation						= {0, 0, 0, 1};
+		::gpk::n3f										Position						= {};
+		::gpk::quatf									Orientation						= {0, 0, 0, 1};
 	};
 
 	GDEFINE_ENUM_TYPE(BOUNDING_TYPE, uint8_t);
@@ -33,46 +33,44 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, AABB				, 1);
 	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Cylinder			, 2);
 
-	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardSphere		, 4);
-	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardAABB		, 5);
-	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, InwardCylinder	, 6);
+	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Inward			, 4);
 
 	struct SRigidBodyFlags {
-		uint8_t											UpdatedTransform				: 1;
-		uint8_t											UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
-		uint8_t											Active							: 1;
-		uint8_t											Collides						: 1;
-		uint8_t											Falling							: 1;
-		uint8_t											BVType							: 3;
+		uint8_t										UpdatedTransform				: 1;
+		uint8_t										UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
+		uint8_t										Active							: 1;
+		uint8_t										Collides						: 1;
+		uint8_t										Falling							: 1;
+		uint8_t										BVType							: 3;
 	};
 
 	struct SRigidBodyFrame {
-		::gpk::SMatrix3<float>							InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
-		::gpk::SCoord3<float>							LastFrameAcceleration			= {0, 0, 0};
-		::gpk::SCoord3<float>							AccumulatedForce				= {0, 0, 0};
-		::gpk::SCoord3<float>							AccumulatedTorque				= {0, 0, 0};
+		::gpk::m3f									InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
+		::gpk::n3f									LastFrameAcceleration			= {0, 0, 0};
+		::gpk::n3f									AccumulatedForce				= {0, 0, 0};
+		::gpk::n3f									AccumulatedTorque				= {0, 0, 0};
 
-		int32_t											ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
+		int32_t										ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
 	};
 
 	struct SBoundingVolume {
-		::gpk::SCoord3<float>							HalfSizes						= {.5f, .5f, .5f};
+		::gpk::n3f									HalfSizes						= {.5f, .5f, .5f};
 	};
 #pragma pack(pop)
-	void											updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::SMatrix4<float> & transformLocal);
-	int32_t											integrateForces					(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
-	int32_t											integratePosition				(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
-	void											transformInertiaTensor			(::gpk::SMatrix3<float> & iitWorld, const ::gpk::SMatrix3<float> &iitBody, const ::gpk::SMatrix4<float> &rotmat);
+	void										updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::SMatrix4<float> & transformLocal);
+	int32_t										integrateForces					(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
+	int32_t										integratePosition				(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
+	void										transformInertiaTensor			(::gpk::SMatrix3<float> & iitWorld, const ::gpk::SMatrix3<float> &iitBody, const ::gpk::SMatrix4<float> &rotmat);
 
 
 	struct SRigidBodyIntegrator {
 		::gpk::apod<::gpk::SRigidBodyFrame	>		BodyFrames						= {};
 		::gpk::apod<::gpk::SRigidBodyFlags	>		BodyFlags						= {};
-		::gpk::apod<::gpk::SBodyForces		>		Forces							= {};
 		::gpk::apod<::gpk::SBodyMass		>		Masses							= {};
+		::gpk::apod<::gpk::SBodyForces		>		Forces							= {};
 		::gpk::apod<::gpk::SBodyCenter		>		Centers							= {};
 		::gpk::apod<::gpk::SBoundingVolume	>		BoundingVolumes					= {};
-		::gpk::apod<::gpk::SMatrix4<float>	>		TransformsLocal					= {};
+		::gpk::apod<::gpk::m4f				>		TransformsLocal					= {};
 
 		static constexpr const ::gpk::SMatrix4<float>	MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
 		static constexpr const ::gpk::SMatrix3<float>	MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
@@ -80,9 +78,20 @@ namespace gpk
 		int32_t 										ZeroForces						()	{
 			for(uint32_t iForce = 0; iForce < Forces.size(); ++iForce)
 				Forces[iForce] = {};
-			return 0;
+			return Forces.size();
 		}
 
+		int32_t 										ZeroCenters						()	{
+			for(uint32_t iCenter = 0; iCenter < Centers.size(); ++iCenter)
+				Centers[iCenter] = {};
+			return Centers.size();
+		}
+
+		int32_t 										Reset							()	{
+			ZeroForces();
+			return ZeroCenters();
+		}
+		
 		int32_t 										Clear							()	{
 			::gpk::clear(BodyFrames, BodyFlags, Forces, Masses, Centers, BoundingVolumes, TransformsLocal);
 			return 0;
@@ -93,7 +102,8 @@ namespace gpk
 			BodyFlags				.push_back(::gpk::SRigidBodyFlags	{BodyFlags			[iBody]});
 			Forces					.push_back(::gpk::SBodyForces		{Forces				[iBody]});
 			Masses					.push_back(::gpk::SBodyMass			{Masses				[iBody]});
-			Centers					.push_back(::gpk::SBodyCenter		{Centers			[iBody]});
+			Centers[Centers.push_back(::gpk::SBodyCenter{Centers[iBody]})];
+			Centers[Centers.push_back(::gpk::SBodyCenter{Centers[iBody]})];
 			BoundingVolumes			.push_back(::gpk::SBoundingVolume	{BoundingVolumes	[iBody]});
 			return TransformsLocal	.push_back(::gpk::SMatrix4<float>	{TransformsLocal	[iBody]});
 		}

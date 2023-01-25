@@ -29,6 +29,7 @@ namespace gpk
 		uint8_t									FrameOut								: 1;
 		uint8_t									Design									: 1;
 		uint8_t									NoBackgroundRect						: 1;
+		uint8_t									Padding									: 1; // 8th bit
 	};
 
 	struct SControlRectangle {
@@ -61,7 +62,7 @@ namespace gpk
 
 	struct SControlConstraints {
 		::gpk::n2<int32_t>						AttachSizeToControl						;
-		::gpk::n2<bool>						AttachSizeToText						;
+		::gpk::n2<bool>							AttachSizeToText						;
 		::gpk::SRectLimits<int32_t>				DockToControl							;
 		::gpk::SMinMax<::gpk::n2<int16_t>>		SizeMinMax								= {{}, {0x7FFF, 0x7FFF}};
 	};

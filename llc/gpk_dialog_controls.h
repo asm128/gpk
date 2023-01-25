@@ -79,7 +79,9 @@ namespace gpk
 
 				::gpk::SMinMax<int64_t>						ValueLimits							= {0, 100};// 0x7fFFffFF};
 				int64_t										ValueCurrent						= -1;
-				bool										Vertical							= false;
+				int32_t										Vertical							= false;
+				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value)>	
+															FuncValueFormat						= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::sliderUpdate(*this); }
 	};
@@ -90,9 +92,9 @@ namespace gpk
 
 				::gpk::SMinMax<int64_t>						ValueLimits							= {(int32_t)0xC0000001, (int32_t)0x3fFFffFF};
 				int64_t										ValueCurrent						= -1;
+				char_t										ValueString	[32]					= {};
 				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value)>	
 															FuncValueFormat						= {};
-				char_t										ValueString	[32]					= {};
 
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
