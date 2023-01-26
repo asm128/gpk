@@ -707,7 +707,7 @@ namespace gpk
 		gpk_necall(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
-
+	                                                                                                                                                                                                                                                                                                                                                                                                                                          
 	typedef ::gpk::SKeyVal<::gpk::vcs, ::gpk::aobj<::gpk::vcs>>	TKeyValConstStringArray;
 
 	::gpk::error_t									keyValConstStringSerialize		(const ::gpk::view1d<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view1d<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output);

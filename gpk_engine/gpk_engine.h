@@ -82,19 +82,19 @@ namespace gpk
 			Scene->Graphics->Shaders.Names[iShader] = name;
 			return 0;
 		}
-		::gpk::error_t						IsPhysicsActive		(uint32_t iEntity)													{ return Integrator.Active(ManagedEntities[iEntity].RigidBody) ? 1 : 0; }
-		float								GetMass				(uint32_t iEntity)													{ return Integrator.GetMass		(ManagedEntities[iEntity].RigidBody);	}
+		::gpk::error_t						IsPhysicsActive		(uint32_t iEntity)													const	{ return Integrator.Active(ManagedEntities[iEntity].RigidBody) ? 1 : 0; }
+		float								GetMass				(uint32_t iEntity)													const	{ return Integrator.GetMass		(ManagedEntities[iEntity].RigidBody);	}
 
-		::gpk::error_t						GetRigidBody		(uint32_t iEntity)													{ return ManagedEntities[iEntity].RigidBody; }
-		::gpk::error_t						GetRenderNode		(uint32_t iEntity)													{ return ManagedEntities[iEntity].RenderNode; }
-		::gpk::error_t						GetParentIndex		(uint32_t iEntity)													{ return ManagedEntities[iEntity].Parent; }
+		::gpk::error_t						GetRigidBody		(uint32_t iEntity)													const	{ return ManagedEntities[iEntity].RigidBody; }
+		::gpk::error_t						GetRenderNode		(uint32_t iEntity)													const	{ return ManagedEntities[iEntity].RenderNode; }
+		::gpk::error_t						GetParentIndex		(uint32_t iEntity)													const	{ return ManagedEntities[iEntity].Parent; }
 
-		::gpk::error_t						GetPosition			(uint32_t iEntity, ::gpk::n3<float> & position)						{ Integrator.GetPosition		(ManagedEntities[iEntity].RigidBody, position);				return 0; }
-		::gpk::error_t						GetVelocity			(uint32_t iEntity, ::gpk::n3<float> & velocity)						{ Integrator.GetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
-		::gpk::error_t						GetAcceleration		(uint32_t iEntity, ::gpk::n3<float> & acceleration)					{ Integrator.GetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);				return 0; }
-		::gpk::error_t						GetRotation			(uint32_t iEntity, ::gpk::n3<float> & velocity)						{ Integrator.GetRotation		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
-		::gpk::error_t						GetOrientation		(uint32_t iEntity, ::gpk::SQuaternion<float> & orientation)			{ Integrator.GetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);				return 0; }
-		::gpk::error_t						GetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.SetActive			(ManagedEntities[iEntity].RigidBody, active);				return 0; }
+		::gpk::error_t						GetPosition			(uint32_t iEntity, ::gpk::n3<float> & position)						const	{ Integrator.GetPosition		(ManagedEntities[iEntity].RigidBody, position);				return 0; }
+		::gpk::error_t						GetVelocity			(uint32_t iEntity, ::gpk::n3<float> & velocity)						const	{ Integrator.GetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
+		::gpk::error_t						GetAcceleration		(uint32_t iEntity, ::gpk::n3<float> & acceleration)					const	{ Integrator.GetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);				return 0; }
+		::gpk::error_t						GetRotation			(uint32_t iEntity, ::gpk::n3<float> & velocity)						const	{ Integrator.GetRotation		(ManagedEntities[iEntity].RigidBody, velocity);				return 0; }
+		::gpk::error_t						GetOrientation		(uint32_t iEntity, ::gpk::SQuaternion<float> & orientation)			const	{ Integrator.GetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);				return 0; }
+		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.SetActive			(ManagedEntities[iEntity].RigidBody, active);				return 0; }
 		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities[iEntity].RigidBody, mass);				return 0; }
 		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::n3<float> & position)				{ Integrator.SetPosition		(ManagedEntities[iEntity].RigidBody, position);			return 0; }
 		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::n3<float> & velocity)				{ Integrator.SetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
