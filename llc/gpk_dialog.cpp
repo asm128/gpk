@@ -175,7 +175,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 }
 		::gpk::error_t												gpk::sliderCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
-	::gpk::pobj<::gpk::SDialogSlider>									slider;
+	::gpk::pobj<::gpk::SDialogSlider>										slider;
 	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
 	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
@@ -187,9 +187,11 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	controlTable.Modes		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
 	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes.Storage, dialog.Colors->Button		.Storage);
 	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes.Storage, dialog.Colors->CheckBox	.Storage);
+	::gpk::SControlText														& tunerText									= controlTable.Text[slider->IdGUIControl];
+	tunerText.Text														= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
 	return index;
 }
-		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value)				{
+		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value, ::gpk::vcs formatString)				{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
@@ -197,9 +199,9 @@ static constexpr	const uint32_t									heightOfField								= 18;
 
 	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
 	::gpk::SControl															& controlSlider								= controlTable.Controls[slider.IdGUIControl];
-	::gpk::SCoord2<double>													ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
-	if(slider.Vertical)	controlButton.Area.Offset.y						= (int16_t)int32_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
-	else				controlButton.Area.Offset.x						= (int16_t)int32_t((controlSlider.Area.Size.x - controlButton.Area.Size.x - ncSpacing.x) * proportion);
+	::gpk::n2<double>														ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
+	if(slider.Vertical)	controlButton.Area.Offset.y						= int16_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
+	else				controlButton.Area.Offset.x						= int16_t((controlSlider.Area.Size.x - controlButton.Area.Size.x - ncSpacing.x) * proportion);
 
 	::gpk::SControlConstraints												& buttonConstraints							= controlTable.Constraints[slider.IdButton];
 	if(slider.Vertical) {
@@ -210,9 +212,19 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		buttonConstraints.AttachSizeToControl.x								= -1;
 		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
 	}
+	::gpk::vcc																valueString;
+	if(formatString.size())
+		valueString			= formatString;
+	else if(slider.FuncValueFormat)
+		slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits.Min, slider.ValueLimits.Max);
+	else 
+		valueString			= ::gpk::vcs("%lli");
+
+	::gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, {slider.ValueString, (uint32_t)snprintf(slider.ValueString, ::gpk::size(slider.ValueString) - 2, ::gpk::toString(valueString).begin(), (long long int)slider.ValueCurrent)});
 	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
 	return 0;
 }
+
 		::gpk::error_t												gpk::sliderUpdate							(::gpk::SDialogSlider	& slider)								{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
@@ -221,17 +233,17 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
 			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
-			::gpk::SCoord2<double>													scale										=
+			::gpk::n2<double>														scale										=
 				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 				};
-			const ::gpk::SCoord2<float>												controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<float>();
-			const ::gpk::SCoord2<float>												controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<float>();
-			::gpk::SCoord2<float>													effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<float>();;
+			const ::gpk::n2f														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<float>();
+			const ::gpk::n2f														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<float>();
+			::gpk::n2f																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<float>();;
 			//
 
-			::gpk::SCoord2<float>													currentValue								= input.MouseCurrent.Position.Cast<float>();
-			const ::gpk::SCoord2<float>												valueUnit									= {1.0f / effectiveSize.x, 1.0f / effectiveSize.y};
+			::gpk::n2f																currentValue								= input.MouseCurrent.Position.Cast<float>();
+			const ::gpk::n2f														valueUnit									= {1.0f / effectiveSize.x, 1.0f / effectiveSize.y};
 			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.Cast<float>() / 2;
 			currentValue.x														*= valueUnit.x;
 			currentValue.y														*= valueUnit.y;
@@ -243,7 +255,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
 			::gpk::SInput															& input										= *dialog.Input;
 			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
-			const ::gpk::SCoord2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
+			const ::gpk::n2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
 				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
 				::gpk::sliderSetValue(slider, finalValue);
@@ -255,6 +267,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		}
 	return 0;
 }
+
 		::gpk::error_t												gpk::editBoxCreate							(::gpk::SDialog			& dialog )								{
 	int32_t																	index										= -1;
 	::gpk::pobj<::gpk::SDialogEditBox>									editBox;
@@ -317,7 +330,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	return index;
 }
 
-		::gpk::error_t												gpk::viewportAdjustSize					(::gpk::SCoord2<int16_t> & sizeViewport, const ::gpk::SCoord2<int16_t> & sizeClient)		{
+		::gpk::error_t												gpk::viewportAdjustSize					(::gpk::n2<int16_t> & sizeViewport, const ::gpk::n2<int16_t> & sizeClient)		{
 	sizeViewport														= sizeClient;
 	sizeViewport.x														+= 4;
 	sizeViewport.y														+= 4 + 1 + heightOfField;
@@ -347,7 +360,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	return one_if(false == control.Settings.Unfolded);
 }
 
-static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& control, ::gpk::SControl & controlMain, ::gpk::SDialog & dialog, ::gpk::SCoord2<bool> locked, ::gpk::SCoord2<int32_t> mouseDeltas)																{
+static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& control, ::gpk::SControl & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2<int32_t> mouseDeltas)																{
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging											= true;
@@ -365,9 +378,9 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 	::gpk::SControl															& controlMain								= controlTable.Controls[control.IdGUIControl];
 	::gpk::SControlState													& controlTitle								= controlTable.States[control.IdTitle];
 	if(controlTitle.Pressed) {
-		::gpk::SCoord2<bool>													locked										= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
+		::gpk::n2<bool>													locked										= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
-			::gpk::SCoord2<int32_t>													mouseDeltas									= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
+			::gpk::n2<int32_t>													mouseDeltas									= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
 				::viewportDrag(control, controlMain, dialog, locked, mouseDeltas);
 		}
@@ -379,7 +392,7 @@ static	::gpk::error_t												viewportDrag								(::gpk::SDialogViewport	& c
 	}
 	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
 		if(true == control.Settings.Unfolded) {
-			::gpk::SCoord2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
+			::gpk::n2<int16_t>													clientFinalSize								= {controlMain.Area.Size};
 			clientFinalSize														-= ::gpk::controlNCSpacing(controlMain);
 			clientFinalSize.y													-=  heightOfField + 1;
 			::gpk::SControl															& controlClient								= controlTable.Controls[control.IdClient];

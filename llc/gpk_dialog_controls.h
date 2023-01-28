@@ -9,7 +9,7 @@ namespace gpk
 {
 	struct SDialogSlider;
 	::gpk::error_t										sliderCreate						(::gpk::SDialog					& dialog);
-	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider			& control, int64_t value);
+	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider			& control, int64_t value, ::gpk::vcs formatString = {});
 	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider			& control);
 
 	struct SDialogTuner;
@@ -80,7 +80,8 @@ namespace gpk
 				::gpk::SMinMax<int64_t>						ValueLimits							= {0, 100};// 0x7fFFffFF};
 				int64_t										ValueCurrent						= -1;
 				int32_t										Vertical							= false;
-				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value)>	
+				char_t										ValueString	[32]					= {};
+				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value, int64_t min, int64_t max)>	
 															FuncValueFormat						= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::sliderUpdate(*this); }
