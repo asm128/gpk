@@ -45,11 +45,18 @@ namespace gpk
 
 	inline	const ::gpk::label_statics &	label::statics				()																						{ static const ::gpk::label_statics init_statics; return init_statics; }
 
-	static inline ::gpk::error_t			loadLabel		(::gpk::view_array<const byte_t> & input, ::gpk::vcc & output) { 
+	static inline ::gpk::error_t			loadLabel		(::gpk::view<const byte_t> & input, ::gpk::vcc & output) { 
 		uint32_t									bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
 		input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		output									= ::gpk::label(output);
+		return 0;
+	}
+	static inline ::gpk::error_t			loadLabel		(::gpk::vcub & input, ::gpk::vcc & output) { 
+		uint32_t									bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(output, input)); 
+		input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output									= ::gpk::label({(const char*)output.begin(), output.size()});
 		return 0;
 	}
 }

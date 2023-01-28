@@ -40,8 +40,8 @@ namespace gpk
 		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
 			gpk_necs(::gpk::viewSave(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
-				gpk_necall(::gpk::viewSave(output, ::gpk::vcu32	{*Children	[iEntity]}), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::viewSave(output, ::gpk::vcc	{Names		[iEntity]}), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::viewSave(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::viewSave(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			info_printf("Saved %s, %i", "Entities", Children.size());
 			return 0;
