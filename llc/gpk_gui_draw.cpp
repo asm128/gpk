@@ -64,7 +64,7 @@ static		::gpk::GUI_CONTROL_PALETTE							paletteIndexFromState									(bool dis
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-static		::gpk::error_t										fillColorTableBorders3D									(const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{
+static		::gpk::error_t										fillColorTableBorders3D									(const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, ::gpk::view<::gpk::SColorBGRA>& colors)					{
 	double																bright;
 	double																shaded;
 	if(controlMode.NoHoverEffect) {
@@ -82,7 +82,7 @@ static		::gpk::error_t										fillColorTableBorders3D									(const ::gpk::SC
 	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colorBackground * shaded;
 	return 0;
 }
-static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{
+static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view<::gpk::SColorBGRA>& colors)					{
 	const ::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
 																		& colorCombo											= gui.Colors->Palettes[control.Palettes[::paletteIndexFromState(disabled, controlState)]];
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND		]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	];
@@ -96,7 +96,7 @@ static		::gpk::error_t										fillColorTableNew										(::gpk::SGUI & gui, :
 	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	];
 	return 0;
 }
-static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view_array<::gpk::SColorBGRA>& colors)					{
+static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl& control, const ::gpk::SControlState& controlState, const ::gpk::SControlMode& controlMode, bool disabled, ::gpk::view<::gpk::SColorBGRA>& colors)					{
 	const ::gpk::SControlTheme											& theme													= (*gui.Colors->ControlThemes)[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
 	const ::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>	& colorCombo											= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
 	colors[::gpk::GUI_CONTROL_AREA_BACKGROUND			]			= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_COLOR_BACKGROUND	]];
@@ -110,7 +110,7 @@ static		::gpk::error_t										fillColorTableOld										(::gpk::SGUI & gui, :
 	colors[::gpk::GUI_CONTROL_AREA_BORDER_BOTTOM	]				= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_COLOR_BORDER_BOTTOM	]];
 	return 0;
 }
-static		::gpk::error_t										fillColorTable											(::gpk::SGUI & gui, int32_t iControl, bool disabled, ::gpk::view_array<::gpk::SColorBGRA> colors)					{
+static		::gpk::error_t										fillColorTable											(::gpk::SGUI & gui, int32_t iControl, bool disabled, ::gpk::view<::gpk::SColorBGRA> colors)					{
 	const ::gpk::SControl												& control												= gui.Controls.Controls	[iControl];
 	const ::gpk::SControlMode											& mode													= gui.Controls.Modes	[iControl];
 	const ::gpk::SControlState											& controlState											= gui.Controls.States	[iControl];
@@ -186,7 +186,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI & gui, i
 	if(false == ::gpk::controlHidden(gui, iControl)) {
 		//::gpk::SControlMode													controlModes										= gui.Controls.Modes[iControl];
 		gpk_necall(::actualControlDraw(gui, iControl, target), "%s", "Unknown issue!");
-		::gpk::view_array<int32_t>											& children												= gui.Controls.Children[iControl];
+		::gpk::view<int32_t>											& children												= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			gpk_necall(::gpk::controlDrawHierarchy(gui, children[iChild], target), "%s", "Unknown issue!");
 	}

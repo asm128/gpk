@@ -1,7 +1,7 @@
 #include "gpk_base64.h"
 #include "gpk_view_bit.h"
 
-static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::vcb & base64Symbols, ::gpk::view_array<uint8_t> inputTriplet, ::gpk::view_array<char_t> out_base64) {
+static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::vcb & base64Symbols, ::gpk::view<uint8_t> inputTriplet, ::gpk::view<char_t> out_base64) {
 	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputTriplet[iSingleIn], 8};
 		::gpk::reverse_bits(inputBits);
@@ -52,7 +52,7 @@ static		::gpk::error_t								base64EncodeTriplet												(const ::gpk::vcb &
 	return 0;
 }
 
-static		::gpk::error_t								base64DecodeQuad												(::gpk::view_array<uint8_t> inputQuad, ::gpk::view_array<byte_t> outputBytes)	{
+static		::gpk::error_t								base64DecodeQuad												(::gpk::view<uint8_t> inputQuad, ::gpk::view<byte_t> outputBytes)	{
 	for(uint32_t iSingleIn = 0; iSingleIn < 4; ++iSingleIn) { // reverse bits before extracting
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputQuad[iSingleIn], 6};
 		::gpk::reverse_bits(inputBits);

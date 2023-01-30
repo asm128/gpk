@@ -10,8 +10,8 @@
 
 ::gpk::error_t												gpk::jsonMapToFields
 (	::gpk::apod<int32_t>									& indicesOfFields
-,	const ::gpk::view_array<const ::gpk::SJSONFieldBinding>		fields
-,	const ::gpk::view_array<const ::gpk::TKeyValConstChar>		fieldMaps
+,	const ::gpk::view<const ::gpk::SJSONFieldBinding>		fields
+,	const ::gpk::view<const ::gpk::TKeyValConstChar>		fieldMaps
 ) {
 	for(uint32_t iMap = 0; iMap < fieldMaps.size(); ++iMap)
 	for(uint32_t iField = 0; iField < fields.size(); ++iField) {
@@ -26,8 +26,8 @@
 
 ::gpk::error_t												gpk::jsonFieldsToMap
 (	::gpk::apod<int32_t>									& indicesOfMaps
-,	const ::gpk::view_array<const ::gpk::SJSONFieldBinding>		fields
-,	const ::gpk::view_array<const ::gpk::TKeyValConstChar>		fieldMaps
+,	const ::gpk::view<const ::gpk::SJSONFieldBinding>		fields
+,	const ::gpk::view<const ::gpk::TKeyValConstChar>		fieldMaps
 ) {
 	uint32_t														countFields							= fields.size();
 	for(uint32_t iField = 0; iField < countFields; ++iField) {
@@ -52,7 +52,7 @@
 	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
-::gpk::error_t												gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view_array<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char_t>> & outputJsons)		{
+::gpk::error_t												gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char_t>> & outputJsons)		{
 	const uint32_t													remainder							= jsonArrayToSplit.Children.size() % blockSize;
 	const uint32_t													countParts							= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
 	gpk_necall(outputJsons.resize(countParts), "%s", "Out of memory?");
@@ -74,7 +74,7 @@
 
 static const ::gpk::vcs		gpk_json_str_true  = "true";
 static const ::gpk::vcs		gpk_json_str_false = "false";
-::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view_array<::gpk::vcc> & jsonViews, ::gpk::apod<char_t> & output)			{
+::gpk::error_t												gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char_t> & output)			{
 	if(node->Token->Type == ::gpk::JSON_TYPE_VALUE && node->Children.size())
 		node														= node->Children[0];
 	switch(node->Token->Type) {
@@ -134,7 +134,7 @@ static const ::gpk::vcs		gpk_json_str_false = "false";
 	return 0;
 }
 
-::gpk::error_t												gpk::jsonTreeRebuild								(::gpk::view_array<::gpk::SJSONToken>& in_object, ::gpk::aobj<::gpk::pobj<::gpk::SJSONNode>> & out_nodes)								{
+::gpk::error_t												gpk::jsonTreeRebuild								(::gpk::view<::gpk::SJSONToken>& in_object, ::gpk::aobj<::gpk::pobj<::gpk::SJSONNode>> & out_nodes)								{
 	::gpk::aobj<::gpk::pobj<::gpk::SJSONNode>>				& tree												= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
@@ -475,7 +475,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return errVal;
 }
 
-			::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader& reader, const ::gpk::vcc & jsonAsString)	{
+			::gpk::error_t									gpk::jsonParseStep									(::gpk::SJSONReader & reader, const ::gpk::vcc & jsonAsString)	{
 	reader.StateRead.CharCurrent								= jsonAsString[reader.StateRead.IndexCurrentChar];
 	::gpk::error_t													errVal												= (reader.StateRead.InsideString)
 		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
@@ -509,7 +509,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return errVal;
 }
 
-			::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader& reader, const ::gpk::vcc & jsonAsString)	{
+			::gpk::error_t									gpk::jsonParse										(::gpk::SJSONReader & reader, const ::gpk::vcc & jsonAsString)	{
 	SJSONReaderState												& stateReader										= reader.StateRead;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < jsonAsString.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::jsonParseStep(reader, jsonAsString), "%s", "Parse step failed.");
@@ -524,7 +524,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return ::gpk::jsonTreeRebuild(reader.Token, reader.Tree);
 }
 
-			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::vcc>& views, ::gpk::apod<int32_t> & indices, ::gpk::aobj<::gpk::vcc> & keys)	{
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode & node_object, const ::gpk::view<::gpk::vcc>& views, ::gpk::apod<int32_t> & indices, ::gpk::aobj<::gpk::vcc> & keys)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
@@ -536,7 +536,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return indices.size();
 }
 
-			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, ::gpk::apod<int32_t> & indices)	{
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode & node_object, ::gpk::apod<int32_t> & indices)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
@@ -546,7 +546,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return indices.size();
 }
 
-			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::vcc>& views, ::gpk::aobj<::gpk::vcc> & keys)	{
+			::gpk::error_t									gpk::jsonObjectKeyList								(const ::gpk::SJSONNode & node_object, const ::gpk::view<::gpk::vcc>& views, ::gpk::aobj<::gpk::vcc> & keys)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
@@ -557,7 +557,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return keys.size();
 }
 
-			::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode& node_object, const ::gpk::view_array<::gpk::vcc>& views, const ::gpk::vcs& key)	{
+			::gpk::error_t									gpk::jsonObjectValueGet								(const ::gpk::SJSONNode & node_object, const ::gpk::view<::gpk::vcc>& views, const ::gpk::vcs& key)	{
 	ree_if(::gpk::JSON_TYPE_OBJECT != node_object.Token->Type, "Invalid node type: %i (%s). Only objects are allowed to be accessed by key.", node_object.Token->Type, ::gpk::get_value_label(node_object.Token->Type).begin());
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
@@ -577,7 +577,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return node->ObjectIndex;
 }
 
-			::gpk::error_t									gpk::jsonCompareArray		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::vcc>& otherViews) {
+			::gpk::error_t									gpk::jsonCompareArray		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc>& otherViews) {
 	if(node.Children.size() != other.Children.size())
 		return 0;
 	if(node.Children.size() == 0)
@@ -606,8 +606,8 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	return 1;
 }
 
-			::gpk::error_t									gpk::jsonCompareObject		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::vcc>& otherViews) { if(node.Children.size() != other.Children.size()) return 0; if(node.Children.size() == 0) return 1; for(uint32_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
-			::gpk::error_t									gpk::jsonCompareNumber		(const ::gpk::SJSONNode& node, const ::gpk::view_array<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view_array<::gpk::vcc>& otherViews) { if(node.Children.size() != other.Children.size()) return 0; if(node.Children.size() == 0) return 1; if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
+			::gpk::error_t									gpk::jsonCompareObject		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc>& otherViews) { if(node.Children.size() != other.Children.size()) return 0; if(node.Children.size() == 0) return 1; for(uint32_t iChild = 0; iChild < node.Children.size(); iChild += 2)	if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
+			::gpk::error_t									gpk::jsonCompareNumber		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc>& views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc>& otherViews) { if(node.Children.size() != other.Children.size()) return 0; if(node.Children.size() == 0) return 1; if(node.Token->Type != other.Token->Type) return 0; if(views[node.ObjectIndex] == otherViews[other.ObjectIndex]) return 1; return 1; }
 
 
 // Get the codepoint from characters of an unicode escape sequence

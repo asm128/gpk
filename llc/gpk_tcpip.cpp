@@ -187,7 +187,7 @@
 	return iAddress;
 }
 
-::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
+::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
 	::gpk::parseIntegerDecimal(strRemotePort, &(remoteIP.Port = 0));
 	if(strRemoteIP.size()) {
 		uint32_t											iOffset						= 0;

@@ -155,13 +155,13 @@ namespace gpk
 		::gpk::aobj<::gpk::apod<char>>			ColorNames				= {};
 	};
 
-	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view_array<const byte_t> & input) 						{
+	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view<const byte_t> & input) 						{
 		uint32_t												bytesRead				= sizeof(uint32_t); 
 		const uint32_t											dictLength				= *(uint32_t*)input.begin(); 
 		input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
-			::gpk::view_array<const char>							readKey					= {};
-			::gpk::view_array<const char>							readVal					= {};
+			::gpk::view<const char>							readKey					= {};
+			::gpk::view<const char>							readVal					= {};
 			bytesRead = ::gpk::viewRead(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			bytesRead = ::gpk::viewRead(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			attributes.push_back({readKey, readVal});
@@ -192,7 +192,7 @@ namespace gpk
 			return {};
 		}
 
-		::gpk::view_array<const ::gpk::SVOXVoxel>				GetXYZI				()	const	{
+		::gpk::view<const ::gpk::SVOXVoxel>				GetXYZI				()	const	{
 			for(uint32_t iChunk = 0; iChunk < ChunksCoord.size(); ++iChunk) {
 				if(0 == memcmp(ChunksCoord[iChunk].Header.Type.Storage, "XYZI", 4))
 					return ChunksCoord[iChunk].Data;
@@ -200,7 +200,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::view_array<const ::gpk::SColorBGRA>			GetBGRA					()	const	{
+		::gpk::view<const ::gpk::SColorBGRA>			GetBGRA					()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk) {
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4))
 					return {(const ::gpk::SColorBGRA*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
@@ -208,7 +208,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::error_t										Load					(::gpk::view_array<const byte_t> & input) { 
+		::gpk::error_t										Load					(::gpk::view<const byte_t> & input) { 
 			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -220,7 +220,7 @@ namespace gpk
 
 				const ::gpk::vcs										CHUNK_TAGS_STATIC[]	= {"MAIN", "SIZE", "PACK", "RGBA"};
 				gpk_vox_info_printf("Chunk type: %s.", gpk::toString(readChunkHeader.Type).begin());
-				if(-1 != ::gpk::find(::gpk::vcs{readChunkHeader.Type}, ::gpk::view_array<const ::gpk::vcs>{CHUNK_TAGS_STATIC})) {
+				if(-1 != ::gpk::find(::gpk::vcs{readChunkHeader.Type}, ::gpk::view<const ::gpk::vcs>{CHUNK_TAGS_STATIC})) {
 					::gpk::SVOXChunk										newChunk				= {};
 					newChunk.Header										= readChunkHeader;
 
@@ -231,7 +231,7 @@ namespace gpk
 						bytesRead = sizeof(uint32_t) * 256; 
 						newChunk.Data.append({input.begin(), bytesRead}); 
 						input = {input.begin() + bytesRead, input.size() - bytesRead}; 
-						::gpk::view_array<::gpk::SColorBGRA>	bgraView = {(::gpk::SColorBGRA*)newChunk.Data.begin(), 256};
+						::gpk::view<::gpk::SColorBGRA>	bgraView = {(::gpk::SColorBGRA*)newChunk.Data.begin(), 256};
 						for(uint32_t iColor = 0; iColor < bgraView.size(); ++iColor) {
 							::gpk::SColorBGRA									& bgra				= bgraView[iColor];
 							std::swap(bgra.r, bgra.b);
@@ -272,7 +272,7 @@ namespace gpk
 					else if(0 == strncmp(readChunkHeader.Type.Storage, "XYZI", 4)) { 
 						::gpk::SVOXChunkXYZI								newChunk			= {}; 
 		 				newChunk.Header									= readChunkHeader;
-						::gpk::view_array<const SVOXVoxel>					readChunkData		= {};
+						::gpk::view<const SVOXVoxel>					readChunkData		= {};
 						bytesRead										= ::gpk::viewRead(readChunkData, input); 
 						input											= {input.begin() + bytesRead, input.size() - bytesRead}; 
 						newChunk.Data									= readChunkData;
@@ -287,7 +287,7 @@ namespace gpk
 		 				newChunk.Header								= readChunkHeader;
 						bytesRead = sizeof(uint32_t	); const uint32_t countFrames = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 						for(uint32_t iFrame = 0; iFrame < countFrames; ++iFrame) {
-							::gpk::view_array<const char>					readVal		= {};
+							::gpk::view<const char>					readVal		= {};
 							bytesRead = ::gpk::viewRead(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							newChunk.ColorNames.push_back(readVal);
 						}
@@ -300,7 +300,7 @@ namespace gpk
 						bytesRead = sizeof(int32_t	); newChunk.Id = *(int32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 						::gpk::voxDictLoad(newChunk.Attributes, input);
 
-						::gpk::view_array<const int32_t>			readChildren		= {};
+						::gpk::view<const int32_t>			readChildren		= {};
 						bytesRead								= ::gpk::viewRead(readChildren, input); 
 						input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
 						newChunk.IdChildren						= readChildren;
@@ -335,8 +335,8 @@ namespace gpk
 							::gpk::SVOXTransformFrame							newFrame	= {};
 							bytesRead = sizeof(uint32_t	); const uint32_t dictLength = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
-								::gpk::view_array<const char>						readKey		= {};
-								::gpk::view_array<const char>						readVal		= {};
+								::gpk::view<const char>						readKey		= {};
+								::gpk::view<const char>						readVal		= {};
 								bytesRead = ::gpk::viewRead(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 								bytesRead = ::gpk::viewRead(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 

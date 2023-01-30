@@ -160,7 +160,7 @@ namespace gpk
 		::gpk::apod<::gpk::SCoord2<uint8_t>>		ChunkPositions;
 
 		int32_t											GetChunk					(const ::gpk::SCoord2<uint8_t> & chunkCoords) const	{ 
-			return ::gpk::find(chunkCoords, ::gpk::view_array<const ::gpk::SCoord2<uint8_t>>{ChunkPositions}); 
+			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::SCoord2<uint8_t>>{ChunkPositions}); 
 		}
 
 		int32_t											GetChunkForVoxel			(const ::gpk::SCoord3<uint8_t> & voxelPosition) const	{ 

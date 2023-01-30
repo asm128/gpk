@@ -4,8 +4,8 @@
 static ::gpk::error_t								geometryVoxelFace
 	( ::gpk::SGeometryIndexedTriangles						& geometry
 	, const ::gpk::SCoord3<float>							& voxelPos
-	, const ::gpk::view_array<const ::gpk::SCoord3<float>>	& rawVertices
-	, const ::gpk::view_array<const uint8_t>				& rawIndices
+	, const ::gpk::view<const ::gpk::SCoord3<float>>	& rawVertices
+	, const ::gpk::view<const uint8_t>				& rawIndices
 	) {
 	::gpk::SCoord3<float>									vertices [4]				= {}; 
 	uint32_t												indices  [6]				= {}; 
@@ -33,19 +33,19 @@ static ::gpk::error_t								geometryVoxelFace
 		aabbModel.Vertices[i].Scale(dimensions.Cast<float>());
 	}
 
-	::gpk::view_array<const ::gpk::SColorBGRA>				rgba					= voxelMap.Palette;
+	::gpk::view<const ::gpk::SColorBGRA>				rgba					= voxelMap.Palette;
 	if(0 == rgba.size())
 		rgba												= ::gpk::VOXEL_PALETTE;
 
-	const ::gpk::view_array<const ::gpk::SVoxel<uint8_t>>	voxels					= voxelMap.Voxels;
+	const ::gpk::view<const ::gpk::SVoxel<uint8_t>>	voxels					= voxelMap.Voxels;
 	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
 		::gpk::apod<::gpk::SGeometryGroup>					& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry									& aabbSlice				= output.AABBSlices[iFace];
 
 		const ::gpk::n3<int8_t>									faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
-		::gpk::view_array<const uint8_t>						rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
-		::gpk::view_array<const ::gpk::n3<float>>				rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
-		::gpk::view_array<const ::gpk::n2<float>>				rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
+		::gpk::view<const uint8_t>						rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
+		::gpk::view<const ::gpk::n3<float>>				rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
+		::gpk::view<const ::gpk::n2<float>>				rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
 		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);

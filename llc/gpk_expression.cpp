@@ -14,7 +14,7 @@ static	::gpk::error_t										expressionReaderViews					(::gpk::apod<::gpk::SEx
 	return 0;
 }
 
-static	::gpk::error_t										expressionTreeRebuild					(::gpk::view_array<::gpk::SExpressionToken>& in_object, ::gpk::aobj<::gpk::pobj<::gpk::SExpressionNode>> & out_nodes)								{
+static	::gpk::error_t										expressionTreeRebuild					(::gpk::view<::gpk::SExpressionToken>& in_object, ::gpk::aobj<::gpk::pobj<::gpk::SExpressionNode>> & out_nodes)								{
 	::gpk::aobj<::gpk::pobj<::gpk::SExpressionNode>>		& tree									= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 

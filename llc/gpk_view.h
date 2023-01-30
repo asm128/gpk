@@ -123,7 +123,7 @@ namespace gpk
 	typedef				::gpk::view_array<const int32_t		>	view_const_int32	, v1ci32, vci32;
 	typedef				::gpk::view_array<const int64_t		>	view_const_int64	, v1ci64, vci64;
 
-	struct view_const_string : public view_array<const char_t> {
+	struct view_const_string : public view<const char_t> {
 		inline constexpr							view_const_string					()																= default;
 		inline constexpr							view_const_string					(const view_const_char & other)									: view(other)							{}
 													view_const_string					(const char* inputString, uint32_t length)						: view(inputString, length)			{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;																}
@@ -166,7 +166,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			find								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, uint32_t offset = 0)				{
+						::gpk::error_t			find								(const _tElement& element, const ::gpk::view<const _tElement>& target, uint32_t offset = 0)				{
 		for(uint32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
 			if(element == target[iOffset])
 				return (int32_t)iOffset;
@@ -174,7 +174,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			rfind								(const _tElement& element, const ::gpk::view_array<const _tElement>& target, int32_t offset = 0)				{
+						::gpk::error_t			rfind								(const _tElement& element, const ::gpk::view<const _tElement>& target, int32_t offset = 0)				{
 		for(int32_t iOffset = target.size() - 1 - offset; iOffset >= 0; --iOffset)
 			if(element == target[iOffset])
 				return iOffset;
@@ -182,7 +182,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			find_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+						::gpk::error_t			find_sequence_obj					(const ::gpk::view<_tElement>& sequence, const ::gpk::view<_tElement>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
 			bool											equal								= true;
 			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
@@ -198,7 +198,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			rfind_sequence_obj					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+						::gpk::error_t			rfind_sequence_obj					(const ::gpk::view<_tElement>& sequence, const ::gpk::view<_tElement>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
 			bool											equal								= true;
 			for(uint32_t iSequenceElement = 0; iSequenceElement < sequence.size(); ++iSequenceElement) {
@@ -214,7 +214,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			find_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+						::gpk::error_t			find_sequence_pod					(const ::gpk::view<_tElement>& sequence, const ::gpk::view<_tElement>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset)
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement)))
 				return iOffset;
@@ -222,7 +222,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			rfind_sequence_pod					(const ::gpk::view_array<_tElement>& sequence, const ::gpk::view_array<_tElement>& target, uint32_t offset = 0)	{
+						::gpk::error_t			rfind_sequence_pod					(const ::gpk::view<_tElement>& sequence, const ::gpk::view<_tElement>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(_tElement)))
 				return iOffset;
@@ -233,7 +233,7 @@ namespace gpk
 	static inline		::gpk::error_t			rfind_string						(const ::gpk::vcs& sequence, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(sequence, target, offset); }
 
 	template<typename _tElement>
-	static inline		::gpk::error_t			is_any_of							(const ::gpk::view_array<const _tElement>& valuesToFind, const _tElement & valueToTest)	{
+	static inline		::gpk::error_t			is_any_of							(const ::gpk::view<const _tElement>& valuesToFind, const _tElement & valueToTest)	{
 		for(uint32_t iCharacter = 0; iCharacter < valuesToFind.size(); ++iCharacter)
 			if(valueToTest == valuesToFind[iCharacter])
 				return iCharacter;
@@ -241,7 +241,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			split								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+						::gpk::error_t			split								(const _tElement& valueToFind, const ::gpk::view<_tElement> & original, ::gpk::view<_tElement> & left, ::gpk::view<_tElement> & right) {
 		const ::gpk::error_t							iValue								= ::gpk::find(valueToFind, original);
 		if(0 > iValue) {
 			left										= original;
@@ -256,7 +256,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			splitAt								(const _tElement& valueToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+						::gpk::error_t			splitAt								(const _tElement& valueToFind, const ::gpk::view<_tElement> & original, ::gpk::view<_tElement> & left, ::gpk::view<_tElement> & right) {
 		const ::gpk::error_t							iValue								= ::gpk::find(valueToFind, original);
 		if(0 > iValue) { // Read until the end unless fragment is found.
 			left										= original;
@@ -270,7 +270,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			split								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+						::gpk::error_t			split								(const ::gpk::view<_tElement>& sequenceToFind, const ::gpk::view<_tElement> & original, ::gpk::view<_tElement> & left, ::gpk::view<_tElement> & right) {
 		const ::gpk::error_t							iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) {
 			left										= original;
@@ -285,7 +285,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			splitAt								(const ::gpk::view_array<_tElement>& sequenceToFind, const ::gpk::view_array<_tElement> & original, ::gpk::view_array<_tElement> & left, ::gpk::view_array<_tElement> & right) {
+						::gpk::error_t			splitAt								(const ::gpk::view<_tElement>& sequenceToFind, const ::gpk::view<_tElement> & original, ::gpk::view<_tElement> & left, ::gpk::view<_tElement> & right) {
 		const ::gpk::error_t							iValue								= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) { // Read until the end unless fragment is found.
 			left										= original;
@@ -299,7 +299,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			max									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
+						::gpk::error_t			max									(const ::gpk::view<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
 			return -1;
 		*result										= &input[0];
@@ -315,7 +315,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t			min									(const ::gpk::view_array<const _tElement> & input, const _tElement ** result) {
+						::gpk::error_t			min									(const ::gpk::view<const _tElement> & input, const _tElement ** result) {
 		if(0 == input.size())
 			return -1;
 		*result										= &input[0];
@@ -331,7 +331,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						const _tElement&		max									(const ::gpk::view_array<const _tElement> & input) {
+						const _tElement&		max									(const ::gpk::view<const _tElement> & input) {
 		gthrow_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		const _tElement									* result							= &input[0];
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
@@ -343,7 +343,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						const _tElement&		min									(const ::gpk::view_array<const _tElement> & input) {
+						const _tElement&		min									(const ::gpk::view<const _tElement> & input) {
 		gthrow_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		const _tElement									* result							= &input[0];
 		for(uint32_t iElement = 1; iElement < input.size(); ++iElement) {
@@ -359,7 +359,7 @@ namespace gpk
 #define be2le_64(number) ::gpk::reverse<ubyte_t>({(ubyte_t*)&number, 8})
 
 	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::vcb & input)	{
+	::gpk::error_t									viewRead							(::gpk::view<const _tElement> & headerToRead, const ::gpk::vcb & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
@@ -368,7 +368,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewRead							(::gpk::view_array<_tElement> & headerToRead, const ::gpk::vb & input)	{
+	::gpk::error_t									viewRead							(::gpk::view<_tElement> & headerToRead, const ::gpk::vb & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
@@ -386,7 +386,7 @@ namespace gpk
 
 
 	template<typename _tElement>
-	::gpk::error_t									viewLoad							(::gpk::view_array<const _tElement> & headerToRead, const ::gpk::vcub & input)	{
+	::gpk::error_t									viewLoad							(::gpk::view<const _tElement> & headerToRead, const ::gpk::vcub & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));
@@ -395,7 +395,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewLoad							(::gpk::view_array<_tElement> & headerToRead, const ::gpk::vub & input)	{
+	::gpk::error_t									viewLoad							(::gpk::view<_tElement> & headerToRead, const ::gpk::vub & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t										elementCount						= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tElement)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tElement));

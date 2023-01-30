@@ -5,21 +5,21 @@
 
 namespace gpk
 {
-					::gpk::error_t					hexEncode													(const ::gpk::view_array<const ubyte_t	> & inputBinary	, ::gpk::apod<char_t	> & out_hexed	);
-					::gpk::error_t					hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::apod<ubyte_t	> & outputBinary);
-	static inline	::gpk::error_t					hexEncode													(const ::gpk::view_array<const byte_t	> & inputBinary	, ::gpk::apod<char_t	> & out_hexed	) { return hexEncode(::gpk::vcub{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
-					::gpk::error_t					hexDecode													(const ::gpk::view_array<const char_t	> & in_hexed	, ::gpk::apod<byte_t	> & outputBinary);
+					::gpk::error_t					hexEncode													(const ::gpk::view<const ubyte_t> & inputBinary	, ::gpk::apod<char_t	> & out_hexed	);
+					::gpk::error_t					hexDecode													(const ::gpk::view<const char_t	> & in_hexed	, ::gpk::apod<ubyte_t	> & outputBinary);
+	static inline	::gpk::error_t					hexEncode													(const ::gpk::view<const byte_t	> & inputBinary	, ::gpk::apod<char_t	> & out_hexed	) { return hexEncode(::gpk::vcub{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+					::gpk::error_t					hexDecode													(const ::gpk::view<const char_t	> & in_hexed	, ::gpk::apod<byte_t	> & outputBinary);
 	// Based on Gary Ardell's code for VB.
-					::gpk::error_t					ardellEncode												(::gpk::apod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output);
-					::gpk::error_t					ardellDecode												(::gpk::apod<int32_t> & cache, const ::gpk::view_array<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output);
-	static inline	::gpk::error_t					ardellEncode												(const ::gpk::view_array<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
-	static inline	::gpk::error_t					ardellDecode												(const ::gpk::view_array<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
+					::gpk::error_t					ardellEncode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output);
+					::gpk::error_t					ardellDecode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output);
+	static inline	::gpk::error_t					ardellEncode												(const ::gpk::view<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
+	static inline	::gpk::error_t					ardellDecode												(const ::gpk::view<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
 
 					::gpk::error_t					saltDataSalt												(const ::gpk::vcb& binary, ::gpk::apod<byte_t> & salted);
 					::gpk::error_t					saltDataUnsalt												(const ::gpk::vcb& salted, ::gpk::apod<byte_t> & binary);
 
 	template<typename _tBase>
-					::gpk::error_t					rleEncode													(const ::gpk::view_array<_tBase>& decoded, ::gpk::apod<byte_t>& encoded) {
+					::gpk::error_t					rleEncode													(const ::gpk::view<_tBase>& decoded, ::gpk::apod<byte_t>& encoded) {
   		uint32_t											idxLatest													= 0;
 		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < decoded.size(); ++iIn) {

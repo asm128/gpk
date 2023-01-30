@@ -1,4 +1,4 @@
-#include "gpk_view.h"		// for gpk::view_array<>
+#include "gpk_view.h"		// for gpk::view<>
 #include "gpk_coord.h"
 
 #ifndef GPK_GRID_VIEW_H_3423423
@@ -8,43 +8,43 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template <typename _tElement>
-	class view_grid {
+	class view2d {
 	protected:
 		// Properties / Member Variables
-							_tElement								* Data						= 0;
-							::gpk::n2<uint32_t>						Size						= {0, 0};
+							_tElement								* Data					= 0;
+							::gpk::n2<uint32_t>						Size					= {0, 0};
 	public:
 		typedef				_tElement								TElement;
 		// Constructors
-		inline constexpr											view_grid					()																			noexcept	= default;
-		inline														view_grid					(_tElement* dataElements, uint32_t gridWidth, uint32_t gridHeight)						: Data{dataElements}, Size{gridWidth, gridHeight}			{
+		inline constexpr											view2d					()																			noexcept	= default;
+		inline														view2d					(_tElement* dataElements, uint32_t gridWidth, uint32_t gridHeight)						: Data{dataElements}, Size{gridWidth, gridHeight}			{
 			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y, "Invalid parameters. Size: %u, %u, pointer: %p.", gridWidth, gridHeight, dataElements);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
-		inline														view_grid					(_tElement* dataElements, const ::gpk::n2<uint32_t>& gridMetrics)						: view_grid(dataElements, gridMetrics.x, gridMetrics.y)		{}
+		inline														view2d					(_tElement* dataElements, const ::gpk::n2<uint32_t>& gridMetrics)						: view2d(dataElements, gridMetrics.x, gridMetrics.y)		{}
 		template<size_t _tWidth, size_t _tHeight>
-		inline constexpr											view_grid					(_tElement (&dataElements)[_tHeight][_tWidth])											: Data{&dataElements[0][0]}, Size{_tWidth, _tHeight}				{}
+		inline constexpr											view2d					(_tElement (&dataElements)[_tHeight][_tWidth])											: Data{&dataElements[0][0]}, Size{_tWidth, _tHeight}				{}
 
-		inline constexpr	operator								view_grid<const _tElement>	()																	const	noexcept	{ return {Data, Size}; }
+		inline constexpr	operator								view2d<const _tElement>	()																	const	noexcept	{ return {Data, Size}; }
 		// Operators
-							::gpk::view<_tElement>					operator[]					(uint32_t row)																			{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<_tElement		>(&Data[row * Size.x], Size.x); }
-							::gpk::view<const _tElement>			operator[]					(uint32_t row)														const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<const _tElement	>(&Data[row * Size.x], Size.x); }
-							_tElement		&						operator[]					(const ::gpk::n2<uint32_t> & cell)														{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
-							const _tElement	&						operator[]					(const ::gpk::n2<uint32_t> & cell)									const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+							::gpk::view<_tElement>					operator[]				(uint32_t row)																			{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<_tElement		>(&Data[row * Size.x], Size.x); }
+							::gpk::view<const _tElement>			operator[]				(uint32_t row)														const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<const _tElement	>(&Data[row * Size.x], Size.x); }
+							_tElement		&						operator[]				(const ::gpk::n2<uint32_t> & cell)														{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
+							const _tElement	&						operator[]				(const ::gpk::n2<uint32_t> & cell)									const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid cell: {%u, %u}.", cell.x, cell.y); gthrow_if(cell.y >= Size.y, "Invalid row: %i.", (int32_t)cell.y); gthrow_if(cell.x >= Size.x, "Invalid column: %i.", (int32_t)cell.x); return Data[cell.y * Size.x + cell.x]; }
 
 		// Methods
 #if !defined(GPK_ATMEL)
-		inline constexpr	const _tElement*						begin						()																	const	noexcept	{ return Data;							}
-		inline constexpr	const _tElement*						end							()																	const	noexcept	{ return Data + size();					}
+		inline constexpr	const _tElement*						begin					()																	const	noexcept	{ return Data;							}
+		inline constexpr	const _tElement*						end						()																	const	noexcept	{ return Data + size();					}
 #endif
-		inline constexpr	_tElement*								begin						()																			noexcept	{ return Data;							}
-		inline constexpr	_tElement*								end							()																			noexcept	{ return Data + size();					}
+		inline constexpr	_tElement*								begin					()																			noexcept	{ return Data;							}
+		inline constexpr	_tElement*								end						()																			noexcept	{ return Data + size();					}
 
-		inline constexpr	const ::gpk::n2<uint32_t>&				metrics						()																	const	noexcept	{ return Size;							}
-		inline constexpr	uint32_t								size						()																	const	noexcept	{ return area();						}
-		inline constexpr	uint32_t 								byte_count					()																	const	noexcept	{ return area() * sizeof(_tElement);	}
-		inline constexpr	uint32_t								area						()																	const	noexcept	{ return Size.x * Size.y;				}
+		inline constexpr	const ::gpk::n2<uint32_t>&				metrics					()																	const	noexcept	{ return Size;							}
+		inline constexpr	uint32_t								size					()																	const	noexcept	{ return area();						}
+		inline constexpr	uint32_t 								byte_count				()																	const	noexcept	{ return area() * sizeof(_tElement);	}
+		inline constexpr	uint32_t								area					()																	const	noexcept	{ return Size.x * Size.y;				}
 
-		inline				::gpk::error_t							fill						(const _tElement & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
+		inline				::gpk::error_t							fill					(const _tElement & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);
 			for(uint32_t i = offset, actualCount = ::gpk::min(size(), count); i < actualCount; ++i)
 				Data[i]									= value;
@@ -52,9 +52,9 @@ namespace gpk
 		}
 	};
 
-	template<typename _tCell>	using grid					= ::gpk::view_grid<_tCell>;
-	template<typename _tCell>	using view2d				= ::gpk::view_grid<_tCell>;
-	template<typename _tCell>	using v2					= ::gpk::view_grid<_tCell>;
+	template<typename _tCell>	using grid					= ::gpk::view2d<_tCell>;
+	template<typename _tCell>	using view_grid				= ::gpk::view2d<_tCell>;
+	template<typename _tCell>	using v2					= ::gpk::view2d<_tCell>;
 
 #pragma pack(pop)
 
@@ -82,65 +82,65 @@ namespace gpk
 		return 0;
 	}
 
-	// view_array		common typedefs
-	typedef	::gpk::view1d<::gpk::n2<char_t			>>		v1n2c		;
-	typedef	::gpk::view1d<::gpk::n2<ubyte_t			>>		v1n2ub		;
-	typedef	::gpk::view1d<::gpk::n2<byte_t			>>		v1n2b		;
-	typedef	::gpk::view1d<::gpk::n2f32				>		v1n2f32		, v1n2f;
-	typedef	::gpk::view1d<::gpk::n2f64				>		v1n2f64		;
-	typedef	::gpk::view1d<::gpk::n2u8				>		v1n2ui8		;
-	typedef	::gpk::view1d<::gpk::n2u16				>		v1n2ui16	;
-	typedef	::gpk::view1d<::gpk::n2u32				>		v1n2ui32	;
-	typedef	::gpk::view1d<::gpk::n2u64				>		v1n2ui64	;
-	typedef	::gpk::view1d<::gpk::n2i8				>		v1n2i8		;
-	typedef	::gpk::view1d<::gpk::n2i16				>		v1n2i16		;
-	typedef	::gpk::view1d<::gpk::n2i32				>		v1n2i32		;
-	typedef	::gpk::view1d<::gpk::n2i64				>		v1n2i64		;
+	// view		common typedefs
+	typedef	::gpk::view<::gpk::n2<char_t			>>		v1n2c		;
+	typedef	::gpk::view<::gpk::n2<ubyte_t			>>		v1n2ub		;
+	typedef	::gpk::view<::gpk::n2<byte_t			>>		v1n2b		;
+	typedef	::gpk::view<::gpk::n2f32				>		v1n2f32		, v1n2f;
+	typedef	::gpk::view<::gpk::n2f64				>		v1n2f64		;
+	typedef	::gpk::view<::gpk::n2u8					>		v1n2ui8		;
+	typedef	::gpk::view<::gpk::n2u16				>		v1n2ui16	;
+	typedef	::gpk::view<::gpk::n2u32				>		v1n2ui32	;
+	typedef	::gpk::view<::gpk::n2u64				>		v1n2ui64	;
+	typedef	::gpk::view<::gpk::n2i8					>		v1n2i8		;
+	typedef	::gpk::view<::gpk::n2i16				>		v1n2i16		;
+	typedef	::gpk::view<::gpk::n2i32				>		v1n2i32		;
+	typedef	::gpk::view<::gpk::n2i64				>		v1n2i64		;
 
-	typedef	::gpk::view1d<::gpk::n3<char_t			>>		v1n3c		;
-	typedef	::gpk::view1d<::gpk::n3<ubyte_t			>>		v1n3ub		;
-	typedef	::gpk::view1d<::gpk::n3<byte_t			>>		v1n3b		;
-	typedef	::gpk::view1d<::gpk::n3f32				>		v1n3f32		, v1n3f;
-	typedef	::gpk::view1d<::gpk::n3f64				>		v1n3f64		;
-	typedef	::gpk::view1d<::gpk::n3u8				>		v1n3ui8		;
-	typedef	::gpk::view1d<::gpk::n3u16				>		v1n3ui16	;
-	typedef	::gpk::view1d<::gpk::n3u32				>		v1n3ui32	;
-	typedef	::gpk::view1d<::gpk::n3u64				>		v1n3ui64	;
-	typedef	::gpk::view1d<::gpk::n3i8				>		v1n3i8		;
-	typedef	::gpk::view1d<::gpk::n3i16				>		v1n3i16		;
-	typedef	::gpk::view1d<::gpk::n3i32				>		v1n3i32		;
-	typedef	::gpk::view1d<::gpk::n3i64				>		v1n3i64		;
+	typedef	::gpk::view<::gpk::n3<char_t			>>		v1n3c		;
+	typedef	::gpk::view<::gpk::n3<ubyte_t			>>		v1n3ub		;
+	typedef	::gpk::view<::gpk::n3<byte_t			>>		v1n3b		;
+	typedef	::gpk::view<::gpk::n3f32				>		v1n3f32		, v1n3f;
+	typedef	::gpk::view<::gpk::n3f64				>		v1n3f64		;
+	typedef	::gpk::view<::gpk::n3u8					>		v1n3ui8		;
+	typedef	::gpk::view<::gpk::n3u16				>		v1n3ui16	;
+	typedef	::gpk::view<::gpk::n3u32				>		v1n3ui32	;
+	typedef	::gpk::view<::gpk::n3u64				>		v1n3ui64	;
+	typedef	::gpk::view<::gpk::n3i8					>		v1n3i8		;
+	typedef	::gpk::view<::gpk::n3i16				>		v1n3i16		;
+	typedef	::gpk::view<::gpk::n3i32				>		v1n3i32		;
+	typedef	::gpk::view<::gpk::n3i64				>		v1n3i64		;
 
-	// view_array<const> common typedefs
-	typedef	::gpk::view1d<const	::gpk::n2<char_t	>>		v1c2c	;
-	typedef	::gpk::view1d<const	::gpk::n2<ubyte_t	>>		v1c2ub	;
-	typedef	::gpk::view1d<const	::gpk::n2<byte_t	>>		v1c2b	;
-	typedef	::gpk::view1d<const	::gpk::n2f32		>		v1c2f32	, v1c2f;
-	typedef	::gpk::view1d<const	::gpk::n2f64		>		v1c2f64	;
-	typedef	::gpk::view1d<const	::gpk::n2u8			>		v1c2ui8	;
-	typedef	::gpk::view1d<const	::gpk::n2u16		>		v1c2ui16;
-	typedef	::gpk::view1d<const	::gpk::n2u32		>		v1c2ui32;
-	typedef	::gpk::view1d<const	::gpk::n2u64		>		v1c2ui64;
-	typedef	::gpk::view1d<const	::gpk::n2i8			>		v1c2i8	;
-	typedef	::gpk::view1d<const	::gpk::n2i16		>		v1c2i16	;
-	typedef	::gpk::view1d<const	::gpk::n2i32		>		v1c2i32	;
-	typedef	::gpk::view1d<const	::gpk::n2i64		>		v1c2i64	;
+	// view<const> common typedefs
+	typedef	::gpk::view<const ::gpk::n2<char_t		>>		v1c2c	;
+	typedef	::gpk::view<const ::gpk::n2<ubyte_t		>>		v1c2ub	;
+	typedef	::gpk::view<const ::gpk::n2<byte_t		>>		v1c2b	;
+	typedef	::gpk::view<const ::gpk::n2f32			>		v1c2f32	, v1c2f;
+	typedef	::gpk::view<const ::gpk::n2f64			>		v1c2f64	;
+	typedef	::gpk::view<const ::gpk::n2u8			>		v1c2ui8	;
+	typedef	::gpk::view<const ::gpk::n2u16			>		v1c2ui16;
+	typedef	::gpk::view<const ::gpk::n2u32			>		v1c2ui32;
+	typedef	::gpk::view<const ::gpk::n2u64			>		v1c2ui64;
+	typedef	::gpk::view<const ::gpk::n2i8			>		v1c2i8	;
+	typedef	::gpk::view<const ::gpk::n2i16			>		v1c2i16	;
+	typedef	::gpk::view<const ::gpk::n2i32			>		v1c2i32	;
+	typedef	::gpk::view<const ::gpk::n2i64			>		v1c2i64	;
+							  
+	typedef	::gpk::view<const ::gpk::n3<char_t		>>		v1c3c	;
+	typedef	::gpk::view<const ::gpk::n3<ubyte_t		>>		v1c3ub	;
+	typedef	::gpk::view<const ::gpk::n3<byte_t		>>		v1c3b	;
+	typedef	::gpk::view<const ::gpk::n3f32			>		v1c3f32	, v1c3f;
+	typedef	::gpk::view<const ::gpk::n3f64			>		v1c3f64	;
+	typedef	::gpk::view<const ::gpk::n3u8			>		v1c3ui8	;
+	typedef	::gpk::view<const ::gpk::n3u16			>		v1c3ui16;
+	typedef	::gpk::view<const ::gpk::n3u32			>		v1c3ui32;
+	typedef	::gpk::view<const ::gpk::n3u64			>		v1c3ui64;
+	typedef	::gpk::view<const ::gpk::n3i8			>		v1c3i8	;
+	typedef	::gpk::view<const ::gpk::n3i16			>		v1c3i16	;
+	typedef	::gpk::view<const ::gpk::n3i32			>		v1c3i32	;
+	typedef	::gpk::view<const ::gpk::n3i64			>		v1c3i64	;
 
-	typedef	::gpk::view1d<const	::gpk::n3<char_t	>>		v1c3c	;
-	typedef	::gpk::view1d<const	::gpk::n3<ubyte_t	>>		v1c3ub	;
-	typedef	::gpk::view1d<const	::gpk::n3<byte_t	>>		v1c3b	;
-	typedef	::gpk::view1d<const	::gpk::n3f32		>		v1c3f32	, v1c3f;
-	typedef	::gpk::view1d<const	::gpk::n3f64		>		v1c3f64	;
-	typedef	::gpk::view1d<const	::gpk::n3u8			>		v1c3ui8	;
-	typedef	::gpk::view1d<const	::gpk::n3u16		>		v1c3ui16;
-	typedef	::gpk::view1d<const	::gpk::n3u32		>		v1c3ui32;
-	typedef	::gpk::view1d<const	::gpk::n3u64		>		v1c3ui64;
-	typedef	::gpk::view1d<const	::gpk::n3i8			>		v1c3i8	;
-	typedef	::gpk::view1d<const	::gpk::n3i16		>		v1c3i16	;
-	typedef	::gpk::view1d<const	::gpk::n3i32		>		v1c3i32	;
-	typedef	::gpk::view1d<const	::gpk::n3i64		>		v1c3i64	;
-
-	// view_array common typedefs
+	// view common typedefs
 	typedef	::gpk::view2d<	char_t	>					v2c			;
 	typedef	::gpk::view2d<	ubyte_t	>					v2ub		;
 	typedef	::gpk::view2d<	byte_t	>					v2b			;
@@ -183,7 +183,7 @@ namespace gpk
 	typedef	::gpk::view2d<::gpk::n3i32			>		v2n3i32		;
 	typedef	::gpk::view2d<::gpk::n3i64			>		v2n3i64		;
 
-	// view_array<const> common typedefs
+	// view<const> common typedefs
 	typedef	::gpk::view2d<const	char_t		>			v2cc	;
 	typedef	::gpk::view2d<const	ubyte_t		>			v2cub	;
 	typedef	::gpk::view2d<const	byte_t		>			v2cb	;

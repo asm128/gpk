@@ -102,7 +102,7 @@ namespace gpk
 	};
 
 	::gpk::error_t																			httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
-	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view_array<const char_t *> & argv);
+	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char_t *> & argv);
 	::gpk::error_t																			cgiMain						(int argc, char** argv, char**envv);
 
 	struct SCGIFramework {

@@ -31,7 +31,7 @@
 	for(uint32_t iView = 0; iView < Allocator.Counts.size(); ++iView)
 		gpk_necall(output.append(Allocator.Views[iView], Allocator.Counts[iView]), "%s", "Out of memory?");
 
-	gpk_necall(::gpk::viewWrite(::gpk::view_array<const _tIndex>{Indices.begin(), Indices.size()}, output), "%s", "Out of memory?");
+	gpk_necall(::gpk::viewWrite(::gpk::view<const _tIndex>{Indices.begin(), Indices.size()}, output), "%s", "Out of memory?");
 	return 0;
 }
 
@@ -48,7 +48,7 @@
 		offsetViewData									+= lenCurrentView;
 		offsetViewSize									+= sizeof(_tViewLen);
 	}
-	::gpk::view_array<const _tIndex>					inputView;
+	::gpk::view<const _tIndex>					inputView;
 	::gpk::viewRead(inputView, {&input[offsetViewData], input.size() - offsetViewData});
 	Indices											= inputView;
 	return 0;

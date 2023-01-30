@@ -190,17 +190,17 @@ namespace gpk
 	typedef ::gpk::SColorRGBA							rgba	;
 	typedef ::gpk::SColorRGB							rgb		;
 
-	typedef	::gpk::view1d<::gpk::rgbaf	>				v1rgbaf	;
-	typedef	::gpk::view1d<::gpk::bgra	>				v1bgra	;
-	typedef	::gpk::view1d<::gpk::bgr	>				v1bgr	;
-	typedef	::gpk::view1d<::gpk::rgba	>				v1rgba	;
-	typedef	::gpk::view1d<::gpk::rgb	>				v1rgb	;
+	typedef	::gpk::view<::gpk::rgbaf	>				v1rgbaf	;
+	typedef	::gpk::view<::gpk::bgra		>				v1bgra	;
+	typedef	::gpk::view<::gpk::bgr		>				v1bgr	;
+	typedef	::gpk::view<::gpk::rgba		>				v1rgba	;
+	typedef	::gpk::view<::gpk::rgb		>				v1rgb	;
 
-	typedef	::gpk::view1d<const	::gpk::rgbaf	>		v1crgbaf;
-	typedef	::gpk::view1d<const	::gpk::bgra		>		v1cbgra	;
-	typedef	::gpk::view1d<const	::gpk::bgr		>		v1cbgr	;
-	typedef	::gpk::view1d<const	::gpk::rgba		>		v1crgba	;
-	typedef	::gpk::view1d<const	::gpk::rgb		>		v1crgb	;
+	typedef	::gpk::view<const	::gpk::rgbaf	>		v1crgbaf;
+	typedef	::gpk::view<const	::gpk::bgra		>		v1cbgra	;
+	typedef	::gpk::view<const	::gpk::bgr		>		v1cbgr	;
+	typedef	::gpk::view<const	::gpk::rgba		>		v1crgba	;
+	typedef	::gpk::view<const	::gpk::rgb		>		v1crgb	;
 
 	typedef	::gpk::view2d<::gpk::rgbaf	>				v2rgbaf	;
 	typedef	::gpk::view2d<::gpk::bgra	>				v2bgra	;

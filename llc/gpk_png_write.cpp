@@ -16,7 +16,7 @@ static			int32_t											make_crc_table							()																									{
 }
 
 // Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below)).
-				uint32_t										gpk::update_crc							(const ::gpk::view_array<const ubyte_t> & buf, uint32_t crc)										{
+				uint32_t										gpk::update_crc							(const ::gpk::view<const ubyte_t> & buf, uint32_t crc)										{
     uint32_t															c										= crc;
     if(0 == g_crc_table_computed) {
 		static const int32_t												initedTable								= make_crc_table();
@@ -30,7 +30,7 @@ static			int32_t											make_crc_table							()																									{
 	return c;
 }
 
-static			::gpk::error_t									pngDeflate								(const ::gpk::view_array<const ubyte_t>& inflated, ::gpk::apod<ubyte_t>& deflated)		{
+static			::gpk::error_t									pngDeflate								(const ::gpk::view<const ubyte_t>& inflated, ::gpk::apod<ubyte_t>& deflated)		{
     int				ret;
 	z_stream		strm												= {};
     ret																	= deflateInit(&strm, Z_BEST_COMPRESSION);

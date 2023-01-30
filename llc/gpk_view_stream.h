@@ -6,11 +6,11 @@
 namespace gpk
 {
 	template<typename _tElement>
-	struct view_stream : public view_array<_tElement> {
+	struct view_stream : public view<_tElement> {
 															uint32_t						CursorPosition						= 0;
 
-		using												view_array<_tElement>::			view_array;
-		using												view_array<_tElement>::			Data;
+		using												view<_tElement>::				view;
+		using												view<_tElement>::				Data;
 
 		//template<typename _tPOD>					inline	::gpk::error_t					rewd								(_tPOD& toSkip)							{ CursorPosition += sizeof(_tPOD); return CursorPosition; }
 		//template<typename _tPOD>					inline	::gpk::error_t					ffwd								(_tPOD& toSkip)							{ CursorPosition += sizeof(_tPOD); return CursorPosition; }

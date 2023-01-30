@@ -121,7 +121,7 @@ int								gpk::drawLine
 	int32_t								err						= xDiff + yDiff;  /* error value e_xy */
 
 	bool								yAxis					= fabs(yDiff) > xDiff;
-	::gpk::view_array<uint32_t>			depthBufferRow			= {};
+	::gpk::view<uint32_t>			depthBufferRow			= {};
 	if( line.A.x >= 0 && line.A.x < (int32_t)offscreenMetrics.x
 	 && line.A.y >= 0 && line.A.y < (int32_t)offscreenMetrics.y
 	 && lineFloat.A.z >= 0 && lineFloat.A.z <= 1

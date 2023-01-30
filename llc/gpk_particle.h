@@ -5,7 +5,7 @@
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
 #include "gpk_coord.h"			// for ::gpk::SCoord2<>
 #include "gpk_error.h"			// for ::gpk::error_t
-#include "gpk_array.h"		// for ::gpk::view_array<>
+#include "gpk_array.h"		// for ::gpk::view<>
 #include <cfloat>
 
 #ifndef GPK_PARTICLE_H_29384923874
@@ -69,7 +69,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										integrate									(const ::gpk::view_array<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view_array<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
+						::gpk::error_t										integrate									(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
 		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
@@ -91,7 +91,7 @@ namespace gpk
 							::gpk::apod<TParticle>							ParticleNext								= {};
 		// -----------------------------------------------------------------	---
 		inline				::gpk::error_t										Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
-							::gpk::error_t										Integrate									(::gpk::view_array<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
+							::gpk::error_t										Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
 		// --------------------------------------------------------------------
 							::gpk::error_t										AddParticle									(const TParticle& particleData)																			{
 								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
@@ -199,7 +199,7 @@ namespace gpk
 			return 0; 
 		}
 
-		::gpk::error_t										Load(::gpk::view_array<const byte_t> & input) { 
+		::gpk::error_t										Load(::gpk::view<const byte_t> & input) { 
 			gpk_necs(::gpk::loadView(input, Position	));
 			gpk_necs(::gpk::loadView(input, Direction	));
 			gpk_necs(::gpk::loadView(input, Speed		));

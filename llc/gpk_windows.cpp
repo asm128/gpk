@@ -14,13 +14,13 @@
 
 	retval_gerror_if({}, nullptr == messageBuffer, "FormatMessage() failed.")
 	else {
-		const ::gpk::apod<char_t>				message								= ::gpk::view_array<const char_t>{messageBuffer, size >= 2 ? size - 2 : size};
+		const ::gpk::apod<char_t>				message								= ::gpk::view<const char_t>{messageBuffer, size >= 2 ? size - 2 : size};
 		LocalFree(messageBuffer);
 		return message;
 	}
 }
 
-::gpk::error_t							gpk::wcstombs						(::gpk::apod<char_t> & output, const ::gpk::view_array<wchar_t> input)	{
+::gpk::error_t							gpk::wcstombs						(::gpk::apod<char_t> & output, const ::gpk::view<wchar_t> input)	{
 	if(0 == input.size())
 		return 0;
 

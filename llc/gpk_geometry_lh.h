@@ -30,7 +30,7 @@ namespace gpk
 			return 0;
 		}
 
-		const ::gpk::error_t						GetElementIndex			(const ::gpk::vcc & keyName) const { return ::gpk::find(keyName, ::gpk::view_array<const ::gpk::vcc>{Keys}); }
+		const ::gpk::error_t						GetElementIndex			(const ::gpk::vcc & keyName) const { return ::gpk::find(keyName, ::gpk::view<const ::gpk::vcc>{Keys}); }
 		const _tElement								GetElementValue			(const ::gpk::vcc & keyName) const { 
 			const ::gpk::error_t							elementIndex			= GetElementIndex(); 
 			if(elementIndex >= 0 && elementIndex < Keys.size()) 

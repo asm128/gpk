@@ -71,7 +71,7 @@ namespace gpk
 		return ::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, GPK_IPV4_EXPAND_PTR_IP(address), &address.Port);
 	}
 
-					::gpk::error_t									tcpipAddress						(const ::gpk::view_array<const char>& strRemoteIP, const ::gpk::view_array<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
+					::gpk::error_t									tcpipAddress						(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
 } // namespace
 
 #endif // GPK_TCPIP_H_2874982374

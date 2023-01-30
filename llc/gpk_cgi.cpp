@@ -27,7 +27,7 @@
 	return 0;
 }
 
-::gpk::error_t										gpk::writeCGIEnvironToFile		(::gpk::view_array<const ::gpk::TKeyValConstString> environViews)	{
+::gpk::error_t										gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
 	::gpk::apod<char_t>								environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {

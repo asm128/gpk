@@ -226,7 +226,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 				continue;
 			int32_t																			lenPath								= snprintf(sPath, ::gpk::size(sPath) - 2, "%s/%s", pathToList.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
-			gpk_necall(output.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
+			gpk_necall(output.push_back(::gpk::view<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");
         }
 	}
 #endif
@@ -259,7 +259,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 		}
 		else {
 			int32_t indexFile;
-			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view_array<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view<const char_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 			//pathContents.Files[indexFile].push_back(0);
 			verbose_printf("File %u: %s.", indexFile, sPath);
 		}

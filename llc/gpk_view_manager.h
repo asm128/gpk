@@ -13,7 +13,7 @@ namespace gpk
 							::gpk::aobj<ptr_block_type>							Blocks;
 							::gpk::apod<uint32_t>									RemainingSpace;
 	public:
-							::gpk::error_t												push_sequence				(const _tElement* sequence, uint32_t length, ::gpk::view_array<const _tElement>& out_view)	{
+							::gpk::error_t												push_sequence				(const _tElement* sequence, uint32_t length, ::gpk::view<const _tElement>& out_view)	{
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t																			& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= length) {
@@ -43,8 +43,8 @@ namespace gpk
 
 																						~CViewManager				()																					{}
 
-			inline			::gpk::error_t												View						(const _tElement* elements, uint16_t count)													{ ::gpk::view_array<const _tElement> out_view; return View(elements, count, out_view); }
-							::gpk::error_t												View						(const _tElement* elements, uint16_t count, ::gpk::view_array<const _tElement>& out_view)	{
+			inline			::gpk::error_t												View						(const _tElement* elements, uint16_t count)													{ ::gpk::view<const _tElement> out_view; return View(elements, count, out_view); }
+							::gpk::error_t												View						(const _tElement* elements, uint16_t count, ::gpk::view<const _tElement>& out_view)	{
 			if(0 == count || 0 == elements) {
 				out_view																		= {};
 				return -1;

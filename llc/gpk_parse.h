@@ -35,7 +35,7 @@ namespace gpk
 #pragma pack(pop)
 	::gpk::error_t												stripLiteralParse				(::gpk::SStripLiteralState	& stateReading	, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format);
 	::gpk::error_t												stripLiteralParseStep			(::gpk::SStripLiteralState	& work_state	, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format);
-	::gpk::error_t												stripLiteralGetViews			(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format);
+	::gpk::error_t												stripLiteralGetViews			(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format);
 
 	bool														isSpaceCharacter				(const char characterToTest);
 	::gpk::error_t												skipToNextCharacter				(uint32_t& indexCurrentChar, const ::gpk::vcc & expression);

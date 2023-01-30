@@ -10,7 +10,7 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::join							(::gpk::apod<char_t> & query, char separator, ::gpk::view_array<const gpk::view_const_char> fields)	{
+::gpk::error_t							gpk::join							(::gpk::apod<char_t> & query, char separator, ::gpk::view<const gpk::view_const_char> fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(query.append(fields[iField]), "%s", "Out of memory?");
 		if(++iField < fields.size())
@@ -40,13 +40,13 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::find							(const ::gpk::vcs & keyToFind, const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyvals, ::gpk::vcc & out_val)		{
+::gpk::error_t							gpk::find							(const ::gpk::vcs & keyToFind, const ::gpk::view<const ::gpk::TKeyValConstString> & keyvals, ::gpk::vcc & out_val)		{
 	::gpk::error_t								index								= ::gpk::find(keyToFind, keyvals);
 	out_val									= (-1 == index) ? ::gpk::vcs{} : keyvals[index].Val;
 	return index;
 }
 
-::gpk::error_t							gpk::keyvalNumeric					(const ::gpk::vcs & key, const ::gpk::view_array<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
+::gpk::error_t							gpk::keyvalNumeric					(const ::gpk::vcs & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	::gpk::error_t								indexKey							= ::gpk::find(key, keyVals);
 	if(-1 != indexKey) {
@@ -55,7 +55,7 @@
 	return indexKey;
 }
 
-::gpk::error_t							gpk::keyValVerify					(const ::gpk::view_array<::gpk::TKeyValConstString> & environViews, const ::gpk::vcc & keyToVerify, const ::gpk::vcc & valueToVerify)	{
+::gpk::error_t							gpk::keyValVerify					(const ::gpk::view<::gpk::TKeyValConstString> & environViews, const ::gpk::vcc & keyToVerify, const ::gpk::vcc & valueToVerify)	{
 	for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey) {
 		if(environViews[iKey].Key == keyToVerify)
 			return (environViews[iKey].Val == valueToVerify) ? iKey : -1;
@@ -63,7 +63,7 @@
 	return -1;
 }
 
-::gpk::error_t							gpk::keyValConstStringSerialize		(const ::gpk::view_array<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view_array<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output)	{
+::gpk::error_t							gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output)	{
 	::gpk::apod<::gpk::TKeyValConstString>	keyValsToSave						= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {

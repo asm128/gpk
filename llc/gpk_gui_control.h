@@ -76,16 +76,16 @@ namespace gpk
 			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
 
 
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER);
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER);
 
 	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
 				return ::gpk::guiSetupButtonList(gui, buttonText, iParent, {buttonWidth, (uint16_t)20}, offset, controlAlign, textAlign); 
 			}
 
 
 	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
 		return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign); 
 	}
 
@@ -103,7 +103,7 @@ namespace gpk
 	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
 		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign);
 	}
-	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view_array<const uint16_t> & keys);
+	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view<const uint16_t> & keys);
 	::gpk::error_t					virtualKeyboardSetup437		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SUIInputBox {
@@ -124,7 +124,7 @@ namespace gpk
 			return one_if(Editing);
 		}
 
-		::gpk::error_t					Update				(::gpk::SGUI & gui, ::gpk::view_array<const ::gpk::SSysEvent> frameEvents, ::gpk::view_array<const uint32_t> processableControls) { 
+		::gpk::error_t					Update				(::gpk::SGUI & gui, ::gpk::view<const ::gpk::SSysEvent> frameEvents, ::gpk::view<const uint32_t> processableControls) { 
 			if(false == Editing)
 				return 0;
 

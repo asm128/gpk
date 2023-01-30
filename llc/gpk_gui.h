@@ -255,7 +255,7 @@ namespace gpk
 
 
 	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute);
-	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::view_array<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::view<const uint32_t> controlsToProcess, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute);
 } // namespace
 
 #endif // GPK_GUI_H_2903874982374

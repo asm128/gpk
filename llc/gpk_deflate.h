@@ -15,15 +15,15 @@ namespace gpk
 
 	struct SFolderPackage {
 		::gpk::SPackHeader 										PackageInfo						;
-		::gpk::apod<byte_t>								CompressedTableFiles			;
-		::gpk::apod<byte_t>								CompressedContentsPacked		;
+		::gpk::apod<byte_t>										CompressedTableFiles			;
+		::gpk::apod<byte_t>										CompressedContentsPacked		;
 	};
 
 	struct SFolderInMemory {
-		::gpk::apod<byte_t>								DataContents					;
-		::gpk::apod<byte_t>								DataInfo						;
-		::gpk::apod<::gpk::view_array<const char_t>>		Contents						;
-		::gpk::apod<::gpk::vcs>				Names							;
+		::gpk::apod<byte_t>										DataContents					;
+		::gpk::apod<byte_t>										DataInfo						;
+		::gpk::apod<::gpk::view<const char_t>>					Contents						;
+		::gpk::apod<::gpk::vcs>									Names							;
 	};
 
 	static constexpr const uint32_t							DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
@@ -49,9 +49,9 @@ namespace gpk
 	};
 
 					::gpk::error_t							fileToMemorySecure				(::gpk::SLoadCache& recycle, ::gpk::apod<char_t>		& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate);
-					::gpk::error_t							fileFromMemorySecure			(::gpk::SLoadCache& recycle, const ::gpk::vcc	& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate);
-	static inline	::gpk::error_t							fileToMemorySecure				(::gpk::apod<char_t>		& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure	(temp, loadedBytes	, fileName, key, deflate); }
-	static inline	::gpk::error_t							fileFromMemorySecure			(const ::gpk::vcc	& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure	(temp, blockBytes	, fileName, key, deflate); }
+					::gpk::error_t							fileFromMemorySecure			(::gpk::SLoadCache& recycle, const ::gpk::vcc			& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate);
+	static inline	::gpk::error_t							fileToMemorySecure				(::gpk::apod<char_t>	& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure	(temp, loadedBytes	, fileName, key, deflate); }
+	static inline	::gpk::error_t							fileFromMemorySecure			(const ::gpk::vcc		& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure	(temp, blockBytes	, fileName, key, deflate); }
 
 } // namespace
 

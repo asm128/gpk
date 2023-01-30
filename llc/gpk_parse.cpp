@@ -143,7 +143,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view_array<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format)		{
+::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcc> & out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format)		{
 	for(uint32_t iType = 0; iType < in_resultOfParser.size(); ++iType) {
 		const ::gpk::SStripLiteralType					& type						= in_resultOfParser[iType];
 		::gpk::vcs						view						= {};
