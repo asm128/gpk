@@ -9,13 +9,13 @@ namespace gpk
 {
 	struct SDialogSlider;
 	::gpk::error_t										sliderCreate						(::gpk::SDialog					& dialog);
-	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider			& control, int64_t value, ::gpk::vcs formatString = {});
+	::gpk::error_t										sliderSetValue						(::gpk::SDialogSlider			& control, int64_t value);
 	::gpk::error_t										sliderUpdate						(::gpk::SDialogSlider			& control);
 
 	struct SDialogTuner;
 	::gpk::error_t										tunerCreate							(::gpk::SDialog					& dialog);
 	::gpk::error_t										tunerUpdate							(::gpk::SDialogTuner			& control);
-	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner			& control, int64_t value, ::gpk::vcs formatString = {});
+	::gpk::error_t										tunerSetValue						(::gpk::SDialogTuner			& control, int64_t value);
 
 	struct SDialogCheckBox;
 	::gpk::error_t										checkBoxCreate						(::gpk::SDialog					& dialog);
@@ -75,28 +75,41 @@ namespace gpk
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
+				typedef	::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value, const ::gpk::SMinMax<int64_t> & limits)>	
+															TCallback;
+
 				int32_t										IdButton							= -1;
 
+				int32_t										Vertical							= false;
 				::gpk::SMinMax<int64_t>						ValueLimits							= {0, 100};// 0x7fFFffFF};
 				int64_t										ValueCurrent						= -1;
-				int32_t										Vertical							= false;
-				char_t										ValueString	[32]					= {};
-				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value, int64_t min, int64_t max)>	
-															FuncValueFormat						= {};
+				char_t										ValueString	[64]					= {};
+
+				TCallback									FuncValueFormat	= [this](::gpk::vcc & format, int64_t, const ::gpk::SMinMax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+				TCallback									FuncGetString	= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::SMinMax<int64_t> &)	mutable	{ 
+					inouts	= {this->ValueString, (uint32_t)snprintf(this->ValueString, ::gpk::size(this->ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
+					return 0; 
+				};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::sliderUpdate(*this); }
 	};
 
 	struct SDialogTuner : public ::gpk::IDialogControl {
+				typedef	::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value, const ::gpk::SMinMax<int64_t> & limits)>	
+															TCallback;
+
 				int32_t										IdDecrease							= -1;
 				int32_t										IdIncrease							= -1;
 
 				::gpk::SMinMax<int64_t>						ValueLimits							= {(int32_t)0xC0000001, (int32_t)0x3fFFffFF};
 				int64_t										ValueCurrent						= -1;
-				char_t										ValueString	[32]					= {};
-				::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value)>	
-															FuncValueFormat						= {};
+				char_t										ValueString	[64]					= {};
 
+				TCallback									FuncValueFormat	= [this](::gpk::vcc & format, int64_t, const ::gpk::SMinMax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+				TCallback									FuncGetString	= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::SMinMax<int64_t> &)	mutable	{ 
+					inouts	= {this->ValueString, (uint32_t)snprintf(this->ValueString, ::gpk::size(this->ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
+					return 0; 
+				};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::tunerUpdate(*this); }
 	};

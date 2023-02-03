@@ -143,26 +143,21 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	tunerText.Align														= ::gpk::ALIGN_CENTER;
 	return index;
 }
-		::gpk::error_t												gpk::tunerSetValue							(::gpk::SDialogTuner	& control, int64_t value, ::gpk::vcs formatString)				{
+		::gpk::error_t												gpk::tunerSetValue							(::gpk::SDialogTuner & control, int64_t value)				{
 	if(value < control.ValueLimits.Min)
 		value																= control.ValueLimits.Min;
 	else if(value > control.ValueLimits.Max)
 		value																= control.ValueLimits.Max;
-
 	control.ValueCurrent												= value;
-	::gpk::vcc																valueString;
-	if(formatString.size())
-		valueString			= formatString;
-	else if(control.FuncValueFormat)
-		control.FuncValueFormat(valueString, value);
-	else 
-		valueString			= ::gpk::vcs("%lli");
 
-	control.Dialog->GUI->Controls.Text[control.IdGUIControl].Text		= {control.ValueString, (uint32_t)snprintf(control.ValueString, ::gpk::size(control.ValueString) - 2, ::gpk::toString(valueString).begin(), (long long int)control.ValueCurrent)};
+	::gpk::vcc																valueString;
+	control.FuncValueFormat(valueString, value, control.ValueLimits);
+	control.FuncGetString(valueString, control.ValueCurrent, control.ValueLimits);
+	::gpk::controlTextSet(*control.Dialog->GUI, control.IdGUIControl, valueString);
 	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
 	return 0;
 }
-		::gpk::error_t												gpk::tunerUpdate							(::gpk::SDialogTuner	& tuner)								{
+		::gpk::error_t												gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)								{
 	::gpk::SDialog															& dialog									= *tuner.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	if(controlTable.States[tuner.IdDecrease].Execute || controlTable.States[tuner.IdIncrease].Execute) {
@@ -173,7 +168,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	}
 	return 0;
 }
-		::gpk::error_t												gpk::sliderCreate							(::gpk::SDialog			& dialog)								{
+		::gpk::error_t												gpk::sliderCreate							(::gpk::SDialog & dialog)								{
 	int32_t																	index										= -1;
 	::gpk::pobj<::gpk::SDialogSlider>										slider;
 	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
@@ -191,7 +186,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	tunerText.Text														= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
 	return index;
 }
-		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider	& slider, int64_t value, ::gpk::vcs formatString)				{
+		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider & slider, int64_t value)				{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
@@ -213,14 +208,9 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		buttonConstraints.AttachSizeToControl.y								= slider.IdButton;
 	}
 	::gpk::vcc																valueString;
-	if(formatString.size())
-		valueString			= formatString;
-	else if(slider.FuncValueFormat)
-		slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits.Min, slider.ValueLimits.Max);
-	else 
-		valueString			= ::gpk::vcs("%lli");
-
-	::gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, {slider.ValueString, (uint32_t)snprintf(slider.ValueString, ::gpk::size(slider.ValueString) - 2, ::gpk::toString(valueString).begin(), (long long int)slider.ValueCurrent)});
+	slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits);
+	slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits);
+	::gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, valueString);
 	::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl);
 	return 0;
 }
@@ -233,18 +223,18 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
 			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
-			::gpk::n2<double>														scale										=
+			::gpk::n2d																scale										=
 				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 				};
-			const ::gpk::n2f														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<float>();
-			const ::gpk::n2f														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<float>();
-			::gpk::n2f																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<float>();;
+			const ::gpk::n2d														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<double>();
+			const ::gpk::n2d														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<double>();
+			::gpk::n2d																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<double>();;
 			//
 
-			::gpk::n2f																currentValue								= input.MouseCurrent.Position.Cast<float>();
-			const ::gpk::n2f														valueUnit									= {1.0f / effectiveSize.x, 1.0f / effectiveSize.y};
-			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.Cast<float>() / 2;
+			::gpk::n2d																currentValue								= input.MouseCurrent.Position.Cast<double>();
+			const ::gpk::n2d														valueUnit									= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
+			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.Cast<double>() / 2;
 			currentValue.x														*= valueUnit.x;
 			currentValue.y														*= valueUnit.y;
 
