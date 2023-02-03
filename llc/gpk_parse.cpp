@@ -24,16 +24,19 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 
 ::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
-	::gpk::apod<char_t>						stringToParse								= {};
+	::gpk::apod<char_t>								stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
+		const char										sourceChar									= (char)tolower(sourceChars[iChar]);
 		bool											bSymbolProcessed							= false;
-		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol)
-			if( symbolList[iSymbol] == sourceChars[iChar] ) {
+		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol) {
+			if(symbolList[iSymbol] == sourceChar) {
 				bSymbolProcessed							= true;
-				gpk_necall(stringToParse.push_back((char_t)::tolower(sourceChars[iChar++])), "%s", "Failed to append character! Out of memory?");
+				gpk_necall(stringToParse.push_back(sourceChar), "%s", "Failed to append character! Out of memory?");
+				++iChar;
 				++totalCharsProcessed;
 				break;
 			}
+		}
 
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
@@ -44,7 +47,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
 		bool											bSymbolProcessed							= false;
 		for( uint32_t iSymbol = 0; iSymbol < base; ++iSymbol )
-			if( symbolList[iSymbol] == stringToParse[iChar] ) {
+			if(symbolList[iSymbol] == stringToParse[iChar]) {
 				number										+= iSymbol * ::gpk::powui(base, totalCharsProcessed);
 				bSymbolProcessed							= true;
 				++iChar;
