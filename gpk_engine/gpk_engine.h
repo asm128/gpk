@@ -76,7 +76,7 @@ namespace gpk
 		::gpk::error_t						SetColorDiffuse		(uint32_t iEntity, const ::gpk::SColorFloat & diffuse)				{ Scene->Graphics->Skins[Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Skin]->Material.Color.Diffuse = diffuse; return 0; }
 		::gpk::error_t						SetMeshScale		(uint32_t iEntity, const ::gpk::n3<float> & scale)					{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.Scale(scale, true); return 0; }
 		::gpk::error_t						SetMeshPosition		(uint32_t iEntity, const ::gpk::n3<float> & position)				{ Scene->ManagedRenderNodes.BaseTransforms[ManagedEntities[iEntity].RenderNode].World.SetTranslation(position, false); return 0; }
-		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcc name) {
+		::gpk::error_t						SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcs name) {
 			const uint32_t							iShader				= Scene->ManagedRenderNodes[ManagedEntities[iEntity].RenderNode].Shader;
 			Scene->Graphics->Shaders[iShader].create(shader);
 			Scene->Graphics->Shaders.Names[iShader] = name;
@@ -93,14 +93,14 @@ namespace gpk
 		::gpk::error_t						GetVelocity			(uint32_t iEntity, ::gpk::n3<float> & velocity)				const	{ Integrator.GetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
 		::gpk::error_t						GetAcceleration		(uint32_t iEntity, ::gpk::n3<float> & acceleration)			const	{ Integrator.GetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);		return 0; }
 		::gpk::error_t						GetRotation			(uint32_t iEntity, ::gpk::n3<float> & velocity)				const	{ Integrator.GetRotation		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
-		::gpk::error_t						GetOrientation		(uint32_t iEntity, ::gpk::SQuaternion<float> & orientation)	const	{ Integrator.GetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);		return 0; }
+		::gpk::error_t						GetOrientation		(uint32_t iEntity, ::gpk::quat<float> & orientation)		const	{ Integrator.GetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);		return 0; }
 		::gpk::error_t						SetPhysicsActive	(uint32_t iEntity, bool active)										{ Integrator.SetActive			(ManagedEntities[iEntity].RigidBody, active);			return 0; }
 		::gpk::error_t						SetMass				(uint32_t iEntity, float mass)										{ Integrator.SetMass			(ManagedEntities[iEntity].RigidBody, mass);				return 0; }
 		::gpk::error_t						SetPosition			(uint32_t iEntity, const ::gpk::n3<float> & position)				{ Integrator.SetPosition		(ManagedEntities[iEntity].RigidBody, position);			return 0; }
 		::gpk::error_t						SetVelocity			(uint32_t iEntity, const ::gpk::n3<float> & velocity)				{ Integrator.SetVelocity		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
 		::gpk::error_t						SetAcceleration		(uint32_t iEntity, const ::gpk::n3<float> & acceleration)			{ Integrator.SetAcceleration	(ManagedEntities[iEntity].RigidBody, acceleration);		return 0; }
 		::gpk::error_t						SetRotation			(uint32_t iEntity, const ::gpk::n3<float> & velocity)				{ Integrator.SetRotation		(ManagedEntities[iEntity].RigidBody, velocity);			return 0; }
-		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::SQuaternion<float> & orientation)	{ Integrator.SetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);		return 0; }
+		::gpk::error_t						SetOrientation		(uint32_t iEntity, const ::gpk::quat<float> & orientation)			{ Integrator.SetOrientation		(ManagedEntities[iEntity].RigidBody, orientation);		return 0; }
 		::gpk::error_t						SetDampingLinear	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities[iEntity].RigidBody].LinearDamping = damping;		return 0; }
 		::gpk::error_t						SetDampingAngular	(uint32_t iEntity, float damping)									{ Integrator.Masses[ManagedEntities[iEntity].RigidBody].AngularDamping = damping;		return 0; }
 		::gpk::error_t						SetHidden			(uint32_t iEntity, bool hidden)										{ Scene->ManagedRenderNodes.Flags[ManagedEntities[iEntity].RenderNode].NoDraw = hidden;	return 0; }	

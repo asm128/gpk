@@ -189,7 +189,8 @@ static constexpr	const uint32_t									heightOfField								= 18;
 		::gpk::error_t												gpk::sliderSetValue							(::gpk::SDialogSlider & slider, int64_t value)				{
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	slider.ValueCurrent													= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);
+	const uint64_t															newValue									= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
+	slider.ValueCurrent													= newValue;
 	const double															proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
 	::gpk::SControl															& controlButton								= controlTable.Controls[slider.IdButton];
