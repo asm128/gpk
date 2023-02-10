@@ -35,20 +35,20 @@ namespace gpk
 			}; 
 														
 	GDEFINE_ENUM_TYPE(VOXEL_FACE, uint8_t);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Top		, 0);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Front	, 1);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Right	, 2);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Bottom	, 3);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Back		, 4);
-	GDEFINE_ENUM_VALUE(VOXEL_FACE, Left		, 5);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Bottom	, 0);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Back		, 1);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Left		, 2);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Top		, 3);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Front	, 4);
+	GDEFINE_ENUM_VALUE(VOXEL_FACE, Right	, 5);
 
 	struct SVoxelFaceBits {
-		bool		 Top			: 1;
-		bool		 Front			: 1;
-		bool		 Right			: 1;
 		bool		 Bottom			: 1;
 		bool		 Back			: 1;
 		bool		 Left			: 1;
+		bool		 Top			: 1;
+		bool		 Front			: 1;
+		bool		 Right			: 1;
 	};
 
 	static constexpr ::gpk::SQuad3<float>				VOXEL_FACE_VERTICES	[6]		= 
@@ -107,12 +107,13 @@ namespace gpk
 		}; 
 
 	static constexpr uint16_t							VOXEL_FACE_INDICES_16	[6][6]	= 
-		{ {4 * 0 + 0, 4 * 0 + 2, 4 * 0 + 1, 4 * 0 + 1, 4 * 0 + 2, 4 * 0 + 3} // Top
-		, {4 * 1 + 0, 4 * 1 + 1, 4 * 1 + 2, 4 * 1 + 1, 4 * 1 + 3, 4 * 1 + 2}
-		, {4 * 2 + 0, 4 * 2 + 1, 4 * 2 + 2, 4 * 2 + 1, 4 * 2 + 3, 4 * 2 + 2}
-		, {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
+		{ {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
 		, {4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 1, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 3}
 		, {4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 1, 4 * 5 + 2, 4 * 5 + 3}
+		, {4 * 0 + 0, 4 * 0 + 2, 4 * 0 + 1, 4 * 0 + 1, 4 * 0 + 2, 4 * 0 + 3} // Top
+		, {4 * 1 + 0, 4 * 1 + 1, 4 * 1 + 2, 4 * 1 + 1, 4 * 1 + 3, 4 * 1 + 2}
+		, {4 * 2 + 0, 4 * 2 + 1, 4 * 2 + 2, 4 * 2 + 1, 4 * 2 + 3, 4 * 2 + 2}
+		, 
 		}; 
 
 	static constexpr float								VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
@@ -153,14 +154,14 @@ namespace gpk
 
 	template<typename _tCell>
 	struct SVoxelMap {
-		::gpk::SCoord3<uint8_t>							Dimensions;
+		::gpk::SCoord3<uint8_t>						Dimensions;
 		::gpk::apod<::gpk::SColorBGRA>				Palette;
-		::gpk::apod<::gpk::SVoxel<uint8_t>>		Voxels;
-		::gpk::aobj<::gpk::SVoxelChunk<_tCell>>	Chunks;
+		::gpk::apod<::gpk::SVoxel<uint8_t>>			Voxels;
+		::gpk::aobj<::gpk::SVoxelChunk<_tCell>>		Chunks;
 		::gpk::apod<::gpk::SCoord2<uint8_t>>		ChunkPositions;
 
-		int32_t											GetChunk					(const ::gpk::SCoord2<uint8_t> & chunkCoords) const	{ 
-			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::SCoord2<uint8_t>>{ChunkPositions}); 
+		int32_t										GetChunk					(const ::gpk::SCoord2<uint8_t> & chunkCoords) const	{ 
+			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::n2<uint8_t>>{ChunkPositions}); 
 		}
 
 		int32_t											GetChunkForVoxel			(const ::gpk::SCoord3<uint8_t> & voxelPosition) const	{ 

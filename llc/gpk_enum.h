@@ -213,11 +213,17 @@ namespace gpk
 	template <typename _tEnum>	uint32_t						get_value_count			()												{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
 	template <typename _tEnum>	const ::gpk::vcc &				get_value_label			(const _tEnum & statusBit					)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
 	template <typename _tEnum>	const ::gpk::vcc &				get_value_desc			(const _tEnum & statusBit					)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::apod<::gpk::vcc> &	get_value_labels		()												{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc> &	get_value_labels		()												{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
 	template <typename _tEnum>	int32_t							get_value_index			(const _tEnum & statusBit					)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
 	template <typename _tEnum>	_tEnum							get_value				(const ::gpk::vcc & valueLabel	)	{ return ::gpk::enum_definition<_tEnum>::get().get_value		(valueLabel);	}
 	template <typename _tEnum, size_t _sLen>
 								_tEnum							get_value				(const char (&valueLabel)[_sLen])				{ return ::gpk::enum_definition<_tEnum>::get().get_value(::gpk::vcs{valueLabel});	}
+
+	template<typename _tEventType>
+	struct SEvent {
+		_tEventType				Type;
+		::gpk::apod<ubyte_t>	Data;
+	};
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators

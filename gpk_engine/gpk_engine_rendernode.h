@@ -27,9 +27,9 @@ namespace gpk
 	};
 
 	struct SRenderNodeTransforms {
-		::gpk::SMatrix4<float>						World					= ::gpk::SMatrix4<float>::GetIdentity();
-		::gpk::SMatrix4<float>						WorldInverse			= ::gpk::SMatrix4<float>::GetIdentity();
-		::gpk::SMatrix4<float>						WorldInverseTranspose	= ::gpk::SMatrix4<float>::GetIdentity();
+		::gpk::m4<float>							World					= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4<float>							WorldInverse			= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4<float>							WorldInverseTranspose	= ::gpk::m4<float>::GetIdentity();
 	};
 	
 	GDEFINE_ENUM_TYPE(LIGHT_TYPE, uint8_t);
@@ -38,7 +38,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Spot			, 2);
 
 	struct SLightSpot {
-		::gpk::SCoord3<float>						Direction;
+		::gpk::n3<float>							Direction;
 		::gpk::SRenderColor							Color;
 		float										SpotPower;
 		float										Range;
@@ -50,7 +50,7 @@ namespace gpk
 	};
 
 	struct SLightDirectional {
-		::gpk::SCoord3<float>						Direction;
+		::gpk::n3<float>							Direction;
 		::gpk::SRenderColor							Color;
 	};
 
@@ -60,9 +60,9 @@ namespace gpk
 	};
 
 	struct SCamera {
-		::gpk::SCoord3<float>						Front;
-		::gpk::SCoord3<float>						Right;
-		::gpk::SCoord3<float>						Up;
+		::gpk::n3<float>							Front;
+		::gpk::n3<float>							Right;
+		::gpk::n3<float>							Up;
 		double										Angle;
 	};
 #pragma pack(pop)

@@ -5,18 +5,18 @@
 #include "gpk_raster_lh.h"
 
 static	::gpk::error_t								transformTriangles					
-	( ::gpk::SVSOutput				& output
-	, ::gpk::vcu16					indices			
-	, ::gpk::v1c3f					positions	
-	, ::gpk::v1c3f					normals		
-	, ::gpk::v1c2f					uv			
-	, const ::gpk::SMatrix4<float>	& projection		
-	, const ::gpk::SMatrix4<float>	& worldTransform	
-	, const ::gpk::SCoord3<float>	& cameraFront
+	( ::gpk::SVSOutput			& output
+	, ::gpk::vcu16				indices			
+	, ::gpk::v1c3f				positions	
+	, ::gpk::v1c3f				normals		
+	, ::gpk::v1c2f				uv			
+	, const ::gpk::m4<float>	& projection		
+	, const ::gpk::m4<float>	& worldTransform	
+	, const ::gpk::n3<float>	& cameraFront
 )	{ 
 	::gpk::v1<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
 
-	const ::gpk::SMatrix4<float>							mWVPS						= worldTransform * projection;
+	const ::gpk::m4<float>							mWVPS						= worldTransform * projection;
 	for(uint32_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {
 		const ::gpk::STriangle<uint16_t>						vertexIndices				= view_indices[iTriangle];
 		::gpk::STriangle3<float>								transformedNormals			= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
@@ -64,7 +64,7 @@ static	::gpk::error_t								transformTriangles
 	verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iRenderNode, renderNode.Mesh, renderNode.Slice, scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 
 	const ::gpk::SRenderNodeTransforms						& transforms				= scene.ManagedRenderNodes.Transforms[iRenderNode];
-	const ::gpk::SMatrix4<float>							& worldTransform			= transforms.World;
+	const ::gpk::m4<float>									& worldTransform			= transforms.World;
 	const ::gpk::vcu16										indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::v1cu16	{(const uint16_t	*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t	 )}	: ::gpk::v1cu16{};
 	const ::gpk::v1c3f										positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::v1c3f	{(const ::gpk::n3f	*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f)}	: ::gpk::v1c3f{};
 	const ::gpk::v1c3f										normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::v1c3f	{(const ::gpk::n3f	*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f)}	: ::gpk::v1c3f{};
@@ -91,7 +91,7 @@ static	::gpk::error_t								drawBuffers
 	::gpk::apod<::gpk::STriangle<float>>					& triangleWeights			= cacheVS.TriangleWeights		;
 	::gpk::apod<::gpk::n2<int16_t>>							& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::n2u16										offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
-	const ::gpk::n3<float>									lightDirectionNormalized	= ::gpk::SCoord3<float>{constants.LightDirection}.Normalize();
+	const ::gpk::n3<float>									lightDirectionNormalized	= ::gpk::n3<float>{constants.LightDirection}.Normalize();
 	::gpk::SPSIn											inPS						= {};
 	inPS.Surface										= surface;
 	inPS.Material										= material;
@@ -159,10 +159,10 @@ static	::gpk::error_t								drawBuffers
 	}
 
 	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
-	::gpk::apod<::gpk::SCoord3<float>>			& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
+	::gpk::apod<::gpk::n3<float>>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
-	constexpr ::gpk::SCoord3<float>					xyz	[3]					= 
+	constexpr ::gpk::n3<float>						xyz	[3]					= 
 		{ {1}
 		, {0, 1}
 		, {0, 0, 1}
