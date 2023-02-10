@@ -29,7 +29,12 @@
 		return 1;
 
 	MONITORINFO									monitor_info					= {sizeof(monitor_info)};
-	ree_if(FALSE == GetWindowRect(windowHandle, (LPRECT)&framework.WindowedWindowRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
+	RECT										windowsRect						= {};
+	ree_if(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
+	framework.WindowedWindowRect.Top	= (uint16_t)windowsRect.top		;
+	framework.WindowedWindowRect.Left	= (uint16_t)windowsRect.left	;
+	framework.WindowedWindowRect.Right	= (uint16_t)windowsRect.right	;
+	framework.WindowedWindowRect.Bottom	= (uint16_t)windowsRect.bottom	;
 	ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
 
 	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
