@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	::gpk::error_t										querystring_split			(const ::gpk::vcc& input_string, ::gpk::aobj<::gpk::vcc>& output_views);
+	::gpk::error_t										querystring_split			(const ::gpk::vcc & input_string, ::gpk::aobj<::gpk::vcc>& output_views);
 	::gpk::error_t										writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews);
 } // namespace
 

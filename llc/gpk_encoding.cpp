@@ -7,7 +7,7 @@
 #include <ctime>
 #include <random>
 
-			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::vcb& binary, ::gpk::apod<byte_t> & salted)				{
+			::gpk::error_t								gpk::saltDataSalt												(const ::gpk::vcb & binary, ::gpk::apod<byte_t> & salted)				{
 	gpk_necall(salted.resize(binary.size() * 2), "%s", "Out of memory?");
 	byte_t														* pSalted														= salted.begin();
 	const byte_t												* pBinary														= binary.begin();
@@ -18,7 +18,7 @@
 	return 0;
 }
 
-			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::vcb& salted, ::gpk::apod<byte_t> & binary)				{
+			::gpk::error_t								gpk::saltDataUnsalt												(const ::gpk::vcb & salted, ::gpk::apod<byte_t> & binary)				{
 	gpk_necall(binary.resize(salted.size() / 2), "%s", "Out of memory?");
 	const byte_t												* pSalted														= salted.begin();
 	byte_t														* pBinary														= binary.begin();

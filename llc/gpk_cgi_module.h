@@ -47,7 +47,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t									loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::vcc& moduleName);
+	::gpk::error_t									loadCGIModule				(::gpk::SCGIModule& loadedModule, const ::gpk::vcc & moduleName);
 
 
 }

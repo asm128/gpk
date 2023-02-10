@@ -253,7 +253,7 @@ static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReade
 	return errVal;
 }
 
-static	::gpk::error_t										jsonParseKeyword									(const ::gpk::vcc& token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateReader, ::gpk::apod<::gpk::SJSONToken>& object, const ::gpk::vcc & jsonAsString)	{
+static	::gpk::error_t										jsonParseKeyword									(const ::gpk::vcc & token, ::gpk::JSON_TYPE jsonType, ::gpk::SJSONReaderState& stateReader, ::gpk::apod<::gpk::SJSONToken>& object, const ::gpk::vcc & jsonAsString)	{
 	ree_if(token.size() > jsonAsString.size() - stateReader.IndexCurrentChar, "End of stream while parsing token: %s.", token.begin());
 	ree_if(0 != strncmp(token.begin(), &jsonAsString[stateReader.IndexCurrentChar], token.size()), "Unrecognized token found while looking for '%s'.", token.begin());
 	json_info_printf("JSON token found: %s.", token.begin());

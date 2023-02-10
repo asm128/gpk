@@ -44,7 +44,7 @@ int64_t								gpk::fileSize					(const ::gpk::vcc	& fileNameSrc)								{
 #	include <sys/stat.h>
 #endif
 
-::gpk::error_t						gpk::pathCreate				(const ::gpk::vcc& pathName, const char separator) {
+::gpk::error_t						gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
 	int32_t									offsetBar					= -1;
@@ -186,7 +186,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::vcc& pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, bool listFolders, const ::gpk::vcc extension)	{
+		::gpk::error_t														gpk::pathList						(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, bool listFolders, const ::gpk::vcc extension)	{
 	static constexpr const char														curDir	[]							= ".";
 	static constexpr const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
@@ -233,7 +233,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	return 0;
 }
 
-		::gpk::error_t														gpk::pathList						(const ::gpk::vcc& pathToList, ::gpk::SPathContents& pathContents, const gpk::vcc extension)						{
+		::gpk::error_t														gpk::pathList						(const ::gpk::vcc & pathToList, ::gpk::SPathContents& pathContents, const gpk::vcc extension)						{
 	char																			sPath[4096];
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", pathToList.size());
@@ -291,7 +291,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
     return 0;
 }
 
-		::gpk::error_t									gpk::fileToMemory									(const ::gpk::vcc& fileName, ::gpk::apod<byte_t>& fileInMemory)		{
+		::gpk::error_t									gpk::fileToMemory									(const ::gpk::vcc & fileName, ::gpk::apod<byte_t>& fileInMemory)		{
 	FILE														* fp												= 0;
 	int32_t														fileErr												= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
 	rvw_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
@@ -313,7 +313,7 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	return result;
 }
 
-		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::vcc& fileName, const ::gpk::vcb& fileInMemory)	{
+		::gpk::error_t									gpk::fileFromMemory									(const ::gpk::vcc & fileName, const ::gpk::vcb & fileInMemory)	{
 	FILE														* fp												= 0;
 	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());

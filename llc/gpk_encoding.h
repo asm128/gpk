@@ -15,8 +15,8 @@ namespace gpk
 	static inline	::gpk::error_t					ardellEncode												(const ::gpk::view<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
 	static inline	::gpk::error_t					ardellDecode												(const ::gpk::view<const byte_t>& input, int key, bool salt, ::gpk::apod<byte_t>& output)		{ ::gpk::apod<int32_t>	tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
 
-					::gpk::error_t					saltDataSalt												(const ::gpk::vcb& binary, ::gpk::apod<byte_t> & salted);
-					::gpk::error_t					saltDataUnsalt												(const ::gpk::vcb& salted, ::gpk::apod<byte_t> & binary);
+					::gpk::error_t					saltDataSalt												(const ::gpk::vcb & binary, ::gpk::apod<byte_t> & salted);
+					::gpk::error_t					saltDataUnsalt												(const ::gpk::vcb & salted, ::gpk::apod<byte_t> & binary);
 
 	template<typename _tBase>
 					::gpk::error_t					rleEncode													(const ::gpk::view<_tBase>& decoded, ::gpk::apod<byte_t>& encoded) {
@@ -39,7 +39,7 @@ namespace gpk
 	}
 
 	template<typename _tBase>
-					::gpk::error_t					rleDecode													(const ::gpk::vcb& encoded, ::gpk::apod<_tBase>& decoded) {
+					::gpk::error_t					rleDecode													(const ::gpk::vcb & encoded, ::gpk::apod<_tBase>& decoded) {
 		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];

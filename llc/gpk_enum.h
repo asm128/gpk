@@ -31,7 +31,7 @@ namespace gpk
 			static	enum_definition<_tValue>						valueRegistry;
 			return valueRegistry;
 		}
-		inline static		_tValue							init									(const ::gpk::vcc& enumName)								{
+		inline static		_tValue							init									(const ::gpk::vcc & enumName)								{
 					enum_definition<_tValue>&						instanceHere							= get();
 
 			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != INVALID_VALUE)) )
@@ -41,7 +41,7 @@ namespace gpk
 			(void)newName;
 			return INVALID_VALUE;
 		}
-							::gpk::error_t					get_value								(const ::gpk::vcc& name, _tValue& value)	const			{
+							::gpk::error_t					get_value								(const ::gpk::vcc & name, _tValue& value)	const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i]) {
 					value												= Values[i];
@@ -61,7 +61,7 @@ namespace gpk
 			value															= INVALID_VALUE;
 			return -1;
 		}
-							_tValue							get_value								(const ::gpk::vcc& name)					const			{
+							_tValue							get_value								(const ::gpk::vcc & name)					const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(name == Names[i])
 					return Values[i];
@@ -100,7 +100,7 @@ namespace gpk
 				return ::gpk::UNDEFINED_ENUM_VALUE_STR;
 			}
 		}
-							::gpk::error_t					get_value_index							(const ::gpk::vcc& name, int32_t& index)	const			{
+							::gpk::error_t					get_value_index							(const ::gpk::vcc & name, int32_t& index)	const			{
 			for(uint32_t i=0, count = Names.size(); i < count; ++i)
 				if(name == Names[i]) {
 					index												= (int32_t)i;
@@ -109,7 +109,7 @@ namespace gpk
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
 			return index											= -1;
 		}
-							int32_t							get_value_index							(const ::gpk::vcc& name)					const			{
+							int32_t							get_value_index							(const ::gpk::vcc & name)					const			{
 			for(uint32_t i=0, count = Names.size(); i < count; ++i)
 				if(name == Names[i])
 					return (int32_t)i;

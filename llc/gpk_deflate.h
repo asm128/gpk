@@ -31,6 +31,8 @@ namespace gpk
 
 	::gpk::error_t											arrayDeflate					(const ::gpk::vcb	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);
 	::gpk::error_t											arrayInflate					(const ::gpk::vcb	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE);
+	static inline	::gpk::error_t							arrayDeflate					(const ::gpk::vcub	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE) { return arrayDeflate(::gpk::vcb{(const char*)inflated.begin(), inflated.size()}, deflated, chunkSize); }
+	static inline	::gpk::error_t							arrayInflate					(const ::gpk::vcub	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE) { return arrayInflate(::gpk::vcb{(const char*)deflated.begin(), deflated.size()}, inflated, chunkSize); }
 	::gpk::error_t											folderPack						(::gpk::SFolderPackage	& out_packed, const ::gpk::vcs nameFolderSrc);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcb & rawFileInMemory);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcs nameFileSrc);

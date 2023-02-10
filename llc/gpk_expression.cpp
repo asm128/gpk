@@ -149,7 +149,7 @@ static	bool												isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
-//static	bool												isAnyOfCharacters						(const ::gpk::vcc& charactersToFind, const char characterToTest)		{
+//static	bool												isAnyOfCharacters						(const ::gpk::vcc & charactersToFind, const char characterToTest)		{
 //	for(uint32_t iCharacter = 0; iCharacter < charactersToFind.size(); ++iCharacter)
 //		if(characterToTest == charactersToFind[iCharacter])
 //			return true;
