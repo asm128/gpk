@@ -232,7 +232,7 @@ namespace gpk {
 
 		const uint32_t &									size						()				const noexcept	{ return Names.size(); }
 		::gpk::error_t										push_back					(::gpk::vcc name, const _tValue& value) {
-			gpk_necall(Names.push_back(name), "%s", "");
+			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
 		}
 	};

@@ -12,20 +12,20 @@ namespace gpk
 		};
 
 	struct SControlList {
-			int32_t																IdControl									= -1;
-			::gpk::CONTROL_LIST_DIRECTION										Orientation									= ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL;
-			int32_t																IndexParentList								= -1;
-			int32_t																IndexParentItem								= -1;
-			::gpk::apod<int32_t>											IdControls									= {};
-			int32_t																IdSelected									= -1;
-			::gpk::apod<int32_t>											IdMultiselect								= {};
-			::gpk::apod<int64_t>											Events										= {};
+		int32_t													IdControl									= -1;
+		::gpk::CONTROL_LIST_DIRECTION							Orientation									= ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL;
+		int32_t													IndexParentList								= -1;
+		int32_t													IndexParentItem								= -1;
+		::gpk::apod<int32_t>									IdControls									= {};
+		int32_t													IdSelected									= -1;
+		::gpk::apod<int32_t>									IdMultiselect								= {};
+		::gpk::apod<int64_t>									Events										= {};
 	};
 
 #pragma pack(push, 1)
-		::gpk::error_t														controlListInitialize						(::gpk::SGUI & gui, ::gpk::SControlList& menu);
-		::gpk::error_t														controlListArrange							(::gpk::SGUI & gui, ::gpk::SControlList& menu);
-		::gpk::error_t														controlListPush								(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode = -1);
+	::gpk::error_t											controlListInitialize						(::gpk::SGUI & gui, ::gpk::SControlList& menu);
+	::gpk::error_t											controlListArrange							(::gpk::SGUI & gui, ::gpk::SControlList& menu);
+	::gpk::error_t											controlListPush								(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode = -1);
 
 	enum VIEWPORT_CONTROL : int8_t
 		{ VIEWPORT_CONTROL_RESIZE_LEFT				= 0
@@ -50,25 +50,25 @@ namespace gpk
 		};
 
 	struct SViewport {
-				int32_t															IdControl									= -1;
-				::gpk::array_static<int32_t, ::gpk::VIEWPORT_CONTROL_COUNT>		IdControls									= {};
-				int32_t															IdDesktopElement							= -1;
-				GUI_CONTROL_TYPE												ControlType									= (GUI_CONTROL_TYPE)-1;
+		int32_t													IdControl									= -1;
+		::gpk::astatic<int32_t, ::gpk::VIEWPORT_CONTROL_COUNT>	IdControls									= {};
+		int32_t													IdDesktopElement							= -1;
+		GUI_CONTROL_TYPE										ControlType									= (GUI_CONTROL_TYPE)-1;
 	};
 
-			::gpk::error_t													viewportInitialize							(::gpk::SGUI & gui, ::gpk::SViewport& viewport);
+	::gpk::error_t											viewportInitialize							(::gpk::SGUI & gui, ::gpk::SViewport& viewport);
 #pragma pack(pop)
 
 	struct SPaletteGrid {
-				int32_t															IdControl									= -1;
-				::gpk::apod<int32_t>										IdControls									= {};
-				::gpk::view2d<::gpk::SColorBGRA>								Colors										= {};
+		int32_t													IdControl									= -1;
+		::gpk::apod<int32_t>									IdControls									= {};
+		::gpk::v2<::gpk::bgra>									Colors										= {};
 	};
 
 	struct SEditBox {
-				int32_t															IdControl									= -1;
-				::gpk::apod<int32_t>										IdControls									= {};
-				::gpk::view2d<::gpk::SColorBGRA>								Colors										= {};
+		int32_t													IdControl									= -1;
+		::gpk::apod<int32_t>									IdControls									= {};
+		::gpk::v2<::gpk::bgra>									Colors										= {};
 	};
 
 
@@ -76,32 +76,32 @@ namespace gpk
 			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
 
 
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER);
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {});
 
 	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-				return ::gpk::guiSetupButtonList(gui, buttonText, iParent, {buttonWidth, (uint16_t)20}, offset, controlAlign, textAlign); 
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+				return ::gpk::guiSetupButtonList(gui, buttonText, iParent, {buttonWidth, (uint16_t)20}, offset, controlAlign, textAlign, out_ids); 
 			}
 
 
 	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign); 
+			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+		return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign, out_ids); 
 	}
 
 	template<typename _tUIEnum>
-	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, yOffset, controlAlign, textAlign);
+	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, yOffset, controlAlign, textAlign, out_ids);
 	}
 
 	template<typename _tUIEnum>
-	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, offset, controlAlign, textAlign);
+	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonWidth, offset, controlAlign, textAlign, out_ids);
 	}
 
 	template<typename _tUIEnum>
-	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER) {
-		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign);
+	static	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+		return ::gpk::guiSetupButtonList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	}
 	::gpk::error_t					virtualKeyboardSetup		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view<const uint16_t> & keys);
 	::gpk::error_t					virtualKeyboardSetup437		(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);

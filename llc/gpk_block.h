@@ -142,11 +142,11 @@ namespace gpk
 			if(5 >= fileNameCurrent.size())
 				continue;
 			::gpk::vcc											filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
-			gpk_necall(fileNameCurrent.slice(filePart, fileNameCurrent.size() - extension.size(), extension.size()), "%s", "");
+			gpk_necs(fileNameCurrent.slice(filePart, fileNameCurrent.size() - extension.size(), extension.size()));
 			if(filePart != extension)
 				continue;
 			//filePart													= {fileNameCurrent.begin(), fileNameCurrent.size() - extension.size() -1};
-			gpk_necall(fileNameCurrent.slice(filePart, 0, fileNameCurrent.size() - extension.size() - 1), "%s", "");
+			gpk_necs(fileNameCurrent.slice(filePart, 0, fileNameCurrent.size() - extension.size() - 1));
 			::gpk::error_t													indexOfPrevDot				= ::gpk::rfind('.', filePart);
 			if(-1 == indexOfPrevDot)
 				continue;

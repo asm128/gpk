@@ -38,24 +38,24 @@ namespace gpk
 	};
 
 	struct SFrameworkSettings {
-							bool													GUIZoom					: 1;
+				bool						GUIZoom					: 1;
 	};
 
 	struct SFramework {
-							::gpk::SRuntimeValues									& RuntimeValues			;
-							::gpk::SFrameworkDetail									PlatformDetail			= {};
-							::gpk::SWindow											RootWindow				= {};
-							::gpk::pobj<::gpk::SInput>							Input					= {};
-							::gpk::STimer											Timer					= {};
-							::gpk::SFrameInfo										FrameInfo				= {};
-							::gpk::pobj<::gpk::SGUI>								GUI						= {};
-							::gpk::SFrameworkSettings								Settings				= {1, };
-							::gpk::SJSONFile										JSONConfig				= {};
-							::gpk::vcs								FileNameJSONConfig		= "gpk_config.json";
+				::gpk::SRuntimeValues		& RuntimeValues			;
+				::gpk::SFrameworkDetail		PlatformDetail			= {};
+				::gpk::SWindow				RootWindow				= {};
+				::gpk::pobj<::gpk::SInput>	Input					= {};
+				::gpk::STimer				Timer					= {};
+				::gpk::SFrameInfo			FrameInfo				= {};
+				::gpk::pobj<::gpk::SGUI>	GUI						= {};
+				::gpk::SFrameworkSettings	Settings				= {1, };
+				::gpk::SJSONFile			JSONConfig				= {};
+				::gpk::vcs					FileNameJSONConfig		= "gpk_config.json";
 
-							::std::mutex											LockGUI;
+				::std::mutex				LockGUI;
 
-		inline																		SFramework				(::gpk::SRuntimeValues& runtimeValues, ::gpk::vcs	fileNameJSONConfig = "gpk_config.json")			noexcept
+		inline								SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcs fileNameJSONConfig = "gpk_config.json")			noexcept
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig)
 		{
 			Input.create();
@@ -66,9 +66,9 @@ namespace gpk
 		}
 	}; // struct
 
-	::gpk::error_t			updateFramework			(::gpk::SFramework& framework);
-	::gpk::error_t			mainWindowCreate		(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput);
-	::gpk::error_t			mainWindowDestroy		(::gpk::SWindow& mainWindow);
+	::gpk::error_t			updateFramework			(::gpk::SFramework & framework);
+	::gpk::error_t			mainWindowCreate		(::gpk::SWindow & mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput> & displayInput);
+	::gpk::error_t			mainWindowDestroy		(::gpk::SWindow & mainWindow);
 } // namespace
 
 #endif // GPK_FRAMEWORK_H_20987347928

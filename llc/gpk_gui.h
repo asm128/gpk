@@ -29,7 +29,7 @@ namespace gpk
 		uint8_t									FrameOut								: 1;
 		uint8_t									Design									: 1;
 		uint8_t									NoBackgroundRect						: 1;
-		uint8_t									Padding									: 1; // 8th bit
+		uint8_t									PercentMetrics							: 1; // 8th bit
 	};
 
 	struct SControlRectangle {

@@ -1129,7 +1129,7 @@ static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData&
 }
 
 				::gpk::error_t											gpk::pngFileLoad								(::gpk::SPNGData& pngData, const ::gpk::vcub& source, ::gpk::img<::gpk::SColorBGRA>& out_Texture) {
-	gpk_necall(::gpk::pngFileLoad(pngData, source), "%s", "");
+	gpk_necs(::gpk::pngFileLoad(pngData, source));
 	return ::gpk::pngDecode(pngData, out_Texture);
 }
 

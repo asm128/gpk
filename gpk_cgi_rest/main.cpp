@@ -12,11 +12,11 @@
 	uint32_t												iChar					= 0;
 	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 		if('x' == input_string[iChar]) {
-			::gpk::array_pod<char>									sx						= {};
-			::gpk::array_pod<char>									sy						= {};
+			::gpk::apod<char>										sx						= {};
+			::gpk::apod<char>										sy						= {};
 			output_metrics										= {};
-			gpk_necall(sy.append((char*)input_string.begin(), iChar), "%s", "");
-			gpk_necall(sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1)), "%s", "");
+			gpk_necs(sy.append((char*)input_string.begin(), iChar));
+			gpk_necs(sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1)));
 			::gpk::parseIntegerDecimal(sx, &output_metrics.x);
 			::gpk::parseIntegerDecimal(sy, &output_metrics.y);
 			break;
@@ -28,16 +28,16 @@
 static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect							= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
-	::gpk::array_pod<char_t>								fileJSONConfig					= {};
+	::gpk::apod<char_t>										fileJSONConfig					= {};
 	::gpk::SJSONReader										jsonConfig						= {};
 	{	// Attempt to load config file.
-		::gpk::view_const_string								fileNameJSONConfig				= "gpk_config.json";
+		::gpk::vcs												fileNameJSONConfig				= "gpk_config.json";
 		rew_if(errored(::gpk::fileToMemory(fileNameJSONConfig, fileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
 		gwarn_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // attempt to load address from config file.
 		{ //
-			::gpk::view_const_string								jsonIP							= {};
+			::gpk::vcs												jsonIP							= {};
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
 			else {
 				info_printf("Remote IP: %s.", jsonIP.begin());
@@ -46,7 +46,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 		}
 		{ // load port from config file
 			bestClient.AddressConnect.Port						= 9998;
-			::gpk::view_const_string								jsonPort							= {};
+			::gpk::vcs												jsonPort							= {};
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				uint64_t												port								= 0;
@@ -62,7 +62,7 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char> & output)										{
 	::gpk::array_pod<char_t>								environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		ree_if(errored(::gpk::environmentBlockFromEnviron(environmentBlock)), "%s", "Failed");
+		gpk_necs(::gpk::environmentBlockFromEnviron(environmentBlock));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
@@ -70,16 +70,16 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 		::gpk::SUDPClient										bestClient				= {};
 		{	// setup and connect
 			bestClient.AddressConnect							= {};
-			gpk_necall(::initClient(bestClient), "%s", "error");
-			gpk_necall(::gpk::clientConnect(bestClient), "%s", "error");
+			gpk_necs(::initClient(bestClient));
+			gpk_necs(::gpk::clientConnect(bestClient));
 		}
-		::gpk::array_pod<char_t>								responseRemote;
+		::gpk::apod<char_t>										responseRemote;
 		{	// Send the request data to the connected service.
 			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			gpk_necall(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock, true, true), "%s", "error");	// Enqueue the packet
+			gpk_necs(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
-				gpk_necall(::gpk::clientUpdate(bestClient), "%s", "error");
-				::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>	received;
+				gpk_necs(::gpk::clientUpdate(bestClient));
+				::gpk::apobj<::gpk::SUDPConnectionMessage>	received;
 				{	// pick up messages for later processing
 					::gpk::mutex_guard												lockRecv					(bestClient.Queue.MutexReceive);
 					received													= bestClient.Queue.Received;
@@ -92,7 +92,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 			}
 		}
 		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
-		gpk_necall(::gpk::clientDisconnect(bestClient), "%s", "error");
+		gpk_necs(::gpk::clientDisconnect(bestClient));
 		output												= responseRemote;
 	}
 	return 0;
@@ -144,3 +144,4 @@ int WINAPI											WinMain
 	return ::cgiMain(__argc, __argv, environ);
 }
 #endif
+// https://articulo.mercadolibre.com.ar/MLA-800947708-lora-sx1276-esp32-bt-wifi-kit-desarrollo-con-display-arduino-_JM

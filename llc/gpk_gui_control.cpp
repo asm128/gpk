@@ -21,7 +21,7 @@
 		::gpk::SControl																& control								= gui.Controls.Controls		[idControl];
 		::gpk::SControlText															& controlText							= gui.Controls.Text			[idControl];
 		const uint32_t																iPrevItem								= iItem - 1;
-		const ::gpk::SCoord2<uint8_t>												fontCharSize							= selectedFont.CharSize;
+		const ::gpk::n2<uint8_t>												fontCharSize							= selectedFont.CharSize;
 		control.Area.Size.y														= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
@@ -40,7 +40,7 @@
 
 	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
-	const ::gpk::SCoord2<uint8_t>												fontCharSize							= selectedFont.CharSize;
+	const ::gpk::n2<uint8_t>												fontCharSize							= selectedFont.CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t																idControl								= menu.IdControls		[iItem];
 		::gpk::SControl																& control								= gui.Controls.Controls	[idControl];
@@ -64,7 +64,7 @@
 
 			::gpk::error_t												gpk::controlListPush					(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
 	if(menu.IdControl == -1)
-		gpk_necall(::gpk::controlListInitialize(gui, menu), "%s", "");
+		gpk_necs(::gpk::controlListInitialize(gui, menu));
 
 	const int32_t																idControl								= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
@@ -81,10 +81,10 @@
 }
 
 			::gpk::error_t												gpk::viewportInitialize					(::gpk::SGUI & gui, ::gpk::SViewport& viewport)																				{
-	const ::gpk::SCoord2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont]->CharSize;
+	const ::gpk::n2<uint8_t>												fontCharSize							= gui.Fonts[gui.SelectedFont]->CharSize;
 	int16_t																		heightTitleBar							= fontCharSize.y + 4;
 	uint32_t																	widthTarget								= 800;
-	const ::gpk::SCoord2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
+	const ::gpk::n2<double>												targetSize								= {(double)widthTarget, widthTarget * (9 / 16.0)};
 
 	//if(-1 == viewport.IdControl)
 	{
@@ -166,7 +166,7 @@
 }
 
 			::gpk::error_t											gpk::paletteGridInitialize				(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
-	const ::gpk::SCoord2<double>											targetSize								= {256.0, 256.0};
+	const ::gpk::n2<double>											targetSize								= {256.0, 256.0};
 	palette.IdControl													= ::gpk::controlCreate(gui);
 	::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControl];
 	const uint32_t															widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
@@ -182,12 +182,12 @@
 
 	//gui.Controls.Metrics[palette.IdControl];
 
-	const ::gpk::SCoord2<uint32_t>											& gridMetrics							= colors.metrics();
+	const ::gpk::n2<uint32_t>											& gridMetrics							= colors.metrics();
 	palette.IdControls.resize(colors.size());
 	palette.Colors														= colors;
 
-	const ::gpk::SCoord2<double>											targetSize								= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.Cast<double>(); //{256.0, 256.0};
-	::gpk::SCoord2<double>													controlSize								= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
+	const ::gpk::n2<double>											targetSize								= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.Cast<double>(); //{256.0, 256.0};
+	::gpk::n2<double>													controlSize								= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(uint32_t y = 0; y < gridMetrics.y; ++y)
 	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
@@ -234,10 +234,13 @@
 	return 0;
 }
 
-::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign) {
+::gpk::error_t					gpk::guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2<uint16_t> & buttonSize, const ::gpk::n2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view<int32_t> out_ids) {
 	int32_t								result							= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		int32_t								idControl						= ::gpk::controlCreate(gui);
+		if(out_ids.size() > iButton)
+			out_ids[iButton] = idControl;
+
 		if(0 == iButton)
 			result = idControl;
 		::gpk::SControl						& control						= gui.Controls.Controls[idControl];
@@ -271,10 +274,10 @@
 	vk.Keys							= keys;
 
 	vk.IdRoot						= ::gpk::controlCreate(gui);
-	const ::gpk::SCoord2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::SCoord2<int16_t>		sizeKey						= (charSize + ::gpk::SCoord2<uint8_t>{6, 6}).Cast<int16_t>();
+	const ::gpk::n2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
+	const ::gpk::n2<int16_t>		sizeKey						= (charSize + ::gpk::n2<uint8_t>{6, 6}).Cast<int16_t>();
 	static constexpr uint16_t			SIZE_BUTTON					= 88;
-	const ::gpk::SCoord2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
+	const ::gpk::n2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
 		::gpk::SControl						& controlRoot				= gui.Controls.Controls[vk.IdRoot];

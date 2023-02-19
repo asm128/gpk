@@ -33,7 +33,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, PROCESSING								, 102);		// (WebDAV; RFC 2518)	A WebDAV request may contain many sub-requests involving file operations, requiring a long time to complete the request. This code indicates that the server has received and is processing the request, but no response is available yet.[7] This prevents the client from timing out and assuming the request was lost.
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, EARLY_HINTS								, 103);		// (RFC 8297)			Used to return some response headers before final HTTP message.[8]
 
-		//_2XX_SUCCESS						, 						This class of status codes indicates the action requested by the client was received, understood and accepted.[2]
+	//_2XX_SUCCESS						, 						This class of status codes indicates the action requested by the client was received, understood and accepted.[2]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, OK										, 200);	// Standard response for successful HTTP requests. The actual response will depend on the request method used. In a GET request, the response will contain an entity corresponding to the requested resource. In a POST request, the response will contain an entity describing or containing the result of the action.[9]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, CREATED									, 201);	// The request has been fulfilled, resulting in the creation of a new resource.[10]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, ACCEPTED								, 202);	// The request has been accepted for processing, but the processing has not been completed. The request might or might not be eventually acted upon, and may be disallowed when processing occurs.[11]
@@ -45,8 +45,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, ALREADY_REPORTED						, 208);	// (WebDAV; RFC 5842) The members of a DAV binding have already been enumerated in a preceding part of the (multistatus) response, and are not being included again.
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, IM_USED									, 226);	// (RFC 3229) The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.[18]
 
-		//_3XX_REDIRECTION						 					This class of status code indicates the client must take additional action to complete the request. Many of these status codes are used in URL redirection.[2]
-		//										 					A user agent may carry out the additional action with no user interaction only if the method used in the second request is GET or HEAD. A user agent may automatically redirect a request. A user agent should detect and intervene to prevent cyclical redirects.[19]
+	//_3XX_REDIRECTION						 					This class of status code indicates the client must take additional action to complete the request. Many of these status codes are used in URL redirection.[2]
+	//										 					A user agent may carry out the additional action with no user interaction only if the method used in the second request is GET or HEAD. A user agent may automatically redirect a request. A user agent should detect and intervene to prevent cyclical redirects.[19]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, MULTIPLE_CHOICES						, 300);		// Indicates multiple options for the resource from which the client may choose (via agent-driven content negotiation). For example, this code could be used to present multiple video format options, to list files with different filename extensions, or to suggest word-sense disambiguation.[20]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, MOVED_PERMANENTLY						, 301);		// This and all future requests should be directed to the given URI.[21]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, FOUND									, 302);		// (Previously "Moved temporarily") Tells the client to look at (browse to) another URL. 302 has been superseded by 303 and 307. This is an example of industry practice contradicting the standard. The HTTP/1.0 specification (RFC 1945) required the client to perform a temporary redirect (the original describing phrase was "Moved Temporarily"),[22] but popular browsers implemented 302 with the functionality of a 303 See Other. Therefore, HTTP/1.1 added status codes 303 and 307 to distinguish between the two behaviours.[23] However, some Web applications and frameworks use the 302 status code as if it were the 303.[24]
@@ -57,10 +57,10 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, TEMPORARY_REDIRECT						, 307);		// (since HTTP/1.1) In this case, the request should be repeated with another URI; however, future requests should still use the original URI. In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the original request. For example, a POST request should be repeated using another POST request.[29]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, PERMANENT_REDIRECT						, 308);		// (RFC 7538) The request and all future requests should be repeated using another URI. 307 and 308 parallel the behaviors of 302 and 301, but do not allow the HTTP method to change. So, for example, submitting a form to a permanently redirected resource may continue smoothly.[30]
 
-		//_4XX_CLIENT_ERRORS					 					This class of status code is intended for situations in which the error seems to have been caused by the client. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and whether it is a temporary or permanent condition. These status codes are applicable to any request method. User agents should display any included entity to the user.
+	//_4XX_CLIENT_ERRORS					 					This class of status code is intended for situations in which the error seems to have been caused by the client. Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and whether it is a temporary or permanent condition. These status codes are applicable to any request method. User agents should display any included entity to the user.
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, BAD_REQUEST								, 400);		// The server cannot or will not process the request due to an apparent client error (e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).[32]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, UNAUTHORIZED							, 401);		// (RFC 7235) Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided. The response must include a WWW-Authenticate header field containing a challenge applicable to the requested resource. See Basic access authentication and Digest access authentication.[33] 401 semantically means "unauthorised",[34] the user does not have valid authentication credentials for the target resource.
-										 				// Note: Some sites incorrectly issue HTTP 401 when an IP address is banned from the website (usually the website domain) and that specific address is refused permission to access a website.[citation needed]
+	// Note: Some sites incorrectly issue HTTP 401 when an IP address is banned from the website (usually the website domain) and that specific address is refused permission to access a website.[citation needed]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, PAYMENT_REQUIRED						, 402);		// Reserved for future use. The original intention was that this code might be used as part of some form of digital cash or micropayment scheme, as proposed, for example, by GNU Taler,[35] but that has not yet happened, and this code is not usually used. Google Developers API uses this status if a particular developer has exceeded the daily limit on requests.[36] Sipgate uses this code if an account does not have sufficient funds to start a call.[37] Shopify uses this code when the store has not paid their fees and is temporarily disabled.[38]
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, FORBIDDEN								, 403);		// The request contained valid data and was understood by the server, but the server is refusing action. This may be due to the user not having the necessary permissions for a resource or needing an account of some sort, or attempting a prohibited action (e.g. creating a duplicate record where only one is allowed). This code is also typically used if the request provided authentication via the WWW-Authenticate header field, but the server did not accept that authentication. The request SHOULD NOT be repeated.
 	GDEFINE_ENUM_VALUE(HTTP_STATUS, NOT_FOUND								, 404);		// The requested resource could not be found but may be available in the future. Subsequent requests by the client are permissible.
@@ -103,64 +103,64 @@ namespace gpk
 
 // // UNOFFICIAL_CODES
 // // THE_FOLLOWING_CODES_ARE_NOT_SPECIFIED_BY_ANY_STANdard.
-// 103_CHECKPOINT										// Used in the resumable requests proposal to resume aborted PUT or POST requests.[71]
-// 218_THIS_IS_FINE									// (Apache Web Server) Used as a catch-all error condition for allowing response bodies to flow through Apache when ProxyErrorOverride is enabled. When ProxyErrorOverride is enabled in Apache, response bodies that contain a status code of 4xx or 5xx are automatically discarded by Apache in favor of a generic response or a custom response specified by the ErrorDocument directive.[72]
-// 419_PAGE_EXPIRED									// (Laravel Framework) Used by the Laravel Framework when a CSRF Token is missing or expired.
-// 420_METHOD_FAILURE									// (Spring Framework) A deprecated response used by the Spring Framework when a method has failed.[73]
-// 420_ENHANCE_YOUR_CALM								// (Twitter) Returned by version 1 of the Twitter Search and Trends API when the client is being rate limited; versions 1.1 and later use the 429 Too Many Requests response code instead.[74]
-// 430_REQUEST_HEADER_FIELDS_TOO_LARGE					// (Shopify) Used by Shopify, instead of the 429 Too Many Requests response code, when too many URLs are requested within a certain time frame.[75]
-// 450_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS			// (Microsoft) The Microsoft extension code indicated when Windows Parental Controls are turned on and are blocking access to the requested webpage.[76]
-// 498_INVALID_TOKEN									// (Esri) Returned by ArcGIS for Server. Code 498 indicates an expired or otherwise invalid token.[77]
-// 499_TOKEN_REQUIRED									// (Esri) Returned by ArcGIS for Server. Code 499 indicates that a token is required but was not submitted.[77]
-// 509_BANDWIDTH_LIMIT_EXCEEDED						// (Apache Web Server/cPanel) The server has exceeded the bandwidth specified by the server administrator; this is often used by shared hosting providers to limit the bandwidth of customers.[78]
-// 526_INVALID_SSL_CERTIFICATE							// Used by Cloudflare and Cloud Foundry's gorouter to indicate failure to validate the SSL/TLS certificate that the origin server presented.
-// 530_SITE_IS_FROZEN									// Used by the Pantheon web platform to indicate a site that has been frozen due to inactivity.[79]
-// 598_NETWORK_READ_TIMEOUT_ERROR						// (Informal convention) Used by some HTTP proxies to signal a network read timeout behind the proxy to a client in front of the proxy.[80]
+// 103_CHECKPOINT								// Used in the resumable requests proposal to resume aborted PUT or POST requests.[71]
+// 218_THIS_IS_FINE								// (Apache Web Server) Used as a catch-all error condition for allowing response bodies to flow through Apache when ProxyErrorOverride is enabled. When ProxyErrorOverride is enabled in Apache, response bodies that contain a status code of 4xx or 5xx are automatically discarded by Apache in favor of a generic response or a custom response specified by the ErrorDocument directive.[72]
+// 419_PAGE_EXPIRED								// (Laravel Framework) Used by the Laravel Framework when a CSRF Token is missing or expired.
+// 420_METHOD_FAILURE							// (Spring Framework) A deprecated response used by the Spring Framework when a method has failed.[73]
+// 420_ENHANCE_YOUR_CALM						// (Twitter) Returned by version 1 of the Twitter Search and Trends API when the client is being rate limited; versions 1.1 and later use the 429 Too Many Requests response code instead.[74]
+// 430_REQUEST_HEADER_FIELDS_TOO_LARGE			// (Shopify) Used by Shopify, instead of the 429 Too Many Requests response code, when too many URLs are requested within a certain time frame.[75]
+// 450_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS		// (Microsoft) The Microsoft extension code indicated when Windows Parental Controls are turned on and are blocking access to the requested webpage.[76]
+// 498_INVALID_TOKEN							// (Esri) Returned by ArcGIS for Server. Code 498 indicates an expired or otherwise invalid token.[77]
+// 499_TOKEN_REQUIRED							// (Esri) Returned by ArcGIS for Server. Code 499 indicates that a token is required but was not submitted.[77]
+// 509_BANDWIDTH_LIMIT_EXCEEDED					// (Apache Web Server/cPanel) The server has exceeded the bandwidth specified by the server administrator; this is often used by shared hosting providers to limit the bandwidth of customers.[78]
+// 526_INVALID_SSL_CERTIFICATE					// Used by Cloudflare and Cloud Foundry's gorouter to indicate failure to validate the SSL/TLS certificate that the origin server presented.
+// 530_SITE_IS_FROZEN							// Used by the Pantheon web platform to indicate a site that has been frozen due to inactivity.[79]
+// 598_NETWORK_READ_TIMEOUT_ERROR				// (Informal convention) Used by some HTTP proxies to signal a network read timeout behind the proxy to a client in front of the proxy.[80]
 //
 // // INTERNET_INFORMATION_SERVICES
 // // MICROSOFT'S_INTERNET_INFORMATION_SERVICES_WEB_SERver expands the 4xx error space to signal errors with the client's request.
-// 440_LOGIN_TIME-OUT									// The client's session has expired and must log in again.[81]
-// 449_RETRY_WITH										// The server cannot honour the request because the user has not provided the required information.[82]
-// 451_REDIRECT										// Used in Exchange ActiveSync when either a more efficient server is available or the server cannot access the users' mailbox.[83] The client is expected to re-run the HTTP AutoDiscover operation to find a more appropriate server.[84]
+// 440_LOGIN_TIME-OUT							// The client's session has expired and must log in again.[81]
+// 449_RETRY_WITH								// The server cannot honour the request because the user has not provided the required information.[82]
+// 451_REDIRECT									// Used in Exchange ActiveSync when either a more efficient server is available or the server cannot access the users' mailbox.[83] The client is expected to re-run the HTTP AutoDiscover operation to find a more appropriate server.[84]
 //
-// 													// nginx
+// // nginx
 // // THE_NGINX_WEB_SERVER_SOFTWARE_EXPANDS_THE_4XX_ERRor space to signal issues with the client's request.[85][86]
-// 444_NO_RESPONSE										// Used internally[87] to instruct the server to return no information to the client and close the connection immediately.
-// 494_REQUEST_HEADER_TOO_LARGE						// Client sent too large request or too long header line.
-// 495_SSL_CERTIFICATE_ERROR							// An expansion of the 400 Bad Request response code, used when the client has provided an invalid client certificate.
-// 496_SSL_CERTIFICATE_REQUIRED						// An expansion of the 400 Bad Request response code, used when a client certificate is required but not provided.
-// 497_HTTP_REQUEST_SENT_TO_HTTPS_PORT					// An expansion of the 400 Bad Request response code, used when the client has made a HTTP request to a port listening for HTTPS requests.
-// 499_CLIENT_CLOSED_REQUEST							// Used when the client has closed the request before the server could send a response.
+// 444_NO_RESPONSE								// Used internally[87] to instruct the server to return no information to the client and close the connection immediately.
+// 494_REQUEST_HEADER_TOO_LARGE					// Client sent too large request or too long header line.
+// 495_SSL_CERTIFICATE_ERROR					// An expansion of the 400 Bad Request response code, used when the client has provided an invalid client certificate.
+// 496_SSL_CERTIFICATE_REQUIRED					// An expansion of the 400 Bad Request response code, used when a client certificate is required but not provided.
+// 497_HTTP_REQUEST_SENT_TO_HTTPS_PORT			// An expansion of the 400 Bad Request response code, used when the client has made a HTTP request to a port listening for HTTPS requests.
+// 499_CLIENT_CLOSED_REQUEST					// Used when the client has closed the request before the server could send a response.
 //
 // // CLOUDFLARE
 // // CLOUDFLARE'S_REVERSE_PROXY_SERVICE_EXPANDS_THE_5Xx series of errors space to signal issues with the origin server.[88]
-// 520_UNKNOWN_ERROR									// The 520 error is used as a "catch-all response for when the origin server returns something unexpected", listing connection resets, large headers, and empty or invalid responses as common triggers.
-// 521_WEB_SERVER_IS_DOWN								//The origin server has refused the connection from Cloudflare.
-// 522_CONNECTION_TIMED_OUT							// Cloudflare could not negotiate a TCP handshake with the origin server.
-// 523_ORIGIN_IS_UNREACHABLE							// Cloudflare could not reach the origin server; for example, if the DNS records for the origin server are incorrect.
-// 524_A_TIMEOUT_OCCURRED								// Cloudflare was able to complete a TCP connection to the origin server, but did not receive a timely HTTP response.
-// 525_SSL_HANDSHAKE_FAILED							// Cloudflare could not negotiate a SSL/TLS handshake with the origin server.
-// 526_INVALID_SSL_CERTIFICATE							// Cloudflare could not validate the SSL certificate on the origin web server.
-// 527_RAILGUN_ERROR									// Indicates that the request timed out or failed after the WAN connection had been established.[89]
-// 530_ORIGIN_DNS_ERROR								// Indicates that the requested host name could not be resolved on the Cloudflare network to an origin server.[90]
+// 520_UNKNOWN_ERROR							// The 520 error is used as a "catch-all response for when the origin server returns something unexpected", listing connection resets, large headers, and empty or invalid responses as common triggers.
+// 521_WEB_SERVER_IS_DOWN						//The origin server has refused the connection from Cloudflare.
+// 522_CONNECTION_TIMED_OUT						// Cloudflare could not negotiate a TCP handshake with the origin server.
+// 523_ORIGIN_IS_UNREACHABLE					// Cloudflare could not reach the origin server; for example, if the DNS records for the origin server are incorrect.
+// 524_A_TIMEOUT_OCCURRED						// Cloudflare was able to complete a TCP connection to the origin server, but did not receive a timely HTTP response.
+// 525_SSL_HANDSHAKE_FAILED						// Cloudflare could not negotiate a SSL/TLS handshake with the origin server.
+// 526_INVALID_SSL_CERTIFICATE					// Cloudflare could not validate the SSL certificate on the origin web server.
+// 527_RAILGUN_ERROR							// Indicates that the request timed out or failed after the WAN connection had been established.[89]
+// 530_ORIGIN_DNS_ERROR							// Indicates that the requested host name could not be resolved on the Cloudflare network to an origin server.[90]
 //
 // // AWS_ELASTIC_LOAD_BALANCER
 // // AMAZON'S_ELASTIC_LOAD_BALANCING_ADDS_A_FEW_CUSTOM 4xx return codes
-// 460													// Client closed the connection with the load balancer before the idle timeout period elapsed. Typically when client timeout is sooner than the Elastic Load Balancer's timeout.[91]
-// 463													// The load balancer received an X-Forwarded-For request header with more than 30 IP addresses.[91]
+// 460											// Client closed the connection with the load balancer before the idle timeout period elapsed. Typically when client timeout is sooner than the Elastic Load Balancer's timeout.[91]
+// 463											// The load balancer received an X-Forwarded-For request header with more than 30 IP addresses.[91]
 
 #pragma pack(push, 1)
 	struct SHTTPAPIRequest {
 		::gpk::aobj<::gpk::vcc>					QueryStringElements			= {};
-		::gpk::aobj<::gpk::TKeyValConstString>					QueryStringKeyVals			= {};
-		::gpk::vcc										Ip							= {};
-		::gpk::vcc										Port						= {};
-		::gpk::vcc										Script						= {};
-		::gpk::vcc										Path						= {};
-		::gpk::vcc										QueryString					= {};
-		::gpk::vcc										ContentBody					= {};
-		::gpk::HTTP_METHOD											Method						= {};
-		bool														IsCGIEnviron				= false;
+		::gpk::aobj<::gpk::TKeyValConstString>	QueryStringKeyVals			= {};
+		::gpk::vcc								Ip							= {};
+		::gpk::vcc								Port						= {};
+		::gpk::vcc								Script						= {};
+		::gpk::vcc								Path						= {};
+		::gpk::vcc								QueryString					= {};
+		::gpk::vcc								ContentBody					= {};
+		::gpk::HTTP_METHOD						Method						= {};
+		bool									IsCGIEnviron				= false;
 	};
 #pragma pack(pop)
 } // namespace

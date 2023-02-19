@@ -93,8 +93,8 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		 || ::gpk::XML_TOKEN_DOCTYPE	== reader.StateRead.CurrentElement->Type
 		 || ::gpk::XML_TOKEN_TAG_OPEN	== reader.StateRead.CurrentElement->Type
 		) {
-			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR), "%s", "");
-			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_NAME), "%s", "");
+			gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR));
+			gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_NAME));
 		}
 		break;
 	case '/':
@@ -110,7 +110,7 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		break;
 	case '"': // open attribute string
 		ree_if(reader.StateRead.CurrentElement->Type != ::gpk::XML_TOKEN_ATTR, "Invalid character");
-		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_VALUE, reader.StateRead.IndexCurrentChar + 1), "%s", "");
+		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_VALUE, reader.StateRead.IndexCurrentChar + 1));
 		break;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
 	{
@@ -141,8 +141,8 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 				if(xmlDoc[reader.StateRead.IndexCurrentChar + 1] != '>')
 					error_printf("Invalid character: %i (%c)", currentChar, currentChar);
 				else {
-					gpk_necall(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 2), "%s", ""); // close PI tag
-					gpk_necall(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 2), "%s", ""); // close TAG_NODE tag
+					gpk_necs(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 2)); // close PI tag
+					gpk_necs(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 2)); // close TAG_NODE tag
 					++reader.StateRead.IndexCurrentChar;
 				}
 			}
@@ -169,7 +169,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 				reader.StateRead.CurrentElement				= &reader.Token[reader.StateRead.IndexCurrentElement = reader.Token.pop_back(0) - 1];
 				reader.StateRead.NestLevel					-= 2;
 				reader.StateRead.CurrentElement->Type		= ::gpk::XML_TOKEN_TAG_CLOSE;
-				gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1), "%s", "");
+				gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1));
 			}
 			else {
 				const uint32_t			nextIdx					= reader.StateRead.IndexCurrentChar + 1;
@@ -212,7 +212,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 				}
 			} 
 			if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_NODE) {
-				gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT, reader.StateRead.IndexCurrentChar + 1), "%s", "");
+				gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT, reader.StateRead.IndexCurrentChar + 1));
 			}
 		}
 		break;
@@ -244,8 +244,8 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 		 || ::gpk::XML_TOKEN_DOCTYPE	== reader.StateRead.CurrentElement->Type
 		 || ::gpk::XML_TOKEN_TAG_OPEN	== reader.StateRead.CurrentElement->Type
 		) {
-			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR), "%s", "");
-			gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_NAME), "%s", "");
+			gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR));
+			gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_ATTR_NAME));
 		}
 	}
 		break;
@@ -280,10 +280,10 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 			};
 		gpk_necall(::gpk::find(reader.StateRead.CurrentElement->Type, validScopes), "Invalid character: %c in node of type '%s'", currentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 		if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_TEXT)
-			gpk_necall(xmlCloseElement(reader), "%s", "");
-		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NODE), "%s", "");
-		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_OPEN), "%s", "");
-		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1), "%s", "");
+			gpk_necs(xmlCloseElement(reader));
+		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NODE));
+		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_OPEN));
+		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1));
 	}
 		break;
 	case '>': { // close (pi, open, close, doctype) tag
@@ -301,7 +301,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 				gpk_necall(xmlCloseElement(reader, reader.StateRead.IndexCurrentChar + 1), "Invalid nest level: %i", reader.StateRead.NestLevel); // close TAG_NODE
 			}
 			else if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_NODE) {
-				gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT, reader.StateRead.IndexCurrentChar + 1), "%s", "");
+				gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_TEXT, reader.StateRead.IndexCurrentChar + 1));
 			}
 		}
 	}
@@ -317,17 +317,17 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
 	static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
 	if(0 == reader.StateRead.CurrentElement) {
-		gpk_necall(xmlOpenElement(reader, ::gpk::XML_TOKEN_DOCUMENT), "%s", "");
+		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_DOCUMENT));
 	}
 
 	if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_ATTR_VALUE)
-		gpk_necall(xmlParseStringCharacter(reader, xmlDoc), "%s", "");
+		gpk_necs(xmlParseStringCharacter(reader, xmlDoc));
 	else if(-1 != ::gpk::find(reader.StateRead.CurrentElement->Type, TOKENS_CHARACTER_TAG))
-		gpk_necall(xmlParseTagCharacter(reader, xmlDoc), "%s", "");
+		gpk_necs(xmlParseTagCharacter(reader, xmlDoc));
 	else if(-1 != ::gpk::find(reader.StateRead.CurrentElement->Type, TOKENS_CHARACTER_NAME))
-		gpk_necall(xmlParseNameCharacter(reader, xmlDoc), "%s", "");
+		gpk_necs(xmlParseNameCharacter(reader, xmlDoc));
 	else {
-		gpk_necall(xmlParseDocumentCharacter(reader, xmlDoc), "%s", "");
+		gpk_necs(xmlParseDocumentCharacter(reader, xmlDoc));
 	}
 	if(xmlDoc.size() == (reader.StateRead.IndexCurrentChar + 1) && reader.StateRead.CurrentElement) {
 		if(reader.StateRead.CurrentElement && reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_TEXT)

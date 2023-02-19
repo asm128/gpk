@@ -638,8 +638,23 @@ namespace gpk
 		}
 	}; // array_obj
 
-	template <typename T>							using aobj				= ::gpk::array_obj<T>; 
-	template <typename T>							using apod				= ::gpk::array_pod<T>;
+	template <typename T>		using aobj		= ::gpk::array_obj<T>; 
+	template <typename T>		using apod		= ::gpk::array_pod<T>;
+
+	typedef apod<ubyte_t	>	array_ubyte		, aub	, aub;
+	typedef apod<byte_t		>	array_byte		, ab	, ab;
+	typedef apod<uchar_t	>	array_uchar		, auc	, auc;
+	typedef apod<char_t		>	array_char		, ac	, ac;
+	typedef apod<float_t	>	array_float32	, af32	, array_float	, af;
+	typedef apod<double_t	>	array_float64	, af64	, array_double	, ad;
+	typedef apod<uint8_t	>	array_uint8		, au8	, au8;
+	typedef apod<uint16_t	>	array_uint16	, au16	, au16;
+	typedef apod<uint32_t	>	array_uint32	, au32	, au32;
+	typedef apod<uint64_t	>	array_uint64	, au64	, au64;
+	typedef apod<int8_t		>	array_int8		, ai8	, ai8;
+	typedef apod<int16_t	>	array_int16		, ai16	, ai16;
+	typedef apod<int32_t	>	array_int32		, ai32	, ai32;
+	typedef apod<int64_t	>	array_int64		, ai64	, ai64;
 
 	template<typename _tElement>
 	::gpk::error_t									split					(const ::gpk::view<const _tElement> & target, const _tElement& separator, ::gpk::aobj<::gpk::view<const _tElement>> & split)	{
@@ -696,15 +711,15 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t									viewWrite							(const ::gpk::view<_tElement>& headerToWrite, ::gpk::apod<byte_t>	& output)	{
-		gpk_necall(output.append(::gpk::vcb{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
-		gpk_necall(output.append(::gpk::vcb{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
+		gpk_necs(output.append(::gpk::vcb{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}));
+		gpk_necs(output.append(::gpk::vcb{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}));
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
 	template<typename _tElement>
 	::gpk::error_t									viewSave						(::gpk::apod<ubyte_t> & output, const ::gpk::view<_tElement>& headerToWrite)	{
-		gpk_necall(output.append({(const ubyte_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}), "%s", "");
-		gpk_necall(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}), "%s", "");
+		gpk_necs(output.append({(const ubyte_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}));
+		gpk_necs(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}));
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 	                                                                                                                                                                                                                                                                                                                                                                                                                                          

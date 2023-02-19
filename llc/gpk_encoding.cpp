@@ -35,21 +35,21 @@ static		::gpk::error_t								hexFromByte														(uint8_t i, char* hexed)	
 	return 0;
 }
 
-static		::gpk::error_t								hexToByte														(const char* s, uint8_t& byte)															{
+static		::gpk::error_t								hexToByte														(const char* s, uint8_t & byte)															{
 	char														temp [3]														= {s[0], s[1]};
-	gpk_necall(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte), "%s", "");
+	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte));
 	return 0;
 }
 
-static		::gpk::error_t								hexToByte														(const char* s, byte_t& byte)															{
+static		::gpk::error_t								hexToByte														(const char* s, byte_t & byte)															{
 	char														temp [3]														= {s[0], s[1]};
-	gpk_necall(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte), "%s", "");
+	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte));
 	return 0;
 }
 
 			::gpk::error_t								gpk::hexEncode													(const ::gpk::view<const ubyte_t	> & in_binary, ::gpk::apod<char_t	> & out_hexed	)	{
 	uint32_t													offset															= out_hexed.size();
-	gpk_necall(out_hexed.resize(offset + in_binary.size() * 2), "%s", "Out of memory?");
+	gpk_necs(out_hexed.resize(offset + in_binary.size() * 2));
 	byte_t														* pHexed														= out_hexed.begin();
 	const ubyte_t												* pBinary														= in_binary.begin();
 	for(uint32_t iByte = 0; iByte < in_binary.size(); ++iByte)
@@ -79,7 +79,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 	return 0;
 }
 
-::gpk::error_t											gpk::ardellEncode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output)						{
+::gpk::error_t											gpk::ardellEncode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t> & input, uint64_t key, bool salt, ::gpk::apod<byte_t> & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	char														saltValue		[4]												= {};
 	if (salt)
@@ -121,7 +121,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 	return 0;
 }
 
-::gpk::error_t											gpk::ardellDecode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t>& input, uint64_t key, bool salt, ::gpk::apod<byte_t>& output)		{
+::gpk::error_t											gpk::ardellDecode												(::gpk::apod<int32_t> & cache, const ::gpk::view<const byte_t> & input, uint64_t key, bool salt, ::gpk::apod<byte_t> & output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	const int32_t												keyFinal[8]														=
 		{ (int32_t)(11 + (key % 233))
@@ -142,7 +142,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 
 	uint32_t													outputOffset													= output.size();
 	const uint32_t												finalStringSize													= salt ? n - 4 : n;
-	const ::gpk::view<const int32_t>						finalValues														= {salt ? &sn[2] : sn, finalStringSize};
+	const ::gpk::vci32											finalValues														= {salt ? &sn[2] : sn, finalStringSize};
 	gpk_necall(output.resize(outputOffset + finalStringSize), "%s", "Out of memory?");
 	byte_t														* outputFast													= output.begin();
 	const int32_t												* finalValuesFast												= finalValues.begin();
@@ -179,7 +179,7 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 
 ::gpk::error_t									gpk::digest													(const ::gpk::vcb & input, ::gpk::apod<uint32_t> & digest)		{
 	uint32_t											x								= 0;
-	::gpk::apod<uint32_t>							filtered						= {};
+	::gpk::apod<uint32_t>								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
@@ -212,10 +212,9 @@ static		::gpk::error_t								hexToByte														(const char* s, byte_t& byt
 	return 0;
 }
 
-
 ::gpk::error_t									gpk::digest													(const ::gpk::vcb & input, ::gpk::apod<byte_t> & digest)		{
 	uint32_t											x								= 0;
-	::gpk::apod<uint32_t>							filtered						= {};
+	::gpk::apod<uint32_t>								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])

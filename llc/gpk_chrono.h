@@ -11,9 +11,17 @@
 
 namespace gpk
 {
-	int64_t											timeCurrent							();
-	int64_t											timeCurrentInMs						();
-	int64_t											timeCurrentInUs						();
+	int64_t						timeCurrent							();
+	int64_t						timeCurrentInMs						();
+	int64_t						timeCurrentInUs						();
+
+	struct STimestamps {
+		uint64_t				TimeCreated;
+		uint64_t				TimeLoaded;
+		uint64_t				TimeModified;
+		uint64_t				TimeSaved;
+	};
+
 } // namespace
 
 #endif // GPK_CHRONO_H_2983742893

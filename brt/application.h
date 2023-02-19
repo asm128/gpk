@@ -25,29 +25,28 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SApplication {
-		::gpk::SFramework																	Framework;
-		::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>					Offscreen							= {};
+		::gpk::SFramework										Framework;
+		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>			Offscreen							= {};
+		::gpk::SUDPServer										Server								= {};
+		::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>>	ReceivedPerClient;
+		::gpk::aobj<::gpk::aobj<::gpk::apod<char_t>>>			ClientResponses;
+		::gpk::aobj<::brt::SProcess>							ClientProcesses;
+		::gpk::aobj<::brt::SProcessHandles>						ClientIOHandles;
+		::gpk::vcc												ProcessFileName						= "";
+		::gpk::vcc												ProcessMockPath						= "";
+		::gpk::vcc												ProcessParams						= "";
+		SECURITY_ATTRIBUTES										DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
-		::gpk::SUDPServer																	Server								= {};
-		::gpk::array_obj<::gpk::array_obj<::gpk::ptr_obj<::gpk::SUDPConnectionMessage>>>	ReceivedPerClient;
-		::gpk::array_obj<::gpk::array_obj<::gpk::array_pod<char_t>>>						ClientResponses;
-		::gpk::array_obj<::brt::SProcess>													ClientProcesses;
-		::gpk::array_obj<::brt::SProcessHandles>											ClientIOHandles;
-		::gpk::view_const_char																ProcessFileName						= "";
-		::gpk::view_const_char																ProcessMockPath						= "";
-		::gpk::view_const_char																ProcessParams						= "";
-		SECURITY_ATTRIBUTES																	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
-
-		::gpk::array_pod<char_t>															szCmdlineApp						= "";
-		::gpk::array_pod<char_t>															szCmdlineFinal						= "";
+		::gpk::array_pod<char_t>								szCmdlineApp						= "";
+		::gpk::array_pod<char_t>								szCmdlineFinal						= "";
 
 
-		int32_t																				IdExit								= -1;
+		int32_t													IdExit								= -1;
 
-		::std::mutex																		LockGUI;
-		::std::mutex																		LockRender;
+		::std::mutex											LockGUI;
+		::std::mutex											LockRender;
 
-																							SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
+																SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
 } // namespace
 

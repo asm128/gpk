@@ -307,7 +307,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	const uint32_t													sizeNum												= lengthJsonNumber(index, jsonAsString);
 	::gpk::SJSONToken												currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
 	::gpk::vcc											numString											= {};
-	gpk_necall(jsonAsString.slice(numString, index, sizeNum), "%s", "");
+	gpk_necs(jsonAsString.slice(numString, index, sizeNum));
 	::gpk::error_t													intCount											= ::gpk::parseIntegerDecimal(numString, &currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type											= ::gpk::JSON_TYPE_DOUBLE;
@@ -319,9 +319,9 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 		if(lenDec) {
 			double															decValue											= 0;
 			if(numString[0] == '.')
-				gpk_necall(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1), "%s", "");
+				gpk_necs(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1));
 			else
-				gpk_necall(jsonAsString.slice(numString, offsetStart, lenDec), "%s", "");
+				gpk_necs(jsonAsString.slice(numString, offsetStart, lenDec));
 			const ::gpk::error_t											decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
 			ree_if(errored(decCount), "%s", "Unknown error.");
 			decValue													/= ::gpk::powui(10, decCount);
@@ -519,7 +519,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	reader.View.resize(reader.Token.size());
 	for(uint32_t iView = 0; iView < reader.Token.size(); ++iView) {
 		const ::gpk::SJSONToken											& currentElement									= reader.Token[iView];
-		gpk_necall(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin), "%s", "");
+		gpk_necs(jsonAsString.slice(reader.View[iView], currentElement.Span.Begin, currentElement.Span.End - currentElement.Span.Begin));
 	}
 	return ::gpk::jsonTreeRebuild(reader.Token, reader.Tree);
 }

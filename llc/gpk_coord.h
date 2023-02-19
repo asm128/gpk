@@ -431,6 +431,8 @@ namespace gpk
 		constexpr inline _tElement			Width		()	const { return Right - Left; }
 		constexpr inline _tElement			Height		()	const { return Bottom - Top; }
 		constexpr ::gpk::n2<_tElement>		Dimensions	()	const { return {Width(), Height()}; }
+		template <typename _t>
+		constexpr inline SRectLimits<_t>	Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }
 	};
 	template<typename _tElement>	struct SOrigin			{ ::gpk::n3<_tElement>					Front, Up, Right		; GPK_DEFAULT_OPERATOR_NE(SOrigin<_tElement>, Front	== other.Front	&& Up		== other.Up		&& Right == other.Right); };
 	template<typename _tElement>	struct SRange			{ _tElement								Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange<_tElement>, Offset	== other.Offset	&& Count	== other.Count					); };

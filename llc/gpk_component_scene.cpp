@@ -6,7 +6,7 @@
 template<typename _tNumber>
 static ::gpk::error_t					jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, _tNumber & out_value){
 	readerCache								= {};
-	gpk_necall(::gpk::jsonParse(readerCache, in_string), "%s", "");
+	gpk_necs(::gpk::jsonParse(readerCache, in_string));
 	const ::gpk::SJSONToken						& jsonValue				= *readerCache[1]->Token;
 	if(readerCache[1]->Token->Type == ::gpk::JSON_TYPE_INTEGER) {
 		out_value								= (_tNumber)jsonValue.Value; }
@@ -192,7 +192,7 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 			}
 			else {
 				::gpk::vcc						filepath				= {};
-				gpk_necall(filename.slice(filepath, 0, pathStop), "%s", "");
+				gpk_necs(filename.slice(filepath, 0, pathStop));
 				matFilename.append(filepath);
 				matFilename.push_back('/');
 				matFilename.append(lineValues[1]);
@@ -288,7 +288,7 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::vcc					extension				= {};
 	::gpk::apod<char_t>				ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
-	gpk_necall(ext_lwr.append(extension), "%s", "");
+	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);
 	static const ::gpk::vcs					str_stl					= ".stl";
 	static const ::gpk::vcs					str_obj					= ".obj";

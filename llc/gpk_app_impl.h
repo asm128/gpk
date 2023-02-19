@@ -42,7 +42,7 @@
 
 #if defined(GPK_WINDOWS)
 #	define GPK_SYSTEM_OS_ENTRY_POINT()																													\
-	static	::gpk::error_t													rtMain							(::gpk::SRuntimeValues& runtimeValues);		\
+	static	::gpk::error_t													rtMain							(::gpk::SRuntimeValues & runtimeValues);		\
 			int																main							(int argc, char *argv[], char *envp[])	{	\
 		GPK_RO_INIT_MULTITHREADED;																														\
 		::gpk::SRuntimeValues														runtimeValues					= {};								\
@@ -84,7 +84,7 @@
 #endif
 
 #define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		\
-static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeValues);													\
+static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtimeValues);													\
 		::gpk::error_t														setup							(_mainClass& app);																																												\
 		::gpk::error_t														cleanup							(_mainClass& app);																																												\
 		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);																																					\
@@ -108,7 +108,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 		::gpk::error_t														cleanup							(_mainClass& app);									\
 		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);		\
 		::gpk::error_t														draw							(_mainClass& app);									\
-		::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeValues)							{	\
+		::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtimeValues)							{	\
 	{																																											\
 		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																		\
 		{																																										\
@@ -132,7 +132,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeV
 }
 
 #define GPK_DEFINE_APPLICATION_ENTRY_POINT_MT(_mainClass, _moduleTitle)		\
-static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues& runtimeValues);													\
+static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtimeValues);													\
 		::gpk::error_t														setup							(_mainClass& app);																																												\
 		::gpk::error_t														cleanup							(_mainClass& app);																																												\
 		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);																																					\
@@ -215,7 +215,7 @@ static	int														grt_Loop						(::SRuntimeState & runtimeState)	{								
 	return updateResult;																																															\
 }																																																					\
 																																																					\
-static	int														rtMain							(::gpk::SRuntimeValues& runtimeValues)						{												\
+static	int														rtMain							(::gpk::SRuntimeValues & runtimeValues)						{												\
 	GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();																																		\
 	SRuntimeState														runtimeState					= {};																										\
 	{																																																				\

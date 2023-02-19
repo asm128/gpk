@@ -26,7 +26,7 @@
 			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
 	::gpk::view_stream<const ubyte_t>							rsw_stream													= {input.begin(), input.size()};
 	SRSWHeader													header														= {};//*(SRSWHeader*)input.begin();
-	gpk_necall(rsw_stream.read_pod(header), "%s", "");//sizeof(SRSWHeader);
+	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
 	info_printf("RSW version: %u.%u.", (uint32_t)header.VersionMajor, (uint32_t)header.VersionMinor);
 	info_printf("RSW version major: 0x%x.", (uint32_t)header.VersionMajor);
