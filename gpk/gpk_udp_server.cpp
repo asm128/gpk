@@ -61,7 +61,7 @@
 							if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 								continue;
 							if(sockets.fd_array[sd] == pclient->Socket) {
-								gpk_necall(clientsToProcess.push_back(pclient), "%s", "Out of memory?");
+								gpk_necs(clientsToProcess.push_back(pclient));
 								break;
 							}
 						}
@@ -145,15 +145,15 @@ static	::gpk::error_t										serverAcceptClient					(::gpk::SUDPServer& server
 		int32_t															found								= ::recycleClient(serverInstance, pClient);
 		::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
 		command.Type												= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
-		::gpk::pobj<::gpk::SUDPConnectionMessage>					connectResponse								= {};
+		::gpk::pobj<::gpk::SUDPConnectionMessage>						connectResponse								= {};
 		connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
-		gpk_necall(pClient->Queue.Send.push_back(connectResponse), "Out of memory?");
+		gpk_necs(pClient->Queue.Send.push_back(connectResponse));
 		pClient->LastPing											=
 		pClient->FirstPing											= ::gpk::timeCurrentInUs();
 		ree_if(INVALID_SOCKET == (pClient->Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
 		pClient->State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 		if(found == -1)
-			gpk_necall(serverInstance.Clients.push_back(pClient), "Out of memory?");
+			gpk_necs(serverInstance.Clients.push_back(pClient));
 	}
 	info_printf("Current client count: %u", serverInstance.Clients.size());
 	return 0;
