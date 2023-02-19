@@ -25,7 +25,7 @@
 		}
 		//message->Payload.clear();
 		message->Payload											= data;
-		gpk_necall(queue.Send.push_back(message), "%s", "Out of memory?");
+		gpk_necs(queue.Send.push_back(message));
 		//::gpk::sleep(1);
 	}
 	return 0;
@@ -114,7 +114,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		if(messageToSend.Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE) {
 			payloadHeader.MessageId										= messageToSend.Time;
 			ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
-			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
+			gpk_necs(messageCacheSent.push_back(pMessageToSend));
 			info_printf("Sent response to message id: %llx", payloadHeader.MessageId);
 		}
 		else {
@@ -143,29 +143,29 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 				}
 			}
 
-			gpk_necall(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size), "%s", "Out of memory?");
+			gpk_necs(messageBytes.resize((uint32_t)sizeof(::gpk::SUDPPayloadHeader) + payloadHeader.Size));
 			sendStream							= {messageBytes.begin(), messageBytes.size()};
-			gpk_necall(sendStream.write_pod(payloadHeader), "%s", "??");
+			gpk_necs(sendStream.write_pod(payloadHeader));
 
 			if(0 != payloadHeader.Command.Encrypted) {
 				info_printf("Original packet size: %u. Final size: %u.", messageToSend.Payload.size(), ardellEncoded.size());
-				gpk_necall(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()), "%s", "??");
+				gpk_necs(sendStream.write_pod(ardellEncoded.begin(), ardellEncoded.size()));
 			}
 			else {
 				if(0 == payloadHeader.Command.Compressed)
-					gpk_necall(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()), "%s", "??");
+					gpk_necs(sendStream.write_pod(messageToSend.Payload.begin(), messageToSend.Payload.size()));
 				else {
 					info_printf("Original packet size: %u. Compressed size: %u.", messageToSend.Payload.size(), compressed.size());
-					gpk_necall(sendStream.write_pod(compressed.begin(), compressed.size()), "%s", "??");
+					gpk_necs(sendStream.write_pod(compressed.begin(), compressed.size()));
 				}
 			}
 
 			ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
 			{
-				gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
+				gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
 			}
-			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
+			gpk_necs(messageCacheSent.push_back(pMessageToSend));
 		}
 	}
 	return 0;
@@ -218,8 +218,8 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 		else {
 			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			//pMessageToSend->Time										= currentTime;
-			gpk_necall(client.Queue.Sent.push_back(pMessageToSend), "%s", "Out of memory?");
-			gpk_necall(messageCacheSent.push_back(pMessageToSend), "%s", "Out of memory?");
+			gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
+			gpk_necs(messageCacheSent.push_back(pMessageToSend));
 		}
 	}
 	gpk_necall(::payloadQueueOptimize(client, messageCacheSent, payloadsToSend), "%s", "Failed to optimize payload queue.");
@@ -266,7 +266,7 @@ typedef int socklen_t;
 #endif
 
 static	::gpk::error_t										postConfirmationResponse			(::gpk::SUDPClientQueue & queue, const ::gpk::SUDPCommand command, const uint64_t messageId)				{
-	::gpk::pobj<::gpk::SUDPConnectionMessage>					response							= {};
+	::gpk::pobj<::gpk::SUDPConnectionMessage>						response							= {};
 	response->Command											= command;
 	response->Command.Type										= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
 	response->Time												= messageId;
@@ -294,7 +294,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand & command,
 	}
 	uint64_t														estimatedTimeSent					= 0;
 	if(command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST) {
-		gpk_necall(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size), "%s", "Out of memory?");
+		gpk_necs(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size));
 		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
 		if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 #if defined(GPK_WINDOWS)
@@ -318,7 +318,7 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand & command,
 					info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
 					break;
 				}
-			reterr_gerror_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
+			ree_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
 		}
 		else { // Why the fuck is this commented???
 			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
@@ -395,9 +395,9 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand & command,
 				messageReceivedInt->Command.Packed							= 0;	// Clear payload mode bits
 				messageReceivedInt->Command.Encrypted						= 0;
 				messageReceivedInt->Command.Compressed						= 0;
-				gpk_necall(messageReceivedInt->Payload.resize(sizes[iSizes]), "%s", "Out of memory?");
+				gpk_necs(messageReceivedInt->Payload.resize(sizes[iSizes]));
 				gpk_necall(payload.read_pod(messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
-				gpk_necall(tempQueue.push_back(messageReceivedInt), "%s", "Out of memory?");
+				gpk_necs(tempQueue.push_back(messageReceivedInt));
 			}
 			{
 				::gpk::mutex_guard												lock								(client.Queue.MutexReceive);
