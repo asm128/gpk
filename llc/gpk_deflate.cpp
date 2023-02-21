@@ -208,7 +208,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	return 0;
 }
 
-		::gpk::error_t					gpk::fileToMemorySecure								(::gpk::SLoadCache& recycle, ::gpk::apod<char_t> & loadedBytes, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate)								{
+		::gpk::error_t					gpk::fileToMemorySecure			(::gpk::SLoadCache& recycle, ::gpk::apod<char_t> & loadedBytes, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate)								{
 	::gpk::vcs					strFilename											= {fileName.begin(), fileName.size()};
 	if(false == deflate && 0 == key.size()) {
 		gpk_necall(::gpk::fileToMemory(strFilename, loadedBytes), "Failed to read file: %s.", ::gpk::toString(fileName).begin());

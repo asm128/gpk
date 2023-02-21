@@ -56,7 +56,7 @@ namespace gpk
 		uint32_t									bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewLoad(output, input)); 
 		input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		output									= ::gpk::label({(const char*)output.begin(), output.size()});
+		output									= ::gpk::label{(const char*)output.begin(), output.size()};
 		return 0;
 	}
 }

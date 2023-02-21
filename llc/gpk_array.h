@@ -24,6 +24,7 @@ namespace gpk
 	}
 
 	// Base for arrays that keeps track of its actual size.
+#pragma pack(push, 1)
 	template<typename _tCell>
 	struct array_base : public view<_tCell> {
 	protected:
@@ -41,6 +42,7 @@ namespace gpk
 		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize, uint32_t(newSize + ::gpk::max(newSize >> 1, 4U)));			}
 		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
 	}; // array_base
+#pragma pack(pop)
 
 	// This class is optimized to contain POD instances and won't work for C++ objects that require calling constructors/destructors.
 	template<typename _tPOD>
@@ -86,7 +88,7 @@ namespace gpk
 		//		safeguard.Handle								= 0;
 		//	}
 		//}
-														array_pod									(array_pod<_tPOD>&& other)													noexcept	{
+														array_pod									(array_pod<_tPOD> && other)			noexcept	{
 			Size											= other.Size									;
 			Count											= other.Count									;
 			Data											= other.Data									;
@@ -94,8 +96,8 @@ namespace gpk
 			other.Size										= other.Count									= 0;
 			other.Data										= 0;
 		}
-		inline											array_pod									(const array_pod<_tPOD>& other)															: array_pod((const view<const _tPOD>&) other) {}
-														array_pod									(const view<const _tPOD>& other)														{
+		inline											array_pod									(const array_pod<_tPOD> & other)				: array_pod((const view<const _tPOD>&) other) {}
+														array_pod									(const view<const _tPOD> & other)				{
 			if(other.size()) {
 				const uint32_t										newSize										= other.size();
 				const uint32_t										reserveSize									= calc_reserve_size(newSize);
@@ -164,7 +166,7 @@ namespace gpk
 		}
 
 		// Returns the index of the pushed value or -1 on failure
-							::gpk::error_t				push_back									(const _tPOD& newValue)														noexcept	{
+							::gpk::error_t				push_back									(const _tPOD & newValue)														noexcept	{
 			const int32_t										oldSize										= Count;
 			const int32_t										newSize										= oldSize + 1;
 			const int32_t										finalSize									= resize(newSize, newValue);
@@ -193,7 +195,7 @@ namespace gpk
 		}
 
 		// Returns the new size of the array.
-							::gpk::error_t				resize										(uint32_t newSize, const _tPOD& newValue)									noexcept	{
+							::gpk::error_t				resize										(uint32_t newSize, const _tPOD & newValue)									noexcept	{
 			int32_t												oldCount									= (int32_t)Count;
 			int32_t												newCount									= resize(newSize);
 			ree_if(newCount != (int32_t)newSize, "Failed to resize array. Requested size: %u. Current size: %u (%u).", newCount, Count, Size);
@@ -248,7 +250,7 @@ namespace gpk
 		}
 
 		// returns the new size of the list or -1 on failure.
-							::gpk::error_t				insert										(uint32_t index, const _tPOD& newValue)										noexcept	{
+							::gpk::error_t				insert										(uint32_t index, const _tPOD & newValue)										noexcept	{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			if(Size < Count + 1) {
 				_tPOD												* oldData									= Data;
@@ -342,7 +344,7 @@ namespace gpk
 		}
 
 		// Returns the index of the argument if found or -1 if not.
-		inline				::gpk::error_t				find										(const _tPOD& valueToLookFor)										const	noexcept	{
+		inline				::gpk::error_t				find										(const _tPOD & valueToLookFor)										const	noexcept	{
 			for(uint32_t i = 0; i < Count; ++i)
 				if(0 == ::gpk::podcmp(&Data[i], &valueToLookFor))
 					return i;
@@ -469,7 +471,7 @@ namespace gpk
 			return Count;
 		}
 		// Returns the index of the pushed value or -1 on failure
-		inline				int32_t						push_back									(const _tObj& newValue)																	{
+		inline				int32_t						push_back									(const _tObj & newValue)																	{
 			int32_t												indexExpected								= Count;
 			int32_t												indexNew									= resize(Count+1, newValue)-1;
 			ree_if(indexNew != indexExpected, "Failed to push value! Array size: %i.", indexExpected);
@@ -548,7 +550,7 @@ namespace gpk
 		}
 
 		// returns the new size of the list or -1 on failure.
-							int32_t						insert										(uint32_t index, const _tObj& newValue)													{
+							int32_t						insert										(uint32_t index, const _tObj & newValue)													{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 
 			if(Size < Count + 1) {

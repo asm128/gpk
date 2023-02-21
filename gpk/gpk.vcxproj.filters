@@ -16,6 +16,9 @@
     <Filter Include="udp">
       <UniqueIdentifier>{558b39bb-72d0-449a-afbb-ebd50d128afb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ragnarok">
+      <UniqueIdentifier>{356a6b64-75c0-4839-a715-fc33431294eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_ro_gnd.h">
@@ -50,15 +53,6 @@
     <ClCompile Include="gpk_bitmap_file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_ro_gnd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_ro_rsm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_ro_rsw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_connection.cpp">
       <Filter>udp</Filter>
     </ClCompile>
@@ -67,6 +61,15 @@
     </ClCompile>
     <ClCompile Include="gpk_udp_client.cpp">
       <Filter>udp</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_gnd.cpp">
+      <Filter>ragnarok</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_rsm.cpp">
+      <Filter>ragnarok</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ro_rsw.cpp">
+      <Filter>ragnarok</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

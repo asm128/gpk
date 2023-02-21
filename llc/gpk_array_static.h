@@ -38,19 +38,31 @@ namespace gpk
 		inline constexpr	const _tCell*			end							()											const	noexcept	{ return Storage + _sizeArray;	}
 
 		inline constexpr	const uint32_t&			size						()											const	noexcept	{ return SIZE; }
+		inline constexpr	const uint32_t			byte_count					()											const	noexcept	{ return (uint32_t)(_sizeArray * sizeof(_tCell));	}
 	};
 
 	template<typename _tCell, uint32_t _sizeArray>	using astatic				= ::gpk::array_static<_tCell, _sizeArray>;
 
 #pragma pack(pop)
 
-	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::array_static<tElement, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
-	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	byte_count	(::gpk::array_static<tElement, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(tElement) * nSize);	}
+	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::astatic<tElement, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
+	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	byte_count	(::gpk::astatic<tElement, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(tElement) * nSize);	}
 
 	template<typename _tElement, size_t _nSize>
-						::gpk::error_t			find						(const _tElement& element, const ::gpk::array_static<const _tElement, _nSize>& target, uint32_t offset = 0)	{
+	::gpk::error_t					find						(const _tElement& element, const ::gpk::astatic<const _tElement, _nSize>& target, uint32_t offset = 0)	{
 		return ::gpk::find(element, ::gpk::view<const _tElement>{target}, offset);
 	}
+
+	template<typename _tPOD, uint32_t _nSize> 
+	::gpk::error_t					loadView		(::gpk::vcub & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
+		::gpk::view<const _tPOD>			readView		= {}; 
+		uint32_t							bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(readView, input)); 
+		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));
+		return 0;
+	}
+
 } // namespace
 
 #endif // GPK_ARRAY_STATIC_H_2983749823749826534465243
