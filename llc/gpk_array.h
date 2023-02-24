@@ -781,6 +781,13 @@ namespace gpk
 		return 0;
 	}
 
+	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::vcub & input, ::gpk::view<const _tPOD> & output) { 
+		uint32_t										bytesRead		= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(output, input)); 
+		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		return 0;
+	}
+
 }
 
 #endif // GPK_ARRAY_H_29837498237498237429837

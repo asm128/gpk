@@ -37,6 +37,9 @@ namespace gpk
 			gthrow_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
 		}
 
+		template <size_t _elementCount>
+		inline constexpr							view					(uint32_t elementCount, _tElement (&_elements)[_elementCount])						: Data(_elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{}
+
 		// Operators
 		inline constexpr	operator				view<const _tElement>	()																const	noexcept	{ return {Data, Count}; }
 							_tElement&				operator[]				(uint32_t index)																	{

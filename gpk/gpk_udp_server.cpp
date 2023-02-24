@@ -236,3 +236,15 @@ void														threadServer						(void* pServerInstance)				{
 	ginfo_if(attempt < 10, "Listening socket closed with %u disconnect attempt%s.", attempt, (attempt > 1) ? "s":"");
 	return 0;
 }
+
+::gpk::error_t												gpk::serverPayloadCollect			(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>> & receivedMessages)		{
+	::gpk::mutex_guard												lock								(server.Mutex);
+	gpk_necs(receivedMessages.resize(server.Clients.size()));
+	for(uint32_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
+		::gpk::pnco<::gpk::SUDPConnection>		client							= server.Clients[iClient];
+		if(!client)
+			continue;
+		gpk_necs(::gpk::connectionPayloadCollect(*client, receivedMessages[iClient]));
+	}
+	return 0;
+}

@@ -236,6 +236,25 @@ namespace gpk
 			return 0;
 		}
 	};
+
+	template<typename _tEventType>
+	struct SEventView {
+		_tEventType					Type;
+		::gpk::view<const ubyte_t>	Data;
+
+		::gpk::error_t				Save			(::gpk::apod<ubyte_t> & output)	const	{
+			gpk_necs(::gpk::savePOD(output, Type));
+			gpk_necs(::gpk::viewSave(output, Data));
+			return 0;
+		}
+
+		::gpk::error_t				Load			(::gpk::vcub & input)					{
+			gpk_necs(::gpk::loadPOD(input, Type));
+			gpk_necs(::gpk::loadView(input, Data));
+			return 0;
+		}
+	};
+
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators

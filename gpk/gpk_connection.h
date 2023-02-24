@@ -91,9 +91,13 @@ namespace gpk
 
 	static constexpr	const uint32_t			UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
+	::gpk::error_t								connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPConnectionMessage> & receivedMessages);
 	::gpk::error_t								connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
 	::gpk::error_t								connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer);
 	::gpk::error_t								connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cb & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
+	static inline		::gpk::error_t			connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cub & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+		return connectionPushData(client, queue, ::gpk::v1cb{(const byte_t*)data.begin(), data.size()}, bEncrypted, bCompress, retryCount);
+	}
 }
 
 #endif // GPK_CONNECTION_H_20347892908347

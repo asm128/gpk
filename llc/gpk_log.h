@@ -170,15 +170,15 @@ namespace gpk
 #	else
 //#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
 //#	pragma warning(disable:4553)	// this was required because "condition" may have had no side effect.
-#		define gthrow_if(condition, format, ...)						if(condition) do{::gpk::dummy(__VA_ARGS__); } while(0)
+#		define gthrow_if(condition, format, ...)			if(condition) do{::gpk::dummy(__VA_ARGS__); } while(0)
 #	endif
 #endif
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
-#		define gserror_if(condition)							if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
-#		define gswarn_if(condition)								if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
-#		define gsinfo_if(condition)								if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#		define gserror_if(condition)							if(condition) { error_printf	("Condition: '%s'", #condition);	}
+#		define gswarn_if(condition)								if(condition) { warning_printf	("Condition: '%s'", #condition);	}
+#		define gsinfo_if(condition)								if(condition) { info_printf		("Condition: '%s'", #condition);	}
 #		if !defined(GPK_WINDOWS)
 #			define gerror_if(condition, format, ...)				if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
 #			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
@@ -360,73 +360,73 @@ namespace gpk
 			return gpk_errCall_; 																														\
 	} while(0)
 
-#	define gpk_rve_ewcall											gpk_rve_ecall	// Non-propagable retval_error error-warning call.
-#	define gpk_pewcall												gpk_pecall			// Propagable retval_error error-warning call.
+#	define gpk_rve_ewcall					gpk_rve_ecall	// Non-propagable retval_error error-warning call.
+#	define gpk_pewcall						gpk_pecall			// Propagable retval_error error-warning call.
 #endif
 
 #ifndef GPK_NULLIFY_NECALL
-#	define gpk_necall(gpkl_call, ...)								gpk_rve_ecall (-1, gpkl_call, __VA_ARGS__)	// Non-propagable error call.
-#	define gpk_necs(gpkl_call, ...)									gpk_rve_ecall (-1, gpkl_call, "%s", "")		// Non-propagable error call string.
-#	define gpk_newcall(gpkl_call, ...)								gpk_rve_ewcall(-1, gpkl_call, __VA_ARGS__)	// Non-propagable error-warning call.
-#	define gpk_hrcall(hr_call)										gpk_rv_hrcall (-1, hr_call)					// HRESULT call.
-#	define gpk_hrecall(hr_call, ...)								gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
+#	define gpk_necall(gpkl_call, ...)		gpk_rve_ecall (-1, gpkl_call, __VA_ARGS__)	// Non-propagable error call.
+#	define gpk_necs(gpkl_call, ...)			gpk_rve_ecall (-1, gpkl_call, "%s", "")		// Non-propagable error call string.
+#	define gpk_newcall(gpkl_call, ...)		gpk_rve_ewcall(-1, gpkl_call, __VA_ARGS__)	// Non-propagable error-warning call.
+#	define gpk_hrcall(hr_call)				gpk_rv_hrcall (-1, hr_call)					// HRESULT call.
+#	define gpk_hrecall(hr_call, ...)		gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	// HRESULT call.
 #else
-#	define gpk_necall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call.
-#	define gpk_necs(gpkl_call, ...)									do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call string.
-#	define gpk_newcall(gpkl_call, ...)								do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error-warning call.
-#	define gpk_hrcall(hr_call)										do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
-#	define gpk_hrecall(hr_call, ...)								do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
+#	define gpk_necall(gpkl_call, ...)		do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call.
+#	define gpk_necs(gpkl_call, ...)			do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error call string.
+#	define gpk_newcall(gpkl_call, ...)		do{gpkl_call; ::gpk::dummy(__VA_ARGS__); } while(0) // Non-propagable error-warning call.
+#	define gpk_hrcall(hr_call)				do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
+#	define gpk_hrecall(hr_call, ...)		do{hr_call	; ::gpk::dummy(__VA_ARGS__); } while(0) // HRESULT call.
 #endif
 
 #ifndef e_if
-#	define e_if														gerror_if
-#	define w_if														gwarn_if
-#	define i_if														ginfo_if
-#	define es_if													gserror_if
-#	define ws_if													gswarn_if
-#	define is_if													gsinfo_if
+#	define e_if								gerror_if
+#	define w_if								gwarn_if
+#	define i_if								ginfo_if
+#	define es_if							gserror_if
+#	define ws_if							gswarn_if
+#	define is_if							gsinfo_if
 #endif
 
 #ifndef re_if
-#	define re_if													ret_gerror_if
-#	define rw_if													ret_gwarn_if
-#	define ri_if													ret_ginfo_if
+#	define re_if							ret_gerror_if
+#	define rw_if							ret_gwarn_if
+#	define ri_if							ret_ginfo_if
 #endif
 
 #ifndef be_if
-#	define be_if													break_gerror_if
-#	define bw_if													break_gwarn_if
-#	define bi_if													break_ginfo_if
+#	define be_if							break_gerror_if
+#	define bw_if							break_gwarn_if
+#	define bi_if							break_ginfo_if
 #endif
 
 #ifndef ce_if
-#	define ce_if													continue_gerror_if
-#	define cw_if													continue_gwarn_if
-#	define ci_if													continue_ginfo_if
+#	define ce_if							continue_gerror_if
+#	define cw_if							continue_gwarn_if
+#	define ci_if							continue_ginfo_if
 #endif
 
 #ifndef rve_if
-#	define rve_if													retval_gerror_if
-#	define rvw_if													retval_gwarn_if
-#	define rvi_if													retval_ginfo_if
+#	define rve_if							retval_gerror_if
+#	define rvw_if							retval_gwarn_if
+#	define rvi_if							retval_ginfo_if
 #endif
 
 #ifndef rne_if
-#	define rne_if													retnul_gerror_if
-#	define rnw_if													retnul_gwarn_if
-#	define rni_if													retnul_ginfo_if
+#	define rne_if							retnul_gerror_if
+#	define rnw_if							retnul_gwarn_if
+#	define rni_if							retnul_ginfo_if
 #endif
 
 #ifndef ree_if
-#	define ree_if													reterr_gerror_if
-#	define rew_if													reterr_gwarn_if
-#	define rei_if													reterr_ginfo_if
+#	define ree_if							reterr_gerror_if
+#	define rew_if							reterr_gwarn_if
+#	define rei_if							reterr_ginfo_if
 #endif
 
 #ifndef rwe_if
-#	define rwe_if													retwarn_gerror_if
-#	define rww_if													retwarn_gwarn_if
-#	define rwi_if													retwarn_ginfo_if
+#	define rwe_if							retwarn_gerror_if
+#	define rww_if							retwarn_gwarn_if
+#	define rwi_if							retwarn_ginfo_if
 #endif
 
 #endif // GPK_LOG_H_8927349654687654365

@@ -17,6 +17,7 @@ namespace gpk
 
 	::gpk::error_t						serverStart							(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex = 0);
 	::gpk::error_t						serverStop							(::gpk::SUDPServer& serverInstance);
+	::gpk::error_t						serverPayloadCollect				(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>> & receivedMessages);
 
 } // namespace
 
