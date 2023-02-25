@@ -19,17 +19,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND_TYPE, REQUEST	, 0);
 	GDEFINE_ENUM_VALUE(ENDPOINT_COMMAND_TYPE, RESPONSE	, 1);
 
-	//enum ENDPOINT_COMMAND : uint8_t
-	//	{ ENDPOINT_COMMAND_NOOP				= 0
-	//	, ENDPOINT_COMMAND_CONNECT			= 1	// - Payload 0: Request connect. - Payload 1: Confirm connect
-	//	, ENDPOINT_COMMAND_PAYLOAD			= 2	// - Payload 0: Single payload. - Payload 1: Payload combo.
-	//	, ENDPOINT_COMMAND_DISCONNECT		= 3
-	//	};
-	//enum ENDPOINT_COMMAND_TYPE : uint8_t
-	//	{ ENDPOINT_COMMAND_TYPE_REQUEST		= 0
-	//	, ENDPOINT_COMMAND_TYPE_RESPONSE	= 1
-	//	};
-
 	struct SUDPCommand {
 		ENDPOINT_COMMAND							Command			: 2;
 		ENDPOINT_COMMAND_TYPE						Type			: 1;
@@ -92,7 +81,7 @@ namespace gpk
 	static constexpr	const uint32_t			UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
 	::gpk::error_t								connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPConnectionMessage> & receivedMessages);
-	::gpk::error_t								connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSent, ::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>& messageCacheSend);
+	::gpk::error_t								connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPConnectionMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPConnectionMessage>& messageCacheSend);
 	::gpk::error_t								connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer);
 	::gpk::error_t								connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cb & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
 	static inline		::gpk::error_t			connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cub & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
