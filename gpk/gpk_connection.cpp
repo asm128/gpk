@@ -252,7 +252,7 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 }
 
 static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
-	ree_if(0 != command.Packed || 0 != command.Encrypted || 0 != command.Compressed || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid command or client state: %s.", ::gpk::get_value_label(client.State).begin());
+	ree_if(0 != command.Packed || 0 != command.Encrypted || 0 != command.Compressed || ::gpk::UDP_CONNECTION_STATE_IDLE != client.State, "Invalid command or client state: 0x%X '%s'.", client.State, ::gpk::get_value_label(client.State).begin());
 	client.FirstPing											=
 	client.KeyPing												= 0;
 	client.LastPing												= gpk::timeCurrentInUs();
@@ -263,7 +263,7 @@ static	::gpk::error_t										handleRequestDISCONNECT					(::gpk::SUDPCommand &
 }
 
 static	::gpk::error_t										handleRequestCONNECT						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client)												{
-	ree_if(1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state: %s.", ::gpk::get_value_label(client.State).begin());
+	ree_if(1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state: 0x%X '%s'.", client.State, ::gpk::get_value_label(client.State).begin());
 	{
 		client.LastPing												= gpk::timeCurrentInUs();
 		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
@@ -295,7 +295,162 @@ static	::gpk::error_t										postConfirmationResponse			(::gpk::SUDPClientQueu
 	return 0;
 }
 
+static	::gpk::error_t										handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPConnection & client)		{
+	// Remove from sent queue.
+	::gpk::mutex_guard												lock								(client.Queue.MutexSend);
+	info_printf("Received response to message id: %llx", header.MessageId);
+	bool															bFound								= false;
+	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
+		::gpk::SUDPConnectionMessage									& messageSent						= *client.Queue.Sent[iSent];
+		for(uint32_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
+			info_printf("Checking hash for message: %s : %llx.", ::gpk::toString(messageSent.Payload).begin(), messageSent.Hashes[iHash]);
+			if(::hashFromTime(messageSent.Time) == header.MessageId) {
+				info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+				client.Queue.Sent.remove_unordered(iSent);
+				client.LastPing												= ::gpk::timeCurrentInUs();
+				bFound = true;
+				break;
+			}
+			uint64_t														hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
+			if(hashLocal == header.MessageId) {
+				info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+				client.Queue.Sent.remove_unordered(iSent);
+				client.LastPing												= ::gpk::timeCurrentInUs();
+				bFound = true;
+				break;
+			}
+		}
+		if(bFound)
+			break;
+	}
+	if(false == bFound)
+		info_printf("Response confirmation for message was not found: %llx.", header.MessageId);
+
+	return 0;
+}
+
 static constexpr const int64_t advantage = 1000000;
+
+static	::gpk::error_t										handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<byte_t> & receiveBuffer)		{
+	sockaddr_in														sa_client							= {};						// Information about the client
+	socklen_t														sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct
+	int																bytes_received						= {};
+	gpk_necs(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size));
+	memset(receiveBuffer.begin(), 0, receiveBuffer.size());
+	if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
+#if defined(GPK_WINDOWS)
+		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
+		else
+			warning_printf("%s", "Failed to receive all of the payload data.");
+#else
+		error_printf("%s", "Failed to receive all of the payload data.");
+		return -1;
+#endif
+	}
+	else
+		rni_if(0 == bytes_received, "The peer has performed an orderly shutdown: '%s'", "https://linux.die.net/man/3/recvfrom");
+
+	ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
+
+	uint64_t														estimatedTimeSent					= 0;
+	if(client.KeyPing == 0) {
+		for(int64_t iTime = 0, countLapse = 60000000; iTime < countLapse; ++iTime)
+			if(::hashFromTime(client.FirstPing - advantage + iTime) == header.MessageId) {
+				client.KeyPing												= client.FirstPing - advantage + iTime;
+				estimatedTimeSent											= client.FirstPing - advantage + iTime;
+				info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
+				break;
+			}
+		ree_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
+	}
+	else { // Why the fuck is this commented???
+		//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
+		//const uint64_t																startTime						= nowInUs - 3000000;
+		//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
+		//	const uint64_t timeSent	 = startTime + iTime;
+		//	if(::hashFromTime(timeSent) == header.MessageId) {
+		//		info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
+		//		estimatedTimeSent											= timeSent;
+		//		break;
+		//	}
+		//}
+	}
+	::gpk::pobj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
+	messageReceived->Command									= header.Command;
+	messageReceived->Time										= estimatedTimeSent; //header.MessageId;
+	if(header.Size > 0) {
+		const ::gpk::vcb									viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
+		if(0 != command.Compressed) {
+			if(0 != command.Encrypted) {
+				::gpk::apod<byte_t>										inflated;
+				::gpk::apod<byte_t>										decoded;
+				rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded)), "%s", "Failed to decrypt packet!");
+				rew_if(errored(::gpk::arrayInflate(decoded, messageReceived->Payload)), "%s", "Failed to inflate packet!");
+			}
+			else {
+				rew_if(errored(::gpk::arrayInflate(viewPayload, messageReceived->Payload)), "%s", "Failed to inflate packet!");
+			}
+		}
+		else {
+			if(0 != command.Encrypted) {
+				messageReceived->Payload.clear();
+				rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload)), "%s", "Failed to decrypt packet!");
+			}
+			else {
+				messageReceived->Payload.resize(header.Size);
+				memcpy(messageReceived->Payload.begin(), viewPayload.begin(), header.Size);
+				{
+					messageReceived->Payload.resize(header.Size + 1, 0);
+					messageReceived->Payload.resize(header.Size);
+				}
+			}
+		}
+	}
+	info_printf("Packet received. Payload size received: %u. Payload size after unpacking/decrypting: %u.", header.Size, messageReceived->Payload.size());
+	client.LastPing												= ::gpk::timeCurrentInUs();
+	//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
+	if(0 == (header.Command.Packed & 1)) {
+		{
+			::gpk::mutex_guard											lock								(client.Queue.MutexReceive);
+			gpk_necall(client.Queue.Received.push_back(messageReceived), "Out of memory? Queue size: %u.", client.Queue.Received.size());
+		}
+		::gpk::pobj<::gpk::SUDPConnectionMessage>					response							= {};
+		::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
+		//info_printf("Sent ack for message id: %llu.", header.MessageId);
+	}
+	else {
+		// 1. Read packet count
+		// 2. Read packet sizes (sizeof(uint16_t) * packet count)
+		// 3. Read payload contents
+		::gpk::view_stream<byte_t>										payload								= {messageReceived->Payload.begin(), messageReceived->Payload.size()};
+		uint16_t														packetCount							= 0;
+		gpk_necall(payload.read_pod(packetCount), "%s", "Invalid data.");
+		if(0 == packetCount)
+			return 0;
+		ree_if((packetCount * sizeof(uint16_t)) > (payload.size() - payload.CursorPosition), "%s", "Invalid packet data.");
+		::gpk::view_array<const uint16_t>								sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
+		payload.CursorPosition										+= packetCount * sizeof(uint16_t);
+		::gpk::apobj<::gpk::SUDPConnectionMessage>						tempQueue;
+		for(uint32_t iSizes = 0; iSizes < sizes.size(); ++iSizes) {
+			::gpk::pobj<::gpk::SUDPConnectionMessage>						messageReceivedInt						= {};
+			messageReceivedInt->Command									= header.Command;
+			messageReceivedInt->Time									= header.MessageId;
+			messageReceivedInt->Command.Packed							= 0;	// Clear payload mode bits
+			messageReceivedInt->Command.Encrypted						= 0;
+			messageReceivedInt->Command.Compressed						= 0;
+			gpk_necs(messageReceivedInt->Payload.resize(sizes[iSizes]));
+			gpk_necall(payload.read_pod(messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
+			gpk_necs(tempQueue.push_back(messageReceivedInt));
+		}
+		{
+			::gpk::mutex_guard												lock								(client.Queue.MutexReceive);
+			for(uint32_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
+				gpk_necall(client.Queue.Received.push_back(tempQueue[iMessage]), "Out of memory? Queue size: %u.", client.Queue.Received.size());
+		}
+		::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
+	}
+	return 0;
+}
 
 static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<byte_t> & receiveBuffer)		{
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
@@ -310,156 +465,14 @@ static	::gpk::error_t										handlePAYLOAD						(::gpk::SUDPCommand & command,
 #else
 #endif
 	}
-	uint64_t														estimatedTimeSent					= 0;
-	if(command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST) {
-		gpk_necs(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size));
-		memset(receiveBuffer.begin(), 0, receiveBuffer.size());
-		if(errored(bytes_received = ::recvfrom(client.Socket, receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
-#if defined(GPK_WINDOWS)
-			rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
-			else
-				warning_printf("%s", "Failed to receive all of the payload data.");
-#else
-			error_printf("%s", "Failed to receive all of the payload data.");
-			return -1;
-#endif
-		}
-		else
-			rni_if(0 == bytes_received, "The peer has performed an orderly shutdown: '%s'", "https://linux.die.net/man/3/recvfrom");
-
-		ree_if(receiveBuffer.size() != (uint32_t)bytes_received, "Packet size received doesn't match with header size. Received size: %u. Expected: %u.", bytes_received, receiveBuffer.size());
-		if(client.KeyPing == 0) {
-			for(int64_t iTime = 0, countLapse = 60000000; iTime < countLapse; ++iTime)
-				if(::hashFromTime(client.FirstPing - advantage + iTime) == header.MessageId) {
-					client.KeyPing												= client.FirstPing - advantage + iTime;
-					estimatedTimeSent											= client.FirstPing - advantage + iTime;
-					info_printf("Key ping detected in %u attempts: %llu. First ping: %llu. Difference: %llu.", iTime, client.KeyPing, client.FirstPing, client.KeyPing - client.FirstPing);
-					break;
-				}
-			ree_if(0 == client.KeyPing, "%s", "Failed to determine encryption key!");
-		}
-		else { // Why the fuck is this commented???
-			//const uint64_t																nowInUs							= ::gpk::timeCurrentInUs();
-			//const uint64_t																startTime						= nowInUs - 3000000;
-			//for(uint32_t iTime = 0, countLapse = 1000000; iTime < countLapse; ++iTime) {
-			//	const uint64_t timeSent	 = startTime + iTime;
-			//	if(::hashFromTime(timeSent) == header.MessageId) {
-			//		info_printf("Payload timestamp found in %u attempts: Latency: %llu.", iTime, nowInUs - timeSent);
-			//		estimatedTimeSent											= timeSent;
-			//		break;
-			//	}
-			//}
-		}
-		::gpk::pobj<::gpk::SUDPConnectionMessage>					messageReceived						= {};
-		messageReceived->Command									= header.Command;
-		messageReceived->Time										= estimatedTimeSent; //header.MessageId;
-		if(header.Size > 0) {
-			const ::gpk::vcb									viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
-			if(0 != command.Compressed) {
-				if(0 != command.Encrypted) {
-					::gpk::apod<byte_t>										inflated;
-					::gpk::apod<byte_t>										decoded;
-					rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded)), "%s", "Failed to decrypt packet!");
-					rew_if(errored(::gpk::arrayInflate(decoded, messageReceived->Payload)), "%s", "Failed to inflate packet!");
-				}
-				else {
-					rew_if(errored(::gpk::arrayInflate(viewPayload, messageReceived->Payload)), "%s", "Failed to inflate packet!");
-				}
-			}
-			else {
-				if(0 != command.Encrypted) {
-					messageReceived->Payload.clear();
-					rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, messageReceived->Payload)), "%s", "Failed to decrypt packet!");
-				}
-				else {
-					messageReceived->Payload.resize(header.Size);
-					memcpy(messageReceived->Payload.begin(), viewPayload.begin(), header.Size);
-					{
-						messageReceived->Payload.resize(header.Size + 1, 0);
-						messageReceived->Payload.resize(header.Size);
-					}
-				}
-			}
-		}
-		info_printf("Packet received. Payload size received: %u. Payload size after unpacking/decrypting: %u.", header.Size, messageReceived->Payload.size());
-		client.LastPing												= ::gpk::timeCurrentInUs();
-		//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
-		if(0 == (header.Command.Packed & 1)) {
-			{
-				::gpk::mutex_guard											lock								(client.Queue.MutexReceive);
-				gpk_necall(client.Queue.Received.push_back(messageReceived), "Out of memory? Queue size: %u.", client.Queue.Received.size());
-			}
-			::gpk::pobj<::gpk::SUDPConnectionMessage>					response							= {};
-			::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
-			//info_printf("Sent ack for message id: %llu.", header.MessageId);
-		}
-		else {
-			// 1. Read packet count
-			// 2. Read packet sizes (sizeof(uint16_t) * packet count)
-			// 3. Read payload contents
-			::gpk::view_stream<byte_t>										payload								= {messageReceived->Payload.begin(), messageReceived->Payload.size()};
-			uint16_t														packetCount							= 0;
-			gpk_necall(payload.read_pod(packetCount), "%s", "Invalid data.");
-			if(0 == packetCount)
-				return 0;
-			ree_if((packetCount * sizeof(uint16_t)) > (payload.size() - payload.CursorPosition), "%s", "Invalid packet data.");
-			::gpk::view_array<const uint16_t>								sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
-			payload.CursorPosition										+= packetCount * sizeof(uint16_t);
-			::gpk::apobj<::gpk::SUDPConnectionMessage>						tempQueue;
-			for(uint32_t iSizes = 0; iSizes < sizes.size(); ++iSizes) {
-				::gpk::pobj<::gpk::SUDPConnectionMessage>						messageReceivedInt						= {};
-				messageReceivedInt->Command									= header.Command;
-				messageReceivedInt->Time									= header.MessageId;
-				messageReceivedInt->Command.Packed							= 0;	// Clear payload mode bits
-				messageReceivedInt->Command.Encrypted						= 0;
-				messageReceivedInt->Command.Compressed						= 0;
-				gpk_necs(messageReceivedInt->Payload.resize(sizes[iSizes]));
-				gpk_necall(payload.read_pod(messageReceivedInt->Payload.begin(), messageReceivedInt->Payload.size()), "Corrupt payload data. Sizes don't match. Payload size: %u.", payload.size());
-				gpk_necs(tempQueue.push_back(messageReceivedInt));
-			}
-			{
-				::gpk::mutex_guard												lock								(client.Queue.MutexReceive);
-				for(uint32_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
-					gpk_necall(client.Queue.Received.push_back(tempQueue[iMessage]), "Out of memory? Queue size: %u.", client.Queue.Received.size());
-			}
-			::postConfirmationResponse(client.Queue, header.Command, header.MessageId);
-		}
+	switch(command.Type) {
+	default										: return -1;
+	case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	: return ::handlePAYLOADRequest (header, command, client, receiveBuffer); 
+	case ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE	: return ::handlePAYLOADResponse(header, client); 
 	}
-	else { // Payload response. Remove from sent queue.
-		::gpk::mutex_guard												lock								(client.Queue.MutexSend);
-		info_printf("Received response to message id: %llx", header.MessageId);
-		bool bFound = false;
-		for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
-			::gpk::SUDPConnectionMessage									& messageSent						= *client.Queue.Sent[iSent];
-			for(uint32_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
-				info_printf("Checking hash for message: %s : %llx.", ::gpk::toString(messageSent.Payload).begin(), messageSent.Hashes[iHash]);
-				if(::hashFromTime(messageSent.Time) == header.MessageId) {
-					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
-					client.Queue.Sent.remove_unordered(iSent);
-					client.LastPing												= ::gpk::timeCurrentInUs();
-					bFound = true;
-					break;
-				}
-				uint64_t														hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
-				if(hashLocal == header.MessageId) {
-					info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
-					client.Queue.Sent.remove_unordered(iSent);
-					client.LastPing												= ::gpk::timeCurrentInUs();
-					bFound = true;
-					break;
-				}
-			}
-			if(bFound)
-				break;
-		}
-		if(false == bFound) {
-			info_printf("Response confirmation for message was not found: %llx.", header.MessageId);
-		}
-	}
-	return 0;
 }
 
-::gpk::error_t												gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer)		{
+::gpk::error_t									gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer)		{
 	::gpk::vcc											labelCommand						= ::gpk::get_value_label(command.Command);
 	::gpk::vcc											labelType							= ::gpk::get_value_label(command.Type	);
 	(void)labelCommand	;

@@ -14,36 +14,36 @@
 #	error	"Not implemented."
 #endif
 
-::gpk::error_t												updateClients						(gpk::SUDPServer& serverInstance)		{
-	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnection>>					clientsToProcess;
-	::gpk::apod<byte_t>												receiveBuffer;
-	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			cacheSent						= {};
-	::gpk::aobj<::gpk::pobj<::gpk::SUDPConnectionMessage>>			cacheSend						= {};
+static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		{
+	::gpk::apobj<::gpk::SUDPConnection>				clientsToProcess;
+	::gpk::apod<byte_t>								receiveBuffer;
+	::gpk::apobj<::gpk::SUDPConnectionMessage>		cacheSent						= {};
+	::gpk::apobj<::gpk::SUDPConnectionMessage>		cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
-		uint32_t														totalClientCount					= serverInstance.Clients.size();
+		uint32_t										totalClientCount				= serverInstance.Clients.size();
 		{
-			::gpk::mutex_guard												lock								(serverInstance.Mutex);
-			totalClientCount											= serverInstance.Clients.size();
+			::gpk::mutex_guard								lock								(serverInstance.Mutex);
+			totalClientCount							= serverInstance.Clients.size();
 		}
-		timeval															wait_time							= {0, 1};
-		uint32_t														remainder							= totalClientCount % 64;
-		uint32_t														stageCount							= totalClientCount / 64 + one_if(remainder);
-		fd_set															sockets								= {};
+		timeval											wait_time							= {0, 1};
+		uint32_t										remainder							= totalClientCount % 64;
+		uint32_t										stageCount							= totalClientCount / 64 + one_if(remainder);
+		fd_set											sockets								= {};
 		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
-			const uint32_t													offsetClient						= iStage * 64;
+			const uint32_t									offsetClient						= iStage * 64;
 			memset(&sockets, -1, sizeof(fd_set));
-			sockets.fd_count											= 0;
-			uint32_t														stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
+			sockets.fd_count							= 0;
+			uint32_t										stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
-				::gpk::mutex_guard												lock								(serverInstance.Mutex);
+				::gpk::mutex_guard							lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < actualCount; ++iClient) {
-					::gpk::pobj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
+					::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
-						gerror_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "??");
-					sockets.fd_array[sockets.fd_count]							= pclient->Socket;
+						gerror_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "%s", "??");
+					sockets.fd_array[sockets.fd_count]		= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
 				}
@@ -53,11 +53,11 @@
 			{
 				clientsToProcess.clear();
 				{
-					::gpk::mutex_guard												lock								(serverInstance.Mutex);
+					::gpk::mutex_guard							lock								(serverInstance.Mutex);
 					break_ginfo_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
-							::gpk::pobj<::gpk::SUDPConnection>							pclient								= serverInstance.Clients[offsetClient + iClient];
+							::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
 							if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 								continue;
 							if(sockets.fd_array[sd] == pclient->Socket) {
@@ -71,17 +71,17 @@
 					if(false == serverInstance.Listen)
 						return 0;
 					FD_ZERO(sockets.fd_array);
-					::gpk::SUDPConnection											& client							= *clientsToProcess[iClient];
-					sockets.fd_array[0]											= client.Socket;
-					sockets.fd_count											= 1;
+					::gpk::SUDPConnection						& client							= *clientsToProcess[iClient];
+					sockets.fd_array[0]						= client.Socket;
+					sockets.fd_count						= 1;
 					::select(0, &sockets, 0, 0, &wait_time);
 					while(sockets.fd_count > 0) {
-						sockaddr_in														sa_client							= {};						// Information about the client
-						int																sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
-						::gpk::SUDPCommand												command								= {};						// Where to store received data
-						int																bytes_received						= 0;
+						sockaddr_in									sa_client							= {};						// Information about the client
+						int											sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
+						::gpk::SUDPCommand							command								= {};						// Where to store received data
+						int											bytes_received						= 0;
 						if errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
-							uint32_t lastError = ::WSAGetLastError();
+							uint32_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
 								warning_printf("%s", "Could not receive datagram.");
 								::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
@@ -90,7 +90,7 @@
 								break;
 							}
 						}
-						::gpk::SIPv4													address								= {{}, 9999};
+						::gpk::SIPv4								address								= {{}, 9999};
 						::gpk::tcpipAddressFromSockaddr(sa_client, address);
 						if(client.Address != address) {
 							warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
@@ -109,49 +109,49 @@
 	return 0;
 }
 
-static	::gpk::error_t										recycleClient						(::gpk::SUDPServer& serverInstance, ::gpk::pobj<::gpk::SUDPConnection> & pClient)		{
+static	::gpk::error_t						recycleClient					(::gpk::SUDPServer& serverInstance, ::gpk::pobj<::gpk::SUDPConnection> & pClient)		{
 	for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
-		pClient														= serverInstance.Clients[iClient];
-		::gpk::SUDPConnection											& client							= *pClient;
-		int64_t															limitTime							= (::gpk::timeCurrentInUs() - client.LastPing);
+		pClient										= serverInstance.Clients[iClient];
+		::gpk::SUDPConnection							& client						= *pClient;
+		int64_t											limitTime						= (::gpk::timeCurrentInUs() - client.LastPing);
 		info_printf("LimitTime : %lli.", limitTime);
 		if(limitTime > serverInstance.Timeout || client.Socket == INVALID_SOCKET || client.State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {
-			client.State												= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
+			client.State								= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 			client.Socket.close();
-			client.KeyPing												=
-			client.LastPing												=
-			client.FirstPing											= 0;
+			client.KeyPing								=
+			client.LastPing								=
+			client.FirstPing							= 0;
 			{
-				::gpk::mutex_guard												lockRecv							(client.Queue.MutexReceive);
+				::gpk::mutex_guard								lockRecv						(client.Queue.MutexReceive);
 				client.Queue.Received	.clear();
 			}
 			{
-				::gpk::mutex_guard												lockSend							(client.Queue.MutexSend);
+				::gpk::mutex_guard								lockSend						(client.Queue.MutexSend);
 				client.Queue.Send		.clear();
 				client.Queue.Sent		.clear();
 			}
 			return iClient;
 		}
 		else
-			pClient														= {};
+			pClient										= {};
 	}
 	return -1;
 }
 
-static	::gpk::error_t										serverAcceptClient					(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
-	::gpk::pobj<::gpk::SUDPConnection>							pClient								= {};
+static	::gpk::error_t						serverAcceptClient				(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
+	::gpk::pobj<::gpk::SUDPConnection>				pClient							= {};
 	{ // accept
-		::gpk::mutex_guard												lock								(serverInstance.Mutex);
-		int32_t															found								= ::recycleClient(serverInstance, pClient);
+		::gpk::mutex_guard								lock							(serverInstance.Mutex);
+		int32_t											found							= ::recycleClient(serverInstance, pClient);
 		::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
-		command.Type												= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
-		::gpk::pobj<::gpk::SUDPConnectionMessage>						connectResponse								= {};
+		command.Type								= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
+		::gpk::pobj<::gpk::SUDPConnectionMessage>		connectResponse					= {};
 		connectResponse.create(::gpk::SUDPConnectionMessage{{}, (uint64_t)::gpk::timeCurrentInUs(), command});
 		gpk_necs(pClient->Queue.Send.push_back(connectResponse));
-		pClient->LastPing											=
-		pClient->FirstPing											= ::gpk::timeCurrentInUs();
+		pClient->LastPing							=
+		pClient->FirstPing							= ::gpk::timeCurrentInUs();
 		ree_if(INVALID_SOCKET == (pClient->Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
-		pClient->State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
+		pClient->State								= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 		if(found == -1)
 			gpk_necs(serverInstance.Clients.push_back(pClient));
 	}
@@ -159,35 +159,37 @@ static	::gpk::error_t										serverAcceptClient					(::gpk::SUDPServer& server
 	return 0;
 }
 
-static	::gpk::error_t										serverListenTick					(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
+static	::gpk::error_t						serverListenTick				(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
 	serverInstance.Socket.close();
 	ree_if(INVALID_SOCKET == (serverInstance.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
 	gpk_necall(::bind(serverInstance.Socket, (sockaddr *)&server, sizeof(sockaddr_in)), "Could not bind name to socket.");	/* Bind address to socket */
-	int																client_length						= (int)sizeof(sockaddr_in);		// Length of client struct
-	::gpk::SUDPCommand												command								= {};							// Where to store received data
-	int																bytes_received						= 0;
-	sockaddr_in														sa_client							= {};							// Information about the client
+	int												client_length					= (int)sizeof(sockaddr_in);		// Length of client struct
+	::gpk::SUDPCommand								command							= {};							// Where to store received data
+	int												bytes_received					= 0;
+	sockaddr_in										sa_client						= {};							// Information about the client
 	if errored(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length)) {
 		warning_printf("Could not receive datagram.");
 	}
-		 gerror_if(	command.Type	!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	, "Invalid message type!")
-	else gerror_if(	command.Command	!= ::gpk::ENDPOINT_COMMAND_CONNECT
-				&&	command.Command	!= ::gpk::ENDPOINT_COMMAND_DISCONNECT	, "Invalid message type!")
-	else if(command.Command	== ::gpk::ENDPOINT_COMMAND_DISCONNECT && false == serverInstance.Listen)
-		return 0;
-	else {
-		::serverAcceptClient(serverInstance, command, sa_client);
-		::gpk::sleep(1);
+	switch(command.Type) {
+	default										: error_printf("Invalid message type: 0x%x '%s'", command.Type, ::gpk::get_value_label(command.Type).begin()); break;
+	case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	:
+		switch(command.Command) {
+		default									: error_printf("Invalid command: 0x%x '%s' ", command.Command, ::gpk::get_value_label(command.Command).begin()); break;
+		case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
+			::serverAcceptClient(serverInstance, command, sa_client);
+			::gpk::sleep(1);
+			break;
+		}
 	}
 	return 0;
 }
 
-static	void												threadUpdateClients					(void* serverInstance)					{ updateClients(*(::gpk::SUDPServer*)serverInstance); }
-static	::gpk::error_t										server								(::gpk::SUDPServer& serverInstance)		{
-	serverInstance.Listen										= true;
-	gpk_necall(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address), "??");
-	sockaddr_in														server								= {};
-	gpk_necall(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server), "??");
+static	void								threadUpdateClients				(void* serverInstance)					{ updateClients(*(::gpk::SUDPServer*)serverInstance); }
+static	::gpk::error_t						server							(::gpk::SUDPServer& serverInstance)		{
+	serverInstance.Listen						= true;
+	gpk_necs(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
+	sockaddr_in										server								= {};
+	gpk_necs(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server));
 #if defined(GPK_WINDOWS)
 	_beginthread(::threadUpdateClients, 0, &serverInstance);
 #else
@@ -201,34 +203,34 @@ static	::gpk::error_t										server								(::gpk::SUDPServer& serverInstance)
 	return 0;
 }
 
-void														threadServer						(void* pServerInstance)				{
-	::gpk::SUDPServer												& serverInstance					= *(::gpk::SUDPServer*)pServerInstance;
+static	void								threadServer					(void* pServerInstance)				{
+	::gpk::SUDPServer								& serverInstance				= *(::gpk::SUDPServer*)pServerInstance;
 	gerror_if(errored(server(serverInstance)), "Server exiting with error.")
 	else
 		info_printf("Server gracefully closed.");
-	serverInstance.Listen										= false;
+	serverInstance.Listen						= false;
 	serverInstance.Socket.close();
 	{
-		::gpk::mutex_guard												lock								(serverInstance.Mutex);
+		::gpk::mutex_guard								lock								(serverInstance.Mutex);
 		serverInstance.Clients.clear();
 	}
 }
 
-::gpk::error_t												gpk::serverStart					(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex)		{
-	serverInstance.Listen										= true;
-	serverInstance.Address.Port									= port;
-	serverInstance.AdapterIndex									= adapterIndex;
+::gpk::error_t								gpk::serverStart				(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex)		{
+	serverInstance.Listen						= true;
+	serverInstance.Address.Port					= port;
+	serverInstance.AdapterIndex					= adapterIndex;
 	_beginthread(::threadServer, 0, &serverInstance);
 	return 0;
 }
 
-::gpk::error_t												gpk::serverStop						(::gpk::SUDPServer& serverInstance)		{
-	serverInstance.Listen										= false;
-	sockaddr_in														sa_srv								= {};							// Information about the client
-	int																sa_length							= (int)sizeof(sockaddr_in);		// Length of client struct
-	::gpk::SUDPCommand												command								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, };							// Where to store received data
+::gpk::error_t								gpk::serverStop					(::gpk::SUDPServer& serverInstance)		{
+	serverInstance.Listen						= false;
+	sockaddr_in										sa_srv							= {};							// Information about the client
+	int												sa_length						= (int)sizeof(sockaddr_in);		// Length of client struct
+	::gpk::SUDPCommand								command							= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, };							// Where to store received data
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
-	uint32_t														attempt								= 0;
+	uint32_t										attempt							= 0;
 	do{
 		::sendto(serverInstance.Socket, (const char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);
@@ -237,11 +239,11 @@ void														threadServer						(void* pServerInstance)				{
 	return 0;
 }
 
-::gpk::error_t												gpk::serverPayloadCollect			(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>> & receivedMessages)		{
-	::gpk::mutex_guard												lock								(server.Mutex);
+::gpk::error_t								gpk::serverPayloadCollect		(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>> & receivedMessages)		{
+	::gpk::mutex_guard								lock							(server.Mutex);
 	gpk_necs(receivedMessages.resize(server.Clients.size()));
 	for(uint32_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
-		::gpk::pnco<::gpk::SUDPConnection>		client							= server.Clients[iClient];
+		::gpk::pnco<::gpk::SUDPConnection>				client							= server.Clients[iClient];
 		if(!client)
 			continue;
 		gpk_necs(::gpk::connectionPayloadCollect(*client, receivedMessages[iClient]));
