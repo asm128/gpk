@@ -30,20 +30,19 @@
 }
 
 ::gpk::error_t						gpk::connectionPayloadCollect			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPConnectionMessage> & receivedMessages)		{
-	if(client.State != ::gpk::UDP_CONNECTION_STATE_IDLE || 0 == client.KeyPing)
+	if(0 == client.KeyPing || client.State == ::gpk::UDP_CONNECTION_STATE_HANDSHAKE)
 		return 1;
 
 	::gpk::mutex_guard						lockRecv								(client.Queue.MutexReceive);
 	for(int32_t iMessage = 0; iMessage < (int32_t)client.Queue.Received.size(); ++iMessage) {
 		const ::gpk::pobj<::gpk::SUDPConnectionMessage>	& messageReceived				= client.Queue.Received[iMessage];
 		const ::gpk::SUDPCommand						udpCommand						= messageReceived->Command;
-		if(udpCommand.Type != ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST)
+		if( udpCommand.Type		!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST 
+		 || udpCommand.Command	!= ::gpk::ENDPOINT_COMMAND_PAYLOAD
+		) {
 			continue;
-
-		if(udpCommand.Command != ::gpk::ENDPOINT_COMMAND_PAYLOAD)
-			continue;
-
-		gpk_necall(receivedMessages.push_back(messageReceived), "%s", "Out of memory?");
+		}
+		gpk_necs(receivedMessages.push_back(messageReceived));
 		gpk_necs(client.Queue.Received.remove_unordered(iMessage--));
 	}
 	return 0;
@@ -83,10 +82,10 @@ static constexpr	const uint32_t							UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // 
 				continue;
 			if(currentPayloadMsg->Time == client.KeyPing)
 				keyPing														= true;
-			gpk_necall(payloadSizes.push_back((uint16_t)currentPayloadView.size()), "Out of memory? Payload size: %u.", currentPayloadView.size());
-			gpk_necall(serialized.append(currentPayloadView.begin(), currentPayloadView.size()), "Failed to append payload! Payload size: %u.", currentPayloadView.size());
-			gpk_necall(payloadsToRemove.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size());
-			gpk_necall(messageCacheSent.push_back(currentPayloadMsg), "Out of memory? Payload count: %u.", payloadsToRemove.size()); //
+			gpk_necs(payloadSizes.push_back((uint16_t)currentPayloadView.size()));
+			gpk_necs(serialized.append(currentPayloadView.begin(), currentPayloadView.size()));
+			gpk_necs(payloadsToRemove.push_back(currentPayloadMsg));
+			gpk_necs(messageCacheSent.push_back(currentPayloadMsg));
 		}
 		rni_if(0 == payloadSizes.size(), "No packets to optimize. Total packets searched: %u.", payloadsToSend.size());
 		info_printf("%u packets optimized.", payloadSizes.size());

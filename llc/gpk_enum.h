@@ -221,8 +221,8 @@ namespace gpk
 
 	template<typename _tEventType>
 	struct SEvent {
-		_tEventType				Type;
-		::gpk::apod<ubyte_t>	Data;
+		_tEventType				Type			= {};
+		::gpk::apod<ubyte_t>	Data			= {};
 
 		::gpk::error_t			Save			(::gpk::apod<ubyte_t> & output)	const	{
 			gpk_necs(::gpk::savePOD(output, Type));
@@ -243,13 +243,13 @@ namespace gpk
 		::gpk::view<const ubyte_t>	Data;
 
 		::gpk::error_t				Save			(::gpk::apod<ubyte_t> & output)	const	{
-			gpk_necs(::gpk::savePOD(output, Type));
+			gpk_necs(::gpk::savePOD (output, Type));
 			gpk_necs(::gpk::viewSave(output, Data));
 			return 0;
 		}
 
 		::gpk::error_t				Load			(::gpk::vcub & input)					{
-			gpk_necs(::gpk::loadPOD(input, Type));
+			gpk_necs(::gpk::loadPOD (input, Type));
 			gpk_necs(::gpk::loadView(input, Data));
 			return 0;
 		}

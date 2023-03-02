@@ -9,7 +9,7 @@ namespace gpk
 	template<typename _tCell, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public view2d<_tCell> {
 							typedef										_tCell									TCell;
-							typedef										view2d<_tCell>						TGridView;
+							typedef										view2d<_tCell>							TGridView;
 
 		static constexpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
 		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;

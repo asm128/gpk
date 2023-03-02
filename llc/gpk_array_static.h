@@ -45,18 +45,18 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::astatic<tElement, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
-	template <typename tElement, size_t nSize>	static inline constexpr uint32_t	byte_count	(::gpk::astatic<tElement, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(tElement) * nSize);	}
+	template <typename _tCell, size_t nSize>	static inline constexpr uint32_t	size		(::gpk::astatic<_tCell, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
+	template <typename _tCell, size_t nSize>	static inline constexpr uint32_t	byte_count	(::gpk::astatic<_tCell, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(_tCell) * nSize);	}
 
-	template<typename _tElement, size_t _nSize>
-	::gpk::error_t					find						(const _tElement& element, const ::gpk::astatic<const _tElement, _nSize>& target, uint32_t offset = 0)	{
-		return ::gpk::find(element, ::gpk::view<const _tElement>{target}, offset);
+	template<typename _tCell, size_t _nSize>
+	::gpk::error_t					find						(const _tCell & element, const ::gpk::astatic<const _tCell, _nSize>& target, uint32_t offset = 0)	{
+		return ::gpk::find(element, ::gpk::view<const _tCell>{target}, offset);
 	}
 
 	template<typename _tPOD, uint32_t _nSize> 
-	::gpk::error_t					loadView		(::gpk::vcub & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
-		::gpk::view<const _tPOD>			readView		= {}; 
-		uint32_t							bytesRead		= 0;
+	::gpk::error_t					loadView					(::gpk::vcub & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
+		::gpk::view<const _tPOD>			readView					= {}; 
+		uint32_t							bytesRead					= 0;
 		gpk_necs(bytesRead = ::gpk::viewLoad(readView, input)); 
 		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));

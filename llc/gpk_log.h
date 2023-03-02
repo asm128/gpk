@@ -201,38 +201,41 @@ namespace gpk
 #endif
 
 #ifndef ret_gerror_if
-#	define ret_gerror_if(condition, format, ...)			if(condition) { error_printf	(format, __VA_ARGS__); return;			}
-#	define ret_gwarn_if(condition, format, ...)				if(condition) { warning_printf	(format, __VA_ARGS__); return;			}
-#	define ret_ginfo_if(condition, format, ...)				if(condition) { info_printf		(format, __VA_ARGS__); return;			}
+#	define ret_gerror_if(condition, format, ...)			if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return;			}
+#	define ret_gwarn_if(condition, format, ...)				if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return;			}
+#	define ret_ginfo_if(condition, format, ...)				if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return;			}
 #endif
 
 #ifndef break_gerror_if
-#	define break_gerror_if(condition, format, ...)			if(condition) { error_printf	(format, __VA_ARGS__); break;			}
-#	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	(format, __VA_ARGS__); break;			}
-#	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		(format, __VA_ARGS__); break;			}
-#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	(format, __VA_ARGS__); break;			}
+#	define break_gerror_if(condition, format, ...)			if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); break;			}
+#	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); break;			}
+#	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); break;			}
+#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); break;			}
 #endif
 
 #ifndef continue_gerror_if
-#	define continue_gerror_if(condition, format, ...)		if(condition) { error_printf	(format, __VA_ARGS__); continue;		}
-#	define continue_gwarn_if(condition, format, ...)		if(condition) { warning_printf	(format, __VA_ARGS__); continue;		}
-#	define continue_ginfo_if(condition, format, ...)		if(condition) { info_printf		(format, __VA_ARGS__); continue;		}
+#	define continue_gerror_if(condition, format, ...)		if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); continue;		}
+#	define continue_gwarn_if(condition, format, ...)		if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); continue;		}
+#	define continue_ginfo_if(condition, format, ...)		if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); continue;		}
 #endif
 
 #ifndef retval_gerror_if
-#	define retval_gerror_if(retVal, condition, format, ...)	if(condition) { error_printf	(format, __VA_ARGS__); return retVal;	}
-#	define retval_gwarn_if(retVal, condition, format, ...)	if(condition) { warning_printf	(format, __VA_ARGS__); return retVal;	}
-#	define retval_ginfo_if(retVal, condition, format, ...)	if(condition) { info_printf		(format, __VA_ARGS__); return retVal;	}
+#	define retval_gerror_if(retVal, condition, format, ...)	if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
+#	define retval_gwarn_if(retVal, condition, format, ...)	if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
+#	define retval_ginfo_if(retVal, condition, format, ...)	if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
 #endif
 
 #ifndef retnul_gerror_if
-#	define retnul_gerror_if(condition, format, ...)			retval_gerror_if	( 0, condition, format, __VA_ARGS__)
-#	define retnul_gwarn_if(condition, format, ...)			retval_gwarn_if		( 0, condition, format, __VA_ARGS__)
-#	define retnul_ginfo_if(condition, format, ...)			retval_ginfo_if		( 0, condition, format, __VA_ARGS__)
+#	define retnul_gerror_if(condition, format, ...)			retval_gerror_if	(0, condition, format, __VA_ARGS__)
+#	define retnul_gwarn_if(condition, format, ...)			retval_gwarn_if		(0, condition, format, __VA_ARGS__)
+#	define retnul_ginfo_if(condition, format, ...)			retval_ginfo_if		(0, condition, format, __VA_ARGS__)
 #endif
 
 #ifndef reterr_gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_RETERR
+#		define reterr_gserror_if(condition)						retval_gerror_if	(-1, condition, "%s", "")
+#		define reterr_gswarn_if	(condition)						retval_gwarn_if		(-1, condition, "%s", "")
+#		define reterr_gsinfo_if	(condition)						retval_ginfo_if		(-1, condition, "%s", "")
 #		define reterr_gerror_if(condition, format, ...)			retval_gerror_if	(-1, condition, format, __VA_ARGS__)
 #		define reterr_gwarn_if(condition, format, ...)			retval_gwarn_if		(-1, condition, format, __VA_ARGS__)
 #		define reterr_ginfo_if(condition, format, ...)			retval_ginfo_if		(-1, condition, format, __VA_ARGS__)
@@ -421,6 +424,9 @@ namespace gpk
 #	define ree_if							reterr_gerror_if
 #	define rew_if							reterr_gwarn_if
 #	define rei_if							reterr_ginfo_if
+#	define rees_if							reterr_gserror_if
+#	define rews_if							reterr_gswarn_if
+#	define reis_if							reterr_gsinfo_if
 #endif
 
 #ifndef rwe_if

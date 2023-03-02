@@ -11,16 +11,17 @@
 
 namespace gpk
 {
-	int64_t						timeCurrent							();
-	int64_t						timeCurrentInMs						();
-	int64_t						timeCurrentInUs						();
-
-	struct STimestamps {
-		uint64_t				TimeCreated;
-		uint64_t				TimeLoaded;
-		uint64_t				TimeModified;
-		uint64_t				TimeSaved;
+	int64_t					timeCurrent			();
+	int64_t					timeCurrentInMs		();
+	int64_t					timeCurrentInUs		();
+#pragma pack(push, 1)
+	struct STimestamps {	
+		uint64_t				Created				= 0;
+		uint64_t				Loaded				= 0;
+		uint64_t				Modified			= 0;
+		uint64_t				Saved				= 0;
 	};
+#pragma pack(pop)
 
 } // namespace
 

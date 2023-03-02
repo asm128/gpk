@@ -600,21 +600,23 @@ namespace gpk
 
 #pragma pack(push, 1)
 	enum AXIS : uint8_t
-		{	AXIS_XPOSITIVE			= 0x1
-		,	AXIS_XNEGATIVE			= 0x2
-		,	AXIS_YPOSITIVE			= 0x4
-		,	AXIS_YNEGATIVE			= 0x8
-		,	AXIS_ZPOSITIVE			= 0x10
-		,	AXIS_ZNEGATIVE			= 0x20
+		{	AXIS_ORIGIN				= 0x0
+		,	AXIS_X_POSITIVE			= 0x1
+		,	AXIS_X_NEGATIVE			= 0x2
+		,	AXIS_Y_POSITIVE			= 0x4
+		,	AXIS_Y_NEGATIVE			= 0x8
+		,	AXIS_Z_POSITIVE			= 0x10
+		,	AXIS_Z_NEGATIVE			= 0x20
 		};
 
 	enum ALIGN : uint8_t
-		{	ALIGN_RIGHT				= ((uint8_t)AXIS_XPOSITIVE)
-		,	ALIGN_LEFT				= ((uint8_t)AXIS_XNEGATIVE)
-		,	ALIGN_BOTTOM			= ((uint8_t)AXIS_YPOSITIVE)
-		,	ALIGN_TOP				= ((uint8_t)AXIS_YNEGATIVE)
-		,	ALIGN_FAR				= ((uint8_t)AXIS_ZPOSITIVE)
-		,	ALIGN_NEAR				= ((uint8_t)AXIS_ZNEGATIVE)
+		{	ALIGN_ORIGIN			= 0
+		,	ALIGN_RIGHT				= ((uint8_t)::gpk::AXIS_X_POSITIVE)
+		,	ALIGN_LEFT				= ((uint8_t)::gpk::AXIS_X_NEGATIVE)
+		,	ALIGN_BOTTOM			= ((uint8_t)::gpk::AXIS_Y_POSITIVE)
+		,	ALIGN_TOP				= ((uint8_t)::gpk::AXIS_Y_NEGATIVE)
+		,	ALIGN_FAR				= ((uint8_t)::gpk::AXIS_Z_POSITIVE)
+		,	ALIGN_NEAR				= ((uint8_t)::gpk::AXIS_Z_NEGATIVE)
 		,	ALIGN_HCENTER			= ALIGN_LEFT	| ALIGN_RIGHT
 		,	ALIGN_VCENTER			= ALIGN_TOP		| ALIGN_BOTTOM
 		,	ALIGN_DCENTER			= ALIGN_FAR		| ALIGN_NEAR
@@ -634,12 +636,12 @@ namespace gpk
 #pragma pack(pop)
 	//------------------------------------------------------------------------------------------------------------
 	template <typename _tCoord>
-				::gpk::SRectangle2<_tCoord>&									realignRectangle
-					(	const ::gpk::SCoord2<uint32_t>			& targetSize
-					,	const ::gpk::SRectangle2<_tCoord>		& rectangleToRealign
-					,	::gpk::SRectangle2<_tCoord>			& rectangleRealigned
-					,	ALIGN									align
-					)																																					noexcept	{
+	::gpk::SRectangle2<_tCoord>&									realignRectangle
+		(	const ::gpk::n2<uint32_t>			& targetSize
+		,	const ::gpk::SRectangle2<_tCoord>	& rectangleToRealign
+		,	::gpk::SRectangle2<_tCoord>			& rectangleRealigned
+		,	ALIGN								align
+		)																																					noexcept	{
 		rectangleRealigned															= rectangleToRealign;
 			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (_tCoord)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
 		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (_tCoord) targetSize.x			- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }

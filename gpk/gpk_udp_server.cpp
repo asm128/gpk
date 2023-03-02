@@ -184,7 +184,7 @@ static	::gpk::error_t						serverListenTick				(::gpk::SUDPServer& serverInstanc
 	return 0;
 }
 
-static	void								threadUpdateClients				(void* serverInstance)					{ updateClients(*(::gpk::SUDPServer*)serverInstance); }
+static	void								threadUpdateClients				(void* serverInstance)					{ ::updateClients(*(::gpk::SUDPServer*)serverInstance); }
 static	::gpk::error_t						server							(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen						= true;
 	gpk_necs(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
@@ -208,6 +208,7 @@ static	void								threadServer					(void* pServerInstance)				{
 	gerror_if(errored(server(serverInstance)), "Server exiting with error.")
 	else
 		info_printf("Server gracefully closed.");
+
 	serverInstance.Listen						= false;
 	serverInstance.Socket.close();
 	{

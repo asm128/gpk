@@ -55,19 +55,19 @@
 ::gpk::error_t												gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char_t>> & outputJsons)		{
 	const uint32_t													remainder							= jsonArrayToSplit.Children.size() % blockSize;
 	const uint32_t													countParts							= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
-	gpk_necall(outputJsons.resize(countParts), "%s", "Out of memory?");
+	gpk_necs(outputJsons.resize(countParts));
 	uint32_t														iSourceRecord						= 0;
 	for(uint32_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
 		::gpk::apod<char_t>										& outputJson						= outputJsons[iPart];
-		gpk_necall(outputJson.push_back('['), "%s", "Out of memory?");
+		gpk_necs(outputJson.push_back('['));
 		for(uint32_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
 			; iPartRecord < countPartRecords
 			; ++iPartRecord) {
-			gpk_necall(::gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson), "%s", "Unknown error!");;
+			gpk_necs(::gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson));;
 			if(iPartRecord < countPartRecords - 1)
-				gpk_necall(outputJson.push_back(','), "%s", "Out of memory?");
+				gpk_necs(outputJson.push_back(','));
 		}
-		gpk_necall(outputJson.push_back(']'), "%s", "Out of memory?");
+		gpk_necs(outputJson.push_back(']'));
 	}
 	return 0;
 }
@@ -97,39 +97,39 @@ static const ::gpk::vcs		gpk_json_str_false = "false";
 			temp[lenNum] = 0;
 			--lenNum;
 		}
-		gpk_necall(output.append_string(temp), "%s", "Out of memory?");
+		gpk_necs(output.append_string(temp));
 	}
 		break;
 	case ::gpk::JSON_TYPE_BOOL			:
-		gpk_necall(output.append(node->Token->Value ? gpk_json_str_true : gpk_json_str_false), "%s", "Out of memory?");
+		gpk_necs(output.append(node->Token->Value ? gpk_json_str_true : gpk_json_str_false));
 		break;
 	case ::gpk::JSON_TYPE_NULL			:
-		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
+		gpk_necs(output.append(jsonViews[node->ObjectIndex]));
 		break;
 	case ::gpk::JSON_TYPE_STRING		:
-		gpk_necall(output.push_back('"'), "%s", "Out of memory?");
-		gpk_necall(output.append(jsonViews[node->ObjectIndex]), "%s", "Out of memory?");
-		gpk_necall(output.push_back('"'), "%s", "Out of memory?");
+		gpk_necs(output.push_back('"'));
+		gpk_necs(output.append(jsonViews[node->ObjectIndex]));
+		gpk_necs(output.push_back('"'));
 		break;
 	case ::gpk::JSON_TYPE_OBJECT		:
-		gpk_necall(output.push_back('{'), "%s", "Out of memory?");
+		gpk_necs(output.push_back('{'));
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); iChildren += 2) {
-			gpk_necall(::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output), "%s", "Unknown error!");;
-			gpk_necall(output.push_back(':'), "%s", "Out of memory?");
-			gpk_necall(::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output), "%s", "Unknown error!");;
+			gpk_necs(::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output));;
+			gpk_necs(output.push_back(':'));
+			gpk_necs(::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output));;
 			if(iChildren < node->Children.size() - 2)
-				gpk_necall(output.push_back(','), "%s", "Out of memory?");
+				gpk_necs(output.push_back(','));
 		}
-		gpk_necall(output.push_back('}'), "%s", "Out of memory?");
+		gpk_necs(output.push_back('}'));
 		break;
 	case ::gpk::JSON_TYPE_ARRAY			:
-		gpk_necall(output.push_back('['), "%s", "Out of memory?");
+		gpk_necs(output.push_back('['));
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren) {
-			gpk_necall(::gpk::jsonWrite(node->Children[iChildren], jsonViews, output), "%s", "Unknown error!");;
+			gpk_necs(::gpk::jsonWrite(node->Children[iChildren], jsonViews, output));;
 			if(iChildren < node->Children.size() - 1)
-				gpk_necall(output.push_back(','), "%s", "Out of memory?");
+				gpk_necs(output.push_back(','));
 		}
-		gpk_necall(output.push_back(']'), "%s", "Out of memory?");
+		gpk_necs(output.push_back(']'));
 	}
 	return 0;
 }
@@ -158,7 +158,7 @@ static const ::gpk::vcs		gpk_json_str_false = "false";
 		)
 			continue;
 		::gpk::aobj<::gpk::pobj<::gpk::SJSONNode>>				newChildren;
-		gpk_necall(newChildren.resize(nodeCurrent->Children.size()), "%s", "Out of memory?");
+		gpk_necs(newChildren.resize(nodeCurrent->Children.size()));
 		for(uint32_t iChild = 0, countChild = newChildren.size(); iChild < countChild; ++iChild)
 			newChildren[iChild]											= nodeCurrent->Children[iChild]->Children[0];
 		nodeCurrent->Children										= newChildren;
@@ -231,7 +231,7 @@ static	::gpk::error_t										jsonParseStringCharacter							(::gpk::SJSONReade
 		seterr_break_if(jsonAsString.size() - stateReader.IndexCurrentChar < 4, "End of stream during unicode code point parsing. JSON length: %s. Current index: %u.", jsonAsString.size(), stateReader.IndexCurrentChar);
 		json_info_printf("Unicode code point found: %4.4s", &jsonAsString[stateReader.IndexCurrentChar]);
 		currentElement												= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_CODEPOINT, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + 4}};
-		seterr_if(errored(tokens.push_back(currentElement)), "%s", "Out of memory?");
+		seterr_if(errored(tokens.push_back(currentElement)), "token count: %i", tokens.size());
 		stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 		stateReader.IndexCurrentChar								+= 3;	// Parse unicode code point
 		break;
@@ -323,7 +323,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 			else
 				gpk_necs(jsonAsString.slice(numString, offsetStart, lenDec));
 			const ::gpk::error_t											decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
-			ree_if(errored(decCount), "%s", "Unknown error.");
+			rees_if(errored(decCount));
 			decValue													/= ::gpk::powui(10, decCount);
 			//info_printf("Decimal part: %f.", decValue);
 			finalValue													+= decValue;
@@ -333,7 +333,7 @@ static	::gpk::error_t										parseJsonNumber										(::gpk::SJSONReaderState
 	else {
 		//info_printf("Integer part: %i.", currentElement.Value);
 	}
-	gpk_necall(tokens.push_back(currentElement), "%s", "Out of memory?");
+	gpk_necs(tokens.push_back(currentElement));
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 	//info_printf("Number found: %s. Length: %u. Negative: %s. Float: %s."
 	//	, ::gpk::toString({&jsonAsString[index], sizeNum}).begin()
@@ -395,7 +395,7 @@ static	::gpk::error_t									jsonCloseContainer									(::gpk::SJSONReaderStat
 
 static	::gpk::error_t									jsonOpenElement										(::gpk::SJSONReaderState& stateReader, ::gpk::apod<::gpk::SJSONToken>& tokens, ::gpk::JSON_TYPE jsonType, uint32_t indexChar) {
 	::gpk::SJSONToken												currentElement										= {stateReader.IndexCurrentElement, jsonType, {indexChar, indexChar}};
-	gpk_necall(stateReader.IndexCurrentElement = tokens.push_back(currentElement), "Failed to push element. %s", "Out of memory?");
+	gpk_necs(stateReader.IndexCurrentElement = tokens.push_back(currentElement));
 	stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 	const ::gpk::vcc									labelType											= ::gpk::get_value_label(currentElement.Type);
 	(void)labelType;
@@ -530,8 +530,8 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
 		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		const ::gpk::vcc									& view												= views[node->ObjectIndex];
-		gpk_necall(indices	.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
-		gpk_necall(keys		.push_back(view)				, "Failed! %s", "Too many nodes?");
+		gpk_necs(indices	.push_back(node->ObjectIndex));
+		gpk_necs(keys		.push_back(view)			);
 	}
 	return indices.size();
 }
@@ -541,7 +541,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 	for(uint32_t iNode = 0, countNodes = node_object.Children.size(); iNode < countNodes; iNode += 2) {
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
 		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
-		gpk_necall(indices.push_back(node->ObjectIndex)	, "Failed! %s", "Too many nodes?");
+		gpk_necs(indices.push_back(node->ObjectIndex));
 	}
 	return indices.size();
 }
@@ -552,7 +552,7 @@ static	::gpk::error_t									jsonParseDocumentCharacter							(::gpk::SJSONRead
 		const ::gpk::SJSONNode											* node												= node_object.Children[iNode];
 		ree_if(::gpk::JSON_TYPE_STRING != node->Token->Type, "Invalid node type: %u (%s). Only string types (%u) can be keys of JSON objects.", node->Token->Type, ::gpk::get_value_label(node->Token->Type).begin(), ::gpk::JSON_TYPE_STRING);
 		const ::gpk::vcc									& view												= views[node->ObjectIndex];
-		gpk_necall(keys.push_back(view)				, "Failed! %s", "Too many nodes?");
+		gpk_necs(keys.push_back(view)			);
 	}
 	return keys.size();
 }
