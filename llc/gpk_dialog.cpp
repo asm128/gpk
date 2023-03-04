@@ -120,54 +120,7 @@ static constexpr	const uint32_t									heightOfField								= 18;
 	}
 	return 0;
 }
-		::gpk::error_t												gpk::tunerCreate							(::gpk::SDialog			& dialog)								{
-	int32_t																	index										= -1;
-	::gpk::pobj<::gpk::SDialogTuner>										tuner;
-	gpk_necall(index = dialog.Create(tuner), "%s", "Out of memory?");
-	tuner->ValueCurrent													= 0; //tuner->ValueLimits.Min;
-	gpk_necall(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	gpk_necall(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl), "%s", "Out of memory?");
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	controlTable.Controls[tuner->IdGUIControl].Margin					= {};
-	for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
-		::gpk::SControl															& controlButton								= controlTable.Controls[iControl];
-		controlButton.Align													= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
-		::gpk::memcpy_s(controlButton.Palettes.Storage, dialog.Colors->Button.Storage);
-		controlTable.Text			[iControl].Text							= (iControl == tuner->IdDecrease) ? "-" : "+";
-		controlTable.Modes			[iControl].UseNewPalettes				= true;
-		controlTable.Modes			[iControl].ColorMode					= ::gpk::GUI_COLOR_MODE_3D;
-		controlTable.Constraints	[iControl].AttachSizeToControl.y		= iControl;
-	}
-	::gpk::SControlText														& tunerText									= controlTable.Text[tuner->IdGUIControl];
-	tunerText.Text														= {tuner->ValueString, (uint32_t)snprintf(tuner->ValueString, ::gpk::size(tuner->ValueString) - 2, "%lli", (long long int)tuner->ValueCurrent)};
-	tunerText.Align														= ::gpk::ALIGN_CENTER;
-	return index;
-}
-		::gpk::error_t												gpk::tunerSetValue							(::gpk::SDialogTuner & control, int64_t value)				{
-	if(value < control.ValueLimits.Min)
-		value																= control.ValueLimits.Min;
-	else if(value > control.ValueLimits.Max)
-		value																= control.ValueLimits.Max;
-	control.ValueCurrent												= value;
 
-	::gpk::vcc																valueString;
-	control.FuncValueFormat(valueString, value, control.ValueLimits);
-	control.FuncGetString(valueString, control.ValueCurrent, control.ValueLimits);
-	::gpk::controlTextSet(*control.Dialog->GUI, control.IdGUIControl, valueString);
-	::gpk::controlMetricsInvalidate(*control.Dialog->GUI, control.IdGUIControl);
-	return 0;
-}
-		::gpk::error_t												gpk::tunerUpdate							(::gpk::SDialogTuner & tuner)								{
-	::gpk::SDialog															& dialog									= *tuner.Dialog;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	if(controlTable.States[tuner.IdDecrease].Execute || controlTable.States[tuner.IdIncrease].Execute) {
-		if(controlTable.States[tuner.IdDecrease].Execute)
-			::gpk::tunerSetValue(tuner, tuner.ValueCurrent - 1);
-		else if(controlTable.States[tuner.IdIncrease].Execute)
-			::gpk::tunerSetValue(tuner, tuner.ValueCurrent + 1);
-	}
-	return 0;
-}
 		::gpk::error_t												gpk::sliderCreate							(::gpk::SDialog & dialog)								{
 	int32_t																	index										= -1;
 	::gpk::pobj<::gpk::SDialogSlider>										slider;
