@@ -29,7 +29,7 @@ namespace gpk
 
 		inline constexpr	TNCOPtr								operator =							(const TNCOPtr& other)										noexcept	{ TRef* oldInstance = Reference; Reference = other.Reference; if(Reference) Reference->AddRef();	if(oldInstance) oldInstance->Release(); return *this; }
 		inline constexpr	TNCOPtr								operator =							(TNCOPtr&& other)											noexcept	{ TRef* oldInstance = Reference; Reference = other.Reference; other.Reference = 0;					if(oldInstance) oldInstance->Release(); return *this; }
-		inline constexpr	TNCOPtr								operator =							(TRef* other)												noexcept	{ TRef* oldInstance = Reference; Reference = other;													if(oldInstance) oldInstance->Release(); if(other) other->AddRef(); return *this; }
+		inline constexpr	TNCOPtr								operator =							(TRef* other)												noexcept	{ TRef* oldInstance = Reference; Reference = other; if(Reference) Reference->AddRef();				if(oldInstance) oldInstance->Release(); return *this; }
 
 		inline				_tNCO*								operator->							()															noexcept	{ return Reference; }
 		inline				const _tNCO*						operator->							()													const	noexcept	{ return Reference; }
