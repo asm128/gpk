@@ -19,8 +19,8 @@ namespace gpk
 																	SImage										(const ::gpk::v2<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																	SImage										(const SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-		inline constexpr	operator								view2d<const _tTexel>					()										const	noexcept	{ return View; }
-		inline				operator								view2d<_tTexel>							()												noexcept	{ return View; }
+		inline constexpr	operator								view2d<const _tTexel>						()										const	noexcept	{ return View; }
+		inline				operator								view2d<_tTexel>								()												noexcept	{ return View; }
 
 							SImage&									operator=									(const ::gpk::v2<_tTexel>& other)						{
 			Texels														= view<const _tTexel>{other.begin(), other.size()};
@@ -47,10 +47,14 @@ namespace gpk
 		inline constexpr	uint32_t								area										()																const	noexcept	{ return View.area		();	}
 		inline constexpr	uint32_t 								byte_count									()																const	noexcept	{ return Texels.byte_count();	}
 
-		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t>& newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t> & newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint16_t> & newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint8_t > & newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY)									noexcept	{ gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize? Requested size: %u.", (uint32_t)(newSizeX * newSizeY)); View = {Texels.begin(), newSizeX, newSizeY}; return 0; }
 
-		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t>& newSize, const _tTexel & newValue)			noexcept	{ return resize(newSize.x, newSize.y, newValue); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t> & newSize, const _tTexel & newValue)			noexcept	{ return resize(newSize.x, newSize.y, newValue); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint16_t> & newSize, const _tTexel & newValue)			noexcept	{ return resize(newSize.x, newSize.y, newValue); }
+		inline				::gpk::error_t							resize										(const ::gpk::n2<uint8_t > & newSize, const _tTexel & newValue)			noexcept	{ return resize(newSize.x, newSize.y, newValue); }
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY, const _tTexel & newValue)		noexcept	{
 			gpk_necall(Texels.resize(newSizeX * newSizeY), "cannot resize? Requested size: %u.", newSizeX * newSizeY);
 			View														= {Texels.begin(), newSizeX, newSizeY};

@@ -96,7 +96,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view<const ubyte
 	}
 	::gpk::apod<ubyte_t>											deflated;
 	::gpk::img<uint8_t>											filtered								= {};
-	filtered.resize({convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
+	filtered.resize(convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y);
 	const uint32_t														scanlineWidthUnfiltered					= convertedScanlines.View.metrics().x * 4;
 	for(uint32_t y = 0; y < in_imageView.metrics().y; ++y) {
 		filtered[y][0]													= 0;
