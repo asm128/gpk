@@ -4,16 +4,16 @@
 
 #include <dxgi1_4.h>
 
-::gpk::error_t				gpk::d3dDeviceValidate				(::gpk::ptr_com<::ID3D11Device3> & d3dDevice)				{
+::gpk::error_t				gpk::d3dDeviceValidate				(::gpk::pcom<::ID3D11Device3> & d3dDevice)				{
 	// The D3D Device is no longer valid if the default adapter changed since the device was created or if the device has been removed. 
-	::gpk::ptr_com<IDXGIDevice3>		dxgiDevice;
-	::gpk::ptr_com<IDXGIAdapter>		deviceAdapter;
-	::gpk::ptr_com<IDXGIFactory4>		deviceFactory;
-	::gpk::ptr_com<IDXGIAdapter1>		previousDefaultAdapter;
-	::gpk::ptr_com<IDXGIFactory4>		currentFactory;
-	::gpk::ptr_com<IDXGIAdapter1>		currentDefaultAdapter;
-	DXGI_ADAPTER_DESC1						previousDesc				= {};	// First, get the information for the default adapter from when the device was created.
-	DXGI_ADAPTER_DESC1						currentDesc					= {};	// Next, get the information for the current default adapter.
+	::gpk::pcom<IDXGIDevice3>		dxgiDevice;
+	::gpk::pcom<IDXGIAdapter>		deviceAdapter;
+	::gpk::pcom<IDXGIFactory4>		deviceFactory;
+	::gpk::pcom<IDXGIAdapter1>		previousDefaultAdapter;
+	::gpk::pcom<IDXGIFactory4>		currentFactory;
+	::gpk::pcom<IDXGIAdapter1>		currentDefaultAdapter;
+	DXGI_ADAPTER_DESC1				previousDesc				= {};	// First, get the information for the default adapter from when the device was created.
+	DXGI_ADAPTER_DESC1				currentDesc					= {};	// Next, get the information for the current default adapter.
 
 	d3dDevice.as(dxgiDevice);
 	gpk_hrcall(dxgiDevice->GetAdapter(&deviceAdapter));
@@ -33,24 +33,24 @@
 }
 
 
-::gpk::error_t				gpk::d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2<const ::gpk::SColorBGRA> initData) {
-	D3D11_TEXTURE2D_DESC						desc				= {initData.metrics().x, initData.metrics().y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE};
-	D3D11_SUBRESOURCE_DATA						d3dInitData			= {};
-	d3dInitData.pSysMem						= initData.begin();
-	d3dInitData.SysMemPitch					= initData.metrics().x * 4;
+::gpk::error_t						gpk::d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2<const ::gpk::bgra> initData) {
+	D3D11_TEXTURE2D_DESC					desc				= {initData.metrics().x, initData.metrics().y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE};
+	D3D11_SUBRESOURCE_DATA					d3dInitData			= {};
+	d3dInitData.pSysMem					= initData.begin();
+	d3dInitData.SysMemPitch				= initData.metrics().x * 4;
 
-	::gpk::ptr_com<ID3D11Texture2D>				pTex2D				= {};
+	::gpk::pcom<ID3D11Texture2D>			pTex2D				= {};
 	gpk_hrcall(pDevice->CreateTexture2D(&desc, &d3dInitData, &pTex2D));
 	if(!pTex2D) 
 		return -1;
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC				srvDesc				= {};
-	srvDesc.Format							= desc.Format;
-	srvDesc.ViewDimension					= D3D_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels				= desc.MipLevels;
+	D3D11_SHADER_RESOURCE_VIEW_DESC			srvDesc				= {};
+	srvDesc.Format						= desc.Format;
+	srvDesc.ViewDimension				= D3D_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels			= desc.MipLevels;
 	//srvDesc.
 
-	::gpk::ptr_com<ID3D11ShaderResourceView>	pSRV;
+	::gpk::pcom<ID3D11ShaderResourceView>	pSRV;
 	gpk_hrcall(pDevice->CreateShaderResourceView(pTex2D, &srvDesc, &pSRV));
 
 	texture									= pTex2D;
