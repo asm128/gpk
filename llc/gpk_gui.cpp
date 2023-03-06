@@ -619,7 +619,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 		rootControlsToProcess.push_back(iControl);
 	}
 
-	gui.CursorPos													+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
+	gui.CursorPos													= {(float)input.MouseCurrent.Position.x, (float)input.MouseCurrent.Position.y}; //+= {(float)input.MouseCurrent.Deltas.x, (float)input.MouseCurrent.Deltas.y};
 	for(uint32_t iControl = 0, countControls = rootControlsToProcess.size(); iControl < countControls; ++iControl) {
 		if(::gpk::controlHidden(gui, rootControlsToProcess[iControl]))
 			continue;

@@ -30,7 +30,6 @@
 	return sizeof(uint32_t) + headerToRead.size();
 }
 
-
 ::gpk::error_t			gpk::viewLoad			(::gpk::vcs & headerToRead, const ::gpk::vcub & input)	{
 	ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 	const uint32_t				elementCount			= *(uint32_t*)input.begin();

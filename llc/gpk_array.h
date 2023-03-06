@@ -204,15 +204,15 @@ namespace gpk
 			return newCount;
 		}
 
-		int32_t											reserve										(uint32_t newCount)								{
+		int32_t									reserve										(uint32_t newCount)								{
 			if(newCount > Size) {
-				uint32_t											newSize										= ::gpk::max(4U, (uint32_t)(newCount + (newCount / 4)));
-				_tPOD												* newData									= (_tPOD*)::gpk::gpk_malloc(newSize * sizeof(_tPOD) + 2);
+				uint32_t								newSize										= ::gpk::max(4U, (uint32_t)(newCount + (newCount / 4)));
+				_tPOD									* newData									= (_tPOD*)::gpk::gpk_malloc(newSize * sizeof(_tPOD) + 2);
 				if(0 == newData)
 					return -1;
 				for(uint32_t iElement = 0; iElement < Count; ++iElement)
 					new (&newData[iElement]) _tPOD(Data[iElement]);
-				_tPOD								* oldData			= Data;
+				_tPOD									* oldData			= Data;
 				Size								= newSize;
 				Data								= newData;
 				for(uint32_t iElement = 0; iElement < Count; ++iElement)
@@ -224,7 +224,7 @@ namespace gpk
 		// Returns the new size of the array.
 							::gpk::error_t				resize										(uint32_t newSize)															noexcept	{
 			const uint32_t										oldCount									= Count;
-			if(newSize >= Size) {
+			if(newSize > Size) {
 				_tPOD												* oldData									= Data;
 				uint32_t											reserveSize									= calc_reserve_size(newSize);
 				uint32_t											mallocSize									= calc_malloc_size(reserveSize) + 2;
@@ -245,7 +245,7 @@ namespace gpk
 			}
 			else
 				Count											= newSize;
-			*(uint16_t*)(&Data[Count])						= 0;
+			//*(uint16_t*)(&Data[Count])						= 0;
 			return (int32_t)Count;
 		}
 
@@ -516,7 +516,7 @@ namespace gpk
 		}
 		template<size_t _Length>
 		inline				::gpk::error_t				append										(const _tObj (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
-		inline				::gpk::error_t				append										(const ::gpk::view<const _tObj>& newChain)								noexcept	{ return append(newChain.begin(), newChain.size());	}
+		inline				::gpk::error_t				append										(const ::gpk::view<const _tObj> & newChain)									noexcept	{ return append(newChain.begin(), newChain.size());	}
 							::gpk::error_t				append										(const _tObj* chainToAppend, uint32_t chainLength)							noexcept	{
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;

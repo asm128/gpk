@@ -29,17 +29,17 @@ namespace gpk
 		ginlcexpr					view					()												noexcept	= default;
 
 		template <size_t _elementCount>
-		ginlcexpr					view					(_tCell (&_elements)[_elementCount])			noexcept	: Data(_elements), Count(_elementCount)										{}
+		ginlcexpr					view					(_tCell (&elements)[_elementCount])				noexcept	: Data(elements), Count(_elementCount)										{}
 
 		template <size_t _elementCount>
-		ginlcexpr					view					(uint32_t elementCount, _tCell (&_elements)[_elementCount])	: Data(_elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{}
+		ginlcexpr					view					(uint32_t elementCount, _tCell (&elements)[_elementCount])	: Data(elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{}
 
 		inline						view					(_tCell * elements, uint32_t elementCount)					: Data(elements), Count(elementCount)										{
 			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
-		inline						view					(_tCell (&_elements)[_elementCount], uint32_t elementCount)	: Data(_elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{
+		inline						view					(_tCell (&elements)[_elementCount], uint32_t elementCount)	: Data(elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{
 			gthrow_if(elementCount > _elementCount, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)_elementCount, elementCount);
 		}
 
@@ -299,9 +299,9 @@ namespace gpk
 			right							= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			gpk_necs(original.slice(left, 0, iValue));
 			const uint32_t						offsetRight				= iValue + 1;
-			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
+			gpk_necs(original.slice(right, offsetRight, original.size() - offsetRight));
 		}
 		return iValue;
 	}
