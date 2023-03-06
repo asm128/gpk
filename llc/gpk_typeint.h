@@ -57,4 +57,6 @@ namespace gpk
 	typedef double			f64	;
 }
 
+#define ginlcexpr	inline constexpr
+
 #endif // GPK_TYPEINT_H_29873490827342

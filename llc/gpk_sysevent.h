@@ -42,6 +42,8 @@ namespace gpk
 		::gpk::apod<uint8_t>	Data;
 	};
 
+	typedef std::function<::gpk::error_t(::gpk::SSysEvent&)>		FSysEvent;
+	typedef std::function<::gpk::error_t(const ::gpk::SSysEvent&)>	FSysEventConst;
 } // namespace 
 
 #endif // GPK_SYSEVENT_H_2094098237

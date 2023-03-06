@@ -1,5 +1,3 @@
-#include "gpk_platform.h"
-
 #include "gpk_typeint.h"
 #if !defined(GPK_ATMEL)
 #include <memory.h>
@@ -23,14 +21,14 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tValue>		static inline constexpr		const _tValue&	min			(const _tValue& a, const _tValue& b)												noexcept	{ return (a < b) ? a : b; }
-	template<typename _tValue>		static inline constexpr		const _tValue&	max			(const _tValue& a, const _tValue& b)												noexcept	{ return (a > b) ? a : b; }
+	template<typename _tValue>	ginlcexpr	const _tValue&	min			(const _tValue & a, const _tValue & b)	noexcept	{ return (a < b) ? a : b; }
+	template<typename _tValue>	ginlcexpr	const _tValue&	max			(const _tValue & a, const _tValue & b)	noexcept	{ return (a > b) ? a : b; }
 	// excluding the stop value
-	template<typename _tValue>		static inline constexpr		bool			in_range	(const _tValue& valueToTest, const _tValue& rangeStart, const _tValue& rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
+	template<typename _tValue>	ginlcexpr	bool			in_range	(const _tValue& valueToTest, const _tValue & rangeStart, const _tValue & rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
 
 
 	template<typename _tElement>
-						bool		equal		(const _tElement * other, const _tElement * local, uint32_t count)			{
+	bool							equal		(const _tElement * other, const _tElement * local, uint32_t count)			{
 		for(uint32_t iElement = 0; iElement < count; ++iElement)
 			if(other[iElement] != local[iElement])
 				return false;
