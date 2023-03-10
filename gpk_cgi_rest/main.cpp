@@ -79,7 +79,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 			gpk_necs(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				gpk_necs(::gpk::clientUpdate(bestClient));
-				::gpk::apobj<::gpk::SUDPConnectionMessage>	received;
+				::gpk::apobj<::gpk::SUDPMessage>	received;
 				{	// pick up messages for later processing
 					::gpk::mutex_guard												lockRecv					(bestClient.Queue.MutexReceive);
 					received													= bestClient.Queue.Received;
