@@ -475,7 +475,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI & gui,
 		}
 	}
 	if(dockToControl.Bottom	!= -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom	), "Invalid control id: %i.", dockToControl.Bottom	);
+		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom), "Invalid control id: %i.", dockToControl.Bottom);
 		const ::gpk::SControl												& other													= gui.Controls.Controls[dockToControl.Bottom];
 		const ::gpk::SControlMetrics										& otherMetrics											= gui.Controls.Metrics[dockToControl.Bottom	];
 		if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
@@ -487,7 +487,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI & gui,
 		}
 	}
 	if(dockToControl.Left	!= -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Left	), "Invalid control id: %i.", dockToControl.Left);
+		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Left), "Invalid control id: %i.", dockToControl.Left);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Left, targetSize, true);
 		const ::gpk::SControl												& other													= gui.Controls.Controls	[dockToControl.Left];
 		const ::gpk::SControlMetrics										& otherMetrics											= gui.Controls.Metrics	[dockToControl.Left];

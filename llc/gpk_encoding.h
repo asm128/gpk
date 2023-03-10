@@ -7,13 +7,13 @@ namespace gpk
 {
 					::gpk::error_t					hexEncode													(const ::gpk::vcub	& inputBinary	, ::gpk::apod<char_t	> & out_hexed	);
 					::gpk::error_t					hexDecode													(const ::gpk::vcc	& in_hexed		, ::gpk::apod<ubyte_t	> & outputBinary);
-	static inline	::gpk::error_t					hexEncode													(const ::gpk::vcb	& inputBinary	, ::gpk::apod<char_t	> & out_hexed	) { return hexEncode(::gpk::vcub{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+	stainli	::gpk::error_t					hexEncode													(const ::gpk::vcb	& inputBinary	, ::gpk::apod<char_t	> & out_hexed	) { return hexEncode(::gpk::vcub{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
 					::gpk::error_t					hexDecode													(const ::gpk::vcc	& in_hexed		, ::gpk::apod<byte_t	> & outputBinary);
 	// Based on Gary Ardell's code for VB.
 					::gpk::error_t					ardellEncode												(::gpk::apod<int32_t> & cache, const ::gpk::vcb & input, uint64_t key, bool salt, ::gpk::apod<byte_t> & output);
 					::gpk::error_t					ardellDecode												(::gpk::apod<int32_t> & cache, const ::gpk::vcb & input, uint64_t key, bool salt, ::gpk::apod<byte_t> & output);
-	static inline	::gpk::error_t					ardellEncode												(const ::gpk::vcb & input, int key, bool salt, ::gpk::apod<byte_t> & output)	{ ::gpk::apod<int32_t> tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
-	static inline	::gpk::error_t					ardellDecode												(const ::gpk::vcb & input, int key, bool salt, ::gpk::apod<byte_t> & output)	{ ::gpk::apod<int32_t> tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
+	stainli	::gpk::error_t					ardellEncode												(const ::gpk::vcb & input, int key, bool salt, ::gpk::apod<byte_t> & output)	{ ::gpk::apod<int32_t> tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
+	stainli	::gpk::error_t					ardellDecode												(const ::gpk::vcb & input, int key, bool salt, ::gpk::apod<byte_t> & output)	{ ::gpk::apod<int32_t> tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
 
 					::gpk::error_t					saltDataSalt												(const ::gpk::vcb & binary, ::gpk::apod<byte_t> & salted);
 					::gpk::error_t					saltDataUnsalt												(const ::gpk::vcb & salted, ::gpk::apod<byte_t> & binary);

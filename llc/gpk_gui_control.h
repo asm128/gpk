@@ -78,14 +78,12 @@ namespace gpk
 
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SCoord2<uint16_t> & buttonSize, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {});
 
-	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+	stainli	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, const ::gpk::SCoord2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
 				return ::gpk::guiSetupButtonList(gui, buttonText, iParent, {buttonWidth, (uint16_t)20}, offset, controlAlign, textAlign, out_ids); 
 			}
 
 
-	static inline
-			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
+	stainli	::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {}) {
 		return ::gpk::guiSetupButtonList(gui, buttonText, iParent, buttonWidth, {0, yOffset}, controlAlign, textAlign, out_ids); 
 	}
 

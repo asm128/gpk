@@ -58,15 +58,6 @@
 #	define GPK_DISABLE_CPP_EXCEPTIONS
 #endif
 
-
-namespace gpk
-{
-	// -- Returns 0 on little-endian machines
-	static inline int				test_endianness			()		noexcept	{ static constexpr const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
-}
-
-#endif // GPK_PLATFORM_GLOBALS_H_298365465465
-
 #if !defined(GPK_WINDOWS)
 	#if defined(GPK_ATMEL)
 	#	include <stddef.h>
@@ -82,3 +73,14 @@ namespace gpk
 #	include <new>
 #endif
 
+#define inlcxpr	inline constexpr
+#define stacxpr	static constexpr
+#define stainli	static inline
+
+namespace gpk
+{
+	// -- Returns 0 on little-endian machines
+	stainli	int				test_endianness			()		noexcept	{ static constexpr const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
+}
+
+#endif // GPK_PLATFORM_GLOBALS_H_298365465465

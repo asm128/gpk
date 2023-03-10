@@ -49,7 +49,7 @@ namespace gpk
 					, ::gpk::apod<::gpk::STriangle3	<float>> & out_NormalsVertex
 					, ::gpk::apod<::gpk::STriangle2	<float>> & out_UV
 					);
-				static inline ::gpk::error_t						generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
+				stainli ::gpk::error_t						generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
 					return ::gpk::generateCubeGeometry
 						( out_Geometry.Positions
 						, out_Geometry.NormalsTriangle
@@ -69,7 +69,7 @@ namespace gpk
 					, ::gpk::apod<::gpk::STriangle3	<float>>	& out_NormalsVertex
 					, ::gpk::apod<::gpk::STriangle2	<float>>	& out_UV
 					);
-				static inline ::gpk::error_t						generateGridGeometry					(const ::gpk::SCoord2<uint32_t>	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
+				stainli ::gpk::error_t						generateGridGeometry					(const ::gpk::SCoord2<uint32_t>	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
 					return ::gpk::generateGridGeometry
 						( gridMetrics
 						, out_Geometry.Positions

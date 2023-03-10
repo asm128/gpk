@@ -260,24 +260,22 @@ namespace gpk
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																																											\
 	enum EnumName : IntType {};																																															\
-	static						const ::gpk::vcs				EnumName##_STR							= #EnumName;																										\
-	/*static constexpr			const EnumName					EnumName##_INVALID						= ::gpk::enum_definition<EnumName>::INVALID_VALUE;																	*/\
-	/*static						const EnumName					__sei_##EnumName##_INVALID				= (EnumName)::gpk::enum_definition<EnumName>::init(EnumName##_STR);													*/\
-	static inline constexpr		EnumName						operator &								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	static inline constexpr		EnumName						operator ~								(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	static inline constexpr		EnumName						operator ^								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	static inline				EnumName&						operator |=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	static inline				EnumName&						operator &=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	static inline				EnumName&						operator ^=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	static inline constexpr		EnumName						operator |								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);				}
+	static			const ::gpk::vcs				EnumName##_STR							= #EnumName;																										\
+	static inlcxpr	EnumName						operator &								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	static inlcxpr	EnumName						operator ~								(EnumName  a)								noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	static inlcxpr	EnumName						operator ^								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	stainli			EnumName&						operator |=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
+	stainli			EnumName&						operator &=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
+	stainli			EnumName&						operator ^=								(EnumName &a, EnumName b)					noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
+	static inlcxpr	EnumName						operator |								(EnumName  a, EnumName b)					noexcept	{ return (EnumName)		(a | (IntType)b);				}
 
 #define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)																																\
-	static constexpr			const EnumName					EnumName##_##ValueName					= (EnumName)(EnumValue);														\
-	static						const EnumName					__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), ::gpk::vcs{#ValueName})
+	static constexpr	const EnumName					EnumName##_##ValueName					= (EnumName)(EnumValue);														\
+	static				const EnumName					__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), ::gpk::vcs{#ValueName})
 
 #define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)																																\
-	static constexpr			const EnumName					EnumName##_##ValueName					= (EnumName)(EnumValue);														\
-	static						const EnumName					__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), ::gpk::vcs{#ValueName}, ::gpk::vcs{EnumDescription})
+	static constexpr	const EnumName					EnumName##_##ValueName					= (EnumName)(EnumValue);														\
+	static				const EnumName					__sei_##EnumName##_##ValueName			= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), ::gpk::vcs{#ValueName}, ::gpk::vcs{EnumDescription})
 
 #define GDEFINE_FLAG_TYPE				GDEFINE_ENUM_TYPE
 #define GDEFINE_FLAG_VALUE				GDEFINE_ENUM_VALUE

@@ -102,7 +102,7 @@ namespace gpk
 								};
 	};
 
-	static inline		::gpk::error_t											sceneBoxAdd									(SScene& scene)	{
+	stainli		::gpk::error_t											sceneBoxAdd									(SScene& scene)	{
 			const uint32_t																newIndex									= scene.ObjectPivots.size();
 		if(errored(::gpk::resize
 			( newIndex + 1

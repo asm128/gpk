@@ -28,7 +28,7 @@ namespace gpk
 	template<typename _tCell>
 	struct array_base : public view<_tCell> {
 	protected:
-		using				view<_tCell>::			Count;
+		using				view<_tCell>::				Count;
 //							uint32_t					Offset										= 0;
 							uint32_t					Size										= 0;
 
@@ -182,15 +182,15 @@ namespace gpk
 		inline				::gpk::error_t				append										(const _tPOD (&newChain)[_Length])											noexcept	{ return append(newChain, (uint32_t)_Length);					}
 		inline				::gpk::error_t				append										(const ::gpk::view<const _tPOD>& newChain)									noexcept	{ return append(newChain.begin(), newChain.size());	}
 							::gpk::error_t				append										(const _tPOD* chainToAppend, uint32_t chainLength)							noexcept	{
+			if(0 == chainLength)
+				return Count;
 			const uint32_t										startIndex									= Count;
 			const uint32_t										requestedSize								= Count + chainLength;
 			ree_if(requestedSize < Count, "Size overflow. Cannot append chain. count: %u. Chain length: %u.", Count, chainLength);
 			const int32_t										newSize										= resize(requestedSize);
 			ree_if(newSize != (int32_t)requestedSize, "Failed to resize array for appending. Requested size: %u.", requestedSize);
-			if(chainLength) {
-				memcpy(&Data[startIndex], chainToAppend, sizeof(_tPOD) * chainLength);
-				*(uint16_t*)(&Data[Count])						= 0;
-			}
+			memcpy(&Data[startIndex], chainToAppend, sizeof(_tPOD) * chainLength);
+			*(uint16_t*)(&Data[Count])						= 0;
 			return startIndex;
 		}
 
@@ -640,24 +640,28 @@ namespace gpk
 		}
 	}; // array_obj
 
-	template <typename T>		using aobj		= ::gpk::array_obj<T>; 
-	template <typename T>		using apod		= ::gpk::array_pod<T>;
-	template <typename T>		using aview		= ::gpk::array_obj<::gpk::view<T>>; 
+	template <typename T>	using aobj		= ::gpk::array_obj<T>; 
+	template <typename T>	using apod		= ::gpk::array_pod<T>;
+	template <typename T>	using aview		= ::gpk::array_obj<::gpk::view<T>>; 
 
-	typedef	::gpk::aview<ubyte_t	>	aview_ubyte			, av1ub, avub;
-	typedef	::gpk::aview<byte_t		>	aview_byte			, av1b, avb;
-	typedef	::gpk::aview<uchar_t	>	aview_uchar			, av1uc, avuc;
-	typedef	::gpk::aview<char_t		>	aview_char			, av1c, avc;
-	typedef	::gpk::aview<float		>	aview_float32		, av1f32, av1f, avf32, avf;
-	typedef	::gpk::aview<double		>	aview_float64		, av1f64, av1d, avf64, avd;
-	typedef	::gpk::aview<uint8_t	>	aview_uint8			, av1u8, avu8;
-	typedef	::gpk::aview<uint16_t	>	aview_uint16		, av1u16, avu16;
-	typedef	::gpk::aview<uint32_t	>	aview_uint32		, av1u32, avu32;
-	typedef	::gpk::aview<uint64_t	>	aview_uint64		, av1u64, avu64;
-	typedef	::gpk::aview<int8_t		>	aview_int8			, av1i8, avi8;
-	typedef	::gpk::aview<int16_t	>	aview_int16			, av1i16, avi16;
-	typedef	::gpk::aview<int32_t	>	aview_int32			, av1i32, avi32;
-	typedef	::gpk::aview<int64_t	>	aview_int64			, av1i64, avi64;
+	template <typename T>	using ao		= ::gpk::aobj	<T>; 
+	template <typename T>	using ap		= ::gpk::apod	<T>;
+	template <typename T>	using av		= ::gpk::aview	<T>; 
+
+	typedef	::gpk::aview<ubyte_t	>		aview_ubyte			, av1ub, avub;
+	typedef	::gpk::aview<byte_t		>		aview_byte			, av1b, avb;
+	typedef	::gpk::aview<uchar_t	>		aview_uchar			, av1uc, avuc;
+	typedef	::gpk::aview<char_t		>		aview_char			, av1c, avc;
+	typedef	::gpk::aview<float		>		aview_float32		, av1f32, av1f, avf32, avf;
+	typedef	::gpk::aview<double		>		aview_float64		, av1f64, av1d, avf64, avd;
+	typedef	::gpk::aview<uint8_t	>		aview_uint8			, av1u8, avu8;
+	typedef	::gpk::aview<uint16_t	>		aview_uint16		, av1u16, avu16;
+	typedef	::gpk::aview<uint32_t	>		aview_uint32		, av1u32, avu32;
+	typedef	::gpk::aview<uint64_t	>		aview_uint64		, av1u64, avu64;
+	typedef	::gpk::aview<int8_t		>		aview_int8			, av1i8, avi8;
+	typedef	::gpk::aview<int16_t	>		aview_int16			, av1i16, avi16;
+	typedef	::gpk::aview<int32_t	>		aview_int32			, av1i32, avi32;
+	typedef	::gpk::aview<int64_t	>		aview_int64			, av1i64, avi64;
 
 	// view_array<const> common typedefs
 	//typedef ::gpk::view_array<const char_t		>	view_const_string	;
@@ -676,20 +680,20 @@ namespace gpk
 	typedef	::gpk::aview<const int32_t	>	aview_const_int32	, av1ci32, avci32;
 	typedef	::gpk::aview<const int64_t	>	aview_const_int64	, av1ci64, avci64;
 
-	typedef apod<ubyte_t	>	array_ubyte		, aub	, aub;
-	typedef apod<byte_t		>	array_byte		, ab	, ab;
-	typedef apod<uchar_t	>	array_uchar		, auc	, auc;
-	typedef apod<char_t		>	array_char		, ac	, ac;
-	typedef apod<float_t	>	array_float32	, af32	, array_float	, af;
-	typedef apod<double_t	>	array_float64	, af64	, array_double	, ad;
-	typedef apod<uint8_t	>	array_uint8		, au8	, au8;
-	typedef apod<uint16_t	>	array_uint16	, au16	, au16;
-	typedef apod<uint32_t	>	array_uint32	, au32	, au32;
-	typedef apod<uint64_t	>	array_uint64	, au64	, au64;
-	typedef apod<int8_t		>	array_int8		, ai8	, ai8;
-	typedef apod<int16_t	>	array_int16		, ai16	, ai16;
-	typedef apod<int32_t	>	array_int32		, ai32	, ai32;
-	typedef apod<int64_t	>	array_int64		, ai64	, ai64;
+	typedef apod<ubyte_t	>				array_ubyte			, aub	, aub;
+	typedef apod<byte_t		>				array_byte			, ab	, ab;
+	typedef apod<uchar_t	>				array_uchar			, auc	, auc;
+	typedef apod<char_t		>				array_char			, ac	, ac;
+	typedef apod<float_t	>				array_float32		, af32	, array_float	, af;
+	typedef apod<double_t	>				array_float64		, af64	, array_double	, ad;
+	typedef apod<uint8_t	>				array_uint8			, au8	, au8;
+	typedef apod<uint16_t	>				array_uint16		, au16	, au16;
+	typedef apod<uint32_t	>				array_uint32		, au32	, au32;
+	typedef apod<uint64_t	>				array_uint64		, au64	, au64;
+	typedef apod<int8_t		>				array_int8			, ai8	, ai8;
+	typedef apod<int16_t	>				array_int16			, ai16	, ai16;
+	typedef apod<int32_t	>				array_int32			, ai32	, ai32;
+	typedef apod<int64_t	>				array_int64			, ai64	, ai64;
 
 	template<typename _tElement>
 	::gpk::error_t									split					(const ::gpk::view<const _tElement> & target, const _tElement& separator, ::gpk::aobj<::gpk::view<const _tElement>> & split)	{
@@ -745,14 +749,14 @@ namespace gpk
 
 
 	template<typename _tElement>
-	::gpk::error_t									viewWrite							(const ::gpk::view<_tElement>& headerToWrite, ::gpk::apod<byte_t>	& output)	{
+	::gpk::error_t									viewWrite							(const ::gpk::view<_tElement> & headerToWrite, ::gpk::apod<byte_t>	& output)	{
 		gpk_necs(output.append(::gpk::vcb{(const char*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}));
 		gpk_necs(output.append(::gpk::vcb{(const char*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}));
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);
 	}
 
 	template<typename _tElement>
-	::gpk::error_t									viewSave						(::gpk::apod<ubyte_t> & output, const ::gpk::view<_tElement>& headerToWrite)	{
+	::gpk::error_t									viewSave						(::gpk::apod<ubyte_t> & output, const ::gpk::view<_tElement> & headerToWrite)	{
 		gpk_necs(output.append({(const ubyte_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}));
 		gpk_necs(output.append({(const ubyte_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(_tElement)}));
 		return sizeof(uint32_t) + headerToWrite.size() * sizeof(_tElement);

@@ -34,7 +34,7 @@ namespace gpk
 	};
 
 	struct SLobbyServer {
-		typedef	::gpk::array_pobj<::gpk::SUDPConnectionMessage> 
+		typedef	::gpk::array_pobj<::gpk::SUDPMessage> 
 													TMessageQueue;
 
 		::gpk::apod<uint64_t>					IdListRoom			= {};
@@ -73,7 +73,7 @@ namespace gpk
 
 
 	struct SLobbyClient {
-		typedef	::gpk::array_pobj<::gpk::SUDPConnectionMessage> 
+		typedef	::gpk::array_pobj<::gpk::SUDPMessage> 
 													TMessageQueue;
 
 		::gpk::SUDPClient							Client				= {};

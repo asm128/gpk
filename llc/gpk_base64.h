@@ -10,10 +10,10 @@ namespace gpk
 
 					::gpk::error_t					base64Encode												(const ::gpk::vcb & base64Symbols, char_t base64PadSymbol, const ::gpk::vcb & inputBinary	, ::gpk::apod<char_t> & out_base64	);
 					::gpk::error_t					base64Decode												(const ::gpk::vcb & base64Symbols, char_t base64PadSymbol, const ::gpk::vcc & in_base64		, ::gpk::apod<byte_t> & outputBinary);
-	static inline	::gpk::error_t					base64Encode												(const ::gpk::vcb & inputBinary	, ::gpk::apod<char_t> & out_base64		) { return base64Encode(b64Symbols	, '=', inputBinary	, out_base64	); }
-	static inline	::gpk::error_t					base64Decode												(const ::gpk::vcb & in_base64	, ::gpk::apod<byte_t> & outputBinary	) { return base64Decode(b64Symbols	, '=', in_base64	, outputBinary	); }
-	static inline	::gpk::error_t					base64EncodeFS												(const ::gpk::vcb & inputBinary	, ::gpk::apod<char_t> & out_base64		) { return base64Encode(b64SymbolsFS, '=', inputBinary	, out_base64	); }
-	static inline	::gpk::error_t					base64DecodeFS												(const ::gpk::vcb & in_base64	, ::gpk::apod<byte_t> & outputBinary	) { return base64Decode(b64SymbolsFS, '=', in_base64	, outputBinary	); }
+	stainli	::gpk::error_t					base64Encode												(const ::gpk::vcb & inputBinary	, ::gpk::apod<char_t> & out_base64		) { return base64Encode(b64Symbols	, '=', inputBinary	, out_base64	); }
+	stainli	::gpk::error_t					base64Decode												(const ::gpk::vcb & in_base64	, ::gpk::apod<byte_t> & outputBinary	) { return base64Decode(b64Symbols	, '=', in_base64	, outputBinary	); }
+	stainli	::gpk::error_t					base64EncodeFS												(const ::gpk::vcb & inputBinary	, ::gpk::apod<char_t> & out_base64		) { return base64Encode(b64SymbolsFS, '=', inputBinary	, out_base64	); }
+	stainli	::gpk::error_t					base64DecodeFS												(const ::gpk::vcb & in_base64	, ::gpk::apod<byte_t> & outputBinary	) { return base64Decode(b64SymbolsFS, '=', in_base64	, outputBinary	); }
 }
 
 #endif //

@@ -18,8 +18,8 @@ static ::gpk::error_t					jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::
 	return 0;
 }
 
-static inline	::gpk::error_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
-static inline	::gpk::error_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, int32_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stainli	::gpk::error_t			floatRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, float	 & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
+stainli	::gpk::error_t			integerRead				(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, int32_t & out_value) { return ::jsonNumberLoad(readerCache, in_string, out_value); }
 
 static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SSTLFile & stlFile, ::gpk::vcs componentName)  {
 	::gpk::SNodeRenderer						& renderer				= scene.Renderer;

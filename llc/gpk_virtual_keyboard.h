@@ -31,7 +31,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SVirtualKeyboard {
-		int32_t											IdRoot;
+		int32_t										IdRoot;
 		::gpk::apod<uint16_t>						Keys;
 
 		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;

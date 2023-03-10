@@ -133,17 +133,17 @@ static constexpr	const uint8_t				rsbox	[256]							= {
   0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
 
 // The round constant word array, Rcon[i], contains the values given by x to the power (i-1) being powers of x (x is denoted as {02}) in the field GF(2^8)
-static constexpr	const uint8_t				Rcon	[11]							= {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
+stacxpr		uint8_t						Rcon	[11]							= {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
 
 // Jordan Goulder points out in PR #12 (https://github.com/kokke/tiny-AES-C/pull/12), that you can remove most of the elements in the Rcon array, because they are unused.
 // From Wikipedia's article on the Rijndael key schedule @ https://en.wikipedia.org/wiki/Rijndael_key_schedule#Rcon
 // "Only the first some of these constants are actually used – up to rcon[10] for AES-128 (as 11 round keys are needed),
 //  up to rcon[8] for AES-192, up to rcon[7] for AES-256. rcon[0] is not used in AES algorithm."
-static inline		uint8_t						getSBoxValue							(uint8_t num)														{ return  sbox[num]; }
-static inline		uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[num]; }
+stainli		uint8_t						getSBoxValue							(uint8_t num)														{ return  sbox[num]; }
+stainli		uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[num]; }
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
-static				void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, ::gpk::AES_LEVEL level)		{
+static		void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, ::gpk::AES_LEVEL level)		{
 	uint32_t											Nk = 0, Nr = 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nk = 4; Nr = 10; break;

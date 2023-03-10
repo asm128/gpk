@@ -6,35 +6,37 @@
 namespace gpk
 {
 
-	static constexpr	const uint64_t			NOISE_SEED			= 16381; // 525253
+	static constexpr	const uint64_t	NOISE_SEED			= 16381; // 525253
 
-						uint32_t				noise1DBase32		(uint32_t x, uint32_t noiseSeed = 15661)	noexcept;
-						uint64_t				noise1DBase			(uint64_t x, uint64_t noiseSeed = 16381)	noexcept;
-						double					noise1D				(uint64_t x, uint64_t noiseSeed = 16381)	noexcept;
-						double					noiseNormal1D		(uint64_t x, uint64_t noiseSeed = 16381)	noexcept;
-						double					noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = 16381)	noexcept;
-						double					noise3D				(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = 16381)	noexcept;
-						double					noiseNormal2D		(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = 16381)	noexcept;
-						double					noiseNormal3D		(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = 16381)	noexcept;
+	static constexpr	uint32_t		noise1DBase32		(uint32_t x, uint32_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883UL)  + 1500450271UL); }	// 1073741824.0
+	static constexpr	uint64_t		noise1DBase			(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883ULL)  + 10657331232548839ULL); }
+	static constexpr	double			noise1D				(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ return ( 1.0 - (::gpk::noise1DBase(x, noiseSeed)  & 0x7fFFffFFffFFffFFULL) / 4611686018427387904.0); }
+	static constexpr	double			noiseNormal1D		(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ return ::gpk::noise1D(x, noiseSeed) *.5 + .5f; }
+		   
+	static constexpr	double			noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth);							return ::gpk::noise1D(x, noiseSeed);		}
+	static constexpr	double			noise3D				(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth + (z * nHeight * nWidth));	return ::gpk::noise1D(x, noiseSeed);		}
+	static constexpr	double			noiseNormal2D		(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth);							return ::gpk::noiseNormal1D(x, noiseSeed);	}
+	static constexpr	double			noiseNormal3D		(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth + (z * nHeight * nWidth));	return ::gpk::noiseNormal1D(x, noiseSeed);	}
 
 #pragma pack(push, 1)
 	struct SPRNG {
-							uint64_t				Seed				= 16381;
-							uint64_t				Position			= 0;
-							uint64_t				Value				= 0;
+		uint64_t				Seed				= NOISE_SEED;
+		uint64_t				Position			= 0;
+		uint64_t				Value				= 0;
 
-		inline				uint64_t				Next				()				noexcept	{ return Value = ::gpk::noise1DBase(++Position, Seed); }
-							void					Reset				()				noexcept	{ Reset(Seed); }
-							void					Reset				(uint64_t seed)	noexcept	{
-			Seed										= seed;
-			Position									= 0;
-			Value										= 0;
+		inline	uint64_t		Next				()				noexcept	{ return Value = ::gpk::noise1DBase(++Position, Seed); }
+
+		inline	void			Reset				()				noexcept	{ Reset(Seed); }
+		void					Reset				(uint64_t seed)	noexcept	{
+			Seed					= seed;
+			Position				= 0;
+			Value					= 0;
 		}
 	};
 #pragma pack(pop)
 
 // --- Some primes that may come in handy
-	static constexpr	uint16_t				primes16bit []		=
+	static constexpr	uint16_t		primes16bit []		=
 	{ 14951,  14957,  14969,  14983,  15013,  15017,  15031,  15053,  15061, 15073
 	, 15077,  15083,  15091,  15101,  15107,  15121,  15131,  15137,  15139, 15149
 	, 15161,  15173,  15187,  15193,  15199,  15217,  15227,  15233,  15241, 15259

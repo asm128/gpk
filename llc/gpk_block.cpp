@@ -17,7 +17,7 @@
 ::gpk::error_t					gpk::blockRecordPath		(::gpk::apod<char_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)	{
 	::gpk::apod<char_t>					finalPath					= dbPath;
 	gpk_necs(::gpk::blockFilePath(finalPath, dbName, dbPath));
-	gpk_necs(::gpk::blockFileName(indices.IdBlock, dbName, finalPath, fileName));
+	gpk_necs(::gpk::blockFileName(fileName, indices.IdBlock, dbName, finalPath));
 	return 0;
 }
 
@@ -29,16 +29,16 @@
 	return 0;
 }
 
-::gpk::error_t					gpk::blockFileName			(const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName, ::gpk::apod<char_t> & fileName)	{
+::gpk::error_t					gpk::blockFileName			(::gpk::apod<char_t> & fileName, const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName)	{
 	if(folderName.size()) {
 		gpk_necs(fileName.append(folderName));
 		gpk_necs(fileName.push_back('/'));
 	}
-	gpk_necs(fileName.append(::gpk::vcs{"db."}));
+	gpk_necs(fileName.append_string("db."));
 	gpk_necs(fileName.append(dbName));
 
 	char								temp	[32]				= {};
-	snprintf(temp, ::gpk::size(temp) - 2, ".%u.ubk", idBlock);
+	snprintf(temp, ::gpk::size(temp) - 2, ".%u%s", idBlock, EXTENSION_BLOCK_FILE.begin());
 	gpk_necs(fileName.append_string(temp));
 	return 0;
 }

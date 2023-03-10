@@ -145,12 +145,24 @@ namespace gpk
 	template <typename T> using pnco		= ::gpk::ptr_nco<T>; 
 	template <typename T> using pobj		= ::gpk::ptr_obj<T>; 
 	template <typename T> using ppod		= ::gpk::ptr_pod<T>;
-	template <typename T> using array_pobj	= ::gpk::aobj<::gpk::pobj<T>>; 
-	template <typename T> using array_ppod	= ::gpk::aobj<::gpk::ppod<T>>;
+
+	template <typename T> using pn			= ::gpk::pnco<T>; 
+	template <typename T> using po			= ::gpk::pobj<T>; 
+	template <typename T> using pp			= ::gpk::ppod<T>;
+	template <typename T> using pi			= ::gpk::pn<T>; 
+
 	template <typename T> using apobj		= ::gpk::aobj<::gpk::pobj<T>>; 
 	template <typename T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
 	template <typename T> using paobj		= ::gpk::pobj<::gpk::aobj<T>>; 
 	template <typename T> using papod		= ::gpk::pobj<::gpk::apod<T>>;
+
+	template <typename T> using apo			= ::gpk::apobj<T>; 
+	template <typename T> using app			= ::gpk::appod<T>;
+	template <typename T> using pao			= ::gpk::paobj<T>; 
+	template <typename T> using pap			= ::gpk::papod<T>;
+
+	template <typename T> using array_pobj	= ::gpk::apobj<T>; 
+	template <typename T> using array_ppod	= ::gpk::appod<T>;
 
 	template <typename T> using vpobj		= ::gpk::view<::gpk::pobj<T>>; 
 	template <typename T> using vppod		= ::gpk::view<::gpk::ppod<T>>;

@@ -82,14 +82,11 @@
     <Filter Include="d3d">
       <UniqueIdentifier>{ea9dc06f-264e-4565-a096-4c11804cfff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cdn">
+      <UniqueIdentifier>{78d360d6-28ed-4b69-85db-ddf562b0c070}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpk_deflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_string_helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_array.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -191,9 +188,6 @@
     </ClInclude>
     <ClInclude Include="gpk_windows.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_keyval.h">
-      <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_grid_static.h">
       <Filter>container</Filter>
@@ -312,9 +306,6 @@
     <ClInclude Include="gpk_http_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view_manager.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -372,12 +363,6 @@
     <ClInclude Include="gpk_vox.h">
       <Filter>voxel</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_virtual_keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_sysevent.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -390,23 +375,38 @@
     <ClInclude Include="gpk_voxel_geometry.h">
       <Filter>voxel</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_complus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_d3d.h">
       <Filter>d3d</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_cdn.h">
+      <Filter>cdn</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block.h">
+      <Filter>cdn</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_font.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_virtual_keyboard.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_deflate.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_complus.h">
+      <Filter>type</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_deflate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_string_helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="llc_header_checkingg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -439,9 +439,6 @@
     </ClCompile>
     <ClCompile Include="gpk_windows.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_keyval.cpp">
-      <Filter>view</Filter>
     </ClCompile>
     <ClCompile Include="gpk_gui.cpp">
       <Filter>gui</Filter>
@@ -512,12 +509,6 @@
     <ClCompile Include="gpk_https_client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_block.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_mapblock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_rigidbody.cpp">
       <Filter>physics</Filter>
     </ClCompile>
@@ -560,20 +551,35 @@
     <ClCompile Include="gpk_xml_reader.cpp">
       <Filter>xml</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_virtual_keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_array.cpp">
       <Filter>container</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_font.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_voxel_geometry.cpp">
       <Filter>voxel</Filter>
     </ClCompile>
     <ClCompile Include="gpk_d3d.cpp">
       <Filter>d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_block.cpp">
+      <Filter>cdn</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_mapblock.cpp">
+      <Filter>cdn</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_virtual_keyboard.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_font.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_keyval.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_deflate.cpp">
+      <Filter>encoding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

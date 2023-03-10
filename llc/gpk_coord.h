@@ -551,7 +551,7 @@ namespace gpk
 	};
 
 	template<typename _tElement>
-							STriangle2<_tElement>&						translate								(::gpk::STriangle2<_tElement>& triangle, const ::gpk::n2<_tElement>& translation)									{
+							STriangle2<_tElement> &						translate								(::gpk::STriangle2<_tElement> & triangle, const ::gpk::n2<_tElement> & translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
@@ -559,14 +559,14 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-							STriangle3<_tElement>&						translate								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::n3<_tElement>& translation)									{
+							STriangle3<_tElement> &						translate								(::gpk::STriangle3<_tElement> & triangle, const ::gpk::n3<_tElement> & translation)									{
 		triangle.A															+= translation;
 		triangle.B															+= translation;
 		triangle.C															+= translation;
 		return triangle;
 	}
 	template<typename _tElement>
-							STriangle3<_tElement>&						scale								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::n3<_tElement>& scale)									{
+							STriangle3<_tElement> &						scale								(::gpk::STriangle3<_tElement> & triangle, const ::gpk::n3<_tElement> & scale)									{
 		triangle.A.Scale(scale);
 		triangle.B.Scale(scale);
 		triangle.C.Scale(scale);
@@ -575,11 +575,11 @@ namespace gpk
 #pragma pack(pop)
 
 	// ---- Line
-	template<typename _tElement>	static inline constexpr	_tElement				rise					(const SLine2<_tElement>& line)													noexcept	{ return line.B.y - line.A.y;		}
-	template<typename _tElement>	static inline constexpr	_tElement				run						(const SLine2<_tElement>& line)													noexcept	{ return line.B.x - line.A.x;		}
-	template<typename _tElement>	static inline constexpr	_tElement				slope					(const SLine2<_tElement>& line)																{ return rise(line) / run(line);	}
-	template<typename _tElement>	static		  constexpr	_tElement				orient2d				(const ::gpk::SLine2<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	template<typename _tElement>	static		  constexpr	_tElement				orient2d3d				(const ::gpk::SLine3<_tElement>& segment, const ::gpk::SCoord2<_tElement>& point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	stainli	constexpr	_tElement				rise					(const SLine2<_tElement> & line)														noexcept	{ return line.B.y - line.A.y;		}
+	template<typename _tElement>	stainli	constexpr	_tElement				run						(const SLine2<_tElement> & line)														noexcept	{ return line.B.x - line.A.x;		}
+	template<typename _tElement>	stainli	constexpr	_tElement				slope					(const SLine2<_tElement> & line)																	{ return rise(line) / run(line);	}
+	template<typename _tElement>	static	constexpr	_tElement				orient2d				(const ::gpk::SLine2<_tElement> & segment, const ::gpk::SCoord2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	static	constexpr	_tElement				orient2d3d				(const ::gpk::SLine3<_tElement> & segment, const ::gpk::SCoord2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 
 	// ---- Collision
 	//template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{
@@ -607,6 +607,16 @@ namespace gpk
 		,	AXIS_Y_NEGATIVE			= 0x8
 		,	AXIS_Z_POSITIVE			= 0x10
 		,	AXIS_Z_NEGATIVE			= 0x20
+		};
+
+	enum DIRECTION : uint8_t
+		{	DIRECTION_ORIGIN		= AXIS_ORIGIN	
+		,	DIRECTION_FRONT			= AXIS_X_POSITIVE
+		,	DIRECTION_BACK			= AXIS_X_NEGATIVE
+		,	DIRECTION_UP			= AXIS_Y_POSITIVE
+		,	DIRECTION_DOWN			= AXIS_Y_NEGATIVE
+		,	DIRECTION_RIGHT			= AXIS_Z_POSITIVE
+		,	DIRECTION_LEFT			= AXIS_Z_NEGATIVE
 		};
 
 	enum ALIGN : uint8_t
@@ -721,7 +731,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static inline		double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
+	stainli		double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 
 	template<typename _tValue>
 	::gpk::SCoord3<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }

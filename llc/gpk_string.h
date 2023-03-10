@@ -19,28 +19,28 @@ namespace gpk
 #if defined(GPK_WINDOWS)
 #	pragma warning(disable : 4996)
 #endif
-	static inline							int	strcat_s		(char *dst, size_t bufferSize, const char *src)										{
+	stainli							int	strcat_s		(char *dst, size_t bufferSize, const char *src)										{
 		if((uint32_t)strlen(dst)+(uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
 			return -1;
 		strcat(dst, src);
 		return 0;
 	}
 
-	static inline							int	strcpy_s		(char *dst, size_t bufferSize, const char *src)										{
+	stainli							int	strcpy_s		(char *dst, size_t bufferSize, const char *src)										{
 		if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
 			return -1;
 		strcpy(dst, src);
 		return 0;
 	}
 
-	static inline							int	strncpy_s		(char *dst, const char *src, size_t bufferSize)										{
+	stainli							int	strncpy_s		(char *dst, const char *src, size_t bufferSize)										{
 		//if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
 		//	return -1;
 		strncpy(dst, src, bufferSize);
 		return 0;
 	}
 
-	static inline							int	_snprintf_s		(char* buffer, size_t bufferSize, size_t count, const char* format, ...)			{
+	stainli							int	_snprintf_s		(char* buffer, size_t bufferSize, size_t count, const char* format, ...)			{
 		va_list args;
 		va_start(args, format);
 		const int									result			= vsnprintf( buffer, ::gpk::max(count, bufferSize - 1), format, args );
@@ -49,7 +49,7 @@ namespace gpk
 	}
 
 	template<size_t _bufferSize>
-	static inline							int	_snprintf_s		(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
+	stainli							int	_snprintf_s		(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
 		va_list args;
 		va_start(args, format);
 		const int									result			= _snprintf_s( buffer, _bufferSize, count, format, args );
@@ -57,7 +57,7 @@ namespace gpk
 		return result;
 	}
 
-	//static inline							int	sprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
+	//stainli							int	sprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
 	//	va_list args;
 	//	va_start(args, format);
 	//	const int									result			= vsprintf(buffer, format, args);
@@ -65,7 +65,7 @@ namespace gpk
 	//	return result;
 	//}
 
-	static inline							int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
+	stainli							int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
 		va_list args;
 		va_start(args, format);
 		const int									result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
@@ -74,7 +74,7 @@ namespace gpk
 	}
 
 	template<size_t _bufferSize>
-	static inline							int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
+	stainli							int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
 		va_list args;
 		va_start(args, format);
 		const int									result			= vsprintf_s(buffer, _bufferSize, format, args);
@@ -82,7 +82,7 @@ namespace gpk
 		return result;
 	}
 
-	static inline							int	sprintf_s		(char *buffer , uint32_t bufferSize, const char* format, ...)								{
+	stainli							int	sprintf_s		(char *buffer , uint32_t bufferSize, const char* format, ...)								{
 		va_list args;
 		va_start(args, format);
 		const int									result			= vsprintf_s(buffer, bufferSize, format, args);
@@ -90,11 +90,11 @@ namespace gpk
 		return result;
 	}
 
-	template<size_t _Size> static inline	int	strcat_s		( char (&dst)[_Size], const char *src )												{ return strcat_s	(dst, _Size, src);				}
-	template<size_t _Size> static inline	int	strcpy_s		( char (&dst)[_Size], const char *src )												{ return strcpy_s	(dst, _Size, src);				}
-	template<size_t _Size> static inline	int	strncpy_s		( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
-	static inline							int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
-	static inline							int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
+	template<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )												{ return strcat_s	(dst, _Size, src);				}
+	template<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )												{ return strcpy_s	(dst, _Size, src);				}
+	template<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
+	stainli							int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
+	stainli							int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
 #if defined(GPK_WINDOWS)
 #	pragma warning(default: 4996)
 #endif

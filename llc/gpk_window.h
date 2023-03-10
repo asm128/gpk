@@ -77,7 +77,7 @@ namespace gpk
 	::gpk::error_t												windowUpdateTick						(::gpk::SWindow & windowInstance);
 	::gpk::error_t												fullScreenExit							(::gpk::SWindow & windowInstance);
 	::gpk::error_t												fullScreenEnter							(::gpk::SWindow & windowInstance);
-	static inline ::gpk::error_t								fullScreenToggle						(::gpk::SWindow & windowInstance) { return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); }
+	stainli ::gpk::error_t								fullScreenToggle						(::gpk::SWindow & windowInstance) { return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); }
 
 } // namespace
 

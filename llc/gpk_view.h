@@ -26,13 +26,13 @@ namespace gpk
 		typedef	view<_tCell>		TView;
 
 		// Constructors
-		ginlcexpr					view					()												noexcept	= default;
+		inlcxpr						view					()												noexcept	= default;
 
 		template <size_t _elementCount>
-		ginlcexpr					view					(_tCell (&elements)[_elementCount])				noexcept	: Data(elements), Count(_elementCount)										{}
+		inlcxpr						view					(_tCell (&elements)[_elementCount])				noexcept	: Data(elements), Count(_elementCount)										{}
 
 		template <size_t _elementCount>
-		ginlcexpr					view					(uint32_t elementCount, _tCell (&elements)[_elementCount])	: Data(elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{}
+		inlcxpr						view					(uint32_t elementCount, _tCell (&elements)[_elementCount])	: Data(elements), Count(::gpk::min((uint32_t)_elementCount, elementCount))	{}
 
 		inline						view					(_tCell * elements, uint32_t elementCount)					: Data(elements), Count(elementCount)										{
 			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
@@ -44,7 +44,7 @@ namespace gpk
 		}
 
 		// Operators
-		ginlcexpr	operator		view<const _tCell>		()								const	noexcept	{ return {Data, Count}; }
+		inlcxpr	operator			view<const _tCell>		()								const	noexcept	{ return {Data, Count}; }
 
 		_tCell&						operator[]				(uint32_t index)									{
 			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
@@ -56,7 +56,7 @@ namespace gpk
 			gthrow_if(index >= Count, "Invalid index: %i.", index);
 			return Data[index];
 		}
-		bool						operator				!=(const TConstView & other)	const				{ return !operator==(other); }
+		inline	bool				operator				!=(const TConstView & other)	const				{ return !operator==(other); }
 		bool						operator				==(const TConstView & other)	const				{
 			if(this->size() != other.size())
 				return false;
@@ -67,10 +67,10 @@ namespace gpk
 
 		// Methods
 
-		ginlcexpr	const _tCell*	begin					()								const	noexcept	{ return Data;			}
-		ginlcexpr	const _tCell*	end						()								const	noexcept	{ return Data + Count;	}
-		ginlcexpr	const uint32_t&	size					()								const	noexcept	{ return Count;			}
-		ginlcexpr	const uint32_t	byte_count				()								const	noexcept	{ return (uint32_t)(Count * sizeof(_tCell));	}
+		inlcxpr	const _tCell*		begin					()								const	noexcept	{ return Data;			}
+		inlcxpr	const _tCell*		end						()								const	noexcept	{ return Data + Count;	}
+		inlcxpr	const uint32_t&		size					()								const	noexcept	{ return Count;			}
+		inlcxpr	const uint32_t		byte_count				()								const	noexcept	{ return (uint32_t)(Count * sizeof(_tCell));	}
 
 		inline	_tCell*				begin					()										noexcept	{ return Data;			}
 		inline	_tCell*				end						()										noexcept	{ return Data + Count;	}
@@ -143,63 +143,105 @@ namespace gpk
 	template<typename _tCell>	using view1d			= ::gpk::view<_tCell>;
 	template<typename _tCell>	using v1				= ::gpk::view<_tCell>;
 
-	template <typename _tCell>	ginlcexpr	uint32_t	size		(const ::gpk::view<_tCell> & viewToTest)	noexcept	{ return viewToTest.size();			}
-	template <typename _tCell>	ginlcexpr	uint32_t	byte_count	(const ::gpk::view<_tCell> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
+	template <typename _tCell>	inlcxpr	uint32_t	size		(const ::gpk::view<_tCell> & viewToTest)	noexcept	{ return viewToTest.size();			}
+	template <typename _tCell>	inlcxpr	uint32_t	byte_count	(const ::gpk::view<_tCell> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
 
 #pragma pack(pop)
 
 	// view_array common typedefs
-	//typedef				::gpk::view_array<char_t			>	view_string			;
-	typedef				::gpk::view_array<ubyte_t			>	view_ubyte			, v1ub, vub;
-	typedef				::gpk::view_array<byte_t			>	view_byte			, v1b, vb;
-	typedef				::gpk::view_array<uchar_t			>	view_uchar			, v1uc, vuc;
-	typedef				::gpk::view_array<char_t			>	view_char			, v1c, vc;
-	typedef				::gpk::view_array<float				>	view_float32		, v1f32, v1f, vf32, vf;
-	typedef				::gpk::view_array<double			>	view_float64		, v1f64, v1d, vf64, vd;
-	typedef				::gpk::view_array<uint8_t			>	view_uint8			, v1u8, vu8;
-	typedef				::gpk::view_array<uint16_t			>	view_uint16			, v1u16, vu16;
-	typedef				::gpk::view_array<uint32_t			>	view_uint32			, v1u32, vu32;
-	typedef				::gpk::view_array<uint64_t			>	view_uint64			, v1u64, vu64;
-	typedef				::gpk::view_array<int8_t			>	view_int8			, v1i8, vi8;
-	typedef				::gpk::view_array<int16_t			>	view_int16			, v1i16, vi16;
-	typedef				::gpk::view_array<int32_t			>	view_int32			, v1i32, vi32;
-	typedef				::gpk::view_array<int64_t			>	view_int64			, v1i64, vi64;
+	typedef				::gpk::view<ubyte_t				>	view_ubyte			, v1ub, vub;
+	typedef				::gpk::view<byte_t				>	view_byte			, v1b, vb;
+	typedef				::gpk::view<uchar_t				>	view_uchar			, v1uc, vuc;
+	typedef				::gpk::view<char_t				>	view_char			, v1c, vc;
+	typedef				::gpk::view<float				>	view_float32		, v1f32, v1f, vf32, vf;
+	typedef				::gpk::view<double				>	view_float64		, v1f64, v1d, vf64, vd;
+	typedef				::gpk::view<uint8_t				>	view_uint8			, v1u8, vu8;
+	typedef				::gpk::view<uint16_t			>	view_uint16			, v1u16, vu16;
+	typedef				::gpk::view<uint32_t			>	view_uint32			, v1u32, vu32;
+	typedef				::gpk::view<uint64_t			>	view_uint64			, v1u64, vu64;
+	typedef				::gpk::view<int8_t				>	view_int8			, v1i8, vi8;
+	typedef				::gpk::view<int16_t				>	view_int16			, v1i16, vi16;
+	typedef				::gpk::view<int32_t				>	view_int32			, v1i32, vi32;
+	typedef				::gpk::view<int64_t				>	view_int64			, v1i64, vi64;
 
 	// view_array<const> common typedefs
-	//typedef				::gpk::view_array<const char_t		>	view_const_string	;
-	typedef				::gpk::view_array<const ubyte_t		>	view_const_ubyte	, v1cub, vcub;
-	typedef				::gpk::view_array<const byte_t		>	view_const_byte		, v1cb, vcb;
-	typedef				::gpk::view_array<const uchar_t		>	view_const_uchar	, v1cuc, vcuc;
-	typedef				::gpk::view_array<const char_t		>	view_const_char		, v1cc, vcc;
-	typedef				::gpk::view_array<const float		>	view_const_float32	, v1cf32, v1cf, vcf32, vcf;
-	typedef				::gpk::view_array<const double		>	view_const_float64	, v1cf64, v1cd, vcf64, vcd;
-	typedef				::gpk::view_array<const uint8_t		>	view_const_uint8	, v1cu8, vcu8;
-	typedef				::gpk::view_array<const uint16_t	>	view_const_uint16	, v1cu16, vcu16;
-	typedef				::gpk::view_array<const uint32_t	>	view_const_uint32	, v1cu32, vcu32;
-	typedef				::gpk::view_array<const uint64_t	>	view_const_uint64	, v1cu64, vcu64;
-	typedef				::gpk::view_array<const int8_t		>	view_const_int8		, v1ci8, vci8;
-	typedef				::gpk::view_array<const int16_t		>	view_const_int16	, v1ci16, vci16;
-	typedef				::gpk::view_array<const int32_t		>	view_const_int32	, v1ci32, vci32;
-	typedef				::gpk::view_array<const int64_t		>	view_const_int64	, v1ci64, vci64;
+	typedef				::gpk::view<const ubyte_t		>	view_const_ubyte	, v1cub, vcub;
+	typedef				::gpk::view<const byte_t		>	view_const_byte		, v1cb, vcb;
+	typedef				::gpk::view<const uchar_t		>	view_const_uchar	, v1cuc, vcuc;
+	typedef				::gpk::view<const char_t		>	view_const_char		, v1cc, vcc;
+	typedef				::gpk::view<const float			>	view_const_float32	, v1cf32, v1cf, vcf32, vcf;
+	typedef				::gpk::view<const double		>	view_const_float64	, v1cf64, v1cd, vcf64, vcd;
+	typedef				::gpk::view<const uint8_t		>	view_const_uint8	, v1cu8, vcu8;
+	typedef				::gpk::view<const uint16_t		>	view_const_uint16	, v1cu16, vcu16;
+	typedef				::gpk::view<const uint32_t		>	view_const_uint32	, v1cu32, vcu32;
+	typedef				::gpk::view<const uint64_t		>	view_const_uint64	, v1cu64, vcu64;
+	typedef				::gpk::view<const int8_t		>	view_const_int8		, v1ci8, vci8;
+	typedef				::gpk::view<const int16_t		>	view_const_int16	, v1ci16, vci16;
+	typedef				::gpk::view<const int32_t		>	view_const_int32	, v1ci32, vci32;
+	typedef				::gpk::view<const int64_t		>	view_const_int64	, v1ci64, vci64;
+
+	typedef				::gpk::view<::gpk::vub	>	vvub;
+	typedef				::gpk::view<::gpk::vb	>	vvb;
+	typedef				::gpk::view<::gpk::vuc	>	vvuc;
+	typedef				::gpk::view<::gpk::vc	>	vvc;
+	typedef				::gpk::view<::gpk::v1f	>	vv1f;
+	typedef				::gpk::view<::gpk::v1d	>	vv1d;
+	typedef				::gpk::view<::gpk::vu8	>	vvu8;
+	typedef				::gpk::view<::gpk::vu16	>	vvu16;
+	typedef				::gpk::view<::gpk::vu32	>	vvu32;
+	typedef				::gpk::view<::gpk::vu64	>	vvu64;
+	typedef				::gpk::view<::gpk::vi8	>	vvi8;
+	typedef				::gpk::view<::gpk::vi16	>	vvi16;
+	typedef				::gpk::view<::gpk::vi32	>	vvi32;
+	typedef				::gpk::view<::gpk::vi64	>	vvi64;
+
+	// view_array<const> common typedefs
+	typedef				::gpk::view<const vcub	>	vcvcub;
+	typedef				::gpk::view<const vcb	>	vcvcb;
+	typedef				::gpk::view<const vcuc	>	vcvcuc;
+	typedef				::gpk::view<const vcc	>	vcvcc;
+	typedef				::gpk::view<const v1cf	>	vcv1cf;
+	typedef				::gpk::view<const v1cd	>	vcv1cd;
+	typedef				::gpk::view<const vcu8	>	vcvcu8;
+	typedef				::gpk::view<const vcu16	>	vcvcu16;
+	typedef				::gpk::view<const vcu32	>	vcvcu32;
+	typedef				::gpk::view<const vcu64	>	vcvcu64;
+	typedef				::gpk::view<const vci8	>	vcvci8;
+	typedef				::gpk::view<const vci16	>	vcvci16;
+	typedef				::gpk::view<const vci32	>	vcvci32;
+	typedef				::gpk::view<const vci64	>	vcvci64;
+
+	static constexpr ::gpk::vcc		STR_NULL		= {4, "null"};
+	static constexpr ::gpk::vcc		STR_TRUE		= {4, "true"};
+	static constexpr ::gpk::vcc		STR_FALSE		= {5, "false"};
 
 	struct view_string : public view<char_t> {
-		ginlcexpr						view_string				()															= default;
-		ginlcexpr						view_string				(const view_char & other)						noexcept	: view(other)				{}
+		inlcxpr							view_string				()															= default;
+		inlcxpr							view_string				(const view_char & other)						noexcept	: view(other)				{}
 										view_string				(char * inputString, uint32_t length)						: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
 		template<size_t _stringLength>	view_string				(char (&inputString)[_stringLength])			noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);								}
 		template<size_t _stringLength>	view_string				(char (&inputString)[_stringLength], uint32_t length)		: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);	}
 	};
 
 	struct view_const_string : public view<const char_t> {
-		ginlcexpr						view_const_string		()															= default;
-		ginlcexpr						view_const_string		(const view_const_char & other)					noexcept	: view(other)				{}
+		inlcxpr							view_const_string		()															= default;
+		inlcxpr							view_const_string		(const view_const_char & other)					noexcept	: view(other)				{}
 										view_const_string		(const char* inputString, uint32_t length)					: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
 		template<size_t _stringLength>	view_const_string		(const char (&inputString)[_stringLength])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);								}
 		template<size_t _stringLength>	view_const_string		(const char (&inputString)[_stringLength], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);	}
 	};
 
-	typedef	::gpk::view_const_string	vcs;
-	typedef	::gpk::view_string			vs;
+	typedef				::gpk::view_string					vs;
+	typedef				::gpk::view_const_string			vcs;
+
+	typedef				::gpk::view<::gpk::vs			>	vvs;
+	typedef				::gpk::view<::gpk::vcs			>	vvcs;
+	typedef				::gpk::view<const ::gpk::vs		>	vcvs;
+	typedef				::gpk::view<const ::gpk::vcs	>	vcvcs;
+
+
+
+
 
 	constexpr ::gpk::vcc			TRIM_CHARACTERS			= " \t\b\n\r";
 
@@ -208,9 +250,9 @@ namespace gpk
 	::gpk::error_t					rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = TRIM_CHARACTERS);
 	::gpk::error_t					ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = TRIM_CHARACTERS);
 	::gpk::error_t					trim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = TRIM_CHARACTERS);
-	static inline	::gpk::error_t	rtrim					(::gpk::vcc & trimmed) 	{ return rtrim(trimmed, trimmed); }
-	static inline	::gpk::error_t	ltrim					(::gpk::vcc & trimmed) 	{ return ltrim(trimmed, trimmed); }
-	static inline	::gpk::error_t	trim					(::gpk::vcc & trimmed) 	{ return trim(trimmed, trimmed); }
+	stainli	::gpk::error_t	rtrim					(::gpk::vcc & trimmed) 	{ return rtrim(trimmed, trimmed); }
+	stainli	::gpk::error_t	ltrim					(::gpk::vcc & trimmed) 	{ return ltrim(trimmed, trimmed); }
+	stainli	::gpk::error_t	trim					(::gpk::vcc & trimmed) 	{ return trim(trimmed, trimmed); }
 
 
 	template <typename _tCell>
@@ -288,8 +330,8 @@ namespace gpk
 		return -1;
 	}
 
-	static inline	::gpk::error_t	find_string				(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::find_sequence_pod (toFind, target, offset); }
-	static inline	::gpk::error_t	rfind_string			(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(toFind, target, offset); }
+	stainli	::gpk::error_t			find_string				(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::find_sequence_pod (toFind, target, offset); }
+	stainli	::gpk::error_t			rfind_string			(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(toFind, target, offset); }
 
 	template<typename _tCell>
 	::gpk::error_t					split					(const _tCell & valueToFind, const ::gpk::view<_tCell> & original, ::gpk::view<_tCell> & left, ::gpk::view<_tCell> & right) {
@@ -381,17 +423,15 @@ namespace gpk
 
 	template<typename _tCell>
 	_tCell&							max						(::gpk::view<_tCell> input) {
-		ree_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		_tCell								* result				= 0;
-		gpk_necs(::gpk::max(input, &result));
+		gthrow_if(errored(::gpk::max(input, &result)), "%s", "");
 		return *result;
 	}
 
 	template<typename _tCell>
 	_tCell&							min						(::gpk::view<_tCell> input) {
-		ree_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		_tCell								* result				= 0;
-		gpk_necs(::gpk::min(input, &result));
+		gthrow_if(errored(::gpk::min(input, &result)), "%s", "");
 		return *result;
 	}
 

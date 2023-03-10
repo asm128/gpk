@@ -14,8 +14,8 @@ static	::gpk::error_t										expressionReaderViews					(::gpk::apod<::gpk::SEx
 	return 0;
 }
 
-static	::gpk::error_t										expressionTreeRebuild					(::gpk::view<::gpk::SExpressionToken>& in_object, ::gpk::aobj<::gpk::pobj<::gpk::SExpressionNode>> & out_nodes)								{
-	::gpk::aobj<::gpk::pobj<::gpk::SExpressionNode>>		& tree									= out_nodes;
+static	::gpk::error_t										expressionTreeRebuild					(::gpk::view<::gpk::SExpressionToken>& in_object, ::gpk::apobj<::gpk::SExpressionNode> & out_nodes)								{
+	::gpk::apobj<::gpk::SExpressionNode>		& tree									= out_nodes;
 	gpk_necall(tree.resize(in_object.size()), "Out of memory? Object count: %u.", in_object.size());
 
 	// -- Build all nodes linearly, without assigning the children
@@ -368,9 +368,9 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	return 0;
 }
 
-::gpk::error_t												gpk::expressionReaderParse				(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression)	{
-	::gpk::SExpressionReaderState									& stateReader							= reader.StateRead;
-	::gpk::apod<::gpk::SExpressionToken>					& tokens								= reader.Token;
+::gpk::error_t							gpk::expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression)	{
+	::gpk::SExpressionReaderState				& stateReader						= reader.StateRead;
+	::gpk::apod<::gpk::SExpressionToken>		& tokens							= reader.Token;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < expression.size(); ++stateReader.IndexCurrentChar) {
 		gpk_necall(::gpk::expressionReaderParseStep(reader, expression), "%s", "Unknown error.");
 		if(stateReader.IndexCurrentChar < expression.size() && expression[stateReader.IndexCurrentChar] == 0)

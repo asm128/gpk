@@ -57,7 +57,7 @@ namespace gpk
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	template<typename _tElement>
-	static inline		void												particleIntegratePosition
+	stainli		void												particleIntegratePosition
 		(	const ::gpk::SCoord2<_tElement>	& velocity
 		,	const double					timeElapsed
 		,	const double					timeElapsedHalfSquared
@@ -157,7 +157,7 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-	static inline			::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stainli			::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 

@@ -6,16 +6,16 @@
 namespace gpk
 {
 	struct SHTTPServer {
-		::gpk::auto_socket_close							Socket;
-		::gpk::aobj<::gpk::pobj<::gpk::STCPConnection>>		Clients;
-		::std::mutex										Mutex;
-		::gpk::SIPv4										Address								= {};
-		bool												Listen								= false;
-		int32_t												Timeout								= 3000000;	// Kill clients timeout
+		::gpk::auto_socket_close			Socket;
+		::gpk::apobj<::gpk::STCPConnection>	Clients;
+		::std::mutex						Mutex;
+		::gpk::SIPv4						Address						= {};
+		bool								Listen						= false;
+		int32_t								Timeout						= 3000000;	// Kill clients timeout
 	};
 
-	::gpk::error_t										serverStart					(::gpk::SHTTPServer& serverInstance, uint16_t port);
-	::gpk::error_t										serverStop					(::gpk::SHTTPServer& serverInstance);
+	::gpk::error_t						serverStart					(::gpk::SHTTPServer& serverInstance, uint16_t port);
+	::gpk::error_t						serverStop					(::gpk::SHTTPServer& serverInstance);
 
 } // namespace
 

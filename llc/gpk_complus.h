@@ -1,3 +1,7 @@
+#include "gpk_platform.h"
+
+#ifdef GPK_WINDOWS
+
 #include "gpk_windows.h"
 
 #include <Unknwn.h>
@@ -63,5 +67,7 @@ namespace gpk
 	template <typename T> using pcom		= ::gpk::ptr_com<T>;
 	template <typename T> using acom		= ::gpk::aobj<::gpk::pcom<T>>;
 }
+
+#endif // GPK_WINDOWS
 
 #endif // GPK_COMPLUS_H_982734

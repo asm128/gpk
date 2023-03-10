@@ -7,8 +7,8 @@ namespace gpk
 {
 	typedef						int32_t					error_t;
 
-	static inline constexpr		bool					failed					(const error_t errorCode)		noexcept	{ return errorCode < 0;		}
-	static inline constexpr		bool					succeeded				(const error_t errorCode)		noexcept	{ return 0 <= errorCode;	}
+	stainli constexpr		bool					failed					(const error_t errorCode)		noexcept	{ return errorCode < 0;		}
+	stainli constexpr		bool					succeeded				(const error_t errorCode)		noexcept	{ return 0 <= errorCode;	}
 
 	static constexpr	::gpk::error_t OS_OK                = 0;
 	static constexpr	::gpk::error_t OS_ERROR             = -1;

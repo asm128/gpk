@@ -1014,7 +1014,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view<ubyte_t
 	return 0;
 }
 
-static inline		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
+stainli		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	verbose_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."

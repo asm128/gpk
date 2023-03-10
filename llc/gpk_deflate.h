@@ -31,8 +31,8 @@ namespace gpk
 
 	::gpk::error_t											arrayDeflate					(const ::gpk::vcb	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE);
 	::gpk::error_t											arrayInflate					(const ::gpk::vcb	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE);
-	static inline	::gpk::error_t							arrayDeflate					(const ::gpk::vcub	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE) { return arrayDeflate(::gpk::vcb{(const char*)inflated.begin(), inflated.size()}, deflated, chunkSize); }
-	static inline	::gpk::error_t							arrayInflate					(const ::gpk::vcub	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE) { return arrayInflate(::gpk::vcb{(const char*)deflated.begin(), deflated.size()}, inflated, chunkSize); }
+	stainli	::gpk::error_t							arrayDeflate					(const ::gpk::vcub	& inflated, ::gpk::apod<byte_t> & deflated, const uint32_t chunkSize = DEFLATE_DEFAULT_CHUNK_SIZE) { return arrayDeflate(::gpk::vcb{(const char*)inflated.begin(), inflated.size()}, deflated, chunkSize); }
+	stainli	::gpk::error_t							arrayInflate					(const ::gpk::vcub	& deflated, ::gpk::apod<byte_t> & inflated, const uint32_t chunkSize = INFLATE_DEFAULT_CHUNK_SIZE) { return arrayInflate(::gpk::vcb{(const char*)deflated.begin(), deflated.size()}, inflated, chunkSize); }
 	::gpk::error_t											folderPack						(::gpk::SFolderPackage	& out_packed, const ::gpk::vcs nameFolderSrc);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcb & rawFileInMemory);
 	::gpk::error_t											folderUnpack					(::gpk::SFolderInMemory	& out_loaded, const ::gpk::vcs nameFileSrc);
@@ -52,8 +52,8 @@ namespace gpk
 
 					::gpk::error_t							fileToMemorySecure				(::gpk::SLoadCache& recycle, ::gpk::apod<char_t>		& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate);
 					::gpk::error_t							fileFromMemorySecure			(::gpk::SLoadCache& recycle, const ::gpk::vcc			& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate);
-	static inline	::gpk::error_t							fileToMemorySecure				(::gpk::apod<char_t>	& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure	(temp, loadedBytes	, fileName, key, deflate); }
-	static inline	::gpk::error_t							fileFromMemorySecure			(const ::gpk::vcc		& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure	(temp, blockBytes	, fileName, key, deflate); }
+	stainli	::gpk::error_t							fileToMemorySecure				(::gpk::apod<char_t>	& loadedBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure	(temp, loadedBytes	, fileName, key, deflate); }
+	stainli	::gpk::error_t							fileFromMemorySecure			(const ::gpk::vcc		& blockBytes	, const ::gpk::vcc & fileName, const ::gpk::vcc & key, const bool deflate) { ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure	(temp, blockBytes	, fileName, key, deflate); }
 
 } // namespace
 

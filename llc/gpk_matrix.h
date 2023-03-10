@@ -485,14 +485,14 @@ namespace gpk
 		}
 	};	// struct
 	template<typename _tElement>
-							STriangle3<_tElement>&						transform								(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SMatrix4<_tElement>& transform)									{
+							STriangle3<_tElement> &						transform								(::gpk::STriangle3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
 		triangle.A															= transform.Transform(triangle.A);
 		triangle.B															= transform.Transform(triangle.B);
 		triangle.C															= transform.Transform(triangle.C);
 		return triangle;
 	}
 	template<typename _tElement>
-							STriangle3<_tElement>&						transformDirection						(::gpk::STriangle3<_tElement>& triangle, const ::gpk::SMatrix4<_tElement>& transform)									{
+							STriangle3<_tElement> &						transformDirection						(::gpk::STriangle3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
 		triangle.A															= transform.TransformDirection(triangle.A);
 		triangle.B															= transform.TransformDirection(triangle.B);
 		triangle.C															= transform.TransformDirection(triangle.C);

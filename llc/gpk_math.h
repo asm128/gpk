@@ -20,20 +20,20 @@ namespace gpk
 	static constexpr		const double	math_pi_180				= ::gpk::math_pi / 180.0;				// Pi / 180.0
 	static constexpr		const double	math_epsilon			= 0.00001;
 
-	static inline			uint64_t		powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
+	stainli			uint64_t		powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
 
 	template<typename _tNumber>
-	static inline constexpr	double			sqrt_safe				(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
+	stainli constexpr	double			sqrt_safe				(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
 
 	template<typename _tNumber>
-	static inline constexpr	_tNumber		clamp					(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
+	stainli constexpr	_tNumber		clamp					(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
 
 	template<typename _tNumber>
 	constexpr				_tNumber		interpolate_linear		(const _tNumber a, const _tNumber b, const double factor)			noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct					SPairSinCos		{ double Sin, Cos; };
 
-	static inline			SPairSinCos		getSinCos				(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
+	stainli			SPairSinCos		getSinCos				(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
 
 	// Calculate determinant of matrix:
 	// [a b]
@@ -41,25 +41,25 @@ namespace gpk
 	constexpr				double			determinant				(double a, double b, double c, double d)							noexcept	{ return a * d - b * c; }
 
 #if defined(GPK_ATMEL)
-	static inline int		abs		(int	f) { return ::abs	(f); }
-	static inline double	abs		(double	f) { return ::abs	(f); }
-	static inline double	fabs	(double	f) { return ::fabs	(f); }
-	static inline double	atan	(double	f) { return ::atan	(f); }
-	static inline double	cos		(double	f) { return ::cos	(f); }
-8	static inline double	acos	(double	f) { return ::acos	(f); }
-	static inline double	sin		(double	f) { return ::sin	(f); }
-	static inline double	asin	(double	f) { return ::asin	(f); }
-	static inline double	sqrt	(double	f) { return ::sqrt	(f); }
+	stainli int		abs		(int	f) { return ::abs	(f); }
+	stainli double	abs		(double	f) { return ::abs	(f); }
+	stainli double	fabs	(double	f) { return ::fabs	(f); }
+	stainli double	atan	(double	f) { return ::atan	(f); }
+	stainli double	cos		(double	f) { return ::cos	(f); }
+8	stainli double	acos	(double	f) { return ::acos	(f); }
+	stainli double	sin		(double	f) { return ::sin	(f); }
+	stainli double	asin	(double	f) { return ::asin	(f); }
+	stainli double	sqrt	(double	f) { return ::sqrt	(f); }
 #elif defined(GPK_WINDOWS)
-	static inline int		abs		(int	f) { return ::abs	(f); }
-	static inline double	abs		(double	f) { return ::abs	(f); }
-	static inline double	fabs	(double	f) { return ::fabs	(f); }
-	static inline double	atan	(double	f) { return ::atan	(f); }
-	static inline double	cos		(double	f) { return ::cos	(f); }
-	static inline double	acos	(double	f) { return ::acos	(f); }
-	static inline double	sin		(double	f) { return ::sin	(f); }
-	static inline double	asin	(double	f) { return ::asin	(f); }
-	static inline double	sqrt	(double	f) { return ::sqrt	(f); }
+	stainli int		abs		(int	f) { return ::abs	(f); }
+	stainli double	abs		(double	f) { return ::abs	(f); }
+	stainli double	fabs	(double	f) { return ::fabs	(f); }
+	stainli double	atan	(double	f) { return ::atan	(f); }
+	stainli double	cos		(double	f) { return ::cos	(f); }
+	stainli double	acos	(double	f) { return ::acos	(f); }
+	stainli double	sin		(double	f) { return ::sin	(f); }
+	stainli double	asin	(double	f) { return ::asin	(f); }
+	stainli double	sqrt	(double	f) { return ::sqrt	(f); }
 #else
 	using	std::abs	;
 	using	std::fabs	;

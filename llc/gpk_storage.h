@@ -14,7 +14,7 @@ namespace gpk
 					::gpk::error_t									pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::apod<char_t>>& output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 					::gpk::error_t									pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::vcc>& output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 					::gpk::error_t									pathList				(const ::gpk::vcc & pathToList, SPathContents & out_Contents, const ::gpk::vcc extension = {});		// Recursive
-	static inline	::gpk::error_t									pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, const ::gpk::vcc extension = {}) {
+	stainli	::gpk::error_t									pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, const ::gpk::vcc extension = {}) {
 		::gpk::SPathContents												tree					= {};
 		int32_t error = ::gpk::pathList(pathToList, tree, extension);
 		gpk_necs(error |= ::gpk::pathList(tree, output, extension));

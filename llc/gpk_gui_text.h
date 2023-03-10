@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	static inline constexpr	::gpk::error_t										textLineCalcWidth								(const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::vcs& text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
+	stainli constexpr	::gpk::error_t										textLineCalcWidth								(const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::vcs& text0)		{ return (::gpk::error_t)(sizeCharCell.x * text0.size()); }
 
 	template<typename _tColor>
 	static					::gpk::error_t										textLineDrawFixedSize							(::gpk::view2d<_tColor>& target, const ::gpk::view2d<_tColor>& viewTextureFont, uint32_t characterCellsX, int32_t dstOffsetY, const ::gpk::SCoord2<int32_t>& sizeCharCell, const ::gpk::vcs& text0, const ::gpk::SCoord2<int32_t> dstTextOffset)	{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.

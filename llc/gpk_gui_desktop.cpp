@@ -74,8 +74,8 @@ static		::gpk::error_t												pushToFrontAndDisplace							(::gpk::SGUI & gu
 	const int32_t																parentControlId									= gui.Controls.Controls[iControl].Parent;
 	for(uint32_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
 		if(gui.Controls.Children[parentControlId][iChild] == iControl) {
-			gpk_necall(gui.Controls.Children[parentControlId].remove(iChild)		, "%s", "Unknown issue!");
-			gpk_necall(gui.Controls.Children[parentControlId].push_back(iControl)	, "%s", "Unknown issue!");
+			gpk_necs(gui.Controls.Children[parentControlId].remove(iChild));
+			gpk_necs(gui.Controls.Children[parentControlId].push_back(iControl));
 			break;
 		}
 	if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)

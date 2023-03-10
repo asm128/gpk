@@ -34,9 +34,9 @@ namespace gpk
 					::gpk::error_t					tcpipAddressFromSockaddr			(const sockaddr_in& sockaddr, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
 					::gpk::error_t					tcpipAddress						(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port);
 
-	static inline	::gpk::error_t					tcpipAddressToSockaddr				(const ::gpk::SIPv4 & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		(&addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port, sockaddr); }
-	static inline	::gpk::error_t					tcpipAddressFromSockaddr			(const sockaddr_in& sockaddr, ::gpk::SIPv4 & addr)	{ return tcpipAddressFromSockaddr	(sockaddr	, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
-	static inline	::gpk::error_t					tcpipAddress						(SOCKET socket, ::gpk::SIPv4 & addr)				{ return tcpipAddress				(socket		, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
+	stainli	::gpk::error_t					tcpipAddressToSockaddr				(const ::gpk::SIPv4 & addr, sockaddr_in & sockaddr)	{ return tcpipAddressToSockaddr		(&addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port, sockaddr); }
+	stainli	::gpk::error_t					tcpipAddressFromSockaddr			(const sockaddr_in& sockaddr, ::gpk::SIPv4 & addr)	{ return tcpipAddressFromSockaddr	(sockaddr	, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
+	stainli	::gpk::error_t					tcpipAddress						(SOCKET socket, ::gpk::SIPv4 & addr)				{ return tcpipAddress				(socket		, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
 } // namespace
 
 #endif // GPK_STDSOCKET_H_9287349823
