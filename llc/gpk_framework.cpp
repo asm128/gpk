@@ -42,11 +42,10 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 	return 0;
 }
 					::gpk::error_t		gpk::updateFramework						(::gpk::SFramework& framework)													{
-	if(0 == framework.Input.get_ref())
-		framework.Input.create();
 	if(0 == framework.GUI.get_ref())
 		framework.GUI.create();
-	::gpk::SInput								& input										= *framework.Input;
+	::gpk::SWindow								& mainWindow								= framework.RootWindow;
+	::gpk::SInput								& input										= *mainWindow.Input;
 	input.KeyboardPrevious					= input.KeyboardCurrent;
 	input.MousePrevious						= input.MouseCurrent;
 	input.MouseCurrent.Deltas				= {};
@@ -70,7 +69,6 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
-	::gpk::SWindow								& mainWindow								= framework.RootWindow;
 #if defined(GPK_XCB)
 	::gpk::pobj<::gpk::rt<::gpk::SColorBGRA, uint32_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
@@ -137,13 +135,13 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 	::gpk::SGUI																					& gui										= *framework.GUI;
 	{
 		::gpk::mutex_guard																			lock										(framework.LockGUI);
-		::gpk::guiProcessInput(gui, *framework.Input, mainWindow.EventQueue);
+		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
 	}
 
 	if(framework.Settings.GUIZoom) {
-		if(framework.Input->MouseCurrent.Deltas.z) {
+		if(mainWindow.Input->MouseCurrent.Deltas.z) {
 			::gpk::mutex_guard																			lock										(framework.LockGUI);
-			if(framework.Input->MouseCurrent.Deltas.z > 0) {
+			if(mainWindow.Input->MouseCurrent.Deltas.z > 0) {
 				if(gui.Zoom.ZoomLevel > 1)
 					++gui.Zoom.ZoomLevel;
 				else
@@ -407,7 +405,7 @@ static	::gpk::error_t			xcbWindowCreate								(::gpk::SWindow & window) {
 #if defined(GPK_WINDOWS)
 	::gpk::SWindowPlatformDetail			& displayDetail								= mainWindow.PlatformDetail;
 	HINSTANCE								hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
-	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName, ::mainWndProc, displayDetail.WindowClass);
+	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName.begin(), ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
 	::RECT									finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
 	DWORD									windowStyle									= WS_OVERLAPPEDWINDOW; //WS_POPUP;
