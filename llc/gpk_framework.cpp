@@ -181,10 +181,12 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	static	const int						adjustedMinRect								= ::AdjustWindowRectEx(&minClientRect, WS_OVERLAPPEDWINDOW, FALSE, 0);
 	if(0 == ::GetWindowLongPtrA(hWnd, GWLP_USERDATA))
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+
 	::gpk::SWindow							& mainDisplay								= *(::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
 	
 	if(!mainDisplay.Input)
 		mainDisplay.Input.create();
+
 	::gpk::SInput							& input										= *mainDisplay.Input;
 	::gpk::SWindowPlatformDetail			& displayDetail								= mainDisplay.PlatformDetail;
 
@@ -237,7 +239,7 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		input.MouseCurrent.Deltas.x			= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 		input.MouseCurrent.Deltas.y			= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
-			mainDisplay.Repaint = true;
+			mainDisplay.Repaint					= true;
 
 		newEvent.Type						= ::gpk::SYSEVENT_MOUSE_POSITION; 
 		newEvent.Data.append((const ubyte_t*)&mousePos, sizeof(mousePos)); 

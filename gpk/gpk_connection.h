@@ -2,6 +2,8 @@
 #include "gpk_stdsocket.h"
 #include "gpk_enum.h"
 
+#include <functional>
+
 #ifndef GPK_CONNECTION_H_20347892908347
 #define GPK_CONNECTION_H_20347892908347
 
@@ -86,6 +88,57 @@ namespace gpk
 
 	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cub & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
 		return connectionPushData(client, queue, ::gpk::v1cb{(const byte_t*)data.begin(), data.size()}, bEncrypted, bCompress, retryCount);
+	}
+
+	template<typename _tWithLoad, typename _tState> 
+	::gpk::error_t				processUDPClientQueueEvents	
+		( _tWithLoad						& eventCache
+		, uint32_t							iClient
+		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
+		, _tState							& state
+		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		) {
+		for(uint32_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
+			const ::gpk::SUDPMessage	& message			= *clientQueue[iMessage];
+			switch(message.Command.Command) {
+			case ::gpk::ENDPOINT_COMMAND_PAYLOAD: {
+				::gpk::vcub						payloadInput		= {(const ubyte_t*)message.Payload.begin(), message.Payload.size()};
+				gpk_necs(eventCache.Load(payloadInput));
+				switch(message.Command.Type) {
+				case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	: 
+					gpk_necs(funcProcessRequest(iClient, state, eventCache)); 
+					break;
+				}
+				break;
+			}
+			}
+		}
+		return 0;
+	}
+
+	template<typename _tWithLoad, typename _tState> 
+	stainli	::gpk::error_t		processUDPClientQueueEvents	
+		( uint32_t							iClient
+		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
+		, _tState							& state
+		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
+		) {
+		_tWithLoad						eventCache			= {};
+		return ::gpk::processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
+	}
+
+	template<typename _tEvent, typename _tState> 
+	::gpk::error_t				processUDPEvents
+		( ::gpk::view<const ::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
+		, _tState												& state
+		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
+		) {
+		_tEvent							eventReceived		= {};
+		for(uint32_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
+			 const ::gpk::apobj<::gpk::SUDPMessage>	& clientQueue		= queueReceived[iClient];
+			 gpk_necs(::gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
+		}
+		return 0;
 	}
 
 }

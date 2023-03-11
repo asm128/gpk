@@ -475,6 +475,23 @@ namespace gpk
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tCell);
 	}
 
+	template<typename _tPOD> 
+	::gpk::error_t					loadPOD					(::gpk::vcb & input, _tPOD & output) { 
+		::gpk::view<const _tPOD>			readView				= {}; 
+		uint32_t							bytesRead				= 0;
+		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
+		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output							= readView[0]; 
+		return 0;
+	}
+
+	template<typename _tPOD> 
+	::gpk::error_t					loadView				(::gpk::vcub & input, ::gpk::view<const _tPOD> & output) { 
+		uint32_t							bytesRead				= 0;
+		gpk_necs(bytesRead = ::gpk::viewLoad(output, input)); 
+		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		return 0;
+	}
 } // namespace
 
 #endif // GPK_ARRAY_VIEW_H_2398472395543

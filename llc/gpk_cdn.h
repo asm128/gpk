@@ -14,9 +14,9 @@ namespace gpk
 
 	// Should fit in an uint32_t
 	struct SContentIdSystem	{ 
-		uint8_t						Bucket				: 8;
-		uint16_t					Server				: 16;
-		uint8_t						System				: 8;
+		uint32_t					Bucket				: 8;
+		uint32_t					Server				: 12;
+		uint32_t					System				: 12;
 	};
 
 	// Should fit in an uint64_t
@@ -38,7 +38,6 @@ namespace gpk
 		::gpk::SContentId			Chatroom	; // server_chatroom
 		::gpk::SContentId			Playroom	; // server_playroom
 	};
-
 #pragma pack(pop)
 } // namespace 
 

@@ -782,15 +782,6 @@ namespace gpk
 		return ::gpk::viewWrite(::gpk::v1<const _tPOD>{&input, 1}, output);
 	}
 
-	template<typename _tPOD> ::gpk::error_t		loadPOD			(::gpk::vcb & input, _tPOD & output) { 
-		::gpk::view<const _tPOD>					readView		= {}; 
-		uint32_t										bytesRead		= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		output										= readView[0]; 
-		return 0;
-	}
-
 	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::vcb & input, ::gpk::apod<_tPOD> & output) { 
 		::gpk::view<const _tPOD>						readView		= {}; 
 		uint32_t										bytesRead		= 0;
@@ -815,13 +806,6 @@ namespace gpk
 		gpk_necs(bytesRead = ::gpk::viewLoad(readView, input)); 
 		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		output										= readView; 
-		return 0;
-	}
-
-	template<typename _tPOD> ::gpk::error_t		loadView		(::gpk::vcub & input, ::gpk::view<const _tPOD> & output) { 
-		uint32_t										bytesRead		= 0;
-		gpk_necs(bytesRead = ::gpk::viewLoad(output, input)); 
-		input										= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		return 0;
 	}
 
