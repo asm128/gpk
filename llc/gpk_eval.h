@@ -24,7 +24,7 @@ namespace gpk
 	template<typename _tValue>	inlcxpr	const _tValue&	min			(const _tValue & a, const _tValue & b)	noexcept	{ return (a < b) ? a : b; }
 	template<typename _tValue>	inlcxpr	const _tValue&	max			(const _tValue & a, const _tValue & b)	noexcept	{ return (a > b) ? a : b; }
 	// excluding the stop value
-	template<typename _tValue>	inlcxpr	bool			in_range	(const _tValue& valueToTest, const _tValue & rangeStart, const _tValue & rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
+	template<typename _tValue>	inlcxpr	bool			in_range	(const _tValue & valueToTest, const _tValue & rangeStart, const _tValue & rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
 
 
 	template<typename _tElement>

@@ -2,6 +2,7 @@
 #include "gpk_storage.h"
 #include "gpk_stdstring.h"
 #include "gpk_json.h"
+#include "gpk_label.h"
 
 template<typename _tNumber>
 static ::gpk::error_t					jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, _tNumber & out_value){
@@ -73,7 +74,7 @@ static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk
 }
 
 static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcc filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
-	::gpk::apod<byte_t>					rawMat					= {};
+	::gpk::apod<byte_t>							rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
 	::gpk::SJSONReader							numberReader			= {};
@@ -81,7 +82,7 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::split(::gpk::vcc{rawMat}, '\n', matFileLines);
 
 	int32_t										countMaterials			= 0;
-	::gpk::apod<char_t>					materialPath			= {};
+	::gpk::apod<char_t>							materialPath			= {};
 	::gpk::label								materialName			= {};
 	::gpk::SMaterial							newMaterial				= {};
 	for(uint32_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
@@ -146,7 +147,7 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 }
 
 static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcc filename)  {
-	::gpk::apod<byte_t>					rawObj					= {};
+	::gpk::apod<byte_t>							rawObj					= {};
 	gpk_necall(::gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
@@ -155,14 +156,14 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::SComponentData						newGroup				= {};
 	uint32_t									countObjects			= 0;
 	uint32_t									countGroups				= 0;
-	::gpk::apod<int16_t>					objectIndices			= {};
-	::gpk::apod<char_t>					objectPath				= {};
+	::gpk::apod<int16_t>						objectIndices			= {};
+	::gpk::apod<char_t>							objectPath				= {};
 	::gpk::label								objectName				= {};
 	::gpk::label								groupName				= {};
-	::gpk::apod<char_t>					groupPath				= {};
+	::gpk::apod<char_t>							groupPath				= {};
 
 
-	::gpk::aobj<::gpk::vcc>	objFileLines			= {};
+	::gpk::aobj<::gpk::vcc>						objFileLines			= {};
 	::gpk::split(::gpk::vcc{rawObj}, '\n', objFileLines);
 	::gpk::SJSONReader							numberReader			= {};
 	info_printf("%s", "Preloading materials...");
@@ -285,13 +286,13 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 }
 
 ::gpk::error_t	gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
-	::gpk::vcc					extension				= {};
-	::gpk::apod<char_t>				ext_lwr					= {};
+	::gpk::vcc								extension				= {};
+	::gpk::apod<char_t>						ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);
-	static const ::gpk::vcs					str_stl					= ".stl";
-	static const ::gpk::vcs					str_obj					= ".obj";
+	stacxpr ::gpk::vcc						str_stl					= {4, ".stl"};
+	stacxpr ::gpk::vcc						str_obj					= {4, ".obj"};
 	if(ext_lwr == str_stl) {
 		::gpk::SSTLFile							stlFile					= {};
 		gpk_necall(::gpk::stlFileLoad(filename, stlFile), "Failed to load file '%s'.", ::gpk::toString(filename).begin());

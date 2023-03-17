@@ -19,7 +19,7 @@
 		::gpk::error_t	GPK_STDCALL															gpk_moduleUpdate							(void*	instanceApp, bool systemRequestedExit)				{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL															gpk_moduleRender							(void*	instanceApp)										{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL															gpk_moduleTitle								(char* out_title, uint32_t *maxCount)						{																																					\
-	static constexpr const char mylmoduleTitle[] = _moduleTitle;									\
+	stacxpr const char mylmoduleTitle[] = _moduleTitle;									\
 	if(0 == out_title) 																				\
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
@@ -97,7 +97,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtime
 		::gpk::error_t	GPK_STDCALL											gpk_moduleUpdate				(void*	instanceApp, bool systemRequestedExit)				{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleRender				(void*	instanceApp)										{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleTitle					(char* out_title, uint32_t *maxCount)						{																																					\
-	static constexpr const char mylmoduleTitle[] = _moduleTitle;									\
+	stacxpr const char mylmoduleTitle[] = _moduleTitle;									\
 	if(0 == out_title) 																				\
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
@@ -145,7 +145,7 @@ static	::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtime
 		::gpk::error_t	GPK_STDCALL											gpk_moduleUpdate				(void*	instanceApp, bool systemRequestedExit)				{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleRender				(void*	instanceApp)										{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleTitle					(char* out_title, uint32_t *maxCount)						{																																					\
-	static constexpr const char mylmoduleTitle[] = _moduleTitle;									\
+	stacxpr const char mylmoduleTitle[] = _moduleTitle;									\
 	if(0 == out_title) 																				\
 		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\

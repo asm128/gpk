@@ -15,7 +15,7 @@ namespace gpk
 							uint32_t								LayerSize		= 0;
 	public:
 		// Constructors
-		inline constexpr											view_layered	()																				noexcept	= default;
+		inlcxpr											view_layered	()																				noexcept	= default;
 		inline														view_layered	(_tElement* dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LayerSize(layerWidth * layerHeight) {
 			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters. Address: %p. Metrics: {%u, %u, %u}", dataElements, Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
@@ -37,14 +37,14 @@ namespace gpk
 		}
 
 		// Methods
-		inline constexpr	const _tElement*						begin			()																		const	noexcept	{ return Data;						}
-		inline constexpr	const _tElement*						end				()																		const	noexcept	{ return Data + size();				}
+		inlcxpr	const _tElement*						begin			()																		const	noexcept	{ return Data;						}
+		inlcxpr	const _tElement*						end				()																		const	noexcept	{ return Data + size();				}
 
-		inline constexpr	_tElement*								begin			()																				noexcept	{ return Data;						}
-		inline constexpr	_tElement*								end				()																				noexcept	{ return Data + size();				}
+		inlcxpr	_tElement*								begin			()																				noexcept	{ return Data;						}
+		inlcxpr	_tElement*								end				()																				noexcept	{ return Data + size();				}
 
-		inline constexpr	const ::gpk::SCoord3<uint32_t>&			metrics			()																		const	noexcept	{ return Size;						}
-		inline constexpr	uint32_t								size			()																		const	noexcept	{ return Size.x * Size.y * Size.z;	}
+		inlcxpr	const ::gpk::SCoord3<uint32_t>&			metrics			()																		const	noexcept	{ return Size;						}
+		inlcxpr	uint32_t								size			()																		const	noexcept	{ return Size.x * Size.y * Size.z;	}
 };
 #pragma pack(pop)
 

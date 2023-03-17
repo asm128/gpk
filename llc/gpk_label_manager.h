@@ -53,7 +53,7 @@ namespace gpk
 	};
 
 	class CLabelManager	{
-		static constexpr	const uint32_t	BLOCK_SIZE					= 1024 * 64;
+		stacxpr	const uint32_t	BLOCK_SIZE					= 1024 * 64;
 
 		block_string_container<BLOCK_SIZE>	Characters;
 		::gpk::vcc							Empty;

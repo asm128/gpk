@@ -21,7 +21,7 @@ namespace gpk
 	template<typename _tBase>
 					::gpk::error_t					rleEncode													(const ::gpk::view<_tBase>& decoded, ::gpk::apod<byte_t>& encoded) {
   		uint32_t											idxLatest													= 0;
-		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
+		stacxpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < decoded.size(); ++iIn) {
 			const _tBase 										& current													= decoded[iIn];
   			const _tBase										& latest													= decoded[idxLatest];
@@ -40,7 +40,7 @@ namespace gpk
 
 	template<typename _tBase>
 					::gpk::error_t					rleDecode													(const ::gpk::vcb & encoded, ::gpk::apod<_tBase>& decoded) {
-		static constexpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
+		stacxpr	const uint32_t					sizeBlock													= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 										& current													= *(_tBase*)&encoded[iIn];
 			const uint8_t										count														= encoded[iIn + sizeof(_tBase)];

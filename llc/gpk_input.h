@@ -40,10 +40,10 @@ namespace gpk
 							SInputMouse							MousePrevious				= {};
 							SInputMouse							MouseCurrent				= {};
 
-		inline constexpr	bool								ButtonUp					(uint8_t buttonIndex)		const	noexcept	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
-		inline constexpr	bool								ButtonDown					(uint8_t buttonIndex)		const	noexcept	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
-		inline constexpr	bool								KeyUp						(uint8_t keyIndex	)		const	noexcept	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
-		inline constexpr	bool								KeyDown						(uint8_t keyIndex	)		const	noexcept	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
+		inlcxpr	bool								ButtonUp					(uint8_t buttonIndex)		const	noexcept	{ return MouseCurrent.ButtonState[buttonIndex	] == 0 && MousePrevious.ButtonState[buttonIndex	] != 0; }
+		inlcxpr	bool								ButtonDown					(uint8_t buttonIndex)		const	noexcept	{ return MouseCurrent.ButtonState[buttonIndex	] != 0 && MousePrevious.ButtonState[buttonIndex	] == 0; }
+		inlcxpr	bool								KeyUp						(uint8_t keyIndex	)		const	noexcept	{ return KeyboardCurrent.KeyState[keyIndex		] == 0 && KeyboardPrevious.KeyState[keyIndex	] != 0; }
+		inlcxpr	bool								KeyDown						(uint8_t keyIndex	)		const	noexcept	{ return KeyboardCurrent.KeyState[keyIndex		] != 0 && KeyboardPrevious.KeyState[keyIndex	] == 0; }
 	};
 } // namespace
 

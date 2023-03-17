@@ -11,12 +11,12 @@ namespace gpk
 							typedef										_tCell									TCell;
 							typedef										view2d<_tCell>							TGridView;
 
-		static constexpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
-		static constexpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
+		stacxpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
+		stacxpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
 
 							TCell										Cells	[_sizeDepth][_sizeWidth]		= {};
 
-		inline constexpr												grid_static								()																		: view2d<_tCell>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inlcxpr												grid_static								()																		: view2d<_tCell>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
 							::gpk::error_t								read									(const byte_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "%s", "Invalid input pointer!");

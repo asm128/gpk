@@ -132,7 +132,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::
 }
 
 static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
-	static constexpr	const uint32_t									iShades													= 16;
+	stacxpr	const uint32_t									iShades													= 16;
 	static				::gpk::SColorBGRA								paletteColors []										=
 		// 16 Base colors
 		{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}

@@ -17,13 +17,13 @@ namespace gpk
 	template<typename _tElement>
 	struct SParticle2Forces {
 		typedef				::gpk::SCoord2<_tElement>							TCoord;
-		static constexpr	const _tElement										VelocityEpsilon								= 0.0001f;
+		stacxpr	const _tElement										VelocityEpsilon								= 0.0001f;
 
 							TCoord												AccumulatedForce							= {};
 							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction
 							TCoord												Velocity									= {};	// A vector representing the speed in a given direction
 
-		inline constexpr	bool												VelocityDepleted							()																					const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
+		inlcxpr	bool												VelocityDepleted							()																					const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
 							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			noexcept	{
 			Acceleration															+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
@@ -43,8 +43,8 @@ namespace gpk
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction
 
 		inline				void												SetMass										(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
-		inline constexpr	double												GetMass										()																					const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inline constexpr	bool												HasFiniteMass								()																					const	noexcept	{ return InverseMass >= 0.0f;								}
+		inlcxpr	double												GetMass										()																					const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
+		inlcxpr	bool												HasFiniteMass								()																					const	noexcept	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
@@ -52,12 +52,12 @@ namespace gpk
 							bool												Unused										: 1;
 							bool												Active										: 1;
 
-		inline constexpr	bool												RequiresProcessing							()																					const	noexcept	{ return (false == Unused) && Active; }
+		inlcxpr	bool												RequiresProcessing							()																					const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	template<typename _tElement>
-	stainli		void												particleIntegratePosition
+	stainli	void												particleIntegratePosition
 		(	const ::gpk::SCoord2<_tElement>	& velocity
 		,	const double					timeElapsed
 		,	const double					timeElapsedHalfSquared
@@ -95,7 +95,7 @@ namespace gpk
 		// --------------------------------------------------------------------
 							::gpk::error_t										AddParticle									(const TParticle& particleData)																			{
 								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
-			static constexpr	const ::gpk::SParticle2State							initialParticleState						= {false, true};
+			stacxpr	const ::gpk::SParticle2State							initialParticleState						= {false, true};
 
 			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
@@ -157,7 +157,7 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-	stainli			::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stainli	::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 

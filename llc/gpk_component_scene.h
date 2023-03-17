@@ -231,7 +231,7 @@ namespace gpk {
 		const _tValue &										operator[]					(uint32_t index)	const		{ return Values[index]; }
 
 		const uint32_t &									size						()				const noexcept	{ return Names.size(); }
-		::gpk::error_t										push_back					(::gpk::vcc name, const _tValue& value) {
+		::gpk::error_t										push_back					(::gpk::vcc name, const _tValue & value) {
 			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
 		}

@@ -38,7 +38,7 @@ namespace gpk
 	::gpk::error_t												stripLiteralGetViews			(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format);
 
 	bool														isSpaceCharacter				(const char characterToTest);
-	::gpk::error_t												skipToNextCharacter				(uint32_t& indexCurrentChar, const ::gpk::vcc & expression);
+	::gpk::error_t												skipToNextCharacter				(uint32_t & indexCurrentChar, const ::gpk::vcc & expression);
 
 } // namespace
 

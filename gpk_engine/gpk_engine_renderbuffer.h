@@ -22,9 +22,15 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterSource		, 11);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterDestination	, 12);
 
+	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Bitfield			, 100);
 	GDEFINE_ENUM_TYPE(ELEMENT_FREQUENCY, uint8_t);
-	GDEFINE_ENUM_VALUE(ELEMENT_FREQUENCY, Element	,  0);
-	GDEFINE_ENUM_VALUE(ELEMENT_FREQUENCY, Instance	,  1);
+	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Element			,  0, "Each element of the buffer matches to an element of the indexed buffer");
+	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Instance			,  1, "Each elements of the buffer matches to a whole primitive instance of the indexed buffer. "
+		"This means that for drawing a triangle, three indexed elements will be used while only one of the instance buffer will be used.");
+	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Bitfield			,  2, "Each element of the buffer contains a smaller-than-byte value that will be used for either each indexed element or each primitive instance, "
+		"depending on the value of first bit");
+	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, BitfieldSizeMask	,  12, "This 2-bit mask grabs the size in bits to read for each element inside the byte. The value represents the size in bits of the element less one (sizeInBits - 1). "
+		"This means it could be 0 for 1-bit values, 1 for 2-bit values, 2 for 3-bit values and 3 for 4-bit values");
 
 #pragma pack(push, 1)
 	struct SRenderBufferDescription {

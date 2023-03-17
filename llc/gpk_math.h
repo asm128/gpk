@@ -14,26 +14,26 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	static constexpr		const double	math_pi					= 3.1415926535897932384626433832795;	// Pi
-	static constexpr		const double	math_pi_2				= 1.5707963267948966192313216916398;	// Pi / 2
-	static constexpr		const double	math_2pi				= 6.2831853071795864769252867665590;	// 2 * Pi
-	static constexpr		const double	math_pi_180				= ::gpk::math_pi / 180.0;				// Pi / 180.0
-	static constexpr		const double	math_epsilon			= 0.00001;
+	stacxpr	double			math_pi					= 3.1415926535897932384626433832795;	// Pi
+	stacxpr	double			math_pi_2				= 1.5707963267948966192313216916398;	// Pi / 2
+	stacxpr	double			math_2pi				= 6.2831853071795864769252867665590;	// 2 * Pi
+	stacxpr	double			math_pi_180				= ::gpk::math_pi / 180.0;				// Pi / 180.0
+	stacxpr	double			math_epsilon			= 0.00001;
 
-	stainli			uint64_t		powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
-
-	template<typename _tNumber>
-	stainli constexpr	double			sqrt_safe				(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
+	stainli	uint64_t		powui					(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
 
 	template<typename _tNumber>
-	stainli constexpr	_tNumber		clamp					(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
+	stincxp	double			sqrt_safe				(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
 
 	template<typename _tNumber>
-	constexpr				_tNumber		interpolate_linear		(const _tNumber a, const _tNumber b, const double factor)			noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
+	stincxp	_tNumber		clamp					(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
+
+	template<typename _tNumber>
+	constexpr		_tNumber		interpolate_linear		(const _tNumber a, const _tNumber b, const double factor)			noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct					SPairSinCos		{ double Sin, Cos; };
 
-	stainli			SPairSinCos		getSinCos				(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
+	stainli	SPairSinCos		getSinCos				(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
 
 	// Calculate determinant of matrix:
 	// [a b]

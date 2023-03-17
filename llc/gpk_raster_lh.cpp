@@ -357,9 +357,9 @@ int													gpk::drawPixels
 		const ::gpk::SCoord3<float>								position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		const ::gpk::SColorFloat								texelColor				= textureImage.size() ? textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x] : ::gpk::SColorBGRA{::gpk::GRAY};
 		::gpk::SColorFloat										fragmentColor			= {};
-		static constexpr	const double						rangeLight				= 10.0;
-		static constexpr	const double						rangeLightSquared		= rangeLight * rangeLight;
-		static constexpr	const double						rangeUnit				= 1.0 / rangeLightSquared;
+		stacxpr	const double						rangeLight				= 10.0;
+		stacxpr	const double						rangeLightSquared		= rangeLight * rangeLight;
+		stacxpr	const double						rangeUnit				= 1.0 / rangeLightSquared;
 		for(uint32_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
 			const ::gpk::SCoord3<float>								lightToPoint			= lightPoints[iLight] - position;
 			const ::gpk::SCoord3<float>								vectorToLight			= lightToPoint;

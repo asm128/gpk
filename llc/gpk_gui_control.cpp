@@ -276,7 +276,7 @@
 	vk.IdRoot						= ::gpk::controlCreate(gui);
 	const ::gpk::n2<uint8_t>		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
 	const ::gpk::n2<int16_t>		sizeKey						= (charSize + ::gpk::n2<uint8_t>{6, 6}).Cast<int16_t>();
-	static constexpr uint16_t			SIZE_BUTTON					= 88;
+	stacxpr uint16_t			SIZE_BUTTON					= 88;
 	const ::gpk::n2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{

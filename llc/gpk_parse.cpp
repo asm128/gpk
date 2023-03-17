@@ -12,7 +12,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
-::gpk::error_t								gpk::skipToNextCharacter					(uint32_t& indexCurrentChar, const ::gpk::vcc & expression)		{
+::gpk::error_t								gpk::skipToNextCharacter					(uint32_t & indexCurrentChar, const ::gpk::vcc & expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::gpk::isSpaceCharacter(expression[indexCurrentChar]))
 			++indexCurrentChar;

@@ -26,7 +26,7 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
-	static constexpr uint32_t ASCII_PALETTE [] = 
+	stacxpr uint32_t ASCII_PALETTE [] = 
 		{	0xFF000000		// BLACK
 		,	0xFF800000	 	// DARKBLUE
 		,	0xFF008000	 	// DARKGREEN
@@ -69,7 +69,7 @@ namespace gpk
 		};
 
 	// Swaps the background color and the font color.
-	inline constexpr	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return (ASCII_COLOR)(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
+	inlcxpr	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return (ASCII_COLOR)(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
 }
 
 // BLINK	128

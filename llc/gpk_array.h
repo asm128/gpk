@@ -32,15 +32,15 @@ namespace gpk
 //							uint32_t					Offset										= 0;
 							uint32_t					Size										= 0;
 
-		inline constexpr								array_base									()																			noexcept	= default;
-		inline constexpr								array_base									(const array_base<_tCell>&	other)											noexcept	= delete;
-		inline constexpr								array_base									(const array_base<_tCell>&&	other)											noexcept	= delete;
+		inlcxpr								array_base									()																			noexcept	= default;
+		inlcxpr								array_base									(const array_base<_tCell>&	other)											noexcept	= delete;
+		inlcxpr								array_base									(const array_base<_tCell>&&	other)											noexcept	= delete;
 
 							array_base<_tCell>&			operator =									(const array_base<_tCell>&	other)														= delete;
 							array_base<_tCell>&			operator =									(const array_base<_tCell>&&	other)														= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		inline constexpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize, uint32_t(newSize + ::gpk::max(newSize >> 1, 4U)));			}
-		inline constexpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
+		inlcxpr	uint32_t					calc_reserve_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize, uint32_t(newSize + ::gpk::max(newSize >> 1, 4U)));			}
+		inlcxpr	uint32_t					calc_malloc_size							(const uint32_t newSize)											const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
 	}; // array_base
 #pragma pack(pop)
 
@@ -58,7 +58,7 @@ namespace gpk
 		using				TArrayBase::				operator[]									;
 
 		inline											~array_pod									()																						{ safe_gpk_free(Data);		}
-		inline constexpr								array_pod									()																			noexcept	= default;
+		inlcxpr								array_pod									()																			noexcept	= default;
 		//inline											array_pod									(uint32_t initialSize)																	{ gthrow_if(errored(resize(initialSize)), "Failed to resize array! Why? Size requested: %u.", initialSize);	}
 														array_pod									(::std::initializer_list<_tPOD> init)													{
 			gthrow_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
@@ -133,7 +133,7 @@ namespace gpk
 			safeguard.Handle								= 0;
 			//*(uint16_t*)(&Data[Count])						= 0;
 		}
-		inline constexpr	operator					view<const _tPOD>						()								const	noexcept	{ return {Data, Count}; }
+		inlcxpr	operator					view<const _tPOD>						()								const	noexcept	{ return {Data, Count}; }
 							array_pod<_tPOD>&			operator =									(const array_pod<_tPOD>& other)															{ return operator=((const view<_tPOD>&) other); }
 							array_pod<_tPOD>&			operator =									(const view<_tPOD>& other)															{
 			gthrow_if(resize(other.size()) != (int32_t)other.size(), "%s", "Failed to assign array.");
@@ -421,7 +421,7 @@ namespace gpk
 		using											TVectorBase::operator[];
 
 		inline											~array_obj									()																						{ for(uint32_t i = 0; i < Count; ++i) Data[i].~_tObj(); safe_gpk_free(Data); }	// dtor
-		inline constexpr								array_obj									()																						= default;
+		inlcxpr								array_obj									()																						= default;
 		inline											array_obj									(const uint32_t newSize)																{ gthrow_if(((int32_t)newSize) != resize(newSize), "", "%s", "Failed to resize array."); }
 		inline											array_obj									(array_obj<_tObj>&& other)													noexcept	{
 			Size											= other.Size									;
@@ -450,7 +450,7 @@ namespace gpk
 				safeguard.Handle								= 0;
 			}
 		}
-		inline constexpr	operator					view<const _tObj>						()								const	noexcept	{ return {Data, Count}; }
+		inlcxpr	operator					view<const _tObj>						()								const	noexcept	{ return {Data, Count}; }
 		inline				array_obj<_tObj>&			operator =									(const array_obj<_tObj>& other)															{
 			gthrow_if(resize(other.Count) != (int32_t)other.Count, "", "Failed to resize array!");
 			for(uint32_t iElement = 0; iElement < other.Count; ++iElement)

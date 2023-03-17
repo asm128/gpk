@@ -87,15 +87,15 @@
 #include "gpk_chrono.h"
 
 // Defines: The number of columns comprising a state in AES. This is a constant in AES. Value=4
-static constexpr	const uint32_t				AES_Nb									= 4;
+stacxpr	const uint32_t				AES_Nb									= 4;
 
 // Private variables:
-typedef				uint8_t						state_t[4][4];	// array holding the intermediate results during decryption.
+typedef	uint8_t						state_t[4][4];	// array holding the intermediate results during decryption.
 
 // The lookup-tables are marked const so they can be placed in read-only storage instead of RAM
 // The numbers below can be computed dynamically trading ROM for RAM -
 // This can be useful in (embedded) bootloader applications, where ROM is often limited.
-static constexpr	const uint8_t				sbox	[256]							= {
+stacxpr	const uint8_t				sbox	[256]							= {
   //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
   0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -114,7 +114,7 @@ static constexpr	const uint8_t				sbox	[256]							= {
   0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
   0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-static constexpr	const uint8_t				rsbox	[256]							= {
+stacxpr	const uint8_t				rsbox	[256]							= {
   0x52, 0x09, 0x6a, 0xd5, 0x30, 0x36, 0xa5, 0x38, 0xbf, 0x40, 0xa3, 0x9e, 0x81, 0xf3, 0xd7, 0xfb,
   0x7c, 0xe3, 0x39, 0x82, 0x9b, 0x2f, 0xff, 0x87, 0x34, 0x8e, 0x43, 0x44, 0xc4, 0xde, 0xe9, 0xcb,
   0x54, 0x7b, 0x94, 0x32, 0xa6, 0xc2, 0x23, 0x3d, 0xee, 0x4c, 0x95, 0x0b, 0x42, 0xfa, 0xc3, 0x4e,
@@ -133,17 +133,17 @@ static constexpr	const uint8_t				rsbox	[256]							= {
   0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d };
 
 // The round constant word array, Rcon[i], contains the values given by x to the power (i-1) being powers of x (x is denoted as {02}) in the field GF(2^8)
-stacxpr		uint8_t						Rcon	[11]							= {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
+stacxpr	uint8_t						Rcon	[11]							= {0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
 
 // Jordan Goulder points out in PR #12 (https://github.com/kokke/tiny-AES-C/pull/12), that you can remove most of the elements in the Rcon array, because they are unused.
 // From Wikipedia's article on the Rijndael key schedule @ https://en.wikipedia.org/wiki/Rijndael_key_schedule#Rcon
 // "Only the first some of these constants are actually used – up to rcon[10] for AES-128 (as 11 round keys are needed),
 //  up to rcon[8] for AES-192, up to rcon[7] for AES-256. rcon[0] is not used in AES algorithm."
-stainli		uint8_t						getSBoxValue							(uint8_t num)														{ return  sbox[num]; }
-stainli		uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[num]; }
+stainli	uint8_t						getSBoxValue							(uint8_t num)														{ return  sbox[num]; }
+stainli	uint8_t						getSBoxInvert							(uint8_t num)														{ return rsbox[num]; }
 
 // This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states.
-static		void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, ::gpk::AES_LEVEL level)		{
+static	void						KeyExpansion							(uint8_t* RoundKey, const uint8_t* Key, ::gpk::AES_LEVEL level)		{
 	uint32_t											Nk = 0, Nr = 0;
 	switch(level) {
 	case ::gpk::AES_LEVEL_128: Nk = 4; Nr = 10; break;
@@ -196,21 +196,21 @@ void											gpk::aesInitCtxIV						(::gpk::SAESContext* ctx, const uint8_t* k
 void											gpk::aesCtxSetIV						(::gpk::SAESContext* ctx, const uint8_t* iv)												{ memcpy(ctx->Iv, iv, AES_SIZEBLOCK); }
 
 // This function adds the round key to state. The round key is added to	 the state by an XOR function.
-static void										AddRoundKey								(uint8_t round,state_t* state,uint8_t* RoundKey)											{
+static	void										AddRoundKey								(uint8_t round,state_t* state,uint8_t* RoundKey)											{
 	for(uint8_t i = 0; i < 4; ++i)
 	for(uint8_t j = 0; j < 4; ++j)
 		(*state)[i][j]									^= RoundKey[(round * AES_Nb * 4) + (i * AES_Nb) + j];
 }
 
 // The SubBytes Function Substitutes the values in the state matrix with values in an S-box.
-static void										SubBytes								(state_t* state)																			{
+static	void										SubBytes								(state_t* state)																			{
 	for(uint8_t i = 0; i < 4; ++i)
 	for(uint8_t j = 0; j < 4; ++j)
 		(*state)[j][i]									= getSBoxValue((*state)[j][i]);
 }
 
 // The ShiftRows() function shifts the rows in the state to the left. Each row is shifted with different offset. Offset = Row number. So the first row is not shifted.
-static void										ShiftRows								(state_t* state)																			{
+static	void										ShiftRows								(state_t* state)																			{
 	uint8_t												temp;
 	// Rotate first row 1 columns to left
 	temp											= (*state)[0][1];
@@ -239,7 +239,7 @@ static void										ShiftRows								(state_t* state)																			{
 static uint8_t									xtime									(uint8_t x)														{ return ((x<<1) ^ (((x>>7) & 1) * 0x1b)); }
 
 // MixColumns function mixes the columns of the state matrix
-static void										MixColumns								(state_t* state)												{
+static	void										MixColumns								(state_t* state)												{
 	for (uint8_t i = 0; i < 4; ++i) {
 		const uint8_t										t										= (*state)[i][0];
 		const uint8_t										Tmp										= (*state)[i][0] ^ (*state)[i][1] ^ (*state)[i][2] ^ (*state)[i][3] ;
@@ -264,7 +264,7 @@ static uint8_t									Multiply								(uint8_t x, uint8_t y)											{
 }
 
 // MixColumns function mixes the columns of the state matrix. The method used to multiply may be difficult to understand for the inexperienced. Please use the references to gain more information.
-static void										InvMixColumns							(state_t* state)												{
+static	void										InvMixColumns							(state_t* state)												{
 	for (int i = 0; i < 4; ++i) {
 		uint8_t											a										= (*state)[i][0];
 		uint8_t											b										= (*state)[i][1];
@@ -278,13 +278,13 @@ static void										InvMixColumns							(state_t* state)												{
 }
 
 // The SubBytes Function Substitutes the values in the state matrix with values in an S-box.
-static void										InvSubBytes								(state_t* state)												{
+static	void										InvSubBytes								(state_t* state)												{
 	for (uint8_t i = 0; i < 4; ++i)
 	for (uint8_t j = 0; j < 4; ++j)
 		(*state)[j][i]									= getSBoxInvert((*state)[j][i]);
 }
 
-static void										InvShiftRows							(state_t* state)												{
+static	void										InvShiftRows							(state_t* state)												{
 	uint8_t												temp;
 
 	// Rotate first row 1 columns to right

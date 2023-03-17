@@ -115,7 +115,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 
 		::gpk::error_t										gpk::clientConnect							(::gpk::SUDPClient & client)		{
 	uint32_t														attempts									= 0;
-	static constexpr uint32_t										MAX_ATTEMPTS								= 1;
+	stacxpr uint32_t										MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
 		::gpk::mutex_guard												lock										(client.Queue.MutexSend);

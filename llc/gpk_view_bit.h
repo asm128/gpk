@@ -17,7 +17,7 @@ namespace gpk
 
 	template <typename _tElement>
 	struct view_bit_iterator {
-		static constexpr	const uint32_t						ELEMENT_BITS				= sizeof(_tElement) * 8;
+		stacxpr	const uint32_t						ELEMENT_BITS				= sizeof(_tElement) * 8;
 
 							const _tElement						* Begin;
 							const _tElement						* End;
@@ -25,8 +25,8 @@ namespace gpk
 							int8_t								Offset;
 
 		inline				operator							bool						()																	const				{ gthrow_if(Element >= End, "Out of range: %u. End: %u.", Element, End); return (*Element) & (1ULL << Offset); }
-		inline constexpr	bool								operator==					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) == (((1ULL << other.Offset)) & *other.Element); }
-		inline constexpr	bool								operator!=					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) != (((1ULL << other.Offset)) & *other.Element); }
+		inlcxpr	bool								operator==					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) == (((1ULL << other.Offset)) & *other.Element); }
+		inlcxpr	bool								operator!=					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) != (((1ULL << other.Offset)) & *other.Element); }
 
 		inline				view_bit_iterator&					operator=					(bool value)																			{ value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
 							view_bit_iterator&					operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				gthrow_if(Element >= (End	+ 1), "Out of range: %u.", Element); } return *this; }
@@ -53,16 +53,16 @@ namespace gpk
 		typedef				_tElement							TElement;
 		typedef				view_bit_iterator<_tElement>		iterator;
 
-		static constexpr	const uint32_t						ELEMENT_BITS				= sizeof(_tElement) * 8;
+		stacxpr	const uint32_t						ELEMENT_BITS				= sizeof(_tElement) * 8;
 
 		// Constructors
-		inline constexpr										view_bit					()																			noexcept	= default;
+		inlcxpr										view_bit					()																			noexcept	= default;
 		inline													view_bit					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
 			gthrow_if(0 == dataElements && 0 != elementCount, "Invalid parameters. Element count: %u.", elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
-		inline constexpr										view_bit					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount * ELEMENT_BITS)											{}
+		inlcxpr										view_bit					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount * ELEMENT_BITS)											{}
 
 		template <size_t _elementCount>
 		inline													view_bit					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)(_elementCount * ELEMENT_BITS), elementCount))	{
@@ -92,10 +92,10 @@ namespace gpk
 		inline				view_bit_iterator<_tElement>		begin						()																			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
 		inline				view_bit_iterator<_tElement>		end							()																			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
 
-		inline constexpr	const view_bit_iterator<_tElement>	begin						()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
-		inline constexpr	const view_bit_iterator<_tElement>	end							()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
+		inlcxpr	const view_bit_iterator<_tElement>	begin						()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
+		inlcxpr	const view_bit_iterator<_tElement>	end							()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
 
-		inline constexpr	uint32_t							size						()																	const	noexcept	{ return Count;																	}
+		inlcxpr	uint32_t							size						()																	const	noexcept	{ return Count;																	}
 	};
 
 	template<typename _tCell>	using vbit					= ::gpk::view_bit<_tCell>;

@@ -3,7 +3,7 @@
 #if defined(GPK_WINDOWS)
 #include <Windows.h>
 
-static constexpr double			MICROSECOND_SCALE											= 0.000001;
+stacxpr double			MICROSECOND_SCALE											= 0.000001;
 
 
 void							gpk::STimer::Reset											()				noexcept				{

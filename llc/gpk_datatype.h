@@ -78,14 +78,14 @@ namespace gpk
 							uint32_t					IsNorm			:  1	;
 							uint32_t					IsSigned		:  1	;
 
-		inline constexpr	uint32_t					ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
-		inline constexpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
+		inlcxpr	uint32_t					ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
+		inlcxpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
-		inline constexpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
-		inline constexpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
-		inline constexpr	bool						IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
+		inlcxpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
+		inlcxpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
+		inlcxpr	bool						IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
 
-		inline constexpr								SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
+		inlcxpr								SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
 			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId) - 1)
 			, ElementPad	(GTYPEID_ELEMENTPAD		(typeId))
 			, ElementCount	(GTYPEID_ELEMENTCOUNT	(typeId) - 1)
@@ -95,7 +95,7 @@ namespace gpk
 			, IsSigned		(GTYPEID_ISSIGNED		(typeId))
 		{}
 		//
-		inline constexpr								SDataTypeID
+		inlcxpr								SDataTypeID
 			( uint8_t	sizeInBits		= 1
 			, uint32_t	elementCount	= 1
 			, bool		isFloat			= false
@@ -112,7 +112,7 @@ namespace gpk
 			, IsNorm		(isNorm			? 1 : 0)
 			, IsSigned		(isSigned		? 0 : 1)
 		{}
-		inline constexpr	operator					DATA_TYPE		()							const				{
+		inlcxpr	operator					DATA_TYPE		()							const				{
 			return GTYPEID_MAKE
 				( !IsSigned
 				, IsNorm
@@ -123,7 +123,7 @@ namespace gpk
 				, SizeInBits+1
 				);
 		}
-		inline constexpr	bool						operator==		(const DATA_TYPE& other)	const				{
+		inlcxpr	bool						operator==		(const DATA_TYPE& other)	const				{
 			return	SizeInBits		+ 1	==			(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad			==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
 				&&	ElementCount	+ 1	== (uint32_t)GTYPEID_ELEMENTCOUNT	(other)
@@ -133,7 +133,7 @@ namespace gpk
 				&&	IsSigned			==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
-		inline constexpr	bool						operator==		(const SDataTypeID& other)	const				{
+		inlcxpr	bool						operator==		(const SDataTypeID& other)	const				{
 			return	SizeInBits		==	other.SizeInBits
 				&&	ElementPad		==	other.ElementPad
 				&&	ElementCount	==	other.ElementCount

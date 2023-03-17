@@ -33,6 +33,8 @@ namespace gpk
 			gpk_necs(Integrator		 .Load(input));
 			return 0;
 		}
+
+		// This function messes up with the ManagedEntities array so be careful of not having any references to its contents or it may end up trying to access invalid memory
 		::gpk::error_t						Clone							(uint32_t iEntitySource, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
 			const ::gpk::SVirtualEntity				entitySource					= ManagedEntities[iEntitySource];
 			int32_t									iEntityNew						= ManagedEntities.Create();
@@ -53,9 +55,8 @@ namespace gpk
 				if(cloneSurfaces) {
 					if(Scene->Graphics->Skins[idSkin]) {
 						::gpk::SSkin							& newSkin						= *Scene->Graphics->Skins[idSkin];
-						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
+						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture)
 							newSkin.Textures[iTexture]			= Scene->Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
-						}
 					}
 				}
 			}
@@ -152,8 +153,8 @@ namespace gpk
 	};
 
 	struct SContact {
-		uint32_t							EntityA							= (uint32_t)-1;
-		uint32_t							EntityB							= (uint32_t)-1;
+		uint32_t							EntityA							= {};
+		uint32_t							EntityB							= {};
 		::gpk::n3<float>					Distance						= {};
 		double								DistanceLength					= {};
 		::gpk::SContactResult				Result							= {};

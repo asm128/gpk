@@ -1,7 +1,7 @@
 #include "gpk_geometry.h"
 
 // Vertex coordinates for cube faces
-static constexpr const ::gpk::STriangle3<float>					geometryCubePositions			[12]						=
+stacxpr const ::gpk::STriangle3<float>					geometryCubePositions			[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second
 	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}	// Back		- first
@@ -16,7 +16,7 @@ static constexpr const ::gpk::STriangle3<float>					geometryCubePositions			[12]
 	, {{1.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f, 1.0f}}	// Top		- second
 	};
 
-static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormalsTriangle		[12]						=
+stacxpr	const ::gpk::SCoord3<float>						geometryCubeNormalsTriangle		[12]						=
 	{ {0.0f, 0.0f, -1.0f}	// Right	- first
 	, {0.0f, 0.0f, -1.0f}	// Right	- second
 
@@ -37,7 +37,7 @@ static constexpr	const ::gpk::SCoord3<float>						geometryCubeNormalsTriangle		[
 	};
 
 // -----------------------------------------------------
-static constexpr	const ::gpk::STriangle3<float>					geometryCubeNormalsVertex		[12]						=
+stacxpr	const ::gpk::STriangle3<float>					geometryCubeNormalsVertex		[12]						=
 	{ { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- first
 	, { {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	, {0.0f, 0.0f, -1.0f}	} // Right	- second
 
@@ -58,7 +58,7 @@ static constexpr	const ::gpk::STriangle3<float>					geometryCubeNormalsVertex		[
 	};
 
 // Vertex coordinates for cube faces
-static constexpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]						=
+stacxpr	const ::gpk::STriangle2<float>					geometryCubeUV					[12]						=
 	{ {{1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f}}	// Right	- first			?? I have no idea if this is correct lol
 	, {{1.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}}	// Right	- second
 

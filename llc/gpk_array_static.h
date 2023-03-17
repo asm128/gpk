@@ -46,8 +46,8 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template <typename _tCell, size_t nSize>	static inlcxpr uint32_t	size		(::gpk::astatic<_tCell, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
-	template <typename _tCell, size_t nSize>	static inlcxpr uint32_t	byte_count	(::gpk::astatic<_tCell, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(_tCell) * nSize);	}
+	template <typename _tCell, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<_tCell, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
+	template <typename _tCell, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<_tCell, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(_tCell) * nSize);	}
 
 	template<typename _tCell, size_t _nSize>
 	::gpk::error_t			find						(const _tCell & element, const ::gpk::astatic<const _tCell, _nSize>& target, uint32_t offset = 0)	{

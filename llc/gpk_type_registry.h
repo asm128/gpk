@@ -28,8 +28,8 @@ namespace gpk
 
 #define GPK_END_POD(_structName)																																											\
 	public:																																																	\
-		stacxpr	const char*					gpk_type_name							()		noexcept	{ static constexpr const char name[] = #_structName; return name; }						\
-		stacxpr	uint32_t					gpk_type_name_len						()		noexcept	{ static constexpr const char name[] = #_structName; return ::gpk::size(name) - 1; }	\
+		stacxpr	const char*					gpk_type_name							()		noexcept	{ stacxpr const char name[] = #_structName; return name; }						\
+		stacxpr	uint32_t					gpk_type_name_len						()		noexcept	{ stacxpr const char name[] = #_structName; return ::gpk::size(name) - 1; }	\
 	};																																																		\
 	static	const int					gpk_tr_##_structName					= ::gpk::STypeRegistrator<_structName>();
 

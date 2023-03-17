@@ -47,14 +47,14 @@ namespace gpk
 												TCoord2&		operator/=				(uint64_t		scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
 		//
 		constexpr								bool			operator==				(const TCoord2& other)												const	noexcept	{ return x == other.x && y == other.y;									}
-		inline constexpr						bool			operator!=				(const TCoord2& other)												const	noexcept	{ return !operator==(other);											}
+		inlcxpr						bool			operator!=				(const TCoord2& other)												const	noexcept	{ return !operator==(other);											}
 		constexpr								TCoord2			operator-				()																	const	noexcept	{ return {x*-1, y*-1};													}
 
 		//
-		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
-		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
-		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
-		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
+		inlcxpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
+		inlcxpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
+		inlcxpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
+		inlcxpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
 
 		//
 		template<typename _t>
@@ -65,8 +65,8 @@ namespace gpk
 		template<typename _tOther>
 		inline									TCoord2&		InPlaceScale			(const SCoord2<_tOther>& other)												noexcept	{ return InPlaceScale(other.x, other.y);																																}
 		inline									TCoord2&		InPlaceNormalize		()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;																	}
-		inline constexpr						TCoord2			GetScaled				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
-		inline constexpr						TCoord2			GetScaled				(double scalarx, double scalary)									const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
+		inlcxpr						TCoord2			GetScaled				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
+		inlcxpr						TCoord2			GetScaled				(double scalarx, double scalary)									const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
 		inline									TCoord2			GetNormalized			()																	const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::sqrt(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	}
 		constexpr								double			Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																																		}
 		constexpr								_tBase			LengthSquared			()																	const	noexcept	{ return x * x + y * y;																																					}
@@ -129,54 +129,54 @@ namespace gpk
 												TCoord3&		operator/=				(uint64_t scalar)																		{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
 		//
 		constexpr								bool			operator==				(const TCoord3& other)												const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
-		inline constexpr						bool			operator!=				(const TCoord3& other)												const	noexcept	{ return !operator==(other);																	}
+		inlcxpr						bool			operator!=				(const TCoord3& other)												const	noexcept	{ return !operator==(other);																	}
 		constexpr								TCoord3			operator-				()																	const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
 
 		//
-		inline constexpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
-		inline constexpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
-		inline constexpr SCoord2<_tBase>		xz				()						{ return {x, z}; }
-		inline constexpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
-		inline constexpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
-		inline constexpr SCoord2<_tBase>		yz				()						{ return {y, z}; }
-		inline constexpr SCoord2<_tBase>		zx				()						{ return {z, x}; }
-		inline constexpr SCoord2<_tBase>		zy				()						{ return {z, y}; }
-		inline constexpr SCoord2<_tBase>		zz				()						{ return {z, z}; }
+		inlcxpr SCoord2<_tBase>		xx				()						{ return {x, x}; }
+		inlcxpr SCoord2<_tBase>		xy				()						{ return {x, y}; }
+		inlcxpr SCoord2<_tBase>		xz				()						{ return {x, z}; }
+		inlcxpr SCoord2<_tBase>		yx				()						{ return {y, x}; }
+		inlcxpr SCoord2<_tBase>		yy				()						{ return {y, y}; }
+		inlcxpr SCoord2<_tBase>		yz				()						{ return {y, z}; }
+		inlcxpr SCoord2<_tBase>		zx				()						{ return {z, x}; }
+		inlcxpr SCoord2<_tBase>		zy				()						{ return {z, y}; }
+		inlcxpr SCoord2<_tBase>		zz				()						{ return {z, z}; }
 
 		//
-		inline constexpr SCoord3<_tBase>		xxx				()						{ return {x, x, x}; }
-		inline constexpr SCoord3<_tBase>		xxy				()						{ return {x, x, y}; }
-		inline constexpr SCoord3<_tBase>		xxz				()						{ return {x, x, z}; }
-		inline constexpr SCoord3<_tBase>		xyx				()						{ return {x, y, x}; }
-		inline constexpr SCoord3<_tBase>		xyy				()						{ return {x, y, y}; }
-		inline constexpr SCoord3<_tBase>		xyz				()						{ return {x, y, z}; }
-		inline constexpr SCoord3<_tBase>		xzx				()						{ return {x, z, x}; }
-		inline constexpr SCoord3<_tBase>		xzy				()						{ return {x, z, y}; }
-		inline constexpr SCoord3<_tBase>		xzz				()						{ return {x, z, z}; }
+		inlcxpr SCoord3<_tBase>		xxx				()						{ return {x, x, x}; }
+		inlcxpr SCoord3<_tBase>		xxy				()						{ return {x, x, y}; }
+		inlcxpr SCoord3<_tBase>		xxz				()						{ return {x, x, z}; }
+		inlcxpr SCoord3<_tBase>		xyx				()						{ return {x, y, x}; }
+		inlcxpr SCoord3<_tBase>		xyy				()						{ return {x, y, y}; }
+		inlcxpr SCoord3<_tBase>		xyz				()						{ return {x, y, z}; }
+		inlcxpr SCoord3<_tBase>		xzx				()						{ return {x, z, x}; }
+		inlcxpr SCoord3<_tBase>		xzy				()						{ return {x, z, y}; }
+		inlcxpr SCoord3<_tBase>		xzz				()						{ return {x, z, z}; }
 
-		inline constexpr SCoord3<_tBase>		yxx				()						{ return {y, x, x}; }
-		inline constexpr SCoord3<_tBase>		yxy				()						{ return {y, x, y}; }
-		inline constexpr SCoord3<_tBase>		yxz				()						{ return {y, x, z}; }
-		inline constexpr SCoord3<_tBase>		yyx				()						{ return {y, y, x}; }
-		inline constexpr SCoord3<_tBase>		yyy				()						{ return {y, y, y}; }
-		inline constexpr SCoord3<_tBase>		yyz				()						{ return {y, y, z}; }
-		inline constexpr SCoord3<_tBase>		yzx				()						{ return {y, z, x}; }
-		inline constexpr SCoord3<_tBase>		yzy				()						{ return {y, z, y}; }
-		inline constexpr SCoord3<_tBase>		yzz				()						{ return {y, z, z}; }
+		inlcxpr SCoord3<_tBase>		yxx				()						{ return {y, x, x}; }
+		inlcxpr SCoord3<_tBase>		yxy				()						{ return {y, x, y}; }
+		inlcxpr SCoord3<_tBase>		yxz				()						{ return {y, x, z}; }
+		inlcxpr SCoord3<_tBase>		yyx				()						{ return {y, y, x}; }
+		inlcxpr SCoord3<_tBase>		yyy				()						{ return {y, y, y}; }
+		inlcxpr SCoord3<_tBase>		yyz				()						{ return {y, y, z}; }
+		inlcxpr SCoord3<_tBase>		yzx				()						{ return {y, z, x}; }
+		inlcxpr SCoord3<_tBase>		yzy				()						{ return {y, z, y}; }
+		inlcxpr SCoord3<_tBase>		yzz				()						{ return {y, z, z}; }
 
-		inline constexpr SCoord3<_tBase>		zxx				()						{ return {z, x, x}; }
-		inline constexpr SCoord3<_tBase>		zxy				()						{ return {z, x, y}; }
-		inline constexpr SCoord3<_tBase>		zxz				()						{ return {z, x, z}; }
-		inline constexpr SCoord3<_tBase>		zyx				()						{ return {z, y, x}; }
-		inline constexpr SCoord3<_tBase>		zyy				()						{ return {z, y, y}; }
-		inline constexpr SCoord3<_tBase>		zyz				()						{ return {z, y, z}; }
-		inline constexpr SCoord3<_tBase>		zzx				()						{ return {z, z, x}; }
-		inline constexpr SCoord3<_tBase>		zzy				()						{ return {z, z, y}; }
-		inline constexpr SCoord3<_tBase>		zzz				()						{ return {z, z, z}; }
+		inlcxpr SCoord3<_tBase>		zxx				()						{ return {z, x, x}; }
+		inlcxpr SCoord3<_tBase>		zxy				()						{ return {z, x, y}; }
+		inlcxpr SCoord3<_tBase>		zxz				()						{ return {z, x, z}; }
+		inlcxpr SCoord3<_tBase>		zyx				()						{ return {z, y, x}; }
+		inlcxpr SCoord3<_tBase>		zyy				()						{ return {z, y, y}; }
+		inlcxpr SCoord3<_tBase>		zyz				()						{ return {z, y, z}; }
+		inlcxpr SCoord3<_tBase>		zzx				()						{ return {z, z, x}; }
+		inlcxpr SCoord3<_tBase>		zzy				()						{ return {z, z, y}; }
+		inlcxpr SCoord3<_tBase>		zzz				()						{ return {z, z, z}; }
 
 		//
 		template<typename _t>
-		inline constexpr 						SCoord3<_t>		Cast					()																	const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
+		inlcxpr 						SCoord3<_t>		Cast					()																	const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
 		inline									TCoord3&		Scale					(double scalar)																noexcept	{ return *this *= scalar;																								}
 		inline									TCoord3&		Scale					(const TCoord3& other)														noexcept	{ x *= other.x; y *= other.y; z *= other.z; return *this;																}
 		inline									TCoord3&		Normalize				()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;								}
@@ -280,7 +280,7 @@ namespace gpk
 		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); if(sqLen) return *this /= ::sqrt(sqLen); Identity();	return *this;		}
 		constexpr			double			Dot						(const TQuat& other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w*other.w;																	}
 		constexpr			_tBase			LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;																					}
-		inline constexpr	double			Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;												}
+		inlcxpr	double			Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;												}
 		inline				TQuat&			LinearInterpolate		(const TQuat &p, const TQuat &q, double fTime)						noexcept	{ return *this = ((q-p)*fTime)+p;																						}
 							//void			AddScaled				(const TCoord4& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
 							TQuat&			AddScaled				(const TCoord3& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }
@@ -423,8 +423,8 @@ namespace gpk
 
 
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
-		inline constexpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
-		inline constexpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
+		inlcxpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
+		inlcxpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
 
 	// ---- Geometric figures and other coord-related POD structs.
 	template<typename _tElement>	struct SRectLimits		{ _tElement									Left, Top, Right, Bottom; GPK_DEFAULT_OPERATOR_NE(SRectLimits<_tElement>, Left	== other.Left	&& Top		== other.Top	&& Right == other.Right && Bottom == other.Bottom); 
@@ -717,21 +717,21 @@ namespace gpk
 	}
 
 	template<typename _tValue>
-	static constexpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& valueToTest, const ::gpk::SCoord2<_tValue>& rangeStart, const ::gpk::SCoord2<_tValue>& rangeStop)	noexcept	{
+	stacxpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& valueToTest, const ::gpk::SCoord2<_tValue>& rangeStart, const ::gpk::SCoord2<_tValue>& rangeStop)	noexcept	{
 		return	::gpk::in_range(valueToTest.x, rangeStart.x, rangeStop.x)
 			&&	::gpk::in_range(valueToTest.y, rangeStart.y, rangeStop.y)
 			;
 	}
 
 	template<typename _tValue>
-	static constexpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& pointToTest, const ::gpk::SRectangle2<_tValue>& area)	noexcept	{
+	stacxpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& pointToTest, const ::gpk::SRectangle2<_tValue>& area)	noexcept	{
 		return	::gpk::in_range(pointToTest.x, area.Offset.x, (_tValue)(area.Offset.x + area.Size.x))
 			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (_tValue)(area.Offset.y + area.Size.y))
 			;
 	}
 
 	template<typename _tCoord>
-	stainli		double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
+	stainli	double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 
 	template<typename _tValue>
 	::gpk::SCoord3<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }

@@ -87,7 +87,7 @@ static ::gpk::error_t			dialogInitialize				(::gpk::SDialog & dialog) {
 	::dialogInitialize(*this);
 }
 
-static constexpr	const uint32_t									heightOfField								= 18;
+stacxpr	const uint32_t									heightOfField								= 18;
 		::gpk::error_t												gpk::checkBoxCreate							(::gpk::SDialog			& dialog)								{
 	int32_t																	index										= -1;
 	::gpk::pobj<::gpk::SDialogCheckBox>									checkBox;

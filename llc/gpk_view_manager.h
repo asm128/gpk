@@ -51,7 +51,7 @@ namespace gpk
 
 	template<typename _tCell>
 	class CViewManager	{
-		static constexpr	const uint32_t			BLOCK_SIZE					= 0xFFFF;
+		stacxpr	const uint32_t			BLOCK_SIZE					= 0xFFFF;
 
 		::gpk::block_container<_tCell, BLOCK_SIZE>	Cells;
 

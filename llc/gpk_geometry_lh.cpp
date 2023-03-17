@@ -1,26 +1,26 @@
 #include "gpk_geometry_lh.h"
 
-//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquarePositions		[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
-//static constexpr const int8_t					geometryIndexedSquareIndices		[]						= {0, 1, 2, 1, 3, 2};
-//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareNormal			[]						= {{0, 0, 1}};
-//static constexpr const int8_t					geometryIndexedSquareNormalIndices	[]						= {0};
-//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareUV				[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
+//stacxpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquarePositions		[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
+//stacxpr const int8_t					geometryIndexedSquareIndices		[]						= {0, 1, 2, 1, 3, 2};
+//stacxpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareNormal			[]						= {{0, 0, 1}};
+//stacxpr const int8_t					geometryIndexedSquareNormalIndices	[]						= {0};
+//stacxpr const ::gpk::SCoord3<int8_t>	geometryIndexedSquareUV				[]						= {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}};
 //
-//static constexpr const int8_t					geometryIndexedSquareUVIndices		[]						= {0, 1, 2, 1, 3, 2};
+//stacxpr const int8_t					geometryIndexedSquareUVIndices		[]						= {0, 1, 2, 1, 3, 2};
 //
 //// Vertex coordinates for cube faces
-//static constexpr const ::gpk::SCoord3<int8_t>	geometryIndexedCubePositions	[8]						=
+//stacxpr const ::gpk::SCoord3<int8_t>	geometryIndexedCubePositions	[8]						=
 //	{ {0, 0, 0}, {0, 1, 0}, {1, 0, 0}, {1, 1, 0}
 //	, {0, 0, 1}, {0, 1, 1}, {1, 0, 1}, {1, 1, 1}
 //	};
 //
-//static constexpr const int8_t					geometryIndexedCubeIndices		[12 * 3]				=
+//stacxpr const int8_t					geometryIndexedCubeIndices		[12 * 3]				=
 //	{ 0, 2, 1, 1, 2, 3 //
 //	, 
 //	};
 
 // Vertex coordinates for cube faces
-static constexpr const ::gpk::STriangle3<int8_t>	geometryCube	[12]						=
+stacxpr const ::gpk::STriangle3<int8_t>	geometryCube	[12]						=
 	{ {{0, 0, 0}, {0, 1, 0}, {1, 0, 0}}	// Right	- first
 	, {{0, 1, 0}, {1, 1, 0}, {1, 0, 0}}	// Right	- second
 
@@ -41,7 +41,7 @@ static constexpr const ::gpk::STriangle3<int8_t>	geometryCube	[12]						=
 	};
 
 // Vertex coordinates for cube faces
-static constexpr const ::gpk::STriangle2<int8_t>	texCoordCubeYUp		[12]						=
+stacxpr const ::gpk::STriangle2<int8_t>	texCoordCubeYUp		[12]						=
 	{ {{0, 1}, {0, 0}, {1, 1}}	// Right	- first
 	, {{0, 0}, {1, 0}, {1, 1}}	// Right	- second
 	//{} //
@@ -61,7 +61,7 @@ static constexpr const ::gpk::STriangle2<int8_t>	texCoordCubeYUp		[12]						=
 	, {{1, 0}, {1, 1}, {0, 0}}	// Top		- second
 	};
 
-static constexpr const ::gpk::SCoord3<int8_t>		geometryNormals	[6]		=
+stacxpr const ::gpk::SCoord3<int8_t>		geometryNormals	[6]		=
 	{ { 0, 0,-1} // Right
 	, {-1, 0, 0} // Back
 	, { 0,-1, 0} // Bottom

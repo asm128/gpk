@@ -136,8 +136,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	// -- Get file size to determine which algorithm to use.
 	// -- For files smaller than 3gb, we use a fast algorithm that loads the entire file in memory.
 	// -- For files of, or larger than, 3gb, we use a fast algorithm that loads chunks of 1gb in memory for writing the parts.
-	static constexpr	const uint32_t		gigabyte						= 1024U*1024U*1024U;
-	static constexpr	const uint32_t		sizeSmallFileMax				= 3U * gigabyte;
+	stacxpr	const uint32_t		gigabyte						= 1024U*1024U*1024U;
+	stacxpr	const uint32_t		sizeSmallFileMax				= 3U * gigabyte;
 	const int64_t							sizeFile						= ::gpk::fileSize(fileNameSrc);
 	ree_if(-1 == sizeFile, "Failed to get size for file: '%s'.", fileNameSrc.begin());
 	return (sizeSmallFileMax > sizeFile) ? ::fileSplitSmall(fileNameSrc, sizePartMax) : ::fileSplitLarge(fileNameSrc, sizePartMax);
@@ -187,8 +187,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, bool listFolders, const ::gpk::vcc extension)	{
-	static constexpr const char														curDir	[]							= ".";
-	static constexpr const char														parDir	[]							= "..";
+	stacxpr const char														curDir	[]							= ".";
+	stacxpr const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", ::gpk::toString(pathToList).size());
 	char																			sPath	[4096];
@@ -238,8 +238,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", pathToList.size());
 	gpk_necall(snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, pathToList.begin()), "%s", "Path too long?");
-	static constexpr const char														curDir []							= ".";
-	static constexpr const char														parDir []							= "..";
+	stacxpr const char														curDir []							= ".";
+	stacxpr const char														parDir []							= "..";
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
 	HANDLE																			hFind								= NULL;

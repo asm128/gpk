@@ -70,8 +70,8 @@
 	return 0;
 }
 
-static constexpr const uint32_t				FOLDERPACK_DEFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
-static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
+stacxpr const uint32_t				FOLDERPACK_DEFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
+stacxpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 * 32;
 
 ::gpk::error_t								gpk::folderPack				(::gpk::SFolderPackage& out_packed, const ::gpk::vcs	nameFolderSrc) {
 	::gpk::SPackHeader 								& fileHeader				= out_packed.PackageInfo;
@@ -248,7 +248,7 @@ static constexpr const uint32_t				FOLDERPACK_INFLATE_CHUNK_SIZE	= 1024 * 1024 *
 	return 0;
 }
 
-static constexpr const uint32_t							GPK_CRC_CRC_SEED			= 18973;
+stacxpr const uint32_t							GPK_CRC_CRC_SEED			= 18973;
 
 		::gpk::error_t									gpk::crcGenerate			(const ::gpk::vcb & bytes, uint64_t & crc)	{
 	crc														= 0;

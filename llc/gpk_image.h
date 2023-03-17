@@ -19,7 +19,7 @@ namespace gpk
 																	SImage										(const ::gpk::v2<_tTexel>& other)						: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 																	SImage										(const SImage<_tTexel>& other)							: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-		inline constexpr	operator								view2d<const _tTexel>						()										const	noexcept	{ return View; }
+		inlcxpr	operator								view2d<const _tTexel>						()										const	noexcept	{ return View; }
 		inline				operator								view2d<_tTexel>								()												noexcept	{ return View; }
 
 							SImage&									operator=									(const ::gpk::v2<_tTexel>& other)						{
@@ -38,14 +38,14 @@ namespace gpk
 		inline				::gpk::v1<_tTexel>						operator[]									(uint32_t index)																	{ return View[index]; }
 		inline				const ::gpk::v1<const _tTexel>			operator[]									(uint32_t index)												const				{ return View[index]; }
 
-		inline constexpr	const _tTexel*							begin										()																const	noexcept	{ return View.begin		();	}
-		inline constexpr	const _tTexel*							end											()																const	noexcept	{ return View.end		();	}
-		inline constexpr	_tTexel*								begin										()																		noexcept	{ return View.begin		();	}
-		inline constexpr	_tTexel*								end											()																		noexcept	{ return View.end		();	}
-		inline constexpr	const ::gpk::n2<uint32_t> &				metrics										()																const	noexcept	{ return View.metrics	();	}
-		inline constexpr	const uint32_t &						size										()																const	noexcept	{ return Texels.size	();	}
-		inline constexpr	uint32_t								area										()																const	noexcept	{ return View.area		();	}
-		inline constexpr	uint32_t 								byte_count									()																const	noexcept	{ return Texels.byte_count();	}
+		inlcxpr	const _tTexel*							begin										()																const	noexcept	{ return View.begin		();	}
+		inlcxpr	const _tTexel*							end											()																const	noexcept	{ return View.end		();	}
+		inlcxpr	_tTexel*								begin										()																		noexcept	{ return View.begin		();	}
+		inlcxpr	_tTexel*								end											()																		noexcept	{ return View.end		();	}
+		inlcxpr	const ::gpk::n2<uint32_t> &				metrics										()																const	noexcept	{ return View.metrics	();	}
+		inlcxpr	const uint32_t &						size										()																const	noexcept	{ return Texels.size	();	}
+		inlcxpr	uint32_t								area										()																const	noexcept	{ return View.area		();	}
+		inlcxpr	uint32_t 								byte_count									()																const	noexcept	{ return Texels.byte_count();	}
 
 		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t> & newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
 		inline				::gpk::error_t							resize										(const ::gpk::n2<uint16_t> & newSize)									noexcept	{ return resize(newSize.x, newSize.y); }
@@ -97,7 +97,7 @@ namespace gpk
 			Pitch														= other.Pitch;
 			return *this;
 		}
-		inline constexpr	const ::gpk::n2<uint32_t>&				metrics										()											const	noexcept	{ return {Pitch, View.size() / Pitch}; }
+		inlcxpr	const ::gpk::n2<uint32_t>&				metrics										()											const	noexcept	{ return {Pitch, View.size() / Pitch}; }
 		inline				::gpk::error_t							resize										(const ::gpk::n2<uint32_t> & newSize)				noexcept	{ return resize(newSize.x, newSize.y); }
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY)				noexcept	{
 			gpk_necall(Texels.resize((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1), "cannot resize? Size requested: %u.", (uint32_t)((newSizeX * (int64_t)newSizeY) / View.ELEMENT_BITS + 1));
@@ -115,13 +115,13 @@ namespace gpk
 		inline				::gpk::view<_tTexel>					operator[]									(uint32_t index)												{ return Color[index]; }
 		inline				const ::gpk::view<const _tTexel>		operator[]									(uint32_t index)							const				{ return Color[index]; }
 
-		inline constexpr	const _tTexel*							begin										()											const	noexcept	{ return Color.begin	();	}
-		inline constexpr	const _tTexel*							end											()											const	noexcept	{ return Color.end		();	}
-		inline constexpr	_tTexel*								begin										()													noexcept	{ return Color.begin	();	}
-		inline constexpr	_tTexel*								end											()													noexcept	{ return Color.end		();	}
-		inline constexpr	const ::gpk::n2<uint32_t>&				metrics										()											const	noexcept	{ return Color.metrics	();	}
-		inline constexpr	const uint32_t&							size										()											const	noexcept	{ return Color.size		();	}
-		inline constexpr	uint32_t								area										()											const	noexcept	{ return Color.area		();	}
+		inlcxpr	const _tTexel*							begin										()											const	noexcept	{ return Color.begin	();	}
+		inlcxpr	const _tTexel*							end											()											const	noexcept	{ return Color.end		();	}
+		inlcxpr	_tTexel*								begin										()													noexcept	{ return Color.begin	();	}
+		inlcxpr	_tTexel*								end											()													noexcept	{ return Color.end		();	}
+		inlcxpr	const ::gpk::n2<uint32_t>&				metrics										()											const	noexcept	{ return Color.metrics	();	}
+		inlcxpr	const uint32_t&							size										()											const	noexcept	{ return Color.size		();	}
+		inlcxpr	uint32_t								area										()											const	noexcept	{ return Color.area		();	}
 
 							::gpk::error_t							resize										(uint32_t newSizeX, uint32_t newSizeY)															noexcept	{
 			gpk_necall(Color		.resize(newSizeX, newSizeY), "cannot resize? Size requested: %u x %u.", newSizeX, newSizeY);
@@ -182,15 +182,15 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	stainli		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2<uint16_t>& newSize)																					{
+	stainli	::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2<uint16_t>& newSize)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
-	stainli		::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2<uint16_t>& newSize, const _tElement & newValue)																					{
+	stainli	::gpk::error_t							updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2<uint16_t>& newSize, const _tElement & newValue)																					{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
 	template<typename _tElement>
-	stainli		::gpk::error_t							updateSizeDependentImage					(::gpk::img<_tElement> & out_texture, const ::gpk::view2d<_tElement> & in_view, const ::gpk::n2<uint16_t>& newSize)																					{
+	stainli	::gpk::error_t							updateSizeDependentImage					(::gpk::img<_tElement> & out_texture, const ::gpk::view2d<_tElement> & in_view, const ::gpk::n2<uint16_t>& newSize)																					{
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

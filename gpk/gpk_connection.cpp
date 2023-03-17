@@ -48,8 +48,8 @@
 	return 0;
 }
 
-static constexpr	uint64_t	hashFromTime						(uint64_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
-static constexpr	uint32_t	UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
+stacxpr	uint64_t	hashFromTime						(uint64_t currentTime)		noexcept	{ return ::gpk::noise1DBase(currentTime & 0xFFFFFFFF) + (currentTime >> 16); }
+stacxpr	uint32_t	UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 
 ::gpk::error_t					payloadQueueOptimize				(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>	& payloadsToSend) {
 	if(payloadsToSend.size() < 2)
@@ -329,7 +329,7 @@ static	::gpk::error_t			handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader
 	return 0;
 }
 
-static constexpr int64_t		advantage							= 1000000;
+stacxpr int64_t		advantage							= 1000000;
 
 static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<byte_t> & receiveBuffer)		{
 	sockaddr_in							sa_client							= {};						// Information about the client

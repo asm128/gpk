@@ -16,15 +16,15 @@ namespace gpk
 	public:
 		typedef				_tElement								TElement;
 		// Constructors
-		inline constexpr											view2d					()																			noexcept	= default;
+		inlcxpr											view2d					()																			noexcept	= default;
 		inline														view2d					(_tElement* dataElements, uint32_t gridWidth, uint32_t gridHeight)						: Data{dataElements}, Size{gridWidth, gridHeight}			{
 			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y, "Invalid parameters. Size: %u, %u, pointer: %p.", gridWidth, gridHeight, dataElements);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 		inline														view2d					(_tElement* dataElements, const ::gpk::n2<uint32_t>& gridMetrics)						: view2d(dataElements, gridMetrics.x, gridMetrics.y)		{}
 		template<size_t _tWidth, size_t _tHeight>
-		inline constexpr											view2d					(_tElement (&dataElements)[_tHeight][_tWidth])											: Data{&dataElements[0][0]}, Size{_tWidth, _tHeight}				{}
+		inlcxpr											view2d					(_tElement (&dataElements)[_tHeight][_tWidth])											: Data{&dataElements[0][0]}, Size{_tWidth, _tHeight}				{}
 
-		inline constexpr	operator								view2d<const _tElement>	()																	const	noexcept	{ return {Data, Size}; }
+		inlcxpr	operator								view2d<const _tElement>	()																	const	noexcept	{ return {Data, Size}; }
 		// Operators
 							::gpk::view<_tElement>					operator[]				(uint32_t row)																			{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<_tElement		>(&Data[row * Size.x], Size.x); }
 							::gpk::view<const _tElement>			operator[]				(uint32_t row)														const				{ gthrow_if(0 == Data, "Uninitialized array pointer. Invalid row: %u.", row); gthrow_if(row >= Size.y, "Invalid row: %i.", (int32_t)row); return ::gpk::v1<const _tElement	>(&Data[row * Size.x], Size.x); }
@@ -33,16 +33,16 @@ namespace gpk
 
 		// Methods
 #if !defined(GPK_ATMEL)
-		inline constexpr	const _tElement*						begin					()																	const	noexcept	{ return Data;							}
-		inline constexpr	const _tElement*						end						()																	const	noexcept	{ return Data + size();					}
+		inlcxpr	const _tElement*						begin					()																	const	noexcept	{ return Data;							}
+		inlcxpr	const _tElement*						end						()																	const	noexcept	{ return Data + size();					}
 #endif
-		inline constexpr	_tElement*								begin					()																			noexcept	{ return Data;							}
-		inline constexpr	_tElement*								end						()																			noexcept	{ return Data + size();					}
+		inlcxpr	_tElement*								begin					()																			noexcept	{ return Data;							}
+		inlcxpr	_tElement*								end						()																			noexcept	{ return Data + size();					}
 
-		inline constexpr	const ::gpk::n2<uint32_t>&				metrics					()																	const	noexcept	{ return Size;							}
-		inline constexpr	uint32_t								size					()																	const	noexcept	{ return area();						}
-		inline constexpr	uint32_t 								byte_count				()																	const	noexcept	{ return area() * sizeof(_tElement);	}
-		inline constexpr	uint32_t								area					()																	const	noexcept	{ return Size.x * Size.y;				}
+		inlcxpr	const ::gpk::n2<uint32_t>&				metrics					()																	const	noexcept	{ return Size;							}
+		inlcxpr	uint32_t								size					()																	const	noexcept	{ return area();						}
+		inlcxpr	uint32_t 								byte_count				()																	const	noexcept	{ return area() * sizeof(_tElement);	}
+		inlcxpr	uint32_t								area					()																	const	noexcept	{ return Size.x * Size.y;				}
 
 		inline				::gpk::error_t							fill					(const _tElement & value, uint32_t offset = 0, uint32_t count = 0xFFFFFFFFU) {
 			ree_if((count > size()) && (count != 0xFFFFFFFFU), "Count: %u", count);

@@ -105,7 +105,7 @@ static			::gpk::error_t											pngScanlineDecode_0_8							(::gpk::view2d<uin
 
 // grayscale 8
 static			::gpk::error_t											pngScanlineDecode_0_8							(::gpk::view2d<uint16_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 255 * 65535;
+	stacxpr const double												unitChannel										= 1.0 / 255 * 65535;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -119,7 +119,7 @@ static			::gpk::error_t											pngScanlineDecode_0_8							(::gpk::view2d<uin
 }
 
 static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<::gpk::SColorBGRA>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -142,7 +142,7 @@ static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<::
 }
 
 static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<uint16_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -167,7 +167,7 @@ static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<ui
 }
 
 static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<uint8_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -192,7 +192,7 @@ static			::gpk::error_t											pngScanlineDecode_2_16							(::gpk::view2d<ui
 }
 
 static			::gpk::error_t											pngScanlineDecode_0_16							(::gpk::view2d<::gpk::SColorBGRA>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -227,7 +227,7 @@ static			::gpk::error_t											pngScanlineDecode_0_16							(::gpk::view2d<ui
 }
 
 static			::gpk::error_t											pngScanlineDecode_0_16							(::gpk::view2d<uint8_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 255 * 65535;
+	stacxpr const double												unitChannel										= 1.0 / 255 * 65535;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -290,7 +290,7 @@ static			::gpk::error_t											pngScanlineDecode_6_8							(::gpk::view2d<uin
 }
 
 static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view2d<::gpk::SColorBGRA>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -314,7 +314,7 @@ static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view2d<::
 }
 
 static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view2d<uint16_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -340,7 +340,7 @@ static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view2d<ui
 }
 
 static			::gpk::error_t											pngScanlineDecode_6_16							(::gpk::view2d<uint8_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitChannel										= 1.0 / 65535 * 255;
+	stacxpr const double												unitChannel										= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -413,7 +413,7 @@ static			::gpk::error_t											pngScanlineDecode_4_8							(::gpk::view2d<uin
 }
 
 static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view2d<::gpk::SColorBGRA>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitGreyscale									= 1.0 / 65535 * 255;
+	stacxpr const double												unitGreyscale									= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -435,7 +435,7 @@ static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view2d<::
 }
 
 static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view2d<uint16_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitGreyscale									= 1.0 / 65535 * 255;
+	stacxpr const double												unitGreyscale									= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -456,7 +456,7 @@ static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view2d<ui
 }
 
 static			::gpk::error_t											pngScanlineDecode_4_16							(::gpk::view2d<uint8_t>& out_View, const ::gpk::view<const ::gpk::apod<uint8_t>> & scanlines)		{
-	static constexpr const double												unitGreyscale									= 1.0 / 65535 * 255;
+	stacxpr const double												unitGreyscale									= 1.0 / 65535 * 255;
 	for(uint32_t iScanline = 0; iScanline < scanlines.size(); ++iScanline) {
 		const ::gpk::apod<uint8_t>												& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
@@ -1014,7 +1014,7 @@ static			::gpk::error_t											pngInflate										(const ::gpk::view<ubyte_t
 	return 0;
 }
 
-stainli		::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
+stainli	::gpk::error_t										pngFilePrintInfo								(::gpk::SPNGData& pngData) {
 	::gpk::SPNGIHDR																& imageHeader									= pngData.Header;
 	verbose_printf("----- PNG File Info summary: "
 		"\nSize                 : {%u,  %u}."

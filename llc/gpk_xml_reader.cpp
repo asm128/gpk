@@ -7,7 +7,7 @@
 
 #define xml_info_printf // info_printf
 
-static constexpr ::gpk::array_static<const char_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
+stacxpr ::gpk::array_static<const char_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 
 ::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, const ::gpk::vcc & filename) {
 	xml_info_printf("Loading xml file: %s.", filename.begin());
@@ -114,7 +114,7 @@ static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 		break;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
 	{
-		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
+		stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
 			{ ::gpk::XML_TOKEN_TAG_NODE
 			, ::gpk::XML_TOKEN_TAG_OPEN
 			, ::gpk::XML_TOKEN_TAG_CLOSE
@@ -194,7 +194,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 		}
 		return -1;
 	case '>': // close tag name and tag. Also close tag node if CurrentElement is a TAG_CLOSE
-		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
+		stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 5> validScopes =
 			{ ::gpk::XML_TOKEN_TAG_NODE
 			, ::gpk::XML_TOKEN_TAG_OPEN
 			, ::gpk::XML_TOKEN_TAG_CLOSE
@@ -250,7 +250,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '\r': case '\n': case '\t': case '\b': case ' ': {
-		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
+		stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 11> validScopes =
 			{ ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_PI
@@ -272,7 +272,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	}
 		break;
 	case '<': {
-		static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
+		stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> validScopes =
 			{ ::gpk::XML_TOKEN_COMMENT
 			, ::gpk::XML_TOKEN_DOCUMENT
 			, ::gpk::XML_TOKEN_TAG_TEXT
@@ -314,8 +314,8 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 }
 
 ::gpk::error_t			gpk::xmlParseCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc)	{
-	static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
-	static constexpr ::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
+	stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
+	stacxpr ::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
 	if(0 == reader.StateRead.CurrentElement) {
 		gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_DOCUMENT));
 	}

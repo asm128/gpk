@@ -17,7 +17,7 @@ namespace gpk
 {
 	typedef					double							float64_t;
 	typedef					float							float32_t;
-	static constexpr		const uint8_t					PLATFORM_BYTE_BIT_COUNT								= 8;
+	stacxpr	const uint8_t					PLATFORM_BYTE_BIT_COUNT								= 8;
 #if defined GPK_WINDOWS
 #	if defined(_WIN64) || defined(WIN64)
 #		define	GPK_REFCOUNT_T								long long
