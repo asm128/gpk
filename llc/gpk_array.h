@@ -30,9 +30,9 @@ namespace gpk
 	struct array_base : public view<_tCell> {
 	protected:
 		typedef									array_base<_tCell>							TypeArray;
-//		uint32_t								Offset										= 0;
 		using									view<_tCell>::Count;
 		uint32_t								Size										= 0;
+//		uint32_t								Offset										= 0;
 
 		inlcxpr									array_base									()									noexcept	= default;
 		inlcxpr									array_base									(const TypeArray &	other)			noexcept	= delete;
