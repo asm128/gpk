@@ -24,9 +24,9 @@
 #	define LOGV(...)  ((void)0)
 #endif
 
-		::gpk::debug_print_t	gpk_debug_printf				= {};
+::gpk::debug_print_t	gpk_debug_printf				= {};
 
-		void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
+void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
 	if(textLen) {
 		if(gpk_debug_printf)
 			::gpk_debug_printf(text, textLen);

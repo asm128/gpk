@@ -442,7 +442,7 @@ namespace gpk
 	template<typename _tCell>
 	::gpk::error_t					viewRead				(::gpk::view<const _tCell> & headerToRead, const ::gpk::vcb & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(uint32_t*)input.begin();
+		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tCell)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tCell));
 		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (const _tCell*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tCell);
@@ -451,7 +451,7 @@ namespace gpk
 	template<typename _tCell>
 	::gpk::error_t					viewRead				(::gpk::view<_tCell> & headerToRead, const ::gpk::vb & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(uint32_t*)input.begin();
+		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tCell)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tCell));
 		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (_tCell*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tCell);
@@ -460,7 +460,7 @@ namespace gpk
 	template<typename _tCell>
 	::gpk::error_t					viewLoad				(::gpk::view<const _tCell> & headerToRead, const ::gpk::vcub & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(uint32_t*)input.begin();
+		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tCell)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tCell));
 		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (const _tCell*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tCell);
@@ -469,7 +469,7 @@ namespace gpk
 	template<typename _tCell>
 	::gpk::error_t					viewLoad				(::gpk::view<_tCell> & headerToRead, const ::gpk::vub & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(uint32_t*)input.begin();
+		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(_tCell)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(_tCell));
 		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (_tCell*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(_tCell);

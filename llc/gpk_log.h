@@ -42,7 +42,14 @@ namespace gpk
 	void												_gpk_print_system_errors						(const char* prefix, uint32_t prefixLen);
 	void												_base_debug_print								(const char* text, uint32_t textLen);
 
-#define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
+#if defined(GPK_STDOUT_LOG_ENABLED)
+#	define base_debug_print(prefix, prefixLen)	do {			\
+		::gpk::_base_debug_print(prefix, (uint32_t)prefixLen);	\
+		printf("%s", prefix);								\
+	} while(0)
+#else 
+#	define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
+#endif
 
 	template<size_t prefixLength, typename... TArgs>
 	void												_gpk_debug_printf								(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
@@ -55,9 +62,6 @@ namespace gpk
 		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
 #else
 		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%lu:", ::gpk::timeCurrentInMs());
-#endif
-#if defined(GPK_STDOUT_LOG_ENABLED)
-		printf("%s", timeString);
 #endif
 		base_debug_print(timeString, (int)stringLength);
 		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
