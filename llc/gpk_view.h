@@ -81,36 +81,51 @@ namespace gpk
 			return Count;
 		}
 
-		typedef std::function<::gpk::error_t(_tCell&)>							TFuncForEach;
-		typedef std::function<::gpk::error_t(const _tCell&)>					TFuncForEachConst;
-		typedef std::function<::gpk::error_t(uint32_t & index, _tCell&)>		TFuncForEnumerate;
-		typedef std::function<::gpk::error_t(uint32_t & index, const _tCell&)>	TFuncForEnumerateConst;
+		typedef std::function<void(_tCell&)>							TFuncForEach;
+		typedef std::function<void(const _tCell&)>						TFuncForEachConst;
+		typedef std::function<void(uint32_t & index, _tCell&)>			TFuncForEnumerate;
+		typedef std::function<void(uint32_t & index, const _tCell&)>	TFuncForEnumerateConst;
 
-		inline	::gpk::error_t		for_each				(const TFuncForEach & funcForEach, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)						{ 
-			return enumerate([&funcForEach](uint32_t, _tCell & value) { return funcForEach(value); }, offset, stop);
+		::gpk::error_t				for_each				(const TFuncForEach & funcForEach, uint32_t offset = 0)										{ 
+			for(; offset < Count; ++offset)
+				funcForEach(Data[offset]);
+			return offset;
 		}
-		inline	::gpk::error_t		for_each				(const TFuncForEachConst & funcForEach, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)		const		{ 
-			return enumerate([&funcForEach](uint32_t, const _tCell & value) { return funcForEach(value); }, offset, stop);
+		::gpk::error_t				for_each				(const TFuncForEachConst & funcForEach, uint32_t offset = 0)					const		{ 
+			for(; offset < Count; ++offset)
+				funcForEach(Data[offset]);
+			return offset;
 		}
-		::gpk::error_t				enumerate				(const TFuncForEnumerate & funcForEach, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)					{ 
-			for(uint32_t iCell = offset, cellCount = ::gpk::min(stop, Count); iCell < cellCount; ++iCell) {
-				::gpk::error_t					funcResult				= funcForEach(iCell, Data[iCell]);
-				if(errored(funcResult))
-					return -(::gpk::error_t)iCell;
-				else if(funcResult)
-					return iCell;
-			}
-			return Count;
+		::gpk::error_t				enumerate				(const TFuncForEnumerate & funcForEach, uint32_t offset = 0)								{ 
+			for(; offset < Count; ++offset)
+				funcForEach(offset, Data[offset]);
+			return offset;
 		}
-		::gpk::error_t				enumerate				(const TFuncForEnumerateConst & funcForEach, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)	const		{ 
-			for(uint32_t iCell = offset, cellCount = ::gpk::min(stop, Count); iCell < cellCount; ++iCell) {
-				::gpk::error_t					funcResult				= funcForEach(iCell, Data[iCell]);
-				if(errored(funcResult))
-					return -(::gpk::error_t)iCell;
-				else if(funcResult)
-					return iCell;
-			}
-			return Count;
+		::gpk::error_t				enumerate				(const TFuncForEnumerateConst & funcForEach, uint32_t offset = 0)				const		{ 
+			for(; offset < Count; ++offset)
+				funcForEach(offset, Data[offset]);
+			return offset;
+		}
+		// 
+		::gpk::error_t				for_each				(const TFuncForEach & funcForEach, uint32_t offset, uint32_t stop)							{ 
+			for(stop = ::gpk::min(stop, Count); offset < stop; ++offset)
+				funcForEach(Data[offset]);
+			return offset;
+		}
+		::gpk::error_t				for_each				(const TFuncForEachConst & funcForEach, uint32_t offset, uint32_t stop)			const		{ 
+			for(stop = ::gpk::min(stop, Count); offset < stop; ++offset)
+				funcForEach(Data[offset]);
+			return offset;
+		}
+		::gpk::error_t				enumerate				(const TFuncForEnumerate & funcForEach, uint32_t offset, uint32_t stop)						{ 
+			for(stop = ::gpk::min(stop, Count); offset < stop; ++offset)
+				funcForEach(offset, Data[offset]);
+			return offset;
+		}
+		::gpk::error_t				enumerate				(const TFuncForEnumerateConst & funcForEach, uint32_t offset, uint32_t stop)	const		{ 
+			for(stop = ::gpk::min(stop, Count); offset < stop; ++offset)
+				funcForEach(offset, Data[offset]);
+			return offset;
 		}
 		::gpk::error_t				slice					(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)				{
 			ree_if(offset > Count, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)Count, offset);
