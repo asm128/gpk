@@ -37,8 +37,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSEVENT, JOY_MOVE			, 28);
 
 	struct SSysEvent {
-		uint32_t					Type	: 24;
-		//uint32_t					Handled : 1;
+		uint32_t				Type	: 24;
+		//uint32_t				Handled : 1;
 		::gpk::apod<uint8_t>	Data;
 	};
 
