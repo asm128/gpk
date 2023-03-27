@@ -91,25 +91,25 @@ namespace gpk
 
 	template<typename _tValue>
 	struct SDialogTuner : public ::gpk::IDialogControl {
-				typedef	::std::function<::gpk::error_t(::gpk::vcc & format, _tValue value, const ::gpk::SMinMax<_tValue> & limits)>	
-															TCallback;
+		typedef	::std::function<::gpk::error_t(::gpk::vcc & format, _tValue value, const ::gpk::SMinMax<_tValue> & limits)>	
+													TCallback;
 
-				int32_t										IdDecrease							= -1;
-				int32_t										IdIncrease							= -1;
+		int32_t										IdDecrease							= -1;
+		int32_t										IdIncrease							= -1;
 
-				::gpk::SMinMax<_tValue>						ValueLimits							= {0, 0x7F};
-				_tValue										ValueCurrent						= 0;
-				char_t										ValueString	[64]					= {};
+		::gpk::SMinMax<_tValue>						ValueLimits							= {0, 0x7F};
+		_tValue										ValueCurrent						= 0;
+		char_t										ValueString	[64]					= {};
 
-				TCallback									FuncValueFormat	= [this](::gpk::vcc & format, _tValue/*value*/, const ::gpk::SMinMax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
-				TCallback									FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::SMinMax<_tValue> &)	mutable	{ 
-					inouts	= {this->ValueString, (uint32_t)snprintf(this->ValueString, ::gpk::size(this->ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
-					return 0; 
-				};
+		TCallback									FuncValueFormat	= [this](::gpk::vcc & format, _tValue/*value*/, const ::gpk::SMinMax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+		TCallback									FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::SMinMax<_tValue> &)		mutable	{ 
+			inouts	= {this->ValueString, (uint32_t)snprintf(this->ValueString, ::gpk::size(this->ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
+			return 0; 
+		};
 
-		virtual	::gpk::error_t								Update							()							{ 
-			::gpk::SDialog											& dialog							= *Dialog;
-			::gpk::SGUIControlTable									& controlTable						= dialog.GUI->Controls;
+		virtual	::gpk::error_t						Update							()							{ 
+			::gpk::SDialog									& dialog						= *Dialog;
+			::gpk::SGUIControlTable							& controlTable					= dialog.GUI->Controls;
 			if(controlTable.States[IdDecrease].Execute || controlTable.States[IdIncrease].Execute) {
 				if(controlTable.States[IdDecrease].Execute)
 					return SetValue(ValueCurrent - 1);
@@ -118,14 +118,15 @@ namespace gpk
 			}
 			return 0;
 		}
-		::gpk::error_t										SetValue						(_tValue value)	{
+
+		::gpk::error_t								SetValue						(_tValue value)	{
 			if(value < ValueLimits.Min)
-				value												= ValueLimits.Min;
+				value										= ValueLimits.Min;
 			else if(value > ValueLimits.Max)
-				value												= ValueLimits.Max;
+				value										= ValueLimits.Max;
 			ValueCurrent								= value;
 
-			::gpk::vcc												valueString;
+			::gpk::vcc										valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
 			::gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString);
@@ -135,18 +136,18 @@ namespace gpk
 	};
 
 	template<typename _tValue>
-	::gpk::error_t										tunerCreate							(::gpk::SDialog	& dialog)								{
-		int32_t													index								= -1;
-		::gpk::pobj<::gpk::SDialogTuner<_tValue>>				tuner;
+	::gpk::error_t								tunerCreate							(::gpk::SDialog	& dialog)								{
+		int32_t											index								= -1;
+		::gpk::pobj<::gpk::SDialogTuner<_tValue>>		tuner;
 		gpk_necs(index = dialog.Create(tuner));
-		tuner->ValueCurrent									= 0; //tuner->ValueLimits.Min;
+		tuner->ValueCurrent							= 0; //tuner->ValueLimits.Min;
 		gpk_necs(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl));
 		gpk_necs(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl));
-		::gpk::SGUIControlTable									& controlTable						= dialog.GUI->Controls;
+		::gpk::SGUIControlTable							& controlTable						= dialog.GUI->Controls;
 		controlTable.Controls[tuner->IdGUIControl].Margin	= {};
 		for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
-			::gpk::SControl											& controlButton						= controlTable.Controls[iControl];
-			controlButton.Align									= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
+			::gpk::SControl									& controlButton						= controlTable.Controls[iControl];
+			controlButton.Align							= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
 			::gpk::memcpy_s(controlButton.Palettes.Storage, dialog.Colors->Button.Storage);
 			controlTable.Text			[iControl].Text						= (iControl == tuner->IdDecrease) ? "-" : "+";
 			controlTable.Modes			[iControl].UseNewPalettes			= true;
@@ -159,7 +160,12 @@ namespace gpk
 	}
 
 	template<typename _tValue>	
-	stainli	::gpk::error_t						tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { int32_t index = -1; gpk_necs(index = ::gpk::tunerCreate<_tValue>(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stainli	::gpk::error_t								tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
+		int32_t													index								= -1; 
+		gpk_necs(index = ::gpk::tunerCreate<_tValue>(dialog)); 
+		dialog.Controls[index].as(createdControl); 
+		return index;
+	}
 
 }
 
