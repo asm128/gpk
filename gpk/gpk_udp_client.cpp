@@ -49,7 +49,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 }
 
 static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & client)		{
-	::gpk::apod<byte_t>										receiveBuffer;
+	::gpk::apod<byte_t>												receiveBuffer;
 	while(client.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED && client.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
 		int																sa_length									= sizeof(struct sockaddr_in);
@@ -115,7 +115,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 
 		::gpk::error_t										gpk::clientConnect							(::gpk::SUDPClient & client)		{
 	uint32_t														attempts									= 0;
-	stacxpr uint32_t										MAX_ATTEMPTS								= 1;
+	stacxpr	uint32_t												MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
 		::gpk::mutex_guard												lock										(client.Queue.MutexSend);

@@ -22,14 +22,14 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	stacxpr SAESLevelProperties		AES_LEVEL_PROPERTIES	[3]		=
+	stacxpr	SAESLevelProperties		AES_LEVEL_PROPERTIES	[3]		=
 		{ {16, 176}
 		, {24, 208}
 		, {32, 240}
 		};
 
-	stacxpr uint32_t				AES_SIZEBLOCK					= 16; // Block length in bytes AES is 128b block only
-	stacxpr uint32_t				AES_SIZEIV						= 16;
+	stacxpr	uint32_t				AES_SIZEBLOCK					= 16; // Block length in bytes AES is 128b block only
+	stacxpr	uint32_t				AES_SIZEIV						= 16;
 
 	struct SAESContext {
 		AES_LEVEL						Level							= {};

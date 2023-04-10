@@ -187,8 +187,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 }
 
 		::gpk::error_t														gpk::pathList						(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, bool listFolders, const ::gpk::vcc extension)	{
-	stacxpr const char														curDir	[]							= ".";
-	stacxpr const char														parDir	[]							= "..";
+	stacxpr	const char														curDir	[]							= ".";
+	stacxpr	const char														parDir	[]							= "..";
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", ::gpk::toString(pathToList).size());
 	char																			sPath	[4096];
@@ -238,8 +238,8 @@ static ::gpk::error_t				fileSplitLarge					(const ::gpk::vcc	& fileNameSrc, con
 	char																			bufferFormat[36];
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", pathToList.size());
 	gpk_necall(snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, pathToList.begin()), "%s", "Path too long?");
-	stacxpr const char														curDir []							= ".";
-	stacxpr const char														parDir []							= "..";
+	stacxpr	const char														curDir []							= ".";
+	stacxpr	const char														parDir []							= "..";
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA																fdFile								= {};
 	HANDLE																			hFind								= NULL;

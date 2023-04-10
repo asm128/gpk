@@ -26,7 +26,7 @@ namespace gpk
 		,	ASCII_COLOR_INDEX_COUNT		= 16			// COUNT
 		};
 
-	stacxpr uint32_t ASCII_PALETTE [] = 
+	stacxpr	uint32_t ASCII_PALETTE [] = 
 		{	0xFF000000		// BLACK
 		,	0xFF800000	 	// DARKBLUE
 		,	0xFF008000	 	// DARKGREEN

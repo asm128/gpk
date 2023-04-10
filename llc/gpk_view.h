@@ -226,9 +226,9 @@ namespace gpk
 	typedef				::gpk::view<const vci32	>	vcvci32;
 	typedef				::gpk::view<const vci64	>	vcvci64;
 
-	stacxpr ::gpk::vcc		STR_NULL		= {4, "null"};
-	stacxpr ::gpk::vcc		STR_TRUE		= {4, "true"};
-	stacxpr ::gpk::vcc		STR_FALSE		= {5, "false"};
+	stacxpr	::gpk::vcc		STR_NULL		= {4, "null"};
+	stacxpr	::gpk::vcc		STR_TRUE		= {4, "true"};
+	stacxpr	::gpk::vcc		STR_FALSE		= {5, "false"};
 
 	struct view_string : public view<char_t> {
 		inlcxpr							view_string				()															= default;

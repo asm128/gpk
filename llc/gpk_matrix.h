@@ -45,9 +45,9 @@ namespace gpk
 		inline				void				Invert						()																									{ *this = GetInverse();		}
 
 		inline				_tMat4&				LinearInterpolate			(const _tMat4&p, const _tMat4&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
-		constexpr			TCoord3				InverseTranslate			(const TCoord3& vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
+		constexpr			TCoord3				InverseTranslate			(const TCoord3 & vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
 							void				InverseTranslateInPlace		(TCoord3& vec)																	const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
-		constexpr			TCoord3				Transform					(const TCoord3& v)																const				{
+		constexpr			TCoord3				Transform					(const TCoord3 & v)																const				{
 			return
 			TCoord3
 				{	(v.x*_11 + v.y*_21 + v.z*_31 + _41)	// x
@@ -57,14 +57,14 @@ namespace gpk
 				/	(v.x*_14 + v.y*_24 + v.z*_34 + _44)	// w
 			;
 		}
-		constexpr			TCoord3				TransformDirection			(const TCoord3& vector)														const	noexcept	{
+		constexpr			TCoord3				TransformDirection			(const TCoord3 & vector)														const	noexcept	{
 			return
 				{	vector.x * _11 + vector.y * _21 + vector.z * _31
 				,	vector.x * _12 + vector.y * _22 + vector.z * _32
 				,	vector.x * _13 + vector.y * _23 + vector.z * _33
 				};
 		}
-		constexpr			TCoord3				TransformInverseDirection	(const TCoord3& _v)															const	noexcept	{
+		constexpr			TCoord3				TransformInverseDirection	(const TCoord3 & _v)															const	noexcept	{
 			return
 				{	_v.x * _11 + _v.y * _12 + _v.z * _13
 				,	_v.x * _21 + _v.y * _22 + _v.z * _23
@@ -73,7 +73,7 @@ namespace gpk
 		}
 		//- Rotate avector using the inverse of the matrix
 		//inline				void				InverseRotateInPlace	(TCoord3& vector)				const			{ fpVec = InverseRotate(vector); }
-		//						TCoord3				InverseRotate			(const TCoord3& fpVec)			const
+		//						TCoord3				InverseRotate			(const TCoord3 & fpVec)			const
 		//{
 		//	return
 		//	{	fpVec.x * _11 + fpVec.y * _21 + fpVec.z * _31
@@ -137,7 +137,7 @@ namespace gpk
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
-		inline				void				Scale						(const TCoord3& ypr, bool bEraseContent)												noexcept
+		inline				void				Scale						(const TCoord3 & ypr, bool bEraseContent)												noexcept
 		{
 			if( bEraseContent ) {
 				_11 = (_tBase)ypr.x;	_12 =					_13 =					_14 =
@@ -149,7 +149,7 @@ namespace gpk
 				_11 = (_tBase)(_11*ypr.x); _22 = (_tBase)(_22*ypr.y); _33 = (_tBase)(_33*ypr.z);
 			}
 		}
-							void				SetTranslation				(const TCoord3& vTranslation, bool bEraseContent)										noexcept	{
+							void				SetTranslation				(const TCoord3 & vTranslation, bool bEraseContent)										noexcept	{
 			if( bEraseContent ) {
 				_11 = (_tBase)1;	_12 =				_13 =				_14 =
 				_21 = (_tBase)0;	_22 = (_tBase)1;	_23 =				_24 =
@@ -158,18 +158,21 @@ namespace gpk
 			}
 			_41	= vTranslation.x; _42 = vTranslation.y; _43 = vTranslation.z;
 		}
-							void				FieldOfView					(double fAngle, double fAspect, double zn, double zf)												{
+		template<typename _tNearFar>
+		inline	void							FieldOfView					(double fAngle, double fAspect, const ::gpk::SMinMax<_tNearFar> & nearFar)	{ return FieldOfView(fAngle, fAspect, nearFar.Min, nearFar.Max); } // FoV
+		template<typename _tNearFar>
+		void									FieldOfView					(double fAngle, double fAspect, _tNearFar zNear, _tNearFar zFar)			{
 			double										fTan						= tan( fAngle / 2.0 );
-			_11 = (_tBase)(1.0 / ( fAspect * fTan )			);
-			_22 = (_tBase)(1.0 / fTan						);
-			_33 = (_tBase)(zf / ( zf - zn )					);
-			_34 = (_tBase)(1								);
-			_43 = (_tBase)(( -( zf * zn ) ) / ( zf - zn )	);
+			_11 = (_tBase)(1.0 / ( fAspect * fTan )				);
+			_22 = (_tBase)(1.0 / fTan							);
+			_33 = (_tBase)(zFar / ( zFar - zNear )				);
+			_34 = (_tBase)(1									);
+			_43 = (_tBase)(( -(zFar * zNear) ) / (zFar - zNear)	);
 
 			_12 = _13 = _14 = _21 = _23 = _24 = _31 = _32 = _41 = _42 = _44 = (_tBase)0;
 		//	return *this;
 		} // FoV
-							void				LookAt						(const TCoord3& vPosition, const TCoord3& vTarget, const TCoord3& vUp)							{
+		void									LookAt						(const TCoord3 & vPosition, const TCoord3& vTarget, const TCoord3& vUp)		{
 			TCoord3										F							= TCoord3{vTarget - vPosition}.Normalize();
 			TCoord3										R							= vUp	.Cross(F).Normalize();
 			TCoord3										U							= F		.Cross(R).Normalize();
@@ -183,7 +186,7 @@ namespace gpk
 			_44 = (_tBase)1;
 		}
 
-							void				View3D						(const TCoord3& vPosition, const TCoord3& vRight, const TCoord3& vUp, const TCoord3& vFront)	{
+							void				View3D						(const TCoord3 & vPosition, const TCoord3& vRight, const TCoord3& vUp, const TCoord3& vFront)	{
 			_11 = vRight.x;	_12 = vUp.x; _13 = vFront.x; _14 = (_tBase)0;
 			_21 = vRight.y;	_22 = vUp.y; _23 = vFront.y; _24 = (_tBase)0;
 			_31 = vRight.z;	_32 = vUp.z; _33 = vFront.z; _34 = (_tBase)0;
@@ -192,7 +195,7 @@ namespace gpk
 			_43 = (_tBase)-vPosition.Dot(vFront	);
 			_44 = (_tBase)1;
 		}
-							void				Billboard					(const TCoord3& vPos, const TCoord3& vDir, const TCoord3& vWorldUp)								{
+							void				Billboard					(const TCoord3 & vPos, const TCoord3& vDir, const TCoord3& vWorldUp)								{
 			TCoord3										vUp
 				,										vRight
 				;
@@ -227,7 +230,7 @@ namespace gpk
 		//	return *this;
 		} // Rota
 
-							void				RotationArbitraryAxis		(const TCoord3& _vcAxis, _tBase a)																		{
+							void				RotationArbitraryAxis		(const TCoord3 & _vcAxis, _tBase a)																		{
 			::gpk::SPairSinCos							pairSinCos					= ::gpk::getSinCos(a);
 			TCoord3										vcAxis						= _vcAxis;
 			double										fSum						= 1.0 - pairSinCos.Cos;

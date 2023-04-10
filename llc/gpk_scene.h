@@ -49,7 +49,7 @@ namespace gpk
 	struct SSceneCamera {
 							::gpk::SCameraPoints									Points								;
 							::gpk::SCameraVectors									Vectors								;
-							::gpk::SNearFar											NearFar								;
+							::gpk::SMinMax<float>									NearFar								;
 							double													Angle;
 	};
 
@@ -77,15 +77,15 @@ namespace gpk
 	};
 
 	struct SScene {
-							::gpk::apod<::gpk::SSceneObject>					Objects										= {};
+							::gpk::apod<::gpk::SSceneObject>						Objects										= {};
 							::gpk::SSceneGeometries									Geometries									= {};
 							::gpk::SSceneLights										Lights										= {};
 							::gpk::SSceneTransforms									Transforms									= {};
 
-							::gpk::apod<::gpk::SModelPivot	<float>>			ObjectPivots								= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectTransform								= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectOrientations							= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>			ObjectOrientationsInverse					= {};
+							::gpk::apod<::gpk::SModelPivot	<float>>				ObjectPivots								= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectTransform								= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectOrientations							= {};
+							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectOrientationsInverse					= {};
 
 							::gpk::SSceneCamera										Camera										=
 								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}
@@ -94,7 +94,7 @@ namespace gpk
 									, {0, 1, 0}
 									, {0, 0, 1}
 									}
-								, ::gpk::SNearFar
+								, ::gpk::SMinMax<float>
 									{ 0.001f
 									, 100.0f
 									}

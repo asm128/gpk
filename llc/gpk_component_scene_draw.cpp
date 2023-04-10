@@ -100,7 +100,7 @@ static	::gpk::error_t					drawOrderedVertices
 	const double								aspectRatio				= target_image.metrics().x / (double)target_image.metrics().y;
 	::gpk::SCamera								& camera				= renderer.Cameras[iCamera];
 	matrixView.LookAt(camera.Position, camera.Target, camera.Up);
-	matrixProjection.FieldOfView(camera.Angle, aspectRatio, camera.ClipPlanes.Near, camera.ClipPlanes.Far);
+	matrixProjection.FieldOfView(camera.Angle, aspectRatio, camera.ClipPlanes.Min, camera.ClipPlanes.Max);
 	renderer.RenderCache.NodesToRender.clear();
 	matrixVP								= matrixView * matrixProjection;
 

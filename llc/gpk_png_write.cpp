@@ -56,12 +56,12 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view<const ubyte
 }
 
 						::gpk::error_t							gpk::pngFileWrite						(const ::gpk::view2d<::gpk::SColorBGRA>& in_imageView, ::gpk::apod<ubyte_t>& out_Bytes)		{
-	stacxpr const ubyte_t										signature	[8]							= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
+	stacxpr	const ubyte_t										signature	[8]							= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::apod<ubyte_t>											safe_Bytes								= {};
 	safe_Bytes.append((ubyte_t*)signature, 8);
 
 	uint32_t															chunkSize								= sizeof(::gpk::SPNGIHDR);
-	stacxpr const char											typeIHDR	[4]							= {'I', 'H', 'D', 'R'};
+	stacxpr	const char											typeIHDR	[4]							= {'I', 'H', 'D', 'R'};
 	int32_t																crc										= 0;
 	::gpk::SPNGIHDR														imageHeader								= {};
 	imageHeader.Size												= in_imageView.metrics();
@@ -105,7 +105,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view<const ubyte
 	gpk_necall(deflated.resize(filtered.Texels.size() * 2 + 65535), "%s", "Out of memory?");
 	gpk_necall(::pngDeflate({(const ubyte_t*)filtered.Texels.begin(), filtered.Texels.size()}, deflated), "%s", "Failed to compress! Out of memory?");
 
-	stacxpr const char											typeIDAT	[4]							= {'I', 'D', 'A', 'T'};
+	stacxpr	const char											typeIDAT	[4]							= {'I', 'D', 'A', 'T'};
 	chunkSize														= deflated.size();
 	be2le_32(chunkSize);
 	safe_Bytes.append((const ubyte_t*)&chunkSize, 4);
@@ -118,7 +118,7 @@ static			::gpk::error_t									pngDeflate								(const ::gpk::view<const ubyte
 
 	chunkSize														= 0;
 	crc																= 0;
-	stacxpr const char											typeIEND	[4]							= {'I', 'E', 'N', 'D'};
+	stacxpr	const char											typeIEND	[4]							= {'I', 'E', 'N', 'D'};
 	be2le_32(chunkSize);
 	safe_Bytes.append((const ubyte_t*)&chunkSize, 4);
 	crcDataStart													= safe_Bytes.size();

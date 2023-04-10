@@ -291,8 +291,8 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);
-	stacxpr ::gpk::vcc						str_stl					= {4, ".stl"};
-	stacxpr ::gpk::vcc						str_obj					= {4, ".obj"};
+	stacxpr	::gpk::vcc						str_stl					= {4, ".stl"};
+	stacxpr	::gpk::vcc						str_obj					= {4, ".obj"};
 	if(ext_lwr == str_stl) {
 		::gpk::SSTLFile							stlFile					= {};
 		gpk_necall(::gpk::stlFileLoad(filename, stlFile), "Failed to load file '%s'.", ::gpk::toString(filename).begin());

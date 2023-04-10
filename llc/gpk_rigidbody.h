@@ -76,8 +76,8 @@ namespace gpk
 		::gpk::apod<::gpk::SBoundingVolume	>		BoundingVolumes					= {};
 		::gpk::apod<::gpk::m4f				>		TransformsLocal					= {};
 
-		stacxpr const ::gpk::m4f					MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
-		stacxpr const ::gpk::m3f					MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
+		stacxpr	const ::gpk::m4f					MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
+		stacxpr	const ::gpk::m3f					MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
 
 		int32_t 									ZeroForces						()	{
 			for(uint32_t iForce = 0; iForce < Forces.size(); ++iForce)

@@ -29,7 +29,7 @@ namespace gpk
 		0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 	};
 
-	stacxpr ::gpk::SCoord3<float>				VOXEL_VERTICES		[8]		= 
+	stacxpr	::gpk::SCoord3<float>				VOXEL_VERTICES		[8]		= 
 			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
 			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 
@@ -51,7 +51,7 @@ namespace gpk
 		bool		 Right			: 1;
 	};
 
-	stacxpr ::gpk::SQuad3<float>				VOXEL_FACE_VERTICES	[6]		= 
+	stacxpr	::gpk::SQuad3<float>				VOXEL_FACE_VERTICES	[6]		= 
 		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
 		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
 		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
@@ -60,7 +60,7 @@ namespace gpk
 		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = 0)
 		}; 
 
-	stacxpr ::gpk::SQuad2<float>				VOXEL_FACE_UV	[6]		= 
+	stacxpr	::gpk::SQuad2<float>				VOXEL_FACE_UV	[6]		= 
 		{ {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Top		
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Front	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Right	
@@ -69,7 +69,7 @@ namespace gpk
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Left		
 		};
 
-	stacxpr ::gpk::SQuad3<float>				VOXEL_FACE_NORMALS	[6]		= 
+	stacxpr	::gpk::SQuad3<float>				VOXEL_FACE_NORMALS	[6]		= 
 		{ {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}	// Top		
 		, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}}	// Front	
 		, {{0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}}	// Right	
@@ -78,8 +78,8 @@ namespace gpk
 		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
 		};
 
-	stacxpr ::gpk::SCoord3<float>				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
-	stacxpr ::gpk::SQuad2<uint8_t>				VOXEL_FACE_NORMAL_INDICES	[6]		= 
+	stacxpr	::gpk::SCoord3<float>				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
+	stacxpr	::gpk::SQuad2<uint8_t>				VOXEL_FACE_NORMAL_INDICES	[6]		= 
 		{ {0, 0, 0, 0}	// Top		
 		, {1, 1, 1, 1}	// Front	
 		, {2, 2, 2, 2}	// Right	
@@ -88,7 +88,7 @@ namespace gpk
 		, {5, 5, 5, 5}	// Left		
 		};
 
-	stacxpr ::gpk::SCoord3<int8_t>				VOXEL_DELTAS				[6]		= 
+	stacxpr	::gpk::SCoord3<int8_t>				VOXEL_DELTAS				[6]		= 
 		{ { 0, 1, 0} // Top		(y = 1)
 		, { 1, 0, 0} // Front	(x = 1)
 		, { 0, 0, 1} // Right	(z = 1)
@@ -97,7 +97,7 @@ namespace gpk
 		, { 0, 0,-1} // Left	(z = -1)
 		};
 
-	stacxpr uint8_t							VOXEL_FACE_INDICES		[6][6]	= 
+	stacxpr	uint8_t							VOXEL_FACE_INDICES		[6][6]	= 
 		{ {0, 2, 1, 1, 2, 3} // Top
 		, {0, 1, 2, 1, 3, 2}
 		, {0, 1, 2, 1, 3, 2}
@@ -106,7 +106,7 @@ namespace gpk
 		, {0, 2, 1, 1, 2, 3}
 		}; 
 
-	stacxpr uint16_t							VOXEL_FACE_INDICES_16	[6][6]	= 
+	stacxpr	uint16_t							VOXEL_FACE_INDICES_16	[6][6]	= 
 		{ {4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 1, 4 * 3 + 3, 4 * 3 + 2} // Bottom
 		, {4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 1, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 3}
 		, {4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 1, 4 * 5 + 2, 4 * 5 + 3}
@@ -116,7 +116,7 @@ namespace gpk
 		, 
 		}; 
 
-	stacxpr float								VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
+	stacxpr	float								VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
 	template<typename _tCell, uint16_t _width = 16>
 	struct SVoxelLayer {

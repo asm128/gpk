@@ -144,7 +144,7 @@ namespace gpk {
 		::gpk::SCoord3<float>							Position						= {};
 		::gpk::SCoord3<float>							Target							= {};
 		::gpk::SCoord3<float>							Up								= {};
-		::gpk::SNearFar									ClipPlanes						= {};
+		::gpk::SMinMax<float>							ClipPlanes						= {};
 		double											Angle							= {};
 	};
 

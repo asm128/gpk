@@ -153,6 +153,7 @@ namespace gpk
 	};
 
 	struct SContact {
+		double								Time							= {};
 		uint32_t							EntityA							= {};
 		uint32_t							EntityB							= {};
 		::gpk::n3<float>					Distance						= {};
@@ -161,7 +162,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	::gpk::error_t						collisionDetect		(const ::gpk::SEngine & engine, ::gpk::apod<::gpk::SContact> & contactsDetected);
+	::gpk::error_t						collisionDetect		(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected);
 } // namespace
 
 #endif

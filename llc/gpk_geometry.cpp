@@ -1,7 +1,7 @@
 #include "gpk_geometry.h"
 
 // Vertex coordinates for cube faces
-stacxpr const ::gpk::STriangle3<float>					geometryCubePositions			[12]						=
+stacxpr	const ::gpk::STriangle3<float>					geometryCubePositions			[12]						=
 	{ {{1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}	// Right	- first
 	, {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}}	// Right	- second
 	, {{0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}}	// Back		- first

@@ -329,7 +329,7 @@ static	::gpk::error_t			handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader
 	return 0;
 }
 
-stacxpr int64_t		advantage							= 1000000;
+stacxpr	int64_t		advantage							= 1000000;
 
 static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<byte_t> & receiveBuffer)		{
 	sockaddr_in							sa_client							= {};						// Information about the client
