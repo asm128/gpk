@@ -4,6 +4,7 @@
 #include "gpk_gui.h"
 #include "gpk_dialog.h"
 #include "gpk_gui_control.h"
+#include "gpk_label.h"
 
 #include <mutex>
 
