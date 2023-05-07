@@ -73,10 +73,10 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 			gpk_necs(::initClient(bestClient));
 			gpk_necs(::gpk::clientConnect(bestClient));
 		}
-		::gpk::apod<char_t>										responseRemote;
+		::gpk::au8												responseRemote;
 		{	// Send the request data to the connected service.
 			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			gpk_necs(::gpk::connectionPushData(bestClient, bestClient.Queue, environmentBlock, true, true));	// Enqueue the packet
+			gpk_necs(::gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
 				gpk_necs(::gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SUDPMessage>	received;
@@ -93,7 +93,7 @@ static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeVal
 		}
 		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
 		gpk_necs(::gpk::clientDisconnect(bestClient));
-		output												= responseRemote;
+		output												= {(char*)responseRemote.begin(), responseRemote.size()};
 	}
 	return 0;
 }

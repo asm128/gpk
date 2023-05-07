@@ -770,9 +770,12 @@ namespace gpk
 
 	::gpk::error_t							keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output);
 	::gpk::error_t							keyValConstStringDeserialize	(const ::gpk::vcb & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
+
 	::gpk::apod<char_t>						toString						(const ::gpk::vcc & strToLog);
-	::gpk::error_t							join							(::gpk::apod<char_t> & query, char separator, ::gpk::view<const gpk::view_const_char>	fields);
-	::gpk::error_t							append_quoted					(::gpk::apod<char_t>& output, ::gpk::vcc text);
+	stainli	::gpk::apod<char_t>				toString						(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
+
+	::gpk::error_t							join							(::gpk::apod<char_t> & query, char separator, ::gpk::view<const gpk::vcc> fields);
+	::gpk::error_t							append_quoted					(::gpk::apod<char_t> & output, ::gpk::vcc text);
 
 
 	::gpk::error_t							filterPrefix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);

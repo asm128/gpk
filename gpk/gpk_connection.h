@@ -35,20 +35,14 @@ namespace gpk
 		uint32_t							Size		;
 		uint64_t							MessageId	;
 	};
-
-	GDEFINE_ENUM_TYPE (UDP_CONNECTION_STATE, uint8_t)
-	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, DISCONNECTED				, 0);
-	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, HANDSHAKE					, 1);	// - Payload 0: Request connect. - Payload 1: Confirm connect
-	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, IDLE						, 2);	// - Payload 0: Single payload. - Payload 1: Payload combo.
-
 #pragma pack(pop)
 
 	struct SUDPMessage {
-		::gpk::apod<byte_t>					Payload		;
+		::gpk::au8							Payload		;
 		uint64_t							Time		;
 		::gpk::SUDPCommand					Command		;
 		uint8_t								RetryCount	;
-		::gpk::apod<uint64_t>				Hashes		;
+		::gpk::au64							Hashes		;
 	};
 
 	struct SUDPClientQueue {
@@ -58,6 +52,11 @@ namespace gpk
 		::std::mutex						MutexSend	;
 		::std::mutex						MutexReceive;
 	};
+
+	GDEFINE_ENUM_TYPE (UDP_CONNECTION_STATE, uint8_t)
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, DISCONNECTED				, 0);
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, HANDSHAKE					, 1);	// - Payload 0: Request connect. - Payload 1: Confirm connect
+	GDEFINE_ENUM_VALUE(UDP_CONNECTION_STATE, IDLE						, 2);	// - Payload 0: Single payload. - Payload 1: Payload combo.
 
 	struct SUDPConnection {
 		::gpk::auto_socket_close			Socket						;
@@ -79,19 +78,20 @@ namespace gpk
 		::gpk::UDP_CONNECTION_STATE			State						= ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 	};
 
-	stacxpr	const uint32_t	UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
+	stacxpr	const uint32_t				UDP_PAYLOAD_SIZE_LIMIT		= 1024 * 128;
 
 	::gpk::error_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
 	::gpk::error_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
-	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<byte_t> & receiveBuffer);
-	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cb & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
-
-	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::v1cub & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
-		return connectionPushData(client, queue, ::gpk::v1cb{(const byte_t*)data.begin(), data.size()}, bEncrypted, bCompress, retryCount);
+	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<uint8_t> & receiveBuffer);
+	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
+	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vci8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
 	}
-
+	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcc & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
+	}
 	template<typename _tWithLoad, typename _tState> 
-	::gpk::error_t				processUDPClientQueueEvents	
+	::gpk::error_t						processUDPClientQueueEvents	
 		( _tWithLoad						& eventCache
 		, uint32_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
@@ -99,10 +99,10 @@ namespace gpk
 		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
 		for(uint32_t iMessage = 0; iMessage < clientQueue.size(); ++iMessage) {
-			const ::gpk::SUDPMessage	& message			= *clientQueue[iMessage];
+			const ::gpk::SUDPMessage				& message					= *clientQueue[iMessage];
 			switch(message.Command.Command) {
 			case ::gpk::ENDPOINT_COMMAND_PAYLOAD: {
-				::gpk::vcub						payloadInput		= {(const ubyte_t*)message.Payload.begin(), message.Payload.size()};
+				::gpk::vcub								payloadInput				= {(const ubyte_t*)message.Payload.begin(), message.Payload.size()};
 				gpk_necs(eventCache.Load(payloadInput));
 				switch(message.Command.Type) {
 				case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	: 
@@ -117,25 +117,25 @@ namespace gpk
 	}
 
 	template<typename _tWithLoad, typename _tState> 
-	stainli	::gpk::error_t		processUDPClientQueueEvents	
+	stainli	::gpk::error_t				processUDPClientQueueEvents	
 		( uint32_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
 		, _tState							& state
 		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tWithLoad &)>	& funcProcessRequest
 		) {
-		_tWithLoad						eventCache			= {};
+		_tWithLoad								eventCache					= {};
 		return ::gpk::processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
 	}
 
 	template<typename _tEvent, typename _tState> 
-	::gpk::error_t				processUDPEvents
+	::gpk::error_t						processUDPEvents
 		( ::gpk::view<const ::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
 		, _tState												& state
 		, const ::std::function<::gpk::error_t (uint32_t iClient, _tState &, const _tEvent &)>	& funcProcessRequest
 		) {
-		_tEvent							eventReceived		= {};
+		_tEvent									eventReceived				= {};
 		for(uint32_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
-			 const ::gpk::apobj<::gpk::SUDPMessage>	& clientQueue		= queueReceived[iClient];
+			 const ::gpk::apobj<::gpk::SUDPMessage>	& clientQueue				= queueReceived[iClient];
 			 gpk_necs(::gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
 		}
 		return 0;

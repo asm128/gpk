@@ -4,6 +4,7 @@
 #include "gpk_gui.h"
 #include "gpk_dialog.h"
 #include "gpk_gui_control.h"
+#include "gpk_label.h"
 
 #include <mutex>
 
@@ -189,7 +190,7 @@ namespace gpk
 				Client.Queue.Received.clear();
 			}
 			for(uint32_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
-				::gpk::vcb							viewPayload					= MessagesToProcess[iMessage]->Payload;
+				::gpk::vcu8							viewPayload					= MessagesToProcess[iMessage]->Payload;
 				info_printf("Client received: %s.", viewPayload.begin());
 			}
 			return 0;

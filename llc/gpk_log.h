@@ -224,9 +224,10 @@ namespace gpk
 #endif
 
 #ifndef retval_gerror_if
-#	define retval_gerror_if(retVal, condition, format, ...)	if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
-#	define retval_gwarn_if(retVal, condition, format, ...)	if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
-#	define retval_ginfo_if(retVal, condition, format, ...)	if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal;	}
+#	define retval_gerror_if(retVal, condition, format, ...)	if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal; }
+#	define retval_gwarn_if(retVal, condition, format, ...)	if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal; }
+#	define retval_ginfo_if(retVal, condition, format, ...)	if(condition) { info_printf		(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal; }
+#	define retval_string_if(retVal, condition)				if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1); return retVal; }
 #endif
 
 #ifndef retnul_gerror_if
@@ -416,6 +417,7 @@ namespace gpk
 #	define rve_if							retval_gerror_if
 #	define rvw_if							retval_gwarn_if
 #	define rvi_if							retval_ginfo_if
+#	define rvs_if							retval_string_if
 #endif
 
 #ifndef rne_if

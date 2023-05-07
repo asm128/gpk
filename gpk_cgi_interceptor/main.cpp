@@ -49,17 +49,17 @@ static	::gpk::error_t								createChildProcess
 		) ? true : false;  // receives PROCESS_INFORMATION
 	ree_if(false == bSuccess, "Failed to create process'%s'.", ::gpk::toString(appPath).begin());
 
-	::gpk::array_pod<char_t>								popupTitle						= {};
+	::gpk::au8						popupTitle						= {};
 	{
-		static constexpr const ::gpk::view_const_char		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
-		char												ensure[encodedSignature.size()]	= {};
+		stacxpr	const ::gpk::vcc		encodedSignature				= {"TGFzdCBDaGFuY2UhIC0gQ0dJIEludGVyY2VwdG9yIC0gYXNtMTI4IChjKSAyMDA5LTIwMTkA"};
+		char							ensure[encodedSignature.size()]	= {};
 		(void)ensure;
 		ree_if(encodedSignature.size() != 73, "%s", "");
 		::gpk::base64Decode(encodedSignature, popupTitle);
 		popupTitle.push_back('\0');
 		ree_if(popupTitle[0] != 'L', "%s", "");
 	}
-	::gpk::array_pod<char_t>								userMessage				= {};
+	::gpk::ac								userMessage				= {};
 	{
 		userMessage.resize(2 * appPath.size() + 2 * commandLine.size() + 1024);
 		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", appPath.begin());

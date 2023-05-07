@@ -19,8 +19,8 @@
 	return 0;
 }
 
-::gpk::apod<char_t>				gpk::toString						(const ::gpk::vcc & strToLog)	{
-	::gpk::apod<char_t>					sprintfable							= strToLog;
+::gpk::apod<char_t>						gpk::toString						(const ::gpk::vcc & strToLog)	{
+	::gpk::apod<char_t>							sprintfable							= strToLog;
 	e_if(::gpk::failed(sprintfable.push_back(0)), "%s", "Out of memory?")
 	else
 		e_if(::gpk::failed(sprintfable.resize(sprintfable.size()-1)), "%s", "Out of memory?");
@@ -49,9 +49,9 @@
 ::gpk::error_t							gpk::keyvalNumeric					(const ::gpk::vcs & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, uint64_t * outputNumber)	{
 	ree_if(0 == outputNumber, "%s", "Output number cannot point to a null address.");
 	::gpk::error_t								indexKey							= ::gpk::find(key, keyVals);
-	if(-1 != indexKey) {
+	if(-1 != indexKey)
 		::gpk::parseIntegerDecimal(keyVals[indexKey].Val, outputNumber);
-	}
+
 	return indexKey;
 }
 
@@ -64,20 +64,20 @@
 }
 
 ::gpk::error_t							gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output)	{
-	::gpk::apod<::gpk::TKeyValConstString>	keyValsToSave						= {};
+	::gpk::apod<::gpk::TKeyValConstString>		keyValsToSave						= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
 			const ::gpk::TKeyValConstString				& kvToCheck							= keyVals[iKey];
-			const ::gpk::vcc				& keyToSave							= keysToSave[iRef];
+			const ::gpk::vcc							& keyToSave							= keysToSave[iRef];
 			if(kvToCheck.Key == keyToSave)
 				keyValsToSave.push_back(kvToCheck);
 		}
 	}
 	output.append((const char*)&keyValsToSave.size(), sizeof(uint32_t));
-	uint32_t												iOffset								= 0;
+	uint32_t									iOffset								= 0;
 	for(uint32_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
-		iOffset												+= ::gpk::viewWrite(keyValsToSave[iKey].Key, output);
-		iOffset												+= ::gpk::viewWrite(keyValsToSave[iKey].Val, output);
+		iOffset									+= ::gpk::viewWrite(keyValsToSave[iKey].Key, output);
+		iOffset									+= ::gpk::viewWrite(keyValsToSave[iKey].Val, output);
 	}
 	return 0;
 }

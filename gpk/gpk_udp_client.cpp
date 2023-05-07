@@ -49,7 +49,7 @@ static	::gpk::error_t										clientConnectAttempt						(::gpk::SUDPClient & cl
 }
 
 static	::gpk::error_t										clientQueueReceive								(::gpk::SUDPClient & client)		{
-	::gpk::apod<byte_t>												receiveBuffer;
+	::gpk::au8														receiveBuffer;
 	while(client.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED && client.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
 		int																sa_length									= sizeof(struct sockaddr_in);

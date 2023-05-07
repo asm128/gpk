@@ -22,7 +22,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::SFramework														& framework					= app.Framework;
 	::gpk::SWindow															& mainWindow				= framework.RootWindow;
 	mainWindow.Size														= {320, 200};
-	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, framework.Input)), "Failed to create main window why?!");
+	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
 	::gpk::SGUI																& gui						= *framework.GUI;
 	app.IdExit															= ::gpk::controlCreate(gui);
 	::gpk::SControl															& controlExit				= gui.Controls.Controls[app.IdExit];
@@ -77,7 +77,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 
 static	::gpk::error_t		createChildProcess
 	(	::brt::SProcess					& process
-	,	::gpk::view_array<char_t>		environmentBlock
+	,	::gpk::vu8						environmentBlock
 	,	::gpk::view_char				appPath
 	,	::gpk::view_char				commandLine
 	,	bool							debugMessageBox			= false
@@ -112,7 +112,7 @@ static	::gpk::error_t		createChildProcess
 	return 0;
 }
 
-static	::gpk::error_t		writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::view_const_byte chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
+static	::gpk::error_t		writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu8 chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD							dwWritten				= 0;
 	bool							bSuccess				= false;
 	e_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "Failed to write to child process' standard input.");
@@ -121,8 +121,8 @@ static	::gpk::error_t		writeToPipe				(const ::brt::SProcessHandles & handles, :
 }
 
 
-static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::array_pod<byte_t> & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
-	static	::gpk::array_pod<char_t>	chBuf;
+static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au8 & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
+	static	::gpk::au8				chBuf;
 	static constexpr	const uint32_t	BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
 	bool								bSuccess				= FALSE;
@@ -178,7 +178,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 				return 1;
 		}
 	}
-	::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>>				& receivedPerClient		= app.ReceivedPerClient;
+	::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>>				& receivedPerClient		= app.ReceivedPerClient;
 	{	// pick up messages for later processing
 		::gpk::mutex_guard																	lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
@@ -198,7 +198,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 			::brt::SProcess											& process				= app.ClientProcesses[iClient];
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());
-				::gpk::view_byte										environmentBlock		= receivedPerClient[iClient][iMessage]->Payload;
+				::gpk::vu8										environmentBlock		= receivedPerClient[iClient][iMessage]->Payload;
 				// llamar proceso
 				::initHandles(iohandles);
 				process.StartInfo.hStdError		= iohandles.ChildStd_ERR_Write;
@@ -206,8 +206,8 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 				process.StartInfo.hStdInput		= iohandles.ChildStd_IN_Read;
 				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
-				::gpk::view_const_byte									payload					= receivedPerClient[iClient][iMessage]->Payload;
-				::gpk::error_t											contentOffset			= ::gpk::find_sequence_pod(::gpk::view_const_byte{"\0"}, payload);
+				::gpk::vcu8									payload					= receivedPerClient[iClient][iMessage]->Payload;
+				::gpk::error_t								contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu8{(const uint8_t*)"\0", 1}, payload);
 				ce_if(errored(contentOffset), "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					e_if(errored(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2})), "Failed to write request content to process' stdin.");
@@ -216,7 +216,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 		}
 	}
 	Sleep(10);
-	::gpk::aobj<::gpk::aobj<::gpk::apod<char_t>>>						& clientResponses		= app.ClientResponses;
+	::gpk::aobj<::gpk::aobj<::gpk::au8>>						& clientResponses		= app.ClientResponses;
 	clientResponses.resize(receivedPerClient.size());
 	{	// Read processes output if they're done processing.
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
