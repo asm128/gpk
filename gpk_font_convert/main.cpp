@@ -47,8 +47,8 @@
 			fontTexture.View[linearIndex] = !fontTexture.View[linearIndex];
 	}
 
-	::gpk::array_pod<char_t>	encoded;
-	::gpk::base64Encode({(const byte_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
+	::gpk::au8	encoded;
+	::gpk::base64Encode({(const uint8_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
 	FILE						* fp = 0;
 	const int nul = 0;
 	fopen_s(&fp, ::gpk::toString(filenameOutput).begin(), "wb");
@@ -58,14 +58,14 @@
 	return 0;
 }
 
-int														main					() {
-	::gpk::array_obj<::gpk::array_pod<char_t>>					fontFiles				= {};
-	::gpk::vcs													pathToSearch			= {"../gpk_data/fonts/cp437"};
+int							main					() {
+	::gpk::aobj<::gpk::ac>			fontFiles				= {};
+	::gpk::vcs						pathToSearch			= {"../gpk_data/fonts/cp437"};
 	gpk_necall(::gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
-	::gpk::SPNGData												pngCache				= {};
-	::gpk::SImage<::gpk::SColorBGRA>							imageCache				= {};
-	::gpk::SImage<::gpk::SColorBGRA>							imageFixed				= {};
-	::gpk::SImage<::gpk::SColorBGRA>							verticalAtlas			= {};
+	::gpk::SPNGData						pngCache				= {};
+	::gpk::SImage<::gpk::bgra>			imageCache				= {};
+	::gpk::SImage<::gpk::bgra>			imageFixed				= {};
+	::gpk::SImage<::gpk::bgra>			verticalAtlas			= {};
 	::gpk::SImageMonochrome<uint32_t>							fontTexture				= {};
 	::gpk::array_pod<char_t>									filenameOutput			= {};
 	::gpk::vcc													extension				= {};

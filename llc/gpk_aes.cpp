@@ -359,9 +359,9 @@ static	void									XorWithIv							(uint8_t* buf, uint8_t* Iv)											{
 }
 
 /* Public functions:                                                         */
-void											gpk::aesECBEncrypt					(::gpk::SAESContext *ctx, uint8_t* buf)								{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesECBDecrypt					(::gpk::SAESContext* ctx, uint8_t* buf)								{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
-void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf, uint32_t length)	{
+void											gpk::aesECBEncrypt					(::gpk::SAESContext * ctx, uint8_t * buf)								{ Cipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // Cipher encrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesECBDecrypt					(::gpk::SAESContext * ctx, uint8_t * buf)								{ InvCipher	((state_t*)buf, ctx->RoundKey.begin(), ctx->Level); } // InvCiper decrypts the PlainText with the Key using AES algorithm.
+void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, uint32_t length)	{
 	uint8_t												* Iv								= ctx->Iv;
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		XorWithIv(buf, Iv);
@@ -373,7 +373,7 @@ void											gpk::aesCBCEncryptBuffer			(::gpk::SAESContext *ctx,uint8_t* buf,
 	memcpy(ctx->Iv, Iv, ::gpk::AES_SIZEBLOCK);	// store Iv in ctx for next call */
 }
 
-void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext* ctx, uint8_t* buf, uint32_t length)			{
+void											gpk::aesCBCDecryptBuffer			(::gpk::SAESContext * ctx, uint8_t * buf, uint32_t length)			{
 	uint8_t												storeNextIv	[::gpk::AES_SIZEBLOCK];
 	for (uintptr_t i = 0; i < length; i += ::gpk::AES_SIZEBLOCK) {
 		memcpy(storeNextIv, buf, ::gpk::AES_SIZEBLOCK);
@@ -406,7 +406,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	}
 }
 
-::gpk::error_t										gpk::aesEncode							(const ::gpk::vcb & messageToEncrypt, const ::gpk::vcb & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputEncrypted)	{
+::gpk::error_t										gpk::aesEncode							(const ::gpk::vcu8 & messageToEncrypt, const ::gpk::vcu8 & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au8 & outputEncrypted)	{
 	uint8_t													iv		[::gpk::AES_SIZEIV]				= {};
 	const double											fraction								= (1.0 / (65535>>1)) * 255.0;
 	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
@@ -418,11 +418,11 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode							(const ::gpk::vcb & messageEncrypted, const ::gpk::vcb & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputDecrypted)	{
-	return ::gpk::aesDecode({messageEncrypted.begin(), messageEncrypted.size() - ::gpk::AES_SIZEIV}, {(uint8_t*)&messageEncrypted[messageEncrypted.size() - ::gpk::AES_SIZEIV], ::gpk::AES_SIZEIV}, encryptionKey, level, outputDecrypted);
+::gpk::error_t										gpk::aesDecode							(const ::gpk::vcu8 & messageEncrypted, const ::gpk::vcu8 & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au8 & outputDecrypted)	{
+	return ::gpk::aesDecode({messageEncrypted.begin(), messageEncrypted.size() - ::gpk::AES_SIZEIV}, {&messageEncrypted[messageEncrypted.size() - ::gpk::AES_SIZEIV], ::gpk::AES_SIZEIV}, encryptionKey, level, outputDecrypted);
 }
 
-::gpk::error_t										gpk::aesEncode						(const ::gpk::vcb & messageToEncrypt, const ::gpk::vcub& iv, const ::gpk::vcb & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputEncrypted) {
+::gpk::error_t										gpk::aesEncode						(const ::gpk::vcu8 & messageToEncrypt, const ::gpk::vcu8 & iv, const ::gpk::vcu8 & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au8 & outputEncrypted) {
 	ree_if(0 == messageToEncrypt.size(), "Cannot encode empty message at address %p.", messageToEncrypt);
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());
 	int8_t													excedent								= messageToEncrypt.size() % ::gpk::AES_SIZEBLOCK;
@@ -439,7 +439,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	return 0;
 }
 
-::gpk::error_t										gpk::aesDecode						(const ::gpk::vcb & messageEncrypted, const ::gpk::vcub& iv, const ::gpk::vcb & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::apod<byte_t>& outputDecrypted) {
+::gpk::error_t										gpk::aesDecode						(const ::gpk::vcu8 & messageEncrypted, const ::gpk::vcu8 & iv, const ::gpk::vcu8 & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::au8 & outputDecrypted) {
 	ree_if(0 == messageEncrypted.size(), "Cannot encode empty message at address %p.", messageEncrypted.begin());
 	ree_if(messageEncrypted.size() % ::gpk::AES_SIZEBLOCK, "Invalid data length: %u.", messageEncrypted.size());
 	ree_if(encryptionKey.size() != 32, "Invalid key length! Key must be exactly 32 bytes long. Key size: %u.", encryptionKey.size());

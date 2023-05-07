@@ -138,18 +138,18 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawTriangle								(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
-		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
-		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
-		int32_t																		pixelsDrawn									= 0;
+	static	::gpk::error_t		drawTriangle			(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
+		::gpk::n2<int32_t>				areaMin					= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2<int32_t>				areaMax					= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+		const int32_t					xStop					= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
+		int32_t							pixelsDrawn				= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
-			const ::gpk::SCoord2<int16_t>												cellCurrent									= {(int16_t)x, (int16_t)y};
+			const ::gpk::n2<int16_t>		cellCurrent				= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
-			int																			w0											= ::gpk::orient2d({triangle.B.template Cast<int16_t>(), triangle.A.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int																			w1											= ::gpk::orient2d({triangle.C.template Cast<int16_t>(), triangle.B.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int																			w2											= ::gpk::orient2d({triangle.A.template Cast<int16_t>(), triangle.C.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int								w0						= ::gpk::orient2d({triangle.B.template Cast<int16_t>(), triangle.A.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int								w1						= ::gpk::orient2d({triangle.C.template Cast<int16_t>(), triangle.B.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int								w2						= ::gpk::orient2d({triangle.A.template Cast<int16_t>(), triangle.C.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if(w0 < 0)
 				continue;
 			if(w1 < 0)
@@ -157,7 +157,7 @@ namespace gpk
 			if(w2 < 0)
 				continue;
 			//if (w0 >= 0 && w1 >= 0 && w2 >= 0) { // If p is on or inside all edges, render pixel.
-				bitmapTarget[y][x]														= value;
+				bitmapTarget[y][x]			= value;
 				++pixelsDrawn;
 			//}
 		}
@@ -165,18 +165,18 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static					::gpk::error_t									drawTriangle								(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)		{
-		::gpk::SCoord2	<int32_t>													areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::SCoord2	<int32_t>													areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
-		const int32_t																xStop										= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
-		int32_t																		pixelsDrawn									= 0;
+	static	::gpk::error_t		drawTriangle			(const ::gpk::n2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)		{
+		::gpk::n2<int32_t>				areaMin					= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2<int32_t>				areaMax					= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+		const int32_t					xStop					= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
+		int32_t							pixelsDrawn				= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)targetMetrics.y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
-			const ::gpk::SCoord2<int32_t>												cellCurrent									= {x, y};
+			const ::gpk::n2<int32_t>		cellCurrent				= {x, y};
 			// Determine barycentric coordinates
-			int32_t																		w0											= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int32_t																		w1											= ::gpk::orient2d({triangle.C, triangle.B}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int32_t																		w2											= ::gpk::orient2d({triangle.A, triangle.C}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int32_t							w0						= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int32_t							w1						= ::gpk::orient2d({triangle.C, triangle.B}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int32_t							w2						= ::gpk::orient2d({triangle.A, triangle.C}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if(w0 < 0)
 				continue;
 			if(w1 < 0)

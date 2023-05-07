@@ -15,7 +15,7 @@ namespace gpk
 	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, SPathContents & out_Contents, const ::gpk::vcc extension = {});		// Recursive
 	stainli	::gpk::error_t				pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>>& output, const ::gpk::vcc extension = {}) {
 		::gpk::SPathContents					tree					= {};
-		int32_t error = ::gpk::pathList(pathToList, tree, extension);
+		int32_t									error					= ::gpk::pathList(pathToList, tree, extension);
 		gpk_necs(error |= ::gpk::pathList(tree, output, extension));
 		return 0;
 	}	// Recursive
@@ -30,8 +30,32 @@ namespace gpk
 	::gpk::error_t						pathCreate				(const ::gpk::vcc & folderName, const char separator = '/');	// Recursive
 
 	// this function was ceated in order to work around the problem of the JSON system returning pointers to the original string, without having the opportunity of processing escaped path slashes.
-	::gpk::error_t						pathNameCompose			(::gpk::vcc path, ::gpk::vcc fileName, ::gpk::apod<char_t> & out_composed);
+	::gpk::error_t						pathNameCompose			(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char_t> & out_composed);
 	::gpk::error_t						findLastSlash			(const ::gpk::vcc & path);
+
+	struct SFileManager {
+		::gpk::aobj<::gpk::au8>				Data					= {};
+		::gpk::aobj<::gpk::vcc>				Name					= {};
+
+		::gpk::error_t						Save					(::gpk::au8 & output)	const	{
+			gpk_necs(::gpk::savePOD(output, Name.size()));
+			for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
+				gpk_necall(::gpk::viewSave(output, Name[iFile]), "iEntity: %i", iFile);
+			}
+			return 0;
+		}
+		::gpk::error_t						AddFile					(const ::gpk::vcc & fileName)	{
+			for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
+				if(fileName == Name[iFile])
+					return iFile;
+			}
+			::gpk::au8								fileBytes				= {};
+			gpk_necall(::gpk::fileToMemory(fileName, fileBytes), "Failed to load file: '%s'", ::gpk::toString(fileName).begin());
+			gpk_necs(Data.push_back(fileBytes));
+			gpk_necs(Name.push_back(fileName));
+			return -1;
+		}
+	};
 } // namespace
 
 #endif // GPK_STORAGE_H_2983749283

@@ -25,28 +25,27 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 	};
 
 	struct SApplication {
-		::gpk::SFramework										Framework;
-		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>			Offscreen							= {};
-		::gpk::SUDPServer										Server								= {};
-		::gpk::aobj<::gpk::apobj<::gpk::SUDPConnectionMessage>>	ReceivedPerClient;
-		::gpk::aobj<::gpk::aobj<::gpk::apod<char_t>>>			ClientResponses;
-		::gpk::aobj<::brt::SProcess>							ClientProcesses;
-		::gpk::aobj<::brt::SProcessHandles>						ClientIOHandles;
-		::gpk::vcc												ProcessFileName						= "";
-		::gpk::vcc												ProcessMockPath						= "";
-		::gpk::vcc												ProcessParams						= "";
-		SECURITY_ATTRIBUTES										DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
+		::gpk::SFramework								Framework;
+		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>	Offscreen							= {};
+		::gpk::SUDPServer								Server								= {};
+		::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>>	ReceivedPerClient;
+		::gpk::aobj<::gpk::aobj<::gpk::au8>>			ClientResponses;
+		::gpk::aobj<::brt::SProcess>					ClientProcesses;
+		::gpk::aobj<::brt::SProcessHandles>				ClientIOHandles;
+		::gpk::vcc										ProcessFileName						= "";
+		::gpk::vcc										ProcessMockPath						= "";
+		::gpk::vcc										ProcessParams						= "";
+		SECURITY_ATTRIBUTES								DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
-		::gpk::array_pod<char_t>								szCmdlineApp						= "";
-		::gpk::array_pod<char_t>								szCmdlineFinal						= "";
+		::gpk::ac										szCmdlineApp						= "";
+		::gpk::ac										szCmdlineFinal						= "";
 
+		int32_t											IdExit								= -1;
 
-		int32_t													IdExit								= -1;
+		::std::mutex									LockGUI;
+		::std::mutex									LockRender;
 
-		::std::mutex											LockGUI;
-		::std::mutex											LockRender;
-
-																SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
+														SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
 } // namespace
 

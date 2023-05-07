@@ -16,9 +16,9 @@
 
 static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		{
 	::gpk::apobj<::gpk::SUDPConnection>				clientsToProcess;
-	::gpk::apod<byte_t>								receiveBuffer;
-	::gpk::apobj<::gpk::SUDPMessage>		cacheSent						= {};
-	::gpk::apobj<::gpk::SUDPMessage>		cacheSend						= {};
+	::gpk::au8										receiveBuffer;
+	::gpk::apobj<::gpk::SUDPMessage>				cacheSent						= {};
+	::gpk::apobj<::gpk::SUDPMessage>				cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
 		uint32_t										totalClientCount				= serverInstance.Clients.size();
