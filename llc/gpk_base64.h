@@ -40,8 +40,6 @@ namespace gpk
 	stainli	::gpk::error_t	base64Decode	(const ::gpk::vcc	&  in_base64	, ::gpk::au8 & outputBinary	) { return ::gpk::base64Decode(b64Symbols	, '=', *(::gpk::vcu8*)&in_base64	, outputBinary	); }
 	stainli	::gpk::error_t	base64EncodeFS	(const ::gpk::vcu8	&  inputBinary	, ::gpk::ac & out_base64	) { return ::gpk::base64Encode(b64SymbolsFS	, '=', inputBinary	, *(::gpk::au8*)&out_base64 	); }
 	stainli	::gpk::error_t	base64DecodeFS	(const ::gpk::vcc	&  in_base64	, ::gpk::au8 & outputBinary	) { return ::gpk::base64Decode(b64SymbolsFS	, '=', *(::gpk::vcu8*)&in_base64	, outputBinary	); }
+} // namespace
 
-}
-
-#endif //
-
+#endif // GPK_BASE64_H_23984293847

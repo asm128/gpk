@@ -5,13 +5,13 @@
 #include "gpk_frameinfo.h"
 #include "gpk_json_expression.h"
 #include "gpk_storage.h"
+#include "gpk_parse.h"
 
 #ifndef GPK_FRAMEWORK_H_20987347928
 #define GPK_FRAMEWORK_H_20987347928
 
 namespace gpk
 {
-
 	struct SFrameworkDetail {
 #if defined(GPK_WINDOWS)
 #elif defined(GPK_XCB)
