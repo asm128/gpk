@@ -73,10 +73,12 @@
 #	include <new>
 #endif
 
+// These aliases make keyword width to be consistent and makes the code less verbose.
 #define inlcxpr	inline constexpr
 #define stacxpr	static constexpr
 #define stainli	static inline
 #define stincxp	static inline constexpr
+#define cnstxpr	constexpr
 
 namespace gpk
 {

@@ -18,7 +18,7 @@ namespace gpk
 		::gpk::apod<::gpk::SVirtualEntity>	Entities		= {};
 		::gpk::aobj<::gpk::vcc>				Names			= {};
 
-		::gpk::apobj<::gpk::apod<uint32_t>>	Children		= {};
+		::gpk::apobj<::gpk::au32>			Children		= {};
 
 		const ::gpk::SVirtualEntity&		operator[]		(uint32_t index)							const	{ return Entities[index]; }
 		SVirtualEntity&						operator[]		(uint32_t index)									{ return Entities[index]; }

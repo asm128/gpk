@@ -106,7 +106,7 @@ namespace gpk
 		::gpk::SShaderManager					Shaders					= {};
 		::gpk::SRasterFontManager				Fonts					= {};
 
-		::gpk::error_t							Save				(::gpk::apod<ubyte_t> & output)		const	{
+		::gpk::error_t							Save				(::gpk::au8 & output)		const	{
 			gpk_necs(Buffers	.Save(output));
 			gpk_necs(Surfaces	.Save(output));
 			gpk_necs(Meshes		.Save(output));
@@ -127,10 +127,9 @@ namespace gpk
 	};
 
 	struct SEngineScene {
-		::gpk::pobj<::gpk::SEngineGraphics>		Graphics				= {};
-		::gpk::SRenderNodeManager				ManagedRenderNodes		= {};
-		::gpk::SEngineRenderCache				RenderCache				= {};
-
+		::gpk::pobj<::gpk::SEngineGraphics>	Graphics				= {};
+		::gpk::SRenderNodeManager			ManagedRenderNodes		= {};
+		::gpk::SEngineRenderCache			RenderCache				= {};
 
 		::gpk::error_t						Save				(::gpk::apod<ubyte_t> & output)		const	{
 			gpk_necs(Graphics			->Save(output));

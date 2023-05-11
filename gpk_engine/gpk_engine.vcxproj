@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine.h" />
+    <ClInclude Include="gpk_engine_soundbuffer.h" />
     <ClInclude Include="gpk_engine_container.h" />
     <ClInclude Include="gpk_engine_d3d.h" />
     <ClInclude Include="gpk_engine_entity.h" />
@@ -178,12 +179,15 @@
     <ClInclude Include="gpk_engine_rendersurface.h" />
     <ClInclude Include="gpk_engine_scene.h" />
     <ClInclude Include="gpk_engine_shader.h" />
+    <ClInclude Include="gpk_engine_file.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp" />
     <ClCompile Include="gpk_engine_d3d.cpp" />
     <ClCompile Include="gpk_engine_scene.cpp" />
     <ClCompile Include="gpk_engine_shader.cpp" />
+    <ClCompile Include="gpk_engine_soundbuffer.cpp" />
+    <ClCompile Include="gpk_engine_file.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

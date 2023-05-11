@@ -10,26 +10,26 @@ namespace gpk
 #pragma pack(push, 1)
 	// ------------------ Render Node
 	struct SRenderNodeFlags {
-		bool										NoAmbient			: 1;
-		bool										NoDiffuse			: 1;
-		bool										NoSpecular			: 1;
-		bool										NoAlphaTest			: 1;
-		bool										NoAlphaBlend		: 1;
-		bool										NoDraw				: 1;
-		//bool										NoTransformInherit	: 1;
+		bool						NoAmbient			: 1;
+		bool						NoDiffuse			: 1;
+		bool						NoSpecular			: 1;
+		bool						NoAlphaTest			: 1;
+		bool						NoAlphaBlend		: 1;
+		bool						NoDraw				: 1;
+		//bool						NoTransformInherit	: 1;
 	};
 
 	struct SRenderNode {
-		uint32_t									Mesh			= (uint32_t)-1;
-		uint32_t									Slice			= (uint32_t)-1;
-		uint32_t									Shader			= (uint32_t)-1;
-		uint32_t									Skin			= (uint32_t)-1;
+		uint32_t					Mesh			= (uint32_t)-1;
+		uint32_t					Slice			= (uint32_t)-1;
+		uint32_t					Shader			= (uint32_t)-1;
+		uint32_t					Skin			= (uint32_t)-1;
 	};
 
 	struct SRenderNodeTransforms {
-		::gpk::m4<float>							World					= ::gpk::m4<float>::GetIdentity();
-		::gpk::m4<float>							WorldInverse			= ::gpk::m4<float>::GetIdentity();
-		::gpk::m4<float>							WorldInverseTranspose	= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4f					World					= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4f					WorldInverse			= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4f					WorldInverseTranspose	= ::gpk::m4<float>::GetIdentity();
 	};
 	
 	GDEFINE_ENUM_TYPE(LIGHT_TYPE, uint8_t);
@@ -38,32 +38,32 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Spot			, 2);
 
 	struct SLightSpot {
-		::gpk::n3<float>							Direction;
-		::gpk::SRenderColor							Color;
-		float										SpotPower;
-		float										Range;
+		::gpk::n3f					Direction;
+		::gpk::SRenderColor			Color;
+		float						SpotPower;
+		float						Range;
 	};
 
 	struct SLightPoint {
-		::gpk::SRenderColor							Color;
-		float										Range;
+		::gpk::SRenderColor			Color;
+		float						Range;
 	};
 
 	struct SLightDirectional {
-		::gpk::n3<float>							Direction;
-		::gpk::SRenderColor							Color;
+		::gpk::n3f					Direction;
+		::gpk::SRenderColor			Color;
 	};
 
 	struct SLight {
-		::gpk::LIGHT_TYPE							Type;
-		uint16_t									Index;
+		::gpk::LIGHT_TYPE			Type;
+		uint16_t					Index;
 	};
 
 	struct SCamera {
-		::gpk::n3<float>							Front;
-		::gpk::n3<float>							Right;
-		::gpk::n3<float>							Up;
-		double										Angle;
+		::gpk::n3f					Front;
+		::gpk::n3f					Right;
+		::gpk::n3f					Up;
+		double						Angle;
 	};
 #pragma pack(pop)
 

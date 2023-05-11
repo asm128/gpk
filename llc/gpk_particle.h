@@ -183,23 +183,23 @@ namespace gpk
 			return Speed.remove_unordered(iParticle);
 		}
 
-		int											Create				(const ::gpk::SCoord3<float> & position, const ::gpk::SCoord3<float> & direction, float speed)	{
+		int											Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed)	{
 			Position	.push_back(position);
 			Direction	.push_back(direction);
 			return Speed.push_back(speed);
 		}
 
-		::gpk::error_t										Save(::gpk::apod<byte_t> & output) const { 
-			gpk_necs(::gpk::viewWrite(Position	, output)); 
-			gpk_necs(::gpk::viewWrite(Direction	, output)); 
-			gpk_necs(::gpk::viewWrite(Speed		, output)); 
+		::gpk::error_t										Save(::gpk::au8 & output) const { 
+			gpk_necs(::gpk::viewSave(output, Position	)); 
+			gpk_necs(::gpk::viewSave(output, Direction	)); 
+			gpk_necs(::gpk::viewSave(output, Speed		)); 
 			info_printf("Saved %s, %i", "Position	", Position		.size()); 
 			info_printf("Saved %s, %i", "Direction	", Direction	.size()); 
 			info_printf("Saved %s, %i", "Speed		", Speed		.size()); 
 			return 0; 
 		}
 
-		::gpk::error_t										Load(::gpk::view<const byte_t> & input) { 
+		::gpk::error_t										Load(::gpk::vcu8 & input) { 
 			gpk_necs(::gpk::loadView(input, Position	));
 			gpk_necs(::gpk::loadView(input, Direction	));
 			gpk_necs(::gpk::loadView(input, Speed		));

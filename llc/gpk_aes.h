@@ -33,7 +33,7 @@ namespace gpk
 
 	struct SAESContext {
 		AES_LEVEL					Level							= {};
-		::gpk::apod<uint8_t>		RoundKey						= {};
+		::gpk::au8					RoundKey						= {};
 		uint8_t						Iv			[AES_SIZEBLOCK]		= {};
 	};
 

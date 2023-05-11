@@ -9,16 +9,25 @@
 namespace gpk
 {
 #pragma pack(push, 1)
+	template <typename _tBase> struct color_wa		{ _tBase w, a;			};
+	template <typename _tBase> struct color_bg		{ _tBase b, g;			};
+	template <typename _tBase> struct color_br		{ _tBase b, r;			};
+	template <typename _tBase> struct color_gr		{ _tBase g, r;			};
+	template <typename _tBase> struct color_gb		{ _tBase g, b;			};
+	template <typename _tBase> struct color_rg		{ _tBase r, g;			};
+	template <typename _tBase> struct color_rb		{ _tBase r, b;			};
 	template <typename _tBase> struct color_bgr		{ _tBase b, g, r;		};
 	template <typename _tBase> struct color_rgb		{ _tBase r, g, b;		};
 	template <typename _tBase> struct color_bgra	{ _tBase b, g, r, a;	};
 	template <typename _tBase> struct color_rgba	{ _tBase r, g, b, a;	};
+	template <typename _tBase> struct color_abgr	{ _tBase a, b, g, r;	};
+	template <typename _tBase> struct color_argb	{ _tBase a, r, g, b;	};
 
-	typedef						uint16_t		SColor16;
+	typedef	uint16_t		SColor16;
 
 	// Stores RGBA color channels
 	struct SColorRGBA : public ::gpk::color_rgba<uint8_t> {
-		constexpr									SColorRGBA		(const SColorRGBA& other)											noexcept	= default;
+		constexpr									SColorRGBA		(const SColorRGBA & other)											noexcept	= default;
 		constexpr									SColorRGBA		(uint8_t r_ = 0, uint8_t g_ = 0, uint8_t b_ = 0, uint8_t a_=0xff)	noexcept	: color_rgba<uint8_t>{b_, g_, r_, a_}																																										{}
 		constexpr									SColorRGBA		(uint32_t other)													noexcept	: color_rgba<uint8_t>
 			{ ((uint8_t)(((other & 0x000000FF) >> 0)))
@@ -213,6 +222,18 @@ namespace gpk
 	typedef	::gpk::view2d<const	::gpk::bgr		>		v2cbgr	;
 	typedef	::gpk::view2d<const	::gpk::rgba		>		v2crgba	;
 	typedef	::gpk::view2d<const	::gpk::rgb		>		v2crgb	;
+
+	typedef	::gpk::apod<::gpk::rgbaf	>				aprgbaf	;
+	typedef	::gpk::apod<::gpk::bgra		>				apbgra	;
+	typedef	::gpk::apod<::gpk::bgr		>				apbgr	;
+	typedef	::gpk::apod<::gpk::rgba		>				aprgba	;
+	typedef	::gpk::apod<::gpk::rgb		>				aprgb	;
+
+	typedef	::gpk::apod<const ::gpk::rgbaf	>			apcrgbaf;
+	typedef	::gpk::apod<const ::gpk::bgra	>			apcbgra	;
+	typedef	::gpk::apod<const ::gpk::bgr	>			apcbgr	;
+	typedef	::gpk::apod<const ::gpk::rgba	>			apcrgba	;
+	typedef	::gpk::apod<const ::gpk::rgb	>			apcrgb	;
 
 	static	constexpr	::gpk::rgbaf	BLACK			= ::gpk::rgbaf(0.0f, 0.0f, 0.0f, 1.0f					);
 	static	constexpr	::gpk::rgbaf	WHITE			= ::gpk::rgbaf(1.0f, 1.0f, 1.0f, 1.0f					);

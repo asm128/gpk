@@ -74,7 +74,7 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 		memcpy(&filename[lenFilename - 3], "png", 3);
 
 	::gpk::vcs					pngfn		= {filename.begin(), lenFilename};
-	::gpk::apod<uint8_t>					filebytes;
+	::gpk::au8					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
 	::gpk::fileFromMemory(pngfn, {(const char*)filebytes.begin(), filebytes.size()});
 	//if((bm.bmBitsPixel * bm.bmPlanes) <= 8) { // If the DIBSection is 256 color or less, it has a color table

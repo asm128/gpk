@@ -104,7 +104,7 @@ stacxpr	const uint32_t		DEFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 
 ::gpk::error_t				gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcs nameFileSrc)					{
-	::gpk::apod<uint8_t>			rawFileInMemory				= {};
+	::gpk::au8			rawFileInMemory				= {};
 	gpk_necall(::gpk::fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %s.", nameFileSrc);
 	gpk_necall(::gpk::folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %s.", nameFileSrc);
 	return 0;

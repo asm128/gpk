@@ -59,7 +59,7 @@ stacxpr	uint32_t					UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		::gpk::apobj<::gpk::SUDPMessage>		optimizedPayloads					= {};
 		::gpk::apobj<::gpk::SUDPMessage>		payloadsToRemove					= {};
 		::gpk::apod<uint16_t>					payloadSizes						= {};
-		::gpk::apod<uint8_t>					serialized							= {};
+		::gpk::au8					serialized							= {};
 
 		::gpk::pobj<::gpk::SUDPMessage>			optimizedMsg						= {};
 		optimizedMsg->Time					= ::gpk::timeCurrentInUs();
@@ -93,7 +93,7 @@ stacxpr	uint32_t					UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		info_printf("%u packets optimized.", payloadSizes.size());
 		const uint32_t							sizeRequired						= serialized.size() + sizeof(uint16_t) * payloadSizes.size() + sizeof(uint16_t);	// payloads + sizes + packet count
 		uint16_t								packetCount							= (uint16_t)payloadSizes.size();
-		::gpk::apod<uint8_t>					& optimizedPayloadBuffer			= optimizedMsg->Payload;
+		::gpk::au8					& optimizedPayloadBuffer			= optimizedMsg->Payload;
 		gpk_necall(optimizedPayloadBuffer.resize(sizeRequired), "Out of memory? Size required: %u.", sizeRequired);
 		optimizedPayloadBuffer.clear();
 		optimizedPayloadBuffer.append((const uint8_t*)&packetCount, sizeof(uint16_t));
@@ -119,7 +119,7 @@ stacxpr	uint32_t					UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 }
 
 ::gpk::error_t						payloadQueueSend					(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage> & payloadsToSend) {
-	::gpk::apod<uint8_t>					messageBytes;
+	::gpk::au8					messageBytes;
 	sockaddr_in								sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 	for(uint32_t iPayload = 0; iPayload < payloadsToSend.size(); ++iPayload) {
@@ -139,11 +139,11 @@ stacxpr	uint32_t					UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		else {
 			ce_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
 			::gpk::view_stream<uint8_t>				sendStream;
-			::gpk::apod<uint8_t>					ardellEncoded;
+			::gpk::au8					ardellEncoded;
 			payloadHeader.MessageId				= ::hashFromTime(messageToSend.Time);
 			messageToSend.Hashes.push_back(payloadHeader.MessageId);
 			info_printf("Sending message with id: %llx: %s.", payloadHeader.MessageId, ::gpk::toString(messageToSend.Payload).begin());
-			::gpk::apod<uint8_t>					compressed;
+			::gpk::au8					compressed;
 			if(0 == payloadHeader.Command.Compressed) {
 				if(0 == payloadHeader.Command.Encrypted)
 					payloadHeader.Size				= messageToSend.Payload.size();
@@ -332,7 +332,7 @@ static	::gpk::error_t			handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader
 
 stacxpr	int64_t					advantage							= 1000000;
 
-static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<uint8_t> & receiveBuffer)		{
+static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au8 & receiveBuffer)		{
 	sockaddr_in							sa_client							= {};						// Information about the client
 	socklen_t							sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct
 	int									bytes_received						= {};
@@ -383,8 +383,8 @@ static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader 
 		const ::gpk::vcu8					viewPayload							= {&receiveBuffer[sizeof(::gpk::SUDPPayloadHeader)], header.Size};
 		if(0 != command.Compressed) {
 			if(0 != command.Encrypted) {
-				::gpk::apod<uint8_t>				inflated;
-				::gpk::apod<uint8_t>				decoded;
+				::gpk::au8				inflated;
+				::gpk::au8				decoded;
 				rew_if(errored(::gpk::ardellDecode(viewPayload, client.KeyPing & 0xFFFFFFFF, true, decoded)), "%s", "Failed to decrypt packet!");
 				rew_if(errored(::gpk::arrayInflate(decoded, messageReceived->Payload)), "%s", "Failed to inflate packet!");
 			}
@@ -453,7 +453,7 @@ static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader 
 	return 0;
 }
 
-static	::gpk::error_t			handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::apod<uint8_t> & receiveBuffer)		{
+static	::gpk::error_t			handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::SUDPConnection & client, ::gpk::au8 & receiveBuffer)		{
 	if(::gpk::UDP_CONNECTION_STATE_IDLE != client.State)
 		return 1;
 	::gpk::SUDPPayloadHeader			header								= {};
@@ -473,7 +473,7 @@ static	::gpk::error_t			handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk:
 	}
 }
 
-::gpk::error_t					gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<uint8_t> & receiveBuffer)		{
+::gpk::error_t					gpk::connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au8 & receiveBuffer)		{
 	::gpk::vcc							labelCommand						= ::gpk::get_value_label(command.Command);
 	::gpk::vcc							labelType							= ::gpk::get_value_label(command.Type	);
 	(void)labelCommand	;

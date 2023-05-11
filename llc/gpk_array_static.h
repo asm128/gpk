@@ -44,6 +44,15 @@ namespace gpk
 	template<typename _tCell, uint32_t _sizeArray>	
 	using astatic	= ::gpk::array_static<_tCell, _sizeArray>;
 
+	template<uint32_t _sizeArray>	using astaticu8 	= ::gpk::array_static<uint8_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu16	= ::gpk::array_static<uint16_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu32	= ::gpk::array_static<uint32_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu64	= ::gpk::array_static<uint64_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici8 	= ::gpk::array_static<int8_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici16	= ::gpk::array_static<int16_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici32	= ::gpk::array_static<int32_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici64	= ::gpk::array_static<int64_t, _sizeArray>;
+
 #pragma pack(pop)
 
 	template <typename _tCell, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<_tCell, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}

@@ -21,8 +21,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Palette			, 10);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterSource		, 11);
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, RasterDestination	, 12);
-
 	GDEFINE_ENUM_VALUE(BUFFER_USAGE, Bitfield			, 100);
+
 	GDEFINE_ENUM_TYPE(ELEMENT_FREQUENCY, uint8_t);
 	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Element			,  0, "Each element of the buffer matches to an element of the indexed buffer");
 	GDEFINE_ENUM_VALUED(ELEMENT_FREQUENCY, Instance			,  1, "Each elements of the buffer matches to a whole primitive instance of the indexed buffer. "
@@ -44,7 +44,7 @@ namespace gpk
 
 	struct SRenderBuffer {
 		SRenderBufferDescription					Desc			= {};
-		::gpk::apod<uint8_t>						Data			= {};
+		::gpk::au8									Data			= {};
 
 		::gpk::error_t								Save			(::gpk::apod<ubyte_t> & output)	const	{ 			
 			gpk_necs(::gpk::savePOD	(output, Desc));

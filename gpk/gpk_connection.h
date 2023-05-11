@@ -82,7 +82,7 @@ namespace gpk
 
 	::gpk::error_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
 	::gpk::error_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
-	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::apod<uint8_t> & receiveBuffer);
+	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au8 & receiveBuffer);
 	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
 	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vci8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
