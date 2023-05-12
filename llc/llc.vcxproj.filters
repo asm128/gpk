@@ -405,6 +405,9 @@
     <ClInclude Include="gpk_complus.h">
       <Filter>type</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">
@@ -580,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="gpk_deflate.cpp">
       <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_event.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

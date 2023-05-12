@@ -125,6 +125,7 @@
     <ClInclude Include="gpk_windows.h" />
     <ClInclude Include="gpk_xml_reader.h" />
     <ClInclude Include="gpk_voxel.h" />
+    <ClInclude Include="gpk_event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
+    <ClCompile Include="gpk_event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />
