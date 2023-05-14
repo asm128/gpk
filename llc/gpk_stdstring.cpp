@@ -3,7 +3,7 @@
 
 ::gpk::error_t									gpk::tolower						(::gpk::view_char input)											{
 	for(uint32_t iByte = 0, sizeHeader = input.size(); iByte < sizeHeader; ++iByte) {
-		char_t & curByte = input[iByte];
+		char & curByte = input[iByte];
 		if(curByte >= 'A' && curByte <= 'Z')
 			curByte						= int8_t(curByte | 0x20);
 	}

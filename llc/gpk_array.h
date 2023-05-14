@@ -652,8 +652,8 @@ namespace gpk
 	template <typename T>	using ap		= ::gpk::apod	<T>;
 	template <typename T>	using av		= ::gpk::aview	<T>; 
 
-	typedef	::gpk::aview<uchar_t	>		aview_uchar			, av1uc, avuc;
-	typedef	::gpk::aview<char_t		>		aview_char			, av1c, avc;
+	typedef	::gpk::aview<::gpk::uchar_t	>		aview_uchar			, av1uc, avuc;
+	typedef	::gpk::aview<char		>		aview_char			, av1c, avc;
 	typedef	::gpk::aview<float		>		aview_float32		, av1f32, av1f, avf32, avf;
 	typedef	::gpk::aview<double		>		aview_float64		, av1f64, av1d, avf64, avd;
 	typedef	::gpk::aview<uint8_t	>		aview_uint8			, av1u8, avu8;
@@ -666,9 +666,9 @@ namespace gpk
 	typedef	::gpk::aview<int64_t	>		aview_int64			, av1i64, avi64;
 
 	// view_array<const> common typedefs
-	//typedef ::gpk::view_array<const char_t		>	view_const_string	;
-	typedef	::gpk::aview<const uchar_t	>	aview_const_uchar	, av1cuc, avcuc;
-	typedef	::gpk::aview<const char_t	>	aview_const_char	, av1cc, avcc;
+	//typedef ::gpk::view_array<const char		>	view_const_string	;
+	typedef	::gpk::aview<const ::gpk::uchar_t	>	aview_const_uchar	, av1cuc, avcuc;
+	typedef	::gpk::aview<const char	>	aview_const_char	, av1cc, avcc;
 	typedef	::gpk::aview<const float	>	aview_const_float32	, av1cf32, av1cf, avcf32, avcf;
 	typedef	::gpk::aview<const double	>	aview_const_float64	, av1cf64, av1cd, avcf64, avcd;
 	typedef	::gpk::aview<const uint8_t	>	aview_const_uint8	, av1cu8, avcu8;
@@ -680,8 +680,8 @@ namespace gpk
 	typedef	::gpk::aview<const int32_t	>	aview_const_int32	, av1ci32, avci32;
 	typedef	::gpk::aview<const int64_t	>	aview_const_int64	, av1ci64, avci64;
 
-	typedef apod<uchar_t	>				array_uchar			, auc	, auc;
-	typedef apod<char_t		>				array_char			, ac	, ac;
+	typedef apod<::gpk::uchar_t	>				array_uchar			, auc	, auc;
+	typedef apod<char		>				array_char			, ac	, ac;
 	typedef apod<float_t	>				array_float32		, af32	, array_float	, af;
 	typedef apod<double_t	>				array_float64		, af64	, array_double	, ad;
 	typedef apod<uint8_t	>				array_uint8			, au8	, au8;
@@ -752,11 +752,11 @@ namespace gpk
 	::gpk::error_t							keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::au8 & output);
 	::gpk::error_t							keyValConstStringDeserialize	(const ::gpk::vcu8 & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
 
-	::gpk::apod<char_t>						toString						(const ::gpk::vcc & strToLog);
-	stainli	::gpk::apod<char_t>				toString						(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
+	::gpk::apod<char>						toString						(const ::gpk::vcc & strToLog);
+	stainli	::gpk::apod<char>				toString						(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
 
-	::gpk::error_t							join							(::gpk::apod<char_t> & query, char separator, ::gpk::view<const gpk::vcc> fields);
-	::gpk::error_t							append_quoted					(::gpk::apod<char_t> & output, ::gpk::vcc text);
+	::gpk::error_t							join							(::gpk::apod<char> & query, char separator, ::gpk::view<const gpk::vcc> fields);
+	::gpk::error_t							append_quoted					(::gpk::apod<char> & output, ::gpk::vcc text);
 
 
 	::gpk::error_t							filterPrefix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);

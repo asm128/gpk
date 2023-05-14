@@ -11,7 +11,7 @@
 #	include <dlfcn.h>
 #endif
 
-GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, char_t* outputBuffer, uint8_t* outputBufferLength					);
+GPK_DECLARE_MODULE_FUNCTION(gpk_moduleTitle		, char* outputBuffer, uint8_t* outputBufferLength					);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleVersion	, uint32_t* version													);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleCreate	, void** customApplication, ::gpk::SRuntimeValues* runtimeValues	);
 GPK_DECLARE_MODULE_FUNCTION(gpk_moduleDelete	, void** customApplication											);

@@ -32,7 +32,7 @@
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {
 		::gpk::au8								temp;
-		::gpk::apod<char_t>						tempName						= {};
+		::gpk::apod<char>						tempName						= {};
 		uint64_t								curTime							= time(0);
 		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)
 			if(environViews[iKey].Key == ::gpk::vcs{"REMOTE_ADDR"}) {

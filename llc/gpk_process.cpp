@@ -37,8 +37,8 @@
 	// The following function retrieves the process's environment block using GetEnvironmentStrings and adds it to the environmentBlock parameter.
 	//char						* lpvEnv						= GetEnvironmentStringsA();	// Get a pointer to the environment block.
 	//ree_if(lpvEnv == NULL, "GetEnvironmentStringsA failed (%x)\n", (uint32_t)GetLastError());
-	//int32_t						lengthEnvStrings				= ::gpk::find_sequence_pod(::gpk::view<const char_t>{"\0", 2U}, ::gpk::view<const char_t>{(const char*)lpvEnv, (uint32_t)-1});
-	//environmentBlock		= ::gpk::view<const char_t>{lpvEnv, (uint32_t)lengthEnvStrings + 2U};
+	//int32_t						lengthEnvStrings				= ::gpk::find_sequence_pod(::gpk::view<const char>{"\0", 2U}, ::gpk::view<const char>{(const char*)lpvEnv, (uint32_t)-1});
+	//environmentBlock		= ::gpk::view<const char>{lpvEnv, (uint32_t)lengthEnvStrings + 2U};
 	//FreeEnvironmentStringsA(lpvEnv);
 	return 0;
 }

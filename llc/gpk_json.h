@@ -102,15 +102,15 @@ namespace gpk
 	stainli	::gpk::error_t					jsonCompareNumber		(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareNumber	(node, views, other, views); }
 
 	struct SJSONFile {
-		::gpk::apod<char_t>						Bytes					= {};
+		::gpk::apod<char>						Bytes					= {};
 		::gpk::SJSONReader						Reader					= {};
 	};
 
 	typedef ::gpk::SKeyVal<::gpk::vcc, ::gpk::SJSONFile>	TKeyValJSONFile;
 
 	::gpk::error_t							jsonFileRead			(::gpk::SJSONFile & file, const ::gpk::vcc & filename);
-	::gpk::error_t							jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char_t> & output);
-	::gpk::error_t							jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char_t>> & outputJsons);
+	::gpk::error_t							jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char> & output);
+	::gpk::error_t							jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char>> & outputJsons);
 
 	struct SJSONFieldBinding {
 		::gpk::vcc								Field					= {};

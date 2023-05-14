@@ -9,7 +9,7 @@
 namespace gpk 
 {
 #define gpk_vox_info_printf info_printf
-	::gpk::array_static<::gpk::SColorBGRA, 256> VOX_PALETTE_DEFAULT = {
+	::gpk::astatic<::gpk::SColorBGRA, 256> VOX_PALETTE_DEFAULT = {
 		0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,
 		0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,
 		0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,
@@ -56,12 +56,12 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SVOXFileHeader {
-		::gpk::array_static<char, 4>						MagicNumber				= {};
+		::gpk::astatic<char, 4>						MagicNumber				= {};
 		uint32_t											Version					= {};
 	};
 
 	struct SVOXChunkHeader {
-		::gpk::array_static<char, 4>						Type					= {};
+		::gpk::astatic<char, 4>						Type					= {};
 		uint32_t											ChunkSize				= 0;	// | num bytes of chunk content (N)
 		uint32_t											ChildChunks				= 0;	// | num bytes of children chunks (M)
 
@@ -72,7 +72,7 @@ namespace gpk
 
 	struct SVOXTransformFrame { // DICT	: frame attributes
 		uint8_t												Rotation				= {};
-		::gpk::SCoord3<int32_t>								Translation				= {};
+		::gpk::n3<int32_t>								Translation				= {};
 		uint32_t											IndexFrame				= {};
 	}; 
 
@@ -87,12 +87,12 @@ namespace gpk
 
 	struct SVOXChunk {
 		SVOXChunkHeader										Header					= {};
-		::gpk::apod<int8_t>							Data					= {};
+		::gpk::au8											Data					= {};
 	};
 
 	struct SVOXChunkXYZI {
 		SVOXChunkHeader										Header					= {};
-		::gpk::apod<SVOXVoxel>							Data					= {};
+		::gpk::apod<SVOXVoxel>								Data					= {};
 	};
 
 	typedef ::gpk::aobj<::gpk::SKeyVal<::gpk::apod<char>, ::gpk::apod<char>>>	SVOXDict;
@@ -151,11 +151,11 @@ namespace gpk
 	};
 
 	struct SVOXChunkNote {
-		SVOXChunkHeader										Header					= {};
+		SVOXChunkHeader							Header					= {};
 		::gpk::aobj<::gpk::apod<char>>			ColorNames				= {};
 	};
 
-	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view<const int8_t> & input) 						{
+	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::vcu8 & input) 						{
 		uint32_t												bytesRead				= sizeof(uint32_t); 
 		const uint32_t											dictLength				= *(uint32_t*)input.begin(); 
 		input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -183,11 +183,11 @@ namespace gpk
 		::gpk::aobj<::gpk::SVOXChunkShape>				ChunksShape				= {};
 		::gpk::aobj<::gpk::SVOXChunkNote>				ChunksNote				= {};
 
-		::gpk::SCoord3<uint8_t>								GetDimensions			()	const	{
+		::gpk::n3<uint8_t>								GetDimensions			()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
-					const ::gpk::SCoord3<uint32_t>							coord					= *(::gpk::SCoord3<uint32_t>*)Chunks[iChunk].Data.begin();
-					return ::gpk::SCoord3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint8_t>();
+					const ::gpk::n3<uint32_t>							coord					= *(::gpk::n3<uint32_t>*)Chunks[iChunk].Data.begin();
+					return ::gpk::n3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint8_t>();
 				}
 			return {};
 		}
@@ -208,7 +208,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::error_t										Load					(::gpk::view<const int8_t> & input) { 
+		::gpk::error_t										Load					(::gpk::vcu8 & input) { 
 			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -225,7 +225,7 @@ namespace gpk
 					newChunk.Header										= readChunkHeader;
 
 						 if(0 == strncmp(newChunk.Header.Type.Storage, "MAIN", 4)) { }
-					else if(0 == strncmp(newChunk.Header.Type.Storage, "SIZE", 4)) { bytesRead = sizeof(::gpk::SCoord3<uint32_t>)	; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
+					else if(0 == strncmp(newChunk.Header.Type.Storage, "SIZE", 4)) { bytesRead = sizeof(::gpk::n3<uint32_t>)	; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
 					else if(0 == strncmp(newChunk.Header.Type.Storage, "PACK", 4)) { bytesRead = sizeof(uint32_t)					; newChunk.Data.append({input.begin(), bytesRead}); input = {input.begin() + bytesRead, input.size() - bytesRead}; }
 					else if(0 == strncmp(newChunk.Header.Type.Storage, "RGBA", 4)) { 
 						bytesRead = sizeof(uint32_t) * 256; 
@@ -335,8 +335,8 @@ namespace gpk
 							::gpk::SVOXTransformFrame							newFrame	= {};
 							bytesRead = sizeof(uint32_t	); const uint32_t dictLength = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
-								::gpk::view<const char>						readKey		= {};
-								::gpk::view<const char>						readVal		= {};
+								::gpk::vcc							readKey		= {};
+								::gpk::vcc							readVal		= {};
 								bytesRead = ::gpk::viewRead(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 								bytesRead = ::gpk::viewRead(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 

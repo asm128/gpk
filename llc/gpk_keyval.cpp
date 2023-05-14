@@ -3,14 +3,14 @@
 #include "gpk_array.h"
 #include "gpk_parse.h"
 
-::gpk::error_t							gpk::append_quoted					(::gpk::apod<char_t>& output, ::gpk::vcc text)		{
+::gpk::error_t							gpk::append_quoted					(::gpk::apod<char>& output, ::gpk::vcc text)		{
 	gpk_necall(output.push_back('"'), "%s", "Out of memory?");
 	gpk_necall(output.append(text)	, "%s", "Out of memory?");
 	gpk_necall(output.push_back('"'), "%s", "Out of memory?");
 	return 0;
 }
 
-::gpk::error_t							gpk::join							(::gpk::apod<char_t> & query, char separator, ::gpk::view<const gpk::view_const_char> fields)	{
+::gpk::error_t							gpk::join							(::gpk::apod<char> & query, char separator, ::gpk::view<const gpk::view_const_char> fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(query.append(fields[iField]), "%s", "Out of memory?");
 		if(++iField < fields.size())
@@ -19,8 +19,8 @@
 	return 0;
 }
 
-::gpk::apod<char_t>						gpk::toString						(const ::gpk::vcc & strToLog)	{
-	::gpk::apod<char_t>							sprintfable							= strToLog;
+::gpk::apod<char>						gpk::toString						(const ::gpk::vcc & strToLog)	{
+	::gpk::apod<char>							sprintfable							= strToLog;
 	e_if(::gpk::failed(sprintfable.push_back(0)), "%s", "Out of memory?")
 	else
 		e_if(::gpk::failed(sprintfable.resize(sprintfable.size()-1)), "%s", "Out of memory?");

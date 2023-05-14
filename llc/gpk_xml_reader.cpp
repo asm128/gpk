@@ -7,7 +7,7 @@
 
 #define xml_info_printf // info_printf
 
-stacxpr	::gpk::array_static<const char_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
+stacxpr	::gpk::array_static<const char, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 
 ::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, const ::gpk::vcc & filename) {
 	xml_info_printf("Loading xml file: %s.", filename.begin());

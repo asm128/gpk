@@ -25,34 +25,34 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(XML_TOKEN, ATTR_VALUE	, 0xF);
 
 	struct SXMLToken {
-		XML_TOKEN					Type;
-		::gpk::SRange<uint32_t>		Range;
-		int32_t						Parent;	// -1 for root element
+		XML_TOKEN				Type;
+		::gpk::SRange<uint32_t>	Range;
+		int32_t					Parent;	// -1 for root element
 	};
 
 	struct SXMLReaderState {
-		uint32_t					IndexCurrentChar	= 0;
-		int32_t						IndexCurrentElement	= -1;
-		SXMLToken					* CurrentElement	= 0;
-		uint32_t					NestLevel			= 0;
-		char						CharCurrent			= 0;
+		uint32_t				IndexCurrentChar	= 0;
+		int32_t					IndexCurrentElement	= -1;
+		SXMLToken				* CurrentElement	= 0;
+		uint32_t				NestLevel			= 0;
+		char					CharCurrent			= 0;
 		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
 	struct SXMLReader {
-		SXMLReaderState				StateRead;
+		SXMLReaderState			StateRead;
 		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
-	::gpk::error_t				xmlParse			(SXMLReader& reader, ::gpk::vcc xmlDoc);
-	::gpk::error_t				xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
+	::gpk::error_t			xmlParse			(SXMLReader& reader, ::gpk::vcc xmlDoc);
+	::gpk::error_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
 
 	struct SXMLFile {
-		::gpk::apod<char_t>	Bytes				= {};
-		::gpk::SXMLReader			Reader				= {};
+		::gpk::apod<char>		Bytes				= {};
+		::gpk::SXMLReader		Reader				= {};
 	};
 
-	::gpk::error_t				xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::vcc & filename);
+	::gpk::error_t			xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::vcc & filename);
 
 }
 

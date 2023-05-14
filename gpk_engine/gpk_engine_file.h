@@ -11,7 +11,7 @@ namespace gpk
 		::gpk::aobj<::gpk::vcc>			Names;
 		::gpk::apod<::gpk::SRange<u32>>	Ranges;
 		::gpk::au8						Contents;
-
+		//								//
 		::gpk::au8						LoadCache;
 
 		::gpk::error_t					AddFile			(::gpk::vcc fileName, ::gpk::vu8 fileContents) {

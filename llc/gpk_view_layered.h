@@ -49,7 +49,7 @@ namespace gpk
 #pragma pack(pop)
 
 	// view2d common typedefs
-	typedef				::gpk::view_layered<char_t			>	view3d_char				;
+	typedef				::gpk::view_layered<char			>	view3d_char				;
 	typedef				::gpk::view_layered<uint8_t			>	view3d_ubyte			;
 	typedef				::gpk::view_layered<int8_t			>	view3d_byte				;
 	typedef				::gpk::view_layered<float			>	view3d_float32			;
@@ -64,7 +64,7 @@ namespace gpk
 	typedef				::gpk::view_layered<int64_t			>	view3d_int64			;
 
 	// view2d<const> common typedefs
-	typedef				::gpk::view_layered<const char_t	>	view3d_const_char		;
+	typedef				::gpk::view_layered<const char	>	view3d_const_char		;
 	typedef				::gpk::view_layered<const uint8_t	>	view3d_const_ubyte		;
 	typedef				::gpk::view_layered<const int8_t	>	view3d_const_byte		;
 	typedef				::gpk::view_layered<const float		>	view3d_const_float32	;

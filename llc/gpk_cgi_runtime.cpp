@@ -13,7 +13,7 @@
 
 	{	// Try to load query from querystring and request body
 		const int32_t										offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
-		::gpk::apod<char_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
+		::gpk::apod<char>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
 			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
@@ -158,7 +158,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char_t *> & argv)	{
+::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
 	::gpk::aobj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);

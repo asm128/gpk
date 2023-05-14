@@ -52,7 +52,7 @@ namespace gpk
 			value									= INVALID_VALUE;
 			return -1;
 		}
-		::gpk::error_t							get_value								(const char_t* name, _tValue & value)		const			{
+		::gpk::error_t							get_value								(const char* name, _tValue & value)		const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(0 == ::strcmp(name, Names[i].begin())) {
 					value									= Values[i];

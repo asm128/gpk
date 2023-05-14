@@ -164,8 +164,8 @@ namespace gpk
 #pragma pack(pop)
 
 	// view_array common typedefs
-	typedef				::gpk::view<uchar_t				>	view_uchar			, v1uc, vuc;
-	typedef				::gpk::view<char_t				>	view_char			, v1c, vc;
+	typedef				::gpk::view<::gpk::uchar_t				>	view_uchar			, v1uc, vuc;
+	typedef				::gpk::view<char				>	view_char			, v1c, vc;
 	typedef				::gpk::view<float				>	view_float32		, v1f32, v1f, vf32, vf;
 	typedef				::gpk::view<double				>	view_float64		, v1f64, v1d, vf64, vd;
 	typedef				::gpk::view<uint8_t				>	view_uint8			, v1u8, vu8;
@@ -178,8 +178,8 @@ namespace gpk
 	typedef				::gpk::view<int64_t				>	view_int64			, v1i64, vi64;
 
 	// view_array<const> common typedefs
-	typedef				::gpk::view<const uchar_t		>	view_const_uchar	, v1cuc, vcuc;
-	typedef				::gpk::view<const char_t		>	view_const_char		, v1cc, vcc;
+	typedef				::gpk::view<const ::gpk::uchar_t		>	view_const_uchar	, v1cuc, vcuc;
+	typedef				::gpk::view<const char		>	view_const_char		, v1cc, vcc;
 	typedef				::gpk::view<const float			>	view_const_float32	, v1cf32, v1cf, vcf32, vcf;
 	typedef				::gpk::view<const double		>	view_const_float64	, v1cf64, v1cd, vcf64, vcd;
 	typedef				::gpk::view<const uint8_t		>	view_const_uint8	, v1cu8, vcu8;
@@ -222,7 +222,7 @@ namespace gpk
 	stacxpr	::gpk::vcc		STR_TRUE		= {4, "true"};
 	stacxpr	::gpk::vcc		STR_FALSE		= {5, "false"};
 
-	struct view_string : public view<char_t> {
+	struct view_string : public view<char> {
 		inlcxpr							view_string				()															= default;
 		inlcxpr							view_string				(const view_char & other)						noexcept	: view(other)				{}
 										view_string				(char * inputString, uint32_t length)						: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
@@ -230,7 +230,7 @@ namespace gpk
 		template<size_t _stringLength>	view_string				(char (&inputString)[_stringLength], uint32_t length)		: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)_stringLength);	}
 	};
 
-	struct view_const_string : public view<const char_t> {
+	struct view_const_string : public view<const char> {
 		inlcxpr							view_const_string		()															= default;
 		inlcxpr							view_const_string		(const view_const_char & other)					noexcept	: view(other)				{}
 										view_const_string		(const char* inputString, uint32_t length)					: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}

@@ -55,13 +55,13 @@
 	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
-::gpk::error_t									gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char_t>> & outputJsons)		{
+::gpk::error_t									gpk::jsonArraySplit					(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char>> & outputJsons)		{
 	const uint32_t										remainder							= jsonArrayToSplit.Children.size() % blockSize;
 	const uint32_t										countParts							= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
 	gpk_necs(outputJsons.resize(countParts));
 	uint32_t											iSourceRecord						= 0;
 	for(uint32_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
-		::gpk::apod<char_t>									& outputJson						= outputJsons[iPart];
+		::gpk::apod<char>									& outputJson						= outputJsons[iPart];
 		gpk_necs(outputJson.push_back('['));
 		for(uint32_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
 			; iPartRecord < countPartRecords
@@ -75,7 +75,7 @@
 	return 0;
 }
 
-::gpk::error_t									gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char_t> & output)			{
+::gpk::error_t									gpk::jsonWrite						(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char> & output)			{
 	if(node->Token->Type == ::gpk::JSON_TYPE_VALUE && node->Children.size())
 		node											= node->Children[0];
 	switch(node->Token->Type) {
@@ -184,8 +184,8 @@ static	::gpk::error_t							jsonParseStringCharacter							(::gpk::SJSONReaderSt
 	::gpk::error_t										errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
-		seterr_break_if(((uchar_t)stateReader.CharCurrent) < 0x20 || ((uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
-		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(((::gpk::uchar_t)stateReader.CharCurrent) < 0x20 || ((::gpk::uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
 		::gpk::skipToNextCharacter(stateReader.IndexCurrentChar, jsonAsString);

@@ -61,7 +61,7 @@ namespace gpk
 
 	struct SGNDFileContents {
 				STiledTerrainMetricsGND								Metrics;
-				::gpk::aobj<::gpk::aobj<char_t>>			TextureNames;
+				::gpk::aobj<::gpk::aobj<char>>			TextureNames;
 				uint32_t											LightmapTiles;		// ??
 				::gpk::SCoord2<uint32_t>							LightmapSize;
 				::gpk::apod<STileBrightnessGND	>				lstTileBrightnessData;

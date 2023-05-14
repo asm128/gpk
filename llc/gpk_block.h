@@ -78,7 +78,7 @@ namespace gpk
 
 	template<typename _tElement>
 	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath, uint64_t idRecord)								{
-		::gpk::apod<char_t>				fileName					= {};
+		::gpk::apod<char>				fileName					= {};
 		gpk_necs(::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
@@ -95,7 +95,7 @@ namespace gpk
 	template<typename _tMapBlock>
 	::gpk::error_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::vcc & dbPath, ::gpk::ac & outputData) {
 		::gpk::SRecordMap				recordMap;
-		::gpk::apod<char_t>				fileBytes;
+		::gpk::apod<char>				fileBytes;
 		::gpk::error_t					indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
 		gpk_necall(indexBlock, "Invalid record id: %llu.", idRecord);
 		_tMapBlock						& loadedBlock				= *mapTable.Block[indexBlock];
@@ -132,13 +132,13 @@ namespace gpk
 			blocksToSkip.push_back(idBlock);
 			(void)block;
 		}
-		::gpk::apod<char_t>				containerPath				= {};
+		::gpk::apod<char>				containerPath				= {};
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
-		::gpk::aobj<::gpk::apod<char_t>>	paths;
+		::gpk::aobj<::gpk::apod<char>>	paths;
 		::gpk::pathCreate(containerPath);
 		::gpk::pathList(containerPath, paths, false, {});
 		constexpr ::gpk::vcs				extension					= ::gpk::EXTENSION_BLOCK_FILE;
-		::gpk::apod<char_t>					loadedBytes;
+		::gpk::apod<char>					loadedBytes;
 		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {
 			const ::gpk::vcc				fileNameCurrent				= paths[iFile];
 			if(extension.size() + mapTable.DBName.size() >= fileNameCurrent.size())
@@ -195,7 +195,7 @@ namespace gpk
 			++mapTable.MaxBlockOnDisk;
 			uint64_t						newIdRecord					= (uint64_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
-			::gpk::apod<char_t>				bytesToWrite;
+			::gpk::apod<char>				bytesToWrite;
 			gpk_necall(newBlock->Save(bytesToWrite), "%s", "Out of memory?");
 			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
 			return newIdRecord;
@@ -209,7 +209,7 @@ namespace gpk
 				newIndices.IdBlock			= idBlockInMemory;
 				uint64_t						newIdRecord					= (uint64_t)-1LL;
 				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
-				::gpk::apod<char_t>				bytesToWrite;
+				::gpk::apod<char>				bytesToWrite;
 				gpk_necall(blockInMemory.Save(bytesToWrite), "%s", "Out of memory?");
 				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
 				return newIdRecord;
@@ -218,12 +218,12 @@ namespace gpk
 
 		::gpk::SRecordMap				indexMap					= {};
 		indexMap.IdBlock			= mapTable.MaxBlockOnDisk;
-		::gpk::apod<char_t>				containerPath				= {};
-		::gpk::apod<char_t>				fileNameCurrent				= {};
-		::gpk::aobj<::gpk::apod<char_t>>paths;
+		::gpk::apod<char>				containerPath				= {};
+		::gpk::apod<char>				fileNameCurrent				= {};
+		::gpk::aobj<::gpk::apod<char>>paths;
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
 		::gpk::blockFileName(indexMap.IdBlock, mapTable.DBName, containerPath, fileNameCurrent);
-		::gpk::apod<char_t>				loadedBytes;
+		::gpk::apod<char>				loadedBytes;
 		const ::gpk::error_t			indexBlock					= ::gpk::blockMapLoad(loadedBytes, mapTable, fileNameCurrent, indexMap);
 		if(indexBlock >= 0) {
 			_tMapBlock						& block						= *mapTable.Block[indexBlock];

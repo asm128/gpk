@@ -10,8 +10,8 @@
 //	uint32_t												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
 //		if('x' == input_string[iChar]) {
-//			::gpk::array_pod<char>									sx						= {};
-//			::gpk::array_pod<char>									sy						= {};
+//			::gpk::apod<char>									sx						= {};
+//			::gpk::apod<char>									sy						= {};
 //			sy.append((char*)input_string.begin(), iChar);
 //			sx.append((char*)&input_string[iChar + 1], input_string.size() - (iChar + 1));
 //			try {
@@ -28,11 +28,11 @@
 //	return 0;
 //}
 
-::gpk::error_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output){
+::gpk::error_t										genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
 	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
 	//char													buffer[4096]					= {};
 	::gpk::SCGIModule										module;
-	::gpk::array_pod<char_t>								moduleName						= gpk::toString({framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)});
+	::gpk::apod<char>								moduleName						= gpk::toString({framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)});
 	::gpk::loadCGIModule(module, moduleName);
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
@@ -71,7 +71,7 @@ static constexpr	const char						html_script	[]			=
 	return 0;
 }
 
-int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_pod<char> & output)										{
+int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output)										{
 	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
 	if(framework.Bootstrapped) {
 		::genHTMLModuleOutput(framework, output);
@@ -124,7 +124,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::array_p
 		//for(int32_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
-			::gpk::array_pod<char>									content_body			= {};
+			::gpk::apod<char>									content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
 			uint32_t												iChar					= 0;
 			char													iArg					= 0;
@@ -171,7 +171,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 		"Content-Type: text/html"
 		"\nCache-Control: no-store"
 	);
-	::gpk::array_pod<char>									html;
+	::gpk::apod<char>									html;
 	::cgiBootstrap(framework, html);
 	html.push_back('\0');
 	OutputDebugStringA(html.begin());

@@ -59,11 +59,11 @@ namespace gpk
 	};
 
 	struct SModelInfoRSW {
-					char_t													Name			[40];
-					char_t													Filename		[40];
-					char_t													Str2			[40];
-					char_t													RootRSMNode		[40];
-					char_t													Str4			[40];
+					char													Name			[40];
+					char													Filename		[40];
+					char													Str2			[40];
+					char													RootRSMNode		[40];
+					char													Str4			[40];
 					int32_t													AnimType		;
 					float													AnimSpeed		;
 					int32_t													BlockType		;
@@ -95,10 +95,10 @@ namespace gpk
 					::gpk::apod<SEffectInfoRSW	>						RSWEffects		;
 					::gpk::apod<SSoundInfoRSW	>						RSWSounds		;
 
-					char_t													INIFilename		[40];
-					char_t													GNDFilename		[40];
-					char_t													GATFilename		[40];
-					char_t													SOMFilename		[40];
+					char													INIFilename		[40];
+					char													GNDFilename		[40];
+					char													GATFilename		[40];
+					char													SOMFilename		[40];
 
 					::gpk::SRSWWorldWater									Water			;
 					::gpk::SRSWWorldLight									Light			;

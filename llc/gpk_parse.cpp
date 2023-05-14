@@ -24,7 +24,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 
 ::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
-	::gpk::apod<char_t>								stringToParse								= {};
+	::gpk::apod<char>								stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
 		const char										sourceChar									= (char)tolower(sourceChars[iChar]);
 		bool											bSymbolProcessed							= false;

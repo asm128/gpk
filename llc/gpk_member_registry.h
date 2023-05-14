@@ -13,11 +13,11 @@
 #define GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
 	struct GPKM_NAME(_memberName)	{																																												\
 		typedef _nameSpace::_memberType			TMember;	\
-		stincxp	const char_t*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
-		stincxp	const char_t*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
-		stincxp	const char_t*										get_member_name					()							noexcept	{ return #_memberName;						}	\
-		stincxp	const char_t*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
-		stincxp	const char_t*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
+		stincxp	const char*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
+		stincxp	const char*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
+		stincxp	const char*										get_member_name					()							noexcept	{ return #_memberName;						}	\
+		stincxp	const char*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
+		stincxp	const char*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
 		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(_nameSpace::_memberType);	}	\
 	};																																																		\
@@ -26,11 +26,11 @@
 #define GPKFM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
 	struct GPKM_NAME(_memberName)	{																																												\
 		typedef GPK_MODULE_FUNCTION_NAME(_memberType)		TMember;	\
-		stincxp	const char_t*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
-		stincxp	const char_t*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
-		stincxp	const char_t*										get_member_name					()							noexcept	{ return #_memberName;						}	\
-		stincxp	const char_t*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
-		stincxp	const char_t*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
+		stincxp	const char*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
+		stincxp	const char*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
+		stincxp	const char*										get_member_name					()							noexcept	{ return #_memberName;						}	\
+		stincxp	const char*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
+		stincxp	const char*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
 		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(GPK_MODULE_FUNCTION_NAME(_memberType));	}	\
 	};																																																		\

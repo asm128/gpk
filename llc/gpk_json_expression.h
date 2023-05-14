@@ -46,7 +46,7 @@ namespace gpk
 					::gpk::error_t		jsonExpressionResolve		(const ::gpk::vcs	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::vcc & output);
 	stainli	::gpk::error_t		jsonExpressionResolve		(const ::gpk::vcs	& expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON)				{ ::gpk::vcc dead; return ::gpk::jsonExpressionResolve(expression, inputJSON, indexNodeJSON, dead); }
 
-					::gpk::error_t		jsonStringFormat			(const ::gpk::vcs	& format	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::apod<char_t>& output);
+					::gpk::error_t		jsonStringFormat			(const ::gpk::vcs	& format	, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::apod<char>& output);
 } // namespace
 
 #endif // GPK_JSON_EXPRESSION_9238749283744

@@ -42,7 +42,7 @@ namespace gpk
 	//	,	::gpk::apod<char>			& out_received
 	//	);
 
-	::gpk::error_t					urlDecode	(::gpk::vcc urlToDecode, ::gpk::apod<char_t> & decoded);
+	::gpk::error_t					urlDecode	(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded);
 
 }
 

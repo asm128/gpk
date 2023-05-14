@@ -13,17 +13,17 @@
 #	include <ctype.h>
 #endif
 
-::gpk::error_t							gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char_t> & decoded)		{
+::gpk::error_t							gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded)		{
 	uint32_t									decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
-		const char_t								currentChar						= urlToDecode[iChar];
+		const char								currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
-			gpk_necall(decoded.push_back((char_t)(uint8_t)currentChar), "%s", "Out of memory?");
+			gpk_necall(decoded.push_back((char)(uint8_t)currentChar), "%s", "Out of memory?");
 			continue;
 		}
 		uint64_t								decodedByte						= 0;
 		gpk_necall(::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, &decodedByte), "%s", "Out of memory?");
-		gpk_necall(decoded.push_back((char_t)(uint8_t)decodedByte), "%s", "Out of memory?");
+		gpk_necall(decoded.push_back((char)(uint8_t)decodedByte), "%s", "Out of memory?");
 		++iChar;
 		++decodedCharacters;
 	}
@@ -218,11 +218,11 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 		::gpk::TKeyValConstString					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
 			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};
-			//::gpk::view_char							strLine							= {(char_t*)header.Key.begin(), header.Key.size()};
+			//::gpk::view_char							strLine							= {(char*)header.Key.begin(), header.Key.size()};
 			//::gpk::tolower(strLine);
 		}
 		else {
-			::gpk::view_char							strLine							= {(char_t*)header.Key.begin(), header.Key.size()};
+			::gpk::view_char							strLine							= {(char*)header.Key.begin(), header.Key.size()};
 			::gpk::tolower(strLine);
 			info_printf("\n%s", ::gpk::toString(strLine).begin());
 			if(::gpk::vcs{"transfer-encoding"} == header.Key) {

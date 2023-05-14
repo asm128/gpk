@@ -9,7 +9,7 @@ namespace gpk
 {
 	template<size_t _blockSize>
 	class block_string_container {
-		::gpk::apobj<::gpk::astatic<char_t, _blockSize>>	Blocks;
+		::gpk::apobj<::gpk::astatic<char, _blockSize>>	Blocks;
 		::gpk::apod<uint32_t>								RemainingSpace;
 
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace gpk
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		::gpk::apod<uint16_t>				Counts;
-		::gpk::apod<const char_t*>			Texts;
+		::gpk::apod<const char*>			Texts;
 
 											~CLabelManager				()																{
 			for(uint32_t iText = 0; iText < Texts.size(); ++iText)

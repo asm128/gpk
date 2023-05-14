@@ -96,8 +96,8 @@ static	::gpk::error_t										expressionReaderCloseTerm							(::gpk::SExpressi
 	::gpk::error_t													errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
-		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
-		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uint8_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uint8_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
 		break;	// these characters are both valid as part of the string and as escapable characters.
@@ -328,7 +328,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	return 0;
 }
 
-::gpk::error_t												gpk::expressionReaderParseStep			(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression)	{
+::gpk::error_t												gpk::expressionReaderParseStep			(::gpk::SExpressionReader & reader, const ::gpk::vcc & expression)	{
 	::gpk::apod<::gpk::SExpressionToken>					& tokens								= reader.Token;
 	::gpk::SExpressionReaderState									& stateReader							= reader.StateRead;
 	stateReader.CharCurrent										= expression[stateReader.IndexCurrentChar];
@@ -368,7 +368,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	return 0;
 }
 
-::gpk::error_t							gpk::expressionReaderParse			(::gpk::SExpressionReader& reader, const ::gpk::vcc & expression)	{
+::gpk::error_t							gpk::expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcc & expression)	{
 	::gpk::SExpressionReaderState				& stateReader						= reader.StateRead;
 	::gpk::apod<::gpk::SExpressionToken>		& tokens							= reader.Token;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < expression.size(); ++stateReader.IndexCurrentChar) {

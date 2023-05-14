@@ -81,6 +81,13 @@ namespace gpk
 	static	::gpk::error_t	eventEnqueueChild	(::gpk::aobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, _tPOD & childEventDataType) {
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)&childEventDataType, sizeof(_tPOD)});
 	}
+
+	template<typename _tParentEvent, typename _tChildEvent>
+	static	::gpk::error_t		extractAndHandle		(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
+		::gpk::SEventView<_tChildEvent>	childEvent; 
+		gpk_necs(parentEvent.ExtractChild(childEvent)); 
+		return funcHandleChild(childEvent);
+	}
 }
 
 #endif // GPK_EVENT_H_230511

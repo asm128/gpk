@@ -58,7 +58,7 @@ namespace gpk
 
 	struct SDialogEditBox : public ::gpk::IDialogControl {
 				::gpk::SMinMax<uint32_t>					Selection							= {};
-				::gpk::apod<char_t>							String								= {};
+				::gpk::apod<char>							String								= {};
 
 		virtual	::gpk::error_t								Update								()							{ return ::gpk::editBoxUpdate(*this); }
 	};
@@ -78,7 +78,7 @@ namespace gpk
 				int32_t										Vertical							= false;
 				::gpk::SMinMax<int64_t>						ValueLimits							= {0, 100};// 0x7fFFffFF};
 				int64_t										ValueCurrent						= -1;
-				char_t										ValueString	[64]					= {};
+				char										ValueString	[64]					= {};
 
 				TCallback									FuncValueFormat	= [this](::gpk::vcc & format, int64_t, const ::gpk::SMinMax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
 				TCallback									FuncGetString	= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::SMinMax<int64_t> &)	mutable	{ 
@@ -99,7 +99,7 @@ namespace gpk
 
 		::gpk::SMinMax<_tValue>						ValueLimits							= {0, 0x7F};
 		_tValue										ValueCurrent						= 0;
-		char_t										ValueString	[64]					= {};
+		char										ValueString	[64]					= {};
 
 		TCallback									FuncValueFormat	= [this](::gpk::vcc & format, _tValue/*value*/, const ::gpk::SMinMax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
 		TCallback									FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::SMinMax<_tValue> &)		mutable	{ 

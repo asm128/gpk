@@ -28,7 +28,7 @@
 static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)										{
 	bestClient.AddressConnect							= {};
 	::gpk::tcpipAddress(9998, 0, ::gpk::TRANSPORT_PROTOCOL_UDP, bestClient.AddressConnect);	// If loading the remote IP from the json fails, we fall back to the local address.
-	::gpk::apod<char_t>										fileJSONConfig					= {};
+	::gpk::apod<char>										fileJSONConfig					= {};
 	::gpk::SJSONReader										jsonConfig						= {};
 	{	// Attempt to load config file.
 		::gpk::vcs												fileNameJSONConfig				= "gpk_config.json";
@@ -59,8 +59,8 @@ static	::gpk::error_t								initClient						(::gpk::SUDPClient & bestClient)			
 	return 0;
 }
 
-static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::array_pod<char> & output)										{
-	::gpk::array_pod<char_t>								environmentBlock		= {};
+static	int											cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
+	::gpk::apod<char>								environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
 		gpk_necs(::gpk::environmentBlockFromEnviron(environmentBlock));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
@@ -103,7 +103,7 @@ static int											cgiMain				(int argc, char** argv, char**envv)	{
 	gpk_necall(::gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
 	::gpk::SCGIRuntimeValues								runtimeValues;
 	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
-	::gpk::array_pod<char>									html;
+	::gpk::apod<char>									html;
 	if errored(::cgiBootstrap(runtimeValues, html)) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"

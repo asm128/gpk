@@ -82,7 +82,7 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::split(::gpk::vcc{rawMat}, '\n', matFileLines);
 
 	int32_t										countMaterials			= 0;
-	::gpk::apod<char_t>							materialPath			= {};
+	::gpk::apod<char>							materialPath			= {};
 	::gpk::label								materialName			= {};
 	::gpk::SMaterial							newMaterial				= {};
 	for(uint32_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
@@ -185,7 +185,7 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 		}
 		const ::gpk::vcc							command					= lineValues[0];
 		if(command == ::gpk::vcs{"mtllib"}) {
-			::gpk::apod<char_t>					matFilename				= {};
+			::gpk::apod<char>					matFilename				= {};
 			int32_t										pathStop				= ::gpk::rfind('/', filename);
 			if(pathStop == -1) {
 				matFilename.append_string("./");
@@ -287,7 +287,7 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 
 ::gpk::error_t	gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
 	::gpk::vcc								extension				= {};
-	::gpk::apod<char_t>						ext_lwr					= {};
+	::gpk::apod<char>						ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);
