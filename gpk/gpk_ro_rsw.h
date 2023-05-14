@@ -106,7 +106,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
+				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<uint8_t>	& input);
 				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, FILE								* input);
 				::gpk::error_t											rswFileLoad								(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input);
 }

@@ -6,8 +6,8 @@
 
 namespace gpk
 {
-	::gpk::error_t			environmentBlockViews						(const ::gpk::vcb & environmentBlock, ::gpk::aobj<TKeyValConstString> & out_Views);	
-	::gpk::error_t			environmentBlockFromEnviron					(::gpk::apod<byte_t> & environmentBlock);
+	::gpk::error_t			environmentBlockViews						(const ::gpk::vcc & environmentBlock, ::gpk::aobj<TKeyValConstString> & out_Views);	
+	::gpk::error_t			environmentBlockFromEnviron					(::gpk::apod<char> & environmentBlock);
 } // namespace
 
 #endif // GPK_PROCESS_H_9823498236748932

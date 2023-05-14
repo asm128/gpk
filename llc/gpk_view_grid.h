@@ -71,7 +71,7 @@ namespace gpk
 
 		::gpk::v1<_tColor>												firstRow					= target[yStart];
 		if constexpr(1 == sizeof(_tColor))
-			memset(&firstRow[xStart], *((ubyte_t*)&value), xCount);
+			memset(&firstRow[xStart], *((uint8_t*)&value), xCount);
 		else {
 			for(int32_t x = 0; x < xCount; ++x)
 				firstRow[xStart + x]										= value;
@@ -84,8 +84,8 @@ namespace gpk
 
 	// view		common typedefs
 	typedef	::gpk::view<::gpk::n2<char_t			>>		v1n2c		;
-	typedef	::gpk::view<::gpk::n2<ubyte_t			>>		v1n2ub		;
-	typedef	::gpk::view<::gpk::n2<byte_t			>>		v1n2b		;
+	typedef	::gpk::view<::gpk::n2<uint8_t			>>		v1n2ub		;
+	typedef	::gpk::view<::gpk::n2<int8_t			>>		v1n2b		;
 	typedef	::gpk::view<::gpk::n2f32				>		v1n2f32		, v1n2f;
 	typedef	::gpk::view<::gpk::n2f64				>		v1n2f64		;
 	typedef	::gpk::view<::gpk::n2u8					>		v1n2ui8		;
@@ -98,8 +98,8 @@ namespace gpk
 	typedef	::gpk::view<::gpk::n2i64				>		v1n2i64		;
 
 	typedef	::gpk::view<::gpk::n3<char_t			>>		v1n3c		;
-	typedef	::gpk::view<::gpk::n3<ubyte_t			>>		v1n3ub		;
-	typedef	::gpk::view<::gpk::n3<byte_t			>>		v1n3b		;
+	typedef	::gpk::view<::gpk::n3<uint8_t			>>		v1n3ub		;
+	typedef	::gpk::view<::gpk::n3<int8_t			>>		v1n3b		;
 	typedef	::gpk::view<::gpk::n3f32				>		v1n3f32		, v1n3f;
 	typedef	::gpk::view<::gpk::n3f64				>		v1n3f64		;
 	typedef	::gpk::view<::gpk::n3u8					>		v1n3ui8		;
@@ -113,8 +113,8 @@ namespace gpk
 
 	// view<const> common typedefs
 	typedef	::gpk::view<const ::gpk::n2<char_t		>>		v1c2c	;
-	typedef	::gpk::view<const ::gpk::n2<ubyte_t		>>		v1c2ub	;
-	typedef	::gpk::view<const ::gpk::n2<byte_t		>>		v1c2b	;
+	typedef	::gpk::view<const ::gpk::n2<uint8_t		>>		v1c2ub	;
+	typedef	::gpk::view<const ::gpk::n2<int8_t		>>		v1c2b	;
 	typedef	::gpk::view<const ::gpk::n2f32			>		v1c2f32	, v1c2f;
 	typedef	::gpk::view<const ::gpk::n2f64			>		v1c2f64	;
 	typedef	::gpk::view<const ::gpk::n2u8			>		v1c2ui8	;
@@ -127,8 +127,8 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::n2i64			>		v1c2i64	;
 							  
 	typedef	::gpk::view<const ::gpk::n3<char_t		>>		v1c3c	;
-	typedef	::gpk::view<const ::gpk::n3<ubyte_t		>>		v1c3ub	;
-	typedef	::gpk::view<const ::gpk::n3<byte_t		>>		v1c3b	;
+	typedef	::gpk::view<const ::gpk::n3<uint8_t		>>		v1c3ub	;
+	typedef	::gpk::view<const ::gpk::n3<int8_t		>>		v1c3b	;
 	typedef	::gpk::view<const ::gpk::n3f32			>		v1c3f32	, v1c3f;
 	typedef	::gpk::view<const ::gpk::n3f64			>		v1c3f64	;
 	typedef	::gpk::view<const ::gpk::n3u8			>		v1c3ui8	;
@@ -142,8 +142,8 @@ namespace gpk
 
 	// view common typedefs
 	typedef	::gpk::view2d<	char_t	>					v2c			;
-	typedef	::gpk::view2d<	ubyte_t	>					v2ub		;
-	typedef	::gpk::view2d<	byte_t	>					v2b			;
+	typedef	::gpk::view2d<	uint8_t	>					v2ub		;
+	typedef	::gpk::view2d<	int8_t	>					v2b			;
 	typedef	::gpk::view2d<	float	>					v2f32		, v2f;
 	typedef	::gpk::view2d<	double	>					v2f64		;
 	typedef	::gpk::view2d<	uint8_t	>					v2u8		;
@@ -156,8 +156,8 @@ namespace gpk
 	typedef	::gpk::view2d<	int64_t	>					v2i64		;
 
 	typedef	::gpk::view2d<::gpk::n2<char_t		>>		v2n2c		;
-	typedef	::gpk::view2d<::gpk::n2<ubyte_t		>>		v2n2ub		;
-	typedef	::gpk::view2d<::gpk::n2<byte_t		>>		v2n2b		;
+	typedef	::gpk::view2d<::gpk::n2<uint8_t		>>		v2n2ub		;
+	typedef	::gpk::view2d<::gpk::n2<int8_t		>>		v2n2b		;
 	typedef	::gpk::view2d<::gpk::n2f32			>		v2n2f32		, v2n2f;
 	typedef	::gpk::view2d<::gpk::n2f64			>		v2n2f64		;
 	typedef	::gpk::view2d<::gpk::n2u8			>		v2n2ui8		;
@@ -170,8 +170,8 @@ namespace gpk
 	typedef	::gpk::view2d<::gpk::n2i64			>		v2n2i64		;
 
 	typedef	::gpk::view2d<::gpk::n3<char_t		>>		v2n3c		;
-	typedef	::gpk::view2d<::gpk::n3<ubyte_t		>>		v2n3ub		;
-	typedef	::gpk::view2d<::gpk::n3<byte_t		>>		v2n3b		;
+	typedef	::gpk::view2d<::gpk::n3<uint8_t		>>		v2n3ub		;
+	typedef	::gpk::view2d<::gpk::n3<int8_t		>>		v2n3b		;
 	typedef	::gpk::view2d<::gpk::n3f32			>		v2n3f32		, v2n3f;
 	typedef	::gpk::view2d<::gpk::n3f64			>		v2n3f64		;
 	typedef	::gpk::view2d<::gpk::n3u8			>		v2n3ui8		;
@@ -185,8 +185,8 @@ namespace gpk
 
 	// view<const> common typedefs
 	typedef	::gpk::view2d<const	char_t		>			v2cc	;
-	typedef	::gpk::view2d<const	ubyte_t		>			v2cub	;
-	typedef	::gpk::view2d<const	byte_t		>			v2cb	;
+	typedef	::gpk::view2d<const	uint8_t		>			v2cub	;
+	typedef	::gpk::view2d<const	int8_t		>			v2cb	;
 	typedef	::gpk::view2d<const	float		>			v2cf32	, v2cf;
 	typedef	::gpk::view2d<const	double		>			v2cf64	;
 	typedef	::gpk::view2d<const	uint8_t		>			v2cui8	;
@@ -199,8 +199,8 @@ namespace gpk
 	typedef	::gpk::view2d<const	int64_t		>			v2ci64	;
 
 	typedef	::gpk::view2d<const	::gpk::n2<char_t	>>	v2c2c	;
-	typedef	::gpk::view2d<const	::gpk::n2<ubyte_t	>>	v2c2ub	;
-	typedef	::gpk::view2d<const	::gpk::n2<byte_t	>>	v2c2b	;
+	typedef	::gpk::view2d<const	::gpk::n2<uint8_t	>>	v2c2ub	;
+	typedef	::gpk::view2d<const	::gpk::n2<int8_t	>>	v2c2b	;
 	typedef	::gpk::view2d<const	::gpk::n2f32		>	v2c2f32	, v2c2f;
 	typedef	::gpk::view2d<const	::gpk::n2f64		>	v2c2f64	;
 	typedef	::gpk::view2d<const	::gpk::n2u8			>	v2c2ui8	;
@@ -213,8 +213,8 @@ namespace gpk
 	typedef	::gpk::view2d<const	::gpk::n2i64		>	v2c2i64	;
 
 	typedef	::gpk::view2d<const	::gpk::n3<char_t	>>	v2c3c	;
-	typedef	::gpk::view2d<const	::gpk::n3<ubyte_t	>>	v2c3ub	;
-	typedef	::gpk::view2d<const	::gpk::n3<byte_t	>>	v2c3b	;
+	typedef	::gpk::view2d<const	::gpk::n3<uint8_t	>>	v2c3ub	;
+	typedef	::gpk::view2d<const	::gpk::n3<int8_t	>>	v2c3b	;
 	typedef	::gpk::view2d<const	::gpk::n3f32		>	v2c3f32	, v2c3f;
 	typedef	::gpk::view2d<const	::gpk::n3f64		>	v2c3f64	;
 	typedef	::gpk::view2d<const	::gpk::n3u8			>	v2c3ui8	;

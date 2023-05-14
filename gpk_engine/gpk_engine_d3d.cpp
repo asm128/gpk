@@ -26,11 +26,11 @@
 			vertexSize									+= buffer->Desc.Format.TotalBytes();
 
 		}
-		::gpk::apod<ubyte_t>						packed;
+		::gpk::apod<uint8_t>						packed;
 		for(uint32_t iValue = 0, valueCount = engineBufferVertices[0]->Data.size() / engineBufferVertices[0]->Desc.Format.TotalBytes(); iValue < valueCount; ++iValue) {
 			for(uint32_t iBuffer = 0; iBuffer < engineBufferVertices.size(); ++iBuffer) {
 				const ::gpk::SRenderBuffer						& buffer					= *engineBufferVertices[iBuffer];
-				::gpk::vcub							value						= {&buffer.Data[iValue * buffer.Desc.Format.TotalBytes()], buffer.Desc.Format.TotalBytes()};
+				::gpk::vcu8							value						= {&buffer.Data[iValue * buffer.Desc.Format.TotalBytes()], buffer.Desc.Format.TotalBytes()};
 				packed.append(value);
 			}
 		}
@@ -88,7 +88,7 @@
 		// After the pixel shader file is loaded, create the shader.
 		char											shaderFileName	[1024]	= {};
 		sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
-		::gpk::apod<byte_t>						filePS;
+		::gpk::apod<int8_t>						filePS;
 		gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 		::gpk::ptr_com<ID3D11PixelShader>				pixelShader;

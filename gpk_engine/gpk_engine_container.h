@@ -28,17 +28,17 @@ namespace gpk
 			return Names.push_back(::gpk::vcc{Names[index]}); 
 		}
 
-		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
-			gpk_necs(output.append(::gpk::vcub{(const ubyte_t*)&Elements.size(), 4}));
+		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+			gpk_necs(output.append(::gpk::vcu8{(const uint8_t*)&Elements.size(), 4}));
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::viewSave(output, Names[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			info_printf("Saved %s, %i", "Elements", Elements.size());
 			return 0;
 		}
 
-		::gpk::error_t						Load			(::gpk::vcub & input) {
+		::gpk::error_t						Load			(::gpk::vcu8 & input) {
 			gpk_necs(Elements.resize(*(uint32_t*)input.begin()));
 			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			gpk_necall(Names.resize(Elements.size()), "size: %i", Elements.size());

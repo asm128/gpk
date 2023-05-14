@@ -7,7 +7,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SIPv4 {
-						ubyte_t											IP		[4]							;
+						uint8_t											IP		[4]							;
 						uint16_t										Port								;
 
 		inline			bool											operator!=							(const SIPv4& other)	const	noexcept	{ return !operator==(other); }

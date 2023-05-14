@@ -12,7 +12,7 @@ namespace gpk
 
 		::gpk::error_t				Save			(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::savePOD (output, Type));
-			gpk_necs(::gpk::viewSave(output, Data));
+			gpk_necs(::gpk::saveView(output, Data));
 			return 0;
 		}
 
@@ -30,7 +30,7 @@ namespace gpk
 
 		::gpk::error_t			Save				(::gpk::au8 & output)				const	{
 			gpk_necs(::gpk::savePOD(output, Type));
-			gpk_necs(::gpk::viewSave(output, Data));
+			gpk_necs(::gpk::saveView(output, Data));
 			return 0;
 		}
 

@@ -37,17 +37,17 @@ namespace gpk
 			return Entities.remove_unordered(index);
 		}
 
-		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
-			gpk_necs(::gpk::viewSave(output, Entities));
+		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+			gpk_necs(::gpk::saveView(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
-				gpk_necall(::gpk::viewSave(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::viewSave(output, Names[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
+				gpk_necall(::gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			info_printf("Saved %s, %i", "Entities", Children.size());
 			return 0;
 		}
 
-		::gpk::error_t						Load			(::gpk::vcub & input) {
+		::gpk::error_t						Load			(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Entities));
 			gpk_necall(Children	.resize(Entities.size()), "size: %i", Entities.size());
 			gpk_necall(Names	.resize(Entities.size()), "size: %i", Entities.size());

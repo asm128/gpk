@@ -7,19 +7,19 @@
 namespace gpk {
 #pragma pack(push, 1)
 	struct SSTLTriangle {
-		::gpk::SCoord3<float>					Normal		= {};
-		::gpk::STriangle3<float>				Triangle	= {};
-		uint16_t								Attribute	= {};
+		::gpk::SCoord3<float>				Normal			= {};
+		::gpk::STriangle3<float>			Triangle		= {};
+		uint16_t							Attribute		= {};
 	};
 #pragma pack(pop)
 	struct SSTLFile {
-		::gpk::apod<byte_t>						Raw			= {};
-		::gpk::view_byte						Header		= {};
-		::gpk::view<::gpk::SSTLTriangle>		Triangles	= {};
+		::gpk::apod<uint8_t>				Raw				= {};
+		::gpk::vcu8							Header			= {};
+		::gpk::view<::gpk::SSTLTriangle>	Triangles		= {};
 	};
 
-	::gpk::error_t			stlFileLoad			(::gpk::vcc filename, ::gpk::SSTLFile& file);
-	::gpk::error_t			stlFileLoad			(::gpk::view_byte fileInMemory, ::gpk::view_byte & out_Header, ::gpk::view<::gpk::SSTLTriangle>	& out_Triangles);
+	::gpk::error_t						stlFileLoad		(::gpk::vcc filename, ::gpk::SSTLFile& file);
+	::gpk::error_t						stlFileLoad		(::gpk::vcu8 fileInMemory, ::gpk::vcu8 & out_Header, ::gpk::view<::gpk::SSTLTriangle>	& out_Triangles);
 }
 
 #endif // GPK_STL_H

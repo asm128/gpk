@@ -8,15 +8,15 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SGNDHeader {
-					uint32_t									nMagicHeader									;
-					uint8_t										nVersionMajor									;
-					uint8_t										nVersionMinor									;
+		uint32_t									nMagicHeader									;
+		uint8_t										nVersionMajor									;
+		uint8_t										nVersionMinor									;
 	};
 #pragma pack(pop)
 }// namespace
 
-				::gpk::error_t								gpk::gndFileLoad										(::gpk::SGNDFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
-	::gpk::view_stream<const ubyte_t>								gnd_stream										= {input.begin(), input.size()};
+::gpk::error_t								gpk::gndFileLoad										(::gpk::SGNDFileContents & loaded, const ::gpk::vu8	& input)							{
+	::gpk::view_stream<const uint8_t>								gnd_stream										= {input.begin(), input.size()};
 	::gpk::SGNDHeader												gndHeader										= {};
 	gpk_necall(gnd_stream.read_pod(gndHeader), "%s", "Cannot read GND header. Corrupt file?");
 #if defined (GPK_ANDROID) || defined(GPK_LINUX)
@@ -79,9 +79,9 @@ namespace gpk
 }
 
 			::gpk::error_t								gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, const ::gpk::vcs	& input)							{
-	::gpk::apod<byte_t>									fileInMemory												= {};
+	::gpk::apod<int8_t>									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
-	return ::gpk::gndFileLoad(loaded, ::gpk::view_ubyte((ubyte_t*)fileInMemory.begin(), fileInMemory.size()));
+	return ::gpk::gndFileLoad(loaded, ::gpk::vu8((uint8_t*)fileInMemory.begin(), fileInMemory.size()));
 }
 
 #if defined(GPK_WINDOWS)

@@ -37,21 +37,21 @@ namespace gpk
 
 #if defined(GPK_WINDOWS)
 	stainli	void													gpk_free					(void* ptr)											noexcept	{ _aligned_free(ptr);									}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
+	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
 #elif defined(GPK_NEWLIB)
 	stainli	void													gpk_free					(void* ptr)											noexcept	{
 		::free(ptr);
 	}
 	stainli	void*													gpk_malloc					(size_t size)										noexcept	{
-		byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1);
+		int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1);
 		return p;
 	}
 #elif defined(GPK_ATMEL)
 	stainli	void													gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #else
 	stainli	void													gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ byte_t* p = (byte_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #endif
 
 	template<typename _typePtr>

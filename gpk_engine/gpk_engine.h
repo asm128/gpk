@@ -21,13 +21,13 @@ namespace gpk
 		::gpk::SVirtualEntityManager		ManagedEntities		;
 		::gpk::SRigidBodyIntegrator			Integrator			;
 
-		::gpk::error_t						Save				(::gpk::apod<ubyte_t> & output)		const	{
+		::gpk::error_t						Save				(::gpk::apod<uint8_t> & output)		const	{
 			gpk_necs(Scene			->Save(output));
 			gpk_necs(ManagedEntities .Save(output));
 			gpk_necs(Integrator		 .Save(output));
 			return 0;
 		}
-		::gpk::error_t						Load				(::gpk::vcub & input) {
+		::gpk::error_t						Load				(::gpk::vcu8 & input) {
 			gpk_necs(Scene			->Load(input));
 			gpk_necs(ManagedEntities .Load(input));
 			gpk_necs(Integrator		 .Load(input));

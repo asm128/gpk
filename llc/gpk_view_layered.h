@@ -50,8 +50,8 @@ namespace gpk
 
 	// view2d common typedefs
 	typedef				::gpk::view_layered<char_t			>	view3d_char				;
-	typedef				::gpk::view_layered<ubyte_t			>	view3d_ubyte			;
-	typedef				::gpk::view_layered<byte_t			>	view3d_byte				;
+	typedef				::gpk::view_layered<uint8_t			>	view3d_ubyte			;
+	typedef				::gpk::view_layered<int8_t			>	view3d_byte				;
 	typedef				::gpk::view_layered<float			>	view3d_float32			;
 	typedef				::gpk::view_layered<double			>	view3d_float64			;
 	typedef				::gpk::view_layered<uint8_t			>	view3d_uint8			;
@@ -65,8 +65,8 @@ namespace gpk
 
 	// view2d<const> common typedefs
 	typedef				::gpk::view_layered<const char_t	>	view3d_const_char		;
-	typedef				::gpk::view_layered<const ubyte_t	>	view3d_const_ubyte		;
-	typedef				::gpk::view_layered<const byte_t	>	view3d_const_byte		;
+	typedef				::gpk::view_layered<const uint8_t	>	view3d_const_ubyte		;
+	typedef				::gpk::view_layered<const int8_t	>	view3d_const_byte		;
 	typedef				::gpk::view_layered<const float		>	view3d_const_float32	;
 	typedef				::gpk::view_layered<const double	>	view3d_const_float64	;
 	typedef				::gpk::view_layered<const uint8_t	>	view3d_const_uint8		;

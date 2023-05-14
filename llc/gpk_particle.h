@@ -190,9 +190,9 @@ namespace gpk
 		}
 
 		::gpk::error_t										Save(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::viewSave(output, Position	)); 
-			gpk_necs(::gpk::viewSave(output, Direction	)); 
-			gpk_necs(::gpk::viewSave(output, Speed		)); 
+			gpk_necs(::gpk::saveView(output, Position	)); 
+			gpk_necs(::gpk::saveView(output, Direction	)); 
+			gpk_necs(::gpk::saveView(output, Speed		)); 
 			info_printf("Saved %s, %i", "Position	", Position		.size()); 
 			info_printf("Saved %s, %i", "Direction	", Direction	.size()); 
 			info_printf("Saved %s, %i", "Speed		", Speed		.size()); 

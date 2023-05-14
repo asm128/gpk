@@ -70,7 +70,7 @@ namespace gpk
 	};
 
 	//709655609
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input);
+			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<uint8_t>	& input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
 			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::vcs	& input);
 

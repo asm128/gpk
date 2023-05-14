@@ -61,7 +61,7 @@ static		::gpk::error_t								base64DecodeQuad												(::gpk::vu8 inputQuad,
 	uint8_t														outputTriplet		[3]											= {};
 	uint32_t													iBitIn															= 0;
 	for(uint32_t iSingleOut = 0; iSingleOut < 3; ++iSingleOut) {
-		::gpk::view_bit<ubyte_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
+		::gpk::view_bit<uint8_t>									outputBits														= {&outputTriplet[iSingleOut], 8};
 		for(uint32_t iBitOut = 0; iBitOut < 8; ++iBitOut) { // extract relevant bits from encoded bytes
 			outputBits[iBitOut]										= inputBits[iBitIn + (iBitIn / 6) * 2];
 			++iBitIn;

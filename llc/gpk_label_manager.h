@@ -14,14 +14,14 @@ namespace gpk
 
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		::gpk::error_t						Clear						()	{ return ::gpk::clear(Blocks, RemainingSpace); }
-		::gpk::error_t						Save						(::gpk::apod<ubyte_t> & output)	const	{
-			gpk_necs(::gpk::viewSave(output, RemainingSpace));
+		::gpk::error_t						Save						(::gpk::apod<uint8_t> & output)	const	{
+			gpk_necs(::gpk::saveView(output, RemainingSpace));
 			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
-				gpk_necs(::gpk::viewSave(output, *Blocks[iArray]));
+				gpk_necs(::gpk::saveView(output, *Blocks[iArray]));
 			return 0;
 		}
 
-		::gpk::error_t						Load						(::gpk::vcub & input) {
+		::gpk::error_t						Load						(::gpk::vcu8 & input) {
 			Clear();
 			gpk_necs(::gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
@@ -72,15 +72,15 @@ namespace gpk
 			Texts		.push_back(Empty.begin()); 
 		}
 
-		::gpk::error_t						Save						(::gpk::apod<ubyte_t> & output)	const	{
-			gpk_necs(::gpk::viewSave(output, Counts));
+		::gpk::error_t						Save						(::gpk::apod<uint8_t> & output)	const	{
+			gpk_necs(::gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
-				gpk_necs(output.append((const ubyte_t*)Texts[iArray], Counts[iArray]));
+				gpk_necs(output.append((const uint8_t*)Texts[iArray], Counts[iArray]));
 
 			return 0;
 		}
 
-		::gpk::error_t						Load						(::gpk::vcub & input) {
+		::gpk::error_t						Load						(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Counts));
 			::gpk::vcc								out_view; 
 			uint32_t								offsetByte					= 0;

@@ -30,7 +30,7 @@
 	return decodedCharacters;
 }
 
-static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcb & body, ::gpk::apod<byte_t> & joined)		{
+static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<char> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -46,23 +46,23 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcb & body, ::g
 		::gpk::parseIntegerHexadecimal(strSize, &sizeChunk);
 		if(0 == sizeChunk)
 			break;
-		joined.append(::gpk::vcb{&body[iStop], (uint32_t)sizeChunk});
+		joined.append({&body[iStop], (uint32_t)sizeChunk});
 		iStop									+= (uint32_t)sizeChunk;
 		iStop									+= 2;	// skip \n
 	}
 	return 0;
 }
 
-static	::gpk::error_t					httpClientRequestConstruct
-	(	::gpk::HTTP_METHOD					method
+static	::gpk::error_t		httpClientRequestConstruct
+	(	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcb		& body
-	,	::gpk::apod<byte_t>			& out_request
+	,	const ::gpk::vcc		& body
+	,	::gpk::apod<char>		& out_request
 	) {
 	::gpk::vcc						strMethod						= ::gpk::get_value_label(method);
-	out_request								= strMethod;
+	out_request					= strMethod;
 	out_request.push_back(' ');
 	out_request.append(path);
 	out_request.append(::gpk::vcs{
@@ -94,10 +94,10 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcb		& body
+	,	const ::gpk::vcc		& body
 	,	::gpk::SHTTPResponse				& out_received
 	) {
-	::gpk::apod<byte_t>					bytesRequest;
+	::gpk::apod<char>					bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
 	const ::gpk::SIPv4							& address						= clientToConnect;
 
@@ -154,7 +154,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 				info_printf("Header stop at position %u.", (uint32_t)stopOfHeader);
 
 				for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-					buf[iByte]							= (byte_t)::tolower(buf[iByte]);
+					buf[iByte]							= (int8_t)::tolower(buf[iByte]);
 
 				bChunked							= 0 <= ::gpk::find_sequence_pod(::gpk::vcs{"chunked"}, {buf.begin(), totalBytes});
 
@@ -199,19 +199,19 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 #endif
 	}
 
-	::gpk::vcb						contentReceived					= {};
+	::gpk::vcc						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
 		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
 	}
 
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
-		buf[iByte]								= (byte_t)::tolower(buf[iByte]);
+		buf[iByte]								= (int8_t)::tolower(buf[iByte]);
 
-	::gpk::aobj<::gpk::vcb>	headerLines;
+	::gpk::aobj<::gpk::vcc>			headerLines;
 	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
 
-	::gpk::split(::gpk::vcb{out_received.HeaderData}, '\n', headerLines);
+	::gpk::split(::gpk::vcc{out_received.HeaderData}, '\n', headerLines);
 	bChunked						= false;
 	out_received.Headers.resize(headerLines.size());
 	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
@@ -235,7 +235,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	if(stopOfHeader < buf.size())
 		contentReceived							= {&buf[stopOfHeader], totalBytes - stopOfHeader};
 
-	::gpk::apod<byte_t>					joined;
+	::gpk::apod<char>					joined;
 	if(bChunked) {
 		info_printf("\nChunked: %s", bChunked ? "true" : "false");
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
@@ -253,8 +253,8 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcb		& body
-	,	::gpk::apod<byte_t>			& out_received
+	,	const ::gpk::vcc		& body
+	,	::gpk::apod<char>			& out_received
 	) {
 	::gpk::SHTTPResponse						response;
 	gpk_necall(::gpk::httpClientRequest

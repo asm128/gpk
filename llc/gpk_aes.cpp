@@ -428,7 +428,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	int8_t													excedent								= messageToEncrypt.size() % ::gpk::AES_SIZEBLOCK;
 	int8_t													paddingRequired							= (int8_t)(::gpk::AES_SIZEBLOCK - excedent);
 	outputEncrypted.clear();
-	gpk_necall(outputEncrypted.resize(messageToEncrypt.size() + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (byte_t)0), "%s", "Out of memory?");
+	gpk_necall(outputEncrypted.resize(messageToEncrypt.size() + (paddingRequired ? paddingRequired : ::gpk::AES_SIZEBLOCK), (int8_t)0), "%s", "Out of memory?");
 	for(int8_t iPad = 0; iPad < paddingRequired; ++iPad)
 		outputEncrypted[messageToEncrypt.size() + iPad]		= paddingRequired;
 	memcpy(outputEncrypted.begin(), messageToEncrypt.begin(), messageToEncrypt.size());

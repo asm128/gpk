@@ -74,7 +74,7 @@ static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk
 }
 
 static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcc filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
-	::gpk::apod<byte_t>							rawMat					= {};
+	::gpk::apod<char>							rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
 	::gpk::SJSONReader							numberReader			= {};
@@ -147,7 +147,7 @@ static ::gpk::error_t					createFromMTL			(::gpk::SComponentScene & scene, ::gpk
 }
 
 static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcc filename)  {
-	::gpk::apod<byte_t>							rawObj					= {};
+	::gpk::apod<char>							rawObj					= {};
 	gpk_necall(::gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
@@ -157,10 +157,10 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 	uint32_t									countObjects			= 0;
 	uint32_t									countGroups				= 0;
 	::gpk::apod<int16_t>						objectIndices			= {};
-	::gpk::apod<char_t>							objectPath				= {};
+	::gpk::apod<char>							objectPath				= {};
 	::gpk::label								objectName				= {};
 	::gpk::label								groupName				= {};
-	::gpk::apod<char_t>							groupPath				= {};
+	::gpk::apod<char>							groupPath				= {};
 
 
 	::gpk::aobj<::gpk::vcc>						objFileLines			= {};

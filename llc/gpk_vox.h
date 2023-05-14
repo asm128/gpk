@@ -87,7 +87,7 @@ namespace gpk
 
 	struct SVOXChunk {
 		SVOXChunkHeader										Header					= {};
-		::gpk::apod<byte_t>							Data					= {};
+		::gpk::apod<int8_t>							Data					= {};
 	};
 
 	struct SVOXChunkXYZI {
@@ -155,7 +155,7 @@ namespace gpk
 		::gpk::aobj<::gpk::apod<char>>			ColorNames				= {};
 	};
 
-	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view<const byte_t> & input) 						{
+	::gpk::error_t										voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::view<const int8_t> & input) 						{
 		uint32_t												bytesRead				= sizeof(uint32_t); 
 		const uint32_t											dictLength				= *(uint32_t*)input.begin(); 
 		input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -208,7 +208,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::error_t										Load					(::gpk::view<const byte_t> & input) { 
+		::gpk::error_t										Load					(::gpk::view<const int8_t> & input) { 
 			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 

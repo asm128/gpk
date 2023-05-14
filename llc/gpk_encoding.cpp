@@ -27,7 +27,7 @@
 	return 0;
 }
 
-static	::gpk::error_t								hexFromByte						(uint8_t i, char* hexed)																{
+static	::gpk::error_t								hexFromByte						(uint8_t i, char * hexed)																{
 	char														converted [0x20]				= {};
 	snprintf(converted, ::gpk::size(converted) - 1, "%*.2X", 2, i);
 	hexed[0]												= converted[0];
@@ -61,8 +61,8 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	uint32_t													offset							= out_binary.size();
 	uint32_t													binarySize						= in_hexed.size() >> 1;
 	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
-	const byte_t												* pHexed						= in_hexed.begin();
-	ubyte_t														* pBinary						= out_binary.begin();
+	const char													* pHexed						= in_hexed.begin();
+	uint8_t														* pBinary						= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
 	return 0;
@@ -72,7 +72,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	uint32_t													offset							= out_binary.size();
 	uint32_t													binarySize						= in_hexed.size() >> 1;
 	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
-	const byte_t												* pHexed						= in_hexed.begin();
+	const char													* pHexed						= in_hexed.begin();
 	int8_t														* pBinary						= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);

@@ -102,7 +102,7 @@ namespace gpk
 			const ::gpk::SUDPMessage				& message					= *clientQueue[iMessage];
 			switch(message.Command.Command) {
 			case ::gpk::ENDPOINT_COMMAND_PAYLOAD: {
-				::gpk::vcub								payloadInput				= {(const ubyte_t*)message.Payload.begin(), message.Payload.size()};
+				::gpk::vcu8								payloadInput				= {(const uint8_t*)message.Payload.begin(), message.Payload.size()};
 				gpk_necs(eventCache.Load(payloadInput));
 				switch(message.Command.Type) {
 				case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	: 

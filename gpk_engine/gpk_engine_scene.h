@@ -82,12 +82,12 @@ namespace gpk
 		::gpk::SRenderMaterial					Material;
 		::gpk::apod<uint32_t>					Textures;
 
-		::gpk::error_t						Save			(::gpk::apod<ubyte_t> & output) const { 
+		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
 			gpk_necs(::gpk::savePOD(output, Material));
-			gpk_necs(::gpk::viewSave(output, Textures));
+			gpk_necs(::gpk::saveView(output, Textures));
 			return 0;
 		}
-		::gpk::error_t						Load			(::gpk::vcub & input) {
+		::gpk::error_t						Load			(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadPOD(input, Material));
 			gpk_necs(::gpk::loadView(input, Textures));
 			return 0;
@@ -115,7 +115,7 @@ namespace gpk
 			//gpk_necs(Fonts	.Save(output));
 			return 0;
 		}
-		::gpk::error_t							Load				(::gpk::vcub & input) {
+		::gpk::error_t							Load				(::gpk::vcu8 & input) {
 			gpk_necs(Buffers	.Load(input));
 			gpk_necs(Surfaces	.Load(input));
 			gpk_necs(Meshes		.Load(input));
@@ -131,13 +131,13 @@ namespace gpk
 		::gpk::SRenderNodeManager			ManagedRenderNodes		= {};
 		::gpk::SEngineRenderCache			RenderCache				= {};
 
-		::gpk::error_t						Save				(::gpk::apod<ubyte_t> & output)		const	{
+		::gpk::error_t						Save				(::gpk::apod<uint8_t> & output)		const	{
 			gpk_necs(Graphics			->Save(output));
 			gpk_necs(ManagedRenderNodes	 .Save(output));
 			//gpk_necs(RenderCache		 .Save(output));
 			return 0;
 		}
-		::gpk::error_t						Load				(::gpk::vcub & input) {
+		::gpk::error_t						Load				(::gpk::vcu8 & input) {
 			gpk_necs(Graphics			->Load(input));
 			gpk_necs(ManagedRenderNodes	 .Load(input));
 			//gpk_necs(RenderCache		 .Load(input));

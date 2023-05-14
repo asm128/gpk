@@ -188,10 +188,10 @@ static	::gpk::error_t				gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs
 		::gpk::rsaDecode(encrypted, n, testkey, decryptTest);
 		gerror_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest =0; iTest < decryptTest.size(); ++iTest) {
-			gerror_if(decryptTest[iTest] != (byte_t)filter_view[iTest], "%s", "Error!");
+			gerror_if(decryptTest[iTest] != (int8_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
-	filter_view									= {(ubyte_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(uint64_t)};
+	filter_view									= {(uint8_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Apply(filter_view);
 	return (::gpk::error_t)i;
 }
@@ -201,7 +201,7 @@ static	::gpk::error_t				gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs
 	uint32_t								offset								= decrypted.size();
 	uint32_t								i									= 0;
 	::gpk::au64								defiltered							(encrypted);
-	::gpk::vu8								defilter_view						= {(ubyte_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
+	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Remove(defilter_view);
 	gpk_necall(::gpk::rsaDecode(defiltered, n, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
 	::gpk::vu8								filter_view							({(uint8_t*)&decrypted[offset], decrypted.size() - offset});

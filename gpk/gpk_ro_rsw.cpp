@@ -5,26 +5,26 @@
 
 #pragma pack(push, 1)
 	struct SRSWHeader {
-					char										Filecode[4];
-					uint8_t										VersionMajor;
-					uint8_t										VersionMinor;
+		char										Filecode[4];
+		uint8_t										VersionMajor;
+		uint8_t										VersionMinor;
 	};
 
 	struct SRSWWorldInfo {
-					//::gpk::SRange;
-					int32_t										Top				;
-					int32_t										Bottom			;
-					int32_t										Left			;
-					int32_t										Right			;
-					uint32_t									ObjectCount;
-					//unsigned char								Unknown2	[8];
-					//unsigned char								UnknownStr	[40];
-					//uint32_t									UnknownInts	[2];
+		//::gpk::SRange;
+		int32_t										Top				;
+		int32_t										Bottom			;
+		int32_t										Left			;
+		int32_t										Right			;
+		uint32_t									ObjectCount;
+		//unsigned char								Unknown2	[8];
+		//unsigned char								UnknownStr	[40];
+		//uint32_t									UnknownInts	[2];
 	};
 #pragma pack(pop)
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
-	::gpk::view_stream<const ubyte_t>							rsw_stream													= {input.begin(), input.size()};
+			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<uint8_t>	& input)							{
+	::gpk::view_stream<const uint8_t>							rsw_stream													= {input.begin(), input.size()};
 	SRSWHeader													header														= {};//*(SRSWHeader*)input.begin();
 	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
@@ -173,17 +173,17 @@
 	return rsw_stream.CursorPosition;
 }
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
+::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)							{
-	::gpk::apod<byte_t>									fileInMemory												= {};
+::gpk::error_t							gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)							{
+	::gpk::au8									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
-	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	uint64_t									unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());
-	return rswFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});
+	return rswFileLoad(loaded, fileInMemory);
 }

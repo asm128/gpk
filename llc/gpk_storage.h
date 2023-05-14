@@ -20,10 +20,12 @@ namespace gpk
 		return 0;
 	}	// Recursive
 	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char_t>> & output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
-	::gpk::error_t						fileToMemory			(const ::gpk::vcc & fileName, ::gpk::apod<byte_t> & fileInMemory);
-	::gpk::error_t						fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcb & fileInMemory);
-	stainli	::gpk::error_t				fileToMemory			(const ::gpk::vcc & fileName, ::gpk::apod<ubyte_t> & fileInMemory)	{ return ::gpk::fileToMemory	(fileName, *(::gpk::apod<byte_t>*)&fileInMemory); }
-	stainli	::gpk::error_t				fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcub & fileInMemory)		{ return ::gpk::fileFromMemory	(fileName, *(const ::gpk::vcb*)&fileInMemory);; }
+	::gpk::error_t						fileToMemory			(const ::gpk::vcc & fileName, ::gpk::apod<uint8_t> & fileInMemory);
+	::gpk::error_t						fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcu8 & fileInMemory);
+	stainli	::gpk::error_t				fileToMemory			(const ::gpk::vcc & fileName, ::gpk::apod<int8_t> & fileInMemory)	{ return ::gpk::fileToMemory	(fileName, *(::gpk::au8*)&fileInMemory); }
+	stainli	::gpk::error_t				fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vci8 & fileInMemory)		{ return ::gpk::fileFromMemory	(fileName, *(const ::gpk::vcu8*)&fileInMemory);; }
+	stainli	::gpk::error_t				fileToMemory			(const ::gpk::vcc & fileName, ::gpk::apod<char> & fileInMemory)		{ return ::gpk::fileToMemory	(fileName, *(::gpk::au8*)&fileInMemory); }
+	stainli	::gpk::error_t				fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcc & fileInMemory)		{ return ::gpk::fileFromMemory	(fileName, *(const ::gpk::vcu8*)&fileInMemory);; }
 	::gpk::error_t						fileJoin				(const ::gpk::vcc & fileNameDst);								// Joins a file split into file.split.## parts.
 	::gpk::error_t						fileSplit				(const ::gpk::vcc & fileNameSrc, const uint32_t partSize);		// Splits a file into file.split.## parts.
 	int64_t								fileSize				(const ::gpk::vcc & fileNameSrc);
@@ -40,7 +42,7 @@ namespace gpk
 		::gpk::error_t						Save					(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::savePOD(output, Name.size()));
 			for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
-				gpk_necall(::gpk::viewSave(output, Name[iFile]), "iEntity: %i", iFile);
+				gpk_necall(::gpk::saveView(output, Name[iFile]), "iEntity: %i", iFile);
 			}
 			return 0;
 		}

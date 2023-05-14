@@ -63,7 +63,7 @@
 	return -1;
 }
 
-::gpk::error_t							gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::apod<byte_t> & output)	{
+::gpk::error_t							gpk::keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstString> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::au8 & output)	{
 	::gpk::apod<::gpk::TKeyValConstString>		keyValsToSave						= {};
 	for(uint32_t iKey = 0; iKey < keyVals.size(); ++iKey) {
 		for(uint32_t iRef = 0; iRef < keysToSave.size(); ++iRef) {
@@ -73,16 +73,16 @@
 				keyValsToSave.push_back(kvToCheck);
 		}
 	}
-	output.append((const char*)&keyValsToSave.size(), sizeof(uint32_t));
+	output.append((const uint8_t*)&keyValsToSave.size(), sizeof(uint32_t));
 	uint32_t									iOffset								= 0;
 	for(uint32_t iKey = 0; iKey < keyValsToSave.size(); ++iKey) {
-		iOffset									+= ::gpk::viewWrite(keyValsToSave[iKey].Key, output);
-		iOffset									+= ::gpk::viewWrite(keyValsToSave[iKey].Val, output);
+		iOffset									+= ::gpk::saveView(output, keyValsToSave[iKey].Key);
+		iOffset									+= ::gpk::saveView(output, keyValsToSave[iKey].Val);
 	}
 	return 0;
 }
 
-::gpk::error_t							gpk::keyValConstStringDeserialize	(const ::gpk::vcb & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
+::gpk::error_t							gpk::keyValConstStringDeserialize	(const ::gpk::vcu8 & input, ::gpk::aobj<::gpk::TKeyValConstString> & output)	{
 	uint32_t									offset								= 0;
 	const uint32_t								keysToRead							= *(const uint32_t*)input.begin();
 	offset									+= (uint32_t)sizeof(uint32_t);

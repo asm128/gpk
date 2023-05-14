@@ -8,7 +8,7 @@ namespace gpk
 	::gpk::error_t						hexEncode				(const ::gpk::vcu8 & inputBinary, ::gpk::ac  & out_hexed	);
 	::gpk::error_t						hexDecode				(const ::gpk::vcc  & in_hexed   , ::gpk::au8 & outputBinary	);
 	::gpk::error_t						hexDecode				(const ::gpk::vcc  & in_hexed   , ::gpk::ai8 & outputBinary	);
-	stainli	::gpk::error_t				hexEncode				(const ::gpk::vci8 & inputBinary, ::gpk::ac  & out_hexed	)			{ return hexEncode(::gpk::vcub{(const ubyte_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
+	stainli	::gpk::error_t				hexEncode				(const ::gpk::vci8 & inputBinary, ::gpk::ac  & out_hexed	)			{ return hexEncode(::gpk::vcu8{(const uint8_t*)inputBinary.begin(), inputBinary.size()}, out_hexed); }
 
 	// Based on Gary Ardell's code for VB.
 	::gpk::error_t						ardellEncode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output);

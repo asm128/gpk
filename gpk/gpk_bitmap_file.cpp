@@ -76,7 +76,7 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	::gpk::vcs					pngfn		= {filename.begin(), lenFilename};
 	::gpk::au8					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
-	::gpk::fileFromMemory(pngfn, {(const char*)filebytes.begin(), filebytes.size()});
+	::gpk::fileFromMemory(pngfn, filebytes);
 	//if((bm.bmBitsPixel * bm.bmPlanes) <= 8) { // If the DIBSection is 256 color or less, it has a color table
 	//	HDC																										hMemDC;
 	//	HBITMAP																									hOldBitmap;
@@ -158,7 +158,7 @@ struct SHeaderInfoBMP {
 #pragma pack( pop )
 
 // Currently supporting only 24-bit bitmaps
-					::gpk::error_t																	gpk::bmpFileLoad							(const byte_t* source, ::gpk::apod<::gpk::SColorBGRA>& out_Colors, ::gpk::view2d<::gpk::SColorBGRA>& out_ImageView)					{
+					::gpk::error_t																	gpk::bmpFileLoad							(const int8_t* source, ::gpk::apod<::gpk::SColorBGRA>& out_Colors, ::gpk::view2d<::gpk::SColorBGRA>& out_ImageView)					{
 	SHeaderFileBMP																							& fileHeader								= *(SHeaderFileBMP*)*source;
 	ree_if(0 != memcmp(fileHeader.Type, "BM", 2), "Invalid magic number for BMP file.");
 	SHeaderInfoBMP																							& infoHeader								= *(SHeaderInfoBMP*)*(source + sizeof(SHeaderFileBMP));
@@ -169,7 +169,7 @@ struct SHeaderInfoBMP {
 	uint32_t																								nPixelCount									= infoHeader.Metrics.x * infoHeader.Metrics.y;
 	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	out_Colors.resize(nPixelCount);
-	ubyte_t																									* srcBytes									= (ubyte_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
+	uint8_t																									* srcBytes									= (uint8_t*)(source + sizeof(SHeaderFileBMP) + sizeof(SHeaderInfoBMP));
 	bool																									b32Bit										= false;
 	uint32_t																								colorSize									= 0;
 	int32_t																									x, y, linearIndexSrc;
@@ -227,7 +227,7 @@ struct SHeaderInfoBMP {
 		&& infoHeader.Bpp != 1
 		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 	uint32_t																								pixelSize									= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
-	::gpk::apod<ubyte_t>																				srcBytes									= {};
+	::gpk::apod<uint8_t>																				srcBytes									= {};
 	gpk_necall(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
 	size_t																									readResult									= fread(&srcBytes[0], pixelSize, nPixelCount, source);
 	ree_if(readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");

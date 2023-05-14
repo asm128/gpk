@@ -13,7 +13,7 @@ struct SRSMHeader {	// RSM Header
 #pragma pack(pop)
 
 
-			::gpk::error_t								analyzeArray												(const ::gpk::view_array<ubyte_t>& input) {
+			::gpk::error_t								analyzeArray												(const ::gpk::view_array<uint8_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
@@ -33,7 +33,7 @@ struct SRSMHeader {	// RSM Header
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
 	uint32_t													keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
@@ -45,7 +45,7 @@ static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stre
 }
 
 // >= v1.5 Read position keyframes
-static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const ubyte_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
 	uint32_t													positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
 	GPK_PLATFORM_CRT_BREAKPOINT();
@@ -56,8 +56,8 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::view_array<ubyte_t>	& input)							{
-	::gpk::view_stream<const ubyte_t>							rsm_stream													= {input.begin(), input.size()};
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view_array<uint8_t>	& input)							{
+	::gpk::view_stream<const uint8_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
 	rsm_stream.read_pod(loaded.AnimLength);
@@ -189,19 +189,19 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return rsm_stream.CursorPosition;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, FILE								* input)							{
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents& loaded, const ::gpk::vcs	& input)							{
-	::gpk::apod<byte_t>									fileInMemory												= {};
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
+	::gpk::au8									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;
 	info_printf("%u", unk);
 	info_printf("Parsing RSM file: %s.", input.begin());
-	return rsmFileLoad(loaded, ::gpk::view_ubyte{(ubyte_t*)fileInMemory.begin(), fileInMemory.size()});
+	return rsmFileLoad(loaded, fileInMemory);
 }
 
 			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view_array<::gpk::SModelNodeRSM>& out_meshes)			{

@@ -198,7 +198,7 @@ stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 
 			fileLocation.Count			= contentsTemp.size();
 			gpk_necs(::gpk::savePOD(tableFiles, fileLocation));
-			gpk_necs(::gpk::viewSave(tableFiles, pathToLoad));
+			gpk_necs(::gpk::saveView(tableFiles, pathToLoad));
 			gpk_necall(contentsPacked.append(contentsTemp.begin(), contentsTemp.size())	, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
 			contentsTemp.clear();
 
@@ -219,7 +219,7 @@ stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 	for(uint32_t iFile = 0, countFiles = virtualFolder.Names.size(); iFile < countFiles; ++iFile) {
 		gpk_safe_fclose(fp);
 		const ::gpk::vcs				& fileName					= virtualFolder.Names		[iFile];
-		const ::gpk::vcub				& fileContent				= virtualFolder.Contents	[iFile];
+		const ::gpk::vcu8				& fileContent				= virtualFolder.Contents	[iFile];
 		snprintf(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
 		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
