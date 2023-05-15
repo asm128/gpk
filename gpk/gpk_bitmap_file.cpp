@@ -183,7 +183,7 @@ struct SHeaderInfoBMP {
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																						= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
 			out_Colors[y * infoHeader.Metrics.x + x]															=
-				{ srcBytes[linearIndexSrc + 0]
+				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
 				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
@@ -195,7 +195,7 @@ struct SHeaderInfoBMP {
 		for(x = 0; x < infoHeader.Metrics.x; ++x ) {
 			linearIndexSrc								= y * infoHeader.Metrics.x + x;
 			out_Colors[linearIndexSrc]																			=
-				{ srcBytes[linearIndexSrc]
+				::gpk::bgra{ srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, 0xFFU
@@ -245,7 +245,7 @@ struct SHeaderInfoBMP {
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																							= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
 			out_Colors[y * infoHeader.Metrics.x + x]																=
-				{ srcBytes[linearIndexSrc + 0]
+				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
 				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
@@ -257,7 +257,7 @@ struct SHeaderInfoBMP {
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc																							= y * infoHeader.Metrics.x + x;
 			out_Colors[linearIndexSrc]																				=
-				{ srcBytes[linearIndexSrc]
+				::gpk::bgra{ srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, 0xFFU
@@ -270,7 +270,7 @@ struct SHeaderInfoBMP {
 			linearIndexSrc																							= y * (infoHeader.Metrics.x / 8) + x / 8;
 			int32_t																										linearIndexDst							= y *  infoHeader.Metrics.x + x;
 			out_Colors[linearIndexDst]																				=
-				{ srcBytes[linearIndexSrc] & (1U << (x % 8))
+				::gpk::bgra{ srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, 0xFFU

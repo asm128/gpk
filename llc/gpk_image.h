@@ -91,10 +91,10 @@ namespace gpk
 	template<typename _tTexel>
 	struct SImageMonochrome {
 		typedef	_tTexel							TTexel;
-		typedef	::gpk::view_bit	<_tTexel>		TView;
+		typedef	::gpk::view_bit<_tTexel>		TView;
 
 		::gpk::apod<_tTexel>					Texels				;
-		::gpk::view_bit	<_tTexel>				View				;
+		::gpk::view_bit<_tTexel>				View				;
 		uint32_t								Pitch				= 0;
 
 		cnstxpr									SImageMonochrome	()													noexcept	= default;
@@ -130,6 +130,11 @@ namespace gpk
 		}
 	}; // struct
 
+	template<typename _tCell>	
+	using	imgmono				= ::gpk::SImageMonochrome<_tCell>;
+
+	typedef	imgmono<uint64_t>	imgmonou64;
+
 	template<typename _tTexel, typename _tDepthStencil>
 	struct SRenderTarget {
 		::gpk::img<_tTexel>						Color				= {};
@@ -164,6 +169,12 @@ namespace gpk
 
 	template<typename _tTexel, typename _tDepthStencil>
 	using									rt					= SRenderTarget<_tTexel, _tDepthStencil>;
+
+	typedef SRenderTarget<::gpk::bgra, uint32_t>	rtbgra8d32;
+	typedef SRenderTarget<::gpk::rgba, uint32_t>	rtrgba8d32;
+
+	typedef SRenderTarget<::gpk::bgra, uint8_t>		rtbgra8s8;
+	typedef SRenderTarget<::gpk::rgba, uint8_t>		rtrgba8s8;
 
 	template<typename _tTexel, typename _tDepthStencil>
 	::gpk::error_t							clearTarget			(::gpk::rt<_tTexel, _tDepthStencil>& targetToClear)		{

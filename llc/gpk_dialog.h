@@ -44,47 +44,47 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogColors {
-		::gpk::apod<::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType										= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Control												= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Button												= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						CheckBox											= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						Viewport											= {};
-		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>						ViewportTitle										= {};
+		::gpk::apod<::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType										= {};
+		::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control												= {};
+		::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button												= {};
+		::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox											= {};
+		::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport											= {};
+		::gpk::astatici32<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle										= {};
 	};
 
 	struct SDialog {
 		::gpk::pobj<::gpk::SDialogColors>													Colors												= {};
 		
-		int32_t																				FocusedCurrent										= -1;
-		int32_t																				FocusedPrevious										= -1;
-		int32_t																				SelectedCurrent										= -1;
-		int32_t																				SelectedPrevious									= -1;
-		::gpk::SCoord2<uint16_t>															LastSize											= {};
-		int32_t																				Root												= -1;
-		::gpk::SControlMode																	DefaultControlModes									= {};
+		int32_t											FocusedCurrent										= -1;
+		int32_t											FocusedPrevious										= -1;
+		int32_t											SelectedCurrent										= -1;
+		int32_t											SelectedPrevious									= -1;
+		::gpk::n2u16									LastSize											= {};
+		int32_t											Root												= -1;
+		::gpk::SControlMode								DefaultControlModes									= {};
 
-		::gpk::pobj<::gpk::SInput>															Input												= {};
-		::gpk::pobj<::gpk::SGUI>															GUI													= {};
-		::gpk::aobj<::gpk::ptr_nco<IDialogControl>>											Controls											= {};
-		::gpk::img<::gpk::SColorBGRA>														ImageCrossBGRA										= {};
-		::gpk::SImageMonochrome<uint32_t>													ImageCross											= {};
+		::gpk::pobj<::gpk::SInput>						Input												= {};
+		::gpk::pobj<::gpk::SGUI>						GUI													= {};
+		::gpk::aobj<::gpk::pnco<IDialogControl>>		Controls											= {};
+		::gpk::img<::gpk::bgra>							ImageCrossBGRA										= {};
+		::gpk::imgmonou64								ImageCross											= {};
 
-																							SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);
-																							SDialog												(::gpk::pobj<::gpk::SGUI> & gui);
-																							SDialog												();
+														SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);
+														SDialog												(::gpk::pobj<::gpk::SGUI> & gui);
+														SDialog												();
 
-		::gpk::error_t																		Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }
-		::gpk::error_t																		Focused												()													{ return FocusedCurrent; }
+		::gpk::error_t									Focus												(int32_t iControl)									{ ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); FocusedPrevious = FocusedCurrent; FocusedCurrent = iControl; return 0; }
+		::gpk::error_t									Focused												()													{ return FocusedCurrent; }
 
 		template<typename _TDialogControl>
-		::gpk::error_t																		Create												(::gpk::ptr_nco<_TDialogControl>& createdControl)	{
+		::gpk::error_t									Create												(::gpk::pnco<_TDialogControl>& createdControl)	{
 			if(0 == GUI.get_ref())
 				GUI.create();
-			::gpk::SGUI																				& gui												= *GUI;
-			int32_t																					index												= -1;
+			::gpk::SGUI											& gui												= *GUI;
+			int32_t												index												= -1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl].get_ref()) {
-					index																		= iControl;
+					index											= iControl;
 					break;
 				}
 
@@ -93,28 +93,28 @@ namespace gpk
 
 			//::gpk::dialogCreate(createdControl);
 			//Controls[index]														= createdControl;
-			::gpk::gpk_ref<_TDialogControl>											* newRef											= 0;
+			::gpk::gpk_ref<_TDialogControl>						* newRef			= 0;
 			ree_if(0 == ::gpk::ref_create(&newRef), "%s", "Out of memory?");
 			Controls[index].set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
-			Controls[index]->Dialog												= this;
-			Controls[index]->IdGUIControl										= ::gpk::controlCreate(*GUI);
-			gui.Controls.Modes[Controls[index]->IdGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(gui.Controls.Controls[Controls[index]->IdGUIControl].Palettes.Storage, Colors->Control.Storage);
-			//gpk_necall(::gpk::controlSetParent(gui, Controls[index]->IdGUIControl, Root), "%s", "Invalid root id!");
+			Controls[index]->Dialog							= this;
+			const uint32_t										idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
+			gui.Controls.Modes[idGUIControl].UseNewPalettes	= true;
+			::gpk::memcpy_s(gui.Controls.Controls[idGUIControl].Palettes.Storage, Colors->Control.Storage);
+			//gpk_necall(::gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}
 
 		template<typename _TDialogControl>
-		::gpk::error_t														Get												(int32_t index, ::gpk::ptr_nco<_TDialogControl>& control)	{
+		::gpk::error_t									Get												(int32_t index, ::gpk::ptr_nco<_TDialogControl>& control)	{
 			Controls[index].as(control);
 			return index;
 		}
 
-		::gpk::error_t														Update												()													{
+		::gpk::error_t									Update												()													{
 			if(0 == GUI.get_ref())
 				GUI.create();
-			::gpk::SGUI																& gui												= *GUI;
+			::gpk::SGUI											& gui				= *GUI;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl) {
 				if(0 == Controls[iControl].get_ref() || ::gpk::controlInvalid(gui, Controls[iControl]->IdGUIControl)) {
 					Controls.remove_unordered(iControl);
@@ -125,7 +125,7 @@ namespace gpk
 			if(LastSize != gui.LastSize) {
 				for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 					Controls[iControl]->Resize(gui.LastSize);
-				LastSize															= gui.LastSize;
+				LastSize										= gui.LastSize;
 			}
 			//if(0 != Input)
 			//	gpk_necall(::gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
