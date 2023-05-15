@@ -14,21 +14,21 @@ namespace gpk
 	};
 
 	struct SLightsDirectional {
-							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
+							::gpk::apod<::gpk::n3<float>>					Directions									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsPoint {
-							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
-							::gpk::apod<::gpk::SCoord3<float>>					Positions									= {};
-							::gpk::apod<::gpk::SCoord3<float>>					Attenuation									= {};
+							::gpk::apod<::gpk::n3<float>>					Directions									= {};
+							::gpk::apod<::gpk::n3<float>>					Positions									= {};
+							::gpk::apod<::gpk::n3<float>>					Attenuation									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsSpot {
-							::gpk::apod<::gpk::SCoord3<float>>					Directions									= {};
-							::gpk::apod<::gpk::SCoord3<float>>					Positions									= {};
-							::gpk::apod<::gpk::SCoord3<float>>					Attenuation									= {};
+							::gpk::apod<::gpk::n3<float>>					Directions									= {};
+							::gpk::apod<::gpk::n3<float>>					Positions									= {};
+							::gpk::apod<::gpk::n3<float>>					Attenuation									= {};
 							::gpk::apod<float>									SpotPower									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};

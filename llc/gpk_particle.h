@@ -3,7 +3,7 @@
 // A particle is the simplest object that can be simulated in the physics system.
 // It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it.
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
-#include "gpk_coord.h"			// for ::gpk::SCoord2<>
+#include "gpk_coord.h"			// for ::gpk::n2<>
 #include "gpk_error.h"			// for ::gpk::error_t
 #include "gpk_array.h"		// for ::gpk::view<>
 #include <cfloat>
@@ -16,7 +16,7 @@ namespace gpk
 #pragma pack(push, 1)
 	template<typename _tElement>
 	struct SParticle2Forces {
-		typedef				::gpk::SCoord2<_tElement>							TCoord;
+		typedef				::gpk::n2<_tElement>							TCoord;
 		stacxpr	const _tElement										VelocityEpsilon								= 0.0001f;
 
 							TCoord												AccumulatedForce							= {};
@@ -37,7 +37,7 @@ namespace gpk
 	template<typename _tElement>
 	struct SParticle2 {
 		// The member variables are organized such that matches the order in which they are used.
-							::gpk::SCoord2<_tElement>							Position									= {};
+							::gpk::n2<_tElement>							Position									= {};
 							SParticle2Forces<_tElement>							Forces										= {};
 							_tElement											InverseMass									= 0;
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction
@@ -58,10 +58,10 @@ namespace gpk
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
 	template<typename _tElement>
 	stainli	void												particleIntegratePosition
-		(	const ::gpk::SCoord2<_tElement>	& velocity
+		(	const ::gpk::n2<_tElement>	& velocity
 		,	const double					timeElapsed
 		,	const double					timeElapsedHalfSquared
-		,	::gpk::SCoord2<_tElement>		& position
+		,	::gpk::n2<_tElement>		& position
 		)
 	{
 		position																+= velocity * timeElapsed;
@@ -84,7 +84,7 @@ namespace gpk
 	template<typename _tElement>
 	struct SParticle2Integrator {
 		typedef				::gpk::SParticle2	<_tElement>						TParticle;
-		typedef				::gpk::SCoord2		<_tElement>						TCoord;
+		typedef				::gpk::n2		<_tElement>						TCoord;
 
 							::gpk::apod<::gpk::SParticle2State>			ParticleState								= {};
 							::gpk::apod<TParticle>							Particle									= {};
@@ -163,14 +163,14 @@ namespace gpk
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::apod<::gpk::SCoord3<float>>		Position			= {};
-		::gpk::apod<::gpk::SCoord3<float>>		Direction			= {};
+		::gpk::apod<::gpk::n3<float>>		Position			= {};
+		::gpk::apod<::gpk::n3<float>>		Direction			= {};
 		::gpk::apod<float>						Speed				= {};
 
 		int											IntegrateSpeed		(double secondsLastFrame)	{
 			for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
-				::gpk::SCoord3<float>							& direction			= Direction	[iShot];
-				::gpk::SCoord3<float>							& position			= Position	[iShot];
+				::gpk::n3<float>							& direction			= Direction	[iShot];
+				::gpk::n3<float>							& position			= Position	[iShot];
 				float											& speed				= Speed		[iShot];
 				position									+= direction * speed * secondsLastFrame;
 			}

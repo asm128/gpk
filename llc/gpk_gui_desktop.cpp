@@ -63,9 +63,9 @@
 	return 0;
 }
 
-static		::gpk::error_t												displace										(::gpk::SGUI & gui, int32_t iControl, const ::gpk::SCoord2<double> & mouseDeltas)	{
-	const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-	::gpk::SCoord2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
+static		::gpk::error_t												displace										(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<double> & mouseDeltas)	{
+	const ::gpk::n2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+	::gpk::n2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
 	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.Cast<int16_t>();
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }
@@ -141,11 +141,11 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI & gui, ::
 		::pushToFrontAndDisplace(gui, vp.IdControl, input);
 	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
-			//::gpk::SCoord2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::SCoord2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
-				::gpk::SCoord2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-				const ::gpk::SCoord2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-				::gpk::SCoord2<int16_t>														deltasScaled									= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).Cast<int16_t>();
+				::gpk::n2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+				const ::gpk::n2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+				::gpk::n2<int16_t>														deltasScaled									= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).Cast<int16_t>();
 				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled;
 				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled;
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);

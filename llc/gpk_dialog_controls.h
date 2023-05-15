@@ -24,7 +24,7 @@ namespace gpk
 	::gpk::error_t										viewportCreate						(::gpk::SDialog					& dialog);
 	::gpk::error_t										viewportUpdate						(::gpk::SDialogViewport			& control);
 	::gpk::error_t										viewportFold						(::gpk::SDialogViewport			& control, bool fold);
-	::gpk::error_t										viewportAdjustSize					(::gpk::SCoord2<int16_t>		& sizeViewport, const ::gpk::n2<int16_t> & sizeClient);
+	::gpk::error_t										viewportAdjustSize					(::gpk::n2<int16_t>		& sizeViewport, const ::gpk::n2<int16_t> & sizeClient);
 
 	stainli	::gpk::error_t								sliderCreate						(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogSlider		>	& createdControl)	 { int32_t index = -1; gpk_necs(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
 	stainli	::gpk::error_t								checkBoxCreate						(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogCheckBox	>	& createdControl)	 { int32_t index = -1; gpk_necs(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }

@@ -36,20 +36,20 @@ static		::gpk::error_t										controlTextDraw											(::gpk::SGUI & gui, in
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics	[iControl];
 	::gpk::SRectangle2<int16_t>											rectText												= controlMetrics.Text;
 	if(false == gui.Controls.Modes[iControl].NoHoverEffect && (controlState.Pressed || controlState.Hover)) { // shift text offset by one pixel to give the effect of being pushed.
-		rectText.Offset													+= ::gpk::SCoord2<int16_t>{1, 1};
-		rectText.Size													-= ::gpk::SCoord2<int16_t>{1, 1};
+		rectText.Offset													+= ::gpk::n2<int16_t>{1, 1};
+		rectText.Size													-= ::gpk::n2<int16_t>{1, 1};
 		if(rectText.Size.x < 0) rectText.Size.x = 0;
 		if(rectText.Size.y < 0) rectText.Size.y = 0;
 	} // This isn't done in updateMetrics() because the function is only executed for outdated metrics.
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	::gpk::SControlText													& controlText											= gui.Controls.Text		[iControl];
-	::gpk::apod<::gpk::SCoord2<int32_t>>							dstCoords;
+	::gpk::apod<::gpk::n2<int32_t>>							dstCoords;
 	const uint32_t														iFont													= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[iFont];
 	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize.Cast<uint16_t>(), rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
-		const ::gpk::SCoord2<int32_t>										dstCoord												= dstCoords[iCoord];
+		const ::gpk::n2<int32_t>										dstCoord												= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]									= colorFace;
 		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
 	}
@@ -151,7 +151,7 @@ static		::gpk::error_t										actualControlDraw										(::gpk::SGUI & gui, i
 		//::gpk::SRectangle2<int32_t>										rectImage							=
 		//	{ controlMetrics.Client.Global.Offset
 		//	, controlMetrics.Client.Global.Size
-		//		+ ::gpk::SCoord2<int32_t>
+		//		+ ::gpk::n2<int32_t>
 		//			{ ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.x, controlMetrics.Client.Local.Offset.x))
 		//			, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
 		//			}

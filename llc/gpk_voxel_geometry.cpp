@@ -3,11 +3,11 @@
 
 static ::gpk::error_t								geometryVoxelFace
 	( ::gpk::SGeometryIndexedTriangles						& geometry
-	, const ::gpk::SCoord3<float>							& voxelPos
-	, const ::gpk::view<const ::gpk::SCoord3<float>>	& rawVertices
+	, const ::gpk::n3<float>							& voxelPos
+	, const ::gpk::view<const ::gpk::n3<float>>	& rawVertices
 	, const ::gpk::view<const uint8_t>				& rawIndices
 	) {
-	::gpk::SCoord3<float>									vertices [4]				= {}; 
+	::gpk::n3<float>									vertices [4]				= {}; 
 	uint32_t												indices  [6]				= {}; 
 	uint32_t												offsetVertex				= geometry.Positions.size();
 	for(uint32_t iVertex = 0; iVertex < 4; ++iVertex)
@@ -22,7 +22,7 @@ static ::gpk::error_t								geometryVoxelFace
 }
 
 ::gpk::error_t										gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<uint8_t> & voxelMap) {
-	const ::gpk::SCoord3<uint8_t>							dimensions				= voxelMap.Dimensions;
+	const ::gpk::n3<uint8_t>							dimensions				= voxelMap.Dimensions;
 
 	::gpk::SGeometryIndexedTriangles						& geometry				= output.Geometry;
 	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
@@ -57,7 +57,7 @@ static ::gpk::error_t								geometryVoxelFace
 			newGroup.Modes.IndexMode				= ::gpk::INDEX_MODE_LIST;
 			newGroup.Modes.PrimitiveType			= ::gpk::PRIMITIVE_TYPE_TRIANGLE;
 			newGroup.Slice.Offset					= (uint16_t)geometry.PositionIndices.size();
-			::gpk::SMinMax<::gpk::SCoord3<float>>		aabbLimits					= {};
+			::gpk::SMinMax<::gpk::n3<float>>		aabbLimits					= {};
 
 			for(uint32_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
 				const ::gpk::SVoxel<uint8_t>				voxel						= voxels[iVoxel];

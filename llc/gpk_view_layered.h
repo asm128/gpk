@@ -11,7 +11,7 @@ namespace gpk
 	protected:
 		// Properties / Member Variables
 							_tElement								* Data			= 0;
-							::gpk::SCoord3<uint32_t>				Size			= {0, 0, 0};
+							::gpk::n3<uint32_t>				Size			= {0, 0, 0};
 							uint32_t								LayerSize		= 0;
 	public:
 		// Constructors
@@ -20,7 +20,7 @@ namespace gpk
 			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters. Address: %p. Metrics: {%u, %u, %u}", dataElements, Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		inline														view_layered	(_tElement* dataElements, const ::gpk::SCoord3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
+		inline														view_layered	(_tElement* dataElements, const ::gpk::n3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
 			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters. Address: %p. Metrics: {%u, %u, %u}", dataElements, Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
@@ -43,7 +43,7 @@ namespace gpk
 		inlcxpr	_tElement*								begin			()																				noexcept	{ return Data;						}
 		inlcxpr	_tElement*								end				()																				noexcept	{ return Data + size();				}
 
-		inlcxpr	const ::gpk::SCoord3<uint32_t>&			metrics			()																		const	noexcept	{ return Size;						}
+		inlcxpr	const ::gpk::n3<uint32_t>&			metrics			()																		const	noexcept	{ return Size;						}
 		inlcxpr	uint32_t								size			()																		const	noexcept	{ return Size.x * Size.y * Size.z;	}
 };
 #pragma pack(pop)

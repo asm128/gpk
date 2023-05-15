@@ -6,14 +6,14 @@
 namespace gpk
 {
 	struct SCameraPoints {
-							::gpk::SCoord3<float>							Position	;
-							::gpk::SCoord3<float>							Target		;
+							::gpk::n3<float>							Position	;
+							::gpk::n3<float>							Target		;
 	};
 
 	struct SCameraVectors {
-							::gpk::SCoord3<float>							Front		;
-							::gpk::SCoord3<float>							Up			;
-							::gpk::SCoord3<float>							Right		;
+							::gpk::n3<float>							Front		;
+							::gpk::n3<float>							Up			;
+							::gpk::n3<float>							Right		;
 	};
 
 	struct SCameraRange {

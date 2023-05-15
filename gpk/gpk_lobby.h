@@ -105,7 +105,7 @@ namespace gpk
 													SLobbyClient		()	{
 			::gpk::SGUI										 & gui				= *Dialog.GUI;
 			gui.Controls.Modes[Dialog.Root].NoBackgroundRect = true;
-			es_if(errored(::gpk::guiSetupButtonList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, ::gpk::SCoord2<uint16_t>{240, 22}, ::gpk::SCoord2<int16_t>{}, ::gpk::ALIGN_TOP_RIGHT)));
+			es_if(errored(::gpk::guiSetupButtonList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, ::gpk::n2<uint16_t>{240, 22}, ::gpk::n2<int16_t>{}, ::gpk::ALIGN_TOP_RIGHT)));
 			es_if(errored(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
 		}
 

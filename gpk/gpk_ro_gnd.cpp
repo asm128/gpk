@@ -89,13 +89,13 @@ namespace gpk
 #endif
 static		::gpk::error_t									gndGenerateFaceGeometryRight							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileRight, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t													baseVertexIndex											= generated.Vertices.size();
-	const ::gpk::SCoord3<float>										faceVerts	[4]											=
+	const ::gpk::n3<float>										faceVerts	[4]											=
 		{ {baseX + 0.0f, (geometryTile.fHeight[2] / tileScale), baseZ + 1.0f}
 		, {baseX + 1.0f, (geometryTile.fHeight[3] / tileScale), baseZ + 1.0f}
 		, {baseX + 0.0f, geometryTileRight ? (geometryTileRight->fHeight[0] / tileScale) : 0.0f, baseZ + 1.0f}
 		, {baseX + 1.0f, geometryTileRight ? (geometryTileRight->fHeight[1] / tileScale) : 0.0f, baseZ + 1.0f}
 		};
-	const ::gpk::SCoord3<float>										faceNormals	[4]											=
+	const ::gpk::n3<float>										faceNormals	[4]											=
 		{ (faceVerts[1] - faceVerts[0]).Cross(faceVerts[2] - faceVerts[0]).Normalize()
 		, (faceVerts[3] - faceVerts[1]).Cross(faceVerts[0] - faceVerts[1]).Normalize()
 		, (faceVerts[0] - faceVerts[2]).Cross(faceVerts[3] - faceVerts[2]).Normalize()
@@ -116,7 +116,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryRight							(uint32_t base
 			};
 		//generated.SkinIndices.append(faceSkins);
 		const ::gpk::STileSkinGND										& skinTile											= lstTileSkinData[faceSkins[0]];
-		::gpk::SCoord2<float>											faceUVs	[4]											;
+		::gpk::n2<float>											faceUVs	[4]											;
 		for(uint32_t i = 0; i < 4; ++i)
 			faceUVs[i]													= {skinTile.u[i], skinTile.v[i]};
 		generated.UVs.append(faceUVs);
@@ -139,13 +139,13 @@ static		::gpk::error_t									gndGenerateFaceGeometryRight							(uint32_t base
 
 static		::gpk::error_t									gndGenerateFaceGeometryFront							(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::STileGeometryGND * geometryTileFront, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t													baseVertexIndex											= generated.Vertices.size();
-	const ::gpk::SCoord3<float>										faceVerts	[4]											=
+	const ::gpk::n3<float>										faceVerts	[4]											=
 		{ {baseX + 1.0f, (geometryTile.fHeight[3] / tileScale), baseZ + 1.0f}
 		, {baseX + 1.0f, (geometryTile.fHeight[1] / tileScale), baseZ + 0.0f}
 		, {baseX + 1.0f, geometryTileFront ? (geometryTileFront->fHeight[2] / tileScale) : 0.0f, baseZ + 1.0f}
 		, {baseX + 1.0f, geometryTileFront ? (geometryTileFront->fHeight[0] / tileScale) : 0.0f, baseZ + 0.0f}
 		};
-	const ::gpk::SCoord3<float>										faceNormals	[4]											=
+	const ::gpk::n3<float>										faceNormals	[4]											=
 		{ (faceVerts[1] - faceVerts[0]).Cross(faceVerts[2] - faceVerts[0]).Normalize()
 		, (faceVerts[3] - faceVerts[1]).Cross(faceVerts[0] - faceVerts[1]).Normalize()
 		, (faceVerts[0] - faceVerts[2]).Cross(faceVerts[3] - faceVerts[2]).Normalize()
@@ -164,7 +164,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryFront							(uint32_t base
 			};
 		//generated.SkinIndices.append(faceSkins);
 		const ::gpk::STileSkinGND										& skinTile											= lstTileSkinData[faceSkins[0]];
-		::gpk::SCoord2<float>											faceUVs	[4]											;
+		::gpk::n2<float>											faceUVs	[4]											;
 		for(uint32_t i = 0; i < 4; ++i)
 			faceUVs[i]													= {skinTile.u[i], skinTile.v[i]};
 		generated.UVs.append(faceUVs);
@@ -188,19 +188,19 @@ static		::gpk::error_t									gndGenerateFaceGeometryFront							(uint32_t base
 
 static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_t baseZ, float tileScale, const ::gpk::STileGeometryGND & geometryTile, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, ::gpk::SModelNodeGND& generated, ::gpk::STileMapping & out_mapping)	{
 	const uint32_t													baseVertexIndex											= generated.Vertices.size();
-	const ::gpk::SCoord3<float>										faceVerts	[4]											=
+	const ::gpk::n3<float>										faceVerts	[4]											=
 		{ {baseX + 0.0f, (geometryTile.fHeight[0] / tileScale), baseZ + 0.0f}
 		, {baseX + 1.0f, (geometryTile.fHeight[1] / tileScale), baseZ + 0.0f}
 		, {baseX + 0.0f, (geometryTile.fHeight[2] / tileScale), baseZ + 1.0f}
 		, {baseX + 1.0f, (geometryTile.fHeight[3] / tileScale), baseZ + 1.0f}
 		};
-	const ::gpk::SCoord3<float>										faceNormals	[4]											=
+	const ::gpk::n3<float>										faceNormals	[4]											=
 		{ (faceVerts[1] - faceVerts[0]).Cross(faceVerts[2] - faceVerts[0]).Normalize()
 		, (faceVerts[3] - faceVerts[1]).Cross(faceVerts[0] - faceVerts[1]).Normalize()
 		, (faceVerts[0] - faceVerts[2]).Cross(faceVerts[3] - faceVerts[2]).Normalize()
 		, (faceVerts[2] - faceVerts[3]).Cross(faceVerts[1] - faceVerts[3]).Normalize()
 		};
-	//::gpk::SCoord3<float>											normal
+	//::gpk::n3<float>											normal
 	//	= faceNormals	[0]
 	//	+ faceNormals	[1]
 	//	+ faceNormals	[2]
@@ -225,7 +225,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 			};
 		//generated.SkinIndices.append(faceSkins);
 		const ::gpk::STileSkinGND										& skinTile											= lstTileSkinData[faceSkins[0]];
-		::gpk::SCoord2<float>											faceUVs	[4]											;
+		::gpk::n2<float>											faceUVs	[4]											;
 		for(uint32_t i = 0; i < 4; ++i)
 			faceUVs[i]													= {skinTile.u[i], skinTile.v[i]};
 		generated.UVs.append(faceUVs);
@@ -332,7 +332,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 			const int32_t														texIndex1											= processTile1 ? lstTileSkinData[tileGeometry1.SkinMapping.SkinIndexTop].TextureIndex : -1;
 			const int32_t														texIndex2											= processTile2 ? lstTileSkinData[tileGeometry2.SkinMapping.SkinIndexTop].TextureIndex : -1;
 			const int32_t														texIndex3											= processTile3 ? lstTileSkinData[tileGeometry3.SkinMapping.SkinIndexTop].TextureIndex : -1;
-			::gpk::SCoord3<float>												normal												= {};
+			::gpk::n3<float>												normal												= {};
 			uint32_t															divisor												= 0;
 			if(processTile0) { ++divisor; ::gpk::SModelNodeGND & gndNode0 = gndModelNodes[texIndex0]; normal += gndNode0.Normals[tileMapping0.VerticesTop[3]]; }
 			if(processTile1) { ++divisor; ::gpk::SModelNodeGND & gndNode1 = gndModelNodes[texIndex1]; normal += gndNode1.Normals[tileMapping1.VerticesTop[2]]; }

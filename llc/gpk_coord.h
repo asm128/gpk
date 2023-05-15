@@ -12,285 +12,305 @@ namespace gpk
 	typedef SMinMax<float> SNearFar;
 
 	template<typename _tBase>
-	struct SCoord2 {
-		typedef	SCoord2<_tBase>	TCoord2;
+	struct n2 {
+		typedef	n2<_tBase>		Tn2;
 		_tBase	x, y;
 
 		//
-		cnstxpr	TCoord2				operator+				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x + other.x), (_tBase)(y + other.y)};				}
-		cnstxpr	TCoord2				operator-				(const TCoord2& other)												const	noexcept	{ return {(_tBase)(x - other.x), (_tBase)(y - other.y)};				}
-		cnstxpr	TCoord2				operator*				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
-		cnstxpr	TCoord2				operator/				(double			scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
-		cnstxpr	TCoord2				operator*				(int64_t		scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
-		cnstxpr	TCoord2				operator/				(int64_t		scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
-		cnstxpr	TCoord2				operator*				(uint64_t		scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
-		cnstxpr	TCoord2				operator/				(uint64_t		scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
-		cnstxpr	TCoord2				operator*				(int32_t		scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
-		cnstxpr	TCoord2				operator/				(int32_t		scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
-		cnstxpr	TCoord2				operator*				(uint32_t		scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
-		cnstxpr	TCoord2				operator/				(uint32_t		scalar)												const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		cnstxpr	Tn2				operator+				(const Tn2 & other)								const	noexcept	{ return {(_tBase)(x + other.x), (_tBase)(y + other.y)};				}
+		cnstxpr	Tn2				operator-				(const Tn2 & other)								const	noexcept	{ return {(_tBase)(x - other.x), (_tBase)(y - other.y)};				}
+		cnstxpr	Tn2				operator*				(double		scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		cnstxpr	Tn2				operator/				(double		scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		cnstxpr	Tn2				operator*				(int64_t	scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		cnstxpr	Tn2				operator/				(int64_t	scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		cnstxpr	Tn2				operator*				(uint64_t	scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		cnstxpr	Tn2				operator/				(uint64_t	scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		cnstxpr	Tn2				operator*				(int32_t	scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		cnstxpr	Tn2				operator/				(int32_t	scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
+		cnstxpr	Tn2				operator*				(uint32_t	scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};					}
+		cnstxpr	Tn2				operator/				(uint32_t	scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar)};					}
 		//
-				TCoord2&			operator+=				(const TCoord2& other)														noexcept	{ x += other.x; y += other.y;							return *this;	}
-				TCoord2&			operator-=				(const TCoord2& other)														noexcept	{ x -= other.x; y -= other.y;							return *this;	}
-				TCoord2&			operator*=				(double			scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
-				TCoord2&			operator/=				(double			scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
-				TCoord2&			operator*=				(int64_t		scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
-				TCoord2&			operator/=				(int64_t		scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
-				TCoord2&			operator*=				(int32_t		scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
-				TCoord2&			operator/=				(int32_t		scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
-				TCoord2&			operator*=				(uint32_t		scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
-				TCoord2&			operator/=				(uint32_t		scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
-				TCoord2&			operator*=				(uint64_t		scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
-				TCoord2&			operator/=				(uint64_t		scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+				Tn2&			operator+=				(const Tn2 & other)										noexcept	{ x += other.x; y += other.y;							return *this;	}
+				Tn2&			operator-=				(const Tn2 & other)										noexcept	{ x -= other.x; y -= other.y;							return *this;	}
+				Tn2&			operator*=				(double		scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+				Tn2&			operator/=				(double		scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+				Tn2&			operator*=				(int64_t	scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+				Tn2&			operator/=				(int64_t	scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+				Tn2&			operator*=				(int32_t	scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+				Tn2&			operator/=				(int32_t	scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+				Tn2&			operator*=				(uint32_t	scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+				Tn2&			operator/=				(uint32_t	scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
+				Tn2&			operator*=				(uint64_t	scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar);	return *this;	}
+				Tn2&			operator/=				(uint64_t	scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar);	return *this;	}
 		//
-		cnstxpr	bool				operator==				(const TCoord2& other)												const	noexcept	{ return x == other.x && y == other.y;									}
-		inlcxpr	bool				operator!=				(const TCoord2& other)												const	noexcept	{ return !operator==(other);											}
-		cnstxpr	TCoord2				operator-				()																	const	noexcept	{ return {x*-1, y*-1};													}
+		cnstxpr	bool			operator==				(const Tn2 & other)								const	noexcept	{ return x == other.x && y == other.y;									}
+		inlcxpr	bool			operator!=				(const Tn2 & other)								const	noexcept	{ return !operator==(other);											}
+		cnstxpr	Tn2				operator-				()												const	noexcept	{ return {x*-1, y*-1};													}
 
 		//
-		inlcxpr	SCoord2<_tBase>		xx						()						{ return {x, x}; }
-		inlcxpr	SCoord2<_tBase>		xy						()						{ return {x, y}; }
-		inlcxpr	SCoord2<_tBase>		yx						()						{ return {y, x}; }
-		inlcxpr	SCoord2<_tBase>		yy						()						{ return {y, y}; }
+		inlcxpr	n2<_tBase>		xx						()	const	{ return {x, x}; }
+		inlcxpr	n2<_tBase>		xy						()	const	{ return {x, y}; }
+		inlcxpr	n2<_tBase>		yx						()	const	{ return {y, x}; }
+		inlcxpr	n2<_tBase>		yy						()	const	{ return {y, y}; }
 
 		//
 		template<typename _t>
-		inlcxpr	SCoord2<_t>			Cast					()																	const	noexcept	{ return {(_t)x, (_t)y};																																				}
-		inlcxpr	_tBase				Area					()																	const				{ return x * y; }
-		inlcxpr	TCoord2				GetScaled				(double			scalar)												const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
-		inlcxpr	TCoord2				GetScaled				(double scalarx, double scalary)									const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
-		inline	TCoord2				GetNormalized			()																	const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::sqrt(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	}
-		cnstxpr	double				Dot						(const TCoord2& other)												const	noexcept	{ return x * other.x + y * other.y;																																		}
-		cnstxpr	_tBase				LengthSquared			()																	const	noexcept	{ return x * x + y * y;																																					}
-		cnstxpr	double				Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;																								}
-		cnstxpr	double				AngleWith				(const TCoord2& other)												const				{ double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;													}
-				void				AddScaled				(const TCoord2& vectorToScaleAndAdd, float scale)										{
-			x							+= vectorToScaleAndAdd.x * scale;
-			y							+= vectorToScaleAndAdd.y * scale;
+		inlcxpr	n2<_t>			Cast					()												const	noexcept	{ return {(_t)x, (_t)y};																																				}
+		inlcxpr	_tBase			Area					()												const				{ return x * y; }
+		inlcxpr	Tn2				GetScaled				(double			scalar)							const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar)};																													}
+		inlcxpr	Tn2				GetScaled				(double scalarx, double scalary)				const	noexcept	{ return {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																												}
+		inline	Tn2				GetNormalized			()												const				{ const _tBase sqLen = LengthSquared(); if(sqLen) { const double len = ::sqrt(sqLen); return {(_tBase)(x / len), (_tBase)(y / len)}; } else return {x, y};	}
+		cnstxpr	double			Dot						(const Tn2 & other)								const	noexcept	{ return x * other.x + y * other.y;																																		}
+		cnstxpr	_tBase			LengthSquared			()												const	noexcept	{ return x * x + y * y;																																					}
+		cnstxpr	double			Length					()												const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;																								}
+		cnstxpr	double			AngleWith				(const Tn2& other)								const				{ double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;													}
+				void			AddScaled				(const Tn2& vectorToScaleAndAdd, float scale) {
+			x						+= vectorToScaleAndAdd.x * scale;
+			y						+= vectorToScaleAndAdd.y * scale;
 		}
-				TCoord2				Clamp					(const TCoord2 & min, const TCoord2 & max)					const	noexcept	{
+				Tn2				Clamp					(const Tn2 & min, const Tn2 & max)				const	noexcept	{
 			return {::gpk::clamp(x, min.x, max.x), ::gpk::clamp(y, min.y, max.y)};
 		}
-				TCoord2&			Rotate					(double theta)																			{
-			const ::gpk::SPairSinCos		pairSinCos				= ::gpk::getSinCos(theta);
-			const double					px						= x * pairSinCos.Cos - y * pairSinCos.Sin;
-			y							= (_tBase)(x * pairSinCos.Sin + y * pairSinCos.Cos);
-			x							= (_tBase)px;
+				Tn2&			Rotate					(double theta)																		{
+			const ::gpk::SSinCos		pairSinCos				= ::gpk::getSinCos(theta);
+			const double				px						= x * pairSinCos.Cos - y * pairSinCos.Sin;
+			y						= (_tBase)(x * pairSinCos.Sin + y * pairSinCos.Cos);
+			x						= (_tBase)px;
 			return *this;
 		}
-		inline	TCoord2&			InPlaceScale			(double scalar)																noexcept	{ return *this *= scalar;																																				}
+		inline	Tn2&			InPlaceScale			(double scalar)											noexcept	{ return *this *= scalar;																																				}
 		template<typename _tOther>
-		inline	TCoord2&			InPlaceScale			(_tOther scalarx, _tOther scalary)											noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																										}
+		inline	Tn2&			InPlaceScale			(_tOther scalarx, _tOther scalary)						noexcept	{ return *this = {(_tBase)(x * scalarx), (_tBase)(y * scalary)};																										}
 		template<typename _tOther>
-		inline	TCoord2&			InPlaceScale			(const SCoord2<_tOther>& other)												noexcept	{ return InPlaceScale(other.x, other.y);																																}
-		inline	TCoord2&			InPlaceNormalize		()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;																	}
-				TCoord2&			InPlaceClamp			(const TCoord2 & min, const TCoord2 & max)		noexcept		{
-			x = ::gpk::clamp(x, min.x, max.x);
-			y = ::gpk::clamp(y, min.y, max.y);
+		inline	Tn2&			InPlaceScale			(const n2<_tOther>& other)								noexcept	{ return InPlaceScale(other.x, other.y);																																}
+		inline	Tn2&			InPlaceNormalize		()																	{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;																	}
+				Tn2&			InPlaceClamp			(const Tn2 & min, const Tn2 & max)						noexcept	{
+			x						= ::gpk::clamp(x, min.x, max.x);
+			y						= ::gpk::clamp(y, min.y, max.y);
 			return *this;
 		}
-	};	// struct SCoord2
+	};	// struct n2
+
+	typedef n2<float>		n2f32, n2f;
+	typedef n2<double>		n2f64, n2d;
+	typedef n2<uint8_t>		n2u8;
+	typedef n2<uint16_t>	n2u16;
+	typedef n2<uint32_t>	n2u32;
+	typedef n2<uint64_t>	n2u64;
+	typedef n2<int8_t>		n2i8;
+	typedef n2<int16_t>		n2i16;
+	typedef n2<int32_t>		n2i32;
+	typedef n2<int64_t>		n2i64;
 
 	template<typename _tBase>
-	struct SCoord3 {
-		typedef									SCoord3<_tBase>	TCoord3;
-		_tBase									x, y, z;
+	struct n3 {
+		typedef	n3<_tBase>		Tn3;
+		_tBase	x, y, z;
 
-		inline									const _tBase&	operator[]				(uint32_t index)											const				{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
-		inline									_tBase&			operator[]				(uint32_t index)																{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
+		inline	const _tBase&	operator[]				(uint32_t index)								const				{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
+		inline	_tBase&			operator[]				(uint32_t index)													{ gthrow_if(index > 2, "", "Invalid quaternion element being accessed: %u", index); return ((&x)[index]); }
 		//
-		cnstxpr								TCoord3			operator+				(const TCoord3 & other)												const	noexcept	{ return {x + other.x, y + other.y, z + other.z};												}
-		cnstxpr								TCoord3			operator-				(const TCoord3 & other)												const	noexcept	{ return {x - other.x, y - other.y, z - other.z};												}
-		cnstxpr								TCoord3			operator*				(double scalar)														const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
-		cnstxpr								TCoord3			operator/				(double scalar)														const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
-		cnstxpr								TCoord3			operator*				(int64_t scalar)													const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
-		cnstxpr								TCoord3			operator/				(int64_t scalar)													const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
-		cnstxpr								TCoord3			operator*				(uint64_t scalar)													const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
-		cnstxpr								TCoord3			operator/				(uint64_t scalar)													const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
-		cnstxpr								TCoord3			operator*				(int32_t scalar)													const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
-		cnstxpr								TCoord3			operator/				(int32_t scalar)													const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
-		cnstxpr								TCoord3			operator*				(uint32_t scalar)													const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
-		cnstxpr								TCoord3			operator/				(uint32_t scalar)													const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		cnstxpr	Tn3				operator+				(const Tn3 & other)								const	noexcept	{ return {x + other.x, y + other.y, z + other.z};												}
+		cnstxpr	Tn3				operator-				(const Tn3 & other)								const	noexcept	{ return {x - other.x, y - other.y, z - other.z};												}
+		cnstxpr	Tn3				operator*				(double scalar)									const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		cnstxpr	Tn3				operator/				(double scalar)									const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		cnstxpr	Tn3				operator*				(int64_t scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		cnstxpr	Tn3				operator/				(int64_t scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		cnstxpr	Tn3				operator*				(uint64_t scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		cnstxpr	Tn3				operator/				(uint64_t scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		cnstxpr	Tn3				operator*				(int32_t scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		cnstxpr	Tn3				operator/				(int32_t scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
+		cnstxpr	Tn3				operator*				(uint32_t scalar)								const	noexcept	{ return {(_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar)};					}
+		cnstxpr	Tn3				operator/				(uint32_t scalar)								const				{ return {(_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar)};					}
 		//
-												TCoord3&		operator+=				(const TCoord3 & other)														noexcept	{ x += other.x; y += other.y; z += other.z;										return *this;	}
-												TCoord3&		operator-=				(const TCoord3 & other)														noexcept	{ x -= other.x; y -= other.y; z -= other.z;										return *this;	}
-												TCoord3&		operator*=				(double scalar)																noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
-												TCoord3&		operator/=				(double scalar)																			{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
-												TCoord3&		operator*=				(int64_t scalar)															noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
-												TCoord3&		operator/=				(int64_t scalar)																		{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
-												TCoord3&		operator*=				(int32_t scalar)															noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
-												TCoord3&		operator/=				(int32_t scalar)																		{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
-												TCoord3&		operator*=				(uint32_t scalar)															noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
-												TCoord3&		operator/=				(uint32_t scalar)																		{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
-												TCoord3&		operator*=				(uint64_t scalar)															noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
-												TCoord3&		operator/=				(uint64_t scalar)																		{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
+				Tn3&			operator+=				(const Tn3 & other)										noexcept	{ x += other.x; y += other.y; z += other.z;										return *this;	}
+				Tn3&			operator-=				(const Tn3 & other)										noexcept	{ x -= other.x; y -= other.y; z -= other.z;										return *this;	}
+				Tn3&			operator*=				(double scalar)											noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
+				Tn3&			operator/=				(double scalar)														{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
+				Tn3&			operator*=				(int64_t scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
+				Tn3&			operator/=				(int64_t scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
+				Tn3&			operator*=				(int32_t scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
+				Tn3&			operator/=				(int32_t scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
+				Tn3&			operator*=				(uint32_t scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
+				Tn3&			operator/=				(uint32_t scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
+				Tn3&			operator*=				(uint64_t scalar)										noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar);	return *this;	}
+				Tn3&			operator/=				(uint64_t scalar)													{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar);	return *this;	}
 		//
-		cnstxpr								bool			operator==				(const TCoord3 & other)												const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
-		inlcxpr									bool			operator!=				(const TCoord3 & other)												const	noexcept	{ return !operator==(other);																	}
-		cnstxpr								TCoord3			operator-				()																	const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
+		cnstxpr	bool			operator==				(const Tn3 & other)								const	noexcept	{ return x == other.x && y == other.y && z == other.z;											}
+		inlcxpr	bool			operator!=				(const Tn3 & other)								const	noexcept	{ return !operator==(other);																	}
+		cnstxpr	Tn3				operator-				()												const	noexcept	{ return {x*-1, y*-1, z*-1};																	}
+		//
+		inlcxpr	n2<_tBase>		xx						()	const	{ return {x, x}; }
+		inlcxpr	n2<_tBase>		xy						()	const	{ return {x, y}; }
+		inlcxpr	n2<_tBase>		xz						()	const	{ return {x, z}; }
+		inlcxpr	n2<_tBase>		yx						()	const	{ return {y, x}; }
+		inlcxpr	n2<_tBase>		yy						()	const	{ return {y, y}; }
+		inlcxpr	n2<_tBase>		yz						()	const	{ return {y, z}; }
+		inlcxpr	n2<_tBase>		zx						()	const	{ return {z, x}; }
+		inlcxpr	n2<_tBase>		zy						()	const	{ return {z, y}; }
+		inlcxpr	n2<_tBase>		zz						()	const	{ return {z, z}; }
 
-		//
-		inlcxpr	SCoord2<_tBase>		xx				()						{ return {x, x}; }
-		inlcxpr	SCoord2<_tBase>		xy				()						{ return {x, y}; }
-		inlcxpr	SCoord2<_tBase>		xz				()						{ return {x, z}; }
-		inlcxpr	SCoord2<_tBase>		yx				()						{ return {y, x}; }
-		inlcxpr	SCoord2<_tBase>		yy				()						{ return {y, y}; }
-		inlcxpr	SCoord2<_tBase>		yz				()						{ return {y, z}; }
-		inlcxpr	SCoord2<_tBase>		zx				()						{ return {z, x}; }
-		inlcxpr	SCoord2<_tBase>		zy				()						{ return {z, y}; }
-		inlcxpr	SCoord2<_tBase>		zz				()						{ return {z, z}; }
+		inlcxpr	n3<_tBase>		xxx						()	const	{ return {x, x, x}; }
+		inlcxpr	n3<_tBase>		xxy						()	const	{ return {x, x, y}; }
+		inlcxpr	n3<_tBase>		xxz						()	const	{ return {x, x, z}; }
+		inlcxpr	n3<_tBase>		xyx						()	const	{ return {x, y, x}; }
+		inlcxpr	n3<_tBase>		xyy						()	const	{ return {x, y, y}; }
+		inlcxpr	n3<_tBase>		xyz						()	const	{ return {x, y, z}; }
+		inlcxpr	n3<_tBase>		xzx						()	const	{ return {x, z, x}; }
+		inlcxpr	n3<_tBase>		xzy						()	const	{ return {x, z, y}; }
+		inlcxpr	n3<_tBase>		xzz						()	const	{ return {x, z, z}; }
 
-		//
-		inlcxpr	SCoord3<_tBase>		xxx				()						{ return {x, x, x}; }
-		inlcxpr	SCoord3<_tBase>		xxy				()						{ return {x, x, y}; }
-		inlcxpr	SCoord3<_tBase>		xxz				()						{ return {x, x, z}; }
-		inlcxpr	SCoord3<_tBase>		xyx				()						{ return {x, y, x}; }
-		inlcxpr	SCoord3<_tBase>		xyy				()						{ return {x, y, y}; }
-		inlcxpr	SCoord3<_tBase>		xyz				()						{ return {x, y, z}; }
-		inlcxpr	SCoord3<_tBase>		xzx				()						{ return {x, z, x}; }
-		inlcxpr	SCoord3<_tBase>		xzy				()						{ return {x, z, y}; }
-		inlcxpr	SCoord3<_tBase>		xzz				()						{ return {x, z, z}; }
+		inlcxpr	n3<_tBase>		yxx						()	const	{ return {y, x, x}; }
+		inlcxpr	n3<_tBase>		yxy						()	const	{ return {y, x, y}; }
+		inlcxpr	n3<_tBase>		yxz						()	const	{ return {y, x, z}; }
+		inlcxpr	n3<_tBase>		yyx						()	const	{ return {y, y, x}; }
+		inlcxpr	n3<_tBase>		yyy						()	const	{ return {y, y, y}; }
+		inlcxpr	n3<_tBase>		yyz						()	const	{ return {y, y, z}; }
+		inlcxpr	n3<_tBase>		yzx						()	const	{ return {y, z, x}; }
+		inlcxpr	n3<_tBase>		yzy						()	const	{ return {y, z, y}; }
+		inlcxpr	n3<_tBase>		yzz						()	const	{ return {y, z, z}; }
 
-		inlcxpr	SCoord3<_tBase>		yxx				()						{ return {y, x, x}; }
-		inlcxpr	SCoord3<_tBase>		yxy				()						{ return {y, x, y}; }
-		inlcxpr	SCoord3<_tBase>		yxz				()						{ return {y, x, z}; }
-		inlcxpr	SCoord3<_tBase>		yyx				()						{ return {y, y, x}; }
-		inlcxpr	SCoord3<_tBase>		yyy				()						{ return {y, y, y}; }
-		inlcxpr	SCoord3<_tBase>		yyz				()						{ return {y, y, z}; }
-		inlcxpr	SCoord3<_tBase>		yzx				()						{ return {y, z, x}; }
-		inlcxpr	SCoord3<_tBase>		yzy				()						{ return {y, z, y}; }
-		inlcxpr	SCoord3<_tBase>		yzz				()						{ return {y, z, z}; }
-
-		inlcxpr	SCoord3<_tBase>		zxx				()						{ return {z, x, x}; }
-		inlcxpr	SCoord3<_tBase>		zxy				()						{ return {z, x, y}; }
-		inlcxpr	SCoord3<_tBase>		zxz				()						{ return {z, x, z}; }
-		inlcxpr	SCoord3<_tBase>		zyx				()						{ return {z, y, x}; }
-		inlcxpr	SCoord3<_tBase>		zyy				()						{ return {z, y, y}; }
-		inlcxpr	SCoord3<_tBase>		zyz				()						{ return {z, y, z}; }
-		inlcxpr	SCoord3<_tBase>		zzx				()						{ return {z, z, x}; }
-		inlcxpr	SCoord3<_tBase>		zzy				()						{ return {z, z, y}; }
-		inlcxpr	SCoord3<_tBase>		zzz				()						{ return {z, z, z}; }
+		inlcxpr	n3<_tBase>		zxx						()	const	{ return {z, x, x}; }
+		inlcxpr	n3<_tBase>		zxy						()	const	{ return {z, x, y}; }
+		inlcxpr	n3<_tBase>		zxz						()	const	{ return {z, x, z}; }
+		inlcxpr	n3<_tBase>		zyx						()	const	{ return {z, y, x}; }
+		inlcxpr	n3<_tBase>		zyy						()	const	{ return {z, y, y}; }
+		inlcxpr	n3<_tBase>		zyz						()	const	{ return {z, y, z}; }
+		inlcxpr	n3<_tBase>		zzx						()	const	{ return {z, z, x}; }
+		inlcxpr	n3<_tBase>		zzy						()	const	{ return {z, z, y}; }
+		inlcxpr	n3<_tBase>		zzz						()	const	{ return {z, z, z}; }
 
 		//
 		template<typename _t>
-		inlcxpr									SCoord3<_t>		Cast					()																	const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
-		inline									TCoord3&		Scale					(double scalar)																noexcept	{ return *this *= scalar;																								}
-		inline									TCoord3&		Scale					(const TCoord3 & other)														noexcept	{ x *= other.x; y *= other.y; z *= other.z; return *this;																}
-		inline									TCoord3			Scaled					(double scalar)																noexcept	{ return *this = scalar;																								}
-		inline									TCoord3			Scaled					(const TCoord3 & other)														noexcept	{ return {x * other.x, y * other.y, z * other.z };																		}
-		inlcxpr									TCoord3			Normalized				()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? *this / ::sqrt(sqLen) : *this;									}
-		inlcxpr									TCoord3&		Normalize				()																						{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;									}
-		cnstxpr								double			Dot						(const TCoord3 & other)												const	noexcept	{ return x * other.x + y * other.y + z * other.z;																		}
-		cnstxpr								_tBase			LengthSquared			()																	const	noexcept	{ return x * x + y * y + z * z;																							}
-		cnstxpr								double			Length					()																	const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;												}
-		cnstxpr								double			AngleWith				(const TCoord3 & other)												const				{ const double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;	}
-												void			AddScaled				(const TCoord3 & vectorToScaleAndAdd, double scale)										{
-			x														+= (_tBase)(vectorToScaleAndAdd.x * scale);
-			y														+= (_tBase)(vectorToScaleAndAdd.y * scale);
-			z														+= (_tBase)(vectorToScaleAndAdd.z * scale);
+		inlcxpr	n3<_t>		Cast					()													const	noexcept	{ return {(_t)x, (_t)y, (_t)z};																							}
+		inlcxpr	_tBase		Area					()													const				{ return x * y * z; }
+		inline	Tn3&		Scale					(double scalar)												noexcept	{ return *this *= scalar;																								}
+		inline	Tn3&		Scale					(const Tn3 & other)											noexcept	{ x *= other.x; y *= other.y; z *= other.z; return *this;																}
+		inline	Tn3			Scaled					(double scalar)												noexcept	{ return *this = scalar;																								}
+		inline	Tn3			Scaled					(const Tn3 & other)											noexcept	{ return {x * other.x, y * other.y, z * other.z };																		}
+		inlcxpr	Tn3			Normalized				()													const				{ const _tBase sqLen = LengthSquared(); return sqLen ? *this / ::sqrt(sqLen) : *this;									}
+		inlcxpr	Tn3&		Normalize				()																		{ const _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this;									}
+		cnstxpr	double		Dot						(const Tn3 & other)									const	noexcept	{ return x * other.x + y * other.y + z * other.z;																		}
+		cnstxpr	_tBase		LengthSquared			()													const	noexcept	{ return x * x + y * y + z * z;																							}
+		cnstxpr	double		Length					()													const				{ const _tBase sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0;												}
+		cnstxpr	double		AngleWith				(const Tn3 & other)									const				{ const double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0;	}
+				void		AddScaled				(const Tn3 & vectorToScaleAndAdd, double scale)		{
+			x					+= (_tBase)(vectorToScaleAndAdd.x * scale);
+			y					+= (_tBase)(vectorToScaleAndAdd.y * scale);
+			z					+= (_tBase)(vectorToScaleAndAdd.z * scale);
 		}
-		cnstxpr								TCoord3			Reflect					(const TCoord3 & direction)											const	noexcept	{ return direction - *this * 2 * Dot(direction);	}
-		cnstxpr								TCoord3			Cross					(const TCoord3 & right)												const	noexcept	{ return {y * right.z - z * right.y, z * right.x - x * right.z, x * right.y - y * right.x };	}
-												TCoord3&		Cross					(const TCoord3 & vector1, const TCoord3& vector2)							noexcept	{
-			x														= vector1.y * vector2.z - vector1.z * vector2.y;
-			y														= vector1.z * vector2.x - vector1.x * vector2.z;
-			z														= vector1.x * vector2.y - vector1.y * vector2.x;
+		cnstxpr	Tn3			Reflect					(const Tn3 & direction)								const	noexcept	{ return direction - *this * 2 * Dot(direction);	}
+		cnstxpr	Tn3			Cross					(const Tn3 & right)									const	noexcept	{ return {y * right.z - z * right.y, z * right.x - x * right.z, x * right.y - y * right.x };	}
+				Tn3&		Cross					(const Tn3 & vector1, const Tn3& vector2)					noexcept	{
+			x					= vector1.y * vector2.z - vector1.z * vector2.y;
+			y					= vector1.z * vector2.x - vector1.x * vector2.z;
+			z					= vector1.x * vector2.y - vector1.y * vector2.x;
 			return *this;
 		}
-												TCoord3&		CrossAndNormalize		(const TCoord3 & in_vLeft, const TCoord3& in_vRight)										{
-			x														= in_vLeft->y * in_vRight->z - in_vLeft->z * in_vRight->y;
-			y														= in_vLeft->z * in_vRight->x - in_vLeft->x * in_vRight->z;
-			z														= in_vLeft->x * in_vRight->y - in_vLeft->y * in_vRight->x;
+				Tn3&		CrossAndNormalize		(const Tn3 & in_vLeft, const Tn3& in_vRight)				{
+			x					= in_vLeft->y * in_vRight->z - in_vLeft->z * in_vRight->y;
+			y					= in_vLeft->z * in_vRight->x - in_vLeft->x * in_vRight->z;
+			z					= in_vLeft->x * in_vRight->y - in_vLeft->y * in_vRight->x;
 			Normalize();
 			return *this;
 		};
-												TCoord3&		RotateX					(double theta)																			{
-			const ::gpk::SPairSinCos									pairSinCos				= ::gpk::getSinCos(theta);
-			const double												pz						= y * pairSinCos.Cos - z * pairSinCos.Sin;
-			y														= (_tBase)(y * pairSinCos.Sin + z * pairSinCos.Cos);
-			z														= (_tBase)pz;
+				Tn3&		RotateX					(double theta)												{
+			const ::gpk::SSinCos	pairSinCos				= ::gpk::getSinCos(theta);
+			const double			pz						= y * pairSinCos.Cos - z * pairSinCos.Sin;
+			y					= (_tBase)(y * pairSinCos.Sin + z * pairSinCos.Cos);
+			z					= (_tBase)pz;
 			return *this;
 		}
 
-												TCoord3&		RotateY					(double theta)																			{
-			const ::gpk::SPairSinCos									pairSinCos				= ::gpk::getSinCos(theta);
-			const double												px						= x * pairSinCos.Cos - z * pairSinCos.Sin;
-			z														= (_tBase)(x * pairSinCos.Sin + z * pairSinCos.Cos);
-			x														= (_tBase)px;
+				Tn3&		RotateY					(double theta)												{
+			const ::gpk::SSinCos	pairSinCos				= ::gpk::getSinCos(theta);
+			const double			px						= x * pairSinCos.Cos - z * pairSinCos.Sin;
+			z					= (_tBase)(x * pairSinCos.Sin + z * pairSinCos.Cos);
+			x					= (_tBase)px;
 			return *this;
 		}
 
-												TCoord3&		RotateZ					(double theta)																			{
-			const ::gpk::SPairSinCos									pairSinCos				= ::gpk::getSinCos(theta);
-			const double												px						= x * pairSinCos.Cos - y * pairSinCos.Sin;
-			y														= (_tBase)(x * pairSinCos.Sin + y * pairSinCos.Cos);
-			x														= (_tBase)px;
+				Tn3&		RotateZ					(double theta)												{
+			const ::gpk::SSinCos	pairSinCos				= ::gpk::getSinCos(theta);
+			const double			px						= x * pairSinCos.Cos - y * pairSinCos.Sin;
+			y					= (_tBase)(x * pairSinCos.Sin + y * pairSinCos.Cos);
+			x					= (_tBase)px;
 			return *this;
 		}
-		inlcxpr						_tBase			Area					()										const											{ return x * y * z; }
-	};	// struct SCoord3
+	};	// struct n3
+
+	typedef n3<float>		n3f32, n3f;
+	typedef n3<double>		n3f64, n3d;
+	typedef n3<uint8_t>		n3u8;
+	typedef n3<uint16_t>	n3u16;
+	typedef n3<uint32_t>	n3u32;
+	typedef n3<uint64_t>	n3u64;
+	typedef n3<int8_t>		n3i8;
+	typedef n3<int16_t>		n3i16;
+	typedef n3<int32_t>		n3i32;
+	typedef n3<int64_t>		n3i64;
 
 	template<typename _tBase>
-	struct SQuaternion {
-		typedef				SQuaternion	<_tBase>	TQuat;
-		typedef				SCoord3		<_tBase>	TCoord3;
+	struct quat {
+		typedef	quat<_tBase>	TQuat;
+		typedef	n3<_tBase>	TCoord3;
 
-							_tBase					x, y, z, w;
+				_tBase			x, y, z, w;
 		//
-		inline				const _tBase&	operator[]				(uint32_t index)											const				{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
-		inline				_tBase&			operator[]				(uint32_t index)																{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
+		inline	const _tBase&	operator[]				(uint32_t index)								const				{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
+		inline	_tBase&			operator[]				(uint32_t index)													{ gthrow_if(index > 3, "Invalid quaternion element being accessed: %u", index); return *((&x)[index]); }
 		//
-		cnstxpr			bool			operator ==				(const TQuat & other)										const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
-		inlcxpr	bool			operator !=				(const TQuat & other)										const	noexcept	{ return !operator==(other); }
+		cnstxpr	bool			operator ==				(const TQuat & other)							const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
+		inlcxpr	bool			operator !=				(const TQuat & other)							const	noexcept	{ return !operator==(other); }
 		//
-		cnstxpr			TQuat			operator +				(const TQuat & other)										const	noexcept	{ return { x + other.x, y + other.y, z + other.z, w + other.w }; }
-		cnstxpr			TQuat			operator -				(const TQuat & other)										const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
-		cnstxpr			TQuat			operator *				(double scalar)												const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
-		cnstxpr			TQuat			operator /				(double scalar)												const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
+		cnstxpr	TQuat			operator +				(const TQuat & other)							const	noexcept	{ return { x + other.x, y + other.y, z + other.z, w + other.w }; }
+		cnstxpr	TQuat			operator -				(const TQuat & other)							const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
+		cnstxpr	TQuat			operator *				(double scalar)									const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
+		cnstxpr	TQuat			operator /				(double scalar)									const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
 
-							TQuat			operator *				(const TQuat & q)											const	noexcept	{
-								TQuat			r;
-								r.x			= w * q.x + x*q.w + y*q.z - z*q.y;
-								r.y			= w * q.y + y*q.w + z*q.x - x*q.z;
-								r.z			= w * q.z + z*q.w + x*q.y - y*q.x;
-								r.w			= w * q.w - x*q.x - y*q.y - z*q.z;
+				TQuat			operator *				(const TQuat & q)								const	noexcept	{
+			TQuat			r;
+			r.x			= w * q.x + x*q.w + y*q.z - z*q.y;
+			r.y			= w * q.y + y*q.w + z*q.x - x*q.z;
+			r.z			= w * q.z + z*q.w + x*q.y - y*q.x;
+			r.w			= w * q.w - x*q.x - y*q.y - z*q.z;
 
-								return r;
-							}
-							TQuat			operator *				(const TCoord3 & v)											const	noexcept	{
-								return
-									{	  w * v.x + y*v.z - z*v.y
-									,	  w * v.y + z*v.x - x*v.z
-									,	  w * v.z + x*v.y - y*v.x
-									,	-(x*v.x + y*v.y + z*v.z)
-									};
-							}
-							TQuat&			operator+=				(const TQuat & other)												noexcept	{ x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
-							TQuat&			operator-=				(const TQuat & other)												noexcept	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
-							TQuat&			operator*=				(double scalar)														noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this;	}
-							TQuat&			operator/=				(double scalar)																	{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this;	}
-		inline				TQuat&			operator*=				(const TQuat & q)													noexcept	{ return *this = operator*(q); }
+			return r;
+		}
+				TQuat			operator *				(const TCoord3 & v)								const	noexcept	{
+			return
+				{	  w * v.x + y*v.z - z*v.y
+				,	  w * v.y + z*v.x - x*v.z
+				,	  w * v.z + x*v.y - y*v.x
+				,	-(x*v.x + y*v.y + z*v.z)
+				};
+		}
+				TQuat&			operator+=				(const TQuat & other)									noexcept	{ x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
+				TQuat&			operator-=				(const TQuat & other)									noexcept	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
+				TQuat&			operator*=				(double scalar)											noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this;	}
+				TQuat&			operator/=				(double scalar)														{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this;	}
+		inline	TQuat&			operator*=				(const TQuat & q)										noexcept	{ return *this = operator*(q); }
 		// Unary operators
-		inlcxpr	TQuat			operator-				()															const	noexcept	{ return {x*-1, y*-1, z*-1, w * -1};	}
-		inlcxpr	TQuat			operator~				()															const	noexcept	{ return {-x, -y, -z, w};			}
+		inlcxpr	TQuat			operator-				()												const	noexcept	{ return {x*-1, y*-1, z*-1, w * -1};	}
+		inlcxpr	TQuat			operator~				()												const	noexcept	{ return {-x, -y, -z, w};			}
 		template<typename _t>
-		inlcxpr	SQuaternion<_t>	Cast					()															const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
-		inline				TQuat&			Identity				()																	noexcept	{ return *this = {0, 0, 0, 1};			}
-		cnstxpr				_tBase			LengthSquared			()															const	noexcept	{ return x * x + y * y + z * z + w * w;	}
-		inlcxpr				double			Length					()															const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
-		inline				TQuat&			Normalize				()																	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
-		inline				TQuat			Normalized				()															const	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /  ::sqrt(sqLen) : *this; }
-		cnstxpr				double			Dot						(const TQuat & other)										const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
-		inline				TQuat&			LinearInterpolate		(const TQuat & p, const TQuat & q, double fTime)					noexcept	{ return *this = ((q-p)*fTime)+p;						}
-							//void			AddScaled				(const TCoord4& vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
-							TQuat&			AddScaled				(const TCoord3 & vector, double scale)								noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }
-		inline				TQuat&			SetRotation				(const TQuat & q, const TQuat & p)									noexcept	{ return *this = q * p * ~q;																							}
-							TCoord3			RotateVector			(const TCoord3 & v)											const	noexcept	{
+		inlcxpr	quat<_t>	Cast					()													const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
+		inline	TQuat&			Identity				()														noexcept	{ return *this = {0, 0, 0, 1};			}
+		cnstxpr	_tBase			LengthSquared			()												const	noexcept	{ return x * x + y * y + z * z + w * w;	}
+		inlcxpr	double			Length					()												const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
+		inline	TQuat&			Normalize				()														noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
+		inline	TQuat			Normalized				()												const	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /  ::sqrt(sqLen) : *this; }
+		cnstxpr	double			Dot						(const TQuat & other)							const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
+		inline	TQuat&			LinearInterpolate		(const TQuat & p, const TQuat & q, double fTime)		noexcept	{ return *this = ((q-p)*fTime)+p;						}
+				//void			AddScaled				(const TCoord4& vector, double scale)					noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
+				TQuat&			AddScaled				(const TCoord3 & vector, double scale)					noexcept	{ TQuat q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }
+		inline	TQuat&			SetRotation				(const TQuat & q, const TQuat & p)						noexcept	{ return *this = q * p * ~q;																							}
+				TCoord3			RotateVector			(const TCoord3 & v)								const	noexcept	{
 			const TQuat								t						= {x, y, z, w};
 			const TQuat								r						= t * v * (~t);
 			return {r.x, r.y, r.z};
 		}
-							TQuat&			SLERP					(const TQuat & p, const TQuat & q, double fTime)								{
+				TQuat&			SLERP					(const TQuat & p, const TQuat & q, double fTime)					{
 			//Calculate the dot product
 			double									fDot					= Dot(q);
 
@@ -308,107 +328,81 @@ namespace gpk
 			return *this						= (p * sin(fTheta * (1 - fTime)) + q_ * sin(fTheta * fTime)) / sin(fTheta);
 		}
 		// Convert from Euler Angles
-		inline				TQuat&			MakeFromEulerTaitBryan	(const TCoord3 & v)																{ return MakeFromEulerTaitBryan(v.x, v.y, v.z);																			}
-							TQuat&			MakeFromEulerTaitBryan	(double fPitch, double fYaw, double fRoll)										{
+		inline	TQuat&			MakeFromEulerTaitBryan	(const TCoord3 & v)													{ return MakeFromEulerTaitBryan(v.x, v.y, v.z);																			}
+				TQuat&			MakeFromEulerTaitBryan	(double fPitch, double fYaw, double fRoll)							{
 			 //Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll and multiply those together. the calculation below does the same, just shorter.
-			fPitch								*= 0.5f;//
-			fYaw								*= 0.5f;//
-			fRoll								*= 0.5f;//
+			fPitch					*= 0.5f;//
+			fYaw					*= 0.5f;//
+			fRoll					*= 0.5f;//
 
-			const SPairSinCos						pairSinCosX				= ::gpk::getSinCos(fPitch	);
-			const SPairSinCos						pairSinCosY				= ::gpk::getSinCos(fYaw	);
-			const SPairSinCos						pairSinCosZ				= ::gpk::getSinCos(fRoll	);
+			const SSinCos			pairSinCosX				= ::gpk::getSinCos(fPitch	);
+			const SSinCos			pairSinCosY				= ::gpk::getSinCos(fYaw	);
+			const SSinCos			pairSinCosZ				= ::gpk::getSinCos(fRoll	);
 
-			const double							cYcZ					= pairSinCosY.Cos * pairSinCosZ.Cos;
-			const double							sYsZ					= pairSinCosY.Sin * pairSinCosZ.Sin;
-			const double							cYsZ					= pairSinCosY.Cos * pairSinCosZ.Sin;
-			const double							sYcZ					= pairSinCosY.Sin * pairSinCosZ.Cos;
+			const double				cYcZ					= pairSinCosY.Cos * pairSinCosZ.Cos;
+			const double				sYsZ					= pairSinCosY.Sin * pairSinCosZ.Sin;
+			const double				cYsZ					= pairSinCosY.Cos * pairSinCosZ.Sin;
+			const double				sYcZ					= pairSinCosY.Sin * pairSinCosZ.Cos;
 
-			w									= (_tBase)(pairSinCosX.Cos * cYcZ + pairSinCosX.Sin * sYsZ);
-			x									= (_tBase)(pairSinCosX.Sin * cYcZ - pairSinCosX.Cos * sYsZ);
-			y									= (_tBase)(pairSinCosX.Cos * sYcZ + pairSinCosX.Sin * cYsZ);
-			z									= (_tBase)(pairSinCosX.Cos * cYsZ - pairSinCosX.Sin * sYcZ);
+			w						= (_tBase)(pairSinCosX.Cos * cYcZ + pairSinCosX.Sin * sYsZ);
+			x						= (_tBase)(pairSinCosX.Sin * cYcZ - pairSinCosX.Cos * sYsZ);
+			y						= (_tBase)(pairSinCosX.Cos * sYcZ + pairSinCosX.Sin * cYsZ);
+			z						= (_tBase)(pairSinCosX.Cos * cYsZ - pairSinCosX.Sin * sYcZ);
 
 			return Normalize();
 		}
-							void			GetEulersTaitBryan		(double* fPitch, double* fYaw, double* fRoll)									{
-			const double							q00						= w * w;
-			const double							q11						= x * x;
-			const double							q22						= y * y;
-			const double							q33						= z * z;
+				void			GetEulersTaitBryan		(double* fPitch, double* fYaw, double* fRoll)						{
+			const double			q00						= w * w;
+			const double			q11						= x * x;
+			const double			q22						= y * y;
+			const double			q33						= z * z;
 
-			const double							r11						= q00 + q11 - q22 - q33;
-			const double							r21						= 2 * (x * y + w * z);
-			const double							r31						= 2 * (x * z - w * y);
-			const double							r32						= 2 * (y*z + w * x);
-			const double							r33						= q00 - q11 - q22 + q33;
+			const double			r11						= q00 + q11 - q22 - q33;
+			const double			r21						= 2 * (x * y + w * z);
+			const double			r31						= 2 * (x * z - w * y);
+			const double			r32						= 2 * (y*z + w * x);
+			const double			r33						= q00 - q11 - q22 + q33;
 
-			const double							tmp						= abs(r31);
+			const double			tmp						= abs(r31);
 			if(tmp > 0.999999) {
-				const double							r12						= 2 * (x * y - w * z);
-				const double							r13						= 2 * (x * z + w * y);
-				*fPitch								= 0.0f;
-				*fYaw								= -((::gpk::math_pi_2) * r31 / tmp);
-				*fRoll								= atan2(-r12, -r31*r13);
+				const double			r12						= 2 * (x * y - w * z);
+				const double			r13						= 2 * (x * z + w * y);
+				*fPitch				= 0.0f;
+				*fYaw				= -((::gpk::math_pi_2) * r31 / tmp);
+				*fRoll				= atan2(-r12, -r31*r13);
 			}
 			else {
-				*fPitch								 = atan2(r32, r33);
-				*fYaw								 = asin(-r31);
-				*fRoll								 = atan2(r21, r11);
+				*fPitch				 = atan2(r32, r33);
+				*fYaw				 = asin(-r31);
+				*fRoll				 = atan2(r21, r11);
 			}
 		} //
 		// just in case you need that function also
-		TQuat&								CreateFromAxisAngle		(const ::gpk::SCoord3<float> & axis, double angle)	{
-			const double							halfAngle				= angle * .5;
-			const double							s						= ::gpk::sin(halfAngle);
-			x									= (_tBase)(axis.x * s);
-			y									= (_tBase)(axis.y * s);
-			z									= (_tBase)(axis.z * s);
-			w									= (_tBase)::gpk::cos(halfAngle);
+				TQuat&			CreateFromAxisAngle		(const ::gpk::n3<float> & axis, double angle)	{
+			const double				halfAngle				= angle * .5;
+			const double				s						= ::gpk::sin(halfAngle);
+			x						= (_tBase)(axis.x * s);
+			y						= (_tBase)(axis.y * s);
+			z						= (_tBase)(axis.z * s);
+			w						= (_tBase)::gpk::cos(halfAngle);
 			return *this;
 		}
 		/// Evaluates a rotation needed to be applied to an object positioned at sourcePoint to face destPoint
-		TQuat&								LookAt					(const ::gpk::SCoord3<float> & sourcePoint, const ::gpk::SCoord3<float> & destPoint, const ::gpk::SCoord3<float> & up = {0, 1, 0}, const ::gpk::SCoord3<float> & front = {1, 0, 0})	{
-			::gpk::SCoord3<float>					forwardVector			= (destPoint - sourcePoint).Normalize();
-			const double							dot						= front.Dot(forwardVector);
+				TQuat&			LookAt					(const ::gpk::n3<float> & sourcePoint, const ::gpk::n3<float> & destPoint, const ::gpk::n3<float> & up = {0, 1, 0}, const ::gpk::n3<float> & front = {1, 0, 0})	{
+			::gpk::n3f32				forwardVector			= (destPoint - sourcePoint).Normalize();
+			const double				dot						= front.Dot(forwardVector);
 			if (::gpk::abs(dot - (-1.0)) < 0.000001)
 				return *this = TQuat{up.x, up.y, up.z, -(_tBase)::gpk::math_pi}.Normalize();
 			if (::gpk::abs(dot - (1.0)) < 0.000001)
 				return *this = {0, 0, 0, 1};
 
 			const double							rotAngle				= ::gpk::acos(dot);
-			::gpk::SCoord3<float>					rotAxis					= front.Cross(forwardVector);
+			::gpk::n3f32							rotAxis					= front.Cross(forwardVector);
 			rotAxis.Normalize();
 			return CreateFromAxisAngle(rotAxis, rotAngle);
 		}
 
-	}; // struct SQuaternion
-
-	template<typename _tDimension>		using n2 = SCoord2<_tDimension>;
-	template<typename _tDimension>		using n3 = SCoord3<_tDimension>;
-	template<typename _tDimension>		using quat = SQuaternion<_tDimension>;
-
-	typedef n2<float>		n2f32, n2f;
-	typedef n2<double>		n2f64, n2d;
-	typedef n2<uint8_t>		n2u8;
-	typedef n2<uint16_t>	n2u16;
-	typedef n2<uint32_t>	n2u32;
-	typedef n2<uint64_t>	n2u64;
-	typedef n2<int8_t>		n2i8;
-	typedef n2<int16_t>		n2i16;
-	typedef n2<int32_t>		n2i32;
-	typedef n2<int64_t>		n2i64;
-
-	typedef n3<float>		n3f32, n3f;
-	typedef n3<double>		n3f64, n3d;
-	typedef n3<uint8_t>		n3u8;
-	typedef n3<uint16_t>	n3u16;
-	typedef n3<uint32_t>	n3u32;
-	typedef n3<uint64_t>	n3u64;
-	typedef n3<int8_t>		n3i8;
-	typedef n3<int16_t>		n3i16;
-	typedef n3<int32_t>		n3i32;
-	typedef n3<int64_t>		n3i64;
+	}; // struct quat
 
 	typedef quat<float>		quatf32, quatf;
 	typedef quat<double>	quatf64, quatd;
@@ -423,8 +417,8 @@ namespace gpk
 
 
 #define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
-		inlcxpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	}	\
-		inlcxpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
+	inlcxpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	} \
+	inlcxpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
 
 	// ---- Geometric figures and other coord-related POD structs.
 	template<typename _tUnit>	struct SRange			{ _tUnit			Offset, Count			; GPK_DEFAULT_OPERATOR_NE(SRange		<_tUnit>, Offset	== other.Offset	&& Count	== other.Count	); };
@@ -494,6 +488,7 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR_NE(STriangle<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
+	template<typename _tDimension>	using tri	= STriangle< _tDimension>;
 
 	template<typename _tDimension>	struct STriangle2 : public STriangle<::gpk::n2<_tDimension>>		{
 		typedef	::gpk::n2<_tDimension>	TVertex;	
@@ -521,6 +516,20 @@ namespace gpk
 				? 1 : 0;
 		}
 	};
+
+	template<typename _tDimension>	
+	using	tri2			= STriangle2<_tDimension>;
+
+	typedef tri2<float>		tri2f32, tri2f;
+	typedef tri2<double>	tri2f64, tri2d;
+	typedef tri2<uint8_t>	tri2u8;
+	typedef tri2<uint16_t>	tri2u16;
+	typedef tri2<uint32_t>	tri2u32;
+	typedef tri2<uint64_t>	tri2u64;
+	typedef tri2<int8_t>	tri2i8;
+	typedef tri2<int16_t>	tri2i16;
+	typedef tri2<int32_t>	tri2i32;
+	typedef tri2<int64_t>	tri2i64;
 
 	template<typename _tDimension>	struct STriangle3 : public STriangle<::gpk::n3<_tDimension>>		{
 		typedef	::gpk::n3<_tDimension>	TVertex;	
@@ -578,6 +587,20 @@ namespace gpk
 		}
 	};
 
+	template<typename _tDimension>	
+	using	tri3			= STriangle3<_tDimension>;
+
+	typedef tri3<float>		tri3f32, tri3f;
+	typedef tri3<double>	tri3f64, tri3d;
+	typedef tri3<uint8_t>	tri3u8;
+	typedef tri3<uint16_t>	tri3u16;
+	typedef tri3<uint32_t>	tri3u32;
+	typedef tri3<uint64_t>	tri3u64;
+	typedef tri3<int8_t>	tri3i8;
+	typedef tri3<int16_t>	tri3i16;
+	typedef tri3<int32_t>	tri3i32;
+	typedef tri3<int64_t>	tri3i64;
+
 	template<typename _tElement>	struct SCircle			{ double Radius; ::gpk::n2<_tElement>	Center			; GPK_DEFAULT_OPERATOR_NE(SCircle		<_tElement>, Center	== other.Center	&& Radius	== other.Radius					); };
 
 	template<typename _tElement>	struct SRectangle3D		{ ::gpk::n3<_tElement>					Offset, Size	; GPK_DEFAULT_OPERATOR_NE(SRectangle3D	<_tElement>, Offset	== other.Offset	&& Size		== other.Size					); };
@@ -622,11 +645,11 @@ namespace gpk
 	template<typename _tElement>	stainli	cnstxpr	_tElement				rise					(const SLine2<_tElement> & line)														noexcept	{ return line.B.y - line.A.y;		}
 	template<typename _tElement>	stainli	cnstxpr	_tElement				run						(const SLine2<_tElement> & line)														noexcept	{ return line.B.x - line.A.x;		}
 	template<typename _tElement>	stainli	cnstxpr	_tElement				slope					(const SLine2<_tElement> & line)																	{ return rise(line) / run(line);	}
-	template<typename _tElement>	static	cnstxpr	_tElement				orient2d				(const ::gpk::SLine2<_tElement> & segment, const ::gpk::SCoord2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	template<typename _tElement>	static	cnstxpr	_tElement				orient2d3d				(const ::gpk::SLine3<_tElement> & segment, const ::gpk::SCoord2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	static	cnstxpr	_tElement				orient2d				(const ::gpk::SLine2<_tElement> & segment, const ::gpk::n2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	template<typename _tElement>	static	cnstxpr	_tElement				orient2d3d				(const ::gpk::SLine3<_tElement> & segment, const ::gpk::n2<_tElement> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
 
 	// ---- Collision
-	//template<typename _tElement>	static					bool					raySegmentIntersect		(SCoord2<_tElement> r_d, SCoord2<_tElement> r_p, SCoord2<_tElement> s_d, SCoord2<_tElement> s_p)								{
+	//template<typename _tElement>	static					bool					raySegmentIntersect		(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
 	//	const double																		t2						= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
 	//	const double																		t1						= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
 	//	return (t2 > 0 && 0 < t2 && t2 < 1);
@@ -709,7 +732,7 @@ namespace gpk
 
 	template <typename _tCoord>
 	::gpk::SRectangle2<_tCoord>&									realignRectangle
-					(	const ::gpk::SCoord2<uint32_t>			& targetSize
+					(	const ::gpk::n2<uint32_t>			& targetSize
 					,	const ::gpk::SRectangle2<double>		& rectangleToRealign
 					,	::gpk::SRectangle2<double>				& rectangleRealigned
 					,	ALIGN									align
@@ -745,10 +768,10 @@ namespace gpk
 
 	//------------------------------------------------------------------------------------------------------------
 	template <typename _tCoord>
-	::gpk::SCoord2<_tCoord>&										realignCoord
-					(	const ::gpk::SCoord2<uint32_t>		& targetSize
-					,	const ::gpk::SCoord2<_tCoord>		& coordToRealign
-					,	::gpk::SCoord2<_tCoord>				& coordRealigned
+	::gpk::n2<_tCoord>&										realignCoord
+					(	const ::gpk::n2<uint32_t>		& targetSize
+					,	const ::gpk::n2<_tCoord>		& coordToRealign
+					,	::gpk::n2<_tCoord>				& coordRealigned
 					,	::gpk::ALIGN						align
 					)																																					noexcept	{
 		coordRealigned																	= coordToRealign;
@@ -761,14 +784,14 @@ namespace gpk
 	}
 
 	template<typename _tValue>
-	stacxpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& valueToTest, const ::gpk::SCoord2<_tValue>& rangeStart, const ::gpk::SCoord2<_tValue>& rangeStop)	noexcept	{
+	stacxpr	bool														in_range		(const ::gpk::n2<_tValue>& valueToTest, const ::gpk::n2<_tValue>& rangeStart, const ::gpk::n2<_tValue>& rangeStop)	noexcept	{
 		return	::gpk::in_range(valueToTest.x, rangeStart.x, rangeStop.x)
 			&&	::gpk::in_range(valueToTest.y, rangeStart.y, rangeStop.y)
 			;
 	}
 
 	template<typename _tValue>
-	stacxpr	bool														in_range		(const ::gpk::SCoord2<_tValue>& pointToTest, const ::gpk::SRectangle2<_tValue>& area)	noexcept	{
+	stacxpr	bool														in_range		(const ::gpk::n2<_tValue>& pointToTest, const ::gpk::SRectangle2<_tValue>& area)	noexcept	{
 		return	::gpk::in_range(pointToTest.x, area.Offset.x, (_tValue)(area.Offset.x + area.Size.x))
 			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (_tValue)(area.Offset.y + area.Size.y))
 			;
@@ -778,9 +801,9 @@ namespace gpk
 	stainli	double														determinant		(const ::gpk::SLine2<_tCoord>& line)													noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 
 	template<typename _tValue>
-	::gpk::SCoord3<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	::gpk::n3<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle3<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 	template<typename _tValue>
-	::gpk::SCoord2<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	::gpk::n2<_tValue>				triangleWeight		(const STriangle<_tValue> & weights, const STriangle2<_tValue> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 
 }
 

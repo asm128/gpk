@@ -108,7 +108,7 @@ namespace gpk
 	struct SCGIFramework {
 		::gpk::vcc																	ModuleName					= {};
 		::gpk::SCGIRuntimeValues																RuntimeValues				= {};
-		::gpk::SCoord2<int32_t>																	TargetSize					= {};
+		::gpk::n2<int32_t>																	TargetSize					= {};
 		bool																					Bootstrapped				= false;
 	};
 } // namespace

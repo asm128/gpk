@@ -17,8 +17,8 @@ static	::gpk::error_t					drawOrderedVertices
 			::gpk::drawTriangle(target_image, triangleFinal, nodeColor);
 		}
 		else if(nodeToDraw.PerFaceColor) {
-			::gpk::apod<::gpk::SCoord3<float>>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
-			::gpk::apod<::gpk::SCoord3<float>>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
+			::gpk::apod<::gpk::n3<float>>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
+			::gpk::apod<::gpk::n3<float>>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
 			for(uint32_t iTriangle = 0; iTriangle < nodeVertices.size() / 3; ++iTriangle) {
 				::gpk::SColorBGRA							triangleColor			= (nodeToDraw.VertexColor >= 0) ? renderer.VertexColors[nodeToDraw.VertexColor][iTriangle] : nodeColor;
 				;
@@ -36,7 +36,7 @@ static	::gpk::error_t					drawOrderedVertices
 				ree_if(::gpk::drawTriangle(target_image.metrics(), triangleTransformed, renderer.RenderCache.PixelCoordBuffer, renderer.RenderCache.TriangleWeightBuffer, target_depth), "%s", "Maybe the pixel caches weren't cleared properly");
 				triangleColor							= triangleColor * nodeNormals[iTriangle].Dot(renderer.Lights[0].Direction);
 				for(uint32_t iPixelCoord = 0; iPixelCoord < renderer.RenderCache.PixelCoordBuffer.size(); ++iPixelCoord) {
-					const ::gpk::SCoord2<int16_t>				pixelCoord				= renderer.RenderCache.PixelCoordBuffer[iPixelCoord];
+					const ::gpk::n2<int16_t>				pixelCoord				= renderer.RenderCache.PixelCoordBuffer[iPixelCoord];
 					target_image[pixelCoord.y][pixelCoord.x]	= triangleColor;
 				}
 			}
@@ -109,7 +109,7 @@ static	::gpk::error_t					drawOrderedVertices
 		if(drawHidden || false == nodeToRender.Hidden) {
 			renderer.RenderCache.NodesToRender.push_back(iNode);
 			::gpk::apod<uint32_t>					& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
-			::gpk::SCoord3<float>						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::SCoord3<float>{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
+			::gpk::n3<float>						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::n3<float>{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
 			for(uint32_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
 				const ::gpk::SLight							& light					= renderer.Lights[iLight];
 				if(light.Type & ::gpk::GLIGHT_STATE_ENABLED) {

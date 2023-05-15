@@ -20,7 +20,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 		RECT																						rcWindow									= {};
 		::GetWindowRect(framework.RootWindow.PlatformDetail.WindowHandle, &rcWindow);
 		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
-		::gpk::SCoord2<uint32_t>																	dpi											= {96, 96};
+		::gpk::n2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
 		if((framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
@@ -75,7 +75,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 	if(mainWindow.Repaint) {
 		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;
 		const xcb_image_format_t					format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::SCoord2<uint32_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		const ::gpk::n2<uint32_t>				& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t									* image						= xcb_image_create_native
 			( mainWindow.PlatformDetail.Connection
 			, guiRenderTargetMetrics.x
@@ -258,7 +258,7 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	case WM_SIZE			:
 		info_printf("%s", "WM_SIZE");
 		if(lParam) {
-			::gpk::n2<uint16_t>					newMetrics					= ::gpk::SCoord2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint16_t>();
+			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint16_t>();
 			RECT								windowrect					= {};
 			GetClientRect(hWnd, &windowrect);
 			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
@@ -320,7 +320,7 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	//	*(LPARAM*)&newEvent.Data[1]		= lParam; 
 	//	mainDisplay.EventQueue.push_back(newEvent); 
 	//
-	//	::gpk::SCoord2<uint16_t>										joyPos										= {LOWORD(lParam), HIWORD(lParam)};
+	//	::gpk::n2<uint16_t>										joyPos										= {LOWORD(lParam), HIWORD(lParam)};
 	//	if(input.JoystickCurrent.size() < 4) {
 	//		input.JoystickCurrent.resize(4, {});
 	//		input.JoystickPrevious.resize(4, {});

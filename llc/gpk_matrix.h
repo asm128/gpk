@@ -10,14 +10,14 @@ namespace gpk
 	template<typename _tBase>
 	struct SMatrix4 {
 		typedef				SMatrix4<_tBase>	_tMat4, TMatrix4;
-		typedef				SCoord3<_tBase>		TCoord3;
+		typedef				n3<_tBase>			Tn3;
 							_tBase				_11, _12, _13, _14
 								,				_21, _22, _23, _24
 								,				_31, _32, _33, _34
 								,				_41, _42, _43, _44
 								;
 
-		inline				TCoord3&			operator[]					(uint32_t index)																					{ return *(TCoord3*)((&_11) + 4 * index); }
+		inline				Tn3&				operator[]					(uint32_t index)																					{ return *(Tn3*)((&_11) + 4 * index); }
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
 
@@ -45,11 +45,11 @@ namespace gpk
 		inline				void				Invert						()																									{ *this = GetInverse();		}
 
 		inline				_tMat4&				LinearInterpolate			(const _tMat4&p, const _tMat4&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
-		constexpr			TCoord3				InverseTranslate			(const TCoord3 & vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
-							void				InverseTranslateInPlace		(TCoord3& vec)																	const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
-		constexpr			TCoord3				Transform					(const TCoord3 & v)																const				{
+		constexpr			Tn3					InverseTranslate			(const Tn3 & vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
+							void				InverseTranslateInPlace		(Tn3& vec)																	const	noexcept	{ vec.x -= _41; vec.y -= _42; vec.z -= _43; }
+		constexpr			Tn3					Transform					(const Tn3 & v)																const				{
 			return
-			TCoord3
+			Tn3
 				{	(v.x*_11 + v.y*_21 + v.z*_31 + _41)	// x
 				,	(v.x*_12 + v.y*_22 + v.z*_32 + _42)	// y
 				,	(v.x*_13 + v.y*_23 + v.z*_33 + _43)	// z
@@ -57,14 +57,14 @@ namespace gpk
 				/	(v.x*_14 + v.y*_24 + v.z*_34 + _44)	// w
 			;
 		}
-		constexpr			TCoord3				TransformDirection			(const TCoord3 & vector)														const	noexcept	{
+		constexpr			Tn3				TransformDirection			(const Tn3 & vector)														const	noexcept	{
 			return
 				{	vector.x * _11 + vector.y * _21 + vector.z * _31
 				,	vector.x * _12 + vector.y * _22 + vector.z * _32
 				,	vector.x * _13 + vector.y * _23 + vector.z * _33
 				};
 		}
-		constexpr			TCoord3				TransformInverseDirection	(const TCoord3 & _v)															const	noexcept	{
+		constexpr			Tn3				TransformInverseDirection	(const Tn3 & _v)															const	noexcept	{
 			return
 				{	_v.x * _11 + _v.y * _12 + _v.z * _13
 				,	_v.x * _21 + _v.y * _22 + _v.z * _23
@@ -72,8 +72,8 @@ namespace gpk
 				};
 		}
 		//- Rotate avector using the inverse of the matrix
-		//inline				void				InverseRotateInPlace	(TCoord3& vector)				const			{ fpVec = InverseRotate(vector); }
-		//						TCoord3				InverseRotate			(const TCoord3 & fpVec)			const
+		//inline				void				InverseRotateInPlace	(Tn3& vector)				const			{ fpVec = InverseRotate(vector); }
+		//						Tn3				InverseRotate			(const Tn3 & fpVec)			const
 		//{
 		//	return
 		//	{	fpVec.x * _11 + fpVec.y * _21 + fpVec.z * _31
@@ -81,7 +81,7 @@ namespace gpk
 		//	,	fpVec.x * _13 + fpVec.y * _23 + fpVec.z * _33
 		//	};
 		//}
-							void				ViewportRH				(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
+							void				ViewportRH				(const ::gpk::n2<uint16_t> & offscreenMetrics)			noexcept	{
 			_11 = (_tBase)(offscreenMetrics.x * .5f);	_12 =										_13 =				_14 =
 			_21 = (_tBase)0;							_22 = (_tBase)(offscreenMetrics.y * .5f);	_23 =				_24 =
 			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 =
@@ -89,7 +89,7 @@ namespace gpk
 			_41											+= offscreenMetrics.x * .5f;
 			_42											+= offscreenMetrics.y * .5f;
 		}
-							void				ViewportLH					(const ::gpk::SCoord2<uint16_t> & offscreenMetrics)			noexcept	{
+							void				ViewportLH					(const ::gpk::n2<uint16_t> & offscreenMetrics)			noexcept	{
 			_11 = (_tBase)(offscreenMetrics.x * .5f);	_12 =										_13 =				_14 =
 			_21 = (_tBase)0;							_22 = -(_tBase)(offscreenMetrics.y * .5f);	_23 =				_24 =
 			_31 =										_32 = (_tBase)0;							_33 = (_tBase)1;	_34 = 0;
@@ -114,14 +114,14 @@ namespace gpk
 		}
 		inline				void				Identity					()																						noexcept	{ SetIdentity(); }
 							void				RotationX					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)1;	_12 =							_13 =
 			_31 = (_tBase)0;	_32 = -(_tBase)angleSinCos.Sin;	_33 = (_tBase)angleSinCos.Cos;
 			_21 = (_tBase)0;	_22 =  (_tBase)angleSinCos.Cos;	_23 = (_tBase)angleSinCos.Sin;
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				RotationY					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
 			_21 = (_tBase)0;				_22 = (_tBase)1;	_23 =  (_tBase)0;
 			_31 = (_tBase)angleSinCos.Sin;	_32 = (_tBase)0;	_33 =  (_tBase)angleSinCos.Cos;
@@ -129,7 +129,7 @@ namespace gpk
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				RotationZ					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
 			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 =
 			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
@@ -137,7 +137,7 @@ namespace gpk
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
-		inline				void				Scale						(const TCoord3 & ypr, bool bEraseContent)												noexcept
+		inline				void				Scale						(const Tn3 & ypr, bool bEraseContent)												noexcept
 		{
 			if( bEraseContent ) {
 				_11 = (_tBase)ypr.x;	_12 =					_13 =					_14 =
@@ -149,7 +149,7 @@ namespace gpk
 				_11 = (_tBase)(_11*ypr.x); _22 = (_tBase)(_22*ypr.y); _33 = (_tBase)(_33*ypr.z);
 			}
 		}
-							void				SetTranslation				(const TCoord3 & vTranslation, bool bEraseContent)										noexcept	{
+							void				SetTranslation				(const Tn3 & vTranslation, bool bEraseContent)										noexcept	{
 			if( bEraseContent ) {
 				_11 = (_tBase)1;	_12 =				_13 =				_14 =
 				_21 = (_tBase)0;	_22 = (_tBase)1;	_23 =				_24 =
@@ -172,10 +172,10 @@ namespace gpk
 			_12 = _13 = _14 = _21 = _23 = _24 = _31 = _32 = _41 = _42 = _44 = (_tBase)0;
 		//	return *this;
 		} // FoV
-		void									LookAt						(const TCoord3 & vPosition, const TCoord3& vTarget, const TCoord3& vUp)		{
-			TCoord3										F							= TCoord3{vTarget - vPosition}.Normalize();
-			TCoord3										R							= vUp	.Cross(F).Normalize();
-			TCoord3										U							= F		.Cross(R).Normalize();
+		void									LookAt						(const Tn3 & vPosition, const Tn3& vTarget, const Tn3& vUp)		{
+			Tn3										F							= Tn3{vTarget - vPosition}.Normalize();
+			Tn3										R							= vUp	.Cross(F).Normalize();
+			Tn3										U							= F		.Cross(R).Normalize();
 
 			_11 = R.x;	_12 = U.x;	_13 = F.x;	_14 = (_tBase)0;
 			_21 = R.y;	_22 = U.y;	_23 = F.y;	_24 = (_tBase)0;
@@ -186,7 +186,7 @@ namespace gpk
 			_44 = (_tBase)1;
 		}
 
-							void				View3D						(const TCoord3 & vPosition, const TCoord3& vRight, const TCoord3& vUp, const TCoord3& vFront)	{
+							void				View3D						(const Tn3 & vPosition, const Tn3& vRight, const Tn3& vUp, const Tn3& vFront)	{
 			_11 = vRight.x;	_12 = vUp.x; _13 = vFront.x; _14 = (_tBase)0;
 			_21 = vRight.y;	_22 = vUp.y; _23 = vFront.y; _24 = (_tBase)0;
 			_31 = vRight.z;	_32 = vUp.z; _33 = vFront.z; _34 = (_tBase)0;
@@ -195,8 +195,8 @@ namespace gpk
 			_43 = (_tBase)-vPosition.Dot(vFront	);
 			_44 = (_tBase)1;
 		}
-							void				Billboard					(const TCoord3 & vPos, const TCoord3& vDir, const TCoord3& vWorldUp)								{
-			TCoord3										vUp
+							void				Billboard					(const Tn3 & vPos, const Tn3& vDir, const Tn3& vWorldUp)								{
+			Tn3										vUp
 				,										vRight
 				;
 			double										fAngle						= vWorldUp.Dot(vDir);
@@ -209,10 +209,10 @@ namespace gpk
 			_41 = vPos.x;	_42 = vPos.y;	_43 = vPos.z;	_44=(_tBase)1;
 		} // Billboard
 		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)																		{ return Rotation({x, y, z}); }
-							void				Rotation					(const TCoord3 &vc)																					{
-			::gpk::SPairSinCos							yaw							= ::gpk::getSinCos(vc.z);
-			::gpk::SPairSinCos							pitch						= ::gpk::getSinCos(vc.y);
-			::gpk::SPairSinCos							roll						= ::gpk::getSinCos(vc.x);
+							void				Rotation					(const Tn3 &vc)																					{
+			::gpk::SSinCos							yaw							= ::gpk::getSinCos(vc.z);
+			::gpk::SSinCos							pitch						= ::gpk::getSinCos(vc.y);
+			::gpk::SSinCos							roll						= ::gpk::getSinCos(vc.x);
 
 			_14 = _24 = _34 = _41 = _42 = _43		= (_tBase)0;
 			_44										= (_tBase)1;
@@ -230,9 +230,9 @@ namespace gpk
 		//	return *this;
 		} // Rota
 
-							void				RotationArbitraryAxis		(const TCoord3 & _vcAxis, _tBase a)																		{
-			::gpk::SPairSinCos							pairSinCos					= ::gpk::getSinCos(a);
-			TCoord3										vcAxis						= _vcAxis;
+							void				RotationArbitraryAxis		(const Tn3 & _vcAxis, _tBase a)																		{
+			::gpk::SSinCos							pairSinCos					= ::gpk::getSinCos(a);
+			Tn3										vcAxis						= _vcAxis;
 			double										fSum						= 1.0 - pairSinCos.Cos;
 
 			if( vcAxis.LengthSquared() != 1.0 )
@@ -254,7 +254,7 @@ namespace gpk
 			_44										= (_tBase)1;
 		}
 
-							void				SetOrientation				(const ::gpk::SQuaternion<_tBase>& qo)																	{
+							void				SetOrientation				(const ::gpk::quat<_tBase>& qo)																	{
 			// set matrix to identity
 			_41 = _42 = _43 = _14 = _24 = _34		= (_tBase)0;
 			_44										= (_tBase)1;
@@ -291,7 +291,7 @@ namespace gpk
 		}
 
 		constexpr			_tMat4				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
-		inlcxpr	TCoord3				GetTranslation				()																				const	noexcept	{ return { _41, _42, _43 }; }
+		inlcxpr	Tn3				GetTranslation				()																				const	noexcept	{ return { _41, _42, _43 }; }
 							_tMat4				GetInverse					()																				const				{
 			_tMat4										mTranspose					= GetTranspose()
 				,										mResult						= *this
@@ -464,11 +464,11 @@ namespace gpk
 			return fDet;
 		}
 
-		_tMat4&								FromRotationDir(const ::gpk::SCoord3<float> & direction, const ::gpk::SCoord3<float> & up = {0,1,0}) {
-			::gpk::SCoord3<float> xaxis = up.Cross(direction);
+		_tMat4&								FromRotationDir(const ::gpk::n3<float> & direction, const ::gpk::n3<float> & up = {0,1,0}) {
+			::gpk::n3<float> xaxis = up.Cross(direction);
 			xaxis.Normalize();
 
-			::gpk::SCoord3<float> yaxis = direction.Cross(xaxis);
+			::gpk::n3<float> yaxis = direction.Cross(xaxis);
 			yaxis.Normalize();
 
 			_11 = xaxis.x;
@@ -505,7 +505,7 @@ namespace gpk
 	template<typename _tBase>
 	struct SMatrix3 {
 		typedef				SMatrix3<_tBase>	_tMat3;
-		typedef				SCoord3<_tBase>		_TCoord3D;
+		typedef				n3<_tBase>		_TCoord3D;
 
 							_tBase				_11, _12, _13
 								,				_21, _22, _23
@@ -601,19 +601,19 @@ namespace gpk
 				};
 		}
 							void				RotationX					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= {sin(angle), cos(angle)};
+			::gpk::SSinCos							angleSinCos					= {sin(angle), cos(angle)};
 			_11 = (_tBase)1;	_12 =							_13 =
 			_31 = (_tBase)0;	_32 = -(_tBase)angleSinCos.Sin;	_33 = (_tBase)angleSinCos.Cos;
 			_21 = (_tBase)0;	_22 =  (_tBase)angleSinCos.Cos;	_23 = (_tBase)angleSinCos.Sin;
 		}
 							void				RotationY					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)angleSinCos.Cos;	_12 = (_tBase)0;	_13 = -(_tBase)angleSinCos.Sin;
 			_21 = (_tBase)0;				_22 = (_tBase)1;	_23 =  (_tBase)0;
 			_31 = (_tBase)angleSinCos.Sin;	_32 = (_tBase)0;	_33 =  (_tBase)angleSinCos.Cos;
 		}
 							void				RotationZ					(double angle)																			noexcept	{
-			::gpk::SPairSinCos							angleSinCos					= ::gpk::getSinCos(angle);
+			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 =  (_tBase)angleSinCos.Cos;	_12 = (_tBase)angleSinCos.Sin;	_13 = (_tBase)0;
 			_21 = -(_tBase)angleSinCos.Sin;	_22 = (_tBase)angleSinCos.Cos;	_23 =
 			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
@@ -631,9 +631,9 @@ namespace gpk
 		}
 		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)															noexcept	{ return Rotation({x, y, z}); }
 							void				Rotation					(const _TCoord3D &vc)																	noexcept	{
-			::gpk::SPairSinCos							yaw							= ::gpk::getSinCos(vc.z);
-			::gpk::SPairSinCos							pitch						= ::gpk::getSinCos(vc.y);
-			::gpk::SPairSinCos							roll						= ::gpk::getSinCos(vc.x);
+			::gpk::SSinCos							yaw							= ::gpk::getSinCos(vc.z);
+			::gpk::SSinCos							pitch						= ::gpk::getSinCos(vc.y);
+			::gpk::SSinCos							roll						= ::gpk::getSinCos(vc.x);
 
 			_11										= (_tBase)(pitch.Cos * yaw.Cos									);
 			_12										= (_tBase)(pitch.Cos * yaw.Sin									);
@@ -648,7 +648,7 @@ namespace gpk
 			_33										= (_tBase)(roll.Cos * pitch.Cos									);
 		} // Rota
 							void				RotationArbitraryAxis		(const _TCoord3D& _vcAxis, _tBase a)																{
-			::gpk::SPairSinCos							pairSinCos					= ::gpk::getSinCos(a);
+			::gpk::SSinCos							pairSinCos					= ::gpk::getSinCos(a);
 			_TCoord3D									vcAxis						= _vcAxis;
 			double										fSum						= 1.0 - pairSinCos.Cos;
 
@@ -668,7 +668,7 @@ namespace gpk
 			_33										= (_tBase)(	(vcAxis.z * vcAxis.z) * fSum + pairSinCos.Cos				);
 		}
 
-							void				SetOrientation				(const ::gpk::SQuaternion<_tBase>& qo)														noexcept	{
+							void				SetOrientation				(const ::gpk::quat<_tBase>& qo)														noexcept	{
 			double										wx, wy, wz, xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
 			x2										= qo.x + qo.x;

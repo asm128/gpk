@@ -29,7 +29,7 @@ namespace gpk
 		constexpr											IDialogControl										()													: DeleteControl(0) {}
 		virtual												~IDialogControl										();
 
-		virtual	::gpk::error_t								Resize												(::gpk::SCoord2<uint16_t>& newSize)					{ (void)newSize; return 0; }
+		virtual	::gpk::error_t								Resize												(::gpk::n2<uint16_t>& newSize)					{ (void)newSize; return 0; }
 		virtual	::gpk::error_t								Update												()													= 0;
 	};
 	//template<typename _TDialogControl>

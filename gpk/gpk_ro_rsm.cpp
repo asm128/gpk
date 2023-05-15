@@ -125,7 +125,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
-				::gpk::apod<::gpk::SCoord3<float>>						& modelVertices												= newNode.Vertices;
+				::gpk::apod<::gpk::n3<float>>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
 				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
 			}

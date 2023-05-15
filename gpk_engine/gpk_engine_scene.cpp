@@ -158,7 +158,7 @@ static	::gpk::error_t								drawBuffers
 		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::SColorBGRA*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
 	}
 
-	const ::gpk::SCoord2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
+	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
 	::gpk::apod<::gpk::n3<float>>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)

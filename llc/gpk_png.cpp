@@ -881,7 +881,7 @@ static	::gpk::error_t											pngDefilterPaeth								(::gpk::view<uint8_t>& s
 	return 0;
 }
 
-static	::gpk::error_t											pngScanlineDefilter								(const ::gpk::view<const uint8_t> & scanlineFilters, const ::gpk::SCoord2<uint32_t> & imageSize, uint32_t bytesPerPixel, ::gpk::view<::gpk::au8> scanlines) {
+static	::gpk::error_t											pngScanlineDefilter								(const ::gpk::view<const uint8_t> & scanlineFilters, const ::gpk::n2<uint32_t> & imageSize, uint32_t bytesPerPixel, ::gpk::view<::gpk::au8> scanlines) {
 	::gpk::apod<bool>														filteredScanlines;
 	filteredScanlines.resize(scanlineFilters.size(), false);
 	if(scanlineFilters.size())
@@ -941,9 +941,9 @@ static	::gpk::error_t											pngBytesPerPixel								(int32_t colorType, int3
 
 static	::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGData & pngData)									{
 	const ::gpk::SPNGIHDR														& imageHeader									= pngData.Header;
-	const ::gpk::SCoord2<uint32_t>												& imageSize										= imageHeader.Size;
+	const ::gpk::n2<uint32_t>												& imageSize										= imageHeader.Size;
 	::gpk::aobj<::gpk::au8>									& scanlines										= pngData.Scanlines;
-	::gpk::view<::gpk::SCoord2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
+	::gpk::view<::gpk::n2<uint32_t>>									imageSizes										= pngData.Adam7Sizes;
 	::gpk::adam7Sizes(imageSizes, imageSize);
 
 	uint32_t																	totalScanlines									= 0;
@@ -958,7 +958,7 @@ static	::gpk::error_t											pngDefilterScanlinesInterlaced					(::gpk::SPNGD
 	for(uint32_t iImage = 0; iImage < 7; ++iImage) {
 		uint32_t																	widthScanlineCurrent							= ::pngScanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageSizes[iImage].x);
 		verbose_printf("Image: %u. Scanline size: %u.", iImage, widthScanlineCurrent);
-		const ::gpk::SCoord2<uint32_t>												currentImageSize								= imageSizes[iImage];
+		const ::gpk::n2<uint32_t>												currentImageSize								= imageSizes[iImage];
 		for(uint32_t y = 0; y < currentImageSize.y; ++y) {
 			const int32_t																currentScanline									= offsetScanline + y;
 			pngData.Filters[currentScanline]										= pngData.Inflated[offsetByte + y * widthScanlineCurrent + y];

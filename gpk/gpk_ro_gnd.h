@@ -9,23 +9,23 @@ namespace gpk
 #pragma pack( push, 1 )
 	// U and V TexCoords follow the same order from GAT format heights
 	struct STileSkinGND {
-				float												u[4]							= { 0, 1, 0, 1 };		//< west->east, north->south ordering; 0=left 1=right
-				float												v[4]							= { 0, 0, 1, 1 };		//< west->east, north->south ordering; 0=up 1=down
-				int16_t												TextureIndex					= -1			;		//< -1 for none
-				int16_t												LightmapIndex					= -1			;		//< -1 for none?
-				uint32_t											dwColor							= 0xFFFFFFFFU	;		// a default color to set to the tile for other kind of representations
+		float									u[4]							= { 0, 1, 0, 1 };		//< west->east, north->south ordering; 0=left 1=right
+		float									v[4]							= { 0, 0, 1, 1 };		//< west->east, north->south ordering; 0=up 1=down
+		int16_t									TextureIndex					= -1			;		//< -1 for none
+		int16_t									LightmapIndex					= -1			;		//< -1 for none?
+		uint32_t								dwColor							= 0xFFFFFFFFU	;		// a default color to set to the tile for other kind of representations
 	};
 
 	struct STileFaceSkinMapping {
-				int32_t												SkinIndexTop					= -1;	// <= -1 for none
-				int32_t												SkinIndexRight					= -1;	// <= -1 for none
-				int32_t												SkinIndexFront					= -1;	// <= -1 for none
+		int32_t									SkinIndexTop					= -1;	// <= -1 for none
+		int32_t									SkinIndexRight					= -1;	// <= -1 for none
+		int32_t									SkinIndexFront					= -1;	// <= -1 for none
 	};
 
 	struct STileGeometryGND {
-				float												fHeight[4]						;			// west->east, north->south ordering
-				::gpk::STileFaceSkinMapping							SkinMapping						;	// <= -1 for none
-				//int16_t												Flags						= 0;				// GND v <= 1.5 // maybe a color key? a terrain property? We're going to use it to tell if the triangle is inverted.
+		float									fHeight[4]						;			// west->east, north->south ordering
+		::gpk::STileFaceSkinMapping				SkinMapping						;	// <= -1 for none
+		//int16_t									Flags						= 0;				// GND v <= 1.5 // maybe a color key? a terrain property? We're going to use it to tell if the triangle is inverted.
 	};
 
 	// 0 - No walkable - No Snipable
@@ -33,93 +33,90 @@ namespace gpk
 	// 2 - Snipable
 	// 3 - Walkable - Snipable
 	struct STileNavigabilityGND {
-				float												fHeight[4]						= {}; // west->east, south->north ordering
-				uint8_t												Type							= 0;
-				uint8_t												FlagsTop						= 0;
-				uint8_t												FlagsRight						= 0;
-				uint8_t												FlagsFront						= 0;
+		float									fHeight[4]						= {}; // west->east, south->north ordering
+		uint8_t									Type							= 0;
+		uint8_t									FlagsTop						= 0;
+		uint8_t									FlagsRight						= 0;
+		uint8_t									FlagsFront						= 0;
 	};
 
 	struct STileBrightnessGND 	{
-				uint8_t												Brightness	[8][8]				= {};
-				::gpk::SColorRGB									ColorRGB	[8][8]				= {};
+		uint8_t									Brightness	[8][8]				= {};
+		::gpk::SColorRGB						ColorRGB	[8][8]				= {};
 	};
 
 	struct STiledTerrainMetricsGND {
-				::gpk::SCoord2<uint32_t>							Size							;	// Tile count
-				float												TileScale						;	// The size to expand the tiles
+		::gpk::n2u32							Size							;	// Tile count
+		float									TileScale						;	// The size to expand the tiles
 	};
 
 	struct STerrainWaterGND {
-				float												fSeaLevel						;	//
-				int32_t												nWaterType						;	//
-				float												fWaveHeight						;	//
-				float												fWaveSpeed						;	//
-				float												fWavePitch						;	//
-				int32_t												nAnimationSpeed					;	//
+		float									fSeaLevel						;	//
+		int32_t									nWaterType						;	//
+		float									fWaveHeight						;	//
+		float									fWaveSpeed						;	//
+		float									fWavePitch						;	//
+		int32_t									nAnimationSpeed					;	//
 	};
 
 	struct SGNDFileContents {
-				STiledTerrainMetricsGND								Metrics;
-				::gpk::aobj<::gpk::aobj<char>>			TextureNames;
-				uint32_t											LightmapTiles;		// ??
-				::gpk::SCoord2<uint32_t>							LightmapSize;
-				::gpk::apod<STileBrightnessGND	>				lstTileBrightnessData;
-				::gpk::apod<STileSkinGND		>				lstTileTextureData;
-				::gpk::apod<STileGeometryGND	>				lstTileGeometryData;
+		STiledTerrainMetricsGND					Metrics;
+		::gpk::aobj<::gpk::apod<char>>			TextureNames;
+		uint32_t								LightmapTiles;		// ??
+		::gpk::n2u32							LightmapSize;
+		::gpk::apod<STileBrightnessGND	>		lstTileBrightnessData;
+		::gpk::apod<STileSkinGND		>		lstTileTextureData;
+		::gpk::apod<STileGeometryGND	>		lstTileGeometryData;
 	};
 
 	//709655609
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<uint8_t>	& input);
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
-			::gpk::error_t										gndFileLoad						(SGNDFileContents& loaded, const ::gpk::vcs	& input);
+	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<uint8_t>	& input);
+	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
+	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, const ::gpk::vcs	& input);
 
 	struct SModelNodeGND {
-				::gpk::apod<::gpk::SCoord3<float>>				Normals			;
-				::gpk::apod<::gpk::SCoord3<float>>				Vertices		;
-				::gpk::apod<::gpk::SCoord2<float>>				UVs				;
-				::gpk::apod<::gpk::STriangle<uint32_t>>		VertexIndices	;
-				//::gpk::apod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
+		::gpk::apod<::gpk::n3f32>				Normals			;
+		::gpk::apod<::gpk::n3f32>				Vertices		;
+		::gpk::apod<::gpk::n2f32>				UVs				;
+		::gpk::apod<::gpk::STriangle<uint32_t>>	VertexIndices	;
+		//::gpk::apod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct STileMapping {
-				int32_t												nChunkIndex;
-				int32_t												SubsetIndexTop;
-				int32_t												SubsetIndexFront;
-				int32_t												SubsetIndexRight;
-				int32_t												VerticesTop[4];
-				int32_t												VerticesFront[4];
-				int32_t												VerticesRight[4];
+		int32_t									nChunkIndex;
+		int32_t									SubsetIndexTop;
+		int32_t									SubsetIndexFront;
+		int32_t									SubsetIndexRight;
+		int32_t									VerticesTop[4];
+		int32_t									VerticesFront[4];
+		int32_t									VerticesRight[4];
 	};
 
 	struct SModelGND {
-				::gpk::aobj<::gpk::SModelNodeGND>				Nodes;
-				::gpk::img<::gpk::STileMapping>					TileMapping;
-
-//																	SModelGND						()							= default;
-//																	SModelGND						(const SModelGND& other)	= default;
+		::gpk::aobj<::gpk::SModelNodeGND>		Nodes;
+		::gpk::img<::gpk::STileMapping>			TileMapping;
 	};
 
 	struct STiledTerrainCounters {
-				uint32_t											nBaseTileCount						;	// Base tile count is equal to (tile map width*tile map depth)
-				uint32_t											nTileColumnCount					;	// Stores the amount of tile columns that contain a single map chunk
-				uint32_t											nTileRowCount						;	// Stores the amount of tile rows that contain a single map chunk
-				uint32_t											nTopTileFaceCount					;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
+		uint32_t								nBaseTileCount						;	// Base tile count is equal to (tile map width*tile map depth)
+		uint32_t								nTileColumnCount					;	// Stores the amount of tile columns that contain a single map chunk
+		uint32_t								nTileRowCount						;	// Stores the amount of tile rows that contain a single map chunk
+		uint32_t								nTopTileFaceCount					;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
 
-				uint32_t											nFrontTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
-				uint32_t											nRightTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-				uint32_t											nBottomTileFaceCount				;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
-				uint32_t											nBackTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
+		uint32_t								nFrontTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
+		uint32_t								nRightTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
+		uint32_t								nBottomTileFaceCount				;	// Stores the number of tiles facing upwards that contain valid attributes and geometry
+		uint32_t								nBackTileFaceCount					;	// Stores the number of tiles facing front that contain valid attributes and geometry
 
-				uint32_t											nLeftTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
-				uint32_t											nTotalTileFaceCount					;	// Stores the total number of valid tiles, which should be equal to the addition of top, front and right tiles.
-				uint32_t											nChunkColumnTileCount				;	// Stores the amount of tile columns that contain a single map chunk
-				uint32_t											nChunkRowTileCount					;	// Stores the amount of tile rows that contain a single map chunk
+		uint32_t								nLeftTileFaceCount					;	// Stores the number of tiles facing right that contain valid attributes and geometry
+		uint32_t								nTotalTileFaceCount					;	// Stores the total number of valid tiles, which should be equal to the addition of top, front and right tiles.
+		uint32_t								nChunkColumnTileCount				;	// Stores the amount of tile columns that contain a single map chunk
+		uint32_t								nChunkRowTileCount					;	// Stores the amount of tile rows that contain a single map chunk
 
-				uint32_t											nChunkTotalTileCount				;	// Stores the total number of tiles contained in a single chunk
-				uint32_t											nColumnChunkCount					;	// Stores the amount of column chunks
-				uint32_t											nRowChunkCount						;	// Stores the amount of row chunks
-				uint32_t											nTotalChunkCount					;	// Stores the total chunks contained in a map
+		uint32_t								nChunkTotalTileCount				;	// Stores the total number of tiles contained in a single chunk
+		uint32_t								nColumnChunkCount					;	// Stores the amount of column chunks
+		uint32_t								nRowChunkCount						;	// Stores the amount of row chunks
+		uint32_t								nTotalChunkCount					;	// Stores the total chunks contained in a map
 	};
 
 	enum TILE_FACE_FACING
@@ -131,17 +128,17 @@ namespace gpk
 		, TILE_FACE_FACING_LEFT
 		};
 
-			::gpk::error_t										gndGenerateFaceGeometry
-	( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
-	, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
-	, const ::gpk::STiledTerrainMetricsGND			tileMapMetrics
-	, TILE_FACE_FACING								facing_direction
-	, int32_t										textureIndex
-	, ::gpk::SModelNodeGND							& generated
-	, ::gpk::view2d<::gpk::STileMapping>			& out_mapping
-	);
+	::gpk::error_t							gndGenerateFaceGeometry
+		( const ::gpk::apod<STileSkinGND		>	lstTileTextureData
+		, const ::gpk::apod<STileGeometryGND	>	lstTileGeometryData
+		, const ::gpk::STiledTerrainMetricsGND		tileMapMetrics
+		, TILE_FACE_FACING							facing_direction
+		, int32_t									textureIndex
+		, ::gpk::SModelNodeGND						& generated
+		, ::gpk::view2d<::gpk::STileMapping>		& out_mapping
+		);
 
-				::gpk::error_t									blendGNDNormals							(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
+	::gpk::error_t							blendGNDNormals						(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

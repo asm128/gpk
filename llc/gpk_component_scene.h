@@ -118,8 +118,8 @@ namespace gpk {
 
 	struct SBoundingVolume {
 		double											Radius							= 0;
-		::gpk::SMinMax<::gpk::SCoord3<float>>			Limits							= {{-1, -1, -1}, {1, 1, 1}};
-		::gpk::SCoord3<float>							Center							= {0, 0, 0};
+		::gpk::SMinMax<::gpk::n3<float>>			Limits							= {{-1, -1, -1}, {1, 1, 1}};
+		::gpk::n3<float>							Center							= {0, 0, 0};
 		::gpk::BOUNDINGPRIMITIVE_TYPE					Type							= BOUNDINGPRIMITIVE_TYPE_SPHERE;
 	};
 
@@ -132,8 +132,8 @@ namespace gpk {
 		::gpk::SColorFloat								Ambient							= {};
 		::gpk::SColorFloat								Diffuse							= {};
 		::gpk::SColorFloat								Specular						= {};
-		::gpk::SCoord3<float>							Position						= {};
-		::gpk::SCoord3<float>							Direction						= {};
+		::gpk::n3<float>							Position						= {};
+		::gpk::n3<float>							Direction						= {};
 		double											Angle							= {};
 		float											RangeSquared					= 1;
 		uint32_t										Type							: 3;
@@ -141,9 +141,9 @@ namespace gpk {
 	};
 
 	struct SCamera {
-		::gpk::SCoord3<float>							Position						= {};
-		::gpk::SCoord3<float>							Target							= {};
-		::gpk::SCoord3<float>							Up								= {};
+		::gpk::n3<float>							Position						= {};
+		::gpk::n3<float>							Target							= {};
+		::gpk::n3<float>							Up								= {};
 		::gpk::SMinMax<float>							ClipPlanes						= {};
 		double											Angle							= {};
 	};
@@ -192,26 +192,26 @@ namespace gpk {
 	};
 #pragma pack(pop)
 
-	typedef	::gpk::apod<::gpk::SCoord3<uint16_t		>>	TIndexBuffer			;
-	typedef	::gpk::apod<::gpk::SCoord3<float			>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
+	typedef	::gpk::apod<::gpk::n3<uint16_t		>>	TIndexBuffer			;
+	typedef	::gpk::apod<::gpk::n3<float			>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
 	typedef	::gpk::apod<::gpk::SColorBGRA				>	TVertexColorBuffer		;
-	typedef	::gpk::apod<::gpk::SCoord2<float			>>	TTexCoordBuffer			;
+	typedef	::gpk::apod<::gpk::n2<float			>>	TTexCoordBuffer			;
 	typedef	::gpk::apod<::gpk::SBlendIndices			>	TBlendIndicesBuffer		;
-	typedef	::gpk::apod<::gpk::SCoord2<int16_t>		>	TPixelCoordBuffer		;
+	typedef	::gpk::apod<::gpk::n2<int16_t>		>	TPixelCoordBuffer		;
 	typedef	::gpk::apod<::gpk::STriangle<float>	>	TTriangleWeightBuffer	;
 
 	struct SRendererCache {
 		::gpk::apod<uint32_t>						NodesToRender					= {};
-		::gpk::aobj<::gpk::SCoord3<float>>			NodeLightPositions				= {};	// an element for each node to render
-		::gpk::aobj<::gpk::SCoord3<float>>			NodeLightDirections				= {};	// an element for each node to render
+		::gpk::aobj<::gpk::n3<float>>			NodeLightPositions				= {};	// an element for each node to render
+		::gpk::aobj<::gpk::n3<float>>			NodeLightDirections				= {};	// an element for each node to render
 		::gpk::aobj<::gpk::apod<uint32_t>>	NodeLights						= {};	// an element for each node to render
 		::gpk::apod<::gpk::SMatrix4<float>>		NodesWVP						= {};	// an element for each node to render
 
-		::gpk::apod<::gpk::SCoord3<float>>			LightWorldDirections			= {};	// an element for each light in renderer
-		::gpk::apod<::gpk::SCoord3<float>>			LightWorldPositions 			= {};	// an element for each light in renderer
+		::gpk::apod<::gpk::n3<float>>			LightWorldDirections			= {};	// an element for each light in renderer
+		::gpk::apod<::gpk::n3<float>>			LightWorldPositions 			= {};	// an element for each light in renderer
 
-		::gpk::apod<::gpk::SCoord3<float>>			CameraWorldDirections			= {};
-		::gpk::apod<::gpk::SCoord3<float>>			CameraWorldPositions 			= {};
+		::gpk::apod<::gpk::n3<float>>			CameraWorldDirections			= {};
+		::gpk::apod<::gpk::n3<float>>			CameraWorldPositions 			= {};
 
 		TIndexBuffer									IndexBuffer						= {};
 		TVertexBuffer									VertexBuffer					= {};
@@ -241,10 +241,10 @@ namespace gpk {
 	template<typename _tValue>	struct SKeyedArrayOBJ : public ::gpk::SKeyedArray<::gpk::aobj<_tValue>, _tValue> {};
 
 	struct SNodeRenderer {
-		typedef	::gpk::apod<::gpk::SCoord3<uint16_t	>>	TIndexBuffer			;
-		typedef	::gpk::apod<::gpk::SCoord3<float		>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
+		typedef	::gpk::apod<::gpk::n3<uint16_t	>>	TIndexBuffer			;
+		typedef	::gpk::apod<::gpk::n3<float		>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
 		typedef	::gpk::apod<::gpk::SColorBGRA			>	TVertexColorBuffer		;
-		typedef	::gpk::apod<::gpk::SCoord2<float		>>	TTexCoordBuffer			;
+		typedef	::gpk::apod<::gpk::n2<float		>>	TTexCoordBuffer			;
 		typedef	::gpk::apod<::gpk::SBlendIndices		>	TBlendIndicesBuffer		;
 
 		::gpk::SKeyedArrayOBJ<TIndexBuffer						>	Indices					= {};

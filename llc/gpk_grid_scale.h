@@ -36,10 +36,10 @@ namespace gpk
 	}
 
 	template<typename _tCell>
-						::gpk::error_t							grid_scale_alpha			(::gpk::view2d<_tCell>& dst, const ::gpk::view2d<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) {
-		const ::gpk::SCoord2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
+						::gpk::error_t							grid_scale_alpha			(::gpk::view2d<_tCell>& dst, const ::gpk::view2d<_tCell>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
+		const ::gpk::n2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
-			::gpk::SCoord2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
+			::gpk::n2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
 			for(int x = dstPos.x, xStop = ::gpk::min(dstPos.x + dstSize.x, (int32_t)dst.metrics().x); x < xStop; ++x) {
 				sourcePixelCoord.x											= (int)((x - (double)dstPos.x) / dstSize.x * (double)srcSize.x);
 				::gpk::SColorBGRA												colorDst					= dst[y][x];
@@ -50,10 +50,10 @@ namespace gpk
 		return 0;
 	}
 	template<typename _tCell>
-						::gpk::error_t							grid_scale					(::gpk::view2d<_tCell>& dst, const ::gpk::view2d<_tCell>& src, const ::gpk::SCoord2<int32_t>& dstPos, const ::gpk::SCoord2<int32_t>& dstSize) {
-		const ::gpk::SCoord2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
+						::gpk::error_t							grid_scale					(::gpk::view2d<_tCell>& dst, const ::gpk::view2d<_tCell>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
+		const ::gpk::n2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
-			::gpk::SCoord2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
+			::gpk::n2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
 			for(int x = dstPos.x, xStop = ::gpk::min(dstPos.x + dstSize.x, (int32_t)dst.metrics().x); x < xStop; ++x) {
 				sourcePixelCoord.x											= (int)((x - (double)dstPos.x) / dstSize.x * (double)srcSize.x);
 				dst[y][x]													= src[sourcePixelCoord.y][sourcePixelCoord.x];

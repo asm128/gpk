@@ -32,7 +32,7 @@
 			}
 		}
 	}
-	const ::gpk::SCoord2<uint32_t>								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
+	const ::gpk::n2<uint32_t>								& textureFontMetrics	= verticalAtlas.View.metrics();// app.TextureFont.View.metrics();
 	gpk_necall(fontTexture.resize(textureFontMetrics), "%s", "");
 	for(uint32_t y = 0, yMax = textureFontMetrics.y; y < yMax; ++y)
 	for(uint32_t x = 0, xMax = textureFontMetrics.x; x < xMax; ++x) {
@@ -83,7 +83,7 @@ int							main					() {
 		::gpk::split(filenameInput, '_', splitFileName);
 		::gpk::array_obj<::gpk::vcc>								splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
-		::gpk::SCoord2<uint32_t>									fontCharSize			= {};
+		::gpk::n2<uint32_t>									fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
 		imageFixed.resize(imageCache.metrics());

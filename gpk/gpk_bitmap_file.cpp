@@ -146,11 +146,11 @@ struct SHeaderFileBMP {
 // BMP Information Header
 struct SHeaderInfoBMP {
 					uint32_t																		Size		;	// Number of bytes in structure
-					::gpk::SCoord2<int32_t>															Metrics		;	// Width and Height of Image
+					::gpk::n2<int32_t>															Metrics		;	// Width and Height of Image
 					uint16_t																		Planes		;	// Always 1
 					uint16_t																		Bpp			;	// Bits Per Pixel (must be 24 for now)
 					uint32_t																		Compression	;	// Must be 0 (uncompressed)
-					::gpk::SCoord2<int32_t>															PPM			;	// Pixels Per Meter
+					::gpk::n2<int32_t>															PPM			;	// Pixels Per Meter
 					uint32_t																		ClrUsed		;	// 0 for 24 bpp bmps
 					uint32_t																		ClrImp		;	// 0
 					uint32_t																		Dunno		;	// 0

@@ -7,7 +7,7 @@
 namespace gpk {
 #pragma pack(push, 1)
 	struct SSTLTriangle {
-		::gpk::SCoord3<float>				Normal			= {};
+		::gpk::n3<float>				Normal			= {};
 		::gpk::STriangle3<float>			Triangle		= {};
 		uint16_t							Attribute		= {};
 	};

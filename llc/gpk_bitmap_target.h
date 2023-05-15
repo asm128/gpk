@@ -10,17 +10,17 @@
 namespace gpk
 {
 	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelBrightness								(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		::gpk::SCoord2<double>														maxRange										= {range, range};
+					::gpk::error_t											drawPixelBrightness								(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+		::gpk::n2<double>														maxRange										= {range, range};
 		double																		rangeUnit										= 1.0 / maxRange.Length();
 		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates
 		for(int32_t x = -(int32_t)range - 1; x < blendCount; ++x) {										// as it causes a visual effect of the light being cut to a rectangle and having sharp borders.
 			if(x || y) {
-				::gpk::SCoord2<_tCoord>													blendPos										= sourcePosition + ::gpk::SCoord2<_tCoord>{(_tCoord)x, (_tCoord)y};
+				::gpk::n2<_tCoord>													blendPos										= sourcePosition + ::gpk::n2<_tCoord>{(_tCoord)x, (_tCoord)y};
 				if( blendPos.x < (int32_t)viewOffscreen.metrics().x && blendPos.x >= 0
 				 && blendPos.y < (int32_t)viewOffscreen.metrics().y && blendPos.y >= 0
 				 ) {
-					::gpk::SCoord2<_tCoord>													brightDistance									= blendPos - sourcePosition;
+					::gpk::n2<_tCoord>													brightDistance									= blendPos - sourcePosition;
 					double																	brightDistanceLength							= brightDistance.Length();
 					double																	distanceFactor									= brightDistanceLength * rangeUnit;
 					if(distanceFactor <= 1.0) {
@@ -33,7 +33,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelLight									(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::SCoord2<_tCoord> & sourcePosition, const _tCell& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+					::gpk::error_t											drawPixelLight									(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const _tCell& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		if( ((uint32_t)sourcePosition.x) < viewOffscreen.metrics().x
 		 && ((uint32_t)sourcePosition.y) < viewOffscreen.metrics().y
 		 )
@@ -95,7 +95,7 @@ namespace gpk
 		const int32_t																startX										= ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius));
 		for(int32_t y = startY, yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = startX; x < xStop; ++x) {
-			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
+			::gpk::n2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
 				if(circle.Center.x - circle.Radius < 0)
@@ -113,13 +113,13 @@ namespace gpk
 	}
 
 	template<typename _tCoord, typename _tColor>
-	static					::gpk::error_t									drawCircle									(const ::gpk::SCoord2<uint32_t>& targetMetrics, const ::gpk::SCircle<_tCoord>& circle, ::gpk::apod<::gpk::SCoord2<int32_t>>& out_Points)			{
+	static					::gpk::error_t									drawCircle									(const ::gpk::n2<uint32_t>& targetMetrics, const ::gpk::SCircle<_tCoord>& circle, ::gpk::apod<::gpk::n2<int32_t>>& out_Points)			{
 		int32_t																		xStop										= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double																		radiusSquared								= circle.Radius * circle.Radius;
 		int32_t																		pixelsDrawn									= 0;
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
-			::gpk::SCoord2<int32_t>														cellCurrent									= {x, y};
+			::gpk::n2<int32_t>														cellCurrent									= {x, y};
 			double																		distanceSquared								= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
 				if(circle.Center.x - circle.Radius < 0)
@@ -191,13 +191,13 @@ namespace gpk
 		return pixelsDrawn;
 	}
 
-	typedef		::gpk::error_t												(*gpk_raster_callback)						(void* bitmapTarget, const ::gpk::SCoord2<uint32_t>& bitmapMetrics, const ::gpk::SCoord2<uint32_t>& cellPos, const void* value);
+	typedef		::gpk::error_t												(*gpk_raster_callback)						(void* bitmapTarget, const ::gpk::n2<uint32_t>& bitmapMetrics, const ::gpk::n2<uint32_t>& cellPos, const void* value);
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									rasterLine									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2<_tCoord>& line, gpk_raster_callback callback)				{
-		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
+		::gpk::n2<float>														A											= line.A.template Cast<float>();
+		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -207,7 +207,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -244,8 +244,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static					::gpk::error_t									drawLine									(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::SLine2<_tCoord>& line)				{
-		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
+		::gpk::n2<float>														A											= line.A.template Cast<float>();
+		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		if(line.A.x == line.B.x)
 			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
 		else if(line.A.y == line.B.y)
@@ -260,7 +260,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -296,9 +296,9 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)				{
-		::gpk::SCoord2<float>														A											= line.A.template Cast<float>();
-		::gpk::SCoord2<float>														B											= line.B.template Cast<float>();
+	static					::gpk::error_t									drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
+		::gpk::n2<float>														A											= line.A.template Cast<float>();
+		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -308,7 +308,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::SCoord2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int16_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int16_t																		y											= (int16_t)A.y;
@@ -344,7 +344,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(const ::gpk::SCoord2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::apod<::gpk::SCoord2<int16_t>>& out_Points)				{
+	static					::gpk::error_t									drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
 		return drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace

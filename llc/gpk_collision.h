@@ -14,7 +14,7 @@ namespace gpk
 					::gpk::error_t											line_line_intersect
 		( const ::gpk::SLine2<_tCoord>	& line1
 		, const ::gpk::SLine2<_tCoord>	& line2
-		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
+		, ::gpk::n2<_tCoord>		& out_intersect_point
 		)
 	{
 		double																		detL1						= ::gpk::determinant(line1);
@@ -46,13 +46,13 @@ namespace gpk
 	// returns t value of intersection and intersection point q
 	template<typename _tAxis>
 	int32_t																	intersectRaySphere
-		( const ::gpk::SCoord3<_tAxis>	& position
-		, const ::gpk::SCoord3<_tAxis>	& direction
+		( const ::gpk::n3<_tAxis>	& position
+		, const ::gpk::n3<_tAxis>	& direction
 		, const ::gpk::SSphere<_tAxis>	& sphere
 		, float							& t
-		, ::gpk::SCoord3<_tAxis>		& q
+		, ::gpk::n3<_tAxis>		& q
 		) {
-		const ::gpk::SCoord3<_tAxis>							m						= position - sphere.Center;
+		const ::gpk::n3<_tAxis>							m						= position - sphere.Center;
 		double													b						= m.Dot(direction);
 		double													c						= m.Dot(m) - sphere.Radius * sphere.Radius;
 
@@ -74,7 +74,7 @@ namespace gpk
 	template<typename _tCoord>
 					::gpk::error_t											point_in_segment
 		( const ::gpk::SLine2<_tCoord>	& segment
-		, const ::gpk::SCoord2<_tCoord>	& point
+		, const ::gpk::n2<_tCoord>	& point
 		)
 	{
 		return (	point.x >=	::gpk::min(segment.A.x, segment.B.x)
@@ -88,7 +88,7 @@ namespace gpk
 					::gpk::error_t											line_segment_intersect
 		( const ::gpk::SLine2<_tCoord>	& line
 		, const ::gpk::SLine2<_tCoord>	& segment
-		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
+		, ::gpk::n2<_tCoord>		& out_intersect_point
 		)
 	{
 		::gpk::error_t																collision					= line_line_intersect(line, segment, out_intersect_point);
@@ -100,7 +100,7 @@ namespace gpk
 					::gpk::error_t											segment_segment_intersect
 		( const ::gpk::SLine2<_tCoord>	& segment1
 		, const ::gpk::SLine2<_tCoord>	& segment2
-		, ::gpk::SCoord2<_tCoord>		& out_intersect_point
+		, ::gpk::n2<_tCoord>		& out_intersect_point
 		)
 	{
 		::gpk::error_t																collision					= line_segment_intersect(segment1, segment2, out_intersect_point);
@@ -110,7 +110,7 @@ namespace gpk
 
 	template<typename _tCoord>
 						::gpk::error_t										buildAABBSegments
-		( const ::gpk::SCoord2<_tCoord> & center
+		( const ::gpk::n2<_tCoord> & center
 		, const _tCoord					halfSizeBox
 		,		::gpk::SLine2<_tCoord>	& left
 		,		::gpk::SLine2<_tCoord>	& top
@@ -118,7 +118,7 @@ namespace gpk
 		,		::gpk::SLine2<_tCoord>	& bottom
 		)
 	{
-		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
+		typedef	::gpk::n2<_tCoord>												TCoord2;
 		left																	= {center + TCoord2{-halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox,-halfSizeBox}};
 		top																		= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox, halfSizeBox}};
 		right																	= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{ halfSizeBox,-halfSizeBox}};
@@ -135,7 +135,7 @@ namespace gpk
 		,		::gpk::SLine2<_tCoord>			& bottom
 		)
 	{
-		typedef	::gpk::SCoord2<_tCoord>												TCoord2;
+		typedef	::gpk::n2<_tCoord>												TCoord2;
 		left																	= {rect.Offset										, rect.Offset + TCoord2{0			, rect.Size.y}};
 		top																		= {rect.Offset + TCoord2{0, rect.Size.y}			, rect.Offset + TCoord2{rect.Size.x	, rect.Size.y}};
 		right																	= {rect.Offset + TCoord2{rect.Size.x, rect.Size.y}	, rect.Offset + TCoord2{rect.Size.x, 0}};

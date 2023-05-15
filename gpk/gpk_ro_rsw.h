@@ -11,14 +11,14 @@ namespace gpk
 					char													part0			[40];
 					char													part1			[40];
 					char													part2			[40];
-					::gpk::SCoord3<float>									Position		;
-					::gpk::SCoord3<float>									Rotation		;
-					::gpk::SCoord3<float>									Scale			;
+					::gpk::n3<float>									Position		;
+					::gpk::n3<float>									Rotation		;
+					::gpk::n3<float>									Scale			;
 					char													u0				;
 					char													uf0				[4];
 					char													somePath		[16];
 					char													unkstr			[12];
-					::gpk::SCoord3<int8_t>									unkchars		;
+					::gpk::n3<int8_t>									unkchars		;
 					uint32_t												minusone		;
 					char													somevals		[8];
 					float													part3			;
@@ -28,15 +28,15 @@ namespace gpk
 	struct SLightInfoRSW {
 					char													Name			[40];
 					char													ToDo			[40];
-					::gpk::SCoord3<float>									Position 		;
-					::gpk::SCoord3<float>									Color			;
+					::gpk::n3<float>									Position 		;
+					::gpk::n3<float>									Color			;
 					float													ToDo2			;
 	};
 
 	struct SEffectInfoRSW {
 					char													name			[40];
 					char													nameUnk			[40];
-					::gpk::SCoord3<float>									position		;
+					::gpk::n3<float>									position		;
 					int														id				;
 					float													loop			;
 					float													param1			;
@@ -50,7 +50,7 @@ namespace gpk
 					char													strUnk0			[40];
 					char													fileName		[40];
 					char													strUnk1			[40];
-					::gpk::SCoord3<float>									position		;
+					::gpk::n3<float>									position		;
 					float													vol				;
 					int32_t													width			;
 					int32_t													height			;
@@ -67,9 +67,9 @@ namespace gpk
 					int32_t													AnimType		;
 					float													AnimSpeed		;
 					int32_t													BlockType		;
-					::gpk::SCoord3<float>									Position		;
-					::gpk::SCoord3<float>									Rotation		;
-					::gpk::SCoord3<float>									Scale			;
+					::gpk::n3<float>									Position		;
+					::gpk::n3<float>									Rotation		;
+					::gpk::n3<float>									Scale			;
 	};
 
 	struct SRSWWorldWater {
@@ -84,8 +84,8 @@ namespace gpk
 	struct SRSWWorldLight {
 					int32_t													Longitude		;
 					int32_t													Latitude		;
-					::gpk::SCoord3<float>									Diffuse			;
-					::gpk::SCoord3<float>									Ambient			;
+					::gpk::n3<float>									Diffuse			;
+					::gpk::n3<float>									Ambient			;
 					float													Intensity		;
 	};
 
