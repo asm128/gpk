@@ -33,6 +33,13 @@ namespace gpk
 	typedef color_abgr<u8>	abgr8;
 	typedef color_argb<u8>	argb8;
 
+	typedef color_bgr <u16>	bgr16 ;
+	typedef color_rgb <u16>	rgb16 ;
+	typedef color_bgra<u16>	bgra16;
+	typedef color_rgba<u16>	rgba16;
+	typedef color_abgr<u16>	abgr16;
+	typedef color_argb<u16>	argb16;
+
 	typedef color_bgr <f32>	bgrf32;
 	typedef color_rgb <f32>	rgbf32;
 	typedef color_bgra<f32>	bgraf32;

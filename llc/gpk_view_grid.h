@@ -52,9 +52,9 @@ namespace gpk
 		}
 	};
 
-	template<typename _tCell>	using grid					= ::gpk::view2d<_tCell>;
-	template<typename _tCell>	using view_grid				= ::gpk::view2d<_tCell>;
-	template<typename _tCell>	using v2					= ::gpk::view2d<_tCell>;
+	template<typename Val>	using grid					= ::gpk::view2d<Val>;
+	template<typename Val>	using view_grid				= ::gpk::view2d<Val>;
+	template<typename Val>	using v2					= ::gpk::view2d<Val>;
 
 #pragma pack(pop)
 

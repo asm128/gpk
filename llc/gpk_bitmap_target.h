@@ -9,8 +9,8 @@
 
 namespace gpk
 {
-	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelBrightness								(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const _tCell& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	template<typename _tCoord, typename Val>
+					::gpk::error_t											drawPixelBrightness								(::gpk::view2d<Val> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const Val& colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		::gpk::n2<double>														maxRange										= {range, range};
 		double																		rangeUnit										= 1.0 / maxRange.Length();
 		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates
@@ -32,8 +32,8 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tCoord, typename _tCell>
-					::gpk::error_t											drawPixelLight									(::gpk::view2d<_tCell> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const _tCell& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
+	template<typename _tCoord, typename Val>
+					::gpk::error_t											drawPixelLight									(::gpk::view2d<Val> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const Val& colorLight, float maxFactor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
 		if( ((uint32_t)sourcePosition.x) < viewOffscreen.metrics().x
 		 && ((uint32_t)sourcePosition.y) < viewOffscreen.metrics().y
 		 )

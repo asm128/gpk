@@ -26,11 +26,11 @@ namespace gpk
 
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
-	template<typename _tCell>
-	struct array_base : public view<_tCell> {
+	template<typename Val>
+	struct array_base : public view<Val> {
 	protected:
-		typedef									array_base<_tCell>							TypeArray;
-		using									view<_tCell>::Count;
+		typedef									array_base<Val>							TypeArray;
+		using									view<Val>::Count;
 		uint32_t								Size										= 0;
 //		uint32_t								Offset										= 0;
 
@@ -38,11 +38,11 @@ namespace gpk
 		inlcxpr									array_base									(const TypeArray &	other)			noexcept	= delete;
 		inlcxpr									array_base									(const TypeArray &&	other)			noexcept	= delete;
 
-		array_base<_tCell>&						operator =									(const TypeArray &	other)						= delete;
-		array_base<_tCell>&						operator =									(const TypeArray &&	other)						= delete;
+		array_base<Val>&						operator =									(const TypeArray &	other)						= delete;
+		array_base<Val>&						operator =									(const TypeArray &&	other)						= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
 		inlcxpr	uint32_t						calc_reserve_size							(const uint32_t newSize)	const	noexcept	{ return ::gpk::max(newSize, uint32_t(newSize + ::gpk::max(newSize >> 1, 4U)));			}
-		inlcxpr	uint32_t						calc_malloc_size							(const uint32_t newSize)	const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(_tCell), Count*(uint32_t)sizeof(_tCell));	}
+		inlcxpr	uint32_t						calc_malloc_size							(const uint32_t newSize)	const	noexcept	{ return ::gpk::max(newSize* (uint32_t)sizeof(Val), Count*(uint32_t)sizeof(Val));	}
 	}; // array_base
 #pragma pack(pop)
 
@@ -693,12 +693,12 @@ namespace gpk
 	typedef apod<int32_t	>				array_int32			, ai32	, ai32;
 	typedef apod<int64_t	>				array_int64			, ai64	, ai64;
 
-	template<typename _tCell>
-	::gpk::error_t							split					(const ::gpk::view<const _tCell> & target, const _tCell & separator, ::gpk::aobj<::gpk::view<const _tCell>> & split)	{
+	template<typename Val>
+	::gpk::error_t							split					(const ::gpk::view<const Val> & target, const Val & separator, ::gpk::aobj<::gpk::view<const Val>> & split)	{
 		uint32_t									lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view<const _tCell>			newView					= {&target[lastOffset], iChar - lastOffset};
+				const ::gpk::view<const Val>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;
@@ -709,13 +709,13 @@ namespace gpk
 		return (int32_t)split.size();
 	}
 
-	template<typename _tCell>
-	::gpk::error_t							split					(const ::gpk::view<const _tCell> & target, const ::gpk::view<const _tCell>& separators, ::gpk::aobj<::gpk::view<const _tCell>> & split)	{
+	template<typename Val>
+	::gpk::error_t							split					(const ::gpk::view<const Val> & target, const ::gpk::view<const Val>& separators, ::gpk::aobj<::gpk::view<const Val>> & split)	{
 		uint32_t									lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
 			for(uint32_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
 				if(target[iChar] == separators[iSeparator]) {
-					const ::gpk::view<const _tCell>			newView					= {&target[lastOffset], iChar - lastOffset};
+					const ::gpk::view<const Val>			newView					= {&target[lastOffset], iChar - lastOffset};
 					++iChar;
 					gpk_necs(split.push_back(newView));
 					lastOffset								= iChar;
@@ -727,8 +727,8 @@ namespace gpk
 		return (int32_t)split.size();
 	}
 
-	template<typename _tCell>
-	::gpk::error_t							split					(const ::gpk::vcs & target, const _tCell & separator, ::gpk::aobj<::gpk::vcs> & split)	{
+	template<typename Val>
+	::gpk::error_t							split					(const ::gpk::vcs & target, const Val & separator, ::gpk::aobj<::gpk::vcs> & split)	{
 		int32_t										lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {

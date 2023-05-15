@@ -71,7 +71,7 @@ namespace gpk
 		}
 	}; // struct
 
-	template<typename _tCell>	using img		= ::gpk::SImage<_tCell>;
+	template<typename Val>	using img		= ::gpk::SImage<Val>;
 
 	typedef	img<int8_t >		imgi8;
 	typedef	img<int16_t>		imgi16;
@@ -130,8 +130,8 @@ namespace gpk
 		}
 	}; // struct
 
-	template<typename _tCell>	
-	using	imgmono				= ::gpk::SImageMonochrome<_tCell>;
+	template<typename Val>	
+	using	imgmono				= ::gpk::SImageMonochrome<Val>;
 
 	typedef	imgmono<uint64_t>	imgmonou64;
 

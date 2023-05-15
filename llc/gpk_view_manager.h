@@ -7,9 +7,9 @@
 
 namespace gpk
 {
-	template<typename _tCell, size_t _blockSize>
+	template<typename Val, size_t _blockSize>
 	class block_container {
-		::gpk::apobj<::gpk::astatic<_tCell, _blockSize>>	Blocks;
+		::gpk::apobj<::gpk::astatic<Val, _blockSize>>	Blocks;
 		::gpk::apod<uint32_t>								RemainingSpace;
 	public:
 		::gpk::error_t										Clear						()	{ return ::gpk::clear(Blocks, RemainingSpace); }
@@ -29,13 +29,13 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t										push_sequence				(const _tCell* sequence, uint32_t length, ::gpk::view<const _tCell>& out_view)	{
+		::gpk::error_t										push_sequence				(const Val* sequence, uint32_t length, ::gpk::view<const Val>& out_view)	{
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t												& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= length) {
-					_tCell													* sequenceStart				= &Blocks[iBlock]->operator[](_blockSize - blkRemainingSpace);
+					Val													* sequenceStart				= &Blocks[iBlock]->operator[](_blockSize - blkRemainingSpace);
 					out_view											= {sequenceStart, length};
-					memcpy(sequenceStart, sequence, length * sizeof(_tCell));
+					memcpy(sequenceStart, sequence, length * sizeof(Val));
 					blkRemainingSpace									-= length;
 					return iBlock;
 				}
@@ -44,39 +44,39 @@ namespace gpk
 			gpk_necs(Blocks			.resize(Blocks.size() + 1));
 			gpk_necs(RemainingSpace	.resize(Blocks.size(), _blockSize - length));
 			out_view											= {&Blocks[indexNewBlock]->operator[](0), length};
-			memcpy(Blocks[indexNewBlock]->Storage, sequence, length * sizeof(_tCell));
+			memcpy(Blocks[indexNewBlock]->Storage, sequence, length * sizeof(Val));
 			return indexNewBlock;
 		}
 	};
 
-	template<typename _tCell>
+	template<typename Val>
 	class CViewManager	{
 		stacxpr	const uint32_t			BLOCK_SIZE					= 0xFFFF;
 
-		::gpk::block_container<_tCell, BLOCK_SIZE>	Cells;
+		::gpk::block_container<Val, BLOCK_SIZE>	Cells;
 
 	public:
 		::gpk::apod<uint16_t>						Counts;
-		::gpk::apod<const _tCell*>					Views;
+		::gpk::apod<const Val*>					Views;
 
 													~CViewManager				()																					{}
 
 		::gpk::error_t								Save						(::gpk::apod<uint8_t> & output)	const	{
 			gpk_necs(::gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
-				gpk_necs(output.append((const uint8_t*)Views[iArray], Counts[iArray] * sizeof(_tCell)));
+				gpk_necs(output.append((const uint8_t*)Views[iArray], Counts[iArray] * sizeof(Val)));
 
 			return 0;
 		}
 
 		::gpk::error_t								Load						(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Counts));
-			::gpk::view<const _tCell>						out_view; 
+			::gpk::view<const Val>						out_view; 
 			uint32_t										offsetByte					= 0;
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {
 				uint32_t										elementCount				= Counts[iArray];
-				uint32_t										byteCount					= elementCount * sizeof(_tCell);
-				gpk_necs(Cells.push_sequence((const _tCell*)&input[offsetByte], elementCount, out_view));
+				uint32_t										byteCount					= elementCount * sizeof(Val);
+				gpk_necs(Cells.push_sequence((const Val*)&input[offsetByte], elementCount, out_view));
 				offsetByte									+= byteCount;
 				gpk_necs(Views.push_back(out_view.begin()));
 			}
@@ -84,24 +84,24 @@ namespace gpk
 			return 0;
 		}
 
-		inline	::gpk::view<const _tCell>			View						(uint32_t index)							const	{ return {Views[index], Counts[index]}; }
-		inline	::gpk::error_t						View						(const _tCell * elements, uint16_t count)			{ ::gpk::view<const _tCell> out_view; return View(elements, count, out_view); }
+		inline	::gpk::view<const Val>			View						(uint32_t index)							const	{ return {Views[index], Counts[index]}; }
+		inline	::gpk::error_t						View						(const Val * elements, uint16_t count)			{ ::gpk::view<const Val> out_view; return View(elements, count, out_view); }
 
-		::gpk::error_t								Index						(const ::gpk::view<const _tCell> & elements) {
+		::gpk::error_t								Index						(const ::gpk::view<const Val> & elements) {
 			ree_if(elements.size() > CViewManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(uint32_t iView = 0, countLabels = Views.size(); iView < countLabels; ++iView) {
 				if(elements.size() != Counts[iView])
 					continue;
 
-				const _tCell									* pStored					= Views[iView];
+				const Val									* pStored					= Views[iView];
 				if(0 == memcmp(pStored, elements.begin(), elements.byte_count()))
 					return iView;
 			}
 			return -1;
 		}
 
-		::gpk::error_t								View						(const _tCell * elements, uint16_t count, ::gpk::view<const _tCell>& out_view)	{
+		::gpk::error_t								View						(const Val * elements, uint16_t count, ::gpk::view<const Val>& out_view)	{
 			if(0 == count || 0 == elements) {
 				out_view									= {};
 				return -1;
