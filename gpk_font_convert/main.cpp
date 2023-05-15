@@ -11,15 +11,15 @@
 #include "gpk_stdstring.h"
 
 ::gpk::error_t											pngToFont
-	( ::gpk::SImage<::gpk::SColorBGRA>	& imageCache
-	, ::gpk::SImage<::gpk::SColorBGRA>	& verticalAtlas
+	( ::gpk::SImage<::gpk::bgra>		& imageCache
+	, ::gpk::SImage<::gpk::bgra>		& verticalAtlas
 	, ::gpk::SImageMonochrome<uint32_t>	& fontTexture
 	, ::gpk::vcc						filenameOutput
-	, const ::gpk::SCoord2<uint32_t>	fontCharSize
+	, const ::gpk::n2u32				fontCharSize
 	, bool								negateBit
 	) {
-	const uint32_t ROW_WIDTH = (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
-	verticalAtlas.resize(fontCharSize.x, fontCharSize.y * 256);
+	const uint32_t						ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
+	verticalAtlas.resize(::gpk::n2u32{fontCharSize.x, fontCharSize.y * 256});
 	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
 		const uint32_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
 		const uint32_t												dstOffsetY				= iChar * fontCharSize.y;
@@ -63,16 +63,16 @@ int							main					() {
 	::gpk::vcs						pathToSearch			= {"../gpk_data/fonts/cp437"};
 	gpk_necall(::gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
 	::gpk::SPNGData						pngCache				= {};
-	::gpk::SImage<::gpk::bgra>			imageCache				= {};
-	::gpk::SImage<::gpk::bgra>			imageFixed				= {};
-	::gpk::SImage<::gpk::bgra>			verticalAtlas			= {};
+	::gpk::img<::gpk::bgra>				imageCache				= {};
+	::gpk::img<::gpk::bgra>				imageFixed				= {};
+	::gpk::img<::gpk::bgra>				verticalAtlas			= {};
 	::gpk::SImageMonochrome<uint32_t>							fontTexture				= {};
-	::gpk::array_pod<char_t>									filenameOutput			= {};
+	::gpk::apod<char>									filenameOutput			= {};
 	::gpk::vcc													extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcc													filenameInput			= fontFiles[iFile];
 		ci_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
-		::gpk::array_pod<char_t>									lowercaseExtension		= ::gpk::toString(extension);
+		::gpk::apod<char>									lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
@@ -86,20 +86,17 @@ int							main					() {
 		::gpk::SCoord2<uint32_t>									fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
-		imageFixed.resize
-			( imageCache.metrics().x
-			, imageCache.metrics().y
-			);
+		imageFixed.resize(imageCache.metrics());
 		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
 		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-			const uint32_t										offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
-			const uint32_t										dstX					= offsetX + (x % fontCharSize.x);
-			::gpk::SColorBGRA									& dstPixel				= imageFixed[y][x];
-			dstPixel										= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
+			const uint32_t					offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
+			const uint32_t					dstX					= offsetX + (x % fontCharSize.x);
+			::gpk::SColorBGRA				& dstPixel				= imageFixed[y][x];
+			dstPixel					= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}
-		::gpk::array_pod<ubyte_t> pngBytes;
+		::gpk::au8						pngBytes;
 		::gpk::pngFileWrite(imageFixed, pngBytes);
-		::gpk::fileFromMemory(filenameOutput, {(const byte_t*)pngBytes.begin(), pngBytes.size()});
+		::gpk::fileFromMemory(filenameOutput, pngBytes);
 
 		filenameOutput[filenameOutput.size() - 3]		= 'b';
 		filenameOutput[filenameOutput.size() - 2]		= '6';

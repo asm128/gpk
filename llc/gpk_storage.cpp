@@ -283,7 +283,7 @@ static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, cons
 				info_printf("Directory: %s.", sPath);
 			}
 			else {
-				gpk_necall(pathContents.Files.push_back(::gpk::vci8{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+				gpk_necall(pathContents.Files.push_back(::gpk::vcc{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 				info_printf("File: %s.", sPath);
 			}
 		}

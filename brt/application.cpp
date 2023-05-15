@@ -62,8 +62,8 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			}
 		}
 	}
-	::gpk::array_pod<char_t>	& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
-	::gpk::array_pod<char_t>	& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
+	::gpk::apod<char>				& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
+	::gpk::apod<char>				& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
 	if(app.ProcessParams.size()) {
 		szCmdlineFinal.push_back(' ');
 		szCmdlineFinal.append(app.ProcessParams);
@@ -78,12 +78,12 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 static	::gpk::error_t		createChildProcess
 	(	::brt::SProcess					& process
 	,	::gpk::vu8						environmentBlock
-	,	::gpk::view_char				appPath
-	,	::gpk::view_char				commandLine
+	,	::gpk::vcc						appPath
+	,	::gpk::vc						commandLine
 	,	bool							debugMessageBox			= false
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	::gpk::view_char				szCmdlineApp			= appPath;
-	::gpk::view_char				szCmdlineFinal			= commandLine;
+	::gpk::vcc						szCmdlineApp			= appPath;
+	::gpk::vc						szCmdlineFinal			= commandLine;
 	bool							bSuccess				= false;
 	static constexpr const bool		isUnicodeEnv			= false;
 	static constexpr const uint32_t	creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
@@ -102,7 +102,7 @@ static	::gpk::error_t		createChildProcess
 		) ? true : false;  // receives PROCESS_INFORMATION
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
 	if(debugMessageBox) {
-		::gpk::array_pod<char_t>		userMessage				= {};
+		::gpk::apod<char>		userMessage				= {};
 		userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
 		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
 		MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);
@@ -302,8 +302,8 @@ static int					REM_tmain0							()		{
 #define VARNAME "MyVariable"
 
 static int					REM_tmain1			() {
-	static constexpr	const uint32_t	BUFSIZE					= 4096;
-	::gpk::view_const_string		szAppName			= "ex3.exe";
+	stacxpr	const uint32_t			BUFSIZE					= 4096;
+	::gpk::vcs						szAppName			= "ex3.exe";
 	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
 	PROCESS_INFORMATION				pi					= {};
 	BOOL							fExist				= 0
@@ -335,7 +335,7 @@ static int					REM_tmain1			() {
 	si							= {sizeof(STARTUPINFOA)};
 	static constexpr const bool		isUnicodeEnv			= false;
 	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
-	::gpk::array_pod<char_t>		bufferAppName			= ::gpk::toString(szAppName);
+	::gpk::apod<char>				bufferAppName			= ::gpk::toString(szAppName);
 	ree_if(FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
 	WaitForSingleObject(pi.hProcess, INFINITE);
 	// - Restore the original environment variable.
