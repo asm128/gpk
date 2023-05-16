@@ -59,11 +59,11 @@ static	::gpk::error_t								transformTriangles
 	, const ::gpk::SEngineSceneConstants	& constants
 	, int32_t								iRenderNode
 	) {
-	const ::gpk::SRenderNode								& renderNode			= scene.ManagedRenderNodes.RenderNodes[iRenderNode];
+	const ::gpk::SRenderNode								& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
 	const ::gpk::SGeometryMesh								& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
 	verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iRenderNode, renderNode.Mesh, renderNode.Slice, scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 
-	const ::gpk::SRenderNodeTransforms						& transforms				= scene.ManagedRenderNodes.Transforms[iRenderNode];
+	const ::gpk::SRenderNodeTransforms						& transforms				= scene.RenderNodes.Transforms[iRenderNode];
 	const ::gpk::m4<float>									& worldTransform			= transforms.World;
 	const ::gpk::vcu16										indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::v1cu16	{(const uint16_t	*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t	 )}	: ::gpk::v1cu16{};
 	const ::gpk::v1c3f										positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::v1c3f	{(const ::gpk::n3f	*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f)}	: ::gpk::v1c3f{};
@@ -132,16 +132,16 @@ static	::gpk::error_t								drawBuffers
 	, const ::gpk::SEngineSceneConstants	& constants
 ) {	//
 	static ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
-	for(uint32_t iRenderNode = 0, countNodes = scene.ManagedRenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
-		const ::gpk::SRenderNodeFlags					& renderNodeFlags		= scene.ManagedRenderNodes.Flags[iRenderNode];
+	for(uint32_t iRenderNode = 0, countNodes = scene.RenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
+		const ::gpk::SRenderNodeFlags					& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
 		if(renderNodeFlags.NoDraw)
 			continue;
 
-		const ::gpk::SRenderNode						& renderNode			= scene.ManagedRenderNodes.RenderNodes[iRenderNode];
+		const ::gpk::SRenderNode						& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
 		if(renderNode.Mesh >= scene.Graphics->Meshes.size())
 			continue;
 		
-		const ::gpk::SRenderNodeTransforms				& transforms			= scene.ManagedRenderNodes.Transforms[iRenderNode];
+		const ::gpk::SRenderNodeTransforms				& transforms			= scene.RenderNodes.Transforms[iRenderNode];
 		const ::gpk::m4f								& worldTransform		= transforms.World;
 		if((worldTransform.GetTranslation() - constants.CameraPosition).Normalize().Dot(constants.CameraFront) <= 0)
 			return 0;

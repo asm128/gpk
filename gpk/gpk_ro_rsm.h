@@ -1,5 +1,6 @@
 #include "gpk_array.h"
 #include "gpk_coord.h"
+#include "gpk_quat.h"
 #include "gpk_array_static.h"
 
 #ifndef GPK_RSM_H_02938402983
@@ -64,15 +65,15 @@ namespace gpk
 		char									RootNodeName[40];
 		::gpk::aobj<::gpk::SRSMNode>			Nodes;
 	};
-	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents& loaded, const ::gpk::vu8	& input);
-	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents& loaded, FILE				* input);
-	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents& loaded, const ::gpk::vcs	& input);
+	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu8	& input);
+	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, FILE				* input);
+	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input);
 
 	struct SModelNodeRSM {
 		::gpk::apod<::gpk::n3f32>				Normals			;
 		::gpk::apod<::gpk::n3f32>				Vertices		;
 		::gpk::apod<::gpk::n2f32>				UVs				;
-		::gpk::apod<::gpk::STriangle<uint32_t>>	VertexIndices	;
+		::gpk::apod<::gpk::triu32>				VertexIndices	;
 		int32_t									TextureIndex	;
 		int32_t									RSMNodeIndex	;
 		//::gpk::ai32					SkinIndices		; // one per triangle (VertexIndices.size() / 3)

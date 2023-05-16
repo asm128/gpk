@@ -72,4 +72,8 @@ namespace gpk
 	typedef double			f64	;
 }
 
+#define GPK_DEFAULT_OPERATOR_NE(_otherType, ...)	\
+	inlcxpr	bool	operator!=	(const _otherType & other) const noexcept { return !operator==(other);	} \
+	inlcxpr	bool	operator==	(const _otherType & other) const noexcept { return __VA_ARGS__;			}
+
 #endif // GPK_TYPEINT_H_29873490827342

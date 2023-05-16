@@ -51,7 +51,10 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_n3.h" />
+    <ClInclude Include="gpk_quat.h" />
     <ClInclude Include="gpk_sysevent.h" />
+    <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
     <ClInclude Include="gpk_voxel_geometry.h" />
@@ -126,6 +129,7 @@
     <ClInclude Include="gpk_xml_reader.h" />
     <ClInclude Include="gpk_voxel.h" />
     <ClInclude Include="gpk_event.h" />
+    <ClInclude Include="gpk_n2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />

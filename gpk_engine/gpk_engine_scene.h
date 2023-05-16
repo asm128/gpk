@@ -60,17 +60,17 @@ namespace gpk
 		);
 
 	struct SVSCache {
-		::gpk::apod<::gpk::STriangle<float>>	TriangleWeights			= {};
+		::gpk::apod<::gpk::trif32>				TriangleWeights			= {};
 		::gpk::apod<::gpk::n2i16>				SolidPixelCoords		= {};
 		::gpk::apod<::gpk::n3f>					WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {
-		::gpk::apod<::gpk::STriangle3<float>>	PositionsWorld			= {};
-		::gpk::apod<::gpk::STriangle3<float>>	PositionsScreen			= {};
-		::gpk::apod<::gpk::STriangle3<float>>	Normals					= {};
-		::gpk::apod<::gpk::STriangle3<float>>	NormalsScreen			= {};
-		::gpk::apod<::gpk::STriangle2<float>>	UVs						= {};
+		::gpk::apod<::gpk::tri3f32>	PositionsWorld			= {};
+		::gpk::apod<::gpk::tri3f32>	PositionsScreen			= {};
+		::gpk::apod<::gpk::tri3f32>	Normals					= {};
+		::gpk::apod<::gpk::tri3f32>	NormalsScreen			= {};
+		::gpk::apod<::gpk::tri2f32>	UVs						= {};
 	};
 
 	struct SEngineRenderCache {
@@ -128,19 +128,19 @@ namespace gpk
 
 	struct SEngineScene {
 		::gpk::pobj<::gpk::SEngineGraphics>	Graphics				= {};
-		::gpk::SRenderNodeManager			ManagedRenderNodes		= {};
+		::gpk::SRenderNodeManager			RenderNodes				= {};
 		::gpk::SEngineRenderCache			RenderCache				= {};
 
-		::gpk::error_t						Save				(::gpk::apod<uint8_t> & output)		const	{
-			gpk_necs(Graphics			->Save(output));
-			gpk_necs(ManagedRenderNodes	 .Save(output));
-			//gpk_necs(RenderCache		 .Save(output));
+		::gpk::error_t						Save					(::gpk::apod<uint8_t> & output)		const	{
+			gpk_necs(Graphics		->Save(output));
+			gpk_necs(RenderNodes	 .Save(output));
+			//gpk_necs(RenderCache	 .Save(output));
 			return 0;
 		}
-		::gpk::error_t						Load				(::gpk::vcu8 & input) {
-			gpk_necs(Graphics			->Load(input));
-			gpk_necs(ManagedRenderNodes	 .Load(input));
-			//gpk_necs(RenderCache		 .Load(input));
+		::gpk::error_t						Load					(::gpk::vcu8 & input) {
+			gpk_necs(Graphics		->Load(input));
+			gpk_necs(RenderNodes	 .Load(input));
+			//gpk_necs(RenderCache	 .Load(input));
 			return 0;
 		}
 	};

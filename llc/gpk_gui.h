@@ -232,9 +232,9 @@ namespace gpk
 		};
 #pragma pack(pop)
 
-	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::v1<const ::gpk::SSysEvent> sysEvents = {});
+	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::v1<const ::gpk::SSysEvent> in_Events = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2<uint16_t> & targetSize, bool forceUpdate);
-	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::v2<::gpk::SColorBGRA> target);
+	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::v2<::gpk::bgra> target);
 	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::apod<uint32_t> & controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI & gui);
 	::gpk::error_t			guiSelect						(::gpk::SGUI & gui, int32_t controlToSelect);

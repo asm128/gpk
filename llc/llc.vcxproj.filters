@@ -408,6 +408,18 @@
     <ClInclude Include="gpk_event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_n2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_n3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">

@@ -211,10 +211,18 @@ namespace gpk
 	typedef	::gpk::view<const vci16	>	vcvci16;
 	typedef	::gpk::view<const vci32	>	vcvci32;
 	typedef	::gpk::view<const vci64	>	vcvci64;
+	typedef	::gpk::view<::gpk::vf32	>	vvf32;
+	typedef	::gpk::view<::gpk::vf64	>	vvf64;
+	typedef	::gpk::view<const vcf32	>	vcvcf32;
+	typedef	::gpk::view<const vcf64	>	vcvcf64;
 
-	stacxpr	::gpk::vcc		STR_NULL		= {4, "null"};
-	stacxpr	::gpk::vcc		STR_TRUE		= {4, "true"};
-	stacxpr	::gpk::vcc		STR_FALSE		= {5, "false"};
+	stacxpr	::gpk::vcc	STR_NULL		= {4, "null"};
+	stacxpr	::gpk::vcc	STR_TRUE		= {4, "true"};
+	stacxpr	::gpk::vcc	STR_FALSE		= {5, "false"};
+	stincxp	const char*	bool2char		(bool b)	{ return b ? ::gpk::STR_TRUE.begin() : ::gpk::STR_FALSE.begin(); } 
+	stincxp	uint8_t		bool2u8			(bool b)	{ return b ? 1 : 0; } 
+	stincxp	uint8_t		bool2i8			(bool b)	{ return b ? 1 : 0; } 
+
 
 	struct view_string : public view<char> {
 		inlcxpr				view_string				()														= default;
