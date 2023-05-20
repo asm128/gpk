@@ -28,47 +28,47 @@
 
 namespace gpk
 {
-	stacxpr	const uintptr_t											calc_align_address			(uintptr_t alignment, uintptr_t address)			noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
-	stincxp	const uintptr_t											calc_align_address_4		(uintptr_t address)									noexcept	{ return calc_align_address( 4, address); }
-	stincxp	const uintptr_t											calc_align_address_8		(uintptr_t address)									noexcept	{ return calc_align_address( 8, address); }
-	stincxp	const uintptr_t											calc_align_address_16		(uintptr_t address)									noexcept	{ return calc_align_address(16, address); }
-	stincxp	const uintptr_t											calc_align_address_32		(uintptr_t address)									noexcept	{ return calc_align_address(32, address); }
-	stincxp	const uintptr_t											calc_align_address_64		(uintptr_t address)									noexcept	{ return calc_align_address(64, address); }
+	stacxpr	const uintptr_t				calc_align_address			(uintptr_t alignment, uintptr_t address)	noexcept	{ return (alignment - ((alignment - 1) & address)) & (alignment - 1); }
+	stincxp	const uintptr_t				calc_align_address_4		(uintptr_t address)							noexcept	{ return calc_align_address( 4, address); }
+	stincxp	const uintptr_t				calc_align_address_8		(uintptr_t address)							noexcept	{ return calc_align_address( 8, address); }
+	stincxp	const uintptr_t				calc_align_address_16		(uintptr_t address)							noexcept	{ return calc_align_address(16, address); }
+	stincxp	const uintptr_t				calc_align_address_32		(uintptr_t address)							noexcept	{ return calc_align_address(32, address); }
+	stincxp	const uintptr_t				calc_align_address_64		(uintptr_t address)							noexcept	{ return calc_align_address(64, address); }
 
 #if defined(GPK_WINDOWS)
-	stainli	void													gpk_free					(void* ptr)											noexcept	{ _aligned_free(ptr);									}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
+	stainli	void						gpk_free					(void* ptr)									noexcept	{ _aligned_free(ptr);									}
+	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)_aligned_malloc(size + 1, GPK_MALLOC_ALIGN); return p; }
 #elif defined(GPK_NEWLIB)
-	stainli	void													gpk_free					(void* ptr)											noexcept	{
+	stainli	void						gpk_free					(void* ptr)									noexcept	{
 		::free(ptr);
 	}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{
+	stainli	void*						gpk_malloc					(size_t size)								noexcept	{
 		int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1);
 		return p;
 	}
 #elif defined(GPK_ATMEL)
-	stainli	void													gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
+	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #else
-	stainli	void													gpk_free					(void* ptr)											noexcept	{ ::free(ptr);											}
-	stainli	void*													gpk_malloc					(size_t size)										noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
+	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
 #endif
 
 	template<typename _typePtr>
-	stainli	void													safe_gpk_free				(_typePtr &p)										noexcept	{
-		_typePtr																			_pepe						= p;
-		p																				= 0;
+	stainli	void						safe_gpk_free				(_typePtr &p)								noexcept	{
+		_typePtr								_pepe						= p;
+		p									= 0;
 		gpk_free((void*)_pepe);
 	}
 
 	struct auto_gpk_free : public ::gpk::auto_handler<void*, nullptr>	{ using TWrapper::auto_handler; inline ~auto_gpk_free() noexcept { close(); } inline void close() noexcept { safe_gpk_free(Handle); } };
 
 #define GREF_PAGE_SIZE_MAX (4096)
-	template<typename _tBase>	stincxp		uint32_t				get_page_size				()																noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
-	template<typename _tBase>	stincxp		uint32_t				get_type_size				()																noexcept	{ return (uint32_t) sizeof(_tBase); }
-	template<typename _tBase>	stincxp		uint32_t				get_type_size				(const _tBase&)													noexcept	{ return (uint32_t) sizeof(_tBase); }
-	template<typename _tBase>	stincxp		uint32_t				get_type_size_padded		(uint32_t paddingInBytes)										noexcept	{ return paddingInBytes ? (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
-	template <typename _tBase>	stincxp		uint32_t				get_type_align				()																noexcept	{
+	template<typename _tBase>	stincxp	uint32_t	get_page_size				()							noexcept	{ return (uint32_t)(sizeof(_tBase) <= GREF_PAGE_SIZE_MAX) ? GREF_PAGE_SIZE_MAX/sizeof(_tBase) : 1; };
+	template<typename _tBase>	stincxp	uint32_t	get_type_size				()							noexcept	{ return (uint32_t) sizeof(_tBase); }
+	template<typename _tBase>	stincxp	uint32_t	get_type_size				(const _tBase&)				noexcept	{ return (uint32_t) sizeof(_tBase); }
+	template<typename _tBase>	stincxp	uint32_t	get_type_size_padded		(uint32_t paddingInBytes)	noexcept	{ return paddingInBytes ? (uint32_t) ( (sizeof(_tBase) / paddingInBytes) + one_if(sizeof(_tBase) % paddingInBytes) ) * paddingInBytes : sizeof(_tBase); }
+	template<typename _tBase>	stincxp	uint32_t	get_type_align				()							noexcept	{
 		return (uint32_t)
 			(	(0 == (sizeof(_tBase) % 32))	? 32
 			:	(0 == (sizeof(_tBase) % 16))	? 16
@@ -79,7 +79,7 @@ namespace gpk
 			);
 	}
 
-	template <typename _tBase>	stincxp		uint32_t				get_type_align_multiplier	()																noexcept	{
+	template <typename _tBase>	stincxp	uint32_t	get_type_align_multiplier	()							noexcept	{
 		return (uint32_t)
 			(	(0 == (sizeof(_tBase) % 32)) ? sizeof(_tBase) / 32
 			:	(0 == (sizeof(_tBase) % 16)) ? sizeof(_tBase) / 16
@@ -90,7 +90,7 @@ namespace gpk
 			);
 	}
 
-	template <typename _tBase>	stainli	int32_t					podcmp						(const _tBase* pA, const _tBase* pB)							noexcept	{
+	template <typename _tBase>	stainli	int32_t		podcmp						(const _tBase* pA, const _tBase* pB)							noexcept	{
 		if(0 == pA)
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)
@@ -99,14 +99,14 @@ namespace gpk
 		return memcmp(pA, pB, sizeof(_tBase));
 	}
 
-	template <typename _tBase>	stainli	_tBase*					chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
+	template <typename _tBase>	stainli	_tBase*		chkcpy						(_tBase* destination, const _tBase* source, uint32_t count)		noexcept	{
 			for (uint32_t i = 0; i < count; ++i)
 				if (destination[i] != source[i])
 					destination[i]  = source[i];
 			return destination;
 	}
 
-	template <typename _tBase>								_tBase*					podcpy						(_tBase* dest, const _tBase* source)							noexcept	{
+	template <typename _tBase>			_tBase*		podcpy						(_tBase* dest, const _tBase* source)							noexcept	{
 		stacxpr	const uint32_t													dataMultiplier				= (uint32_t)get_type_align_multiplier<_tBase>();
 		stacxpr	const uint32_t													typeAlign					= (uint32_t)get_type_align<_tBase>();
 		switch (typeAlign) {
@@ -123,7 +123,7 @@ namespace gpk
 		return dest;
 	}
 
-	template <typename _tBase, size_t _sizeArray>			_tBase*					memcpy_s					(_tBase (&dest)[_sizeArray], const _tBase (&src)[_sizeArray])	noexcept	{ ::memcpy(dest, src, sizeof(_tBase) * _sizeArray); return dest; }
+	template <typename _t, size_t _len>	_t*			memcpy_s					(_t (&dest)[_len], const _t (&src)[_len])				noexcept	{ ::memcpy(dest, src, sizeof(_t) * _len); return dest; }
 }	// namespace
 
 #endif // GPK_MEMORY_H__92836409283642038462309846

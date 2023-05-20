@@ -161,7 +161,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	::gpk::STimer														timer;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
-		::gpk::mutex_guard														lock						(app.LockRender);
+		::std::lock_guard											lock						(app.LockRender);
 		app.Framework.RootWindow.BackBuffer									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;
@@ -180,11 +180,11 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	}
 	::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>>				& receivedPerClient		= app.ReceivedPerClient;
 	{	// pick up messages for later processing
-		::gpk::mutex_guard																	lock						(app.Server.Mutex);
+		::std::lock_guard																	lock						(app.Server.Mutex);
 		receivedPerClient.resize(app.Server.Clients.size());
 		for(uint32_t iClient = 0; iClient < app.Server.Clients.size(); ++iClient) {
 			::gpk::pobj<::gpk::SUDPConnection>													conn						= app.Server.Clients[iClient];
-			::gpk::mutex_guard																	lockRecv					(conn->Queue.MutexReceive);
+			::std::lock_guard																	lockRecv					(conn->Queue.MutexReceive);
 			receivedPerClient[iClient]														= app.Server.Clients[iClient]->Queue.Received;
 			app.Server.Clients[iClient]->Queue.Received.clear();
 		}
@@ -238,7 +238,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	for(uint32_t iClient = 0; iClient < clientResponses.size(); ++iClient) {
 		for(uint32_t iMessage = 0; iMessage < clientResponses[iClient].size(); ++iMessage) { // contestar
 			if(clientResponses[iClient][iMessage].size()) {
-				::gpk::mutex_guard														lock						(app.Server.Mutex);
+				::std::lock_guard														lock						(app.Server.Mutex);
 				::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
 				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage], true, true);
 				receivedPerClient[iClient][iMessage]		= {};
@@ -262,11 +262,11 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	{	
-		::gpk::mutex_guard														lock					(app.LockGUI);
+		::std::lock_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::gpk::mutex_guard														lock					(app.LockRender);
+		::std::lock_guard														lock					(app.LockRender);
 		app.Offscreen														= target;
 	}
 	//timer.Frame();

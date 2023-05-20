@@ -77,7 +77,7 @@ namespace gpk
 	stainli	int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
 		va_list args;
 		va_start(args, format);
-		const int									result			= vsprintf_s(buffer, _bufferSize, format, args);
+		const int									result			= std::vsnprintf(buffer, _bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}
@@ -85,7 +85,7 @@ namespace gpk
 	stainli	int	sprintf_s		(char *buffer , uint32_t bufferSize, const char* format, ...)								{
 		va_list args;
 		va_start(args, format);
-		const int									result			= vsprintf_s(buffer, bufferSize, format, args);
+		const int									result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}

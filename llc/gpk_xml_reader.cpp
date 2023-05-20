@@ -165,8 +165,8 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 		// if it is, then we need to remove the node-open-name elements and replace them
 		if(reader.StateRead.CurrentElement->Type == ::gpk::XML_TOKEN_TAG_NAME) {
 			if(reader.StateRead.CurrentElement->Range.Offset == reader.StateRead.IndexCurrentChar) { // test if it's the first character after '<'
-				reader.StateRead.CurrentElement				= &reader.Token[reader.StateRead.IndexCurrentElement = reader.Token.pop_back(0) - 1];
-				reader.StateRead.CurrentElement				= &reader.Token[reader.StateRead.IndexCurrentElement = reader.Token.pop_back(0) - 1];
+				reader.StateRead.CurrentElement				= &reader.Token[reader.StateRead.IndexCurrentElement = reader.Token.pop_back() - 1];
+				reader.StateRead.CurrentElement				= &reader.Token[reader.StateRead.IndexCurrentElement = reader.Token.pop_back() - 1];
 				reader.StateRead.NestLevel					-= 2;
 				reader.StateRead.CurrentElement->Type		= ::gpk::XML_TOKEN_TAG_CLOSE;
 				gpk_necs(xmlOpenElement(reader, ::gpk::XML_TOKEN_TAG_NAME, reader.StateRead.IndexCurrentChar + 1));

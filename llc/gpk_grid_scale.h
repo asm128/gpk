@@ -6,23 +6,23 @@
 
 namespace gpk
 {
-	template<typename Val>
-						::gpk::error_t							grid_scale_fast					(::gpk::view2d<Val>& dst, const ::gpk::view2d<Val>& src, const float xFactor, const float yFactor)		{
+	template<typename T>
+						::gpk::error_t							grid_scale_fast					(::gpk::view2d<T>& dst, const ::gpk::view2d<T>& src, const float xFactor, const float yFactor)		{
 		for(uint32_t y = 0; y < dst.metrics().y; ++y)
 		for(uint32_t x = 0; x < dst.metrics().x; ++x)
 			dst[y][x]													= src[(uint32_t)(y * yFactor)][(uint32_t)(x * xFactor)];
 		return 0;
 	}
 
-	template<typename Val>
-						::gpk::error_t							grid_scale					(::gpk::view2d<Val>& dst, const ::gpk::view2d<Val>& src)													{
+	template<typename T>
+						::gpk::error_t							grid_scale					(::gpk::view2d<T>& dst, const ::gpk::view2d<T>& src)													{
 		const float														xFactor						= src.metrics().x / (float)dst.metrics().x;
 		const float														yFactor						= src.metrics().y / (float)dst.metrics().y;
 		return grid_scale_fast(dst, src, xFactor, yFactor);
 	}
 
-	template<typename Val>
-						::gpk::error_t							grid_scale					(::gpk::view2d<Val>& dst, const ::gpk::view2d<Val>& src, const float xFactor, const float yFactor)			{
+	template<typename T>
+						::gpk::error_t							grid_scale					(::gpk::view2d<T>& dst, const ::gpk::view2d<T>& src, const float xFactor, const float yFactor)			{
 		for(uint32_t y = 0; y < dst.metrics().y; ++y)
 		for(uint32_t x = 0; x < dst.metrics().x; ++x) {
 			const uint32_t													xSrc						= (uint32_t)(x * yFactor);
@@ -35,8 +35,8 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename Val>
-						::gpk::error_t							grid_scale_alpha			(::gpk::view2d<Val>& dst, const ::gpk::view2d<Val>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
+	template<typename T>
+						::gpk::error_t							grid_scale_alpha			(::gpk::view2d<T>& dst, const ::gpk::view2d<T>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
 		const ::gpk::n2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
 			::gpk::n2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
@@ -49,8 +49,8 @@ namespace gpk
 		}
 		return 0;
 	}
-	template<typename Val>
-						::gpk::error_t							grid_scale					(::gpk::view2d<Val>& dst, const ::gpk::view2d<Val>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
+	template<typename T>
+						::gpk::error_t							grid_scale					(::gpk::view2d<T>& dst, const ::gpk::view2d<T>& src, const ::gpk::n2<int32_t>& dstPos, const ::gpk::n2<int32_t>& dstSize) {
 		const ::gpk::n2<int32_t>									srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
 			::gpk::n2<int32_t>											sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};

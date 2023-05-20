@@ -39,11 +39,11 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, ::gpk::SColorBGRA{}, 0xFFFFFFFF);
 	{
-		::gpk::mutex_guard														lock					(app.LockGUI);
+		::std::lock_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::gpk::mutex_guard														lock					(app.LockRender);
+		::std::lock_guard														lock					(app.LockRender);
 		app.Offscreen														= target;
 	}
 	//timer.Frame();
@@ -55,7 +55,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	//::gpk::STimer															timer;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
-		::gpk::mutex_guard														lock						(app.LockRender);
+		::std::lock_guard														lock						(app.LockRender);
 		app.Framework.RootWindow.BackBuffer									= app.Offscreen;
 	}
 	::gpk::SFramework														& framework					= app.Framework;

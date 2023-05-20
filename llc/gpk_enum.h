@@ -1,6 +1,7 @@
 // These sources are best viewed in Visual Studio 2017 or newer with a screen of at least 1920x1080 screen, Consolas font and zoom set to 81 %.
 // Pablo Ariel Zorrilla Cepeda (asm128) Copyright (c) 2016-2022 - Distributed under the MIT License.
-#include "gpk_array.h"
+#include "gpk_array_pod.h"
+#include "gpk_array_obj.h"
 
 #ifndef GPK_ENUM_H_982364987234987234
 #define GPK_ENUM_H_982364987234987234
@@ -23,9 +24,9 @@ namespace gpk
 
 		::gpk::vcc								Name									= "";
 		::gpk::apod<_tValue>					Values									= {};
-		::gpk::apod<::gpk::vcc>					Names									= {};
-		::gpk::apod<::gpk::vcc>					Titles									= {};
-		::gpk::apod<::gpk::vcc>					Descriptions							= {};
+		::gpk::aobj<::gpk::vcc>					Names									= {};
+		::gpk::aobj<::gpk::vcc>					Titles									= {};
+		::gpk::aobj<::gpk::vcc>					Descriptions							= {};
 
 		inline									enum_definition							()															: Name(::gpk::vcs{"Enum definition name not set."})	{}
 		stainli	enum_definition<_tValue>&		get										()															{

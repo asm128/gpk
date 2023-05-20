@@ -98,7 +98,7 @@ namespace gpk
 		inlcxpr	uint32_t							size						()																	const	noexcept	{ return Count;																	}
 	};
 
-	template<typename Val>	using vbit					= ::gpk::view_bit<Val>;
+	template<typename T>	using vbit					= ::gpk::view_bit<T>;
 
 	template<typename _tField>
 	::gpk::error_t											reverse_bits				(::gpk::view_bit<_tField> toReverse)													{

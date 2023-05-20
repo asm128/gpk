@@ -116,7 +116,7 @@ namespace gpk {
 		{}
 	};
 
-	struct SBoundingVolume {
+	struct SBodyVolume {
 		double											Radius							= 0;
 		::gpk::SMinMax<::gpk::n3<float>>			Limits							= {{-1, -1, -1}, {1, 1, 1}};
 		::gpk::n3<float>							Center							= {0, 0, 0};
@@ -261,7 +261,7 @@ namespace gpk {
 		::gpk::SKeyedArrayPOD<::gpk::SLight						>	Lights					= {};
 		::gpk::SKeyedArrayPOD<::gpk::SCamera					>	Cameras					= {};
 		::gpk::SKeyedArrayPOD<::gpk::SRenderNodeTransform		>	Transforms				= {};
-		::gpk::SKeyedArrayPOD<::gpk::SBoundingVolume			>	BoundingVolumes			= {};
+		::gpk::SKeyedArrayPOD<::gpk::SBodyVolume			>	BoundingVolumes			= {};
 		//
 		::gpk::SKeyedArrayOBJ<::gpk::SRenderNode>					Nodes					= {};
 		//

@@ -1,4 +1,4 @@
-#include "gpk_array.h"
+#include "gpk_array_pod.h"
 
 #ifndef GPK_BASE64_H_23984293847
 #define GPK_BASE64_H_23984293847

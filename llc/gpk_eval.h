@@ -21,14 +21,16 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tValue>	inlcxpr	const _tValue&	min			(const _tValue & a, const _tValue & b)	noexcept	{ return (a < b) ? a : b; }
-	template<typename _tValue>	inlcxpr	const _tValue&	max			(const _tValue & a, const _tValue & b)	noexcept	{ return (a > b) ? a : b; }
+	template<typename _t>	inlcxpr	const _t&	min			(const _t & a, const _t & b)	noexcept	{ return (a < b) ? a : b; }
+	template<typename _t>	inlcxpr	const _t&	max			(const _t & a, const _t & b)	noexcept	{ return (a > b) ? a : b; }
+
+	template<typename _t>	stincxp	_t			clamp		(const _t _value, const _t _min, const _t _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value)); }
+
 	// excluding the stop value
-	template<typename _tValue>	inlcxpr	bool			in_range	(const _tValue & valueToTest, const _tValue & rangeStart, const _tValue & rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
+	template<typename _t>	inlcxpr	bool		in_range	(const _t & valueToTest, const _t & rangeStart, const _t & rangeStop)	noexcept	{ return (valueToTest >= rangeStart) && (valueToTest < rangeStop);	}
 
 
-	template<typename _tElement>
-	bool							equal		(const _tElement * other, const _tElement * local, uint32_t count)			{
+	template<typename _t>	bool				equal		(const _t * other, const _t * local, uint32_t count)		{
 		for(uint32_t iElement = 0; iElement < count; ++iElement)
 			if(other[iElement] != local[iElement])
 				return false;

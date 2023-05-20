@@ -32,7 +32,7 @@ namespace gpk
 	struct SJSONNode {
 		SJSONToken								* Token					= 0;
 		SJSONNode								* Parent				= 0;
-		::gpk::apobj<SJSONNode>					Children				= 0;
+		::gpk::apobj<SJSONNode>					Children				= {};
 		int32_t									ObjectIndex				= -1;
 	};
 
@@ -77,8 +77,8 @@ namespace gpk
 	::gpk::error_t							jsonParseStep			(::gpk::SJSONReader & reader, const ::gpk::vcc & jsonAsString);
 	::gpk::error_t							jsonTreeRebuild			(::gpk::view<::gpk::SJSONToken>& in_object, ::gpk::apobj<::gpk::SJSONNode> & out_nodes);
 
-	stincxp	::gpk::error_t		jsonObjectKeyCount		(const ::gpk::SJSONNode & node)		noexcept	{ return node.Children.size() / 2; }
-	stincxp	::gpk::error_t		jsonArraySize			(const ::gpk::SJSONNode & node)		noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
+	stincxp	::gpk::error_t					jsonObjectKeyCount		(const ::gpk::SJSONNode & node)		noexcept	{ return node.Children.size() / 2; }
+	stincxp	::gpk::error_t					jsonArraySize			(const ::gpk::SJSONNode & node)		noexcept	{ return node.Children.size(); }	// returns the index of the JSON element corresponding to the index provided as parameter.
 	::gpk::error_t							jsonArrayValueGet		(const ::gpk::SJSONNode & node, uint32_t index);	// returns the index of the JSON element corresponding to the index provided as parameter.
 	::gpk::error_t							jsonObjectValueGet		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::vcs & key);
 	::gpk::error_t							jsonObjectKeyList		(const ::gpk::SJSONNode & node, ::gpk::apod<int32_t> & indices);

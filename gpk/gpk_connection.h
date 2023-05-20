@@ -4,6 +4,10 @@
 
 #include <functional>
 
+#if !defined(GPK_ATMEL)
+#	include <mutex>
+#endif
+
 #ifndef GPK_CONNECTION_H_20347892908347
 #define GPK_CONNECTION_H_20347892908347
 

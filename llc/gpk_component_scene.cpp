@@ -32,7 +32,7 @@ static ::gpk::error_t					createFromSTL			(::gpk::SComponentScene & scene, ::gpk
 	::gpk::SNodeRenderer::TVertexColorBuffer	& bufferVertexColors	= renderer.VertexColors		[newNode.VertexColor	= renderer.VertexColors		.push_back(componentName, {})];
 	::gpk::SMaterial							& material				= renderer.Materials		[newNode.Material		= renderer.Materials		.push_back(componentName, {})];
 	::gpk::SRenderNodeTransform					& transform				= renderer.Transforms		[newNode.Transform		= renderer.Transforms		.push_back(componentName, {})];
-	::gpk::SBoundingVolume						& boundingVolume		= renderer.BoundingVolumes	[newNode.BoundingVolume	= renderer.BoundingVolumes	.push_back(componentName, {})];
+	::gpk::SBodyVolume						& boundingVolume		= renderer.BoundingVolumes	[newNode.BoundingVolume	= renderer.BoundingVolumes	.push_back(componentName, {})];
 
 	transform.SetIdentity();
 

@@ -2,6 +2,7 @@
 #include "gpk_debug.h"
 #include "gpk_eval.h"
 #include "gpk_chrono.h" 
+#include "gpk_string.h"
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -67,7 +68,7 @@ namespace gpk
 		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
 		base_debug_print(prefix, prefixLength);
 		char													customDynamicString	[8192]						= {};
-		stringLength										= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
+		stringLength										= ::gpk::sprintf_s(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);
@@ -85,14 +86,14 @@ namespace gpk
 #define	GPK_TOSTRING(x)  GPK_STRINGIFY(x)
 
 #if !defined(GPK_WINDOWS)
-#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "):", format, __VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "):", format, ##__VA_ARGS__)
 #else
 #	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #endif
 
 #ifndef always_printf
 #if !defined(GPK_WINDOWS)
-#	define always_printf(format, ...)					debug_printf(3, "info", format, ## __VA_ARGS__)
+#	define always_printf(format, ...)					debug_printf(3, "info", format, ##__VA_ARGS__)
 #else
 #	define always_printf(format, ...)					debug_printf(3, "info", format, __VA_ARGS__)
 #endif
@@ -101,7 +102,7 @@ namespace gpk
 #ifndef error_printf
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
-#		define error_printf(format, ...)					do { debug_printf(1, "error", format, ## __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { debug_printf(1, "error", format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else
 #		define error_printf(format, ...)					do { debug_printf(1, "error", format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #endif
@@ -113,7 +114,7 @@ namespace gpk
 #ifndef warning_printf
 #	if defined (GPK_WARNING_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
-#		define warning_printf(format, ...)					debug_printf(2, "warning"	, format, ## __VA_ARGS__)
+#		define warning_printf(format, ...)					debug_printf(2, "warning"	, format, ##__VA_ARGS__)
 #else
 #		define warning_printf(format, ...)					debug_printf(2, "warning"	, format, __VA_ARGS__)
 #endif
@@ -125,7 +126,7 @@ namespace gpk
 #ifndef info_printf
 #	if defined (GPK_INFO_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
-#		define info_printf(format, ...)						debug_printf(3, "info"		, format, ## __VA_ARGS__)
+#		define info_printf(format, ...)						debug_printf(3, "info"		, format, ##__VA_ARGS__)
 #else
 #		define info_printf(format, ...)						debug_printf(3, "info"		, format, __VA_ARGS__)
 #endif
@@ -137,7 +138,7 @@ namespace gpk
 #ifndef success_printf
 #	if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
-#		define success_printf(format, ...)					debug_printf(4, "info"		, format, ## __VA_ARGS__)
+#		define success_printf(format, ...)					debug_printf(4, "info"		, format, ##__VA_ARGS__)
 #else
 #		define success_printf(format, ...)					debug_printf(4, "info"		, format, __VA_ARGS__)
 #endif
@@ -149,7 +150,7 @@ namespace gpk
 #ifndef verbose_printf
 #	if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
-#		define verbose_printf(format, ...)					debug_printf(4, "info"		, format, ## __VA_ARGS__)
+#		define verbose_printf(format, ...)					debug_printf(4, "info"		, format, ##__VA_ARGS__)
 #else
 #		define verbose_printf(format, ...)					debug_printf(4, "info"		, format, __VA_ARGS__)
 #endif
@@ -167,9 +168,11 @@ namespace gpk
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
 #if !defined(GPK_WINDOWS)
-#		define gthrow_if(condition, format, ...)			if(condition) { error_printf(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#		define gthrow_if(condition, format, ...)	if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1); error_printf(format, ##__VA_ARGS__); gpk_throw("");	}
+#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: " #condition "\n"); gpk_throw("");	}
 #	else
-#		define gthrow_if(condition, format, ...)			if(condition) { error_printf(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); gpk_throw("");	}
+#		define gthrow_if(condition, format, ...)	if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1); error_printf(format, __VA_ARGS__); gpk_throw("");	}
+#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: " #condition "\n"); gpk_throw("");	}
 #	endif
 #	else
 //#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
@@ -184,9 +187,9 @@ namespace gpk
 #		define gswarn_if(condition)								if(condition) { warning_printf	("Condition: '%s'", #condition);	}
 #		define gsinfo_if(condition)								if(condition) { info_printf		("Condition: '%s'", #condition);	}
 #		if !defined(GPK_WINDOWS)
-#			define gerror_if(condition, format, ...)				if(condition) { error_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
-#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
-#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		(format, ## __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#			define gerror_if(condition, format, ...)				if(condition) { error_printf	(format, ##__VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	(format, ##__VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
+#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		(format, ##__VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1);	}
 #		else
 #			define gerror_if(condition, format, ...)				if(condition) { error_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 		}
 #			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	(format, __VA_ARGS__); base_debug_print("Condition: " #condition "\n", (uint32_t)-1); 		}

@@ -29,7 +29,7 @@ void								gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4
 	transformLocal.SetTranslation( bodyTransform.Position, false );
 }
 
-int32_t								gpk::integrateForces		(double duration, ::gpk::SRigidBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass) {
+int32_t								gpk::integrateForces		(double duration, ::gpk::SBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass) {
 	// -- Calculate linear acceleration from force inputs.
 	bodyFrame.LastFrameAcceleration		= bodyForce.Acceleration;
 	bodyFrame.LastFrameAcceleration.AddScaled(bodyFrame.AccumulatedForce, bodyMass.InverseMass);
@@ -48,7 +48,7 @@ int32_t								gpk::integrateForces		(double duration, ::gpk::SRigidBodyFrame& b
 }
 
 // ------------- Adjust positions
-int32_t								gpk::integratePosition		(double duration, double durationHalfSquared, ::gpk::SRigidBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces) {
+int32_t								gpk::integratePosition		(double duration, double durationHalfSquared, ::gpk::SBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces) {
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, duration);
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, durationHalfSquared);
 	bodyTransform.Orientation	.AddScaled(bodyForces.Rotation, duration);	// Update angular position.

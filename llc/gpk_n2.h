@@ -96,4 +96,11 @@ namespace gpk
 	typedef n2<int64_t>		n2i64;
 } // namespace
 
+#define N2_F32 "{%f, %f}"
+#define N2_F64 "{%g, %g}"
+#define N2_I32 "{%i, %i}"
+#define N2_U32 "{%u, %u}"
+#define N2_I64 "{%lli, %lli}"
+#define N2_U64 "{%llu, %llu}"
+
 #endif // GPK_N2_H_230515

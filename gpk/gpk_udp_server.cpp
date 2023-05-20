@@ -23,7 +23,7 @@ static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		
 		::gpk::sleep(1);
 		uint32_t										totalClientCount				= serverInstance.Clients.size();
 		{
-			::gpk::mutex_guard								lock								(serverInstance.Mutex);
+			::std::lock_guard								lock								(serverInstance.Mutex);
 			totalClientCount							= serverInstance.Clients.size();
 		}
 		timeval											wait_time							= {0, 1};
@@ -36,7 +36,7 @@ static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		
 			sockets.fd_count							= 0;
 			uint32_t										stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
-				::gpk::mutex_guard							lock								(serverInstance.Mutex);
+				::std::lock_guard							lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < actualCount; ++iClient) {
 					::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
@@ -53,7 +53,7 @@ static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		
 			{
 				clientsToProcess.clear();
 				{
-					::gpk::mutex_guard							lock								(serverInstance.Mutex);
+					::std::lock_guard							lock								(serverInstance.Mutex);
 					break_ginfo_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
@@ -122,11 +122,11 @@ static	::gpk::error_t						recycleClient					(::gpk::SUDPServer& serverInstance,
 			client.LastPing								=
 			client.FirstPing							= 0;
 			{
-				::gpk::mutex_guard								lockRecv						(client.Queue.MutexReceive);
+				::std::lock_guard								lockRecv						(client.Queue.MutexReceive);
 				client.Queue.Received	.clear();
 			}
 			{
-				::gpk::mutex_guard								lockSend						(client.Queue.MutexSend);
+				::std::lock_guard								lockSend						(client.Queue.MutexSend);
 				client.Queue.Send		.clear();
 				client.Queue.Sent		.clear();
 			}
@@ -141,7 +141,7 @@ static	::gpk::error_t						recycleClient					(::gpk::SUDPServer& serverInstance,
 static	::gpk::error_t						serverAcceptClient				(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
 	::gpk::pobj<::gpk::SUDPConnection>				pClient							= {};
 	{ // accept
-		::gpk::mutex_guard								lock							(serverInstance.Mutex);
+		::std::lock_guard								lock							(serverInstance.Mutex);
 		int32_t											found							= ::recycleClient(serverInstance, pClient);
 		::gpk::tcpipAddressFromSockaddr(sa_client, pClient->Address);
 		command.Type								= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
@@ -229,7 +229,7 @@ static	void								threadServer					(void* pServerInstance)				{
 	serverInstance.Listen						= false;
 	serverInstance.Socket.close();
 	{
-		::gpk::mutex_guard								lock								(serverInstance.Mutex);
+		::std::lock_guard								lock								(serverInstance.Mutex);
 		serverInstance.Clients.clear();
 	}
 }
@@ -259,7 +259,7 @@ static	void								threadServer					(void* pServerInstance)				{
 }
 
 ::gpk::error_t								gpk::serverPayloadCollect		(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>> & receivedMessages)		{
-	::gpk::mutex_guard								lock							(server.Mutex);
+	::std::lock_guard								lock							(server.Mutex);
 	gpk_necs(receivedMessages.resize(server.Clients.size()));
 	for(uint32_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {
 		::gpk::pnco<::gpk::SUDPConnection>				client							= server.Clients[iClient];

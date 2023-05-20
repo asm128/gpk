@@ -166,7 +166,7 @@ namespace gpk
 				case ::gpk::SYSEVENT_KEY_DOWN:
 					switch(frameEvents[iEvent].Data[0]) {
 					case VK_RETURN	: enterKeyPressed = true; break; 
-					case VK_BACK	: Text.pop_back(0)	; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+					case VK_BACK	: Text.pop_back()	; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
 					case VK_CLEAR	: Text.clear()		; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
 					case VK_ESCAPE	: Edit(gui, false); 
 						break;

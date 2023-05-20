@@ -23,6 +23,9 @@
     <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
+    <ClInclude Include="gpk_array_base.h" />
+    <ClInclude Include="gpk_array_obj.h" />
+    <ClInclude Include="gpk_array_pod.h" />
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
@@ -130,6 +133,7 @@
     <ClInclude Include="gpk_voxel.h" />
     <ClInclude Include="gpk_event.h" />
     <ClInclude Include="gpk_n2.h" />
+    <ClInclude Include="gpk_functional.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />

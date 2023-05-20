@@ -102,7 +102,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_server);
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_DISCONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	// Data to send */
 	{
-		::gpk::mutex_guard												lock										(client.Queue.MutexSend);
+		::std::lock_guard												lock										(client.Queue.MutexSend);
 		for(uint32_t i = 0; i < 2; ++i)
 			sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.close();
@@ -118,12 +118,12 @@ static	void												threadUpdateClient							(void* pClient)						{
 	stacxpr	uint32_t												MAX_ATTEMPTS								= 1;
 	client.State												= ::gpk::UDP_CONNECTION_STATE_HANDSHAKE;
 	{
-		::gpk::mutex_guard												lock										(client.Queue.MutexSend);
+		::std::lock_guard												lock										(client.Queue.MutexSend);
 		client.Queue.Send.clear();
 		client.Queue.Sent.clear();
 	}
 	{
-		::gpk::mutex_guard												lock										(client.Queue.MutexReceive);
+		::std::lock_guard												lock										(client.Queue.MutexReceive);
 		client.Queue.Received.clear();
 	}
 	do {

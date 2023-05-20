@@ -118,13 +118,13 @@ namespace gpk
 
 	stacxpr	float								VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
-	template<typename Val, uint16_t _width = 16>
+	template<typename T, uint16_t _width = 16>
 	struct SVoxelLayer {
 		stacxpr	uint32_t					WIDTH						= _width;
 		stacxpr	uint32_t					DEPTH						= WIDTH;
 
 		uint16_t										Y							= {};
-		Val											Cells	[DEPTH][WIDTH]		= {};
+		T											Cells	[DEPTH][WIDTH]		= {};
 	};
 
 	template <typename _uIndex>
@@ -147,17 +147,17 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template<typename Val>
+	template<typename T>
 	struct SVoxelChunk {
-		::gpk::array_pobj<::gpk::SVoxelLayer<Val>>	Layers						= {};
+		::gpk::array_pobj<::gpk::SVoxelLayer<T>>	Layers						= {};
 	};
 
-	template<typename Val>
+	template<typename T>
 	struct SVoxelMap {
 		::gpk::n3<uint8_t>						Dimensions;
 		::gpk::apod<::gpk::SColorBGRA>				Palette;
 		::gpk::apod<::gpk::SVoxel<uint8_t>>			Voxels;
-		::gpk::aobj<::gpk::SVoxelChunk<Val>>		Chunks;
+		::gpk::aobj<::gpk::SVoxelChunk<T>>		Chunks;
 		::gpk::apod<::gpk::n2<uint8_t>>		ChunkPositions;
 
 		int32_t										GetChunk					(const ::gpk::n2<uint8_t> & chunkCoords) const	{ 
@@ -165,24 +165,24 @@ namespace gpk
 		}
 
 		int32_t											GetChunkForVoxel			(const ::gpk::n3<uint8_t> & voxelPosition) const	{ 
-			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<Val>::WIDTH; 
+			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			return GetChunk({floor.x, floor.z}); 
 		}
 
-		int32_t											SetValue					(const ::gpk::n3<uint8_t> & voxelPosition, const Val & cellValue) 	{ 
-			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<Val>::WIDTH; 
+		int32_t											SetValue					(const ::gpk::n3<uint8_t> & voxelPosition, const T & cellValue) 	{ 
+			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) {
 				indexChunk										= Chunks.push_back({});
 				ChunkPositions.push_back({floor.x, floor.z});
 			}
 
-			::gpk::SVoxelChunk<Val>							& chunk						= Chunks[indexChunk];
+			::gpk::SVoxelChunk<T>							& chunk						= Chunks[indexChunk];
 			if(chunk.Layers.size() < uint32_t(voxelPosition.y) + 1)
 				chunk.Layers.resize(voxelPosition.y + 1);
 
-			Val												& cell						= chunk.Layers[voxelPosition.y]
-				->Cells[voxelPosition.z % SVoxelLayer<Val>::DEPTH][voxelPosition.x % SVoxelLayer<Val>::WIDTH];
+			T												& cell						= chunk.Layers[voxelPosition.y]
+				->Cells[voxelPosition.z % SVoxelLayer<T>::DEPTH][voxelPosition.x % SVoxelLayer<T>::WIDTH];
 			if(cell != cellValue) {
 				if(0 == cell) 
 					Voxels.push_back({voxelPosition.x, voxelPosition.y, voxelPosition.z, cellValue});
@@ -211,21 +211,21 @@ namespace gpk
 			return indexChunk;
 		}
 
-		int32_t											GetValue					(const ::gpk::n3<uint8_t> & voxelPosition, Val & cellValue) const	{ 
-			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<Val>::WIDTH; 
+		int32_t											GetValue					(const ::gpk::n3<uint8_t> & voxelPosition, T & cellValue) const	{ 
+			const ::gpk::n3<uint8_t>						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) 
 				return -1;
 
-			const ::gpk::SVoxelChunk<Val>				 	& chunk						= Chunks[indexChunk];
+			const ::gpk::SVoxelChunk<T>				 	& chunk						= Chunks[indexChunk];
 			if(voxelPosition.y >= chunk.Layers.size()) 
 				return -1;
 
-			const ::gpk::pobj<::gpk::SVoxelLayer<Val>>	& layer						= chunk.Layers[voxelPosition.y];
+			const ::gpk::pobj<::gpk::SVoxelLayer<T>>	& layer						= chunk.Layers[voxelPosition.y];
 			if(0 == layer.get_ref())
 				return -1;
 
-			cellValue										= layer->Cells[voxelPosition.z % SVoxelLayer<Val>::DEPTH][voxelPosition.x % SVoxelLayer<Val>::WIDTH];
+			cellValue										= layer->Cells[voxelPosition.z % SVoxelLayer<T>::DEPTH][voxelPosition.x % SVoxelLayer<T>::WIDTH];
 			return 0;
 		}
 	};

@@ -159,4 +159,11 @@ namespace gpk
 	typedef n3<int64_t>		n3i64;
 } // namespace
 
+#define N3_F32 "{%f, %f, %f}"
+#define N3_F64 "{%g, %g, %g}"
+#define N3_I32 "{%i, %i, %i}"
+#define N3_U32 "{%u, %u, %u}"
+#define N3_I64 "{%lli, %lli, %lli}"
+#define N3_U64 "{%llu, %llu, %llu}"
+
 #endif // GPK_N3_H_230515

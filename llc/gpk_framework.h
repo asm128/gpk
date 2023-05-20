@@ -7,6 +7,10 @@
 #include "gpk_storage.h"
 #include "gpk_parse.h"
 
+#if !defined(GPK_ATMEL)
+#	include <mutex>
+#endif
+
 #ifndef GPK_FRAMEWORK_H_20987347928
 #define GPK_FRAMEWORK_H_20987347928
 

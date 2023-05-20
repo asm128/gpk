@@ -339,7 +339,7 @@ static	::gpk::error_t							jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONR
 	if(tokens[tokens.size() - 1].Type == containerType) {
 		json_info_printf("Discarding empty container element at index %i (%s). Level: %i", tokens.size() - 1, ::gpk::get_value_label(containerType).begin(), stateReader.NestLevel);
 		stateReader.IndexCurrentElement								= tokens[tokens.size() - 1].ParentIndex;
-		tokens.pop_back(0);
+		tokens.pop_back();
 		--stateReader.NestLevel;
 		if((uint32_t)stateReader.IndexCurrentElement < tokens.size())
 			stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];

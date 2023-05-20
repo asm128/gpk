@@ -5,25 +5,25 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename Val, uint32_t _sizeArray>
+	template<typename T, uint32_t _sizeArray>
 	struct array_static	{
 		stacxpr	const uint32_t	SIZE						= _sizeArray;
 
-		Val					Storage	[_sizeArray]		;
+		T					Storage	[_sizeArray]		;
 
-		operator				view<Val>				()																{ return {Storage, _sizeArray}; }
-		operator				view<const Val>			()											const	noexcept	{ return {Storage, _sizeArray}; }
+		operator				view<T>				()																{ return {Storage, _sizeArray}; }
+		operator				view<const T>			()											const	noexcept	{ return {Storage, _sizeArray}; }
 
-		inline	const Val&	operator[]					(uint32_t index)							const				{
+		inline	const T&	operator[]					(uint32_t index)							const				{
 			gthrow_if(index >= _sizeArray, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);
 			return Storage[index];
 		}
-		inline	Val&			operator[]					(uint32_t index)												{
+		inline	T&			operator[]					(uint32_t index)												{
 			gthrow_if(index >= _sizeArray, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);
 			return Storage[index];
 		}
-		bool					operator!=					(const ::gpk::view<const Val>& other)	const				{ return !operator==(other); }
-		bool					operator==					(const ::gpk::view<const Val>& other)	const				{
+		bool					operator!=					(const ::gpk::view<const T>& other)	const				{ return !operator==(other); }
+		bool					operator==					(const ::gpk::view<const T>& other)	const				{
 			if(this->size() != other.size())
 				return false;
 			if(this->begin() == other.begin())
@@ -31,18 +31,18 @@ namespace gpk
 			return ::gpk::equal(other.begin(), this->begin(), this->size());
 		}
 		// Methods
-		inline	Val*			begin						()													noexcept	{ return Storage;				}
-		inline	Val*			end							()													noexcept	{ return Storage + _sizeArray;	}
+		inline	T*			begin						()													noexcept	{ return Storage;				}
+		inline	T*			end							()													noexcept	{ return Storage + _sizeArray;	}
 
-		inlcxpr	const Val*	begin						()											const	noexcept	{ return Storage;				}
-		inlcxpr	const Val*	end							()											const	noexcept	{ return Storage + _sizeArray;	}
+		inlcxpr	const T*	begin						()											const	noexcept	{ return Storage;				}
+		inlcxpr	const T*	end							()											const	noexcept	{ return Storage + _sizeArray;	}
 
 		inlcxpr	const uint32_t&	size						()											const	noexcept	{ return SIZE; }
-		inlcxpr	const uint32_t	byte_count					()											const	noexcept	{ return (uint32_t)(_sizeArray * sizeof(Val));	}
+		inlcxpr	const uint32_t	byte_count					()											const	noexcept	{ return (uint32_t)(_sizeArray * sizeof(T));	}
 	};
 
-	template<typename Val, uint32_t _sizeArray>	
-	using astatic	= ::gpk::array_static<Val, _sizeArray>;
+	template<typename T, uint32_t _sizeArray>	
+	using astatic	= ::gpk::array_static<T, _sizeArray>;
 
 	template<uint32_t _sizeArray>	using astaticu8 	= ::gpk::array_static<uint8_t, _sizeArray>;
 	template<uint32_t _sizeArray>	using astaticu16	= ::gpk::array_static<uint16_t, _sizeArray>;
@@ -55,12 +55,12 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template <typename Val, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<Val, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
-	template <typename Val, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<Val, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(Val) * nSize);	}
+	template <typename T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
+	template <typename T, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<T, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(T) * nSize);	}
 
-	template<typename Val, size_t _nSize>
-	::gpk::error_t			find						(const Val & element, const ::gpk::astatic<const Val, _nSize>& target, uint32_t offset = 0)	{
-		return ::gpk::find(element, ::gpk::view<const Val>{target}, offset);
+	template<typename T, size_t _nSize>
+	::gpk::error_t			find						(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
+		return ::gpk::find(element, ::gpk::view<const T>{target}, offset);
 	}
 
 	template<typename _tPOD, uint32_t _nSize> 

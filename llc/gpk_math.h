@@ -20,25 +20,21 @@ namespace gpk
 	stacxpr	double		math_pi_180			= ::gpk::math_pi / 180.0;				// Pi / 180.0
 	stacxpr	double		math_epsilon		= 0.00001;
 
-	stainli	uint64_t	powui				(const uint32_t	base, const uint32_t	exponent)					noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
+	stainli	uint64_t	powui				(const uint32_t	base, const uint32_t	exponent)			noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
 
 	template<typename _tNumber>
-	stincxp	double		sqrt_safe			(_tNumber _valueSquared)											noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
-
+	stincxp	double		sqrt_safe			(_tNumber _valueSquared)									noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
 	template<typename _tNumber>
-	stincxp	_tNumber	clamp				(const _tNumber _value, const _tNumber _min, const _tNumber _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value));	}
-
-	template<typename _tNumber>
-	cnstxpr	_tNumber	interpolate_linear	(const _tNumber a, const _tNumber b, const double factor)			noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
+	cnstxpr	_tNumber	interpolate_linear	(const _tNumber a, const _tNumber b, const double factor)	noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct SSinCos { double Sin, Cos; };
 
-	stainli	SSinCos		getSinCos			(double theta)														noexcept	{ return {sin(theta), cos(theta)};						}
+	stainli	SSinCos		getSinCos			(double theta)												noexcept	{ return {sin(theta), cos(theta)};						}
 
 	// Calculate determinant of matrix:
 	// [a b]
 	// [c d]
-	cnstxpr	double		determinant			(double a, double b, double c, double d)							noexcept	{ return a * d - b * c; }
+	cnstxpr	double		determinant			(double a, double b, double c, double d)					noexcept	{ return a * d - b * c; }
 
 #if defined(GPK_ATMEL)
 	stainli int		abs		(int	f) { return ::abs	(f); }

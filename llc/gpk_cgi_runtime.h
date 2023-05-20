@@ -3,6 +3,7 @@
 #include "gpk_member_registry.h"
 #include "gpk_runtime.h"
 #include "gpk_http.h"
+#include "gpk_n2.h"
 
 #ifndef GPK_CGI_RUNTIME_H_2938479283
 #define GPK_CGI_RUNTIME_H_2938479283

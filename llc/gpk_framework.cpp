@@ -134,13 +134,13 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 #endif
 	::gpk::SGUI																					& gui										= *framework.GUI;
 	{
-		::gpk::mutex_guard																			lock										(framework.LockGUI);
+		::std::lock_guard																			lock										(framework.LockGUI);
 		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
 	}
 
 	if(framework.Settings.GUIZoom) {
 		if(mainWindow.Input->MouseCurrent.Deltas.z) {
-			::gpk::mutex_guard																			lock										(framework.LockGUI);
+			::std::lock_guard																			lock										(framework.LockGUI);
 			if(mainWindow.Input->MouseCurrent.Deltas.z > 0) {
 				if(gui.Zoom.ZoomLevel > 1)
 					++gui.Zoom.ZoomLevel;

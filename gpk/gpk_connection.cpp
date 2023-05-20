@@ -24,7 +24,7 @@
 	//message->Payload.clear();
 	message->Payload					= data;
 	{
-		::gpk::mutex_guard						lock								(queue.MutexSend);
+		::std::lock_guard						lock								(queue.MutexSend);
 		gpk_necs(queue.Send.push_back(message));
 	}
 	return 0;
@@ -34,7 +34,7 @@
 	if(0 == client.KeyPing || client.State == ::gpk::UDP_CONNECTION_STATE_HANDSHAKE)
 		return 1;
 
-	::gpk::mutex_guard						lockRecv							(client.Queue.MutexReceive);
+	::std::lock_guard						lockRecv							(client.Queue.MutexReceive);
 	for(int32_t iMessage = 0; iMessage < (int32_t)client.Queue.Received.size(); ++iMessage) {
 		const ::gpk::pobj<::gpk::SUDPMessage>	& messageReceived					= client.Queue.Received[iMessage];
 		const ::gpk::SUDPCommand				udpCommand							= messageReceived->Command;
@@ -195,7 +195,7 @@ stacxpr	uint32_t					UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 	sockaddr_in							sa_remote							= {};							// Information about the client
 	::gpk::tcpipAddressToSockaddr(client.Address, sa_remote);
 
-	::gpk::mutex_guard					lock								(client.Queue.MutexSend);
+	::std::lock_guard					lock								(client.Queue.MutexSend);
 	for(int32_t iSent = 0; iSent < (int32_t)client.Queue.Sent.size(); ++iSent) {
 		::gpk::pobj<::gpk::SUDPMessage> messageSent = client.Queue.Sent[iSent];
 		if(0 == messageSent.get_ref())
@@ -267,7 +267,7 @@ static	::gpk::error_t			handleRequestCONNECT						(::gpk::SUDPCommand & command,
 	ree_if(1 != command.Packed || ::gpk::UDP_CONNECTION_STATE_HANDSHAKE != client.State, "Invalid client state: 0x%X '%s'.", client.State, ::gpk::get_value_label(client.State).begin());
 	client.LastPing					= gpk::timeCurrentInUs();
 	{
-		::gpk::mutex_guard					lock								(client.Queue.MutexSend);
+		::std::lock_guard					lock								(client.Queue.MutexSend);
 		for(uint32_t iSent = 0, countSent = client.Queue.Sent.size(); iSent < countSent; ++iSent)
 			if(::gpk::ENDPOINT_COMMAND_CONNECT == client.Queue.Sent[iSent]->Command.Command) {
 				client.Queue.Sent.remove_unordered(iSent);
@@ -290,7 +290,7 @@ static	::gpk::error_t			postConfirmationResponse			(::gpk::SUDPClientQueue & que
 	response->Command.Type			= ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE;
 	response->Time					= messageId;
 	{
-		::gpk::mutex_guard					lock								(queue.MutexSend);
+		::std::lock_guard					lock								(queue.MutexSend);
 		gpk_necall(queue.Send.push_back(response), "Out of memory? Queue size: %u.", queue.Send.size());
 	}
 	return 0;
@@ -298,7 +298,7 @@ static	::gpk::error_t			postConfirmationResponse			(::gpk::SUDPClientQueue & que
 
 static	::gpk::error_t			handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader & header, ::gpk::SUDPConnection & client)		{
 	// Remove from sent queue.
-	::gpk::mutex_guard					lock								(client.Queue.MutexSend);
+	::std::lock_guard					lock								(client.Queue.MutexSend);
 	info_printf("Received response to message id: %llx", header.MessageId);
 	bool								bFound								= false;
 	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
@@ -412,7 +412,7 @@ static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader 
 	//ree_if(header.Command.Payload > 3, "Unsupported payload format. Payload: %u.", (uint32_t)header.Command.Payload);
 	if(0 == (header.Command.Packed & 1)) {
 		{
-			::gpk::mutex_guard					lock								(client.Queue.MutexReceive);
+			::std::lock_guard					lock								(client.Queue.MutexReceive);
 			gpk_necall(client.Queue.Received.push_back(messageReceived), "Out of memory? Queue size: %u.", client.Queue.Received.size());
 		}
 		::gpk::pobj<::gpk::SUDPMessage>		response							= {};
@@ -444,7 +444,7 @@ static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader 
 			gpk_necs(tempQueue.push_back(messageReceivedInt));
 		}
 		{
-			::gpk::mutex_guard					lock								(client.Queue.MutexReceive);
+			::std::lock_guard					lock								(client.Queue.MutexReceive);
 			for(uint32_t iMessage = 0; iMessage < tempQueue.size(); ++iMessage)
 				gpk_necall(client.Queue.Received.push_back(tempQueue[iMessage]), "Out of memory? Queue size: %u.", client.Queue.Received.size());
 		}

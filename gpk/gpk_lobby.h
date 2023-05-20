@@ -183,7 +183,7 @@ namespace gpk
 				}));
 			}
 			{
-				::gpk::mutex_guard								lockRecv					(Client.Queue.MutexReceive);
+				::std::lock_guard								lockRecv					(Client.Queue.MutexReceive);
 				for(uint32_t iMessage = 0; iMessage < Client.Queue.Received.size(); ++iMessage) {
 					gpk_necall(MessagesToProcess.push_back(Client.Queue.Received[iMessage]), "%s", "Out of memory?");
 				}
