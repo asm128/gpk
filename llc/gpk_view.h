@@ -408,51 +408,6 @@ namespace gpk
 #define be2le_16(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 4})
 #define be2le_64(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 8})
-
-	template<typename T>
-	::gpk::error_t					viewRead				(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
-		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
-		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
-		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (const T*)&input[sizeof(uint32_t)] : 0, elementCount};
-		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
-	}
-
-	template<typename T>
-	::gpk::error_t					viewRead				(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
-		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
-		const uint32_t						elementCount			= *(const uint32_t*)input.begin();
-		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
-		headerToRead					= {(input.size() > sizeof(uint32_t)) ? (T*)&input[sizeof(uint32_t)] : 0, elementCount};
-		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
-	}
-
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vi8 & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vc  & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
-
-	template<typename _tPOD> 
-	::gpk::error_t					loadPOD				(::gpk::vcu8 & input, _tPOD & output) { 
-		::gpk::view<const _tPOD>			readView			= {}; 
-		uint32_t							bytesRead			= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		output							= readView[0]; 
-		return 0;
-	}
-	template<typename _tPOD> ::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD> ::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-
-	template<typename _tPOD> 
-	::gpk::error_t					loadView			(::gpk::vcu8 & input, ::gpk::view<const _tPOD> & output) { 
-		uint32_t							bytesRead				= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
-		input							= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		return 0;
-	}
-	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 } // namespace
 
 #endif // GPK_ARRAY_VIEW_H_2398472395543

@@ -1,6 +1,7 @@
 #include "gpk_array.h"
 #include "gpk_array_static.h"
 #include "gpk_ptr.h"
+#include "gpk_apod_serialize.h"
 
 #ifndef GPK_VIEW_MANAGER_H_29037492837
 #define GPK_VIEW_MANAGER_H_29037492837

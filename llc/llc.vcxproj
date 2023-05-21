@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
+    <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
@@ -58,6 +59,7 @@
     <ClInclude Include="gpk_quat.h" />
     <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_tri.h" />
+    <ClInclude Include="gpk_view_serialize.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
     <ClInclude Include="gpk_voxel_geometry.h" />
@@ -134,6 +136,7 @@
     <ClInclude Include="gpk_event.h" />
     <ClInclude Include="gpk_n2.h" />
     <ClInclude Include="gpk_functional.h" />
+    <ClInclude Include="gpk_astatic_serialize.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
@@ -153,6 +156,7 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_voxel_geometry.cpp" />
     <ClCompile Include="gpk_window.cpp" />

@@ -27,32 +27,30 @@ namespace gpk
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
 	template<typename T>
-	struct array_base : public view<T> {
-		using				view<T>::byte_count;
-	private:
+	class array_base : public view<T> {
 		stincxp	uint32_t	calc_reserve_size		(const uint32_t newCount)	noexcept	{ return ::gpk::clamp(newCount, newCount + (newCount >> 2), 0xBFFFFFFFU); }
 
 	protected:
 		using				view<T>::Data;
 
 		typedef				array_base<T>			TArray;
-		uint32_t			Size					= 0;
+		uint32_t			Size					: 31;
+		uint32_t			NoAlloc					: 1;
 //		uint32_t			Offset					= 0;
 
-		inline				~array_base				()							noexcept	{ ::gpk::safe_gpk_free(Data); }
+		inline				~array_base				()							noexcept	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
 		
-		inlcxpr				array_base				()							noexcept	= default;
+		inlcxpr				array_base				()							noexcept	: NoAlloc(0), Size(0) {}
 		inlcxpr				array_base				(const TArray &	 other)		noexcept	= delete;
 		inlcxpr				array_base				(const TArray && other)		noexcept	= delete;
 
 		TArray&				operator =				(const TArray &	 other)					= delete;
 		TArray&				operator =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	inline	T*	alloc_with_reserve		(const uint32_t newCount, uint32_t & reservedSize)	noexcept	{ 
+		stainli	uint32_t 	alloc_with_reserve		(const uint32_t newCount, T*& reserved)	noexcept	{ 
 			const uint32_t			newSize					= calc_reserve_size(newCount);
-			T						* newData				= (T*)::gpk::gpk_malloc(::gpk::size<T>(newSize) + 2); 
-			reservedSize		= newSize;
-			return newData;
+			reserved			= (T*)::gpk::gpk_malloc(::gpk::size<T>(newSize) + 2); 
+			return newSize;
 		}
 	}; // array_base
 #pragma pack(pop)

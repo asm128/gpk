@@ -4,7 +4,6 @@
 // It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it.
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
 #include "gpk_coord.h"			// for ::gpk::n2<>
-#include "gpk_error.h"			// for ::gpk::error_t
 #include "gpk_array.h"		// for ::gpk::view<>
 #include <cfloat>
 
@@ -83,19 +82,19 @@ namespace gpk
 
 	template<typename _tElement>
 	struct SParticle2Integrator {
-		typedef				::gpk::SParticle2	<_tElement>						TParticle;
-		typedef				::gpk::n2		<_tElement>						TCoord;
+		typedef	::gpk::SParticle2	<_tElement>	TParticle;
+		typedef	::gpk::n2			<_tElement>	TCoord;
 
-							::gpk::apod<::gpk::SParticle2State>			ParticleState								= {};
-							::gpk::apod<TParticle>							Particle									= {};
-							::gpk::apod<TParticle>							ParticleNext								= {};
-		// -----------------------------------------------------------------	---
-		inline				::gpk::error_t										Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
-							::gpk::error_t										Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
-		// --------------------------------------------------------------------
-							::gpk::error_t										AddParticle									(const TParticle& particleData)																			{
-								const uint32_t											particleCount								= (uint32_t)ParticleState.size();
-			stacxpr	const ::gpk::SParticle2State							initialParticleState						= {false, true};
+		::gpk::apod<::gpk::SParticle2State>		ParticleState								= {};
+		::gpk::apod<TParticle>					Particle									= {};
+		::gpk::apod<TParticle>					ParticleNext								= {};
+		// -----------------------------------------------------	---
+		inline	::gpk::error_t					Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
+		::gpk::error_t							Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
+		// --------------------------------------------------------
+		::gpk::error_t							AddParticle									(const TParticle& particleData)																			{
+			const uint32_t								particleCount								= (uint32_t)ParticleState.size();
+			stacxpr	const ::gpk::SParticle2State		initialParticleState						= {false, true};
 
 			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
@@ -127,10 +126,10 @@ namespace gpk
 
 	template<typename _tParticleType>
 	struct SParticleBinding {
-		typedef					_tParticleType									TParticleType;
+		typedef	_tParticleType	TParticleType;
 
-								TParticleType									Binding										= {};
-								int32_t											IndexParticlePhysics						= -1;
+		TParticleType			Binding										= {};
+		int32_t					IndexParticlePhysics						= -1;
 	};
 
 	template<typename _tParticleType, typename _tCoord>
@@ -149,11 +148,11 @@ namespace gpk
 
 	template<typename _tParticleType, typename _tCoord>
 	struct SParticleSystem {
-		typedef					::gpk::SParticleBinding<_tParticleType>			TParticleInstance;
-		typedef					::gpk::SParticle2Integrator<_tCoord>			TIntegrator;
+		typedef	::gpk::SParticleBinding<_tParticleType>	TParticleInstance;
+		typedef	::gpk::SParticle2Integrator<_tCoord>	TIntegrator;
 
-								::gpk::apod<TParticleInstance>				Instances									= {};
-								TIntegrator										Integrator									= {};
+		::gpk::apod<TParticleInstance>					Instances									= {};
+		TIntegrator										Integrator									= {};
 	};
 
 	template<typename _tParticleType, typename _tCoord>
@@ -163,48 +162,17 @@ namespace gpk
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::apod<::gpk::n3<float>>		Position			= {};
-		::gpk::apod<::gpk::n3<float>>		Direction			= {};
-		::gpk::apod<float>						Speed				= {};
+		::gpk::apod<::gpk::n3f32>	Position			= {};
+		::gpk::apod<::gpk::n3f32>	Direction			= {};
+		::gpk::apod<float>			Speed				= {};
 
-		int											IntegrateSpeed		(double secondsLastFrame)	{
-			for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
-				::gpk::n3<float>							& direction			= Direction	[iShot];
-				::gpk::n3<float>							& position			= Position	[iShot];
-				float											& speed				= Speed		[iShot];
-				position									+= direction * speed * secondsLastFrame;
-			}
-			return 0;
-		}
+		int							IntegrateSpeed		(double secondsLastFrame);
 
-		int											Remove				(int32_t iParticle)	{
-			Position	.remove_unordered(iParticle);
-			Direction	.remove_unordered(iParticle);
-			return Speed.remove_unordered(iParticle);
-		}
+		int							Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed);
+		int							Remove				(int32_t iParticle);
 
-		int											Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed)	{
-			Position	.push_back(position);
-			Direction	.push_back(direction);
-			return Speed.push_back(speed);
-		}
-
-		::gpk::error_t										Save(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::saveView(output, Position	)); 
-			gpk_necs(::gpk::saveView(output, Direction	)); 
-			gpk_necs(::gpk::saveView(output, Speed		)); 
-			info_printf("Saved %s, %i", "Position	", Position		.size()); 
-			info_printf("Saved %s, %i", "Direction	", Direction	.size()); 
-			info_printf("Saved %s, %i", "Speed		", Speed		.size()); 
-			return 0; 
-		}
-
-		::gpk::error_t										Load(::gpk::vcu8 & input) { 
-			gpk_necs(::gpk::loadView(input, Position	));
-			gpk_necs(::gpk::loadView(input, Direction	));
-			gpk_necs(::gpk::loadView(input, Speed		));
-			return 0;
-		}
+		::gpk::error_t				Load				(::gpk::vcu8 & input);
+		::gpk::error_t				Save				(::gpk::au8 & output)	const;
 	};
 } // namespace
 

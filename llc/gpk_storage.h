@@ -35,29 +35,29 @@ namespace gpk
 	::gpk::error_t						pathNameCompose			(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed);
 	::gpk::error_t						findLastSlash			(const ::gpk::vcc & path);
 
-	struct SFileManager {
-		::gpk::aobj<::gpk::au8>				Data					= {};
-		::gpk::aobj<::gpk::vcc>				Name					= {};
-
-		::gpk::error_t						Save					(::gpk::au8 & output)	const	{
-			gpk_necs(::gpk::savePOD(output, Name.size()));
-			for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
-				gpk_necall(::gpk::saveView(output, Name[iFile]), "iEntity: %i", iFile);
-			}
-			return 0;
-		}
-		::gpk::error_t						AddFile					(const ::gpk::vcc & fileName)	{
-			for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
-				if(fileName == Name[iFile])
-					return iFile;
-			}
-			::gpk::au8								fileBytes				= {};
-			gpk_necall(::gpk::fileToMemory(fileName, fileBytes), "Failed to load file: '%s'", ::gpk::toString(fileName).begin());
-			gpk_necs(Data.push_back(fileBytes));
-			gpk_necs(Name.push_back(fileName));
-			return -1;
-		}
-	};
+	//struct SFileManager {
+	//	::gpk::aobj<::gpk::au8>				Data					= {};
+	//	::gpk::aobj<::gpk::vcc>				Name					= {};
+	//
+	//	::gpk::error_t						Save					(::gpk::au8 & output)	const	{
+	//		gpk_necs(::gpk::savePOD(output, Name.size()));
+	//		for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
+	//			gpk_necall(::gpk::saveView(output, Name[iFile]), "iEntity: %i", iFile);
+	//		}
+	//		return 0;
+	//	}
+	//	::gpk::error_t						AddFile					(const ::gpk::vcc & fileName)	{
+	//		for(uint32_t iFile = 0; iFile < Name.size(); ++iFile) {
+	//			if(fileName == Name[iFile])
+	//				return iFile;
+	//		}
+	//		::gpk::au8								fileBytes				= {};
+	//		gpk_necall(::gpk::fileToMemory(fileName, fileBytes), "Failed to load file: '%s'", ::gpk::toString(fileName).begin());
+	//		gpk_necs(Data.push_back(fileBytes));
+	//		gpk_necs(Name.push_back(fileName));
+	//		return -1;
+	//	}
+	//};
 } // namespace
 
 #endif // GPK_STORAGE_H_2983749283

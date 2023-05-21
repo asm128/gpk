@@ -1,5 +1,4 @@
 #include "gpk_matrix.h"
-#include "gpk_array.h"
 #include "gpk_enum.h"
 
 #ifndef GPK_RIGIDBODY_H_234872398472341
@@ -79,6 +78,11 @@ namespace gpk
 
 		stacxpr	const ::gpk::m4f					MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
 		stacxpr	const ::gpk::m3f					MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
+
+		::gpk::error_t								Load							(::gpk::vcu8 & input);
+		::gpk::error_t								Save							(::gpk::au8 & output)	const;
+		inline	::gpk::error_t						Load							(::gpk::vcc & input)			{ return Load(*((::gpk::vcu8*)&input)); }
+		inline	::gpk::error_t						Save							(::gpk::ai8 & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
 
 		int32_t 									ZeroCenters						()	{ return Centers.fill({}); }
 		int32_t 									ZeroForces						()	{ return Forces.fill({}); }
@@ -183,6 +187,7 @@ namespace gpk
 		}
 
 		inline	bool								Active							(uint32_t iBody)									const	{ return Flags[iBody].Active; }
+		inline	bool								Collides						(uint32_t iBody)									const	{ return Flags[iBody].Collides; }
 		inline	float								GetMass							(uint32_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }
 		inline	void								GetPosition						(uint32_t iBody, ::gpk::n3f32 & position)			const	{ position		= Centers[iBody].Position; }
 		inline	void								GetOrientation					(uint32_t iBody, ::gpk::quatf32 & orientation)		const	{ orientation	= Centers[iBody].Orientation; }
@@ -190,7 +195,8 @@ namespace gpk
 		inline	void								GetAcceleration					(uint32_t iBody, ::gpk::n3f32 & acceleration)		const	{ acceleration	= Forces[iBody].Acceleration;	}
 		inline	void								GetVelocity						(uint32_t iBody, ::gpk::n3f32 & velocity)			const	{ velocity		= Forces[iBody].Velocity;		}
 
-		inline	void								SetActive						(uint32_t iBody, bool active)								{ Flags[iBody].Active = active; }
+		inline	void								SetActive						(uint32_t iBody, bool active)								{ Flags[iBody].Active	= active; }
+		inline	void								SetCollides						(uint32_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
 		inline	void								SetMassInverse					(uint32_t iBody, float inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
 		inline	void								SetMass							(uint32_t iBody, float mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
 		inline	void								AddForce						(uint32_t iBody, const ::gpk::n3f32 & force)				{ Frames[iBody].AccumulatedForce += force; }
@@ -242,33 +248,6 @@ namespace gpk
 				bodyFlags.Falling							= true; 
 		}
 
-		::gpk::error_t								Save							(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::saveView(output, Frames			));
-			gpk_necs(::gpk::saveView(output, Flags			));
-			gpk_necs(::gpk::saveView(output, Forces			));
-			gpk_necs(::gpk::saveView(output, Masses			));
-			gpk_necs(::gpk::saveView(output, Centers		));
-			gpk_necs(::gpk::saveView(output, TransformsLocal));
-
-			info_printf("Saved %s, %i", "Frames"			, Frames		.size());
-			info_printf("Saved %s, %i", "Flags"				, Flags			.size());
-			info_printf("Saved %s, %i", "Forces"			, Forces			.size());
-			info_printf("Saved %s, %i", "Masses"			, Masses			.size());
-			info_printf("Saved %s, %i", "Transforms"		, Centers			.size());
-			info_printf("Saved %s, %i", "TransformsLocal"	, TransformsLocal	.size());
-			return 0; 
-		}
-		::gpk::error_t								Load							(::gpk::vcu8 & input) { 
-			gpk_necs(::gpk::loadView(input, Frames			));
-			gpk_necs(::gpk::loadView(input, Flags			));
-			gpk_necs(::gpk::loadView(input, Forces			));
-			gpk_necs(::gpk::loadView(input, Masses			));
-			gpk_necs(::gpk::loadView(input, Centers			));
-			gpk_necs(::gpk::loadView(input, TransformsLocal	));
-			return 0;																	  
-		}
-		inline	::gpk::error_t						Save							(::gpk::apod<int8_t> & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
-		inline	::gpk::error_t						Load							(::gpk::vcc & input)					{ return Load(*((::gpk::vcu8*)&input)); }
 	};
 
 	int											createOrbiter

@@ -1,4 +1,32 @@
 #include "gpk_rigidbody.h"
+#include "gpk_apod_serialize.h"
+
+::gpk::error_t	gpk::SRigidBodyIntegrator::Load							(::gpk::vcu8 & input) { 
+	gpk_necs(::gpk::loadView(input, Frames			));
+	gpk_necs(::gpk::loadView(input, Flags			));
+	gpk_necs(::gpk::loadView(input, Forces			));
+	gpk_necs(::gpk::loadView(input, Masses			));
+	gpk_necs(::gpk::loadView(input, Centers			));
+	gpk_necs(::gpk::loadView(input, TransformsLocal	));
+	return 0;																	  
+}
+
+::gpk::error_t	gpk::SRigidBodyIntegrator::Save							(::gpk::au8 & output) const { 
+	gpk_necs(::gpk::saveView(output, Frames			));
+	gpk_necs(::gpk::saveView(output, Flags			));
+	gpk_necs(::gpk::saveView(output, Forces			));
+	gpk_necs(::gpk::saveView(output, Masses			));
+	gpk_necs(::gpk::saveView(output, Centers		));
+	gpk_necs(::gpk::saveView(output, TransformsLocal));
+
+	info_printf("Saved %s, %i", "Frames"			, Frames		.size());
+	info_printf("Saved %s, %i", "Flags"				, Flags			.size());
+	info_printf("Saved %s, %i", "Forces"			, Forces			.size());
+	info_printf("Saved %s, %i", "Masses"			, Masses			.size());
+	info_printf("Saved %s, %i", "Transforms"		, Centers			.size());
+	info_printf("Saved %s, %i", "TransformsLocal"	, TransformsLocal	.size());
+	return 0; 
+}
 
 void								gpk::transformInertiaTensor	(::gpk::SMatrix3<float> & iitWorld, const ::gpk::SMatrix3<float> &iitBody, const ::gpk::SMatrix4<float> &rotmat)		{
 	const float								t4							= rotmat._11*iitBody._11 + rotmat._21*iitBody._12 + rotmat._31*iitBody._13;

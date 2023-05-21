@@ -719,8 +719,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 		const ::gpk::SControlState				& controlState				= gui.Controls.States[idControl];
 		if(controlState.Execute) {
 			info_printf("Executed control %i (0x%x).", idControl, idControl);
-			gpk_necall(funcOnExecute(idControl), "idControl: %i (0x%x).", idControl, idControl);
-			break;
+			return funcOnExecute(idControl);
 		}
 	}
 	return 0;

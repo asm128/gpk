@@ -9,16 +9,16 @@ namespace gpk
 	struct array_static	{
 		stacxpr	const uint32_t	SIZE						= _sizeArray;
 
-		T					Storage	[_sizeArray]		;
+		T						Storage	[_sizeArray]		;
 
 		operator				view<T>				()																{ return {Storage, _sizeArray}; }
 		operator				view<const T>			()											const	noexcept	{ return {Storage, _sizeArray}; }
 
-		inline	const T&	operator[]					(uint32_t index)							const				{
+		inline	const T&		operator[]					(uint32_t index)							const				{
 			gthrow_if(index >= _sizeArray, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);
 			return Storage[index];
 		}
-		inline	T&			operator[]					(uint32_t index)												{
+		inline	T&				operator[]					(uint32_t index)												{
 			gthrow_if(index >= _sizeArray, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);
 			return Storage[index];
 		}
@@ -31,14 +31,14 @@ namespace gpk
 			return ::gpk::equal(other.begin(), this->begin(), this->size());
 		}
 		// Methods
-		inline	T*			begin						()													noexcept	{ return Storage;				}
-		inline	T*			end							()													noexcept	{ return Storage + _sizeArray;	}
+		inline	T*				begin						()													noexcept	{ return Storage;				}
+		inline	T*				end							()													noexcept	{ return Storage + _sizeArray;	}
 
-		inlcxpr	const T*	begin						()											const	noexcept	{ return Storage;				}
-		inlcxpr	const T*	end							()											const	noexcept	{ return Storage + _sizeArray;	}
+		inlcxpr	const T*		begin						()											const	noexcept	{ return Storage;				}
+		inlcxpr	const T*		end							()											const	noexcept	{ return Storage + _sizeArray;	}
 
 		inlcxpr	const uint32_t&	size						()											const	noexcept	{ return SIZE; }
-		inlcxpr	const uint32_t	byte_count					()											const	noexcept	{ return (uint32_t)(_sizeArray * sizeof(T));	}
+		inlcxpr	uint32_t		byte_count					()											const	noexcept	{ return (uint32_t)(_sizeArray * sizeof(T));	}
 	};
 
 	template<typename T, uint32_t _sizeArray>	
@@ -62,17 +62,6 @@ namespace gpk
 	::gpk::error_t			find						(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
 		return ::gpk::find(element, ::gpk::view<const T>{target}, offset);
 	}
-
-	template<typename _tPOD, uint32_t _nSize> 
-	::gpk::error_t			loadView					(::gpk::vcu8 & input, ::gpk::astatic<_tPOD, _nSize> & output) { 
-		::gpk::view<const _tPOD>	readView					= {}; 
-		uint32_t					bytesRead					= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));
-		return 0;
-	}
-
 } // namespace
 
 #endif // GPK_ARRAY_STATIC_H_2983749823749826534465243

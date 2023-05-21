@@ -1,5 +1,7 @@
 #include "gpk_enum.h"
 
+#include "gpk_apod_serialize.h"
+
 #ifndef GPK_EVENT_H_230511
 #define GPK_EVENT_H_230511
 
@@ -83,11 +85,14 @@ namespace gpk
 	}
 
 	template<typename _tParentEvent, typename _tChildEvent>
-	static	::gpk::error_t		extractAndHandle		(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
+	static	::gpk::error_t	extractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
 		::gpk::SEventView<_tChildEvent>	childEvent; 
 		gpk_necs(parentEvent.ExtractChild(childEvent)); 
 		return funcHandleChild(childEvent);
 	}
+
+#define gpk_warning_unhandled_event(eventUnhandled)		warning_printf("unhandled %s event: %s", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type)); 
+	
 }
 
 #endif // GPK_EVENT_H_230511

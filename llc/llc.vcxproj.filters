@@ -306,9 +306,6 @@
     <ClInclude Include="gpk_http_client.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_manager.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_model.h">
       <Filter>geometry</Filter>
     </ClInclude>
@@ -423,14 +420,26 @@
     <ClInclude Include="gpk_functional.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_array_pod.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_astatic_serialize.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_serialize.h">
+      <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_array_base.h">
-      <Filter>Header Files</Filter>
+      <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_array_obj.h">
-      <Filter>Header Files</Filter>
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_pod.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_manager.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_serialize.h">
+      <Filter>view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -609,6 +618,9 @@
       <Filter>encoding</Filter>
     </ClCompile>
     <ClCompile Include="gpk_event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

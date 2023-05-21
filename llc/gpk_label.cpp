@@ -1,22 +1,22 @@
 #include "gpk_label.h"
 #include "gpk_label_manager.h"
 
-static	::gpk::CLabelManager*	labelManagerSingleton						()										noexcept	{ 
-	static ::gpk::CLabelManager			instanceLabelManager; 
+static	::gpk::CLabelManager*	labelManagerSingleton		()			noexcept	{ 
+	static	::gpk::CLabelManager	instanceLabelManager; 
 	return &instanceLabelManager; 
 }
 
-								::gpk::label::label							(const char * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
+		::gpk::label::label			(const char * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
 	LabelManager->View(text, stringLen, *this); 
 }
 
-bool							::gpk::label::operator==					(const ::gpk::vcs & other)		const	noexcept	{
+bool	::gpk::label::operator==	(const ::gpk::vcs & other)		const	noexcept	{
 	if(Data == other.begin())
 		return true;
 	return (Count != other.size()) ? false : 0 == memcmp(Data, other.begin(), Count);
 }
 
-bool							::gpk::label::operator==					(const label & other)			const	noexcept	{
+bool	::gpk::label::operator==	(const label & other)			const	noexcept	{
 	if(Data == other.Data)
 		return true;
 	if(Count != other.Count)

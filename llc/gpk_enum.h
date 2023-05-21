@@ -10,10 +10,10 @@
 
 namespace gpk
 {
-	static	const ::gpk::vcc				INVALID_ENUM_VALUE_STR					= {7, "INVALID"};
-	//stacxpr	const ::gpk::vcs				UNDEFINED_ENUM_TYPE_STR					= "Undefined enumeration type.";
-	static	const ::gpk::vcs				UNDEFINED_ENUM_VALUE_STR				= "Undefined enumeration value";
-	static	const ::gpk::vcs				UNRESOLVED_ENUM_LABEL_STR				= "Unresolved enumeration value name";
+	//stacxpr	::gpk::vcc				UNDEFINED_ENUM_TYPE_STR					= "Undefined enumeration type.";
+	stacxpr	::gpk::vcc				INVALID_ENUM_VALUE_STR					= {7, "INVALID"};
+	stacxpr	::gpk::vcc				UNDEFINED_ENUM_VALUE_STR				= {27, "Undefined enumeration value"};
+	stacxpr	::gpk::vcc				UNRESOLVED_ENUM_LABEL_STR				= {33, "Unresolved enumeration value name"};
 
 	// This template is intended to store the name of an enumeration, the values of such enumeration and a string representing each value.
 	// The implementation separates names from values for improving search speed by reducing the memory usage when performing searches for names/values.
@@ -64,15 +64,15 @@ namespace gpk
 			return -1;
 		}
 		_tValue									get_value								(const ::gpk::vcc & name)					const			{
-			for(uint32_t i=0, count = Names.size(); i<count; ++i)
+			for(uint32_t i=0, count = Names.size(); i<count; ++i) {
 				if(name == Names[i])
 					return Values[i];
-
+			}
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
 			return INVALID_VALUE;
 		}
 		::gpk::error_t							get_value_by_index						(uint32_t index, _tValue & value)			const			{
-			if( index < Values.size() ) {
+			if(index < Values.size()) {
 				value									= Values[index];
 				return 0;
 			}
@@ -85,7 +85,7 @@ namespace gpk
 			return Values[index];
 		}
 		::gpk::error_t							get_label_by_index						(uint32_t index, ::gpk::vcc & value)		const			{
-			if( index < Names.size() ) {
+			if(index < Names.size()) {
 				value									= Names[index];
 				return 0;
 			}
@@ -94,9 +94,8 @@ namespace gpk
 			return -1;
 		}
 		::gpk::vcc								get_label_by_index						(uint32_t index)							const			{
-			if( index < Names.size() ) {
+			if(index < Names.size())
 				return Names[index];
-			}
 			else {
 				gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
 				return ::gpk::UNDEFINED_ENUM_VALUE_STR;
@@ -112,10 +111,10 @@ namespace gpk
 			return index							= -1;
 		}
 		int32_t									get_value_index							(const ::gpk::vcc & name)					const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i)
+			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
 				if(name == Names[i])
 					return (int32_t)i;
-
+			}
 			error_printf("Enumeration value not found! Name: %s.", name.begin());
 			return -1;
 		}
@@ -129,10 +128,10 @@ namespace gpk
 			return index							= -1;
 		}
 		int32_t									get_value_index							(const _tValue & value)						const			{
-			for(uint32_t i=0, count = Names.size(); i < count; ++i)
+			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
 				if(value == Values[i])
 					return (int32_t)i;
-
+			}
 			gpk_enum_warning_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
 			return -1;
 		}
@@ -157,18 +156,18 @@ namespace gpk
 			return -1;
 		}
 		const ::gpk::vcc &						get_value_label							(const _tValue & value)						const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i)
+			for(uint32_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Names[i];
-
+			}
 			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		const ::gpk::vcc &						get_value_desc							(const _tValue & value)						const			{
-			for(uint32_t i=0, count = Values.size(); i < count; ++i)
+			for(uint32_t i=0, count = Values.size(); i < count; ++i) {
 				if(value == Values[i])
 					return Descriptions[i];
-
+			}
 			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
@@ -217,33 +216,38 @@ namespace gpk
 	};
 
 	template <typename _tEnum, size_t _sLen>
-	_tEnum														get_value				(const char (&valueLabel)[_sLen])	{ return ::gpk::enum_definition<_tEnum>::get().get_value(::gpk::vcs{valueLabel});	}
-	template <typename _tEnum>	_tEnum							get_value				(const ::gpk::vcs & valueLabel	)	{ return ::gpk::enum_definition<_tEnum>::get().get_value(valueLabel);	}
-	template <typename _tEnum>	_tEnum							get_value				(const ::gpk::vcc & valueLabel	)	{ return ::gpk::enum_definition<_tEnum>::get().get_value(valueLabel);	}
+	_tEnum														get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::enum_definition<_tEnum>::get().get_value(::gpk::vcs{valueLabel});	}
+	template <typename _tEnum>	_tEnum							get_value			(const ::gpk::vcs & valueLabel	)		{ return ::gpk::enum_definition<_tEnum>::get().get_value(valueLabel);	}
+	template <typename _tEnum>	_tEnum							get_value			(const ::gpk::vcc & valueLabel	)		{ return ::gpk::enum_definition<_tEnum>::get().get_value(valueLabel);	}
 
-	template <typename _tEnum>	uint32_t						get_value_count			()									{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
-	template <typename _tEnum>	const ::gpk::vcc &				get_value_label			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::vcc &				get_value_namev			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	const char*						get_value_namep			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit).begin();	}
-	template <typename _tEnum>	const ::gpk::vcc &				get_value_descv			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::vcc &				get_value_descp			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc> &	get_value_labels		()									{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc> &	get_value_names			()									{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc> &	get_value_descs			()									{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	int32_t							get_value_index			(const _tEnum & statusBit		)	{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
+	template <typename _tEnum>	uint32_t						get_value_count		()										{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_label		(const _tEnum & statusBit		)		{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_namev		(const _tEnum & statusBit		)		{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
+	template <typename _tEnum>	const char*						get_value_namep		(const _tEnum & statusBit		)		{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit).begin();	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_descv		(const _tEnum & statusBit		)		{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_descp		(const _tEnum & statusBit		)		{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_labels	()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_names		()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_descs		()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
+	template <typename _tEnum>	int32_t							get_value_index		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name;			}
+	template <typename _tEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name.begin();	}
+	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		(const _tEnum & )			noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name;			}
+	template <typename _tEnum>	const char*						get_enum_namep		(const _tEnum & )			noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name.begin();	}
 
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
-#define GDEFINE_ENUM_TYPE(EnumName, IntType)																														\
-	enum EnumName : IntType {};																																		\
-	stincxp	EnumName			operator &						(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	stincxp	EnumName			operator ~						(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	stincxp	EnumName			operator ^						(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	stainli	EnumName&			operator |=						(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	stainli	EnumName&			operator &=						(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	stainli	EnumName&			operator ^=						(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	stincxp	EnumName			operator |						(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}
+#define GDEFINE_ENUM_TYPE(EnumName, IntType)																												\
+	enum EnumName : IntType {};																																\
+	stincxp	EnumName				operator &		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	stincxp	EnumName				operator ~		(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	stincxp	EnumName				operator ^		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	stainli	EnumName&				operator |=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
+	stainli	EnumName&				operator &=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
+	stainli	EnumName&				operator ^=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
+	stincxp	EnumName				operator |		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
+	template<EnumName> const char*	get_enum_namep	(const EnumName &)			noexcept	{ return #EnumName;	}
 
 #define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
 	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\

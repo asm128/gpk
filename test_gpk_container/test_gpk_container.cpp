@@ -1,12 +1,13 @@
 #include "gpk_array.h"
 #include <windows.h>
 
+static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};	
+
 int test_array_pod() {
-	const char						test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};	
-	const ::gpk::array_pod<char>	aconst_0			= ::gpk::vcs{"Hello"};
-	const ::gpk::array_pod<char>	aconst_1			{test_chars};
-	::gpk::array_pod<char>			atest_0				= "Again ";
-	::gpk::array_pod<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
+	static	const ::gpk::apod<char>	aconst_0			= ::gpk::vcs{"Hello"};
+	static	const ::gpk::apod<char>	aconst_1			{test_chars};
+	::gpk::apod<char>			atest_0				= "Again ";
+	::gpk::apod<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 	
 	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);	
@@ -17,18 +18,18 @@ int test_array_pod() {
 	OutputDebugString("\n\n");
 
 	::gpk::view<const char>			vtest_0(aconst_0), vtest_1{atest_1};
-	atest_1						= aconst_1;
 	atest_0						= vtest_0;
+	atest_1						= aconst_1;
 	always_printf("atest_0   : %u, %s", atest_0		.size(), atest_0	.begin());		
 	always_printf("atest_1   : %u, %s", atest_1		.size(), atest_1	.begin());		
 	OutputDebugString("\n\n");
 
 	char							popped				= 0;									    
-	gpk_necs(atest_0.pop_back		(popped));					always_printf("pop_back             : %u, %s", atest_0.size(), atest_0.begin());	
-	gpk_necs(atest_1.pop_back		());						always_printf("pop_back             : %u, %s", atest_1.size(), atest_1.begin());	
-	gpk_necs(atest_0.push_back		(popped));					always_printf("push_back            : %u, %s", atest_0.size(), atest_0.begin());	
-	gpk_necs(atest_0.append_string	(" again"));				always_printf("append_string        : %u, %s", atest_0.size(), atest_0.begin());		
-	gpk_necs(atest_1.append_string	(::gpk::vcs{" value"}));	always_printf("append_string        : %u, %s", atest_1.size(), atest_1.begin());				
+	gpk_necs(atest_0.pop_back		());						always_printf("pop_back             : %u, %s"		, atest_0.size(), atest_0.begin());	
+	gpk_necs(atest_1.pop_back		(popped));					always_printf("pop_back             : %u, %s, '%c'"	, atest_1.size(), atest_1.begin(), popped);	
+	gpk_necs(atest_1.push_back		(popped = '$'));			always_printf("push_back            : %u, %s"		, atest_1.size(), atest_1.begin());	
+	gpk_necs(atest_0.append_string	(" again"));				always_printf("append_string        : %u, %s"		, atest_0.size(), atest_0.begin());		
+	gpk_necs(atest_1.append_string	(::gpk::vcs{" value"}));	always_printf("append_string        : %u, %s"		, atest_1.size(), atest_1.begin());				
 	OutputDebugString("\n\n");
 
 	atest_0.clear			();			always_printf("clear                : %u, 0x%p", atest_0.size(), atest_0.begin());	
@@ -93,13 +94,11 @@ int test_array_pod() {
 	return 0;
 }
 
-
 int test_array_obj() {
-	const char						test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};	
-	const ::gpk::array_obj<char>	aconst_0			= ::gpk::vcs{"Hello"};
-	const ::gpk::array_obj<char>	aconst_1			{test_chars};
-	::gpk::array_obj<char>			atest_0				= "Again ";
-	::gpk::array_obj<char>			atest_1				= {'L', 'a', 't', 'e', 'r'};
+	const ::gpk::aobj<char>			aconst_0			= ::gpk::vcs{"Hello"};
+	const ::gpk::aobj<char>			aconst_1			{test_chars};
+	::gpk::aobj<char>				atest_0				= "Again ";
+	::gpk::aobj<char>				atest_1				= {'L', 'a', 't', 'e', 'r'};
 	OutputDebugString("\n\n");
 	
 	always_printf("test_chars: %u, %u, %s", (uint32_t)strlen(test_chars), (uint32_t)::gpk::size(test_chars), test_chars);	

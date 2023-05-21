@@ -2,7 +2,9 @@
 // Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_framework.h"
-#include "gpk_safe.h"
+//#include "gpk_safe.h"
+#include "gpk_apod_serialize.h"
+
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
 #	include <ShellScalingApi.h>	// for GetDpiForMonitor()

@@ -2,6 +2,8 @@
 
 #include "gpk_keyval.h"
 
+#include "gpk_view_serialize.h"
+
 #ifndef GPK_ARRAY_POD_H_230518
 #define GPK_ARRAY_POD_H_230518
 
@@ -34,21 +36,13 @@ namespace gpk
 		}
 		inline					array_pod			(const array_pod<T> & other)						: array_pod((const view<const T>&) other) {}
 								array_pod			(const view<const T> & other)						{
-			if(0 == other.size()) 
-				return; 
-			Data					= (T*)alloc_with_reserve(other.size(), Size);
-			gthrow_if(0 == Data, "Failed to allocate array. Requested size: %u. ", (uint32_t)other.size());
+			gsthrow_if(resize(other.size()) != (int32_t)other.size());
 			memcpy(Data, other.begin(), other.byte_count());
-			*(u16*)&Data[other.size()]	= 0;
-			Count					= other.size();
 		}
 		template<size_t _count>			
 								array_pod			(const T (&other)[_count])							{
-			Data					= (T*)alloc_with_reserve(_count, Size);
-			gthrow_if(0 == Data, "Failed to allocate array. Requested size: %u. ", (uint32_t)_count);
+			gsthrow_if(resize(_count) != (int32_t)_count);
 			memcpy(Data, other, _count * sizeof(T));
-			*(u16*)&Data[_count]	= 0;
-			Count					= _count;
 		}
 		inlcxpr	operator		view<const T>	()									const	noexcept	{ return {Data, Count}; }
 		TArray&					operator =			(const array_pod<T>& other)							{ return operator=((const view<T> &) other); }
@@ -106,16 +100,16 @@ namespace gpk
 		}
 		::gpk::error_t			reserve				(uint32_t newCount)								{
 			if(newCount > Size) {
-				uint32_t					newSize;
-				T							* newData			= (T*)alloc_with_reserve(newCount, newSize);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
-				if(Data) {
+				if(Data)
 					memcpy(newData, Data, this->byte_count());
 					*(u16*)&newData[Count]	= 0;
-					::gpk::gpk_free(Data);
-				}
+				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
+				::gpk::gpk_free(oldData);
 			}
 			return Size;
 		}
@@ -142,13 +136,17 @@ namespace gpk
 			ree_if(index > Count, "Invalid index: %u.", index);
 			const uint32_t				newCount			= Count + 1;
 			if(Size < newCount) {
-				T						* oldData			= Data;
-				T						* newData			= (T*)alloc_with_reserve(newCount, Size);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
-				memcpy(newData, oldData, index * sizeof(T));
+				if(Data)
+					memcpy(newData, Data, index * sizeof(T));
 				newData[index]			= newValue;
-				memcpy(&newData[index + 1], &oldData[index], Count - index);
+				if(Data)
+					memcpy(&newData[index + 1], &Data[index], Count - index);
+				T							* oldData			= Data;
 				Data					= newData;
+				Size					= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {
@@ -165,13 +163,17 @@ namespace gpk
 
 			const uint32_t				newCount			= Count + chainLength;
 			if(Size < newCount) {
-				T						* oldData			= Data;
-				T						* newData			= (T*)alloc_with_reserve(newCount, Size);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
-				memcpy(newData, oldData, index * sizeof(T));
+				if(Data)
+					memcpy(newData, Data, index * sizeof(T));
 				memcpy(&newData[index], chainToInsert, chainLength * sizeof(T));
-				memcpy(&newData[index + chainLength], &oldData[index], Count - index);
+				if(Data)
+					memcpy(&newData[index + chainLength], &Data[index], Count - index);
+				T							* oldData			= Data;
 				Data					= newData;
+				Size					= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
@@ -186,7 +188,7 @@ namespace gpk
 		inline	::gpk::error_t	insert				(uint32_t index, const T (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (uint32_t)_chainLength); }
 		inline	::gpk::error_t	insert				(uint32_t index, ::gpk::view<const T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-		::gpk::error_t			remove_unordered	(uint32_t index)													noexcept	{
+		::gpk::error_t			remove_unordered	(uint32_t index)												noexcept	{
 			ree_if(index >= Count, "Invalid index: %u.", index);
 			Data[index]				= Data[--Count];
 			*(u16*)&Data[Count]		= 0;
@@ -240,32 +242,6 @@ namespace gpk
 
 	::gpk::error_t				join							(::gpk::apod<char> & query, char separator, ::gpk::view<const gpk::vcc> fields);
 	::gpk::error_t				append_quoted					(::gpk::apod<char> & output, ::gpk::vcc text);
-
-	::gpk::error_t				keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::au8 & output);
-
-	template<typename T>
-	::gpk::error_t				saveView			(::gpk::au8 & output, const ::gpk::view<T> & headerToWrite)	{
-		gpk_necs(output.append({(const uint8_t*)&headerToWrite.size(), (uint32_t)sizeof(uint32_t)}));
-		gpk_necs(output.append({(const uint8_t*)headerToWrite.begin(), headerToWrite.size() * (uint32_t)sizeof(T)}));
-		return sizeof(uint32_t) + headerToWrite.size() * sizeof(T);
-	}
-	template<typename T> ::gpk::error_t	saveView(::gpk::ai8 & output, const ::gpk::view<T> & headerToWrite) { return ::gpk::saveView(headerToWrite, *(const ::gpk::au8*)&output); }
-
-	template<typename T> ::gpk::error_t	savePOD	(::gpk::au8 & output, const T & input)						{ return ::gpk::saveView(output, ::gpk::view<const T>{&input, 1}); }
-	template<typename T> ::gpk::error_t	savePOD	(::gpk::ai8 & output, const T & input)						{ return ::gpk::saveView(output, ::gpk::view<const T>{&input, 1}); }
-
-	template<typename T> 
-	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::apod<T> & output) { 
-		::gpk::view<const T>		readView			= {}; 
-		uint32_t						bytesRead			= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		output									= readView; 
-		return 0;
-	}
-	template<typename T> ::gpk::error_t	loadView			(::gpk::vci8 & input, ::gpk::apod<T> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-	template<typename T> ::gpk::error_t	loadView			(::gpk::vcc  & input, ::gpk::apod<T> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-
 } // namespace
 
 #endif // GPK_ARRAY_POD_H_230518

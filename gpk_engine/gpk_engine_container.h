@@ -1,5 +1,6 @@
 #include "gpk_ptr.h"
 #include "gpk_label.h"
+#include "gpk_apod_serialize.h"
 
 #ifndef GPK_ENGINE_CONTAINER_H
 #define GPK_ENGINE_CONTAINER_H

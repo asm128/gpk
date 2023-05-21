@@ -57,8 +57,8 @@ namespace gpk
 
 		::gpk::error_t			reserve				(uint32_t newCount)										{
 			if(newCount > Size) {
-				uint32_t					newSize;
-				T							* newData			= (T*)alloc_with_reserve(newCount, newSize);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
 				for(uint32_t iElement = 0; iElement < Count; ++iElement) {
 					new (&newData[iElement]) T(Data[iElement]);
@@ -180,8 +180,8 @@ namespace gpk
 			ree_if(index > Count, "Invalid index: %u.", index);
 			const uint32_t				newCount			= Count + 1;
 			if(Size < newCount) {
-				T							* oldData			= Data;
-				T							* newData			= (T*)alloc_with_reserve(newCount, Size);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
 				for(uint32_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
@@ -192,7 +192,9 @@ namespace gpk
 					new (&newData[i + 1]) T(Data[i]);
 					Data[i].~T();
 				}
+				T							* oldData			= Data;
 				Data					= newData;
+				Size					= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {
@@ -211,8 +213,8 @@ namespace gpk
 
 			const uint32_t				newCount			= Count + chainLength;
 			if(Size < newCount) {
-				T							* oldData			= Data;
-				T							* newData			= (T*)alloc_with_reserve(newCount, Size);
+				T							* newData			= 0;
+				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
 				for(uint32_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
@@ -226,8 +228,9 @@ namespace gpk
 					new (&newData[i + chainLength]) T(Data[i]);
 					Data[i].~T();
 				}
-
+				T							* oldData			= Data;
 				Data					= newData;
+				Size					= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place

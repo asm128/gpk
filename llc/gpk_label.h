@@ -1,4 +1,5 @@
 #include "gpk_view.h"
+#include "gpk_view_serialize.h"
 
 #ifndef GPK_LABEL_H_2908742983
 #define GPK_LABEL_H_2908742983

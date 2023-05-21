@@ -1,5 +1,6 @@
-#include "gpk_array.h"
 #include "gpk_array_static.h"
+#include "gpk_apod_serialize.h"
+#include "gpk_array_obj.h"
 #include "gpk_ptr.h"
 
 #ifndef GPK_LABEL_MANAGER_H_29037492837
@@ -8,20 +9,20 @@
 namespace gpk
 {
 	template<size_t _blockSize>
-	class block_string_container {
+	class block_nts_container {
 		::gpk::apobj<::gpk::astatic<char, _blockSize>>	Blocks;
-		::gpk::apod<uint32_t>								RemainingSpace;
+		::gpk::apod<uint32_t>							RemainingSpace;
 
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::error_t						Clear						()	{ return ::gpk::clear(Blocks, RemainingSpace); }
-		::gpk::error_t						Save						(::gpk::apod<uint8_t> & output)	const	{
+		::gpk::error_t						Clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
+		::gpk::error_t						Save						(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::saveView(output, RemainingSpace));
 			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
 				gpk_necs(::gpk::saveView(output, *Blocks[iArray]));
 			return 0;
 		}
 
-		::gpk::error_t						Load						(::gpk::vcu8 & input) {
+		::gpk::error_t						Load						(::gpk::vcu8 & input)			{
 			Clear();
 			gpk_necs(::gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
@@ -53,13 +54,13 @@ namespace gpk
 	};
 
 	class CLabelManager	{
-		stacxpr	const uint32_t	BLOCK_SIZE					= 1024 * 64;
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
 
-		block_string_container<BLOCK_SIZE>	Characters;
+		block_nts_container<BLOCK_SIZE>		Characters;
 		::gpk::vcc							Empty;
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::apod<uint16_t>				Counts;
+		::gpk::au32							Counts;
 		::gpk::apod<const char*>			Texts;
 
 											~CLabelManager				()																{
@@ -72,7 +73,7 @@ namespace gpk
 			Texts		.push_back(Empty.begin()); 
 		}
 
-		::gpk::error_t						Save						(::gpk::apod<uint8_t> & output)	const	{
+		::gpk::error_t						Save	(::gpk::au8 & output)						const	{
 			gpk_necs(::gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Texts[iArray], Counts[iArray]));
@@ -80,17 +81,17 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load						(::gpk::vcu8 & input) {
+		::gpk::error_t						Load	(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Counts));
-			::gpk::vcc								out_view; 
-			uint32_t								offsetByte					= 0;
+			::gpk::vcc					out_view; 
+			uint32_t					offsetByte					= 0;
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {
-				uint32_t								elementCount				= Counts[iArray];
+				uint32_t					elementCount				= Counts[iArray];
 				gpk_necs(Characters.push_sequence((const char*)&input[offsetByte], elementCount, out_view));
-				offsetByte							+= elementCount;
+				offsetByte				+= elementCount;
 				gpk_necs(Texts.push_back(out_view.begin()));
 			}
-			input								= {input.begin(), input.size() - offsetByte};
+			input					= {input.begin(), input.size() - offsetByte};
 			return 0;
 		}
 

@@ -6,6 +6,7 @@
 #include "gpk_io.h"
 #include "gpk_aes.h"
 #include "gpk_noise.h"
+#include "gpk_apod_serialize.h"
 
 stacxpr	const uint32_t		GPK_CRC_CRC_SEED			= 18973;
 

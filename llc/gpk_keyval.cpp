@@ -1,7 +1,7 @@
 #include "gpk_keyval.h"
 #include "gpk_safe.h"
-#include "gpk_array.h"
 #include "gpk_parse.h"
+#include "gpk_apod_serialize.h"
 
 ::gpk::error_t							gpk::append_quoted					(::gpk::apod<char>& output, ::gpk::vcc text)		{
 	gpk_necall(output.push_back('"'), "%s", "Out of memory?");
