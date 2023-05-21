@@ -27,7 +27,7 @@ namespace gpk
 		::gpk::aobj<::gpk::vcc>					Names									= {};
 		::gpk::aobj<::gpk::vcc>					Titles									= {};
 		::gpk::aobj<::gpk::vcc>					Descriptions							= {};
-
+		
 		inline									enum_definition							()															: Name(::gpk::vcs{"Enum definition name not set."})	{}
 		stainli	enum_definition<_tValue>&		get										()															{
 			static	enum_definition<_tValue>			valueRegistry;
@@ -39,8 +39,9 @@ namespace gpk
 			if( instanceHere.Name != enumName || (instanceHere.Values.size() && (instanceHere.Values[0] != INVALID_VALUE)) )
 				verbose_printf("Initializing enumeration type: '%s'.", enumName.begin());
 
-			static const ::gpk::vcc						newName									= instanceHere.Name = enumName;
-			(void)newName;
+			if(instanceHere.Name.size() != enumName.size())
+				instanceHere.Name						= enumName;
+
 			return INVALID_VALUE;
 		}
 		::gpk::error_t							get_value								(const ::gpk::vcc & name, _tValue & value)	const			{
@@ -238,16 +239,17 @@ namespace gpk
 } // namespace
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
-#define GDEFINE_ENUM_TYPE(EnumName, IntType)																												\
-	enum EnumName : IntType {};																																\
-	stincxp	EnumName				operator &		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	stincxp	EnumName				operator ~		(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	stincxp	EnumName				operator ^		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	stainli	EnumName&				operator |=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	stainli	EnumName&				operator &=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	stainli	EnumName&				operator ^=		(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	stincxp	EnumName				operator |		(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
-	template<EnumName> const char*	get_enum_namep	(const EnumName &)			noexcept	{ return #EnumName;	}
+#define GDEFINE_ENUM_TYPE(EnumName, IntType)																			\
+	enum EnumName : IntType {};																							\
+	static	const uint32_t			__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);	\
+	stincxp	EnumName				operator &					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	stincxp	EnumName				operator ~					(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	stincxp	EnumName				operator ^					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	stainli	EnumName&				operator |=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
+	stainli	EnumName&				operator &=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
+	stainli	EnumName&				operator ^=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
+	stincxp	EnumName				operator |					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
+	template<EnumName> const char*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
 
 #define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
 	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\
