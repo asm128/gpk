@@ -1,6 +1,6 @@
 /// Copyright 2017-2018 - asm128
-#include "gpk_ptr.h"
 #include "gpk_module.h"
+#include "gpk_ptr_obj.h"
 #include "gpk_process.h"
 #include "gpk_runtime_module.h"
 #include "gpk_timer.h"

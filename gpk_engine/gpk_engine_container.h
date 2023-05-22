@@ -29,7 +29,7 @@ namespace gpk
 			return Names.push_back(::gpk::vcc{Names[index]}); 
 		}
 
-		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+		::gpk::error_t						Save			(::gpk::au8 & output) const { 
 			gpk_necs(output.append(::gpk::vcu8{(const uint8_t*)&Elements.size(), 4}));
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);

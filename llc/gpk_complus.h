@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_array.h"
 
 #ifdef GPK_WINDOWS
 
@@ -14,16 +14,16 @@ namespace gpk
 	template<typename _tNCO>
 	class ptr_com {
 	protected:
-							_tNCO								* Reference							= 0;
+							_tNCO					* Reference							= 0;
 	public:
-		typedef				::gpk::ptr_com<_tNCO>				TNCOPtr;
-		typedef				_tNCO								TRef;
+		typedef				::gpk::ptr_com<_tNCO>	TNCOPtr;
+		typedef				_tNCO					TRef;
 
-		inline													~ptr_com							()															noexcept	{ if(Reference) Reference->Release();								}
+		inline										~ptr_com							()															noexcept	{ if(Reference) Reference->Release();								}
 		inlcxpr										ptr_com								()															noexcept	= default;
-		inline													ptr_com								(const TNCOPtr& other)										noexcept	{ Reference = other.Reference; if(Reference) Reference->AddRef();	}
+		inline										ptr_com								(const TNCOPtr& other)										noexcept	{ Reference = other.Reference; if(Reference) Reference->AddRef();	}
 		inlcxpr										ptr_com								(TNCOPtr&& other)											noexcept	{ Reference = other.Reference; other.Reference = 0;					}
-		inline													ptr_com								(TRef* other)												noexcept	{ Reference = other;												}
+		inline										ptr_com								(TRef* other)												noexcept	{ Reference = other;												}
 
 		inlcxpr	operator							_tNCO		*						()															noexcept	{ return Reference;	}
 		inlcxpr	operator							const _tNCO	*						()													const	noexcept	{ return Reference;	}
@@ -35,37 +35,38 @@ namespace gpk
 		inlcxpr	TNCOPtr								operator =							(TNCOPtr&& other)											noexcept	{ TRef* oldInstance = Reference; Reference = other.Reference; other.Reference = 0;					if(oldInstance) oldInstance->Release(); return *this; }
 		inlcxpr	TNCOPtr								operator =							(TRef* other)												noexcept	{ TRef* oldInstance = Reference; Reference = other; if(Reference) Reference->AddRef();				if(oldInstance) oldInstance->Release(); return *this; }
 
-		inline				_tNCO*								operator->							()															noexcept	{ return Reference; }
-		inline				const _tNCO*						operator->							()													const	noexcept	{ return Reference; }
+		inline				_tNCO*					operator->							()															noexcept	{ return Reference; }
+		inline				const _tNCO*			operator->							()													const	noexcept	{ return Reference; }
 
-		inline				TRef**								operator &							()															noexcept	{ return &Reference;	}
+		inline				TRef**					operator &							()															noexcept	{ return &Reference;	}
 
 		inlcxpr	const TRef*							get_ref								()													const	noexcept	{ return Reference;	}
 		inlcxpr	const TRef*							set_ref								(TRef* ref)													noexcept	{ TRef* oldInstance = Reference; Reference = ref; if(oldInstance) oldInstance->Release(); return Reference;	}
 		inlcxpr	TRef*								get									()													const	noexcept	{ return Reference;	}
 
 		template<typename _tNCOOther>
-		inline				::gpk::error_t						as									(_tNCOOther** other)										noexcept	{ 
-			_tNCOOther*													old									= *other;
-			*other													= {};
-			HRESULT														hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)other) : 0;
+		inline				::gpk::error_t			as									(_tNCOOther** other)										noexcept	{ 
+			_tNCOOther*										old									= *other;
+			*other										= {};
+			HRESULT											hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)other) : 0;
 			if(old)
 				old->Release();
 			return hr;
 		}
 
 		template<typename _tNCOOther>
-		inline				::gpk::error_t						as									(::gpk::ptr_com<_tNCOOther>& other)							noexcept	{ 
-			::gpk::ptr_com<_tNCOOther>									old									= other;
-			other													= {};
-			HRESULT														hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)&other) : 0;
+		inline				::gpk::error_t			as									(::gpk::ptr_com<_tNCOOther>& other)							noexcept	{ 
+			::gpk::ptr_com<_tNCOOther>						old									= other;
+			other										= {};
+			HRESULT											hr									= Reference ? Reference->QueryInterface(__uuidof(_tNCOOther), (void**)&other) : 0;
 			return hr;
 		}
 	};
-
-	template <typename T> using array_com	= ::gpk::aobj<::gpk::ptr_com<T>>;
 	template <typename T> using pcom		= ::gpk::ptr_com<T>;
 	template <typename T> using acom		= ::gpk::aobj<::gpk::pcom<T>>;
+	template <typename T> using vcom		= ::gpk::view<::gpk::pcom<T>>;
+	template <typename T> using array_com	= ::gpk::acom<T>;
+	template <typename T> using view_com	= ::gpk::vcom<T>;
 }
 
 #endif // GPK_WINDOWS

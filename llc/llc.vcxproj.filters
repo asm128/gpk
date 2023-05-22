@@ -85,6 +85,9 @@
     <Filter Include="cdn">
       <UniqueIdentifier>{78d360d6-28ed-4b69-85db-ddf562b0c070}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pointer">
+      <UniqueIdentifier>{38024203-df7b-41df-a297-207479159f38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_array.h">
@@ -276,9 +279,6 @@
     <ClInclude Include="gpk_type_registry.h">
       <Filter>type</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_ptr.h">
-      <Filter>type</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_expression.h">
       <Filter>script</Filter>
     </ClInclude>
@@ -399,9 +399,6 @@
     <ClInclude Include="gpk_deflate.h">
       <Filter>encoding</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_complus.h">
-      <Filter>type</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -440,6 +437,30 @@
     </ClInclude>
     <ClInclude Include="gpk_view_serialize.h">
       <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_complus.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_obj.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_nco.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_pod.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ref.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container_nts.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

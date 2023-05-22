@@ -1,7 +1,3 @@
-#include "gpk_image.h"
-#include "gpk_color.h"
-#include "gpk_enum.h"
-#include "gpk_ptr.h"
 #include "gpk_png.h"
 
 #ifndef CED_GEOMETRY_H_29234234

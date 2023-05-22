@@ -1,8 +1,8 @@
+#include "gpk_input.h"
 #include "gpk_sysevent.h"
 
 #include "gpk_array_static.h"
-#include "gpk_ptr.h"
-#include "gpk_input.h"
+#include "gpk_ptr_obj.h"
 #include "gpk_image.h"
 
 #if defined(GPK_WINDOWS)

@@ -1,62 +1,14 @@
-#include "gpk_array_static.h"
-#include "gpk_apod_serialize.h"
-#include "gpk_array_obj.h"
-#include "gpk_ptr.h"
+#include "gpk_block_container_nts.h"
 
 #ifndef GPK_LABEL_MANAGER_H_29037492837
 #define GPK_LABEL_MANAGER_H_29037492837
 
 namespace gpk
 {
-	template<size_t _blockSize>
-	class block_nts_container {
-		::gpk::apobj<::gpk::astatic<char, _blockSize>>	Blocks;
-		::gpk::apod<uint32_t>							RemainingSpace;
-
-	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::error_t						Clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
-		::gpk::error_t						Save						(::gpk::au8 & output)	const	{
-			gpk_necs(::gpk::saveView(output, RemainingSpace));
-			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
-				gpk_necs(::gpk::saveView(output, *Blocks[iArray]));
-			return 0;
-		}
-
-		::gpk::error_t						Load						(::gpk::vcu8 & input)			{
-			Clear();
-			gpk_necs(::gpk::loadView(input, RemainingSpace));
-			gpk_necs(Blocks.resize(RemainingSpace.size()));
-			for(uint32_t iArray = 0; iArray < Blocks.size(); ++iArray)
-				gpk_necs(::gpk::loadView(input, Blocks[iArray]->Storage));
-			return 0;
-		}
-
-		::gpk::error_t						push_sequence				(const char* sequence, uint32_t length, ::gpk::vcc & out_view)	{
-			const uint32_t							lengthPlusOne				= length + 1;
-			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
-				uint32_t								& blkRemainingSpace			= RemainingSpace[iBlock];
-				if(blkRemainingSpace >= lengthPlusOne) {
-					char									* sequenceStart				= &Blocks[iBlock]->operator[](_blockSize - blkRemainingSpace);
-					out_view							= {sequenceStart, length};
-					memcpy(sequenceStart, sequence, length);
-					sequenceStart[lengthPlusOne]		= 0;
-					blkRemainingSpace					-= lengthPlusOne;
-					return iBlock;
-				}
-			}
-			int32_t									indexNewBlock				= Blocks.size();
-			gpk_necs(Blocks			.resize(Blocks.size() + 1));
-			gpk_necs(RemainingSpace	.resize(Blocks.size() + 1, _blockSize - length - 1));
-			out_view							= {&Blocks[indexNewBlock]->operator[](0), length};
-			memcpy(Blocks[indexNewBlock]->Storage, sequence, length);
-			return indexNewBlock;
-		}
-	};
-
 	class CLabelManager	{
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
 
-		block_nts_container<BLOCK_SIZE>		Characters;
+		::gpk::block_container_nts<BLOCK_SIZE>	Characters;
 		::gpk::vcc							Empty;
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -100,7 +52,7 @@ namespace gpk
 		inline	::gpk::error_t				View						(const char* elements, uint16_t count)	{ ::gpk::vcc out_view; return View(elements, count, out_view); }
 
 		::gpk::error_t						Index						(const ::gpk::vcc & elements) {
-			ree_if(elements.size() > CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
+			ree_if(elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(uint32_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {
 				if(elements.size() != Counts[iView])

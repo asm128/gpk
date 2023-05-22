@@ -117,51 +117,51 @@ namespace gpk {
 	};
 
 	struct SBodyVolume {
-		double											Radius							= 0;
-		::gpk::SMinMax<::gpk::n3<float>>			Limits							= {{-1, -1, -1}, {1, 1, 1}};
-		::gpk::n3<float>							Center							= {0, 0, 0};
-		::gpk::BOUNDINGPRIMITIVE_TYPE					Type							= BOUNDINGPRIMITIVE_TYPE_SPHERE;
+		double							Radius							= 0;
+		::gpk::SMinMax<::gpk::n3f32>	Limits							= {{-1, -1, -1}, {1, 1, 1}};
+		::gpk::n3f32					Center							= {0, 0, 0};
+		::gpk::BOUNDINGPRIMITIVE_TYPE	Type							= BOUNDINGPRIMITIVE_TYPE_SPHERE;
 	};
 
 	struct SBufferSlice {
-		::gpk::SRange<int32_t>							Indices							= {};
-		::gpk::SRange<int32_t>							Vertices						= {};
+		::gpk::SRange<int32_t>			Indices							= {};
+		::gpk::SRange<int32_t>			Vertices						= {};
 	};
 
 	struct SLight {
-		::gpk::SColorFloat								Ambient							= {};
-		::gpk::SColorFloat								Diffuse							= {};
-		::gpk::SColorFloat								Specular						= {};
-		::gpk::n3<float>							Position						= {};
-		::gpk::n3<float>							Direction						= {};
-		double											Angle							= {};
-		float											RangeSquared					= 1;
-		uint32_t										Type							: 3;
-		uint32_t										Disabled						: 1;
+		::gpk::SColorFloat		Ambient							= {};
+		::gpk::SColorFloat		Diffuse							= {};
+		::gpk::SColorFloat		Specular						= {};
+		::gpk::n3f32			Position						= {};
+		::gpk::n3f32			Direction						= {};
+		double					Angle							= {};
+		float					RangeSquared					= 1;
+		uint32_t				Type							: 3;
+		uint32_t				Disabled						: 1;
 	};
 
 	struct SCamera {
-		::gpk::n3<float>							Position						= {};
-		::gpk::n3<float>							Target							= {};
-		::gpk::n3<float>							Up								= {};
-		::gpk::SMinMax<float>							ClipPlanes						= {};
-		double											Angle							= {};
+		::gpk::n3f32			Position						= {};
+		::gpk::n3f32			Target							= {};
+		::gpk::n3f32			Up								= {};
+		::gpk::SMinMax<float>	ClipPlanes						= {};
+		double					Angle							= {};
 	};
 
 	struct SMaterial {
-		::gpk::SColorFloat								Ambient							= {};
-		::gpk::SColorFloat								Diffuse							= {};
-		::gpk::SColorFloat								Specular						= {};
-		::gpk::SColorFloat								Emissive						= {};
-		float											SpecularFactor					= {};
-		float											Transparency					= {};
+		::gpk::rgbaf			Ambient							= {};
+		::gpk::rgbaf			Diffuse							= {};
+		::gpk::rgbaf			Specular						= {};
+		::gpk::rgbaf			Emissive						= {};
+		float					SpecularFactor					= {};
+		float					Transparency					= {};
 
 	};
 	struct SRenderNodeTransform {
-		::gpk::SMatrix4<float>							Matrix							= {};
-		::gpk::SMatrix4<float>							MatrixInverse					= {};
+		::gpk::m4f32			Matrix							= {};
+		::gpk::m4f32			MatrixInverse					= {};
 
-		inline	void									SetIdentity						()	noexcept {
+		inline	void			SetIdentity						()	noexcept {
 			Matrix			.SetIdentity();
 			MatrixInverse	.SetIdentity();
 		}
@@ -192,46 +192,46 @@ namespace gpk {
 	};
 #pragma pack(pop)
 
-	typedef	::gpk::apod<::gpk::n3<uint16_t		>>	TIndexBuffer			;
-	typedef	::gpk::apod<::gpk::n3<float			>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
-	typedef	::gpk::apod<::gpk::SColorBGRA				>	TVertexColorBuffer		;
-	typedef	::gpk::apod<::gpk::n2<float			>>	TTexCoordBuffer			;
-	typedef	::gpk::apod<::gpk::SBlendIndices			>	TBlendIndicesBuffer		;
-	typedef	::gpk::apod<::gpk::n2<int16_t>		>	TPixelCoordBuffer		;
-	typedef	::gpk::apod<::gpk::STriangle<float>	>	TTriangleWeightBuffer	;
+	typedef	::gpk::apod<::gpk::n3u16		>	TIndexBuffer			;
+	typedef	::gpk::apod<::gpk::n3f32		>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
+	typedef	::gpk::apod<::gpk::bgra			>	TVertexColorBuffer		;
+	typedef	::gpk::apod<::gpk::n2f32		>	TTexCoordBuffer			;
+	typedef	::gpk::apod<::gpk::SBlendIndices>	TBlendIndicesBuffer		;
+	typedef	::gpk::apod<::gpk::n2i16		>	TPixelCoordBuffer		;
+	typedef	::gpk::apod<::gpk::trif32		>	TTriangleWeightBuffer	;
 
 	struct SRendererCache {
-		::gpk::apod<uint32_t>						NodesToRender					= {};
-		::gpk::aobj<::gpk::n3<float>>			NodeLightPositions				= {};	// an element for each node to render
-		::gpk::aobj<::gpk::n3<float>>			NodeLightDirections				= {};	// an element for each node to render
-		::gpk::aobj<::gpk::apod<uint32_t>>	NodeLights						= {};	// an element for each node to render
-		::gpk::apod<::gpk::SMatrix4<float>>		NodesWVP						= {};	// an element for each node to render
+		::gpk::au32						NodesToRender					= {};
+		::gpk::aobj<::gpk::n3f32>		NodeLightPositions				= {};	// an element for each node to render
+		::gpk::aobj<::gpk::n3f32>		NodeLightDirections				= {};	// an element for each node to render
+		::gpk::aobj<::gpk::au32>		NodeLights						= {};	// an element for each node to render
+		::gpk::apod<::gpk::m4f32>		NodesWVP						= {};	// an element for each node to render
 
-		::gpk::apod<::gpk::n3<float>>			LightWorldDirections			= {};	// an element for each light in renderer
-		::gpk::apod<::gpk::n3<float>>			LightWorldPositions 			= {};	// an element for each light in renderer
+		::gpk::apod<::gpk::n3f32>		LightWorldDirections			= {};	// an element for each light in renderer
+		::gpk::apod<::gpk::n3f32>		LightWorldPositions 			= {};	// an element for each light in renderer
 
-		::gpk::apod<::gpk::n3<float>>			CameraWorldDirections			= {};
-		::gpk::apod<::gpk::n3<float>>			CameraWorldPositions 			= {};
+		::gpk::apod<::gpk::n3f32>		CameraWorldDirections			= {};
+		::gpk::apod<::gpk::n3f32>		CameraWorldPositions 			= {};
 
-		TIndexBuffer									IndexBuffer						= {};
-		TVertexBuffer									VertexBuffer					= {};
-		TVertexColorBuffer								VertexColorBuffer				= {};
-		TTexCoordBuffer									TexCoordBuffer					= {};
-		TBlendIndicesBuffer								BlendIndicesBuffer				= {};
-		TPixelCoordBuffer								PixelCoordBuffer				= {};
-		TTriangleWeightBuffer							TriangleWeightBuffer			= {};
+		TIndexBuffer					IndexBuffer						= {};
+		TVertexBuffer					VertexBuffer					= {};
+		TVertexColorBuffer				VertexColorBuffer				= {};
+		TTexCoordBuffer					TexCoordBuffer					= {};
+		TBlendIndicesBuffer				BlendIndicesBuffer				= {};
+		TPixelCoordBuffer				PixelCoordBuffer				= {};
+		TTriangleWeightBuffer			TriangleWeightBuffer			= {};
 	};
 
 	template<typename _tContainer, typename _tValue>
 	struct SKeyedArray {
-		::gpk::aobj<::gpk::vcc>			Names	;
-		_tContainer											Values	;
+		::gpk::aobj<::gpk::vcc>						Names	;
+		_tContainer									Values	;
 
-		_tValue &											operator[]					(uint32_t index)				{ return Values[index]; }
-		const _tValue &										operator[]					(uint32_t index)	const		{ return Values[index]; }
+		_tValue &									operator[]					(uint32_t index)				{ return Values[index]; }
+		const _tValue &								operator[]					(uint32_t index)	const		{ return Values[index]; }
 
-		const uint32_t &									size						()				const noexcept	{ return Names.size(); }
-		::gpk::error_t										push_back					(::gpk::vcc name, const _tValue & value) {
+		const uint32_t &							size						()				const noexcept	{ return Names.size(); }
+		::gpk::error_t								push_back					(::gpk::vcc name, const _tValue & value) {
 			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
 		}
@@ -241,60 +241,60 @@ namespace gpk {
 	template<typename _tValue>	struct SKeyedArrayOBJ : public ::gpk::SKeyedArray<::gpk::aobj<_tValue>, _tValue> {};
 
 	struct SNodeRenderer {
-		typedef	::gpk::apod<::gpk::n3<uint16_t	>>	TIndexBuffer			;
-		typedef	::gpk::apod<::gpk::n3<float		>>	TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
-		typedef	::gpk::apod<::gpk::SColorBGRA			>	TVertexColorBuffer		;
-		typedef	::gpk::apod<::gpk::n2<float		>>	TTexCoordBuffer			;
-		typedef	::gpk::apod<::gpk::SBlendIndices		>	TBlendIndicesBuffer		;
+		typedef	::gpk::apod<::gpk::n3u16>			TIndexBuffer			;
+		typedef	::gpk::apod<::gpk::n3f32>			TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
+		typedef	::gpk::apod<::gpk::bgra>			TVertexColorBuffer		;
+		typedef	::gpk::apod<::gpk::n2f32>			TTexCoordBuffer			;
+		typedef	::gpk::apod<::gpk::SBlendIndices>	TBlendIndicesBuffer		;
 
-		::gpk::SKeyedArrayOBJ<TIndexBuffer						>	Indices					= {};
-		::gpk::SKeyedArrayOBJ<TVertexBuffer						>	Vertices				= {};
-		::gpk::SKeyedArrayOBJ<TNormalBuffer						>	Normals					= {};
-		::gpk::SKeyedArrayOBJ<TTangentBuffer					>	Tangents				= {};
-		::gpk::SKeyedArrayOBJ<TVertexColorBuffer				>	VertexColors			= {};
-		::gpk::SKeyedArrayOBJ<TTexCoordBuffer					>	TexCoords				= {};
-		::gpk::SKeyedArrayOBJ<TBlendIndicesBuffer				>	BlendIndices			= {};
-		::gpk::SKeyedArrayOBJ<::gpk::img<::gpk::SColorBGRA>	>	Textures				= {};
+		::gpk::SKeyedArrayOBJ<TIndexBuffer					>	Indices					= {};
+		::gpk::SKeyedArrayOBJ<TVertexBuffer					>	Vertices				= {};
+		::gpk::SKeyedArrayOBJ<TNormalBuffer					>	Normals					= {};
+		::gpk::SKeyedArrayOBJ<TTangentBuffer				>	Tangents				= {};
+		::gpk::SKeyedArrayOBJ<TVertexColorBuffer			>	VertexColors			= {};
+		::gpk::SKeyedArrayOBJ<TTexCoordBuffer				>	TexCoords				= {};
+		::gpk::SKeyedArrayOBJ<TBlendIndicesBuffer			>	BlendIndices			= {};
+		::gpk::SKeyedArrayOBJ<::gpk::img<::gpk::bgra>		>	Textures				= {};
 
-		::gpk::SKeyedArrayPOD<::gpk::SColorBGRA					>	Colors					= {};
-		::gpk::SKeyedArrayPOD<::gpk::SMaterial					>	Materials				= {};
-		::gpk::SKeyedArrayPOD<::gpk::SLight						>	Lights					= {};
-		::gpk::SKeyedArrayPOD<::gpk::SCamera					>	Cameras					= {};
-		::gpk::SKeyedArrayPOD<::gpk::SRenderNodeTransform		>	Transforms				= {};
+		::gpk::SKeyedArrayPOD<::gpk::bgra					>	Colors					= {};
+		::gpk::SKeyedArrayPOD<::gpk::SMaterial				>	Materials				= {};
+		::gpk::SKeyedArrayPOD<::gpk::SLight					>	Lights					= {};
+		::gpk::SKeyedArrayPOD<::gpk::SCamera				>	Cameras					= {};
+		::gpk::SKeyedArrayPOD<::gpk::SRenderNodeTransform	>	Transforms				= {};
 		::gpk::SKeyedArrayPOD<::gpk::SBodyVolume			>	BoundingVolumes			= {};
 		//
-		::gpk::SKeyedArrayOBJ<::gpk::SRenderNode>					Nodes					= {};
+		::gpk::SKeyedArrayOBJ<::gpk::SRenderNode>			Nodes					= {};
 		//
-		::gpk::SRendererCache										RenderCache				= {};
+		::gpk::SRendererCache								RenderCache				= {};
 	};
 
-	::gpk::error_t											nodeRendererDrawNode
-		( ::gpk::SNodeRenderer					& renderer
-		, uint32_t								iNode
-		, const ::gpk::SMatrix4<float>			& view
-		, const ::gpk::SMatrix4<float>			& projection
-		, const ::gpk::SMatrix4<float>			& viewProjection
-		, ::gpk::view2d<::gpk::SColorBGRA>	target_image
-		, ::gpk::view2d<uint32_t>			target_depth
+	::gpk::error_t					nodeRendererDrawNode
+		( ::gpk::SNodeRenderer			& renderer
+		, uint32_t						iNode
+		, const ::gpk::m4<float>		& view
+		, const ::gpk::m4<float>		& projection
+		, const ::gpk::m4<float>		& viewProjection
+		, ::gpk::view2d<::gpk::bgra>	target_image
+		, ::gpk::view2d<uint32_t>		target_depth
 		);
 
-	::gpk::error_t											nodeRendererDraw
-		( ::gpk::SNodeRenderer					& renderer
-		, int32_t								iCamera
-		, ::gpk::view2d<::gpk::SColorBGRA>	target_image
-		, ::gpk::view2d<uint32_t>			target_depth
-		, bool									drawHidden			= false
+	::gpk::error_t					nodeRendererDraw
+		( ::gpk::SNodeRenderer			& renderer
+		, int32_t						iCamera
+		, ::gpk::view2d<::gpk::bgra>	target_image
+		, ::gpk::view2d<uint32_t>		target_depth
+		, bool							drawHidden			= false
 		);
 
 	struct SComponentData {
-		int32_t													Parent				= -1;
-		::gpk::apod<int32_t>								RenderNodes				= {};
+		int32_t												Parent				= -1;
+		::gpk::ai32											RenderNodes				= {};
 		::gpk::apod<::gpk::SRenderNodeTransform>			LocalTransforms			= {};
 	};
 
 	struct SComponentScene {
 		::gpk::SKeyedArrayOBJ<::gpk::SComponentData>			Components				= {};
-		::gpk::apod<::gpk::apod<int32_t>>				Children				= {};	// A children list for each component
+		::gpk::apod<::gpk::ai32>								Children				= {};	// A children list for each component
 
 		::gpk::SNodeRenderer									Renderer				= {};
 
