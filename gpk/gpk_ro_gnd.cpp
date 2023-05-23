@@ -122,7 +122,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryRight							(uint32_t base
 		generated.UVs.append(faceUVs);
 	}
 	{
-		const ::gpk::STriangle<uint32_t>							faceIndices[6]										=
+		const ::gpk::tri<uint32_t>							faceIndices[6]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2
@@ -168,7 +168,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryFront							(uint32_t base
 		for(uint32_t i = 0; i < 4; ++i)
 			faceUVs[i]													= {skinTile.u[i], skinTile.v[i]};
 		generated.UVs.append(faceUVs);
-		const ::gpk::STriangle<uint32_t>							faceIndices[6]										=
+		const ::gpk::tri<uint32_t>							faceIndices[6]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2
@@ -231,7 +231,7 @@ static		::gpk::error_t									gndGenerateFaceGeometryTop								(uint32_t baseX
 		generated.UVs.append(faceUVs);
 	}
 	{
-		const ::gpk::STriangle<uint32_t>							faceIndices[6]										=
+		const ::gpk::tri<uint32_t>							faceIndices[6]										=
 			{	{ baseVertexIndex + 0 // + 0//+ 0 // 0
 				, baseVertexIndex + 1 // + 1//+ 2 // 1
 				, baseVertexIndex + 2 // + 2//+ 1 // 2

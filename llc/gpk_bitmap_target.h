@@ -1,7 +1,10 @@
 #include "gpk_image.h"
 #include "gpk_color.h"
-#include "gpk_coord.h"
+//#include "gpk_coord.h"
 #include "gpk_camera.h"
+
+#include "gpk_tri2.h"
+
 #include <memory> // this is required for ::std::swap()
 
 #ifndef BITMAP_TARGET_H_98237498023745654654
@@ -138,7 +141,7 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord, typename _tColor>
-	static	::gpk::error_t		drawTriangle			(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::STriangle2<_tCoord>& triangle)										{
+	static	::gpk::error_t		drawTriangle			(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::tri2<_tCoord>& triangle)										{
 		::gpk::n2<int32_t>				areaMin					= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2<int32_t>				areaMax					= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t					xStop					= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
@@ -165,7 +168,7 @@ namespace gpk
 	}
 
 	template<typename _tCoord>
-	static	::gpk::error_t		drawTriangle			(const ::gpk::n2<uint32_t>& targetMetrics, const ::gpk::STriangle2<_tCoord>& triangle, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)		{
+	static	::gpk::error_t		drawTriangle			(const ::gpk::n2<uint32_t>& targetMetrics, const ::gpk::tri2<_tCoord>& triangle, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)		{
 		::gpk::n2<int32_t>				areaMin					= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2<int32_t>				areaMax					= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t					xStop					= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);

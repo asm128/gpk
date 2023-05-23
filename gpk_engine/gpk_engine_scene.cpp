@@ -14,12 +14,12 @@ static	::gpk::error_t								transformTriangles
 	, const ::gpk::m4<float>	& worldTransform	
 	, const ::gpk::n3<float>	& cameraFront
 )	{ 
-	::gpk::v1<const ::gpk::STriangle<uint16_t>>		view_indices				= {(const ::gpk::STriangle<uint16_t>*)indices.begin(), indices.size() / 3};
+	::gpk::v1<const ::gpk::tri<uint16_t>>		view_indices				= {(const ::gpk::tri<uint16_t>*)indices.begin(), indices.size() / 3};
 
 	const ::gpk::m4<float>							mWVPS						= worldTransform * projection;
 	for(uint32_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {
-		const ::gpk::STriangle<uint16_t>						vertexIndices				= view_indices[iTriangle];
-		::gpk::STriangle3<float>								transformedNormals			= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
+		const ::gpk::tri<uint16_t>						vertexIndices				= view_indices[iTriangle];
+		::gpk::tri3<float>						transformedNormals			= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
 		::gpk::transformDirection(transformedNormals, worldTransform);
 		transformedNormals.A.Normalize();
 		transformedNormals.B.Normalize();
@@ -32,14 +32,14 @@ static	::gpk::error_t								transformTriangles
 
 		output.Normals.push_back(transformedNormals);
 
-		::gpk::STriangle3<float>								transformedPositions		= {positions[vertexIndices.A], positions[vertexIndices.B], positions[vertexIndices.C]};
+		::gpk::tri3<float>								transformedPositions		= {positions[vertexIndices.A], positions[vertexIndices.B], positions[vertexIndices.C]};
 		::gpk::transform(transformedPositions, worldTransform);
 		output.PositionsWorld.push_back(transformedPositions);
 		
 		::gpk::transform(transformedPositions, projection);
 		output.PositionsScreen.push_back(transformedPositions);
 		
-		::gpk::STriangle2<float>								transformedUVs				= {uv[vertexIndices.A], uv[vertexIndices.B], uv[vertexIndices.C]};
+		::gpk::tri2<float>								transformedUVs				= {uv[vertexIndices.A], uv[vertexIndices.B], uv[vertexIndices.C]};
 		if( transformedUVs.A.x > 1.0f
 		 || transformedUVs.A.y > 1.0f
 		 || transformedUVs.B.x > 1.0f
@@ -88,7 +88,7 @@ static	::gpk::error_t								drawBuffers
 	, const ::gpk::SEngineSceneConstants				& constants
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
-	::gpk::apod<::gpk::STriangle<float>>					& triangleWeights			= cacheVS.TriangleWeights		;
+	::gpk::apod<::gpk::tri<float>>					& triangleWeights			= cacheVS.TriangleWeights		;
 	::gpk::apod<::gpk::n2<int16_t>>							& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::n2u16										offscreenMetrics			= backBufferColors.metrics().Cast<uint16_t>();
 	const ::gpk::n3<float>									lightDirectionNormalized	= ::gpk::n3<float>{constants.LightDirection}.Normalize();
@@ -97,23 +97,23 @@ static	::gpk::error_t								drawBuffers
 	inPS.Material										= material;
 
 	for(uint32_t iTriangle = 0; iTriangle < outVS.PositionsScreen.size(); ++iTriangle) {
-		const ::gpk::STriangle3<float>							& triPositions				= outVS.PositionsScreen	[iTriangle];
+		const ::gpk::tri3<float>							& triPositions				= outVS.PositionsScreen	[iTriangle];
 		if( triPositions.CulledZ({0, 0xFFFFFF})
 		 || triPositions.CulledX({0, (float)offscreenMetrics.x})
 		 || triPositions.CulledY({0, (float)offscreenMetrics.y})
 		)
 			continue;
 
-		const ::gpk::STriangle3<float>							& triPositionsWorld			= outVS.PositionsWorld	[iTriangle];
-		const ::gpk::STriangle3<float>							& triNormals				= outVS.Normals			[iTriangle];
-		const ::gpk::STriangle2<float>							& triUVs					= outVS.UVs				[iTriangle];
+		const ::gpk::tri3<float>							& triPositionsWorld			= outVS.PositionsWorld	[iTriangle];
+		const ::gpk::tri3<float>							& triNormals				= outVS.Normals			[iTriangle];
+		const ::gpk::tri2<float>							& triUVs					= outVS.UVs				[iTriangle];
 
 		trianglePixelCoords.clear();
 		triangleWeights.clear();
 		gerror_if(errored(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)), "Not sure if these functions could ever fail");
 		//const bool													stripped					= surface[0][0] == ::gpk::SColorBGRA{gpk::WHITE};
 		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
-			const ::gpk::STriangle<float>							& vertexWeights				= triangleWeights[iCoord];
+			const ::gpk::tri<float>							& vertexWeights				= triangleWeights[iCoord];
 			inPS.WeightedPosition								= triPositionsWorld.A * vertexWeights.A + triPositionsWorld.B * vertexWeights.B + triPositionsWorld.C * vertexWeights.C;
 			inPS.WeightedNormal									= (triNormals.A * vertexWeights.A + triNormals.B * vertexWeights.B + triNormals.C * vertexWeights.C).Normalize();
 			inPS.WeightedUV										= triUVs.A * vertexWeights.A + triUVs.B * vertexWeights.B + triUVs.C * vertexWeights.C;

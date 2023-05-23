@@ -1,6 +1,6 @@
 #include "gpk_array.h"
 #include "gpk_matrix.h"
-
+#include "gpk_tri2.h"
 
 #ifndef GPK_GEOMETRY_H
 #define GPK_GEOMETRY_H
@@ -9,10 +9,10 @@ namespace gpk
 {
 	template <typename _tUnit>
 	struct SModelGeometry {
-					::gpk::apod<::gpk::STriangle3	<_tUnit>>		Positions									;
+					::gpk::apod<::gpk::tri3	<_tUnit>>		Positions									;
 					::gpk::apod<::gpk::n3		<_tUnit>>		NormalsTriangle								;
-					::gpk::apod<::gpk::STriangle3	<_tUnit>>		NormalsVertex								;
-					::gpk::apod<::gpk::STriangle2	<_tUnit>>		UVs											;
+					::gpk::apod<::gpk::tri3	<_tUnit>>		NormalsVertex								;
+					::gpk::apod<::gpk::tri2	<_tUnit>>		UVs											;
 	};
 
 	template <typename _tElement, typename _tIndex>
@@ -25,8 +25,8 @@ namespace gpk
 	struct SModelGeometryIndexed {
 					::gpk::SModelBufferIndexed<::gpk::n3		<_tAxis>, _tIndex>	Positions					;
 					::gpk::SModelBufferIndexed<::gpk::n3		<_tAxis>, _tIndex>	NormalsTriangle				;
-					::gpk::SModelBufferIndexed<::gpk::STriangle3	<_tAxis>, _tIndex>	NormalsVertex				;
-					::gpk::SModelBufferIndexed<::gpk::STriangle2	<_tAxis>, _tIndex>	UVs							;
+					::gpk::SModelBufferIndexed<::gpk::tri3	<_tAxis>, _tIndex>	NormalsVertex				;
+					::gpk::SModelBufferIndexed<::gpk::tri2	<_tAxis>, _tIndex>	UVs							;
 					::gpk::apod<_tIndex>											PositionRemap				;
 
 	};
@@ -39,15 +39,15 @@ namespace gpk
 	};
 
 	// --- Geometry generation: Cube.
-				::gpk::error_t										generateCubePositions					(::gpk::apod<::gpk::STriangle3<float>>& out_Positions	);
+				::gpk::error_t										generateCubePositions					(::gpk::apod<::gpk::tri3<float>>& out_Positions	);
 				::gpk::error_t										generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3	<float>>& out_Normals	);
-				::gpk::error_t										generateCubeNormalsVertex				(::gpk::apod<::gpk::STriangle3<float>>& out_Normals	);
-				::gpk::error_t										generateCubeUV							(::gpk::apod<::gpk::STriangle2<float>>& out_UV		);
+				::gpk::error_t										generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3<float>>& out_Normals	);
+				::gpk::error_t										generateCubeUV							(::gpk::apod<::gpk::tri2<float>>& out_UV		);
 				::gpk::error_t										generateCubeGeometry
-					( ::gpk::apod<::gpk::STriangle3	<float>> & out_Positions
+					( ::gpk::apod<::gpk::tri3	<float>> & out_Positions
 					, ::gpk::apod<::gpk::n3		<float>> & out_Normals
-					, ::gpk::apod<::gpk::STriangle3	<float>> & out_NormalsVertex
-					, ::gpk::apod<::gpk::STriangle2	<float>> & out_UV
+					, ::gpk::apod<::gpk::tri3	<float>> & out_NormalsVertex
+					, ::gpk::apod<::gpk::tri2	<float>> & out_UV
 					);
 				stainli ::gpk::error_t						generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
 					return ::gpk::generateCubeGeometry
@@ -58,16 +58,16 @@ namespace gpk
 						);
 				}
 
-				::gpk::error_t										generateGridPositions					(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle3	<float>>& out_Positions	);
+				::gpk::error_t										generateGridPositions					(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::tri3	<float>>& out_Positions	);
 				::gpk::error_t										generateGridNormalsTriangle				(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::n3		<float>>& out_Normals	);
-				::gpk::error_t										generateGridNormalsVertex				(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle3	<float>>& out_Normals	);
-				::gpk::error_t										generateGridUV							(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::STriangle2	<float>>& out_UV		);
+				::gpk::error_t										generateGridNormalsVertex				(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::tri3	<float>>& out_Normals	);
+				::gpk::error_t										generateGridUV							(const ::gpk::n2<uint32_t> & gridMetrics, ::gpk::apod<::gpk::tri2	<float>>& out_UV		);
 				::gpk::error_t										generateGridGeometry
 					( const ::gpk::n2<uint32_t>					& gridMetrics
-					, ::gpk::apod<::gpk::STriangle3	<float>>	& out_Positions
+					, ::gpk::apod<::gpk::tri3	<float>>	& out_Positions
 					, ::gpk::apod<::gpk::n3		<float>>	& out_Normals
-					, ::gpk::apod<::gpk::STriangle3	<float>>	& out_NormalsVertex
-					, ::gpk::apod<::gpk::STriangle2	<float>>	& out_UV
+					, ::gpk::apod<::gpk::tri3	<float>>	& out_NormalsVertex
+					, ::gpk::apod<::gpk::tri2	<float>>	& out_UV
 					);
 				stainli ::gpk::error_t						generateGridGeometry					(const ::gpk::n2<uint32_t>	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
 					return ::gpk::generateGridGeometry
@@ -82,14 +82,14 @@ namespace gpk
 
 	struct SRenderCache {
 						::gpk::apod<::gpk::n2<int16_t>>						TrianglePixelCoords					= {};
-						::gpk::apod<::gpk::STriangle<float>>						TrianglePixelWeights				= {};
+						::gpk::apod<::gpk::tri<float>>						TrianglePixelWeights				= {};
 						::gpk::apod<::gpk::n2<int16_t>>						WireframePixelCoords				= {};
 
-						::gpk::apod<::gpk::STriangle3<float>>						TransformedNormalsVertex			= {};
+						::gpk::apod<::gpk::tri3<float>>						TransformedNormalsVertex			= {};
 
 						::gpk::apod<int32_t>										Triangle3dIndices					= {};
-						::gpk::apod<::gpk::STriangle3<float>>						Triangle3dToDraw					= {};
-						::gpk::apod<::gpk::STriangle3<float>>						Triangle3dWorld						= {};
+						::gpk::apod<::gpk::tri3<float>>						Triangle3dToDraw					= {};
+						::gpk::apod<::gpk::tri3<float>>						Triangle3dWorld						= {};
 
 						uint32_t														TrianglesDrawn						= 0;
 						uint32_t														PixelsDrawn							= 0;

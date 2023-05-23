@@ -72,7 +72,7 @@ namespace gpk
 		bool								FullScreen					: 1;
 	};
 
-	::gpk::error_t						windowPresentTarget			(::gpk::SWindow & windowInstance, const ::gpk::view2d<::gpk::SColorBGRA>& targetToPresent);
+	::gpk::error_t						windowPresentTarget			(::gpk::SWindow & windowInstance, const ::gpk::view2d<::gpk::bgra>& targetToPresent);
 	::gpk::error_t						windowUpdate				(::gpk::SWindow & windowInstance);
 	::gpk::error_t						windowUpdateTick			(::gpk::SWindow & windowInstance);
 	::gpk::error_t						fullScreenExit				(::gpk::SWindow & windowInstance);

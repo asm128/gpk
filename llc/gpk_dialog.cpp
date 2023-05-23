@@ -7,7 +7,7 @@
 		::gpk::controlDelete(*Dialog->GUI, IdGUIControl, true); 
 }
 
-static ::gpk::error_t			dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>> & palettes) {
+static ::gpk::error_t			dialogInitializeColors			(::gpk::SDialogColors & dialogColors, ::gpk::apod<::gpk::array_static<::gpk::bgra, ::gpk::GUI_CONTROL_COLOR_COUNT>> & palettes) {
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= palettes.push_back({{::gpk::DARKGRAY			, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE		* .85	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
@@ -100,7 +100,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 ::gpk::error_t							gpk::checkBoxUpdate							(::gpk::SDialogCheckBox	& checkbox)								{
 	::gpk::SDialog															& dialog									= *checkbox.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	::gpk::img<::gpk::SColorBGRA>											& imageCross								= dialog.ImageCrossBGRA;
+	::gpk::img<::gpk::bgra>											& imageCross								= dialog.ImageCrossBGRA;
 	if(controlTable.States[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);
@@ -116,7 +116,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 			}
 		}
 		checkbox.Checked													= !checkbox.Checked;
-		controlTable.Controls[checkbox.IdGUIControl].Image					= (false == checkbox.Checked) ? ::gpk::view2d<::gpk::SColorBGRA>{} : imageCross.View;
+		controlTable.Controls[checkbox.IdGUIControl].Image					= (false == checkbox.Checked) ? ::gpk::view2d<::gpk::bgra>{} : imageCross.View;
 	}
 	return 0;
 }

@@ -8,9 +8,9 @@
 namespace gpk
 {
 	struct SColorsMaterial {
-							::gpk::apod<::gpk::SColorBGRA>						Ambient										= {};
-							::gpk::apod<::gpk::SColorBGRA>						Diffuse										= {};
-							::gpk::apod<::gpk::SColorBGRA>						Specular									= {};
+							::gpk::apod<::gpk::bgra>						Ambient										= {};
+							::gpk::apod<::gpk::bgra>						Diffuse										= {};
+							::gpk::apod<::gpk::bgra>						Specular									= {};
 	};
 
 	struct SLightsDirectional {

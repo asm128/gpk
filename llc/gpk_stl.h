@@ -1,5 +1,5 @@
-#include "gpk_coord.h"
 #include "gpk_array.h"
+#include "gpk_tri3.h"
 
 #ifndef GPK_STL_H
 #define GPK_STL_H
@@ -7,13 +7,13 @@
 namespace gpk {
 #pragma pack(push, 1)
 	struct SSTLTriangle {
-		::gpk::n3<float>				Normal			= {};
-		::gpk::STriangle3<float>			Triangle		= {};
-		uint16_t							Attribute		= {};
+		::gpk::n3f32				Normal			= {};
+		::gpk::tri3f32				Triangle		= {};
+		uint16_t					Attribute		= {};
 	};
 #pragma pack(pop)
 	struct SSTLFile {
-		::gpk::apod<uint8_t>				Raw				= {};
+		::gpk::au8							Raw				= {};
 		::gpk::vcu8							Header			= {};
 		::gpk::view<::gpk::SSTLTriangle>	Triangles		= {};
 	};

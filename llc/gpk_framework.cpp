@@ -72,7 +72,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 	timer		.Frame();
 	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
 #if defined(GPK_XCB)
-	::gpk::pobj<::gpk::rt<::gpk::SColorBGRA, uint32_t>>
+	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;
 	if(mainWindow.Repaint) {
 		xcb_screen_t								* xcbScreen					= xcb_setup_roots_iterator(xcb_get_setup(framework.PlatformDetail.XCBConnection)).data;

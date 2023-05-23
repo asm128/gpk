@@ -29,7 +29,7 @@
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk::SColorBGRA>& palette, const ::gpk::view<const ::gpk::SColorBGRA>& colors, uint32_t iShades)	{
+static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk::bgra>& palette, const ::gpk::view<const ::gpk::SColorBGRA>& colors, uint32_t iShades)	{
 	const uint32_t														newPaletteSize											= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		gpk_necall(palette.resize(newPaletteSize), "%s", "Out of memory?");
@@ -122,7 +122,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::view<co
 	return 0;
 }
 
-static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::gpk::SColorBGRA>& palette, ::gpk::apod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
+static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::gpk::bgra>& palette, ::gpk::apod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
 	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {
 		const int32_t														indexTheme												= themes.push_back({});
 		::gpk::SControlTheme												& theme													= themes[indexTheme];
@@ -131,7 +131,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::
 	return 0;
 }
 
-static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
+static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::bgra>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
 	stacxpr	const uint32_t									iShades													= 16;
 	static				::gpk::SColorBGRA								paletteColors []										=
 		// 16 Base colors
@@ -185,8 +185,8 @@ static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes)	{
-	static ::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>>		globalDefaultPalette		= {};
+static		::gpk::error_t										paletteSetupDefaultColors								(::gpk::pobj<::gpk::apod<::gpk::bgra>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes)	{
+	static ::gpk::pobj<::gpk::apod<::gpk::bgra>>		globalDefaultPalette		= {};
 	static ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>>	globalDefaultTheme			= {};
 	
 	if(!globalDefaultPalette || 0 == globalDefaultPalette->size()) 
@@ -362,7 +362,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	return 0;
 }
 
-static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::SRectangle2<int16_t>> finalRects, ::gpk::view<::gpk::STriangle2<int16_t>> triangles)					{
+static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::SRectangle2<int16_t>> finalRects, ::gpk::view<::gpk::tri2<int16_t>> triangles)					{
 	::gpk::SRectLimits<int16_t>											scaledBorders											= {};
 	const ::gpk::n2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left												= (int16_t)(control.Border.Left		* scaleFinal.x);

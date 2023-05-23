@@ -399,9 +399,6 @@
     <ClInclude Include="gpk_deflate.h">
       <Filter>encoding</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_tri.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_astatic_serialize.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -461,6 +458,15 @@
     </ClInclude>
     <ClInclude Include="gpk_event.h">
       <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri3.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

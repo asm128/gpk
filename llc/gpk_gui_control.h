@@ -73,7 +73,7 @@ namespace gpk
 
 
 			::gpk::error_t			paletteGridInitialize		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette);
-			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::SColorBGRA>& colors);
+			::gpk::error_t			paletteGridColorsSet		(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::bgra>& colors);
 
 
 			::gpk::error_t			guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2<uint16_t> & buttonSize, const ::gpk::n2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER, ::gpk::view<int32_t> out_ids = {});

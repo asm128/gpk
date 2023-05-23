@@ -4,10 +4,13 @@
 #include "gpk_array_static.h"
 #include "gpk_ascii_color.h"
 #include "gpk_font.h"
+#include "gpk_tri2.h"
 
 #include "gpk_sysevent.h"
 
 #include <functional>
+
+
 
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
@@ -52,7 +55,7 @@ namespace gpk
 		::gpk::SControlRectangle				Client;
 		::gpk::SRectangle2<int16_t>				Text;
 		::gpk::SRectangle2<int16_t>				Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
-		::gpk::STriangle2<int16_t>				Triangles	[8]								= {};
+		::gpk::tri2<int16_t>				Triangles	[8]								= {};
 	};
 
 	struct SControlAttachId {
@@ -121,14 +124,14 @@ namespace gpk
 		};
 
 	struct SControlImage {
-		::gpk::img<::gpk::SColorBGRA>									Temp								= {};
+		::gpk::img<::gpk::bgra>									Temp								= {};
 	};
 
 	struct SControl {
 		::gpk::SRectangle2<int16_t>										Area								= {{}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
-		::gpk::view2d<::gpk::SColorBGRA>								Image								= {};
+		::gpk::view2d<::gpk::bgra>								Image								= {};
 		::gpk::n2<int16_t>												ImageOffset							= {};
 		::gpk::ALIGN													ImageAlign							= ::gpk::ALIGN_CENTER;
 
@@ -184,13 +187,13 @@ namespace gpk
 	};
 
 	struct SGUIColors {
-		::gpk::pobj<::gpk::apod<::gpk::SColorBGRA>		>				Palette								= {};
+		::gpk::pobj<::gpk::apod<::gpk::bgra>		>				Palette								= {};
 		::gpk::pobj<::gpk::apod<::gpk::SControlTheme>	>				ControlThemes						= {};
 
 		::gpk::array_static<int32_t, ::gpk::GUI_CONTROL_PALETTE_COUNT>	DefaultColors						= {};
 
 		::gpk::apod<
-			::gpk::array_static<::gpk::SColorBGRA, ::gpk::GUI_CONTROL_COLOR_COUNT>
+			::gpk::array_static<::gpk::bgra, ::gpk::GUI_CONTROL_COLOR_COUNT>
 		>																Palettes;
 	};
 
@@ -243,7 +246,7 @@ namespace gpk
 	::gpk::error_t			controlCreate					(::gpk::SGUI & gui);
 	::gpk::error_t			controlCreateChild				(::gpk::SGUI & gui, int32_t iParent);
 	::gpk::error_t			controlSetParent				(::gpk::SGUI & gui, int32_t iControl, int32_t iParent);
-	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::SColorBGRA> target);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> target);
 	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, int32_t iControl, const ::gpk::vcs& text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI & gui, int32_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);

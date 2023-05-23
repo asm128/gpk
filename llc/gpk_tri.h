@@ -7,17 +7,15 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tVertex>		
-	struct STriangle { 
-		_tVertex					A, B, C; 
+	struct tri { 
+		_tVertex	A, B, C; 
 
-		cnstxpr						STriangle		()																= default;
-		cnstxpr						STriangle		(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
-		cnstxpr						STriangle		(const STriangle & other)										= default;
+		cnstxpr		tri()															= default;
+		cnstxpr		tri(const tri & other)											= default;
+		cnstxpr		tri(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
 
-		GPK_DEFAULT_OPERATOR_NE(STriangle<_tVertex>, A == other.A && B == other.B && C == other.C);
+		GPK_DEFAULT_OPERATOR_NE(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
-	template<typename _tDimension>	
-	using	tri					= STriangle< _tDimension>;
 	typedef tri<float		>	trif32, trif;
 	typedef tri<double		>	trif64, trid;
 	typedef tri<uint8_t		>	triu8;

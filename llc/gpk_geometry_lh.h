@@ -1,4 +1,6 @@
 #include "gpk_png.h"
+#include "gpk_tri2.h"
+#include "gpk_tri3.h"
 
 #ifndef CED_GEOMETRY_H_29234234
 #define CED_GEOMETRY_H_29234234
@@ -17,15 +19,15 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SGeometryQuads {
-		::gpk::apod<::gpk::STriangle3	<float>>	Triangles;
+		::gpk::apod<::gpk::tri3	<float>>	Triangles;
 		::gpk::apod<::gpk::n3			<float>>	Normals;
-		::gpk::apod<::gpk::STriangle2	<float>>	TextureCoords;
+		::gpk::apod<::gpk::tri2	<float>>	TextureCoords;
 	};
 
 	struct SGeometryTriangles {
-		::gpk::apod<::gpk::STriangle3<float>>		Triangles;
-		::gpk::apod<::gpk::STriangle3<float>>		Normals;
-		::gpk::apod<::gpk::STriangle2<float>>		TextureCoords;
+		::gpk::apod<::gpk::tri3<float>>		Triangles;
+		::gpk::apod<::gpk::tri3<float>>		Normals;
+		::gpk::apod<::gpk::tri2<float>>		TextureCoords;
 	};
 
 	struct SGeometryIndexedTriangles {
@@ -92,16 +94,16 @@ namespace gpk
 	};
 
 	struct SModelQuads {
-		::gpk::apod<::gpk::STriangle3<float>>	Triangles;
+		::gpk::apod<::gpk::tri3<float>>	Triangles;
 		::gpk::apod<::gpk::n3<float>>			Normals;
-		::gpk::apod<::gpk::STriangle2<float>>	TextureCoords;
+		::gpk::apod<::gpk::tri2<float>>	TextureCoords;
 		::gpk::apod<::gpk::SGeometryGroup>		GeometryGroups;
 	};
 
 	struct SModelTriangles {
-		::gpk::apod<::gpk::STriangle3<float>>	Triangles;
-		::gpk::apod<::gpk::STriangle3<float>>	Normals;
-		::gpk::apod<::gpk::STriangle2<float>>	TextureCoords;
+		::gpk::apod<::gpk::tri3<float>>	Triangles;
+		::gpk::apod<::gpk::tri3<float>>	Normals;
+		::gpk::apod<::gpk::tri2<float>>	TextureCoords;
 		::gpk::apod<::gpk::SGeometryGroup>		GeometryGroups;
 	};
 

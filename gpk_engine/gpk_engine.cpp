@@ -136,7 +136,7 @@ int									gpk::updateEntityTransforms
 	pVertices		->Data.resize(24 * sizeof(::gpk::n3f));
 	pNormals		->Data.resize(24 * sizeof(::gpk::n3f));
 	pUV				->Data.resize(24 * sizeof(::gpk::n2f));
-	pIndicesVertex	->Data.resize(12 * sizeof(::gpk::STriangle<uint16_t>));
+	pIndicesVertex	->Data.resize(12 * sizeof(::gpk::tri<uint16_t>));
 	memcpy(&pVertices		->Data[0], ::gpk::VOXEL_FACE_VERTICES	, pVertices			->Data.size());
 	memcpy(&pIndicesVertex	->Data[0], ::gpk::VOXEL_FACE_INDICES_16	, pIndicesVertex	->Data.size());
 	memcpy(&pNormals		->Data[0], ::gpk::VOXEL_FACE_NORMALS	, pNormals			->Data.size());

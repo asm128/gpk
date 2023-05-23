@@ -1,6 +1,7 @@
 #include "gpk_engine_container.h"
 #include "gpk_matrix.h"
 #include "gpk_enum.h"
+#include "gpk_coord.h"
 
 #ifndef GPK_ENGINE_RENDERMESH_H
 #define GPK_ENGINE_RENDERMESH_H

@@ -1,6 +1,7 @@
 #include "gpk_ascii_color.h"
 #include "gpk_image.h"
 #include "gpk_color.h"
+#include "gpk_tri2.h"
 
 #include <memory> // this is required for ::std::swap()
 
@@ -50,7 +51,7 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord>
-	stainli	::gpk::error_t									drawTriangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::STriangle2<_tCoord>& triangle)		{
+	stainli	::gpk::error_t									drawTriangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::tri2<_tCoord>& triangle)		{
 		::gpk::n2		<int32_t>												areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2		<int32_t>												areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)asciiTarget.metrics().y); y < yStop; ++y)

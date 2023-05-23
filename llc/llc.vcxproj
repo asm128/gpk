@@ -64,6 +64,8 @@
     <ClInclude Include="gpk_ref.h" />
     <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_tri.h" />
+    <ClInclude Include="gpk_tri2.h" />
+    <ClInclude Include="gpk_tri3.h" />
     <ClInclude Include="gpk_view_serialize.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />

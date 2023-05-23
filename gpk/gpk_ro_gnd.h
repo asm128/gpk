@@ -1,5 +1,6 @@
 #include "gpk_color.h"
 #include "gpk_image.h"
+#include "gpk_tri.h"
 
 #ifndef TERRAIN_H_289374982374
 #define TERRAIN_H_289374982374
@@ -78,7 +79,7 @@ namespace gpk
 		::gpk::apod<::gpk::n3f32>				Normals			;
 		::gpk::apod<::gpk::n3f32>				Vertices		;
 		::gpk::apod<::gpk::n2f32>				UVs				;
-		::gpk::apod<::gpk::STriangle<uint32_t>>	VertexIndices	;
+		::gpk::apod<::gpk::tri<uint32_t>>	VertexIndices	;
 		//::gpk::apod<int32_t>							SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 

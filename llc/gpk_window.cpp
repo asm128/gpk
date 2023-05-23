@@ -94,7 +94,7 @@
 }
 
 #if defined(GPK_WINDOWS)
-		::gpk::error_t					drawBuffer									(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::view2d<::gpk::SColorBGRA>& colorArray)				{
+		::gpk::error_t					drawBuffer									(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::view2d<::gpk::bgra>& colorArray)				{
 	const uint32_t								bytesToCopy									= sizeof(::RGBQUAD) * colorArray.size();
 	const ::gpk::n2<uint16_t>				metricsSource								= colorArray.metrics().Cast<uint16_t>();
 	const ::gpk::n2<uint16_t>				prevSize									= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
@@ -147,7 +147,7 @@
 }
 #endif
 
-		::gpk::error_t																			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::view2d<::gpk::SColorBGRA>& targetToPresent)		{
+		::gpk::error_t																			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::view2d<::gpk::bgra>& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;

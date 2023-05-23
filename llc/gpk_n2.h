@@ -94,6 +94,14 @@ namespace gpk
 	typedef n2<int16_t>		n2i16;
 	typedef n2<int32_t>		n2i32;
 	typedef n2<int64_t>		n2i64;
+
+	template<typename _tValue>
+	stacxpr	bool	in_range	(const ::gpk::n2<_tValue>& valueToTest, const ::gpk::n2<_tValue>& rangeStart, const ::gpk::n2<_tValue>& rangeStop)	noexcept	{
+		return	::gpk::in_range(valueToTest.x, rangeStart.x, rangeStop.x)
+			&&	::gpk::in_range(valueToTest.y, rangeStart.y, rangeStop.y)
+			;
+	}
+
 } // namespace
 
 #define N2_F32 "{%f, %f}"

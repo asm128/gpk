@@ -5,12 +5,12 @@ static	::gpk::error_t					drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::SMatrix4<float>				matrixWVP
-	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<::gpk::bgra>	target_image
 	, ::gpk::view2d<uint32_t>			target_depth
 	) {
 
-	::gpk::STriangle3<float>					triangleTransformed		= {};
-	::gpk::STriangle2<int16_t>					triangleFinal			= {};
+	::gpk::tri3<float>					triangleTransformed		= {};
+	::gpk::tri2<int16_t>					triangleFinal			= {};
 	::gpk::SColorBGRA							nodeColor				= (nodeToDraw.Color >= 0) ? renderer.Colors[nodeToDraw.Color] : ::gpk::SColorBGRA{0xFFFF00FF};
 	if(nodeToDraw.PerFaceNormal) {
 		if(nodeToDraw.VertexColor < 0) {
@@ -58,7 +58,7 @@ static	::gpk::error_t					drawOrderedVertices
 	, const ::gpk::SMatrix4<float>			& view
 	, const ::gpk::SMatrix4<float>			& projection
 	, const ::gpk::SMatrix4<float>			& viewProjection
-	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<::gpk::bgra>	target_image
 	, ::gpk::view2d<uint32_t>			target_depth
 	) {
 	if(0 == target_image.size())
@@ -87,7 +87,7 @@ static	::gpk::error_t					drawOrderedVertices
 ::gpk::error_t							gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, int32_t								iCamera
-	, ::gpk::view2d<::gpk::SColorBGRA>	target_image
+	, ::gpk::view2d<::gpk::bgra>	target_image
 	, ::gpk::view2d<uint32_t>			target_depth
 	, bool									drawHidden
 	) {

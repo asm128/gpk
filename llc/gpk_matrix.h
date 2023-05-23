@@ -1,5 +1,6 @@
 #include "gpk_quat.h"
-#include "gpk_coord.h"
+//#include "gpk_coord.h"
+#include "gpk_tri3.h"
 //#include "gpk_log.h"
 
 #ifndef GPK_MATRIX_H_298374982374
@@ -24,8 +25,8 @@ namespace gpk
 
 		constexpr			_tMat4				operator +					(const _tMat4& other)															const	noexcept	{ return {_11 + other._11, _12 + other._12, _13 + other._13, _14 + other._14, _21 + other._21	, _22 + other._22, _23 + other._23, _24 + other._24, _31 + other._31, _32 + other._32, _33 + other._33, _34 + other._34, _41 + other._41, _42 + other._42, _43 + other._43, _44 + other._44}; }
 		constexpr			_tMat4				operator -					(const _tMat4& other)															const	noexcept	{ return {_11 - other._11, _12 - other._12, _13 - other._13, _14 - other._14, _21 - other._21	, _22 - other._22, _23 - other._23, _24 - other._24, _31 - other._31, _32 - other._32, _33 - other._33, _34 - other._34, _41 - other._41, _42 - other._42, _43 - other._43, _44 - other._44}; }
-		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{								return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
-							_tMat4				operator /					(double scalar)																	const				{ if(0 == scalar) gpk_throw("");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
+		constexpr			_tMat4				operator *					(double scalar)																	const	noexcept	{return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_14 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_24 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar), (_tBase)(_34 * scalar), (_tBase)(_41 * scalar), (_tBase)(_42 * scalar), (_tBase)(_43 * scalar), (_tBase)(_44 * scalar) }; }
+							_tMat4				operator /					(double scalar)																	const				{ return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_14 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_24 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar), (_tBase)(_34 / scalar), (_tBase)(_41 / scalar), (_tBase)(_42 / scalar), (_tBase)(_43 / scalar), (_tBase)(_44 / scalar) }; }
 		constexpr			_tMat4				operator *					(const _tMat4& right)															const	noexcept	{
 			return
 				{ _11*right._11 + _12*right._21 + _13*right._31 + _14*right._41, _11*right._12 + _12*right._22 + _13*right._32 + _14*right._42, _11*right._13 + _12*right._23 + _13*right._33 + _14*right._43, _11*right._14 + _12*right._24 + _13*right._34 + _14*right._44
@@ -489,14 +490,14 @@ namespace gpk
 		}
 	};	// struct
 	template<typename _tElement>
-							STriangle3<_tElement> &						transform								(::gpk::STriangle3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
+	::gpk::tri3<_tElement> &						transform								(::gpk::tri3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
 		triangle.A															= transform.Transform(triangle.A);
 		triangle.B															= transform.Transform(triangle.B);
 		triangle.C															= transform.Transform(triangle.C);
 		return triangle;
 	}
 	template<typename _tElement>
-							STriangle3<_tElement> &						transformDirection						(::gpk::STriangle3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
+	::gpk::tri3<_tElement> &						transformDirection						(::gpk::tri3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
 		triangle.A															= transform.TransformDirection(triangle.A);
 		triangle.B															= transform.TransformDirection(triangle.B);
 		triangle.C															= transform.TransformDirection(triangle.C);
@@ -513,16 +514,13 @@ namespace gpk
 								,				_31, _32, _33
 								;
 
-		inline				const _tBase&		operator[]					(uint32_t index)																const				{ gthrow_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
-		inline				_tBase&				operator[]					(uint32_t index)																					{ gthrow_if(index > 8, "", "Invalid matrix element index: %u", index); return *((&_11)[index]); }
-
 		constexpr			bool				operator ==					(const _tMat3& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _31 == other._31 && _32 == other._32 && _33 == other._33; }
 		constexpr inline	bool				operator !=					(const _tMat3& other)															const	noexcept	{ return !operator==(other); }
 
 		constexpr			_tMat3				operator +					(const _tMat3& other)															const	noexcept	{ return {_11 + other._11, _12 + other._12, _13 + other._13, _21 + other._21, _22 + other._22, _23 + other._23, _31 + other._31, _32 + other._32, _33 + other._33}; }
 		constexpr			_tMat3				operator -					(const _tMat3& other)															const	noexcept	{ return {_11 - other._11, _12 - other._12, _13 - other._13, _21 - other._21, _22 - other._22, _23 - other._23, _31 - other._31, _32 - other._32, _33 - other._33}; }
-		constexpr			_tMat3				operator *					(double scalar)																	const	noexcept	{												return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar)}; }
-							_tMat3				operator /					(double scalar)																	const				{ gerror_if(0 == scalar, "%s", "Division by zero.");	return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar)}; }
+		constexpr			_tMat3				operator *					(double scalar)																	const	noexcept	{ return {(_tBase)(_11 * scalar), (_tBase)(_12 * scalar), (_tBase)(_13 * scalar), (_tBase)(_21 * scalar), (_tBase)(_22 * scalar), (_tBase)(_23 * scalar), (_tBase)(_31 * scalar), (_tBase)(_32 * scalar), (_tBase)(_33 * scalar)}; }
+							_tMat3				operator /					(double scalar)																	const				{ return {(_tBase)(_11 / scalar), (_tBase)(_12 / scalar), (_tBase)(_13 / scalar), (_tBase)(_21 / scalar), (_tBase)(_22 / scalar), (_tBase)(_23 / scalar), (_tBase)(_31 / scalar), (_tBase)(_32 / scalar), (_tBase)(_33 / scalar)}; }
 		constexpr			_tMat3				operator *					(const _tMat3& right)															const	noexcept	{
 			return
 				{ _11*right._11 + _12*right._21 + _13*right._31, _11*right._12 + _12*right._22 + _13*right._32, _11*right._13 + _12*right._23 + _13*right._33
@@ -560,7 +558,6 @@ namespace gpk
 
 			_tMat3										result;
 			if(0 == det) {
-				error_printf("%s", "Matrix determinant is zero.");
 				result									=
 					{	1, 0, 0
 					,	0, 1, 0
