@@ -5,6 +5,7 @@
 
 namespace gpk 
 {
+#pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	template<typename _tBase>
 	struct n3 {
 		typedef	_tBase		T;
@@ -157,6 +158,7 @@ namespace gpk
 	typedef n3<int16_t>		n3i16;
 	typedef n3<int32_t>		n3i32;
 	typedef n3<int64_t>		n3i64;
+#pragma pack(pop)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 } // namespace
 
 #define N3_F32 "{%f, %f, %f}"

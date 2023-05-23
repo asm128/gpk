@@ -1,5 +1,4 @@
 #include "gpk_array.h"
-#include "gpk_coord.h"
 #include "gpk_quat.h"
 #include "gpk_array_static.h"
 #include "gpk_tri.h"

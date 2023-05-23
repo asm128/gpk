@@ -468,6 +468,12 @@
     <ClInclude Include="gpk_tri3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">

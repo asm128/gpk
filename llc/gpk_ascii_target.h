@@ -2,6 +2,7 @@
 #include "gpk_image.h"
 #include "gpk_color.h"
 #include "gpk_tri2.h"
+#include "gpk_line.h"
 
 #include <memory> // this is required for ::std::swap()
 

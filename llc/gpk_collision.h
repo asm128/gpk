@@ -3,6 +3,7 @@
 //		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
 #include "gpk_coord.h"
 #include "gpk_log.h"
+#include "gpk_line.h"
 
 #ifndef GPK_COLLISION_H_209384
 #define GPK_COLLISION_H_209384
@@ -11,7 +12,7 @@ namespace gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
 	template<typename _tCoord>
-					::gpk::error_t											line_line_intersect
+	::gpk::error_t											line_line_intersect
 		( const ::gpk::SLine2<_tCoord>	& line1
 		, const ::gpk::SLine2<_tCoord>	& line2
 		, ::gpk::n2<_tCoord>		& out_intersect_point

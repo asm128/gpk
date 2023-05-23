@@ -1,5 +1,4 @@
 #include "gpk_enum.h"
-#include "gpk_coord.h"
 #include "gpk_ptr.h"
 
 #ifndef GPK_EXPRESSION_H_92837498237

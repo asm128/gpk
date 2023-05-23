@@ -23,15 +23,15 @@
 	};
 #pragma pack(pop)
 
-			::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::view_array<uint8_t>	& input)							{
-	::gpk::view_stream<const uint8_t>							rsw_stream													= {input.begin(), input.size()};
-	SRSWHeader													header														= {};//*(SRSWHeader*)input.begin();
+::gpk::error_t					gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, const ::gpk::vcu8 & input) {
+	::gpk::view_stream<const uint8_t>	rsw_stream			= {input.begin(), input.size()};
+	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
 	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
 	info_printf("RSW magic number: %.4s.", header.Filecode);
 	info_printf("RSW version: %u.%u.", (uint32_t)header.VersionMajor, (uint32_t)header.VersionMinor);
 	info_printf("RSW version major: 0x%x.", (uint32_t)header.VersionMajor);
 	info_printf("RSW version minor: 0x%x.", (uint32_t)header.VersionMinor);
-	const uint32_t												promoted													= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
+	const uint32_t						promoted			= *(uint16_t*)&input[4];	// I had to put this in a variable because the static analyzer believed I may have been confused with this statement.
 	info_printf("RSW version number: 0x%x.", promoted);
 	(void)promoted;
 	//info_printf("RSW version: 0x%x.", header.Version);

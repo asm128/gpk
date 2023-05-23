@@ -29,7 +29,7 @@
 	return 0;
 }
 
-static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk::bgra>& palette, const ::gpk::view<const ::gpk::SColorBGRA>& colors, uint32_t iShades)	{
+static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk::bgra>& palette, const ::gpk::view<const ::gpk::bgra>& colors, uint32_t iShades)	{
 	const uint32_t														newPaletteSize											= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		gpk_necall(palette.resize(newPaletteSize), "%s", "Out of memory?");
@@ -37,8 +37,8 @@ static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk:
 		palette[iTone * iShades]										= colors[iTone];
 
 	for(uint32_t iShade = 0; iShade < iShades; ++iShade) {
-		const ::gpk::SColorBGRA												& baseColor												= palette[iShade * iShades];
-		::gpk::SColorBGRA													& paletteItem											= palette[iShade];
+		const ::gpk::bgra												& baseColor												= palette[iShade * iShades];
+		::gpk::bgra													& paletteItem											= palette[iShade];
 		paletteItem														= baseColor;
 	}
 
@@ -47,8 +47,8 @@ static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk:
 			if(0 == (iShade % iShades))
 				continue;
 			const int32_t														toneIndex												= iTone * iShades;
-			const ::gpk::SColorBGRA												& baseColor												= colors[iTone];
-			::gpk::SColorBGRA													& paletteItem											= palette[toneIndex + iShade];
+			const ::gpk::bgra												& baseColor												= colors[iTone];
+			::gpk::bgra													& paletteItem											= palette[toneIndex + iShade];
 			paletteItem														= ::gpk::SColorFloat(baseColor) / (float)iShades * (iShades - (float)iShade);
 			paletteItem.a = 1;
 			verbose_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
@@ -58,7 +58,7 @@ static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk:
 	return 0;
 }
 
-static		::gpk::error_t										themeSetupDefault										(const ::gpk::view<const ::gpk::SColorBGRA>& palette, int32_t iColor, ::gpk::SControlTheme& theme, uint32_t iShades)	{
+static		::gpk::error_t										themeSetupDefault										(const ::gpk::view<const ::gpk::bgra>& palette, int32_t iColor, ::gpk::SControlTheme& theme, uint32_t iShades)	{
 	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
 	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
 	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_COLOR_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
@@ -133,7 +133,7 @@ static		::gpk::error_t										themeSetupDefault										(const ::gpk::apod<::
 
 static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::bgra>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
 	stacxpr	const uint32_t									iShades													= 16;
-	static				::gpk::SColorBGRA								paletteColors []										=
+	static				::gpk::bgra								paletteColors []										=
 		// 16 Base colors
 		{ ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_0	}
 		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_1	}
@@ -152,23 +152,23 @@ static		::gpk::error_t										initDefaults				(::gpk::pobj<::gpk::apod<::gpk::
 		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_14	}
 		, ::gpk::SColorRGBA{::gpk::ASCII_COLOR_INDEX_15	}
 		// 16 Extended colors
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_14	+ ::gpk::ASCII_COLOR_INDEX_1}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_13	+ ::gpk::ASCII_COLOR_INDEX_2}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_12	+ ::gpk::ASCII_COLOR_INDEX_3}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_11	+ ::gpk::ASCII_COLOR_INDEX_4}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_10	+ ::gpk::ASCII_COLOR_INDEX_5}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_9 	+ ::gpk::ASCII_COLOR_INDEX_6}
-		, ::gpk::SColorBGRA{::gpk::ASCII_COLOR_INDEX_8 	+ ::gpk::ASCII_COLOR_INDEX_7}
-		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
-		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
-		, ::gpk::SColorBGRA{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
-		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4)}
-		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7)}
-		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8)}
-		, ::gpk::SColorBGRA{(uint32_t)(::gpk::ASCII_COLOR_INDEX_4 + ::gpk::ASCII_COLOR_INDEX_7)}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_14	+ ::gpk::ASCII_COLOR_INDEX_1}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_13	+ ::gpk::ASCII_COLOR_INDEX_2}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_12	+ ::gpk::ASCII_COLOR_INDEX_3}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_11	+ ::gpk::ASCII_COLOR_INDEX_4}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_10	+ ::gpk::ASCII_COLOR_INDEX_5}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_9 	+ ::gpk::ASCII_COLOR_INDEX_6}
+		, ::gpk::bgra{::gpk::ASCII_COLOR_INDEX_8 	+ ::gpk::ASCII_COLOR_INDEX_7}
+		, ::gpk::bgra{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_4 * (uint64_t)::gpk::ASCII_COLOR_INDEX_11)}
+		, ::gpk::bgra{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_5 * (uint64_t)::gpk::ASCII_COLOR_INDEX_10)}
+		, ::gpk::bgra{0xFFFFFFFFU & (::gpk::ASCII_COLOR_INDEX_7 * (uint64_t)::gpk::ASCII_COLOR_INDEX_8 )}
+		, ::gpk::bgra{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_4)}
+		, ::gpk::bgra{(uint32_t)(::gpk::ASCII_COLOR_INDEX_3 + ::gpk::ASCII_COLOR_INDEX_7)}
+		, ::gpk::bgra{(uint32_t)(::gpk::ASCII_COLOR_INDEX_1 + ::gpk::ASCII_COLOR_INDEX_8)}
+		, ::gpk::bgra{(uint32_t)(::gpk::ASCII_COLOR_INDEX_4 + ::gpk::ASCII_COLOR_INDEX_7)}
 
-		, ::gpk::SColorBGRA{::gpk::BROWN}
-		, ::gpk::SColorBGRA{::gpk::LIGHTORANGE}
+		, ::gpk::bgra{::gpk::BROWN}
+		, ::gpk::bgra{::gpk::LIGHTORANGE}
 	};
 	for(uint32_t iColor = 0; iColor < ::gpk::size(paletteColors); ++iColor) 
 		paletteColors[iColor].a = 255;

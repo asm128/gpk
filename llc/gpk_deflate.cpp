@@ -1,6 +1,5 @@
 #include "gpk_deflate.h"
 #include "gpk_storage.h"
-#include "gpk_coord.h"
 #include "gpk_safe.h"
 #include "deflate.h"
 #include "gpk_io.h"

@@ -8,7 +8,8 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tDimension>	struct tri2 : public tri<::gpk::n2<_tDimension>>		{
-		typedef				::gpk::n2<_tDimension>	TVertex;	
+		typedef	_tDimension	T;
+		typedef				::gpk::n2<T>	TVertex;	
 		using tri<TVertex>	::A;
 		using tri<TVertex>	::B;
 		using tri<TVertex>	::C;
@@ -22,12 +23,12 @@ namespace gpk
 				, C.template Cast<_tOther>()
 				};
 		}
-		bool				CulledX					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool				CulledX					(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		bool				CulledY					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool				CulledY					(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;

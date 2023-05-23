@@ -1,5 +1,5 @@
 #include "gpk_label_manager.h"
-#include "gpk_coord.h"
+#include "gpk_n2.h"
 #include "gpk_storage.h"
 
 #ifndef GPK_FILE_H_230508

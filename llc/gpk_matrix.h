@@ -1,7 +1,5 @@
 #include "gpk_quat.h"
-//#include "gpk_coord.h"
 #include "gpk_tri3.h"
-//#include "gpk_log.h"
 
 #ifndef GPK_MATRIX_H_298374982374
 #define GPK_MATRIX_H_298374982374

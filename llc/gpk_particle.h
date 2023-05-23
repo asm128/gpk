@@ -3,8 +3,8 @@
 // A particle is the simplest object that can be simulated in the physics system.
 // It has position data (no orientation data), along with velocity. It can be integrated forward through time, and have linear forces, and impulses applied to it.
 // This system allows defining the floating-point precision of the elements. It obviously won't work for integer types so don't use it in that way.
-#include "gpk_coord.h"			// for ::gpk::n2<>
-#include "gpk_array.h"		// for ::gpk::view<>
+#include "gpk_n3.h"			// for ::gpk::n2<>
+#include "gpk_array_pod.h"		// for ::gpk::view<>
 #include <cfloat>
 
 #ifndef GPK_PARTICLE_H_29384923874
@@ -133,7 +133,7 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-							::gpk::error_t									addParticle
+	::gpk::error_t			addParticle
 		(	const _tParticleType										& particleType
 		,	::gpk::apod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
 		,	::gpk::SParticle2Integrator<_tCoord>						& particleIntegrator
@@ -156,7 +156,7 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-	stainli	::gpk::error_t									addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stainli	::gpk::error_t		addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 

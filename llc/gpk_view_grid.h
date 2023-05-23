@@ -12,7 +12,7 @@ namespace gpk
 	protected:
 		// Properties / Member Variables
 		_tElement					* Data					= 0;
-		::gpk::n2<uint32_t>			Size					= {0, 0};
+		::gpk::n2u32				Size					= {0, 0};
 	public:
 		typedef	_tElement			T;
 		// Constructors

@@ -3,7 +3,8 @@
 #include "gpk_color.h"
 #include "gpk_geometry_lh.h"
 
-#include "gpk_array.h"
+#include "gpk_array_pod.h"
+#include "gpk_line.h"
 
 #include <functional>
 

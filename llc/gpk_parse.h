@@ -1,5 +1,4 @@
 #include "gpk_enum.h"
-#include "gpk_coord.h"
 
 #ifndef GPK_PARSE_H_298374298347
 #define GPK_PARSE_H_298374298347

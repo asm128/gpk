@@ -5,6 +5,7 @@
 
 namespace gpk 
 {
+#pragma pack(push, 1)
 	template<typename _tBase>
 	struct n2 {
 		typedef	_tBase		T;
@@ -101,7 +102,7 @@ namespace gpk
 			&&	::gpk::in_range(valueToTest.y, rangeStart.y, rangeStop.y)
 			;
 	}
-
+#pragma pack(pop)
 } // namespace
 
 #define N2_F32 "{%f, %f}"

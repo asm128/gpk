@@ -1,4 +1,4 @@
-#include "gpk_array.h"
+#include "gpk_array_pod.h"
 #include "gpk_view_grid.h"
 #include "gpk_view_bit.h"
 #include "gpk_grid_scale.h"

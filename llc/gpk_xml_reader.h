@@ -1,5 +1,5 @@
 #include "gpk_enum.h"
-#include "gpk_coord.h"
+#include "gpk_n2.h"
 
 #ifndef GPK_XML_READER_H_20220702
 #define GPK_XML_READER_H_20220702

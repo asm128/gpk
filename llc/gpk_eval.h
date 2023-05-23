@@ -55,6 +55,12 @@ namespace gpk
 		inline	bool					operator==	(const SMinMax & other)		const	noexcept	{ return Min == other.Min && Max == other.Max; }
 				bool					operator!=	(const SMinMax & other)		const	noexcept	{ return !operator==(other); }
 	};
+
+	typedef SMinMax<float> SNearFar;
+
+	template<typename _tUnit> struct SRange { _tUnit Offset, Count	; GPK_DEFAULT_OPERATOR_NE(SRange<_tUnit>, Offset == other.Offset && Count == other.Count); };
+	template<typename _tUnit> struct SSlice { _tUnit Begin, End		; GPK_DEFAULT_OPERATOR_NE(SSlice<_tUnit>, Begin  == other.Begin  && End   == other.End  ); };
+
 #pragma pack(pop)
 #ifndef true_if
 #	define true_if(expression)		((expression) ? true : false)	// returns true  if the parameter evaluates to true

@@ -3,6 +3,7 @@
 #include "gpk_json.h"
 #include "gpk_storage.h"
 #include "gpk_parse.h"
+#include "gpk_math.h"
 
 #define json_info_printf(...) // info_printf
 #define json_error_printf error_printf

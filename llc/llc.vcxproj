@@ -56,10 +56,12 @@
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
     <ClInclude Include="gpk_ptr_pod.h" />
+    <ClInclude Include="gpk_quad.h" />
     <ClInclude Include="gpk_quat.h" />
     <ClInclude Include="gpk_ref.h" />
     <ClInclude Include="gpk_sysevent.h" />

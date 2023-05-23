@@ -1,8 +1,8 @@
-#include "gpk_coord.h"
 #include "gpk_enum.h"
 #include "gpk_ptr.h"
 #include "gpk_color.h"
 #include "gpk_array_static.h"
+#include "gpk_quad.h"
 
 #ifndef GPK_VOXEL_H_098273498237423
 #define GPK_VOXEL_H_098273498237423

@@ -1,7 +1,6 @@
 #include "gpk_engine_container.h"
-#include "gpk_matrix.h"
+#include "gpk_n2.h"
 #include "gpk_enum.h"
-#include "gpk_coord.h"
 
 #ifndef GPK_ENGINE_RENDERMESH_H
 #define GPK_ENGINE_RENDERMESH_H
@@ -46,7 +45,7 @@ namespace gpk
 		::gpk::apod<uint32_t>				ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
-		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+		::gpk::error_t						Save			(::gpk::au8 & output) const { 
 			gpk_necs(::gpk::savePOD(output, Desc));
 			gpk_necs(::gpk::saveView(output, GeometryBuffers));
 			gpk_necs(::gpk::saveView(output, ConstantBuffers));

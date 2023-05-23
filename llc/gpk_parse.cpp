@@ -1,6 +1,7 @@
 #include "gpk_parse.h"
 #include "gpk_array.h"
 #include "gpk_safe.h"
+#include "gpk_math.h"
 #include <ctype.h>
 
 bool										gpk::isSpaceCharacter						(const char characterToTest)		{
