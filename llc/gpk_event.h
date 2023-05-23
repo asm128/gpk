@@ -25,6 +25,8 @@ namespace gpk
 			return 0;
 		}
 	};
+	template<typename T> using FEventViewHandler		= std::function<::gpk::error_t(      ::gpk::SEventView<T>&)>;
+	template<typename T> using FEventViewHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEventView<T>&)>;
 
 	template<typename _tEventType>
 	struct SEvent {
@@ -60,6 +62,8 @@ namespace gpk
 		}
 	};
 
+	template<typename T> using FEventHandler		= std::function<::gpk::error_t(      ::gpk::SEvent<T>&)>;
+	template<typename T> using FEventHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEvent<T>&)>;
 
 	template <typename _tEvntParent, typename _tEvntChild>
 	static	::gpk::error_t	eventWrapChild		(::gpk::SEvent<_tEvntParent> & parentEvent, _tEvntChild childEventType, ::gpk::vcu8 eventData) {
@@ -92,9 +96,8 @@ namespace gpk
 		gpk_necs(parentEvent.ExtractChild(childEvent)); 
 		return funcHandleChild(childEvent);
 	}
-
-#define gpk_warning_unhandled_event(eventUnhandled)		warning_printf("unhandled %s event: %s", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type)); 
-	
 }
+
+#define gpk_warning_unhandled_event(eventUnhandled)		warning_printf("Unhandled %s event: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), eventUnhandled.Type, eventUnhandled.Type, (char)eventUnhandled.Type); 
 
 #endif // GPK_EVENT_H_230511

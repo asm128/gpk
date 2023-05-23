@@ -166,4 +166,6 @@ namespace gpk
 #define N3_I64 "{%lli, %lli, %lli}"
 #define N3_U64 "{%llu, %llu, %llu}"
 
+#define gpk_xyz(n3var) n3var.x, n3var.y, n3var.z
+
 #endif // GPK_N3_H_230515

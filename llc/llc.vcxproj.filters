@@ -399,22 +399,7 @@
     <ClInclude Include="gpk_deflate.h">
       <Filter>encoding</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_n2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_n3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_quat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_tri.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_functional.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_astatic_serialize.h">
@@ -460,7 +445,22 @@
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_block_container_nts.h">
-      <Filter>Header Files</Filter>
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quat.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_n2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_n3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_functional.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_event.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -638,11 +638,8 @@
     <ClCompile Include="gpk_deflate.cpp">
       <Filter>encoding</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_event.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_particle.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -651,5 +648,6 @@
     <None Include="Makefile" />
     <None Include="copy_gpk_config.bat" />
     <None Include="character_codes.json" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

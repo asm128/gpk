@@ -1,7 +1,7 @@
 #include "gpk_particle.h"
 #include "gpk_apod_serialize.h"
 
-int				gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
+::gpk::error_t	gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
 	for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
 		::gpk::n3<float>							& direction			= Direction	[iShot];
 		::gpk::n3<float>							& position			= Position	[iShot];
@@ -11,13 +11,13 @@ int				gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
 	return 0;
 }
 
-int				gpk::SParticles3::Remove				(int32_t iParticle)	{
+::gpk::error_t	gpk::SParticles3::Remove				(int32_t iParticle)	{
 	Position	.remove_unordered(iParticle);
 	Direction	.remove_unordered(iParticle);
 	return Speed.remove_unordered(iParticle);
 }
 
-int				gpk::SParticles3::Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed)	{
+::gpk::error_t	gpk::SParticles3::Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed)	{
 	Position	.push_back(position);
 	Direction	.push_back(direction);
 	return Speed.push_back(speed);

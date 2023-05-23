@@ -41,7 +41,7 @@ namespace gpk
 #	define ENTER_SHARED_SECTION(Name)							EnterCriticalSection (&Name)
 #	define LEAVE_SHARED_SECTION(Name)							LeaveCriticalSection (&Name)
 #	define DELETE_SHARED_SECTION(Name)							DeleteCriticalSection(&Name)
-	stainli ::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
+	stainli	::gpk::error_t								sleep							(uint32_t milliseconds)		noexcept	{ Sleep(milliseconds); return 0; }
 #else
 #	define gpk__sync_increment(nCount)								(++(nCount))
 #	define gpk__sync_decrement(nCount)								(--(nCount))

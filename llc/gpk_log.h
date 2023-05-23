@@ -242,14 +242,17 @@ namespace gpk
 #ifndef reterr_gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_RETERR
 #		define reterr_gserror_if(condition)						retval_gerror_if	(-1, condition, "%s", "")
-#		define reterr_gswarn_if	(condition)						retval_gwarn_if		(-1, condition, "%s", "")
-#		define reterr_gsinfo_if	(condition)						retval_ginfo_if		(-1, condition, "%s", "")
+#		define reterr_gswarn_if(condition)						retval_gwarn_if		(-1, condition, "%s", "")
+#		define reterr_gsinfo_if(condition)						retval_ginfo_if		(-1, condition, "%s", "")
 #		define reterr_gerror_if(condition, format, ...)			retval_gerror_if	(-1, condition, format, __VA_ARGS__)
 #		define reterr_gwarn_if(condition, format, ...)			retval_gwarn_if		(-1, condition, format, __VA_ARGS__)
 #		define reterr_ginfo_if(condition, format, ...)			retval_ginfo_if		(-1, condition, format, __VA_ARGS__)
 #	else
 #		pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
 #		pragma warning(disable:4553)	// this is required because "condition" may have no side effect.
+#		define reterr_gserror_if(condition)						if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define reterr_gswarn_if(condition)						if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
+#		define reterr_gsinfo_if(condition)						if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
 #		define reterr_gerror_if(condition, format, ...)			if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
 #		define reterr_gwarn_if(condition, format, ...)			if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
 #		define reterr_ginfo_if(condition, format, ...)			if(condition) { do{::gpk::dummy(__VA_ARGS__); } while(0); }
@@ -257,9 +260,12 @@ namespace gpk
 #endif
 
 #ifndef retwarn_gerror_if
-#	define retwarn_gerror_if(condition, format, ...)		retval_gerror_if( 1, condition, format, __VA_ARGS__)
-#	define retwarn_gwarn_if(condition, format, ...)			retval_gwarn_if	( 1, condition, format, __VA_ARGS__)
-#	define retwarn_ginfo_if(condition, format, ...)			retval_ginfo_if	( 1, condition, format, __VA_ARGS__)
+#	define retwarn_gserror_if(condition)					retval_gerror_if	(1, condition, "%s", "")
+#	define retwarn_gswarn_if(condition)						retval_gwarn_if		(1, condition, "%s", "")
+#	define retwarn_gsinfo_if(condition)						retval_ginfo_if		(1, condition, "%s", "")
+#	define retwarn_gerror_if(condition, format, ...)		retval_gerror_if	(1, condition, format, __VA_ARGS__)
+#	define retwarn_gwarn_if(condition, format, ...)			retval_gwarn_if		(1, condition, format, __VA_ARGS__)
+#	define retwarn_ginfo_if(condition, format, ...)			retval_ginfo_if		(1, condition, format, __VA_ARGS__)
 #endif
 
 
@@ -442,6 +448,9 @@ namespace gpk
 #	define rwe_if							retwarn_gerror_if
 #	define rww_if							retwarn_gwarn_if
 #	define rwi_if							retwarn_ginfo_if
+#	define rwes_if							retwarn_gserror_if
+#	define rwws_if							retwarn_gswarn_if
+#	define rwis_if							retwarn_gsinfo_if
 #endif
 
 #endif // GPK_LOG_H_8927349654687654365

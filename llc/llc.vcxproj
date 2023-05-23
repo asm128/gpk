@@ -204,11 +204,11 @@
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
-    <ClCompile Include="gpk_event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />
     <None Include="copy_gpk_config.bat" />
+    <None Include="cpp.hint" />
     <None Include="gpk_cgi_interceptor.json" />
     <None Include="gpk_config.json" />
     <None Include="Makefile" />

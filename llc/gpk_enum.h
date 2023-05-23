@@ -270,4 +270,6 @@ namespace gpk
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
+#define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(valueUnhandled), ::gpk::get_value_namep(valueUnhandled), valueUnhandled, valueUnhandled, (char)valueUnhandled)
+
 #endif // GPK_ENUM_H_982364987234987234

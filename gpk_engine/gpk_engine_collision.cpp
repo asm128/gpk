@@ -87,10 +87,10 @@ static	::gpk::error_t		collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & 
 				"\nEntityA       : %i"
 				"\nEntityB       : %i"
 				"\nCenterDistance: " N3_F32
-				"\nDistanceLength: %g"
+				"\nDistanceLength: %f"
 				, contact.EntityA
 				, contact.EntityB
-				, contact.CenterDistance
+				, gpk_xyz(contact.CenterDistance)
 				, contact.DistanceLength
 				);
 		}

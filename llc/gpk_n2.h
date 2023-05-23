@@ -103,4 +103,6 @@ namespace gpk
 #define N2_I64 "{%lli, %lli}"
 #define N2_U64 "{%llu, %llu}"
 
+#define gpk_xy(n2var) n2var.x, n2var.y
+
 #endif // GPK_N2_H_230515

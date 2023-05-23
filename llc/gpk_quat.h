@@ -164,6 +164,17 @@ namespace gpk
 	typedef quat<int16_t>	quati16;
 	typedef quat<int32_t>	quati32;
 	typedef quat<int64_t>	quati64;
+
+
+#define QUAT_F32 "{%f, %f, %f, %f}"
+#define QUAT_F64 "{%g, %g, %g, %g}"
+#define QUAT_I32 "{%i, %i, %i, %i}"
+#define QUAT_U32 "{%u, %u, %u, %u}"
+#define QUAT_I64 "{%lli, %lli, %lli, %lli}"
+#define QUAT_U64 "{%llu, %llu, %llu, %llu}"
+
+#define gpk_xyzw(quatvar) quatvar.x, quatvar.y, quatvar.z, quatvar.w
+
 } // namespace
 
 #endif // GPK_QUAT_H_230515

@@ -1,4 +1,4 @@
-#include "gpk_enum.h"
+#include "gpk_event.h"
 
 #ifndef GPK_SYSEVENT_H_2094098237
 #define GPK_SYSEVENT_H_2094098237
@@ -36,14 +36,9 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSEVENT, JOY_BUTTON_UP		, 27);
 	GDEFINE_ENUM_VALUE(SYSEVENT, JOY_MOVE			, 28);
 
-	struct SSysEvent {
-		uint32_t			Type	: 24;
-		//uint32_t			Handled : 1;
-		::gpk::au8			Data;
-	};
-
-	typedef std::function<::gpk::error_t(::gpk::SSysEvent&)>		FSysEvent;
-	typedef std::function<::gpk::error_t(const ::gpk::SSysEvent&)>	FSysEventConst;
+	typedef ::gpk::SEvent            <SYSEVENT> SSysEvent;
+	typedef ::gpk::FEventHandler     <SYSEVENT>	FSysEvent;
+	typedef ::gpk::FEventHandlerConst<SYSEVENT>	FSysEventConst;
 } // namespace 
 
 #endif // GPK_SYSEVENT_H_2094098237
