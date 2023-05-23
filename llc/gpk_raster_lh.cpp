@@ -44,7 +44,7 @@ int								gpk::drawCircle			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SCircle<
 }
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-int								gpk::drawLine       	(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SLine2<int16_t> line, ::gpk::SColorBGRA color)	{
+int								gpk::drawLine       	(::gpk::view2d<::gpk::bgra> pixels, ::gpk::line2<int16_t> line, ::gpk::SColorBGRA color)	{
 	int32_t								countPixels				= 0;
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
@@ -72,7 +72,7 @@ int								gpk::drawLine       	(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SLine
 
 
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-int								gpk::drawLine       	(const ::gpk::n2<uint16_t>	offscreenMetrics, ::gpk::SLine2<int16_t> line, ::gpk::apod<::gpk::n2<int16_t>> & pixelCoords)	{
+int								gpk::drawLine       	(const ::gpk::n2<uint16_t>	offscreenMetrics, ::gpk::line2<int16_t> line, ::gpk::apod<::gpk::n2<int16_t>> & pixelCoords)	{
 	int32_t								dx						= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
 	int32_t								dy						= (int32_t)-fabs(line.B.y - line.A.y );
@@ -109,11 +109,11 @@ int								gpk::drawLine       	(const ::gpk::n2<uint16_t>	offscreenMetrics, ::g
 // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 int								gpk::drawLine
 	( const ::gpk::n2<uint16_t>				offscreenMetrics
-	, const ::gpk::SLine3<float>					& lineFloat
+	, const ::gpk::line3<float>					& lineFloat
 	, ::gpk::apod<::gpk::n3<float>>		& pixelCoords
 	, ::gpk::view2d<uint32_t>					depthBuffer
 	) {
-	::gpk::SLine2<int32_t>				line					= {{(int32_t)lineFloat.A.x, (int32_t)lineFloat.A.y}, {(int32_t)lineFloat.B.x, (int32_t)lineFloat.B.y}};
+	::gpk::line2<int32_t>				line					= {{(int32_t)lineFloat.A.x, (int32_t)lineFloat.A.y}, {(int32_t)lineFloat.B.x, (int32_t)lineFloat.B.y}};
 	int32_t								xDiff					= (int32_t)fabs(line.B.x - line.A.x);
 	int32_t								yDiff					= (int32_t)-fabs(line.B.y - line.A.y);
 	int32_t								sx						= (int32_t)line.A.x < line.B.x ? 1 : -1;
@@ -192,10 +192,10 @@ int								gpk::drawLine
 }
 
 //https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
-double									orient2d				(const ::gpk::SLine2<int16_t>	& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-double									orient2d				(const ::gpk::SLine3<int16_t>	& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-double									orient2d				(const ::gpk::SLine3<float>		& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-double									orient2d				(const ::gpk::SLine2<float>		& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::line2<int16_t>	& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::line3<int16_t>	& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::line3<float>		& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+double									orient2d				(const ::gpk::line2<float>		& segment, const ::gpk::n2<int16_t>& point)		{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 
 template <typename _tValue>	_tValue 	max3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 template <typename _tValue>	_tValue 	min3					(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }

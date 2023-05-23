@@ -35,8 +35,6 @@ namespace gpk
 
 		inline	::gpk::n2<_tElement>	Limit				()		const	noexcept	{ return Offset + Size; }
 	};
-
-
 #pragma pack(pop)
 
 

@@ -147,7 +147,6 @@ namespace gpk
 			return *this;
 		}
 	};	// struct n3
-
 	typedef n3<float>		n3f32, n3f;
 	typedef n3<double>		n3f64, n3d;
 	typedef n3<uint8_t>		n3u8;

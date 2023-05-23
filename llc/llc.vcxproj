@@ -57,6 +57,8 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_font.h" />
     <ClInclude Include="gpk_line.h" />
+    <ClInclude Include="gpk_line2.h" />
+    <ClInclude Include="gpk_line3.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />

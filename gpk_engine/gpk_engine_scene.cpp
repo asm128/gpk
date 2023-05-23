@@ -175,7 +175,7 @@ static	::gpk::error_t								drawBuffers
 
 	for(uint32_t iVector = 0; iVector < 3; ++iVector) {
 		wireframePixelCoords.clear();
-		::gpk::drawLine(offscreenMetrics, ::gpk::SLine3<float>{{}, xyz[iVector]}, constants.VPS, wireframePixelCoords, backBufferDepth);
+		::gpk::drawLine(offscreenMetrics, ::gpk::line3<float>{{}, xyz[iVector]}, constants.VPS, wireframePixelCoords, backBufferDepth);
 		for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
 			::gpk::n3u16									coord					= wireframePixelCoords[iCoord].Cast<uint16_t>();
 			backBufferColors[coord.y][coord.x]	= colorXYZ[iVector];

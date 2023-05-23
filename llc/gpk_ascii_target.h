@@ -2,7 +2,7 @@
 #include "gpk_image.h"
 #include "gpk_color.h"
 #include "gpk_tri2.h"
-#include "gpk_line.h"
+#include "gpk_line2.h"
 
 #include <memory> // this is required for ::std::swap()
 
@@ -72,7 +72,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SLine2<_tCoord>& line)				{
+	static					::gpk::error_t									drawLine									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::line2<_tCoord>& line)				{
 		float																		x1											= (float)line.A.x
 			,																		y1											= (float)line.A.y
 			,																		x2											= (float)line.B.x

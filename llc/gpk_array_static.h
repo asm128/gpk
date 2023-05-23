@@ -55,6 +55,17 @@ namespace gpk
 	template<uint32_t _sizeArray>	using astatici32	= ::gpk::array_static<int32_t , _sizeArray>;
 	template<uint32_t _sizeArray>	using astatici64	= ::gpk::array_static<int64_t , _sizeArray>;
 
+	template<uint32_t _sizeArray>	using astc		= ::gpk::array_static<char    , _sizeArray>;
+	template<uint32_t _sizeArray>	using astuc 	= ::gpk::array_static<uchar_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astu8 	= ::gpk::array_static<uint8_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astu16	= ::gpk::array_static<uint16_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astu32	= ::gpk::array_static<uint32_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astu64	= ::gpk::array_static<uint64_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using asti8 	= ::gpk::array_static<int8_t  , _sizeArray>;
+	template<uint32_t _sizeArray>	using asti16	= ::gpk::array_static<int16_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using asti32	= ::gpk::array_static<int32_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using asti64	= ::gpk::array_static<int64_t , _sizeArray>;
+
 #pragma pack(pop)
 
 	template <typename T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}

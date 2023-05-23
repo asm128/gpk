@@ -3,7 +3,8 @@
 #include "gpk_camera.h"
 
 #include "gpk_tri2.h"
-#include "gpk_line.h"
+#include "gpk_line2.h"
+#include "gpk_line3.h"
 
 #include <memory> // this is required for ::std::swap()
 
@@ -198,7 +199,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static	::gpk::error_t		rasterLine									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SLine2<_tCoord>& line, gpk_raster_callback callback)				{
+	static	::gpk::error_t		rasterLine									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::line2<_tCoord>& line, gpk_raster_callback callback)				{
 		::gpk::n2<float>														A											= line.A.template Cast<float>();
 		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -246,7 +247,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
-	static	::gpk::error_t		drawLine									(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::SLine2<_tCoord>& line)				{
+	static	::gpk::error_t		drawLine									(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::line2<_tCoord>& line)				{
 		::gpk::n2<float>														A											= line.A.template Cast<float>();
 		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		if(line.A.x == line.B.x)
@@ -299,7 +300,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static	::gpk::error_t		drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::SLine2<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
+	static	::gpk::error_t		drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::line2<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
 		::gpk::n2<float>														A											= line.A.template Cast<float>();
 		::gpk::n2<float>														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
@@ -347,8 +348,8 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static	::gpk::error_t		drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::SLine3<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
-		return drawLine(targetMetrics, ::gpk::SLine2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
+	static	::gpk::error_t		drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::line3<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
+		return drawLine(targetMetrics, ::gpk::line2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace
 
