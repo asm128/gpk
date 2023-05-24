@@ -1,6 +1,7 @@
 #include "gpk_gui.h"
 #include "gpk_gui_text.h"
 #include "gpk_base64.h"
+#include "gpk_rect_align.h"
 
 // GUI_CONTROL_COLOR_BACKGROUND
 // GUI_CONTROL_COLOR_BORDER_LEFT
@@ -362,7 +363,7 @@ static		::gpk::error_t										controlInstanceReset									(::gpk::SGUI & gui,
 	return 0;
 }
 
-static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::SRectangle2<int16_t>> finalRects, ::gpk::view<::gpk::tri2<int16_t>> triangles)					{
+static		::gpk::error_t										buildControlGeometry									(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::rect2<int16_t>> finalRects, ::gpk::view<::gpk::tri2<int16_t>> triangles)					{
 	::gpk::SRectLimits<int16_t>											scaledBorders											= {};
 	const ::gpk::n2<double>										scaleFinal												= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left												= (int16_t)(control.Border.Left		* scaleFinal.x);
@@ -371,7 +372,7 @@ static		::gpk::error_t										buildControlGeometry									(const ::gpk::SCont
 	scaledBorders.Bottom											= (int16_t)(control.Border.Bottom	* scaleFinal.y);
 	(void)scaledBorders;
 
-	const ::gpk::SRectangle2<int16_t>									& rectTotal												= controlMetrics.Total.Global;
+	const ::gpk::rect2<int16_t>									& rectTotal												= controlMetrics.Total.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BACKGROUND		]			= rectTotal;
 	finalRects[::gpk::GUI_CONTROL_AREA_CLIENT			]			= controlMetrics.Client.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_BORDER_LEFT		]			= {rectTotal.Offset , ::gpk::n2<int16_t>{control.Border.Left, rectTotal.Size.y}};
@@ -417,7 +418,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI & gui,
 	//::gpk::SRectLimits<double>											scaledMargins											= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics[iControl];
-	::gpk::SRectangle2<double>											rectText												= {};
+	::gpk::rect2<double>											rectText												= {};
 	::gpk::SControlText													& controlText											= gui.Controls.Text[iControl];
 	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont];
 	const ::gpk::n2<uint8_t>										fontCharSize											= selectedFont.CharSize;
@@ -442,7 +443,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI & gui,
 	::gpk::n2<double> maxSizeScaled = (controlConstraints.SizeMinMax.Max.Cast<double>().InPlaceScale(scale.x, scale.y));
 	scaledSize.x													= ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
 	scaledSize.y													= ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
-	::gpk::realignRectangle(targetSize.Cast<uint32_t>(), ::gpk::SRectangle2<int16_t>{scaledPosition.Cast<int16_t>(), scaledSize.Cast<int16_t>()}, controlMetrics.Total.Local, control.Align);
+	::gpk::realignRectangle(targetSize.Cast<uint32_t>(), ::gpk::rect2<int16_t>{scaledPosition.Cast<int16_t>(), scaledSize.Cast<int16_t>()}, controlMetrics.Total.Local, control.Align);
 	controlMetrics.Total	.Global									= controlMetrics.Total	.Local;
 	controlMetrics.Client	.Global									= controlMetrics.Client	.Local;
 	controlMetrics.Client	.Global.Offset							+= controlMetrics.Total	.Local.Offset;
@@ -514,7 +515,7 @@ static						::gpk::error_t						controlUpdateMetrics									(::gpk::SGUI & gui,
 		}
 	}
 	{ // calculate text rectangle
-		const ::gpk::SRectangle2<int16_t>									& targetRect											= controlMetrics.Client.Global;
+		const ::gpk::rect2<int16_t>									& targetRect											= controlMetrics.Client.Global;
 		controlMetrics.Text.Offset										= {};
 		controlMetrics.Text.Size										= rectText.Size.Cast<int16_t>();
 		::gpk::realignRectangle(targetRect.Size.Cast<uint32_t>(), controlMetrics.Text, controlMetrics.Text, controlText.Align);

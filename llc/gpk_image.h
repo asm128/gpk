@@ -2,6 +2,7 @@
 #include "gpk_view_grid.h"
 #include "gpk_view_bit.h"
 #include "gpk_grid_scale.h"
+#include "gpk_color.h"
 
 #ifndef GPK_IMAGE_H_902387498237
 #define GPK_IMAGE_H_902387498237
@@ -66,7 +67,7 @@ namespace gpk
 		inline	::gpk::error_t					resize						(const ::gpk::n2u32 & newSize, const _tTexel & newValue)	noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View									= {Texels.begin(), newSize.x, newSize.y};
-			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::SRectangle2<int32_t>{{}, View.metrics().template Cast<int32_t>()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
+			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().template Cast<int32_t>()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
 			return Texels.size();
 		}
 	}; // struct

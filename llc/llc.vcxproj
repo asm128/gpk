@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
+    <ClInclude Include="gpk_align.h" />
     <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_auto_handler.h" />
+    <ClInclude Include="gpk_axis.h" />
     <ClInclude Include="gpk_base64.h" />
     <ClInclude Include="gpk_bit.h" />
     <ClInclude Include="gpk_bitmap_target.h" />
@@ -44,6 +46,7 @@
     <ClInclude Include="gpk_cgi_module.h" />
     <ClInclude Include="gpk_cgi_runtime.h" />
     <ClInclude Include="gpk_chrono.h" />
+    <ClInclude Include="gpk_circle.h" />
     <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_color.h" />
     <ClInclude Include="gpk_complus.h" />
@@ -65,6 +68,10 @@
     <ClInclude Include="gpk_ptr_pod.h" />
     <ClInclude Include="gpk_quad.h" />
     <ClInclude Include="gpk_quat.h" />
+    <ClInclude Include="gpk_rect.h" />
+    <ClInclude Include="gpk_rect2.h" />
+    <ClInclude Include="gpk_rect3.h" />
+    <ClInclude Include="gpk_rect_align.h" />
     <ClInclude Include="gpk_ref.h" />
     <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_tri.h" />

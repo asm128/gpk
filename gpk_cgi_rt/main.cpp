@@ -45,7 +45,7 @@
 	return 0;
 }
 
-static constexpr	const char						html_script	[]			=
+stacxpr	const char						html_script	[]			=
 	"\n<script>"
 	"\nfunction bootstrap() {"
     "\nvar url = [self.location.protocol, '//', self.location.host, self.location.pathname].join('');"

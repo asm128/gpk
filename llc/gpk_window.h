@@ -4,6 +4,7 @@
 #include "gpk_array_static.h"
 #include "gpk_ptr_obj.h"
 #include "gpk_image.h"
+#include "gpk_rect.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -11,7 +12,6 @@
 #	include <xcb/xcb.h>
 #endif
 
-#include "gpk_color.h"
 #ifndef GPK_DISPLAY_H_293874928374
 #define GPK_DISPLAY_H_293874928374
 

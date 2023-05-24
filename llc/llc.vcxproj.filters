@@ -480,6 +480,27 @@
     <ClInclude Include="gpk_line3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_axis.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_align.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect_align.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="llc_header_checkingg.cpp">

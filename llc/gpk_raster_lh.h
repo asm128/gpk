@@ -6,6 +6,7 @@
 #include "gpk_array_pod.h"
 #include "gpk_line2.h"
 #include "gpk_line3.h"
+#include "gpk_circle.h"
 
 #include <functional>
 
@@ -21,7 +22,7 @@ namespace gpk
 
 	int								pixelBlend			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::n2i16 position	, ::gpk::bgra color);
 	int								setPixel			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::n2i16 position	, ::gpk::bgra color);
-	int								drawRectangle		(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SRectangle2	<int16_t> rectangle	, ::gpk::bgra color);
+	int								drawRectangle		(::gpk::view2d<::gpk::bgra> pixels, ::gpk::rect2	<int16_t> rectangle	, ::gpk::bgra color);
 	int								drawCircle			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SCircle		<int16_t> circle	, ::gpk::bgra color);
 	int								drawLine			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::line2		<int16_t> line		, ::gpk::bgra color);
 	int								drawLine			(const ::gpk::n2<uint16_t>	offscreenMetrics, ::gpk::line2		<int16_t> line		, ::gpk::apod<::gpk::n2i16> & pixelCoords);

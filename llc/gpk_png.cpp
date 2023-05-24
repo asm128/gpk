@@ -1,9 +1,10 @@
+#include "gpk_png.h"
+
 #include "gpk_view_stream.h"
 #include "deflate.h"
-#include "gpk_png.h"
 #include "gpk_adam7.h"
-#include "gpk_io.h"
 #include "gpk_storage.h"
+#include "gpk_bit.h"
 
 static	::gpk::error_t	scanLineSizeFromFormat	(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
 	int32_t																		scanLineWidth									= imageWidth;

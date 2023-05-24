@@ -1,7 +1,9 @@
-#include "gpk_gui_text.h"
 #include "gpk_gui.h"
+
 #include "gpk_grid_copy.h"
 #include "gpk_bitmap_target.h"
+#include "gpk_gui_text.h"
+#include "gpk_rect_align.h"
 
 static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> & target, bool bDisabled)				{
 	const ::gpk::SControl		& control			= gui.Controls.Controls	[iControl];
@@ -33,7 +35,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	}
 
 	::gpk::SControlMetrics		& controlMetrics					= gui.Controls.Metrics	[iControl];
-	::gpk::SRectangle2<int16_t>	rectText							= controlMetrics.Text;
+	::gpk::rect2<int16_t>	rectText							= controlMetrics.Text;
 	if(false == gui.Controls.Modes[iControl].NoHoverEffect && (controlState.Pressed || controlState.Hover)) { // shift text offset by one pixel to give the effect of being pushed.
 		rectText.Offset			+= ::gpk::n2<int16_t>{1, 1};
 		rectText.Size			-= ::gpk::n2<int16_t>{1, 1};
@@ -149,7 +151,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 
 	if(control.Image.metrics().x && control.Image.metrics().y) {
 		const ::gpk::SControlState	& state							= gui.Controls.States[iControl];
-		//::gpk::SRectangle2<int32_t>	rectImage						=
+		//::gpk::rect2<int32_t>	rectImage						=
 		//	{ controlMetrics.Client.Global.Offset
 		//	, controlMetrics.Client.Global.Size
 		//		+ ::gpk::n2<int32_t>
@@ -157,7 +159,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 		//			, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
 		//			}
 		//	};
-		::gpk::SRectangle2<int16_t>										rectImage							= {{}, control.Image.metrics().Cast<int16_t>()};
+		::gpk::rect2<int16_t>										rectImage							= {{}, control.Image.metrics().Cast<int16_t>()};
 		::gpk::realignRectangle(controlMetrics.Client.Global.Size.Cast<uint32_t>(), rectImage, rectImage, control.ImageAlign);
 		rectImage.Offset											+= controlMetrics.Client.Global.Offset;
 		rectImage.Size.x											= ::gpk::min(rectImage.Limit().x, controlMetrics.Client.Global.Limit().x) - rectImage.Offset.x;

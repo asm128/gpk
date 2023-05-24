@@ -24,7 +24,7 @@ int								gpk::setPixel			(::gpk::view2d<::gpk::bgra> pixels, ::gpk::n2<int16_t
 	return 0;
 }
 
-int								gpk::drawRectangle		(::gpk::view2d<::gpk::bgra> pixels, ::gpk::SRectangle2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
+int								gpk::drawRectangle		(::gpk::view2d<::gpk::bgra> pixels, ::gpk::rect2<int16_t> rectangle, ::gpk::SColorBGRA color)	{
 	int32_t								countPixels				= 0;
 	for(int16_t y = 0; y < (int16_t)rectangle.Size.y; ++y)
 	for(int16_t x = 0; x < (int16_t)rectangle.Size.x; ++x)

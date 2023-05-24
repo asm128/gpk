@@ -1,5 +1,6 @@
 #include "gpk_view.h"		// for gpk::view<>
-#include "gpk_coord.h"
+#include "gpk_rect2.h"
+#include "gpk_n3.h"
 
 #ifndef GPK_GRID_VIEW_H_3423423
 #define GPK_GRID_VIEW_H_3423423
@@ -58,8 +59,8 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template<typename _tCoord, typename _tColor>
-	static	::gpk::error_t		drawRectangle			(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
+	template<typename T, typename _tColor>
+	static	::gpk::error_t		drawRectangle			(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::rect2<T>& rectangle)		{
 		const int32_t					xCount					= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, (int32_t)0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, (int32_t)0));
 		const int32_t					yCount					= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, (int32_t)0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, (int32_t)0));
 		const int32_t					yStart					= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y);

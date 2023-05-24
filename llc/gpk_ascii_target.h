@@ -3,6 +3,8 @@
 #include "gpk_color.h"
 #include "gpk_tri2.h"
 #include "gpk_line2.h"
+#include "gpk_circle.h"
+#include "gpk_rect2.h"
 
 #include <memory> // this is required for ::std::swap()
 
@@ -12,23 +14,23 @@
 namespace gpk
 {
 	struct SASCIITarget {
-								::gpk::img<uint8_t>						Characters									= {};
-								::gpk::img<uint16_t>						Colors										= {};
+		::gpk::img<uint8_t>		Characters			= {};
+		::gpk::img<uint16_t>	Colors				= {};
 
-		inlcxpr		::gpk::n2<uint32_t>					metrics										()																	const	noexcept	{ return Characters.metrics(); }
+		inlcxpr	::gpk::n2u32	metrics				()	const	noexcept	{ return Characters.metrics(); }
 	};
 
-							::gpk::error_t									asciiTargetClear							(::gpk::SASCIITarget& target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
+	::gpk::error_t			asciiTargetClear	(::gpk::SASCIITarget& target, uint8_t character = ' ', uint16_t color = ASCII_COLOR_WHITE);
 
 	// ------------------------------------------------------
 #pragma pack(push, 1)
 	struct SASCIICell {
-								uint8_t											Character	;
-								uint16_t										Color		;
+		uint8_t					Character	;
+		uint16_t				Color		;
 	};
 #pragma pack(pop)
 
-	stainli	::gpk::error_t									drawRectangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SRectangle2<int32_t>& rectangle)	{
+	stainli	::gpk::error_t	drawRectangle		(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::rect2<int32_t>& rectangle)	{
 		for(int32_t y = (int32_t)::gpk::max(0, rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = (int32_t)::gpk::max(0, rectangle.Offset.x), xStop = ::gpk::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;
@@ -37,14 +39,14 @@ namespace gpk
 		return 0;
 	}
 
-	stainli	::gpk::error_t									drawCircle									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SCircle<int32_t>& circle)			{
+	stainli	::gpk::error_t	drawCircle			(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::SCircle<int32_t>& circle)			{
 		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
-			::gpk::n2<int32_t>														cellCurrent									= {x, y};
-			double																		distance									= (cellCurrent - circle.Center).Length();
+			::gpk::n2i32				cellCurrent			= {x, y};
+			double						distance			= (cellCurrent - circle.Center).Length();
 			if(distance < circle.Radius) {
-				asciiTarget.Characters	[y][x]											= value.Character;
-				asciiTarget.Colors		[y][x]											= value.Color;
+				asciiTarget.Characters	[y][x]					= value.Character;
+				asciiTarget.Colors		[y][x]					= value.Color;
 			}
 		}
 		return 0;
@@ -52,19 +54,19 @@ namespace gpk
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	template<typename _tCoord>
-	stainli	::gpk::error_t									drawTriangle								(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::tri2<_tCoord>& triangle)		{
-		::gpk::n2		<int32_t>												areaMin										= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::n2		<int32_t>												areaMax										= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+	stainli	::gpk::error_t	drawTriangle		(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::tri2<_tCoord>& triangle)		{
+		::gpk::n2i32				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, 0), xStop = ::gpk::min(areaMax.x, (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
-			const ::gpk::n2<int32_t>												cellCurrent									= {x, y};
+			const ::gpk::n2i32			cellCurrent			= {x, y};
 			// Determine barycentric coordinates
-			int																			w0											= ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int																			w1											= ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int																			w2											= ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int							w0					= ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int							w1					= ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int							w2					= ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if (w0 >= 0 && w1 >= 0 && w2 >= 0) { // If p is on or inside all edges, render pixel.
-				asciiTarget.Characters	[y][x]											= value.Character;
-				asciiTarget.Colors		[y][x]											= value.Color;
+				asciiTarget.Characters	[y][x]	= value.Character;
+				asciiTarget.Colors		[y][x]	= value.Color;
 			}
 		}
 		return 0;
@@ -72,13 +74,13 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	template<typename _tCoord>
-	static					::gpk::error_t									drawLine									(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::line2<_tCoord>& line)				{
-		float																		x1											= (float)line.A.x
-			,																		y1											= (float)line.A.y
-			,																		x2											= (float)line.B.x
-			,																		y2											= (float)line.B.y
+	static	::gpk::error_t	drawLine			(::gpk::SASCIITarget& asciiTarget, const ::gpk::SASCIICell& value, const ::gpk::line2<_tCoord>& line)				{
+		float						x1					= (float)line.A.x
+			,						y1					= (float)line.A.y
+			,						x2					= (float)line.B.x
+			,						y2					= (float)line.B.y
 			;
-		const bool																	steep										= (fabs(y2 - y1) > fabs(x2 - x1));
+		const bool					steep				= (fabs(y2 - y1) > fabs(x2 - x1));
 		if(steep){
 			::std::swap(x1, y1);
 			::std::swap(x2, y2);
@@ -87,23 +89,23 @@ namespace gpk
 			::std::swap(x1, x2);
 			::std::swap(y1, y2);
 		}
-		const float																	dx											= x2 - x1;
-		const float																	dy											= fabs(y2 - y1);
-		float																		error										= dx / 2.0f;
-		const int32_t																ystep										= (y1 < y2) ? 1 : -1;
-		int32_t																		y											= (int32_t)y1;
+		const float					dx					= x2 - x1;
+		const float					dy					= fabs(y2 - y1);
+		float						error				= dx / 2.0f;
+		const int32_t				ystep				= (y1 < y2) ? 1 : -1;
+		int32_t						y					= (int32_t)y1;
 		if(steep) {
 			for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
 				if( false == ::gpk::in_range(x, 0, (int32_t)asciiTarget.metrics().y)
 				 || false == ::gpk::in_range(y, 0, (int32_t)asciiTarget.metrics().x)
 				 )
 					continue;
-				asciiTarget.Characters	[x][y]											= value.Character;
-				asciiTarget.Colors		[x][y]											= value.Color;
-				error																	-= dy;
+				asciiTarget.Characters	[x][y]	= value.Character;
+				asciiTarget.Colors		[x][y]	= value.Color;
+				error					-= dy;
 				if(error < 0) {
-					y																		+= ystep;
-					error																	+= dx;
+					y						+= ystep;
+					error					+= dx;
 				}
 			}
 		}
@@ -113,12 +115,12 @@ namespace gpk
 				 || false == ::gpk::in_range(x, 0, (int32_t)asciiTarget.metrics().x)
 				 )
 					continue;
-				asciiTarget.Characters	[y][x]											= value.Character;
-				asciiTarget.Colors		[y][x]											= value.Color;
-				error																	-= dy;
+				asciiTarget.Characters	[y][x]	= value.Character;
+				asciiTarget.Colors		[y][x]	= value.Color;
+				error							-= dy;
 				if(error < 0) {
-					y																		+= ystep;
-					error																	+= dx;
+					y								+= ystep;
+					error							+= dx;
 				}
 			}
 		}

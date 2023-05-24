@@ -27,6 +27,7 @@ namespace gpk
 
 		// Constructors
 		inlcxpr					view			()									noexcept	= default;
+		inlcxpr					view			(const view<T> & other)				noexcept	= default;
 
 		template<size_t Len>
 		inlcxpr					view			(T (&elements)[Len])				noexcept	: Data(elements), Count(Len)										{}

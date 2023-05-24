@@ -5,6 +5,7 @@
 #include "gpk_tri2.h"
 #include "gpk_line2.h"
 #include "gpk_line3.h"
+#include "gpk_circle.h"
 
 #include <memory> // this is required for ::std::swap()
 
@@ -73,7 +74,7 @@ namespace gpk
 
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
 	template<typename _tCoord, typename _tColor>
-	static	::gpk::error_t		drawRectangleBorder							(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::SRectangle2<_tCoord>& rectangle)		{
+	static	::gpk::error_t		drawRectangleBorder							(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::rect2<_tCoord>& rectangle)		{
 		int32_t																		yStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
 		int32_t																		yStop										= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
 		int32_t																		xStart										= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);

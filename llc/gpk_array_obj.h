@@ -252,8 +252,9 @@ namespace gpk
 	}; // array_obj
 
 	template <typename T>	using aobj		= ::gpk::array_obj<T>; 
-	template <typename T>	using ao		= ::gpk::aobj	<T>; 
-	template <typename T>	using aview		= ::gpk::array_obj<::gpk::view<T>>; 
+	template <typename T>	using ao		= ::gpk::aobj<T>; 
+
+	template <typename T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
 	template <typename T>	using av		= ::gpk::aview	<T>; 
 
 	typedef	::gpk::aview<uchar_t	>	aview_uchar			, av1uc, avuc;

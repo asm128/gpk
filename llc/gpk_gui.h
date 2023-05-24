@@ -1,16 +1,12 @@
 #include "gpk_input.h"
-#include "gpk_image.h"
-#include "gpk_color.h"
 #include "gpk_array_static.h"
 #include "gpk_ascii_color.h"
 #include "gpk_font.h"
 #include "gpk_tri2.h"
+#include "gpk_rect.h"
+#include "gpk_align.h"
 
 #include "gpk_sysevent.h"
-
-#include <functional>
-
-
 
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
@@ -36,8 +32,8 @@ namespace gpk
 	};
 
 	struct SControlRectangle {
-		::gpk::SRectangle2<int16_t>				Local;
-		::gpk::SRectangle2<int16_t>				Global;
+		::gpk::rect2<int16_t>				Local;
+		::gpk::rect2<int16_t>				Global;
 	};
 
 	enum GUI_CONTROL_AREA : uint8_t
@@ -53,8 +49,8 @@ namespace gpk
 	struct SControlMetrics {
 		::gpk::SControlRectangle				Total;
 		::gpk::SControlRectangle				Client;
-		::gpk::SRectangle2<int16_t>				Text;
-		::gpk::SRectangle2<int16_t>				Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
+		::gpk::rect2<int16_t>				Text;
+		::gpk::rect2<int16_t>				Rectangles	[::gpk::GUI_CONTROL_AREA_COUNT]	= {};
 		::gpk::tri2<int16_t>				Triangles	[8]								= {};
 	};
 
@@ -128,7 +124,7 @@ namespace gpk
 	};
 
 	struct SControl {
-		::gpk::SRectangle2<int16_t>										Area								= {{}, {16, 16}};
+		::gpk::rect2<int16_t>										Area								= {{}, {16, 16}};
 		::gpk::SRectLimits<uint16_t>									Margin								= {1, 1, 1, 1};
 		::gpk::SRectLimits<uint8_t>										Border								= {1, 1, 1, 1};
 		::gpk::view2d<::gpk::bgra>								Image								= {};
@@ -223,7 +219,7 @@ namespace gpk
 			bool														NoHoverEffect	;
 			bool														FrameOut		;
 			::gpk::ALIGN												Align			;
-			::gpk::SRectangle2<int16_t>									Area			;
+			::gpk::rect2<int16_t>									Area			;
 			::gpk::SRectLimits<uint8_t>									Border			;
 			::gpk::SRectLimits<uint16_t>								Margin			;
 			::gpk::vcs													Text			;
