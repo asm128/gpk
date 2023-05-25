@@ -34,7 +34,7 @@
 #	define GPK_PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
 #	define GPK_ERROR_PRINTF_ENABLED
 #	define GPK_WARNING_PRINTF_ENABLED	// Uncomment as needed
-//#	define GPK_INFO_PRINTF_ENABLED		// Uncomment as needed
+#	define GPK_INFO_PRINTF_ENABLED		// Uncomment as needed
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
 //#	define GPK_VERBOSE_PRINTF_ENABLED
 #endif

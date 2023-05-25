@@ -227,7 +227,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	case '&':
 		stateReader.ExpectsSeparator								= false;
 		skip_if_escaping();
-		ree_if(stateReader.IndexCurrentChar >= expression.size() - 1 || '&' != expression[stateReader.IndexCurrentChar + 1], "%s", "Invalid syntax.")
+		ree_if(stateReader.IndexCurrentChar >= expression.size() - 1 || '&' != expression[stateReader.IndexCurrentChar + 1], "%s", "Invalid syntax.");
 		gpk_necall(::expressionReaderCloseTerm(stateReader, tokens), "Failed to close term at index %i", stateReader.IndexCurrentChar);
 		++stateReader.IndexCurrentChar;
 		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_AND	, stateReader.IndexCurrentChar + 1), "Failed to open key at index %i", stateReader.IndexCurrentChar);
@@ -235,7 +235,7 @@ static	::gpk::error_t										expressionReaderProcessDocCharacter		(::gpk::SExp
 	case '|':
 		stateReader.ExpectsSeparator								= false;
 		skip_if_escaping();
-		ree_if(stateReader.IndexCurrentChar >= expression.size() - 2 || '|' != expression[stateReader.IndexCurrentChar + 1], "%s", "Invalid syntax.")
+		ree_if(stateReader.IndexCurrentChar >= expression.size() - 2 || '|' != expression[stateReader.IndexCurrentChar + 1], "%s", "Invalid syntax.");
 		gpk_necall(::expressionReaderCloseTerm(stateReader, tokens), "Failed to close term at index %i", stateReader.IndexCurrentChar);
 		++stateReader.IndexCurrentChar;
 		gpk_necall(::expressionReaderOpenLevel	(stateReader, tokens, ::gpk::EXPRESSION_READER_TYPE_TERM_OR		, stateReader.IndexCurrentChar + 1), "Failed to open key at index %i", stateReader.IndexCurrentChar);

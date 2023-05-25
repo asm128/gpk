@@ -322,7 +322,7 @@ static	::gpk::error_t							parseJsonNumber										(::gpk::SJSONReaderState & 
 			&& charCurrent != ']'
 			&& charCurrent != '}'
 			&& charCurrent != ','
-			, "Invalid number termination: '%c'.", charCurrent)
+			, "Invalid number termination: '%c'.", charCurrent);
 	}
 	return 0;
 }

@@ -222,7 +222,7 @@ static	::gpk::error_t						server							(::gpk::SUDPServer& serverInstance)		{
 
 static	void								threadServer					(void* pServerInstance)				{
 	::gpk::SUDPServer								& serverInstance				= *(::gpk::SUDPServer*)pServerInstance;
-	gerror_if(errored(server(serverInstance)), "Server exiting with error.")
+	gerror_if(errored(server(serverInstance)), "Server exiting with error.");
 	else
 		info_printf("Server gracefully closed.");
 

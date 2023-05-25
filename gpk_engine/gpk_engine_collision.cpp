@@ -28,9 +28,9 @@ static	::gpk::error_t		detectSame				(const ::gpk::SRigidBodyIntegrator & integr
 	::gpk::error_t					result					= -1;
 	switch(bvA) {
 	default								: warning_printf("Unsupported type: (%i) %s.", bvA, ::gpk::get_value_namep(bvA)); break; 
-	case ::gpk::BOUNDING_TYPE_Sphere	: gsinfo_if(result = ::detectSphere  (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
-	case ::gpk::BOUNDING_TYPE_Cylinder	: gsinfo_if(result = ::detectCylinder(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
-	case ::gpk::BOUNDING_TYPE_AABB		: gsinfo_if(result = ::detectAABB    (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
+	case ::gpk::BOUNDING_TYPE_Sphere	: result = ::detectSphere  (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected); break; 
+	case ::gpk::BOUNDING_TYPE_Cylinder	: result = ::detectCylinder(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected); break; 
+	case ::gpk::BOUNDING_TYPE_AABB		: result = ::detectAABB    (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected); break; 
 	} // switch bvA
 	return result;
 }
@@ -83,18 +83,19 @@ static	::gpk::error_t		collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & 
 			if(false == flagsB.Collides)
 				continue;
 
-			ginfo_if(::collisionDetectAny(engine.Integrator, (::gpk::BOUNDING_TYPE)flagsA.BVType, (::gpk::BOUNDING_TYPE)flagsB.BVType, entityA.RigidBody, entityB.RigidBody, contact, contactsDetected), 
-				"\nEntityA       : %i"
-				"\nEntityB       : %i"
-				"\nCenterDistance: " N3_F32
-				"\nDistanceLength: %f"
-				, contact.EntityA
-				, contact.EntityB
-				, gpk_xyz(contact.CenterDistance)
-				, contact.DistanceLength
-				);
+			gpk_necs(::collisionDetectAny(engine.Integrator, (::gpk::BOUNDING_TYPE)flagsA.BVType, (::gpk::BOUNDING_TYPE)flagsB.BVType, entityA.RigidBody, entityB.RigidBody, contact, contactsDetected));
 		}
 	}
-	ginfo_if(contactsDetected.size() - count, "%i collisions detected.", contactsDetected.size() - count);
+	//ginfo_if(contactsDetected.size() - count, "%i collisions detected.", contactsDetected.size() - count);
 	return contactsDetected.size() - count;
 }
+
+//				"\nEntityA       : %i"
+//				"\nEntityB       : %i"
+//				"\nCenterDistance: " N3_F32
+//				"\nDistanceLength: %f"
+//				, contact.EntityA
+//				, contact.EntityB
+//				, gpk_xyz(contact.CenterDistance)
+//				, contact.DistanceLength
+//				);
