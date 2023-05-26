@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T>	
+	template<typename T>
 	struct SRectLimits {
 		T						Left, Top, Right, Bottom; 
 		GPK_DEFAULT_OPERATOR_NE(SRectLimits<T>, Left == other.Left && Top == other.Top && Right == other.Right && Bottom == other.Bottom); 

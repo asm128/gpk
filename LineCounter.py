@@ -63,10 +63,10 @@ for subdir, dirs, files in os.walk(rootdir):
 			newNode['creation date']		= time.asctime( gmtime( os.path.getctime(fullpath) ) )
 			newNode['modification date']	= time.asctime( gmtime( os.path.getmtime(fullpath) ) )
 			lines = getFileLines( fullpath, filename )
-	
+
 			for line in lines:
 				newNode=parseLine( newNode, line.replace("\0", "").strip() )
-				
+
 			allnodes.append( newNode )
 
 outString = '';

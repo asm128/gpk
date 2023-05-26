@@ -1,7 +1,7 @@
 #define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 
 #include "gpk_json.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 #include "gpk_parse.h"
 #include "gpk_math.h"
 

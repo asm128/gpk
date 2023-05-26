@@ -38,7 +38,7 @@ namespace gpk
 	::gpk::error_t					grid_scale_alpha			(::gpk::view2d<T> & dst, const ::gpk::view2d<T> & src, const ::gpk::n2<int32_t> & dstPos, const ::gpk::n2<int32_t> & dstSize) {
 		const ::gpk::n2<int32_t>			srcSize						= {(int)src.metrics().x	, (int)src.metrics().y	};
 		for(int y = dstPos.y, yStop = ::gpk::min(dstPos.y + dstSize.y, (int32_t)dst.metrics().y); y < yStop; ++y) {
-			const ::gpk::n2<int32_t>			sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
+			::gpk::n2<int32_t>					sourcePixelCoord			= {0, (int)((y - (double)dstPos.y) / dstSize.y * (double)srcSize.y)};
 			for(int x = dstPos.x, xStop = ::gpk::min(dstPos.x + dstSize.x, (int32_t)dst.metrics().x); x < xStop; ++x) {
 				sourcePixelCoord.x				= (int)((x - (double)dstPos.x) / dstSize.x * (double)srcSize.x);
 				T									& colorDst					= dst[y][x];

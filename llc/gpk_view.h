@@ -217,7 +217,7 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::vcs	>	vcvcs;
 
 	cnstxpr ::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
-							
+
 	::gpk::error_t			rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
 	::gpk::error_t			ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
 	::gpk::error_t			trim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);

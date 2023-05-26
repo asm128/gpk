@@ -1,7 +1,7 @@
 ﻿#define GPK_STDOUT_LOG_ENABLED
 
 #include "gpk_base64.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 static constexpr const char sign []= "MjAwOS0yMDE5IChjKSBUaGUgRHJhZ29u";
 

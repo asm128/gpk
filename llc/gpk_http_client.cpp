@@ -124,7 +124,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
         }
         break;
     }
-    ree_if(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
+    ree_if(0 == currentServinfo, "failed to connect to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address))
 	else
 		info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 

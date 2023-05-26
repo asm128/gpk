@@ -1,7 +1,7 @@
 // Original file created on: 2002/08/30 19:33 by Andreas Hartl. Visit http://www.runicsoft.com for updates and more information
 #include "gpk_bitmap_file.h"
 #include "gpk_png.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 #if defined(GPK_WINDOWS)
 

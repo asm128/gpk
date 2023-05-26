@@ -10,11 +10,12 @@
 #	include <ShellScalingApi.h>	// for GetDpiForMonitor()
 #	include <joystickapi.h>
 #	include <xinput.h>
+#	pragma warning(disable: 4995)
 #elif defined(GPK_XCB)
 #	include <xcb/xcb_image.h>
 #endif
 
-#pragma warning(disable: 4995)
+
 
 static				::gpk::error_t														updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
@@ -185,7 +186,7 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
 	::gpk::SWindow							& mainDisplay								= *(::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
-	
+
 	if(!mainDisplay.Input)
 		mainDisplay.Input.create();
 

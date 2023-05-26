@@ -1,11 +1,15 @@
 #include "gpk_deflate.h"
-#include "gpk_storage.h"
+
+#include "gpk_path.h"
+
+#include "gpk_file.h"
 #include "gpk_safe.h"
-#include "deflate.h"
 #include "gpk_io.h"
 #include "gpk_aes.h"
 #include "gpk_noise.h"
 #include "gpk_apod_serialize.h"
+
+#include "deflate.h"
 
 stacxpr	const uint32_t		GPK_CRC_CRC_SEED			= 18973;
 

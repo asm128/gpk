@@ -4,7 +4,7 @@
 #include "gpk_timer.h"
 #include "gpk_frameinfo.h"
 #include "gpk_json_expression.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 #include "gpk_parse.h"
 
 #if !defined(GPK_ATMEL)

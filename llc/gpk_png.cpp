@@ -3,7 +3,7 @@
 #include "gpk_view_stream.h"
 #include "deflate.h"
 #include "gpk_adam7.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 #include "gpk_bit.h"
 
 static	::gpk::error_t	scanLineSizeFromFormat	(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{

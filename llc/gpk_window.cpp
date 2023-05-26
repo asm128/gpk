@@ -5,7 +5,7 @@
 		return 0;
 
 	window.Size								= window.WindowedWindowRect.Dimensions();
-
+#if defined(GPK_WINDOWS)
 	HWND										windowHandle					= window.PlatformDetail.WindowHandle;
 	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
@@ -14,7 +14,7 @@
 		, window.WindowedWindowRect.Bottom - window.WindowedWindowRect.Top
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
-
+#endif
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
 	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= window.Size.Cast<uint16_t>();
@@ -24,10 +24,11 @@
 }
 
 ::gpk::error_t							gpk::fullScreenEnter			(::gpk::SWindow & framework) {
-	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
 	if(framework.FullScreen)
 		return 1;
 
+#if defined(GPK_WINDOWS)
+	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
 	MONITORINFO									monitor_info					= {sizeof(monitor_info)};
 	RECT										windowsRect						= {};
 	ree_if(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
@@ -45,16 +46,16 @@
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 
-	framework.FullScreen					= true;
 	framework.Size							= 
 		{ uint16_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
 		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
-
+#endif
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
 	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
 	framework.EventQueue.push_back(newEvent);
+	framework.FullScreen					= true;
 	return 0;
 }
 

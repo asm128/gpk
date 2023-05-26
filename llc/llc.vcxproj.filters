@@ -234,7 +234,7 @@
     <ClInclude Include="gpk_tcpip.h">
       <Filter>file</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_storage.h">
+    <ClInclude Include="gpk_file.h">
       <Filter>file</Filter>
     </ClInclude>
     <ClInclude Include="gpk_timer.h">
@@ -501,11 +501,20 @@
     <ClInclude Include="gpk_rect_align.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_path.h">
+      <Filter>file</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_key.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="llc_header_checkingg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_adam7.cpp">
       <Filter>image</Filter>
     </ClCompile>
@@ -557,7 +566,7 @@
     <ClCompile Include="gpk_tcpip.cpp">
       <Filter>file</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_storage.cpp">
+    <ClCompile Include="gpk_file.cpp">
       <Filter>file</Filter>
     </ClCompile>
     <ClCompile Include="gpk_timer.cpp">
@@ -679,6 +688,9 @@
     </ClCompile>
     <ClCompile Include="gpk_particle.cpp">
       <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_path.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T>	
+	template<typename T>
 	struct rect2 {
 		::gpk::n2<T>			Offset, Size;
 		GPK_DEFAULT_OPERATOR_NE(rect2<T>, Offset	== other.Offset	&& Size == other.Size);

@@ -1,5 +1,5 @@
 #include "gpk_component_scene.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 #include "gpk_stdstring.h"
 #include "gpk_json.h"
 #include "gpk_label.h"

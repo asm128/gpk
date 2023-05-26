@@ -8,7 +8,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tDimension>	struct tri3 : public tri<::gpk::n3<_tDimension>>		{
-		typedef	::gpk::n3<_tDimension>	TVertex;	
+		typedef	::gpk::n3<_tDimension>	TVertex;
 		using tri<TVertex>	::A;
 		using tri<TVertex>	::B;
 		using tri<TVertex>	::C;

@@ -179,11 +179,11 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	if(controlTable.States[slider.IdButton].Pressed) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
-			const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
-			::gpk::n2d																scale										=
-				{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
-				, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
-				};
+			//const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
+			//::gpk::n2d																scale										=
+			//	{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
+			//	, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
+			//	};
 			const ::gpk::n2d														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<double>();
 			const ::gpk::n2d														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<double>();
 			::gpk::n2d																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<double>();;

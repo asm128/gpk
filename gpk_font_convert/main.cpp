@@ -3,12 +3,12 @@
 #define GPK_WARNING_PRINTF_ENABLED
 #define GPK_INFO_PRINTF_ENABLED
 
-#include "gpk_array.h"
 #include "gpk_png.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 #include "gpk_base64.h"
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
+#include "gpk_path.h"
 
 ::gpk::error_t											pngToFont
 	( ::gpk::SImage<::gpk::bgra>		& imageCache

@@ -8,8 +8,8 @@ namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 	template<typename _tDimension>	struct line2 : public line<::gpk::n2<_tDimension>>		{
-		typedef	_tDimension		T;	
-		typedef	::gpk::n2<T>	TVertex;	
+		typedef	_tDimension		T;
+		typedef	::gpk::n2<T>	TVertex;
 		using line<TVertex>::	A;
 		using line<TVertex>::	B;
 		using line<TVertex>::	line;

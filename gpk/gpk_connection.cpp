@@ -340,7 +340,7 @@ static	::gpk::error_t			handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader 
 	memset(receiveBuffer.begin(), 0, receiveBuffer.size());
 	if(errored(bytes_received = ::recvfrom(client.Socket, (char*)receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 #if defined(GPK_WINDOWS)
-		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.");
+		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
 		else
 			warning_printf("%s", "Failed to receive all of the payload data.");
 #else

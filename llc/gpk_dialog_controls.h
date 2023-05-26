@@ -80,7 +80,7 @@ namespace gpk
 				int64_t										ValueCurrent						= -1;
 				char										ValueString	[64]					= {};
 
-				TCallback									FuncValueFormat	= [this](::gpk::vcc & format, int64_t, const ::gpk::SMinMax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+				TCallback									FuncValueFormat	= []	(::gpk::vcc & format, int64_t, const ::gpk::SMinMax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
 				TCallback									FuncGetString	= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::SMinMax<int64_t> &)	mutable	{ 
 					inouts	= {this->ValueString, (uint32_t)snprintf(this->ValueString, ::gpk::size(this->ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 					return 0; 

@@ -1,5 +1,5 @@
 #include "gpk_stl.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 ::gpk::error_t		gpk::stlFileLoad		(::gpk::vcc filename, ::gpk::SSTLFile& file) {
 	gpk_necall(::gpk::fileToMemory(filename, file.Raw), "Failed to load file '%s'.", ::gpk::toString(filename).begin());

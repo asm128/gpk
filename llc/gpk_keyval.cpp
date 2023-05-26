@@ -21,7 +21,7 @@
 
 ::gpk::apod<char>						gpk::toString						(const ::gpk::vcc & strToLog)	{
 	::gpk::apod<char>							sprintfable							= strToLog;
-	e_if(::gpk::failed(sprintfable.push_back(0)), "%s", "Out of memory?");
+	e_if(::gpk::failed(sprintfable.push_back(0)), "%s", "Out of memory?")
 	else
 		e_if(::gpk::failed(sprintfable.resize(sprintfable.size()-1)), "%s", "Out of memory?");
 	return sprintfable;

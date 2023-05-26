@@ -4,7 +4,7 @@
 #define GPK_INFO_PRINTF_ENABLED
 
 #include "gpk_log.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{

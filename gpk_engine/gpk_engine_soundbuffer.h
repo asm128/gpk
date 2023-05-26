@@ -35,7 +35,7 @@ namespace gpk
 		SSoundBufferDescription						Desc			= {};
 		::gpk::au8									Data			= {};
 
-		::gpk::error_t								Save			(::gpk::apod<uint8_t> & output)	const	{ 			
+		::gpk::error_t								Save			(::gpk::apod<uint8_t> & output)	const	{ 
 			gpk_necs(::gpk::savePOD	(output, Desc));
 			gpk_necs(::gpk::saveView(output, Data));
 			return 0; 

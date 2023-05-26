@@ -5,14 +5,16 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	struct SSPIDevice {
-		uint16_t			Address		= 0;
 #if defined(GPK_CMSIS)
-		SPI_HandleTypeDef	Handle	= 0;
+		SPI_HandleTypeDef	Handle;
 #else
-		void				* Handle	= 0;
+		void				* Handle;
 #endif
+		uint16_t			Address;
 	};
+#pragma pack(pop)
 
 	enum SPI_MODE : int8_t
 		{ SPI_MODE_TASK
@@ -21,9 +23,8 @@ namespace gpk
 		};
 
 	::gpk::error_t spiInit (SSPIDevice& device);
-	::gpk::error_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::array_pod<ubyte_t> & data, ::gpk::SPI_MODE mode, uint32_t timeout);
-	::gpk::error_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, const ::gpk::view_const_ubyte & data, ::gpk::SPI_MODE mode, uint32_t timeout);
+	::gpk::error_t spiRead (SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::au8 & data, ::gpk::SPI_MODE mode, uint32_t timeout);
+	::gpk::error_t spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, const ::gpk::vcu8 & data, ::gpk::SPI_MODE mode, uint32_t timeout);
 } // namespace
-
 
 #endif // GPK_SPI_H_02394293

@@ -261,7 +261,7 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>							target;
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
-	{	
+	{
 		::std::lock_guard														lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}

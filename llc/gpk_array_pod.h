@@ -39,7 +39,7 @@ namespace gpk
 			gsthrow_if(resize(other.size()) != (int32_t)other.size());
 			memcpy(Data, other.begin(), other.byte_count());
 		}
-		template<size_t _count>			
+		template<size_t _count>
 								array_pod			(const T (&other)[_count])							{
 			gsthrow_if(resize(_count) != (int32_t)_count);
 			memcpy(Data, other, _count * sizeof(T));

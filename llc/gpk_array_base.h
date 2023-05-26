@@ -9,7 +9,7 @@
 namespace gpk
 {
 	template<typename... _Args>	void	clear					(_Args&&... args)						{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
-	template<typename... _Args>	
+	template<typename... _Args>
 	::gpk::error_t						resize					(uint32_t newSize, _Args&&... args)		{
 		const uint32_t							oldSizes	[]			= {args.size	()			..., 0};
 		const ::gpk::error_t					results		[]			= {args.resize	(newSize)	..., 0};
@@ -39,8 +39,8 @@ namespace gpk
 //		uint32_t			Offset					= 0;
 
 		inline				~array_base				()							noexcept	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
-		
-		inlcxpr				array_base				()							noexcept	: NoAlloc(0), Size(0) {}
+
+		inlcxpr				array_base				()							noexcept	: Size(0), NoAlloc(0) {}
 		inlcxpr				array_base				(const TArray &	 other)		noexcept	= delete;
 		inlcxpr				array_base				(const TArray && other)		noexcept	= delete;
 

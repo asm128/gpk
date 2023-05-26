@@ -2,7 +2,7 @@
 #include "gpk_view_grid.h"
 #include "gpk_view_stream.h"
 #include "gpk_io.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 namespace gpk
 {

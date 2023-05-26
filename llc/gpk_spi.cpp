@@ -1,12 +1,12 @@
 #include "gpk_spi.h"
 #include "gpk_platform_error.h"
 
-::gpk::error_t gpk::spiInit(SSPIDevice& device) {
+::gpk::error_t gpk::spiInit(SSPIDevice & device) {
 	(void)device;
 	return 0;
 }
 
-::gpk::error_t gpk::spiRead(SSPIDevice& device, uint16_t address, uint16_t count, ::gpk::array_pod<ubyte_t> & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
+::gpk::error_t gpk::spiRead(SSPIDevice & device, uint16_t address, uint16_t count, ::gpk::au8 & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {
@@ -23,7 +23,7 @@
 #endif
 }
 
-::gpk::error_t gpk::spiWrite(SSPIDevice& device, uint16_t address, uint16_t count, const ::gpk::view_const_ubyte & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
+::gpk::error_t gpk::spiWrite(SSPIDevice & device, uint16_t address, uint16_t count, const ::gpk::vcu8 & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {

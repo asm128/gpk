@@ -1,6 +1,6 @@
 #include "gpk_label_manager.h"
 #include "gpk_n2.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 #ifndef GPK_FILE_H_230508
 #define GPK_FILE_H_230508

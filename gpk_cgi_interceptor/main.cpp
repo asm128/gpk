@@ -1,7 +1,7 @@
 #include "gpk_process.h"			// for ::gpk::getEnvironmentBlock()
 #include "gpk_cgi_runtime.h"		// for ::gpk::SCGIRuntimeVlaues and ::gpk::cgiRuntimeValuesLoad()
 #include "gpk_json_expression.h"	// for ::gpk::jsonParse()
-#include "gpk_storage.h"			// for ::gpk::fileToMemory()
+#include "gpk_file.h"
 #include "gpk_base64.h"
 
 #include <Windows.h>

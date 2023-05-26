@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tVertex>		
+	template<typename _tVertex>
 	struct line { 
 		_tVertex				A, B; 
 

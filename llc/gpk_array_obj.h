@@ -41,7 +41,7 @@ namespace gpk
 								array_obj			(::std::initializer_list<T> init)				{
 			gthrow_if(errored(append(init.begin(), (uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 		}
-		template<size_t _count>			
+		template<size_t _count>
 								array_obj			(const T (&other)[_count])							{
 			gthrow_if(errored(append(other, (uint32_t)_count)), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)_count);
 		}

@@ -45,12 +45,12 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	::gpk::SControlText			& controlText						= gui.Controls.Text		[iControl];
-	::gpk::apod<::gpk::n2i32>	dstCoords;
+	::gpk::apod<::gpk::n2u16>	dstCoords;
 	const uint32_t				iFont								= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont						= *gui.Fonts[iFont];
-	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize.Cast<uint16_t>(), rectText, selectedFont.Texture, controlText.Text, dstCoords));
+	gpk_necs(::gpk::textLineRaster(target.metrics().Cast<uint16_t>(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
-		const ::gpk::n2i32			dstCoord												= dstCoords[iCoord];
+		const ::gpk::n2u16			dstCoord												= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]	= colorFace;
 		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
 	}

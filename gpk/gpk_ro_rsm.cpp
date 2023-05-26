@@ -2,7 +2,7 @@
 #include "gpk_matrix.h"
 #include "gpk_view_stream.h"
 #include "gpk_io.h"
-#include "gpk_storage.h"
+#include "gpk_file.h"
 
 #pragma pack(push, 1)
 struct SRSMHeader {	// RSM Header

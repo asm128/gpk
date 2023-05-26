@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T>	
+	template<typename T>
 	struct rect3 { 
 		::gpk::n3<T>			Offset, Size; 
 

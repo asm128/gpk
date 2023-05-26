@@ -1,4 +1,6 @@
 // This is done because if the .h files are not being included, they may not be read by the compiler, failing to notice problems on the sources that only get spotted when developing on top of this library.
+#include "gpk_file.h"
+#include "gpk_path.h"
 #include "gpk_adam7.h"
 #include "gpk_aes.h"
 #include "gpk_array.h"
@@ -61,7 +63,6 @@
 #include "gpk_scene.h"
 #include "gpk_size.h"
 #include "gpk_stdsocket.h"
-#include "gpk_storage.h"
 #include "gpk_string.h"
 #include "gpk_string_helper.h"
 #include "gpk_sync.h"

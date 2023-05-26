@@ -24,8 +24,8 @@ namespace gpk
 	struct SFolderInMemory {
 		::gpk::au8					DataContents					;
 		::gpk::au8					DataInfo						;
-		::gpk::apod<::gpk::vcu8>	Contents						;
-		::gpk::aobj<::gpk::vcc>		Names							;
+		::gpk::avcu8				Contents						;
+		::gpk::avcc					Names							;
 	};
 
 	stacxpr	uint32_t			DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;

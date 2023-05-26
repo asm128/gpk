@@ -5,14 +5,16 @@
 
 namespace gpk
 {
+#pragma pack(push, 1)
 	struct SI2CDevice {
-		uint16_t			Address;
 #if defined(GPK_CMSIS)
 		I2C_HandleTypeDef	Handle;
 #else
 		void				* Handle;
 #endif
+		uint16_t			Address;
 	};
+#pragma pack(pop)
 
 	enum I2C_MODE : int8_t
 		{ I2C_MODE_TASK
@@ -20,9 +22,9 @@ namespace gpk
 		, I2C_MODE_DMA
 		};
 
-	::gpk::error_t i2cInit (SI2CDevice& device);
-	::gpk::error_t i2cRead (SI2CDevice& device, uint16_t address, uint16_t count, ::gpk::array_pod<ubyte_t> & data, ::gpk::I2C_MODE mode, uint32_t timeout);
-	::gpk::error_t i2cWrite(SI2CDevice& device, uint16_t address, uint16_t count, const ::gpk::view_const_ubyte & data, ::gpk::I2C_MODE mode, uint32_t timeout);
+	::gpk::error_t i2cInit (SI2CDevice & device);
+	::gpk::error_t i2cRead (SI2CDevice & device, uint16_t address, uint16_t count, ::gpk::au8 & data, ::gpk::I2C_MODE mode, uint32_t timeout);
+	::gpk::error_t i2cWrite(SI2CDevice & device, uint16_t address, uint16_t count, const ::gpk::vcu8 & data, ::gpk::I2C_MODE mode, uint32_t timeout);
 } // namespace
 
 
