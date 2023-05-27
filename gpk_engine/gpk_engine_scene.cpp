@@ -111,7 +111,7 @@ static	::gpk::error_t								drawBuffers
 		trianglePixelCoords.clear();
 		triangleWeights.clear();
 		gerror_if(errored(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)), "Not sure if these functions could ever fail");
-		//const bool													stripped					= surface[0][0] == ::gpk::SColorBGRA{gpk::WHITE};
+		//const bool													stripped					= surface[0][0] == ::gpk::bgra{gpk::WHITE};
 		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
 			const ::gpk::tri<float>							& vertexWeights				= triangleWeights[iCoord];
 			inPS.WeightedPosition								= triPositionsWorld.A * vertexWeights.A + triPositionsWorld.B * vertexWeights.B + triPositionsWorld.C * vertexWeights.C;
@@ -155,7 +155,7 @@ static	::gpk::error_t								drawBuffers
 		const ::std::function<::gpk::TFuncPixelShader>			& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
-		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::SColorBGRA*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
 	}
 
 	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
@@ -167,7 +167,7 @@ static	::gpk::error_t								drawBuffers
 		, {0, 1}
 		, {0, 0, 1}
 		};
-	constexpr ::gpk::SColorBGRA						colorXYZ[3]				= 
+	constexpr ::gpk::bgra						colorXYZ[3]				= 
 		{ ::gpk::RED
 		, ::gpk::GREEN
 		, ::gpk::BLUE

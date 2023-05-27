@@ -194,7 +194,7 @@
 		const int32_t															linearIndex								= y * gridMetrics.x + x;
 		uint32_t																iFoundColor								= 0;
 		int32_t																	themeIndex								= -1;
-		const ::gpk::SColorBGRA													& gridCellColor							= colors[y][x];
+		const ::gpk::bgra													& gridCellColor							= colors[y][x];
 		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
 			if((*gui.Colors->Palette)[iFoundColor] == gridCellColor) {
 				themeIndex															= iFoundColor;

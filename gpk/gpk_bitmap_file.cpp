@@ -41,7 +41,7 @@
 #pragma pack(push, 1)
 
 
-static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::vcs& szFileName, ::gpk::apod<::gpk::bgra>& out_Colors, ::gpk::view2d<::gpk::bgra>& out_ImageView, const ::gpk::SColorBGRA& alphaKey, bool* out_alphaFound)		{
+static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk::vcs& szFileName, ::gpk::apod<::gpk::bgra>& out_Colors, ::gpk::view2d<::gpk::bgra>& out_ImageView, const ::gpk::bgra& alphaKey, bool* out_alphaFound)		{
 	HBITMAP																									phBitmap									= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
 	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName.begin());
 
@@ -55,7 +55,7 @@ static				::gpk::error_t																	LoadBitmapFromBMPFile						(const ::gpk
 	for(uint32_t y = 0; y < out_ImageView.metrics().y; ++y)
 	for(uint32_t x = 0; x < out_ImageView.metrics().x; ++x) {
 		const COLORREF																							colpix										= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
-		const ::gpk::SColorBGRA																					toWrite										= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
+		const ::gpk::bgra																					toWrite										= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
 		out_ImageView[y][x]																					= toWrite;
 		if(toWrite == alphaKey && out_alphaFound)
 			*out_alphaFound																						= true;

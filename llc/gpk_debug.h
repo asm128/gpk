@@ -36,7 +36,7 @@
 #	define GPK_WARNING_PRINTF_ENABLED	// Uncomment as needed
 #	define GPK_INFO_PRINTF_ENABLED		// Uncomment as needed
 //#	define GPK_SUCCESS_PRINTF_ENABLED	// Uncomment as needed
-//#	define GPK_VERBOSE_PRINTF_ENABLED
+//#	define GPK_VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 #endif
 
 #endif // GPK_DEBUG_H_97826389432654

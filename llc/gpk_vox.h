@@ -200,10 +200,10 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::view<const ::gpk::SColorBGRA>			GetBGRA					()	const	{
+		::gpk::view<const ::gpk::bgra>			GetBGRA					()	const	{
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk) {
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "RGBA", 4))
-					return {(const ::gpk::SColorBGRA*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
+					return {(const ::gpk::bgra*)Chunks[iChunk].Data.begin(), Chunks[iChunk].Data.size() / 4};
 			}
 			return {};
 		}
@@ -231,9 +231,9 @@ namespace gpk
 						bytesRead = sizeof(uint32_t) * 256; 
 						newChunk.Data.append({input.begin(), bytesRead}); 
 						input = {input.begin() + bytesRead, input.size() - bytesRead}; 
-						::gpk::view<::gpk::bgra>	bgraView = {(::gpk::SColorBGRA*)newChunk.Data.begin(), 256};
+						::gpk::view<::gpk::bgra>	bgraView = {(::gpk::bgra*)newChunk.Data.begin(), 256};
 						for(uint32_t iColor = 0; iColor < bgraView.size(); ++iColor) {
-							::gpk::SColorBGRA									& bgra				= bgraView[iColor];
+							::gpk::bgra									& bgra				= bgraView[iColor];
 							std::swap(bgra.r, bgra.b);
 						}
 					}

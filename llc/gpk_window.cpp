@@ -107,7 +107,7 @@
 	 || 0 == offscreenDetail.IntermediateBitmap
 	) {
 		offscreenDetail.BitmapInfoSize			= sizeof(::BITMAPINFO);
-		//memcpy(&offscreenDetail.BitmapInfo->bmiColors[1], colorArray[0].begin(), metricsSource.x * metricsSource.y * sizeof(::gpk::SColorBGRA));
+		//memcpy(&offscreenDetail.BitmapInfo->bmiColors[1], colorArray[0].begin(), metricsSource.x * metricsSource.y * sizeof(::gpk::bgra));
 
 		offscreenDetail.BitmapInfo.bmiHeader				= {sizeof(::BITMAPINFO)};
 		offscreenDetail.BitmapInfo.bmiHeader.biWidth		= colorArray.metrics().x;
@@ -128,9 +128,9 @@
 		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
 		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
-	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::SColorBGRA);
+	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
 	const uint32_t lastLine		= metricsSource.y - 1;
-	const ::gpk::SColorBGRA									* dest										= colorArray.begin();
+	const ::gpk::bgra									* dest										= colorArray.begin();
 	for(uint32_t y = 0, yMax = metricsSource.y; y < yMax; ++y)
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 

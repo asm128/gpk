@@ -17,7 +17,7 @@ int									gpk::updateEntityTransforms
 		::gpk::SRenderNodeTransforms				& transforms					= renderNodes.Transforms[entity.RenderNode];
 		::gpk::m4<float>							& worldTransform				= transforms.World;
 		if(-1 == entity.RigidBody)
-			worldTransform							= ::gpk::SMatrix4<float>::GetIdentity();
+			worldTransform							= ::gpk::m4<float>::GetIdentity();
 		else {
 			integrator.GetTransform(entity.RigidBody, worldTransform);
 		}

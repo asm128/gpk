@@ -582,12 +582,12 @@ int													gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_
 	return 0;
 }
 
-int													gpk::geometryBuildTileListFromImage		(::gpk::view2d<const ::gpk::SColorBGRA> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
+int													gpk::geometryBuildTileListFromImage		(::gpk::view2d<const ::gpk::bgra> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
 	{
 		::gpk::STile											newTile;
 		for(uint32_t z = 0, maxZ = image.metrics().y; z < maxZ ; ++z)
 		for(uint32_t x = 0, maxX = image.metrics().x; x < maxX ; ++x) {
-			::gpk::SColorFloat										currentPixel							= (0 == imagePitch) ? image[z][x] : image.begin()[z * imagePitch + x];
+			::gpk::rgbaf										currentPixel							= (0 == imagePitch) ? image[z][x] : image.begin()[z * imagePitch + x];
 			float													pixelHeight								= float((currentPixel.r + (double)currentPixel.g + currentPixel.b) / 3.0);
 			for(uint32_t iCorner = 0; iCorner < 4; ++iCorner)
 				newTile.Height[iCorner]								= pixelHeight;

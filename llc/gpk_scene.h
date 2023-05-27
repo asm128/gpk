@@ -67,13 +67,13 @@ namespace gpk
 	};
 
 	struct SSceneTransforms {
-							::gpk::SMatrix4<float>									Viewport									= {};
-							::gpk::SMatrix4<float>									ViewportInverse								= {};
-							::gpk::SMatrix4<float>									ViewportInverseCentered						= {};
-							::gpk::SMatrix4<float>									FieldOfView									= {};
-							::gpk::SMatrix4<float>									FinalProjection								= {};
-							::gpk::SMatrix4<float>									FinalProjectionInverse						= {};
-							::gpk::SMatrix4<float>									View										= {};
+							::gpk::m4<float>									Viewport									= {};
+							::gpk::m4<float>									ViewportInverse								= {};
+							::gpk::m4<float>									ViewportInverseCentered						= {};
+							::gpk::m4<float>									FieldOfView									= {};
+							::gpk::m4<float>									FinalProjection								= {};
+							::gpk::m4<float>									FinalProjectionInverse						= {};
+							::gpk::m4<float>									View										= {};
 	};
 
 	struct SScene {
@@ -83,9 +83,9 @@ namespace gpk
 							::gpk::SSceneTransforms									Transforms									= {};
 
 							::gpk::apod<::gpk::SModelPivot	<float>>				ObjectPivots								= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectTransform								= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectOrientations							= {};
-							::gpk::apod<::gpk::SMatrix4	<float>>					ObjectOrientationsInverse					= {};
+							::gpk::apod<::gpk::m4	<float>>					ObjectTransform								= {};
+							::gpk::apod<::gpk::m4	<float>>					ObjectOrientations							= {};
+							::gpk::apod<::gpk::m4	<float>>					ObjectOrientationsInverse					= {};
 
 							::gpk::SSceneCamera										Camera										=
 								{ ::gpk::SCameraPoints{{20, 1, 0}, {}}

@@ -33,7 +33,7 @@ static ::gpk::error_t								geometryVoxelFace
 		aabbModel.Vertices[i].Scale(dimensions.Cast<float>());
 	}
 
-	::gpk::view<const ::gpk::SColorBGRA>				rgba					= voxelMap.Palette;
+	::gpk::view<const ::gpk::bgra>				rgba					= voxelMap.Palette;
 	if(0 == rgba.size())
 		rgba												= ::gpk::VOXEL_PALETTE;
 
@@ -71,7 +71,7 @@ static ::gpk::error_t								geometryVoxelFace
 				aabbLimits.Max.y = ::gpk::max(aabbLimits.Max.y, (float)voxel.Position.y);
 				aabbLimits.Max.z = ::gpk::max(aabbLimits.Max.z, (float)voxel.Position.z);
 
-				::gpk::SColorBGRA							color						= rgba[iValue ? iValue - 1 : 0];
+				::gpk::bgra							color						= rgba[iValue ? iValue - 1 : 0];
 				uint8_t										adjacentValue				= {};
 				voxelMap.GetValue((voxel.Position.Cast<int32_t>() + faceDelta.Cast<int32_t>()).Cast<uint8_t>(), adjacentValue);
 				bool										renderFace					= 0 == adjacentValue || color.a < 0xFF;

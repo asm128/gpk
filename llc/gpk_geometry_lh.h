@@ -132,7 +132,7 @@ namespace gpk
 		int16_t										Flags		;
 	};
 #pragma pack(pop)
-	int											geometryBuildTileListFromImage	(::gpk::view2d<const ::gpk::SColorBGRA> image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
+	int											geometryBuildTileListFromImage	(::gpk::view2d<const ::gpk::bgra> image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
 	int											geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> image, ::gpk::n2<float> gridCenter, const ::gpk::n3<float> & scale);
 
 #pragma pack(push, 1)

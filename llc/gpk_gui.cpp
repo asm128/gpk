@@ -50,7 +50,7 @@ static		::gpk::error_t										paletteSetupDefault										(::gpk::apod<::gpk:
 			const int32_t														toneIndex												= iTone * iShades;
 			const ::gpk::bgra												& baseColor												= colors[iTone];
 			::gpk::bgra													& paletteItem											= palette[toneIndex + iShade];
-			paletteItem														= ::gpk::SColorFloat(baseColor) / (float)iShades * (iShades - (float)iShade);
+			paletteItem														= ::gpk::rgbaf(baseColor) / (float)iShades * (iShades - (float)iShade);
 			paletteItem.a = 1;
 			verbose_printf("Original color: {r: 0x%X, g: 0x%X, b: 0x%X}.", baseColor	.r, baseColor	.g, baseColor	.b);
 			verbose_printf("Shaded color  : {r: 0x%X, g: 0x%X, b: 0x%X}.", paletteItem	.r, paletteItem	.g, paletteItem	.b);

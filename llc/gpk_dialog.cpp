@@ -107,7 +107,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 
 			dialog.ImageCross.resize(imageCross.metrics());
 			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
-				if(imageCross.Texels[iTexel] == (SColorBGRA)::gpk::BLACK)
+				if(imageCross.Texels[iTexel] == (::gpk::bgra)::gpk::BLACK)
 					dialog.ImageCross.View[iTexel]										=  true;
 				else {
 					imageCross.Texels[iTexel].a											= 0;

@@ -124,7 +124,7 @@ namespace gpk
 		, const ::gpk::m4<float>						& matrixTransform
 		, const ::gpk::m4<float>						& matrixTransformView
 		, const ::gpk::n3<float>						& lightVector
-		, const ::gpk::SColorFloat							& lightColor
+		, const ::gpk::rgbaf							& lightColor
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::tri<float>>	& pixelVertexWeights
 		, ::gpk::view2d<const ::gpk::bgra>			textureImage
@@ -139,12 +139,12 @@ namespace gpk
 		, const ::gpk::m4<float>						& matrixTransform
 		, const ::gpk::m4<float>						& matrixTransformView
 		, const ::gpk::n3<float>						& lightVector
-		, const ::gpk::SColorFloat							& lightColor
+		, const ::gpk::rgbaf							& lightColor
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::tri<float>>	& pixelVertexWeights
 		, ::gpk::view2d<const ::gpk::bgra>			textureImage
 		, ::gpk::apod<::gpk::SLight3>					& lightPoints
-		, ::gpk::apod<::gpk::SColorFloat>				& lightColors
+		, ::gpk::apod<::gpk::rgbaf>				& lightColors
 		, ::gpk::view2d<uint32_t>						depthBuffer
 		);
 

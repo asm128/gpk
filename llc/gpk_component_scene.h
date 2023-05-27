@@ -129,9 +129,9 @@ namespace gpk {
 	};
 
 	struct SLight {
-		::gpk::SColorFloat		Ambient							= {};
-		::gpk::SColorFloat		Diffuse							= {};
-		::gpk::SColorFloat		Specular						= {};
+		::gpk::rgbaf			Ambient							= {};
+		::gpk::rgbaf			Diffuse							= {};
+		::gpk::rgbaf			Specular						= {};
 		::gpk::n3f32			Position						= {};
 		::gpk::n3f32			Direction						= {};
 		double					Angle							= {};

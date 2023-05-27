@@ -20,7 +20,7 @@ namespace gpk
 
 	struct SWindowPlatformDetail {
 #if defined(GPK_WINDOWS)
-		typedef	::gpk::SColorBGRA			TOSWindowNativeTexel;
+		typedef	::gpk::bgra			TOSWindowNativeTexel;
 		stacxpr	::gpk::astatic<TCHAR, 256>	DefaultRootWindowClassName	= {TEXT("GPK_WINDOW")};
 
 		::HWND								WindowHandle				= {};

@@ -8,8 +8,8 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tBase>
-	struct SMatrix4 {
-		typedef				SMatrix4<_tBase>	_tMat4, TMatrix4;
+	struct m4 {
+		typedef				m4<_tBase>	_tMat4, TMatrix4;
 		typedef				n3<_tBase>			Tn3;
 							_tBase				_11, _12, _13, _14
 								,				_21, _22, _23, _24
@@ -488,14 +488,14 @@ namespace gpk
 		}
 	};	// struct
 	template<typename _tElement>
-	::gpk::tri3<_tElement> &						transform								(::gpk::tri3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
+	::gpk::tri3<_tElement> &						transform								(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
 		triangle.A															= transform.Transform(triangle.A);
 		triangle.B															= transform.Transform(triangle.B);
 		triangle.C															= transform.Transform(triangle.C);
 		return triangle;
 	}
 	template<typename _tElement>
-	::gpk::tri3<_tElement> &						transformDirection						(::gpk::tri3<_tElement> & triangle, const ::gpk::SMatrix4<_tElement> & transform)									{
+	::gpk::tri3<_tElement> &						transformDirection						(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
 		triangle.A															= transform.TransformDirection(triangle.A);
 		triangle.B															= transform.TransformDirection(triangle.B);
 		triangle.C															= transform.TransformDirection(triangle.C);
@@ -503,8 +503,8 @@ namespace gpk
 	}
 
 	template<typename _tBase>
-	struct SMatrix3 {
-		typedef				SMatrix3<_tBase>	_tMat3;
+	struct m3 {
+		typedef				m3<_tBase>	_tMat3;
 		typedef				n3<_tBase>		_TCoord3D;
 
 							_tBase				_11, _12, _13
@@ -718,10 +718,6 @@ namespace gpk
 				);
 		}
 	};
-
-	template<typename _tDimension>		using m3	= SMatrix3<_tDimension>;
-	template<typename _tDimension>		using m4	= SMatrix4<_tDimension>;
-
 	typedef m3<float>		m3f32, m3f;
 	typedef m3<double>		m3f64, m3d;
 	typedef m3<uint8_t>		m3u8;
