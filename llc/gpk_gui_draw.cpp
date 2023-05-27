@@ -48,7 +48,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	::gpk::apod<::gpk::n2u16>	dstCoords;
 	const uint32_t				iFont								= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont						= *gui.Fonts[iFont];
-	gpk_necs(::gpk::textLineRaster(target.metrics().Cast<uint16_t>(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
+	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		const ::gpk::n2u16			dstCoord												= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]	= colorFace;
