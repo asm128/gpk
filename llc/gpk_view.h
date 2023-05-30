@@ -119,6 +119,12 @@ namespace gpk
 		::gpk::error_t			for_each		(const TFuncForEachConst   & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
 		::gpk::error_t			enumerate		(const TFuncEnumerate      & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
 		::gpk::error_t			enumerate		(const TFuncEnumerateConst & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
+
+		typedef	FBool<T&>						TFuncFind;
+		typedef	FBool<const T&>					TFuncFindConst;
+		::gpk::error_t			find			(const TFuncFind      & funcForEach, uint32_t offset = 0)							{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
+		::gpk::error_t			find			(const TFuncFindConst & funcForEach, uint32_t offset = 0)					const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
+
 	}; // view<>
 
 	template<typename T>	using	view_array	= ::gpk::view<T>;

@@ -20,6 +20,7 @@ namespace gpk
 		using array_base<T>		::Data					;
 		using array_base<T>		::Size					;
 		using array_base<T>		::alloc_with_reserve	;
+		using array_base<T>		::find					;
 
 		inlcxpr					array_pod			()										noexcept	= default;
 								array_pod			(::std::initializer_list<T> init)				{
