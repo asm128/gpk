@@ -1,0 +1,2092 @@
+File name: gpk_adam7.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 37
+File directive lines: 1
+File comment lines: 0
+File blank lines: 14
+File bytes: 2219
+
+File name: gpk_adam7.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 21
+File directive lines: 4
+File comment lines: 1
+File blank lines: 10
+File bytes: 1372
+
+File name: gpk_process.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:53:18 2023
+File code lines: 3
+File directive lines: 5
+File comment lines: 1
+File blank lines: 4
+File bytes: 404
+
+File name: gpk_rsa.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May  7 01:02:22 2023
+File code lines: 23
+File directive lines: 4
+File comment lines: 1
+File blank lines: 9
+File bytes: 3832
+
+File name: gpk_ptr_obj.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 06:27:56 2023
+File modification date: Mon May 22 07:10:16 2023
+File code lines: 16
+File directive lines: 4
+File comment lines: 1
+File blank lines: 8
+File bytes: 1014
+
+File name: gpk_gui.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 06:46:00 2023
+File code lines: 187
+File directive lines: 15
+File comment lines: 4
+File blank lines: 54
+File bytes: 10555
+
+File name: gpk_axis.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 05:03:28 2023
+File modification date: Fri May 26 12:56:46 2023
+File code lines: 40
+File directive lines: 6
+File comment lines: 1
+File blank lines: 6
+File bytes: 2424
+
+File name: gpk_array_static.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 12:11:54 2023
+File code lines: 53
+File directive lines: 6
+File comment lines: 2
+File blank lines: 19
+File bytes: 4136
+
+File name: gpk_ascii_color.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar 30 19:42:36 2023
+File code lines: 56
+File directive lines: 4
+File comment lines: 6
+File blank lines: 12
+File bytes: 2992
+
+File name: gpk_ascii_target.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 7
+File directive lines: 1
+File comment lines: 0
+File blank lines: 3
+File bytes: 464
+
+File name: gpk_ascii_target.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:47:06 2023
+File code lines: 79
+File directive lines: 13
+File comment lines: 4
+File blank lines: 35
+File bytes: 5036
+
+File name: gpk_auto_handler.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 11:48:22 2023
+File code lines: 13
+File directive lines: 6
+File comment lines: 3
+File blank lines: 9
+File bytes: 1103
+
+File name: gpk_rsa.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:47:22 2023
+File code lines: 203
+File directive lines: 5
+File comment lines: 14
+File blank lines: 65
+File bytes: 11919
+
+File name: gpk_tri.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 16 04:42:55 2023
+File modification date: Fri May 26 13:49:10 2023
+File code lines: 18
+File directive lines: 6
+File comment lines: 1
+File blank lines: 7
+File bytes: 798
+
+File name: gpk_geometry.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 10:06:30 2023
+File code lines: 66
+File directive lines: 6
+File comment lines: 2
+File blank lines: 27
+File bytes: 3841
+
+File name: gpk_bitmap_target.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:25:44 2023
+File code lines: 253
+File directive lines: 11
+File comment lines: 11
+File blank lines: 82
+File bytes: 16527
+
+File name: gpk_array.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 13:12:54 2023
+File code lines: 1
+File directive lines: 5
+File comment lines: 0
+File blank lines: 6
+File bytes: 198
+
+File name: gpk_file.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:01:18 2023
+File code lines: 10
+File directive lines: 4
+File comment lines: 1
+File blank lines: 4
+File bytes: 1321
+
+File name: gpk_matrix.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:56 2023
+File code lines: 561
+File directive lines: 7
+File comment lines: 19
+File blank lines: 159
+File bytes: 37333
+
+File name: gpk_cdn.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat Mar 11 05:28:02 2023
+File code lines: 22
+File directive lines: 6
+File comment lines: 5
+File blank lines: 11
+File bytes: 1053
+
+File name: gpk_base64.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 79
+File directive lines: 2
+File comment lines: 2
+File blank lines: 22
+File bytes: 6190
+
+File name: gpk_cgi.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 19 05:15:56 2023
+File code lines: 3
+File directive lines: 5
+File comment lines: 1
+File blank lines: 4
+File bytes: 361
+
+File name: gpk_cgi_app_impl.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:54:46 2023
+File code lines: 21
+File directive lines: 10
+File comment lines: 0
+File blank lines: 6
+File bytes: 1540
+
+File name: gpk_cgi_app_impl_v2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 10
+File directive lines: 10
+File comment lines: 0
+File blank lines: 5
+File bytes: 830
+
+File name: gpk_debug.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:00:06 2023
+File code lines: 0
+File directive lines: 32
+File comment lines: 6
+File blank lines: 4
+File bytes: 1443
+
+File name: gpk_cgi_module.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 13
+File directive lines: 5
+File comment lines: 0
+File blank lines: 6
+File bytes: 1002
+
+File name: gpk_cgi_runtime.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 19 05:16:18 2023
+File code lines: 110
+File directive lines: 10
+File comment lines: 1
+File blank lines: 15
+File bytes: 7761
+
+File name: gpk_cgi_runtime.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 160
+File directive lines: 4
+File comment lines: 3
+File blank lines: 40
+File bytes: 13697
+
+File name: gpk_dialog_controls.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:37:24 2023
+File code lines: 119
+File directive lines: 7
+File comment lines: 0
+File blank lines: 46
+File bytes: 7783
+
+File name: gpk_chrono.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 9
+File directive lines: 2
+File comment lines: 4
+File blank lines: 8
+File bytes: 1111
+
+File name: gpk_chrono.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue Feb 28 09:01:42 2023
+File code lines: 9
+File directive lines: 11
+File comment lines: 1
+File blank lines: 7
+File bytes: 502
+
+File name: gpk_label.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 21 07:06:34 2023
+File code lines: 34
+File directive lines: 5
+File comment lines: 1
+File blank lines: 18
+File bytes: 2187
+
+File name: gpk_color.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 15 04:19:48 2023
+File code lines: 233
+File directive lines: 10
+File comment lines: 12
+File blank lines: 46
+File bytes: 23535
+
+File name: gpk_event.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 12 01:44:20 2023
+File modification date: Mon May 22 12:20:28 2023
+File code lines: 63
+File directive lines: 7
+File comment lines: 0
+File blank lines: 33
+File bytes: 4091
+
+File name: gpk_component_scene.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:06:16 2023
+File code lines: 242
+File directive lines: 5
+File comment lines: 1
+File blank lines: 61
+File bytes: 14238
+
+File name: gpk_component_scene.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:56:34 2023
+File code lines: 218
+File directive lines: 12
+File comment lines: 10
+File blank lines: 66
+File bytes: 13026
+
+File name: gpk_component_scene_draw.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:04 2023
+File code lines: 95
+File directive lines: 2
+File comment lines: 0
+File blank lines: 31
+File bytes: 5559
+
+File name: gpk_platform.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:58:50 2023
+File code lines: 2
+File directive lines: 69
+File comment lines: 4
+File blank lines: 14
+File bytes: 2550
+
+File name: gpk_d3d.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun Mar  5 06:39:16 2023
+File code lines: 38
+File directive lines: 4
+File comment lines: 3
+File blank lines: 16
+File bytes: 2646
+
+File name: gpk_vox.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:19:18 2023
+File code lines: 258
+File directive lines: 10
+File comment lines: 12
+File blank lines: 91
+File bytes: 17785
+
+File name: gpk_datatype.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 20
+File directive lines: 4
+File comment lines: 1
+File blank lines: 6
+File bytes: 1285
+
+File name: gpk_datatype.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri Mar 17 08:44:14 2023
+File code lines: 427
+File directive lines: 48
+File comment lines: 31
+File blank lines: 42
+File bytes: 42473
+
+File name: gpk_gui_text.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 01:27:18 2023
+File code lines: 50
+File directive lines: 8
+File comment lines: 6
+File blank lines: 17
+File bytes: 6582
+
+File name: gpk_array_pod.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Thu May 18 11:41:33 2023
+File modification date: Mon May 29 15:01:22 2023
+File code lines: 188
+File directive lines: 6
+File comment lines: 13
+File blank lines: 41
+File bytes: 9018
+
+File name: gpk_bit.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 09:39:44 2023
+File code lines: 17
+File directive lines: 11
+File comment lines: 2
+File blank lines: 11
+File bytes: 2675
+
+File name: gpk_complus.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 08:30:14 2023
+File code lines: 45
+File directive lines: 8
+File comment lines: 0
+File blank lines: 21
+File bytes: 3542
+
+File name: gpk_n2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 15 14:53:57 2023
+File modification date: Wed May 24 06:54:16 2023
+File code lines: 81
+File directive lines: 13
+File comment lines: 2
+File blank lines: 20
+File bytes: 6381
+
+File name: gpk_runtime.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 33
+File directive lines: 16
+File comment lines: 1
+File blank lines: 16
+File bytes: 1520
+
+File name: gpk_process.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 22
+File directive lines: 7
+File comment lines: 6
+File blank lines: 9
+File bytes: 1881
+
+File name: gpk_aes.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:46:26 2023
+File code lines: 256
+File directive lines: 3
+File comment lines: 98
+File blank lines: 102
+File bytes: 24329
+
+File name: gpk_rect.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 05:05:08 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 10
+File directive lines: 6
+File comment lines: 1
+File blank lines: 7
+File bytes: 705
+
+File name: gpk_memory.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 11:47:14 2023
+File code lines: 69
+File directive lines: 24
+File comment lines: 8
+File blank lines: 28
+File bytes: 6419
+
+File name: gpk_parse.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:52:36 2023
+File code lines: 124
+File directive lines: 5
+File comment lines: 1
+File blank lines: 40
+File bytes: 6640
+
+File name: gpk_json.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:57:52 2023
+File code lines: 492
+File directive lines: 15
+File comment lines: 19
+File blank lines: 120
+File bytes: 36972
+
+File name: gpk_expression.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:41:04 2023
+File code lines: 42
+File directive lines: 7
+File comment lines: 1
+File blank lines: 13
+File bytes: 2189
+
+File name: gpk_font.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 09:48:24 2023
+File code lines: 20
+File directive lines: 1
+File comment lines: 0
+File blank lines: 5
+File bytes: 60913
+
+File name: gpk_font.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 09:45:52 2023
+File code lines: 24
+File directive lines: 8
+File comment lines: 0
+File blank lines: 17
+File bytes: 1550
+
+File name: gpk_frameinfo.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 30
+File directive lines: 6
+File comment lines: 6
+File blank lines: 16
+File bytes: 1832
+
+File name: gpk_framework.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 283
+File directive lines: 37
+File comment lines: 55
+File blank lines: 73
+File bytes: 25487
+
+File name: gpk_windows.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 06:42:26 2023
+File code lines: 4
+File directive lines: 6
+File comment lines: 1
+File blank lines: 4
+File bytes: 464
+
+File name: gpk_block.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:56:54 2023
+File code lines: 170
+File directive lines: 14
+File comment lines: 16
+File blank lines: 53
+File bytes: 11573
+
+File name: gpk_timer.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 30 10:59:48 2023
+File code lines: 15
+File directive lines: 10
+File comment lines: 1
+File blank lines: 9
+File bytes: 1421
+
+File name: gpk_geometry_lh.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:24:30 2023
+File code lines: 546
+File directive lines: 1
+File comment lines: 31
+File blank lines: 157
+File bytes: 34536
+
+File name: gpk_geometry_lh.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:21:00 2023
+File code lines: 101
+File directive lines: 14
+File comment lines: 1
+File blank lines: 36
+File bytes: 6358
+
+File name: gpk_rect2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 05:22:33 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 20
+File directive lines: 6
+File comment lines: 1
+File blank lines: 9
+File bytes: 1033
+
+File name: gpk_deflate.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:57:46 2023
+File code lines: 218
+File directive lines: 9
+File comment lines: 5
+File blank lines: 65
+File bytes: 13924
+
+File name: gpk_grid_static.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 07:05:44 2023
+File code lines: 28
+File directive lines: 5
+File comment lines: 0
+File blank lines: 17
+File bytes: 1556
+
+File name: gpk_scene.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:04 2023
+File code lines: 85
+File directive lines: 6
+File comment lines: 1
+File blank lines: 37
+File bytes: 3491
+
+File name: gpk_gui_control.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:20:54 2023
+File code lines: 259
+File directive lines: 2
+File comment lines: 10
+File blank lines: 68
+File bytes: 19687
+
+File name: gpk_gui_control.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 12:52:00 2023
+File code lines: 119
+File directive lines: 8
+File comment lines: 0
+File blank lines: 48
+File bytes: 8065
+
+File name: gpk_gui_desktop.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 15 03:50:34 2023
+File code lines: 222
+File directive lines: 3
+File comment lines: 5
+File blank lines: 67
+File bytes: 17884
+
+File name: gpk_path.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 26 08:48:32 2023
+File modification date: Fri May 26 08:50:02 2023
+File code lines: 16
+File directive lines: 4
+File comment lines: 3
+File blank lines: 8
+File bytes: 1868
+
+File name: gpk_d3d.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:18:28 2023
+File code lines: 3
+File directive lines: 9
+File comment lines: 1
+File blank lines: 8
+File bytes: 528
+
+File name: gpk_ptr.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 06:57:26 2023
+File code lines: 15
+File directive lines: 6
+File comment lines: 1
+File blank lines: 7
+File bytes: 1058
+
+File name: gpk_http.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 96
+File directive lines: 6
+File comment lines: 51
+File blank lines: 15
+File bytes: 28055
+
+File name: gpk_https_client.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:46:26 2023
+File code lines: 0
+File directive lines: 0
+File comment lines: 73
+File blank lines: 23
+File bytes: 5633
+
+File name: gpk_http_client.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:25:54 2023
+File code lines: 189
+File directive lines: 15
+File comment lines: 40
+File blank lines: 58
+File bytes: 11433
+
+File name: gpk_http_client.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 22
+File directive lines: 5
+File comment lines: 9
+File blank lines: 13
+File bytes: 1191
+
+File name: gpk_typeint.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:28:18 2023
+File code lines: 42
+File directive lines: 19
+File comment lines: 3
+File blank lines: 15
+File bytes: 2579
+
+File name: gpk_i2c.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:16:26 2023
+File code lines: 12
+File directive lines: 9
+File comment lines: 1
+File blank lines: 9
+File bytes: 677
+
+File name: gpk_particle.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 10:46:08 2023
+File code lines: 109
+File directive lines: 11
+File comment lines: 12
+File blank lines: 47
+File bytes: 8463
+
+File name: gpk_view_bit.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 07:05:42 2023
+File code lines: 75
+File directive lines: 5
+File comment lines: 5
+File blank lines: 33
+File bytes: 5940
+
+File name: gpk_io.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar  9 06:58:48 2023
+File code lines: 4
+File directive lines: 8
+File comment lines: 0
+File blank lines: 6
+File bytes: 469
+
+File name: gpk_n3.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 15 14:56:28 2023
+File modification date: Fri May 26 13:25:36 2023
+File code lines: 129
+File directive lines: 13
+File comment lines: 2
+File blank lines: 28
+File bytes: 9951
+
+File name: gpk_json_expression.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 07:47:56 2023
+File code lines: 239
+File directive lines: 9
+File comment lines: 3
+File blank lines: 65
+File bytes: 22037
+
+File name: gpk_json_expression.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 30
+File directive lines: 7
+File comment lines: 1
+File blank lines: 14
+File bytes: 2285
+
+File name: gpk_windows.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:21:24 2023
+File code lines: 30
+File directive lines: 7
+File comment lines: 0
+File blank lines: 13
+File bytes: 1748
+
+File name: gpk_cgi.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:55:58 2023
+File code lines: 45
+File directive lines: 4
+File comment lines: 1
+File blank lines: 12
+File bytes: 2375
+
+File name: gpk_keyval.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 38
+File directive lines: 4
+File comment lines: 2
+File blank lines: 20
+File bytes: 2715
+
+File name: gpk_quad2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 26 13:28:38 2023
+File modification date: Fri May 26 13:56:18 2023
+File code lines: 22
+File directive lines: 7
+File comment lines: 0
+File blank lines: 6
+File bytes: 911
+
+File name: gpk_png.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:06:16 2023
+File code lines: 903
+File directive lines: 6
+File comment lines: 9
+File blank lines: 248
+File bytes: 58520
+
+File name: gpk_label_manager.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 08:41:06 2023
+File code lines: 58
+File directive lines: 4
+File comment lines: 0
+File blank lines: 30
+File bytes: 2977
+
+File name: gpk_log.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar 23 12:43:42 2023
+File code lines: 38
+File directive lines: 36
+File comment lines: 1
+File blank lines: 16
+File bytes: 2757
+
+File name: gpk_encoding.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:49:00 2023
+File code lines: 47
+File directive lines: 4
+File comment lines: 2
+File blank lines: 18
+File bytes: 4758
+
+File name: gpk_window.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:20:42 2023
+File code lines: 47
+File directive lines: 17
+File comment lines: 1
+File blank lines: 22
+File bytes: 2842
+
+File name: gpk_camera.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:36:52 2023
+File code lines: 11
+File directive lines: 6
+File comment lines: 1
+File blank lines: 9
+File bytes: 407
+
+File name: gpk_math.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:51:40 2023
+File code lines: 40
+File directive lines: 17
+File comment lines: 3
+File blank lines: 12
+File bytes: 2678
+
+File name: gpk_member_registry.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 33
+File directive lines: 19
+File comment lines: 3
+File blank lines: 8
+File bytes: 5593
+
+File name: gpk_label.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 21 05:34:46 2023
+File code lines: 15
+File directive lines: 2
+File comment lines: 0
+File blank lines: 8
+File bytes: 782
+
+File name: gpk_log.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:24:44 2023
+File code lines: 103
+File directive lines: 299
+File comment lines: 23
+File blank lines: 54
+File bytes: 23392
+
+File name: gpk_module.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 6
+File directive lines: 42
+File comment lines: 3
+File blank lines: 13
+File bytes: 2086
+
+File name: gpk_module_exports.def
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue Jan  3 23:34:56 2023
+File code lines: 10
+File directive lines: 0
+File comment lines: 0
+File blank lines: 0
+File bytes: 142
+
+File name: gpk_noise.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri Mar 10 12:32:56 2023
+File code lines: 0
+File directive lines: 1
+File comment lines: 8
+File blank lines: 0
+File bytes: 394
+
+File name: gpk_noise.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri Mar 17 08:41:04 2023
+File code lines: 62
+File directive lines: 6
+File comment lines: 1
+File blank lines: 16
+File bytes: 5478
+
+File name: gpk_tcpip.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 117
+File directive lines: 28
+File comment lines: 35
+File blank lines: 37
+File bytes: 9172
+
+File name: gpk_gui.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:24:30 2023
+File code lines: 523
+File directive lines: 11
+File comment lines: 35
+File blank lines: 159
+File bytes: 43985
+
+File name: gpk_view.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 07:46:38 2023
+File code lines: 16
+File directive lines: 1
+File comment lines: 0
+File blank lines: 6
+File bytes: 1031
+
+File name: gpk_dialog.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 15 03:50:34 2023
+File code lines: 88
+File directive lines: 8
+File comment lines: 13
+File blank lines: 31
+File bytes: 5257
+
+File name: gpk_platform_error.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue Jan  3 23:34:56 2023
+File code lines: 9
+File directive lines: 4
+File comment lines: 0
+File blank lines: 4
+File bytes: 496
+
+File name: gpk_platform_error.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue Jan  3 23:34:56 2023
+File code lines: 3
+File directive lines: 7
+File comment lines: 1
+File blank lines: 4
+File bytes: 326
+
+File name: gpk_model.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:04 2023
+File code lines: 13
+File directive lines: 6
+File comment lines: 1
+File blank lines: 9
+File bytes: 582
+
+File name: gpk_sync.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 05:03:42 2023
+File code lines: 4
+File directive lines: 88
+File comment lines: 1
+File blank lines: 7
+File bytes: 5284
+
+File name: gpk_png_write.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 10 03:19:42 2023
+File code lines: 109
+File directive lines: 2
+File comment lines: 2
+File blank lines: 21
+File bytes: 5906
+
+File name: gpk_input.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:41:28 2023
+File code lines: 30
+File directive lines: 7
+File comment lines: 1
+File blank lines: 12
+File bytes: 1771
+
+File name: gpk_stl.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:58:52 2023
+File code lines: 9
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 729
+
+File name: gpk_quad3.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 26 13:29:21 2023
+File modification date: Fri May 26 13:56:22 2023
+File code lines: 22
+File directive lines: 7
+File comment lines: 0
+File blank lines: 6
+File bytes: 911
+
+File name: gpk_raster_lh.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:04 2023
+File code lines: 535
+File directive lines: 2
+File comment lines: 26
+File blank lines: 149
+File bytes: 31943
+
+File name: gpk_collision.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 06:07:32 2023
+File code lines: 95
+File directive lines: 6
+File comment lines: 8
+File blank lines: 41
+File bytes: 5344
+
+File name: gpk_rigidbody.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:26:18 2023
+File code lines: 87
+File directive lines: 2
+File comment lines: 6
+File blank lines: 25
+File bytes: 6443
+
+File name: gpk_view.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 30 08:48:14 2023
+File code lines: 299
+File directive lines: 15
+File comment lines: 6
+File blank lines: 99
+File bytes: 18719
+
+File name: gpk_deflate.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:55:22 2023
+File code lines: 47
+File directive lines: 6
+File comment lines: 1
+File blank lines: 17
+File bytes: 4570
+
+File name: gpk_array.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 20 08:00:16 2023
+File code lines: 12
+File directive lines: 1
+File comment lines: 0
+File blank lines: 7
+File bytes: 1013
+
+File name: gpk_enum.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 07:46:40 2023
+File code lines: 189
+File directive lines: 16
+File comment lines: 8
+File blank lines: 61
+File bytes: 14292
+
+File name: gpk_runtime_module.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 13
+File directive lines: 1
+File comment lines: 0
+File blank lines: 5
+File bytes: 930
+
+File name: gpk_runtime_module.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 29
+File directive lines: 13
+File comment lines: 0
+File blank lines: 11
+File bytes: 1812
+
+File name: gpk_safe.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 0
+File directive lines: 31
+File comment lines: 0
+File blank lines: 10
+File bytes: 1243
+
+File name: gpk_align.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 05:18:26 2023
+File modification date: Wed May 24 06:21:16 2023
+File code lines: 14
+File directive lines: 8
+File comment lines: 2
+File blank lines: 6
+File bytes: 1035
+
+File name: gpk_size.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 07:57:52 2023
+File code lines: 6
+File directive lines: 4
+File comment lines: 0
+File blank lines: 5
+File bytes: 981
+
+File name: gpk_spi.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:23:44 2023
+File code lines: 25
+File directive lines: 8
+File comment lines: 0
+File blank lines: 8
+File bytes: 1839
+
+File name: gpk_i2c.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:23:04 2023
+File code lines: 25
+File directive lines: 8
+File comment lines: 0
+File blank lines: 8
+File bytes: 1917
+
+File name: gpk_stdsocket.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar  9 06:58:48 2023
+File code lines: 12
+File directive lines: 19
+File comment lines: 1
+File blank lines: 10
+File bytes: 1796
+
+File name: gpk_stdstring.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 8
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 471
+
+File name: gpk_stdstring.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 3
+File directive lines: 5
+File comment lines: 0
+File blank lines: 3
+File bytes: 309
+
+File name: gpk_file.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 08:53:24 2023
+File code lines: 108
+File directive lines: 15
+File comment lines: 10
+File blank lines: 28
+File bytes: 7697
+
+File name: gpk_framework.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:13:36 2023
+File code lines: 35
+File directive lines: 17
+File comment lines: 2
+File blank lines: 21
+File bytes: 2099
+
+File name: gpk_app_impl.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 07:00:30 2023
+File code lines: 193
+File directive lines: 27
+File comment lines: 1
+File blank lines: 17
+File bytes: 19076
+
+File name: gpk_aes.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May  9 05:25:32 2023
+File code lines: 62
+File directive lines: 6
+File comment lines: 8
+File blank lines: 25
+File bytes: 11590
+
+File name: gpk_string.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 14:06:58 2023
+File code lines: 51
+File directive lines: 18
+File comment lines: 10
+File blank lines: 24
+File bytes: 3241
+
+File name: gpk_string_helper.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 6
+File directive lines: 1
+File comment lines: 0
+File blank lines: 3
+File bytes: 472
+
+File name: gpk_string_helper.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 5
+File directive lines: 4
+File comment lines: 0
+File blank lines: 7
+File bytes: 529
+
+File name: gpk_keyval.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:21:06 2023
+File code lines: 64
+File directive lines: 4
+File comment lines: 0
+File blank lines: 27
+File bytes: 4163
+
+File name: gpk_base64.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 13:32:30 2023
+File code lines: 29
+File directive lines: 4
+File comment lines: 1
+File blank lines: 11
+File bytes: 5195
+
+File name: gpk_parse.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:37:32 2023
+File code lines: 27
+File directive lines: 6
+File comment lines: 1
+File blank lines: 10
+File bytes: 2571
+
+File name: gpk_tcpip.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 43
+File directive lines: 10
+File comment lines: 1
+File blank lines: 23
+File bytes: 2974
+
+File name: gpk_timer.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar 30 19:42:36 2023
+File code lines: 36
+File directive lines: 6
+File comment lines: 1
+File blank lines: 14
+File bytes: 2174
+
+File name: gpk_array_obj.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Thu May 18 11:49:13 2023
+File modification date: Fri May 26 13:39:36 2023
+File code lines: 245
+File directive lines: 5
+File comment lines: 16
+File blank lines: 84
+File bytes: 12611
+
+File name: gpk_type_identifier.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 7
+File directive lines: 4
+File comment lines: 3
+File blank lines: 7
+File bytes: 674
+
+File name: gpk_type_registry.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri Mar 10 06:49:30 2023
+File code lines: 3
+File directive lines: 1
+File comment lines: 0
+File blank lines: 2
+File bytes: 178
+
+File name: gpk_type_registry.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar 30 19:42:36 2023
+File code lines: 22
+File directive lines: 8
+File comment lines: 0
+File blank lines: 16
+File bytes: 1758
+
+File name: gpk_raster_lh.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:24:30 2023
+File code lines: 142
+File directive lines: 12
+File comment lines: 1
+File blank lines: 24
+File bytes: 7347
+
+File name: gpk_spi.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:22:06 2023
+File code lines: 12
+File directive lines: 9
+File comment lines: 1
+File blank lines: 8
+File bytes: 674
+
+File name: gpk_path.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 26 08:51:38 2023
+File modification date: Fri May 26 08:53:22 2023
+File code lines: 141
+File directive lines: 21
+File comment lines: 6
+File blank lines: 44
+File bytes: 8742
+
+File name: gpk_view_layered.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 15 03:50:22 2023
+File code lines: 53
+File directive lines: 6
+File comment lines: 6
+File blank lines: 18
+File bytes: 4241
+
+File name: gpk_view_manager.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 08:24:42 2023
+File code lines: 51
+File directive lines: 4
+File comment lines: 1
+File blank lines: 24
+File bytes: 2584
+
+File name: gpk_view_stream.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu Mar 30 19:42:36 2023
+File code lines: 25
+File directive lines: 4
+File comment lines: 3
+File blank lines: 12
+File bytes: 3667
+
+File name: gpk_virtual_keyboard.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 12:01:16 2023
+File code lines: 13
+File directive lines: 2
+File comment lines: 0
+File blank lines: 5
+File bytes: 881
+
+File name: gpk_virtual_keyboard.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:14:16 2023
+File code lines: 24
+File directive lines: 6
+File comment lines: 1
+File blank lines: 10
+File bytes: 1154
+
+File name: gpk_block.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 37
+File directive lines: 3
+File comment lines: 0
+File blank lines: 16
+File bytes: 2491
+
+File name: gpk_tri2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 09:51:06 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 38
+File directive lines: 7
+File comment lines: 1
+File blank lines: 15
+File bytes: 1735
+
+File name: gpk_voxel_geometry.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:20:48 2023
+File code lines: 77
+File directive lines: 1
+File comment lines: 2
+File blank lines: 24
+File bytes: 4502
+
+File name: gpk_voxel_geometry.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 10
+File directive lines: 5
+File comment lines: 1
+File blank lines: 7
+File bytes: 720
+
+File name: gpk_quat.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 15 15:12:27 2023
+File modification date: Tue May 23 07:52:46 2023
+File code lines: 124
+File directive lines: 11
+File comment lines: 9
+File blank lines: 36
+File bytes: 8277
+
+File name: gpk_grid_copy.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 01:09:48 2023
+File code lines: 216
+File directive lines: 8
+File comment lines: 6
+File blank lines: 56
+File bytes: 23442
+
+File name: gpk_xml_reader.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 14:01:16 2023
+File code lines: 277
+File directive lines: 6
+File comment lines: 3
+File blank lines: 78
+File bytes: 17582
+
+File name: gpk_xml_reader.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:25:30 2023
+File code lines: 37
+File directive lines: 5
+File comment lines: 1
+File blank lines: 16
+File bytes: 1669
+
+File name: gpk_expression.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 07:47:30 2023
+File code lines: 313
+File directive lines: 6
+File comment lines: 6
+File blank lines: 59
+File bytes: 24996
+
+File name: gpk_png.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 10:20:30 2023
+File code lines: 57
+File directive lines: 10
+File comment lines: 2
+File blank lines: 16
+File bytes: 2906
+
+File name: gpk_system_key.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Fri May 26 12:46:00 2023
+File modification date: Fri May 26 12:56:16 2023
+File code lines: 195
+File directive lines: 4
+File comment lines: 1
+File blank lines: 5
+File bytes: 13902
+
+File name: gpk_stl.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 10:11:50 2023
+File code lines: 11
+File directive lines: 7
+File comment lines: 0
+File blank lines: 7
+File bytes: 608
+
+File name: gpk_mapblock.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:48:54 2023
+File code lines: 13
+File directive lines: 1
+File comment lines: 0
+File blank lines: 6
+File bytes: 722
+
+File name: gpk_encoding.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 06:51:48 2023
+File code lines: 194
+File directive lines: 7
+File comment lines: 2
+File blank lines: 49
+File bytes: 10114
+
+File name: gpk_cgi_main.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 10
+File directive lines: 1
+File comment lines: 0
+File blank lines: 2
+File bytes: 516
+
+File name: gpk_cgi_module.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 14 08:42:34 2023
+File code lines: 29
+File directive lines: 13
+File comment lines: 0
+File blank lines: 13
+File bytes: 1778
+
+File name: gpk_geometry.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 09:54:50 2023
+File code lines: 105
+File directive lines: 1
+File comment lines: 3
+File blank lines: 40
+File bytes: 7778
+
+File name: gpk_grid_scale.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 09:29:04 2023
+File code lines: 42
+File directive lines: 4
+File comment lines: 1
+File blank lines: 19
+File bytes: 2926
+
+File name: gpk_json.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Tue May 23 11:38:50 2023
+File code lines: 85
+File directive lines: 7
+File comment lines: 3
+File blank lines: 28
+File bytes: 7926
+
+File name: gpk_functional.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Thu May 18 07:11:13 2023
+File modification date: Mon May 29 15:06:28 2023
+File code lines: 3
+File directive lines: 5
+File comment lines: 1
+File blank lines: 5
+File bytes: 325
+
+File name: gpk_error.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 18 11:45:14 2023
+File code lines: 15
+File directive lines: 11
+File comment lines: 0
+File blank lines: 9
+File bytes: 1242
+
+File name: gpk_rigidbody.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sun May 21 12:16:56 2023
+File code lines: 196
+File directive lines: 7
+File comment lines: 3
+File blank lines: 60
+File bytes: 11319
+
+File name: gpk_view_serialize.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Sat May 20 09:30:56 2023
+File modification date: Sun May 21 08:55:42 2023
+File code lines: 68
+File directive lines: 6
+File comment lines: 5
+File blank lines: 24
+File bytes: 4915
+
+File name: gpk_apod_serialize.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Sun May 21 00:46:38 2023
+File modification date: Sun May 21 08:04:20 2023
+File code lines: 21
+File directive lines: 6
+File comment lines: 1
+File blank lines: 12
+File bytes: 2049
+
+File name: gpk_quad.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 11:46:02 2023
+File modification date: Fri May 26 13:50:26 2023
+File code lines: 20
+File directive lines: 6
+File comment lines: 0
+File blank lines: 9
+File bytes: 924
+
+File name: gpk_astatic_serialize.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Sun May 21 05:39:46 2023
+File modification date: Sun May 21 05:41:48 2023
+File code lines: 9
+File directive lines: 5
+File comment lines: 1
+File blank lines: 6
+File bytes: 660
+
+File name: gpk_ptr_pod.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 06:27:47 2023
+File modification date: Mon May 22 06:57:16 2023
+File code lines: 15
+File directive lines: 4
+File comment lines: 1
+File blank lines: 7
+File bytes: 1036
+
+File name: gpk_tri3.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 09:51:22 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 64
+File directive lines: 7
+File comment lines: 1
+File blank lines: 23
+File bytes: 2845
+
+File name: gpk_ref.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 06:22:26 2023
+File modification date: Mon May 22 06:40:48 2023
+File code lines: 51
+File directive lines: 6
+File comment lines: 1
+File blank lines: 18
+File bytes: 2266
+
+File name: gpk_ptr_nco.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 06:27:36 2023
+File modification date: Mon May 22 06:57:18 2023
+File code lines: 32
+File directive lines: 4
+File comment lines: 1
+File blank lines: 14
+File bytes: 2990
+
+File name: gpk_sysevent.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Mon May 22 12:21:34 2023
+File code lines: 34
+File directive lines: 4
+File comment lines: 1
+File blank lines: 5
+File bytes: 1758
+
+File name: gpk_block_container.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 08:19:26 2023
+File modification date: Mon May 22 08:24:14 2023
+File code lines: 34
+File directive lines: 6
+File comment lines: 1
+File blank lines: 14
+File bytes: 1808
+
+File name: gpk_block_container_nts.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon May 22 08:25:55 2023
+File modification date: Mon May 22 08:41:40 2023
+File code lines: 36
+File directive lines: 6
+File comment lines: 1
+File blank lines: 13
+File bytes: 2037
+
+File name: gpk_line.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 11:10:42 2023
+File modification date: Fri May 26 13:39:24 2023
+File code lines: 8
+File directive lines: 6
+File comment lines: 1
+File blank lines: 7
+File bytes: 598
+
+File name: gpk_particle.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Sun May 21 05:03:21 2023
+File modification date: Mon May 22 12:51:20 2023
+File code lines: 28
+File directive lines: 2
+File comment lines: 0
+File blank lines: 11
+File bytes: 1395
+
+File name: gpk_circle.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 04:45:56 2023
+File modification date: Wed May 24 04:57:40 2023
+File code lines: 8
+File directive lines: 6
+File comment lines: 3
+File blank lines: 5
+File bytes: 1343
+
+File name: gpk_window.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:19:32 2023
+File code lines: 116
+File directive lines: 18
+File comment lines: 3
+File blank lines: 29
+File bytes: 8260
+
+File name: gpk_line2.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 12:19:38 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 27
+File directive lines: 7
+File comment lines: 6
+File blank lines: 10
+File bytes: 2173
+
+File name: gpk_line3.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Tue May 23 12:19:45 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 24
+File directive lines: 7
+File comment lines: 1
+File blank lines: 10
+File bytes: 1226
+
+File name: gpk_coord.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:54:38 2023
+File code lines: 5
+File directive lines: 6
+File comment lines: 1
+File blank lines: 6
+File bytes: 590
+
+File name: gpk_eval.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 06:40:34 2023
+File code lines: 27
+File directive lines: 40
+File comment lines: 2
+File blank lines: 20
+File bytes: 3765
+
+File name: gpk_rect3.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 05:21:44 2023
+File modification date: Fri May 26 13:39:14 2023
+File code lines: 5
+File directive lines: 6
+File comment lines: 1
+File blank lines: 6
+File bytes: 360
+
+File name: gpk_image.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:44:44 2023
+File code lines: 165
+File directive lines: 8
+File comment lines: 3
+File blank lines: 57
+File bytes: 11890
+
+File name: gpk_view_grid.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Wed May 24 05:37:12 2023
+File code lines: 190
+File directive lines: 10
+File comment lines: 7
+File blank lines: 25
+File bytes: 11604
+
+File name: gpk_voxel.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Fri May 26 13:41:24 2023
+File code lines: 163
+File directive lines: 11
+File comment lines: 1
+File blank lines: 60
+File bytes: 9873
+
+File name: gpk_dialog.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 02:20:06 2023
+File code lines: 269
+File directive lines: 3
+File comment lines: 8
+File blank lines: 70
+File bytes: 22782
+
+File name: gpk_rect_align.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Wed May 24 06:43:32 2023
+File modification date: Wed May 24 06:45:24 2023
+File code lines: 31
+File directive lines: 6
+File comment lines: 2
+File blank lines: 9
+File bytes: 2330
+
+File name: gpk_array_base.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Thu May 18 11:41:47 2023
+File modification date: Fri May 26 13:39:24 2023
+File code lines: 32
+File directive lines: 9
+File comment lines: 4
+File blank lines: 14
+File bytes: 2141
+
+File name: gpk_gui_desktop.h
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Thu May 25 09:53:06 2023
+File code lines: 33
+File directive lines: 5
+File comment lines: 1
+File blank lines: 17
+File bytes: 2393
+
+File name: gpk_gui_draw.cpp
+File folder: E:\d1_env\gpk\llc\
+File creation date: Mon Apr 24 01:58:41 2023
+File modification date: Sat May 27 00:41:28 2023
+File code lines: 157
+File directive lines: 5
+File comment lines: 13
+File blank lines: 35
+File bytes: 12444
+
+
+----------------------------- Total Files: 207
+----------------------------- Total Lines: 26025
+
+Comments: 1060
+Code: 17389
+Compiler directives: 2128
+Blanks: 5448
+Total bytes: 1363815
+
+----------------------------- Stats: 
+
+Average lines per file: 125.72463768115942
+Average lines of comments per file: 5.120772946859903
+Average lines of code per file: 84.0048309178744
+Average lines of compiler directives per file: 10.280193236714975
+Average blank lines per file: 26.318840579710145
+
+Comments: 4.073006724303554%
+Code: 66.81652257444765%
+Compiler directives: 8.176753121998079%
+Blanks: 20.933717579250718%

@@ -101,8 +101,7 @@ namespace gpk
 			return 0;
 		}
 
-		typedef	std::function<void(T&)>			TFuncFill;
-		inline	::gpk::error_t	fill			(const T & value, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)			{ for(uint32_t i = offset; i < ::gpk::min(Count, stop); ++i) Data[i] = value; return Count; }
+		inline	::gpk::error_t	fill			(const T & value, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)					{ for(; offset < ::gpk::min(Count, stop); ++offset) Data[offset] = value; return Count; }
 
 
 		typedef	FVoid<T&>						TFuncForEach;

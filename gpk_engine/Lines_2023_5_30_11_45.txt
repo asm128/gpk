@@ -1,0 +1,222 @@
+File name: gpk_engine.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sat May 27 02:26:04 2023
+File code lines: 299
+File directive lines: 5
+File comment lines: 3
+File blank lines: 96
+File bytes: 17712
+
+File name: gpk_engine_container.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Mon May 22 06:58:06 2023
+File code lines: 32
+File directive lines: 6
+File comment lines: 1
+File blank lines: 18
+File bytes: 2117
+
+File name: gpk_engine_d3d.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Fri May 26 08:53:58 2023
+File code lines: 66
+File directive lines: 4
+File comment lines: 1
+File blank lines: 30
+File bytes: 4314
+
+File name: gpk_engine_d3d.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Mon May 22 08:30:16 2023
+File code lines: 4
+File directive lines: 11
+File comment lines: 1
+File blank lines: 9
+File bytes: 976
+
+File name: gpk_engine_entity.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Mon May 22 06:58:52 2023
+File code lines: 39
+File directive lines: 8
+File comment lines: 1
+File blank lines: 23
+File bytes: 2055
+
+File name: gpk_engine_renderbuffer.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sun May 14 07:49:34 2023
+File code lines: 42
+File directive lines: 8
+File comment lines: 1
+File blank lines: 14
+File bytes: 2662
+
+File name: gpk_engine_rendercolor.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Wed Feb 22 20:24:18 2023
+File code lines: 5
+File directive lines: 6
+File comment lines: 1
+File blank lines: 5
+File bytes: 263
+
+File name: gpk_engine_rendermesh.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Tue May 23 11:27:22 2023
+File code lines: 39
+File directive lines: 10
+File comment lines: 2
+File blank lines: 16
+File bytes: 1826
+
+File name: gpk_engine_soundbuffer.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Tue May  9 00:02:00 2023
+File modification date: Fri May 26 13:39:36 2023
+File code lines: 31
+File directive lines: 8
+File comment lines: 1
+File blank lines: 15
+File bytes: 2171
+
+File name: gpk_engine_file.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon May  8 09:04:38 2023
+File modification date: Tue May  9 04:54:24 2023
+File code lines: 0
+File directive lines: 1
+File comment lines: 0
+File blank lines: 0
+File bytes: 28
+
+File name: gpk_engine_scene.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sat May 27 02:15:36 2023
+File code lines: 138
+File directive lines: 5
+File comment lines: 2
+File blank lines: 40
+File bytes: 9447
+
+File name: gpk_engine_scene.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Mon May 15 14:35:46 2023
+File code lines: 97
+File directive lines: 12
+File comment lines: 7
+File blank lines: 42
+File bytes: 4037
+
+File name: gpk_engine_shader.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sat May 27 02:24:30 2023
+File code lines: 26
+File directive lines: 1
+File comment lines: 0
+File blank lines: 13
+File bytes: 1614
+
+File name: gpk_engine_shader.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sat May 27 02:16:48 2023
+File code lines: 10
+File directive lines: 6
+File comment lines: 1
+File blank lines: 9
+File bytes: 1196
+
+File name: gpk_engine.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sat May 27 02:08:52 2023
+File code lines: 121
+File directive lines: 9
+File comment lines: 2
+File blank lines: 38
+File bytes: 8928
+
+File name: gpk_engine_file.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon May  8 09:04:24 2023
+File modification date: Fri May 26 09:06:16 2023
+File code lines: 26
+File directive lines: 6
+File comment lines: 2
+File blank lines: 14
+File bytes: 1628
+
+File name: gpk_engine_rendernode.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Sun May 14 07:49:34 2023
+File code lines: 124
+File directive lines: 8
+File comment lines: 3
+File blank lines: 46
+File bytes: 6841
+
+File name: gpk_engine_rendersurface.h
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Mon Apr 24 01:58:40 2023
+File modification date: Tue May 23 10:43:38 2023
+File code lines: 14
+File directive lines: 8
+File comment lines: 1
+File blank lines: 9
+File bytes: 807
+
+File name: gpk_engine_collision.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Wed May 17 04:22:54 2023
+File modification date: Thu May 25 08:13:26 2023
+File code lines: 66
+File directive lines: 1
+File comment lines: 15
+File blank lines: 19
+File bytes: 6577
+
+File name: gpk_engine_soundbuffer.cpp
+File folder: E:\d1_env\gpk\gpk_engine\
+File creation date: Tue May  9 00:02:32 2023
+File modification date: Tue May  9 00:02:50 2023
+File code lines: 0
+File directive lines: 1
+File comment lines: 0
+File blank lines: 0
+File bytes: 35
+
+
+----------------------------- Total Files: 20
+----------------------------- Total Lines: 1804
+
+Comments: 45
+Code: 1179
+Compiler directives: 124
+Blanks: 456
+Total bytes: 75234
+
+----------------------------- Stats: 
+
+Average lines per file: 90.2
+Average lines of comments per file: 2.25
+Average lines of code per file: 58.95
+Average lines of compiler directives per file: 6.2
+Average blank lines per file: 22.8
+
+Comments: 2.494456762749446%
+Code: 65.35476718403548%
+Compiler directives: 6.873614190687362%
+Blanks: 25.277161862527716%
