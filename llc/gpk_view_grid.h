@@ -41,6 +41,7 @@ namespace gpk
 		inlcxpr	T*					end						()																			noexcept	{ return Data + size();					}
 
 		inlcxpr	const ::gpk::n2u32&	metrics					()																	const	noexcept	{ return Size;							}
+		inlcxpr	::gpk::n2u16		metrics16				()																	const	noexcept	{ return Size.Cast<uint16_t>();			}
 		inlcxpr	uint32_t			size					()																	const	noexcept	{ return area();						}
 		inlcxpr	uint32_t 			byte_count				()																	const	noexcept	{ return area() * sizeof(_tElement);	}
 		inlcxpr	uint32_t			area					()																	const	noexcept	{ return Size.x * Size.y;				}

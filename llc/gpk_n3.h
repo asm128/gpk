@@ -85,6 +85,17 @@ namespace gpk
 		inlcxpr	Tn3			zzy					()									const	noexcept	{ return {z, z, y}; }
 		inlcxpr	Tn3			zzz					()									const	noexcept	{ return {z, z, z}; }
 
+		inlcxpr	n3<uint8_t>	u8					()									const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	n3<uint16_t>u16					()									const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	n3<uint32_t>u32					()									const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	n3<uint64_t>u64					()									const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	n3<int8_t>	i8					()									const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	n3<int16_t>	i16					()									const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	n3<int32_t>	i32					()									const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	n3<int64_t>	i64					()									const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	n3<float>	f32					()									const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	n3<double>	f64					()									const	noexcept	{ return Cast<double	>(); }
+
 		//
 		template<typename _t2>
 		inlcxpr	n3<_t2>		Cast				()									const	noexcept	{ return {(_t2)x, (_t2)y, (_t2)z}; }
