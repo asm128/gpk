@@ -85,11 +85,11 @@ namespace gpk
 		::gpk::apod<::gpk::trif32>		TrianglePixelWeights				= {};
 		::gpk::apod<::gpk::n2i16>		WireframePixelCoords				= {};
 
-		::gpk::apod<::gpk::trif32>		TransformedNormalsVertex			= {};
+		::gpk::apod<::gpk::tri3f32>		TransformedNormalsVertex			= {};
 
 		::gpk::ai32						Triangle3dIndices					= {};
-		::gpk::apod<::gpk::trif32>		Triangle3dToDraw					= {};
-		::gpk::apod<::gpk::trif32>		Triangle3dWorld						= {};
+		::gpk::apod<::gpk::tri3f32>		Triangle3dToDraw					= {};
+		::gpk::apod<::gpk::tri3f32>		Triangle3dWorld						= {};
 
 		uint32_t						TrianglesDrawn						= 0;
 		uint32_t						PixelsDrawn							= 0;
