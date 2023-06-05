@@ -35,7 +35,7 @@ namespace gpk
 
 	template<typename _tBlock>
 	struct SMapTable {
-		::gpk::apod<uint32_t>		Id;
+		::gpk::au32		Id;
 		::gpk::apobj<_tBlock>		Block;
 
 		::gpk::SBlockConfig			BlockConfig					= {::gpk::vcc{32, "01234567890123456789012345678901"}, 65535, true};
@@ -116,8 +116,8 @@ namespace gpk
 
 	template<typename _tMapBlock>
 	int64_t						mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToFind)	{
-		::gpk::apod<uint32_t>			idBlocks					= mapTable.Id;
-		::gpk::apod<uint32_t>			blocksToSkip;
+		::gpk::au32			idBlocks					= mapTable.Id;
+		::gpk::au32			blocksToSkip;
 		for(uint32_t iBlock = 0; iBlock < mapTable.Block.size(); ++iBlock) {
 			const _tMapBlock				& block						= *mapTable.Block[iBlock];
 			const int32_t					idEmail						= block.MapId(sequenceToFind);

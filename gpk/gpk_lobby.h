@@ -124,7 +124,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, const ::gpk::view_array<const ::gpk::SSysEvent> & frameEvents) { 
+		::gpk::error_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, const ::gpk::view<const ::gpk::SSysEvent> & frameEvents) { 
 			if(!Dialog.Input) {
 				Dialog.Input								= inputState;
 			}
@@ -143,7 +143,7 @@ namespace gpk
 
 			gpk_necs(::gpk::guiProcessInput(gui, *inputState, frameEvents));
 
-			::gpk::apod<uint32_t>				controlsToProcess			= {};
+			::gpk::au32				controlsToProcess			= {};
 			gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 			if(const int32_t result = InputBox.Update(gui, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 

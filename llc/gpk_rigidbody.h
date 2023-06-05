@@ -203,7 +203,7 @@ namespace gpk
 
 		void										SetPosition						(uint32_t iBody, const ::gpk::n3f32 & newPosition)			{
 			::gpk::SBodyCenter								& bodyCenter					= Centers[iBody];
-			if(0 == memcmp(&newPosition.x, &bodyCenter.Position.x, sizeof(::gpk::n3<float>)))
+			if(0 == memcmp(&newPosition.x, &bodyCenter.Position.x, sizeof(::gpk::n3f32)))
 				return;
 			bodyCenter.Position							= newPosition;
 			::gpk::SBodyFlags								& bodyFlags						= Flags[iBody];
@@ -221,7 +221,7 @@ namespace gpk
 		}
 		void										SetVelocity						(uint32_t iBody, const ::gpk::n3f32 & newVelocity)			{
 			::gpk::SBodyForces								& bodyForces					= Forces[iBody];
-			if(0 == memcmp(&newVelocity.x, &bodyForces.Velocity.x, sizeof(::gpk::n3<float>)))
+			if(0 == memcmp(&newVelocity.x, &bodyForces.Velocity.x, sizeof(::gpk::n3f32)))
 				return;
 			bodyForces.Velocity							= newVelocity;
 			::gpk::SBodyFlags								& bodyFlags						= Flags[iBody];
@@ -231,7 +231,7 @@ namespace gpk
 		}
 		void										SetAcceleration					(uint32_t iBody, const ::gpk::n3f32 & acceleration)			{
 			::gpk::SBodyForces								& bodyForces					= Forces[iBody];
-			if(0 == memcmp(&acceleration.x, &bodyForces.Acceleration.x, sizeof(::gpk::n3<float>)))
+			if(0 == memcmp(&acceleration.x, &bodyForces.Acceleration.x, sizeof(::gpk::n3f32)))
 				return;
 			bodyForces.Acceleration						= acceleration;
 			::gpk::SBodyFlags								& bodyFlags						= Flags[iBody];
@@ -239,7 +239,7 @@ namespace gpk
 		}
 		void										SetRotation						(uint32_t iBody, const ::gpk::n3f32 & newRotation)			{
 			::gpk::SBodyForces								& bodyForces					= Forces[iBody];
-			if(0 == memcmp(&newRotation.x, &bodyForces.Rotation.x, sizeof(::gpk::n3<float>)))
+			if(0 == memcmp(&newRotation.x, &bodyForces.Rotation.x, sizeof(::gpk::n3f32)))
 				return;
 			bodyForces.Rotation							= newRotation;
 			::gpk::SBodyFlags								& bodyFlags						= Flags[iBody];

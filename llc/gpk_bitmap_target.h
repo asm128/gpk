@@ -201,8 +201,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static	::gpk::error_t		rasterLine									(::gpk::view2d<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::line2<_tCoord>& line, gpk_raster_callback callback)				{
-		::gpk::n2<float>														A											= line.A.template Cast<float>();
-		::gpk::n2<float>														B											= line.B.template Cast<float>();
+		::gpk::n2f32														A											= line.A.f32();
+		::gpk::n2f32														B											= line.B.f32();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -212,7 +212,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f32													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -249,8 +249,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord, typename _tColor>
 	static	::gpk::error_t		drawLine									(::gpk::view2d<_tColor>& target, const _tColor& value, const ::gpk::line2<_tCoord>& line)				{
-		::gpk::n2<float>														A											= line.A.template Cast<float>();
-		::gpk::n2<float>														B											= line.B.template Cast<float>();
+		::gpk::n2f32														A											= line.A.f32();
+		::gpk::n2f32														B											= line.B.f32();
 		if(line.A.x == line.B.x)
 			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
 		else if(line.A.y == line.B.y)
@@ -265,7 +265,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f32													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int32_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int32_t																		y											= (int32_t)A.y;
@@ -302,8 +302,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	template<typename _tCoord>
 	static	::gpk::error_t		drawLine									(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::line2<_tCoord>& line, ::gpk::apod<::gpk::n2<int16_t>>& out_Points)				{
-		::gpk::n2<float>														A											= line.A.template Cast<float>();
-		::gpk::n2<float>														B											= line.B.template Cast<float>();
+		::gpk::n2f32														A											= line.A.template Cast<float>();
+		::gpk::n2f32														B											= line.B.template Cast<float>();
 		const bool																	steep										= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::std::swap(A.x, A.y);
@@ -313,7 +313,7 @@ namespace gpk
 			::std::swap(A.x, B.x);
 			::std::swap(A.y, B.y);
 		}
-		const ::gpk::n2<float>													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f32													d											= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float																		error										= d.x / 2.0f;
 		const int16_t																ystep										= (A.y < B.y) ? 1 : -1;
 		int16_t																		y											= (int16_t)A.y;

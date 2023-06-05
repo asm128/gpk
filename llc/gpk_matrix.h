@@ -464,11 +464,11 @@ namespace gpk
 			return fDet;
 		}
 
-		_tMat4&								FromRotationDir(const ::gpk::n3<float> & direction, const ::gpk::n3<float> & up = {0,1,0}) {
-			::gpk::n3<float> xaxis = up.Cross(direction);
+		_tMat4&								FromRotationDir(const ::gpk::n3f32 & direction, const ::gpk::n3f32 & up = {0,1,0}) {
+			::gpk::n3f32 xaxis = up.Cross(direction);
 			xaxis.Normalize();
 
-			::gpk::n3<float> yaxis = direction.Cross(xaxis);
+			::gpk::n3f32 yaxis = direction.Cross(xaxis);
 			yaxis.Normalize();
 
 			_11 = xaxis.x;

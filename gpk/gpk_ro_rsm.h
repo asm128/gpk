@@ -84,7 +84,7 @@ namespace gpk
 		::gpk::ai32								IdChildren		;
 	};
 
-	::gpk::error_t							rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view_array<::gpk::SModelNodeRSM>& out_generated);
+	::gpk::error_t							rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view<::gpk::SModelNodeRSM>& out_generated);
 } // namespace
 
 #endif // GPK_RSM_H_02938402983

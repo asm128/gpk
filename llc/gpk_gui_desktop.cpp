@@ -161,7 +161,7 @@ static		::gpk::error_t												clearMenuHierarchy						(::gpk::SGUI & gui, ::
 		::viewportUpdate(gui, desktop, input, iViewport);
 	}
 
-	::gpk::apod<uint32_t>													controlsToProcess						= {};
+	::gpk::au32													controlsToProcess						= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 
 	bool																			inControlArea						= false;

@@ -599,7 +599,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 			::gpk::error_t										gpk::guiProcessInput									(::gpk::SGUI & gui, const ::gpk::SInput& input, ::gpk::v1<const ::gpk::SSysEvent> sysEvents)	{
 	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
 	::gpk::error_t														controlHovered											= -1;
-	::gpk::apod<uint32_t>											rootControlsToProcess									= {};
+	::gpk::au32											rootControlsToProcess									= {};
 	rootControlsToProcess.resize(1000);
 	rootControlsToProcess.clear();
 	(void)sysEvents;
@@ -678,7 +678,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 	return 0;
 }
 
-			::gpk::error_t										gpk::guiGetProcessableControls							(const ::gpk::SGUI & gui, ::gpk::apod<uint32_t>& controlIndices)													{
+			::gpk::error_t										gpk::guiGetProcessableControls							(const ::gpk::SGUI & gui, ::gpk::au32& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState											& controlState											= gui.Controls.States[iControl];
 		if(controlState.Unused || gui.Controls.Modes[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
@@ -709,7 +709,7 @@ static		::gpk::error_t										controlProcessInput										(::gpk::SGUI & gui,
 }
 
 ::gpk::error_t						gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(int32_t iControl)> & funcOnExecute) {
-	::gpk::apod<uint32_t>				controlsToProcess			= {};
+	::gpk::au32				controlsToProcess			= {};
 	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
 }

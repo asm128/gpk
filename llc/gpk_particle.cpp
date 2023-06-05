@@ -3,8 +3,8 @@
 
 ::gpk::error_t	gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
 	for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
-		::gpk::n3<float>							& direction			= Direction	[iShot];
-		::gpk::n3<float>							& position			= Position	[iShot];
+		::gpk::n3f32							& direction			= Direction	[iShot];
+		::gpk::n3f32							& position			= Position	[iShot];
 		float											& speed				= Speed		[iShot];
 		position									+= direction * speed * secondsLastFrame;
 	}

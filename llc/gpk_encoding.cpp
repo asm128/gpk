@@ -179,7 +179,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 
 ::gpk::error_t									gpk::digest								(const ::gpk::vcu8 & input, ::gpk::au32 & digest)		{
 	uint32_t											x								= 0;
-	::gpk::apod<uint32_t>								filtered						= {};
+	::gpk::au32								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
@@ -214,7 +214,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 
 ::gpk::error_t									gpk::digest													(const ::gpk::vcu8 & input, ::gpk::ac & digest)		{
 	uint32_t											x								= 0;
-	::gpk::apod<uint32_t>								filtered						= {};
+	::gpk::au32								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])

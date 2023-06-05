@@ -179,8 +179,8 @@ namespace gpk {
 		int32_t											Transform						= -1;
 		int32_t											Color							= -1;
 
-		::gpk::apod<uint32_t>						Textures						= {};
-		::gpk::apod<uint32_t>						Lights							= {};
+		::gpk::au32						Textures						= {};
+		::gpk::au32						Lights							= {};
 
 		uint32_t										PerFaceNormal					: 1;
 		uint32_t										PerFaceColor					: 1;
@@ -271,9 +271,9 @@ namespace gpk {
 	::gpk::error_t					nodeRendererDrawNode
 		( ::gpk::SNodeRenderer			& renderer
 		, uint32_t						iNode
-		, const ::gpk::m4<float>		& view
-		, const ::gpk::m4<float>		& projection
-		, const ::gpk::m4<float>		& viewProjection
+		, const ::gpk::m4f32		& view
+		, const ::gpk::m4f32		& projection
+		, const ::gpk::m4f32		& viewProjection
 		, ::gpk::view2d<::gpk::bgra>	target_image
 		, ::gpk::view2d<uint32_t>		target_depth
 		);

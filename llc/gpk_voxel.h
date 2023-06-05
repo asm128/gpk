@@ -30,7 +30,7 @@ namespace gpk
 		0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 	};
 
-	stacxpr	::gpk::n3<float>				VOXEL_VERTICES		[8]		= 
+	stacxpr	::gpk::n3f32				VOXEL_VERTICES		[8]		= 
 			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
 			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 

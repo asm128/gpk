@@ -270,8 +270,7 @@ namespace gpk
 	typedef	::gpk::aview<int32_t	>	aview_int32			, av1i32, avi32;
 	typedef	::gpk::aview<int64_t	>	aview_int64			, av1i64, avi64;
 
-	// view_array<const> common typedefs
-	//typedef ::gpk::view_array<const char		>	view_const_string	;
+	// view<const> common typedefs
 	typedef	::gpk::aview<const uchar_t	>	aview_const_uchar	, av1cuc, avcuc;
 	typedef	::gpk::aview<const char		>	aview_const_char	, av1cc, avcc;
 	typedef	::gpk::aview<const float	>	aview_const_float32	, av1cf32, av1cf, avcf32, avcf;

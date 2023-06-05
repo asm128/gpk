@@ -38,10 +38,10 @@ namespace gpk
 		}
 #elif defined(GPK_XCB)
 		typedef	::gpk::bgra					TOSWindowNativeTexel;
-		xcb_connection_t					* Connection				= {};
-		xcb_gcontext_t						GC							= {};
-		xcb_drawable_t						IdDrawable					= {};
-		xcb_drawable_t						IdDrawableBackPixmap		= {};
+			xcb_connection_t					* Connection				= {};
+			xcb_gcontext_t						GC							= {};
+			xcb_drawable_t						IdDrawable					= {};
+			xcb_drawable_t						IdDrawableBackPixmap		= {};
 
 											~SWindowPlatformDetail		()	{
 			if(uint32_t(-1) != GC) {

@@ -14,21 +14,21 @@ namespace gpk
 	};
 
 	struct SLightsDirectional {
-							::gpk::apod<::gpk::n3<float>>					Directions									= {};
+							::gpk::apod<::gpk::n3f32>					Directions									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsPoint {
-							::gpk::apod<::gpk::n3<float>>					Directions									= {};
-							::gpk::apod<::gpk::n3<float>>					Positions									= {};
-							::gpk::apod<::gpk::n3<float>>					Attenuation									= {};
+							::gpk::apod<::gpk::n3f32>					Directions									= {};
+							::gpk::apod<::gpk::n3f32>					Positions									= {};
+							::gpk::apod<::gpk::n3f32>					Attenuation									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
 
 	struct SLightsSpot {
-							::gpk::apod<::gpk::n3<float>>					Directions									= {};
-							::gpk::apod<::gpk::n3<float>>					Positions									= {};
-							::gpk::apod<::gpk::n3<float>>					Attenuation									= {};
+							::gpk::apod<::gpk::n3f32>					Directions									= {};
+							::gpk::apod<::gpk::n3f32>					Positions									= {};
+							::gpk::apod<::gpk::n3f32>					Attenuation									= {};
 							::gpk::apod<float>									SpotPower									= {};
 							::gpk::SColorsMaterial									Colors										= {};
 	};
@@ -67,13 +67,13 @@ namespace gpk
 	};
 
 	struct SSceneTransforms {
-							::gpk::m4<float>									Viewport									= {};
-							::gpk::m4<float>									ViewportInverse								= {};
-							::gpk::m4<float>									ViewportInverseCentered						= {};
-							::gpk::m4<float>									FieldOfView									= {};
-							::gpk::m4<float>									FinalProjection								= {};
-							::gpk::m4<float>									FinalProjectionInverse						= {};
-							::gpk::m4<float>									View										= {};
+							::gpk::m4f32									Viewport									= {};
+							::gpk::m4f32									ViewportInverse								= {};
+							::gpk::m4f32									ViewportInverseCentered						= {};
+							::gpk::m4f32									FieldOfView									= {};
+							::gpk::m4f32									FinalProjection								= {};
+							::gpk::m4f32									FinalProjectionInverse						= {};
+							::gpk::m4f32									View										= {};
 	};
 
 	struct SScene {

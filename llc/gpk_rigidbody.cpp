@@ -28,7 +28,7 @@
 	return 0; 
 }
 
-void								gpk::transformInertiaTensor	(::gpk::m3<float> & iitWorld, const ::gpk::m3<float> &iitBody, const ::gpk::m4<float> &rotmat)		{
+void								gpk::transformInertiaTensor	(::gpk::m3<float> & iitWorld, const ::gpk::m3<float> &iitBody, const ::gpk::m4f32 &rotmat)		{
 	const float								t4							= rotmat._11*iitBody._11 + rotmat._21*iitBody._12 + rotmat._31*iitBody._13;
 	const float								t9							= rotmat._11*iitBody._21 + rotmat._21*iitBody._22 + rotmat._31*iitBody._23;
 	const float								t14							= rotmat._11*iitBody._31 + rotmat._21*iitBody._32 + rotmat._31*iitBody._33;

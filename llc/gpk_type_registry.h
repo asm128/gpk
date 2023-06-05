@@ -7,7 +7,7 @@ namespace gpk
 {
 	struct STypeRegistry {
 		::gpk::apod<::gpk::vcc>				Names;
-		::gpk::apod<uint32_t>				MemberCount;
+		::gpk::au32				MemberCount;
 	};
 
 	::gpk::STypeRegistry&				typeRegistrySingleton					()		noexcept;

@@ -53,16 +53,16 @@ namespace gpk
 		::gpk::v2cbgra				Surface				; 
 	};
 
-	typedef ::gpk::error_t					(TFuncPixelShader)
+	typedef ::gpk::error_t		(TFuncPixelShader)
 		( const ::gpk::SEngineSceneConstants	& constants
 		, const ::gpk::SPSIn					& inPS
 		, ::gpk::bgra							& outputPixel
 		);
 
 	struct SVSCache {
-		::gpk::apod<::gpk::trif32>				TriangleWeights			= {};
-		::gpk::apod<::gpk::n2i16>				SolidPixelCoords		= {};
-		::gpk::apod<::gpk::n3f>					WireframePixelCoords	= {};
+		::gpk::apod<::gpk::trif32>	TriangleWeights			= {};
+		::gpk::apod<::gpk::n2i16>	SolidPixelCoords		= {};
+		::gpk::apod<::gpk::n3f>		WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {
@@ -74,15 +74,15 @@ namespace gpk
 	};
 
 	struct SEngineRenderCache {
-		::gpk::SVSOutput						VertexShaderOutput		= {};
-		::gpk::SVSCache							VertexShaderCache		= {};
+		::gpk::SVSOutput			VertexShaderOutput		= {};
+		::gpk::SVSCache				VertexShaderCache		= {};
 	};
 
 	struct SSkin {
-		::gpk::SRenderMaterial					Material;
-		::gpk::apod<uint32_t>					Textures;
+		::gpk::SRenderMaterial		Material;
+		::gpk::au32					Textures;
 
-		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+		::gpk::error_t						Save			(::gpk::au8 & output) const { 
 			gpk_necs(::gpk::savePOD(output, Material));
 			gpk_necs(::gpk::saveView(output, Textures));
 			return 0;
@@ -131,7 +131,7 @@ namespace gpk
 		::gpk::SRenderNodeManager			RenderNodes				= {};
 		::gpk::SEngineRenderCache			RenderCache				= {};
 
-		::gpk::error_t						Save					(::gpk::apod<uint8_t> & output)		const	{
+		::gpk::error_t						Save					(::gpk::au8 & output)		const	{
 			gpk_necs(Graphics		->Save(output));
 			gpk_necs(RenderNodes	 .Save(output));
 			//gpk_necs(RenderCache	 .Save(output));

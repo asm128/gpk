@@ -13,7 +13,7 @@ struct SRSMHeader {	// RSM Header
 #pragma pack(pop)
 
 
-			::gpk::error_t								analyzeArray												(const ::gpk::view_array<uint8_t>& input) {
+			::gpk::error_t								analyzeArray												(const ::gpk::view<uint8_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
@@ -56,7 +56,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view_array<uint8_t>	& input)							{
+			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<uint8_t>	& input)							{
 	::gpk::view_stream<const uint8_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
@@ -125,7 +125,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
-				::gpk::apod<::gpk::n3<float>>						& modelVertices												= newNode.Vertices;
+				::gpk::apod<::gpk::n3f32>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
 				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
 			}
@@ -204,7 +204,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return rsmFileLoad(loaded, fileInMemory);
 }
 
-			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view_array<::gpk::SModelNodeRSM>& out_meshes)			{
+			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
 	for(uint32_t iTex = 0, texCount = rsmData.TextureNames.size(); iTex < texCount; ++iTex) {
 		for(uint32_t iNode = 0, countNodes = rsmData.Nodes.size(); iNode < countNodes; ++iNode) {
 			const ::gpk::SRSMNode										& rsmNode													= rsmData.Nodes[iNode];

@@ -12,12 +12,12 @@ int									gpk::updateEntityTransforms
 	, ::gpk::SRenderNodeManager				& renderNodes
 	)
 {
-	const ::gpk::pobj<::gpk::apod<uint32_t>>	& children						= managedEntities.Children[iEntity];
+	const ::gpk::pobj<::gpk::au32>	& children						= managedEntities.Children[iEntity];
 	if(-1 != entity.RenderNode) {
 		::gpk::SRenderNodeTransforms				& transforms					= renderNodes.Transforms[entity.RenderNode];
-		::gpk::m4<float>							& worldTransform				= transforms.World;
+		::gpk::m4f32								& worldTransform				= transforms.World;
 		if(-1 == entity.RigidBody)
-			worldTransform							= ::gpk::m4<float>::GetIdentity();
+			worldTransform							= ::gpk::m4f32::GetIdentity();
 		else {
 			integrator.GetTransform(entity.RigidBody, worldTransform);
 		}
@@ -36,7 +36,7 @@ int									gpk::updateEntityTransforms
 		transforms.WorldInverseTranspose		= transforms.WorldInverse.GetTranspose();
 	}
 	else if(-1 != entity.RigidBody) {
-		::gpk::m4<float>							& worldTransform				= integrator.TransformsLocal[entity.RigidBody];
+		::gpk::m4f32							& worldTransform				= integrator.TransformsLocal[entity.RigidBody];
 		integrator.GetTransform(entity.RigidBody, worldTransform);
 		if(-1 != entity.Parent) {
 			const ::gpk::SVirtualEntity					& entityParent					= managedEntities.Entities[entity.Parent];
@@ -95,7 +95,7 @@ int									gpk::updateEntityTransforms
 
 ::gpk::error_t						gpk::SEngine::CreateBox				()	{
 	int32_t									iEntity								= this->Entities.Create();
-	Entities.Names[iEntity]		= ::gpk::vcs{"Box"};
+	Entities.Names[iEntity]				= ::gpk::vcs{"Box"};
 	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
 	entity.RenderNode					= Scene->RenderNodes.Create();
 	entity.RigidBody					= this->Integrator.Create();
@@ -173,10 +173,10 @@ int									gpk::updateEntityTransforms
 		slice.Slice							= {offsetIndex, 6};
 		offsetIndex							+= slice.Slice.Count;
 
-		int32_t									iFaceEntity				= this->Entities.Create();
+		int32_t									iFaceEntity				= Entities.Create();
 		uint32_t								iFaceRenderNode			= Scene->RenderNodes.Create();
-		::gpk::SVirtualEntity					& faceEntity			= this->Entities[iFaceEntity];
-		::gpk::SRenderNode						& faceRenderNode		= this->Scene->RenderNodes.RenderNodes[iFaceRenderNode];
+		::gpk::SVirtualEntity					& faceEntity			= Entities[iFaceEntity];
+		::gpk::SRenderNode						& faceRenderNode		= Scene->RenderNodes.RenderNodes[iFaceRenderNode];
 
 		faceRenderNode.Mesh					= iMesh;
 		faceRenderNode.Slice				= iFace;
@@ -198,8 +198,8 @@ int									gpk::updateEntityTransforms
 	::gpk::SGeometryIndexedTriangles		geometry;
 	::gpk::geometryBuildSphere(geometry, 24, 24, .5f, {});
 
-	int32_t									iEntity								= this->Entities.Create();
-	Entities.Names[iEntity]		= ::gpk::vcs{"Sphere"};
+	int32_t									iEntity								= Entities.Create();
+	Entities.Names[iEntity]				= ::gpk::vcs{"Sphere"};
 	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
 	entity.RenderNode					= Scene->RenderNodes.Create();;
 	Integrator.BoundingVolumes[entity.RigidBody = this->Integrator.Create()].HalfSizes = {0.5f, 0.5f, 0.5f};

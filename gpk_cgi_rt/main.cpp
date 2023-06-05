@@ -93,7 +93,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::view_array<::gpk::view_const_char>		keyvalviews			= runtimeValues.QueryStringElements;
+		const ::gpk::view<::gpk::view_const_char>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 

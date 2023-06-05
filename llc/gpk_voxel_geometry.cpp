@@ -3,11 +3,11 @@
 
 static ::gpk::error_t								geometryVoxelFace
 	( ::gpk::SGeometryIndexedTriangles						& geometry
-	, const ::gpk::n3<float>							& voxelPos
-	, const ::gpk::view<const ::gpk::n3<float>>	& rawVertices
+	, const ::gpk::n3f32							& voxelPos
+	, const ::gpk::view<const ::gpk::n3f32>	& rawVertices
 	, const ::gpk::view<const uint8_t>				& rawIndices
 	) {
-	::gpk::n3<float>									vertices [4]				= {}; 
+	::gpk::n3f32									vertices [4]				= {}; 
 	uint32_t												indices  [6]				= {}; 
 	uint32_t												offsetVertex				= geometry.Positions.size();
 	for(uint32_t iVertex = 0; iVertex < 4; ++iVertex)
@@ -44,8 +44,8 @@ static ::gpk::error_t								geometryVoxelFace
 
 		const ::gpk::n3<int8_t>									faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
 		::gpk::view<const uint8_t>						rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
-		::gpk::view<const ::gpk::n3<float>>				rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
-		::gpk::view<const ::gpk::n2<float>>				rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
+		::gpk::view<const ::gpk::n3f32>				rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
+		::gpk::view<const ::gpk::n2f32>				rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
 		geometry.Normals.push_back(::gpk::VOXEL_NORMALS[iFace]);
 		geometry.TextureCoords.append(rawTexCoord);
@@ -57,7 +57,7 @@ static ::gpk::error_t								geometryVoxelFace
 			newGroup.Modes.IndexMode				= ::gpk::INDEX_MODE_LIST;
 			newGroup.Modes.PrimitiveType			= ::gpk::PRIMITIVE_TYPE_TRIANGLE;
 			newGroup.Slice.Offset					= (uint16_t)geometry.PositionIndices.size();
-			::gpk::SMinMax<::gpk::n3<float>>		aabbLimits					= {};
+			::gpk::SMinMax<::gpk::n3f32>		aabbLimits					= {};
 
 			for(uint32_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
 				const ::gpk::SVoxel<uint8_t>				voxel						= voxels[iVoxel];

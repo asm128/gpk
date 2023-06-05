@@ -254,20 +254,20 @@ static ::gpk::error_t					createFromOBJ			(::gpk::SComponentScene & scene, ::gpk
 				}
 		}
 		else if(command == ::gpk::vcs{"v"}) {
-			::gpk::n3<float>						vertex			= {};
+			::gpk::n3f32						vertex			= {};
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
 				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis])), "%s", "");
 			info_printf("Vertex found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);
 			//scene.Renderer.Vertices[scene.Renderer.Nodes[newGroup.RenderNodes[0]].Vertices].push_back(vertex);
 		}
 		else if(command == ::gpk::vcs{"vt"}) {
-			::gpk::n2<float>						texCoord		= {};
+			::gpk::n2f32						texCoord		= {};
 			for(uint32_t iAxis = 0; iAxis < 2; ++iAxis)
 				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&texCoord.x)[iAxis])), "%s", "");
 			info_printf("TexCoord found: [%f, %f, %f].", texCoord.x, texCoord.y);
 		}
 		else if(command == ::gpk::vcs{"vn"}) {
-			::gpk::n3<float>						vertex			= {};
+			::gpk::n3f32						vertex			= {};
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
 				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis])), "%s", "");
 			info_printf("Normal found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);

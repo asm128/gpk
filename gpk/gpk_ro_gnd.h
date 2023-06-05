@@ -71,7 +71,7 @@ namespace gpk
 	};
 
 	//709655609
-	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view_array<uint8_t>	& input);
+	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, const ::gpk::view<uint8_t>	& input);
 	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, FILE								* input);
 	::gpk::error_t							gndFileLoad						(SGNDFileContents& loaded, const ::gpk::vcs	& input);
 
@@ -139,7 +139,7 @@ namespace gpk
 		, ::gpk::view2d<::gpk::STileMapping>		& out_mapping
 		);
 
-	::gpk::error_t							blendGNDNormals						(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view_array<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view_array<::gpk::SModelNodeGND> & gndModelNodes);
+	::gpk::error_t							blendGNDNormals						(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

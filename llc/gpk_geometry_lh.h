@@ -8,8 +8,8 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tAxis, typename _tColor> struct SLightPoint2{ ::gpk::n2<float> Position; _tColor Color; };
-	template<typename _tAxis, typename _tColor> struct SLightPoint3{ ::gpk::n3<float> Position; _tColor Color; };
+	template<typename _tAxis, typename _tColor> struct SLightPoint2{ ::gpk::n2f32 Position; _tColor Color; };
+	template<typename _tAxis, typename _tColor> struct SLightPoint3{ ::gpk::n3f32 Position; _tColor Color; };
 
 	struct SImageTag {
 		 COLOR_TYPE											ColorType;
@@ -31,10 +31,10 @@ namespace gpk
 	};
 
 	struct SGeometryIndexedTriangles {
-		::gpk::apod<::gpk::n3<float>>				Positions;
-		::gpk::apod<::gpk::n3<float>>				Normals;
-		::gpk::apod<::gpk::n2<float>>				TextureCoords;
-		::gpk::apod<uint32_t>						PositionIndices;
+		::gpk::apod<::gpk::n3f32>				Positions;
+		::gpk::apod<::gpk::n3f32>				Normals;
+		::gpk::apod<::gpk::n2f32>				TextureCoords;
+		::gpk::au32						PositionIndices;
 	};
 
 	GDEFINE_ENUM_TYPE (MODEL_NODE_TYPE, uint8_t);
@@ -95,7 +95,7 @@ namespace gpk
 
 	struct SModelQuads {
 		::gpk::apod<::gpk::tri3<float>>	Triangles;
-		::gpk::apod<::gpk::n3<float>>			Normals;
+		::gpk::apod<::gpk::n3f32>			Normals;
 		::gpk::apod<::gpk::tri2<float>>	TextureCoords;
 		::gpk::apod<::gpk::SGeometryGroup>		GeometryGroups;
 	};
@@ -108,21 +108,21 @@ namespace gpk
 	};
 
 
-	int											geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::n3<float> & scale);
-	int											geometryBuildGrid				(::gpk::SGeometryQuads & geometry, ::gpk::n2<uint32_t> gridSize, ::gpk::n2<float> gridCenter, const ::gpk::n3<float> & scale);
-	int											geometryBuildSphere				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter);
-	int											geometryBuildCylinder			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3<float> & gridCenter, const ::gpk::n3<float> & scale);
-	int											geometryBuildHalfHelix			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter, const ::gpk::n3<float> & scale);
-	int											geometryBuildHelix				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter, const ::gpk::n3<float> & scale);
-	int											geometryBuildTender				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter, const ::gpk::n3<float> & scale);
-	int											geometryBuildFigure0			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter);
-	int											geometryBuildFigure1			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter);
+	int											geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale);
+	int											geometryBuildGrid				(::gpk::SGeometryQuads & geometry, ::gpk::n2<uint32_t> gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
+	int											geometryBuildSphere				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
+	int											geometryBuildCylinder			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
+	int											geometryBuildHalfHelix			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
+	int											geometryBuildHelix				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
+	int											geometryBuildTender				(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
+	int											geometryBuildFigure0			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
+	int											geometryBuildFigure1			(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
 
-	int											geometryBuildSphere				(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter);
-	int											geometryBuildSphere				(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3<float> & gridCenter);
-	int											geometryBuildCylinder			(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3<float> & gridCenter, const ::gpk::n3<float> & scale, bool negateNormals, float diameterRatio = 1.0f);
+	int											geometryBuildSphere				(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
+	int											geometryBuildSphere				(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
+	int											geometryBuildCylinder			(::gpk::SGeometryIndexedTriangles & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale, bool negateNormals, float diameterRatio = 1.0f);
 
-	int											geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::n3<float> & scale, const ::gpk::n3<float> & translation);
+	int											geometryBuildCube				(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale, const ::gpk::n3f32 & translation);
 #pragma pack(push, 1)
 	struct STile {
 		float										Height[4]	;
@@ -133,7 +133,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 	int											geometryBuildTileListFromImage	(::gpk::view2d<const ::gpk::bgra> image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
-	int											geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> image, ::gpk::n2<float> gridCenter, const ::gpk::n3<float> & scale);
+	int											geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> image, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
 
 #pragma pack(push, 1)
 	struct SRenderMaterialPaletted {
@@ -143,7 +143,7 @@ namespace gpk
 	};
 
 	struct SAABBGeometry {
-		::gpk::n3<float>							Vertices	[8]			= {};
+		::gpk::n3f32							Vertices	[8]			= {};
 	};
 #pragma pack(pop)
 

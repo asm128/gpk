@@ -18,7 +18,7 @@ namespace gpk
 	};
 
 	struct SCameraRange {
-		SNearFar		NearFar		;
+		::gpk::SNearFar	NearFar		;
 		double			Angle		;
 	};
 #pragma pack(pop)

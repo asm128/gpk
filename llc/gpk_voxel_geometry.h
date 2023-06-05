@@ -8,8 +8,8 @@ namespace gpk
 {
 	struct SVoxelGeometry {
 		::gpk::SGeometryIndexedTriangles					Geometry			= {};
-		::gpk::apod<uint32_t>							VoxelIndices		= {};
-		::gpk::apod<uint32_t>							FaceIndices			= {};
+		::gpk::au32							VoxelIndices		= {};
+		::gpk::au32							FaceIndices			= {};
 		::gpk::apod<::gpk::SRenderMaterialPaletted>	Materials			= {};
 		::gpk::apod<::gpk::SGeometryGroup>				GeometrySlices	[6]	= {};
 		::gpk::SAABBGeometry								AABBModel			= {};

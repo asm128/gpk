@@ -41,8 +41,8 @@ namespace gpk
 
 	struct SGeometryMesh {
 		::gpk::SMeshDescription				Desc;
-		::gpk::apod<uint32_t>				GeometryBuffers;
-		::gpk::apod<uint32_t>				ConstantBuffers;
+		::gpk::au32				GeometryBuffers;
+		::gpk::au32				ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
 		::gpk::error_t						Save			(::gpk::au8 & output) const { 

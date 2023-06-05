@@ -12,7 +12,7 @@
 
 		::gpk::pobj<::gpk::SRenderBuffer>			engineBufferIndices;
 		::gpk::apobj<::gpk::SRenderBuffer>			engineBufferVertices;
-		::gpk::apod<uint32_t>						layoutOffsets;
+		::gpk::au32						layoutOffsets;
 
 		uint32_t										vertexSize					= 0;
 		for(uint32_t iBuffer = 0; iBuffer < mesh->GeometryBuffers.size(); ++iBuffer) {

@@ -27,9 +27,9 @@ namespace gpk
 	};
 
 	struct SRenderNodeTransforms {
-		::gpk::m4f					World					= ::gpk::m4<float>::GetIdentity();
-		::gpk::m4f					WorldInverse			= ::gpk::m4<float>::GetIdentity();
-		::gpk::m4f					WorldInverseTranspose	= ::gpk::m4<float>::GetIdentity();
+		::gpk::m4f					World					= ::gpk::m4f32::GetIdentity();
+		::gpk::m4f					WorldInverse			= ::gpk::m4f32::GetIdentity();
+		::gpk::m4f					WorldInverseTranspose	= ::gpk::m4f32::GetIdentity();
 	};
 	
 	GDEFINE_ENUM_TYPE(LIGHT_TYPE, uint8_t);
@@ -80,10 +80,10 @@ namespace gpk
 		::gpk::apobj<::gpk::apod<::gpk::SLightPoint			>>	LightsPoint			= {};
 		::gpk::apobj<::gpk::apod<::gpk::SLightSpot			>>	LightsSpot			= {};
 
-		const ::gpk::SRenderNode&								operator[]		(uint32_t index)							const	{ return RenderNodes[index]; }
-		SRenderNode&											operator[]		(uint32_t index)									{ return RenderNodes[index]; }
+		const ::gpk::SRenderNode&			operator[]		(uint32_t index)							const	{ return RenderNodes[index]; }
+		SRenderNode&						operator[]		(uint32_t index)									{ return RenderNodes[index]; }
 
-		uint32_t												size			()											const	{ return RenderNodes.size(); }
+		uint32_t							size			()											const	{ return RenderNodes.size(); }
 
 		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
 			gpk_necs(::gpk::saveView(output, RenderNodes	));
@@ -118,62 +118,64 @@ namespace gpk
 			gpk_necall(Lights	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
 			gpk_necall(Cameras	.resize(RenderNodes.size()), "size: %i", RenderNodes.size());
 			for(uint32_t iEntity = 0; iEntity < RenderNodes.size(); ++iEntity) {
-				if(!Lights	[iEntity]) Lights	[iEntity].create();
-				if(!Cameras	[iEntity]) Cameras	[iEntity].create();
+				if(!Lights	[iEntity]) 
+					ree_if(0 == Lights	[iEntity].create(), "iEntity: %i", iEntity);
+				if(!Cameras	[iEntity]) 
+					ree_if(0 == Cameras	[iEntity].create(), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadView(input, *Lights	[iEntity]), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadView(input, *Cameras	[iEntity]), "iEntity: %i", iEntity);
 			}
 
 			gpk_necs(LightsDirectional.resize(*(uint32_t*)input.begin()));
-			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			input								= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			for(uint32_t iEntity = 0; iEntity < LightsDirectional.size(); ++iEntity) {
 				if(!LightsDirectional[iEntity])
-					LightsDirectional[iEntity].create();
+					ree_if(0 == LightsDirectional[iEntity].create(), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadView(input, *LightsDirectional[iEntity]), "iEntity: %i", iEntity);
 			}
 
 			gpk_necs(LightsPoint.resize(*(uint32_t*)input.begin()));
-			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			input								= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			for(uint32_t iEntity = 0; iEntity < LightsPoint.size(); ++iEntity) {
 				if(!LightsPoint[iEntity])
-					LightsPoint[iEntity].create();
+					ree_if(0 == LightsPoint[iEntity].create(), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadView(input, *LightsPoint[iEntity]), "iEntity: %i", iEntity);
 			}
 
 			gpk_necs(LightsSpot.resize(*(uint32_t*)input.begin()));
-			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			input								= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			for(uint32_t iEntity = 0; iEntity < LightsSpot.size(); ++iEntity) {
 				if(!LightsSpot[iEntity])
-					LightsSpot[iEntity].create();
+					ree_if(0 == LightsSpot[iEntity].create(), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadView(input, *LightsSpot[iEntity]), "iEntity: %i", iEntity);
 			}
 			return 0;
 		}
-		::gpk::error_t											Create		()	{
-			Transforms			.push_back({});
-			BaseTransforms		.push_back({});
-			Lights				.push_back({});
-			Cameras				.push_back({});
-			Flags				.push_back({});
-			return RenderNodes	.push_back({(uint32_t)-1});
+		::gpk::error_t						Create		()	{
+			gpk_necs(Transforms		.push_back({}));
+			gpk_necs(BaseTransforms	.push_back({}));
+			gpk_necs(Lights			.push_back({}));
+			gpk_necs(Cameras		.push_back({}));
+			gpk_necs(Flags			.push_back({}));
+			return RenderNodes.push_back({(uint32_t)-1});
 		}
 
-		::gpk::error_t											Clone		(uint32_t iNode)	{
-			Transforms			.push_back(::gpk::SRenderNodeTransforms					{Transforms		[iNode]});
-			BaseTransforms		.push_back(::gpk::SRenderNodeTransforms					{BaseTransforms	[iNode]});
-			Lights				.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]});
-			Cameras				.push_back(::gpk::pobj<::gpk::apod<::gpk::SCamera	>>	{Cameras		[iNode]});
-			Flags				.push_back(::gpk::SRenderNodeFlags						{Flags			[iNode]});
-			return RenderNodes	.push_back(::gpk::SRenderNode							{RenderNodes	[iNode]});
+		::gpk::error_t						Clone		(uint32_t iNode)	{
+			gpk_necs(Transforms		.push_back(::gpk::SRenderNodeTransforms					{Transforms		[iNode]}));
+			gpk_necs(BaseTransforms	.push_back(::gpk::SRenderNodeTransforms					{BaseTransforms	[iNode]}));
+			gpk_necs(Lights			.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]}));
+			gpk_necs(Cameras		.push_back(::gpk::pobj<::gpk::apod<::gpk::SCamera	>>	{Cameras		[iNode]}));
+			gpk_necs(Flags			.push_back(::gpk::SRenderNodeFlags						{Flags			[iNode]}));
+			return RenderNodes.push_back(::gpk::SRenderNode{RenderNodes	[iNode]});
 		}
 
-		::gpk::error_t											Delete		(uint32_t indexNode)	{
-			Transforms			.remove_unordered(indexNode);
-			BaseTransforms		.remove_unordered(indexNode);
-			Lights				.remove_unordered(indexNode);
-			Cameras				.remove_unordered(indexNode);
-			Flags				.remove_unordered(indexNode);
-			return RenderNodes	.remove_unordered(indexNode);
+		::gpk::error_t						Delete		(uint32_t indexNode)	{
+			gpk_necs(Transforms			.remove_unordered(indexNode));
+			gpk_necs(BaseTransforms		.remove_unordered(indexNode));
+			gpk_necs(Lights				.remove_unordered(indexNode));
+			gpk_necs(Cameras			.remove_unordered(indexNode));
+			gpk_necs(Flags				.remove_unordered(indexNode));
+			return RenderNodes.remove_unordered(indexNode);
 		}
 	};
 } // namespace
