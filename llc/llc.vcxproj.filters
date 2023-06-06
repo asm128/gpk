@@ -88,6 +88,9 @@
     <Filter Include="pointer">
       <UniqueIdentifier>{38024203-df7b-41df-a297-207479159f38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="http">
+      <UniqueIdentifier>{f1c14652-08ae-4615-bfb2-4fa022661399}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_array.h">
@@ -288,12 +291,6 @@
     <ClInclude Include="gpk_input.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_stdstring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_http.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_base64.h">
       <Filter>encoding</Filter>
     </ClInclude>
@@ -302,9 +299,6 @@
     </ClInclude>
     <ClInclude Include="gpk_cgi_app_impl_v2.h">
       <Filter>web_cgi</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_http_client.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_model.h">
       <Filter>geometry</Filter>
@@ -465,30 +459,6 @@
     <ClInclude Include="gpk_tri2.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_tri3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_line.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_quad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_line2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_line3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_circle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_axis.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_align.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_rect.h">
       <Filter>geometry</Filter>
     </ClInclude>
@@ -498,20 +468,53 @@
     <ClInclude Include="gpk_rect3.h">
       <Filter>geometry</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_rect_align.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_path.h">
       <Filter>file</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_system_key.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_line.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_line2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_line3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad.h">
+      <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="gpk_quad2.h">
-      <Filter>Header Files</Filter>
+      <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="gpk_quad3.h">
-      <Filter>Header Files</Filter>
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_align.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_axis.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_circle.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_key.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect_align.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_http.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_http_client.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stdstring.h">
+      <Filter>view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -599,20 +602,11 @@
     <ClCompile Include="gpk_geometry.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_stdstring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_cgi_main.cpp">
       <Filter>web_cgi</Filter>
     </ClCompile>
     <ClCompile Include="gpk_base64.cpp">
       <Filter>encoding</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_http_client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_https_client.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_rigidbody.cpp">
       <Filter>physics</Filter>
@@ -689,8 +683,17 @@
     <ClCompile Include="gpk_particle.cpp">
       <Filter>physics</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_https_client.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_http_client.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stdstring.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
     <ClCompile Include="gpk_path.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>file</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
