@@ -124,8 +124,8 @@ namespace gpk {
 	};
 
 	struct SBufferSlice {
-		::gpk::SRange<int32_t>			Indices							= {};
-		::gpk::SRange<int32_t>			Vertices						= {};
+		::gpk::rangei32			Indices							= {};
+		::gpk::rangei32			Vertices						= {};
 	};
 
 	struct SLight {
@@ -168,26 +168,26 @@ namespace gpk {
 	};
 
 	struct SRenderNode {
-		int32_t											BoundingVolume					= -1;
-		int32_t											TexCoords						= -1;
-		int32_t											BlendIndices					= -1;
-		int32_t											Indices							= -1;
-		int32_t											Vertices						= -1;
-		int32_t											Normals							= -1;
-		int32_t											VertexColor						= -1;
-		int32_t											Material						= -1;
-		int32_t											Transform						= -1;
-		int32_t											Color							= -1;
+		int32_t					BoundingVolume					= -1;
+		int32_t					TexCoords						= -1;
+		int32_t					BlendIndices					= -1;
+		int32_t					Indices							= -1;
+		int32_t					Vertices						= -1;
+		int32_t					Normals							= -1;
+		int32_t					VertexColor						= -1;
+		int32_t					Material						= -1;
+		int32_t					Transform						= -1;
+		int32_t					Color							= -1;
 
-		::gpk::au32						Textures						= {};
-		::gpk::au32						Lights							= {};
+		::gpk::au32				Textures						= {};
+		::gpk::au32				Lights							= {};
 
-		uint32_t										PerFaceNormal					: 1;
-		uint32_t										PerFaceColor					: 1;
-		uint32_t										Transparent						: 1;
-		uint32_t										Hidden							: 1;
-		uint32_t										CullMode						: 2;
-		uint32_t										PrimitiveType					: 3;
+		uint32_t				PerFaceNormal					: 1;
+		uint32_t				PerFaceColor					: 1;
+		uint32_t				Transparent						: 1;
+		uint32_t				Hidden							: 1;
+		uint32_t				CullMode						: 2;
+		uint32_t				PrimitiveType					: 3;
 
 	};
 #pragma pack(pop)
@@ -224,14 +224,14 @@ namespace gpk {
 
 	template<typename _tContainer, typename _tValue>
 	struct SKeyedArray {
-		::gpk::aobj<::gpk::vcc>						Names	;
-		_tContainer									Values	;
+		::gpk::aobj<::gpk::vcc>			Names	;
+		_tContainer						Values	;
 
-		_tValue &									operator[]					(uint32_t index)				{ return Values[index]; }
-		const _tValue &								operator[]					(uint32_t index)	const		{ return Values[index]; }
+		_tValue &						operator[]					(uint32_t index)				{ return Values[index]; }
+		const _tValue &					operator[]					(uint32_t index)	const		{ return Values[index]; }
 
-		const uint32_t &							size						()				const noexcept	{ return Names.size(); }
-		::gpk::error_t								push_back					(::gpk::vcc name, const _tValue & value) {
+		const uint32_t &				size						()				const noexcept	{ return Names.size(); }
+		::gpk::error_t					push_back					(::gpk::vcc name, const _tValue & value) {
 			gpk_necs(Names.push_back(name));
 			return Values.push_back(value);
 		}

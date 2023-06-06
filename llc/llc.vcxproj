@@ -160,6 +160,7 @@
     <ClInclude Include="gpk_astatic_serialize.h" />
     <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_quad2.h" />
+    <ClInclude Include="gpk_sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />

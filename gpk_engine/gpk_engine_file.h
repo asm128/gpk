@@ -9,7 +9,7 @@ namespace gpk
 {
 	struct SRAMFolder {
 		::gpk::aobj<::gpk::vcc>			Names;
-		::gpk::apod<::gpk::SRange<u32>>	Ranges;
+		::gpk::apod<::gpk::rangeu32>	Ranges;
 		::gpk::au8						Contents;
 		//								//
 		::gpk::au8						LoadCache;

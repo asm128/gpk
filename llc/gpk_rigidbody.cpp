@@ -102,7 +102,7 @@ int									gpk::createOrbiter
 		::gpk::SBodyCenter						& orbitTransform			= bodies.Centers	[indexFirstBody]		= {};
 		::gpk::SBodyForces						& orbitForces				= bodies.Forces		[indexFirstBody]		= {};
 		orbitForces.Rotation				= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
-		orbitTransform.Orientation.MakeFromEulerTaitBryan( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
+		orbitTransform.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
 	}
 	{
 		::gpk::SBodyMass						& planetMass				= bodies.Masses		[indexFirstBody + 1]	= {};
@@ -111,7 +111,7 @@ int									gpk::createOrbiter
 		planetMass.InverseMass				= float(1.0 / mass);
 		planetTransform.Position.x			= float(distance_scale * distance);
 
-		planetTransform.Orientation.MakeFromEulerTaitBryan((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
+		planetTransform.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
 
 		planetForces.Rotation				= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
 		planetForces.Rotation				= planetTransform.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis

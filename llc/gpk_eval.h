@@ -57,8 +57,31 @@ namespace gpk
 
 	typedef SMinMax<float> SNearFar;
 
-	template<typename T> struct SRange { T Offset, Count	; GPK_DEFAULT_OPERATOR_NE(SRange<T>, Offset == other.Offset && Count == other.Count); };
-	template<typename T> struct SSlice { T Begin, End		; GPK_DEFAULT_OPERATOR_NE(SSlice<T>, Begin  == other.Begin  && End   == other.End  ); };
+	template<typename T> struct range { T Offset, Count	; GPK_DEFAULT_OPERATOR_NE(range<T>, Offset == other.Offset && Count == other.Count); };
+	template<typename T> struct slice { T Begin, End	; GPK_DEFAULT_OPERATOR_NE(slice<T>, Begin  == other.Begin  && End   == other.End  ); };
+
+	typedef range<uint8_t>	rangeu8;
+	typedef range<uint16_t>	rangeu16;
+	typedef range<uint32_t>	rangeu32;
+	typedef range<uint64_t>	rangeu64;
+	typedef range<int8_t>	rangei8;
+	typedef range<int16_t>	rangei16;
+	typedef range<int32_t>	rangei32;
+	typedef range<int64_t>	rangei64;
+	typedef range<float>	rangef32;
+	typedef range<double>	rangef64;
+
+	typedef slice<uint8_t>	sliceu8;
+	typedef slice<uint16_t>	sliceu16;
+	typedef slice<uint32_t>	sliceu32;
+	typedef slice<uint64_t>	sliceu64;
+	typedef slice<int8_t>	slicei8;
+	typedef slice<int16_t>	slicei16;
+	typedef slice<int32_t>	slicei32;
+	typedef slice<int64_t>	slicei64;
+	typedef slice<float>	slicef32;
+	typedef slice<double>	slicef64;
+
 
 #pragma pack(pop)
 #ifndef true_if

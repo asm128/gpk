@@ -516,6 +516,9 @@
     <ClInclude Include="gpk_stdstring.h">
       <Filter>view</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_sphere.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

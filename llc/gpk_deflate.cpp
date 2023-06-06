@@ -104,11 +104,11 @@ stacxpr	const uint32_t		GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-stacxpr	const uint32_t		DEFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
-stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
+stacxpr	uint32_t			DEFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
+stacxpr	uint32_t			INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 
 ::gpk::error_t				gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcs nameFileSrc)					{
-	::gpk::au8			rawFileInMemory				= {};
+	::gpk::au8						rawFileInMemory				= {};
 	gpk_necall(::gpk::fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %s.", nameFileSrc);
 	gpk_necall(::gpk::folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %s.", nameFileSrc);
 	return 0;
@@ -166,8 +166,8 @@ stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 	{ // Build access tables.
 		uint32_t						offsetInfo					= 0;
 		for(uint32_t iFile = 0; iFile < out_loaded.Names.size(); ++iFile) {
-			const ::gpk::SRange<uint32_t>	& fileLocation				= *(const ::gpk::SRange<uint32_t>*)&out_loaded.DataInfo[offsetInfo];
-			offsetInfo					+= sizeof(const ::gpk::SRange<uint32_t>);
+			const ::gpk::rangeu32			& fileLocation				= *(const ::gpk::rangeu32*)&out_loaded.DataInfo[offsetInfo];
+			offsetInfo					+= sizeof(::gpk::rangeu32);
 			const uint32_t					lenName						= *(uint32_t*)&out_loaded.DataInfo		[offsetInfo];
 			offsetInfo					+= sizeof(uint32_t);
 			out_loaded.Names	[iFile]	= {(const char*)&out_loaded.DataInfo[offsetInfo], lenName};
@@ -190,7 +190,7 @@ stacxpr	const uint32_t		INFLATE_CHUNK_SIZE		= 1024 * 1024 * 32;
 		gpk_necall(::gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
 
 		::gpk::au8						contentsTemp			= {};
-		::gpk::SRange<uint32_t>			fileLocation			= {0, 0};
+		::gpk::rangeu32					fileLocation			= {0, 0};
 		for(uint32_t iFile = 0; iFile < listFiles.size(); ++iFile) {
 			fileLocation.Offset			= contentsPacked.size();
 			const ::gpk::vcs				pathToLoad				= {listFiles[iFile].begin(), listFiles[iFile].size()};

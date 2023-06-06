@@ -10,9 +10,8 @@ namespace gpk
 	// ------------------ Geometry Mesh
 #pragma pack(push, 1)
 	struct SGeometrySlice {
-		::gpk::SRange<uint32_t>				Slice;
+		::gpk::rangeu32						Slice;
 	};
-#pragma pack(pop)
 
 	GDEFINE_ENUM_TYPE(NORMAL_MODE, uint8_t);
 	GDEFINE_ENUM_VALUE(NORMAL_MODE, Point			, 0);
@@ -31,7 +30,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GEOMETRY_TYPE, Triangle		, 2);
 	GDEFINE_ENUM_VALUE(GEOMETRY_TYPE, Quad			, 3);
 
-#pragma pack(push, 1)
 	struct SMeshDescription {
 		::gpk::GEOMETRY_TYPE				Type;
 		::gpk::MESH_MODE					Mode;
@@ -41,8 +39,8 @@ namespace gpk
 
 	struct SGeometryMesh {
 		::gpk::SMeshDescription				Desc;
-		::gpk::au32				GeometryBuffers;
-		::gpk::au32				ConstantBuffers;
+		::gpk::au32							GeometryBuffers;
+		::gpk::au32							ConstantBuffers;
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
 		::gpk::error_t						Save			(::gpk::au8 & output) const { 

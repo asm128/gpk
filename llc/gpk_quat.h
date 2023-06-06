@@ -53,7 +53,7 @@ namespace gpk
 		inline	Tq				Normalized				()									const	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /  ::sqrt(sqLen) : *this; }
 		inline	Tq&				LinearInterpolate		(const Tq & p, const Tq & q, double fTime)	noexcept	{ return *this = ((q-p)*fTime)+p;						}
 		inline	Tq&				SetRotation				(const Tq & q, const Tq & p)				noexcept	{ return *this = q * p * ~q;																							}
-		inline	Tq&				MakeFromEulerTaitBryan	(const Tn3 & v)											{ return MakeFromEulerTaitBryan(v.x, v.y, v.z);																			}
+		inline	Tq&				MakeFromEuler			(const Tn3 & v)											{ return MakeFromEuler(v.x, v.y, v.z);																			}
 		//void					AddScaled				(const TCoord4& vector, double scale)		noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
 		Tq&						AddScaled				(const Tn3 & vector, double scale)			noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }
 		Tn3						RotateVector			(const Tn3 & v)						const	noexcept	{
@@ -103,7 +103,7 @@ namespace gpk
 			return *this = (p * sin(fTheta * (1 - fTime)) + q_ * sin(fTheta * fTime)) / sin(fTheta);
 		}
 		// Convert from Euler Angles
-		Tq&						MakeFromEulerTaitBryan	(double fPitch, double fYaw, double fRoll)				{
+		Tq&						MakeFromEuler			(double fPitch, double fYaw, double fRoll)				{
 			 //Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll and multiply those together. the calculation below does the same, just shorter.
 			fPitch					*= 0.5f;//
 			fYaw					*= 0.5f;//
