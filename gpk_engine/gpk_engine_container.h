@@ -9,27 +9,27 @@ namespace gpk
 {
 	template <typename _tElement> 
 	struct SLinearMap {
-		::gpk::apobj<_tElement>				Elements		= {};
-		::gpk::aobj<::gpk::vcc>				Names			= {};
+		::gpk::apobj<_tElement>			Elements		= {};
+		::gpk::aobj<::gpk::vcc>			Names			= {};
 
-		const ::gpk::pobj<_tElement>&		operator[]		(uint32_t index)							const	{ return Elements[index]; }
-		::gpk::pobj<_tElement>&				operator[]		(uint32_t index)									{ return Elements[index]; }
+		const ::gpk::pobj<_tElement>&	operator[]		(uint32_t index)					const	{ return Elements[index]; }
+		::gpk::pobj<_tElement>&			operator[]		(uint32_t index)							{ return Elements[index]; }
 
-		uint32_t							size			()											const	{ return Names.size(); }
-		::gpk::error_t						push_back		(const ::gpk::pobj<_tElement> & instance)			{ Names.push_back({});				return Elements.push_back(instance); }
+		uint32_t						size			()									const	{ return Names.size(); }
+		::gpk::error_t					push_back		(const ::gpk::pobj<_tElement> & instance)	{ Names.push_back({});				return Elements.push_back(instance); }
 
-		::gpk::error_t						Create			()													{ Names.push_back({});				return Elements.push_back({}); }
-		::gpk::error_t						Delete			(uint32_t index)									{ Names.remove_unordered(index);	return Elements.remove_unordered(index); }
-		::gpk::error_t						Clone			(uint32_t index)									{ 
-			::gpk::pobj<_tElement>					& newElement	= Elements[Elements.push_back({})]; 
-			const ::gpk::pobj<_tElement>			& srcElement	= Elements[index];
+		::gpk::error_t					Create			()											{ Names.push_back({});				return Elements.push_back({}); }
+		::gpk::error_t					Delete			(uint32_t index)							{ Names.remove_unordered(index);	return Elements.remove_unordered(index); }
+		::gpk::error_t					Clone			(uint32_t index)							{ 
+			::gpk::pobj<_tElement>				& newElement	= Elements[Elements.push_back({})]; 
+			const ::gpk::pobj<_tElement>		& srcElement	= Elements[index];
 			if(srcElement) {
-				*newElement.create()				= *srcElement;
+				*newElement.create()			= *srcElement;
 			}
 			return Names.push_back(::gpk::vcc{Names[index]}); 
 		}
 
-		::gpk::error_t						Save			(::gpk::au8 & output) const { 
+		::gpk::error_t					Save			(::gpk::au8 & output) const { 
 			gpk_necs(output.append(::gpk::vcu8{(const uint8_t*)&Elements.size(), 4}));
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);
@@ -39,15 +39,14 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load			(::gpk::vcu8 & input) {
+		::gpk::error_t					Load			(::gpk::vcu8 & input) {
 			gpk_necs(Elements.resize(*(uint32_t*)input.begin()));
-			input											= {input.begin() + sizeof(uint32_t), input.size() - 4};
+			input							= {input.begin() + sizeof(uint32_t), input.size() - 4};
 			gpk_necall(Names.resize(Elements.size()), "size: %i", Elements.size());
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Load(input), "iEntity: %i", iEntity);
 				gpk_necall(::gpk::loadLabel(input, Names[iEntity]), "iEntity: %i", iEntity);
 			}
-
 			return 0; 
 		}
 	};

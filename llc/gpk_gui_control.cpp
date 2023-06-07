@@ -38,7 +38,7 @@
 		}
 	}
 
-	::gpk::SControl																& controlMenu							= gui.Controls.Controls[menu.IdControl];
+	::gpk::SControl					& controlMenu							= gui.Controls.Controls[menu.IdControl];
 	controlMenu.Area.Size													= {};
 	const ::gpk::n2<uint8_t>												fontCharSize							= selectedFont.CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
@@ -69,8 +69,8 @@
 	const int32_t																idControl								= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
 	::gpk::controlSetParent(gui, idControl, menu.IdControl);
-	::gpk::SControl																& control								= gui.Controls.Controls		[idControl];
-	::gpk::SControlText															& controlText							= gui.Controls.Text			[idControl];
+	::gpk::SControl					& control								= gui.Controls.Controls		[idControl];
+	::gpk::SControlText				& controlText							= gui.Controls.Text			[idControl];
 	control				.Margin												= {4, 2, 4, 2};
 	controlText			.Text												= {text.begin(), text.size()};
 	controlText			.Align												= ::gpk::ALIGN_CENTER_LEFT;
@@ -168,7 +168,7 @@
 ::gpk::error_t			gpk::paletteGridInitialize				(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::n2<double>											targetSize								= {256.0, 256.0};
 	palette.IdControl													= ::gpk::controlCreate(gui);
-	::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControl];
+	::gpk::SControl					& control								= gui.Controls.Controls[palette.IdControl];
 	const uint32_t					widthViewport							= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
 	const uint32_t					heightViewport							= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
 	control.Area.Size													= {(int16_t)widthViewport, (int16_t)heightViewport};

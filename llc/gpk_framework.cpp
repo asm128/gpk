@@ -47,7 +47,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 ::gpk::error_t			gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.GUI.get_ref())
 		framework.GUI.create();
-	::gpk::SWindow								& mainWindow								= framework.RootWindow;
+	::gpk::SWindow					& mainWindow								= framework.RootWindow;
 	::gpk::SInput								& input										= *mainWindow.Input;
 	input.KeyboardPrevious					= input.KeyboardCurrent;
 	input.MousePrevious						= input.MouseCurrent;
@@ -135,7 +135,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 			gerror_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 #endif
-	::gpk::SGUI				& gui										= *framework.GUI;
+	::gpk::SGUI						& gui										= *framework.GUI;
 	{
 		::std::lock_guard																			lock										(framework.LockGUI);
 		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);

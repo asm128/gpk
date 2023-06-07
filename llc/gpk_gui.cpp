@@ -244,9 +244,9 @@ static	::gpk::error_t	controlInstanceReset									(::gpk::SGUI & gui, int32_t i
 	controlTable.States		[iControl]								= {};
 	controlTable.Images		[iControl]								= {};
 	//controlTable.Modes		[iControl].UseNewPalettes				= 1;
-	::gpk::SControl														& control				= controlTable.Controls		[iControl]	= {};
-	::gpk::SControlConstraints											& controlConstraints	= controlTable.Constraints	[iControl]	= {};
-	::gpk::SControlText													& controlText			= controlTable.Text			[iControl]	= {};
+	::gpk::SControl					& control				= controlTable.Controls		[iControl]	= {};
+	::gpk::SControlConstraints		& controlConstraints	= controlTable.Constraints	[iControl]	= {};
+	::gpk::SControlText				& controlText			= controlTable.Text			[iControl]	= {};
 	control.Parent														= -1;
 	control.Align															= ::gpk::ALIGN_TOP_LEFT;
 	control.Area															= {{0, 0}, {16, 16}};
@@ -323,7 +323,7 @@ static	::gpk::error_t	controlInstanceReset									(::gpk::SGUI & gui, int32_t i
 #if defined(GPK_DEBUG_ENABLED)
 	gerror_if(childrenRemoved > 1, "%s", "Parent should not reference a child control more than once.");
 #endif
-	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+	::gpk::SControlState		& controlState											= gui.Controls.States[iControl];
 	controlState.Unused												= true;
 	return 0;
 }
@@ -331,7 +331,7 @@ static	::gpk::error_t	controlInstanceReset									(::gpk::SGUI & gui, int32_t i
 ::gpk::error_t			gpk::controlSetParent									(::gpk::SGUI & gui, int32_t iControl, int32_t iParent)	{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	const uint32_t				oldParent												= gui.Controls.Controls[iControl].Parent;
-	::gpk::SControl														& control												= gui.Controls.Controls[iControl];
+	::gpk::SControl					& control												= gui.Controls.Controls[iControl];
 	if(control.Parent == iParent)	// Exit early if there is nothing to do here.
 		return 0;
 
@@ -407,7 +407,7 @@ static	::gpk::error_t	buildControlGeometry					(const ::gpk::SControl & control,
 
 static	::gpk::error_t	controlUpdateMetrics									(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint16_t> & _targetSize)					{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+	::gpk::SControlState		& controlState											= gui.Controls.States[iControl];
 	const ::gpk::SControl												& control												= gui.Controls.Controls[iControl];
 	::gpk::n2<double>												scale													= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	if(fabs(1.0 - scale.x) < 0.001) scale.x = 1.0;
@@ -419,13 +419,13 @@ static	::gpk::error_t	controlUpdateMetrics									(::gpk::SGUI & gui, int32_t i
 
 	::gpk::SControlMetrics												& controlMetrics										= gui.Controls.Metrics[iControl];
 	::gpk::rect2<double>											rectText												= {};
-	::gpk::SControlText													& controlText											= gui.Controls.Text[iControl];
+	::gpk::SControlText				& controlText											= gui.Controls.Text[iControl];
 	const ::gpk::SRasterFont											& selectedFont											= *gui.Fonts[::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont];
 	const ::gpk::n2<uint8_t>										fontCharSize											= selectedFont.CharSize;
 	rectText.Size													= {(double)(fontCharSize.x * controlText.Text.size()), (double)fontCharSize.y};
 	rectText.Size.InPlaceScale(scale.x, scale.y);
 
-	const ::gpk::SControlConstraints									& controlConstraints									= gui.Controls.Constraints[iControl];
+	const ::gpk::SControlConstraints		& controlConstraints									= gui.Controls.Constraints[iControl];
 	const ::gpk::SRectLimits<int16_t>									ncSizes													= ::gpk::controlNCRect(control);
 	const ::gpk::SRectLimits<double>									ncSizesScaled											= {(ncSizes.Left * scale.x), (ncSizes.Top * scale.y), (ncSizes.Right * scale.x), (ncSizes.Bottom * scale.y)};
 	const ::gpk::n2<double>										ncTotalSize												= {(double)ncSizes.Left + ncSizes.Right, (double)ncSizes.Top + ncSizes.Bottom};
@@ -562,7 +562,7 @@ static	::gpk::error_t	updateGUIControlHovered									(::gpk::SControlState & co
 }
 
 static	::gpk::error_t	controlProcessInput										(::gpk::SGUI & gui, const ::gpk::SInput& input, int32_t iControl)														{
-	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+	::gpk::SControlState		& controlState											= gui.Controls.States[iControl];
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
 	if(::gpk::in_range(gui.CursorPos.Cast<int16_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
@@ -670,7 +670,7 @@ static	::gpk::error_t	controlProcessInput										(::gpk::SGUI & gui, const ::g
 }
 
 ::gpk::error_t			gpk::controlMetricsInvalidate							(::gpk::SGUI & gui, int32_t iControl)	{
-	::gpk::SControlState												& controlState											= gui.Controls.States[iControl];
+	::gpk::SControlState		& controlState											= gui.Controls.States[iControl];
 	controlState.Updated											= false;
 	const ::gpk::view<int32_t>									& controlChildren										= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild)

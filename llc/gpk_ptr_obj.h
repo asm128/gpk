@@ -6,23 +6,22 @@
 namespace gpk
 {
 	template<typename _tOBJ>
-	class ptr_obj : public ::gpk::ptr_nco<_tOBJ> {
+	class pobj : public ::gpk::pnco<_tOBJ> {
 	public:
-		typedef _tOBJ				T;
-		typedef	::gpk::ptr_nco<T>	TNCOPtr;
-		typedef	::gpk::ptr_obj<T>	TOBJPtr;
-		typedef	::gpk::gpk_ref<T>	TRef;
-		using	TNCOPtr				::Reference;
+		typedef _tOBJ			T;
+		typedef	::gpk::pnco<T>	TNCOPtr;
+		typedef	::gpk::pobj<T>	TOBJPtr;
+		typedef	::gpk::gref<T>	TRef;
 
-		inline	const T*			operator->				()										const	noexcept	{ return Reference->Instance;														}
-		inline	T*					operator->				()												noexcept	{ return (0 == Reference) ? ::gpk::ref_create(&Reference) : Reference->Instance;	}
+		using	TNCOPtr			::Reference;
+
+		inline	const T*		operator->	()		const	noexcept	{ return Reference->Instance;														}
+		inline	T*				operator->	()				noexcept	{ return (0 == Reference) ? ::gpk::ref_create(&Reference) : Reference->Instance;	}
 
 		template<typename... _tArgsConstructor>
-		inline	T*					create					(_tArgsConstructor &&... argsConstructor)		noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
-		inline	T*					allocate				()												noexcept	{ return ::gpk::ref_allocate(&Reference);											}
+		inline	T*				create		(_tArgsConstructor &&... argsConstructor)	noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
+		inline	T*				allocate	()											noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
-
-	template<typename T> using pobj	= ::gpk::ptr_obj<T>; 
 	template<typename T> using po	= ::gpk::pobj<T>; 
 } // namespace
 

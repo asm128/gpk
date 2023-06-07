@@ -53,7 +53,7 @@ static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogCol
 }
 
 static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
-	::gpk::SGUI							& gui							= *dialog.GUI; 
+	::gpk::SGUI						& gui							= *dialog.GUI; 
 	gthrow_if(-1 == (dialog.Root = ::gpk::controlCreate(gui)), "%s", "Out of memory?");
 	gui.Controls.Controls		[dialog.Root].Margin					= {};
 	gui.Controls.Controls		[dialog.Root].Border					= {};
@@ -147,8 +147,8 @@ stacxpr	const uint32_t									heightOfField								= 18;
 
 	const double								proportion									= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
-	::gpk::SControl								& controlButton								= controlTable.Controls[slider.IdButton];
-	::gpk::SControl								& controlSlider								= controlTable.Controls[slider.IdGUIControl];
+	::gpk::SControl					& controlButton								= controlTable.Controls[slider.IdButton];
+	::gpk::SControl					& controlSlider								= controlTable.Controls[slider.IdGUIControl];
 	::gpk::n2<double>							ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
 	if(slider.Vertical)	
 		controlButton.Area.Offset.y				= int16_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
@@ -322,8 +322,8 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 ::gpk::error_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)																{
 	::gpk::SDialog								& dialog				= *control.Dialog;
 	::gpk::SGUIControlTable						& controlTable			= dialog.GUI->Controls;
-	::gpk::SControl								& controlMain			= controlTable.Controls[control.IdGUIControl];
-	::gpk::SControlState						& controlTitle			= controlTable.States[control.IdTitle];
+	::gpk::SControl					& controlMain			= controlTable.Controls[control.IdGUIControl];
+	::gpk::SControlState		& controlTitle			= controlTable.States[control.IdTitle];
 	if(controlTitle.Pressed) {
 		::gpk::n2<bool>								locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {

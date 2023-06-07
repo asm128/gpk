@@ -7,10 +7,10 @@
 
 #if defined GPK_AVOID_LOCAL_APPLICATION_MODULE_MODEL_EXECUTABLE_RUNTIME
 #	define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)														\
-		::gpk::error_t																		setup										(_mainClass& app);						\
-		::gpk::error_t																		cleanup										(_mainClass& app);						\
-		::gpk::error_t																		update										(_mainClass& app, bool systemRequestedExit);																		\
-		::gpk::error_t																		draw										(_mainClass& app);						\
+::gpk::error_t				setup		(_mainClass& app);						\
+::gpk::error_t				cleanup		(_mainClass& app);						\
+::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);																		\
+::gpk::error_t				draw		(_mainClass& app);						\
 		::gpk::error_t	GPK_STDCALL															gpk_moduleVersion							()															{ return 1; }															\
 		::gpk::error_t	GPK_STDCALL															gpk_moduleCreate							(void**	instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};												return 0;		} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL															gpk_moduleDelete							(void**	instanceApp)										{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
@@ -85,10 +85,10 @@
 
 #define GPK_DEFINE_APPLICATION_ENTRY_POINT(_mainClass, _moduleTitle)		\
 static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);													\
-		::gpk::error_t														setup							(_mainClass& app);						\
-		::gpk::error_t														cleanup							(_mainClass& app);						\
-		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);																		\
-		::gpk::error_t														draw							(_mainClass& app);						\
+::gpk::error_t				setup		(_mainClass& app);						\
+::gpk::error_t				cleanup		(_mainClass& app);						\
+::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);																		\
+::gpk::error_t				draw		(_mainClass& app);						\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleVersion				()															{ return 1; }															\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleCreate				(void**	instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};												return 0;		} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleDelete				(void**	instanceApp)										{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
@@ -104,10 +104,10 @@ static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);					
 	return 0;			\
 }						\
 		GPK_SYSTEM_OS_ENTRY_POINT()																	\
-		::gpk::error_t														setup							(_mainClass& app);									\
-		::gpk::error_t														cleanup							(_mainClass& app);									\
-		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);		\
-		::gpk::error_t														draw							(_mainClass& app);									\
+::gpk::error_t				setup		(_mainClass& app);									\
+::gpk::error_t				cleanup		(_mainClass& app);									\
+::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);		\
+::gpk::error_t				draw		(_mainClass& app);									\
 		::gpk::error_t														rtMain							(::gpk::SRuntimeValues & runtimeValues)							{	\
 	{							\
 		GPK_SYSTEM_OS_DEBUG_INIT_FLAGS();															\
@@ -133,10 +133,10 @@ static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);					
 
 #define GPK_DEFINE_APPLICATION_ENTRY_POINT_MT(_mainClass, _moduleTitle)		\
 static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);													\
-		::gpk::error_t														setup							(_mainClass& app);						\
-		::gpk::error_t														cleanup							(_mainClass& app);						\
-		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);																		\
-		::gpk::error_t														draw							(_mainClass& app);						\
+::gpk::error_t				setup		(_mainClass& app);						\
+::gpk::error_t				cleanup		(_mainClass& app);						\
+::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);																		\
+::gpk::error_t				draw		(_mainClass& app);						\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleVersion				()															{ return 1; }															\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleCreate				(void**	instanceApp, ::gpk::SRuntimeValues* runtimeValues)	{ try { *instanceApp = new _mainClass{*runtimeValues};												return 0;		} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL											gpk_moduleDelete				(void**	instanceApp)										{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
@@ -152,10 +152,10 @@ static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);					
 	return 0;			\
 }						\
 		GPK_SYSTEM_OS_ENTRY_POINT()																	\
-		::gpk::error_t														setup							(_mainClass& app);									\
-		::gpk::error_t														cleanup							(_mainClass& app);									\
-		::gpk::error_t														update							(_mainClass& app, bool systemRequestedExit);		\
-		::gpk::error_t														draw							(_mainClass& app);									\
+::gpk::error_t				setup		(_mainClass& app);									\
+::gpk::error_t				cleanup		(_mainClass& app);									\
+::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);		\
+::gpk::error_t				draw		(_mainClass& app);									\
 															\
 struct SRuntimeState {										\
 			::gpk::refcount_t										RenderThreadUsers				= 0;								\

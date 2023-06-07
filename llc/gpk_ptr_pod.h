@@ -6,22 +6,23 @@
 namespace gpk
 {
 	template<typename _tPOD>
-	class ptr_pod : public ::gpk::ptr_nco<_tPOD> {
+	class ppod : public ::gpk::pnco<_tPOD> {
 	public:
-		typedef	::gpk::ptr_nco<_tPOD>		TNCOPtr;
-		typedef	::gpk::gpk_ref<_tPOD>		TRef;
-		typedef	::gpk::ptr_pod<_tPOD>		TPODPtr;
-		using	TNCOPtr						::Reference;
+		typedef _tPOD			T;
+		typedef	::gpk::pnco<T>	TNCOPtr;
+		typedef	::gpk::pobj<T>	TPODtr;
+		typedef	::gpk::gref<T>	TRef;
 
-		inline	const _tPOD*				operator->				()										const	noexcept	{ return Reference->Instance;														}
-		inline	_tPOD*						operator->				()												noexcept	{ return (0 == Reference) ? ::gpk::ref_allocate(&Reference) : Reference->Instance;	}
+		using	TNCOPtr			::Reference;
+								
+		inline	const T*		operator->	()		const	noexcept	{ return Reference->Instance;														}
+		inline	T*				operator->	()				noexcept	{ return (0 == Reference) ? ::gpk::ref_allocate(&Reference) : Reference->Instance;	}
 
 		template<typename... _tArgsConstructor>
-		inline	_tPOD*						create					(_tArgsConstructor &&... argsConstructor)		noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
-		inline	_tPOD*						allocate				()												noexcept	{ return ::gpk::ref_allocate(&Reference);											}
+		inline	T*				create		(_tArgsConstructor &&... argsConstructor)	noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
+		inline	T*				allocate	()											noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
-	template<typename T> using ppod		= ::gpk::ptr_pod<T>;
-	template<typename T> using pp		= ::gpk::ppod<T>;
+	template<typename T> using pp	= ::gpk::ppod<T>;
 } // namespace
 
 #endif // GPK_PTR_POD_H_0297349827220523

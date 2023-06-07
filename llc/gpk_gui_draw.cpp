@@ -44,7 +44,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	} // This isn't done in updateMetrics() because the function is only executed for outdated metrics.
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
-	::gpk::SControlText			& controlText						= gui.Controls.Text		[iControl];
+	::gpk::SControlText				& controlText						= gui.Controls.Text		[iControl];
 	::gpk::apod<::gpk::n2u16>	dstCoords;
 	const uint32_t				iFont								= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont						= *gui.Fonts[iFont];
@@ -115,7 +115,7 @@ static	::gpk::error_t	fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_
 static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, int32_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{
 	const ::gpk::SControl		& control						= gui.Controls.Controls	[iControl];
 	const ::gpk::SControlMode	& mode							= gui.Controls.Modes	[iControl];
-	const ::gpk::SControlState	& controlState					= gui.Controls.States	[iControl];
+	const ::gpk::SControlState		& controlState					= gui.Controls.States	[iControl];
 	::gpk::GUI_COLOR_MODE		colorMode						= (::gpk::GUI_COLOR_MODE)((mode.ColorMode == ::gpk::GUI_COLOR_MODE_DEFAULT) ? gui.ColorModeDefault : mode.ColorMode);
 	gpk_necall((false == mode.UseNewPalettes) 
 		? fillColorTableOld(gui, colorMode, control, controlState, mode, disabled, colors) 

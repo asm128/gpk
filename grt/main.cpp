@@ -85,7 +85,7 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 #endif
 	SRuntimeState														runtimeState					= {};
 	{
-		::gpk::view_const_string											fileName						= "gme";
+		::gpk::vcs											fileName						= "gme";
 		if(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine.size() > 1)
 			fileName														= {globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1], (uint32_t)strlen(globalRuntimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine[1])};
 		char																mainModuleName	[512]			= {};

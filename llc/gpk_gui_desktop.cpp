@@ -252,7 +252,7 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 		return 0;
 	controlList.IndexParentList 											= iParentControlList;
 	controlList.IndexParentItem												= iParentListItem;
-	::gpk::SControlState														& controlListStates										= gui.Controls.States[controlList.IdControl];
+	::gpk::SControlState		& controlListStates										= gui.Controls.States[controlList.IdControl];
 	if((desktop.Items.ControlLists.size() <= (uint32_t)iParentControlList) || desktop.Items.ControlLists.Unused[iParentControlList]) {
 		ree_if(-1 != iParentControlList, "Invalid parent control list: %i. List item: %i.", iParentControlList, iParentListItem);
 		controlListStates.Hidden												= false;

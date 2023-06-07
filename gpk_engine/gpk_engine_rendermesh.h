@@ -59,7 +59,7 @@ namespace gpk
 		}
 	};	
 
-	typedef	::gpk::SLinearMap<::gpk::SGeometryMesh>			SMeshManager;
+	typedef	::gpk::SLinearMap<::gpk::SGeometryMesh>	SMeshManager;
 } // namespace
 
 #endif

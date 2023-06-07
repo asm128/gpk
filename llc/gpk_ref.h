@@ -8,25 +8,25 @@
 namespace gpk
 {
 	template<typename _tInstance>
-	struct gpk_ref {
-		typedef	_tInstance							TInstance;
+	struct gref {
+		typedef	_tInstance		TInstance;
 
-		_tInstance									* Instance;
-		refcount_t									References;
+		_tInstance				* Instance;
+		refcount_t				References;
 	};
 
 	template<typename _tNCO>
-	::gpk::gpk_ref<_tNCO>*						ref_acquire				(::gpk::gpk_ref<_tNCO>* gpk_reference)								noexcept	{
+	::gpk::gref<_tNCO>*		ref_acquire				(::gpk::gref<_tNCO> * gpk_reference)	noexcept	{
 		if(gpk_reference)
 			gpk_sync_increment(gpk_reference->References);
 		return gpk_reference;
 	};
 
 	template<typename _tNCO>
-	::gpk::error_t								ref_release				(::gpk::gpk_ref<_tNCO>** gpk_reference)											{
-		typedef	::gpk::gpk_ref<_tNCO>					TRef;
-		TRef											* oldRef				= *gpk_reference;
-		*gpk_reference								= 0;
+	::gpk::error_t			ref_release				(::gpk::gref<_tNCO>* * gpk_reference) {
+		typedef	::gpk::gref<_tNCO>	TRef;
+		TRef						* oldRef				= *gpk_reference;
+		*gpk_reference			= 0;
 		if(oldRef)
 			switch(gpk_sync_decrement(oldRef->References)) {
 			case -1: error_printf("%s", "Reference count error!"); return -1;
@@ -43,31 +43,31 @@ namespace gpk
 	};
 
 	template<typename _tOBJ>
-	_tOBJ*										ref_allocate			(::gpk::gpk_ref<_tOBJ>** gpk_reference)								noexcept	{
-		typedef	::gpk::gpk_ref<_tOBJ>					TRef;
-		TRef											* newRef				= (TRef *)::gpk::gpk_malloc(sizeof(TRef));
+	_tOBJ*					ref_allocate			(::gpk::gref<_tOBJ>* * gpk_reference)	noexcept	{
+		typedef	::gpk::gref<_tOBJ>	TRef;
+		TRef						* newRef				= (TRef *)::gpk::gpk_malloc(sizeof(TRef));
 		retnul_gerror_if(0 == newRef, "%s", "Failed to allocate reference! Out of memory?");
 		if(0 == (newRef->Instance = (_tOBJ*)::gpk::gpk_malloc(sizeof(_tOBJ)))) {
 			::gpk::gpk_free(newRef);
 			error_printf("%s", "Failed to allocate instance! Out of memory?");
 			return 0;
 		}
-		newRef->References							= 1;
-		TRef											* oldRef				= *gpk_reference;
-		*gpk_reference								= newRef;
+		newRef->References		= 1;
+		TRef						* oldRef				= *gpk_reference;
+		*gpk_reference			= newRef;
 		::gpk::ref_release(&oldRef);
 		return (*gpk_reference)->Instance;
 	};
 
 	template<typename _tOBJ, typename... _tArgs>
-	_tOBJ*										ref_create				(::gpk::gpk_ref<_tOBJ>** gpk_reference, _tArgs&&... argsConstructor)			{
-		typedef	::gpk::gpk_ref<_tOBJ>					TRef;
-		TRef											* newRef				= 0;
+	_tOBJ*					ref_create				(::gpk::gref<_tOBJ>* * gpk_reference, _tArgs&&... argsConstructor)	{
+		typedef	::gpk::gref<_tOBJ>	TRef;
+		TRef						* newRef				= 0;
 		retnul_gerror_if(0 == ::gpk::ref_allocate(&newRef), "%s", "Failed to allocate reference");
 		new (newRef->Instance) _tOBJ{argsConstructor...};
 
-		TRef											* oldRef				= *gpk_reference;
-		*gpk_reference								= newRef;
+		TRef						* oldRef				= *gpk_reference;
+		*gpk_reference			= newRef;
 		::gpk::ref_release(&oldRef);
 		return (*gpk_reference)->Instance;
 	};

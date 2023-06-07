@@ -102,10 +102,10 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 			output.append(buffer, ::gpk::formatForSize(keyval.Val, buffer, "\n<h3>Val: ", "</h3>"));
 		}
 
-		::gpk::view_const_string							contentype	;
-		::gpk::view_const_string							remoteIP	;
-		::gpk::view_const_string							remotePORT	;
-		::gpk::view_const_string							contentLength;
+		::gpk::vcs			contentype	;
+		::gpk::vcs			remoteIP	;
+		::gpk::vcs			remotePORT	;
+		::gpk::vcs			contentLength;
 		::gpk::find(::gpk::vcs{"CONTENT_TYPE"	 }, runtimeValues.QueryStringKeyVals, contentype);
 		::gpk::find(::gpk::vcs{"REMOTE_IP"	 }, runtimeValues.QueryStringKeyVals, remoteIP	);
 		::gpk::find(::gpk::vcs{"REMOTE_PORT"	 }, runtimeValues.QueryStringKeyVals, remotePORT	);
@@ -124,27 +124,27 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 		//for(int32_t iArg = 0; iArg < argc; ++iArg)
 		//	output.append(buffer, sprintf_s(buffer, "\n<h1>argv[%u]: %s</h1>", iArg, argv[iArg]));
 		{
-			::gpk::apod<char>									content_body			= {};
+			::gpk::apod<char>	content_body			= {};
 			content_body.resize(runtimeValues.Content.Length);
-			uint32_t												iChar					= 0;
-			char													iArg					= 0;
+			uint32_t			iChar					= 0;
+			char				iArg					= 0;
 			while(iChar < runtimeValues.Content.Length) {
-				int														count					= 0;
+				int					count					= 0;
 				//memset(content_body.begin(), 0, content_body.size());
 				content_body.resize(0);
-				uint32_t												iOffset					= iChar;
-				bool													value					= false;
+				uint32_t			iOffset					= iChar;
+				bool				value					= false;
 				while(iChar < runtimeValues.Content.Length && (iArg = runtimeValues.Content.Body[iChar++])) {
 					if(iArg == '\n') {
 						++count;
 						if(count >= 2) {
-							value												= true;
-							count												= 0;
+							value			= true;
+							count			= 0;
 							//break;
 						}
 					}
 					else if(iArg != '\r')
-						count												= 0;
+						count			= 0;
 					content_body.push_back(iArg);
 				}
 				if(0 == content_body.size())
