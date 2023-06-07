@@ -17,7 +17,7 @@ namespace gpk
 								,				_41, _42, _43, _44
 								;
 
-		inline				Tn3&				operator[]					(uint32_t index)																					{ return *(Tn3*)((&_11) + 4 * index); }
+		inline				Tn3&				operator[]					(uint32_t index)				{ return *(Tn3*)((&_11) + 4 * index); }
 		constexpr			bool				operator ==					(const _tMat4& other)															const	noexcept	{ return _11 == other._11 && _12 == other._12 && _13 == other._13 && _14 == other._14 && _21 == other._21 && _22 == other._22 && _23 == other._23 && _24 == other._24 && _31 == other._31 && _32 == other._32 && _33 == other._33 && _34 == other._34 && _41 == other._41 && _42 == other._42 && _43 == other._43 && _44 == other._44; }
 		constexpr inline	bool				operator !=					(const _tMat4& other)															const	noexcept	{ return !operator==(other); }
 
@@ -36,13 +36,13 @@ namespace gpk
 		inline				_tMat4&				operator +=					(const _tMat4& other)																	noexcept	{ return *this = operator+(other	); }
 		inline				_tMat4&				operator -=					(const _tMat4& other)																	noexcept	{ return *this = operator-(other	); }
 		inline				_tMat4&				operator *=					(double scalar)																			noexcept	{ return *this = operator*(scalar	); }
-		inline				_tMat4&				operator /=					(double scalar)																						{ return *this = operator/(scalar	); }
+		inline				_tMat4&				operator /=					(double scalar)			{ return *this = operator/(scalar	); }
 		inline				_tMat4&				operator *=					(const _tMat4& right)																	noexcept	{ return *this = operator*(right	); }
 
-		inline				void				SetTranspose				(const _tMat4& m)																					{ *this = m.GetTranspose(); }
-		inline				void				SetInverse					(const _tMat4& m)																					{ *this = m.GetInverse();	}
-		inline				void				Transpose					(const _tMat4& m)																					{ *this = GetTranspose();	}
-		inline				void				Invert						()																									{ *this = GetInverse();		}
+		inline				void				SetTranspose				(const _tMat4& m)				{ *this = m.GetTranspose(); }
+		inline				void				SetInverse					(const _tMat4& m)				{ *this = m.GetInverse();	}
+		inline				void				Transpose					(const _tMat4& m)				{ *this = GetTranspose();	}
+		inline				void				Invert						()						{ *this = GetInverse();		}
 
 		inline				_tMat4&				LinearInterpolate			(const _tMat4&p, const _tMat4&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
 		constexpr			Tn3					InverseTranslate			(const Tn3 & vec)															const	noexcept	{ return { vec.x - _41, vec.y - _42, vec.z - _43 }; }
@@ -96,7 +96,7 @@ namespace gpk
 			_41 = (_tBase)(offscreenMetrics.x * .5f);	_42 = (_tBase)(offscreenMetrics.y * .5f);	_43 = (_tBase)0;	_44 = (_tBase)1;
 		}
 
-		static	constexpr	_tMat4				GetIdentity					()																						noexcept	{
+		static	constexpr	_tMat4				GetIdentity					()			noexcept	{
 			return
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
@@ -104,7 +104,7 @@ namespace gpk
 				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
-							void				SetIdentity					()																						noexcept	{
+							void				SetIdentity					()			noexcept	{
 			*this									=
 				{ (_tBase)1,  (_tBase)0,  (_tBase)0,  (_tBase)0
 				, (_tBase)0,  (_tBase)1,  (_tBase)0,  (_tBase)0
@@ -112,7 +112,7 @@ namespace gpk
 				, (_tBase)0,  (_tBase)0,  (_tBase)0,  (_tBase)1
 				};
 		}
-		inline				void				Identity					()																						noexcept	{ SetIdentity(); }
+		inline				void				Identity					()			noexcept	{ SetIdentity(); }
 							void				RotationX					(double angle)																			noexcept	{
 			::gpk::SSinCos							angleSinCos					= ::gpk::getSinCos(angle);
 			_11 = (_tBase)1;	_12 =							_13 =
@@ -137,7 +137,7 @@ namespace gpk
 			_41 = _42 = _43 = _14 = _24 = _34 = (_tBase)0; _44 = (_tBase)1;
 		}
 							void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
-		inline				void				Scale						(const Tn3 & ypr, bool bEraseContent)												noexcept
+		inline				void				Scale		(const Tn3 & ypr, bool bEraseContent)												noexcept
 		{
 			if( bEraseContent ) {
 				_11 = (_tBase)ypr.x;	_12 =					_13 =					_14 =
@@ -172,7 +172,7 @@ namespace gpk
 			_12 = _13 = _14 = _21 = _23 = _24 = _31 = _32 = _41 = _42 = _44 = (_tBase)0;
 		//	return *this;
 		} // FoV
-		void									LookAt						(const Tn3 & vPosition, const Tn3& vTarget, const Tn3& vUp)		{
+		void									LookAt		(const Tn3 & vPosition, const Tn3& vTarget, const Tn3& vUp)		{
 			Tn3										F							= Tn3{vTarget - vPosition}.Normalize();
 			Tn3										R							= vUp	.Cross(F).Normalize();
 			Tn3										U							= F		.Cross(R).Normalize();
@@ -186,7 +186,7 @@ namespace gpk
 			_44 = (_tBase)1;
 		}
 
-							void				View3D						(const Tn3 & vPosition, const Tn3& vRight, const Tn3& vUp, const Tn3& vFront)	{
+							void				View3D		(const Tn3 & vPosition, const Tn3& vRight, const Tn3& vUp, const Tn3& vFront)	{
 			_11 = vRight.x;	_12 = vUp.x; _13 = vFront.x; _14 = (_tBase)0;
 			_21 = vRight.y;	_22 = vUp.y; _23 = vFront.y; _24 = (_tBase)0;
 			_31 = vRight.z;	_32 = vUp.z; _33 = vFront.z; _34 = (_tBase)0;
@@ -209,7 +209,7 @@ namespace gpk
 			_41 = vPos.x;	_42 = vPos.y;	_43 = vPos.z;	_44=(_tBase)1;
 		} // Billboard
 		inline				void				Rotation					(_tBase x, _tBase y, _tBase z)																		{ return Rotation({x, y, z}); }
-							void				Rotation					(const Tn3 &vc)																					{
+							void				Rotation					(const Tn3 &vc)				{
 			::gpk::SSinCos							yaw							= ::gpk::getSinCos(vc.z);
 			::gpk::SSinCos							pitch						= ::gpk::getSinCos(vc.y);
 			::gpk::SSinCos							roll						= ::gpk::getSinCos(vc.x);
@@ -290,9 +290,9 @@ namespace gpk
 			_33										= (_tBase)(1.0 - (xx + yy)	);
 		}
 
-		constexpr			_tMat4				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
-		inlcxpr	Tn3				GetTranslation				()																				const	noexcept	{ return { _41, _42, _43 }; }
-							_tMat4				GetInverse					()																				const				{
+		constexpr			_tMat4				GetTranspose				()			const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
+		inlcxpr	Tn3				GetTranslation				()			const	noexcept	{ return { _41, _42, _43 }; }
+							_tMat4				GetInverse					()			const				{
 			_tMat4										mTranspose					= GetTranspose()
 				,										mResult						= *this
 				;
@@ -389,7 +389,7 @@ namespace gpk
 			return mResult;
 		}
 
-							double				GetDeterminant				()																				const				{
+							double				GetDeterminant				()			const				{
 			_tMat4										mTranspose					= GetTranspose()
 				,										mThis						= *this
 				;
@@ -530,18 +530,18 @@ namespace gpk
 		inline				_tMat3&				operator +=					(const _tMat3& other)																	noexcept	{ return *this = operator+(other	);	}
 		inline				_tMat3&				operator -=					(const _tMat3& other)																	noexcept	{ return *this = operator-(other	);	}
 		inline				_tMat3&				operator *=					(double scalar)																			noexcept	{ return *this = operator*(scalar	);	}
-		inline				_tMat3&				operator /=					(double scalar)																						{ return *this = operator/(scalar	);	}
+		inline				_tMat3&				operator /=					(double scalar)			{ return *this = operator/(scalar	);	}
 		inline				_tMat3&				operator *=					(const _tMat3& right)																	noexcept	{ return *this = operator*(right	);	}
 
 							void				SetTranspose				(const _tMat3& m)																		noexcept	{ *this = m.GetTranspose();				}
-							void				SetInverse					(const _tMat3& m)																					{ *this = m.GetInverse();				}
+							void				SetInverse					(const _tMat3& m)				{ *this = m.GetInverse();				}
 							void				Transpose					(const _tMat3& m)																		noexcept	{ *this = GetTranspose();				}
-							void				Invert						()																									{ *this = GetInverse();					}
+							void				Invert						()						{ *this = GetInverse();					}
 
 		inline				_tMat3&				LinearInterpolate			(const _tMat3&p, const _tMat3&q, double fTime)											noexcept	{ return *this = ((q-p)*fTime)+p; }
-		constexpr			double				GetDeterminant				()																				const	noexcept	{ return _11*(_22*_33-_23*_32) + _12*(_23*_31-_33*_21) + _13*(_21*_32-_22*_31); }
-		constexpr			_tMat3				GetTranspose				()																				const	noexcept	{ return {_11, _21, _31, _12, _22, _32, _13, _23, _33};	}
-							_tMat3				GetInverse					()																				const				{
+		constexpr			double				GetDeterminant				()			const	noexcept	{ return _11*(_22*_33-_23*_32) + _12*(_23*_31-_33*_21) + _13*(_21*_32-_22*_31); }
+		constexpr			_tMat3				GetTranspose				()			const	noexcept	{ return {_11, _21, _31, _12, _22, _32, _13, _23, _33};	}
+							_tMat3				GetInverse					()			const				{
 			_tBase										A, B, C, D, E, F, G, H, I;
 
 			A										= (_22*_33 - _23*_32);/**/ B = (_23*_31 - _21*_33);/**/ C = (_21*_32 - _22*_31);
@@ -589,7 +589,7 @@ namespace gpk
 				,	_v.x * _31 + _v.y * _32 + _v.z * _33
 				};
 		}
-							void				Identity					()																						noexcept	{
+							void				Identity					()			noexcept	{
 			*this =
 				{	(_tBase)1,  (_tBase)0,  (_tBase)0
 				,	(_tBase)0,  (_tBase)1,  (_tBase)0
@@ -615,7 +615,7 @@ namespace gpk
 			_31 =							_32 = (_tBase)0;				_33 = (_tBase)1;
 		}
 		inline				void				Scale						(_tBase x, _tBase y, _tBase z, bool bEraseContent)										noexcept	{ Scale({x, y, z}, bEraseContent); }
-							void				Scale						(const _TCoord3D& ypr, bool bEraseContent)												noexcept	{
+							void				Scale		(const _TCoord3D& ypr, bool bEraseContent)												noexcept	{
 			if( bEraseContent ) {
 				_11 = (_tBase)ypr.x;		_12 =					_13 =
 				_21 = (_tBase)0;			_22 = (_tBase)ypr.y;	_23 =

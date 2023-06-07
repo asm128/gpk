@@ -47,12 +47,12 @@ namespace gpk
 		inlcxpr	quat<_t>		Cast					()									const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
 		cnstxpr	_tBase			LengthSquared			()									const	noexcept	{ return x * x + y * y + z * z + w * w;	}
 		inlcxpr	double			Length					()									const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
-		cnstxpr	double			Dot						(const Tq & other)					const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
+		cnstxpr	double			Dot		(const Tq & other)					const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
 		inline	Tq&				Identity				()											noexcept	{ return *this = {0, 0, 0, 1};			}
 		inline	Tq&				Normalize				()											noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
 		inline	Tq				Normalized				()									const	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /  ::sqrt(sqLen) : *this; }
 		inline	Tq&				LinearInterpolate		(const Tq & p, const Tq & q, double fTime)	noexcept	{ return *this = ((q-p)*fTime)+p;						}
-		inline	Tq&				SetRotation				(const Tq & q, const Tq & p)				noexcept	{ return *this = q * p * ~q;																							}
+		inline	Tq&				SetRotation				(const Tq & q, const Tq & p)				noexcept	{ return *this = q * p * ~q;				}
 		inline	Tq&				MakeFromEuler			(const Tn3 & v)											{ return MakeFromEuler(v.x, v.y, v.z);																			}
 		//void					AddScaled				(const TCoord4& vector, double scale)		noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
 		Tq&						AddScaled				(const Tn3 & vector, double scale)			noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }

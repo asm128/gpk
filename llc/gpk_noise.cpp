@@ -1,7 +1,7 @@
 #include "gpk_noise.h"
-																																																							// 4611686018427387904
+																	// 4611686018427387904
 // Based on noiseNormal1D() returns a value between 0 and 1.
-//double						::gpk::randNoise			(uint64_t seed)																					noexcept	{
+//double						::gpk::randNoise			(uint64_t seed)				noexcept	{
 //		static	::gpk::SRandomGenerator		generator;
 //		if( generator.Seed != seed )
 //			generator.Reset(seed);

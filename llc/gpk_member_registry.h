@@ -10,8 +10,8 @@
 #define GPKM_REGISTRY_NAME		gpk_member_registry
 #define GPKM_NAME(_memberName)	_gpk_info_##_memberName##_	// This mangles the member name for use as the type name.
 
-#define GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
-	struct GPKM_NAME(_memberName)	{																																												\
+#define GPKM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)				\
+	struct GPKM_NAME(_memberName)	{						\
 		typedef _nameSpace::_memberType			TMember;	\
 		stincxp	const char*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
 		stincxp	const char*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
@@ -20,11 +20,11 @@
 		stincxp	const char*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
 		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(_nameSpace::_memberType);	}	\
-	};																																																		\
+	};												\
 	_nameSpace::_memberType		_memberName
 
-#define GPKFM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)																					\
-	struct GPKM_NAME(_memberName)	{																																												\
+#define GPKFM(_nameSpace, _memberType, _memberName, _dataTypeId, _displayName, _memberDescription)				\
+	struct GPKM_NAME(_memberName)	{						\
 		typedef GPK_MODULE_FUNCTION_NAME(_memberType)		TMember;	\
 		stincxp	const char*										get_member_namespace			()							noexcept	{ return #_nameSpace;						}	\
 		stincxp	const char*										get_member_type_name			()							noexcept	{ return #_memberType;						}	\
@@ -33,13 +33,13 @@
 		stincxp	const char*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
 		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(GPK_MODULE_FUNCTION_NAME(_memberType));	}	\
-	};																																																		\
+	};												\
 	GPK_MODULE_FUNCTION_NAME(_memberType)		_memberName
 
 namespace gpk {
 #pragma pack(push, 1)
 	template <typename... _tArgs>	struct member_registry {
-		stincxp	const uint32_t										get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);																																																														}
+		stincxp	const uint32_t										get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);							}
 		stainli	const ::gpk::view<const ::gpk::STypeIdentifier	>&	get_types						()										{ static const ::gpk::STypeIdentifier	results[] = {{{			_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}	}; static const ::gpk::view<const ::gpk::STypeIdentifier	> results_view = {results}; return results_view;	}
 		stainli	const ::gpk::view<const ::gpk::label			>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
 		stainli	const ::gpk::view<const ::gpk::label			>&	get_display_names				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}

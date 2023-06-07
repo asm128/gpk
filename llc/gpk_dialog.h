@@ -69,7 +69,7 @@ namespace gpk
 		::gpk::img<::gpk::bgra>							ImageCrossBGRA										= {};
 		::gpk::imgmonou64								ImageCross											= {};
 
-														SDialog												(const ::gpk::pobj<::gpk::SGUI> & gui);
+														SDialog								(const ::gpk::pobj<::gpk::SGUI> & gui);
 														SDialog												(::gpk::pobj<::gpk::SGUI> & gui);
 														SDialog												();
 

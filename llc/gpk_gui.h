@@ -140,7 +140,7 @@ namespace gpk
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
 	constexpr	void												controlNCSpacing					(const ::gpk::SControl & ctl, ::gpk::SRectLimits	<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
 	constexpr	void												controlNCSpacing					(const ::gpk::SControl & ctl, ::gpk::n2			<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
-	constexpr	::gpk::SRectLimits	<int16_t>						controlNCRect						(const ::gpk::SControl & ctl)												noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	constexpr	::gpk::SRectLimits	<int16_t>						controlNCRect		(const ::gpk::SControl & ctl)												noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
 	constexpr	::gpk::n2			<int16_t>						controlNCSpacing					(const ::gpk::SControl & ctl)												noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
 
 	struct SGUIZoom {
@@ -148,12 +148,12 @@ namespace gpk
 		::gpk::SMinMax<double>											ZoomLimits							= {0.1, 10.0};
 		double															ZoomLevel							= 1.0;
 
-		bool															operator==							(const ::gpk::SGUIZoom & other)		const	noexcept	{
+		bool															operator==			(const ::gpk::SGUIZoom & other)		const	noexcept	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inline	bool													operator!=							(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+		inline	bool													operator!=			(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
 	};
 
 	struct SControlText {
@@ -203,8 +203,8 @@ namespace gpk
 
 		::gpk::SGUIZoom													LastZoom							= {};
 		::gpk::SGUIZoom													Zoom								= {};
-		uint32_t														SelectedFont						= 7;
-		uint32_t														ThemeDefault						= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+		uint32_t						SelectedFont						= 7;
+		uint32_t						ThemeDefault						= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 		::gpk::GUI_COLOR_MODE											ColorModeDefault					= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool															InputModeTouch						= true;
 	};

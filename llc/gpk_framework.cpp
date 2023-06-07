@@ -17,12 +17,12 @@
 
 
 
-static				::gpk::error_t														updateDPI									(::gpk::SFramework & framework)													{
+static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
-		RECT																						rcWindow									= {};
+		RECT			rcWindow									= {};
 		::GetWindowRect(framework.RootWindow.PlatformDetail.WindowHandle, &rcWindow);
-		POINT																						point										= {rcWindow.left + 8, rcWindow.top};
+		POINT			point										= {rcWindow.left + 8, rcWindow.top};
 		::gpk::n2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
@@ -32,8 +32,8 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().Cast<uint16_t>(), true);
 		}
 #else
-		HMONITOR																					hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
-		HRESULT																						hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
+		HMONITOR				hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
+		HRESULT			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
 		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
@@ -44,7 +44,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 #endif
 	return 0;
 }
-					::gpk::error_t		gpk::updateFramework						(::gpk::SFramework& framework)													{
+::gpk::error_t			gpk::updateFramework						(::gpk::SFramework& framework)													{
 	if(0 == framework.GUI.get_ref())
 		framework.GUI.create();
 	::gpk::SWindow								& mainWindow								= framework.RootWindow;
@@ -135,7 +135,7 @@ static				::gpk::error_t														updateDPI									(::gpk::SFramework & fra
 			gerror_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
 	}
 #endif
-	::gpk::SGUI																					& gui										= *framework.GUI;
+	::gpk::SGUI				& gui										= *framework.GUI;
 	{
 		::std::lock_guard																			lock										(framework.LockGUI);
 		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
@@ -354,23 +354,23 @@ static	void					initWndClass								(::HINSTANCE hInstance, const TCHAR* classNa
 	wndClassToInit.style			= CS_DBLCLKS;
 }
 #elif defined(GPK_XCB)
-static	::gpk::error_t			xcbWindowCreate								(::gpk::SWindow & window) {
+static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	if(0 == window.PlatformDetail.Connection) {
 		window.PlatformDetail.Connection														= xcb_connect(NULL, NULL);
 	}
-	xcb_screen_t																				* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
+	xcb_screen_t			* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(window.PlatformDetail.Connection)).data;
 	window.PlatformDetail.IdDrawableBackPixmap												= xcb_generate_id(window.PlatformDetail.Connection);
 	xcb_create_pixmap(window.PlatformDetail.Connection, xcbScreen->root_depth, window.PlatformDetail.IdDrawableBackPixmap, xcbScreen->root, window.Size.x, window.Size.y);
 	{	// create graphics context
 		window.PlatformDetail.GC																= xcb_generate_id(window.PlatformDetail.Connection);
-		const uint32_t																				mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
-		const uint32_t																				values[3]	= {xcbScreen->black_pixel, xcbScreen->white_pixel, 0};
+		const uint32_t			mask		= XCB_GC_FOREGROUND | XCB_GC_BACKGROUND | XCB_GC_GRAPHICS_EXPOSURES;
+		const uint32_t			values[3]	= {xcbScreen->black_pixel, xcbScreen->white_pixel, 0};
 		xcb_create_gc(window.PlatformDetail.Connection, window.PlatformDetail.GC, xcbScreen->root, mask, values);
 	}
 	{	// create the window
 		window.PlatformDetail.IdDrawable																		= xcb_generate_id(window.PlatformDetail.Connection);
-		const uint32_t																				mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
-		const uint32_t																				values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
+		const uint32_t			mask		= XCB_CW_BACK_PIXMAP | XCB_CW_EVENT_MASK;
+		const uint32_t			values[2]	= { window.PlatformDetail.IdDrawableBackPixmap
 			, XCB_EVENT_MASK_EXPOSURE | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_STRUCTURE_NOTIFY
 			| XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_KEY_PRESS  | XCB_EVENT_MASK_KEY_RELEASE | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
 		};
@@ -392,7 +392,7 @@ static	::gpk::error_t			xcbWindowCreate								(::gpk::SWindow & window) {
 }
 #endif
 
-::gpk::error_t						gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
+::gpk::error_t			gpk::mainWindowDestroy						(::gpk::SWindow& mainWindow)				{
 #if defined(GPK_WINDOWS)
 	::DestroyWindow(mainWindow.PlatformDetail.WindowHandle);
 	::gpk::windowUpdate(mainWindow);
@@ -404,7 +404,7 @@ static	::gpk::error_t			xcbWindowCreate								(::gpk::SWindow & window) {
 	return 0;
 }
 
-::gpk::error_t						gpk::mainWindowCreate						(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
+::gpk::error_t			gpk::mainWindowCreate						(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
 #if defined(GPK_WINDOWS)

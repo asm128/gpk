@@ -61,7 +61,7 @@ namespace gpk
 	::gpk::error_t					generateGridPositions					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
 	::gpk::error_t					generateGridNormalsTriangle				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::n3f32  > & out_Normals	);
 	::gpk::error_t					generateGridNormalsVertex				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t					generateGridUV							(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t					generateGridUV			(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
 	::gpk::error_t					generateGridGeometry
 		( const ::gpk::n2u16			& gridMetrics
 		, ::gpk::apod<::gpk::tri3f32>	& out_Positions

@@ -72,7 +72,7 @@ namespace gpk
 	template <typename T, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<T, nSize> viewToTest)		noexcept	{ return (uint32_t)(sizeof(T) * nSize);	}
 
 	template<typename T, size_t _nSize>
-	::gpk::error_t			find						(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
+	::gpk::error_t			find		(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
 		return ::gpk::find(element, ::gpk::view<const T>{target}, offset);
 	}
 } // namespace

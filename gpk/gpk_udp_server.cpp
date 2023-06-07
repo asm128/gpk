@@ -14,7 +14,7 @@
 #	error	"Not implemented."
 #endif
 
-static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		{
+static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 	::gpk::apobj<::gpk::SUDPConnection>				clientsToProcess;
 	::gpk::au8										receiveBuffer;
 	::gpk::apobj<::gpk::SUDPMessage>				cacheSent						= {};
@@ -109,7 +109,7 @@ static	::gpk::error_t						updateClients					(gpk::SUDPServer& serverInstance)		
 	return 0;
 }
 
-static	::gpk::error_t						recycleClient					(::gpk::SUDPServer& serverInstance, ::gpk::pobj<::gpk::SUDPConnection> & pClient)		{
+static	::gpk::error_t	recycleClient					(::gpk::SUDPServer& serverInstance, ::gpk::pobj<::gpk::SUDPConnection> & pClient)		{
 	for(uint32_t iClient = 0, countClients = serverInstance.Clients.size(); iClient < countClients; ++iClient) {
 		pClient										= serverInstance.Clients[iClient];
 		::gpk::SUDPConnection							& client						= *pClient;
@@ -138,7 +138,7 @@ static	::gpk::error_t						recycleClient					(::gpk::SUDPServer& serverInstance,
 	return -1;
 }
 
-static	::gpk::error_t						serverAcceptClient				(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
+static	::gpk::error_t	serverAcceptClient				(::gpk::SUDPServer& serverInstance, ::gpk::SUDPCommand command, const sockaddr_in & sa_client)		{
 	::gpk::pobj<::gpk::SUDPConnection>				pClient							= {};
 	{ // accept
 		::std::lock_guard								lock							(serverInstance.Mutex);
@@ -159,7 +159,7 @@ static	::gpk::error_t						serverAcceptClient				(::gpk::SUDPServer& serverInsta
 	return 0;
 }
 
-static	::gpk::error_t						serverListenTick				(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
+static	::gpk::error_t	serverListenTick				(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
 	serverInstance.Socket.close();
 	ree_if(INVALID_SOCKET == (serverInstance.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
 	gpk_necall(::bind(serverInstance.Socket, (sockaddr *)&server, sizeof(sockaddr_in)), "Could not bind name to socket.");	/* Bind address to socket */
@@ -202,7 +202,7 @@ static	::gpk::error_t						serverListenTick				(::gpk::SUDPServer& serverInstanc
 }
 
 static	void								threadUpdateClients				(void* serverInstance)					{ ::updateClients(*(::gpk::SUDPServer*)serverInstance); }
-static	::gpk::error_t						server							(::gpk::SUDPServer& serverInstance)		{
+static	::gpk::error_t	server							(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen						= true;
 	gpk_necs(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
 	sockaddr_in										server								= {};
@@ -234,7 +234,7 @@ static	void								threadServer					(void* pServerInstance)				{
 	}
 }
 
-::gpk::error_t								gpk::serverStart				(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex)		{
+::gpk::error_t			gpk::serverStart				(::gpk::SUDPServer& serverInstance, uint16_t port, int16_t adapterIndex)		{
 	serverInstance.Listen						= true;
 	serverInstance.Address.Port					= port;
 	serverInstance.AdapterIndex					= adapterIndex;
@@ -242,7 +242,7 @@ static	void								threadServer					(void* pServerInstance)				{
 	return 0;
 }
 
-::gpk::error_t								gpk::serverStop					(::gpk::SUDPServer& serverInstance)		{
+::gpk::error_t			gpk::serverStop					(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen						= false;
 	sockaddr_in										sa_srv							= {};							// Information about the client
 	int												sa_length						= (int)sizeof(sockaddr_in);		// Length of client struct
@@ -258,7 +258,7 @@ static	void								threadServer					(void* pServerInstance)				{
 	return 0;
 }
 
-::gpk::error_t								gpk::serverPayloadCollect		(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>> & receivedMessages)		{
+::gpk::error_t			gpk::serverPayloadCollect		(::gpk::SUDPServer & server, ::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>> & receivedMessages)		{
 	::std::lock_guard								lock							(server.Mutex);
 	gpk_necs(receivedMessages.resize(server.Clients.size()));
 	for(uint32_t iClient = 0, countClients = server.Clients.size(); iClient < countClients; ++iClient) {

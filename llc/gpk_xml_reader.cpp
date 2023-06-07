@@ -15,7 +15,7 @@
 	return ::gpk::xmlParse(file.Reader, file.Bytes);
 }
 
-static ::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
+static	::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
 	const int32_t			parentIndex					= reader.StateRead.IndexCurrentElement;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	const uint32_t			offsetChar					= (iStartCharacter == -1) ? reader.StateRead.IndexCurrentChar : iStartCharacter;
@@ -35,7 +35,7 @@ static ::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_
 	return ++reader.StateRead.NestLevel;
 }
 
-static ::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
+static	::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iStopCharacter = -1) {
 	const ::gpk::XML_TOKEN	token						= reader.StateRead.CurrentElement->Type;
 	const int32_t			parentIndex					= reader.StateRead.CurrentElement->Parent;
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
@@ -54,7 +54,7 @@ static ::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iS
 	return --reader.StateRead.NestLevel;
 }
 
-static ::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
 	const char				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -79,7 +79,7 @@ static ::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk:
 	return 0;
 }
 
-static ::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
 	const char				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {

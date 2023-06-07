@@ -4,7 +4,7 @@
 #include "gpk_math.h"
 #include <ctype.h>
 
-bool										gpk::isSpaceCharacter						(const char characterToTest)		{
+bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 	switch(characterToTest) {
 	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
 		return true;
@@ -13,7 +13,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	}
 }
 
-::gpk::error_t								gpk::skipToNextCharacter					(uint32_t & indexCurrentChar, const ::gpk::vcc & expression)		{
+::gpk::error_t			gpk::skipToNextCharacter					(uint32_t & indexCurrentChar, const ::gpk::vcc & expression)		{
 	while(indexCurrentChar < expression.size()) {
 		if(::gpk::isSpaceCharacter(expression[indexCurrentChar]))
 			++indexCurrentChar;
@@ -23,7 +23,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
+::gpk::error_t			gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
 	::gpk::apod<char>								stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
@@ -125,7 +125,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
+::gpk::error_t			gpk::stripLiteralParseStep		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	if(work_state.InsideToken)
 		::stripLiteralsParseToken(work_state, out_types, in_format);
 	else {
@@ -139,7 +139,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
+::gpk::error_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
 		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "%s", "Parse step failed.");
@@ -147,7 +147,7 @@ bool										gpk::isSpaceCharacter						(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcc> & out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format)		{
+::gpk::error_t			gpk::stripLiteralGetViews		(::gpk::aobj<::gpk::vcc> & out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format)		{
 	for(uint32_t iType = 0; iType < in_resultOfParser.size(); ++iType) {
 		const ::gpk::SStripLiteralType					& type						= in_resultOfParser[iType];
 		::gpk::vcs						view						= {};

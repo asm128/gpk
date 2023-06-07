@@ -7,7 +7,7 @@
 #include <ctime>
 #include <random>
 
-::gpk::error_t								gpk::saltDataSalt				(const ::gpk::vcu8 & binary, ::gpk::au8 & salted)				{
+::gpk::error_t			gpk::saltDataSalt				(const ::gpk::vcu8 & binary, ::gpk::au8 & salted)				{
 	gpk_necall(salted.resize(binary.size() * 2), "%s", "Out of memory?");
 	uint8_t											* pSalted						= salted.begin();
 	const uint8_t									* pBinary						= binary.begin();
@@ -18,7 +18,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::saltDataUnsalt				(const ::gpk::vcu8 & salted, ::gpk::au8 & binary)				{
+::gpk::error_t			gpk::saltDataUnsalt				(const ::gpk::vcu8 & salted, ::gpk::au8 & binary)				{
 	gpk_necall(binary.resize(salted.size() / 2), "%s", "Out of memory?");
 	const uint8_t									* pSalted						= salted.begin();
 	uint8_t											* pBinary						= binary.begin();
@@ -27,7 +27,7 @@
 	return 0;
 }
 
-static	::gpk::error_t								hexFromByte						(uint8_t i, char * hexed)																{
+static	::gpk::error_t	hexFromByte						(uint8_t i, char * hexed)																{
 	char														converted [0x20]				= {};
 	snprintf(converted, ::gpk::size(converted) - 1, "%*.2X", 2, i);
 	hexed[0]												= converted[0];
@@ -35,20 +35,20 @@ static	::gpk::error_t								hexFromByte						(uint8_t i, char * hexed)									
 	return 0;
 }
 
-static	::gpk::error_t								hexToByte						(const char* s, uint8_t & byte)															{
+static	::gpk::error_t	hexToByte		(const char* s, uint8_t & byte)															{
 	char														temp [3]						= {s[0], s[1]};
 	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte));
 	return 0;
 }
 
-static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)															{
+static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	char														temp [3]						= {s[0], s[1]};
 	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, &byte));
 	return 0;
 }
 
-			::gpk::error_t								gpk::hexEncode					(const ::gpk::vcu8 & in_binary, ::gpk::ac & out_hexed	)	{
-	uint32_t													offset							= out_hexed.size();
+::gpk::error_t			gpk::hexEncode					(const ::gpk::vcu8 & in_binary, ::gpk::ac & out_hexed	)	{
+	uint32_t					offset							= out_hexed.size();
 	gpk_necs(out_hexed.resize(offset + in_binary.size() * 2));
 	char														* pHexed						= out_hexed.begin();
 	const uint8_t												* pBinary						= in_binary.begin();
@@ -57,9 +57,9 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-			::gpk::error_t								gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::au8 & out_binary)	{
-	uint32_t													offset							= out_binary.size();
-	uint32_t													binarySize						= in_hexed.size() >> 1;
+::gpk::error_t			gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::au8 & out_binary)	{
+	uint32_t					offset							= out_binary.size();
+	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
 	const char													* pHexed						= in_hexed.begin();
 	uint8_t														* pBinary						= out_binary.begin();
@@ -68,9 +68,9 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-			::gpk::error_t								gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::ai8 & out_binary)	{
-	uint32_t													offset							= out_binary.size();
-	uint32_t													binarySize						= in_hexed.size() >> 1;
+::gpk::error_t			gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::ai8 & out_binary)	{
+	uint32_t					offset							= out_binary.size();
+	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necall(out_binary.resize(offset + binarySize), "%s", "Out of memory?");
 	const char													* pHexed						= in_hexed.begin();
 	int8_t														* pBinary						= out_binary.begin();
@@ -79,7 +79,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-::gpk::error_t											gpk::ardellEncode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
+::gpk::error_t			gpk::ardellEncode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	char														saltValue		[4]				= {};
 	if (salt)
@@ -113,7 +113,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	for(i = 2		; i  < n; ++i) sn[i] = sn[i] ^ sn[i - 2] ^  (keyFinal[2] * sn[i - 1]) % 256 ;
 	for(i = n - 3	; i >= 0; --i) sn[i] = sn[i] ^ sn[i + 2] ^  (keyFinal[3] * sn[i + 1]) % 256 ;
 
-	uint32_t													outputOffset					= output.size();
+	uint32_t					outputOffset					= output.size();
 	gpk_necall(output.resize(outputOffset + n), "%s", "Out of memory?");
 	uint8_t														* outputFast					= output.begin();
 	for( i = 0; i < n; ++i)
@@ -121,7 +121,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-::gpk::error_t											gpk::ardellDecode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)		{
+::gpk::error_t			gpk::ardellDecode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	const int32_t												keyFinal[8]						=
 		{ (int32_t)(11 + (key % 233))
@@ -140,8 +140,8 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	for(i = 0		; i  < n - 1; ++i)	sn[i]			= sn[i] ^ sn[i + 1] ^ (keyFinal[1] * sn[i + 1]) % 256;
 	for(i = n - 1	; i >= 1	; --i)	sn[i]			= sn[i] ^ sn[i - 1] ^ (keyFinal[0] * sn[i - 1]) % 256;
 
-	uint32_t													outputOffset					= output.size();
-	const uint32_t												finalStringSize					= salt ? n - 4 : n;
+	uint32_t					outputOffset					= output.size();
+	const uint32_t				finalStringSize					= salt ? n - 4 : n;
 	const ::gpk::vci32											finalValues						= {salt ? &sn[2] : sn, finalStringSize};
 	gpk_necall(output.resize(outputOffset + finalStringSize), "%s", "Out of memory?");
 	uint8_t														* outputFast					= output.begin();
@@ -151,8 +151,8 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-::gpk::error_t											gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::ac & hexDigits) {
-	const uint32_t												offset							= hexDigits.size();
+::gpk::error_t			gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::ac & hexDigits) {
+	const uint32_t				offset							= hexDigits.size();
 	if (codePoint <= 0x7f) {
 		hexDigits.resize(offset + 1);
 		hexDigits[offset + 0]									= static_cast<char>(codePoint);
@@ -177,7 +177,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-::gpk::error_t									gpk::digest								(const ::gpk::vcu8 & input, ::gpk::au32 & digest)		{
+::gpk::error_t			gpk::digest				(const ::gpk::vcu8 & input, ::gpk::au32 & digest)		{
 	uint32_t											x								= 0;
 	::gpk::au32								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
@@ -212,7 +212,7 @@ static	::gpk::error_t								hexToByte						(const char* s, int8_t & byte)						
 	return 0;
 }
 
-::gpk::error_t									gpk::digest													(const ::gpk::vcu8 & input, ::gpk::ac & digest)		{
+::gpk::error_t			gpk::digest									(const ::gpk::vcu8 & input, ::gpk::ac & digest)		{
 	uint32_t											x								= 0;
 	::gpk::au32								filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {

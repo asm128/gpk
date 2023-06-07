@@ -18,7 +18,7 @@ namespace gpk
 
 		inlcxpr												grid_static								()																		: view2d<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-							::gpk::error_t								read									(const int8_t* input, uint32_t* inout_bytesRead)						{
+							::gpk::error_t								read					(const int8_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "%s", "Invalid input pointer!");
 			TGridView															inputGrid								= {(T*)input, Width, Depth};
 			*inout_bytesRead												+= sizeof(T) * Width * Depth;

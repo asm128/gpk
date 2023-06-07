@@ -38,10 +38,10 @@
 
 namespace gpk
 {
-	typedef	void										(*debug_print_t)								(const char* text, uint32_t textLen);
+	typedef	void										(*debug_print_t)				(const char* text, uint32_t textLen);
 
-	void												_gpk_print_system_errors						(const char* prefix, uint32_t prefixLen);
-	void												_base_debug_print								(const char* text, uint32_t textLen);
+	void												_gpk_print_system_errors		(const char* prefix, uint32_t prefixLen);
+	void												_base_debug_print				(const char* text, uint32_t textLen);
 
 #if defined(GPK_STDOUT_LOG_ENABLED)
 #	define base_debug_print(prefix, prefixLen)	do {			\
@@ -190,7 +190,7 @@ namespace gpk
 #			define gerror_if(condition, format, ...)				if(condition) { error_printf	("Condition: %s", "" #condition "\n"); error_printf		(format, ##__VA_ARGS__);	} 
 #			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: %s", "" #condition "\n"); warning_printf	(format, ##__VA_ARGS__);	} 
 #			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: %s", "" #condition "\n"); info_printf		(format, ##__VA_ARGS__);	} 
-#		else																										
+#		else							
 #			define gerror_if(condition, format, ...)				if(condition) { error_printf	("Condition: %s", "" #condition "\n"); error_printf		(format, __VA_ARGS__);	 } 
 #			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: %s", "" #condition "\n"); warning_printf	(format, __VA_ARGS__);	 } 
 #			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: %s", "" #condition "\n"); info_printf		(format, __VA_ARGS__);	 } 
@@ -290,110 +290,110 @@ namespace gpk
 
 #if defined (GPK_ERROR_PRINTF_ENABLED)
 // Non-propagable retval_error call.
-#	define gpk_rve_ecall(retVal, gpkl_call, format, ...) do {																							\
-		::gpk::error_t gpk_errCall_ = (gpkl_call);  																									\
-		if(gpk_errCall_ < 0) {																															\
+#	define gpk_rve_ecall(retVal, gpkl_call, format, ...) do {				\
+		::gpk::error_t gpk_errCall_ = (gpkl_call);  						\
+		if(gpk_errCall_ < 0) {												\
 			debug_printf(0, "error", "%s: 0x%X.", #gpkl_call, gpk_errCall_);																			\
-			error_printf(format, __VA_ARGS__); 																											\
-			return retVal; 																																\
-		}																																				\
-		else {																																			\
+			error_printf(format, __VA_ARGS__); 								\
+			return retVal; 													\
+		}																	\
+		else {																\
 			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
-		}																																				\
+		}																	\
 	} while(0)
 
 // Non-propagable retval_error error-warning call.
-#	define gpk_rve_ewcall(retVal, gpkl_call, format, ...) do {																							\
-		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 																								\
-			if(gpk_errCall_ < 0) {																														\
+#	define gpk_rve_ewcall(retVal, gpkl_call, format, ...) do {				\
+		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 					\
+			if(gpk_errCall_ < 0) {											\
 				debug_printf(0, "error", "%s: 0x%X.", #gpkl_call, gpk_errCall_);																		\
-				error_printf(format, __VA_ARGS__); 																										\
-				return retval; 																															\
-			}																																			\
-			else {																																		\
-				warning_printf("%s: 0x%X.", #gpkl_call, gpk_errCall_);																					\
-			}																																			\
-		}																																				\
-		else {																																			\
+				error_printf(format, __VA_ARGS__); 							\
+				return retval; 												\
+			}																\
+			else {															\
+				warning_printf("%s: 0x%X.", #gpkl_call, gpk_errCall_);				\
+			}																\
+		}																	\
+		else {																\
 			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
-		}																																				\
+		}																	\
 	} while(0)
 
 //
-#	define gpk_rv_hrcall(retVal, hr_call) do {																											\
-		::HRESULT errCall_ = (hr_call);  																												\
-		if FAILED(errCall_) {																															\
+#	define gpk_rv_hrcall(retVal, hr_call) do {								\
+		::HRESULT errCall_ = (hr_call);  									\
+		if FAILED(errCall_) {												\
 			debug_printf(0, "error", "%s: (0x%X) : '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin());						\
-			return retVal; 																																\
-		}																																				\
-		else {																																			\
-			success_printf("%s: Success (0x%X).", #hr_call, errCall_);																					\
-		}																																				\
+			return retVal; 													\
+		}																	\
+		else {																\
+			success_printf("%s: Success (0x%X).", #hr_call, errCall_);				\
+		}																	\
 	} while(0)
 
 //
-#	define gpk_rve_hrcall(retVal, hr_call, format, ...) do {																							\
-		::HRESULT errCall_ = (hr_call);  																												\
-		if FAILED(errCall_) {																															\
+#	define gpk_rve_hrcall(retVal, hr_call, format, ...) do {				\
+		::HRESULT errCall_ = (hr_call);  									\
+		if FAILED(errCall_) {												\
 			debug_printf(0, "error", "%s: (0x%X) : '%s' - " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__);	\
-			return retVal; 																																\
-		}																																				\
-		else {																																			\
-			success_printf("%s: Success (0x%X).", #hr_call, errCall_);																					\
-		}																																				\
+			return retVal; 													\
+		}																	\
+		else {																\
+			success_printf("%s: Success (0x%X).", #hr_call, errCall_);				\
+		}																	\
 	} while(0)
 
 // --------------------------------------------------------------------
 // Propagable retval_error call.
-#	define gpk_pecall(gpkl_call, ...) do {																												\
-		::gpk::error_t gpk_errCall_ = (gpkl_call);  																									\
-		if(gpk_errCall_ < 0) {																															\
-			debug_printf(0, "error", "%s: 0x%X", #gpkl_call, gpk_errCall_);																				\
-			error_printf(__VA_ARGS__); 																													\
-			return gpk_errCall_; 																														\
-		}																																				\
-		else {																																			\
+#	define gpk_pecall(gpkl_call, ...) do {									\
+		::gpk::error_t gpk_errCall_ = (gpkl_call);  						\
+		if(gpk_errCall_ < 0) {												\
+			debug_printf(0, "error", "%s: 0x%X", #gpkl_call, gpk_errCall_);			\
+			error_printf(__VA_ARGS__); 										\
+			return gpk_errCall_; 											\
+		}																	\
+		else {																\
 			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
-		}																																				\
+		}																	\
 	} while(0)
 
 // Propagable retval_error error-warning call.
-#	define gpk_pewcall(gpkl_call, ...) do {																												\
-		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 																								\
-			if(gpk_errCall_ < 0) {																														\
+#	define gpk_pewcall(gpkl_call, ...) do {									\
+		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 					\
+			if(gpk_errCall_ < 0) {											\
 				debug_printf(0, "error", "%s: 0x%X", #gpkl_call, gpk_errCall_);																			\
-				error_printf(__VA_ARGS__); 																												\
-				return gpk_errCall_; 																													\
-			}																																			\
-			else {																																		\
-				warning_printf("%s: 0x%X.", #gpkl_call, gpk_errCall_);																					\
-			}																																			\
-		}																																				\
-		else {																																			\
+				error_printf(__VA_ARGS__); 									\
+				return gpk_errCall_; 										\
+			}																\
+			else {															\
+				warning_printf("%s: 0x%X.", #gpkl_call, gpk_errCall_);				\
+			}																\
+		}																	\
+		else {																\
 			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
-		}																																				\
+		}																	\
 	} while(0)
 
 #else
-#	define gpk_rve_ecall(retval, gpkl_call, ...) do {																									\
-		if(::gpk::failed(gpkl_call))  																													\
-			return retval; 																																\
+#	define gpk_rve_ecall(retval, gpkl_call, ...) do {						\
+		if(::gpk::failed(gpkl_call))  										\
+			return retval; 													\
 	} while(0)
 
-#	define gpk_rve_hrcall(retval, gpkl_call, ...) do {																									\
-		if(FAILED(gpkl_call))  																															\
-			return retval; 																																\
+#	define gpk_rve_hrcall(retval, gpkl_call, ...) do {						\
+		if(FAILED(gpkl_call))  												\
+			return retval; 													\
 	} while(0)
 
-#	define gpk_rv_hrcall(retval, gpkl_call) do {																										\
-		if(FAILED(gpkl_call))  																															\
-			return retval; 																																\
+#	define gpk_rv_hrcall(retval, gpkl_call) do {							\
+		if(FAILED(gpkl_call))  												\
+			return retval; 													\
 	} while(0)
 
-#	define gpk_pecall(gpkl_call, ...) do {																												\
-		::gpk::error_t gpk_errCall_ = (gpkl_call);																										\
-		if(::gpk::failed(gpk_errCall_)) 																												\
-			return gpk_errCall_; 																														\
+#	define gpk_pecall(gpkl_call, ...) do {									\
+		::gpk::error_t gpk_errCall_ = (gpkl_call);							\
+		if(::gpk::failed(gpk_errCall_)) 									\
+			return gpk_errCall_; 											\
 	} while(0)
 
 #	define gpk_rve_ewcall					gpk_rve_ecall	// Non-propagable retval_error error-warning call.

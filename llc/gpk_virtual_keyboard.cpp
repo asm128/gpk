@@ -2,7 +2,7 @@
 
 #include "gpk_virtual_keyboard.h"
 
-::gpk::error_t				gpk::virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, int32_t iControl) {
+::gpk::error_t			gpk::virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, int32_t iControl) {
 	const int32_t					idKeyFirst		= vk.IdRoot + 1;
 	const int32_t					idKeyStop		= idKeyFirst + vk.Keys.size();
 	if(::gpk::in_range<int32_t>(iControl, idKeyFirst, idKeyStop)) {

@@ -13,7 +13,7 @@
 #	include <ctype.h>
 #endif
 
-::gpk::error_t							gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded)		{
+::gpk::error_t			gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded)		{
 	uint32_t									decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const char								currentChar						= urlToDecode[iChar];
@@ -30,7 +30,7 @@
 	return decodedCharacters;
 }
 
-static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<char> & joined)		{
+static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<char> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -53,7 +53,7 @@ static	::gpk::error_t					httpRequestChunkedJoin			(const ::gpk::vcc & body, ::g
 	return 0;
 }
 
-static	::gpk::error_t		httpClientRequestConstruct
+static	::gpk::error_t	httpClientRequestConstruct
 	(	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
@@ -88,7 +88,7 @@ static	::gpk::error_t		httpClientRequestConstruct
 
 // get sockaddr, IPv4 or IPv6:
 void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
-::gpk::error_t							gpk::httpClientRequest
+::gpk::error_t			gpk::httpClientRequest
 	(	const ::gpk::SIPv4					& clientToConnect
 	,	::gpk::HTTP_METHOD					method
 	,	const ::gpk::vcs		& hostName
@@ -247,7 +247,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 	return 0;
 }
 
-::gpk::error_t							gpk::httpClientRequest
+::gpk::error_t			gpk::httpClientRequest
 	(	const ::gpk::SIPv4					& clientToConnect
 	,	::gpk::HTTP_METHOD					method
 	,	const ::gpk::vcs		& hostName

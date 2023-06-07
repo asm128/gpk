@@ -43,7 +43,7 @@ void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
 	}
 }
 
-static	::gpk::error_t			getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
+static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
 #if defined(GPK_WINDOWS)
 	if(nullptr == buffer)
 		return -1;

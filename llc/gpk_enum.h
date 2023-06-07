@@ -206,14 +206,14 @@ namespace gpk
 		::gpk::vcc			Title					= INVALID_ENUM_VALUE_STR;
 		::gpk::vcc			Description				= INVALID_ENUM_VALUE_STR;
 		//
-		inlcxpr				genum_value				()																											= default;
-		inlcxpr				genum_value				(const genum_value & other)																					= default;
-		inlcxpr				genum_value				(const T & value)																						: Value((T)value), Name(::gpk::enum_definition<T>::get().get_value_name(value))				{}
+		inlcxpr				genum_value				()								= default;
+		inlcxpr				genum_value				(const genum_value & other)				= default;
+		inlcxpr				genum_value				(const T & value)			: Value((T)value), Name(::gpk::enum_definition<T>::get().get_value_name(value))				{}
 		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name)															: Value((T)value), Name(name), Title(name), Description(name)			{ ::gpk::enum_definition<T>::get().add_value(value, name, name, name);			}
 		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value((T)value), Name(name), Title(name), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(value, name, name, description);		}
 		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)value), Name(name), Title(title), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(value, name, title, description);	}
 
-		inlcxpr	operator	const	T&		()																				const	{ return Value; }
+		inlcxpr	operator	const	T&		()			const	{ return Value; }
 	};
 
 	template <typename _tEnum, size_t _sLen>
@@ -239,7 +239,7 @@ namespace gpk
 
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																			\
-	enum EnumName : IntType {};																							\
+	enum EnumName : IntType {};				\
 	static	const uint32_t			__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);	\
 	stincxp	EnumName				operator &					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
 	stincxp	EnumName				operator ~					(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\

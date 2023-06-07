@@ -23,7 +23,7 @@
 	};
 #pragma pack(pop)
 
-::gpk::error_t					gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, const ::gpk::vcu8 & input) {
+::gpk::error_t			gpk::rswFileLoad	(::gpk::SRSWFileContents & loaded, const ::gpk::vcu8 & input) {
 	::gpk::view_stream<const uint8_t>	rsw_stream			= {input.begin(), input.size()};
 	SRSWHeader							header				= {};//*(SRSWHeader*)input.begin();
 	gpk_necs(rsw_stream.read_pod(header));//sizeof(SRSWHeader);
@@ -173,12 +173,12 @@
 	return rsw_stream.CursorPosition;
 }
 
-::gpk::error_t								gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
+::gpk::error_t			gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::error_t							gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)							{
+::gpk::error_t			gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)							{
 	::gpk::au8									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t									unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];

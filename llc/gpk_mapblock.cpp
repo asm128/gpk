@@ -1,12 +1,12 @@
 #include "gpk_block.h"
 
-::gpk::error_t									gpk::SMapBlock::MapGet					(uint32_t index, ::gpk::vcu8 & data)				const	{
+::gpk::error_t			gpk::SMapBlock::MapGet					(uint32_t index, ::gpk::vcu8 & data)				const	{
 	ree_if(index >= Allocator.Views.size(), "Index out of range: %i", index);
 	data											= {Allocator.Views[index], Allocator.Counts[index]};
 	return 0;
 }
 
-::gpk::error_t									gpk::SMapBlock::MapId					(const ::gpk::vcu8 & dataToAdd)						const	{
+::gpk::error_t			gpk::SMapBlock::MapId					(const ::gpk::vcu8 & dataToAdd)						const	{
 	ree_if(0 == dataToAdd.size(), "%s", "Empty data is not allowed");
 	for(uint32_t iMap = 0; iMap < Allocator.Views.size(); ++iMap) {
 		const uint16_t										currentViewLen							= Allocator.Counts[iMap];

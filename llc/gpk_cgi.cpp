@@ -4,7 +4,7 @@
 
 #include <ctime>
 
-::gpk::error_t				gpk::querystring_split	(const ::gpk::vcc & input_string, ::gpk::aobj<::gpk::vcc>& output_views)		{
+::gpk::error_t			gpk::querystring_split	(const ::gpk::vcc & input_string, ::gpk::aobj<::gpk::vcc>& output_views)		{
 	if(0 == input_string.size())
 		return 0;
 	uint32_t						start				= 0;
@@ -28,7 +28,7 @@
 	return 0;
 }
 
-::gpk::error_t				gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
+::gpk::error_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
 	::gpk::au8						environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {

@@ -39,7 +39,7 @@ int64_t								gpk::fileSize				(const ::gpk::vcc	& fileNameSrc)								{
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static ::gpk::error_t				fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+static	::gpk::error_t	fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	::gpk::apod<int8_t>						fileInMemory;
 	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
@@ -63,7 +63,7 @@ static ::gpk::error_t				fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, cons
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	int64_t									sizeFile					= ::gpk::fileSize(fileNameSrc);
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
@@ -94,7 +94,7 @@ static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, cons
 }
 
 // Splits a file into file.## parts.
-::gpk::error_t						gpk::fileSplit				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+::gpk::error_t			gpk::fileSplit				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
 	// -- Get file size to determine which algorithm to use.
 	// -- For files smaller than 3gb, we use a fast algorithm that loads the entire file in memory.
 	// -- For files of, or larger than, 3gb, we use a fast algorithm that loads chunks of 1gb in memory for writing the parts.
@@ -106,7 +106,7 @@ static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, cons
 }
 
 // Joins a file split into file.## parts.
-::gpk::error_t						gpk::fileJoin				(const ::gpk::vcc	& fileNameDst)	{
+::gpk::error_t			gpk::fileJoin				(const ::gpk::vcc	& fileNameDst)	{
 	char									fileNameSrc	[1024]			= {};
 	uint32_t								iFile						= 0;
 	gpk_necall(snprintf(fileNameSrc, ::gpk::size(fileNameSrc) - 2, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
@@ -125,7 +125,7 @@ static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, cons
 	return iFile - 1;
 }
 
-::gpk::error_t						gpk::fileToMemory			(const ::gpk::vcc & fileName, ::gpk::au8 & fileInMemory)		{
+::gpk::error_t			gpk::fileToMemory			(const ::gpk::vcc & fileName, ::gpk::au8 & fileInMemory)		{
 	FILE									* fp						= 0;
 	int32_t									fileErr						= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
 	rvw_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
@@ -147,7 +147,7 @@ static ::gpk::error_t				fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, cons
 	return result;
 }
 
-::gpk::error_t						gpk::fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcu8 & fileInMemory)	{
+::gpk::error_t			gpk::fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcu8 & fileInMemory)	{
 	FILE									* fp						= 0;
 	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());

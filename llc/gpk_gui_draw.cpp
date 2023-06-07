@@ -65,7 +65,7 @@ static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState						(bool disabled, con
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
-static	::gpk::error_t	fillColorTableBorders3D									(const ::gpk::SControlState & controlState, const ::gpk::SControlMode & controlMode, ::gpk::view<::gpk::bgra> & colors)					{
+static	::gpk::error_t	fillColorTableBorders3D					(const ::gpk::SControlState & controlState, const ::gpk::SControlMode & controlMode, ::gpk::view<::gpk::bgra> & colors)					{
 	double						bright;
 	double						shaded;
 	if(controlMode.NoHoverEffect) {

@@ -38,7 +38,7 @@ namespace gpk
 // 32th bit		: 0 = Signed / 1 = Unsigned
 //
 #define GTYPEID_MAKE( IsSigned, IsNorm, IsFloat, IsBigEndian, ElementCount, ElementPad, SizeInBits )	\
-	( ::gpk::DATA_TYPE																					\
+	( ::gpk::DATA_TYPE				\
 		( ((IsSigned)			? 0 : ::gpk::DATA_TYPE_IS_SIGNED)										\
 		| ((IsNorm)				? ::gpk::DATA_TYPE_IS_NORMALIZED		: 0)							\
 		| ((IsFloat)			? ::gpk::DATA_TYPE_IS_FLOAT				: 0)							\
@@ -63,10 +63,10 @@ namespace gpk
 #define	GTYPEID_TOTALBYTES( _dataTypeID )																		\
 	( GTYPEID_ELEMENTPAD(_dataTypeID) ?																			\
 		(GTYPEID_ELEMENTBYTES( _dataTypeID )*GTYPEID_ELEMENTCOUNT( _dataTypeID )) :								\
-		(																										\
+		(							\
 			( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(uint32_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) / 8 )			\
 			+ one_if( (GTYPEID_ELEMENTSIZE( _dataTypeID )*(uint32_t)GTYPEID_ELEMENTCOUNT( _dataTypeID )) % 8 )	\
-		)																										\
+		)							\
 	)
 
 	struct SDataTypeID {
@@ -103,7 +103,7 @@ namespace gpk
 			, bool		isNorm			= false
 			, bool		elementPad		= false
 			, bool		isBigEndian		= false
-			)																								noexcept
+			)					noexcept
 			: SizeInBits	(sizeInBits		- 1)
 			, ElementPad	(elementPad		? 1 : 0)
 			, ElementCount	(elementCount	- 1)

@@ -15,7 +15,7 @@ namespace gpk
 		, const ::gpk::n2<TCoord>	& coordToRealign
 		, ::gpk::n2<TCoord>			& coordRealigned
 		, ::gpk::ALIGN				align
-		)																																					noexcept	{
+		)																		noexcept	{
 		coordRealigned		= coordToRealign;
  			 if gbit_true(align, ::gpk::ALIGN_CENTER	) coordRealigned.x	+= (targetSize.x >> 1);
 		else if gbit_true(align, ::gpk::ALIGN_RIGHT		) coordRealigned.x	= targetSize.x - coordToRealign.x;

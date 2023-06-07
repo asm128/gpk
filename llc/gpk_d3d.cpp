@@ -4,7 +4,7 @@
 
 #include <dxgi1_4.h>
 
-::gpk::error_t				gpk::d3dDeviceValidate				(::gpk::pcom<::ID3D11Device3> & d3dDevice)				{
+::gpk::error_t			gpk::d3dDeviceValidate				(::gpk::pcom<::ID3D11Device3> & d3dDevice)				{
 	// The D3D Device is no longer valid if the default adapter changed since the device was created or if the device has been removed. 
 	::gpk::pcom<IDXGIDevice3>		dxgiDevice;
 	::gpk::pcom<IDXGIAdapter>		deviceAdapter;
@@ -33,7 +33,7 @@
 }
 
 
-::gpk::error_t						gpk::d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2<const ::gpk::bgra> initData) {
+::gpk::error_t			gpk::d3dCreateTextureDynamic		(ID3D11Device* pDevice, ::gpk::pcom<ID3D11Texture2D> & texture, ::gpk::pcom<ID3D11ShaderResourceView> & shaderResourceView, ::gpk::v2<const ::gpk::bgra> initData) {
 	D3D11_TEXTURE2D_DESC					desc				= {initData.metrics().x, initData.metrics().y, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_DYNAMIC, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE};
 	D3D11_SUBRESOURCE_DATA					d3dInitData			= {};
 	d3dInitData.pSysMem					= initData.begin();

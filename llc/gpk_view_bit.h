@@ -29,17 +29,17 @@ namespace gpk
 		inlcxpr	bool								operator!=					(const view_bit_iterator& other)									const	noexcept	{ return (((1ULL << Offset)) & *Element) != (((1ULL << other.Offset)) & *other.Element); }
 
 		inline				view_bit_iterator&					operator=					(bool value)																			{ value ? *Element |= (1ULL << Offset) : *Element &= ~(1ULL << Offset); return *this; }
-							view_bit_iterator&					operator++					()																						{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				gthrow_if(Element >= (End	+ 1), "Out of range: %u.", Element); } return *this; }
-							view_bit_iterator&					operator--					()																						{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; gthrow_if(Element <  (Begin	- 1), "Out of range: %u.", Element); } return *this; }
-							view_bit_iterator					operator++					(int)																					{
+							view_bit_iterator&					operator++					()			{ ++Offset; if(Offset >= ELEMENT_BITS)	{ ++Element; Offset = 0;				gthrow_if(Element >= (End	+ 1), "Out of range: %u.", Element); } return *this; }
+							view_bit_iterator&					operator--					()			{ --Offset; if(Offset < 0)				{ --Element; Offset = ELEMENT_BITS - 1; gthrow_if(Element <  (Begin	- 1), "Out of range: %u.", Element); } return *this; }
+							view_bit_iterator					operator++					(int)				{
 			view_bit_iterator											result						(*this);	// Make a copy.
-			++(*this);																								// Use the prefix version to do the work.
-			return result;																							// Return the old value.
+			++(*this);					// Use the prefix version to do the work.
+			return result;				// Return the old value.
 		}
-							view_bit_iterator					operator--					(int)																					{
+							view_bit_iterator					operator--					(int)				{
 			view_bit_iterator											result						(*this);	// Make a copy.
-			--(*this);																								// Use the prefix version to do the work.
-			return result;																							// Return the old value.
+			--(*this);					// Use the prefix version to do the work.
+			return result;				// Return the old value.
 		}
 	};
 

@@ -20,7 +20,7 @@ namespace gpk
 
 		inlcxpr	operator							const _tHandle&					()						const	noexcept	{ return Handle;		}
 
-		inlcxpr	TWrapper							operator=						(const _tHandle & other)		noexcept	= delete;
+		inlcxpr	TWrapper							operator=		(const _tHandle & other)		noexcept	= delete;
 		inlcxpr	_tHandle*							operator&						()								noexcept	{ return &Handle;		}
 #if !defined(GPK_ATMEL)
 		inlcxpr	const _tHandle*						operator&						()						const	noexcept	{ return &Handle;		}

@@ -1,7 +1,7 @@
 #include "gpk_rigidbody.h"
 #include "gpk_apod_serialize.h"
 
-::gpk::error_t	gpk::SRigidBodyIntegrator::Load							(::gpk::vcu8 & input) { 
+::gpk::error_t			gpk::SRigidBodyIntegrator::Load							(::gpk::vcu8 & input) { 
 	gpk_necs(::gpk::loadView(input, Frames			));
 	gpk_necs(::gpk::loadView(input, Flags			));
 	gpk_necs(::gpk::loadView(input, Forces			));
@@ -11,7 +11,7 @@
 	return 0;																	  
 }
 
-::gpk::error_t	gpk::SRigidBodyIntegrator::Save							(::gpk::au8 & output) const { 
+::gpk::error_t			gpk::SRigidBodyIntegrator::Save							(::gpk::au8 & output) const { 
 	gpk_necs(::gpk::saveView(output, Frames			));
 	gpk_necs(::gpk::saveView(output, Flags			));
 	gpk_necs(::gpk::saveView(output, Forces			));
@@ -86,7 +86,7 @@ int32_t								gpk::integratePosition		(double duration, double durationHalfSqua
 	return 0;
 }
 
-int									gpk::createOrbiter
+::gpk::error_t			gpk::createOrbiter
 	( ::gpk::SRigidBodyIntegrator	& bodies
 	, double						mass
 	, double						distance

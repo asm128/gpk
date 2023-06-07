@@ -65,21 +65,21 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	uint32_t								update_crc						(const ::gpk::view<const uint8_t> & buf, uint32_t crc)		;
-	stainli	uint32_t						get_crc							(const ::gpk::view<const uint8_t> & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
+	uint32_t								update_crc		(const ::gpk::view<const uint8_t> & buf, uint32_t crc)		;
+	stainli	uint32_t						get_crc			(const ::gpk::view<const uint8_t> & buf)					{ return update_crc(buf, 0xffffffffL) ^ 0xffffffffL; }
 
 	::gpk::error_t							pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename	);
 	::gpk::error_t							pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcu8	& source	);
 	::gpk::error_t							pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcs	& filename	, ::gpk::img<::gpk::bgra> & out_Texture)	;
 	::gpk::error_t							pngFileLoad						(::gpk::SPNGData & pngCache, const ::gpk::vcu8	& source	, ::gpk::img<::gpk::bgra> & out_Texture)	;
-																							 
+				 
 	::gpk::error_t							pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<::gpk::bgra> & out_Texture);
 	::gpk::error_t							pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<uint16_t> & out_Texture);
 	::gpk::error_t							pngDecode						(::gpk::SPNGData & pngData, ::gpk::img<uint8_t> & out_Texture);
 	::gpk::error_t							pngFileWrite					(const ::gpk::view2d<::gpk::bgra> & out_ImageView, ::gpk::au8 & out_Bytes);
 
-	stainli	::gpk::error_t					pngFileLoad						(const ::gpk::vcs	& filename	, ::gpk::img<::gpk::bgra> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
-	stainli	::gpk::error_t					pngFileLoad						(const ::gpk::vcu8	& source	, ::gpk::img<::gpk::bgra> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
+	stainli	::gpk::error_t					pngFileLoad		(const ::gpk::vcs	& filename	, ::gpk::img<::gpk::bgra> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
+	stainli	::gpk::error_t					pngFileLoad		(const ::gpk::vcu8	& source	, ::gpk::img<::gpk::bgra> & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 
 #endif // GPK_PNG_H_0928374982374

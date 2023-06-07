@@ -15,15 +15,15 @@ namespace gpk
 		static	const ::gpk::label_statics	& statics					();
 
 											label						()																			noexcept	= default;
-											label						(const label& other)														noexcept	= default;
+											label		(const label& other)														noexcept	= default;
 
 				label&						operator=					(const label& other)														noexcept	= default;
 
-											label						(const char* str, uint32_t len)												noexcept;
+											label		(const char* str, uint32_t len)												noexcept;
 
 		template<size_t _stringLength>
-		inline 								label						(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)			noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
-		inline 								label						(const ::gpk::vcs& other)													noexcept	: label(other.begin(), other.size())							{}
+		inline 								label		(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)			noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
+		inline 								label		(const ::gpk::vcs& other)													noexcept	: label(other.begin(), other.size())							{}
 
 		inline	operator					::gpk::vcs					()																	const				{ return {Data, Count}; }
 
@@ -44,7 +44,7 @@ namespace gpk
 				::gpk::label				comma						= {","	, 1};
 	};
 
-	inline	const ::gpk::label_statics &	label::statics				()																						{ static const ::gpk::label_statics init_statics; return init_statics; }
+	inline	const ::gpk::label_statics &	label::statics				()			{ static const ::gpk::label_statics init_statics; return init_statics; }
 
 	stainli ::gpk::error_t					loadLabel		(::gpk::vcu8 & input, ::gpk::vcc & output) { 
 		uint32_t									bytesRead		= 0;

@@ -90,7 +90,7 @@ namespace gpk
 			);
 	}
 
-	template <typename _tBase>	stainli	int32_t		podcmp						(const _tBase* pA, const _tBase* pB)							noexcept	{
+	template <typename _tBase>	stainli	int32_t		podcmp		(const _tBase* pA, const _tBase* pB)							noexcept	{
 		if(0 == pA)
 			return (0 == pB) ? 0 : 0x7FFFFFFF;
 		else if(0 == pB)

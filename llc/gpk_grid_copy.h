@@ -233,7 +233,7 @@ namespace gpk
 	}
 
 	template<typename T, typename _tCoord>
-	::gpk::error_t			grid_copy_blend					(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src, const ::gpk::n2<_tCoord> & dstOffset)																				{
+	::gpk::error_t			grid_copy_blend					(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src, const ::gpk::n2<_tCoord> & dstOffset)			{
 		const ::gpk::n2i32			offsetSrc						= {-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
 		const ::gpk::n2i32			offsetDst						= { ::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
 		::gpk::n2i32				stopDst							= src.metrics().template Cast<int32_t>() + ::gpk::n2i32{::gpk::min(0, (int32_t)dstOffset.x), ::gpk::min(0, (int32_t)dstOffset.y)};
@@ -243,7 +243,7 @@ namespace gpk
 	}
 
 	template<typename T, typename _tCoord>
-	::gpk::error_t			grid_copy						(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src, const ::gpk::n2<_tCoord> & dstOffset)																				{
+	::gpk::error_t			grid_copy						(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src, const ::gpk::n2<_tCoord> & dstOffset)			{
 		const ::gpk::n2i32			offsetSrc						= {-::gpk::min(0, (int32_t)dstOffset.x), -::gpk::min(0, (int32_t)dstOffset.y)};
 		const ::gpk::n2i32			offsetDst						= { ::gpk::max(0, (int32_t)dstOffset.x),  ::gpk::max(0, (int32_t)dstOffset.y)};
 		::gpk::n2i32				stopDst							= src.metrics().template Cast<int32_t>() + ::gpk::n2i32{::gpk::min(0, (int32_t)dstOffset.x), ::gpk::min(0, (int32_t)dstOffset.y)};
@@ -257,7 +257,7 @@ namespace gpk
 	template<typename T> ::gpk::error_t		grid_copy						(::gpk::view2d<T> & dst, const ::gpk::view2d<T> & src)						{ const ::gpk::n2u32 metrics = {(uint32_t)::gpk::min(dst.metrics().x, src.metrics().x), (uint32_t)::gpk::min(dst.metrics().y, src.metrics().y)}; return ::gpk::grid_copy_ex			(dst, src, metrics, {}, {}); }
 
 	template<typename T>
-	::gpk::error_t			grid_mirror_x					(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src)																														{
+	::gpk::error_t			grid_mirror_x					(::gpk::view2d<T> & dst, const ::gpk::view2d<T>& src)											{
 		const ::gpk::n2i32			metrics							=
 			{ ::gpk::min((int32_t)dst.metrics().x, (int32_t)src.metrics().x)
 			, ::gpk::min((int32_t)dst.metrics().y, (int32_t)src.metrics().y)

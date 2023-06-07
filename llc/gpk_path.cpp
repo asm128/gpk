@@ -15,7 +15,7 @@
 #	include <sys/stat.h>
 #endif
 
-::gpk::error_t						gpk::findLastSlash			(const ::gpk::vcc & path)		{
+::gpk::error_t			gpk::findLastSlash			(const ::gpk::vcc & path)		{
 	int32_t									indexOfStartOfFileName0		= ::gpk::rfind('\\', path);
 	int32_t									indexOfStartOfFileName1		= ::gpk::rfind('/', path);
 	return
@@ -25,7 +25,7 @@
 		;
 }
 
-::gpk::error_t						gpk::pathNameCompose		(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed)		{
+::gpk::error_t			gpk::pathNameCompose		(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed)		{
 	if(path.size()) {
 		for(uint32_t iChar = 0; iChar < path.size(); ++iChar) {
 			const char								curChar						= path[iChar];
@@ -50,7 +50,7 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
+::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 	char									folder[1024]				= {};
 	int32_t									offsetBar					= -1;
@@ -82,7 +82,7 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::vcc>& output, const ::gpk::vcc extension)					{
+::gpk::error_t			gpk::pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::vcc>& output, const ::gpk::vcc extension)					{
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		const ::gpk::vcc						& fileName					= input.Files[iFile];
 		if(0 == extension.size() || (extension.size() < fileName.size() && 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()))))
@@ -94,7 +94,7 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::apod<char>>& output, const ::gpk::vcc extension)					{
+::gpk::error_t			gpk::pathList				(const ::gpk::SPathContents& input, ::gpk::aobj<::gpk::apod<char>>& output, const ::gpk::vcc extension)					{
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		const ::gpk::vcc						& fileName					= input.Files[iFile];
 		if(0 == extension.size() || (extension.size() < fileName.size() && 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()))))
@@ -105,7 +105,7 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char>>& output, bool listFolders, const ::gpk::vcc extension)	{
+::gpk::error_t			gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char>>& output, bool listFolders, const ::gpk::vcc extension)	{
 	stacxpr	char							curDir	[]					= ".";
 	stacxpr	char							parDir	[]					= "..";
 	char									bufferFormat[36]			=  {};
@@ -152,7 +152,7 @@
 	return 0;
 }
 
-::gpk::error_t						gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::SPathContents& pathContents, const gpk::vcc extension)						{
+::gpk::error_t			gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::SPathContents& pathContents, const gpk::vcc extension)						{
 	char									sPath[4096]					= {};
 	char									bufferFormat[36]			= {};
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", pathToList.size());

@@ -3,7 +3,7 @@
 #include "gpk_process.h"
 #include "gpk_parse.h"
 
-::gpk::error_t									gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
+::gpk::error_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
 	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::vcc								remoteAddr;
 	const bool											isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
@@ -53,7 +53,7 @@
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<const char> & strContentType)	{
+static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<const char> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
 	static	const ::gpk::vcc					content_types []			=
 		{ ::gpk::vcs{"application/javascript"													}
@@ -158,7 +158,7 @@ static	::gpk::error_t								cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & conte
 	return 0;
 }
 
-::gpk::error_t										gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv)	{
+::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
 	::gpk::aobj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);

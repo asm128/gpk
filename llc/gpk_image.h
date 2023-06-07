@@ -17,8 +17,8 @@ namespace gpk
 		::gpk::v2<_tTexel>						View						;
 
 		constexpr								SImage						()													= default;
-												SImage						(const ::gpk::v2<_tTexel>& other)					: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-												SImage						(const SImage<_tTexel>& other)						: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+												SImage		(const ::gpk::v2<_tTexel>& other)					: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+												SImage		(const SImage<_tTexel>& other)						: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
 		inlcxpr	operator						v2<const _tTexel>			()								const	noexcept	{ return View; }
 		inline	operator						v2<_tTexel>					()										noexcept	{ return View; }
@@ -48,23 +48,23 @@ namespace gpk
 		inlcxpr	uint32_t						area						()													const	noexcept	{ return View.area		();	}
 		inlcxpr	uint32_t 						byte_count					()													const	noexcept	{ return Texels.byte_count();	}
 
-		inline	::gpk::error_t					resize						(const ::gpk::n2i8 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2i16 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2i32 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u8  & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u16 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u32 & newSize)								noexcept	{ 
+		inline	::gpk::error_t					resize		(const ::gpk::n2i8 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2i16 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2i32 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u8  & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u16 & newSize)								noexcept	{ return resize(newSize.Cast<uint32_t>()); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u32 & newSize)								noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View									= {Texels.begin(), newSize.x, newSize.y};
 			return 0;
 		}
 
-		inline	::gpk::error_t					resize						(const ::gpk::n2i8  & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2i16 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2i32 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u8  & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u16 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
-		inline	::gpk::error_t					resize						(const ::gpk::n2u32 & newSize, const _tTexel & newValue)	noexcept	{ 
+		inline	::gpk::error_t					resize		(const ::gpk::n2i8  & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2i16 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2i32 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u8  & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u16 & newSize, const _tTexel & newValue)	noexcept	{ return resize(newSize.Cast<uint32_t>(), newValue); }
+		inline	::gpk::error_t					resize		(const ::gpk::n2u32 & newSize, const _tTexel & newValue)	noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View									= {Texels.begin(), newSize.x, newSize.y};
 			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().template Cast<int32_t>()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
@@ -216,15 +216,15 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-	stainli	::gpk::error_t					updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2u16 & newSize)																					{
+	stainli	::gpk::error_t					updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2u16 & newSize)				{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
 	template<typename _tElement>
-	stainli	::gpk::error_t					updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2u16 & newSize, const _tElement & newValue)																					{
+	stainli	::gpk::error_t					updateSizeDependentTarget					(::gpk::img<_tElement> & out_texture, const ::gpk::n2u16 & newSize, const _tElement & newValue)				{
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
 	template<typename _tElement>
-	stainli	::gpk::error_t					updateSizeDependentImage					(::gpk::img<_tElement> & out_texture, const ::gpk::v2<_tElement> & in_view, const ::gpk::n2u16 & newSize)																					{
+	stainli	::gpk::error_t					updateSizeDependentImage					(::gpk::img<_tElement> & out_texture, const ::gpk::v2<_tElement> & in_view, const ::gpk::n2u16 & newSize)				{
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

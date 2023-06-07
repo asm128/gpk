@@ -18,9 +18,9 @@ namespace gpk
 		using array_base<T>		::Size					;
 		using array_base<T>		::alloc_with_reserve	;
 
-		inline					~array_obj			()																				{ for(uint32_t i = 0; i < Count; ++i) Data[i].~T(); }	// dtor
+		inline					~array_obj			()			{ for(uint32_t i = 0; i < Count; ++i) Data[i].~T(); }	// dtor
 
-		inlcxpr					array_obj			()																				= default;
+		inlcxpr					array_obj			()			= default;
 		inline					array_obj			(TArray&& other)											noexcept	{
 			Size					= other.Size;
 			Count					= other.Count;

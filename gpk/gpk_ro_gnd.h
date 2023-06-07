@@ -139,7 +139,7 @@ namespace gpk
 		, ::gpk::view2d<::gpk::STileMapping>		& out_mapping
 		);
 
-	::gpk::error_t							blendGNDNormals						(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
+	::gpk::error_t							blendGNDNormals		(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes);
 
 #pragma pack(pop)
 } // namespace

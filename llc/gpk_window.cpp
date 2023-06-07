@@ -1,6 +1,6 @@
 #include "gpk_window.h"
 
-::gpk::error_t							gpk::fullScreenExit				(::gpk::SWindow & window) {
+::gpk::error_t			gpk::fullScreenExit				(::gpk::SWindow & window) {
 	if(false == window.FullScreen)
 		return 0;
 
@@ -23,7 +23,7 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::fullScreenEnter			(::gpk::SWindow & framework) {
+::gpk::error_t			gpk::fullScreenEnter			(::gpk::SWindow & framework) {
 	if(framework.FullScreen)
 		return 1;
 
@@ -59,7 +59,7 @@
 	return 0;
 }
 
-		::gpk::error_t					gpk::windowUpdateTick						(::gpk::SWindow& displayInstance)											{
+::gpk::error_t			gpk::windowUpdateTick						(::gpk::SWindow& displayInstance)											{
 	bool										quit	= false;
 #if defined(GPK_WINDOWS)
 	::MSG										msg											= {};
@@ -78,7 +78,7 @@
 	return quit ? 1 : 0;
 }
 
-		::gpk::error_t					gpk::windowUpdate							(::gpk::SWindow& displayInstance)											{
+::gpk::error_t			gpk::windowUpdate							(::gpk::SWindow& displayInstance)											{
 	displayInstance.EventQueue.clear();
 	displayInstance.Resized					= false;
 	displayInstance.Repaint					= false;
@@ -148,12 +148,12 @@
 }
 #endif
 
-		::gpk::error_t																			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::view2d<::gpk::bgra>& targetToPresent)		{
+::gpk::error_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::view2d<::gpk::bgra>& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
-	::HWND																								windowHandle								= displayInstance.PlatformDetail.WindowHandle;
+	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;
 	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
-	::HDC																								dc											= ::GetDC(windowHandle);
+	::HDC					dc											= ::GetDC(windowHandle);
 	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
 	e_if(errored(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);

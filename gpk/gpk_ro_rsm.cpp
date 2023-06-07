@@ -13,7 +13,7 @@ struct SRSMHeader {	// RSM Header
 #pragma pack(pop)
 
 
-			::gpk::error_t								analyzeArray												(const ::gpk::view<uint8_t>& input) {
+			::gpk::error_t								analyzeArray								(const ::gpk::view<uint8_t>& input) {
 	info_printf("%s", "---- Analyzing bytes     :");			for(uint32_t iChar = 0; iChar < input.size() / 1; ++iChar)			info_printf("'%c' : %.4u : %.4i : 0x%x"	, input[iChar] ? input[iChar] : ' ', (uint32_t)input[iChar], (int32_t)((int8_t*)input.begin())[iChar], input[iChar]);
 
 	info_printf("%s", "---- Analyzing shorts    :");			for(uint32_t iChar = 0; iChar < input.size() / 2; ++iChar)			info_printf(  "%.6u : %.6i : 0x%.4x"	, ((uint16_t	*)&input[0])[iChar], (int32_t)((int16_t	*)input.begin())[iChar], ((uint16_t	*)input.begin())[iChar]);
@@ -33,8 +33,8 @@ struct SRSMHeader {	// RSM Header
 }
 
 // Read rotation keyframes. Not sure how they're expressed though.
-static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
-	uint32_t													keyframeCount												= 0;			// Get the number of keyframe
+static	::gpk::error_t	rsmReadRotationKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFrameRotation> & modelKeyframes)	{
+	uint32_t					keyframeCount												= 0;			// Get the number of keyframe
 	rsm_stream.read_pod(keyframeCount);
 	info_printf("Rotation keyframe count: %u.", keyframeCount);
 	if(keyframeCount) {
@@ -45,8 +45,8 @@ static		::gpk::error_t								rsmReadRotationKeyframes									(::gpk::view_stre
 }
 
 // >= v1.5 Read position keyframes
-static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
-	uint32_t													positionFrameCount											= 0;
+static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const uint8_t>& rsm_stream, ::gpk::apod<::gpk::SRSMFramePosition> & modelKeyframes)	{
+	uint32_t					positionFrameCount											= 0;
 	rsm_stream.read_pod(positionFrameCount);
 	GPK_PLATFORM_CRT_BREAKPOINT();
 	if(positionFrameCount) {
@@ -56,7 +56,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<uint8_t>	& input)							{
+::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::view<uint8_t>	& input)							{
 	::gpk::view_stream<const uint8_t>							rsm_stream													= {input.begin(), input.size()};
 	SRSMHeader													header														= {};
 	rsm_stream.read_pod(header);
@@ -67,7 +67,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 
 	rsm_stream.read_pod(loaded.Unknown);
 
-	uint32_t													textureCount												= 0;			// Get the number of textures
+	uint32_t					textureCount												= 0;			// Get the number of textures
 	rsm_stream.read_pod(textureCount);
 
 	info_printf("RSM magic number   : %.4s."	, header.filecode);
@@ -87,10 +87,10 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	int32_t														meshCountIBelieve											= 1;
 	rsm_stream.read_pod(meshCountIBelieve);
 
-	uint32_t													totalVertices												= 0;
-	uint32_t													totalUVs													= 0;
-	uint32_t													totalFaces													= 0;
-	uint32_t													byteOffsetStartModel										= rsm_stream.CursorPosition;
+	uint32_t					totalVertices												= 0;
+	uint32_t					totalUVs													= 0;
+	uint32_t					totalFaces													= 0;
+	uint32_t					byteOffsetStartModel										= rsm_stream.CursorPosition;
 
 	loaded.Nodes.resize(meshCountIBelieve);
 	for(int32_t iMesh = 0; iMesh < meshCountIBelieve; ++iMesh) {
@@ -101,7 +101,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 		info_printf("Mesh node name: %s."	, newNode.Name			);
 		info_printf("Parent node name: %s."	, newNode.ParentName	);
 		{
-			uint32_t													texMappingCount												= 0;			// Get the number of texture indices for this model
+			uint32_t					texMappingCount												= 0;			// Get the number of texture indices for this model
 			rsm_stream.read_pod(texMappingCount);
 			info_printf("Texture index count: %u.", texMappingCount);
 			if(texMappingCount) {
@@ -121,7 +121,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 		info_printf("Node rotation axis      : {%f, %f, %f}."		, newNode.Transform.RotAxis		.x, newNode.Transform.RotAxis		.y, newNode.Transform.RotAxis		.z);
 		info_printf("Node scale              : {%f, %f, %f}."		, newNode.Transform.Scale		.x, newNode.Transform.Scale			.y, newNode.Transform.Scale			.z);
 		{ // Read vertices (positions)
-			uint32_t													vertexCount													= 0;			// Get the number of vertex
+			uint32_t					vertexCount													= 0;			// Get the number of vertex
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
@@ -131,7 +131,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 			}
 		}
 		{ // Read vertex attributes (texCoord & ...color?)
-			uint32_t													texVtxCount													= 0;			// Get the number of unk
+			uint32_t					texVtxCount													= 0;			// Get the number of unk
 			rsm_stream.read_pod(texVtxCount);
 			info_printf("UV coord count: %u.", texVtxCount);
 			if(texVtxCount) {
@@ -150,7 +150,7 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 		}
 		//1C1SQJL_esAR795AR795
 		{ // Read Triangle descriptions (vertex/UV indices, texture and other properties)
-			uint32_t													faceCount													= 0;			// Get the number of face
+			uint32_t					faceCount													= 0;			// Get the number of face
 			rsm_stream.read_pod(faceCount);
 			info_printf("Face count: %u.", faceCount);
 			if(faceCount) {
@@ -189,12 +189,12 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return rsm_stream.CursorPosition;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
+::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, FILE								* input)							{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-			::gpk::error_t								gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
+::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
 	::gpk::au8									fileInMemory												= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
@@ -204,14 +204,14 @@ static		::gpk::error_t								rsmReadPositionKeyframes									(::gpk::view_stre
 	return rsmFileLoad(loaded, fileInMemory);
 }
 
-			::gpk::error_t								gpk::rsmGeometryGenerate									(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
+::gpk::error_t			gpk::rsmGeometryGenerate					(const ::gpk::SRSMFileContents& rsmData, ::gpk::view<::gpk::SModelNodeRSM>& out_meshes)			{
 	for(uint32_t iTex = 0, texCount = rsmData.TextureNames.size(); iTex < texCount; ++iTex) {
 		for(uint32_t iNode = 0, countNodes = rsmData.Nodes.size(); iNode < countNodes; ++iNode) {
 			const ::gpk::SRSMNode										& rsmNode													= rsmData.Nodes[iNode];
 			::gpk::SModelNodeRSM										& meshNode													= out_meshes[iTex * countNodes + iNode];
 			meshNode.RSMNodeIndex									= iNode;
 			meshNode.TextureIndex									= iTex;
-			uint32_t													vertexOffset												= 0;
+			uint32_t					vertexOffset												= 0;
 			for(uint32_t iFace = 0, countFaces = rsmNode.Faces.size(); iFace < countFaces; ++iFace) {
 				const ::gpk::SRSMFace										& face														= rsmNode.Faces[iFace];
 				if(rsmNode.TextureIndices[face.IndexTextureIndex] != (int32_t)iTex)

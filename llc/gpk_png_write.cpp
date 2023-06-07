@@ -4,10 +4,10 @@
 static	unsigned long					g_crc_table	[256]						= {};	// Table of CRCs of all 8-bit messages.
 static	int32_t							g_crc_table_computed					= 0;	// Flag: has the table been computed? Initially false.
 /* Make the table for a fast CRC. */
-static	int32_t							make_crc_table							()																									{
+static	int32_t							make_crc_table							()						{
     uint32_t															n, k;
     for (n = 0; n < 256; ++n) {
-		uint32_t															c										= n;
+		uint32_t							c										= n;
 		for (k = 0; k < 8; ++k)
 			c																= (c & 1) ? 0xedb88320L ^ (c >> 1) : c >> 1;
 		g_crc_table[n]													= c;
@@ -16,7 +16,7 @@ static	int32_t							make_crc_table							()																									{
 }
 
 // Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below)).
-uint32_t								gpk::update_crc							(const ::gpk::view<const uint8_t> & buf, uint32_t crc)										{
+uint32_t								gpk::update_crc			(const ::gpk::view<const uint8_t> & buf, uint32_t crc)										{
     uint32_t															c										= crc;
     if(0 == g_crc_table_computed) {
 		static const int32_t												initedTable								= make_crc_table();
@@ -30,7 +30,7 @@ uint32_t								gpk::update_crc							(const ::gpk::view<const uint8_t> & buf, u
 	return c;
 }
 
-static	::gpk::error_t					pngDeflate								(const ::gpk::view<const uint8_t>& inflated, ::gpk::au8& deflated)		{
+static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated, ::gpk::au8& deflated)		{
     int				ret;
 	z_stream		strm												= {};
     ret																	= deflateInit(&strm, Z_BEST_COMPRESSION);
@@ -55,12 +55,12 @@ static	::gpk::error_t					pngDeflate								(const ::gpk::view<const uint8_t>& i
 	return 0;
 }
 
-::gpk::error_t							gpk::pngFileWrite						(const ::gpk::v2bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
+::gpk::error_t			gpk::pngFileWrite		(const ::gpk::v2bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
 	stacxpr	const uint8_t												signature	[8]							= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::au8												safe_Bytes								= {};
 	safe_Bytes.append((uint8_t*)signature, 8);
 
-	uint32_t															chunkSize								= sizeof(::gpk::SPNGIHDR);
+	uint32_t							chunkSize								= sizeof(::gpk::SPNGIHDR);
 	stacxpr	const char													typeIHDR	[4]							= {'I', 'H', 'D', 'R'};
 	int32_t																crc										= 0;
 	::gpk::SPNGIHDR														imageHeader								= {};
@@ -75,7 +75,7 @@ static	::gpk::error_t					pngDeflate								(const ::gpk::view<const uint8_t>& i
 	be2le_32(imageHeader.Size.y);
 	be2le_32(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
-	uint32_t															crcDataStart							= safe_Bytes.size();
+	uint32_t							crcDataStart							= safe_Bytes.size();
 	safe_Bytes.append((const uint8_t*)typeIHDR, 4);
 	safe_Bytes.append((const uint8_t*)&imageHeader, sizeof(::gpk::SPNGIHDR));
 	crc																= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
@@ -97,7 +97,7 @@ static	::gpk::error_t					pngDeflate								(const ::gpk::view<const uint8_t>& i
 	::gpk::au8											deflated;
 	::gpk::imgu8										filtered								= {};
 	filtered.resize(::gpk::n2u32{convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
-	const uint32_t														scanlineWidthUnfiltered					= convertedScanlines.View.metrics().x * 4;
+	const uint32_t				scanlineWidthUnfiltered					= convertedScanlines.View.metrics().x * 4;
 	for(uint32_t y = 0; y < in_imageView.metrics().y; ++y) {
 		filtered[y][0]													= 0;
 		memcpy(&filtered[y][1], &convertedScanlines[y][0], scanlineWidthUnfiltered);

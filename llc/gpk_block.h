@@ -241,11 +241,11 @@ namespace gpk
 		inline	::gpk::error_t					Size						()										const	{ return Allocator.Counts.size(); }
 		inline	::gpk::error_t					Save						(::gpk::apod<uint8_t> & output)			const	{ return Allocator.Save(output); }
 		inline	::gpk::error_t					Load						(::gpk::vcu8 & input)							{ return Allocator.Load(input); }
-		inline	::gpk::error_t					MapAdd						(const ::gpk::vcu8 & dataToAdd)					{
+		inline	::gpk::error_t					MapAdd		(const ::gpk::vcu8 & dataToAdd)					{
 			return Allocator.View(dataToAdd.begin(), (uint16_t)dataToAdd.size());
 		}
 
-		::gpk::error_t							MapId						(const ::gpk::vcu8 & dataToFind)		const;
+		::gpk::error_t							MapId		(const ::gpk::vcu8 & dataToFind)		const;
 		::gpk::error_t							MapGet						(uint32_t index, ::gpk::vcu8 & data)	const;
 	};
 } // namespace

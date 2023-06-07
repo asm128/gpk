@@ -4,7 +4,7 @@
 #include "gpk_ascii_color.h"
 #include "gpk_raster_lh.h"
 
-static	::gpk::error_t								transformTriangles					
+static	::gpk::error_t	transformTriangles					
 	( ::gpk::SVSOutput			& output
 	, ::gpk::vcu16				indices			
 	, ::gpk::v1c3f				positions	
@@ -53,7 +53,7 @@ static	::gpk::error_t								transformTriangles
 	return 0; 
 }
 
-static	::gpk::error_t								transformTriangles
+static	::gpk::error_t	transformTriangles
 	( ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants
@@ -78,7 +78,7 @@ static	::gpk::error_t								transformTriangles
 }
 
 
-static	::gpk::error_t								drawBuffers
+static	::gpk::error_t	drawBuffers
 	( ::gpk::v2bgra										& backBufferColors
 	, ::gpk::v2u32										backBufferDepth
 	, ::gpk::SVSOutput									& outVS
@@ -124,7 +124,7 @@ static	::gpk::error_t								drawBuffers
 	return 0;
 }
 
-::gpk::error_t										gpk::drawScene									
+::gpk::error_t			gpk::drawScene									
 	( ::gpk::v2bgra							& backBufferColors
 	, ::gpk::v2u32							& backBufferDepth
 	, ::gpk::SEngineRenderCache				& renderCache

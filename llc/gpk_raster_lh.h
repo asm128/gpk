@@ -134,7 +134,7 @@ namespace gpk
 		);
 	int				drawTriangle
 		( ::gpk::view2d<::gpk::bgra>				targetPixels
-		, const ::gpk::SGeometryIndexedTriangles	& geometry
+		, const ::gpk::STrianglesIndexed	& geometry
 		, const int									iTriangle
 		, const ::gpk::m4f32						& matrixTransform
 		, const ::gpk::m4f32						& matrixTransformView

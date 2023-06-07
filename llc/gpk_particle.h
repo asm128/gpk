@@ -22,7 +22,7 @@ namespace gpk
 							TCoord												Acceleration								= {};	// A vector representing the speed in a given direction
 							TCoord												Velocity									= {};	// A vector representing the speed in a given direction
 
-		inlcxpr	bool												VelocityDepleted							()																					const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
+		inlcxpr	bool												VelocityDepleted							()				const	noexcept	{ return (Velocity + Acceleration).LengthSquared() < (VelocityEpsilon * VelocityEpsilon); }
 		// This basically does Acceleration += (Force * 1 / Mass) and Velocity += (Acceleration * Time).
 							void												IntegrateAccumulatedForce					(const _tElement inverseMass, const _tElement damping, const double timeElapsed)			noexcept	{
 			Acceleration															+= AccumulatedForce * inverseMass;				// Calculate linear acceleration from force inputs.
@@ -41,9 +41,9 @@ namespace gpk
 							_tElement											InverseMass									= 0;
 							_tElement											Damping										= .99f;	// A vector representing the speed in a given direction
 
-		inline				void												SetMass										(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
-		inlcxpr	double												GetMass										()																					const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
-		inlcxpr	bool												HasFiniteMass								()																					const	noexcept	{ return InverseMass >= 0.0f;								}
+		inline				void												SetMass						(const double mass)																			noexcept	{ InverseMass = mass ? ((_tElement)(1.0 / mass)) : 0;		}
+		inlcxpr	double												GetMass										()				const	noexcept	{ return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass;	}
+		inlcxpr	bool												HasFiniteMass								()				const	noexcept	{ return InverseMass >= 0.0f;								}
 	};
 
 	// This compact structure allows to define all the boolean states of the particle packed in a single byte.
@@ -51,7 +51,7 @@ namespace gpk
 							bool												Unused										: 1;
 							bool												Active										: 1;
 
-		inlcxpr	bool												RequiresProcessing							()																					const	noexcept	{ return (false == Unused) && Active; }
+		inlcxpr	bool												RequiresProcessing							()				const	noexcept	{ return (false == Unused) && Active; }
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
@@ -68,7 +68,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										integrate									(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
+						::gpk::error_t										integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
 		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
@@ -92,7 +92,7 @@ namespace gpk
 		inline	::gpk::error_t					Integrate									(double timeElapsed, double timeElapsedHalfSquared)														{ return Integrate(ParticleNext, timeElapsed, timeElapsedHalfSquared);	}
 		::gpk::error_t							Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
 		// --------------------------------------------------------
-		::gpk::error_t							AddParticle									(const TParticle& particleData)																			{
+		::gpk::error_t							AddParticle					(const TParticle& particleData)																			{
 			const uint32_t								particleCount								= (uint32_t)ParticleState.size();
 			stacxpr	const ::gpk::SParticle2State		initialParticleState						= {false, true};
 
@@ -156,7 +156,7 @@ namespace gpk
 	};
 
 	template<typename _tParticleType, typename _tCoord>
-	stainli	::gpk::error_t		addParticle									(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
+	stainli	::gpk::error_t		addParticle					(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}
 

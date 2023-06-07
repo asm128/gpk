@@ -17,20 +17,20 @@
 	#define GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT()
 #endif
 
-#define GPK_CGI_JSON_APP_IMPL()																																			\
+#define GPK_CGI_JSON_APP_IMPL()																\
 	::gpk::error_t			generate_output		(::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output);			\
 	::gpk::error_t			cgiMain				(int argc, char** argv, char**envv)		{										\
-		(void)(envv);																																					\
-		::gpk::SCGIRuntimeValues	runtimeValues;																							\
-		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc});																				\
-		::gpk::apod<char>			output;																									\
-		output.append_string("Content-type: application/json\r\n");																										\
-		::generate_output(runtimeValues, output);																														\
-		output.push_back('\0');																																			\
-		printf("%s", output.begin());																																	\
-		return 0;																																						\
-	}																																									\
-																																										\
+		(void)(envv);																		\
+		::gpk::SCGIRuntimeValues	runtimeValues;				\
+		::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc});			\
+		::gpk::apod<char>			output;						\
+		output.append_string("Content-type: application/json\r\n");							\
+		::generate_output(runtimeValues, output);											\
+		output.push_back('\0');																\
+		printf("%s", output.begin());														\
+		return 0;																			\
+	}					\
+						\
 	int						main				(int argc, char** argv, char**envv)		{ return ::cgiMain(argc, argv, envv); }	\
 	GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT();
 

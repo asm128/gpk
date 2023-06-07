@@ -637,7 +637,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 
 ::gpk::error_t			gpk::drawTriangle
 	( const ::gpk::view2d<::gpk::bgra>	targetPixels
-	, const ::gpk::SGeometryIndexedTriangles	& geometry
+	, const ::gpk::STrianglesIndexed	& geometry
 	, const int							iTriangle
 	, const ::gpk::m4f32				& matrixTransform
 	, const ::gpk::m4f32				& matrixTransformView

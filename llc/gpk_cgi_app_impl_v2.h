@@ -18,7 +18,7 @@
 	#define GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT()
 #endif
 
-#define GPK_CGI_JSON_APP_IMPL()																																					\
+#define GPK_CGI_JSON_APP_IMPL()																		\
 	int								main				(int argc, char** argv, char**envv)		{ return ::gpk::cgiMain(argc, argv, envv); }	\
 	GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT();
 

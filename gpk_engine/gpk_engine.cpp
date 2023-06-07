@@ -4,7 +4,7 @@
 #include "gpk_geometry_lh.h"
 #include "gpk_engine_shader.h"
 
-int									gpk::updateEntityTransforms			
+::gpk::error_t			gpk::updateEntityTransforms			
 	( uint32_t								iEntity
 	, const ::gpk::SVirtualEntity			& entity
 	, const ::gpk::SVirtualEntityManager	& managedEntities	
@@ -57,7 +57,7 @@ int									gpk::updateEntityTransforms
 	return 0;
 }
 
-::gpk::error_t						gpk::SEngine::CreateLight			(::gpk::LIGHT_TYPE type) {
+::gpk::error_t			gpk::SEngine::CreateLight			(::gpk::LIGHT_TYPE type) {
 	int32_t									iEntity								= this->Entities.Create();
 	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
 	entity.RenderNode					= Scene->RenderNodes.Create();
@@ -76,7 +76,7 @@ int									gpk::updateEntityTransforms
 	return iEntity;
 }
 
-::gpk::error_t						gpk::SEngine::CreateCamera			() {
+::gpk::error_t			gpk::SEngine::CreateCamera			() {
 	int32_t									iEntity								= this->Entities.Create();
 	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
 	entity.RenderNode					= Scene->RenderNodes.Create();
@@ -93,7 +93,7 @@ int									gpk::updateEntityTransforms
 	return iEntity;
 }
 
-::gpk::error_t						gpk::SEngine::CreateBox				()	{
+::gpk::error_t			gpk::SEngine::CreateBox				()	{
 	int32_t									iEntity								= this->Entities.Create();
 	Entities.Names[iEntity]				= ::gpk::vcs{"Box"};
 	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
@@ -194,8 +194,8 @@ int									gpk::updateEntityTransforms
 	return iEntity;
 }
 
-::gpk::error_t						gpk::SEngine::CreateSphere			()	{ 
-	::gpk::SGeometryIndexedTriangles		geometry;
+::gpk::error_t			gpk::SEngine::CreateSphere			()	{ 
+	::gpk::STrianglesIndexed		geometry;
 	::gpk::geometryBuildSphere(geometry, 24, 24, .5f, {});
 
 	int32_t									iEntity								= Entities.Create();
@@ -287,8 +287,8 @@ int									gpk::updateEntityTransforms
 	return iEntity;
 }
 
-::gpk::error_t						gpk::SEngine::CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio)	{ 
-	::gpk::SGeometryIndexedTriangles		geometry;
+::gpk::error_t			gpk::SEngine::CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio)	{ 
+	::gpk::STrianglesIndexed		geometry;
 	if(reverse)
 		::gpk::geometryBuildCylinder(geometry, 1, slices, .5f, .5f, {}, {1, 1, -1}, true, diameterRatio);
 	else

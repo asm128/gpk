@@ -11,7 +11,7 @@
 #	include <arpa/inet.h>
 #endif
 
-::gpk::error_t								gpk::tcpipInitialize						()																										{
+::gpk::error_t			gpk::tcpipInitialize						()							{
 #if defined(GPK_WINDOWS)
 	::WSADATA										w											= {};
 	ree_if(::WSAStartup(0x0202, &w) != 0, "Could not open Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());
@@ -20,7 +20,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipShutdown							()																										{
+::gpk::error_t			gpk::tcpipShutdown							()							{
 #if defined(GPK_WINDOWS)
 	ree_if(::WSACleanup() != 0, "Could not shut down Windows sockets: 0x%X '%s'", WSAGetLastError(), ::gpk::getWindowsErrorAsString(WSAGetLastError()).begin());		// Open windows connection
 #endif
@@ -28,7 +28,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
+::gpk::error_t			gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
 #if defined(GPK_WINDOWS)
 	gpk_safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	gpk_safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
@@ -44,7 +44,7 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipAddressToSockaddr					(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
+::gpk::error_t			gpk::tcpipAddressToSockaddr					(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
 	sockaddr_ipv4								= {AF_INET, port ? htons(*port) : (uint16_t)0};
 #if defined(GPK_WINDOWS)
 	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1 ? *a1 : 0;
@@ -60,20 +60,20 @@
 	return 0;
 }
 
-::gpk::error_t								gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
+::gpk::error_t			gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
 	sockaddr_in										sockaddr_ipv4								= {};
 	socklen_t										len											= sizeof(sockaddr_in);
 	ree_if(getsockname(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");
 	return ::gpk::tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
-::gpk::error_t								gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
+::gpk::error_t			gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
 	char											host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
 
-::gpk::error_t								gpk::tcpipAddress							(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
+::gpk::error_t			gpk::tcpipAddress			(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
 	char											portString			[16]					= {};
 	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 
@@ -187,7 +187,7 @@
 	return iAddress;
 }
 
-::gpk::error_t									gpk::tcpipAddress					(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
+::gpk::error_t			gpk::tcpipAddress					(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
 	::gpk::parseIntegerDecimal(strRemotePort, &(remoteIP.Port = 0));
 	if(strRemoteIP.size()) {
 		uint32_t											iOffset						= 0;
