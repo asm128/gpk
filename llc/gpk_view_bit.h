@@ -47,68 +47,69 @@ namespace gpk
 	class view_bit {
 	protected:
 		// Properties / Member Variables
-							_tElement							* Data						= 0;
-							uint32_t							Count						= 0;
+		_tElement				* Data				= 0;
+		uint32_t				Count				= 0;
 	public:
-		typedef				_tElement							TElement;
-		typedef				view_bit_iterator<_tElement>		iterator;
+		typedef	_tElement				T;
+		typedef	view_bit_iterator<T>	TIterator;
+		typedef	view_bit_iterator<T>	iterator;
 
-		stacxpr	const uint32_t						ELEMENT_BITS				= sizeof(_tElement) * 8;
+		stacxpr	const uint32_t	ELEMENT_BITS		= sizeof(T) * 8;
 
 		// Constructors
-		inlcxpr										view_bit					()																			noexcept	= default;
-		inline													view_bit					(_tElement* dataElements, uint32_t elementCount)										: Data(dataElements), Count(elementCount)										{
+		inlcxpr					view_bit			()												noexcept	= default;
+		inline					view_bit			(T * dataElements, uint32_t elementCount)					: Data(dataElements), Count(elementCount) {
 			gthrow_if(0 == dataElements && 0 != elementCount, "Invalid parameters. Element count: %u.", elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t _elementCount>
-		inlcxpr										view_bit					(_tElement (&_dataElements)[_elementCount])									noexcept	: Data(_dataElements), Count(_elementCount * ELEMENT_BITS)											{}
+		inlcxpr					view_bit			(T (&_dataElements)[_elementCount])				noexcept	: Data(_dataElements), Count(_elementCount * ELEMENT_BITS)											{}
 
 		template <size_t _elementCount>
-		inline													view_bit					(_tElement (&_dataElements)[_elementCount], uint32_t elementCount)						: Data(_dataElements), Count(::gpk::min((uint32_t)(_elementCount * ELEMENT_BITS), elementCount))	{
+		inline					view_bit			(T (&_dataElements)[_elementCount], uint32_t elementCount)	: Data(_dataElements), Count(::gpk::min((uint32_t)(_elementCount * ELEMENT_BITS), elementCount))	{
 			gthrow_if(elementCount > (_elementCount * ELEMENT_BITS), "Out of range count. Max count: %u. Requested: %u.", _elementCount, elementCount);
 		}
 
 		// Operators
-							view_bit_proxy<_tElement>			operator[]					(uint32_t index)																		{
+		view_bit_proxy<T>		operator[]			(uint32_t index) {
 			gthrow_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index);
 			gthrow_if(index >= Count, "Invalid index: %u.", index);
-			const uint32_t												offsetRow					= index / ELEMENT_BITS;
-			const uint32_t												offsetBit					= index % ELEMENT_BITS;
-			_tElement													& selectedElement			= Data[offsetRow];
+			const uint32_t				offsetRow			= index / ELEMENT_BITS;
+			const uint32_t				offsetBit			= index % ELEMENT_BITS;
+			T							& selectedElement	= Data[offsetRow];
 			return {selectedElement, (uint8_t)offsetBit};
 		}
 
-							bool								operator[]					(uint32_t index)													const				{
+		bool					operator[]			(uint32_t index)	const	{
 			gthrow_if(0 == Data, "Uninitialized array pointer. Invalid index: %u.", index);
 			gthrow_if(index >= Count, "Invalid index: %u.", index);
-			const uint32_t													offsetElement				= index / ELEMENT_BITS;
-			const uint32_t													offsetLocal					= index % ELEMENT_BITS;
-			const _tElement													& selectedElement			= Data[offsetElement];
+			const uint32_t				offsetElement		= index / ELEMENT_BITS;
+			const uint32_t				offsetLocal			= index % ELEMENT_BITS;
+			const T						& selectedElement	= Data[offsetElement];
 			return (selectedElement & (1ULL << offsetLocal)) > 0 ? true : false;
 		}
 
 		// Methods
-		inline				view_bit_iterator<_tElement>		begin						()																			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
-		inline				view_bit_iterator<_tElement>		end							()																			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
+		inline	TIterator		begin				()			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
+		inline	TIterator		end					()			noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
 
-		inlcxpr	const view_bit_iterator<_tElement>	begin						()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
-		inlcxpr	const view_bit_iterator<_tElement>	end							()																	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
+		inlcxpr	const TIterator	begin				()	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data, 0};							}
+		inlcxpr	const TIterator	end					()	const	noexcept	{ return {Data, Data + Count / ELEMENT_BITS, Data + Count / ELEMENT_BITS, 0};	}
 
-		inlcxpr	uint32_t							size						()																	const	noexcept	{ return Count;																	}
+		inlcxpr	uint32_t		size				()	const	noexcept	{ return Count;																	}
 	};
 
-	template<typename T>	using vbit					= ::gpk::view_bit<T>;
+	template<typename T>	using vbit	= ::gpk::view_bit<T>;
 
 	template<typename _tField>
-	::gpk::error_t											reverse_bits				(::gpk::view_bit<_tField> toReverse)													{
-		const uint32_t												countBits					= toReverse.size() / 2;
-		const uint32_t												lastBitIndex				= toReverse.size() - 1;
+	::gpk::error_t			reverse_bits				(::gpk::view_bit<_tField> toReverse)													{
+		const uint32_t				countBits					= toReverse.size() / 2;
+		const uint32_t				lastBitIndex				= toReverse.size() - 1;
 		for(uint32_t iBit = 0; iBit < countBits; ++iBit) {
-			const uint32_t												iRev						= lastBitIndex - iBit;
-			const bool													current						= toReverse[iBit];
-			toReverse[iBit]											= (bool)toReverse[iRev];
-			toReverse[iRev]											= current;
+			const uint32_t				iRev						= lastBitIndex - iBit;
+			const bool					current						= toReverse[iBit];
+			toReverse[iBit]			= (bool)toReverse[iRev];
+			toReverse[iRev]			= current;
 		}
 		return 0;
 	}

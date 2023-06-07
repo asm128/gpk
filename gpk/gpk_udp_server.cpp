@@ -42,7 +42,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
-						gerror_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)), "%s", "??");
+						es_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)));
 					sockets.fd_array[sockets.fd_count]		= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -54,7 +54,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 				clientsToProcess.clear();
 				{
 					::std::lock_guard							lock								(serverInstance.Mutex);
-					break_ginfo_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
+					bi_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
@@ -178,7 +178,7 @@ static	::gpk::error_t	serverListenTick				(::gpk::SUDPServer& serverInstance, co
 
 	switch(command.Command) {
 	case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
-		gerror_if(errored(::serverAcceptClient(serverInstance, command, sa_client)), "%s", "");
+		es_if(errored(::serverAcceptClient(serverInstance, command, sa_client)));
 		::gpk::sleep(1);
 		break;
 	case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: {
@@ -222,7 +222,7 @@ static	::gpk::error_t	server							(::gpk::SUDPServer& serverInstance)		{
 
 static	void								threadServer					(void* pServerInstance)				{
 	::gpk::SUDPServer								& serverInstance				= *(::gpk::SUDPServer*)pServerInstance;
-	gerror_if(errored(server(serverInstance)), "Server exiting with error.")
+	es_if(errored(server(serverInstance)))
 	else
 		info_printf("Server gracefully closed.");
 

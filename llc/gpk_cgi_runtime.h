@@ -115,10 +115,10 @@ namespace gpk
 } // namespace
 
 #define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)									\
-::gpk::error_t				setup		(_mainClass& app);							\
-::gpk::error_t				cleanup		(_mainClass& app);							\
-::gpk::error_t				update		(_mainClass& app, bool systemRequestedExit);																	\
-::gpk::error_t				draw		(_mainClass& app, ::gpk::apod<char>& output);															\
+::gpk::error_t			setup		(_mainClass& app);							\
+::gpk::error_t			cleanup		(_mainClass& app);							\
+::gpk::error_t			update		(_mainClass& app, bool systemRequestedExit);																	\
+::gpk::error_t			draw		(_mainClass& app, ::gpk::apod<char>& output);															\
 		::gpk::error_t	GPK_STDCALL																gpk_moduleVersion		()														{ return 1; }															\
 		::gpk::error_t	GPK_STDCALL																gpk_moduleCreate		(void**	instanceApp, ::gpk::SCGIFramework* framework)	{ try { *instanceApp = new _mainClass{*framework};													return 0;		} catch(...) {} return -1; }	\
 		::gpk::error_t	GPK_STDCALL																gpk_moduleDelete		(void**	instanceApp)									{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\

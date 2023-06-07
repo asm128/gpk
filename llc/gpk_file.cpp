@@ -65,14 +65,14 @@ static	::gpk::error_t	fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const u
 // This function is useful for splitting files smaller than 4gb very quick.
 static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
-	int64_t									sizeFile					= ::gpk::fileSize(fileNameSrc);
+	int64_t						sizeFile					= ::gpk::fileSize(fileNameSrc);
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
-	FILE									* fp						= 0;
+	FILE						* fp						= 0;
 	ree_if(0 == fp, "%s", "Files larger than 3gb still not supported.");
 	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
 	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
 
-	::gpk::apod<int8_t>						partInMemory;
+	::gpk::ai8					partInMemory;
 	gpk_necall(partInMemory.resize(sizePartMax), "Failed to allocate buffer for file part. Out of memory? File part size: %u.", sizePartMax);
 
 	// -- Write parts to disk.
@@ -128,7 +128,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 ::gpk::error_t			gpk::fileToMemory			(const ::gpk::vcc & fileName, ::gpk::au8 & fileInMemory)		{
 	FILE									* fp						= 0;
 	int32_t									fileErr						= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
-	rvw_if(fileErr > 0 ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
+	rvw_if((fileErr > 0) ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
 	fseek(fp, 0, SEEK_END);
 	int32_t									fileSize					= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);

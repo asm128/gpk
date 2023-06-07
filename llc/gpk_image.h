@@ -10,34 +10,35 @@
 namespace gpk
 {
 	template<typename _tColor>
-	struct SImage {
+	struct img {
 		typedef	_tColor				T;
+		typedef	const _tColor		TConst;
 
 		::gpk::apod<T>				Texels		;
 		::gpk::v2<T>				View		;
 
-		constexpr					SImage		()								= default;
-									SImage		(const ::gpk::v2<T> & other)	: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
-									SImage		(const SImage<T> & other)		: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
+		constexpr					img			()								= default;
+									img			(const ::gpk::v2<T> & other)	: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+									img			(const img<T> & other)			: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
 		inlcxpr	operator			v2<const T>	()						const	noexcept	{ return View; }
 		inline	operator			v2<T>		()								noexcept	{ return View; }
 
-		SImage&						operator=	(const ::gpk::v2<T> & other) {
+		img&						operator=	(const ::gpk::v2<T> & other) {
 			Texels						= v1<const T>{other.begin(), other.size()};
 			View						= {Texels.begin(), other.metrics()};
 			return *this;
 		}
 
-		SImage&						operator=	(const SImage<T> & other) {
+		img&						operator=	(const img<T> & other) {
 			Texels						= other.Texels;
 			View						= {Texels.begin(), other.View.metrics()};
 			return *this;
 		}
 
 
-		inline	::gpk::v1<T>				operator[]	(uint32_t index)					{ return View[index]; }
-		inline	const ::gpk::v1<const T>	operator[]	(uint32_t index)	const			{ return View[index]; }
+		inline	::gpk::v1<T>			operator[]	(uint32_t index)						{ return View[index]; }
+		inline	const ::gpk::v1<TConst>	operator[]	(uint32_t index)	const				{ return View[index]; }
 
 		inlcxpr	const T*			begin		()						const	noexcept	{ return View.begin		();	}
 		inlcxpr	const T*			end			()						const	noexcept	{ return View.end		();	}
@@ -72,8 +73,6 @@ namespace gpk
 		}
 	}; // struct
 
-	template<typename T>	using img	= ::gpk::SImage<T>;
-
 	typedef	img<int8_t >	imgi8;
 	typedef	img<int16_t>	imgi16;
 	typedef	img<int32_t>	imgi32;
@@ -82,6 +81,8 @@ namespace gpk
 	typedef	img<uint16_t>	imgu16;
 	typedef	img<uint32_t>	imgu32;
 	typedef	img<uint64_t>	imgu64;
+	typedef	img<float>		imgf32;
+	typedef	img<double>		imgf64;
 
 	typedef	img<::gpk::bgr	>	img8bgr	;
 	typedef	img<::gpk::rgb	>	img8rgb	;
@@ -140,21 +141,21 @@ namespace gpk
 
 	template<typename _tColor, typename _tDepthStencil>
 	struct SRenderTarget {
-		::gpk::img<_tColor>			Color			= {};
-		::gpk::img<_tDepthStencil>	DepthStencil	= {};
+		::gpk::img<_tColor>			Color				= {};
+		::gpk::img<_tDepthStencil>	DepthStencil		= {};
 
-		inline	::gpk::v1<_tColor>				operator[]		(uint32_t index)							{ return Color[index]; }
-		inline	const ::gpk::v1<const _tColor>	operator[]		(uint32_t index)		const				{ return Color[index]; }
+		inline	::gpk::v1<_tColor>				operator[]	(uint32_t index)						{ return Color[index]; }
+		inline	const ::gpk::v1<const _tColor>	operator[]	(uint32_t index)	const				{ return Color[index]; }
 
-		inlcxpr	const _tColor*		begin			()						const	noexcept	{ return Color.begin	();	}
-		inlcxpr	const _tColor*		end				()						const	noexcept	{ return Color.end		();	}
-		inlcxpr	_tColor*			begin			()								noexcept	{ return Color.begin	();	}
-		inlcxpr	_tColor*			end				()								noexcept	{ return Color.end		();	}
-		inlcxpr	const ::gpk::n2u32&	metrics			()						const	noexcept	{ return Color.metrics	();	}
-		inlcxpr	const uint32_t&		size			()						const	noexcept	{ return Color.size		();	}
-		inlcxpr	uint32_t			area			()						const	noexcept	{ return Color.area		();	}
+		inlcxpr	const _tColor*		begin				()						const	noexcept	{ return Color.begin	();	}
+		inlcxpr	const _tColor*		end					()						const	noexcept	{ return Color.end		();	}
+		inlcxpr	_tColor*			begin				()								noexcept	{ return Color.begin	();	}
+		inlcxpr	_tColor*			end					()								noexcept	{ return Color.end		();	}
+		inlcxpr	const ::gpk::n2u32&	metrics				()						const	noexcept	{ return Color.metrics	();	}
+		inlcxpr	const uint32_t&		size				()						const	noexcept	{ return Color.size		();	}
+		inlcxpr	uint32_t			area				()						const	noexcept	{ return Color.area		();	}
 
-		::gpk::error_t				resize			(const ::gpk::n2u32 & newSize)	noexcept	{
+		::gpk::error_t				resize				(const ::gpk::n2u32 & newSize)	noexcept	{
 			gpk_necs(Color			.resize(newSize));
 			gpk_necs(DepthStencil	.resize(newSize));
 			return 0;
@@ -164,6 +165,7 @@ namespace gpk
 			gpk_necs(DepthStencil	.resize(newSize, depth));
 			return 0;
 		}
+
 		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize)														noexcept	{ return resize(newSize.u32()); }
 		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize)														noexcept	{ return resize(newSize.u32()); }
 		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize, const _tColor & color, const _tDepthStencil & depth)	noexcept	{ return resize(newSize.u32(), color, depth); }
@@ -180,9 +182,9 @@ namespace gpk
 	typedef SRenderTarget<::gpk::rgba, uint8_t>		rtrgba8s8;
 
 	template<typename _tColor, typename _tDepthStencil>
-	::gpk::error_t				clearTarget					(::gpk::rt<_tColor, _tDepthStencil> & targetToClear)		{
-		::gpk::img<_tColor>				& offscreen					= targetToClear.Color;
-		::gpk::img<_tDepthStencil>		& offscreenDepth			= targetToClear.DepthStencil;
+	::gpk::error_t				clearTarget			(::gpk::rt<_tColor, _tDepthStencil> & targetToClear)		{
+		::gpk::img<_tColor>				& offscreen			= targetToClear.Color;
+		::gpk::img<_tDepthStencil>		& offscreenDepth	= targetToClear.DepthStencil;
 		::memset(offscreenDepth	.Texels.begin(), -1, sizeof(_tDepthStencil)	* offscreenDepth	.Texels.size());	// Clear target.
 		::memset(offscreen		.Texels.begin(),  0, sizeof(_tColor)		* offscreen			.Texels.size());	// Clear target.
 		return 0;
@@ -212,7 +214,7 @@ namespace gpk
 		if( out_view.metrics().u16() != newSize ) {
 			out_view					= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
-				gerror_if(errored(::gpk::grid_scale(out_view, in_view)), "%s", "I believe this never fails.");
+				es_if(errored(::gpk::grid_scale(out_view, in_view)));
 		}
 		return 0;
 	}

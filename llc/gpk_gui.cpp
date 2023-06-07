@@ -300,7 +300,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)
 	if(recursive) { // Delete children first.
 		::gpk::ai32					children				= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			gerror_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
+			e_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
 	}
 	// Remove from parent list
 	const uint32_t				indexParent				= (uint32_t)gui.Controls.Controls[iControl].Parent;
@@ -597,7 +597,7 @@ static	::gpk::error_t	controlProcessInput										(::gpk::SGUI & gui, const ::g
 }
 
 ::gpk::error_t			gpk::guiProcessInput	(::gpk::SGUI & gui, const ::gpk::SInput& input, ::gpk::v1<const ::gpk::SSysEvent> sysEvents)	{
-	gerror_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)), "%s", "Why would this ever happen?");
+	es_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)));
 	::gpk::error_t				controlHovered			= -1;
 	::gpk::au32					rootControlsToProcess	= {};
 	rootControlsToProcess.resize(1000);

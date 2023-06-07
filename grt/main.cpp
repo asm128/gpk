@@ -32,20 +32,20 @@ static	void													threadRender					(void* pRuntimeState)												{
 	info_printf("Render thread done.");
 }
 
-static	int														threadRenderStart				(::SRuntimeState& runtimeState)										{
+static	int				threadRenderStart				(::SRuntimeState& runtimeState)										{
 	_beginthread(threadRender, 0, &runtimeState);
 	return 0;
 }
 
-static	int														grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
+static	int				grt_Loop						(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & mainModule)	{
 #if defined(GPK_WINDOWS)
-	::gpk::error_t														updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
+	::gpk::error_t				updateResult					= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
 #else
-	::gpk::error_t														updateResult					= mainModule.Update(mainModule.Application, false);
+	::gpk::error_t				updateResult					= mainModule.Update(mainModule.Application, false);
 #endif
 	if(1 == updateResult || errored(updateResult)) {
-		ginfo_if(1 == updateResult, "%s", "Application requested termination.");
-		gerror_if(errored(updateResult), "%s", "update() returned error.");
+		is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);
+		es_if(errored(updateResult));
 	}
 	else {
 		gpk_sync_increment(runtimeState.RenderThreadUsers);	// Report we're alive
@@ -105,7 +105,7 @@ static	int														grt_Main						(::gpk::SRuntimeValues& globalRuntimeValue
 		runtimeState.MainModule											= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		gerror_if(errored(mainModule.Cleanup(app)), "%s", "Failed.");
+		es_if(errored(mainModule.Cleanup(app)));
 		info_printf("%s", "Application instance destroyed.");
 		gpk_necall(mainModule.Delete(&app), "");
 	}

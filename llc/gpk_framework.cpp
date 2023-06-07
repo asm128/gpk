@@ -125,36 +125,36 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #else
 	::gpk::error_t				updateResult		= ::gpk::windowUpdate(mainWindow);
 #endif
-	ree_if(errored(updateResult), "%s", "Not sure why this would fail.");
-	rvi_if(1, mainWindow.Closed, "%s", "Application exiting because the main window was closed.");
-	rvi_if(1, 1 == updateResult, "%s", "Application exiting because the WM_QUIT message was processed.");
-	::gpk::pobj<::gpk::SWindow::TOffscreen>					offscreen									= framework.RootWindow.BackBuffer;
+	rees_if(errored(updateResult));
+	rvis_if(1, mainWindow.Closed);
+	rvis_if(1, 1 == updateResult);
+	::gpk::pobj<::gpk::SWindow::TOffscreen>	offscreen	= framework.RootWindow.BackBuffer;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())
-			gerror_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)), "%s", "Unknown error.");
+			es_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
 	}
 #endif
-	::gpk::SGUI						& gui										= *framework.GUI;
+	::gpk::SGUI						& gui				= *framework.GUI;
 	{
-		::std::lock_guard																			lock										(framework.LockGUI);
+		::std::lock_guard				lock										(framework.LockGUI);
 		::gpk::guiProcessInput(gui, *mainWindow.Input, mainWindow.EventQueue);
 	}
 
 	if(framework.Settings.GUIZoom) {
 		if(mainWindow.Input->MouseCurrent.Deltas.z) {
-			::std::lock_guard																			lock										(framework.LockGUI);
+			::std::lock_guard				lock										(framework.LockGUI);
 			if(mainWindow.Input->MouseCurrent.Deltas.z > 0) {
 				if(gui.Zoom.ZoomLevel > 1)
 					++gui.Zoom.ZoomLevel;
 				else
-					gui.Zoom.ZoomLevel																		*= 2;
+					gui.Zoom.ZoomLevel		*= 2;
 			}
 			else {
 				if(gui.Zoom.ZoomLevel > 1)
 					--gui.Zoom.ZoomLevel;
 				else
-					gui.Zoom.ZoomLevel																		*= .5;
+					gui.Zoom.ZoomLevel		*= .5;
 			}
 			::gpk::guiUpdateMetrics(gui, framework.RootWindow.Size, true);
 		}
@@ -165,10 +165,10 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #if defined(GPK_WINDOWS)
 #	include <Windowsx.h>
 
-static	::RECT						minClientRect			= {100, 100, 100 + 320, 100 + 200};
+static	::RECT				minClientRect			= {100, 100, 100 + 320, 100 + 200};
 
-//extern				::SApplication							* g_ApplicationInstance						;
-static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
+//extern				::SApplication				* g_ApplicationInstance						;
+static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
 	switch(uMsg) {
 	default					: break;
 	case WM_GETMINMAXINFO	:	// Catch this message so to prevent the window from becoming too small.
@@ -185,10 +185,14 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	if(0 == ::GetWindowLongPtrA(hWnd, GWLP_USERDATA))
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
-	::gpk::SWindow							& mainDisplay								= *(::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
+	::gpk::SWindow				* pWindow		= (::gpk::SWindow*)::GetWindowLongPtrA(hWnd, GWLP_USERDATA);
+	if(0 == pWindow)
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 
-	if(!mainDisplay.Input)
-		mainDisplay.Input.create();
+	::gpk::SWindow				& mainDisplay	= *pWindow;
+
+	//if(!mainDisplay.Input)
+		//mainDisplay.Input.create();
 
 	::gpk::SInput							& input										= *mainDisplay.Input;
 	::gpk::SWindowPlatformDetail			& displayDetail								= mainDisplay.PlatformDetail;
@@ -283,29 +287,29 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			}
 		}
 		if( wParam == SIZE_MINIMIZED ) {
-			mainDisplay.MinOrMaxed = mainDisplay.NoDraw												= true;
+			mainDisplay.MinOrMaxed = mainDisplay.NoDraw					= true;
 		}
 		else if( wParam == SIZE_MAXIMIZED ) {
-			mainDisplay.Resized = mainDisplay.MinOrMaxed											= true;
-			mainDisplay.NoDraw																		= false;
+			mainDisplay.Resized = mainDisplay.MinOrMaxed				= true;
+			mainDisplay.NoDraw											= false;
 		}
 		else if( wParam == SIZE_RESTORED ) {
-			mainDisplay.Resized																		= true;
-			mainDisplay.MinOrMaxed																	= true;
-			mainDisplay.NoDraw																		= false;
+			mainDisplay.Resized											= true;
+			mainDisplay.MinOrMaxed										= true;
+			mainDisplay.NoDraw											= false;
 		}
 		else {
 			//State.Resized									= true;	?
-			mainDisplay.MinOrMaxed = mainDisplay.NoDraw												= false;
+			mainDisplay.MinOrMaxed = mainDisplay.NoDraw					= false;
 		}
 		break;
 	case WM_PAINT			:
 		info_printf("%s", "WM_PAINT");
-		mainDisplay.Repaint																		= true;
+		mainDisplay.Repaint											= true;
 		break;
 	case WM_DESTROY			:
-		displayDetail.WindowHandle																= 0;
-		mainDisplay.Closed																		= true;
+		displayDetail.WindowHandle									= 0;
+		mainDisplay.Closed											= true;
 		::PostQuitMessage(0);
 		return 0;
 	//case MM_JOY1BUTTONDOWN	: newEvent.Type = ::gpk::SYSEVENT_JOY_BUTTON_DOWN	; newEvent.Data.resize(1 + sizeof(LPARAM)); newEvent.Data[0] = 0; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueue.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
@@ -404,18 +408,19 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	return 0;
 }
 
-::gpk::error_t			gpk::mainWindowCreate						(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
+::gpk::error_t			gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
+
 #if defined(GPK_WINDOWS)
-	::gpk::SWindowPlatformDetail			& displayDetail								= mainWindow.PlatformDetail;
-	HINSTANCE								hInstance									= runtimeValues.EntryPointArgsWin.hInstance;
+	::gpk::SWindowPlatformDetail	& displayDetail			= mainWindow.PlatformDetail;
+	HINSTANCE						hInstance				= runtimeValues.EntryPointArgsWin.hInstance;
 	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName.begin(), ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
-	::RECT									finalClientRect								= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
-	DWORD									windowStyle									= WS_OVERLAPPEDWINDOW; //WS_POPUP;
+	::RECT							finalClientRect			= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
+	DWORD							windowStyle				= WS_OVERLAPPEDWINDOW; //WS_POPUP;
 	::AdjustWindowRectEx(&finalClientRect, windowStyle, FALSE, 0);
-	displayDetail.WindowHandle			= ::CreateWindowEx(0, displayDetail.WindowClass.lpszClassName, TEXT("Window"), windowStyle | CS_DBLCLKS
+	displayDetail.WindowHandle	= ::CreateWindowEx(0, displayDetail.WindowClass.lpszClassName, TEXT("Window"), windowStyle | CS_DBLCLKS
 		, finalClientRect.left
 		, finalClientRect.top
 		, finalClientRect.right		- finalClientRect.left
@@ -433,9 +438,9 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	//	mainWindow.PlatformDetail.Connection													= framework.PlatformDetail.XCBConnection;
 	//}
 	if(0 == displayDetail.Connection) {
-		displayDetail.Connection			= xcb_connect(0, 0);
+		displayDetail.Connection	= xcb_connect(0, 0);
 	}
-	xcb_screen_t							* xcbScreen									= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
+	xcb_screen_t				* xcbScreen			= xcb_setup_roots_iterator(xcb_get_setup(mainWindow.PlatformDetail.Connection)).data;
 	::std::shared_ptr<xcb_get_geometry_reply_t>	geometry									(xcb_get_geometry_reply(mainWindow.PlatformDetail.Connection, xcb_get_geometry(mainWindow.PlatformDetail.Connection, xcbScreen->root), nullptr), free);
 	mainWindow.Size						= {geometry->width, geometry->height};
 	gpk_necall(xcbWindowCreate(mainWindow), "%s", "Failed to create main window.");
@@ -443,6 +448,6 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 #else
 	(void)runtimeValues;
 #endif
-	mainWindow.Resized					= true;
+	mainWindow.Resized		= true;
 	return 0;
 }

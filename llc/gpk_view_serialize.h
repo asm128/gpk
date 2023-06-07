@@ -53,6 +53,22 @@ namespace gpk
 #pragma pack(pop)
 
 	template<typename T>
+	::gpk::error_t				viewReadForBobosData(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t					elementCount		= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
+		headerToRead				= {(input.size() > sizeof(uint32_t)) ? (const T*)&input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
+	}
+	template<typename T>
+	::gpk::error_t				viewReadForBobosData(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
+		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
+		const uint32_t					elementCount		= *(uint32_t*)input.begin();
+		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
+		headerToRead				= {(input.size() > sizeof(uint32_t)) ? (T*)&input[sizeof(uint32_t)] : 0, elementCount};
+		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
+	}
+	template<typename T>
 	::gpk::error_t				viewRead			(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
 		const SSerializedViewHeader		& header			= *(const SSerializedViewHeader*)input.begin();
 		const uint32_t					elementCount		= header.ActualCount();

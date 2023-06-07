@@ -433,6 +433,9 @@ namespace gpk
 #	define be_if							break_gerror_if
 #	define bw_if							break_gwarn_if
 #	define bi_if							break_ginfo_if
+#	define bes_if							break_gserror_if
+#	define bws_if							break_gswarn_if
+#	define bis_if							break_gsinfo_if
 #endif
 
 #ifndef ce_if
