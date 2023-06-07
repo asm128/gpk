@@ -205,21 +205,21 @@
 			int32_t											indexColor								= gui.Colors->Palette->push_back(gridCellColor);
 			themeIndex									= gui.Colors->ControlThemes->push_back({});
 			::gpk::SControlTheme							& theme									= (*gui.Colors->ControlThemes)[themeIndex];
-			::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	& comboDisabled		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	] = {};
-			::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	& comboPressed 		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	] = {};
-			::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	& comboSelected		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	] = {};
-			::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	& comboHover 		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	] = {};
-			::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	& comboNormal		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	] = {};
-			comboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= indexColor;
-			comboDisabled	[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]	= comboDisabled[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-			comboNormal		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= indexColor;
-			comboNormal		[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]	= comboDisabled[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-			comboSelected	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= indexColor;
-			comboSelected	[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]	= comboDisabled[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-			comboHover		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= indexColor;
-			comboHover		[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]	= comboDisabled[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-			comboPressed	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= indexColor;
-			comboPressed	[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]	= comboDisabled[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
+			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboDisabled		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	] = {};
+			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboPressed 		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	] = {};
+			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboSelected		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	] = {};
+			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboHover 		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	] = {};
+			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboNormal		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	] = {};
+			comboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
+			comboDisabled	[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
+			comboNormal		[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
+			comboNormal		[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
+			comboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
+			comboSelected	[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
+			comboHover		[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
+			comboHover		[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
+			comboPressed	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
+			comboPressed	[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
 			//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
 			//	for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
 			//		theme.ColorCombos[iState][iArea]									= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);

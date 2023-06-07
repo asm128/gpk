@@ -62,8 +62,8 @@ namespace gpk
 	struct SControlConstraints {
 		::gpk::n2i32					AttachSizeToControl	;
 		::gpk::n2<bool>					AttachSizeToText	;
-		::gpk::SRectLimits<int32_t>		DockToControl		;
-		::gpk::SMinMax<::gpk::n2i16>	SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
+		::gpk::rect<int32_t>			DockToControl		;
+		::gpk::minmax<::gpk::n2i16>	SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlState {
@@ -81,28 +81,28 @@ namespace gpk
 		bool		Unused			: 1;
 	};
 
-	enum GUI_CONTROL_AREA_EX : uint8_t
-		{ GUI_CONTROL_AREA_EX_BACKGROUND	= 0
-		, GUI_CONTROL_AREA_EX_CLIENT
-		, GUI_CONTROL_AREA_EX_BORDER_LEFT
-		, GUI_CONTROL_AREA_EX_BORDER_TOP
-		, GUI_CONTROL_AREA_EX_BORDER_RIGHT
-		, GUI_CONTROL_AREA_EX_BORDER_BOTTOM
-		, GUI_CONTROL_AREA_EX_TEXT_BACKGROUND
-		, GUI_CONTROL_AREA_EX_TEXT_FACE
-		, GUI_CONTROL_AREA_EX_MARGIN_LEFT
-		, GUI_CONTROL_AREA_EX_MARGIN_TOP
-		, GUI_CONTROL_AREA_EX_MARGIN_RIGHT
-		, GUI_CONTROL_AREA_EX_MARGIN_BOTTOM
-		, GUI_CONTROL_AREA_EX_CORNER_LEFT_TOP_TOP
-		, GUI_CONTROL_AREA_EX_CORNER_LEFT_TOP_LEFT
-		, GUI_CONTROL_AREA_EX_CORNER_RIGHT_TOP_TOP
-		, GUI_CONTROL_AREA_EX_CORNER_RIGHT_TOP_RIGHT
-		, GUI_CONTROL_AREA_EX_CORNER_LEFT_BOTTOM_LEFT
-		, GUI_CONTROL_AREA_EX_CORNER_LEFT_BOTTOM_BOTTOM
-		, GUI_CONTROL_AREA_EX_CORNER_RIGHT_BOTTOM_RIGHT
-		, GUI_CONTROL_AREA_EX_CORNER_RIGHT_BOTTOM_BOTTOM
-		, GUI_CONTROL_AREA_EX_COUNT
+	enum UI_CONTROL_AREA : uint8_t
+		{ UI_CONTROL_AREA_BACKGROUND	= 0
+		, UI_CONTROL_AREA_CLIENT
+		, UI_CONTROL_AREA_BORDER_LEFT
+		, UI_CONTROL_AREA_BORDER_TOP
+		, UI_CONTROL_AREA_BORDER_RIGHT
+		, UI_CONTROL_AREA_BORDER_BOTTOM
+		, UI_CONTROL_AREA_TEXT_BACKGROUND
+		, UI_CONTROL_AREA_TEXT_FACE
+		, UI_CONTROL_AREA_MARGIN_LEFT
+		, UI_CONTROL_AREA_MARGIN_TOP
+		, UI_CONTROL_AREA_MARGIN_RIGHT
+		, UI_CONTROL_AREA_MARGIN_BOTTOM
+		, UI_CONTROL_AREA_CORNER_LEFT_TOP_TOP
+		, UI_CONTROL_AREA_CORNER_LEFT_TOP_LEFT
+		, UI_CONTROL_AREA_CORNER_RIGHT_TOP_TOP
+		, UI_CONTROL_AREA_CORNER_RIGHT_TOP_RIGHT
+		, UI_CONTROL_AREA_CORNER_LEFT_BOTTOM_LEFT
+		, UI_CONTROL_AREA_CORNER_LEFT_BOTTOM_BOTTOM
+		, UI_CONTROL_AREA_CORNER_RIGHT_BOTTOM_RIGHT
+		, UI_CONTROL_AREA_CORNER_RIGHT_BOTTOM_BOTTOM
+		, UI_CONTROL_AREA_COUNT
 		};
 
 	enum GUI_CONTROL_PALETTE
@@ -125,8 +125,8 @@ namespace gpk
 
 	struct SControl {
 		::gpk::rect2i16					Area			= {{}, {16, 16}};
-		::gpk::SRectLimits<uint16_t>	Margin			= {1, 1, 1, 1};
-		::gpk::SRectLimits<uint8_t>		Border			= {1, 1, 1, 1};
+		::gpk::rect<uint16_t>	Margin			= {1, 1, 1, 1};
+		::gpk::rect<uint8_t>		Border			= {1, 1, 1, 1};
 		::gpk::view2d<::gpk::bgra>		Image			= {};
 		::gpk::n2i16					ImageOffset		= {};
 		::gpk::ALIGN					ImageAlign		= ::gpk::ALIGN_CENTER;
@@ -139,34 +139,34 @@ namespace gpk
 	};
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
-	cnstxpr	void						controlNCSpacing	(const ::gpk::SControl & ctl, ::gpk::SRectLimits<int16_t> & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	cnstxpr	void						controlNCSpacing	(const ::gpk::SControl & ctl, ::gpk::n2i16 & ncSpacing)					noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
-	cnstxpr	::gpk::SRectLimits<int16_t>	controlNCRect		(const ::gpk::SControl & ctl)	noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
-	cnstxpr	::gpk::n2i16				controlNCSpacing	(const ::gpk::SControl & ctl)	noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	cnstxpr	void				controlNCSpacing	(const ::gpk::SControl & ctl, ::gpk::recti16 & ncSpacing)	noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	cnstxpr	void				controlNCSpacing	(const ::gpk::SControl & ctl, ::gpk::n2i16 & ncSpacing)		noexcept	{ ncSpacing = {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
+	cnstxpr	::gpk::recti16		controlNCRect		(const ::gpk::SControl & ctl)	noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left), (int16_t)(ctl.Border.Top + ctl.Margin.Top), (int16_t)(ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Bottom + ctl.Margin.Bottom)};	 }
+	cnstxpr	::gpk::n2i16		controlNCSpacing	(const ::gpk::SControl & ctl)	noexcept	{ return {(int16_t)(ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right), (int16_t)(ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom)}; }
 
 	struct SGUIZoom {
-		::gpk::n2f64				DPI					= {1.0, 1.0};
-		::gpk::SMinMax<double>		ZoomLimits			= {0.1, 10.0};
-		double						ZoomLevel			= 1.0;
+		::gpk::n2f64			DPI					= {1.0, 1.0};
+		::gpk::minmax<double>	ZoomLimits			= {0.1, 10.0};
+		double					ZoomLevel			= 1.0;
 
-		bool						operator==			(const ::gpk::SGUIZoom & other)		const	noexcept	{
+		bool					operator==			(const ::gpk::SGUIZoom & other)		const	noexcept	{
 			return DPI			== other.DPI
 				&& ZoomLevel	== other.ZoomLevel
 				;
 		}
-		inline	bool				operator!=			(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
+		inline	bool			operator!=			(const ::gpk::SGUIZoom & other)		const	noexcept	{ return !operator==(other); }
 	};
 
 	struct SControlText {
-		::gpk::vcs					Text				= {};
-		::gpk::ALIGN				Align				= ::gpk::ALIGN_CENTER;
-		::gpk::SMinMax<uint32_t>	Selection			= {0, 1};
-		int16_t						FontSelected		= -1;
+		::gpk::vcs				Text				= {};
+		::gpk::ALIGN			Align				= ::gpk::ALIGN_CENTER;
+		::gpk::minmax<uint32_t>	Selection			= {0, 1};
+		int16_t					FontSelected		= -1;
 	};
 
 	struct SControlTheme {
-		::gpk::astatic<::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>, ::gpk::GUI_CONTROL_PALETTE_COUNT>							
-									ColorCombos			= {};
+		::gpk::astatic<::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>, ::gpk::GUI_CONTROL_PALETTE_COUNT>							
+								ColorCombos			= {};
 	};
 #pragma pack(pop)
 	struct SGUIControlTable {
@@ -188,7 +188,7 @@ namespace gpk
 		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>	
 											DefaultColors			= {};
 
-		::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::GUI_CONTROL_AREA_EX_COUNT>
+		::gpk::apod<::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>
 		>									Palettes;
 	};
 
@@ -219,8 +219,8 @@ namespace gpk
 			bool							FrameOut		;
 			::gpk::ALIGN					Align			;
 			::gpk::rect2i16					Area			;
-			::gpk::SRectLimits<uint8_t>		Border			;
-			::gpk::SRectLimits<uint16_t>	Margin			;
+			::gpk::rect<uint8_t>		Border			;
+			::gpk::rect<uint16_t>	Margin			;
 			::gpk::vcs						Text			;
 			::gpk::ALIGN					TextAlign		;
 			::gpk::ALIGN					IconAlign		;

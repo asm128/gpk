@@ -159,7 +159,7 @@ namespace gpk
 			_41	= vTranslation.x; _42 = vTranslation.y; _43 = vTranslation.z;
 		}
 		template<typename _tNearFar>
-		inline	void							FieldOfView					(double fAngle, double fAspect, const ::gpk::SMinMax<_tNearFar> & nearFar)	{ return FieldOfView(fAngle, fAspect, nearFar.Min, nearFar.Max); } // FoV
+		inline	void							FieldOfView					(double fAngle, double fAspect, const ::gpk::minmax<_tNearFar> & nearFar)	{ return FieldOfView(fAngle, fAspect, nearFar.Min, nearFar.Max); } // FoV
 		template<typename _tNearFar>
 		void									FieldOfView					(double fAngle, double fAspect, _tNearFar zNear, _tNearFar zFar)			{
 			double										fTan						= tan( fAngle / 2.0 );
@@ -290,181 +290,181 @@ namespace gpk
 			_33										= (_tBase)(1.0 - (xx + yy)	);
 		}
 
-		constexpr			_tMat4				GetTranspose				()			const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
-		inlcxpr	Tn3				GetTranslation				()			const	noexcept	{ return { _41, _42, _43 }; }
-							_tMat4				GetInverse					()			const				{
-			_tMat4										mTranspose					= GetTranspose()
-				,										mResult						= *this
+		cnstxpr	_tMat4		GetTranspose				()			const	noexcept	{ return {_11, _21, _31, _41,  _12, _22, _32, _42,  _13, _23, _33, _43,  _14, _24, _34, _44};	}
+		inlcxpr	Tn3			GetTranslation				()			const	noexcept	{ return { _41, _42, _43 }; }
+		_tMat4				GetInverse					()			const				{
+			_tMat4					mTranspose					= GetTranspose()
+				,					mResult						= *this
 				;
-			_tBase										fTemp[12];
+			_tBase					fTemp[12];
 
-			fTemp[ 0]								= mTranspose._33 * mTranspose._44;
-			fTemp[ 1]								= mTranspose._34 * mTranspose._43;
-			fTemp[ 2]								= mTranspose._32 * mTranspose._44;
-			fTemp[ 3]								= mTranspose._34 * mTranspose._42;
-			fTemp[ 4]								= mTranspose._32 * mTranspose._43;
-			fTemp[ 5]								= mTranspose._33 * mTranspose._42;
-			fTemp[ 6]								= mTranspose._31 * mTranspose._44;
-			fTemp[ 7]								= mTranspose._34 * mTranspose._41;
-			fTemp[ 8]								= mTranspose._31 * mTranspose._43;
-			fTemp[ 9]								= mTranspose._33 * mTranspose._41;
-			fTemp[10]								= mTranspose._31 * mTranspose._42;
-			fTemp[11]								= mTranspose._32 * mTranspose._41;
+			fTemp[ 0]			= mTranspose._33 * mTranspose._44;
+			fTemp[ 1]			= mTranspose._34 * mTranspose._43;
+			fTemp[ 2]			= mTranspose._32 * mTranspose._44;
+			fTemp[ 3]			= mTranspose._34 * mTranspose._42;
+			fTemp[ 4]			= mTranspose._32 * mTranspose._43;
+			fTemp[ 5]			= mTranspose._33 * mTranspose._42;
+			fTemp[ 6]			= mTranspose._31 * mTranspose._44;
+			fTemp[ 7]			= mTranspose._34 * mTranspose._41;
+			fTemp[ 8]			= mTranspose._31 * mTranspose._43;
+			fTemp[ 9]			= mTranspose._33 * mTranspose._41;
+			fTemp[10]			= mTranspose._31 * mTranspose._42;
+			fTemp[11]			= mTranspose._32 * mTranspose._41;
 
-			mResult._11								 = fTemp[0]*mTranspose._22 + fTemp[3]*mTranspose._23 + fTemp[4] *mTranspose._24;
-			mResult._11								-= fTemp[1]*mTranspose._22 + fTemp[2]*mTranspose._23 + fTemp[5] *mTranspose._24;
-			mResult._12								 = fTemp[1]*mTranspose._21 + fTemp[6]*mTranspose._23 + fTemp[9] *mTranspose._24;
-			mResult._12								-= fTemp[0]*mTranspose._21 + fTemp[7]*mTranspose._23 + fTemp[8] *mTranspose._24;
-			mResult._13								 = fTemp[2]*mTranspose._21 + fTemp[7]*mTranspose._22 + fTemp[10]*mTranspose._24;
-			mResult._13								-= fTemp[3]*mTranspose._21 + fTemp[6]*mTranspose._22 + fTemp[11]*mTranspose._24;
-			mResult._14								 = fTemp[5]*mTranspose._21 + fTemp[8]*mTranspose._22 + fTemp[11]*mTranspose._23;
-			mResult._14								-= fTemp[4]*mTranspose._21 + fTemp[9]*mTranspose._22 + fTemp[10]*mTranspose._23;
-			mResult._21								 = fTemp[1]*mTranspose._12 + fTemp[2]*mTranspose._13 + fTemp[5] *mTranspose._14;
-			mResult._21								-= fTemp[0]*mTranspose._12 + fTemp[3]*mTranspose._13 + fTemp[4] *mTranspose._14;
-			mResult._22								 = fTemp[0]*mTranspose._11 + fTemp[7]*mTranspose._13 + fTemp[8] *mTranspose._14;
-			mResult._22								-= fTemp[1]*mTranspose._11 + fTemp[6]*mTranspose._13 + fTemp[9] *mTranspose._14;
-			mResult._23								 = fTemp[3]*mTranspose._11 + fTemp[6]*mTranspose._12 + fTemp[11]*mTranspose._14;
-			mResult._23								-= fTemp[2]*mTranspose._11 + fTemp[7]*mTranspose._12 + fTemp[10]*mTranspose._14;
-			mResult._24								 = fTemp[4]*mTranspose._11 + fTemp[9]*mTranspose._12 + fTemp[10]*mTranspose._13;
-			mResult._24								-= fTemp[5]*mTranspose._11 + fTemp[8]*mTranspose._12 + fTemp[11]*mTranspose._13;
+			mResult._11			 = fTemp[0]*mTranspose._22 + fTemp[3]*mTranspose._23 + fTemp[4] *mTranspose._24;
+			mResult._11			-= fTemp[1]*mTranspose._22 + fTemp[2]*mTranspose._23 + fTemp[5] *mTranspose._24;
+			mResult._12			 = fTemp[1]*mTranspose._21 + fTemp[6]*mTranspose._23 + fTemp[9] *mTranspose._24;
+			mResult._12			-= fTemp[0]*mTranspose._21 + fTemp[7]*mTranspose._23 + fTemp[8] *mTranspose._24;
+			mResult._13			 = fTemp[2]*mTranspose._21 + fTemp[7]*mTranspose._22 + fTemp[10]*mTranspose._24;
+			mResult._13			-= fTemp[3]*mTranspose._21 + fTemp[6]*mTranspose._22 + fTemp[11]*mTranspose._24;
+			mResult._14			 = fTemp[5]*mTranspose._21 + fTemp[8]*mTranspose._22 + fTemp[11]*mTranspose._23;
+			mResult._14			-= fTemp[4]*mTranspose._21 + fTemp[9]*mTranspose._22 + fTemp[10]*mTranspose._23;
+			mResult._21			 = fTemp[1]*mTranspose._12 + fTemp[2]*mTranspose._13 + fTemp[5] *mTranspose._14;
+			mResult._21			-= fTemp[0]*mTranspose._12 + fTemp[3]*mTranspose._13 + fTemp[4] *mTranspose._14;
+			mResult._22			 = fTemp[0]*mTranspose._11 + fTemp[7]*mTranspose._13 + fTemp[8] *mTranspose._14;
+			mResult._22			-= fTemp[1]*mTranspose._11 + fTemp[6]*mTranspose._13 + fTemp[9] *mTranspose._14;
+			mResult._23			 = fTemp[3]*mTranspose._11 + fTemp[6]*mTranspose._12 + fTemp[11]*mTranspose._14;
+			mResult._23			-= fTemp[2]*mTranspose._11 + fTemp[7]*mTranspose._12 + fTemp[10]*mTranspose._14;
+			mResult._24			 = fTemp[4]*mTranspose._11 + fTemp[9]*mTranspose._12 + fTemp[10]*mTranspose._13;
+			mResult._24			-= fTemp[5]*mTranspose._11 + fTemp[8]*mTranspose._12 + fTemp[11]*mTranspose._13;
 
-			fTemp[ 0]								= mTranspose._13 * mTranspose._24;
-			fTemp[ 1]								= mTranspose._14 * mTranspose._23;
-			fTemp[ 2]								= mTranspose._12 * mTranspose._24;
-			fTemp[ 3]								= mTranspose._14 * mTranspose._22;
-			fTemp[ 4]								= mTranspose._12 * mTranspose._23;
-			fTemp[ 5]								= mTranspose._13 * mTranspose._22;
-			fTemp[ 6]								= mTranspose._11 * mTranspose._24;
-			fTemp[ 7]								= mTranspose._14 * mTranspose._21;
-			fTemp[ 8]								= mTranspose._11 * mTranspose._23;
-			fTemp[ 9]								= mTranspose._13 * mTranspose._21;
-			fTemp[10]								= mTranspose._11 * mTranspose._22;
-			fTemp[11]								= mTranspose._12 * mTranspose._21;
+			fTemp[ 0]			= mTranspose._13 * mTranspose._24;
+			fTemp[ 1]			= mTranspose._14 * mTranspose._23;
+			fTemp[ 2]			= mTranspose._12 * mTranspose._24;
+			fTemp[ 3]			= mTranspose._14 * mTranspose._22;
+			fTemp[ 4]			= mTranspose._12 * mTranspose._23;
+			fTemp[ 5]			= mTranspose._13 * mTranspose._22;
+			fTemp[ 6]			= mTranspose._11 * mTranspose._24;
+			fTemp[ 7]			= mTranspose._14 * mTranspose._21;
+			fTemp[ 8]			= mTranspose._11 * mTranspose._23;
+			fTemp[ 9]			= mTranspose._13 * mTranspose._21;
+			fTemp[10]			= mTranspose._11 * mTranspose._22;
+			fTemp[11]			= mTranspose._12 * mTranspose._21;
 
-			mResult._31								 = fTemp[0] *mTranspose._42 + fTemp[3] *mTranspose._43 + fTemp[4] *mTranspose._44;
-			mResult._31								-= fTemp[1] *mTranspose._42 + fTemp[2] *mTranspose._43 + fTemp[5] *mTranspose._44;
-			mResult._32								 = fTemp[1] *mTranspose._41 + fTemp[6] *mTranspose._43 + fTemp[9] *mTranspose._44;
-			mResult._32								-= fTemp[0] *mTranspose._41 + fTemp[7] *mTranspose._43 + fTemp[8] *mTranspose._44;
-			mResult._33								 = fTemp[2] *mTranspose._41 + fTemp[7] *mTranspose._42 + fTemp[10]*mTranspose._44;
-			mResult._33								-= fTemp[3] *mTranspose._41 + fTemp[6] *mTranspose._42 + fTemp[11]*mTranspose._44;
-			mResult._34								 = fTemp[5] *mTranspose._41 + fTemp[8] *mTranspose._42 + fTemp[11]*mTranspose._43;
-			mResult._34								-= fTemp[4] *mTranspose._41 + fTemp[9] *mTranspose._42 + fTemp[10]*mTranspose._43;
-			mResult._41								 = fTemp[2] *mTranspose._33 + fTemp[5] *mTranspose._34 + fTemp[1] *mTranspose._32;
-			mResult._41								-= fTemp[4] *mTranspose._34 + fTemp[0] *mTranspose._32 + fTemp[3] *mTranspose._33;
-			mResult._42								 = fTemp[8] *mTranspose._34 + fTemp[0] *mTranspose._31 + fTemp[7] *mTranspose._33;
-			mResult._42								-= fTemp[6] *mTranspose._33 + fTemp[9] *mTranspose._34 + fTemp[1] *mTranspose._31;
-			mResult._43								 = fTemp[6] *mTranspose._32 + fTemp[11]*mTranspose._34 + fTemp[3] *mTranspose._31;
-			mResult._43								-= fTemp[10]*mTranspose._34 + fTemp[2] *mTranspose._31 + fTemp[7] *mTranspose._32;
-			mResult._44								 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
-			mResult._44								-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
+			mResult._31			 = fTemp[0] *mTranspose._42 + fTemp[3] *mTranspose._43 + fTemp[4] *mTranspose._44;
+			mResult._31			-= fTemp[1] *mTranspose._42 + fTemp[2] *mTranspose._43 + fTemp[5] *mTranspose._44;
+			mResult._32			 = fTemp[1] *mTranspose._41 + fTemp[6] *mTranspose._43 + fTemp[9] *mTranspose._44;
+			mResult._32			-= fTemp[0] *mTranspose._41 + fTemp[7] *mTranspose._43 + fTemp[8] *mTranspose._44;
+			mResult._33			 = fTemp[2] *mTranspose._41 + fTemp[7] *mTranspose._42 + fTemp[10]*mTranspose._44;
+			mResult._33			-= fTemp[3] *mTranspose._41 + fTemp[6] *mTranspose._42 + fTemp[11]*mTranspose._44;
+			mResult._34			 = fTemp[5] *mTranspose._41 + fTemp[8] *mTranspose._42 + fTemp[11]*mTranspose._43;
+			mResult._34			-= fTemp[4] *mTranspose._41 + fTemp[9] *mTranspose._42 + fTemp[10]*mTranspose._43;
+			mResult._41			 = fTemp[2] *mTranspose._33 + fTemp[5] *mTranspose._34 + fTemp[1] *mTranspose._32;
+			mResult._41			-= fTemp[4] *mTranspose._34 + fTemp[0] *mTranspose._32 + fTemp[3] *mTranspose._33;
+			mResult._42			 = fTemp[8] *mTranspose._34 + fTemp[0] *mTranspose._31 + fTemp[7] *mTranspose._33;
+			mResult._42			-= fTemp[6] *mTranspose._33 + fTemp[9] *mTranspose._34 + fTemp[1] *mTranspose._31;
+			mResult._43			 = fTemp[6] *mTranspose._32 + fTemp[11]*mTranspose._34 + fTemp[3] *mTranspose._31;
+			mResult._43			-= fTemp[10]*mTranspose._34 + fTemp[2] *mTranspose._31 + fTemp[7] *mTranspose._32;
+			mResult._44			 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
+			mResult._44			-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
 
-			double										fDet							=	mTranspose._11*mResult._11
-				+																			mTranspose._12*mResult._12
-				+																			mTranspose._13*mResult._13
-				+																			mTranspose._14*mResult._14
+			double					fDet							=	mTranspose._11*mResult._11
+				+														mTranspose._12*mResult._12
+				+														mTranspose._13*mResult._13
+				+														mTranspose._14*mResult._14
 				;
 
-			fDet									= 1.0/fDet;
+			fDet				= 1.0/fDet;
 
-			mResult._11								= (_tBase)(mResult._11 * fDet);
-			mResult._12								= (_tBase)(mResult._12 * fDet);
-			mResult._13								= (_tBase)(mResult._13 * fDet);
-			mResult._14								= (_tBase)(mResult._14 * fDet);
+			mResult._11			= (_tBase)(mResult._11 * fDet);
+			mResult._12			= (_tBase)(mResult._12 * fDet);
+			mResult._13			= (_tBase)(mResult._13 * fDet);
+			mResult._14			= (_tBase)(mResult._14 * fDet);
 
-			mResult._21								= (_tBase)(mResult._21 * fDet);
-			mResult._22								= (_tBase)(mResult._22 * fDet);
-			mResult._23								= (_tBase)(mResult._23 * fDet);
-			mResult._24								= (_tBase)(mResult._24 * fDet);
+			mResult._21			= (_tBase)(mResult._21 * fDet);
+			mResult._22			= (_tBase)(mResult._22 * fDet);
+			mResult._23			= (_tBase)(mResult._23 * fDet);
+			mResult._24			= (_tBase)(mResult._24 * fDet);
 
-			mResult._31								= (_tBase)(mResult._31 * fDet);
-			mResult._32								= (_tBase)(mResult._32 * fDet);
-			mResult._33								= (_tBase)(mResult._33 * fDet);
-			mResult._34								= (_tBase)(mResult._34 * fDet);
+			mResult._31			= (_tBase)(mResult._31 * fDet);
+			mResult._32			= (_tBase)(mResult._32 * fDet);
+			mResult._33			= (_tBase)(mResult._33 * fDet);
+			mResult._34			= (_tBase)(mResult._34 * fDet);
 
-			mResult._41								= (_tBase)(mResult._41 * fDet);
-			mResult._42								= (_tBase)(mResult._42 * fDet);
-			mResult._43								= (_tBase)(mResult._43 * fDet);
-			mResult._44								= (_tBase)(mResult._44 * fDet);
+			mResult._41			= (_tBase)(mResult._41 * fDet);
+			mResult._42			= (_tBase)(mResult._42 * fDet);
+			mResult._43			= (_tBase)(mResult._43 * fDet);
+			mResult._44			= (_tBase)(mResult._44 * fDet);
 
 			return mResult;
 		}
 
-							double				GetDeterminant				()			const				{
-			_tMat4										mTranspose					= GetTranspose()
-				,										mThis						= *this
+		double				GetDeterminant				()			const				{
+			_tMat4					mTranspose					= GetTranspose()
+				,					mThis						= *this
 				;
-			_tBase										fTemp[12];
+			_tBase					fTemp[12];
 
-			fTemp[ 0]								 = mTranspose._33 * mTranspose._44;
-			fTemp[ 1]								 = mTranspose._34 * mTranspose._43;
-			fTemp[ 2]								 = mTranspose._32 * mTranspose._44;
-			fTemp[ 3]								 = mTranspose._34 * mTranspose._42;
-			fTemp[ 4]								 = mTranspose._32 * mTranspose._43;
-			fTemp[ 5]								 = mTranspose._33 * mTranspose._42;
-			fTemp[ 6]								 = mTranspose._31 * mTranspose._44;
-			fTemp[ 7]								 = mTranspose._34 * mTranspose._41;
-			fTemp[ 8]								 = mTranspose._31 * mTranspose._43;
-			fTemp[ 9]								 = mTranspose._33 * mTranspose._41;
-			fTemp[10]								 = mTranspose._31 * mTranspose._42;
-			fTemp[11]								 = mTranspose._32 * mTranspose._41;
+			fTemp[ 0]			 = mTranspose._33 * mTranspose._44;
+			fTemp[ 1]			 = mTranspose._34 * mTranspose._43;
+			fTemp[ 2]			 = mTranspose._32 * mTranspose._44;
+			fTemp[ 3]			 = mTranspose._34 * mTranspose._42;
+			fTemp[ 4]			 = mTranspose._32 * mTranspose._43;
+			fTemp[ 5]			 = mTranspose._33 * mTranspose._42;
+			fTemp[ 6]			 = mTranspose._31 * mTranspose._44;
+			fTemp[ 7]			 = mTranspose._34 * mTranspose._41;
+			fTemp[ 8]			 = mTranspose._31 * mTranspose._43;
+			fTemp[ 9]			 = mTranspose._33 * mTranspose._41;
+			fTemp[10]			 = mTranspose._31 * mTranspose._42;
+			fTemp[11]			 = mTranspose._32 * mTranspose._41;
 
-			mThis._11								 = fTemp[0]*mTranspose._22 + fTemp[3]*mTranspose._23 + fTemp[4] *mTranspose._24;
-			mThis._11								-= fTemp[1]*mTranspose._22 + fTemp[2]*mTranspose._23 + fTemp[5] *mTranspose._24;
-			mThis._12								 = fTemp[1]*mTranspose._21 + fTemp[6]*mTranspose._23 + fTemp[9] *mTranspose._24;
-			mThis._12								-= fTemp[0]*mTranspose._21 + fTemp[7]*mTranspose._23 + fTemp[8] *mTranspose._24;
-			mThis._13								 = fTemp[2]*mTranspose._21 + fTemp[7]*mTranspose._22 + fTemp[10]*mTranspose._24;
-			mThis._13								-= fTemp[3]*mTranspose._21 + fTemp[6]*mTranspose._22 + fTemp[11]*mTranspose._24;
-			mThis._14								 = fTemp[5]*mTranspose._21 + fTemp[8]*mTranspose._22 + fTemp[11]*mTranspose._23;
-			mThis._14								-= fTemp[4]*mTranspose._21 + fTemp[9]*mTranspose._22 + fTemp[10]*mTranspose._23;
-			mThis._21								 = fTemp[1]*mTranspose._12 + fTemp[2]*mTranspose._13 + fTemp[5] *mTranspose._14;
-			mThis._21								-= fTemp[0]*mTranspose._12 + fTemp[3]*mTranspose._13 + fTemp[4] *mTranspose._14;
-			mThis._22								 = fTemp[0]*mTranspose._11 + fTemp[7]*mTranspose._13 + fTemp[8] *mTranspose._14;
-			mThis._22								-= fTemp[1]*mTranspose._11 + fTemp[6]*mTranspose._13 + fTemp[9] *mTranspose._14;
-			mThis._23								 = fTemp[3]*mTranspose._11 + fTemp[6]*mTranspose._12 + fTemp[11]*mTranspose._14;
-			mThis._23								-= fTemp[2]*mTranspose._11 + fTemp[7]*mTranspose._12 + fTemp[10]*mTranspose._14;
-			mThis._24								 = fTemp[4]*mTranspose._11 + fTemp[9]*mTranspose._12 + fTemp[10]*mTranspose._13;
-			mThis._24								-= fTemp[5]*mTranspose._11 + fTemp[8]*mTranspose._12 + fTemp[11]*mTranspose._13;
+			mThis._11			 = fTemp[0]*mTranspose._22 + fTemp[3]*mTranspose._23 + fTemp[4] *mTranspose._24;
+			mThis._11			-= fTemp[1]*mTranspose._22 + fTemp[2]*mTranspose._23 + fTemp[5] *mTranspose._24;
+			mThis._12			 = fTemp[1]*mTranspose._21 + fTemp[6]*mTranspose._23 + fTemp[9] *mTranspose._24;
+			mThis._12			-= fTemp[0]*mTranspose._21 + fTemp[7]*mTranspose._23 + fTemp[8] *mTranspose._24;
+			mThis._13			 = fTemp[2]*mTranspose._21 + fTemp[7]*mTranspose._22 + fTemp[10]*mTranspose._24;
+			mThis._13			-= fTemp[3]*mTranspose._21 + fTemp[6]*mTranspose._22 + fTemp[11]*mTranspose._24;
+			mThis._14			 = fTemp[5]*mTranspose._21 + fTemp[8]*mTranspose._22 + fTemp[11]*mTranspose._23;
+			mThis._14			-= fTemp[4]*mTranspose._21 + fTemp[9]*mTranspose._22 + fTemp[10]*mTranspose._23;
+			mThis._21			 = fTemp[1]*mTranspose._12 + fTemp[2]*mTranspose._13 + fTemp[5] *mTranspose._14;
+			mThis._21			-= fTemp[0]*mTranspose._12 + fTemp[3]*mTranspose._13 + fTemp[4] *mTranspose._14;
+			mThis._22			 = fTemp[0]*mTranspose._11 + fTemp[7]*mTranspose._13 + fTemp[8] *mTranspose._14;
+			mThis._22			-= fTemp[1]*mTranspose._11 + fTemp[6]*mTranspose._13 + fTemp[9] *mTranspose._14;
+			mThis._23			 = fTemp[3]*mTranspose._11 + fTemp[6]*mTranspose._12 + fTemp[11]*mTranspose._14;
+			mThis._23			-= fTemp[2]*mTranspose._11 + fTemp[7]*mTranspose._12 + fTemp[10]*mTranspose._14;
+			mThis._24			 = fTemp[4]*mTranspose._11 + fTemp[9]*mTranspose._12 + fTemp[10]*mTranspose._13;
+			mThis._24			-= fTemp[5]*mTranspose._11 + fTemp[8]*mTranspose._12 + fTemp[11]*mTranspose._13;
 
-			fTemp[ 0]								 = mTranspose._13 * mTranspose._24;
-			fTemp[ 1]								 = mTranspose._14 * mTranspose._23;
-			fTemp[ 2]								 = mTranspose._12 * mTranspose._24;
-			fTemp[ 3]								 = mTranspose._14 * mTranspose._22;
-			fTemp[ 4]								 = mTranspose._12 * mTranspose._23;
-			fTemp[ 5]								 = mTranspose._13 * mTranspose._22;
-			fTemp[ 6]								 = mTranspose._11 * mTranspose._24;
-			fTemp[ 7]								 = mTranspose._14 * mTranspose._21;
-			fTemp[ 8]								 = mTranspose._11 * mTranspose._23;
-			fTemp[ 9]								 = mTranspose._13 * mTranspose._21;
-			fTemp[10]								 = mTranspose._11 * mTranspose._22;
-			fTemp[11]								 = mTranspose._12 * mTranspose._21;
+			fTemp[ 0]			 = mTranspose._13 * mTranspose._24;
+			fTemp[ 1]			 = mTranspose._14 * mTranspose._23;
+			fTemp[ 2]			 = mTranspose._12 * mTranspose._24;
+			fTemp[ 3]			 = mTranspose._14 * mTranspose._22;
+			fTemp[ 4]			 = mTranspose._12 * mTranspose._23;
+			fTemp[ 5]			 = mTranspose._13 * mTranspose._22;
+			fTemp[ 6]			 = mTranspose._11 * mTranspose._24;
+			fTemp[ 7]			 = mTranspose._14 * mTranspose._21;
+			fTemp[ 8]			 = mTranspose._11 * mTranspose._23;
+			fTemp[ 9]			 = mTranspose._13 * mTranspose._21;
+			fTemp[10]			 = mTranspose._11 * mTranspose._22;
+			fTemp[11]			 = mTranspose._12 * mTranspose._21;
 
-			mThis._31								 = fTemp[0] *mTranspose._42 + fTemp[3] *mTranspose._43 + fTemp[4] *mTranspose._44;
-			mThis._31								-= fTemp[1] *mTranspose._42 + fTemp[2] *mTranspose._43 + fTemp[5] *mTranspose._44;
-			mThis._32								 = fTemp[1] *mTranspose._41 + fTemp[6] *mTranspose._43 + fTemp[9] *mTranspose._44;
-			mThis._32								-= fTemp[0] *mTranspose._41 + fTemp[7] *mTranspose._43 + fTemp[8] *mTranspose._44;
-			mThis._33								 = fTemp[2] *mTranspose._41 + fTemp[7] *mTranspose._42 + fTemp[10]*mTranspose._44;
-			mThis._33								-= fTemp[3] *mTranspose._41 + fTemp[6] *mTranspose._42 + fTemp[11]*mTranspose._44;
-			mThis._34								 = fTemp[5] *mTranspose._41 + fTemp[8] *mTranspose._42 + fTemp[11]*mTranspose._43;
-			mThis._34								-= fTemp[4] *mTranspose._41 + fTemp[9] *mTranspose._42 + fTemp[10]*mTranspose._43;
-			mThis._41								 = fTemp[2] *mTranspose._33 + fTemp[5] *mTranspose._34 + fTemp[1] *mTranspose._32;
-			mThis._41								-= fTemp[4] *mTranspose._34 + fTemp[0] *mTranspose._32 + fTemp[3] *mTranspose._33;
-			mThis._42								 = fTemp[8] *mTranspose._34 + fTemp[0] *mTranspose._31 + fTemp[7] *mTranspose._33;
-			mThis._42								-= fTemp[6] *mTranspose._33 + fTemp[9] *mTranspose._34 + fTemp[1] *mTranspose._31;
-			mThis._43								 = fTemp[6] *mTranspose._32 + fTemp[11]*mTranspose._34 + fTemp[3] *mTranspose._31;
-			mThis._43								-= fTemp[10]*mTranspose._34 + fTemp[2] *mTranspose._31 + fTemp[7] *mTranspose._32;
-			mThis._44								 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
-			mThis._44								-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
+			mThis._31			 = fTemp[0] *mTranspose._42 + fTemp[3] *mTranspose._43 + fTemp[4] *mTranspose._44;
+			mThis._31			-= fTemp[1] *mTranspose._42 + fTemp[2] *mTranspose._43 + fTemp[5] *mTranspose._44;
+			mThis._32			 = fTemp[1] *mTranspose._41 + fTemp[6] *mTranspose._43 + fTemp[9] *mTranspose._44;
+			mThis._32			-= fTemp[0] *mTranspose._41 + fTemp[7] *mTranspose._43 + fTemp[8] *mTranspose._44;
+			mThis._33			 = fTemp[2] *mTranspose._41 + fTemp[7] *mTranspose._42 + fTemp[10]*mTranspose._44;
+			mThis._33			-= fTemp[3] *mTranspose._41 + fTemp[6] *mTranspose._42 + fTemp[11]*mTranspose._44;
+			mThis._34			 = fTemp[5] *mTranspose._41 + fTemp[8] *mTranspose._42 + fTemp[11]*mTranspose._43;
+			mThis._34			-= fTemp[4] *mTranspose._41 + fTemp[9] *mTranspose._42 + fTemp[10]*mTranspose._43;
+			mThis._41			 = fTemp[2] *mTranspose._33 + fTemp[5] *mTranspose._34 + fTemp[1] *mTranspose._32;
+			mThis._41			-= fTemp[4] *mTranspose._34 + fTemp[0] *mTranspose._32 + fTemp[3] *mTranspose._33;
+			mThis._42			 = fTemp[8] *mTranspose._34 + fTemp[0] *mTranspose._31 + fTemp[7] *mTranspose._33;
+			mThis._42			-= fTemp[6] *mTranspose._33 + fTemp[9] *mTranspose._34 + fTemp[1] *mTranspose._31;
+			mThis._43			 = fTemp[6] *mTranspose._32 + fTemp[11]*mTranspose._34 + fTemp[3] *mTranspose._31;
+			mThis._43			-= fTemp[10]*mTranspose._34 + fTemp[2] *mTranspose._31 + fTemp[7] *mTranspose._32;
+			mThis._44			 = fTemp[10]*mTranspose._33 + fTemp[4] *mTranspose._31 + fTemp[9] *mTranspose._32;
+			mThis._44			-= fTemp[8] *mTranspose._32 + fTemp[11]*mTranspose._33 + fTemp[5] *mTranspose._31;
 
-			double										fDet						=	mTranspose._11*mThis._11
-				+																		mTranspose._12*mThis._12
-				+																		mTranspose._13*mThis._13
-				+																		mTranspose._14*mThis._14
+			double					fDet						=	mTranspose._11*mThis._11
+				+													mTranspose._12*mThis._12
+				+													mTranspose._13*mThis._13
+				+													mTranspose._14*mThis._14
 				;
 
 			return fDet;
 		}
 
-		_tMat4&								FromRotationDir(const ::gpk::n3f32 & direction, const ::gpk::n3f32 & up = {0,1,0}) {
+		_tMat4&				FromRotationDir(const ::gpk::n3f32 & direction, const ::gpk::n3f32 & up = {0,1,0}) {
 			::gpk::n3f32 xaxis = up.Cross(direction);
 			xaxis.Normalize();
 
@@ -488,17 +488,17 @@ namespace gpk
 		}
 	};	// struct
 	template<typename _tElement>
-	::gpk::tri3<_tElement> &						transform								(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
-		triangle.A															= transform.Transform(triangle.A);
-		triangle.B															= transform.Transform(triangle.B);
-		triangle.C															= transform.Transform(triangle.C);
+	::gpk::tri3<_tElement> &	transform			(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
+		triangle.A					= transform.Transform(triangle.A);
+		triangle.B					= transform.Transform(triangle.B);
+		triangle.C					= transform.Transform(triangle.C);
 		return triangle;
 	}
 	template<typename _tElement>
-	::gpk::tri3<_tElement> &						transformDirection						(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
-		triangle.A															= transform.TransformDirection(triangle.A);
-		triangle.B															= transform.TransformDirection(triangle.B);
-		triangle.C															= transform.TransformDirection(triangle.C);
+	::gpk::tri3<_tElement> &	transformDirection	(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
+		triangle.A					= transform.TransformDirection(triangle.A);
+		triangle.B					= transform.TransformDirection(triangle.B);
+		triangle.C					= transform.TransformDirection(triangle.C);
 		return triangle;
 	}
 

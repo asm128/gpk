@@ -9,7 +9,8 @@ namespace gpk
 	template<typename T>
 	struct rect2 {
 		::gpk::n2<T>			Offset, Size;
-		GPK_DEFAULT_OPERATOR_NE(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
+
+		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
 		inline	::gpk::n2<T>	Limit		()	const	noexcept	{ return Offset + Size; }
 	};

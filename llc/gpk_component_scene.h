@@ -118,7 +118,7 @@ namespace gpk {
 
 	struct SBodyVolume {
 		double							Radius							= 0;
-		::gpk::SMinMax<::gpk::n3f32>	Limits							= {{-1, -1, -1}, {1, 1, 1}};
+		::gpk::minmax<::gpk::n3f32>		Limits							= {{-1, -1, -1}, {1, 1, 1}};
 		::gpk::n3f32					Center							= {0, 0, 0};
 		::gpk::BOUNDINGPRIMITIVE_TYPE	Type							= BOUNDINGPRIMITIVE_TYPE_SPHERE;
 	};
@@ -144,7 +144,7 @@ namespace gpk {
 		::gpk::n3f32			Position						= {};
 		::gpk::n3f32			Target							= {};
 		::gpk::n3f32			Up								= {};
-		::gpk::SMinMax<float>	ClipPlanes						= {};
+		::gpk::minmax<float>	ClipPlanes						= {};
 		double					Angle							= {};
 	};
 

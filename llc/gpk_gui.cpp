@@ -60,64 +60,64 @@ static	::gpk::error_t	paletteSetupDefault										(::gpk::apod<::gpk::bgra>& pa
 }
 
 static	::gpk::error_t	themeSetupDefault						(const ::gpk::view<const ::gpk::bgra>& palette, int32_t iColor, ::gpk::SControlTheme& theme, uint32_t iShades)	{
-	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_AREA_EX_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_AREA_EX_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_AREA_EX_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_AREA_EX_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::GUI_CONTROL_AREA_EX_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	]	= {};
+	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
+	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
+	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
+	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	]	= {};
+	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	]	= {};
 
 	//const int32_t														colorBase												= iColor / iShades;
 	const int32_t														colorShade												= iColor % iShades;
 	const int32_t														colorText												= (::gpk::ASCII_COLOR_WHITE * iShades);
 
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE		]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 1 : iColor + 1;
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
 //
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE		]	= (colorShade > 7) ? colorText + 7 : colorText + 9;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 3 : iColor + 3;
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 7 : colorText + 9;
 //
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 8;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? colorText - 7 : colorText + 9;
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 8;
 //
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE		]	= (colorShade > 7) ? colorText + 4: colorText + 12;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 7: iColor + 7;
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText + 4: colorText + 12;
 //
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= iColor;//(colorShade > 7) ? iColor : iColor;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_TOP	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]	= (colorShade > 7) ? iColor - 5: iColor + 5;
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_FACE		]	= (colorShade > 7) ? colorText : colorText + 15;
 
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND	]	= colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_CLIENT			]	= colorComboDisabled	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND	]	= colorComboPressed		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_CLIENT			]	= colorComboPressed 	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND	]	= colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_CLIENT			]	= colorComboSelected	[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND	]	= colorComboHover		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboHover 	[::gpk::GUI_CONTROL_AREA_EX_CLIENT			]	= colorComboHover 		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND	]	= colorComboNormal		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
-	colorComboNormal	[::gpk::GUI_CONTROL_AREA_EX_CLIENT			]	= colorComboNormal		[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND];
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboDisabled	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboDisabled	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboPressed		[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboPressed 	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboPressed 	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboSelected	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboSelected	[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboHover		[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboHover 	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboHover 		[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND	]	= colorComboNormal		[::gpk::UI_CONTROL_AREA_BACKGROUND];
+	colorComboNormal	[::gpk::UI_CONTROL_AREA_CLIENT			]	= colorComboNormal		[::gpk::UI_CONTROL_AREA_BACKGROUND];
 
 	for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
-		for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_AREA_EX_COUNT; ++iArea) {
+		for(uint32_t iArea = 0; iArea < ::gpk::UI_CONTROL_AREA_COUNT; ++iArea) {
 			theme.ColorCombos[iState][iArea]							= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], palette.size() - 1);
 		}
 	return 0;
@@ -364,7 +364,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)
 }
 
 static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::rect2<int16_t>> finalRects, ::gpk::view<::gpk::tri2<int16_t>> triangles)					{
-	::gpk::SRectLimits<int16_t>	scaledBorders			= {};
+	::gpk::rect<int16_t>	scaledBorders			= {};
 	const ::gpk::n2f64			scaleFinal				= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left		= (int16_t)(control.Border.Left		* scaleFinal.x);
 	scaledBorders.Top		= (int16_t)(control.Border.Top		* scaleFinal.y);
@@ -414,8 +414,8 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	if(fabs(1.0 - scale.y) < 0.001) scale.y = 1.0;
 	::gpk::n2f64				scaledPosition			= {control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y};
 	::gpk::n2f64				scaledSize				= {control.Area.Size	.x * scale.x, control.Area.Size		.y * scale.y};
-	//::gpk::SRectLimits<double>	scaledBorders		= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
-	//::gpk::SRectLimits<double>	scaledMargins		= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
+	//::gpk::rect<double>	scaledBorders		= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
+	//::gpk::rect<double>	scaledMargins		= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
 
 	::gpk::SControlMetrics		& controlMetrics		= gui.Controls.Metrics[iControl];
 	::gpk::rect2f64				rectText				= {};
@@ -426,8 +426,8 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	rectText.Size.InPlaceScale(scale.x, scale.y);
 
 	const ::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints[iControl];
-	const ::gpk::SRectLimits<int16_t>	ncSizes			= ::gpk::controlNCRect(control);
-	const ::gpk::SRectLimits<double>	ncSizesScaled	= {(ncSizes.Left * scale.x), (ncSizes.Top * scale.y), (ncSizes.Right * scale.x), (ncSizes.Bottom * scale.y)};
+	const ::gpk::rect<int16_t>	ncSizes			= ::gpk::controlNCRect(control);
+	const ::gpk::rect<double>	ncSizesScaled	= {(ncSizes.Left * scale.x), (ncSizes.Top * scale.y), (ncSizes.Right * scale.x), (ncSizes.Bottom * scale.y)};
 	const ::gpk::n2f64			ncTotalSize				= {(double)ncSizes.Left + ncSizes.Right, (double)ncSizes.Top + ncSizes.Bottom};
 	const ::gpk::n2f64			ncTotalSizeScaled		= ncTotalSize.GetScaled(scale.x, scale.y);
 	if(controlConstraints.AttachSizeToText.x) scaledSize.x	= rectText.Size.x + ncTotalSizeScaled.x;
@@ -453,7 +453,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 		controlMetrics.Total .Global.Offset	+= parentMetrics.Client.Global.Offset;
 	}
 
-	const ::gpk::SRectLimits<int32_t>	& dockToControl		= controlConstraints.DockToControl;
+	const ::gpk::rect<int32_t>	& dockToControl		= controlConstraints.DockToControl;
 	if(dockToControl.Right	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u16(), true);

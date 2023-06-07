@@ -11,7 +11,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	::gpk::bgra					colorFace			= {0xFF, 0x00, 0xFF, 0xFF};
 	if(0 == gui.Controls.Modes[iControl].UseNewPalettes) {
 		const ::gpk::SControlTheme	& theme				= (*gui.Colors->ControlThemes)[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
-		const ::gpk::astu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	
+		const ::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	
 									& colorCombo		= theme.ColorCombos
 			[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
 			: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED
@@ -19,11 +19,11 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 			: controlState.Hover	? ::gpk::GUI_CONTROL_PALETTE_HOVER
 			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			];
-		colorFace				= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE]];
-		//const ::gpk::bgra			colorBack			= gui.Palette[colorCombo[::gpk::GUI_CONTROL_AREA_EX_TEXT_BACKGROUND]];
+		colorFace				= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE]];
+		//const ::gpk::bgra			colorBack			= gui.Palette[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_BACKGROUND]];
 	}
 	else {
-		const ::gpk::astatic<::gpk::bgra, ::gpk::GUI_CONTROL_AREA_EX_COUNT>	& colorCombo											=
+		const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
 			gui.Colors->Palettes[control.Palettes
 				[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
 				: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED
@@ -32,7 +32,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 				]]
 				;
-		colorFace				= colorCombo[::gpk::GUI_CONTROL_AREA_EX_TEXT_FACE];
+		colorFace				= colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE];
 	}
 
 	::gpk::SControlMetrics		& controlMetrics	= gui.Controls.Metrics	[iControl];
@@ -85,32 +85,32 @@ static	::gpk::error_t	fillColorTableBorders3D			(const ::gpk::SControlState & co
 	return 0;					  
 }
 static	::gpk::error_t	fillColorTableNew				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl & control, const ::gpk::SControlState & controlState, const ::gpk::SControlMode & controlMode, bool disabled, ::gpk::view<::gpk::bgra> & colors)					{
-	const ::gpk::astatic<::gpk::bgra, ::gpk::GUI_CONTROL_AREA_EX_COUNT>
+	const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>
 								& colorCombo					= gui.Colors->Palettes[control.Palettes[::paletteIndexFromState(disabled, controlState)]];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_CLIENT		];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= colorCombo[::gpk::UI_CONTROL_AREA_BACKGROUND	];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= colorCombo[::gpk::UI_CONTROL_AREA_CLIENT		];
 	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_DEFAULT)
 		return ::fillColorTableBorders3D(controlState, controlMode, colors);
 
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT	]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP	]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT	]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT	]	= colorCombo[::gpk::UI_CONTROL_AREA_BORDER_LEFT	];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP	]	= colorCombo[::gpk::UI_CONTROL_AREA_BORDER_TOP	];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT	]	= colorCombo[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= colorCombo[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	];
 	return 0;
 }
 static	::gpk::error_t	fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_MODE colorMode, const ::gpk::SControl & control, const ::gpk::SControlState & controlState, const ::gpk::SControlMode & controlMode, bool disabled, ::gpk::view<::gpk::bgra> & colors)					{
 	const ::gpk::SControlTheme	& theme							= (*gui.Colors->ControlThemes)[(0 == control.ColorTheme) ? gui.ThemeDefault : control.ColorTheme - 1];
-	const ::gpk::astaticu32<::gpk::GUI_CONTROL_AREA_EX_COUNT>	
+	const ::gpk::astaticu32<::gpk::UI_CONTROL_AREA_COUNT>	
 								& colorCombo					= theme.ColorCombos[::paletteIndexFromState(disabled, controlState)];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_BACKGROUND	]];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_CLIENT		]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND	]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BACKGROUND	]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_CLIENT		]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_CLIENT		]];
 	if(colorMode == ::gpk::GUI_COLOR_MODE_3D || colorMode == ::gpk::GUI_COLOR_MODE_DEFAULT)
 		return ::fillColorTableBorders3D(controlState, controlMode, colors);
 
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT	]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_LEFT	]];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP	]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_TOP	]];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT	]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_RIGHT	]];
-	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= (*gui.Colors->Palette)[colorCombo[::gpk::GUI_CONTROL_AREA_EX_BORDER_BOTTOM	]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT	]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_LEFT	]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP	]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_TOP	]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT	]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_RIGHT	]];
+	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]];
 	return 0;
 }
 static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, int32_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{

@@ -14,7 +14,7 @@ namespace gpk
 		cnstxpr		tri(const tri & other)											= default;
 		cnstxpr		tri(const _tVertex & a, const _tVertex & b, const _tVertex & c)	: A(a), B(b), C(c)	{}
 
-		GPK_DEFAULT_OPERATOR_NE(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
+		GPK_DEFAULT_OPERATOR(tri<_tVertex>, A == other.A && B == other.B && C == other.C);
 	};
 	typedef tri<float		>	trif32, trif;
 	typedef tri<double		>	trif64, trid;

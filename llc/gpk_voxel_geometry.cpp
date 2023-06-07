@@ -42,8 +42,8 @@ static	::gpk::error_t	geometryVoxelFace
 		::gpk::apod<::gpk::SGeometryGroup>	& faceSlices			= output.GeometrySlices[iFace];
 		::gpk::SAABBGeometry				& aabbSlice				= output.AABBSlices[iFace];
 
-		const ::gpk::n3<int8_t>				faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
-		::gpk::view<const uint8_t>			rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
+		const ::gpk::n3i8					faceDelta				= ::gpk::VOXEL_DELTAS			[iFace];
+		::gpk::vcu8							rawIndices				= ::gpk::VOXEL_FACE_INDICES		[iFace];
 		::gpk::view<const ::gpk::n3f32>		rawVertices				= {&::gpk::VOXEL_FACE_VERTICES	[iFace].A, 4};
 		::gpk::view<const ::gpk::n2f32>		rawTexCoord				= {&::gpk::VOXEL_FACE_UV		[iFace].A, 4};
 
@@ -57,7 +57,7 @@ static	::gpk::error_t	geometryVoxelFace
 			newGroup.Modes.IndexMode		= ::gpk::INDEX_MODE_LIST;
 			newGroup.Modes.PrimitiveType	= ::gpk::PRIMITIVE_TYPE_TRIANGLE;
 			newGroup.Slice.Offset			= (uint16_t)geometry.PositionIndices.size();
-			::gpk::SMinMax<::gpk::n3f32>		aabbLimits					= {};
+			::gpk::minmax<::gpk::n3f32>			aabbLimits					= {};
 
 			for(uint32_t iVoxel = 0; iVoxel < voxels.size(); ++iVoxel) {
 				const ::gpk::SVoxel<uint8_t>		voxel						= voxels[iVoxel];

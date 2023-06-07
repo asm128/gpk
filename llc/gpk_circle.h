@@ -11,7 +11,7 @@ namespace gpk
 		double			Radius; 
 		::gpk::n2<T>	Center; 
 
-		GPK_DEFAULT_OPERATOR_NE(circle<T>, Center == other.Center && Radius == other.Radius); 
+		GPK_DEFAULT_OPERATOR(circle<T>, Center == other.Center && Radius == other.Radius); 
 	};
 	typedef circle<float>		circlef32, circlef;
 	typedef circle<double>		circlef64, circled;

@@ -10,7 +10,7 @@ namespace gpk
 	struct rect3 { 
 		::gpk::n3<T>			Offset, Size; 
 
-		GPK_DEFAULT_OPERATOR_NE(rect3<T>, Offset == other.Offset && Size == other.Size); 
+		GPK_DEFAULT_OPERATOR(rect3<T>, Offset == other.Offset && Size == other.Size); 
 	};
 #pragma pack(pop)
 } // namespace

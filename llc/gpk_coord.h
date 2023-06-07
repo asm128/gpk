@@ -10,7 +10,7 @@ namespace gpk
 	template<typename T>
 	struct SOrigin { 
 		::gpk::n3<T>	Front, Up, Right; 
-		GPK_DEFAULT_OPERATOR_NE(SOrigin<T>, Front == other.Front && Up == other.Up && Right == other.Right); 
+		GPK_DEFAULT_OPERATOR(SOrigin<T>, Front == other.Front && Up == other.Up && Right == other.Right); 
 	};
 #pragma pack(pop)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 }

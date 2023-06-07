@@ -35,22 +35,22 @@ namespace gpk
 				, C.template Cast<_tOther>()
 				};
 		}
-		bool					CulledX		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledX		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		bool					CulledY		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledY		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;
 		}
-		bool					CulledZ		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledZ		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
 			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				;
 		}
-		bool					CulledZSpecial	(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledZSpecial	(const ::gpk::minmax<T>& minMax)	const	noexcept		{
 			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				;

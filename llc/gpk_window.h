@@ -62,7 +62,7 @@ namespace gpk
 		::gpk::pobj<::gpk::SInput>			Input						= {};
 		::gpk::n2<uint16_t>					PreviousSize				= {};
 		::gpk::n2<uint16_t>					Size						= {320, 200};
-		::gpk::SRectLimits<uint16_t>		WindowedWindowRect			= {0, 0, 320, 200};
+		::gpk::rect<uint16_t>		WindowedWindowRect			= {0, 0, 320, 200};
 
 		bool								Resized						: 1;
 		bool								Repaint						: 1;

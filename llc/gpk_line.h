@@ -14,7 +14,7 @@ namespace gpk
 		inlcxpr					line		(const line<_tVertex> & other)				= default;
 		inlcxpr					line		(const _tVertex & a, const _tVertex & b)	: A(a), B(b)	{}
 
-		GPK_DEFAULT_OPERATOR_NE(line<_tVertex>, A == other.A && B == other.B);
+		GPK_DEFAULT_OPERATOR(line<_tVertex>, A == other.A && B == other.B);
 	};
 #pragma pack(pop)
 } // namespace

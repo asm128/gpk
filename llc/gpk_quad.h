@@ -17,7 +17,7 @@ namespace gpk
 		cnstxpr		quad	(const TQuad & other)				= default;
 		cnstxpr		quad	(const T & a, const T & b, const T & c, const T & d)	: A(a), B(b), C(c), D(d)	{}
 
-		GPK_DEFAULT_OPERATOR_NE(TQuad, A == other.A && B == other.B && C == other.C && D == other.D);
+		GPK_DEFAULT_OPERATOR(TQuad, A == other.A && B == other.B && C == other.C && D == other.D);
 	};
 	typedef quad<float>		quadf32, quadf;
 	typedef quad<double>	quadf64, quadd;

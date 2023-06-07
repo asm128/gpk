@@ -11,7 +11,7 @@ namespace gpk
 		double			Radius;
 		::gpk::n3<T>	Center;
 
-		GPK_DEFAULT_OPERATOR_NE(sphere<T>, Center == other.Center && Radius == other.Radius); 
+		GPK_DEFAULT_OPERATOR(sphere<T>, Center == other.Center && Radius == other.Radius); 
 	};
 	typedef sphere<float>		spheref32, spheref;
 	typedef sphere<double>		spheref64, sphered;

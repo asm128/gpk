@@ -45,20 +45,22 @@ namespace gpk
 	template<>	inline	bool	equal	(const int8_t	* other, const int8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int8_t	)*count); }
 	template<>	inline	bool	equal	(const uint8_t	* other, const uint8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint8_t	)*count); }
 #endif
+	template<typename T> struct minmax	{ T Min, Max;		GPK_DEFAULT_OPERATOR(minmax<T>, Max    == other.Max    && Min   == other.Min  ); };
+	template<typename T> struct range	{ T Offset, Count;	GPK_DEFAULT_OPERATOR(range <T>, Offset == other.Offset && Count == other.Count); };
+	template<typename T> struct slice	{ T Begin, End;		GPK_DEFAULT_OPERATOR(slice <T>, Begin  == other.Begin  && End   == other.End  ); };
 
-	template<typename T>
-	struct SMinMax	{
-		T				Min;
-		T				Max;
+	typedef minmax<uint8_t	>	minmaxu8;
+	typedef minmax<uint16_t	>	minmaxu16;
+	typedef minmax<uint32_t	>	minmaxu32;
+	typedef minmax<uint64_t	>	minmaxu64;
+	typedef minmax<int8_t	>	minmaxi8;
+	typedef minmax<int16_t	>	minmaxi16;
+	typedef minmax<int32_t	>	minmaxi32;
+	typedef minmax<int64_t	>	minmaxi64;
+	typedef minmax<float	>	minmaxf32;
+	typedef minmax<double	>	minmaxf64;
 
-		inlcxpr bool	operator==	(const SMinMax & other)	const	noexcept	{ return Min == other.Min && Max == other.Max; }
-		inlcxpr	bool	operator!=	(const SMinMax & other)	const	noexcept	{ return !operator==(other); }
-	};
-
-	typedef SMinMax<float> SNearFar;
-
-	template<typename T> struct range { T Offset, Count	; GPK_DEFAULT_OPERATOR_NE(range<T>, Offset == other.Offset && Count == other.Count); };
-	template<typename T> struct slice { T Begin, End	; GPK_DEFAULT_OPERATOR_NE(slice<T>, Begin  == other.Begin  && End   == other.End  ); };
+	typedef minmax<float> SNearFar;
 
 	typedef range<uint8_t>	rangeu8;
 	typedef range<uint16_t>	rangeu16;
@@ -81,7 +83,6 @@ namespace gpk
 	typedef slice<int64_t>	slicei64;
 	typedef slice<float>	slicef32;
 	typedef slice<double>	slicef64;
-
 
 #pragma pack(pop)
 #ifndef true_if
