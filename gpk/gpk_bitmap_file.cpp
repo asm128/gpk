@@ -54,9 +54,9 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs& szFileName, ::gp
 	hOldBitmap				= (HBITMAP)SelectObject(hMemDC, phBitmap);
 	for(uint32_t y = 0; y < out_ImageView.metrics().y; ++y)
 	for(uint32_t x = 0; x < out_ImageView.metrics().x; ++x) {
-		const COLORREF				colpix										= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
-		const ::gpk::bgra			toWrite										= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
-		out_ImageView[y][x]			= toWrite;
+		const COLORREF				colpix						= GetPixel(hMemDC, x, y); // GetPixel(hMemDC, x, out_ImageView.metrics().y - 1 - y);
+		const ::gpk::bgra			toWrite						= {GetBValue(colpix), GetGValue(colpix), GetRValue(colpix), 0xFF};
+		out_ImageView[y][x]		= toWrite;
 		if(toWrite == alphaKey && out_alphaFound)
 			*out_alphaFound			= true;
 	}
@@ -73,7 +73,7 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs& szFileName, ::gp
 	else
 		memcpy(&filename[lenFilename - 3], "png", 3);
 
-	::gpk::vcs					pngfn		= {filename.begin(), lenFilename};
+	::gpk::vcs					pngfn						= {filename.begin(), lenFilename};
 	::gpk::au8					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
 	::gpk::fileFromMemory(pngfn, filebytes);
@@ -181,8 +181,8 @@ struct SHeaderInfoBMP {
 		colorSize				= b32Bit ? 4 : 3;
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
-			linearIndexSrc			= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-			out_Colors[y * infoHeader.Metrics.x + x]					=
+			linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
+			out_Colors[y * infoHeader.Metrics.x + x]	=
 				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
@@ -193,8 +193,8 @@ struct SHeaderInfoBMP {
 	case 8 :
 		for(y = 0; y < infoHeader.Metrics.y; ++y )
 		for(x = 0; x < infoHeader.Metrics.x; ++x ) {
-			linearIndexSrc			= y * infoHeader.Metrics.x + x;
-			out_Colors[linearIndexSrc]																			=
+			linearIndexSrc				= y * infoHeader.Metrics.x + x;
+			out_Colors[linearIndexSrc]	=
 				::gpk::bgra{ srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
 				, srcBytes[linearIndexSrc]
@@ -207,18 +207,13 @@ struct SHeaderInfoBMP {
 	return 0;
 }
 
-static	::gpk::error_t	bmpFileLoadPaletted	(FILE* source, ::gpk::apod<::gpk::bgra>& out_Colors, ::gpk::view2d<::gpk::bgra>& out_ImageView)					{
-	source, out_Colors, out_ImageView;
-	return 0;
-}
-
 // Currently supporting only 24-bit bitmaps
 ::gpk::error_t			gpk::bmpFileLoad	(FILE* source, ::gpk::apod<::gpk::bgra>& out_Colors, ::gpk::view2d<::gpk::bgra>& out_ImageView)					{
 	::SHeaderFileBMP			fileHeader			= {};
 	::SHeaderInfoBMP			infoHeader			= {};
 	ree_if(fread(&fileHeader, 1, sizeof(::SHeaderFileBMP), source) != sizeof(::SHeaderFileBMP), "Failed to read file! File corrupt?");
 	ree_if(fread(&infoHeader, 1, sizeof(::SHeaderInfoBMP), source) != sizeof(::SHeaderInfoBMP), "Failed to read file! File corrupt?");
-	uint32_t					nPixelCount									= infoHeader.Metrics.x * infoHeader.Metrics.y;
+	uint32_t					nPixelCount			= infoHeader.Metrics.x * infoHeader.Metrics.y;
 	ree_if(0 == nPixelCount, "Invalid BMP image size! Valid images are at least 1x1 pixels! This image claims to contain %ux%u pixels", infoHeader.Metrics.x, infoHeader.Metrics.y);	// make sure it contains data
 	ree_if(infoHeader.Compression != BI_RGB, "Unsupported bmp compression!");
 	ree_if(infoHeader.Bpp != 24
@@ -243,8 +238,8 @@ static	::gpk::error_t	bmpFileLoadPaletted	(FILE* source, ::gpk::apod<::gpk::bgra
 		colorSize				= b32Bit ? 4 : 3;
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
-			linearIndexSrc				= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
-			out_Colors[y * infoHeader.Metrics.x + x]																=
+			linearIndexSrc								= y * infoHeader.Metrics.x * colorSize + (x * colorSize);
+			out_Colors[y * infoHeader.Metrics.x + x]	=
 				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
@@ -268,7 +263,7 @@ static	::gpk::error_t	bmpFileLoadPaletted	(FILE* source, ::gpk::apod<::gpk::bgra
 		for(y = 0; y < infoHeader.Metrics.y; ++y)
 		for(x = 0; x < infoHeader.Metrics.x; ++x) {
 			linearIndexSrc				= y * (infoHeader.Metrics.x / 8) + x / 8;
-			int32_t							linearIndexDst							= y *  infoHeader.Metrics.x + x;
+			int32_t							linearIndexDst		= y *  infoHeader.Metrics.x + x;
 			out_Colors[linearIndexDst]	=
 				::gpk::bgra{ srcBytes[linearIndexSrc] & (1U << (x % 8))
 				, srcBytes[linearIndexSrc] & (1U << (x % 8))
