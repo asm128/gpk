@@ -149,7 +149,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 
 	::gpk::SControl					& controlButton								= controlTable.Controls[slider.IdButton];
 	::gpk::SControl					& controlSlider								= controlTable.Controls[slider.IdGUIControl];
-	::gpk::n2<double>							ncSpacing									= ::gpk::controlNCSpacing(controlSlider).Cast<double>();
+	::gpk::n2<double>							ncSpacing									= ::gpk::controlNCSpacing(controlSlider).f64();
 	if(slider.Vertical)	
 		controlButton.Area.Offset.y				= int16_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
 	else				
@@ -184,14 +184,14 @@ stacxpr	const uint32_t									heightOfField								= 18;
 			//	{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 			//	, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 			//	};
-			const ::gpk::n2d														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.Cast<double>();
-			const ::gpk::n2d														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.Cast<double>();
-			::gpk::n2d																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).Cast<double>();;
+			const ::gpk::n2d														controlSliderPos							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.f64();
+			const ::gpk::n2d														controlSliderSize							= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.f64();
+			::gpk::n2d																effectiveSize								= controlSliderSize - (controlTable.Controls[slider.IdButton].Area.Size).f64();;
 			//
 
-			::gpk::n2d																currentValue								= input.MouseCurrent.Position.Cast<double>();
+			::gpk::n2d																currentValue								= input.MouseCurrent.Position.f64();
 			const ::gpk::n2d														valueUnit									= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
-			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.Cast<double>() / 2;
+			currentValue														-= controlSliderPos + controlTable.Controls[slider.IdButton].Area.Size.f64() / 2;
 			currentValue.x														*= valueUnit.x;
 			currentValue.y														*= valueUnit.y;
 

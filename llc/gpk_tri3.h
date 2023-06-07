@@ -8,56 +8,69 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tDimension>	struct tri3 : public tri<::gpk::n3<_tDimension>>		{
-		typedef	::gpk::n3<_tDimension>	TVertex;
-		using tri<TVertex>	::A;
-		using tri<TVertex>	::B;
-		using tri<TVertex>	::C;
-		using tri<TVertex>	::tri;
+		typedef	_tDimension		T;
+		typedef	::gpk::n3<T>	TVertex;
+
+		using	tri<TVertex>	::A;
+		using	tri<TVertex>	::B;
+		using	tri<TVertex>	::C;
+		using	tri<TVertex>	::tri;
+
+		inlcxpr	tri3<float>		f32			()		const	noexcept	{ return {A.f32(), B.f32(), C.f32()}; }
+		inlcxpr	tri3<double>	f64			()		const	noexcept	{ return {A.f64(), B.f64(), C.f64()}; }
+		inlcxpr	tri3<uint8_t>	i8			()		const	noexcept	{ return {A.i8 (), B.i8 (), C.i8 ()}; }
+		inlcxpr	tri3<uint16_t>	i16			()		const	noexcept	{ return {A.i16(), B.i16(), C.i16()}; }
+		inlcxpr	tri3<uint32_t>	i32			()		const	noexcept	{ return {A.i32(), B.i32(), C.i32()}; }
+		inlcxpr	tri3<uint64_t>	i64			()		const	noexcept	{ return {A.i64(), B.i64(), C.i64()}; }
+		inlcxpr	tri3<int8_t>	u8			()		const	noexcept	{ return {A.u8 (), B.u8 (), C.u8 ()}; }
+		inlcxpr	tri3<int16_t>	u16			()		const	noexcept	{ return {A.u16(), B.u16(), C.u16()}; }
+		inlcxpr	tri3<int32_t>	u32			()		const	noexcept	{ return {A.u32(), B.u32(), C.u32()}; }
+		inlcxpr	tri3<int64_t>	u64			()		const	noexcept	{ return {A.u64(), B.u64(), C.u64()}; }
 
 		template<typename _tOther>
-		tri3<_tOther>		Cast					()		const	noexcept		{
+		tri3<_tOther>			Cast		()		const	noexcept		{
 			return
 				{ A.template Cast<_tOther>()
 				, B.template Cast<_tOther>()
 				, C.template Cast<_tOther>()
 				};
 		}
-		bool				CulledX					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool					CulledX		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		bool				CulledY					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool					CulledY		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;
 		}
-		bool				CulledZ					(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool					CulledZ		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.z  < minMax.Min) && (B.z  < minMax.Min) && (C.z  < minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				;
 		}
-		bool				CulledZSpecial			(const ::gpk::SMinMax<_tDimension>& minMax)	const	noexcept		{
+		bool					CulledZSpecial	(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.z <= minMax.Min) || (B.z <= minMax.Min) || (C.z <= minMax.Min))
 				|| ((A.z >= minMax.Max) && (B.z >= minMax.Max) && (C.z >= minMax.Max))
 				;
 		}
-		bool				ClipZ					()											const	noexcept		{
+		bool					ClipZ		()									const	noexcept		{
 			if(A.z < 0 || A.z >= 1) return true;
 			if(B.z < 0 || B.z >= 1) return true;
 			if(C.z < 0 || C.z >= 1) return true;
 			return false;
 		}
-		tri3<_tDimension>&	Scale					(const ::gpk::n3<_tDimension> & scale)				noexcept		{
+		tri3<T>&				Scale					(const TVertex & scale)				noexcept		{
 			A.Scale(scale);
 			B.Scale(scale);
 			C.Scale(scale);
 			return *this;
 		}
-		tri3<_tDimension>&	Translate				(const ::gpk::n3<_tDimension> & translation)		noexcept		{
-			A					+= translation;
-			B					+= translation;
-			C					+= translation;
+		tri3<T>&				Translate				(const TVertex & translation)		noexcept		{
+			A						+= translation;
+			B						+= translation;
+			C						+= translation;
 			return *this;
 		}
 	};

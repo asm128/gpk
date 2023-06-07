@@ -18,8 +18,8 @@ namespace gpk
 			int16_t						coordTableX						= charToDraw % characterCellsX;
 			int16_t						coordTableY						= charToDraw / characterCellsX;
 			const ::gpk::n2i16			coordCharTable					= {int16_t(coordTableX * sizeCharCell.x), int16_t(coordTableY * sizeCharCell.y)};
-			const ::gpk::rect2i16		dstRect0						= {{int16_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.Cast<int16_t>()};
-			const ::gpk::rect2i16		srcRect0						= {coordCharTable, sizeCharCell.Cast<int16_t>()};
+			const ::gpk::rect2i16		dstRect0						= {{int16_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.i16()};
+			const ::gpk::rect2i16		srcRect0						= {coordCharTable, sizeCharCell.i16()};
 			gerror_if(errored(::gpk::grid_copy_alpha(target, viewTextureFont, ::gpk::rect2i16{dstTextOffset + dstRect0.Offset, dstRect0.Size}, srcRect0.Offset, {0xFF, 0x00, 0xFF, 0xFF})), "%s", "I believe this never fails.");
 			//gerror_if(errored(::gpk::grid_copy(target, viewTextureFont, dstTextOffset + dstOffset1, srcRect0)), "I believe this never fails.");
 		}
@@ -35,10 +35,10 @@ namespace gpk
 			const int16_t				coordTableX						= charToDraw % characterCellsX;
 			const int16_t				coordTableY						= charToDraw / characterCellsX;
 			const ::gpk::n2i16			coordCharTable					= {int16_t(coordTableX * sizeCharCell.x), int16_t(coordTableY * sizeCharCell.y)};
-			const ::gpk::rect2i16		dstRect0						= {{int16_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.Cast<int16_t>()};
-			const ::gpk::rect2i16		srcRect0						= {coordCharTable, sizeCharCell.Cast<int16_t>()};
+			const ::gpk::rect2i16		dstRect0						= {{int16_t(sizeCharCell.x * iChar), dstOffsetY}, sizeCharCell.i16()};
+			const ::gpk::rect2i16		srcRect0						= {coordCharTable, sizeCharCell.i16()};
 			//gerror_if(errored(::gpk::grid_copy_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, color, srcRect0)), "I believe this never fails.");
-			gerror_if(errored(::gpk::grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, ::gpk::rect2i16{dstTextOffset + dstRect0.Offset, sizeCharCell.Cast<int16_t>()}, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
+			gerror_if(errored(::gpk::grid_raster_alpha_bit(target.metrics(), viewTextureFont, viewMetrics, ::gpk::rect2i16{dstTextOffset + dstRect0.Offset, sizeCharCell.i16()}, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");
 			//gerror_if(errored(::gpk::grid_raster_alpha_bit(target, viewTextureFont, dstTextOffset + dstOffset1, viewMetrics, srcRect0, dstCoords)), "I believe this never fails.");
 		}
 		for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord)
@@ -68,8 +68,8 @@ namespace gpk
 			const int32_t				coordTableX						= charToDraw % charsPerRow;
 			const int32_t				coordTableY						= charToDraw / charsPerRow;
 			const ::gpk::n2i32			coordCharTable					= {coordTableX * fontCharSize.x, coordTableY * fontCharSize.y};
-			const ::gpk::rect2i32		srcRect0						= {coordCharTable, fontCharSize.template Cast<int32_t>()};
-			::gpk::rect2i32				dstRect1						= {{int32_t(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.template Cast<int32_t>()};
+			const ::gpk::rect2i32		srcRect0						= {coordCharTable, fontCharSize.i32()};
+			::gpk::rect2i32				dstRect1						= {{int32_t(targetRect.Offset.x + fontCharSize.x * iChar), targetRect.Offset.y}, fontCharSize.i32()};
 			//dstRect1.Size.x		+= ::gpk::min(0, (int32_t)targetRect.Offset.x);
 			dstRect1.Size.y			+= ::gpk::min<int16_t>(0, targetRect.Offset.y);
 			gerror_if(errored(::gpk::grid_raster_alpha_bit(targetMetrics, fontTexture.View, {uint32_t(charsPerRow * fontCharSize.x), 256U * fontCharSize.y}, dstRect1, srcRect0.Offset, dstCoords)), "%s", "I believe this never fails.");

@@ -187,7 +187,7 @@ namespace gpk
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
 					const ::gpk::n3<uint32_t>							coord					= *(::gpk::n3<uint32_t>*)Chunks[iChunk].Data.begin();
-					return ::gpk::n3<uint32_t>{coord.y, coord.z, coord.x}.Cast<uint8_t>();
+					return ::gpk::n3<uint32_t>{coord.y, coord.z, coord.x}.u8();
 				}
 			return {};
 		}

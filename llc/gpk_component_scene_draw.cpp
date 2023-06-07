@@ -28,7 +28,7 @@ static	::gpk::error_t	drawOrderedVertices
 				::gpk::transform(triangleTransformed, matrixWVP);
 
 				::gpk::m4f32						matrixViewport			= {};
-				matrixViewport.ViewportLH(target_image.metrics().Cast<uint16_t>());
+				matrixViewport.ViewportLH(target_image.metrics().u16());
 				::gpk::transform(triangleTransformed, matrixViewport);
 
 				renderer.RenderCache.PixelCoordBuffer.clear();

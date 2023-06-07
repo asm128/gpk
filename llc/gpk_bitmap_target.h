@@ -152,9 +152,9 @@ namespace gpk
 		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
 			const ::gpk::n2i16			cellCurrent			= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
-			int							w0					= ::gpk::orient2d({triangle.B.template Cast<int16_t>(), triangle.A.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int							w1					= ::gpk::orient2d({triangle.C.template Cast<int16_t>(), triangle.B.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int							w2					= ::gpk::orient2d({triangle.A.template Cast<int16_t>(), triangle.C.template Cast<int16_t>()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int							w0					= ::gpk::orient2d({triangle.B.i16(), triangle.A.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int							w1					= ::gpk::orient2d({triangle.C.i16(), triangle.B.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int							w2					= ::gpk::orient2d({triangle.A.i16(), triangle.C.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if(w0 < 0)
 				continue;
 			if(w1 < 0)

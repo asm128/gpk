@@ -8,27 +8,39 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	template<typename _tDimension>	struct tri2 : public tri<::gpk::n2<_tDimension>>		{
-		typedef	_tDimension	T;
-		typedef				::gpk::n2<T>	TVertex;
-		using tri<TVertex>	::A;
-		using tri<TVertex>	::B;
-		using tri<TVertex>	::C;
-		using tri<TVertex>	::tri;
+		typedef	_tDimension		T;
+		typedef	::gpk::n2<T>	TVertex;
+
+		using	tri<TVertex>	::A;
+		using	tri<TVertex>	::B;
+		using	tri<TVertex>	::C;
+		using	tri<TVertex>	::tri;
+
+		inlcxpr	tri2<float>		f32			()		const	noexcept	{ return {A.f32(), B.f32(), C.f32()}; }
+		inlcxpr	tri2<double>	f64			()		const	noexcept	{ return {A.f64(), B.f64(), C.f64()}; }
+		inlcxpr	tri2<uint8_t>	i8			()		const	noexcept	{ return {A.i8 (), B.i8 (), C.i8 ()}; }
+		inlcxpr	tri2<uint16_t>	i16			()		const	noexcept	{ return {A.i16(), B.i16(), C.i16()}; }
+		inlcxpr	tri2<uint32_t>	i32			()		const	noexcept	{ return {A.i32(), B.i32(), C.i32()}; }
+		inlcxpr	tri2<uint64_t>	i64			()		const	noexcept	{ return {A.i64(), B.i64(), C.i64()}; }
+		inlcxpr	tri2<int8_t>	u8			()		const	noexcept	{ return {A.u8 (), B.u8 (), C.u8 ()}; }
+		inlcxpr	tri2<int16_t>	u16			()		const	noexcept	{ return {A.u16(), B.u16(), C.u16()}; }
+		inlcxpr	tri2<int32_t>	u32			()		const	noexcept	{ return {A.u32(), B.u32(), C.u32()}; }
+		inlcxpr	tri2<int64_t>	u64			()		const	noexcept	{ return {A.u64(), B.u64(), C.u64()}; }
 
 		template<typename _tOther>
-		tri2<_tOther>		Cast					()											const	noexcept		{
+		tri2<_tOther>			Cast		()		const	noexcept		{
 			return
 				{ A.template Cast<_tOther>()
 				, B.template Cast<_tOther>()
 				, C.template Cast<_tOther>()
 				};
 		}
-		bool				CulledX					(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledX		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		bool				CulledY					(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
+		bool					CulledY		(const ::gpk::SMinMax<T>& minMax)	const	noexcept		{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;

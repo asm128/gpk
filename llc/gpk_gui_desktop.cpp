@@ -65,8 +65,8 @@
 
 static	::gpk::error_t	displace										(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<double> & mouseDeltas)	{
 	const ::gpk::n2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-	::gpk::n2<double>														deltasScaled									= mouseDeltas.Cast<double>().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.Cast<int16_t>();
+	::gpk::n2<double>														deltasScaled									= mouseDeltas.f64().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
+	gui.Controls.Controls[iControl].Area.Offset								+= deltasScaled.i16();
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }
 
@@ -142,10 +142,10 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
 			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.Cast<int32_t>()})) {
+			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.i32()})) {
 				::gpk::n2<int32_t>														mouseDeltas										= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 				const ::gpk::n2<double>												currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-				::gpk::n2<int16_t>														deltasScaled									= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).Cast<int16_t>();
+				::gpk::n2<int16_t>														deltasScaled									= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).i16();
 				gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size										+= deltasScaled;
 				gui.Controls.Controls[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled;
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
@@ -171,7 +171,7 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 		const ::gpk::SControlState														& controlState						= gui.Controls.States[iControl];
 		const ::gpk::SControlMetrics													& controlMetrics					= gui.Controls.Metrics[iControl];
 		if(iControl != (uint32_t)desktop.IdControl)
-			inControlArea																= inControlArea || ::gpk::in_range(gui.CursorPos.Cast<int16_t>(), controlMetrics.Total.Global);
+			inControlArea																= inControlArea || ::gpk::in_range(gui.CursorPos.i16(), controlMetrics.Total.Global);
 		//if(controlState.Pressed && (int32_t)iControl != app.Desktop.IdControl)
 		//	anyControlPressed															= true;
 
@@ -203,7 +203,7 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 		}
 		else {
 			const ::gpk::SControlMetrics													& controlListMetrics				= gui.Controls.Metrics[menu.IdControl];
-			if(::gpk::in_range(gui.CursorPos.Cast<int16_t>(), controlListMetrics.Total.Global) && controlStateMenu.Hidden == false)
+			if(::gpk::in_range(gui.CursorPos.i16(), controlListMetrics.Total.Global) && controlStateMenu.Hidden == false)
 				::unhideMenuHierarchy(gui, desktop, menu);
 
 			else if(parentMenu.IdSelected != menu.IndexParentItem)

@@ -30,7 +30,7 @@ static	::gpk::error_t	geometryVoxelFace
 	::gpk::SAABBGeometry		& aabbModel				= output.AABBModel;
 	for(uint32_t i = 0; i < 8; ++i) {
 		aabbModel.Vertices[i]								= ::gpk::VOXEL_VERTICES[i];
-		aabbModel.Vertices[i].Scale(dimensions.Cast<float>());
+		aabbModel.Vertices[i].Scale(dimensions.f32());
 	}
 
 	::gpk::view<const ::gpk::bgra>	rgba					= voxelMap.Palette;

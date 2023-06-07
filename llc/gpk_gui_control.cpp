@@ -154,7 +154,7 @@
 		controlText.Align						= ::gpk::ALIGN_CENTER_TOP;
 		control.Border							= {};
 		control.Margin							= {};
-		control.Area.Size						= targetSize.Cast<int16_t>();
+		control.Area.Size						= targetSize.i16();
 		//control.Area.Offset.y					= heightTitleBar;
 		control.ColorTheme						= 60;
 		::gpk::SControlConstraints					& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];
@@ -229,7 +229,7 @@
 		::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
 		control.ColorTheme													= int16_t(themeIndex + 1);
 		control.Area.Offset													= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
-		control.Area.Size													= controlSize.Cast<int16_t>();
+		control.Area.Size													= controlSize.i16();
 		gpk_necs(::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
 	}
 	return 0;
@@ -245,7 +245,7 @@
 		if(0 == iButton)
 			result = idControl;
 		::gpk::SControl						& control						= gui.Controls.Controls[idControl];
-		control.Area					= {{offset.x, (int16_t)(buttonSize.y * iButton + offset.y)}, buttonSize.Cast<int16_t>()};
+		control.Area					= {{offset.x, (int16_t)(buttonSize.y * iButton + offset.y)}, buttonSize.i16()};
 		control.Border					= {1, 1, 1, 1};//{10, 10, 10, 10};
 		control.Margin					= {1, 1, 1, 1};
 		control.Align					= controlAlign;
@@ -276,7 +276,7 @@
 
 	vk.IdRoot						= ::gpk::controlCreate(gui);
 	const ::gpk::n2u8		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::n2<int16_t>		sizeKey						= (charSize + ::gpk::n2u8{6, 6}).Cast<int16_t>();
+	const ::gpk::n2<int16_t>		sizeKey						= (charSize + ::gpk::n2u8{6, 6}).i16();
 	stacxpr	uint16_t			SIZE_BUTTON					= 88;
 	const ::gpk::n2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 

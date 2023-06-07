@@ -110,14 +110,14 @@ static	::gpk::error_t	drawBuffers
 
 		trianglePixelCoords.clear();
 		triangleWeights.clear();
-		gerror_if(errored(::gpk::drawTriangle(offscreenMetrics.Cast<uint32_t>(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)), "Not sure if these functions could ever fail");
+		gerror_if(errored(::gpk::drawTriangle(offscreenMetrics.u32(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)), "Not sure if these functions could ever fail");
 		//const bool													stripped					= surface[0][0] == ::gpk::bgra{gpk::WHITE};
 		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
 			const ::gpk::trif32							& vertexWeights				= triangleWeights[iCoord];
 			inPS.WeightedPosition								= triPositionsWorld.A * vertexWeights.A + triPositionsWorld.B * vertexWeights.B + triPositionsWorld.C * vertexWeights.C;
 			inPS.WeightedNormal									= (triNormals.A * vertexWeights.A + triNormals.B * vertexWeights.B + triNormals.C * vertexWeights.C).Normalize();
 			inPS.WeightedUV										= triUVs.A * vertexWeights.A + triUVs.B * vertexWeights.B + triUVs.C * vertexWeights.C;
-			const ::gpk::n2u16										coord						= trianglePixelCoords[iCoord].Cast<uint16_t>();
+			const ::gpk::n2u16										coord						= trianglePixelCoords[iCoord].u16();
 			ps(constants, inPS, backBufferColors[coord.y][coord.x]);
 		}
 	}
@@ -155,10 +155,10 @@ static	::gpk::error_t	drawBuffers
 		const ::std::function<::gpk::TFuncPixelShader>			& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
-		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.Cast<uint32_t>()}, constants, fx);
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u32()}, constants, fx);
 	}
 
-	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().Cast<uint16_t>();
+	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().u16();
 	::gpk::apod<::gpk::n3f32>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
@@ -177,7 +177,7 @@ static	::gpk::error_t	drawBuffers
 		wireframePixelCoords.clear();
 		::gpk::drawLine(offscreenMetrics, ::gpk::line3f32{{}, xyz[iVector]}, constants.VPS, wireframePixelCoords, backBufferDepth);
 		for(uint32_t iCoord = 0; iCoord < wireframePixelCoords.size(); ++iCoord) {
-			::gpk::n3u16									coord					= wireframePixelCoords[iCoord].Cast<uint16_t>();
+			::gpk::n3u16									coord					= wireframePixelCoords[iCoord].u16();
 			backBufferColors[coord.y][coord.x]	= colorXYZ[iVector];
 		}
 	}

@@ -17,7 +17,7 @@
 #endif
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
-	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= window.Size.Cast<uint16_t>();
+	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= window.Size.u16();
 	window.EventQueue[window.EventQueue.push_back({})] = newEvent;
 	window.FullScreen						= false;
 	return 0;
@@ -53,7 +53,7 @@
 #endif
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
-	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= framework.Size.Cast<uint16_t>();
+	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= framework.Size.u16();
 	framework.EventQueue.push_back(newEvent);
 	framework.FullScreen					= true;
 	return 0;
@@ -97,7 +97,7 @@
 #if defined(GPK_WINDOWS)
 		::gpk::error_t					drawBuffer									(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::view2d<::gpk::bgra>& colorArray)				{
 	const uint32_t								bytesToCopy									= sizeof(::RGBQUAD) * colorArray.size();
-	const ::gpk::n2<uint16_t>				metricsSource								= colorArray.metrics().Cast<uint16_t>();
+	const ::gpk::n2<uint16_t>				metricsSource								= colorArray.metrics().u16();
 	const ::gpk::n2<uint16_t>				prevSize									= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight

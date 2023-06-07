@@ -433,17 +433,17 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	if(controlConstraints.AttachSizeToText.x) scaledSize.x	= rectText.Size.x + ncTotalSizeScaled.x;
 	if(controlConstraints.AttachSizeToText.y) scaledSize.y	= rectText.Size.y + ncTotalSizeScaled.y;
 	const bool					isValidParent			= 0 == ::gpk::controlInvalid(gui, control.Parent);
-	const ::gpk::n2u16			targetSize				= isValidParent ? gui.Controls.Metrics[control.Parent].Client.Global.Size.Cast<uint16_t>() : _targetSize.Cast<uint16_t>();
+	const ::gpk::n2u16			targetSize				= isValidParent ? gui.Controls.Metrics[control.Parent].Client.Global.Size.u16() : _targetSize.u16();
 
 	if(controlConstraints.AttachSizeToControl.x == iControl) { if(controlConstraints.DockToControl.Left	!= -1) {} else { scaledPosition.x = 0; } scaledSize.x = targetSize.x; } else if(false == ::gpk::controlInvalid(gui, controlConstraints.AttachSizeToControl.x)) { if(controlConstraints.DockToControl.Left != -1) {} else { scaledPosition.x = 0;} scaledSize.x = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
 	if(controlConstraints.AttachSizeToControl.y == iControl) { if(controlConstraints.DockToControl.Top	!= -1) {} else { scaledPosition.y = 0; } scaledSize.y = targetSize.y; } else if(false == ::gpk::controlInvalid(gui, controlConstraints.AttachSizeToControl.y)) { if(controlConstraints.DockToControl.Top  != -1) {} else { scaledPosition.y = 0;} scaledSize.y = gui.Controls.Metrics[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
 
-	controlMetrics.Client	.Local	= {{(int16_t)ncSizesScaled.Left, (int16_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).Cast<int16_t>()};
-	::gpk::n2<double> minSizeScaled = (controlConstraints.SizeMinMax.Min.Cast<double>().InPlaceScale(scale.x, scale.y));
-	::gpk::n2<double> maxSizeScaled = (controlConstraints.SizeMinMax.Max.Cast<double>().InPlaceScale(scale.x, scale.y));
+	controlMetrics.Client	.Local	= {{(int16_t)ncSizesScaled.Left, (int16_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).i16()};
+	::gpk::n2<double> minSizeScaled = (controlConstraints.SizeMinMax.Min.f64().InPlaceScale(scale.x, scale.y));
+	::gpk::n2<double> maxSizeScaled = (controlConstraints.SizeMinMax.Max.f64().InPlaceScale(scale.x, scale.y));
 	scaledSize.x					= ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
 	scaledSize.y					= ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
-	::gpk::realignRectangle(targetSize.Cast<uint32_t>(), ::gpk::rect2<int16_t>{scaledPosition.Cast<int16_t>(), scaledSize.Cast<int16_t>()}, controlMetrics.Total.Local, control.Align);
+	::gpk::realignRectangle(targetSize.u32(), ::gpk::rect2<int16_t>{scaledPosition.i16(), scaledSize.i16()}, controlMetrics.Total.Local, control.Align);
 	controlMetrics.Total .Global	= controlMetrics.Total	.Local;
 	controlMetrics.Client.Global	= controlMetrics.Client	.Local;
 	controlMetrics.Client.Global.Offset	+= controlMetrics.Total	.Local.Offset;
@@ -456,7 +456,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	const ::gpk::SRectLimits<int32_t>	& dockToControl		= controlConstraints.DockToControl;
 	if(dockToControl.Right	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
-		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.Cast<uint16_t>(), true);
+		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u16(), true);
 		const ::gpk::SControl				& other				= gui.Controls.Controls	[dockToControl.Right];
 		const ::gpk::SControlMetrics		& otherMetrics		= gui.Controls.Metrics	[dockToControl.Right];
 		if(gbit_true(other.Align, ::gpk::ALIGN_RIGHT) && gbit_false(other.Align, ::gpk::ALIGN_HCENTER)) {
@@ -517,9 +517,9 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	{ // calculate text rectangle
 		const ::gpk::rect2<int16_t>									& targetRect											= controlMetrics.Client.Global;
 		controlMetrics.Text.Offset										= {};
-		controlMetrics.Text.Size										= rectText.Size.Cast<int16_t>();
-		::gpk::realignRectangle(targetRect.Size.Cast<uint32_t>(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
-		controlMetrics.Text.Offset										+= controlMetrics.Client.Global.Offset.Cast<int16_t>();
+		controlMetrics.Text.Size										= rectText.Size.i16();
+		::gpk::realignRectangle(targetRect.Size.u32(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
+		controlMetrics.Text.Offset										+= controlMetrics.Client.Global.Offset.i16();
 	}
 	::buildControlGeometry(control, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
 	controlState.Updated											= true;
@@ -565,7 +565,7 @@ static	::gpk::error_t	controlProcessInput										(::gpk::SGUI & gui, const ::g
 	::gpk::SControlState		& controlState											= gui.Controls.States[iControl];
 	//--------------------
 	::gpk::error_t														controlHovered											= -1;
-	if(::gpk::in_range(gui.CursorPos.Cast<int16_t>(), gui.Controls.Metrics[iControl].Total.Global)) {
+	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Metrics[iControl].Total.Global)) {
 		if(false == gui.Controls.Modes[iControl].Design) {
 			controlHovered													= iControl;
 			::updateGUIControlHovered(controlState, input,  ::gpk::controlDisabled(gui, iControl));

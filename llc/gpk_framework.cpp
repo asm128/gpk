@@ -26,15 +26,15 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 		::gpk::n2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
-		if((framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+		if((framework.GUI->Zoom.DPI * 96).u32() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::SWindow::TOffscreen>												offscreen									= framework.RootWindow.BackBuffer;
-			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().Cast<uint16_t>(), true);
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().u16(), true);
 		}
 #else
 		HMONITOR				hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr && (framework.GUI->Zoom.DPI * 96).Cast<uint32_t>() != dpi) {
+		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u32() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
@@ -200,7 +200,7 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 		const CREATESTRUCTA						& createStruct			= *(const CREATESTRUCTA*)lParam;
 		RECT									rect					= {};
 		GetClientRect(hWnd, &rect);
-		::gpk::n2<uint16_t>						newMetrics				= ::gpk::n2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.Cast<uint16_t>();
+		::gpk::n2<uint16_t>						newMetrics				= ::gpk::n2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.u16();
 		newEvent.Type						= ::gpk::SYSEVENT_WINDOW_CREATE;
 		::gpk::savePOD(newEvent.Data, newMetrics); 
 		::gpk::savePOD(newEvent.Data, createStruct); 
@@ -261,11 +261,11 @@ static	LRESULT WINAPI				mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	case WM_SIZE			:
 		info_printf("%s", "WM_SIZE");
 		if(lParam) {
-			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.Cast<uint16_t>();
+			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u16();
 			RECT								windowrect					= {};
 			GetClientRect(hWnd, &windowrect);
 			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
-			if(newMetrics != mainDisplay.Size.Cast<uint16_t>()) {
+			if(newMetrics != mainDisplay.Size.u16()) {
 				mainDisplay.PreviousSize		= mainDisplay.Size;
 				mainDisplay.Size				= newMetrics;
 				mainDisplay.Resized				= true;
