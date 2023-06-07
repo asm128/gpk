@@ -10,15 +10,15 @@
 #include "gpk_stdstring.h"
 #include "gpk_path.h"
 
-::gpk::error_t											pngToFont
-	( ::gpk::SImage<::gpk::bgra>		& imageCache
-	, ::gpk::SImage<::gpk::bgra>		& verticalAtlas
-	, ::gpk::SImageMonochrome<uint32_t>	& fontTexture
-	, ::gpk::vcc						filenameOutput
-	, const ::gpk::n2u32				fontCharSize
-	, bool								negateBit
+::gpk::error_t				pngToFont
+	( ::gpk::img8bgra			& imageCache
+	, ::gpk::img8bgra			& verticalAtlas
+	, ::gpk::imgmonou64			& fontTexture
+	, ::gpk::vcc				filenameOutput
+	, const ::gpk::n2u32		fontCharSize
+	, bool						negateBit
 	) {
-	const uint32_t						ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
+	const uint32_t					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
 	verticalAtlas.resize(::gpk::n2u32{fontCharSize.x, fontCharSize.y * 256});
 	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
 		const uint32_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
@@ -58,43 +58,43 @@
 	return 0;
 }
 
-int							main					() {
-	::gpk::aobj<::gpk::ac>			fontFiles				= {};
-	::gpk::vcs						pathToSearch			= {"../gpk_data/fonts/cp437"};
+int						main					() {
+	::gpk::aobj<::gpk::ac>		fontFiles				= {};
+	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
 	gpk_necall(::gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
-	::gpk::SPNGData						pngCache				= {};
-	::gpk::img<::gpk::bgra>				imageCache				= {};
-	::gpk::img<::gpk::bgra>				imageFixed				= {};
-	::gpk::img<::gpk::bgra>				verticalAtlas			= {};
-	::gpk::SImageMonochrome<uint32_t>							fontTexture				= {};
-	::gpk::apod<char>									filenameOutput			= {};
-	::gpk::vcc													extension				= {};
+	::gpk::SPNGData				pngCache				= {};
+	::gpk::img8bgra				imageCache				= {};
+	::gpk::img8bgra				imageFixed				= {};
+	::gpk::img8bgra				verticalAtlas			= {};
+	::gpk::imgmonou64			fontTexture				= {};
+	::gpk::apod<char>			filenameOutput			= {};
+	::gpk::vcc					extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
-		::gpk::vcc													filenameInput			= fontFiles[iFile];
+		::gpk::vcc					filenameInput			= fontFiles[iFile];
 		ci_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
-		::gpk::apod<char>									lowercaseExtension		= ::gpk::toString(extension);
+		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
 		ce_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
-		filenameOutput											= filenameInput;
+		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
-		::gpk::array_obj<::gpk::vcc>								splitFileName;
+		::gpk::aobj<::gpk::vcc>		splitFileName;
 		::gpk::split(filenameInput, '_', splitFileName);
-		::gpk::array_obj<::gpk::vcc>								splitFontMetrics;
+		::gpk::aobj<::gpk::vcc>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
-		::gpk::n2<uint32_t>									fontCharSize			= {};
+		::gpk::n2u32				fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
 		imageFixed.resize(imageCache.metrics());
 		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
 		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {
-			const uint32_t					offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
-			const uint32_t					dstX					= offsetX + (x % fontCharSize.x);
-			::gpk::SColorBGRA				& dstPixel				= imageFixed[y][x];
-			dstPixel					= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
+			const uint32_t				offsetX					= (fontCharSize.x + fontCharSize.x * (x / fontCharSize.x)) % imageCache.metrics().x;
+			const uint32_t				dstX					= offsetX + (x % fontCharSize.x);
+			::gpk::bgra					& dstPixel				= imageFixed[y][x];
+			dstPixel				= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}
-		::gpk::au8						pngBytes;
+		::gpk::au8					pngBytes;
 		::gpk::pngFileWrite(imageFixed, pngBytes);
 		::gpk::fileFromMemory(filenameOutput, pngBytes);
 

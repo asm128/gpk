@@ -32,41 +32,41 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	return 0;
 }
 
-			::gpk::error_t											draw					(::gme::SApplication & app)						{
+::gpk::error_t				draw			(::gme::SApplication & app)						{
 	//::gpk::STimer															timer;
 	app;
-	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>		target;
+	::gpk::pobj<::gpk::rtbgra8d32>	target;
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, ::gpk::SColorBGRA{}, 0xFFFFFFFF);
 	{
-		::std::lock_guard														lock					(app.LockGUI);
+		::std::lock_guard				lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::std::lock_guard														lock					(app.LockRender);
-		app.Offscreen														= target;
+		::std::lock_guard				lock					(app.LockRender);
+		app.Offscreen				= target;
 	}
 	//timer.Frame();
 	//info_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
 	return 0;
 }
 
-			::gpk::error_t											update						(::gme::SApplication & app, bool exitSignal)	{
-	//::gpk::STimer															timer;
+::gpk::error_t				update						(::gme::SApplication & app, bool exitSignal)	{
+	//::gpk::STimer					timer;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
-		::std::lock_guard														lock						(app.LockRender);
-		app.Framework.RootWindow.BackBuffer									= app.Offscreen;
+		::std::lock_guard				lock					(app.LockRender);
+		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
-	::gpk::SFramework														& framework					= app.Framework;
+	::gpk::SFramework				& framework					= app.Framework;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
-	::gpk::SGUI																& gui						= *framework.GUI;
-	::gpk::array_pod<uint32_t>												controlsToProcess			= {};
+	::gpk::SGUI						& gui						= *framework.GUI;
+	::gpk::au32						controlsToProcess			= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
-		uint32_t																idControl					= controlsToProcess[iControl];
-		const ::gpk::SControlState												& controlState				= gui.Controls.States[idControl];
+		uint32_t						idControl					= controlsToProcess[iControl];
+		const ::gpk::SControlState		& controlState				= gui.Controls.States[idControl];
 		if(controlState.Execute) {
 			info_printf("Executed %u.", idControl);
 			if(idControl == (uint32_t)app.IdExit)

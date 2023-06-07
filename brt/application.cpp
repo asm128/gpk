@@ -221,8 +221,8 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	{	// Read processes output if they're done processing.
 		for(uint32_t iClient = 0; iClient < receivedPerClient.size(); ++iClient) {
 			clientResponses[iClient].resize(receivedPerClient[iClient].size());
-			::brt::SProcessHandles									& iohandles				= app.ClientIOHandles[iClient];
-			::brt::SProcess											& process				= app.ClientProcesses[iClient];
+			::brt::SProcessHandles	& iohandles				= app.ClientIOHandles[iClient];
+			::brt::SProcess			& process				= app.ClientProcesses[iClient];
 			for(uint32_t iMessage = 0; iMessage < receivedPerClient[iClient].size(); ++iMessage) {
 				info_printf("Client %i received: %s.", iClient, receivedPerClient[iClient][iMessage]->Payload.begin());
 				// generar respuesta proceso
@@ -238,8 +238,8 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	for(uint32_t iClient = 0; iClient < clientResponses.size(); ++iClient) {
 		for(uint32_t iMessage = 0; iMessage < clientResponses[iClient].size(); ++iMessage) { // contestar
 			if(clientResponses[iClient][iMessage].size()) {
-				::std::lock_guard														lock						(app.Server.Mutex);
-				::gpk::ptr_obj<::gpk::SUDPConnection>									conn						= app.Server.Clients[iClient];
+				::std::lock_guard					lock						(app.Server.Mutex);
+				::gpk::pobj<::gpk::SUDPConnection>	conn						= app.Server.Clients[iClient];
 				::gpk::connectionPushData(*conn, conn->Queue, clientResponses[iClient][iMessage], true, true);
 				receivedPerClient[iClient][iMessage]		= {};
 				::brt::SProcess											& process				= app.ClientProcesses[iClient];
@@ -255,19 +255,19 @@ static	::gpk::error_t		readFromPipe			(const ::brt::SProcess & process, const ::
 	return 0;
 }
 
-			::gpk::error_t											draw					(::brt::SApplication & app)						{
-	::gpk::STimer															timer;
+::gpk::error_t				draw					(::brt::SApplication & app)						{
+	::gpk::STimer					timer;
 	app;
-	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>							target;
+	::gpk::pobj<::gpk::rtbgra8d32>	target;
 	target.create();
 	target->resize(app.Framework.RootWindow.Size, {0xFF, 0x40, 0x7F, 0xFF}, (uint32_t)-1);
 	{
-		::std::lock_guard														lock					(app.LockGUI);
+		::std::lock_guard				lock					(app.LockGUI);
 		::gpk::controlDrawHierarchy(*app.Framework.GUI, 0, target->Color.View);
 	}
 	{
-		::std::lock_guard														lock					(app.LockRender);
-		app.Offscreen														= target;
+		::std::lock_guard				lock					(app.LockRender);
+		app.Offscreen				= target;
 	}
 	//timer.Frame();
 	//warning_printf("Draw time: %f.", (float)timer.LastTimeSeconds);
