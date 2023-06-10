@@ -519,6 +519,15 @@
     <ClInclude Include="gpk_sphere.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_inputbox.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_viewport.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry_draw.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -602,7 +611,7 @@
     <ClCompile Include="gpk_expression.cpp">
       <Filter>script</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_geometry.cpp">
+    <ClCompile Include="gpk_scene.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="gpk_cgi_main.cpp">
@@ -697,6 +706,18 @@
     </ClCompile>
     <ClCompile Include="gpk_path.cpp">
       <Filter>file</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_inputbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_viewport.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry_draw.cpp">
+      <Filter>geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

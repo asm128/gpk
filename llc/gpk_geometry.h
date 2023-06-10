@@ -1,100 +1,61 @@
-#include "gpk_array.h"
-#include "gpk_matrix.h"
-#include "gpk_tri2.h"
+#include "gpk_array_pod.h"
+#include "gpk_n3.h"
 
 #ifndef GPK_GEOMETRY_H
 #define GPK_GEOMETRY_H
 
 namespace gpk
 {
-	template <typename _tUnit>
-	struct SModelGeometry {
-		::gpk::apod<::gpk::tri3<_tUnit>>	Positions									;
-		::gpk::apod<::gpk::n3  <_tUnit>>	NormalsTriangle								;
-		::gpk::apod<::gpk::tri3<_tUnit>>	NormalsVertex								;
-		::gpk::apod<::gpk::tri2<_tUnit>>	UVs											;
+	struct STrianglesIndexed {
+		::gpk::apod<::gpk::n3f32>	Positions;
+		::gpk::apod<::gpk::n3f32>	Normals;
+		::gpk::apod<::gpk::n2f32>	TextureCoords;
+		::gpk::au32					PositionIndices;
 	};
 
-	template <typename _tElement, typename _tIndex>
-	struct SModelBufferIndexed {
-		::gpk::apod<_tIndex>				Indices										;
-		::gpk::apod<_tElement>				Values										;
+#pragma pack(push, 1)
+	struct SParamsBox { 
+		::gpk::n3f32	Center;
+		::gpk::n3u32	HalfSizes;
+
+		GPK_DEFAULT_OPERATOR(SParamsBox, HalfSizes == other.HalfSizes && Center == other.Center); 
 	};
 
-	template <typename _tAxis, typename _tIndex>
-	struct SModelGeometryIndexed {
-		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	Positions					;
-		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	NormalsTriangle				;
-		::gpk::SModelBufferIndexed<::gpk::tri3	<_tAxis>, _tIndex>	NormalsVertex				;
-		::gpk::SModelBufferIndexed<::gpk::tri2	<_tAxis>, _tIndex>	UVs							;
-		::gpk::apod<_tIndex>										PositionRemap				;
-
+	struct SParamsSphere { 
+		::gpk::n3f32		Center		= {};
+		float				Radius		= .5f;
+		uint16_t			Stacks		= 16;
+		uint16_t			Slices		= 24;
+		bool				Reverse		= false;
+	
+		GPK_DEFAULT_OPERATOR(SParamsSphere, Center == other.Center && Radius == other.Radius && Stacks == other.Stacks && Slices == other.Slices && Reverse == other.Reverse); 
 	};
 
-	template <typename _tUnit>
-	struct SModelPivot {
-		::gpk::n3	<_tUnit>						Scale										;
-		::gpk::quat	<_tUnit>						Orientation									;
-		::gpk::n3	<_tUnit>						Position									;
+	struct SParamsCylinder { 
+		::gpk::n3f32		Center			= {0, .5f};
+		float				DiameterRatio	= 1.0f;
+		::gpk::minmaxf32	Radius			= {.5f, .5f};
+		uint16_t			Stacks			= 1, Slices = 16;
+		bool				Reverse			= false;
+
+		GPK_DEFAULT_OPERATOR(SParamsCylinder, Center == other.Center && Radius == other.Radius && Stacks == other.Stacks && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio); 
 	};
 
-	// --- Geometry generation: Cube.
-	::gpk::error_t										generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t										generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t										generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t										generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
-	::gpk::error_t										generateCubeGeometry
-		( ::gpk::apod<::gpk::tri3f32> & out_Positions
-		, ::gpk::apod<::gpk::n3f32  > & out_Normals
-		, ::gpk::apod<::gpk::tri3f32> & out_NormalsVertex
-		, ::gpk::apod<::gpk::tri2f32> & out_UV
-		);
-	stainli	::gpk::error_t			generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
-		return ::gpk::generateCubeGeometry
-			( out_Geometry.Positions
-			, out_Geometry.NormalsTriangle
-			, out_Geometry.NormalsVertex
-			, out_Geometry.UVs
-			);
-	}
+	struct SParamsGrid { 
+		::gpk::n2f32	Center				= {.5f, .5f};
+		::gpk::n2u16	CellCount			= {2, 2};
+		bool			ReverseTriangles	= false;
 
-	::gpk::error_t					generateGridPositions					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t					generateGridNormalsTriangle				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t					generateGridNormalsVertex				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t					generateGridUV			(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
-	::gpk::error_t					generateGridGeometry
-		( const ::gpk::n2u16			& gridMetrics
-		, ::gpk::apod<::gpk::tri3f32>	& out_Positions
-		, ::gpk::apod<::gpk::n3f32  >	& out_Normals
-		, ::gpk::apod<::gpk::tri3f32>	& out_NormalsVertex
-		, ::gpk::apod<::gpk::tri2f32>	& out_UV
-		);
-	stainli	::gpk::error_t			generateGridGeometry					(const ::gpk::n2u16	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
-		return ::gpk::generateGridGeometry
-			( gridMetrics
-			, out_Geometry.Positions
-			, out_Geometry.NormalsTriangle
-			, out_Geometry.NormalsVertex
-			, out_Geometry.UVs
-			);
-	}
+		GPK_DEFAULT_OPERATOR(SParamsGrid, Center == other.Center && CellCount == other.CellCount && ReverseTriangles == other.ReverseTriangles); 
+	};																														
+#pragma pack(pop)
 
 
-	struct SRenderCache {
-		::gpk::apod<::gpk::n2i16>		TrianglePixelCoords					= {};
-		::gpk::apod<::gpk::trif32>		TrianglePixelWeights				= {};
-		::gpk::apod<::gpk::n2i16>		WireframePixelCoords				= {};
+	::gpk::error_t	geometryBuildSphere		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsSphere	& params);
+	::gpk::error_t	geometryBuildCylinder	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsCylinder	& params);
+	::gpk::error_t	geometryBuildGrid		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsGrid		& params);
 
-		::gpk::apod<::gpk::tri3f32>		TransformedNormalsVertex			= {};
 
-		::gpk::ai32						Triangle3dIndices					= {};
-		::gpk::apod<::gpk::tri3f32>		Triangle3dToDraw					= {};
-		::gpk::apod<::gpk::tri3f32>		Triangle3dWorld						= {};
-
-		uint32_t						TrianglesDrawn						= 0;
-		uint32_t						PixelsDrawn							= 0;
-		uint32_t						PixelsSkipped						= 0;
-	};
 
 } // namespace
 

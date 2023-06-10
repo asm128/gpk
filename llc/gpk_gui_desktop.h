@@ -1,4 +1,5 @@
 #include "gpk_gui_control.h"
+#include "gpk_gui_viewport.h"
 
 #ifndef GPK_GUI_DESKTOP_H_9283492374
 #define GPK_GUI_DESKTOP_H_9283492374

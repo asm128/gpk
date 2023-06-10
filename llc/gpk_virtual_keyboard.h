@@ -36,7 +36,10 @@ namespace gpk
 		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
 	};
 
-	::gpk::error_t	virtualKeyboardHandleEvent		(::gpk::SVirtualKeyboard & vk, int32_t iControl);
+	
+	::gpk::error_t			virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, int32_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events);
+
+	//stainli	::gpk::error_t	virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, int32_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
 } // namespace 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_293874239874

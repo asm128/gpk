@@ -213,13 +213,6 @@ namespace gpk
 			*(u16*)&Data[Count]		= 0;
 			return Count;
 		}
-		// Returns the index of the argument if found or -1 if not.
-		inline	::gpk::error_t	find				(const T & valueToLookFor)								const	noexcept	{
-			for(uint32_t i = 0; i < Count; ++i)
-				if(0 == ::gpk::podcmp(&Data[i], &valueToLookFor))
-					return i;
-			return -1;
-		}
 	}; // array_pod
 
 	template <typename T>	using apod		= ::gpk::array_pod<T>;

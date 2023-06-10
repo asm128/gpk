@@ -93,6 +93,32 @@
 	return iEntity;
 }
 
+static ::gpk::error_t	createBuffers	
+	( uint32_t							vertexCount
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
+	) {
+	::gpk::clear(pIndicesVertex, pVertices, pNormals, pUV);
+	pVertices	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
+	pVertices	->Desc.Usage	= ::gpk::BUFFER_USAGE_Position;
+
+	pNormals	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
+	pNormals	->Desc.Usage	= ::gpk::BUFFER_USAGE_Normal;
+
+	pUV			->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_2;
+	pUV			->Desc.Usage	= ::gpk::BUFFER_USAGE_UV;
+
+	pIndicesVertex->Desc.Usage	= ::gpk::BUFFER_USAGE_Index;
+	pIndicesVertex->Desc.Format	
+		= (vertexCount > 0xFFFF) ? ::gpk::DATA_TYPE_UINT32
+		: (vertexCount > 0x00FF) ? ::gpk::DATA_TYPE_UINT16
+		: ::gpk::DATA_TYPE_UINT8
+		;
+	return 0;
+}
+
 ::gpk::error_t			gpk::SEngine::CreateBox				()	{
 	int32_t									iEntity								= this->Entities.Create();
 	Entities.Names[iEntity]				= ::gpk::vcs{"Box"};
@@ -104,19 +130,7 @@
 	::gpk::pobj<::gpk::SRenderBuffer>		pVertices;
 	::gpk::pobj<::gpk::SRenderBuffer>		pNormals;
 	::gpk::pobj<::gpk::SRenderBuffer>		pUV;
-	pIndicesVertex	->Desc.Format		= ::gpk::DATA_TYPE_UINT16;
-	pIndicesVertex	->Desc.Usage		= ::gpk::BUFFER_USAGE_Index;
-
-	pVertices		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pVertices		->Desc.Usage		= ::gpk::BUFFER_USAGE_Position;
-
-	pNormals		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pNormals		->Desc.Usage		= ::gpk::BUFFER_USAGE_Normal;
-
-	pUV				->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_2;
-	pUV				->Desc.Usage		= ::gpk::BUFFER_USAGE_UV;
-
-
+	gpk_necs(::createBuffers(0x7FFF, pIndicesVertex, pVertices, pNormals, pUV));
 	uint32_t								iVertices				= (uint32_t)Scene->Graphics->Buffers.push_back(pVertices);
 	uint32_t								iNormals				= (uint32_t)Scene->Graphics->Buffers.push_back(pNormals);
 	uint32_t								iUV						= (uint32_t)Scene->Graphics->Buffers.push_back(pUV);
@@ -194,126 +208,6 @@
 	return iEntity;
 }
 
-::gpk::error_t			gpk::SEngine::CreateSphere			(uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f & center)	{ 
-	::gpk::STrianglesIndexed		geometry;
-	::gpk::geometryBuildSphere(geometry, stacks, slices, radius, center);
-
-	int32_t									iEntity								= Entities.Create();
-	Entities.Names[iEntity]				= ::gpk::vcs{"Sphere"};
-	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
-	entity.RenderNode					= Scene->RenderNodes.Create();;
-	Integrator.BoundingVolumes[entity.RigidBody = this->Integrator.Create()].HalfSizes = {0.5f, 0.5f, 0.5f};
-
-	::gpk::pobj<::gpk::SRenderBuffer>		pIndicesVertex;
-	::gpk::pobj<::gpk::SRenderBuffer>		pVertices;
-	::gpk::pobj<::gpk::SRenderBuffer>		pNormals;
-	::gpk::pobj<::gpk::SRenderBuffer>		pUV;
-
-	pIndicesVertex	->Desc.Format		= ::gpk::DATA_TYPE_UINT16;
-	pIndicesVertex	->Desc.Usage		= ::gpk::BUFFER_USAGE_Index;
-
-	pVertices		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pVertices		->Desc.Usage		= ::gpk::BUFFER_USAGE_Position;
-
-	pNormals		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pNormals		->Desc.Usage		= ::gpk::BUFFER_USAGE_Normal;
-
-	pUV				->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_2;
-	pUV				->Desc.Usage		= ::gpk::BUFFER_USAGE_UV;
-
-	pIndicesVertex	->Data.resize(geometry.PositionIndices	.byte_count() / 2);
-	::gpk::view<uint16_t>					viewIndices							= {(uint16_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-	for(uint32_t index = 0; index < geometry.PositionIndices.size(); ++index) {
-		viewIndices[index] = (uint16_t)geometry.PositionIndices[index];
-	}
-	//memcpy(&pIndicesVertex	->Data[0], geometry.PositionIndices	.begin(), pIndicesVertex	->Data.size());
-
-	pVertices	->Data.resize(geometry.Positions		.byte_count());
-	pNormals	->Data.resize(geometry.Normals			.byte_count());
-	pUV			->Data.resize(geometry.TextureCoords	.byte_count());
-	memcpy(&pVertices	->Data[0], geometry.Positions		.begin(), pVertices	->Data.size());
-	memcpy(&pNormals	->Data[0], geometry.Normals			.begin(), pNormals	->Data.size());
-	memcpy(&pUV			->Data[0], geometry.TextureCoords	.begin(), pUV		->Data.size());
-
-	uint32_t								iVertices				= (uint32_t)Scene->Graphics->Buffers.push_back(pVertices);
-	uint32_t								iNormals				= (uint32_t)Scene->Graphics->Buffers.push_back(pNormals);
-	uint32_t								iUV						= (uint32_t)Scene->Graphics->Buffers.push_back(pUV);
-	uint32_t								iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
-
-	uint32_t								iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::pobj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
-	Scene->Graphics->Meshes.Names[iMesh]= ::gpk::vcs{"Sphere"};
-	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
-
-	mesh->Desc.Mode						= ::gpk::MESH_MODE_List;
-	mesh->Desc.Type						= ::gpk::GEOMETRY_TYPE_Triangle;
-	mesh->Desc.NormalMode				= ::gpk::NORMAL_MODE_Point;
-
-	uint32_t								iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
-	::gpk::pobj<::gpk::SSkin>			& skin					= Scene->Graphics->Skins.Elements[iSkin];
-	skin->Material.Color.Ambient		= ::gpk::bgra(::gpk::ASCII_PALETTE[3]) * .1f;
-	skin->Material.Color.Diffuse		= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
-	skin->Material.Color.Specular		= ::gpk::WHITE;
-	skin->Material.SpecularPower		= 0.5f;
-
-	uint32_t								iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
-	skin->Textures.push_back(iSurface);
-
-	skin->Material.Color.Ambient		*= .1f;
-
-	::gpk::pobj<::gpk::SSurface>			& surface				= Scene->Graphics->Surfaces[iSurface];
-	surface->Desc.ColorType				= ::gpk::COLOR_TYPE_BGRA;
-	surface->Desc.MethodCompression		= 0;
-	surface->Desc.MethodFilter			= 0;
-	surface->Desc.MethodInterlace		= 0;
-	surface->Desc.Dimensions			= {32, 32};
-	surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::bgra));
-	memset(surface->Data.begin(), 0xFF, surface->Data.size());
-	::gpk::view2d<::gpk::bgra>				view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
-	::gpk::rgba								color					= {::gpk::ASCII_PALETTE[rand() % 16]};
-	for(uint32_t y = surface->Desc.Dimensions.y / 3; y < surface->Desc.Dimensions.y / 3U * 2U; ++y)
-	for(uint32_t x = 0; x < surface->Desc.Dimensions.x; ++x)
-		view[y][x]	= color;
-
-	mesh->GeometrySlices.resize(1);	// one per face
-	::gpk::SGeometrySlice					& slice					= mesh->GeometrySlices[0];
-	slice.Slice							= {0, geometry.PositionIndices.size()};
-
-	::gpk::SRenderNode						& renderNode						= Scene->RenderNodes.RenderNodes[entity.RenderNode];
-	renderNode.Skin						= iSkin;
-	renderNode.Mesh						= iMesh;
-	renderNode.Slice					= 0;
-	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
-	return iEntity;
-}
-
-static ::gpk::error_t	createBuffers	
-	( uint32_t							vertexCount
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
-	) {
-	::gpk::clear(pIndicesVertex, pVertices, pNormals, pUV);
-	pVertices	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
-	pVertices	->Desc.Usage	= ::gpk::BUFFER_USAGE_Position;
-
-	pNormals	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
-	pNormals	->Desc.Usage	= ::gpk::BUFFER_USAGE_Normal;
-
-	pUV			->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_2;
-	pUV			->Desc.Usage	= ::gpk::BUFFER_USAGE_UV;
-
-	pIndicesVertex->Desc.Usage	= ::gpk::BUFFER_USAGE_Index;
-	pIndicesVertex->Desc.Format	
-		= (vertexCount > 0xFFFF) ? ::gpk::DATA_TYPE_UINT32
-		: (vertexCount > 0x00FF) ? ::gpk::DATA_TYPE_UINT16
-		: ::gpk::DATA_TYPE_UINT8
-		;
-	return 0;
-}
-
-
 static ::gpk::error_t	createBuffers	
 	( const ::gpk::STrianglesIndexed	& geometry
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
@@ -350,15 +244,12 @@ static ::gpk::error_t	createBuffers
 static ::gpk::error_t	createBuffers
 	( ::gpk::SRenderBufferManager		& bufferManager 
 	, const ::gpk::STrianglesIndexed	& geometry
+	, uint32_t							& iIndicesVertex
 	, uint32_t							& iVertices
 	, uint32_t							& iNormals
 	, uint32_t							& iUV
-	, uint32_t							& iIndicesVertex
 	) {
-	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex	;
-	::gpk::pobj<::gpk::SRenderBuffer>	pVertices		;
-	::gpk::pobj<::gpk::SRenderBuffer>	pNormals		;
-	::gpk::pobj<::gpk::SRenderBuffer>	pUV				;
+	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex, pVertices, pNormals, pUV;
 	gpk_necs(::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
 	gpk_necs(iIndicesVertex			= (uint32_t)bufferManager.push_back(pIndicesVertex));
 	gpk_necs(iVertices				= (uint32_t)bufferManager.push_back(pVertices));
@@ -367,79 +258,123 @@ static ::gpk::error_t	createBuffers
 	return 0;
 }
 
-::gpk::error_t			gpk::SEngine::CreateCylinder(uint16_t slices, bool reverse, float diameterRatio)	{ 
-	::gpk::STrianglesIndexed	geometry;
-	if(reverse)
-		::gpk::geometryBuildCylinder(geometry, 1, slices, .5f, .5f, {}, {1, 1, -1}, true, diameterRatio);
-	else
-		::gpk::geometryBuildCylinder(geometry, 1, slices, .5f, .5f, {}, {1, 1, 1}, false, diameterRatio);
-
-	int32_t						iEntity					= this->Entities.Create();
-	Entities.Names[iEntity]	= ::gpk::vcs{"Cylinder"};
-	::gpk::SVirtualEntity		& entity				= Entities[iEntity];
-	entity.RenderNode		= Scene->RenderNodes.Create();
-	entity.RigidBody		= this->Integrator.Create();
-
+static ::gpk::error_t	createRenderNode
+	( ::gpk::SEngineScene				& scene
+	, const ::gpk::STrianglesIndexed	& geometry
+	, const ::gpk::vcc					name 
+	) {
+	uint32_t					iIndicesVertex			= 0;
 	uint32_t					iVertices				= 0;
 	uint32_t					iNormals				= 0;
 	uint32_t					iUV						= 0;
-	uint32_t					iIndicesVertex			= 0;
-	::createBuffers(Scene->Graphics->Buffers, geometry, iIndicesVertex, iVertices, iNormals, iUV);
+	::createBuffers(scene.Graphics->Buffers, geometry, iIndicesVertex, iVertices, iNormals, iUV);
 
-	uint32_t					iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Scene->Graphics->Meshes[iMesh];
-	Scene->Graphics->Meshes.Names[iMesh]= ::gpk::vcs{"Sphere"};
+	uint32_t					iMesh					= (uint32_t)scene.Graphics->Meshes.Create();
+	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= scene.Graphics->Meshes[iMesh];
+	scene.Graphics->Meshes.Names[iMesh] = name;
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
-	mesh->Desc.Mode						= ::gpk::MESH_MODE_List;
-	mesh->Desc.Type						= ::gpk::GEOMETRY_TYPE_Triangle;
-	mesh->Desc.NormalMode				= ::gpk::NORMAL_MODE_Point;
+	mesh->Desc.Mode			= ::gpk::MESH_MODE_List;
+	mesh->Desc.Type			= ::gpk::GEOMETRY_TYPE_Triangle;
+	mesh->Desc.NormalMode	= ::gpk::NORMAL_MODE_Point;
 
-	uint32_t								iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
-	::gpk::pobj<::gpk::SSkin>				& skin					= Scene->Graphics->Skins.Elements[iSkin];
-	skin->Material.Color.Ambient		= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
-	skin->Material.Color.Diffuse		= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
-	skin->Material.Color.Specular		= ::gpk::WHITE;
-	skin->Material.SpecularPower		= 0.5f;
+	uint32_t					iSkin					= (uint32_t)scene.Graphics->Skins.Create();
+	::gpk::pobj<::gpk::SSkin>	& skin					= scene.Graphics->Skins.Elements[iSkin];
+	skin->Material.Color.Ambient	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]) * .1f;
+	skin->Material.Color.Diffuse	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
+	skin->Material.Color.Specular	= ::gpk::WHITE;
+	skin->Material.SpecularPower	= 0.5f;
 
-	uint32_t								iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
+	uint32_t					iSurface				= (uint32_t)scene.Graphics->Surfaces.Create();
 	skin->Textures.push_back(iSurface);
 
-	skin->Material.Color.Ambient		*= .1f;
+	skin->Material.Color.Ambient	*= .1f;
 
-	::gpk::pobj<::gpk::SSurface>			& surface				= Scene->Graphics->Surfaces[iSurface];
-	surface->Desc.ColorType				= ::gpk::COLOR_TYPE_BGRA;
-	surface->Desc.MethodCompression		= 0;
-	surface->Desc.MethodFilter			= 0;
-	surface->Desc.MethodInterlace		= 0;
-	surface->Desc.Dimensions			= {32, 16};
+	::gpk::pobj<::gpk::SSurface>	& surface			= scene.Graphics->Surfaces[iSurface];
+	surface->Desc.ColorType			= ::gpk::COLOR_TYPE_BGRA;
+	surface->Desc.MethodCompression	= 0;
+	surface->Desc.MethodFilter		= 0;
+	surface->Desc.MethodInterlace	= 0;
+	surface->Desc.Dimensions		= {32, 32};
 	surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::bgra));
 	memset(surface->Data.begin(), 0xFF, surface->Data.size());
-	::gpk::view2d<::gpk::bgra>				view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
-	::gpk::rgba								color					= {::gpk::ASCII_PALETTE[rand() % 16]};
+	::gpk::view2d<::gpk::bgra>	view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
+	::gpk::rgba					color					= {::gpk::ASCII_PALETTE[rand() % 16]};
 	for(uint32_t y = surface->Desc.Dimensions.y / 3; y < surface->Desc.Dimensions.y / 3U * 2U; ++y)
 	for(uint32_t x = 0; x < surface->Desc.Dimensions.x; ++x)
-		view[y][x]							= color;
+		view[y][x]	= color;
 
-	mesh->GeometrySlices.resize(1);	// one per face
-	::gpk::SGeometrySlice					& slice					= mesh->GeometrySlices[0];
-	slice.Slice							= {0, geometry.PositionIndices.size()};
 
-	::gpk::SRenderNode						& renderNode						= Scene->RenderNodes.RenderNodes[entity.RenderNode];
-	renderNode.Skin						= iSkin;
-	renderNode.Mesh						= iMesh;
-	renderNode.Slice					= 0;
-	Scene->Graphics->Shaders[renderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
+	mesh->GeometrySlices.resize(1);	// 
 
-	return iEntity;
+	::gpk::SGeometrySlice		& slice					= mesh->GeometrySlices[0];
+	slice.Slice				= {0, geometry.PositionIndices.size()};
+
+	uint32_t					iRenderNode				= scene.RenderNodes.Create();
+	::gpk::SRenderNode			& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
+	renderNode.Skin			= iSkin;
+	renderNode.Mesh			= iMesh;
+	renderNode.Slice		= 0;
+	scene.Graphics->Shaders[renderNode.Shader = scene.Graphics->Shaders.push_back({})].create(::gpk::psSolid);
+
+	return iRenderNode;
 }
 
-::gpk::error_t			gpk::SEngine::CreateGrid			(::gpk::n2u16 gridSize, bool topRight)	{ 	
-	int32_t						iEntity								= this->Entities.Create();
-	::gpk::STrianglesIndexed	geometry;
-	::gpk::geometryBuildGrid(geometry, gridSize, gridSize.f32() * .5f, {1.0f / gridSize.x, 1.0f / gridSize.y}, topRight);
+typedef std::function<::gpk::error_t(::gpk::STrianglesIndexed&)> TGeometryFunc;
+
+template<typename _tParams>
+static ::gpk::error_t	createEntityFromGeometry
+	( ::gpk::SEngine							& engine
+	, const ::gpk::vcc							name		
+	, const ::gpk::n3f							halfSizes
+	, const _tParams							& params
+	, ::gpk::SLinearPODMap<_tParams, uint32_t>	& recycleRenderNodeMap
+	, const TGeometryFunc						& funcGeometry
+	) {
+	int32_t						iEntity					= engine.Entities.Create();
+	engine.Entities.Names[iEntity]	= name;
+
+	::gpk::SVirtualEntity		& entity				= engine.Entities[iEntity];
+	engine.Integrator.BoundingVolumes[entity.RigidBody = engine.Integrator.Create()].HalfSizes = halfSizes;
+
+	int32_t						reuse					= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
+	if(recycleRenderNodeMap.size() > (uint32_t)reuse)
+		entity.RenderNode		= engine.Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
+	else {
+		::gpk::STrianglesIndexed	geometry;
+		gpk_necs(funcGeometry(geometry));
+		entity.RenderNode		= ::createRenderNode(*engine.Scene, geometry, name);
+		recycleRenderNodeMap.push_back(params, entity.RenderNode);
+	}
+
 	return iEntity;
- }
+};
+
+::gpk::error_t			gpk::SEngine::CreateSphere(const SParamsSphere & params)	{ 
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Sphere"}, ::gpk::n3f{params.Radius, params.Radius, params.Radius}, params, ParamsSphere
+		, [params](::gpk::STrianglesIndexed & geometry) { 
+			return ::gpk::geometryBuildSphere(geometry, params); 
+		});
+}
+
+::gpk::error_t			gpk::SEngine::CreateGrid(const SParamsGrid & params)	{ 
+	stacxpr	float				radius					= .5f;
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f{radius, radius, radius}, params, ParamsGrid
+		, [params](::gpk::STrianglesIndexed & geometry) { 
+			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
+			return 0;
+		});
+}
+
+::gpk::error_t			gpk::SEngine::CreateCylinder(const SParamsCylinder & params)	{ 
+	stacxpr	float				radius					= .5f;
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f{radius, radius, radius}, params, ParamsCylinder
+		, [params](::gpk::STrianglesIndexed & geometry) { 
+			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
+			return 0;
+		});
+}
+
 
 ::gpk::error_t			gpk::SEngine::CreateCircle			()	{ 	
 	int32_t						iEntity								= this->Entities.Create();
@@ -454,3 +389,4 @@ static ::gpk::error_t	createBuffers
 	return iEntity;
  }
 
+ 

@@ -131,6 +131,29 @@ namespace gpk
 		::gpk::SRenderNodeManager			RenderNodes				= {};
 		::gpk::SEngineRenderCache			RenderCache				= {};
 
+		::gpk::error_t						Clone					(uint32_t iRenderNode, bool cloneSkin, bool cloneSurfaces, bool cloneShaders) {
+			uint32_t							iNewNode					= RenderNodes.Clone(iRenderNode);
+			uint32_t							idShaderSource				= RenderNodes[iRenderNode].Shader;
+			if(cloneShaders && idShaderSource < Graphics->Shaders.size()) {
+				gpk_necs(RenderNodes[iNewNode].Shader = Graphics->Shaders.Clone(idShaderSource));
+			}
+
+			uint32_t							idSkinSource		= RenderNodes[iNewNode].Skin;
+			if(cloneSkin && idSkinSource < Graphics->Skins.size()) {
+				uint32_t							idSkin;
+				gpk_necs(idSkin = Graphics->Skins.Clone(idSkinSource));
+				RenderNodes[iNewNode].Skin	= idSkin;
+				if(cloneSurfaces) {
+					if(Graphics->Skins[idSkin]) {
+						::gpk::SSkin						& newSkin			= *Graphics->Skins[idSkin];
+						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture)
+							newSkin.Textures[iTexture]		= Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
+					}
+				}
+			}
+			return iNewNode;
+		}
+
 		::gpk::error_t						Save					(::gpk::au8 & output)		const	{
 			gpk_necs(Graphics		->Save(output));
 			gpk_necs(RenderNodes	 .Save(output));

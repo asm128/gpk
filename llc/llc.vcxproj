@@ -58,7 +58,10 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_geometry_draw.h" />
     <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_gui_inputbox.h" />
+    <ClInclude Include="gpk_gui_viewport.h" />
     <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
@@ -180,6 +183,10 @@
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_deflate.cpp" />
     <ClCompile Include="gpk_dialog.cpp" />
+    <ClCompile Include="gpk_geometry.cpp" />
+    <ClCompile Include="gpk_geometry_draw.cpp" />
+    <ClCompile Include="gpk_gui_inputbox.cpp" />
+    <ClCompile Include="gpk_gui_viewport.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
@@ -191,7 +198,7 @@
     <ClCompile Include="gpk_raster_lh.cpp" />
     <ClCompile Include="gpk_encoding.cpp" />
     <ClCompile Include="gpk_expression.cpp" />
-    <ClCompile Include="gpk_geometry.cpp" />
+    <ClCompile Include="gpk_scene.cpp" />
     <ClCompile Include="gpk_geometry_lh.cpp" />
     <ClCompile Include="gpk_gui.cpp" />
     <ClCompile Include="gpk_gui_draw.cpp" />

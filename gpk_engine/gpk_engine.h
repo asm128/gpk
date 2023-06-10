@@ -2,6 +2,8 @@
 #include "gpk_engine_scene.h"
 #include "gpk_rigidbody.h"
 #include "gpk_view_grid.h"
+#include "gpk_engine_map_pod.h"
+#include "gpk_geometry.h"
 
 #ifndef GPK_ENGINE_H
 #define GPK_ENGINE_H
@@ -16,27 +18,15 @@ namespace gpk
 		, ::gpk::SRenderNodeManager				& renderNodes
 		);
 
-#pragma pack(push, 1)
-	struct SParamsBox		{ };
-	struct SParamsSphere	{ uint16_t Stacks, Slices; float Radius; const ::gpk::n3f32 & Center; };
-	struct SParamsCylinder	{ uint16_t Slices; bool Reverse; float DiameterRatio; };
-	struct SParamsGrid		{ ::gpk::n2u16 CellCount; bool ReverseTriangles; };
-#pragma pack(pop)
-
 	struct SEngine {
 		::gpk::pobj<::gpk::SEngineScene>Scene				;
 		::gpk::SVirtualEntityManager	Entities			;
 		::gpk::SRigidBodyIntegrator		Integrator			;
 
-		::gpk::apod<SParamsBox		>	GeometryParamsBox		;
-		::gpk::apod<SParamsSphere	>	GeometryParamsSphere	;
-		::gpk::apod<SParamsCylinder	>	GeometryParamsCylinder	;
-		::gpk::apod<SParamsGrid		>	GeometryParamsGrid		;
-
-		::gpk::au32						GeometryRenderNodeBox		;
-		::gpk::au32						GeometryRenderNodeSphere	;
-		::gpk::au32						GeometryRenderNodeCylinder	;
-		::gpk::au32						GeometryRenderNodeGrid		;
+		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox			;
+		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere		;
+		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder		;
+		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid			;
 
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }
@@ -60,28 +50,9 @@ namespace gpk
 			const ::gpk::SVirtualEntity			entitySource		= Entities[iEntitySource];
 			int32_t								iEntityNew			= Entities.Create();
 			::gpk::SVirtualEntity				& entityNew			= Entities[iEntityNew];
-			entityNew.RenderNode			= Scene->RenderNodes.Clone(entitySource.RenderNode);
+			entityNew.RenderNode			= Scene->Clone(entitySource.RenderNode, cloneSkin, cloneSurfaces, cloneShaders);
 			entityNew.RigidBody				= ((uint32_t)entitySource.RigidBody < Integrator.Flags.size()) ? Integrator.Clone(entitySource.RigidBody) : (uint32_t)-1;
 			entityNew.Parent				= entitySource.Parent;
-
-			uint32_t							idShaderSource		= Scene->RenderNodes[entityNew.RenderNode].Shader;
-			if(cloneShaders && idShaderSource < Scene->Graphics->Shaders.size()) {
-				gpk_necs(Scene->RenderNodes[entityNew.RenderNode].Shader = Scene->Graphics->Shaders.Clone(idShaderSource));
-			}
-
-			uint32_t							idSkinSource		= Scene->RenderNodes[entityNew.RenderNode].Skin;
-			if(cloneSkin && idSkinSource < Scene->Graphics->Skins.size()) {
-				uint32_t							idSkin				;
-				gpk_necs(idSkin = Scene->Graphics->Skins.Clone(idSkinSource));
-				Scene->RenderNodes[entityNew.RenderNode].Skin	= idSkin;
-				if(cloneSurfaces) {
-					if(Scene->Graphics->Skins[idSkin]) {
-						::gpk::SSkin						& newSkin			= *Scene->Graphics->Skins[idSkin];
-						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture)
-							newSkin.Textures[iTexture]		= Scene->Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
-					}
-				}
-			}
 
 			const ::gpk::pobj<::gpk::au32>		childrenSource		= Entities.Children[iEntitySource];
 			if(childrenSource && childrenSource->size()) {
@@ -133,13 +104,36 @@ namespace gpk
 
 		::gpk::error_t					CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t					CreateCamera		();
-		::gpk::error_t					CreateSphere		(uint32_t stacks = 24, uint32_t slices = 24, float radius = .5f, const ::gpk::n3f32 & center = {});
-		::gpk::error_t					CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio);
+		::gpk::error_t					CreateSphere		(const SParamsSphere & params);
+		::gpk::error_t					CreateCylinder		(const SParamsCylinder & params);
+		::gpk::error_t					CreateGrid			(const SParamsGrid & params);
 		::gpk::error_t					CreateBox			();
 		::gpk::error_t					CreateCircle		();
 		::gpk::error_t					CreateRing			();
-		::gpk::error_t					CreateGrid			(::gpk::n2u16 gridSize, bool topRight = false);
 		::gpk::error_t					CreateTriangle		();
+		inline	::gpk::error_t			CreateSphere		(uint16_t stacks = 24, uint16_t slices = 24, float radius = .5f, const ::gpk::n3f32 & center = {}) { 
+			SParamsSphere			params			= {};
+			params.Stacks		= stacks;
+			params.Slices		= slices;
+			params.Radius		= radius;
+			params.Center		= center;
+			return CreateSphere(params); 
+		}
+		inline	::gpk::error_t			CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio) { 
+			SParamsCylinder			params;
+			params.DiameterRatio	= diameterRatio;
+			params.Slices		= slices;
+			params.Reverse		= reverse;
+			return CreateCylinder(params); 
+		}
+		inline	::gpk::error_t			CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
+			SParamsGrid				params;
+			params.Center		= {.5f, .5f};
+			params.CellCount	= cellCount;
+			params.ReverseTriangles	= topRight;
+			return CreateGrid(params); 
+		}
+
 		::gpk::error_t					Update				(double secondsLastFrame)			{
 			Integrator.Integrate(secondsLastFrame);
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {

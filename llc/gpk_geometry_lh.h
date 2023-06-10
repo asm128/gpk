@@ -30,12 +30,6 @@ namespace gpk
 		::gpk::apod<::gpk::tri2f32>	TextureCoords;
 	};
 
-	struct STrianglesIndexed {
-		::gpk::apod<::gpk::n3f32>	Positions;
-		::gpk::apod<::gpk::n3f32>	Normals;
-		::gpk::apod<::gpk::n2f32>	TextureCoords;
-		::gpk::au32					PositionIndices;
-	};
 
 	GDEFINE_ENUM_TYPE (MODEL_NODE_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(MODEL_NODE_TYPE, FILE		, 0);
@@ -109,7 +103,6 @@ namespace gpk
 
 	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale);
 	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryQuads & geometry, ::gpk::n2u16 gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildGrid		(::gpk::STrianglesIndexed & geometry, ::gpk::n2u16 gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale, bool topright);
 
 	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
 	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
@@ -120,9 +113,6 @@ namespace gpk
 	::gpk::error_t	geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
 
 	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
-	::gpk::error_t	geometryBuildSphere		(::gpk::STrianglesIndexed & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
-	::gpk::error_t	geometryBuildCylinder	(::gpk::STrianglesIndexed & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale, bool negateNormals, float diameterRatio = 1.0f);
-
 	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale, const ::gpk::n3f32 & translation);
 #pragma pack(push, 1)
 	struct STile {
