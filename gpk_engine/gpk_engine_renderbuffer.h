@@ -59,7 +59,7 @@ namespace gpk
 		}
 	};
 
-	typedef		::gpk::SLinearMap<::gpk::SRenderBuffer>		SRenderBufferManager;
+	typedef	::gpk::SLinearNamedMap<::gpk::SRenderBuffer>	SRenderBufferManager;
 } // namespace
 
 #endif

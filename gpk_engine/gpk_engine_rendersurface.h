@@ -26,7 +26,7 @@ namespace gpk
 		::gpk::error_t				Load			(::gpk::vcu8 & input)			{ gpk_necs(::gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
 	};
 
-	typedef	::gpk::SLinearMap<::gpk::SSurface>	SSurfaceManager;
+	typedef	::gpk::SLinearNamedMap<::gpk::SSurface>	SSurfaceManager;
 } // namespace
 
 #endif

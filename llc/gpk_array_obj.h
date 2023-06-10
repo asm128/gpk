@@ -59,7 +59,7 @@ namespace gpk
 			if(newCount > Size) {
 				T							* newData			= 0;
 				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				ree_if(0 == newData, "newCount: %i, newSize: %i", newCount, newSize);
 				for(uint32_t iElement = 0; iElement < Count; ++iElement) {
 					new (&newData[iElement]) T(Data[iElement]);
 					Data[iElement].~T();

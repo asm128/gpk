@@ -123,7 +123,7 @@ namespace gpk
 		typedef	FBool<const T&>					TFuncFindConst;
 		::gpk::error_t			find			(const TFuncFind      & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
 		::gpk::error_t			find			(const TFuncFindConst & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
-		::gpk::error_t			find			(const T & value, uint32_t offset = 0)						const	{ for(; offset < Count; ++offset) if(Data[offset] == value) return (::gpk::error_t)offset; return -1; }
+		::gpk::error_t			find			(const T & value, uint32_t offset = 0)								{ for(; offset < Count; ++offset) if(Data[offset] == value) return (::gpk::error_t)offset; return -1; }
 	
 	}; // view<>
 

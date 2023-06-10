@@ -31,8 +31,8 @@ static	::gpk::error_t								createChildProcess
 	,	::gpk::vcc						commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	bool													bSuccess				= false;
-	static constexpr const bool								isUnicodeEnv			= false;
-	static constexpr const uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	stacxpr	bool								isUnicodeEnv			= false;
+	stacxpr	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	gpk_safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA

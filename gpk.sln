@@ -131,6 +131,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_gpk_container", "test_
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gpk_gui_editor", "gpk_gui_editor\gpk_gui_editor.vcxproj", "{8FAFEBE5-E653-46AE-836E-13232B04E11E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{830AB681-B788-47D4-9767-BA4E0792F682} = {830AB681-B788-47D4-9767-BA4E0792F682}
+		{8FD826F8-3739-44E6-8CC8-997122E53B8D} = {8FD826F8-3739-44E6-8CC8-997122E53B8D}
+		{976FE3EA-9FD1-4066-9003-0E8513F9D900} = {976FE3EA-9FD1-4066-9003-0E8513F9D900}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

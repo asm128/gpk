@@ -1,9 +1,10 @@
 #include "gpk_ptr.h"
 #include "gpk_label.h"
 #include "gpk_apod_serialize.h"
+#include "gpk_enum.h"
 
-#ifndef GPK_ENGINE_CONTAINER_H
-#define GPK_ENGINE_CONTAINER_H
+#ifndef GPK_ENGINE_MAP_POD_H
+#define GPK_ENGINE_MAP_POD_H
 
 namespace gpk
 {
@@ -31,7 +32,9 @@ namespace gpk
 			if(srcElement) {
 				*newElement.create() = *srcElement;
 			}
-			return Names.push_back(::gpk::vcc{Names[index]}); 
+			char					newName[256]	= {};
+			sprintf_s(newName, "%s_%i", Names.size());
+			return Names.push_back(::gpk::label{newName}); 
 		}
 
 		::gpk::error_t		Save			(::gpk::au8 & output) const { 
@@ -56,6 +59,57 @@ namespace gpk
 		}
 	};
 
+	template <typename _tKey, typename _tElement> 
+	struct SLinearKeyPODMap {
+		typedef _tElement		T;
+		typedef _tKey			K;
+
+		::gpk::apod<T>		Elements		= {};
+		::gpk::apod<K>		Keys			= {};
+
+		const T&			operator[]		(const K & key)	const	{ return Elements[Keys.find(key)]; }
+		T&					operator[]		(const K & key)			{ return Elements[Keys.find(key)]; }
+
+		uint32_t			size			()				const	{ return Keys.size(); }
+
+		::gpk::error_t		push_back		(const K & key, const T & instance)	{ 
+			ree_if(Keys.size() > (uint32_t)Keys.find(key), "Key already found: %i (%s).", key, ::gpk::get_value_namep(key));
+			Keys.push_back(key); 
+			return Elements.push_back(instance); 
+		}
+
+		::gpk::error_t		Create			(const K & key)							{
+			ree_if(Keys.size() > (uint32_t)Keys.find(key), "Key already found: %i (%s).", key, ::gpk::get_value_namep(key));
+			Keys.push_back({});
+			return Elements.push_back({});
+		}
+
+		::gpk::error_t		Delete			(const K & key)					{
+			uint32_t				index			= Keys.find(key);
+			ree_if(Keys.size() <= index, "Key not found: %i (%s).", key, ::gpk::get_value_namep(key));
+			Keys.remove_unordered(index);
+			return Elements.remove_unordered(index); 
+		}
+
+		::gpk::error_t		Clone			(const K & key, uint32_t index)	{ 
+			T						& newElement	= Elements[Elements.push_back({})]; 
+			const T					& srcElement	= Elements[index];
+			newElement			= srcElement;
+			return Keys.push_back(key); 
+		}
+
+		::gpk::error_t		Save			(::gpk::au8 & output) const { 
+			gpk_necs(::gpk::saveView(output, Keys));
+			gpk_necs(::gpk::saveView(output, Elements));
+			return 0;
+		}
+
+		::gpk::error_t		Load			(::gpk::vcu8 & input) {
+			gpk_necs(::gpk::loadView(input, Keys));
+			gpk_necs(::gpk::loadView(input, Elements));
+			return 0; 
+		}
+	};
 } // namespace
 
-#endif // GPK_ENGINE_CONTAINER_H
+#endif // GPK_ENGINE_MAP_POD_H

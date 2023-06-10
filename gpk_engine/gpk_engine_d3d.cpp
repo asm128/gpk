@@ -43,9 +43,21 @@
 			vertexBuffers.push_back(d3dBuffer);
 		}
 		{
-			D3D11_SUBRESOURCE_DATA							indexBufferData			= {engineBufferIndices->Data.begin()};
-			D3D11_BUFFER_DESC								indexBufferDesc			= {engineBufferIndices->Data.size()};
-			indexBufferDesc.BindFlags					= D3D11_BIND_INDEX_BUFFER;
+			D3D11_SUBRESOURCE_DATA			indexBufferData			= {engineBufferIndices->Data.begin()};
+			D3D11_BUFFER_DESC				indexBufferDesc			= {engineBufferIndices->Data.size()};
+			indexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;
+			::gpk::au16						indices;
+			const SDataTypeID				indexFormat				= engineBufferIndices->Desc.Format;
+			const uint32_t					indexSize				= engineBufferIndices->Desc.Format.TotalBytes();
+			//if(engineBufferIndices->Desc.Format.TotalBytes() == 4) 
+			//else 
+			if(indexSize == 1) {
+				indices.resize(engineBufferIndices->Data.size());
+				indices.enumerate([engineBufferIndices](uint32_t & i, uint16_t & value){ value = engineBufferIndices->Data[i]; }, 0);
+				indexBufferData.pSysMem	= indices.begin();
+				indexBufferDesc.ByteWidth = indices.byte_count();
+			}
+
 			::gpk::ptr_com<ID3D11Buffer>					d3dBuffer;
 			gpk_hrcall(pDevice->CreateBuffer(&indexBufferDesc, &indexBufferData, &d3dBuffer));
 			indexBuffers.push_back(d3dBuffer);

@@ -55,13 +55,16 @@ namespace gpk
 	struct SDialog {
 		::gpk::pobj<::gpk::SDialogColors>	Colors					= {};
 		
-		int32_t				FocusedCurrent							= -1;
-		int32_t				FocusedPrevious							= -1;
-		int32_t				SelectedCurrent							= -1;
-		int32_t				SelectedPrevious						= -1;
-		::gpk::n2u16		LastSize								= {};
-		int32_t				Root									= -1;
-		::gpk::SControlMode	DefaultControlModes						= {};
+		int32_t					FocusedCurrent		= -1;
+		int32_t					FocusedPrevious		= -1;
+		int32_t					SelectedCurrent		= -1;
+		int32_t					SelectedPrevious	= -1;
+		::gpk::n2u16			LastSize			= {};
+		int32_t					Root				= -1;
+		::gpk::ai32				Buttons				= {};
+
+
+		::gpk::SControlMode		DefaultControlModes	= {};
 
 		::gpk::pobj<::gpk::SInput>					Input			= {};
 		::gpk::pobj<::gpk::SGUI>					GUI				= {};

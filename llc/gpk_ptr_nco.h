@@ -14,7 +14,7 @@ namespace gpk
 		typedef	pnco<T>			TNCOPtr;
 		typedef	::gpk::gref<T>	TRef;
 
-		inline					~pnco		()									noexcept	{ ::gpk::ref_release(&Reference); }
+		inline					~pnco		()									noexcept	{ clear(); }
 		inlcxpr					pnco		()									noexcept	= default;
 		inline					pnco		(const TNCOPtr & other)				noexcept	{ Reference = ::gpk::ref_acquire(other.Reference);	}
 		inlcxpr					pnco		(TNCOPtr && other)					noexcept	{ Reference = other.Reference; other.Reference = 0;	}
@@ -37,6 +37,7 @@ namespace gpk
 
 		inlcxpr	const TRef*		get_ref		()							const	noexcept	{ return Reference; }
 		inlcxpr	const TRef*		set_ref		(TRef * ref)						noexcept	{ TRef * oldInstance = Reference; Reference = ref; ::gpk::ref_release(&oldInstance); return Reference; }
+		inline	::gpk::error_t	clear		()									noexcept	{ return ::gpk::ref_release(&Reference); }
 
 		template<typename _tNCOOther>
 		inline	_tNCO*			as			(_tNCOOther* * other)				noexcept	{ return *other = (Reference ? dynamic_cast<_tNCOOther*>(Reference->Instance) : 0); }

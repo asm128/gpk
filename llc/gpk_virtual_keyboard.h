@@ -29,13 +29,14 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SVirtualKeyboard {
-		int32_t										IdRoot;
-		::gpk::apod<uint16_t>						Keys;
+		int32_t			IdRoot;
+		::gpk::ai32		IdKeys;
+		::gpk::au16		Keys;
 
 		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
 	};
 
-	::gpk::error_t				virtualKeyboardHandleEvent		(::gpk::SVirtualKeyboard & vk, int32_t iControl);
+	::gpk::error_t	virtualKeyboardHandleEvent		(::gpk::SVirtualKeyboard & vk, int32_t iControl);
 } // namespace 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_293874239874

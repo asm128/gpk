@@ -36,7 +36,7 @@ namespace gpk
 		}
 	};
 
-	typedef	::gpk::SLinearMap<::gpk::SSoundBuffer>	SSoundBufferManager;
+	typedef	::gpk::SLinearNamedMap<::gpk::SSoundBuffer>	SSoundBufferManager;
 
 } // namespace
 

@@ -103,7 +103,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 	return 0;
 }
 
-::gpk::error_t			gpk::geometryBuildGrid	(SGeometryQuads & geometry, ::gpk::n2<uint32_t> gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale)	{
+::gpk::error_t			gpk::geometryBuildGrid	(SGeometryQuads & geometry, ::gpk::n2u16 gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale)	{
 	::gpk::n2f32				texCoordUnits			= {1.0f / gridSize.x, 1.0f / gridSize.y};
 	for(uint32_t z = 0; z < gridSize.y; ++z)
 	for(uint32_t x = 0; x < gridSize.x; ++x)  {
@@ -142,6 +142,48 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 		::gpk::n3f32				normal					= (triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize());
 		normal.Normalize();
 		geometry.Normals		.push_back(normal);
+	}
+	return 0;
+}
+
+enum SQUARE_MODE 
+	{ SQUARE_MODE_TOP_LEFT
+	, SQUARE_MODE_TOP_RIGHT
+	};
+
+::gpk::error_t			gpk::geometryBuildGrid	(::gpk::STrianglesIndexed & geometry, ::gpk::n2u16 cellCount, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale, bool topright)	{
+	::gpk::n2f32				texCoordUnits			= {1.0f / cellCount.x, 1.0f / cellCount.y};
+	for(uint32_t z = 0, zStop = cellCount.y + 1; z < zStop; ++z)
+	for(uint32_t x = 0, xStop = cellCount.x + 1; x < xStop; ++x) {
+		::gpk::n3f32				position				= {(float)x, 0, (float)z};
+		position.Scale(scale);
+		position				-= {gridCenter.x, 0, gridCenter.y};
+
+		geometry.Positions		.push_back(position);
+		geometry.TextureCoords	.push_back({x * texCoordUnits.x, z * texCoordUnits.y});
+		geometry.Normals		.push_back({0, 1, 0});
+	}
+
+	const uint16_t				pitch					= cellCount.x;
+
+	for(uint32_t z = 0, zStop = cellCount.y; z < zStop; ++z)
+	for(uint32_t x = 0, xStop = cellCount.x; x < xStop; ++x) {
+		const uint32_t				indices[4]				= {0U, 1U, pitch, uint32_t(pitch + 1U)};
+
+		const uint32_t				indices_modes[4][6]		=
+			{ {indices[0], indices[1], indices[3], indices[0], indices[3], indices[2]}
+			, {indices[0], indices[1], indices[2], indices[1], indices[3], indices[0]}
+			};
+
+		const bool					reverseQuad 
+			= ( (x >= uint32_t(cellCount.x >> 1U) && z <  uint32_t(cellCount.y >> 1U))
+			 || (x <  uint32_t(cellCount.x >> 1U) && z >= uint32_t(cellCount.y >> 1U))
+			);
+
+		const ::gpk::vcu32			relative_indices		= indices_modes[((reverseQuad ? SQUARE_MODE_TOP_RIGHT : SQUARE_MODE_TOP_LEFT) + one_if(topright)) % 2];
+		const uint32_t				positionOffset			= geometry.Positions.size();
+		for(uint32_t i = 0; i < 6; ++i)
+			geometry.PositionIndices.push_back(positionOffset + relative_indices[i]);
 	}
 	return 0;
 }

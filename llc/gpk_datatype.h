@@ -70,22 +70,22 @@ namespace gpk
 	)
 
 	struct SDataTypeID {
-							uint32_t					SizeInBits		:  7	;
-							uint32_t					ElementPad		:  1	;
-							uint32_t					ElementCount	: 20	;
-							uint32_t					IsBigEndian		:  1	;
-							uint32_t					IsFloat			:  1	;
-							uint32_t					IsNorm			:  1	;
-							uint32_t					IsSigned		:  1	;
+		uint32_t			SizeInBits		:  7	;
+		uint32_t			ElementPad		:  1	;
+		uint32_t			ElementCount	: 20	;
+		uint32_t			IsBigEndian		:  1	;
+		uint32_t			IsFloat			:  1	;
+		uint32_t			IsNorm			:  1	;
+		uint32_t			IsSigned		:  1	;
 
-		inlcxpr	uint32_t					ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
-		inlcxpr	uint32_t					TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
+		inlcxpr	uint32_t	ElementBytes	()							const	noexcept	{ return ( SizeInBits / 8 + one_if( SizeInBits % 8 ) ); }
+		inlcxpr	uint32_t	TotalBytes		()							const	noexcept	{ return ElementPad ? ElementBytes() * (ElementCount + 1) : SizeInBits * (ElementCount + 1) / 8 + one_if( SizeInBits * (ElementCount + 1) % 8 ); }
 
-		inlcxpr	bool						IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
-		inlcxpr	bool						IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
-		inlcxpr	bool						IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
+		inlcxpr	bool		IsSTL			()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && IsFloat			&& IsNorm			&& (IsBigEndian == 0); }
+		inlcxpr	bool		IsNonUniform	()							const	noexcept	{ return (1 == SizeInBits) && IsSigned && (IsFloat == 0)	&& (IsNorm == 0)	&& (IsBigEndian == 0); }
+		inlcxpr	bool		IsUniform		()							const	noexcept	{ return !IsNonUniform(); }
 
-		inlcxpr								SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
+		inlcxpr				SDataTypeID		( ::gpk::DATA_TYPE typeId )			noexcept
 			: SizeInBits	(GTYPEID_ELEMENTSIZE	(typeId) - 1)
 			, ElementPad	(GTYPEID_ELEMENTPAD		(typeId))
 			, ElementCount	(GTYPEID_ELEMENTCOUNT	(typeId) - 1)
@@ -95,7 +95,7 @@ namespace gpk
 			, IsSigned		(GTYPEID_ISSIGNED		(typeId))
 		{}
 		//
-		inlcxpr								SDataTypeID
+		inlcxpr				SDataTypeID
 			( uint8_t	sizeInBits		= 1
 			, uint32_t	elementCount	= 1
 			, bool		isFloat			= false
@@ -112,7 +112,7 @@ namespace gpk
 			, IsNorm		(isNorm			? 1 : 0)
 			, IsSigned		(isSigned		? 0 : 1)
 		{}
-		inlcxpr	operator					DATA_TYPE		()							const				{
+		inlcxpr	operator	DATA_TYPE		()							const				{
 			return GTYPEID_MAKE
 				( !IsSigned
 				, IsNorm
@@ -123,7 +123,7 @@ namespace gpk
 				, SizeInBits+1
 				);
 		}
-		inlcxpr	bool						operator==		(const DATA_TYPE& other)	const				{
+		inlcxpr	bool		operator==		(const DATA_TYPE& other)	const				{
 			return	SizeInBits		+ 1	==			(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad			==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
 				&&	ElementCount	+ 1	== (uint32_t)GTYPEID_ELEMENTCOUNT	(other)
@@ -133,7 +133,7 @@ namespace gpk
 				&&	IsSigned			==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
-		inlcxpr	bool						operator==		(const SDataTypeID& other)	const				{
+		inlcxpr	bool		operator==		(const SDataTypeID& other)	const				{
 			return	SizeInBits		==	other.SizeInBits
 				&&	ElementPad		==	other.ElementPad
 				&&	ElementCount	==	other.ElementCount
@@ -182,362 +182,361 @@ namespace gpk
 #define GTYPEID_MAKE_FLOAT64( ElementCount)							GTYPEID_MAKE_FLOAT		( 64 , ElementCount )
 
 	// Type ID can now be built with the GTYPEID_MAKE macros, so these would be "helper" constants
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT1					= GTYPEID_MAKE_UINT			   (1,0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT5					= GTYPEID_MAKE_UINT			   (5,0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT5_3				= GTYPEID_MAKE_UINT			   (5,0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8					= GTYPEID_MAKE_UINT8			 (0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_2				= GTYPEID_MAKE_UINT8			 (0x002);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_3				= GTYPEID_MAKE_UINT8			 (0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_4				= GTYPEID_MAKE_UINT8			 (0x004);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_5				= GTYPEID_MAKE_UINT8			 (0x005);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_6				= GTYPEID_MAKE_UINT8			 (0x006);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_7				= GTYPEID_MAKE_UINT8			 (0x007);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_8				= GTYPEID_MAKE_UINT8			 (0x008);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_9				= GTYPEID_MAKE_UINT8			 (0x009);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_16				= GTYPEID_MAKE_UINT8			 (0x010);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_32				= GTYPEID_MAKE_UINT8			 (0x020);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_64				= GTYPEID_MAKE_UINT8			 (0x040);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_128				= GTYPEID_MAKE_UINT8			 (0x080);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT8_256				= GTYPEID_MAKE_UINT8			 (0x100);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16				= GTYPEID_MAKE_UINT16			 (0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_2				= GTYPEID_MAKE_UINT16			 (0x002);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_3				= GTYPEID_MAKE_UINT16			 (0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_4				= GTYPEID_MAKE_UINT16			 (0x004);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_5				= GTYPEID_MAKE_UINT16			 (0x005);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_6				= GTYPEID_MAKE_UINT16			 (0x006);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_7				= GTYPEID_MAKE_UINT16			 (0x007);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_8				= GTYPEID_MAKE_UINT16			 (0x008);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_9				= GTYPEID_MAKE_UINT16			 (0x009);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_16				= GTYPEID_MAKE_UINT16			 (0x010);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_32				= GTYPEID_MAKE_UINT16			 (0x020);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_64				= GTYPEID_MAKE_UINT16			 (0x040);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_128			= GTYPEID_MAKE_UINT16			 (0x080);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT16_256			= GTYPEID_MAKE_UINT16			 (0x100);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32				= GTYPEID_MAKE_UINT32			 (0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_2				= GTYPEID_MAKE_UINT32			 (0x002);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_3				= GTYPEID_MAKE_UINT32			 (0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_4				= GTYPEID_MAKE_UINT32			 (0x004);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_5				= GTYPEID_MAKE_UINT32			 (0x005);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_6				= GTYPEID_MAKE_UINT32			 (0x006);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_7				= GTYPEID_MAKE_UINT32			 (0x007);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_8				= GTYPEID_MAKE_UINT32			 (0x008);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_9				= GTYPEID_MAKE_UINT32			 (0x009);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_16				= GTYPEID_MAKE_UINT32			 (0x010);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_32				= GTYPEID_MAKE_UINT32			 (0x020);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_64				= GTYPEID_MAKE_UINT32			 (0x040);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_128			= GTYPEID_MAKE_UINT32			 (0x080);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT32_256			= GTYPEID_MAKE_UINT32			 (0x100);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64				= GTYPEID_MAKE_UINT64			 (0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_2				= GTYPEID_MAKE_UINT64			 (0x002);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_3				= GTYPEID_MAKE_UINT64			 (0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_4				= GTYPEID_MAKE_UINT64			 (0x004);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_5				= GTYPEID_MAKE_UINT64			 (0x005);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_6				= GTYPEID_MAKE_UINT64			 (0x006);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_7				= GTYPEID_MAKE_UINT64			 (0x007);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_8				= GTYPEID_MAKE_UINT64			 (0x008);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_9				= GTYPEID_MAKE_UINT64			 (0x009);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_16				= GTYPEID_MAKE_UINT64			 (0x010);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_32				= GTYPEID_MAKE_UINT64			 (0x020);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_64				= GTYPEID_MAKE_UINT64			 (0x040);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_128			= GTYPEID_MAKE_UINT64			 (0x080);
-	static 		constexpr DATA_TYPE				DATA_TYPE_UINT64_256			= GTYPEID_MAKE_UINT64			 (0x100);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT5					= GTYPEID_MAKE_INT			   (5,0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT5_3				= GTYPEID_MAKE_INT			   (5,0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT8					= GTYPEID_MAKE_INT8				 (0x001);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT8_2				= GTYPEID_MAKE_INT8				 (0x002);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT8_3				= GTYPEID_MAKE_INT8				 (0x003);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT8_4				= GTYPEID_MAKE_INT8				 (0x004);
-	static 		constexpr DATA_TYPE				DATA_TYPE_INT8_5				= GTYPEID_MAKE_INT8				 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_6				= GTYPEID_MAKE_INT8				 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_7				= GTYPEID_MAKE_INT8				 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_8				= GTYPEID_MAKE_INT8				 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_9				= GTYPEID_MAKE_INT8				 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_16				= GTYPEID_MAKE_INT8				 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_32				= GTYPEID_MAKE_INT8				 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_64				= GTYPEID_MAKE_INT8				 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_128				= GTYPEID_MAKE_INT8				 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_256				= GTYPEID_MAKE_INT8				 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16					= GTYPEID_MAKE_INT16			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_2				= GTYPEID_MAKE_INT16			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_3				= GTYPEID_MAKE_INT16			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_4				= GTYPEID_MAKE_INT16			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_5				= GTYPEID_MAKE_INT16			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_6				= GTYPEID_MAKE_INT16			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_7				= GTYPEID_MAKE_INT16			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_8				= GTYPEID_MAKE_INT16			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_9				= GTYPEID_MAKE_INT16			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_16				= GTYPEID_MAKE_INT16			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_32				= GTYPEID_MAKE_INT16			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_64				= GTYPEID_MAKE_INT16			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_128				= GTYPEID_MAKE_INT16			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_256				= GTYPEID_MAKE_INT16			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32					= GTYPEID_MAKE_INT32			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_2				= GTYPEID_MAKE_INT32			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_3				= GTYPEID_MAKE_INT32			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_4				= GTYPEID_MAKE_INT32			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_5				= GTYPEID_MAKE_INT32			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_6				= GTYPEID_MAKE_INT32			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_7				= GTYPEID_MAKE_INT32			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_8				= GTYPEID_MAKE_INT32			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_9				= GTYPEID_MAKE_INT32			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_16				= GTYPEID_MAKE_INT32			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_32				= GTYPEID_MAKE_INT32			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_64				= GTYPEID_MAKE_INT32			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_128				= GTYPEID_MAKE_INT32			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_256				= GTYPEID_MAKE_INT32			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64					= GTYPEID_MAKE_INT64			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_2				= GTYPEID_MAKE_INT64			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_3				= GTYPEID_MAKE_INT64			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_4				= GTYPEID_MAKE_INT64			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_5				= GTYPEID_MAKE_INT64			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_6				= GTYPEID_MAKE_INT64			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_7				= GTYPEID_MAKE_INT64			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_8				= GTYPEID_MAKE_INT64			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_9				= GTYPEID_MAKE_INT64			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_16				= GTYPEID_MAKE_INT64			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_32				= GTYPEID_MAKE_INT64			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_64				= GTYPEID_MAKE_INT64			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_128				= GTYPEID_MAKE_INT64			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_256				= GTYPEID_MAKE_INT64			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_256		= GTYPEID_MAKE_FLOAT16			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16				= GTYPEID_MAKE_FLOAT16			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_2				= GTYPEID_MAKE_FLOAT16			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_3				= GTYPEID_MAKE_FLOAT16			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_4				= GTYPEID_MAKE_FLOAT16			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_5				= GTYPEID_MAKE_FLOAT16			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_6				= GTYPEID_MAKE_FLOAT16			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_7				= GTYPEID_MAKE_FLOAT16			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_8				= GTYPEID_MAKE_FLOAT16			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_9				= GTYPEID_MAKE_FLOAT16			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_16			= GTYPEID_MAKE_FLOAT16			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_32			= GTYPEID_MAKE_FLOAT16			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_64			= GTYPEID_MAKE_FLOAT16			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_128			= GTYPEID_MAKE_FLOAT16			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_256			= GTYPEID_MAKE_FLOAT16			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32				= GTYPEID_MAKE_FLOAT32			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_2				= GTYPEID_MAKE_FLOAT32			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_3				= GTYPEID_MAKE_FLOAT32			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_4				= GTYPEID_MAKE_FLOAT32			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_5				= GTYPEID_MAKE_FLOAT32			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_6				= GTYPEID_MAKE_FLOAT32			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_7				= GTYPEID_MAKE_FLOAT32			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_8				= GTYPEID_MAKE_FLOAT32			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_9				= GTYPEID_MAKE_FLOAT32			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_16			= GTYPEID_MAKE_FLOAT32			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_32			= GTYPEID_MAKE_FLOAT32			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_64			= GTYPEID_MAKE_FLOAT32			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_128			= GTYPEID_MAKE_FLOAT32			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_256			= GTYPEID_MAKE_FLOAT32			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64				= GTYPEID_MAKE_FLOAT64			 (0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_2				= GTYPEID_MAKE_FLOAT64			 (0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_3				= GTYPEID_MAKE_FLOAT64			 (0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_4				= GTYPEID_MAKE_FLOAT64			 (0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_5				= GTYPEID_MAKE_FLOAT64			 (0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_6				= GTYPEID_MAKE_FLOAT64			 (0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_7				= GTYPEID_MAKE_FLOAT64			 (0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_8				= GTYPEID_MAKE_FLOAT64			 (0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_9				= GTYPEID_MAKE_FLOAT64			 (0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_16			= GTYPEID_MAKE_FLOAT64			 (0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_32			= GTYPEID_MAKE_FLOAT64			 (0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_64			= GTYPEID_MAKE_FLOAT64			 (0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_128			= GTYPEID_MAKE_FLOAT64			 (0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_256			= GTYPEID_MAKE_FLOAT64			 (0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT5_NORM			= GTYPEID_MAKE_UINT_NORM	(0x05,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT5_NORM_3			= GTYPEID_MAKE_UINT_NORM	(0x05,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM			= GTYPEID_MAKE_UINT_NORM	(0x08,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_2			= GTYPEID_MAKE_UINT_NORM	(0x08,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_3			= GTYPEID_MAKE_UINT_NORM	(0x08,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_4			= GTYPEID_MAKE_UINT_NORM	(0x08,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_5			= GTYPEID_MAKE_UINT_NORM	(0x08,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_6			= GTYPEID_MAKE_UINT_NORM	(0x08,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_7			= GTYPEID_MAKE_UINT_NORM	(0x08,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_8			= GTYPEID_MAKE_UINT_NORM	(0x08,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_9			= GTYPEID_MAKE_UINT_NORM	(0x08,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_16			= GTYPEID_MAKE_UINT_NORM	(0x08,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_32			= GTYPEID_MAKE_UINT_NORM	(0x08,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_64			= GTYPEID_MAKE_UINT_NORM	(0x08,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_128		= GTYPEID_MAKE_UINT_NORM	(0x08,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT8_NORM_256		= GTYPEID_MAKE_UINT_NORM	(0x08,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM			= GTYPEID_MAKE_UINT_NORM	(0x10,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_2			= GTYPEID_MAKE_UINT_NORM	(0x10,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_3			= GTYPEID_MAKE_UINT_NORM	(0x10,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_4			= GTYPEID_MAKE_UINT_NORM	(0x10,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_5			= GTYPEID_MAKE_UINT_NORM	(0x10,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_6			= GTYPEID_MAKE_UINT_NORM	(0x10,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_7			= GTYPEID_MAKE_UINT_NORM	(0x10,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_8			= GTYPEID_MAKE_UINT_NORM	(0x10,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_9			= GTYPEID_MAKE_UINT_NORM	(0x10,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_16		= GTYPEID_MAKE_UINT_NORM	(0x10,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_32		= GTYPEID_MAKE_UINT_NORM	(0x10,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_64		= GTYPEID_MAKE_UINT_NORM	(0x10,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_128		= GTYPEID_MAKE_UINT_NORM	(0x10,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT16_NORM_256		= GTYPEID_MAKE_UINT_NORM	(0x10,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM			= GTYPEID_MAKE_UINT_NORM	(0x20,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_2			= GTYPEID_MAKE_UINT_NORM	(0x20,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_3			= GTYPEID_MAKE_UINT_NORM	(0x20,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_4			= GTYPEID_MAKE_UINT_NORM	(0x20,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_5			= GTYPEID_MAKE_UINT_NORM	(0x20,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_6			= GTYPEID_MAKE_UINT_NORM	(0x20,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_7			= GTYPEID_MAKE_UINT_NORM	(0x20,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_8			= GTYPEID_MAKE_UINT_NORM	(0x20,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_9			= GTYPEID_MAKE_UINT_NORM	(0x20,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_16		= GTYPEID_MAKE_UINT_NORM	(0x20,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_32		= GTYPEID_MAKE_UINT_NORM	(0x20,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_64		= GTYPEID_MAKE_UINT_NORM	(0x20,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_128		= GTYPEID_MAKE_UINT_NORM	(0x20,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT32_NORM_256		= GTYPEID_MAKE_UINT_NORM	(0x20,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM			= GTYPEID_MAKE_UINT_NORM	(0x40,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_2			= GTYPEID_MAKE_UINT_NORM	(0x40,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_3			= GTYPEID_MAKE_UINT_NORM	(0x40,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_4			= GTYPEID_MAKE_UINT_NORM	(0x40,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_5			= GTYPEID_MAKE_UINT_NORM	(0x40,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_6			= GTYPEID_MAKE_UINT_NORM	(0x40,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_7			= GTYPEID_MAKE_UINT_NORM	(0x40,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_8			= GTYPEID_MAKE_UINT_NORM	(0x40,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_9			= GTYPEID_MAKE_UINT_NORM	(0x40,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_16		= GTYPEID_MAKE_UINT_NORM	(0x40,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_32		= GTYPEID_MAKE_UINT_NORM	(0x40,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_64		= GTYPEID_MAKE_UINT_NORM	(0x40,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_128		= GTYPEID_MAKE_UINT_NORM	(0x40,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_UINT64_NORM_256		= GTYPEID_MAKE_UINT_NORM	(0x40,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT5_NORM				= GTYPEID_MAKE_INT_NORM		(0x05,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT5_NORM_3			= GTYPEID_MAKE_INT_NORM		(0x05,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM				= GTYPEID_MAKE_INT_NORM		(0x08,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_2			= GTYPEID_MAKE_INT_NORM		(0x08,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_3			= GTYPEID_MAKE_INT_NORM		(0x08,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_4			= GTYPEID_MAKE_INT_NORM		(0x08,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_5			= GTYPEID_MAKE_INT_NORM		(0x08,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_6			= GTYPEID_MAKE_INT_NORM		(0x08,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_7			= GTYPEID_MAKE_INT_NORM		(0x08,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_8			= GTYPEID_MAKE_INT_NORM		(0x08,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_9			= GTYPEID_MAKE_INT_NORM		(0x08,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_16			= GTYPEID_MAKE_INT_NORM		(0x08,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_32			= GTYPEID_MAKE_INT_NORM		(0x08,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_64			= GTYPEID_MAKE_INT_NORM		(0x08,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_128			= GTYPEID_MAKE_INT_NORM		(0x08,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT8_NORM_256			= GTYPEID_MAKE_INT_NORM		(0x08,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM			= GTYPEID_MAKE_INT_NORM		(0x10,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_2			= GTYPEID_MAKE_INT_NORM		(0x10,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_3			= GTYPEID_MAKE_INT_NORM		(0x10,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_4			= GTYPEID_MAKE_INT_NORM		(0x10,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_5			= GTYPEID_MAKE_INT_NORM		(0x10,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_6			= GTYPEID_MAKE_INT_NORM		(0x10,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_7			= GTYPEID_MAKE_INT_NORM		(0x10,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_8			= GTYPEID_MAKE_INT_NORM		(0x10,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_9			= GTYPEID_MAKE_INT_NORM		(0x10,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_16			= GTYPEID_MAKE_INT_NORM		(0x10,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_32			= GTYPEID_MAKE_INT_NORM		(0x10,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_64			= GTYPEID_MAKE_INT_NORM		(0x10,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_128		= GTYPEID_MAKE_INT_NORM		(0x10,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT16_NORM_256		= GTYPEID_MAKE_INT_NORM		(0x10,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM			= GTYPEID_MAKE_INT_NORM		(0x20,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_2			= GTYPEID_MAKE_INT_NORM		(0x20,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_3			= GTYPEID_MAKE_INT_NORM		(0x20,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_4			= GTYPEID_MAKE_INT_NORM		(0x20,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_5			= GTYPEID_MAKE_INT_NORM		(0x20,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_6			= GTYPEID_MAKE_INT_NORM		(0x20,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_7			= GTYPEID_MAKE_INT_NORM		(0x20,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_8			= GTYPEID_MAKE_INT_NORM		(0x20,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_9			= GTYPEID_MAKE_INT_NORM		(0x20,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_16			= GTYPEID_MAKE_INT_NORM		(0x20,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_32			= GTYPEID_MAKE_INT_NORM		(0x20,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_64			= GTYPEID_MAKE_INT_NORM		(0x20,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_128		= GTYPEID_MAKE_INT_NORM		(0x20,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT32_NORM_256		= GTYPEID_MAKE_INT_NORM		(0x20,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM			= GTYPEID_MAKE_INT_NORM		(0x40,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_2			= GTYPEID_MAKE_INT_NORM		(0x40,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_3			= GTYPEID_MAKE_INT_NORM		(0x40,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_4			= GTYPEID_MAKE_INT_NORM		(0x40,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_5			= GTYPEID_MAKE_INT_NORM		(0x40,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_6			= GTYPEID_MAKE_INT_NORM		(0x40,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_7			= GTYPEID_MAKE_INT_NORM		(0x40,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_8			= GTYPEID_MAKE_INT_NORM		(0x40,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_9			= GTYPEID_MAKE_INT_NORM		(0x40,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_16			= GTYPEID_MAKE_INT_NORM		(0x40,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_32			= GTYPEID_MAKE_INT_NORM		(0x40,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_64			= GTYPEID_MAKE_INT_NORM		(0x40,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_INT64_NORM_128		= GTYPEID_MAKE_INT_NORM		(0x40,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM			= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_2		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_3		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_4		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_5		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_6		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_7		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_8		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_9		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_16		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_32		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_64		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_128		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT16_NORM_256		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM			= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_2		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_3		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_4		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_5		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_6		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_7		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_8		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_9		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_16		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_32		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_64		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_128		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT32_NORM_256		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x100);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM			= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x001);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_2		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x002);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_3		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x003);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_4		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x004);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_5		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x005);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_6		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x006);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_7		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x007);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_8		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x008);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_9		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x009);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_16		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x010);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_32		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x020);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_64		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x040);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_128		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x080);
-	static 		constexpr SDataTypeID			DATA_TYPE_FLOAT64_NORM_256		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x100);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT1				= GTYPEID_MAKE_UINT		 (1,0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT5				= GTYPEID_MAKE_UINT		 (5,0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT5_3			= GTYPEID_MAKE_UINT		 (5,0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8				= GTYPEID_MAKE_UINT8	 (0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_2			= GTYPEID_MAKE_UINT8	 (0x002);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_3			= GTYPEID_MAKE_UINT8	 (0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_4			= GTYPEID_MAKE_UINT8	 (0x004);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_5			= GTYPEID_MAKE_UINT8	 (0x005);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_6			= GTYPEID_MAKE_UINT8	 (0x006);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_7			= GTYPEID_MAKE_UINT8	 (0x007);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_8			= GTYPEID_MAKE_UINT8	 (0x008);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_9			= GTYPEID_MAKE_UINT8	 (0x009);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_16			= GTYPEID_MAKE_UINT8	 (0x010);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_32			= GTYPEID_MAKE_UINT8	 (0x020);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_64			= GTYPEID_MAKE_UINT8	 (0x040);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_128			= GTYPEID_MAKE_UINT8	 (0x080);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT8_256			= GTYPEID_MAKE_UINT8	 (0x100);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16			= GTYPEID_MAKE_UINT16	 (0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_2			= GTYPEID_MAKE_UINT16	 (0x002);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_3			= GTYPEID_MAKE_UINT16	 (0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_4			= GTYPEID_MAKE_UINT16	 (0x004);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_5			= GTYPEID_MAKE_UINT16	 (0x005);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_6			= GTYPEID_MAKE_UINT16	 (0x006);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_7			= GTYPEID_MAKE_UINT16	 (0x007);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_8			= GTYPEID_MAKE_UINT16	 (0x008);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_9			= GTYPEID_MAKE_UINT16	 (0x009);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_16			= GTYPEID_MAKE_UINT16	 (0x010);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_32			= GTYPEID_MAKE_UINT16	 (0x020);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_64			= GTYPEID_MAKE_UINT16	 (0x040);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_128		= GTYPEID_MAKE_UINT16	 (0x080);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT16_256		= GTYPEID_MAKE_UINT16	 (0x100);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32			= GTYPEID_MAKE_UINT32	 (0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_2			= GTYPEID_MAKE_UINT32	 (0x002);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_3			= GTYPEID_MAKE_UINT32	 (0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_4			= GTYPEID_MAKE_UINT32	 (0x004);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_5			= GTYPEID_MAKE_UINT32	 (0x005);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_6			= GTYPEID_MAKE_UINT32	 (0x006);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_7			= GTYPEID_MAKE_UINT32	 (0x007);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_8			= GTYPEID_MAKE_UINT32	 (0x008);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_9			= GTYPEID_MAKE_UINT32	 (0x009);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_16			= GTYPEID_MAKE_UINT32	 (0x010);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_32			= GTYPEID_MAKE_UINT32	 (0x020);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_64			= GTYPEID_MAKE_UINT32	 (0x040);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_128		= GTYPEID_MAKE_UINT32	 (0x080);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT32_256		= GTYPEID_MAKE_UINT32	 (0x100);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64			= GTYPEID_MAKE_UINT64	 (0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_2			= GTYPEID_MAKE_UINT64	 (0x002);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_3			= GTYPEID_MAKE_UINT64	 (0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_4			= GTYPEID_MAKE_UINT64	 (0x004);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_5			= GTYPEID_MAKE_UINT64	 (0x005);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_6			= GTYPEID_MAKE_UINT64	 (0x006);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_7			= GTYPEID_MAKE_UINT64	 (0x007);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_8			= GTYPEID_MAKE_UINT64	 (0x008);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_9			= GTYPEID_MAKE_UINT64	 (0x009);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_16			= GTYPEID_MAKE_UINT64	 (0x010);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_32			= GTYPEID_MAKE_UINT64	 (0x020);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_64			= GTYPEID_MAKE_UINT64	 (0x040);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_128		= GTYPEID_MAKE_UINT64	 (0x080);
+	stacxpr DATA_TYPE	DATA_TYPE_UINT64_256		= GTYPEID_MAKE_UINT64	 (0x100);
+	stacxpr DATA_TYPE	DATA_TYPE_INT5				= GTYPEID_MAKE_INT		 (5,0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_INT5_3			= GTYPEID_MAKE_INT		 (5,0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_INT8				= GTYPEID_MAKE_INT8		 (0x001);
+	stacxpr DATA_TYPE	DATA_TYPE_INT8_2			= GTYPEID_MAKE_INT8		 (0x002);
+	stacxpr DATA_TYPE	DATA_TYPE_INT8_3			= GTYPEID_MAKE_INT8		 (0x003);
+	stacxpr DATA_TYPE	DATA_TYPE_INT8_4			= GTYPEID_MAKE_INT8		 (0x004);
+	stacxpr DATA_TYPE	DATA_TYPE_INT8_5			= GTYPEID_MAKE_INT8		 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_6			= GTYPEID_MAKE_INT8		 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_7			= GTYPEID_MAKE_INT8		 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_8			= GTYPEID_MAKE_INT8		 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_9			= GTYPEID_MAKE_INT8		 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_16			= GTYPEID_MAKE_INT8		 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_32			= GTYPEID_MAKE_INT8		 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_64			= GTYPEID_MAKE_INT8		 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_128			= GTYPEID_MAKE_INT8		 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_256			= GTYPEID_MAKE_INT8		 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT16				= GTYPEID_MAKE_INT16	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_2			= GTYPEID_MAKE_INT16	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_3			= GTYPEID_MAKE_INT16	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_4			= GTYPEID_MAKE_INT16	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_5			= GTYPEID_MAKE_INT16	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_6			= GTYPEID_MAKE_INT16	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_7			= GTYPEID_MAKE_INT16	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_8			= GTYPEID_MAKE_INT16	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_9			= GTYPEID_MAKE_INT16	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_16			= GTYPEID_MAKE_INT16	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_32			= GTYPEID_MAKE_INT16	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_64			= GTYPEID_MAKE_INT16	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_128			= GTYPEID_MAKE_INT16	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_256			= GTYPEID_MAKE_INT16	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT32				= GTYPEID_MAKE_INT32	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_2			= GTYPEID_MAKE_INT32	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_3			= GTYPEID_MAKE_INT32	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_4			= GTYPEID_MAKE_INT32	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_5			= GTYPEID_MAKE_INT32	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_6			= GTYPEID_MAKE_INT32	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_7			= GTYPEID_MAKE_INT32	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_8			= GTYPEID_MAKE_INT32	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_9			= GTYPEID_MAKE_INT32	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_16			= GTYPEID_MAKE_INT32	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_32			= GTYPEID_MAKE_INT32	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_64			= GTYPEID_MAKE_INT32	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_128			= GTYPEID_MAKE_INT32	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_256			= GTYPEID_MAKE_INT32	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT64				= GTYPEID_MAKE_INT64	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_2			= GTYPEID_MAKE_INT64	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_3			= GTYPEID_MAKE_INT64	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_4			= GTYPEID_MAKE_INT64	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_5			= GTYPEID_MAKE_INT64	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_6			= GTYPEID_MAKE_INT64	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_7			= GTYPEID_MAKE_INT64	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_8			= GTYPEID_MAKE_INT64	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_9			= GTYPEID_MAKE_INT64	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_16			= GTYPEID_MAKE_INT64	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_32			= GTYPEID_MAKE_INT64	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_64			= GTYPEID_MAKE_INT64	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_128			= GTYPEID_MAKE_INT64	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_256			= GTYPEID_MAKE_INT64	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_256	= GTYPEID_MAKE_FLOAT16	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16			= GTYPEID_MAKE_FLOAT16	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_2			= GTYPEID_MAKE_FLOAT16	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_3			= GTYPEID_MAKE_FLOAT16	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_4			= GTYPEID_MAKE_FLOAT16	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_5			= GTYPEID_MAKE_FLOAT16	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_6			= GTYPEID_MAKE_FLOAT16	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_7			= GTYPEID_MAKE_FLOAT16	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_8			= GTYPEID_MAKE_FLOAT16	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_9			= GTYPEID_MAKE_FLOAT16	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_16		= GTYPEID_MAKE_FLOAT16	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_32		= GTYPEID_MAKE_FLOAT16	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_64		= GTYPEID_MAKE_FLOAT16	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_128		= GTYPEID_MAKE_FLOAT16	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_256		= GTYPEID_MAKE_FLOAT16	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32			= GTYPEID_MAKE_FLOAT32	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_2			= GTYPEID_MAKE_FLOAT32	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_3			= GTYPEID_MAKE_FLOAT32	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_4			= GTYPEID_MAKE_FLOAT32	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_5			= GTYPEID_MAKE_FLOAT32	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_6			= GTYPEID_MAKE_FLOAT32	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_7			= GTYPEID_MAKE_FLOAT32	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_8			= GTYPEID_MAKE_FLOAT32	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_9			= GTYPEID_MAKE_FLOAT32	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_16		= GTYPEID_MAKE_FLOAT32	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_32		= GTYPEID_MAKE_FLOAT32	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_64		= GTYPEID_MAKE_FLOAT32	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_128		= GTYPEID_MAKE_FLOAT32	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_256		= GTYPEID_MAKE_FLOAT32	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64			= GTYPEID_MAKE_FLOAT64	 (0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_2			= GTYPEID_MAKE_FLOAT64	 (0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_3			= GTYPEID_MAKE_FLOAT64	 (0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_4			= GTYPEID_MAKE_FLOAT64	 (0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_5			= GTYPEID_MAKE_FLOAT64	 (0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_6			= GTYPEID_MAKE_FLOAT64	 (0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_7			= GTYPEID_MAKE_FLOAT64	 (0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_8			= GTYPEID_MAKE_FLOAT64	 (0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_9			= GTYPEID_MAKE_FLOAT64	 (0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_16		= GTYPEID_MAKE_FLOAT64	 (0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_32		= GTYPEID_MAKE_FLOAT64	 (0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_64		= GTYPEID_MAKE_FLOAT64	 (0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_128		= GTYPEID_MAKE_FLOAT64	 (0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_256		= GTYPEID_MAKE_FLOAT64	 (0x100);
+	stacxpr SDataTypeID	DATA_TYPE_UINT5_NORM		= GTYPEID_MAKE_UINT_NORM	(0x05,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_UINT5_NORM_3		= GTYPEID_MAKE_UINT_NORM	(0x05,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM		= GTYPEID_MAKE_UINT_NORM	(0x08,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_2		= GTYPEID_MAKE_UINT_NORM	(0x08,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_3		= GTYPEID_MAKE_UINT_NORM	(0x08,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_4		= GTYPEID_MAKE_UINT_NORM	(0x08,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_5		= GTYPEID_MAKE_UINT_NORM	(0x08,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_6		= GTYPEID_MAKE_UINT_NORM	(0x08,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_7		= GTYPEID_MAKE_UINT_NORM	(0x08,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_8		= GTYPEID_MAKE_UINT_NORM	(0x08,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_9		= GTYPEID_MAKE_UINT_NORM	(0x08,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_16		= GTYPEID_MAKE_UINT_NORM	(0x08,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_32		= GTYPEID_MAKE_UINT_NORM	(0x08,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_64		= GTYPEID_MAKE_UINT_NORM	(0x08,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_128	= GTYPEID_MAKE_UINT_NORM	(0x08,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_UINT8_NORM_256	= GTYPEID_MAKE_UINT_NORM	(0x08,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM		= GTYPEID_MAKE_UINT_NORM	(0x10,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_2		= GTYPEID_MAKE_UINT_NORM	(0x10,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_3		= GTYPEID_MAKE_UINT_NORM	(0x10,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_4		= GTYPEID_MAKE_UINT_NORM	(0x10,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_5		= GTYPEID_MAKE_UINT_NORM	(0x10,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_6		= GTYPEID_MAKE_UINT_NORM	(0x10,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_7		= GTYPEID_MAKE_UINT_NORM	(0x10,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_8		= GTYPEID_MAKE_UINT_NORM	(0x10,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_9		= GTYPEID_MAKE_UINT_NORM	(0x10,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_16	= GTYPEID_MAKE_UINT_NORM	(0x10,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_32	= GTYPEID_MAKE_UINT_NORM	(0x10,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_64	= GTYPEID_MAKE_UINT_NORM	(0x10,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_128	= GTYPEID_MAKE_UINT_NORM	(0x10,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_UINT16_NORM_256	= GTYPEID_MAKE_UINT_NORM	(0x10,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM		= GTYPEID_MAKE_UINT_NORM	(0x20,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_2		= GTYPEID_MAKE_UINT_NORM	(0x20,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_3		= GTYPEID_MAKE_UINT_NORM	(0x20,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_4		= GTYPEID_MAKE_UINT_NORM	(0x20,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_5		= GTYPEID_MAKE_UINT_NORM	(0x20,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_6		= GTYPEID_MAKE_UINT_NORM	(0x20,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_7		= GTYPEID_MAKE_UINT_NORM	(0x20,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_8		= GTYPEID_MAKE_UINT_NORM	(0x20,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_9		= GTYPEID_MAKE_UINT_NORM	(0x20,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_16	= GTYPEID_MAKE_UINT_NORM	(0x20,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_32	= GTYPEID_MAKE_UINT_NORM	(0x20,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_64	= GTYPEID_MAKE_UINT_NORM	(0x20,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_128	= GTYPEID_MAKE_UINT_NORM	(0x20,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_UINT32_NORM_256	= GTYPEID_MAKE_UINT_NORM	(0x20,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM		= GTYPEID_MAKE_UINT_NORM	(0x40,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_2		= GTYPEID_MAKE_UINT_NORM	(0x40,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_3		= GTYPEID_MAKE_UINT_NORM	(0x40,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_4		= GTYPEID_MAKE_UINT_NORM	(0x40,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_5		= GTYPEID_MAKE_UINT_NORM	(0x40,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_6		= GTYPEID_MAKE_UINT_NORM	(0x40,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_7		= GTYPEID_MAKE_UINT_NORM	(0x40,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_8		= GTYPEID_MAKE_UINT_NORM	(0x40,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_9		= GTYPEID_MAKE_UINT_NORM	(0x40,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_16	= GTYPEID_MAKE_UINT_NORM	(0x40,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_32	= GTYPEID_MAKE_UINT_NORM	(0x40,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_64	= GTYPEID_MAKE_UINT_NORM	(0x40,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_128	= GTYPEID_MAKE_UINT_NORM	(0x40,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_UINT64_NORM_256	= GTYPEID_MAKE_UINT_NORM	(0x40,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT5_NORM			= GTYPEID_MAKE_INT_NORM		(0x05,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT5_NORM_3		= GTYPEID_MAKE_INT_NORM		(0x05,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM			= GTYPEID_MAKE_INT_NORM		(0x08,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_2		= GTYPEID_MAKE_INT_NORM		(0x08,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_3		= GTYPEID_MAKE_INT_NORM		(0x08,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_4		= GTYPEID_MAKE_INT_NORM		(0x08,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_5		= GTYPEID_MAKE_INT_NORM		(0x08,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_6		= GTYPEID_MAKE_INT_NORM		(0x08,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_7		= GTYPEID_MAKE_INT_NORM		(0x08,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_8		= GTYPEID_MAKE_INT_NORM		(0x08,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_9		= GTYPEID_MAKE_INT_NORM		(0x08,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_16		= GTYPEID_MAKE_INT_NORM		(0x08,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_32		= GTYPEID_MAKE_INT_NORM		(0x08,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_64		= GTYPEID_MAKE_INT_NORM		(0x08,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_128		= GTYPEID_MAKE_INT_NORM		(0x08,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT8_NORM_256		= GTYPEID_MAKE_INT_NORM		(0x08,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM		= GTYPEID_MAKE_INT_NORM		(0x10,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_2		= GTYPEID_MAKE_INT_NORM		(0x10,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_3		= GTYPEID_MAKE_INT_NORM		(0x10,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_4		= GTYPEID_MAKE_INT_NORM		(0x10,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_5		= GTYPEID_MAKE_INT_NORM		(0x10,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_6		= GTYPEID_MAKE_INT_NORM		(0x10,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_7		= GTYPEID_MAKE_INT_NORM		(0x10,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_8		= GTYPEID_MAKE_INT_NORM		(0x10,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_9		= GTYPEID_MAKE_INT_NORM		(0x10,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_16		= GTYPEID_MAKE_INT_NORM		(0x10,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_32		= GTYPEID_MAKE_INT_NORM		(0x10,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_64		= GTYPEID_MAKE_INT_NORM		(0x10,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_128	= GTYPEID_MAKE_INT_NORM		(0x10,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT16_NORM_256	= GTYPEID_MAKE_INT_NORM		(0x10,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM		= GTYPEID_MAKE_INT_NORM		(0x20,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_2		= GTYPEID_MAKE_INT_NORM		(0x20,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_3		= GTYPEID_MAKE_INT_NORM		(0x20,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_4		= GTYPEID_MAKE_INT_NORM		(0x20,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_5		= GTYPEID_MAKE_INT_NORM		(0x20,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_6		= GTYPEID_MAKE_INT_NORM		(0x20,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_7		= GTYPEID_MAKE_INT_NORM		(0x20,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_8		= GTYPEID_MAKE_INT_NORM		(0x20,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_9		= GTYPEID_MAKE_INT_NORM		(0x20,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_16		= GTYPEID_MAKE_INT_NORM		(0x20,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_32		= GTYPEID_MAKE_INT_NORM		(0x20,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_64		= GTYPEID_MAKE_INT_NORM		(0x20,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_128	= GTYPEID_MAKE_INT_NORM		(0x20,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_INT32_NORM_256	= GTYPEID_MAKE_INT_NORM		(0x20,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM		= GTYPEID_MAKE_INT_NORM		(0x40,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_2		= GTYPEID_MAKE_INT_NORM		(0x40,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_3		= GTYPEID_MAKE_INT_NORM		(0x40,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_4		= GTYPEID_MAKE_INT_NORM		(0x40,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_5		= GTYPEID_MAKE_INT_NORM		(0x40,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_6		= GTYPEID_MAKE_INT_NORM		(0x40,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_7		= GTYPEID_MAKE_INT_NORM		(0x40,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_8		= GTYPEID_MAKE_INT_NORM		(0x40,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_9		= GTYPEID_MAKE_INT_NORM		(0x40,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_16		= GTYPEID_MAKE_INT_NORM		(0x40,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_32		= GTYPEID_MAKE_INT_NORM		(0x40,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_64		= GTYPEID_MAKE_INT_NORM		(0x40,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_INT64_NORM_128	= GTYPEID_MAKE_INT_NORM		(0x40,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM		= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_2	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_3	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_4	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_5	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_6	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_7	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_8	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_9	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_16	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_32	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_64	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_128	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT16_NORM_256	= GTYPEID_MAKE_FLOAT_NORM	(0x10,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM		= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_2	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_3	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_4	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_5	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_6	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_7	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_8	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_9	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_16	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_32	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_64	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_128	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT32_NORM_256	= GTYPEID_MAKE_FLOAT_NORM	(0x20,0x100);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM		= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x001);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_2	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x002);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_3	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x003);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_4	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x004);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_5	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x005);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_6	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x006);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_7	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x007);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_8	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x008);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_9	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x009);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_16	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x010);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_32	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x020);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_64	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x040);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_128	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x080);
+	stacxpr SDataTypeID	DATA_TYPE_FLOAT64_NORM_256	= GTYPEID_MAKE_FLOAT_NORM	(0x40,0x100);
 
-	// --------------		------------------------	------------------------- DATA_TYPE ---------------------------------------------------------------
+	// --------------	--------------------	------------------------- DATA_TYPE ---------------------------------------------------------------
 	// -- Non-POD types:
-	static 		constexpr SDataTypeID			DATA_TYPE_UNKNOWN				= GTYPEID_MAKE_NON_UNIFORM(0x01);				// aka DATA_TYPE_INT1
-	static 		constexpr SDataTypeID			DATA_TYPE_GPKVECTOR				= GTYPEID_MAKE_NON_UNIFORM(0x02);				// aka DATA_TYPE_INT1_2
-	static 		constexpr SDataTypeID			DATA_TYPE_GPKSTRING				= GTYPEID_MAKE_NON_UNIFORM(0x03);				// aka DATA_TYPE_INT1_3
-	static 		constexpr SDataTypeID			DATA_TYPE_GLABEL				= GTYPEID_MAKE_NON_UNIFORM(0x04);				// aka DATA_TYPE_INT1_4
-	static 		constexpr SDataTypeID			DATA_TYPE_GENUM					= GTYPEID_MAKE_NON_UNIFORM(0x05);				// aka DATA_TYPE_INT1_5
-	static 		constexpr SDataTypeID			DATA_TYPE_GDESCRIPTOR			= GTYPEID_MAKE_NON_UNIFORM(0x06);				// aka DATA_TYPE_INT1_6
-	static 		constexpr SDataTypeID			DATA_TYPE_GPOD					= GTYPEID_MAKE_NON_UNIFORM(0x07);				// aka DATA_TYPE_INT1_7
-	static 		constexpr SDataTypeID			DATA_TYPE_GOBJ					= GTYPEID_MAKE_NON_UNIFORM(0x08);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_GNCO					= GTYPEID_MAKE_NON_UNIFORM(0x09);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_GREF					= GTYPEID_MAKE_NON_UNIFORM(0x0A);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_GLIST					= GTYPEID_MAKE_NON_UNIFORM(0x0B);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_GPURE					= GTYPEID_MAKE_NON_UNIFORM(0x0C);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_CUSTOM				= GTYPEID_MAKE_NON_UNIFORM(0x0D);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_POD					= GTYPEID_MAKE_NON_UNIFORM(0x0E);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_OBJ					= GTYPEID_MAKE_NON_UNIFORM(0x0F);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_NCO					= GTYPEID_MAKE_NON_UNIFORM(0x10);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_MOD					= GTYPEID_MAKE_NON_UNIFORM(0x11);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_FUN					= GTYPEID_MAKE_NON_UNIFORM(0x12);				//
-	static 		constexpr SDataTypeID			DATA_TYPE_PRC					= GTYPEID_MAKE_NON_UNIFORM(0x13);				// aka DATA_TYPE_INT1_13
-	static 		constexpr SDataTypeID			DATA_TYPE_POINTER				= GTYPEID_MAKE_NON_UNIFORM(sizeof(void*)*8);	// notice that this definition changes depending on the platform
+	stacxpr SDataTypeID	DATA_TYPE_UNKNOWN			= GTYPEID_MAKE_NON_UNIFORM(0x01);				// aka DATA_TYPE_INT1
+	stacxpr SDataTypeID	DATA_TYPE_GPKVECTOR			= GTYPEID_MAKE_NON_UNIFORM(0x02);				// aka DATA_TYPE_INT1_2
+	stacxpr SDataTypeID	DATA_TYPE_GPKSTRING			= GTYPEID_MAKE_NON_UNIFORM(0x03);				// aka DATA_TYPE_INT1_3
+	stacxpr SDataTypeID	DATA_TYPE_GLABEL			= GTYPEID_MAKE_NON_UNIFORM(0x04);				// aka DATA_TYPE_INT1_4
+	stacxpr SDataTypeID	DATA_TYPE_GENUM				= GTYPEID_MAKE_NON_UNIFORM(0x05);				// aka DATA_TYPE_INT1_5
+	stacxpr SDataTypeID	DATA_TYPE_GDESCRIPTOR		= GTYPEID_MAKE_NON_UNIFORM(0x06);				// aka DATA_TYPE_INT1_6
+	stacxpr SDataTypeID	DATA_TYPE_GPOD				= GTYPEID_MAKE_NON_UNIFORM(0x07);				// aka DATA_TYPE_INT1_7
+	stacxpr SDataTypeID	DATA_TYPE_GOBJ				= GTYPEID_MAKE_NON_UNIFORM(0x08);				//
+	stacxpr SDataTypeID	DATA_TYPE_GNCO				= GTYPEID_MAKE_NON_UNIFORM(0x09);				//
+	stacxpr SDataTypeID	DATA_TYPE_GREF				= GTYPEID_MAKE_NON_UNIFORM(0x0A);				//
+	stacxpr SDataTypeID	DATA_TYPE_GLIST				= GTYPEID_MAKE_NON_UNIFORM(0x0B);				//
+	stacxpr SDataTypeID	DATA_TYPE_GPURE				= GTYPEID_MAKE_NON_UNIFORM(0x0C);				//
+	stacxpr SDataTypeID	DATA_TYPE_CUSTOM			= GTYPEID_MAKE_NON_UNIFORM(0x0D);				//
+	stacxpr SDataTypeID	DATA_TYPE_POD				= GTYPEID_MAKE_NON_UNIFORM(0x0E);				//
+	stacxpr SDataTypeID	DATA_TYPE_OBJ				= GTYPEID_MAKE_NON_UNIFORM(0x0F);				//
+	stacxpr SDataTypeID	DATA_TYPE_NCO				= GTYPEID_MAKE_NON_UNIFORM(0x10);				//
+	stacxpr SDataTypeID	DATA_TYPE_MOD				= GTYPEID_MAKE_NON_UNIFORM(0x11);				//
+	stacxpr SDataTypeID	DATA_TYPE_FUN				= GTYPEID_MAKE_NON_UNIFORM(0x12);				//
+	stacxpr SDataTypeID	DATA_TYPE_PRC				= GTYPEID_MAKE_NON_UNIFORM(0x13);				// aka DATA_TYPE_INT1_13
+	stacxpr SDataTypeID	DATA_TYPE_POINTER			= GTYPEID_MAKE_NON_UNIFORM(sizeof(void*)*8);	// notice that this definition changes depending on the platform
 
 	// -- STL types
-	static 		constexpr SDataTypeID			DATA_TYPE_STLOTHER				= GTYPEID_MAKE_STL(0x01);	// aka DATA_TYPE_FLOAT1_NORM
-	static 		constexpr SDataTypeID			DATA_TYPE_STLVECTOR				= GTYPEID_MAKE_STL(0x02);	// aka DATA_TYPE_FLOAT1_NORM_2
-	static 		constexpr SDataTypeID			DATA_TYPE_STLSTRING				= GTYPEID_MAKE_STL(0x03);	// aka DATA_TYPE_FLOAT1_NORM_3
+	stacxpr SDataTypeID	DATA_TYPE_STLOTHER			= GTYPEID_MAKE_STL(0x01);	// aka DATA_TYPE_FLOAT1_NORM
+	stacxpr SDataTypeID	DATA_TYPE_STLVECTOR			= GTYPEID_MAKE_STL(0x02);	// aka DATA_TYPE_FLOAT1_NORM_2
+	stacxpr SDataTypeID	DATA_TYPE_STLSTRING			= GTYPEID_MAKE_STL(0x03);	// aka DATA_TYPE_FLOAT1_NORM_3
 
-	// -- Random bullshit that can cause a lot of problems such as security vulnerabilities, buffer overflows, hidden bugs, portability problems, increasing code size, etc.
-	static 		const SDataTypeID			DATA_TYPE_SIZE_T				= ::gpk::SDataTypeID(sizeof(size_t)*8, 1, false, sizeof(size_t) == 4 ? false : true);
+	stacxpr SDataTypeID	DATA_TYPE_SIZE_T			= ::gpk::SDataTypeID(sizeof(size_t)*8, 1, false, sizeof(size_t) == 4 ? false : true);
 
 	//}; // DATA_TYPE
 	// ------------------------------------------ Aliases
-#define DATA_TYPE_DATATYPE	DATA_TYPE_UINT32
-#define DATA_TYPE_BOOL		DATA_TYPE_UINT8
+	stacxpr	DATA_TYPE	DATA_TYPE_DATATYPE			= DATA_TYPE_UINT32;
+	stacxpr	DATA_TYPE	DATA_TYPE_BOOL				= DATA_TYPE_UINT8;
 
 #pragma pack(pop)
-							uint32_t					getStringFromDataType			( DATA_TYPE dataType, char* string );
+	uint32_t			getStringFromDataType			(DATA_TYPE dataType, char* string);
 
 #if defined(__WINDOWS__)
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4

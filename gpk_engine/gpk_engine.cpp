@@ -194,9 +194,9 @@
 	return iEntity;
 }
 
-::gpk::error_t			gpk::SEngine::CreateSphere			()	{ 
+::gpk::error_t			gpk::SEngine::CreateSphere			(uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f & center)	{ 
 	::gpk::STrianglesIndexed		geometry;
-	::gpk::geometryBuildSphere(geometry, 24, 24, .5f, {});
+	::gpk::geometryBuildSphere(geometry, stacks, slices, radius, center);
 
 	int32_t									iEntity								= Entities.Create();
 	Entities.Names[iEntity]				= ::gpk::vcs{"Sphere"};
@@ -287,57 +287,107 @@
 	return iEntity;
 }
 
-::gpk::error_t			gpk::SEngine::CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio)	{ 
-	::gpk::STrianglesIndexed		geometry;
+static ::gpk::error_t	createBuffers	
+	( uint32_t							vertexCount
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
+	) {
+	::gpk::clear(pIndicesVertex, pVertices, pNormals, pUV);
+	pVertices	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
+	pVertices	->Desc.Usage	= ::gpk::BUFFER_USAGE_Position;
+
+	pNormals	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
+	pNormals	->Desc.Usage	= ::gpk::BUFFER_USAGE_Normal;
+
+	pUV			->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_2;
+	pUV			->Desc.Usage	= ::gpk::BUFFER_USAGE_UV;
+
+	pIndicesVertex->Desc.Usage	= ::gpk::BUFFER_USAGE_Index;
+	pIndicesVertex->Desc.Format	
+		= (vertexCount > 0xFFFF) ? ::gpk::DATA_TYPE_UINT32
+		: (vertexCount > 0x00FF) ? ::gpk::DATA_TYPE_UINT16
+		: ::gpk::DATA_TYPE_UINT8
+		;
+	return 0;
+}
+
+
+static ::gpk::error_t	createBuffers	
+	( const ::gpk::STrianglesIndexed	& geometry
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
+	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
+	) {
+	gpk_necs(::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
+
+	pVertices	->Data.resize(geometry.Positions	.byte_count());
+	pNormals	->Data.resize(geometry.Normals		.byte_count());
+	pUV			->Data.resize(geometry.TextureCoords.byte_count());
+	memcpy(&pVertices	->Data[0], geometry.Positions		.begin(), pVertices	->Data.size());
+	memcpy(&pNormals	->Data[0], geometry.Normals			.begin(), pNormals	->Data.size());
+	memcpy(&pUV			->Data[0], geometry.TextureCoords	.begin(), pUV		->Data.size());
+	if(geometry.Positions.size() > 0xFFFF) {
+		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count());
+		memcpy(pIndicesVertex->Data.begin(), geometry.PositionIndices.begin(), pIndicesVertex->Data.size());
+	}
+	else if(geometry.Positions.size() > 0xFF) {
+		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 1);
+		::gpk::vu16					viewIndices					= ::gpk::vu16{(uint16_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
+		viewIndices.enumerate([&geometry](uint32_t index, uint16_t & value){ value = (uint16_t)geometry.PositionIndices[index]; }, 0);
+	}
+	else {
+		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 2);
+		::gpk::vu8					viewIndices					= ::gpk::vu8{(uint8_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
+		viewIndices.enumerate([&geometry](uint32_t index, uint8_t & value){ value = (uint8_t)geometry.PositionIndices[index]; }, 0);
+	}
+
+	return 0;
+}
+
+static ::gpk::error_t	createBuffers
+	( ::gpk::SRenderBufferManager		& bufferManager 
+	, const ::gpk::STrianglesIndexed	& geometry
+	, uint32_t							& iVertices
+	, uint32_t							& iNormals
+	, uint32_t							& iUV
+	, uint32_t							& iIndicesVertex
+	) {
+	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex	;
+	::gpk::pobj<::gpk::SRenderBuffer>	pVertices		;
+	::gpk::pobj<::gpk::SRenderBuffer>	pNormals		;
+	::gpk::pobj<::gpk::SRenderBuffer>	pUV				;
+	gpk_necs(::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
+	gpk_necs(iIndicesVertex			= (uint32_t)bufferManager.push_back(pIndicesVertex));
+	gpk_necs(iVertices				= (uint32_t)bufferManager.push_back(pVertices));
+	gpk_necs(iNormals				= (uint32_t)bufferManager.push_back(pNormals));
+	gpk_necs(iUV					= (uint32_t)bufferManager.push_back(pUV));
+	return 0;
+}
+
+::gpk::error_t			gpk::SEngine::CreateCylinder(uint16_t slices, bool reverse, float diameterRatio)	{ 
+	::gpk::STrianglesIndexed	geometry;
 	if(reverse)
 		::gpk::geometryBuildCylinder(geometry, 1, slices, .5f, .5f, {}, {1, 1, -1}, true, diameterRatio);
 	else
 		::gpk::geometryBuildCylinder(geometry, 1, slices, .5f, .5f, {}, {1, 1, 1}, false, diameterRatio);
 
-	int32_t									iEntity								= this->Entities.Create();
-	Entities.Names[iEntity]		= ::gpk::vcs{"Cylinder"};
-	::gpk::SVirtualEntity					& entity							= Entities[iEntity];
-	entity.RenderNode					= Scene->RenderNodes.Create();
-	entity.RigidBody					= this->Integrator.Create();
+	int32_t						iEntity					= this->Entities.Create();
+	Entities.Names[iEntity]	= ::gpk::vcs{"Cylinder"};
+	::gpk::SVirtualEntity		& entity				= Entities[iEntity];
+	entity.RenderNode		= Scene->RenderNodes.Create();
+	entity.RigidBody		= this->Integrator.Create();
 
-	::gpk::pobj<::gpk::SRenderBuffer>		pIndicesVertex;
-	::gpk::pobj<::gpk::SRenderBuffer>		pVertices;
-	::gpk::pobj<::gpk::SRenderBuffer>		pNormals;
-	::gpk::pobj<::gpk::SRenderBuffer>		pUV;
+	uint32_t					iVertices				= 0;
+	uint32_t					iNormals				= 0;
+	uint32_t					iUV						= 0;
+	uint32_t					iIndicesVertex			= 0;
+	::createBuffers(Scene->Graphics->Buffers, geometry, iIndicesVertex, iVertices, iNormals, iUV);
 
-	pIndicesVertex	->Desc.Format		= ::gpk::DATA_TYPE_UINT16;
-	pIndicesVertex	->Desc.Usage		= ::gpk::BUFFER_USAGE_Index;
-
-	pVertices		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pVertices		->Desc.Usage		= ::gpk::BUFFER_USAGE_Position;
-
-	pNormals		->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_3;
-	pNormals		->Desc.Usage		= ::gpk::BUFFER_USAGE_Normal;
-
-	pUV				->Desc.Format		= ::gpk::DATA_TYPE_FLOAT32_2;
-	pUV				->Desc.Usage		= ::gpk::BUFFER_USAGE_UV;
-
-	pIndicesVertex	->Data.resize(geometry.PositionIndices	.byte_count() / 2);
-	::gpk::view<uint16_t>					viewIndices							= {(uint16_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-	for(uint32_t index = 0; index < geometry.PositionIndices.size(); ++index) {
-		viewIndices[index]					= (uint16_t)geometry.PositionIndices[index];
-	}
-	//memcpy(&pIndicesVertex	->Data[0], geometry.PositionIndices	.begin(), pIndicesVertex	->Data.size());
-
-	pVertices	->Data.resize(geometry.Positions		.byte_count());
-	pNormals	->Data.resize(geometry.Normals			.byte_count());
-	pUV			->Data.resize(geometry.TextureCoords	.byte_count());
-	memcpy(&pVertices	->Data[0], geometry.Positions		.begin(), pVertices	->Data.size());
-	memcpy(&pNormals	->Data[0], geometry.Normals			.begin(), pNormals	->Data.size());
-	memcpy(&pUV			->Data[0], geometry.TextureCoords	.begin(), pUV		->Data.size());
-
-	uint32_t								iVertices				= (uint32_t)Scene->Graphics->Buffers.push_back(pVertices);
-	uint32_t								iNormals				= (uint32_t)Scene->Graphics->Buffers.push_back(pNormals);
-	uint32_t								iUV						= (uint32_t)Scene->Graphics->Buffers.push_back(pUV);
-	uint32_t								iIndicesVertex			= (uint32_t)Scene->Graphics->Buffers.push_back(pIndicesVertex);
-
-	uint32_t								iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
-	::gpk::pobj<::gpk::SGeometryMesh>		& mesh					= Scene->Graphics->Meshes[iMesh];
+	uint32_t					iMesh					= (uint32_t)Scene->Graphics->Meshes.Create();
+	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Scene->Graphics->Meshes[iMesh];
 	Scene->Graphics->Meshes.Names[iMesh]= ::gpk::vcs{"Sphere"};
 	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
 
@@ -384,20 +434,23 @@
 	return iEntity;
 }
 
+::gpk::error_t			gpk::SEngine::CreateGrid			(::gpk::n2u16 gridSize, bool topRight)	{ 	
+	int32_t						iEntity								= this->Entities.Create();
+	::gpk::STrianglesIndexed	geometry;
+	::gpk::geometryBuildGrid(geometry, gridSize, gridSize.f32() * .5f, {1.0f / gridSize.x, 1.0f / gridSize.y}, topRight);
+	return iEntity;
+ }
+
 ::gpk::error_t			gpk::SEngine::CreateCircle			()	{ 	
-	int32_t									iEntity								= this->Entities.Create();
+	int32_t						iEntity								= this->Entities.Create();
 	return iEntity;
  }
 ::gpk::error_t			gpk::SEngine::CreateRing			()	{ 	
-	int32_t									iEntity								= this->Entities.Create();
-	return iEntity;
- }
-::gpk::error_t			gpk::SEngine::CreateSquare			()	{ 	
-	int32_t									iEntity								= this->Entities.Create();
+	int32_t						iEntity								= this->Entities.Create();
 	return iEntity;
  }
 ::gpk::error_t			gpk::SEngine::CreateTriangle		()	{ 	
-	int32_t									iEntity								= this->Entities.Create();
+	int32_t						iEntity								= this->Entities.Create();
 	return iEntity;
  }
 

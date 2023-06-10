@@ -9,10 +9,15 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
+	typedef	uint32_t			eid_t;
+
+	typedef	apod<eid_t>			aeid;
+	typedef	view<const eid_t>	vceid;
+
 	struct SVirtualEntity {
 		uint32_t							RenderNode		= (uint32_t)-1;
 		uint32_t							RigidBody		= (uint32_t)-1;
-		uint32_t							Parent			= (uint32_t)-1;
+		eid_t								Parent			= (eid_t)-1;
 	};
 #pragma pack(pop)
 
@@ -20,7 +25,7 @@ namespace gpk
 		::gpk::apod<::gpk::SVirtualEntity>	Entities		= {};
 		::gpk::aobj<::gpk::vcc>				Names			= {};
 
-		::gpk::apobj<::gpk::au32>			Children		= {};
+		::gpk::apobj<::gpk::aeid>			Children		= {};
 
 		const ::gpk::SVirtualEntity&		operator[]		(uint32_t index)							const	{ return Entities[index]; }
 		SVirtualEntity&						operator[]		(uint32_t index)									{ return Entities[index]; }
@@ -39,7 +44,7 @@ namespace gpk
 			return Entities.remove_unordered(index);
 		}
 
-		::gpk::error_t						Save			(::gpk::apod<uint8_t> & output) const { 
+		::gpk::error_t						Save			(::gpk::au8 & output) const { 
 			gpk_necs(::gpk::saveView(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				gpk_necall(::gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
@@ -51,8 +56,8 @@ namespace gpk
 
 		::gpk::error_t						Load			(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Entities));
-			gpk_necall(Children	.resize(Entities.size()), "size: %i", Entities.size());
-			gpk_necall(Names	.resize(Entities.size()), "size: %i", Entities.size());
+			gpk_necs(Children	.resize(Entities.size()));
+			gpk_necs(Names		.resize(Entities.size()));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				if(!Children[iEntity])
 					Children[iEntity].create();

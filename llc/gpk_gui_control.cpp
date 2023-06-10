@@ -1,7 +1,6 @@
 #include "gpk_gui_control.h"
 #include "gpk_label.h"
 
-
 ::gpk::error_t			gpk::controlListInitialize			(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu					= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
@@ -124,13 +123,13 @@
 
 	}
 	{
-		::gpk::SControl								& control								= gui.Controls.Controls		[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
-		::gpk::SControlText							& controlText							= gui.Controls.Text			[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
-		control.Area.Size						= {(int16_t)heightTitleBar, (int16_t)heightTitleBar};
-		control.Align							= ::gpk::ALIGN_TOP_RIGHT;
-		controlText.Text						= {"X", (uint32_t)1};
-		controlText.Align						= ::gpk::ALIGN_CENTER;
-		::gpk::SControlConstraints					& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		::gpk::SControl				& control								= gui.Controls.Controls		[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		::gpk::SControlText			& controlText							= gui.Controls.Text			[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
+		control.Area.Size		= {(int16_t)heightTitleBar, (int16_t)heightTitleBar};
+		control.Align			= ::gpk::ALIGN_TOP_RIGHT;
+		controlText.Text		= {"X", (uint32_t)1};
+		controlText.Align		= ::gpk::ALIGN_CENTER;
+		::gpk::SControlConstraints	& controlConstraints					= gui.Controls.Constraints	[viewport.IdControls[VIEWPORT_CONTROL_CLOSE]];
 		controlConstraints.AttachSizeToControl	= {-1, -1};
 	}
 	{
@@ -169,6 +168,7 @@
 ::gpk::error_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
 	const ::gpk::n2f64			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
+
 	::gpk::SControl				& control					= gui.Controls.Controls[palette.IdControl];
 	const uint32_t				widthViewport				= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
 	const uint32_t				heightViewport				= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
@@ -177,34 +177,34 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::paletteGridColorsSet				(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::bgra>& colors)			{
+::gpk::error_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::bgra>& colors)			{
 	if(-1 == palette.IdControl)
 		::gpk::paletteGridInitialize(gui, palette);
 
 	//gui.Controls.Metrics[palette.IdControl];
 
-	const ::gpk::n2u32			& gridMetrics							= colors.metrics();
+	const ::gpk::n2u32			& gridMetrics				= colors.metrics();
 	palette.IdControls.resize(colors.size());
 	palette.Colors			= colors;
 
-	const ::gpk::n2f64			targetSize								= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.f64(); //{256.0, 256.0};
-	::gpk::n2f64				controlSize								= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
+	const ::gpk::n2f64			targetSize					= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.f64(); //{256.0, 256.0};
+	::gpk::n2f64				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(uint32_t y = 0; y < gridMetrics.y; ++y)
 	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
-		const int32_t				linearIndex								= y * gridMetrics.x + x;
-		uint32_t					iFoundColor								= 0;
-		int32_t						themeIndex								= -1;
-		const ::gpk::bgra			& gridCellColor							= colors[y][x];
+		const int32_t				linearIndex					= y * gridMetrics.x + x;
+		uint32_t					iFoundColor					= 0;
+		int32_t						themeIndex					= -1;
+		const ::gpk::bgra			& gridCellColor				= colors[y][x];
 		for(; iFoundColor < gui.Colors->Palette->size(); ++iFoundColor)
 			if((*gui.Colors->Palette)[iFoundColor] == gridCellColor) {
-				themeIndex															= iFoundColor;
+				themeIndex				= iFoundColor;
 				break;
 			}
 		if(iFoundColor >= gui.Colors->Palette->size()) {
-			int32_t											indexColor								= gui.Colors->Palette->push_back(gridCellColor);
-			themeIndex									= gui.Colors->ControlThemes->push_back({});
-			::gpk::SControlTheme							& theme									= (*gui.Colors->ControlThemes)[themeIndex];
+			int32_t						indexColor			= gui.Colors->Palette->push_back(gridCellColor);
+			themeIndex				= gui.Colors->ControlThemes->push_back({});
+			::gpk::SControlTheme		& theme				= (*gui.Colors->ControlThemes)[themeIndex];
 			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboDisabled		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	] = {};
 			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboPressed 		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	] = {};
 			::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	& comboSelected		= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	] = {};
@@ -221,45 +221,77 @@
 			comboPressed	[::gpk::UI_CONTROL_AREA_BACKGROUND	]	= indexColor;
 			comboPressed	[::gpk::UI_CONTROL_AREA_CLIENT		]	= comboDisabled[::gpk::UI_CONTROL_AREA_BACKGROUND];
 			//for(uint32_t iState = 0; iState < theme.ColorCombos.size(); ++iState)
-			//	for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
-			//		theme.ColorCombos[iState][iArea]									= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
+			//for(uint32_t iArea = 0; iArea < ::gpk::GUI_CONTROL_COLOR_COUNT; ++iArea)
+			//	theme.ColorCombos[iState][iArea]	= ::gpk::min((uint32_t)theme.ColorCombos[iState][iArea], gui.Palette.size() - 1);
 		}
-		const uint32_t															paletteElemIndex						= linearIndex;
-		palette.IdControls[paletteElemIndex]								= ::gpk::controlCreate(gui);
-		::gpk::SControl															& control								= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
-		control.ColorTheme													= int16_t(themeIndex + 1);
-		control.Area.Offset													= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
-		control.Area.Size													= controlSize.i16();
+		const uint32_t				paletteElemIndex	= linearIndex;
+		palette.IdControls[paletteElemIndex] = ::gpk::controlCreate(gui);
+		::gpk::SControl				& control			= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
+		control.ColorTheme		= int16_t(themeIndex + 1);
+		control.Area.Offset		= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
+		control.Area.Size		= controlSize.i16();
 		gpk_necs(::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
 	}
 	return 0;
 }
 
-::gpk::error_t			gpk::guiSetupButtonList			(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2<uint16_t> & buttonSize, const ::gpk::n2<int16_t> & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::view<int32_t> out_ids) {
-	int32_t								result							= -1;
+::gpk::error_t			gpk::guiSetupControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SControl & args, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+	int32_t						result						= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
-		int32_t								idControl						= ::gpk::controlCreate(gui);
+		int32_t						idControl					= ::gpk::controlCreate(gui);
 		if(out_ids.size() > iButton)
-			out_ids[iButton] = idControl;
+			out_ids[iButton]		= idControl;
 
 		if(0 == iButton)
-			result = idControl;
-		::gpk::SControl						& control						= gui.Controls.Controls[idControl];
-		control.Area					= {{offset.x, (int16_t)(buttonSize.y * iButton + offset.y)}, buttonSize.i16()};
-		control.Border					= {1, 1, 1, 1};//{10, 10, 10, 10};
-		control.Margin					= {1, 1, 1, 1};
-		control.Align					= controlAlign;
-		::gpk::SControlText					& controlText					= gui.Controls.Text[idControl];
-		controlText.Text				= buttonText[iButton];
-		controlText.Align				= textAlign;
+			result					= idControl;
+
+		::gpk::SControl				& control					= gui.Controls.Controls[idControl];
+		control					= args;
+		if(direction & (::gpk::DIRECTION_LEFT | ::gpk::DIRECTION_RIGHT))
+			control.Area.Offset.x	+= int16_t(args.Area.Size.x * iButton);
+		else
+			control.Area.Offset.y	+= int16_t(args.Area.Size.y * iButton);
+
+		::gpk::SControlText			& controlText				= gui.Controls.Text[idControl];
+		controlText.Text		= buttonText[iButton];
+		controlText.Align		= textAlign;
+
+		::gpk::SControlConstraints	& itemConstraints	= gui.Controls.Constraints[idControl];
+		if(direction & (::gpk::DIRECTION_UP | ::gpk::DIRECTION_DOWN))
+			itemConstraints.AttachSizeToControl.x	= iParent;
+		else if(direction & (::gpk::DIRECTION_LEFT | ::gpk::DIRECTION_RIGHT)) {
+			itemConstraints.AttachSizeToText.x		= true;
+			itemConstraints.AttachSizeToControl.y	= iParent;
+		}
+
+		if(iButton) {
+			if(direction & ::gpk::DIRECTION_LEFT)
+				itemConstraints.DockToControl.Left	= out_ids[iButton - 1];
+			else if(direction & ::gpk::DIRECTION_RIGHT)
+				itemConstraints.DockToControl.Right	= out_ids[iButton - 1];
+			else if(direction & ::gpk::DIRECTION_UP)
+				itemConstraints.DockToControl.Top	= out_ids[iButton - 1];
+			else if(direction & ::gpk::DIRECTION_DOWN)
+				itemConstraints.DockToControl.Bottom	= out_ids[iButton - 1];
+
+		}
 		gpk_necall(::gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a template and macro for this pattern
 	}
 	return result;
 }
 
+::gpk::error_t			gpk::guiSetupControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+	SControl					controlArgs					= {};
+	controlArgs.Align		= controlAlign;
+	controlArgs.Area		= {offset, buttonSize.i16()};
+	controlArgs.Border		= {1, 1, 1, 1};
+	controlArgs.Margin		= {1, 1, 1, 1};
+	return ::gpk::guiSetupControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);
+}
+
 
 ::gpk::error_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
-	::gpk::apod<uint16_t>			keys;
+	::gpk::au16					keys;
 	for(uint16_t i = 1; i < 255; ++i) {
 		keys.push_back(i);
 	}
@@ -271,30 +303,30 @@
 }
 
 
-::gpk::error_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view<const uint16_t> & keys) {
-	vk.Keys							= keys;
+::gpk::error_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu16 & keys) {
+	vk.Keys					= keys;
 
-	vk.IdRoot						= ::gpk::controlCreate(gui);
-	const ::gpk::n2u8		charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::n2<int16_t>		sizeKey						= (charSize + ::gpk::n2u8{6, 6}).i16();
+	vk.IdRoot				= ::gpk::controlCreate(gui);
+	const ::gpk::n2u8			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
+	const ::gpk::n2i16			sizeKey						= (charSize + ::gpk::n2u8{6, 6}).i16();
 	stacxpr	uint16_t			SIZE_BUTTON					= 88;
-	const ::gpk::n2<int16_t>		sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
+	const ::gpk::n2i16			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
-		::gpk::SControl						& controlRoot				= gui.Controls.Controls[vk.IdRoot];
-		controlRoot.Area.Size			= sizeKeypad;
-		controlRoot.Align				= ::gpk::ALIGN_CENTER_BOTTOM;
+		::gpk::SControl				& controlRoot				= gui.Controls.Controls[vk.IdRoot];
+		controlRoot.Area.Size	= sizeKeypad;
+		controlRoot.Align		= ::gpk::ALIGN_CENTER_BOTTOM;
 	}
 	for(uint32_t iKey = 0; iKey < vk.Keys.size(); ++iKey) {
-		char								text[8]		= {};
+		char						text[8]		= {};
 		sprintf_s(text, "%c", vk.Keys[iKey]);
 
-		int32_t								idKey			= ::gpk::controlCreate(gui);
-		::gpk::SControl						& controlKey	= gui.Controls.Controls[idKey];
-		controlKey.Area.Size			= sizeKey;
-		controlKey.Area.Offset.x		= (int16_t)((iKey % rowWidth) * sizeKey.x);
-		controlKey.Area.Offset.y		= (int16_t)((iKey / rowWidth) * sizeKey.y);
-		controlKey.Border				= {1, 1, 1, 1};
+		int32_t						idKey			= ::gpk::controlCreate(gui);
+		::gpk::SControl				& controlKey	= gui.Controls.Controls[idKey];
+		controlKey.Area.Size	= sizeKey;
+		controlKey.Area.Offset.x= int16_t((iKey % rowWidth) * sizeKey.x);
+		controlKey.Area.Offset.y= int16_t((iKey / rowWidth) * sizeKey.y);
+		controlKey.Border		= {1, 1, 1, 1};
 		//controlKey.ColorTheme			= ::gpk::ASCII_COLOR_DARKGREY * 16 + 8;
 		gui.Controls.Text[idKey].Align	= ::gpk::ALIGN_CENTER;
 
@@ -302,39 +334,39 @@
 		gpk_necs(::gpk::controlTextSet(gui, idKey, ::gpk::label(text)));
 	}
 
-	gpk_necs(::gpk::guiSetupButtonList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT));
+	gpk_necs(::gpk::guiSetupControlList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_CENTER, vk.IdKeys));
 	return 0;
 }
 
 ::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent)	{
-		gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
-		gui.Controls.Controls	[inputBox.IdRoot].Border			= {};
-		gui.Controls.Controls	[inputBox.IdRoot].Margin			= {};
-		gui.Controls.Modes		[inputBox.IdRoot].Design			= true;
-		gui.Controls.Modes		[inputBox.IdRoot].NoBackgroundRect	= true;
+	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
+	gui.Controls.Controls	[inputBox.IdRoot].Border			= {};
+	gui.Controls.Controls	[inputBox.IdRoot].Margin			= {};
+	gui.Controls.Modes		[inputBox.IdRoot].Design			= true;
+	gui.Controls.Modes		[inputBox.IdRoot].NoBackgroundRect	= true;
 
-		gpk_necs(inputBox.IdText = ::gpk::controlCreate(gui));
-		gui.Controls.Controls	[inputBox.IdText].Border	= {2, 2, 2, 2};
-		gui.Controls.Controls	[inputBox.IdText].Margin	= {1, 1, 1, 1};
-		gui.Controls.Controls	[inputBox.IdText].Area.Size	= {0, 22};
-		gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
+	gpk_necs(inputBox.IdText = ::gpk::controlCreate(gui));
+	gui.Controls.Controls	[inputBox.IdText].Border	= {2, 2, 2, 2};
+	gui.Controls.Controls	[inputBox.IdText].Margin	= {1, 1, 1, 1};
+	gui.Controls.Controls	[inputBox.IdText].Area.Size	= {0, 22};
+	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
-		gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
-		gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
-		gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Controls[inputBox.IdText].Align;
-		gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
-			= gui.Controls.Controls	[inputBox.IdText].Area.Offset.y
-			+ gui.Controls.Controls	[inputBox.IdText].Area.Size.y
-			;
-		gui.Controls.Controls	[inputBox.IdText].Area.Size.x	= gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Size.x;
+	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
+	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
+	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Controls[inputBox.IdText].Align;
+	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
+		= gui.Controls.Controls	[inputBox.IdText].Area.Offset.y
+		+ gui.Controls.Controls	[inputBox.IdText].Area.Size.y
+		;
+	gui.Controls.Controls	[inputBox.IdText].Area.Size.x	= gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Size.x;
 
-		gui.Controls.Controls[inputBox.IdRoot].Area.Size.x	= ::gpk::max(gui.Controls.Controls[inputBox.IdText].Area.Size.x, gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.x);
-		gui.Controls.Controls[inputBox.IdRoot].Area.Size.y	+= gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.y;
+	gui.Controls.Controls[inputBox.IdRoot].Area.Size.x	= ::gpk::max(gui.Controls.Controls[inputBox.IdText].Area.Size.x, gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.x);
+	gui.Controls.Controls[inputBox.IdRoot].Area.Size.y	+= gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.y;
 
-		gpk_necs(::gpk::controlSetParent(gui, inputBox.IdText					, inputBox.IdRoot));
-		gpk_necs(::gpk::controlSetParent(gui, inputBox.VirtualKeyboard.IdRoot	, inputBox.IdRoot));
-		if(iParent >= 0)
-			gpk_necall(::gpk::controlSetParent(gui, inputBox.IdRoot, iParent), "iParent: %i", iParent);
+	gpk_necs(::gpk::controlSetParent(gui, inputBox.IdText					, inputBox.IdRoot));
+	gpk_necs(::gpk::controlSetParent(gui, inputBox.VirtualKeyboard.IdRoot	, inputBox.IdRoot));
+	if(iParent >= 0)
+		gpk_necall(::gpk::controlSetParent(gui, inputBox.IdRoot, iParent), "iParent: %i", iParent);
 
-		return inputBox.IdRoot;
-	}
+	return inputBox.IdRoot;
+}

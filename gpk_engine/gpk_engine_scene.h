@@ -94,8 +94,8 @@ namespace gpk
 		}
 	};
 
-	typedef	::gpk::SLinearMap<::gpk::SSkin>							SSkinManager;
-	typedef	::gpk::SLinearMap<::std::function<TFuncPixelShader>>	SShaderManager;
+	typedef	::gpk::SLinearNamedMap<::gpk::SSkin>						SSkinManager;
+	typedef	::gpk::SLinearNamedMap<::std::function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
 		::gpk::SRenderBufferManager				Buffers					= {};

@@ -11,41 +11,42 @@
 namespace brt // I'm gonna use a different namespace in order to test a few things about the macros.
 {
 	struct SProcessHandles {
-		HANDLE						ChildStd_IN_Read		= INVALID_HANDLE_VALUE;
-		HANDLE						ChildStd_IN_Write		= INVALID_HANDLE_VALUE;
-		HANDLE						ChildStd_OUT_Read		= INVALID_HANDLE_VALUE;
-		HANDLE						ChildStd_OUT_Write		= INVALID_HANDLE_VALUE;
-		HANDLE						ChildStd_ERR_Read		= INVALID_HANDLE_VALUE;
-		HANDLE						ChildStd_ERR_Write		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_IN_Read		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_IN_Write		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_OUT_Read		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_OUT_Write		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_ERR_Read		= INVALID_HANDLE_VALUE;
+		HANDLE				ChildStd_ERR_Write		= INVALID_HANDLE_VALUE;
 	};
 
 	struct SProcess {
-		PROCESS_INFORMATION			ProcessInfo				= {};
-		STARTUPINFOA				StartInfo				= {sizeof(STARTUPINFOA)};
+		PROCESS_INFORMATION	ProcessInfo				= {};
+		STARTUPINFOA		StartInfo				= {sizeof(STARTUPINFOA)};
 	};
 
 	struct SApplication {
-		::gpk::SFramework								Framework;
-		::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>	Offscreen							= {};
-		::gpk::SUDPServer								Server								= {};
-		::gpk::aobj<::gpk::apobj<::gpk::SUDPMessage>>	ReceivedPerClient;
-		::gpk::aobj<::gpk::aobj<::gpk::au8>>			ClientResponses;
+		::gpk::SFramework				Framework;
+		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen							= {};
+		::gpk::SUDPServer				Server								= {};
+		::gpk::apobj<::gpk::apobj<::gpk::SUDPMessage>>	ReceivedPerClient;
+		::gpk::apobj<::gpk::apobj<::gpk::au8>>			ClientResponses;
 		::gpk::aobj<::brt::SProcess>					ClientProcesses;
 		::gpk::aobj<::brt::SProcessHandles>				ClientIOHandles;
-		::gpk::vcc										ProcessFileName						= "";
-		::gpk::vcc										ProcessMockPath						= "";
-		::gpk::vcc										ProcessParams						= "";
-		SECURITY_ATTRIBUTES								DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
-		::gpk::ac										szCmdlineApp						= "";
-		::gpk::ac										szCmdlineFinal						= "";
+		::gpk::vcc			ProcessFileName						= "";
+		::gpk::vcc			ProcessMockPath						= "";
+		::gpk::vcc			ProcessParams						= "";
+		SECURITY_ATTRIBUTES	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
-		int32_t											IdExit								= -1;
+		::gpk::ac			szCmdlineApp						= "";
+		::gpk::ac			szCmdlineFinal						= "";
 
-		::std::mutex									LockGUI;
-		::std::mutex									LockRender;
+		int32_t				IdExit								= -1;
 
-														SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
+		::std::mutex		LockGUI;
+		::std::mutex		LockRender;
+
+										SApplication		(::gpk::SRuntimeValues& runtimeValues)	: Framework(runtimeValues)		{}
 	};
 } // namespace
 

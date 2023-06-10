@@ -16,10 +16,27 @@ namespace gpk
 		, ::gpk::SRenderNodeManager				& renderNodes
 		);
 
+#pragma pack(push, 1)
+	struct SParamsBox		{ };
+	struct SParamsSphere	{ uint16_t Stacks, Slices; float Radius; const ::gpk::n3f32 & Center; };
+	struct SParamsCylinder	{ uint16_t Slices; bool Reverse; float DiameterRatio; };
+	struct SParamsGrid		{ ::gpk::n2u16 CellCount; bool ReverseTriangles; };
+#pragma pack(pop)
+
 	struct SEngine {
 		::gpk::pobj<::gpk::SEngineScene>Scene				;
 		::gpk::SVirtualEntityManager	Entities			;
 		::gpk::SRigidBodyIntegrator		Integrator			;
+
+		::gpk::apod<SParamsBox		>	GeometryParamsBox		;
+		::gpk::apod<SParamsSphere	>	GeometryParamsSphere	;
+		::gpk::apod<SParamsCylinder	>	GeometryParamsCylinder	;
+		::gpk::apod<SParamsGrid		>	GeometryParamsGrid		;
+
+		::gpk::au32						GeometryRenderNodeBox		;
+		::gpk::au32						GeometryRenderNodeSphere	;
+		::gpk::au32						GeometryRenderNodeCylinder	;
+		::gpk::au32						GeometryRenderNodeGrid		;
 
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }
@@ -31,7 +48,7 @@ namespace gpk
 			gpk_necs(Integrator	.Save(output));
 			return 0;
 		}
-		::gpk::error_t					Load				(::gpk::vcu8 & input) {
+		::gpk::error_t					Load				(::gpk::vcu8 & input)	{
 			gpk_necs(Scene		->Load(input));
 			gpk_necs(Entities	.Load(input));
 			gpk_necs(Integrator	.Load(input));
@@ -108,20 +125,20 @@ namespace gpk
 		inline	::gpk::error_t			SetDampingAngular	(uint32_t iEntity, float damping)								{ Integrator.Masses[GetRigidBody(iEntity)].AngularDamping	= damping;	return 0; }
 		::gpk::error_t					SetHidden			(uint32_t iEntity, bool hidden)									{ Scene->RenderNodes.Flags[GetRenderNode(iEntity)].NoDraw	= hidden;	return 0; }	
 
-		::gpk::error_t					ToggleHidden			(uint32_t iEntity) {
-			::gpk::SRenderNodeFlags				& flags					= Scene->RenderNodes.Flags[GetRenderNode(iEntity)];
+		::gpk::error_t					ToggleHidden		(uint32_t iEntity) {
+			::gpk::SRenderNodeFlags				& flags				= Scene->RenderNodes.Flags[GetRenderNode(iEntity)];
 			flags.NoDraw					= !flags.NoDraw;
 			return 0;
 		}
 
 		::gpk::error_t					CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t					CreateCamera		();
-		::gpk::error_t					CreateSphere		();
+		::gpk::error_t					CreateSphere		(uint32_t stacks = 24, uint32_t slices = 24, float radius = .5f, const ::gpk::n3f32 & center = {});
 		::gpk::error_t					CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio);
 		::gpk::error_t					CreateBox			();
 		::gpk::error_t					CreateCircle		();
 		::gpk::error_t					CreateRing			();
-		::gpk::error_t					CreateSquare		();
+		::gpk::error_t					CreateGrid			(::gpk::n2u16 gridSize, bool topRight = false);
 		::gpk::error_t					CreateTriangle		();
 		::gpk::error_t					Update				(double secondsLastFrame)			{
 			Integrator.Integrate(secondsLastFrame);
