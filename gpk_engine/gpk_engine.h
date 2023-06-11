@@ -104,13 +104,14 @@ namespace gpk
 
 		::gpk::error_t					CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t					CreateCamera		();
+		::gpk::error_t					CreateBox			(const SParamsBox & params);
 		::gpk::error_t					CreateSphere		(const SParamsSphere & params);
 		::gpk::error_t					CreateCylinder		(const SParamsCylinder & params);
 		::gpk::error_t					CreateGrid			(const SParamsGrid & params);
-		::gpk::error_t					CreateBox			();
 		::gpk::error_t					CreateCircle		();
 		::gpk::error_t					CreateRing			();
 		::gpk::error_t					CreateTriangle		();
+		::gpk::error_t					CreateBox			() { SParamsBox params = {}; return CreateBox(params); }
 		inline	::gpk::error_t			CreateSphere		(uint16_t stacks = 24, uint16_t slices = 24, float radius = .5f, const ::gpk::n3f32 & center = {}) { 
 			SParamsSphere			params			= {};
 			params.Stacks		= stacks;

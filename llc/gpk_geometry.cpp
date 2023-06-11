@@ -1,4 +1,23 @@
 #include "gpk_geometry.h"
+#include "gpk_voxel.h"
+
+template<typename _tIndex>
+static	::gpk::error_t	geometryBuildSpheroidIndices(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const uint16_t stacks, const uint16_t slices) {// uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
+	for(uint32_t y = 0; y < stacks; ++y) {
+		for(uint32_t z = 0; z < slices; ++z) {
+			const uint32_t				indices		[4]				= {vertexOffset + 0, vertexOffset + 1, (vertexOffset + slices + 1), (vertexOffset + slices + 2)};
+			positionIndices.push_back(indices[0]);
+			positionIndices.push_back(indices[2]);
+			positionIndices.push_back(indices[1]);
+			positionIndices.push_back(indices[1]);
+			positionIndices.push_back(indices[2]);
+			positionIndices.push_back(indices[3]);
+			++vertexOffset;
+		}
+		++vertexOffset;
+	}
+	return 0;
+}
 
 ::gpk::error_t			gpk::geometryBuildSphere	(STrianglesIndexed & geometry, const ::gpk::SParamsSphere & params) {// uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
 	const ::gpk::n2f32			texCoordUnits				= {1.0f / params.Slices, 1.0f / params.Stacks};
@@ -8,28 +27,16 @@
 		const double				currentY					= ::gpk::math_pi * y / params.Slices;
 		const double				currentRadius				= sin(currentY);
 		for(uint32_t x = 0; x < (uint32_t)params.Slices + 1; ++x)  {
-			::gpk::n2f32				texcoord				= {x * texCoordUnits.x, y * texCoordUnits.y};
+			::gpk::n2f32				texcoord				= {x * texCoordUnits.x, 1.0f - (y * texCoordUnits.y)};
 			geometry.TextureCoords.push_back(texcoord);
 			const double				currentX				= ::gpk::math_2pi * x / params.Stacks;
-			::gpk::n3f64				coord 					= {currentRadius * cos(currentX), cos(currentY), currentRadius * sin(currentX) * scale};
+			::gpk::n3f64				coord 					= {currentRadius * cos(currentX), -cos(currentY), currentRadius * sin(currentX) * scale};
 			geometry.Positions	.push_back((coord * params.Radius).f32() - params.Center);
 			geometry.Normals	.push_back(coord.Normalize().f32() * scale);
 		}
 	}
-	for(uint32_t y = 0; y < params.Stacks; ++y) {
-		for(uint32_t z = 0; z < params.Slices; ++z) {
-			uint32_t					indices		[4]			= {vertexOffset + 0, vertexOffset + 1, (vertexOffset + params.Slices + 1), (vertexOffset + params.Slices + 2)};
-			geometry.PositionIndices.push_back(indices[0]);
-			geometry.PositionIndices.push_back(indices[1]);
-			geometry.PositionIndices.push_back(indices[2]);
-			geometry.PositionIndices.push_back(indices[1]);
-			geometry.PositionIndices.push_back(indices[3]);
-			geometry.PositionIndices.push_back(indices[2]);
-			++vertexOffset;
-		}
-		++vertexOffset;
-	}
 
+	::geometryBuildSpheroidIndices(geometry.PositionIndices, vertexOffset, params.Stacks, params.Slices); 
 	return 0;
 }
 
@@ -42,7 +49,7 @@
 	for(uint32_t y = 0; y < (uint32_t)params.Stacks + 1; ++y) {
 		double						radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, radiusUnit * y);
 		for(uint32_t z = 0; z < (uint32_t)params.Slices + 1; ++z) {
-			::gpk::n2f32				texcoord					= {z * texCoordUnits.x, y * texCoordUnits.y};
+			::gpk::n2f32				texcoord					= {z * texCoordUnits.x, 1.f - y * texCoordUnits.y};
 			geometry.TextureCoords.push_back(texcoord);
 
 			::gpk::n3f64				coord						= {radius, (double)y};
@@ -53,20 +60,7 @@
 		}
 	}
 
-	for(uint32_t y = 0; y < params.Stacks; ++y) {
-		for(uint32_t z = 0; z < params.Slices; ++z) {
-			uint32_t					indices		[4]				= {vertexOffset + 0, vertexOffset + 1, (vertexOffset + params.Slices + 1), (vertexOffset + params.Slices + 2)};
-			geometry.PositionIndices.push_back(indices[0]);
-			geometry.PositionIndices.push_back(indices[2]);
-			geometry.PositionIndices.push_back(indices[1]);
-			geometry.PositionIndices.push_back(indices[1]);
-			geometry.PositionIndices.push_back(indices[2]);
-			geometry.PositionIndices.push_back(indices[3]);
-			++vertexOffset;
-		}
-		++vertexOffset;
-	}
-
+	::geometryBuildSpheroidIndices(geometry.PositionIndices, vertexOffset, params.Stacks, params.Slices); 
 	return 0;
 }
 
@@ -77,21 +71,21 @@ enum SQUARE_MODE
 
 ::gpk::error_t			gpk::geometryBuildGrid	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsGrid & params)	{
 	const ::gpk::n2f32			texCoordUnits			= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
-	const ::gpk::n3f32			scale					= {1.0f / params.CellCount.x, 1, 1.0f / params.CellCount.y};
+	const ::gpk::n2f32			scale					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
 	uint32_t					vertexOffset			= geometry.Positions.size();
+	const ::gpk::n3f32			center					= {params.Center.x, 0, params.Center.y};
 
 	for(uint32_t z = 0, zStop = params.CellCount.y + 1; z < zStop; ++z)
 	for(uint32_t x = 0, xStop = params.CellCount.x + 1; x < xStop; ++x) {
-		::gpk::n3f32				position				= {(float)x, 0, (float)z};
-		position.Scale(scale);
-		position				-= {.5f, 0, .5f};
+		::gpk::n3f32				position				= {(float)x * scale.x, 0, (float)z * scale.y};
+		position				-= center;
 
 		geometry.Positions		.push_back(position);
 		geometry.TextureCoords	.push_back({x * texCoordUnits.x, z * texCoordUnits.y});
 		geometry.Normals		.push_back({0, 1, 0});
 	}
 
-	const uint16_t				pitch					= params.CellCount.x;
+	const uint16_t				pitch					= params.CellCount.x + 1;
 	const uint32_t				indices[4]				= {0U, 1U, pitch, uint32_t(pitch + 1U)};
 	const uint32_t				indices_modes[2][6]		=
 		{ {indices[0], indices[1], indices[3], indices[0], indices[3], indices[2]}
@@ -113,5 +107,22 @@ enum SQUARE_MODE
 		}
 		++vertexOffset;
 	}
+	return 0;
+}
+
+::gpk::error_t			gpk::geometryBuildBox	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsBox & params) {
+	::gpk::resize(24, geometry.Positions, geometry.Normals, geometry.TextureCoords);
+	geometry.PositionIndices.resize(36);
+	const ::gpk::view<const n3f32>	vertices			= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
+	for(uint32_t iVertex = 0; iVertex < geometry.Positions.size(); ++iVertex)
+		geometry.Positions[iVertex] = (vertices[iVertex] - params.Center).Scale(params.HalfSizes.f32() * 2.0f);
+
+	//memcpy(&geometry.Positions		[0], ::gpk::VOXEL_FACE_VERTICES	, geometry.Positions		.byte_count());
+	memcpy(&geometry.Normals		[0], ::gpk::VOXEL_FACE_NORMALS	, geometry.Normals			.byte_count());
+	memcpy(&geometry.TextureCoords	[0], ::gpk::VOXEL_FACE_UV		, geometry.TextureCoords	.byte_count());
+	const ::gpk::vcu16			indices					= {::gpk::VOXEL_FACE_INDICES_16[0], 36};
+	for(uint32_t iIndex = 0; iIndex < geometry.PositionIndices.size(); ++iIndex) 
+		geometry.PositionIndices[iIndex] = indices[iIndex];
+
 	return 0;
 }

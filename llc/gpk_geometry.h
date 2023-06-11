@@ -15,8 +15,8 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SParamsBox { 
-		::gpk::n3f32	Center;
-		::gpk::n3u32	HalfSizes;
+		::gpk::n3f32	Center			= {.5f, .5f, .5f};
+		::gpk::n3f32	HalfSizes		= {.5f, .5f, .5f};
 
 		GPK_DEFAULT_OPERATOR(SParamsBox, HalfSizes == other.HalfSizes && Center == other.Center); 
 	};
@@ -24,7 +24,7 @@ namespace gpk
 	struct SParamsSphere { 
 		::gpk::n3f32		Center		= {};
 		float				Radius		= .5f;
-		uint16_t			Stacks		= 16;
+		uint16_t			Stacks		= 24;
 		uint16_t			Slices		= 24;
 		bool				Reverse		= false;
 	
@@ -51,6 +51,7 @@ namespace gpk
 #pragma pack(pop)
 
 
+	::gpk::error_t	geometryBuildBox		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsBox		& params);
 	::gpk::error_t	geometryBuildSphere		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsSphere	& params);
 	::gpk::error_t	geometryBuildCylinder	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsCylinder	& params);
 	::gpk::error_t	geometryBuildGrid		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsGrid		& params);
