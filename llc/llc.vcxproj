@@ -24,10 +24,14 @@
     <ClInclude Include="gpk_align.h" />
     <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_app_impl.h" />
+    <ClInclude Include="gpk_aptr.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
+    <ClInclude Include="gpk_array_color.h" />
     <ClInclude Include="gpk_array_obj.h" />
+    <ClInclude Include="gpk_array_pobj.h" />
     <ClInclude Include="gpk_array_pod.h" />
+    <ClInclude Include="gpk_array_ppod.h" />
     <ClInclude Include="gpk_array_static.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
@@ -49,6 +53,7 @@
     <ClInclude Include="gpk_circle.h" />
     <ClInclude Include="gpk_collision.h" />
     <ClInclude Include="gpk_color.h" />
+    <ClInclude Include="gpk_color_type.h" />
     <ClInclude Include="gpk_complus.h" />
     <ClInclude Include="gpk_component_scene.h" />
     <ClInclude Include="gpk_coord.h" />
@@ -60,8 +65,10 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_geometry_draw.h" />
     <ClInclude Include="gpk_font.h" />
+    <ClInclude Include="gpk_grid_color.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
+    <ClInclude Include="gpk_image_color.h" />
     <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
@@ -83,6 +90,10 @@
     <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_tri2.h" />
     <ClInclude Include="gpk_tri3.h" />
+    <ClInclude Include="gpk_view_color.h" />
+    <ClInclude Include="gpk_view_n3.h" />
+    <ClInclude Include="gpk_view_pobj.h" />
+    <ClInclude Include="gpk_view_ppod.h" />
     <ClInclude Include="gpk_view_serialize.h" />
     <ClInclude Include="gpk_virtual_keyboard.h" />
     <ClInclude Include="gpk_vox.h" />
@@ -164,6 +175,7 @@
     <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_quad2.h" />
     <ClInclude Include="gpk_sphere.h" />
+    <ClInclude Include="gpk_view_n2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />

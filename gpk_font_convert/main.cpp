@@ -9,6 +9,7 @@
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
 #include "gpk_path.h"
+#include "gpk_image_color.h"
 
 ::gpk::error_t				pngToFont
 	( ::gpk::img8bgra			& imageCache
@@ -84,8 +85,8 @@ int						main					() {
 		::gpk::aobj<::gpk::vcc>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
 		::gpk::n2u32				fontCharSize			= {};
-		::gpk::parseIntegerDecimal(splitFontMetrics[0], &fontCharSize.x);
-		::gpk::parseIntegerDecimal(splitFontMetrics[1], &fontCharSize.y);
+		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);
+		::gpk::parseIntegerDecimal(splitFontMetrics[1], fontCharSize.y);
 		imageFixed.resize(imageCache.metrics());
 		for(uint32_t y = 0; y < imageFixed.metrics().y; ++y)
 		for(uint32_t x = 0; x < imageFixed.metrics().x; ++x) {

@@ -11,6 +11,30 @@
 
 namespace gpk
 {
+	template<typename TUnknown> 
+	::gpk::error_t		safe_release	(TUnknown ** storage) { 
+		TUnknown*				p				= *storage;
+		if(p) { 
+			(*storage)			= 0; 
+			return (::gpk::error_t)p->Release(); 
+		} 
+		return 0;
+	}
+
+	template<typename TUnknown> 
+	::gpk::error_t		safe_addref		(TUnknown ** storage, TUnknown * toAcquire) { 
+		::gpk::error_t			result			= 0;
+		TUnknown*				p				= *storage;
+		*storage			= toAcquire;
+		if(toAcquire)
+			result = (::gpk::error_t)toAcquire->AddRef();
+
+		if(p)
+			p->Release(); 
+
+		return result; 
+	}
+
 	template<typename _tNCO>
 	class ptr_com {
 	protected:
@@ -19,17 +43,18 @@ namespace gpk
 		typedef	::gpk::ptr_com<_tNCO>	TNCOPtr;
 		typedef	_tNCO					TRef;
 
-		inline					~ptr_com		()									noexcept	{ if(Reference) Reference->Release();								}
+		inline					~ptr_com		()									noexcept	{ clear(); }
+
 		inlcxpr					ptr_com			()									noexcept	= default;
-		inline					ptr_com			(const TNCOPtr& other)				noexcept	{ Reference = other.Reference; if(Reference) Reference->AddRef();	}
-		inlcxpr					ptr_com			(TNCOPtr&& other)					noexcept	{ Reference = other.Reference; other.Reference = 0;					}
-		inline					ptr_com			(TRef* other)						noexcept	{ Reference = other;												}
+		inline					ptr_com			(const TNCOPtr& other)				noexcept	{ Reference = other.Reference; if(Reference) Reference->AddRef(); }
+		inlcxpr					ptr_com			(TNCOPtr&& other)					noexcept	{ Reference = other.Reference; other.Reference = 0; }
+		inline					ptr_com			(TRef* other)						noexcept	{ Reference = other; }
 
 		inlcxpr	operator		TRef		*	()									noexcept	{ return Reference;	}
 		inlcxpr	operator		const TRef	*	()							const	noexcept	{ return Reference;	}
 
-		inlcxpr	bool			operator==		(const TNCOPtr& other)		const	noexcept	{ return Reference == other.Reference;												}
-		inlcxpr	bool			operator!=		(const TNCOPtr& other)		const	noexcept	{ return !operator==(other);														}
+		inlcxpr	bool			operator==		(const TNCOPtr& other)		const	noexcept	{ return Reference == other.Reference; }
+		inlcxpr	bool			operator!=		(const TNCOPtr& other)		const	noexcept	{ return !operator==(other); }
 
 		inlcxpr	TNCOPtr			operator =		(const TNCOPtr& other)				noexcept	{ TRef* oldInstance = Reference; Reference = other.Reference; if(Reference) Reference->AddRef();	if(oldInstance) oldInstance->Release(); return *this; }
 		inlcxpr	TNCOPtr			operator =		(TNCOPtr&& other)					noexcept	{ TRef* oldInstance = Reference; Reference = other.Reference; other.Reference = 0;					if(oldInstance) oldInstance->Release(); return *this; }
@@ -38,11 +63,12 @@ namespace gpk
 		inline	TRef*			operator->		()									noexcept	{ return Reference; }
 		inline	const TRef*		operator->		()							const	noexcept	{ return Reference; }
 
-		inline	TRef**			operator &		()									noexcept	{ return &Reference;	}
+		inline	TRef**			operator &		()									noexcept	{ return &Reference; }
 
-		inlcxpr	const TRef*		get_ref			()							const	noexcept	{ return Reference;	}
-		inlcxpr	const TRef*		set_ref			(TRef* ref)							noexcept	{ TRef* oldInstance = Reference; Reference = ref; if(oldInstance) oldInstance->Release(); return Reference;	}
-		inlcxpr	TRef*			get				()							const	noexcept	{ return Reference;	}
+		inline	uint32_t		clear			()									noexcept	{ return ::gpk::safe_release(&Reference); }
+		inlcxpr	const TRef*		get_ref			()							const	noexcept	{ return Reference; }
+		inlcxpr	const TRef*		set_ref			(TRef* ref)							noexcept	{ ::gpk::safe_addref(&Reference, ref); return Reference; }
+		inlcxpr	TRef*			get				()							const	noexcept	{ return Reference; }
 
 		template<typename _tNCOOther>
 		inline	::gpk::error_t	as				(_tNCOOther** other)				noexcept	{ 

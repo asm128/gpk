@@ -5,6 +5,7 @@
 
 #include "gpk_font.h"
 #include "gpk_raster_lh.h"
+#include "gpk_grid_color.h"
 
 #include <functional>
 

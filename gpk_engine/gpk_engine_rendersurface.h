@@ -1,6 +1,7 @@
 #include "gpk_color.h"
 #include "gpk_n2.h"
 #include "gpk_engine_container.h"
+#include "gpk_color_type.h"
 
 #ifndef GPK_ENGINE_RENDERIMAGE_H
 #define GPK_ENGINE_RENDERIMAGE_H

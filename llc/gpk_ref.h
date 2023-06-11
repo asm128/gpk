@@ -9,10 +9,10 @@ namespace gpk
 {
 	template<typename _tInstance>
 	struct gref {
-		typedef	_tInstance		TInstance;
+		typedef	_tInstance	T;
 
-		_tInstance				* Instance;
-		refcount_t				References;
+		T					* Instance;
+		refcount_t			References;
 	};
 
 	template<typename _tNCO>
@@ -42,12 +42,12 @@ namespace gpk
 		return 0;
 	};
 
-	template<typename _tOBJ>
-	_tOBJ*					ref_allocate			(::gpk::gref<_tOBJ>* * gpk_reference)	noexcept	{
-		typedef	::gpk::gref<_tOBJ>	TRef;
-		TRef						* newRef				= (TRef *)::gpk::gpk_malloc(sizeof(TRef));
+	template<typename T>
+	T*						ref_allocate			(::gpk::gref<T>* * gpk_reference)	noexcept	{
+		typedef	::gpk::gref<T>	TRef;
+		TRef						* newRef				= (TRef*)::gpk::gpk_malloc(sizeof(TRef));
 		retnul_gerror_if(0 == newRef, "%s", "Failed to allocate reference! Out of memory?");
-		if(0 == (newRef->Instance = (_tOBJ*)::gpk::gpk_malloc(sizeof(_tOBJ)))) {
+		if(0 == (newRef->Instance = (T*)::gpk::gpk_malloc(sizeof(T)))) {
 			::gpk::gpk_free(newRef);
 			error_printf("%s", "Failed to allocate instance! Out of memory?");
 			return 0;

@@ -8,6 +8,9 @@
 
 #include "gpk_sysevent.h"
 
+#include "gpk_image_color.h"
+
+
 #ifndef GPK_GUI_H_2903874982374
 #define GPK_GUI_H_2903874982374
 

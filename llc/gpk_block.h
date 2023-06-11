@@ -158,7 +158,7 @@ namespace gpk
 
 			filePart				= {&filePart[indexOfPrevDot], filePart.size() - indexOfPrevDot};
 			uint32_t					idBlock						= (uint32_t)-1;
-			::gpk::parseIntegerDecimal(filePart, &idBlock);
+			::gpk::parseIntegerDecimal(filePart, idBlock);
 			mapTable.MaxBlockOnDisk	= ::gpk::max(mapTable.MaxBlockOnDisk, (int32_t)idBlock);
 			if(0 <= ::gpk::find(idBlock, ::gpk::vcu32{blocksToSkip.begin(), blocksToSkip.size()}))
 				continue;
@@ -189,7 +189,7 @@ namespace gpk
 			::gpk::pobj<_tMapBlock>			newBlock;
 			newBlock.create();
 			::gpk::SRecordMap				newIndices;
-			gpk_necall(newIndices.IndexRecord = newBlock->MapAdd(sequenceToAdd), "%s", "Out of memory?");
+			gpk_necs(newIndices.IndexRecord = newBlock->MapAdd(sequenceToAdd));
 			newIndices.IdBlock			= 0;
 			mapTable.Block	.push_back(newBlock);
 			mapTable.Id		.push_back(newIndices.IdBlock);

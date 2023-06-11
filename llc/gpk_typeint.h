@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_debug.h"
 
 #if defined(GPK_ATMEL)
 #	include <stdint.h>
@@ -8,9 +8,6 @@
 
 #ifndef GPK_TYPEINT_H_29873490827342
 #define GPK_TYPEINT_H_29873490827342
-
-//typedef	int8_t			int8_t	;
-//typedef	uint8_t			uint8_t	;
 
 namespace gpk
 {
@@ -59,20 +56,31 @@ namespace gpk
 	template<class _tBase>	using									remove_volatile_t									= typename remove_volatile<_tBase>::type;
 
 
-	typedef uint8_t			u8	;
-	typedef uint16_t		u16	;
-	typedef uint32_t		u32	;
-	typedef uint64_t		u64	;
+	typedef uint8_t		u8	;
+	typedef uint16_t	u16	;
+	typedef uint32_t	u32	;
+	typedef uint64_t	u64	;
+	typedef int8_t		i8 ;
+	typedef int16_t		i16;
+	typedef int32_t		i32;
+	typedef int64_t		i64;
+	typedef float		f32;
+	typedef double		f64;
 
-	typedef int8_t			i8	;
-	typedef int16_t			i16	;
-	typedef int32_t			i32	;
-	typedef int64_t			i64	;
-	typedef float			f32	;
-	typedef double			f64	;
+	typedef const uint8_t	cu8 ;
+	typedef const uint16_t	cu16;
+	typedef const uint32_t	cu32;
+	typedef const uint64_t	cu64;
+	typedef const int8_t	ci8 ;
+	typedef const int16_t	ci16;
+	typedef const int32_t	ci32;
+	typedef const int64_t	ci64;
+	typedef const float		cf32;
+	typedef const double	cf64;
 }
 
 #define GPK_DEFAULT_OPERATOR(_otherType, ...)	\
-	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; }
+	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; } \
+	inlcxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
 
 #endif // GPK_TYPEINT_H_29873490827342

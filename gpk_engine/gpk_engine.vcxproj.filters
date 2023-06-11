@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="explorer">
+      <UniqueIdentifier>{b731d895-1b3a-4cdd-aaaa-186eb3e44410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d">
+      <UniqueIdentifier>{47c1436b-c4e1-4d78-9b04-c6a7ebf1589b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine_rendermesh.h">
@@ -45,9 +51,6 @@
     <ClInclude Include="gpk_engine_rendercolor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_d3d.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine_file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,6 +63,27 @@
     <ClInclude Include="gpk_engine_map_pod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_engine_explorer.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_explorer_menu.h">
+      <Filter>explorer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_d3d.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_d3d_app.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleFpsTextRenderer.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="Sample3DSceneRenderer.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">
@@ -71,9 +95,6 @@
     <ClCompile Include="gpk_engine_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_engine_d3d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_engine_file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -83,5 +104,28 @@
     <ClCompile Include="gpk_engine_collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_engine_explorer.cpp">
+      <Filter>explorer</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_d3d_app.cpp">
+      <Filter>d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_d3d.cpp">
+      <Filter>d3d</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="psSolid.hlsl" />
+    <FxCompile Include="SampleVertexShader.hlsl" />
+    <FxCompile Include="vsGUI.hlsl" />
+    <FxCompile Include="psGUI.hlsl" />
+    <FxCompile Include="psHidden.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PixelShaderShared.hlsli" />
+    <None Include="PixelShaderShared2D.hlsli" />
+    <None Include="ShaderShared2D.hlsli" />
+    <None Include="ShaderShared.hlsli" />
+    <None Include="ShaderColors.hlsli" />
   </ItemGroup>
 </Project>

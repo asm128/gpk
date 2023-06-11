@@ -18,32 +18,32 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t	setup	(::brt::SApplication & app)	{
-	::gpk::SFramework														& framework					= app.Framework;
-	::gpk::SWindow															& mainWindow				= framework.RootWindow;
-	mainWindow.Size														= {320, 200};
+::gpk::error_t			setup	(::brt::SApplication & app)	{
+	::gpk::SFramework			& framework					= app.Framework;
+	::gpk::SWindow				& mainWindow				= framework.RootWindow;
+	mainWindow.Size			= {320, 200};
 	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
-	::gpk::SGUI																& gui						= *framework.GUI;
-	app.IdExit															= ::gpk::controlCreate(gui);
-	::gpk::SControl															& controlExit				= gui.Controls.Controls[app.IdExit];
-	controlExit.Area													= {{0, 0}, {64, 20}};
-	controlExit.Border													= {1, 1, 1, 1};
-	controlExit.Margin													= {1, 1, 1, 1};
-	controlExit.Align													= ::gpk::ALIGN_BOTTOM_RIGHT;
-	::gpk::SControlText														& controlText				= gui.Controls.Text[app.IdExit];
-	controlText.Text													= "Exit";
-	controlText.Align													= ::gpk::ALIGN_CENTER;
-	::gpk::SControlConstraints												& controlConstraints		= gui.Controls.Constraints[app.IdExit];
-	controlConstraints.AttachSizeToText.y								= app.IdExit;
-	controlConstraints.AttachSizeToText.x								= app.IdExit;
+	::gpk::SGUI					& gui						= *framework.GUI;
+	app.IdExit				= ::gpk::controlCreate(gui);
+	::gpk::SControl				& controlExit				= gui.Controls.Controls[app.IdExit];
+	controlExit.Area		= {{0, 0}, {64, 20}};
+	controlExit.Border		= {1, 1, 1, 1};
+	controlExit.Margin		= {1, 1, 1, 1};
+	controlExit.Align		= ::gpk::ALIGN_BOTTOM_RIGHT;
+	::gpk::SControlText			& controlText				= gui.Controls.Text[app.IdExit];
+	controlText.Text		= "Exit";
+	controlText.Align		= ::gpk::ALIGN_CENTER;
+	::gpk::SControlConstraints	& controlConstraints		= gui.Controls.Constraints[app.IdExit];
+	controlConstraints.AttachSizeToText.y	= app.IdExit;
+	controlConstraints.AttachSizeToText.x	= app.IdExit;
 	::gpk::controlSetParent(gui, app.IdExit, -1);
 	::gpk::tcpipInitialize();
-	uint64_t																port						= 9998;
-	uint64_t																adapter						= 0;
+	uint64_t					port						= 9998;
+	uint64_t					adapter						= 0;
 	{ // load port from config file
-		::gpk::view_const_char													jsonPort					= {};
-		const ::gpk::SJSONReader												& jsonReader						= framework.JSONConfig.Reader;
-		const int32_t															indexObjectApp						= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, app.ProcessFileName);
+		::gpk::vcc					jsonPort					= {};
+		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
+		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, app.ProcessFileName);
 		gwarn_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
@@ -51,19 +51,19 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
-				::gpk::parseIntegerDecimal(jsonPort, &port);
+				::gpk::parseIntegerDecimal(jsonPort, port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
 			jsonPort = "";
 			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
-				::gpk::parseIntegerDecimal(jsonPort, &adapter);
+				::gpk::parseIntegerDecimal(jsonPort, adapter);
 				info_printf("Adapter: %u.", (uint32_t)adapter);
 			}
 		}
 	}
-	::gpk::apod<char>				& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
-	::gpk::apod<char>				& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
+	::gpk::apod<char>			& szCmdlineApp		= app.szCmdlineApp		= app.ProcessFileName;
+	::gpk::apod<char>			& szCmdlineFinal	= app.szCmdlineFinal	= app.ProcessMockPath;
 	if(app.ProcessParams.size()) {
 		szCmdlineFinal.push_back(' ');
 		szCmdlineFinal.append(app.ProcessParams);
@@ -75,21 +75,21 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-static	::gpk::error_t		createChildProcess
+static	::gpk::error_t	createChildProcess
 	(	::brt::SProcess					& process
 	,	::gpk::vu8						environmentBlock
 	,	::gpk::vcc						appPath
 	,	::gpk::vc						commandLine
 	,	bool							debugMessageBox			= false
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
-	::gpk::vcc						szCmdlineApp			= appPath;
-	::gpk::vc						szCmdlineFinal			= commandLine;
-	bool							bSuccess				= false;
-	stacxpr	bool		isUnicodeEnv			= false;
-	stacxpr	uint32_t	creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+	::gpk::vcc					szCmdlineApp			= appPath;
+	::gpk::vc					szCmdlineFinal			= commandLine;
+	bool						bSuccess				= false;
+	stacxpr	bool				isUnicodeEnv			= false;
+	stacxpr	uint32_t			creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
 	if(INVALID_HANDLE_VALUE != process.ProcessInfo.hProcess	){ CloseHandle(process.ProcessInfo.hProcess	); }
-	bSuccess					= CreateProcessA(szCmdlineApp.begin()	// Create the child process.
+	bSuccess				= CreateProcessA(szCmdlineApp.begin()	// Create the child process.
 		, szCmdlineFinal.begin()	// command line
 		, nullptr					// process security attributes
 		, nullptr					// primary thread security attributes
@@ -102,7 +102,7 @@ static	::gpk::error_t		createChildProcess
 		) ? true : false;  // receives PROCESS_INFORMATION
 	ree_if(false == bSuccess, "Failed to create process, because... '%s'.", "???");
 	if(debugMessageBox) {
-		::gpk::apod<char>		userMessage				= {};
+		::gpk::apod<char>			userMessage				= {};
 		userMessage.resize(2 * szCmdlineApp.size() + 2 * szCmdlineFinal.size() + 1024);
 		sprintf_s(userMessage.begin(), userMessage.size(), "Attach your debugger to '%s' and press OK to initiate the process' main thread.", szCmdlineApp.begin());
 		MessageBoxA(0, userMessage.begin(), "Last chance!", MB_OK | MB_TOPMOST);

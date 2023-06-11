@@ -56,6 +56,7 @@ namespace gpk
 			gthrow_if(index >= Count, "Invalid index: %i. Count: %i.", index, Count);
 			return Data[index];
 		}
+		bool					operator!=		(const TConstView & other)	const				{ return  !operator==(other); } // I had to add this for the android build not supporting C++20.
 		bool					operator==		(const TConstView & other)	const				{
 			if(this->size() != other.size())
 				return false;

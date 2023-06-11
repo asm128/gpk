@@ -3,6 +3,8 @@
 #include "gpk_noise.h"
 #include "gpk_ascii_color.h"
 #include "gpk_raster_lh.h"
+#include "gpk_view_n3.h"
+#include "gpk_view_n2.h"
 
 static	::gpk::error_t	transformTriangles					
 	( ::gpk::SVSOutput		& output

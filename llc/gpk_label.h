@@ -30,10 +30,10 @@ namespace gpk
 	};
 
 	stainli ::gpk::error_t	loadLabel		(::gpk::vcu8 & input, ::gpk::vcc & output) { 
-		uint32_t									bytesRead		= 0;
+		uint32_t					bytesRead		= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
-		input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
-		output									= ::gpk::label{(const char*)output.begin(), output.size()};
+		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		output					= ::gpk::label{(const char*)output.begin(), output.size()};
 		return 0;
 	}
 }

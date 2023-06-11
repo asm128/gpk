@@ -1,7 +1,5 @@
 /// Copyright 2009-2017 - asm128
 #include "gpk_math.h"
-#include "gpk_enum.h"
-#include "gpk_view_grid.h"
 
 #ifndef GPK_COLOR_H_29734982734
 #define GPK_COLOR_H_29734982734
@@ -219,41 +217,6 @@ namespace gpk
 	typedef ::gpk::SColorRGBA					rgba	;
 	typedef ::gpk::SColorRGB					rgb		;
 
-	typedef	::gpk::view<::gpk::rgbaf	>		v1rgbaf	;
-	typedef	::gpk::view<::gpk::bgra		>		v1bgra	;
-	typedef	::gpk::view<::gpk::bgr		>		v1bgr	;
-	typedef	::gpk::view<::gpk::rgba		>		v1rgba	;
-	typedef	::gpk::view<::gpk::rgb		>		v1rgb	;
-
-	typedef	::gpk::view<const ::gpk::rgbaf	>	v1crgbaf;
-	typedef	::gpk::view<const ::gpk::bgra	>	v1cbgra	;
-	typedef	::gpk::view<const ::gpk::bgr	>	v1cbgr	;
-	typedef	::gpk::view<const ::gpk::rgba	>	v1crgba	;
-	typedef	::gpk::view<const ::gpk::rgb	>	v1crgb	;
-
-	typedef	::gpk::view2d<::gpk::rgbaf	>		v2rgbaf	;
-	typedef	::gpk::view2d<::gpk::bgra	>		v2bgra	;
-	typedef	::gpk::view2d<::gpk::bgr	>		v2bgr	;
-	typedef	::gpk::view2d<::gpk::rgba	>		v2rgba	;
-	typedef	::gpk::view2d<::gpk::rgb	>		v2rgb	;
-
-	typedef	::gpk::view2d<const ::gpk::rgbaf>	v2crgbaf;
-	typedef	::gpk::view2d<const ::gpk::bgra	>	v2cbgra	;
-	typedef	::gpk::view2d<const ::gpk::bgr	>	v2cbgr	;
-	typedef	::gpk::view2d<const ::gpk::rgba	>	v2crgba	;
-	typedef	::gpk::view2d<const ::gpk::rgb	>	v2crgb	;
-
-	typedef	::gpk::apod<::gpk::rgbaf	>		aprgbaf	;
-	typedef	::gpk::apod<::gpk::bgra		>		apbgra	;
-	typedef	::gpk::apod<::gpk::bgr		>		apbgr	;
-	typedef	::gpk::apod<::gpk::rgba		>		aprgba	;
-	typedef	::gpk::apod<::gpk::rgb		>		aprgb	;
-
-	typedef	::gpk::apod<const ::gpk::rgbaf	>	apcrgbaf;
-	typedef	::gpk::apod<const ::gpk::bgra	>	apcbgra	;
-	typedef	::gpk::apod<const ::gpk::bgr	>	apcbgr	;
-	typedef	::gpk::apod<const ::gpk::rgba	>	apcrgba	;
-	typedef	::gpk::apod<const ::gpk::rgb	>	apcrgb	;
 
 	stacxpr	::gpk::rgbaf	BLACK			= {0.0f , 0.0f               , 0.00f, 1.0f};
 	stacxpr	::gpk::rgbaf	WHITE			= {1.0f , 1.0f               , 1.0f , 1.0f};
@@ -285,16 +248,6 @@ namespace gpk
 	stacxpr	::gpk::rgbaf	DARKMAGENTA		= {0.5f , 0.0f               , 0.5f , 1.0f};
 	stacxpr	::gpk::rgbaf	DARKCYAN		= {0.0f , 0.5f               , 0.5f , 1.0f};
 	stacxpr	::gpk::rgbaf	DARKORANGE		= {1.0f , 0.5490196078431373f, 0.00f, 1.0f};
-
-	GDEFINE_ENUM_TYPE(COLOR_TYPE, u8);
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE		, 0); // Grayscale
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, RGB				, 2); // Red Green Blue 
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, PALETTE			, 3); // Palette
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE_ALPHA	, 4); // Grayscale Alpha 
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, RGBA				, 6); // Red Green Blue Alpha
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, BGR				, 7); // Blue Green Red
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, BGRA				, 8); // Blue Green Red Alpha
-	GDEFINE_ENUM_VALUE(COLOR_TYPE, FILE				, 255); // Defined by file on load
 #pragma pack(pop)
 } // namespace
 

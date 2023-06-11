@@ -175,7 +175,7 @@ namespace gpk
 		::gpk::error_t				add_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	{
 			for(uint32_t i=0, count = Values.size(); i < count; ++i)
 				if(Values[i] == value) {
-					rww_if(Names[i] != name, "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
+					rww_if(name != Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 						, Name		.begin()
 						, (uint64_t)value
 						, Names[i]	.begin()

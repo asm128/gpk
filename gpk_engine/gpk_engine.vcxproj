@@ -167,7 +167,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="gpk_engine_d3d_app.h" />
+    <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="gpk_engine.h" />
+    <ClInclude Include="gpk_engine_explorer.h" />
+    <ClInclude Include="gpk_engine_explorer_menu.h" />
     <ClInclude Include="gpk_engine_gui.h" />
     <ClInclude Include="gpk_engine_map_pod.h" />
     <ClInclude Include="gpk_engine_soundbuffer.h" />
@@ -182,15 +186,58 @@
     <ClInclude Include="gpk_engine_scene.h" />
     <ClInclude Include="gpk_engine_shader.h" />
     <ClInclude Include="gpk_engine_file.h" />
+    <ClInclude Include="Sample3DSceneRenderer.h" />
+    <ClInclude Include="SampleFpsTextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gpk_engine_d3d_app.cpp" />
     <ClCompile Include="gpk_engine.cpp" />
     <ClCompile Include="gpk_engine_d3d.cpp" />
     <ClCompile Include="gpk_engine_collision.cpp" />
+    <ClCompile Include="gpk_engine_explorer.cpp" />
     <ClCompile Include="gpk_engine_scene.cpp" />
     <ClCompile Include="gpk_engine_shader.cpp" />
     <ClCompile Include="gpk_engine_soundbuffer.cpp" />
     <ClCompile Include="gpk_engine_file.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="psGUI.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="psHidden.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="psSolid.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="SampleVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="vsGUI.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PixelShaderShared.hlsli" />
+    <None Include="PixelShaderShared2D.hlsli" />
+    <None Include="ShaderColors.hlsli" />
+    <None Include="ShaderShared.hlsli" />
+    <None Include="ShaderShared2D.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

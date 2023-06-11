@@ -150,33 +150,33 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SContactResult {
-		::gpk::n3f32					ContactPosition					= {};
-		::gpk::n3f32					DistanceDirection				= {};
-		double							ForceTransferRatioA				= 0;
-		double							ForceTransferRatioB				= 0;
+		::gpk::n3f32			ContactPosition					= {};
+		::gpk::n3f32			DistanceDirection				= {};
+		double					ForceTransferRatioA				= 0;
+		double					ForceTransferRatioB				= 0;
 
-		::gpk::n3f32					InitialVelocityA				= {};
-		::gpk::n3f32					InitialVelocityB				= {};
-		::gpk::n3f32					FinalVelocityA					= {};
-		::gpk::n3f32					FinalVelocityB					= {};
+		::gpk::n3f32			InitialVelocityA				= {};
+		::gpk::n3f32			InitialVelocityB				= {};
+		::gpk::n3f32			FinalVelocityA					= {};
+		::gpk::n3f32			FinalVelocityB					= {};
 
-		::gpk::n3f32					InitialRotationA				= {};
-		::gpk::n3f32					InitialRotationB				= {};
-		::gpk::n3f32					FinalRotationA					= {};
-		::gpk::n3f32					FinalRotationB					= {};
+		::gpk::n3f32			InitialRotationA				= {};
+		::gpk::n3f32			InitialRotationB				= {};
+		::gpk::n3f32			FinalRotationA					= {};
+		::gpk::n3f32			FinalRotationB					= {};
 	};
 
 	struct SContact {
-		double							Time							= {};
-		uint32_t						EntityA							= {};
-		uint32_t						EntityB							= {};
-		::gpk::n3f32					CenterDistance					= {};
-		double							DistanceLength					= {};
-		::gpk::SContactResult			Result							= {};
+		double					Time							= {};
+		uint32_t				EntityA							= {};
+		uint32_t				EntityB							= {};
+		::gpk::n3f32			CenterDistance					= {};
+		double					DistanceLength					= {};
+		::gpk::SContactResult	Result							= {};
 	};
 #pragma pack(pop)
 
-	::gpk::error_t					collisionDetect		(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected);
+	::gpk::error_t			collisionDetect		(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected);
 } // namespace
 
 #endif

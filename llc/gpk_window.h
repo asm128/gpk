@@ -5,6 +5,7 @@
 #include "gpk_ptr_obj.h"
 #include "gpk_image.h"
 #include "gpk_rect.h"
+#include "gpk_color.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>

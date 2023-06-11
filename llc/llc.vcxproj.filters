@@ -528,6 +528,42 @@
     <ClInclude Include="gpk_geometry_draw.h">
       <Filter>geometry</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_color_type.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_color.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_color.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n2.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n3.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_image_color.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_color.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_pobj.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_ppod.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_aptr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_pobj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_ppod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

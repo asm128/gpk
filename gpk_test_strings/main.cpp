@@ -8,14 +8,14 @@
 
 // Splits a file into file.split.## parts.
 int									main							(int , char ** )		{
-	const ::gpk::view_const_string text = "habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::view_const_string text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
-	const ::gpk::view_const_string words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
+	const ::gpk::vcs text = "habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcs text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
+	const ::gpk::vcs words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
 	info_printf("%u:%s.", text.size(), text.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::view_const_char word = words[iWord];
+		const ::gpk::vcc word = words[iWord];
 
-		::gpk::view_const_char left, right;
+		::gpk::vcc left, right;
 		const int32_t iPos = ::gpk::split(word, text, left, right);
 		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
 		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
@@ -23,15 +23,15 @@ int									main							(int , char ** )		{
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::view_const_char word = words[iWord];
+		const ::gpk::vcc word = words[iWord];
 
-		::gpk::view_const_char left, right;
+		::gpk::vcc left, right;
 		const int32_t iPos = ::gpk::split(word, text1, left, right);
 		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
 		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
 	}
 
-	::gpk::view_const_char trimmed;
+	::gpk::vcc trimmed;
 	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
 	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
 	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());

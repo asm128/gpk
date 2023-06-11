@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{8fafebe5-e653-46ae-836e-13232b04e11e}</ProjectGuid>
-    <RootNamespace>gpkguieditor</RootNamespace>
+    <ProjectGuid>{d48bfec0-85ce-482a-87c8-8aa24166cf85}</ProjectGuid>
+    <RootNamespace>gpkengineexplorer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -95,9 +95,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; d1.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; d1_d3d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,9 +116,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; d1.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; d1_d3d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,9 +133,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; d1.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; d1_d3d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,26 +154,22 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; d1.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; d1_d3d.lib;</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutDir);</AdditionalLibraryDirectories>
+      <AdditionalDependencies>llc.lib; gpk_engine.lib; zlibvc.lib; user32.lib; gdi32.lib; shcore.lib; windowscodecs.lib; dxgi.lib; d2d1.lib; d3d11.lib; dwrite.lib; ole32.lib; </AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="audio.cpp" />
-    <ClCompile Include="gpk_gui_editor.cpp" />
-    <ClCompile Include="gpk_gui_editor_win32.cpp" />
-    <ClCompile Include="WaveBankReader.cpp" />
-    <ClCompile Include="WAVFileReader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="audio.h" />
-    <ClInclude Include="gpk_gui_editor.h" />
-    <ClInclude Include="gpk_gui_editor_app.h" />
-    <ClInclude Include="gpk_gui_editor_menu.h" />
+    <ClInclude Include="gpk_engine_explorer_app.h" />
     <ClInclude Include="WaveBankReader.h" />
     <ClInclude Include="WAVFileReader.h" />
     <ClInclude Include="XAudio2Versions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="audio.cpp" />
+    <ClCompile Include="gpk_engine_explorer_win32.cpp" />
+    <ClCompile Include="WaveBankReader.cpp" />
+    <ClCompile Include="WAVFileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

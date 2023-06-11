@@ -1,13 +1,7 @@
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
-#if defined(GPK_ATMEL) || defined(GPK_WINDOWS)
-#	include <stdint.h>
-#else
-#	include <cstdint>
-#endif
-
-#ifndef GPK_CHRONO_H_2983742893
-#define GPK_CHRONO_H_2983742893
+#ifndef GPK_CHRONO_H_23611
+#define GPK_CHRONO_H_23611
 
 namespace gpk
 {
@@ -25,4 +19,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_CHRONO_H_2983742893
+#endif // GPK_CHRONO_H_23611

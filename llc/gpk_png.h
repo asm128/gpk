@@ -1,8 +1,8 @@
-#include "gpk_array.h"
-#include "gpk_color.h"
 #include "gpk_image.h"
 #include "gpk_array_static.h"
 #include "gpk_enum.h"
+#include "gpk_color_type.h"
+#include "gpk_array_color.h"
 
 #ifndef GPK_PNG_H_0928374982374
 #define GPK_PNG_H_0928374982374
@@ -51,17 +51,17 @@ namespace gpk
 		};
 
 	struct SPNGData {
-		char									Signature			[8]			= {};
-		::gpk::aobj<SPNGChunk>					Chunks							;
-		::gpk::au8								Deflated						;
-		::gpk::au8								Inflated						;
-		::gpk::au8								Filters							;
-		::gpk::aobj<::gpk::au8>					Scanlines						;
-		::gpk::apbgr							Palette							;
-		::gpk::n2u32							Adam7Sizes			[7]			= {};
-		//::gpk::SPNGFeature						Feature							= {};
-		::gpk::SPNGIHDR							Header							= {};
-		::gpk::astatic<int32_t, PNG_TAG_COUNT>	Feature							;
+		char									Signature	[8]	= {};
+		::gpk::aobj<SPNGChunk>					Chunks			;
+		::gpk::au8								Deflated		;
+		::gpk::au8								Inflated		;
+		::gpk::au8								Filters			;
+		::gpk::aobj<::gpk::au8>					Scanlines		;
+		::gpk::a8bgr							Palette			;
+		::gpk::n2u32							Adam7Sizes	[7]	= {};
+		//::gpk::SPNGFeature						Feature			= {};
+		::gpk::SPNGIHDR							Header			= {};
+		::gpk::astatic<int32_t, PNG_TAG_COUNT>	Feature			;
 	};
 #pragma pack(pop)
 
