@@ -25,6 +25,8 @@ namespace gpk
 			gui.Controls.States[IdRoot].Hidden	= false == Editing;
 			return one_if(Editing);
 		}
+		
+		// Returns INT_MAX if the (real or virtual) enter key was pressed.
 		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::SSysEvent> frameEvents, ::gpk::vcu32 processableControls) { 
 			if(false == Editing)
 				return 0;
@@ -33,11 +35,11 @@ namespace gpk
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
 			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](int32_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
-					handledControl = iControl;
+					return handledControl = iControl;
 				return 0;
 			}));
 
-			::gpk::aobj<::gpk::SSysEvent>					sysEvents			= frameEvents;
+			::gpk::aobj<::gpk::SSysEvent>sysEvents			= frameEvents;
 			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:

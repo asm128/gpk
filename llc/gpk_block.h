@@ -135,7 +135,7 @@ namespace gpk
 		}
 		::gpk::apod<char>				containerPath				= {};
 		::gpk::blockFilePath(containerPath, mapTable.DBName, dbPath);
-		::gpk::aobj<::gpk::apod<char>>	paths;
+		::gpk::aapod<char>				paths;
 		::gpk::pathCreate(containerPath);
 		::gpk::pathList(containerPath, paths, false, {});
 		constexpr ::gpk::vcs				extension					= ::gpk::EXTENSION_BLOCK_FILE;
@@ -160,7 +160,7 @@ namespace gpk
 			uint32_t					idBlock						= (uint32_t)-1;
 			::gpk::parseIntegerDecimal(filePart, &idBlock);
 			mapTable.MaxBlockOnDisk	= ::gpk::max(mapTable.MaxBlockOnDisk, (int32_t)idBlock);
-			if(0 <= ::gpk::find(idBlock, ::gpk::view_const_uint32{blocksToSkip.begin(), blocksToSkip.size()}))
+			if(0 <= ::gpk::find(idBlock, ::gpk::vcu32{blocksToSkip.begin(), blocksToSkip.size()}))
 				continue;
 
 			::gpk::SRecordMap			indexMap					= {};
@@ -197,8 +197,8 @@ namespace gpk
 			uint64_t						newIdRecord					= (uint64_t)-1LL;
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 			::gpk::apod<char>				bytesToWrite;
-			gpk_necall(newBlock->Save(bytesToWrite), "%s", "Out of memory?");
-			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
+			gpk_necs(newBlock->Save(bytesToWrite));
+			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
 			return newIdRecord;
 		}
 		for(uint32_t iBlock = 0, countBlocks = mapTable.Block.size(); iBlock < countBlocks; ++iBlock) {
@@ -206,13 +206,13 @@ namespace gpk
 			_tMapBlock						& blockInMemory				= *mapTable.Block[iBlock];
 			if(idBlockInMemory == ((uint32_t)mapTable.MaxBlockOnDisk) && blockInMemory.Size() < (int32_t)mapTable.BlockConfig.BlockSize) {
 				::gpk::SRecordMap				newIndices;
-				gpk_necall(newIndices.IndexRecord = blockInMemory.MapAdd(sequenceToAdd), "Failed to add record! %s", "Out of memory?");
+				gpk_necs(newIndices.IndexRecord = blockInMemory.MapAdd(sequenceToAdd));
 				newIndices.IdBlock			= idBlockInMemory;
 				uint64_t						newIdRecord					= (uint64_t)-1LL;
 				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 				::gpk::apod<char>				bytesToWrite;
-				gpk_necall(blockInMemory.Save(bytesToWrite), "%s", "Out of memory?");
-				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "%s", "Failed to add record! Disk full?");
+				gpk_necs(blockInMemory.Save(bytesToWrite));
+				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
 				return newIdRecord;
 			}
 		}

@@ -60,11 +60,11 @@ stacxpr	const char						html_script	[]			=
 
 	framework.TargetSize								= {123, 456};
 
-		 if(keyVal.Key == ::gpk::vcs("w")) ::gpk::parseIntegerDecimal(keyVal.Val, &framework.TargetSize.x);
-	else if(keyVal.Key == ::gpk::vcs("h")) ::gpk::parseIntegerDecimal(keyVal.Val, &framework.TargetSize.y);
+		 if(keyVal.Key == ::gpk::vcs("w")) ::gpk::parseIntegerDecimal(keyVal.Val, framework.TargetSize.x);
+	else if(keyVal.Key == ::gpk::vcs("h")) ::gpk::parseIntegerDecimal(keyVal.Val, framework.TargetSize.y);
 
 	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("bt") - 1) && 0 == memcmp("bt", keyVal.Key.begin(), ::gpk::size("bt") - 1)) {
-		::gpk::parseIntegerDecimal(keyVal.Val, &framework.Bootstrapped);
+		::gpk::parseIntegerDecimal(keyVal.Val, framework.Bootstrapped);
 	}
 	if(keyVal.Val.size() && keyVal.Key.size() == (::gpk::size("m") - 1) && 0 == memcmp("m", keyVal.Key.begin(), ::gpk::size("m") - 1))
 		framework.ModuleName								= keyVal.Val;
@@ -93,7 +93,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::view<::gpk::view_const_char>		keyvalviews			= runtimeValues.QueryStringElements;
+		const ::gpk::view<::gpk::vcc>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
@@ -163,7 +163,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
-	const ::gpk::array_obj<::gpk::view_const_char>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	const ::gpk::array_obj<::gpk::vcc>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 

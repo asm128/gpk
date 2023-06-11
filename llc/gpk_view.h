@@ -56,7 +56,6 @@ namespace gpk
 			gthrow_if(index >= Count, "Invalid index: %i. Count: %i.", index, Count);
 			return Data[index];
 		}
-		inline	bool			operator!=		(const TConstView & other)	const				{ return !operator==(other); }
 		bool					operator==		(const TConstView & other)	const				{
 			if(this->size() != other.size())
 				return false;
@@ -136,47 +135,47 @@ namespace gpk
 
 #pragma pack(pop)
 
-	typedef	::gpk::view<::gpk::uchar_t		>	view_uchar			, v1uc, vuc;
-	typedef	::gpk::view<char				>	view_char			, v1c, vc;
-	typedef	::gpk::view<float				>	view_float32		, v1f32, v1f, vf32, vf;
-	typedef	::gpk::view<double				>	view_float64		, v1f64, v1d, vf64, vd;
-	typedef	::gpk::view<uint8_t				>	view_uint8			, v1u8, vu8;
-	typedef	::gpk::view<uint16_t			>	view_uint16			, v1u16, vu16;
-	typedef	::gpk::view<uint32_t			>	view_uint32			, v1u32, vu32;
-	typedef	::gpk::view<uint64_t			>	view_uint64			, v1u64, vu64;
-	typedef	::gpk::view<int8_t				>	view_int8			, v1i8, vi8;
-	typedef	::gpk::view<int16_t				>	view_int16			, v1i16, vi16;
-	typedef	::gpk::view<int32_t				>	view_int32			, v1i32, vi32;
-	typedef	::gpk::view<int64_t				>	view_int64			, v1i64, vi64;
-	typedef	::gpk::view<const ::gpk::uchar_t>	view_const_uchar	, v1cuc, vcuc;
-	typedef	::gpk::view<const char			>	view_const_char		, v1cc, vcc;
-	typedef	::gpk::view<const float			>	view_const_float32	, v1cf32, v1cf, vcf32, vcf;
-	typedef	::gpk::view<const double		>	view_const_float64	, v1cf64, v1cd, vcf64, vcd;
-	typedef	::gpk::view<const uint8_t		>	view_const_uint8	, v1cu8, vcu8;
-	typedef	::gpk::view<const uint16_t		>	view_const_uint16	, v1cu16, vcu16;
-	typedef	::gpk::view<const uint32_t		>	view_const_uint32	, v1cu32, vcu32;
-	typedef	::gpk::view<const uint64_t		>	view_const_uint64	, v1cu64, vcu64;
-	typedef	::gpk::view<const int8_t		>	view_const_int8		, v1ci8, vci8;
-	typedef	::gpk::view<const int16_t		>	view_const_int16	, v1ci16, vci16;
-	typedef	::gpk::view<const int32_t		>	view_const_int32	, v1ci32, vci32;
-	typedef	::gpk::view<const int64_t		>	view_const_int64	, v1ci64, vci64;
+	typedef	::gpk::view<::gpk::uchar_t		>	vuc;
+	typedef	::gpk::view<char				>	vc;
+	typedef	::gpk::view<float				>	vf32;
+	typedef	::gpk::view<double				>	vf64;
+	typedef	::gpk::view<uint8_t				>	vu8;
+	typedef	::gpk::view<uint16_t			>	vu16;
+	typedef	::gpk::view<uint32_t			>	vu32;
+	typedef	::gpk::view<uint64_t			>	vu64;
+	typedef	::gpk::view<int8_t				>	vi8;
+	typedef	::gpk::view<int16_t				>	vi16;
+	typedef	::gpk::view<int32_t				>	vi32;
+	typedef	::gpk::view<int64_t				>	vi64;
 
-	typedef	::gpk::view<::gpk::vuc	>	vvuc;
-	typedef	::gpk::view<::gpk::vc	>	vvc;
-	typedef	::gpk::view<::gpk::v1f	>	vv1f;
-	typedef	::gpk::view<::gpk::v1d	>	vv1d;
-	typedef	::gpk::view<::gpk::vu8	>	vvu8;
-	typedef	::gpk::view<::gpk::vu16	>	vvu16;
-	typedef	::gpk::view<::gpk::vu32	>	vvu32;
-	typedef	::gpk::view<::gpk::vu64	>	vvu64;
-	typedef	::gpk::view<::gpk::vi8	>	vvi8;
-	typedef	::gpk::view<::gpk::vi16	>	vvi16;
-	typedef	::gpk::view<::gpk::vi32	>	vvi32;
-	typedef	::gpk::view<::gpk::vi64	>	vvi64;
+	typedef	::gpk::view<const ::gpk::uchar_t>	vcuc;
+	typedef	::gpk::view<const char			>	vcc;
+	typedef	::gpk::view<const float			>	vcf32;
+	typedef	::gpk::view<const double		>	vcf64;
+	typedef	::gpk::view<const uint8_t		>	vcu8;
+	typedef	::gpk::view<const uint16_t		>	vcu16;
+	typedef	::gpk::view<const uint32_t		>	vcu32;
+	typedef	::gpk::view<const uint64_t		>	vcu64;
+	typedef	::gpk::view<const int8_t		>	vci8;
+	typedef	::gpk::view<const int16_t		>	vci16;
+	typedef	::gpk::view<const int32_t		>	vci32;
+	typedef	::gpk::view<const int64_t		>	vci64;
+
+	typedef	::gpk::view<vuc		>	vvuc;
+	typedef	::gpk::view<vc		>	vvc;
+	typedef	::gpk::view<vu8		>	vvu8;
+	typedef	::gpk::view<vu16	>	vvu16;
+	typedef	::gpk::view<vu32	>	vvu32;
+	typedef	::gpk::view<vu64	>	vvu64;
+	typedef	::gpk::view<vi8		>	vvi8;
+	typedef	::gpk::view<vi16	>	vvi16;
+	typedef	::gpk::view<vi32	>	vvi32;
+	typedef	::gpk::view<vi64	>	vvi64;
+	typedef	::gpk::view<vf32	>	vvf32;
+	typedef	::gpk::view<vf64	>	vvf64;
+
 	typedef	::gpk::view<const vcuc	>	vcvcuc;
 	typedef	::gpk::view<const vcc	>	vcvcc;
-	typedef	::gpk::view<const v1cf	>	vcv1cf;
-	typedef	::gpk::view<const v1cd	>	vcv1cd;
 	typedef	::gpk::view<const vcu8	>	vcvcu8;
 	typedef	::gpk::view<const vcu16	>	vcvcu16;
 	typedef	::gpk::view<const vcu32	>	vcvcu32;
@@ -185,10 +184,21 @@ namespace gpk
 	typedef	::gpk::view<const vci16	>	vcvci16;
 	typedef	::gpk::view<const vci32	>	vcvci32;
 	typedef	::gpk::view<const vci64	>	vcvci64;
-	typedef	::gpk::view<::gpk::vf32	>	vvf32;
-	typedef	::gpk::view<::gpk::vf64	>	vvf64;
 	typedef	::gpk::view<const vcf32	>	vcvcf32;
 	typedef	::gpk::view<const vcf64	>	vcvcf64;
+
+	typedef	::gpk::view<vcuc	>	vvcuc;
+	typedef	::gpk::view<vcc		>	vvcc;
+	typedef	::gpk::view<vcu8	>	vvcu8;
+	typedef	::gpk::view<vcu16	>	vvcu16;
+	typedef	::gpk::view<vcu32	>	vvcu32;
+	typedef	::gpk::view<vcu64	>	vvcu64;
+	typedef	::gpk::view<vci8	>	vvci8;
+	typedef	::gpk::view<vci16	>	vvci16;
+	typedef	::gpk::view<vci32	>	vvci32;
+	typedef	::gpk::view<vci64	>	vvci64;
+	typedef	::gpk::view<vcf32	>	vvcf32;
+	typedef	::gpk::view<vcf64	>	vvcf64;
 
 	stacxpr	::gpk::vcc	STR_NULL		= {4, "null"};
 	stacxpr	::gpk::vcc	STR_TRUE		= {4, "true"};
@@ -199,19 +209,19 @@ namespace gpk
 
 
 	struct view_string : public view<char> {
-		inlcxpr				view_string				()														= default;
-		inlcxpr				view_string				(const view_char & other)					noexcept	: view(other)				{}
-							view_string				(char * inputString, uint32_t length)					: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		template<u32 Len>	view_string				(char (&inputString)[Len])					noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		template<u32 Len>	view_string				(char (&inputString)[Len], uint32_t length)				: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		inlcxpr				view_string				()													= default;
+		inlcxpr				view_string				(const view<char> & other)				noexcept	: view(other)				{}
+							view_string				(char * inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
+		template<u32 Len>	view_string				(char (&inputString)[Len])				noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		template<u32 Len>	view_string				(char (&inputString)[Len], uint32_t length)			: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
 	};
 
 	struct view_const_string : public view<const char> {
-		inlcxpr				view_const_string		()														= default;
-		inlcxpr				view_const_string		(const view_const_char & other)				noexcept	: view(other)				{}
-							view_const_string		(const char* inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		template<u32 Len>	view_const_string		(const char (&inputString)[Len])			noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		template<u32 Len>	view_const_string		(const char (&inputString)[Len], uint32_t length)		: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		inlcxpr				view_const_string		()													= default;
+		inlcxpr				view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
+							view_const_string		(const char* inputString, uint32_t length)			: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
+		template<u32 Len>	view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		template<u32 Len>	view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
 	};
 
 	typedef	::gpk::view_string					vs;

@@ -116,13 +116,13 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-::gpk::error_t										cgiLoadAddr					(::gpk::SIPv4 & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<const char>& strRemotePort)	{
-	remoteIP.Port										= 0;
-	::gpk::parseIntegerDecimal(strRemotePort, &remoteIP.Port);
+static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4 & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<const char>& strRemotePort)	{
+	remoteIP.Port			= 0;
+	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
 	if(strRemoteIP.size()) {
-		uint32_t												iOffset						= 0;
-		uint32_t												iEnd						= 0;
+		uint32_t					iOffset			= 0;
+		uint32_t					iEnd			= 0;
 		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				char curChar = strRemoteIP[iEnd];
@@ -134,21 +134,21 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 					break;
 				++iEnd;
 			}
-			remoteIP.IP[iVal]									= 0;
-			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, &remoteIP.IP[iVal]);
-			iOffset												= iEnd + 1;
-			iEnd												= iOffset;
+			remoteIP.IP[iVal]		= 0;
+			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, remoteIP.IP[iVal]);
+			iOffset					= iEnd + 1;
+			iEnd					= iOffset;
 		}
 	}
 	return 0;
 }
 
-::gpk::error_t										cgiLoadFormData				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<const char> & strContent)	{
+static	::gpk::error_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<const char> & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-::gpk::error_t										cgiLoadContent				(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<const char> & strContent)	{
+static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<const char> & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
@@ -159,32 +159,32 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 }
 
 ::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv)	{
-	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine		= argv;
-	::gpk::aobj<::gpk::TKeyValConstString>				& environViews					= cgiRuntimeValues.EnvironViews;
+	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
+	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
 	::gpk::environmentBlockViews(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock, environViews);
 	//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)
 	//	info_printf("CGI Environ (original): '%s = %s'.", ::gpk::toString(environViews[iEnviron].Key).begin(), ::gpk::toString(environViews[iEnviron].Val).begin());
 
 	{
-		::gpk::vcs								querystring;
+		::gpk::vcs					querystring;
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, environViews, querystring);
 		::gpk::querystring_split(querystring, cgiRuntimeValues.QueryStringElements);
 		cgiRuntimeValues.QueryStringKeyVals.resize(cgiRuntimeValues.QueryStringElements.size());
 		for(uint32_t iKeyVal = 0; iKeyVal < cgiRuntimeValues.QueryStringKeyVals.size(); ++iKeyVal) {
-			::gpk::TKeyValConstString								& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
+			::gpk::TKeyValConstString	& keyValDst				= cgiRuntimeValues.QueryStringKeyVals[iKeyVal];
 			::gpk::keyval_split(cgiRuntimeValues.QueryStringElements[iKeyVal], keyValDst);
 		}
 	}
 	{
-		::gpk::vcs								contentype;
+		::gpk::vcs					contentype;
 		::gpk::find(::gpk::vcs{"CONTENT_TYPE"}, environViews, contentype);
 		if(contentype.size())
 			::cgiLoadContentType(cgiRuntimeValues.Content.Type, contentype);
 	}
 	{
-		::gpk::vcs								remoteIP	;
-		::gpk::vcs								remotePORT	;
+		::gpk::vcs					remoteIP	;
+		::gpk::vcs					remotePORT	;
 		::gpk::find(::gpk::vcs{"REMOTE_IP"	}, environViews, remoteIP	);
 		::gpk::find(::gpk::vcs{"REMOTE_PORT"}, environViews, remotePORT	);
 		::cgiLoadAddr(cgiRuntimeValues.RemoteIP, remoteIP, remotePORT);
@@ -193,7 +193,7 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 		::gpk::vcs								contentLength;
 		::gpk::find(::gpk::vcs{"CONTENT_LENGTH"}	, environViews, contentLength);
 		cgiRuntimeValues.Content.Length						= 0;
-		::gpk::parseIntegerDecimal(contentLength, &cgiRuntimeValues.Content.Length);
+		::gpk::parseIntegerDecimal(contentLength, cgiRuntimeValues.Content.Length);
 	}
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
 	memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());

@@ -9,7 +9,7 @@
 	}
 	keys.push_back('!');
 	keys.push_back('?');
-	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::view_const_uint16{keys}));
+	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
 	gui.Controls.States[vk.IdRoot].Hidden	= true;
 	return vk.IdRoot;
 }

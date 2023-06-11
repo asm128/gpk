@@ -112,7 +112,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 					ree_if(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %s.", ::gpk::toString(currentExpressionView).begin());
 					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
 					uint64_t											numberRead								= 0;
-					gpk_necall(::gpk::parseIntegerDecimal(viewOfExpressionResult, &numberRead), "%s", "Out of memory?");
+					gpk_necs(::gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
 					if(currentType == ::gpk::JSON_TYPE_STRING)
 						lastResult.Output								= output = {&inputJSON.View[lastResult.IndexJSONResult][(uint32_t)numberRead], 1};
 					else {

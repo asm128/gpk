@@ -5,9 +5,26 @@
 
 namespace gpk
 {
-										::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t * number_);
-	template<typename _tInt>	inline	::gpk::error_t			parseIntegerDecimal				(const ::gpk::vcc & sourceChars, _tInt * number_)	{ uint64_t number = 0; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(10, ::gpk::vcs{"0123456789"		}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); gpk_safe_assign(number_, (_tInt)number); return countDigits; }
-	template<typename _tInt>	inline	::gpk::error_t			parseIntegerHexadecimal			(const ::gpk::vcc & sourceChars, _tInt * number_)	{ uint64_t number = 0; const ::gpk::error_t countDigits = ::gpk::parseArbitraryBaseInteger(16, ::gpk::vcs{"0123456789abcdef"	}, sourceChars, &number); gpk_necall(countDigits, "%s", "Unknown error."); gpk_safe_assign(number_, (_tInt)number); return countDigits; }
+	stacxpr	::gpk::vcc		DIGITS_HEX						= ::gpk::vcc{16, "0123456789abcdef"};
+	stacxpr	::gpk::vcc		DIGITS_DECIMAL					= ::gpk::vcc{10, "0123456789"};
+	::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t * number_);
+	template<typename _tInt>	
+	inline	::gpk::error_t	parseIntegerDecimal				(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
+		uint64_t					number							= 0; 
+		::gpk::error_t				countDigits; 
+		gpk_necs(countDigits = ::gpk::parseArbitraryBaseInteger(10, ::gpk::vcs{"0123456789"}, sourceChars, &number)); 
+		number_ = (_tInt)number; 
+		return countDigits; 
+	}
+
+	template<typename _tInt>	
+	inline	::gpk::error_t	parseIntegerHexadecimal			(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
+		uint64_t					number							= 0; 
+		::gpk::error_t countDigits;
+		gpk_necs(countDigits = ::gpk::parseArbitraryBaseInteger(16, ::gpk::vcs{"0123456789abcdef"}, sourceChars, &number)); 
+		number_ = (_tInt)number; 
+		return countDigits; 
+	}
 
 	GDEFINE_ENUM_TYPE(STRIP_LITERAL_TYPE, int8_t);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, LITERAL	, 0);

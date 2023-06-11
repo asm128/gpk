@@ -278,7 +278,7 @@ static	::gpk::error_t	parseJsonNumber										(::gpk::SJSONReaderState & stateR
 	::gpk::SJSONToken									currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
 	::gpk::vcc											numString											= {};
 	gpk_necs(jsonAsString.slice(numString, index, sizeNum));
-	::gpk::error_t										intCount											= ::gpk::parseIntegerDecimal(numString, &currentElement.Value);
+	::gpk::error_t										intCount											= ::gpk::parseIntegerDecimal(numString, currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type								= ::gpk::JSON_TYPE_DOUBLE;
 		double												finalValue											= (double)currentElement.Value;
@@ -292,7 +292,7 @@ static	::gpk::error_t	parseJsonNumber										(::gpk::SJSONReaderState & stateR
 				gpk_necs(jsonAsString.slice(numString, offsetStart + 1, lenDec - 1));
 			else
 				gpk_necs(jsonAsString.slice(numString, offsetStart, lenDec));
-			const ::gpk::error_t								decCount											= ::gpk::parseIntegerDecimal(numString, &decValue);
+			const ::gpk::error_t								decCount											= ::gpk::parseIntegerDecimal(numString, decValue);
 			rees_if(errored(decCount));
 			decValue										/= ::gpk::powui(10, decCount);
 			//info_printf("Decimal part: %f.", decValue);

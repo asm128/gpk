@@ -218,18 +218,18 @@ namespace gpk
 	template <typename T>	using apod		= ::gpk::array_pod<T>;
 	template <typename T>	using ap		= ::gpk::apod	<T>;
 
-	typedef apod<uchar_t	>	array_uchar		, auc	, auc;
-	typedef apod<char		>	array_char		, ac	, ac;
-	typedef apod<float_t	>	array_float32	, af32	, array_float	, af;
-	typedef apod<double_t	>	array_float64	, af64	, array_double	, ad;
-	typedef apod<uint8_t	>	array_uint8		, au8	, au8;
-	typedef apod<uint16_t	>	array_uint16	, au16	, au16;
-	typedef apod<uint32_t	>	array_uint32	, au32	, au32;
-	typedef apod<uint64_t	>	array_uint64	, au64	, au64;
-	typedef apod<int8_t		>	array_int8		, ai8	, ai8;
-	typedef apod<int16_t	>	array_int16		, ai16	, ai16;
-	typedef apod<int32_t	>	array_int32		, ai32	, ai32;
-	typedef apod<int64_t	>	array_int64		, ai64	, ai64;
+	typedef apod<uchar_t	>	auc	;
+	typedef apod<char		>	ac	;
+	typedef apod<float_t	>	af32;
+	typedef apod<double_t	>	af64;
+	typedef apod<uint8_t	>	au8	;
+	typedef apod<uint16_t	>	au16;
+	typedef apod<uint32_t	>	au32;
+	typedef apod<uint64_t	>	au64;
+	typedef apod<int8_t		>	ai8	;
+	typedef apod<int16_t	>	ai16;
+	typedef apod<int32_t	>	ai32;
+	typedef apod<int64_t	>	ai64;
 
 	::gpk::apod<char>			toString		(const ::gpk::vcc & strToLog);
 	stainli	::gpk::apod<char>	toString		(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }

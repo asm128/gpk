@@ -343,9 +343,9 @@ namespace gpk
 								// Welcome to the amazing fucked up way to store a transform in a binary file
 									 if(readKey == ::gpk::vcs{"_r"}) { newFrame.Rotation = readVal[0]; }
 								else if(readKey == ::gpk::vcs{"_t"}) {
-									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.x = value; }
-									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.z = value; }
-									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, &value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.y = value; }
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.x = value; }
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.z = value; }
+									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.y = value; }
 								}
 								else if(readKey == ::gpk::vcs{"_f"}) { newFrame.IndexFrame	= *(const int32_t*)readVal.begin(); }; 
 							}

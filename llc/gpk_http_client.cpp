@@ -14,16 +14,16 @@
 #endif
 
 ::gpk::error_t			gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded)		{
-	uint32_t									decodedCharacters				= 0;
+	uint32_t					decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
-		const char								currentChar						= urlToDecode[iChar];
+		const char					currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
-			gpk_necall(decoded.push_back((char)(uint8_t)currentChar), "%s", "Out of memory?");
+			gpk_necs(decoded.push_back((char)(uint8_t)currentChar));
 			continue;
 		}
-		uint64_t								decodedByte						= 0;
-		gpk_necall(::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, &decodedByte), "%s", "Out of memory?");
-		gpk_necall(decoded.push_back((char)(uint8_t)decodedByte), "%s", "Out of memory?");
+		uint64_t					decodedByte						= 0;
+		gpk_necs(::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
+		gpk_necs(decoded.push_back((char)(uint8_t)decodedByte));
 		++iChar;
 		++decodedCharacters;
 	}
@@ -43,7 +43,7 @@ static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::
 		else
 			break;
 		uint64_t									sizeChunk						= 0;
-		::gpk::parseIntegerHexadecimal(strSize, &sizeChunk);
+		::gpk::parseIntegerHexadecimal(strSize, sizeChunk);
 		if(0 == sizeChunk)
 			break;
 		joined.append({&body[iStop], (uint32_t)sizeChunk});
@@ -179,7 +179,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 						digitsLengthStart	= iOffset;
 				}
 				::gpk::vcs				strContentLength				= {&buf[digitsLengthStart], (uint32_t)(digitsLengthStop - digitsLengthStart)};
-				::gpk::parseIntegerDecimal(strContentLength, &contentLength);
+				::gpk::parseIntegerDecimal(strContentLength, contentLength);
 			}
 		}
 		//else if(stopOfHeader && totalBytes > stopOfHeader && bChunked) {
@@ -222,7 +222,7 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 			//::gpk::tolower(strLine);
 		}
 		else {
-			::gpk::view_char							strLine							= {(char*)header.Key.begin(), header.Key.size()};
+			::gpk::view<char>							strLine							= {(char*)header.Key.begin(), header.Key.size()};
 			::gpk::tolower(strLine);
 			info_printf("\n%s", ::gpk::toString(strLine).begin());
 			if(::gpk::vcs{"transfer-encoding"} == header.Key) {

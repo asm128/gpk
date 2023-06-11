@@ -257,32 +257,32 @@ namespace gpk
 	template <typename T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
 	template <typename T>	using av		= ::gpk::aview	<T>; 
 
-	typedef	::gpk::aview<uchar_t	>	aview_uchar			, av1uc, avuc;
-	typedef	::gpk::aview<char		>	aview_char			, av1c, avc;
-	typedef	::gpk::aview<float		>	aview_float32		, av1f32, av1f, avf32, avf;
-	typedef	::gpk::aview<double		>	aview_float64		, av1f64, av1d, avf64, avd;
-	typedef	::gpk::aview<uint8_t	>	aview_uint8			, av1u8, avu8;
-	typedef	::gpk::aview<uint16_t	>	aview_uint16		, av1u16, avu16;
-	typedef	::gpk::aview<uint32_t	>	aview_uint32		, av1u32, avu32;
-	typedef	::gpk::aview<uint64_t	>	aview_uint64		, av1u64, avu64;
-	typedef	::gpk::aview<int8_t		>	aview_int8			, av1i8, avi8;
-	typedef	::gpk::aview<int16_t	>	aview_int16			, av1i16, avi16;
-	typedef	::gpk::aview<int32_t	>	aview_int32			, av1i32, avi32;
-	typedef	::gpk::aview<int64_t	>	aview_int64			, av1i64, avi64;
+	typedef	::gpk::aview<uchar_t	>	avuc;
+	typedef	::gpk::aview<char		>	avc;
+	typedef	::gpk::aview<float		>	avf32, avf;
+	typedef	::gpk::aview<double		>	avf64, avd;
+	typedef	::gpk::aview<uint8_t	>	avu8;
+	typedef	::gpk::aview<uint16_t	>	avu16;
+	typedef	::gpk::aview<uint32_t	>	avu32;
+	typedef	::gpk::aview<uint64_t	>	avu64;
+	typedef	::gpk::aview<int8_t		>	avi8;
+	typedef	::gpk::aview<int16_t	>	avi16;
+	typedef	::gpk::aview<int32_t	>	avi32;
+	typedef	::gpk::aview<int64_t	>	avi64;
 
 	// view<const> common typedefs
-	typedef	::gpk::aview<const uchar_t	>	aview_const_uchar	, av1cuc, avcuc;
-	typedef	::gpk::aview<const char		>	aview_const_char	, av1cc, avcc;
-	typedef	::gpk::aview<const float	>	aview_const_float32	, av1cf32, av1cf, avcf32, avcf;
-	typedef	::gpk::aview<const double	>	aview_const_float64	, av1cf64, av1cd, avcf64, avcd;
-	typedef	::gpk::aview<const uint8_t	>	aview_const_uint8	, av1cu8, avcu8;
-	typedef	::gpk::aview<const uint16_t	>	aview_const_uint16	, av1cu16, avcu16;
-	typedef	::gpk::aview<const uint32_t	>	aview_const_uint32	, av1cu32, avcu32;
-	typedef	::gpk::aview<const uint64_t	>	aview_const_uint64	, av1cu64, avcu64;
-	typedef	::gpk::aview<const int8_t	>	aview_const_int8	, av1ci8, avci8;
-	typedef	::gpk::aview<const int16_t	>	aview_const_int16	, av1ci16, avci16;
-	typedef	::gpk::aview<const int32_t	>	aview_const_int32	, av1ci32, avci32;
-	typedef	::gpk::aview<const int64_t	>	aview_const_int64	, av1ci64, avci64;
+	typedef	::gpk::aview<const uchar_t	>	avcuc;
+	typedef	::gpk::aview<const char		>	avcc;
+	typedef	::gpk::aview<const float	>	avcf32, avcf;
+	typedef	::gpk::aview<const double	>	avcf64, avcd;
+	typedef	::gpk::aview<const uint8_t	>	avcu8;
+	typedef	::gpk::aview<const uint16_t	>	avcu16;
+	typedef	::gpk::aview<const uint32_t	>	avcu32;
+	typedef	::gpk::aview<const uint64_t	>	avcu64;
+	typedef	::gpk::aview<const int8_t	>	avci8;
+	typedef	::gpk::aview<const int16_t	>	avci16;
+	typedef	::gpk::aview<const int32_t	>	avci32;
+	typedef	::gpk::aview<const int64_t	>	avci64;
 
 
 	template<typename T>
