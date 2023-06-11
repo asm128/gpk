@@ -19,6 +19,9 @@
     <Filter Include="d3d">
       <UniqueIdentifier>{47c1436b-c4e1-4d78-9b04-c6a7ebf1589b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xaudio2">
+      <UniqueIdentifier>{071c02e8-d276-46e1-97ed-4232a5606855}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine_rendermesh.h">
@@ -66,7 +69,7 @@
     <ClInclude Include="gpk_engine_explorer.h">
       <Filter>explorer</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_explorer_menu.h">
+    <ClInclude Include="gpk_engine_explorer_app_menu.h">
       <Filter>explorer</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_d3d.h">
@@ -83,6 +86,18 @@
     </ClInclude>
     <ClInclude Include="DeviceResources.h">
       <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="XAudio2Versions.h">
+      <Filter>xaudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveBankReader.h">
+      <Filter>xaudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="WAVFileReader.h">
+      <Filter>xaudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_xaudio2.h">
+      <Filter>xaudio2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -112,6 +127,15 @@
     </ClCompile>
     <ClCompile Include="gpk_engine_d3d.cpp">
       <Filter>d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_xaudio2.cpp">
+      <Filter>xaudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveBankReader.cpp">
+      <Filter>xaudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="WAVFileReader.cpp">
+      <Filter>xaudio2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

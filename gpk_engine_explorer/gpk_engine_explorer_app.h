@@ -5,24 +5,24 @@
 #define DISABLE_D3D11
 //#define DISABLE_XAUDIO2
 #ifndef DISABLE_XAUDIO2
-#	include "audio.h"
+#	include "gpk_xaudio2.h"
 #endif
 
 #ifndef GPK_ENGINE_EXPLORER_APP_H
 #define GPK_ENGINE_EXPLORER_APP_H
 
 struct SApplication {
-	::gpk::SFramework	Framework;
+	::gpk::SFramework		Framework;
 
-	::gpk::SEditor		Editor;
+	::gpk::SEditor			Editor;
 
 #ifndef DISABLE_D3D11
-	::SD3DApplication	D3DApp;
+	::gpk::SD3DApplication	D3DApp;
 #endif
 #ifndef DISABLE_XAUDIO2
-	AUDIO_STATE			AudioState;
+	::gpk::AUDIO_STATE		AudioState;
 #endif
-						SApplication	(::gpk::SRuntimeValues & runtimeValues)	noexcept : Framework(runtimeValues) {}
+							SApplication	(::gpk::SRuntimeValues & runtimeValues)	noexcept : Framework(runtimeValues) {}
 };
 
 #endif // GPK_ENGINE_EXPLORER_APP_H

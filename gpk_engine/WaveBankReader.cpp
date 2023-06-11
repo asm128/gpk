@@ -9,7 +9,10 @@
 // http://go.microsoft.com/fwlink/?LinkId=248929
 // http://go.microsoft.com/fwlink/?LinkID=615561
 //-------------------------------------------------------------------------------------
+
 #include "gpk_complus.h"
+
+#ifdef GPK_WINDOWS
 
 #include <cassert>
 
@@ -517,13 +520,9 @@ HRESULT WaveBankReader::WaveBankReaderImpl::Open(const wchar_t* szFileName) noex
 			result = GetOverlappedResult(hFile.get(), &request, &bytes, FALSE);
 		#endif
 
-			if (!result || (namesBytes != bytes))
-			{
-				return HRESULT_FROM_WIN32(GetLastError());
-			}
-
-			for (uint32_t j = 0; j < m_data.dwEntryCount; ++j)
-			{
+			rves_if(HRESULT_FROM_WIN32(GetLastError()), !result || (namesBytes != bytes));
+				
+			for (uint32_t j = 0; j < m_data.dwEntryCount; ++j) {
 				const DWORD n = m_data.dwEntryNameElementSize * j;
 
 				char name[64] = {};
@@ -536,13 +535,10 @@ HRESULT WaveBankReader::WaveBankReaderImpl::Open(const wchar_t* szFileName) noex
 
 	// Load entries
 	if (m_data.dwFlags & BANKDATA::FLAGS_COMPACT)
-	{
 		m_entries.reset(reinterpret_cast<uint8_t*>(new (std::nothrow) ENTRYCOMPACT[m_data.dwEntryCount]));
-	}
 	else
-	{
 		m_entries.reset(reinterpret_cast<uint8_t*>(new (std::nothrow) ENTRY[m_data.dwEntryCount]));
-	}
+
 	if (!m_entries)
 		return E_OUTOFMEMORY;
 
@@ -1009,3 +1005,5 @@ void WaveBankReader::WaitOnPrepare() noexcept {
 		pImpl->UpdatePrepared();
 	}
 }
+
+#endif // GPK_WINDOWS - ignore the whole thing if not a Windows build

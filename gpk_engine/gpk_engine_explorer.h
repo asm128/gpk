@@ -1,4 +1,4 @@
-#include "gpk_engine_explorer_menu.h"
+#include "gpk_engine_explorer_app_menu.h"
 #include "gpk_gui.h"
 #include "gpk_engine_gui.h"
 #include "gpk_gui_inputbox.h"
@@ -9,13 +9,15 @@
 namespace gpk
 {
 	struct SEditorRigidBody	{};
+
 	struct SEditorImage		{};
 	struct SEditorMesh		{};
-	struct SEditorPalette	{};
-	struct SEditorLayout	{};
 	struct SEditorScene		{};
 	struct SEditorBuffer	{};
 	struct SEditorSurface	{};
+
+	struct SEditorPalette	{};
+	struct SEditorLayout	{};
 
 	struct SEditorApplication {
 		::gpk::SUIInputBox	InputBox		= {};
@@ -23,6 +25,8 @@ namespace gpk
 
 		::gpk::apapodc		InputHistory;
 	};
+
+	struct SEditorSettings	{};
 
 	struct SEditor : public SEditorApplication {
 		::gpk::ai32			Dialogs;
@@ -32,14 +36,15 @@ namespace gpk
 		::gpk::ai32			Expand;
 
 		SEditorRigidBody	EditorRigidBody	= {};
+
 		SEditorImage		EditorImage		= {};
 		SEditorMesh			EditorMesh		= {};
-		SEditorPalette		EditorPalette	= {};
-		SEditorLayout		EditorLayout	= {};
 		SEditorScene		EditorScene		= {};
 		SEditorBuffer		EditorBuffer	= {};
 		SEditorSurface		EditorSurface	= {};
 
+		SEditorPalette		EditorPalette	= {};
+		SEditorLayout		EditorLayout	= {};
 	};
 
 	::gpk::error_t		editorCreate	(::gpk::SEditor & editor);

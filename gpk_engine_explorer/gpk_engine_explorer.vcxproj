@@ -159,17 +159,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="audio.h" />
     <ClInclude Include="gpk_engine_explorer_app.h" />
-    <ClInclude Include="WaveBankReader.h" />
-    <ClInclude Include="WAVFileReader.h" />
-    <ClInclude Include="XAudio2Versions.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="audio.cpp" />
     <ClCompile Include="gpk_engine_explorer_win32.cpp" />
-    <ClCompile Include="WaveBankReader.cpp" />
-    <ClCompile Include="WAVFileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

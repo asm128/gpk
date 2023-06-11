@@ -4,6 +4,8 @@
 #include "gpk_ptr.h"
 #include "gpk_array.h"
 
+#ifdef GPK_WINDOWS
+
 #include <objbase.h>
 
 #include <mmreg.h>
@@ -28,5 +30,7 @@ namespace DirectX
 	HRESULT					LoadWAVAudioInMemoryEx	(::gpk::vcu8 wavData, WAVData & result) noexcept;
 	HRESULT					LoadWAVAudioFromFileEx	(::gpk::vcc szFileName, ::gpk::au8 & wavData, WAVData & result) noexcept;
 }
+
+#endif // GPK_WINDOWS
 
 #endif // WAVFILEREADER_H_02397492830

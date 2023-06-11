@@ -2,8 +2,8 @@
 #include "gpk_virtual_keyboard.h"
 #include "gpk_system_key.h"
 
-#ifndef GPK_GUI_INPUTBOX_H
-#define GPK_GUI_INPUTBOX_H
+#ifndef GPK_GUI_INPUTBOX_H_23611
+#define GPK_GUI_INPUTBOX_H_23611
 
 namespace gpk
 {
@@ -84,4 +84,4 @@ namespace gpk
 	::gpk::error_t			inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent = -1);
 } // namespace
 
-#endif // GPK_GUI_EDITOR_H
+#endif // GPK_GUI_INPUTBOX_H_23611

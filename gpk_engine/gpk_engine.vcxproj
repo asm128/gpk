@@ -167,11 +167,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="gpk_xaudio2.h" />
     <ClInclude Include="gpk_engine_d3d_app.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="gpk_engine.h" />
     <ClInclude Include="gpk_engine_explorer.h" />
-    <ClInclude Include="gpk_engine_explorer_menu.h" />
+    <ClInclude Include="gpk_engine_explorer_app_menu.h" />
     <ClInclude Include="gpk_engine_gui.h" />
     <ClInclude Include="gpk_engine_map_pod.h" />
     <ClInclude Include="gpk_engine_soundbuffer.h" />
@@ -188,8 +189,12 @@
     <ClInclude Include="gpk_engine_file.h" />
     <ClInclude Include="Sample3DSceneRenderer.h" />
     <ClInclude Include="SampleFpsTextRenderer.h" />
+    <ClInclude Include="WaveBankReader.h" />
+    <ClInclude Include="WAVFileReader.h" />
+    <ClInclude Include="XAudio2Versions.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="gpk_xaudio2.cpp" />
     <ClCompile Include="gpk_engine_d3d_app.cpp" />
     <ClCompile Include="gpk_engine.cpp" />
     <ClCompile Include="gpk_engine_d3d.cpp" />
@@ -199,6 +204,8 @@
     <ClCompile Include="gpk_engine_shader.cpp" />
     <ClCompile Include="gpk_engine_soundbuffer.cpp" />
     <ClCompile Include="gpk_engine_file.cpp" />
+    <ClCompile Include="WaveBankReader.cpp" />
+    <ClCompile Include="WAVFileReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="psGUI.hlsl">

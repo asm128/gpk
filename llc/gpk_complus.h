@@ -95,6 +95,6 @@ namespace gpk
 	template <typename T> using view_com	= ::gpk::vcom<T>;
 }
 
-#endif // GPK_WINDOWS
-
 #endif // GPK_COMPLUS_H_982734
+
+#endif // GPK_WINDOWS - ignore the whole thing if not a Windows build

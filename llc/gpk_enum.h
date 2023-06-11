@@ -194,9 +194,12 @@ namespace gpk
 				, (uint64_t)value
 				, name.begin()
 				);
-			return 0;
+			return newIndex;
 		}
 	};
+
+	template <typename _tEnum>	inline	::gpk::enum_definition<_tEnum>&	get_enum	()					noexcept	{ return ::gpk::enum_definition<_tEnum>::get();	}
+	template <typename _tEnum>	inline	::gpk::enum_definition<_tEnum>&	get_enum	(const _tEnum & )	noexcept	{ return ::gpk::enum_definition<_tEnum>::get();	}
 
 	// This type is used to initialize an enumeration value.
 	template <typename T>
@@ -206,34 +209,50 @@ namespace gpk
 		::gpk::vcc			Title					= INVALID_ENUM_VALUE_STR;
 		::gpk::vcc			Description				= INVALID_ENUM_VALUE_STR;
 		//
-		inlcxpr				genum_value				()								= default;
+		inlcxpr				genum_value				()										= default;
 		inlcxpr				genum_value				(const genum_value & other)				= default;
-		inlcxpr				genum_value				(const T & value)			: Value((T)value), Name(::gpk::enum_definition<T>::get().get_value_name(value))				{}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name)															: Value((T)value), Name(name), Title(name), Description(name)			{ ::gpk::enum_definition<T>::get().add_value(value, name, name, name);			}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value((T)value), Name(name), Title(name), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(value, name, name, description);		}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)value), Name(name), Title(title), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(value, name, title, description);	}
+		inlcxpr				genum_value				(const T & value)						: Value((T)value), Name(::gpk::get_enum<T>().get_value_name(value))				{}
+		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name)																: Value((T)value), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value(value, name, name, name);			}
+		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & description)								: Value((T)value), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, name, description);		}
+		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)value), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, title, description);	}
 
 		inlcxpr	operator	const	T&		()			const	{ return Value; }
 	};
 
 	template <typename _tEnum, size_t _sLen>
-	_tEnum														get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::enum_definition<_tEnum>::get().get_value({valueLabel, _sLen - 1});	}
-	template <typename _tEnum>	_tEnum							get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::enum_definition<_tEnum>::get().get_value(valueLabel);	}
+	_tEnum														get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::get_enum<_tEnum>().get_value({valueLabel, _sLen - 1}); }
+	template <typename _tEnum>	_tEnum							get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<_tEnum>().get_value(valueLabel); }
 
-	template <typename _tEnum>	uint32_t						get_value_count		()										{ return ::gpk::enum_definition<_tEnum>::get().Values.size();	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_value_label		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_value_namev		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit);	}
-	template <typename _tEnum>	const char*						get_value_namep		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_label	(statusBit).begin();	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_value_descv		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_value_descp		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_desc	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_labels	()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_names		()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_descs		()										{ return ::gpk::enum_definition<_tEnum>::get().Names;	}
-	template <typename _tEnum>	int32_t							get_value_index		(const _tEnum & statusBit)				{ return ::gpk::enum_definition<_tEnum>::get().get_value_index	(statusBit);	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name;			}
-	template <typename _tEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name.begin();	}
-	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		(const _tEnum & )			noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name;			}
-	template <typename _tEnum>	const char*						get_enum_namep		(const _tEnum & )			noexcept	{ return ::gpk::enum_definition<_tEnum>::get().Name.begin();	}
+	template <typename _tEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<_tEnum>().Values.size(); }
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_label		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_namev		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }
+	template <typename _tEnum>	const char*						get_value_namep		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit).begin(); }
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_descv		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_desc (statusBit); }
+	template <typename _tEnum>	const ::gpk::vcc&				get_value_descp		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_desc (statusBit); }
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_labels	()										{ return ::gpk::get_enum<_tEnum>().Names; }
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_names		()										{ return ::gpk::get_enum<_tEnum>().Names; }
+	template <typename _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_descs		()										{ return ::gpk::get_enum<_tEnum>().Names; }
+	template <typename _tEnum>	int32_t							get_value_index		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_index(statusBit); }
+	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::get_enum<_tEnum>().Name;			}
+	template <typename _tEnum>	const ::gpk::vcc&				get_enum_namev		(const _tEnum & )			noexcept	{ return ::gpk::get_enum<_tEnum>().Name;			}
+	template <typename _tEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::get_enum<_tEnum>().Name.begin();	}
+	template <typename _tEnum>	const char*						get_enum_namep		(const _tEnum & )			noexcept	{ return ::gpk::get_enum<_tEnum>().Name.begin();	}
+
+	template <typename T>
+	struct genum_value_auto {
+		T					Value				= ::gpk::enum_definition<T>::INVALID_VALUE;
+		::gpk::vcc			Name				= INVALID_ENUM_VALUE_STR;
+		::gpk::vcc			Title				= INVALID_ENUM_VALUE_STR;
+		::gpk::vcc			Description			= INVALID_ENUM_VALUE_STR;
+		//
+		inlcxpr				genum_value_auto	()									= default;
+		inlcxpr				genum_value_auto	(const genum_value_auto & other)	= default;
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name)															: Value(::gpk::get_value_count<T>()), Name(name), Title(name), Description(name)			{ ::gpk::enum_definition<T>::get().add_value(Value, name, name, name);			}
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value(::gpk::get_value_count<T>()), Name(name), Title(name), Description(description)		{ ::gpk::enum_definition<T>::get().add_value(Value, name, name, description);		}
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value(::gpk::get_value_count<T>()), Name(name), Title(title), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(Value, name, title, description);	}
+
+		inlcxpr	operator	const	T&		()			const	{ return Value; }
+	};
 
 } // namespace
 
