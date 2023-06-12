@@ -115,20 +115,28 @@ static	::gpk::error_t	selectMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskt
 static	::gpk::error_t	unhoverMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDesktop& desktop, ::gpk::SControlList& menu)	{
 	if(desktop.Items.ControlLists.size() > (uint32_t)menu.IndexParentList)
 		::unhoverMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
-	gui.Controls.Events[menu.IdControl].Hover									= false;
-	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem)
-		gui.Controls.Events[menu.IdControls[iItem]].Hover							= false;
+	
+	if(gui.Controls.States[menu.IdControl].Hovered)
+		gui.Controls.Events[menu.IdControl].MouseOut	= true;
+
+	gui.Controls.States[menu.IdControl].Hovered	= false;
+
+	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
+		if(gui.Controls.States[menu.IdControls[iItem]].Hovered)
+			gui.Controls.Events[menu.IdControls[iItem]].MouseOut	= true;
+		gui.Controls.States[menu.IdControls[iItem]].Hovered							= false;
+	}
 	return 0;
 }
 
-static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDesktop& desktop)	{
-	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
+static	::gpk::error_t	clearMenuHierarchy	(::gpk::SGUI & gui, ::gpk::SDesktop& desktop)	{
+	::gpk::SRecyclableElementContainer<::gpk::SControlList>	& menus	= desktop.Items.ControlLists;
 	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
-		::gpk::SControlList																& menu								= menus[iMenu];
-		menu.IdSelected																= -1;
+		::gpk::SControlList			& menu				= menus[iMenu];
+		menu.IdSelected			= -1;
 		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // skip root menus
 			continue;
-		gui.Controls.Modes[menu.IdControl].Hidden									= true;
+		gui.Controls.Modes[menu.IdControl].Hidden	= true;
 	}
 	return 0;
 }
@@ -137,9 +145,9 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 	::gpk::SViewport															& vp									= desktop.Items.Viewports[iViewport];
 	if(gui.Controls.Events[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].Execute)
 		::gpk::desktopDeleteViewport(gui, desktop, iViewport);
-	else if(gui.Controls.Events[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]].Pressed)
+	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]].Pressed)
 		::pushToFrontAndDisplace(gui, vp.IdControl, input);
-	else if(gui.Controls.Events[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
+	else if(gui.Controls.States[(uint32_t)vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT]].Pressed) {
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
 			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.i32()})) {
@@ -182,19 +190,20 @@ static	::gpk::error_t	clearMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDeskto
 	}
 
 	bool selectedMenu = false;
-	::gpk::SRecyclableElementContainer<::gpk::SControlList>							& menus								= desktop.Items.ControlLists;
+	::gpk::SRecyclableElementContainer<::gpk::SControlList>	& menus			= desktop.Items.ControlLists;
 	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
-		::gpk::SControlList																& menu								= menus[iMenu];
+		::gpk::SControlList					& menu				= menus[iMenu];
 		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
 			continue;
 		else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent
 			continue;
 
-		::gpk::SControlList																& parentMenu						= menus[menu.IndexParentList];
-		const ::gpk::SControlEvent														& parentItemState					= gui.Controls.Events[parentMenu.IdControls[menu.IndexParentItem]];
-		if(parentItemState.Hover) {
+		::gpk::SControlList					& parentMenu		= menus[menu.IndexParentList];
+		const ::gpk::SControlState			& parentItemState	= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]];
+		const ::gpk::SControlEvent			& parentItemEvent	= gui.Controls.Events[parentMenu.IdControls[menu.IndexParentItem]];
+		if(parentItemState.Hovered) {
 			::unhideMenuHierarchy(gui, desktop, menu);
-			if(parentItemState.Execute) {
+			if(parentItemEvent.Execute) {
 				::clearMenuHierarchy(gui, desktop);
 				::selectMenuHierarchy(gui, desktop, menu);
 				selectedMenu																= true;

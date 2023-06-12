@@ -554,43 +554,54 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	return 0;
 }
 
-static	::gpk::error_t	updateGUIControlHovered	(::gpk::SControlEvent & controlFlags, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
-	if(controlFlags.Hover) {
-		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed)
-			controlFlags.Pressed	= true;
+static	::gpk::error_t	updateGUIControlHovered	(::gpk::SControlState & controlState, ::gpk::SControlEvent & controlEvent, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
+	if(controlState.Hovered) {
+		if(inputSystem.ButtonDown(0) && false == controlState.Pressed) {
+			controlState.Pressed	= true;
+			controlEvent.Pushed		= true;
+		}
 		else {
 			if(inputSystem.ButtonUp(0)) {
-				controlFlags.Released		= true;
-				if(controlFlags.Pressed) {
-					controlFlags.Execute		= true;
-					controlFlags.Pressed		= false;
+				controlEvent.Released		= true;
+				if(controlState.Pressed) {
+					controlEvent.Execute		= true;
+					controlState.Pressed		= false;
 				}
 			}
 		}
 	}
-	else
-		controlFlags.Hover		= false == disabled;//controlFlags.Disabled;
-	return one_if(controlFlags.Hover);
+	else {
+		if(false == disabled) {
+			if(false == controlState.Hovered)
+				controlEvent.FocusIn	= true;
+
+			controlState.Hovered = true;//controlFlags.Disabled;
+		}
+	}
+	return one_if(controlState.Hovered);
 }
 
 static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput& input, int32_t iControl)														{
-	::gpk::SControlEvent		& controlState			= gui.Controls.Events[iControl];
 	//--------------------
+	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
+	::gpk::SControlEvent		& controlEvents			= gui.Controls.Events[iControl];
 	::gpk::error_t				controlHovered			= -1;
 	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Metrics[iControl].Total.Global)) {
 		if(false == gui.Controls.Draw[iControl].Design) {
-			controlHovered													= iControl;
-			::updateGUIControlHovered(controlState, input,  ::gpk::controlDisabled(gui, iControl));
+			controlHovered		= iControl;
+			::updateGUIControlHovered(controlState, controlEvents, input, ::gpk::controlDisabled(gui, iControl));
 		}
 	}
 	else {
-		if (controlState.Hover) {
-			controlState.Hover		= false;
-			controlState.UnHover	= true;
+		if (controlState.Hovered) {
+			controlState.Hovered	= false;
+			controlEvents.MouseOut	= true;
 		}
 
-		if(input.ButtonUp(0) && controlState.Pressed)
+		if(input.ButtonUp(0) && controlState.Pressed) {
 			controlState.Pressed	= false;
+			controlEvents.Released	= true;
+		}
 	}
 	{
 		::gpk::vi32					& children				= gui.Controls.Children[iControl];
@@ -599,8 +610,8 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 				continue;
 			::gpk::error_t				controlPressed			= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.Controls.size() > (uint32_t)controlPressed) {
-				controlState.Hover		= false;
-				//controlState.Pressed	= false;
+				//controlState.Hover		= false;
+				controlState.Pressed	= false;
 				controlHovered			= controlPressed;
 			}
 		}
@@ -627,9 +638,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 			continue;
 
 		::gpk::SControlEvent		& controlEvent			= gui.Controls.Events[iControl];// Clear events that only last one tick.
-		if (controlEvent.Execute	) controlEvent.Execute		= false;
-		if (controlEvent.Released	) controlEvent.Released		= false;
-		if (controlEvent.UnHover	) controlEvent.UnHover		= false;
+		controlEvent			= {};
 
 		::gpk::SControl				& control				= gui.Controls.Controls[iControl];
 		if(false == ::gpk::controlInvalid(gui, control.Parent))
@@ -651,8 +660,8 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
-			::gpk::SControlEvent		& controlState		= gui.Controls.Events[iControl];
-			controlState.Hover		= false;
+			::gpk::SControlState		& controlState		= gui.Controls.States[iControl];
+			controlState.Hovered		= false;
 			if(0 == input.MouseCurrent.ButtonState[0])
 				controlState.Pressed	= false;
 		}
@@ -665,14 +674,14 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 
 ::gpk::error_t			gpk::guiDeselect		(::gpk::SGUI & gui)	{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		gui.Controls.Events[iControl].Selected	= false;
+		gui.Controls.States[iControl].Selected	= false;
 	}
 	return 0;
 }
 
 ::gpk::error_t			gpk::guiSelect			(::gpk::SGUI & gui, int32_t controlToSelect)	{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		gui.Controls.Events[iControl].Selected	= controlToSelect == (int32_t)iControl;
+		gui.Controls.States[iControl].Selected	= controlToSelect == (int32_t)iControl;
 	}
 	return 0;
 }

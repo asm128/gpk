@@ -99,7 +99,7 @@ namespace gpk
 
 											SLobbyClient		()	{
 			::gpk::SGUI								 & gui				= *Dialog.GUI;
-			gui.Controls.Modes[Dialog.Root].NoBackgroundRect = true;
+			gui.Controls.Draw[Dialog.Root].NoBackgroundRect = true;
 			::gpk::acid	controls;
 			es_if(errored(::gpk::guiSetupControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
 			es_if(errored(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
@@ -147,7 +147,7 @@ namespace gpk
 					::gpk::trim(trimmed);
 					::gpk::controlTextSet(gui, Dialog.Root + 1 + Field, ::gpk::label{trimmed});
 					InputBox.Edit(gui, false);
-					gui.Controls.States[InputBox.IdRoot].Hidden = true;
+					gui.Controls.Modes[InputBox.IdRoot].Hidden = true;
 				}
 			}
 			else {
@@ -159,7 +159,7 @@ namespace gpk
 					default								: 
 					case ::gpk::UI_LOBBY_USER_GUID		: 
 					case ::gpk::UI_LOBBY_USER_Offline	: 
-						gui.Controls.States[InputBox.IdRoot].Hidden = true;
+						gui.Controls.Modes[InputBox.IdRoot].Hidden = true;
 						break;
 					case ::gpk::UI_LOBBY_USER_Mail		: 
 					case ::gpk::UI_LOBBY_USER_Name		: 
@@ -171,7 +171,7 @@ namespace gpk
 						InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 						edit						= true;
 						Field						= (::gpk::UI_LOBBY_USER)(iControl - (Dialog.Root + 1));
-						gui.Controls.States[InputBox.IdRoot].Hidden = false;
+						gui.Controls.Modes[InputBox.IdRoot].Hidden = false;
 						break;
 					}
 					InputBox.Edit(gui, edit);

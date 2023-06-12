@@ -36,27 +36,36 @@ namespace gpk
 	struct SControlState {
 		bool				Updated			: 1;
 		bool				Unused			: 1;
+		bool				Hovered			: 1;
+		bool				Selected		: 1;
+		bool				Pressed			: 1;
+		bool				Focused			: 1;
 	};
 
 	// Holds the state changes after an update call. 
 	struct SControlEvent {
-		bool				Hover				: 1;
-		bool				UnHover				: 1;
-		bool				Pressed				: 1;
-		bool				Released			: 1;
-		bool				Focused				: 1;
-		bool				DeFocused			: 1;
-		bool				Selected			: 1;
-		bool				Execute				: 1;
+		bool				MouseIn			: 1;
+		bool				MouseOut		: 1;
+		bool				Pushed			: 1;
+		bool				Released		: 1;
+		bool				Show			: 1;
+		bool				Hide			: 1;
+		bool				FocusIn			: 1;
+		bool				FocusOut		: 1;
+
+		bool				SelectIn		: 1;
+		bool				SelectOut		: 1;
+
+		bool				Execute			: 1;
 	};
 
 	struct SControlMode {
-		uint8_t				NoHover				: 1;
-		uint8_t				NoFocus				: 1;
-		uint8_t				NoExecute			: 1;
-		uint8_t				NoSelect			: 1;
-		bool				Disabled			: 1;
-		bool				Hidden				: 1;
+		bool				NoHover			: 1;
+		bool				NoFocus			: 1;
+		bool				NoExecute		: 1;
+		bool				NoSelect		: 1;
+		bool				Disabled		: 1;
+		bool				Hidden			: 1;
 	};
 
 	struct SControlDraw {
@@ -66,20 +75,20 @@ namespace gpk
 		uint8_t				NoClient			: 1;	// skip drawing client area
 		uint8_t				StatePalette		: 3;
 		
-		uint8_t				UseNewPalettes		: 1;	// -- Legacy property (don't use on the new implementation!)
-		uint8_t				Design				: 1;	// -- Legacy property (don't use on the new implementation!)
-		uint8_t				NoBackgroundRect	: 1;	// -- Legacy property (don't use on the new implementation!)
+		bool				UseNewPalettes		: 1;	// -- Legacy property (don't use on the new implementation!)
+		bool				Design				: 1;	// -- Legacy property (don't use on the new implementation!)
+		bool				NoBackgroundRect	: 1;	// -- Legacy property (don't use on the new implementation!)
 	};
 
 	struct SRelativeBit {
-		uint8_t				XOffset			: 1; //
-		uint8_t				YOffset			: 1; //
-		uint8_t				XSize			: 1; //
-		uint8_t				YSize			: 1; //
-		uint8_t				BorderLeft		: 1; //
-		uint8_t				BorderTop		: 1; //
-		uint8_t				BorderRight		: 1; //
-		uint8_t				BorderBottom	: 1; //
+		bool				XOffset			: 1; //
+		bool				YOffset			: 1; //
+		bool				XSize			: 1; //
+		bool				YSize			: 1; //
+		bool				BorderLeft		: 1; //
+		bool				BorderTop		: 1; //
+		bool				BorderRight		: 1; //
+		bool				BorderBottom	: 1; //
 	};
 
 	struct SControlRectangle {

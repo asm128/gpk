@@ -176,7 +176,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	const int64_t															valueRange									= slider.ValueLimits.Max - slider.ValueLimits.Min;
-	if(controlTable.Events[slider.IdButton].Pressed) {
+	if(controlTable.States[slider.IdButton].Pressed) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
 			//const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
@@ -199,7 +199,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 		}
 	}
 	else
-		if(dialog.Input->ButtonDown(0) && controlTable.Events[slider.IdGUIControl].Pressed) {	//
+		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
 			::gpk::SInput															& input										= *dialog.Input;
 			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
 			const ::gpk::n2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
@@ -324,7 +324,8 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	::gpk::SGUIControlTable		& controlTable			= dialog.GUI->Controls;
 	::gpk::SControl				& controlMain			= controlTable.Controls[control.IdGUIControl];
 	::gpk::SControlEvent		& controlTitle			= controlTable.Events[control.IdTitle];
-	if(controlTitle.Pressed) {
+	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
+	if(controlTitleState.Pressed) {
 		::gpk::n2<bool>								locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
 			::gpk::n2i32								mouseDeltas				= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
