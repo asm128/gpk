@@ -58,10 +58,10 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	gui.Controls.Controls		[dialog.Root].Margin					= {};
 	gui.Controls.Controls		[dialog.Root].Border					= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
-	gui.Controls.Modes			[dialog.Root].Design					= true;
-	dialog.DefaultControlModes.NoHoverEffect	= 1;
-	dialog.DefaultControlModes.FrameOut			= 1;
-	dialog.DefaultControlModes.UseNewPalettes	= 1;
+	gui.Controls.Draw			[dialog.Root].Design					= true;
+	dialog.DefaultControlModes.NoHover			= 1;
+	dialog.DefaultControlDraw.FrameOut			= 1;
+	dialog.DefaultControlDraw.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
 		static ::gpk::pobj<::gpk::SDialogColors>	globalDefaultColors			= {};
 		if(!globalDefaultColors) {
@@ -101,7 +101,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	::gpk::SDialog															& dialog									= *checkbox.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	::gpk::img<::gpk::bgra>											& imageCross								= dialog.ImageCrossBGRA;
-	if(controlTable.States[checkbox.IdGUIControl].Execute) {
+	if(controlTable.Events[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);
 
@@ -131,8 +131,8 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	controlTable.Controls	[slider->IdButton].Area.Size				= {16, 16};
 	controlTable.Text		[slider->IdButton].Text						= "-";
 	controlTable.Constraints[slider->IdButton].AttachSizeToControl.y	= slider->IdButton;
-	controlTable.Modes		[slider->IdButton].UseNewPalettes			= true;
-	controlTable.Modes		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
+	controlTable.Draw		[slider->IdButton].UseNewPalettes			= true;
+	controlTable.Draw		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
 	::gpk::memcpy_s(controlTable.Controls[slider->IdButton		].Palettes.Storage, dialog.Colors->Button		.Storage);
 	::gpk::memcpy_s(controlTable.Controls[slider->IdGUIControl	].Palettes.Storage, dialog.Colors->CheckBox	.Storage);
 	::gpk::SControlText							& tunerText									= controlTable.Text[slider->IdGUIControl];
@@ -176,7 +176,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	::gpk::SDialog															& dialog									= *slider.Dialog;
 	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
 	const int64_t															valueRange									= slider.ValueLimits.Max - slider.ValueLimits.Min;
-	if(controlTable.States[slider.IdButton].Pressed) {
+	if(controlTable.Events[slider.IdButton].Pressed) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput															& input										= *dialog.Input;
 			//const ::gpk::SGUIZoom													& zoom										= dialog.GUI->Zoom;
@@ -199,7 +199,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 		}
 	}
 	else
-		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
+		if(dialog.Input->ButtonDown(0) && controlTable.Events[slider.IdGUIControl].Pressed) {	//
 			::gpk::SInput															& input										= *dialog.Input;
 			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
 			const ::gpk::n2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
@@ -215,36 +215,36 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	return 0;
 }
 
-::gpk::error_t			gpk::editBoxCreate							(::gpk::SDialog			& dialog )								{
-	int32_t																	index										= -1;
-	::gpk::pobj<::gpk::SDialogEditBox>									editBox;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
+::gpk::error_t			gpk::editBoxCreate		(::gpk::SDialog			& dialog )								{
+	int32_t						index					= -1;
+	::gpk::pobj<::gpk::SDialogEditBox>	editBox;
+	::gpk::SGUIControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
-	controlTable.Modes[editBox->IdGUIControl].UseNewPalettes			= true;
-	controlTable.Modes[editBox->IdGUIControl].ColorMode					= ::gpk::GUI_COLOR_MODE_FLAT;
+	controlTable.Draw[editBox->IdGUIControl].UseNewPalettes	= true;
+	controlTable.Draw[editBox->IdGUIControl].ColorMode		= ::gpk::GUI_COLOR_MODE_Flat;
 	::gpk::memcpy_s(controlTable.Controls[editBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
 }
-::gpk::error_t			gpk::editBoxUpdate							(::gpk::SDialogEditBox	& control)								{
-	::gpk::SDialog															& dialog									= *control.Dialog;
+::gpk::error_t			gpk::editBoxUpdate		(::gpk::SDialogEditBox	& control)								{
+	::gpk::SDialog				& dialog				= *control.Dialog;
 	if(dialog.Input->ButtonDown(0)) {
 	}
 	return 0;
 }
-::gpk::error_t			gpk::viewportCreate							(::gpk::SDialog			& dialog)								{
-	int32_t																	index										= -1;
-	::gpk::pobj<::gpk::SDialogViewport>									viewport;
-	::gpk::SGUIControlTable													& controlTable								= dialog.GUI->Controls;
-	gpk_necall(index = dialog.Create(viewport), "%s", "Out of memory?");
-	controlTable.Modes[viewport->IdGUIControl].UseNewPalettes			= true;
-	controlTable.Modes[viewport->IdGUIControl].FrameOut					= true;
-	controlTable.Modes[viewport->IdGUIControl].NoHoverEffect			= true;
+::gpk::error_t			gpk::viewportCreate		(::gpk::SDialog			& dialog)								{
+	int32_t						index					= -1;
+	::gpk::pobj<::gpk::SDialogViewport>	viewport;
+	::gpk::SGUIControlTable		& controlTable			= dialog.GUI->Controls;
+	gpk_necs(index = dialog.Create(viewport));
+	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
+	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
+	controlTable.Modes[viewport->IdGUIControl].NoHover			= true;
 	controlTable.Controls[viewport->IdGUIControl].Margin				= {};
 	::gpk::memcpy_s(controlTable.Controls[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
 	{ // Create field group
 		// Set up client area control
-		int32_t																	idControl							= ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl);
-		gpk_necall(viewport->IdClient = idControl, "%s", "????");		// Create group control array
+		int32_t																	idControl;
+		gpk_necs(viewport->IdClient = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl));		// Create group control array
 		::gpk::SControl															& control							= controlTable.Controls		[idControl];
 		::gpk::SControlConstraints												& constraints						= controlTable.Constraints	[idControl];
 		control.Area.Offset													= {0, heightOfField + 1};
@@ -290,7 +290,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 		::gpk::SGUIControlTable						& controlTable								= dialog.GUI->Controls;
 		::gpk::SControl								& controlMain								= controlTable.Controls[control.IdGUIControl];
 		::gpk::SControl								& controlTitle								= controlTable.Controls[control.IdTitle];
-		::gpk::SControlState						& stateClient								= controlTable.States[control.IdClient];
+		::gpk::SControlMode							& stateClient								= controlTable.Modes[control.IdClient];
 		if(fold && control.Settings.Unfolded)
 			controlMain.Area.Size.y					= controlTitle.Area.Size.y + ::gpk::controlNCSpacing(controlMain).y;
 		else if(false == control.Settings.Unfolded && false == fold) {
@@ -320,10 +320,10 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 }
 
 ::gpk::error_t			gpk::viewportUpdate		(::gpk::SDialogViewport	& control)																{
-	::gpk::SDialog								& dialog				= *control.Dialog;
-	::gpk::SGUIControlTable						& controlTable			= dialog.GUI->Controls;
-	::gpk::SControl					& controlMain			= controlTable.Controls[control.IdGUIControl];
-	::gpk::SControlState		& controlTitle			= controlTable.States[control.IdTitle];
+	::gpk::SDialog				& dialog				= *control.Dialog;
+	::gpk::SGUIControlTable		& controlTable			= dialog.GUI->Controls;
+	::gpk::SControl				& controlMain			= controlTable.Controls[control.IdGUIControl];
+	::gpk::SControlEvent		& controlTitle			= controlTable.Events[control.IdTitle];
 	if(controlTitle.Pressed) {
 		::gpk::n2<bool>								locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {

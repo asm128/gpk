@@ -110,10 +110,10 @@ namespace gpk
 		virtual	::gpk::error_t	Update				()							{ 
 			::gpk::SDialog				& dialog			= *Dialog;
 			::gpk::SGUIControlTable		& controlTable		= dialog.GUI->Controls;
-			if(controlTable.States[IdDecrease].Execute || controlTable.States[IdIncrease].Execute) {
-				if(controlTable.States[IdDecrease].Execute)
+			if(controlTable.Events[IdDecrease].Execute || controlTable.Events[IdIncrease].Execute) {
+				if(controlTable.Events[IdDecrease].Execute)
 					return SetValue(ValueCurrent - 1);
-				else if(controlTable.States[IdIncrease].Execute)
+				else if(controlTable.Events[IdIncrease].Execute)
 					return SetValue(ValueCurrent + 1);
 			}
 			return 0;
@@ -150,8 +150,8 @@ namespace gpk
 			controlButton.Align		= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
 			::gpk::memcpy_s(controlButton.Palettes.Storage, dialog.Colors->Button.Storage);
 			controlTable.Text			[iControl].Text						= (iControl == tuner->IdDecrease) ? "-" : "+";
-			controlTable.Modes			[iControl].UseNewPalettes			= true;
-			controlTable.Modes			[iControl].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
+			controlTable.Draw			[iControl].UseNewPalettes			= true;
+			controlTable.Draw			[iControl].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
 			controlTable.Constraints	[iControl].AttachSizeToControl.y	= iControl;
 		}
 		tuner->SetValue(tuner->ValueCurrent);

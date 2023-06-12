@@ -10,7 +10,7 @@
 	keys.push_back('!');
 	keys.push_back('?');
 	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
-	gui.Controls.States[vk.IdRoot].Hidden	= true;
+	gui.Controls.Modes[vk.IdRoot].Hidden	= true;
 	return vk.IdRoot;
 }
 
@@ -53,8 +53,8 @@
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
 	gui.Controls.Controls	[inputBox.IdRoot].Border			= {};
 	gui.Controls.Controls	[inputBox.IdRoot].Margin			= {};
-	gui.Controls.Modes		[inputBox.IdRoot].Design			= true;
-	gui.Controls.Modes		[inputBox.IdRoot].NoBackgroundRect	= true;
+	gui.Controls.Draw		[inputBox.IdRoot].Design			= true;
+	gui.Controls.Draw		[inputBox.IdRoot].NoBackgroundRect	= true;
 
 	gpk_necs(inputBox.IdText = ::gpk::controlCreate(gui));
 	gui.Controls.Controls	[inputBox.IdText].Border	= {2, 2, 2, 2};
@@ -63,7 +63,7 @@
 	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
 	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
-	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
+	gui.Controls.Modes		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
 	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Controls[inputBox.IdText].Align;
 	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
 		= gui.Controls.Controls	[inputBox.IdText].Area.Offset.y

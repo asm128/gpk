@@ -184,10 +184,33 @@ namespace gpk
 					return 0;	// Found same name and value combination. This is normal when values are defined as static const.
 				}
 			uint32_t						newIndex				= Values.push_back(value);
-			gpk_necall(newIndex, "Failed to add value to enumeration definition. Value: 0x%llX. Name: %s.", (uint64_t)value, name.begin());
-			gpk_necall(Names.push_back(name), "Failed to add value name to enumeration definition. Value: 0x%llX. Name: %s.", (uint64_t)value, name.begin());
-			gpk_necall(Titles.push_back(title), "Failed to add value name to enumeration definition. Value: 0x%llX. Name: %s.", (uint64_t)value, name.begin());
-			gpk_necall(Descriptions.push_back(description), "Failed to add value description to enumeration definition. Value: 0x%llX. Name: %s.", (uint64_t)value, name.begin());
+			gpk_necs(newIndex);
+			gpk_necs(Names.push_back(name));
+			gpk_necs(Titles.push_back(title));
+			gpk_necs(Descriptions.push_back(description));
+			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s."
+				, Name.begin()
+				, (uint32_t)newIndex
+				, (uint64_t)value
+				, name.begin()
+				);
+			return newIndex;
+		}
+		::gpk::error_t				add_value_auto			(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	{
+			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
+				ree_if(name == Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
+					, Name		.begin()
+					, (uint64_t)Values[i]	
+					, Names[i]	.begin()
+					, name		.begin()
+					);
+			}
+			const T							value					= (T)Values.size();	
+			uint32_t						newIndex				= Values.push_back(value);
+			gpk_necs(newIndex);
+			gpk_necs(Names.push_back(name));
+			gpk_necs(Titles.push_back(title));
+			gpk_necs(Descriptions.push_back(description));
 			verbose_printf("Added new value to enumeration definition. Enum name: %s. Index: %.02u, Value: 0x%llX. Value name: %s."
 				, Name.begin()
 				, (uint32_t)newIndex
@@ -247,9 +270,9 @@ namespace gpk
 		//
 		inlcxpr				genum_value_auto	()									= default;
 		inlcxpr				genum_value_auto	(const genum_value_auto & other)	= default;
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name)															: Value(::gpk::get_value_count<T>()), Name(name), Title(name), Description(name)			{ ::gpk::enum_definition<T>::get().add_value(Value, name, name, name);			}
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value(::gpk::get_value_count<T>()), Name(name), Title(name), Description(description)		{ ::gpk::enum_definition<T>::get().add_value(Value, name, name, description);		}
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value(::gpk::get_value_count<T>()), Name(name), Title(title), Description(description)	{ ::gpk::enum_definition<T>::get().add_value(Value, name, title, description);	}
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name)															: Value((T)0), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value_auto(name, name, name);			Value = ::gpk::get_value<T>(name); }
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value((T)0), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, name, description);		Value = ::gpk::get_value<T>(name); }
+		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)0), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, title, description);	Value = ::gpk::get_value<T>(name); }
 
 		inlcxpr	operator	const	T&		()			const	{ return Value; }
 	};
@@ -272,6 +295,8 @@ namespace gpk
 #define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
 	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\
 	static	const EnumName		__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName})
+
+#define GDEFINE_ENUM_AVALUE(EnumName, ValueName) static	const EnumName	EnumName##_##ValueName	= (EnumName)::gpk::genum_value_auto<EnumName>({sizeof(#ValueName) - 1, #ValueName})
 
 #define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)				\
 	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\

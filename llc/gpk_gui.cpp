@@ -236,8 +236,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 	return 0;
 }
 
-static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)										{
-	::gpk::SGUIControlTable		& controlTable			= gui.Controls;
+static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTable, int32_t iControl, ::gpk::vi32 defaultColors)										{
 	controlTable.Metrics	[iControl]	= {};
 	controlTable.Children	[iControl]	= ::gpk::vcid{};
 	controlTable.Modes		[iControl]	= {};
@@ -250,7 +249,9 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)
 	control.Parent	= -1;
 	control.Align	= ::gpk::ALIGN_TOP_LEFT;
 	control.Area	= {{0, 0}, {16, 16}};
-	::gpk::memcpy_s(control.Palettes.Storage, gui.Colors->DefaultColors.Storage);
+	for(uint32_t iColor = 0, countColors = ::gpk::min(control.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
+		control.Palettes[iColor] = defaultColors[iColor];
+
 	controlConstraints.AttachSizeToControl	= {-1, -1};
 	controlConstraints.AttachSizeToText		= {};
 	controlConstraints.DockToControl		= {-1, -1, -1, -1};
@@ -264,7 +265,34 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)
 	return idControl;
 }
 
-::gpk::error_t			gpk::controlCreate		(::gpk::SGUI & gui)										{
+
+::gpk::error_t			gpk::controlCreate		(::gpk::SGUIControlTable & controlTable, ::gpk::vi32 defaultColors)	{
+	for(uint32_t iControl = 0; iControl < controlTable.States.size(); ++iControl) {
+		if(controlTable.States[iControl].Unused) {
+			gpk_necall(::controlInstanceReset(controlTable, iControl, defaultColors), "iControl: %i", iControl);
+			return iControl;
+		}
+	}
+
+	::gpk::error_t				iControl				= -1;
+	gpk_necs(iControl = ::gpk::resize(controlTable.Controls.size() + 1
+		, controlTable.Controls		
+		, controlTable.Metrics			
+		, controlTable.Text			
+		, controlTable.Constraints		
+		, controlTable.States			
+		, controlTable.Modes			
+		, controlTable.Draw			
+		, controlTable.Events			
+		, controlTable.RelativeBit		
+		, controlTable.Children		
+		, controlTable.Images			
+		) - 1);
+	gpk_necs(::controlInstanceReset(controlTable, iControl, defaultColors));
+	return iControl;
+}
+
+::gpk::error_t			gpk::controlCreate		(::gpk::SGUI & gui)							{
 	gpk_necs(::uiColorsSetupDefault(gui.Colors));
 
 	if(0 == gui.Fonts.size())
@@ -273,24 +301,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUI & gui, int32_t iControl)
 	if(gui.Fonts.size() <= gui.SelectedFont)
 		gui.SelectedFont = gui.Fonts.size() - 1;
 
-	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		if(gui.Controls.States[iControl].Unused) {
-			gpk_necall(::controlInstanceReset(gui, iControl), "iControl: %i", iControl);
-			return iControl;
-		}
-	}
-	::gpk::error_t				iControl				= -1;
-	gpk_necs(iControl = ::gpk::resize(gui.Controls.Controls.size() + 1
-		, gui.Controls.Controls
-		, gui.Controls.States
-		, gui.Controls.Metrics
-		, gui.Controls.Text
-		, gui.Controls.Children
-		, gui.Controls.Constraints
-		, gui.Controls.Modes
-		, gui.Controls.Images
-		) - 1);
-	gpk_necs(::controlInstanceReset(gui, iControl));
+	::gpk::error_t				iControl				= ::gpk::controlCreate(gui.Controls, gui.Colors->DefaultColors);
 	return iControl;
 }
 ::gpk::error_t			gpk::controlDelete		(::gpk::SGUI & gui, int32_t iControl, bool recursive)			{
@@ -543,7 +554,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	return 0;
 }
 
-static	::gpk::error_t	updateGUIControlHovered									(::gpk::SControlState & controlFlags, const ::gpk::SInput & inputSystem, bool disabled)								noexcept	{
+static	::gpk::error_t	updateGUIControlHovered	(::gpk::SControlEvent & controlFlags, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
 	if(controlFlags.Hover) {
 		if(inputSystem.ButtonDown(0) && false == controlFlags.Pressed)
 			controlFlags.Pressed	= true;
@@ -558,16 +569,16 @@ static	::gpk::error_t	updateGUIControlHovered									(::gpk::SControlState & co
 		}
 	}
 	else
-		controlFlags.Hover												= false == disabled;//controlFlags.Disabled;
+		controlFlags.Hover		= false == disabled;//controlFlags.Disabled;
 	return one_if(controlFlags.Hover);
 }
 
 static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput& input, int32_t iControl)														{
-	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
+	::gpk::SControlEvent		& controlState			= gui.Controls.Events[iControl];
 	//--------------------
 	::gpk::error_t				controlHovered			= -1;
 	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Metrics[iControl].Total.Global)) {
-		if(false == gui.Controls.Modes[iControl].Design) {
+		if(false == gui.Controls.Draw[iControl].Design) {
 			controlHovered													= iControl;
 			::updateGUIControlHovered(controlState, input,  ::gpk::controlDisabled(gui, iControl));
 		}
@@ -604,18 +615,21 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	es_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)));
 	::gpk::error_t				controlHovered			= -1;
 	::gpk::au32					rootControlsToProcess	= {};
-	rootControlsToProcess.resize(1000);
-	rootControlsToProcess.clear();
+	rootControlsToProcess.reserve(1000);
 	(void)sysEvents;
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
-		::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
-		if(controlState.Unused || controlState.Disabled)
+		const ::gpk::SControlState	& controlState			= gui.Controls.States[iControl];
+		if(controlState.Unused)
 			continue;
 
-		// Clear events that only last one tick.
-		if (controlState.Execute	) controlState.Execute		= false;
-		if (controlState.Released	) controlState.Released		= false;
-		if (controlState.UnHover	) controlState.UnHover		= false;
+		::gpk::SControlMode			& controlMode			= gui.Controls.Modes[iControl];
+		if(controlMode.Disabled)
+			continue;
+
+		::gpk::SControlEvent		& controlEvent			= gui.Controls.Events[iControl];// Clear events that only last one tick.
+		if (controlEvent.Execute	) controlEvent.Execute		= false;
+		if (controlEvent.Released	) controlEvent.Released		= false;
+		if (controlEvent.UnHover	) controlEvent.UnHover		= false;
 
 		::gpk::SControl				& control				= gui.Controls.Controls[iControl];
 		if(false == ::gpk::controlInvalid(gui, control.Parent))
@@ -637,7 +651,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
-			::gpk::SControlState		& controlState		= gui.Controls.States[iControl];
+			::gpk::SControlEvent		& controlState		= gui.Controls.Events[iControl];
 			controlState.Hover		= false;
 			if(0 == input.MouseCurrent.ButtonState[0])
 				controlState.Pressed	= false;
@@ -651,25 +665,25 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 
 ::gpk::error_t			gpk::guiDeselect		(::gpk::SGUI & gui)	{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		gui.Controls.States[iControl].Selected	= false;
+		gui.Controls.Events[iControl].Selected	= false;
 	}
 	return 0;
 }
 
 ::gpk::error_t			gpk::guiSelect			(::gpk::SGUI & gui, int32_t controlToSelect)	{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl) {
-		gui.Controls.States[iControl].Selected	= controlToSelect == (int32_t)iControl;
+		gui.Controls.Events[iControl].Selected	= controlToSelect == (int32_t)iControl;
 	}
 	return 0;
 }
 
 ::gpk::error_t			gpk::controlHidden		(const ::gpk::SGUI & gui, int32_t iControl)	{
-	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Hidden;
+	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.Modes[iControl].Hidden;
 	return imHidden ? imHidden : (false == ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent) && ::gpk::controlHidden(gui, gui.Controls.Controls[iControl].Parent));
 }
 
 ::gpk::error_t			gpk::controlDisabled	(const ::gpk::SGUI & gui, int32_t iControl)	{
-	bool						imDisabled				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Disabled;
+	bool						imDisabled				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.Modes[iControl].Disabled;
 	return imDisabled ? imDisabled : (false == ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent) && ::gpk::controlDisabled(gui, gui.Controls.Controls[iControl].Parent));
 }
 
@@ -686,7 +700,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 ::gpk::error_t			gpk::guiGetProcessableControls	(const ::gpk::SGUI & gui, ::gpk::au32& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState	& controlState					= gui.Controls.States[iControl];
-		if(controlState.Unused || gui.Controls.Modes[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
+		if(controlState.Unused || gui.Controls.Draw[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
 			continue;
 		gpk_necall(controlIndices.push_back(iControl), "%s", "Out of memory?");
 	}
@@ -722,7 +736,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 ::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcu32 controlsToProcess, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute) {
 	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
 		const uint32_t				idControl					= controlsToProcess[iControl];
-		const ::gpk::SControlState	& controlState				= gui.Controls.States[idControl];
+		const ::gpk::SControlEvent	& controlState				= gui.Controls.Events[idControl];
 		if(controlState.Execute) {
 			info_printf("Executed control %i (0x%x).", idControl, idControl);
 			return funcOnExecute(idControl);

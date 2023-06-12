@@ -65,6 +65,7 @@ namespace gpk
 
 
 		::gpk::SControlMode		DefaultControlModes	= {};
+		::gpk::SControlDraw		DefaultControlDraw	= {};
 
 		::gpk::pobj<::gpk::SInput>					Input			= {};
 		::gpk::pobj<::gpk::SGUI>					GUI				= {};
@@ -107,7 +108,7 @@ namespace gpk
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
 			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
-			gui.Controls.Modes[idGUIControl].UseNewPalettes	= true;
+			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
 			::gpk::memcpy_s(gui.Controls.Controls[idGUIControl].Palettes.Storage, Colors->Control.Storage);
 			//gpk_necall(::gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);

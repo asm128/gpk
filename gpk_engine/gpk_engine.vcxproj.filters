@@ -22,6 +22,9 @@
     <Filter Include="xaudio2">
       <UniqueIdentifier>{071c02e8-d276-46e1-97ed-4232a5606855}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hlsl">
+      <UniqueIdentifier>{6f0c05b2-b6f7-4a9a-8bfb-5eda7a1181bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine_rendermesh.h">
@@ -139,17 +142,37 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="psSolid.hlsl" />
-    <FxCompile Include="SampleVertexShader.hlsl" />
-    <FxCompile Include="vsGUI.hlsl" />
-    <FxCompile Include="psGUI.hlsl" />
-    <FxCompile Include="psHidden.hlsl" />
+    <FxCompile Include="psGUI.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psHidden.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psSolid.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="SampleVertexShader.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="vsGUI.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PixelShaderShared.hlsli" />
-    <None Include="PixelShaderShared2D.hlsli" />
-    <None Include="ShaderShared2D.hlsli" />
-    <None Include="ShaderShared.hlsli" />
-    <None Include="ShaderColors.hlsli" />
+    <None Include="PixelShaderShared.hlsli">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="PixelShaderShared2D.hlsli">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="ShaderColors.hlsli">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="ShaderShared.hlsli">
+      <Filter>hlsl</Filter>
+    </None>
+    <None Include="ShaderShared2D.hlsli">
+      <Filter>hlsl</Filter>
+    </None>
   </ItemGroup>
 </Project>

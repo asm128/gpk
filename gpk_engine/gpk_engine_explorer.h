@@ -8,25 +8,24 @@
 
 namespace gpk
 {
-	struct SEditorRigidBody	{};
-
-	struct SEditorImage		{};
-	struct SEditorMesh		{};
-	struct SEditorScene		{};
-	struct SEditorBuffer	{};
-	struct SEditorSurface	{};
-
-	struct SEditorPalette	{};
-	struct SEditorLayout	{};
+	struct SEditorRigidBody		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorImage			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorMesh			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorScene			{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorBuffer		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorSurface		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorPalette		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorControl		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorControlText	{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorLayout		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
+	struct SEditorSettings		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
 
 	struct SEditorApplication {
-		::gpk::SUIInputBox	InputBox		= {};
-		::gpk::SEngineGUI	GUI				= {};
+		::gpk::SUIInputBox	InputBox			= {};
+		::gpk::SEngineGUI	GUI					= {};
 
 		::gpk::apapodc		InputHistory;
 	};
-
-	struct SEditorSettings	{};
 
 	struct SEditor : public SEditorApplication {
 		::gpk::ai32			Dialogs;
@@ -35,16 +34,18 @@ namespace gpk
 		::gpk::ai32			Selection;
 		::gpk::ai32			Expand;
 
-		SEditorRigidBody	EditorRigidBody	= {};
+		SEditorRigidBody	EditorRigidBody		= {};
 
-		SEditorImage		EditorImage		= {};
-		SEditorMesh			EditorMesh		= {};
-		SEditorScene		EditorScene		= {};
-		SEditorBuffer		EditorBuffer	= {};
-		SEditorSurface		EditorSurface	= {};
+		SEditorImage		EditorImage			= {};
+		SEditorMesh			EditorMesh			= {};
+		SEditorScene		EditorScene			= {};
+		SEditorBuffer		EditorBuffer		= {};
+		SEditorSurface		EditorSurface		= {};
 
-		SEditorPalette		EditorPalette	= {};
-		SEditorLayout		EditorLayout	= {};
+		SEditorPalette		EditorPalette		= {};
+		SEditorLayout		EditorLayout		= {};
+		SEditorControl		EditorControl		= {};
+		SEditorControlText	EditorControlText	= {};
 	};
 
 	::gpk::error_t		editorCreate	(::gpk::SEditor & editor);

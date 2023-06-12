@@ -45,8 +45,9 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 	if(int32_t result = editor.InputBox.Update(gui, editor.InputBox.VirtualKeyboard, queuedEvents, controlsToProcess)) {
 		if(result == INT_MAX) { // enter key pressed
-			::gpk::vcc					trimmed				= {editor.InputBox.Text.begin(), ::gpk::min(editor.InputBox.Text.size(), 16U)};
-			::gpk::trim(trimmed);
+			::gpk::vcc					trimmed				= {};
+			gpk_necs(editor.InputBox.Text.slice(trimmed, 0, ::gpk::min(editor.InputBox.Text.size(), 128U)));
+			gpk_necs(::gpk::trim(trimmed));
 			if(trimmed.size()) {
 				::gpk::pobj<::gpk::ac>	textInput;
 				textInput.create();
@@ -60,7 +61,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 		::gpk::guiProcessControls(gui, controlsToProcess, [&](uint32_t iControl) {
 			//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
 			editor.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
-			editor.InputBox.Edit(gui, gui.Controls.States[iControl].Execute);
+			editor.InputBox.Edit(gui, gui.Controls.Events[iControl].Execute);
 			return 0;
 		});
 	}

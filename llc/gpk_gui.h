@@ -19,31 +19,72 @@ namespace gpk
 #pragma pack(push, 1)
 	typedef	int32_t		cid_t;
 
-	typedef	n2<cid_t>	n2cid;
-	typedef	rect<cid_t>	rectcid;
-	typedef	apod<cid_t>	acid;
-	typedef	view<cid_t>	vcid;
+	typedef	n2<cid_t>			n2cid;
+	typedef	rect<cid_t>			rectcid;
+	typedef	apod<cid_t>			acid;
+	typedef	view<cid_t>			vcid;
+	typedef	view<const cid_t>	vccid;
 
 	enum GUI_COLOR_MODE : uint8_t
-		{ GUI_COLOR_MODE_DEFAULT	= 0
+		{ GUI_COLOR_MODE_Default	= 0
 		, GUI_COLOR_MODE_3D
-		, GUI_COLOR_MODE_FLAT
+		, GUI_COLOR_MODE_Flat
 		, GUI_COLOR_MODE_COUNT
 		};
 
+	// Runtime internal states
+	struct SControlState {
+		bool				Updated			: 1;
+		bool				Unused			: 1;
+	};
+
+	// Holds the state changes after an update call. 
+	struct SControlEvent {
+		bool				Hover				: 1;
+		bool				UnHover				: 1;
+		bool				Pressed				: 1;
+		bool				Released			: 1;
+		bool				Focused				: 1;
+		bool				DeFocused			: 1;
+		bool				Selected			: 1;
+		bool				Execute				: 1;
+	};
+
 	struct SControlMode {
-		uint8_t			ColorMode			: 2;
-		uint8_t			UseNewPalettes		: 1;
-		uint8_t			NoHoverEffect		: 1;
-		uint8_t			FrameOut			: 1;
-		uint8_t			Design				: 1;
-		uint8_t			NoBackgroundRect	: 1;
-		uint8_t			PercentMetrics		: 1; // 8th bit
+		uint8_t				NoHover				: 1;
+		uint8_t				NoFocus				: 1;
+		uint8_t				NoExecute			: 1;
+		uint8_t				NoSelect			: 1;
+		bool				Disabled			: 1;
+		bool				Hidden				: 1;
+	};
+
+	struct SControlDraw {
+		uint8_t				ColorMode			: 2;
+		uint8_t				FrameOut			: 1;
+		uint8_t				NoBorder			: 1;	// skip drawing border area
+		uint8_t				NoClient			: 1;	// skip drawing client area
+		uint8_t				StatePalette		: 3;
+		
+		uint8_t				UseNewPalettes		: 1;	// -- Legacy property (don't use on the new implementation!)
+		uint8_t				Design				: 1;	// -- Legacy property (don't use on the new implementation!)
+		uint8_t				NoBackgroundRect	: 1;	// -- Legacy property (don't use on the new implementation!)
+	};
+
+	struct SRelativeBit {
+		uint8_t				XOffset			: 1; //
+		uint8_t				YOffset			: 1; //
+		uint8_t				XSize			: 1; //
+		uint8_t				YSize			: 1; //
+		uint8_t				BorderLeft		: 1; //
+		uint8_t				BorderTop		: 1; //
+		uint8_t				BorderRight		: 1; //
+		uint8_t				BorderBottom	: 1; //
 	};
 
 	struct SControlRectangle {
-		::gpk::rect2i16	Local;
-		::gpk::rect2i16	Global;
+		::gpk::rect2i16		Local;
+		::gpk::rect2i16		Global;
 	};
 
 	enum CONTROL_AREA_BASE : uint8_t 
@@ -115,20 +156,6 @@ namespace gpk
 		::gpk::minmax<::gpk::n2i16>	SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
 
-	struct SControlState {
-		bool				Disabled		: 1;
-		bool				Hover			: 1;
-		bool				UnHover			: 1;
-		bool				Pressed			: 1;
-		bool				Released		: 1;
-		bool				Selected		: 1;
-		bool				Execute			: 1;
-		bool				Updated			: 1;
-
-		bool				Hidden			: 1;
-		bool				ImageInvertY	: 1;
-		bool				Unused			: 1;
-	};
 
 	enum GUI_CONTROL_PALETTE
 		{ GUI_CONTROL_PALETTE_NORMAL		= 0
@@ -155,6 +182,7 @@ namespace gpk
 		::gpk::v2bgra			Image			= {};
 		::gpk::n2i16			ImageOffset		= {};
 		::gpk::ALIGN			ImageAlign		= ::gpk::ALIGN_CENTER;
+		bool					ImageInvertY	= false;
 
 		::gpk::ALIGN			Align			= ::gpk::ALIGN_TOP_LEFT;
 		int16_t					ColorTheme		= 0;
@@ -196,15 +224,21 @@ namespace gpk
 #pragma pack(pop)
 	struct SGUIControlTable {
 		::gpk::apod<::gpk::SControl				>	Controls		= {};
-		::gpk::apod<::gpk::SControlState		>	States			= {};
 		::gpk::apod<::gpk::SControlMetrics		>	Metrics			= {};
-		::gpk::aobj<::gpk::SControlText			>	Text			= {};
 		::gpk::apod<::gpk::SControlConstraints	>	Constraints		= {};
-		::gpk::aobj<::gpk::SControlMode			>	Modes			= {};
+		::gpk::apod<::gpk::SControlState		>	States			= {};
+		::gpk::apod<::gpk::SControlMode			>	Modes			= {};
+		::gpk::apod<::gpk::SControlDraw			>	Draw			= {};
+		::gpk::apod<::gpk::SControlEvent		>	Events			= {};
+		::gpk::apod<::gpk::SRelativeBit			>	RelativeBit		= {};
+
+		::gpk::aobj<::gpk::SControlText			>	Text			= {};
 		::gpk::aobj<::gpk::acid					>	Children		= {};
 		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
-		::gpk::apod<::gpk::SSysEvent			>	Events			= {};
+
+		::gpk::apod<::gpk::SSysEvent			>	EventQueue		= {};
 	};
+	::gpk::error_t			controlCreate					(::gpk::SGUIControlTable & gui, ::gpk::vi32 defaultColors);
 
 	struct SGUIColors {
 		::gpk::papod<::gpk::bgra>			Palette					= {};
