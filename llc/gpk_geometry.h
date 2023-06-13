@@ -42,6 +42,7 @@ namespace gpk
 	};
 
 	struct SParamsGrid { 
+		::gpk::n2f32	Size				= {1, 1};
 		::gpk::n2f32	Center				= {.5f, .5f};
 		::gpk::n2u16	CellCount			= {2, 2};
 		bool			ReverseTriangles	= false;

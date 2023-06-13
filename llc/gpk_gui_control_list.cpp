@@ -1,57 +1,57 @@
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
 ::gpk::error_t			gpk::controlListInitialize			(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu					= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
-	gui.Controls.Controls		[menu.IdControl].Border				= {};
-	gui.Controls.Controls		[menu.IdControl].Margin				= {};
+	gui.Controls.Placement[menu.IdControl].Border				= {};
+	gui.Controls.Placement[menu.IdControl].Margin				= {};
 	gui.Controls.Text			[menu.IdControl].Text				= " ";
 	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText	= {false, false};
 	//gui.Controls.Modes			[menu.IdControl].Design				= true;
 	return 0;
 }
 
-::gpk::error_t			gpk::controlListArrange				(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
-	const ::gpk::SRasterFont	& selectedFont						= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
+::gpk::error_t			gpk::controlListArrange	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(gui.Controls.Text[menu.IdControl].FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? gui.Controls.Text[menu.IdControl].FontSelected : gui.SelectedFont];
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const uint32_t				idControl							= menu.IdControls[iItem];
-		::gpk::SControlConstraints	& controlConstraints				= gui.Controls.Constraints	[idControl];
-		::gpk::SControl				& control							= gui.Controls.Controls		[idControl];
-		::gpk::SControlText			& controlText						= gui.Controls.Text			[idControl];
-		const uint32_t				iPrevItem							= iItem - 1;
-		const ::gpk::n2u8			fontCharSize						= selectedFont.CharSize;
+		const uint32_t				idControl				= menu.IdControls[iItem];
+		::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[idControl];
+		::gpk::SControlPlacement	& control				= gui.Controls.Placement	[idControl];
+		::gpk::SControlText			& controlText			= gui.Controls.Text			[idControl];
+		const uint32_t				iPrevItem				= iItem - 1;
+		const ::gpk::n2u8			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
 		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
-			control.Area.Size.x												= int16_t(fontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
+			control.Area.Size.x		= int16_t(fontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
 			if(menu.IdControls.size() > iPrevItem)
-				control.Area.Offset.x											= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().x;
+				control.Area.Offset.x	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
 		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
-			controlConstraints.AttachSizeToControl.x						= menu.IdControl;
+			controlConstraints.AttachSizeToControl.x	= menu.IdControl;
 			if(menu.IdControls.size() > iPrevItem)
-				control.Area.Offset.y											= gui.Controls.Controls[menu.IdControls[iPrevItem]].Area.Limit().y;
+				control.Area.Offset.y	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().y;
 			break;
 		}
 	}
 
-	::gpk::SControl				& controlMenu							= gui.Controls.Controls[menu.IdControl];
+	::gpk::SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
 	controlMenu.Area.Size	= {};
-	const ::gpk::n2u8			fontCharSize							= selectedFont.CharSize;
+	const ::gpk::n2u8			fontCharSize			= selectedFont.CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
-		const uint32_t				idControl								= menu.IdControls		[iItem];
-		::gpk::SControl				& control								= gui.Controls.Controls	[idControl];
-		::gpk::SControlText			& controlText							= gui.Controls.Text		[idControl];
+		const uint32_t				idControl			= menu.IdControls		[iItem];
+		::gpk::SControlPlacement	& control			= gui.Controls.Placement[idControl];
+		::gpk::SControlText			& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {
 		default:
 		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
-			controlMenu.Area.Size.x	+= gui.Controls.Controls[idControl].Area.Size.x;
-			controlMenu.Area.Size.y	= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Controls[idControl].Area.Size.y);
+			controlMenu.Area.Size.x	+= gui.Controls.Placement[idControl].Area.Size.x;
+			controlMenu.Area.Size.y	= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Placement[idControl].Area.Size.y);
 			break;
 		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
-			controlMenu.Area.Size.y	+= gui.Controls.Controls[idControl].Area.Size.y;
+			controlMenu.Area.Size.y	+= gui.Controls.Placement[idControl].Area.Size.y;
 			controlMenu.Area.Size.x	= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * fontCharSize.x + ::gpk::controlNCSpacing(control).x));
 			break;
 		}
@@ -69,8 +69,8 @@
 	const int32_t				idControl				= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
 	::gpk::controlSetParent(gui, idControl, menu.IdControl);
-	::gpk::SControl				& control				= gui.Controls.Controls		[idControl];
-	::gpk::SControlText			& controlText			= gui.Controls.Text			[idControl];
+	::gpk::SControlPlacement	& control				= gui.Controls.Placement[idControl];
+	::gpk::SControlText			& controlText			= gui.Controls.Text		[idControl];
 	control		.Margin		= {4, 2, 4, 2};
 	controlText	.Text		= {text.begin(), text.size()};
 	controlText	.Align		= ::gpk::ALIGN_CENTER_LEFT;
@@ -84,7 +84,7 @@
 	const ::gpk::n2f64			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
 
-	::gpk::SControl				& control					= gui.Controls.Controls[palette.IdControl];
+	::gpk::SControlPlacement	& control					= gui.Controls.Placement[palette.IdControl];
 	const uint32_t				widthViewport				= (uint32_t)(targetSize.x + ((int64_t)control.Border.Left + control.Border.Right + control.Margin.Left + control.Margin.Right));
 	const uint32_t				heightViewport				= (uint32_t)(targetSize.y + ((int64_t)control.Border.Top + control.Border.Bottom + control.Margin.Top + control.Margin.Bottom));
 	control.Area.Size		= {(int16_t)widthViewport, (int16_t)heightViewport};
@@ -141,8 +141,9 @@
 		}
 		const uint32_t				paletteElemIndex	= linearIndex;
 		palette.IdControls[paletteElemIndex] = ::gpk::controlCreate(gui);
-		::gpk::SControl				& control			= gui.Controls.Controls[palette.IdControls[paletteElemIndex]];
-		control.ColorTheme		= int16_t(themeIndex + 1);
+		::gpk::SControlPlacement	& control			= gui.Controls.Placement[palette.IdControls[paletteElemIndex]];
+		::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
+		controlDraw.ColorTheme	= int8_t(themeIndex + 1);
 		control.Area.Offset		= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
 		control.Area.Size		= controlSize.i16();
 		gpk_necs(::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
@@ -150,7 +151,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::guiSetupControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SControl & args, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
 	int32_t						result						= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		int32_t						idControl					= ::gpk::controlCreate(gui);
@@ -160,7 +161,7 @@
 		if(0 == iButton)
 			result					= idControl;
 
-		::gpk::SControl				& control					= gui.Controls.Controls[idControl];
+		::gpk::SControlPlacement	& control					= gui.Controls.Placement[idControl];
 		control					= args;
 		if(direction & (::gpk::DIRECTION_LEFT | ::gpk::DIRECTION_RIGHT))
 			control.Area.Offset.x	+= int16_t(args.Area.Size.x * iButton);
@@ -195,11 +196,11 @@
 	return result;
 }
 
-::gpk::error_t			gpk::guiSetupControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
-	SControl					controlArgs					= {};
+::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+	SControlPlacement			controlArgs					= {};
 	controlArgs.Align		= controlAlign;
 	controlArgs.Area		= {offset, buttonSize.i16()};
 	controlArgs.Border		= {1, 1, 1, 1};
 	controlArgs.Margin		= {1, 1, 1, 1};
-	return ::gpk::guiSetupControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);
+	return ::gpk::guiCreateControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);
 }

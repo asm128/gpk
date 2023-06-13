@@ -60,8 +60,6 @@ namespace gpk
 	typedef minmax<float	>	minmaxf32;
 	typedef minmax<double	>	minmaxf64;
 
-	typedef minmax<float> SNearFar;
-
 	typedef range<uint8_t>	rangeu8;
 	typedef range<uint16_t>	rangeu16;
 	typedef range<uint32_t>	rangeu32;
@@ -87,22 +85,16 @@ namespace gpk
 #pragma pack(pop)
 #ifndef true_if
 #	define true_if(expression)		((expression) ? true : false)	// returns true  if the parameter evaluates to true
-#endif
-#ifndef false_if
 #	define false_if(expression)		((expression) ? false : true)	// returns false if the parameter evaluates to true
-#endif
-#ifndef one_if
 #	define one_if(expression)		((expression) ? 1 : 0)			// returns one   if the parameter evaluates to true
-#endif
-#ifndef zero_if
 #	define zero_if(expression)		((expression) ? 0 : 1)			// returns zero  if the parameter evaluates to true
-#endif
-//
-#ifndef is_one
 #	define is_one(your_int)			(1 == (your_int))				// returns true if the parameter is equal to one
-#endif
-#ifndef is_zero
 #	define is_zero(your_int)		(0 == (your_int))				// returns true if the parameter is equal to zero
+#	define one_if_false(expression)	one_if(false == (expression));
+//
+#	define one_if_remainder(count, denominator)		(((count) + ((denominator) - 1)) / (denominator))	// returns one if there is a remainder
+#	define zero_if_remainder(count, denominator)	(one_if_remainder(count, denominator) ? 0 : 1)		// returns zero if there is a remainder
+#	define round_up(count, denominator)				((count) / (denominator) + one_if_remainder((count), (denominator)))	// returns one if there is a remainder
 #endif
 
 } // namespace

@@ -99,3 +99,4 @@
 #define GDEFINE_FLAG_TYPE
 #define GDEFINE_FLAG_VALUE
 #define gpk_warning_unhandled_value
+#define CONTROL_STATE_SET_FUNCTION

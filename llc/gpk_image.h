@@ -35,7 +35,6 @@ namespace gpk
 			return *this;
 		}
 
-
 		inline	::gpk::v1<T>			operator[]	(uint32_t index)						{ return View[index]; }
 		inline	const ::gpk::v1<TConst>	operator[]	(uint32_t index)	const				{ return View[index]; }
 

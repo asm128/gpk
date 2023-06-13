@@ -1,10 +1,10 @@
 #include "gpk_engine_explorer.h"
 #include "gpk_gui_text.h"
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_list.h"
 
 static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 	int32_t						idMenu			= ::gpk::controlCreate(gui);
-	::gpk::SControl				& controlMenu	= gui.Controls.Controls[idMenu];
+	::gpk::SControlPlacement	& controlMenu	= gui.Controls.Placement[idMenu];
 	controlMenu.Area		= {0, 0, 0, 20};
 	controlMenu.Area.Size.y	= 20;
 	controlMenu.Margin		= {};
@@ -14,7 +14,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 	controlMenuState.AttachSizeToControl.x	= (uint32_t)0;
 	controlMenuState.AttachSizeToControl.y	= -1;
 
-	::gpk::SControl				controlItem		= {};
+	::gpk::SControlPlacement	controlItem		= {};
 	controlItem.Margin		= {4, 2, 4, 2};
 	controlItem.Border		= {1, 1, 1, 1};
 	gpk_necs(::gpk::guiCreateControlList<::gpk::EDITOR_APP_MENU>(gui, ::gpk::DIRECTION_RIGHT, idMenu, controlItem, ::gpk::ALIGN_CENTER_LEFT, idButtons));
@@ -26,7 +26,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 	gpk_necs(::gpk::inputBoxCreate(editor.InputBox, gui));
 
 	//gui.Controls.States	[editor.InputBox.IdRoot].Hidden			= true;
-	gui.Controls.Controls	[editor.InputBox.IdRoot].Align			= ::gpk::ALIGN_CENTER;
+	gui.Controls.Placement[editor.InputBox.IdRoot].Align			= ::gpk::ALIGN_CENTER;
 	//gui.Controls.Controls	[editor.InputBox.IdRoot].Area.Offset.x = 240;
 
 	//const ::gpk::eid_t			iEntityTopLeft		= editor.GUIEngine.CreateSquare(false);

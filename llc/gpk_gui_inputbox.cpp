@@ -1,5 +1,5 @@
 #include "gpk_gui_inputbox.h"
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
 ::gpk::error_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
@@ -10,7 +10,7 @@
 	keys.push_back('!');
 	keys.push_back('?');
 	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
-	gui.Controls.Modes[vk.IdRoot].Hidden	= true;
+	gui.Controls.States[vk.IdRoot].Hidden	= true;
 	return vk.IdRoot;
 }
 
@@ -24,7 +24,7 @@
 	const ::gpk::n2i16			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
-		::gpk::SControl				& controlRoot				= gui.Controls.Controls[vk.IdRoot];
+		::gpk::SControlPlacement	& controlRoot				= gui.Controls.Placement[vk.IdRoot];
 		controlRoot.Area.Size	= sizeKeypad;
 		controlRoot.Align		= ::gpk::ALIGN_CENTER_BOTTOM;
 	}
@@ -33,7 +33,7 @@
 		sprintf_s(text, "%c", vk.Keys[iKey]);
 
 		int32_t						idKey			= ::gpk::controlCreate(gui);
-		::gpk::SControl				& controlKey	= gui.Controls.Controls[idKey];
+		::gpk::SControlPlacement	& controlKey	= gui.Controls.Placement[idKey];
 		controlKey.Area.Size	= sizeKey;
 		controlKey.Area.Offset.x= int16_t((iKey % rowWidth) * sizeKey.x);
 		controlKey.Area.Offset.y= int16_t((iKey / rowWidth) * sizeKey.y);
@@ -45,34 +45,35 @@
 		gpk_necs(::gpk::controlTextSet(gui, idKey, ::gpk::label(text)));
 	}
 
-	gpk_necs(::gpk::guiSetupControlList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_CENTER, vk.IdKeys));
+	gpk_necs(::gpk::guiCreateControlList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_CENTER, vk.IdKeys));
 	return 0;
 }
 
 ::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent)	{
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
-	gui.Controls.Controls	[inputBox.IdRoot].Border			= {};
-	gui.Controls.Controls	[inputBox.IdRoot].Margin			= {};
-	gui.Controls.Draw		[inputBox.IdRoot].Design			= true;
-	gui.Controls.Draw		[inputBox.IdRoot].NoBackgroundRect	= true;
+	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};
+	gui.Controls.Placement	[inputBox.IdRoot].Margin	= {};
+	gui.Controls.Modes		[inputBox.IdRoot].NoHover	= true;
+	gui.Controls.Draw		[inputBox.IdRoot].NoBorder	= true;
+	gui.Controls.Draw		[inputBox.IdRoot].NoClient	= true;
 
 	gpk_necs(inputBox.IdText = ::gpk::controlCreate(gui));
-	gui.Controls.Controls	[inputBox.IdText].Border	= {2, 2, 2, 2};
-	gui.Controls.Controls	[inputBox.IdText].Margin	= {1, 1, 1, 1};
-	gui.Controls.Controls	[inputBox.IdText].Area.Size	= {0, 22};
+	gui.Controls.Placement	[inputBox.IdText].Border	= {2, 2, 2, 2};
+	gui.Controls.Placement	[inputBox.IdText].Margin	= {1, 1, 1, 1};
+	gui.Controls.Placement	[inputBox.IdText].Area.Size	= {0, 22};
 	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
 	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
-	gui.Controls.Modes		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
-	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Controls[inputBox.IdText].Align;
-	gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
-		= gui.Controls.Controls	[inputBox.IdText].Area.Offset.y
-		+ gui.Controls.Controls	[inputBox.IdText].Area.Size.y
+	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
+	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Placement[inputBox.IdText].Align;
+	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
+		= gui.Controls.Placement	[inputBox.IdText].Area.Offset.y
+		+ gui.Controls.Placement	[inputBox.IdText].Area.Size.y
 		;
-	gui.Controls.Controls	[inputBox.IdText].Area.Size.x	= gui.Controls.Controls	[inputBox.VirtualKeyboard.IdRoot].Area.Size.x;
+	gui.Controls.Placement[inputBox.IdText].Area.Size.x	= gui.Controls.Placement[inputBox.VirtualKeyboard.IdRoot].Area.Size.x;
 
-	gui.Controls.Controls[inputBox.IdRoot].Area.Size.x	= ::gpk::max(gui.Controls.Controls[inputBox.IdText].Area.Size.x, gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.x);
-	gui.Controls.Controls[inputBox.IdRoot].Area.Size.y	+= gui.Controls.Controls[inputBox.VirtualKeyboard.IdRoot].Area.Size.y;
+	gui.Controls.Placement[inputBox.IdRoot].Area.Size.x	= ::gpk::max(gui.Controls.Placement[inputBox.IdText].Area.Size.x, gui.Controls.Placement[inputBox.VirtualKeyboard.IdRoot].Area.Size.x);
+	gui.Controls.Placement[inputBox.IdRoot].Area.Size.y	+= gui.Controls.Placement[inputBox.VirtualKeyboard.IdRoot].Area.Size.y;
 
 	gpk_necs(::gpk::controlSetParent(gui, inputBox.IdText					, inputBox.IdRoot));
 	gpk_necs(::gpk::controlSetParent(gui, inputBox.VirtualKeyboard.IdRoot	, inputBox.IdRoot));

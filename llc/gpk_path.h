@@ -6,16 +6,16 @@
 namespace gpk
 {
 	struct SPathContents {
-		::gpk::aobj<::gpk::apod<char>>		Files					= {};
+		::gpk::aachar						Files					= {};
 		::gpk::aobj<::gpk::SPathContents>	Folders					= {};
 	};
 
 	::gpk::error_t						pathCreate				(const ::gpk::vcc & folderName, const char separator = '/');	// Recursive
-	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char>> & output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
-	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<::gpk::apod<char>> & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
-	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<::gpk::vcc> & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
+	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, ::gpk::aachar & output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
+	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::aachar & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
+	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::avcc & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, SPathContents & out_Contents, const ::gpk::vcc extension = {});		// Recursive
-	stainli	::gpk::error_t				pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char>>& output, const ::gpk::vcc extension = {}) {
+	stainli	::gpk::error_t				pathList				(const ::gpk::vcc & pathToList, ::gpk::aachar & output, const ::gpk::vcc extension = {}) {
 		::gpk::SPathContents					tree					= {};
 		int32_t									error					= ::gpk::pathList(pathToList, tree, extension);
 		gpk_necs(error |= ::gpk::pathList(tree, output, extension));

@@ -341,7 +341,7 @@ static ::gpk::error_t	createEntityFromGeometry
 ::gpk::error_t			gpk::SEngine::CreateGrid(const SParamsGrid & params)	{ 
 	stacxpr	float				radius					= .5f;
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f{radius, radius, radius}, true, params, ParamsGrid
-		, [params](::gpk::STrianglesIndexed & geometry) { 
+		, [params](::gpk::STrianglesIndexed & geometry) {
 			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
 			return 0;
 		});

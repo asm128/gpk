@@ -11,8 +11,8 @@ namespace gpk
 
 		T						Storage	[_sizeArray]		;
 
-		operator				view<T>				()																{ return {Storage, _sizeArray}; }
-		operator				view<const T>			()											const	noexcept	{ return {Storage, _sizeArray}; }
+		operator				view<T>						()																{ return {Storage, _sizeArray}; }
+		operator				view<const T>				()											const	noexcept	{ return {Storage, _sizeArray}; }
 
 		inline	const T&		operator[]					(uint32_t index)							const				{
 			gthrow_if(index >= _sizeArray, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_sizeArray);

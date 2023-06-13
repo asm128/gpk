@@ -95,16 +95,27 @@ namespace gpk
 			return *this;
 		}
 	};	// struct n2
-	typedef n2<float>		n2f32, n2f;
-	typedef n2<double>		n2f64, n2d;
-	typedef n2<uint8_t>		n2u8;
-	typedef n2<uint16_t>	n2u16;
-	typedef n2<uint32_t>	n2u32;
-	typedef n2<uint64_t>	n2u64;
-	typedef n2<int8_t>		n2i8;
-	typedef n2<int16_t>		n2i16;
-	typedef n2<int32_t>		n2i32;
-	typedef n2<int64_t>		n2i64;
+	typedef	n2<float>		n2f32;
+	typedef	n2<double>		n2f64;
+	typedef	n2<uint8_t>		n2u8;
+	typedef	n2<uint16_t>	n2u16;
+	typedef	n2<uint32_t>	n2u32;
+	typedef	n2<uint64_t>	n2u64;
+	typedef	n2<int8_t>		n2i8;
+	typedef	n2<int16_t>		n2i16;
+	typedef	n2<int32_t>		n2i32;
+	typedef	n2<int64_t>		n2i64;
+
+	typedef	minmax<n2f32>	minmax2f32;
+	typedef	minmax<n2f64>	minmax2f64;
+	typedef	minmax<n2u8 >	minmax2u8;
+	typedef	minmax<n2u16>	minmax2u16;
+	typedef	minmax<n2u32>	minmax2u32;
+	typedef	minmax<n2u64>	minmax2u64;
+	typedef	minmax<n2i8 >	minmax2i8;
+	typedef	minmax<n2i16>	minmax2i16;
+	typedef	minmax<n2i32>	minmax2i32;
+	typedef	minmax<n2i64>	minmax2i64;
 
 	template<typename _tValue>
 	stacxpr	bool	in_range	(const ::gpk::n2<_tValue>& valueToTest, const ::gpk::n2<_tValue>& rangeStart, const ::gpk::n2<_tValue>& rangeStop)	noexcept	{

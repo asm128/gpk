@@ -28,7 +28,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 		}
 		timeval											wait_time							= {0, 1};
 		uint32_t										remainder							= totalClientCount % 64;
-		uint32_t										stageCount							= totalClientCount / 64 + one_if(remainder);
+		uint32_t										stageCount							= round_up(totalClientCount, 64);
 		fd_set											sockets								= {};
 		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
 			const uint32_t									offsetClient						= iStage * 64;

@@ -15,7 +15,7 @@ namespace gpk
 		,	::gpk::rect2<T>				& rectangleRealigned
 		,	ALIGN						align
 		)	noexcept	{
-		rectangleRealigned															= rectangleToRealign;
+		rectangleRealigned		= rectangleToRealign;
 			 if(::gpk::bit_true(align, ::gpk::ALIGN_HCENTER	))	{ rectangleRealigned.Offset.x += (T)(targetSize.x >> 1)	- (rectangleRealigned.Size.x >> 1); }
 		else if(::gpk::bit_true(align, ::gpk::ALIGN_RIGHT	))	{ rectangleRealigned.Offset.x =  (T) targetSize.x		- (rectangleRealigned.Size.x + rectangleRealigned.Offset.x); }
 		else													{}

@@ -168,6 +168,17 @@ namespace gpk
 	typedef n3<int16_t>		n3i16;
 	typedef n3<int32_t>		n3i32;
 	typedef n3<int64_t>		n3i64;
+
+	typedef	minmax<n3f32>	minmax3f32;
+	typedef	minmax<n3f64>	minmax3f64;
+	typedef	minmax<n3u8 >	minmax3u8;
+	typedef	minmax<n3u16>	minmax3u16;
+	typedef	minmax<n3u32>	minmax3u32;
+	typedef	minmax<n3u64>	minmax3u64;
+	typedef	minmax<n3i8 >	minmax3i8;
+	typedef	minmax<n3i16>	minmax3i16;
+	typedef	minmax<n3i32>	minmax3i32;
+	typedef	minmax<n3i64>	minmax3i64;
 #pragma pack(pop)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 } // namespace
 

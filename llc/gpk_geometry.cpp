@@ -70,8 +70,8 @@ enum SQUARE_MODE
 	};
 
 ::gpk::error_t			gpk::geometryBuildGrid	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsGrid & params)	{
-	const ::gpk::n2f32			texCoordUnits			= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
-	const ::gpk::n2f32			scale					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
+	const ::gpk::n2f32			texCoordUnits			= {params.Size.x * (1.0f / params.CellCount.x), params.Size.y * (1.0f / params.CellCount.y)};
+	const ::gpk::n2f32			scale					= {params.Size.x * (1.0f / params.CellCount.x), params.Size.y * (1.0f / params.CellCount.y)};
 	uint32_t					vertexOffset			= geometry.Positions.size();
 	const ::gpk::n3f32			center					= {params.Center.x, 0, params.Center.y};
 

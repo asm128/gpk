@@ -12,6 +12,20 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
+		template <typename _t>
+		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.Cast<_t>(), Size.Cast<_t>()}; }
+
+		inlcxpr	rect2<uint8_t>	u8			()	const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	rect2<uint16_t>	u16			()	const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	rect2<uint32_t>	u32			()	const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	rect2<uint64_t>	u64			()	const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	rect2<int8_t>	i8			()	const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	rect2<int16_t>	i16			()	const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	rect2<int32_t>	i32			()	const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	rect2<int64_t>	i64			()	const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	rect2<float>	f32			()	const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	rect2<double>	f64			()	const	noexcept	{ return Cast<double	>(); }
+
 		inline	::gpk::n2<T>	Limit		()	const	noexcept	{ return Offset + Size; }
 	};
 	typedef rect2<float>	rect2f32, rect2f;

@@ -61,9 +61,9 @@ namespace gpk
 			context->BeginDraw();
 
 			// Position on the bottom right corner
-			D2D1::Matrix3x2F									screenTranslation				= D2D1::Matrix3x2F::Translation(logicalSize.x - TextMetrics.layoutWidth, logicalSize.y - TextMetrics.height);
+			D2D1::Matrix3x2F									screenTranslation				= D2D1::Matrix3x2F::Translation(0, logicalSize.y - TextMetrics.height);
 			context->SetTransform(screenTranslation * DeviceResources->GetOrientationTransform2D());
-			gpk_hrcall(TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING));
+			gpk_hrcall(TextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING));
 
 			context->DrawTextLayout(D2D1::Point2F(0.f, 0.f), TextLayout, WhiteBrush);
 	

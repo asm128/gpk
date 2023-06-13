@@ -44,12 +44,12 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SDialogColors {
-		::gpk::apod<::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
-		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control			= {};
-		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button			= {};
-		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox		= {};
-		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport		= {};
-		::gpk::asti32<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle	= {};
+		::gpk::apod<::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>>	PerControlType	= {};
+		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Control			= {};
+		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Button			= {};
+		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					CheckBox		= {};
+		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					Viewport		= {};
+		::gpk::asti16<::gpk::GUI_CONTROL_PALETTE_COUNT>					ViewportTitle	= {};
 	};
 
 	struct SDialog {
@@ -109,7 +109,7 @@ namespace gpk
 			Controls[index]->Dialog	= this;
 			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
 			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
-			::gpk::memcpy_s(gui.Controls.Controls[idGUIControl].Palettes.Storage, Colors->Control.Storage);
+			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
 			//gpk_necall(::gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;

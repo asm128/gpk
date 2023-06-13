@@ -333,9 +333,6 @@
     <ClInclude Include="gpk_app_impl.h">
       <Filter>framework</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_gui_control.h">
-      <Filter>dialog</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_gui_desktop.h">
       <Filter>dialog</Filter>
     </ClInclude>
@@ -555,17 +552,23 @@
     <ClInclude Include="gpk_array_ppod.h">
       <Filter>pointer</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_aptr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view_pobj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_ppod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_gui_base.h">
+    <ClInclude Include="keyed_bit_array.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_bit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_list.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control.h">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -683,9 +686,6 @@
     <ClCompile Include="gpk_view.cpp">
       <Filter>view</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_gui_control.cpp">
-      <Filter>dialog</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_gui_desktop.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
@@ -757,6 +757,9 @@
     </ClCompile>
     <ClCompile Include="gpk_geometry_draw.cpp">
       <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_list.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

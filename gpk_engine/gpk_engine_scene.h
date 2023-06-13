@@ -34,22 +34,22 @@ namespace gpk
 
 	struct SRenderMaterial {
 		::gpk::SRenderColor			Color;
-		::gpk::n3f					Emission;
+		::gpk::n3f32				Emission;
 		float						SpecularPower;
 	};
 
 	struct SRenderNodeConstants {
-		::gpk::m4f					Model;
-		::gpk::m4f					ModelInverseTranspose;
-		::gpk::m4f					MVP;
+		::gpk::m4f32				Model;
+		::gpk::m4f32				ModelInverseTranspose;
+		::gpk::m4f32				MVP;
 		::gpk::SRenderMaterial		Material;
 	};
 #pragma pack(pop)
 
 	struct SPSIn {
-		::gpk::n3f					WeightedPosition	;
-		::gpk::n3f					WeightedNormal		;
-		::gpk::n2f					WeightedUV			;
+		::gpk::n3f32				WeightedPosition	;
+		::gpk::n3f32				WeightedNormal		;
+		::gpk::n2f32				WeightedUV			;
 		::gpk::SRenderMaterial		Material			;
 		::gpk::v2cbgra				Surface				; 
 	};
@@ -99,15 +99,15 @@ namespace gpk
 	typedef	::gpk::SLinearNamedMap<::std::function<TFuncPixelShader>>	SShaderManager;
 
 	struct SEngineGraphics {
-		::gpk::SRenderBufferManager				Buffers					= {};
-		::gpk::SSurfaceManager					Surfaces				= {};
-		::gpk::SMeshManager						Meshes					= {};
-		::gpk::SSkinManager						Skins					= {};
+		::gpk::SRenderBufferManager	Buffers		= {};
+		::gpk::SSurfaceManager		Surfaces	= {};
+		::gpk::SMeshManager			Meshes		= {};
+		::gpk::SSkinManager			Skins		= {};
 
-		::gpk::SShaderManager					Shaders					= {};
-		::gpk::SRasterFontManager				Fonts					= {};
+		::gpk::SShaderManager		Shaders		= {};
+		::gpk::SRasterFontManager	Fonts		= {};
 
-		::gpk::error_t							Save				(::gpk::au8 & output)		const	{
+		::gpk::error_t				Save		(::gpk::au8 & output)		const	{
 			gpk_necs(Buffers	.Save(output));
 			gpk_necs(Surfaces	.Save(output));
 			gpk_necs(Meshes		.Save(output));
@@ -116,7 +116,7 @@ namespace gpk
 			//gpk_necs(Fonts	.Save(output));
 			return 0;
 		}
-		::gpk::error_t							Load				(::gpk::vcu8 & input) {
+		::gpk::error_t				Load		(::gpk::vcu8 & input) {
 			gpk_necs(Buffers	.Load(input));
 			gpk_necs(Surfaces	.Load(input));
 			gpk_necs(Meshes		.Load(input));

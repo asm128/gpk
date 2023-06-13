@@ -114,6 +114,12 @@ namespace gpk
 			}
 			return Size;
 		}
+
+		inline	::gpk::error_t	resize_bits			(uint32_t newBitCount)						noexcept	{
+			stacxpr	uint32_t			elementBits			= (uint32_t)sizeof(T) * 8U;
+			return resize(newBitCount / elementBits + one_if(newBitCount % elementBits));
+		}
+
 		// Returns the new size of the array.
 		::gpk::error_t			resize				(uint32_t newCount)						noexcept	{
 			gpk_necs(reserve(newCount));
@@ -218,8 +224,8 @@ namespace gpk
 	template <typename T>	using apod		= ::gpk::array_pod<T>;
 	template <typename T>	using ap		= ::gpk::apod	<T>;
 
-	typedef apod<uchar_t	>	auc	;
-	typedef apod<char		>	ac	;
+	typedef apod<uchar_t	>	auchar, auc;
+	typedef apod<char		>	achar , ac ;
 	typedef apod<float_t	>	af32;
 	typedef apod<double_t	>	af64;
 	typedef apod<uint8_t	>	au8	;
@@ -234,8 +240,8 @@ namespace gpk
 	::gpk::apod<char>			toString		(const ::gpk::vcc & strToLog);
 	stainli	::gpk::apod<char>	toString		(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
 
-	::gpk::error_t				join							(::gpk::apod<char> & query, char separator, ::gpk::view<const gpk::vcc> fields);
-	::gpk::error_t				append_quoted					(::gpk::apod<char> & output, ::gpk::vcc text);
+	::gpk::error_t				join							(::gpk::achar & query, char separator, ::gpk::view<const gpk::vcc> fields);
+	::gpk::error_t				append_quoted					(::gpk::achar & output, ::gpk::vcc text);
 } // namespace
 
 #endif // GPK_ARRAY_POD_H_230518

@@ -109,7 +109,7 @@ namespace gpk
 
 		virtual	::gpk::error_t	Update				()							{ 
 			::gpk::SDialog				& dialog			= *Dialog;
-			::gpk::SGUIControlTable		& controlTable		= dialog.GUI->Controls;
+			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
 			if(controlTable.Events[IdDecrease].Execute || controlTable.Events[IdIncrease].Execute) {
 				if(controlTable.Events[IdDecrease].Execute)
 					return SetValue(ValueCurrent - 1);
@@ -129,8 +129,8 @@ namespace gpk
 			::gpk::vcc					valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
-			::gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString);
-			::gpk::controlMetricsInvalidate(*Dialog->GUI, IdGUIControl);
+			gpk_necs(::gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));
+			gpk_necs(::gpk::controlMetricsInvalidate(*Dialog->GUI, IdGUIControl));
 			return 0;
 		}
 	};
@@ -143,12 +143,12 @@ namespace gpk
 		tuner->ValueCurrent		= 0; //tuner->ValueLimits.Min;
 		gpk_necs(tuner->IdDecrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl));
 		gpk_necs(tuner->IdIncrease = ::gpk::controlCreateChild(*dialog.GUI, tuner->IdGUIControl));
-		::gpk::SGUIControlTable		& controlTable						= dialog.GUI->Controls;
-		controlTable.Controls[tuner->IdGUIControl].Margin	= {};
+		::gpk::SControlTable		& controlTable						= dialog.GUI->Controls;
+		controlTable.Placement[tuner->IdGUIControl].Margin	= {};
 		for(int32_t iControl = tuner->IdDecrease; iControl < tuner->IdIncrease + 1; ++iControl) {
-			::gpk::SControl				& controlButton						= controlTable.Controls[iControl];
+			::gpk::SControlPlacement	& controlButton						= controlTable.Placement[iControl];
 			controlButton.Align		= (iControl == tuner->IdDecrease) ? ::gpk::ALIGN_CENTER_LEFT : ::gpk::ALIGN_CENTER_RIGHT;
-			::gpk::memcpy_s(controlButton.Palettes.Storage, dialog.Colors->Button.Storage);
+			::gpk::memcpy_s(controlTable.Draw[iControl].Palettes.Storage, dialog.Colors->Button.Storage);
 			controlTable.Text			[iControl].Text						= (iControl == tuner->IdDecrease) ? "-" : "+";
 			controlTable.Draw			[iControl].UseNewPalettes			= true;
 			controlTable.Draw			[iControl].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;

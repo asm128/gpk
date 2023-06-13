@@ -199,16 +199,16 @@ static	::gpk::error_t	paletteSetupDefaultColors	(::gpk::pobj<::gpk::apod<::gpk::
 }
 
 static	::gpk::error_t	uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED				]	= guiColors.Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= guiColors.Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= guiColors.Palettes.push_back({{::gpk::RED			, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED				]	= guiColors.Palettes.push_back({{::gpk::ORANGE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_NORMAL				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::GRAY	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_DISABLED				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::LIGHTGRAY	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::LIGHTGRAY * 1.1	,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_HOVER				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::CYAN		, ::gpk::YELLOW	, ::gpk::MAGENTA, ::gpk::GREEN, ::gpk::ORANGE, {}, ::gpk::DARKCYAN / 2.0	,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_PRESSED				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::RED		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::ORANGE	, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	return 0;
 }
 
@@ -236,7 +236,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 	return 0;
 }
 
-static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTable, int32_t iControl, ::gpk::vi32 defaultColors)										{
+static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable, int32_t iControl, ::gpk::vi16 defaultColors)										{
 	controlTable.Metrics	[iControl]	= {};
 	controlTable.Children	[iControl]	= ::gpk::vcid{};
 	controlTable.Modes		[iControl]	= {};
@@ -244,13 +244,15 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTab
 	controlTable.Images		[iControl]	= {};
 	//controlTable.Modes		[iControl].UseNewPalettes				= 1;
 	::gpk::SControl				& control				= controlTable.Controls		[iControl]	= {};
+	::gpk::SControlPlacement	& controlPlacement		= controlTable.Placement	[iControl]	= {};
+	::gpk::SControlDraw			& controlDraw			= controlTable.Draw			[iControl]	= {};
 	::gpk::SControlConstraints	& controlConstraints	= controlTable.Constraints	[iControl]	= {};
 	::gpk::SControlText			& controlText			= controlTable.Text			[iControl]	= {};
-	control.Parent	= -1;
-	control.Align	= ::gpk::ALIGN_TOP_LEFT;
-	control.Area	= {{0, 0}, {16, 16}};
-	for(uint32_t iColor = 0, countColors = ::gpk::min(control.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
-		control.Palettes[iColor] = defaultColors[iColor];
+	control.Parent			= -1;
+	controlPlacement.Align	= ::gpk::ALIGN_TOP_LEFT;
+	controlPlacement.Area	= {{0, 0}, {16, 16}};
+	for(uint32_t iColor = 0, countColors = ::gpk::min(controlDraw.Palettes.size(), defaultColors.size()); iColor < countColors; ++iColor)
+		controlDraw.Palettes[iColor] = defaultColors[iColor];
 
 	controlConstraints.AttachSizeToControl	= {-1, -1};
 	controlConstraints.AttachSizeToText		= {};
@@ -266,7 +268,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTab
 }
 
 
-::gpk::error_t			gpk::controlCreate		(::gpk::SGUIControlTable & controlTable, ::gpk::vi32 defaultColors)	{
+::gpk::error_t			gpk::controlCreate		(::gpk::SControlTable & controlTable, ::gpk::vi16 defaultColors)	{
 	for(uint32_t iControl = 0; iControl < controlTable.States.size(); ++iControl) {
 		if(controlTable.States[iControl].Unused) {
 			gpk_necall(::controlInstanceReset(controlTable, iControl, defaultColors), "iControl: %i", iControl);
@@ -277,6 +279,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTab
 	::gpk::error_t				iControl				= -1;
 	gpk_necs(iControl = ::gpk::resize(controlTable.Controls.size() + 1
 		, controlTable.Controls		
+		, controlTable.Placement		
 		, controlTable.Metrics			
 		, controlTable.Text			
 		, controlTable.Constraints		
@@ -373,7 +376,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SGUIControlTable & controlTab
 	return 0;
 }
 
-static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControl & control, const ::gpk::SControlMetrics & controlMetrics, const ::gpk::SGUIZoom& zoom, ::gpk::view<::gpk::rect2<int16_t>> finalRects, ::gpk::view<::gpk::tri2<int16_t>> triangles)					{
+static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControlPlacement & control, const ::gpk::SControlArea & controlMetrics, const ::gpk::SGUIZoom & zoom, ::gpk::view<::gpk::rect2i16> finalRects, ::gpk::view<::gpk::tri2i16> triangles)					{
 	::gpk::recti16				scaledBorders			= {};
 	const ::gpk::n2f64			scaleFinal				= zoom.DPI * zoom.ZoomLevel;
 	scaledBorders.Left		= (int16_t)(control.Border.Left		* scaleFinal.x);
@@ -385,10 +388,10 @@ static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControl & control, con
 	const ::gpk::rect2i16		& rectTotal				= controlMetrics.Total.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		]	= rectTotal;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_CLIENT			]	= controlMetrics.Client.Global;
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT		]	= {rectTotal.Offset , ::gpk::n2i16{control.Border.Left, rectTotal.Size.y}};
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP		]	= {rectTotal.Offset , ::gpk::n2i16{rectTotal.Size.x, control.Border.Top}};
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT		]	= {rectTotal.Offset + ::gpk::n2i16{int16_t(rectTotal.Size.x - control.Border.Right), 0} , ::gpk::n2i16{control.Border.Right, controlMetrics.Total.Global.Size.y}};
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM	]	= {rectTotal.Offset + ::gpk::n2i16{0, int16_t(rectTotal.Size.y - control.Border.Bottom)}, ::gpk::n2i16{rectTotal.Size.x, control.Border.Bottom}};
+	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT		]	= {rectTotal.Offset , ::gpk::n2i16{(int16_t)control.Border.Left, rectTotal.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP		]	= {rectTotal.Offset , ::gpk::n2i16{rectTotal.Size.x, (int16_t)control.Border.Top}};
+	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT		]	= {rectTotal.Offset + ::gpk::n2i16{int16_t(rectTotal.Size.x - control.Border.Right), 0} , ::gpk::n2i16{(int16_t)control.Border.Right, controlMetrics.Total.Global.Size.y}};
+	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM	]	= {rectTotal.Offset + ::gpk::n2i16{0, int16_t(rectTotal.Size.y - control.Border.Bottom)}, ::gpk::n2i16{rectTotal.Size.x, (int16_t)control.Border.Bottom}};
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.x	+= control.Border.Left	;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.y	+= control.Border.Top	;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Size	.x	-= control.Border.Left	+ control.Border.Right	;
@@ -396,22 +399,22 @@ static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControl & control, con
 
 	// --- Draw control corners
 	::gpk::n2i16				startOffset				= controlMetrics.Total.Global.Offset;
-	triangles[0]			= {startOffset, startOffset + ::gpk::n2i16{control.Border.Left, control.Border.Top}, startOffset + ::gpk::n2i16{control.Border.Left, 0}	};
-	triangles[1]			= {startOffset, startOffset + ::gpk::n2i16{0, control.Border.Top}, startOffset + ::gpk::n2i16{control.Border.Left, control.Border.Top}	};
+	triangles[0]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.i16()	};
+	triangles[1]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.i16()	};
 
 	int16_t						startOffsetX			= startOffset.x + controlMetrics.Total.Global.Size.x - control.Border.Right;
 	startOffset				= {startOffsetX, controlMetrics.Total.Global.Offset.y};
-	triangles[2]			= {startOffset, startOffset + ::gpk::n2i16{0, control.Border.Top}, startOffset + ::gpk::n2i16{control.Border.Right, 0}	};
-	triangles[3]			= {startOffset + ::gpk::n2i16{control.Border.Right, 0}, startOffset + ::gpk::n2i16{0, control.Border.Top}, startOffset + ::gpk::n2i16{control.Border.Right, control.Border.Top}	};
+	triangles[2]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16()	};
+	triangles[3]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.i16()	};
 
 	int16_t						startOffsetY			= startOffset.y + controlMetrics.Total.Global.Size.y - control.Border.Bottom;
 	startOffset				= {controlMetrics.Total.Global.Offset.x, startOffsetY};
-	triangles[4]			= {startOffset, startOffset + ::gpk::n2i16{0, control.Border.Bottom}, startOffset + ::gpk::n2i16{control.Border.Left, 0}	};
-	triangles[5]			= {startOffset + ::gpk::n2i16{control.Border.Right, 0}, startOffset + ::gpk::n2i16{0, control.Border.Top}, startOffset + ::gpk::n2i16{control.Border.Right, control.Border.Top}	};
+	triangles[4]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.i16()	};
+	triangles[5]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.i16()	};
 
-	startOffset				= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::n2i16{control.Border.Right, control.Border.Bottom};
-	triangles[6]			= {startOffset, startOffset + ::gpk::n2i16{control.Border.Right, control.Border.Bottom}, startOffset + ::gpk::n2i16{control.Border.Right, 0}	};
-	triangles[7]			= {startOffset, startOffset + ::gpk::n2i16{0, control.Border.Bottom}, startOffset + ::gpk::n2i16{control.Border.Right, control.Border.Bottom}	};
+	startOffset				= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16();
+	triangles[6]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16()	};
+	triangles[7]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16()	};
 	return 0;
 }
 
@@ -419,16 +422,17 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 
 	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
+	const ::gpk::SControlPlacement	& controlPlacement	= gui.Controls.Placement[iControl];
 	const ::gpk::SControl		& control				= gui.Controls.Controls[iControl];
 	::gpk::n2f64				scale					= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
 	if(fabs(1.0 - scale.x) < 0.001) scale.x = 1.0;
 	if(fabs(1.0 - scale.y) < 0.001) scale.y = 1.0;
-	::gpk::n2f64				scaledPosition			= {control.Area.Offset	.x * scale.x, control.Area.Offset	.y * scale.y};
-	::gpk::n2f64				scaledSize				= {control.Area.Size	.x * scale.x, control.Area.Size		.y * scale.y};
+	::gpk::n2f64				scaledPosition			= {controlPlacement.Area.Offset	.x * scale.x, controlPlacement.Area.Offset	.y * scale.y};
+	::gpk::n2f64				scaledSize				= {controlPlacement.Area.Size	.x * scale.x, controlPlacement.Area.Size		.y * scale.y};
 	//::gpk::rect<double>	scaledBorders		= {(control.Border.Left * scale.x), (control.Border.Top * scale.y), (control.Border.Right * scale.x), (control.Border.Bottom * scale.y)};
 	//::gpk::rect<double>	scaledMargins		= {(control.Margin.Left * scale.x), (control.Margin.Top * scale.y), (control.Margin.Right * scale.x), (control.Margin.Bottom * scale.y)};
 
-	::gpk::SControlMetrics		& controlMetrics		= gui.Controls.Metrics[iControl];
+	::gpk::SControlArea		& controlMetrics		= gui.Controls.Metrics[iControl];
 	::gpk::rect2f64				rectText				= {};
 	::gpk::SControlText			& controlText			= gui.Controls.Text[iControl];
 	const ::gpk::SRasterFont	& selectedFont			= *gui.Fonts[::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont];
@@ -438,7 +442,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	rectText.Size.InPlaceScale(scale.x, scale.y);
 
 	const ::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints[iControl];
-	const ::gpk::recti16		ncSizes					= ::gpk::controlNCRect(control);
+	const ::gpk::rectu16		ncSizes					= ::gpk::controlNCRect(controlPlacement);
 	const ::gpk::rectf64		ncSizesScaled			= {(ncSizes.Left * scale.x), (ncSizes.Top * scale.y), (ncSizes.Right * scale.x), (ncSizes.Bottom * scale.y)};
 	const ::gpk::n2f64			ncTotalSize				= {(double)ncSizes.Left + ncSizes.Right, (double)ncSizes.Top + ncSizes.Bottom};
 	const ::gpk::n2f64			ncTotalSizeScaled		= ncTotalSize.GetScaled(scale.x, scale.y);
@@ -455,12 +459,12 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	::gpk::n2f64				maxSizeScaled			= (controlConstraints.SizeMinMax.Max.f64().InPlaceScale(scale.x, scale.y));
 	scaledSize.x			= ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
 	scaledSize.y			= ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
-	::gpk::realignRectangle(targetSize.u32(), ::gpk::rect2<int16_t>{scaledPosition.i16(), scaledSize.i16()}, controlMetrics.Total.Local, control.Align);
+	::gpk::realignRectangle(targetSize.u32(), ::gpk::rect2<int16_t>{scaledPosition.i16(), scaledSize.i16()}, controlMetrics.Total.Local, controlPlacement.Align);
 	controlMetrics.Total .Global	= controlMetrics.Total	.Local;
 	controlMetrics.Client.Global	= controlMetrics.Client	.Local;
 	controlMetrics.Client.Global.Offset	+= controlMetrics.Total	.Local.Offset;
 	if(isValidParent) {
-		::gpk::SControlMetrics		& parentMetrics			= gui.Controls.Metrics[control.Parent];
+		::gpk::SControlArea		& parentMetrics			= gui.Controls.Metrics[control.Parent];
 		controlMetrics.Client.Global.Offset	+= parentMetrics.Client.Global.Offset;
 		controlMetrics.Total .Global.Offset	+= parentMetrics.Client.Global.Offset;
 	}
@@ -469,8 +473,8 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	if(dockToControl.Right	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u16(), true);
-		const ::gpk::SControl		& other					= gui.Controls.Controls	[dockToControl.Right];
-		const ::gpk::SControlMetrics& otherMetrics			= gui.Controls.Metrics	[dockToControl.Right];
+		const ::gpk::SControlPlacement	& other				= gui.Controls.Placement[dockToControl.Right];
+		const ::gpk::SControlArea		& otherMetrics		= gui.Controls.Metrics	[dockToControl.Right];
 		if(gbit_true(other.Align, ::gpk::ALIGN_RIGHT) && gbit_false(other.Align, ::gpk::ALIGN_HCENTER)) {
 			controlMetrics.Total .Global.Offset.x	= otherMetrics.Total.Global.Offset.x - controlMetrics.Total.Global.Size.x;
 			controlMetrics.Client.Global.Offset.x	= (int16_t)(controlMetrics.Total.Global.Offset.x + ncSizesScaled.Left);
@@ -489,8 +493,8 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	}
 	if(dockToControl.Bottom	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom), "Invalid control id: %i.", dockToControl.Bottom);
-		const ::gpk::SControl		& other					= gui.Controls.Controls[dockToControl.Bottom];
-		const ::gpk::SControlMetrics& otherMetrics			= gui.Controls.Metrics[dockToControl.Bottom	];
+		const ::gpk::SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Bottom];
+		const ::gpk::SControlArea		& otherMetrics			= gui.Controls.Metrics[dockToControl.Bottom	];
 		if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
 			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
 			controlMetrics.Client.Global.Offset.y	= (int16_t)(controlMetrics.Total.Global.Offset.y + ncSizesScaled.Top);
@@ -502,28 +506,28 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 	if(dockToControl.Left	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Left), "Invalid control id: %i.", dockToControl.Left);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Left, targetSize, true);
-		const ::gpk::SControl		& other					= gui.Controls.Controls	[dockToControl.Left];
-		const ::gpk::SControlMetrics& otherMetrics			= gui.Controls.Metrics	[dockToControl.Left];
+		const ::gpk::SControlPlacement	& other			= gui.Controls.Placement[dockToControl.Left];
+		const ::gpk::SControlArea		& otherMetrics	= gui.Controls.Metrics	[dockToControl.Left];
 		if(gbit_true(other.Align, ::gpk::ALIGN_RIGHT) && gbit_false(other.Align, ::gpk::ALIGN_HCENTER)) {
 			controlMetrics.Total	.Global.Offset.x	= otherMetrics				.Total.Global.Offset.x + otherMetrics.Total.Global.Size.x - controlMetrics.Total.Global.Size.x;
-			controlMetrics.Client	.Global.Offset.x	= (int16_t)(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
+			controlMetrics.Client	.Global.Offset.x	= int16_t(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
 		else {
 			controlMetrics.Total	.Global.Offset.x	= otherMetrics				.Total.Global.Offset.x;
-			controlMetrics.Client	.Global.Offset.x	= (int16_t)(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
+			controlMetrics.Client	.Global.Offset.x	= int16_t(controlMetrics	.Total.Global.Offset.x + ncSizesScaled.Left);
 		}
 	}
 	if(dockToControl.Top	!= -1) {
 		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Top), "Invalid control id: %i.", dockToControl.Top);
-		const ::gpk::SControl		& other					= gui.Controls.Controls	[dockToControl.Top ];
-		const ::gpk::SControlMetrics& otherMetrics			= gui.Controls.Metrics	[dockToControl.Top ];
+		const ::gpk::SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Top ];
+		const ::gpk::SControlArea		& otherMetrics			= gui.Controls.Metrics	[dockToControl.Top ];
 		if(gbit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && gbit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
-			controlMetrics.Total.Global.Offset.y		= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
-			controlMetrics.Client.Global.Offset.y		= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
+			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y - controlMetrics.Total.Global.Size.y;
+			controlMetrics.Client.Global.Offset.y	= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
 		}
 		else {
-			controlMetrics.Total.Global.Offset.y		= otherMetrics.Total.Global.Offset.y + controlMetrics.Total.Global.Offset.y;
-			controlMetrics.Client.Global.Offset.y		= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
+			controlMetrics.Total.Global.Offset.y	= otherMetrics.Total.Global.Offset.y + controlMetrics.Total.Global.Offset.y;
+			controlMetrics.Client.Global.Offset.y	= controlMetrics.Total.Global.Offset.y + ncSizes.Top ;
 		}
 	}
 	{ // calculate text rectangle
@@ -533,7 +537,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, int32_t iControl,
 		::gpk::realignRectangle(targetRect.Size.u32(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
 		controlMetrics.Text.Offset	+= controlMetrics.Client.Global.Offset.i16();
 	}
-	::buildControlGeometry(control, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
+	::buildControlGeometry(controlPlacement, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
 	controlState.Updated	= true;
 	return 0;
 }
@@ -573,7 +577,7 @@ static	::gpk::error_t	updateGUIControlHovered	(::gpk::SControlState & controlSta
 	else {
 		if(false == disabled) {
 			if(false == controlState.Hovered)
-				controlEvent.FocusIn	= true;
+				controlEvent.MouseIn	= true;
 
 			controlState.Hovered = true;//controlFlags.Disabled;
 		}
@@ -587,7 +591,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	::gpk::SControlEvent		& controlEvents			= gui.Controls.Events[iControl];
 	::gpk::error_t				controlHovered			= -1;
 	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Metrics[iControl].Total.Global)) {
-		if(false == gui.Controls.Draw[iControl].Design) {
+		if(false == gui.Controls.Modes[iControl].NoHover) {
 			controlHovered		= iControl;
 			::updateGUIControlHovered(controlState, controlEvents, input, ::gpk::controlDisabled(gui, iControl));
 		}
@@ -633,14 +637,13 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 		if(controlState.Unused)
 			continue;
 
-		::gpk::SControlMode			& controlMode			= gui.Controls.Modes[iControl];
-		if(controlMode.Disabled)
+		if(controlState.Disabled)
 			continue;
 
 		::gpk::SControlEvent		& controlEvent			= gui.Controls.Events[iControl];// Clear events that only last one tick.
 		controlEvent			= {};
 
-		::gpk::SControl				& control				= gui.Controls.Controls[iControl];
+		const ::gpk::SControl		& control				= gui.Controls.Controls[iControl];
 		if(false == ::gpk::controlInvalid(gui, control.Parent))
 			continue;
 
@@ -687,12 +690,12 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 }
 
 ::gpk::error_t			gpk::controlHidden		(const ::gpk::SGUI & gui, int32_t iControl)	{
-	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.Modes[iControl].Hidden;
+	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Hidden;
 	return imHidden ? imHidden : (false == ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent) && ::gpk::controlHidden(gui, gui.Controls.Controls[iControl].Parent));
 }
 
 ::gpk::error_t			gpk::controlDisabled	(const ::gpk::SGUI & gui, int32_t iControl)	{
-	bool						imDisabled				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.Modes[iControl].Disabled;
+	bool						imDisabled				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].Disabled;
 	return imDisabled ? imDisabled : (false == ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent) && ::gpk::controlDisabled(gui, gui.Controls.Controls[iControl].Parent));
 }
 
@@ -709,9 +712,9 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 ::gpk::error_t			gpk::guiGetProcessableControls	(const ::gpk::SGUI & gui, ::gpk::au32& controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.Controls.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState	& controlState					= gui.Controls.States[iControl];
-		if(controlState.Unused || gui.Controls.Draw[iControl].Design || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
+		if(controlState.Unused || gui.Controls.Modes[iControl].NoExecute || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
 			continue;
-		gpk_necall(controlIndices.push_back(iControl), "%s", "Out of memory?");
+		gpk_necs(controlIndices.push_back(iControl));
 	}
 	return controlIndices.size();
 }

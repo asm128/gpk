@@ -67,10 +67,10 @@ static	::gpk::error_t	transformTriangles
 
 	const ::gpk::SRenderNodeTransforms	& transforms				= scene.RenderNodes.Transforms[iRenderNode];
 	const ::gpk::m4f32					& worldTransform			= transforms.World;
-	const ::gpk::vcu16					indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::vcu16	{(const uint16_t	*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t	 )}	: ::gpk::vcu16{};
-	const ::gpk::vc3f32					positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f)}	: ::gpk::vc3f32{};
-	const ::gpk::vc3f32					normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f)}	: ::gpk::vc3f32{};
-	const ::gpk::vc2f32					uv							= (mesh.GeometryBuffers.size() > 3) ? ::gpk::vc2f32	{(const ::gpk::n2f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::n2f)}	: ::gpk::vc2f32{};
+	const ::gpk::vcu16					indices						= (mesh.GeometryBuffers.size() > 0) ? ::gpk::vcu16	{(const uint16_t	*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)}	: ::gpk::vcu16{};
+	const ::gpk::vc3f32					positions					= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
+	const ::gpk::vc3f32					normals						= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
+	const ::gpk::vc2f32					uv							= (mesh.GeometryBuffers.size() > 3) ? ::gpk::vc2f32	{(const ::gpk::n2f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::n2f32)}	: ::gpk::vc2f32{};
 
 	const ::gpk::SGeometrySlice			slice						= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 

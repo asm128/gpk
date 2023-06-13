@@ -247,7 +247,7 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	// Read in the wave file
 	const WAVEFORMATEX* pwfx = 0;
 	::gpk::view<const uint8_t> audioView			= {};
-	gpk_hrcall(DirectX::LoadWAVAudioFromFile( ::gpk::vcs{strFilePath}, WaveData, &pwfx, audioView));
+	gpk_necs(DirectX::LoadWAVAudioFromFile( ::gpk::vcs{strFilePath}, WaveData, &pwfx, audioView));
 
 	assert(pwfx->nChannels == INPUTCHANNELS);
 

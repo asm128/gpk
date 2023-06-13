@@ -70,7 +70,8 @@ namespace gpk
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}
 		inlcxpr	const uint32_t&	size			()							const	noexcept	{ return Count;			}
-		inlcxpr	const uint32_t	byte_count		()							const	noexcept	{ return (uint32_t)(Count * sizeof(T));	}
+		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(Count * sizeof(T));	}
+		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
 		inline	T*				begin			()									noexcept	{ return Data;			}
 		inline	T*				end				()									noexcept	{ return Data + Count;	}

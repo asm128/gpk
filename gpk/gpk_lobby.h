@@ -3,8 +3,7 @@
 #include "gpk_framework.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_dialog.h"
-#include "gpk_gui_control.h"
-#include "gpk_gui_control.h"
+#include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
 #include <mutex>
@@ -99,9 +98,9 @@ namespace gpk
 
 											SLobbyClient		()	{
 			::gpk::SGUI								 & gui				= *Dialog.GUI;
-			gui.Controls.Draw[Dialog.Root].NoBackgroundRect = true;
+			gui.Controls.Draw[Dialog.Root].NoBorder = gui.Controls.Draw[Dialog.Root].NoClient = true;
 			::gpk::acid	controls;
-			es_if(errored(::gpk::guiSetupControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
+			es_if(errored(::gpk::guiCreateControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
 			es_if(errored(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
 		}
 
@@ -147,19 +146,19 @@ namespace gpk
 					::gpk::trim(trimmed);
 					::gpk::controlTextSet(gui, Dialog.Root + 1 + Field, ::gpk::label{trimmed});
 					InputBox.Edit(gui, false);
-					gui.Controls.Modes[InputBox.IdRoot].Hidden = true;
+					gui.Controls.States[InputBox.IdRoot].Hidden = true;
 				}
 			}
 			else {
 				gpk_necs(::gpk::guiProcessControls(gui, controlsToProcess, [&](int32_t iControl) {
-					const ::gpk::SControl			& control		= gui.Controls.Controls[iControl];
-					::gpk::SControl					& inputBox		= gui.Controls.Controls[InputBox.IdRoot];
+					const ::gpk::SControlPlacement			& control		= gui.Controls.Placement[iControl];
+					::gpk::SControlPlacement				& inputBox		= gui.Controls.Placement[InputBox.IdRoot];
 					bool							edit			= false;
 					switch(iControl - (Dialog.Root + 1)) {
 					default								: 
 					case ::gpk::UI_LOBBY_USER_GUID		: 
 					case ::gpk::UI_LOBBY_USER_Offline	: 
-						gui.Controls.Modes[InputBox.IdRoot].Hidden = true;
+						gui.Controls.States[InputBox.IdRoot].Hidden = true;
 						break;
 					case ::gpk::UI_LOBBY_USER_Mail		: 
 					case ::gpk::UI_LOBBY_USER_Name		: 
@@ -171,7 +170,7 @@ namespace gpk
 						InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 						edit						= true;
 						Field						= (::gpk::UI_LOBBY_USER)(iControl - (Dialog.Root + 1));
-						gui.Controls.Modes[InputBox.IdRoot].Hidden = false;
+						gui.Controls.States[InputBox.IdRoot].Hidden = false;
 						break;
 					}
 					InputBox.Edit(gui, edit);
