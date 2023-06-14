@@ -12,8 +12,9 @@ namespace gpk
 #endif
 		return (_tField)(((_tField)1) << bitIndex);
 	}
-	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField& inout_FlagVariable, _tBitField in_BitsToSet  )				noexcept	{ return ((inout_FlagVariable & in_BitsToSet) == in_BitsToSet)	? inout_FlagVariable					: inout_FlagVariable |= in_BitsToSet	;}
 	template<typename _tBitField> stainli	_tBitField	bit_clear		(_tBitField& inout_FlagVariable, _tBitField in_BitsToClear)				noexcept	{ return (inout_FlagVariable & in_BitsToClear)					? inout_FlagVariable &= ~in_BitsToClear : inout_FlagVariable					;}
+	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField& inout_FlagVariable, _tBitField in_BitsToSet  )				noexcept	{ return ((inout_FlagVariable & in_BitsToSet) == in_BitsToSet)	? inout_FlagVariable					: inout_FlagVariable |= in_BitsToSet	;}
+	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField& inout_FlagVariable, _tBitField in_BitsToSet, bool value)	noexcept	{ return value ? bit_set(inout_FlagVariable, in_BitsToSet) : bit_clear(inout_FlagVariable, in_BitsToSet); }
 	template<typename _tBitField> stincxp	_tBitField	bit_test		(const _tBitField in_FlagVariable, const _tBitField bitsToTest)			noexcept	{ return ((in_FlagVariable & bitsToTest) == bitsToTest) ? bitsToTest : (_tBitField)0; }
 	template<typename _tBitField> cnstxpr	_tBitField	bit_test_masked	(const _tBitField state, const _tBitField mask, const _tBitField value)	noexcept	{ return bit_test(mask, value) ? bit_test(state, value) : (_tBitField)0; }
 	template<typename _tBitField> stincxp	_tBitField	bit_true		(const _tBitField in_FlagVariable, const _tBitField bitsToTest)			noexcept	{ return bit_test(in_FlagVariable, bitsToTest); }

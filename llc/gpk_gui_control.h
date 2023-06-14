@@ -1,12 +1,12 @@
-#include "gpk_input.h"
-#include "gpk_array_static.h"
+#include "gpk_gui_control_state.h"
+
 #include "gpk_tri2.h"
 #include "gpk_rect.h"
 #include "gpk_align.h"
-
-#include "gpk_sysevent.h"
+#include "gpk_array_static.h"
 
 #include "gpk_image_color.h"
+#include "gpk_sysevent.h"
 
 
 #ifndef GPK_GUI_CONTROL_H_29038749823613
@@ -15,137 +15,16 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	typedef	int32_t			cid_t;
-	typedef	const cid_t		ccid_t;
-
 	typedef	n2<cid_t>		n2cid;
 	typedef	rect<cid_t>		rectcid;
-	typedef	apod<cid_t>		acid;
-	typedef	view<cid_t>		vcid;
-	typedef	view<ccid_t>	vccid;
+
+	template<uint32_t _sizeArray>	
+	using	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
 
 	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, uint8_t)
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, 3D		, 1);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Flat		, 2);
-
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_STATE, uint16_t)
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Hovered	, 0x001);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Pressed	, 0x002);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Hidden	, 0x004);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Focused	, 0x008);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Selected	, 0x010);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Open		, 0x020);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Locked	, 0x040);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Expanded	, 0x080);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Disabled	, 0x100);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Updated	, 0x200);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_STATE, Unused	, 0x400);
-
-	inlcxpr	bool	isHovered			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Hovered ); }
-	inlcxpr	bool	isPressed			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Pressed ); }
-	inlcxpr	bool	isHidden			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Hidden  ); }
-	inlcxpr	bool	isFocused			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Focused ); }
-	inlcxpr	bool	isSelected			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Selected); }
-	inlcxpr	bool	isOpen				(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Open    ); }
-	inlcxpr	bool	isLocked			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Locked  ); }
-	inlcxpr	bool	isExpanded			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Expanded); }
-	inlcxpr	bool	isDisabled			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Disabled); }
-	inlcxpr	bool	isUpdated			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Updated ); }
-	inlcxpr	bool	isUnused			(const GUI_CONTROL_STATE state, const GUI_CONTROL_STATE mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_STATE_Unused  ); }
-
-	inlcxpr	bool	setHovered			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Hovered ) && (GUI_CONTROL_STATE_Hovered  & (value ? bit_set(state, GUI_CONTROL_STATE_Hovered ) : bit_clear(state, GUI_CONTROL_STATE_Hovered ))); }
-	inlcxpr	bool	setPressed			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Pressed ) && (GUI_CONTROL_STATE_Pressed  & (value ? bit_set(state, GUI_CONTROL_STATE_Pressed ) : bit_clear(state, GUI_CONTROL_STATE_Pressed ))); }
-	inlcxpr	bool	setHidden			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Hidden  ) && (GUI_CONTROL_STATE_Hidden   & (value ? bit_set(state, GUI_CONTROL_STATE_Hidden  ) : bit_clear(state, GUI_CONTROL_STATE_Hidden  ))); }
-	inlcxpr	bool	setFocused			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Focused ) && (GUI_CONTROL_STATE_Focused  & (value ? bit_set(state, GUI_CONTROL_STATE_Focused ) : bit_clear(state, GUI_CONTROL_STATE_Focused ))); }
-	inlcxpr	bool	setSelected			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Selected) && (GUI_CONTROL_STATE_Selected & (value ? bit_set(state, GUI_CONTROL_STATE_Selected) : bit_clear(state, GUI_CONTROL_STATE_Selected))); }
-	inlcxpr	bool	setOpen				(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Open    ) && (GUI_CONTROL_STATE_Open     & (value ? bit_set(state, GUI_CONTROL_STATE_Open    ) : bit_clear(state, GUI_CONTROL_STATE_Open    ))); }
-	inlcxpr	bool	setLocked			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Locked  ) && (GUI_CONTROL_STATE_Locked   & (value ? bit_set(state, GUI_CONTROL_STATE_Locked  ) : bit_clear(state, GUI_CONTROL_STATE_Locked  ))); }
-	inlcxpr	bool	setExpanded			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Expanded) && (GUI_CONTROL_STATE_Expanded & (value ? bit_set(state, GUI_CONTROL_STATE_Expanded) : bit_clear(state, GUI_CONTROL_STATE_Expanded))); }
-	inlcxpr	bool	setDisabled			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Disabled) && (GUI_CONTROL_STATE_Disabled & (value ? bit_set(state, GUI_CONTROL_STATE_Disabled) : bit_clear(state, GUI_CONTROL_STATE_Disabled))); }
-	inlcxpr	bool	setUpdated			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Updated ) && (GUI_CONTROL_STATE_Updated  & (value ? bit_set(state, GUI_CONTROL_STATE_Updated ) : bit_clear(state, GUI_CONTROL_STATE_Updated ))); }
-	inlcxpr	bool	setUnused			(GUI_CONTROL_STATE & state, const GUI_CONTROL_STATE mask, bool value)	noexcept	{ return bit_test(mask, GUI_CONTROL_STATE_Unused  ) && (GUI_CONTROL_STATE_Unused   & (value ? bit_set(state, GUI_CONTROL_STATE_Unused  ) : bit_clear(state, GUI_CONTROL_STATE_Unused  ))); }
-
-	GDEFINE_ENUM_TYPE (GUI_CONTROL_EVENT, uint16_t)
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_EVENT, StateChange, 0x000);
-
-	// Holds the state changes after an update call. 
-	struct SControlEvent {
-		bool			MouseIn				: 1;
-		bool			MouseOut			: 1;
-		bool			Pushed				: 1;
-		bool			Released			: 1;
-		bool			Show				: 1;
-		bool			Hide				: 1;
-		bool			FocusIn				: 1;
-		bool			FocusOut			: 1;
-
-		bool			SelectIn			: 1;
-		bool			SelectOut			: 1;
-		bool			Open				: 1;
-		bool			Close				: 1;
-		bool			Expand				: 1;
-		bool			Collapse			: 1;
-
-		bool			Execute				: 1;
-		bool			Resize				: 1;
-		bool			Create				: 1;
-
-		bool			HandleStateChange	(const GUI_CONTROL_STATE oldState, const GUI_CONTROL_STATE newState) {
-			bool				handled				= false;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Hovered  ) != bit_test(newState, GUI_CONTROL_STATE_Hovered  ))	(bit_test(newState, GUI_CONTROL_STATE_Hovered) ? MouseIn : MouseOut ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Pressed  ) != bit_test(newState, GUI_CONTROL_STATE_Pressed  ))	handled = bit_test(newState, GUI_CONTROL_STATE_Pressed) ? Pushed = true : Released = Execute = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Hidden   ) != bit_test(newState, GUI_CONTROL_STATE_Hidden   ))	(bit_test(newState, GUI_CONTROL_STATE_Hidden   )	 ? Hide    : Hide     ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Focused  ) != bit_test(newState, GUI_CONTROL_STATE_Focused  ))	(bit_test(newState, GUI_CONTROL_STATE_Focused  )	 ? FocusIn : FocusOut ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Selected ) != bit_test(newState, GUI_CONTROL_STATE_Selected ))	(bit_test(newState, GUI_CONTROL_STATE_Selected )	 ? SelectIn: SelectOut) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Open     ) != bit_test(newState, GUI_CONTROL_STATE_Open     ))	(bit_test(newState, GUI_CONTROL_STATE_Open     )	 ? Open    : Close    ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Expanded ) != bit_test(newState, GUI_CONTROL_STATE_Expanded ))	(bit_test(newState, GUI_CONTROL_STATE_Expanded )	 ? Expand  : Collapse ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Updated  ) != bit_test(newState, GUI_CONTROL_STATE_Updated  ))	(bit_test(newState, GUI_CONTROL_STATE_Updated  )	 ? Resize  : Resize   ) = handled = true;
-			if(bit_test(oldState, GUI_CONTROL_STATE_Unused   ) != bit_test(newState, GUI_CONTROL_STATE_Unused	) && false == bit_test(newState, GUI_CONTROL_STATE_Unused))
-				Create = handled	= true;
-			return handled;
-		}
-	};
-
-	struct SControlState {
-		cid_t				Parent			= -1;
-		GUI_CONTROL_STATE	State			= {};
-		GUI_CONTROL_STATE	Mask			= (GUI_CONTROL_STATE)-1;
-
-#define CONTROL_STATE_SET_FUNCTION(MemberName)					\
-	if(false == bit_test(Mask, GUI_CONTROL_STATE_##MemberName))	\
-		return false;											\
-	const GUI_CONTROL_STATE	oldState = State;					\
-	set##MemberName(State, Mask, value);						\
-	events.HandleStateChange(oldState, State);					\
-	return bit_test(State, GUI_CONTROL_STATE_##MemberName)
-
-		bool				SetHovered		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Hovered ); }
-		bool				SetPressed		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Pressed ); }
-		bool				SetHidden		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Hidden  ); }
-		bool				SetFocused		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Focused ); }
-		bool				SetSelected		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Selected); }
-		bool				SetOpen			(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Open    ); }
-		bool				SetLocked		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Locked  ); }
-		bool				SetExpanded		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Expanded); }
-		bool				SetDisabled		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Disabled); }
-		bool				SetUpdated		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Updated ); }
-		bool				SetUnused		(SControlEvent & events, bool value)	noexcept	{ CONTROL_STATE_SET_FUNCTION(Unused  ); }
-
-		inlcxpr	bool		IsHovered		()	const	noexcept	{ return isHovered  (State, Mask); }
-		inlcxpr	bool		IsPressed		()	const	noexcept	{ return isPressed  (State, Mask); }
-		inlcxpr	bool		IsHidden		()	const	noexcept	{ return isHidden   (State, Mask); }
-		inlcxpr	bool		IsFocused		()	const	noexcept	{ return isFocused  (State, Mask); }
-		inlcxpr	bool		IsSelected		()	const	noexcept	{ return isSelected (State, Mask); }
-		inlcxpr	bool		IsOpen			()	const	noexcept	{ return isOpen     (State, Mask); }
-		inlcxpr	bool		IsLocked		()	const	noexcept	{ return isLocked   (State, Mask); }
-		inlcxpr	bool		IsExpanded		()	const	noexcept	{ return isExpanded (State, Mask); }
-		inlcxpr	bool		IsDisabled		()	const	noexcept	{ return isDisabled (State, Mask); }
-		inlcxpr	bool		IsUpdated		()	const	noexcept	{ return isUpdated  (State, Mask); }
-		inlcxpr	bool		IsUnused		()	const	noexcept	{ return isUnused   (State, Mask); }
-
-	};
-	stacxpr	size_t SIZEOF_SCONTROL	= sizeof(SControlState);
 
 	struct SControlMode {
 		bool			NoHover				: 1;
@@ -255,7 +134,7 @@ namespace gpk
 	};
 
 	struct SControlAttachId {
-		cid_t						IdControl			: 31;
+		cid_t						IdControl			: 15;
 		cid_t						Total				: 1;
 	};
 
@@ -281,7 +160,7 @@ namespace gpk
 		::gpk::rectu16				Margin				= {1, 1, 1, 1};
 		::gpk::rectu16				Border				= {1, 1, 1, 1};
 		::gpk::ALIGN				Align				= ::gpk::ALIGN_TOP_LEFT;
-	};
+	}; 
 
 	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = ::gpk::recti32{ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom}.u16();	 }
@@ -323,9 +202,6 @@ namespace gpk
 		inline	bool		SetHidden		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (Events[iControl], value); }
 		inline	bool		SetFocused		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (Events[iControl], value); }
 		inline	bool		SetSelected		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (Events[iControl], value); }
-		inline	bool		SetOpen			(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetOpen     (Events[iControl], value); }
-		inline	bool		SetLocked		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetLocked   (Events[iControl], value); }
-		inline	bool		SetExpanded		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetExpanded (Events[iControl], value); }
 		inline	bool		SetDisabled		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (Events[iControl], value); }
 		inline	bool		SetUpdated		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (Events[iControl], value); }
 		inline	bool		SetUnused		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (Events[iControl], value); }
@@ -335,9 +211,6 @@ namespace gpk
 		inlcxpr	bool		IsHidden		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
 		inlcxpr	bool		IsFocused		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
 		inlcxpr	bool		IsSelected		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
-		inlcxpr	bool		IsOpen			(uint32_t iControl)		const	noexcept	{ return States[iControl].IsOpen     (); }
-		inlcxpr	bool		IsLocked		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsLocked   (); }
-		inlcxpr	bool		IsExpanded		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsExpanded (); }
 		inlcxpr	bool		IsDisabled		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
 		inlcxpr	bool		IsUpdated		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
 		inlcxpr	bool		IsUnused		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
