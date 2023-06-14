@@ -14,9 +14,9 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 		const ::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>	
 									& colorCombo		= theme.ColorCombos
 			[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-			: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-			: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-			: controlState.Hovered	? ::gpk::GUI_CONTROL_PALETTE_HOVER
+			: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
+			: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+			: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
 			: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 			];
 		colorFace				= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_TEXT_FACE]];
@@ -26,9 +26,9 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 		const ::gpk::astatic<::gpk::bgra, ::gpk::UI_CONTROL_AREA_COUNT>	& colorCombo											=
 			gui.Colors->Palettes[controlDraw.Palettes
 				[ bDisabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-				: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-				: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-				: controlState.Hovered	? ::gpk::GUI_CONTROL_PALETTE_HOVER
+				: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
+				: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+				: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
 				: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 				]]
 				;
@@ -37,7 +37,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 
 	::gpk::SControlArea		& controlMetrics	= gui.Controls.Metrics	[iControl];
 	::gpk::rect2i16				rectText			= controlMetrics.Text;
-	if(false == gui.Controls.Modes[iControl].NoHover && (controlState.Pressed || controlState.Hovered)) { // shift text offset by one pixel to give the effect of being pushed.
+	if(false == gui.Controls.Modes[iControl].NoHover && (controlState.IsPressed() || controlState.IsHovered())) { // shift text offset by one pixel to give the effect of being pushed.
 		rectText.Offset			+= ::gpk::n2<int16_t>{1, 1};
 		rectText.Size			-= ::gpk::n2<int16_t>{1, 1};
 		if(rectText.Size.x < 0) rectText.Size.x = 0;
@@ -60,9 +60,9 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 static	::gpk::GUI_CONTROL_PALETTE	paletteIndexFromState	(bool disabled, const ::gpk::SControlState & controlState)					{
 	return
 		disabled				? ::gpk::GUI_CONTROL_PALETTE_DISABLED
-		: controlState.Pressed	? ::gpk::GUI_CONTROL_PALETTE_PRESSED
-		: controlState.Selected	? ::gpk::GUI_CONTROL_PALETTE_SELECTED
-		: controlState.Hovered	? ::gpk::GUI_CONTROL_PALETTE_HOVER
+		: controlState.IsPressed () ? ::gpk::GUI_CONTROL_PALETTE_PRESSED
+		: controlState.IsSelected() ? ::gpk::GUI_CONTROL_PALETTE_SELECTED
+		: controlState.IsHovered () ? ::gpk::GUI_CONTROL_PALETTE_HOVER
 		: ::gpk::GUI_CONTROL_PALETTE_NORMAL
 		;
 }
@@ -74,8 +74,8 @@ static	::gpk::error_t	fillColorTableBorders3D			(const ::gpk::SControlState & co
 		shaded					= controlDraw.FrameOut ? 0.8 : 1.2;
 	}
 	else {
-		bright					= controlState.Pressed ? 0.4 : controlState.Hovered ? 0.8 : 1.2;
-		shaded					= controlState.Pressed ? 1.5 : controlState.Hovered ? 1.2 : 0.8;
+		bright					= controlState.IsPressed() ? 0.4 : controlState.IsHovered() ? 0.8 : 1.2;
+		shaded					= controlState.IsPressed() ? 1.5 : controlState.IsHovered() ? 1.2 : 0.8;
 	}
 	::gpk::bgra					colorBackground											= colors[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND];
 	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT		]	= colorBackground * bright;
@@ -162,11 +162,11 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 		//			}
 		//	};
 		::gpk::rect2i16				rectImage				= {{}, controlImage.Image.metrics().i16()};
-		::gpk::realignRectangle(controlMetrics.Client.Global.Size.u32(), rectImage, rectImage, controlImage.ImageAlign);
+		::gpk::realignRectangle(controlMetrics.Client.Global.Size, rectImage, rectImage, (::gpk::ALIGN)controlImage.ImageAlign);
 		rectImage.Offset		+= controlMetrics.Client.Global.Offset;
 		rectImage.Size.x		= ::gpk::min(rectImage.Limit().x, controlMetrics.Client.Global.Limit().x) - rectImage.Offset.x;
 		rectImage.Size.y		= ::gpk::min(rectImage.Limit().y, controlMetrics.Client.Global.Limit().y) - rectImage.Offset.y;
-		if(controlState.Hovered)
+		if(controlState.IsHovered())
 			rectImage.Offset		+= {1, 1};
 		if(0 == controlImage.ImageInvertY)
 			::gpk::grid_copy_blend(target, controlImage.Image, rectImage, controlImage.ImageOffset);
@@ -183,9 +183,9 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 }
 ::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> target)								{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
-	if(gui.LastSize != target.metrics().u16()) {
-		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
-			gui.Controls.States[iOutdated].Updated	= false;
+	if(gui.LastSize != target.metrics16()) {
+		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+			gui.Controls.SetUpdated(iOutdated, false);
 		gui.LastSize			= target.metrics().u16();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
@@ -199,14 +199,14 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 }
 ::gpk::error_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::v2<::gpk::bgra> target)													{
 	if(gui.LastSize != target.metrics().u16() || gui.LastZoom != gui.Zoom) {
-		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.Controls.size(); ++iOutdated)
-			gui.Controls.States[iOutdated].Updated	= false;
+		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
+			gui.Controls.SetUpdated(iOutdated, false);
 		gui.LastSize			= target.metrics().u16();
 		gui.LastZoom			= gui.Zoom;
 	}
 	gpk_necs(::gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
-	for(uint32_t iControl = 0; iControl < gui.Controls.Controls.size(); ++iControl)
-		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.Controls[iControl].Parent))
+	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
+		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
 			es_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)));
 	return 0;
 }

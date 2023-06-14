@@ -10,7 +10,7 @@
 	keys.push_back('!');
 	keys.push_back('?');
 	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
-	gui.Controls.States[vk.IdRoot].Hidden	= true;
+	gui.Controls.States[vk.IdRoot].SetHidden(gui.Controls.Events[vk.IdRoot], true);
 	return vk.IdRoot;
 }
 
@@ -64,7 +64,7 @@
 	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
 	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
-	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].Hidden		= false;
+	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].SetHidden(gui.Controls.Events[inputBox.VirtualKeyboard.IdRoot], false);
 	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Placement[inputBox.IdText].Align;
 	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
 		= gui.Controls.Placement	[inputBox.IdText].Area.Offset.y

@@ -8,14 +8,19 @@ namespace gpk
 {
 	template<typename _tField>	cnstxpr		_tField		bit_make	(uint8_t bitIndex)	noexcept	{
 #if defined(GPK_DEBUG_ENABLED)
-		rve_if((_tField)-1LL, bitIndex >= (sizeof(_tField) * PLATFORM_BYTE_BIT_COUNT), "%s", "");
+		rve_if((_tField)-1LL, bitIndex >= (sizeof(_tField) * PLATFORM_BYTE_BIT_COUNT), "%i", bitIndex);
 #endif
 		return (_tField)(((_tField)1) << bitIndex);
 	}
-	template<typename _tBitField> stainli	_tBitField	bit_set		(_tBitField& inout_FlagVariable, _tBitField in_BitsToSet  )	noexcept	{ return ((inout_FlagVariable & in_BitsToSet) == in_BitsToSet)	? inout_FlagVariable					: inout_FlagVariable |= in_BitsToSet	;}
-	template<typename _tBitField> stainli	_tBitField	bit_clear	(_tBitField& inout_FlagVariable, _tBitField in_BitsToClear)	noexcept	{ return (inout_FlagVariable & in_BitsToClear)					? inout_FlagVariable &= ~in_BitsToClear : inout_FlagVariable					;}
-	template<typename _tBitField> stincxp	bool		bit_true	(const _tBitField in_FlagVariable, const _tBitField in_Bit)	noexcept	{ return ((in_FlagVariable & in_Bit) == in_Bit) ? true : false; }
-	template<typename _tBitField> stincxp	bool		bit_false	(const _tBitField in_FlagVariable, const _tBitField in_Bit)	noexcept	{ return ((in_FlagVariable & in_Bit) != in_Bit) ? true : false; }
+	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField& inout_FlagVariable, _tBitField in_BitsToSet  )				noexcept	{ return ((inout_FlagVariable & in_BitsToSet) == in_BitsToSet)	? inout_FlagVariable					: inout_FlagVariable |= in_BitsToSet	;}
+	template<typename _tBitField> stainli	_tBitField	bit_clear		(_tBitField& inout_FlagVariable, _tBitField in_BitsToClear)				noexcept	{ return (inout_FlagVariable & in_BitsToClear)					? inout_FlagVariable &= ~in_BitsToClear : inout_FlagVariable					;}
+	template<typename _tBitField> stincxp	_tBitField	bit_test		(const _tBitField in_FlagVariable, const _tBitField bitsToTest)			noexcept	{ return ((in_FlagVariable & bitsToTest) == bitsToTest) ? bitsToTest : (_tBitField)0; }
+	template<typename _tBitField> cnstxpr	_tBitField	bit_test_masked	(const _tBitField state, const _tBitField mask, const _tBitField value)	noexcept	{ return bit_test(mask, value) ? bit_test(state, value) : (_tBitField)0; }
+	template<typename _tBitField> stincxp	_tBitField	bit_true		(const _tBitField in_FlagVariable, const _tBitField bitsToTest)			noexcept	{ return bit_test(in_FlagVariable, bitsToTest); }
+	template<typename _tBitField> stincxp	_tBitField	bit_false		(const _tBitField in_FlagVariable, const _tBitField bitsToTest)			noexcept	{
+		const _tBitField	bitsThatMatch		= (in_FlagVariable & bitsToTest);
+		return _tBitField((bitsThatMatch == bitsToTest) ? 0 : bitsToTest & ~bitsThatMatch);
+	}
 
 #define	gbit_make(bitIndex)								( 1 << (bitIndex) )
 #define	gbit_set(inout_FlagVariable, in_BitsToSet  )	( (((inout_FlagVariable) & (in_BitsToSet)) == (in_BitsToSet))	? (inout_FlagVariable)						: (inout_FlagVariable) |= (in_BitsToSet)	)
@@ -33,9 +38,7 @@ namespace gpk
 		}
 		return result;
 	}
-
-
 }
 
 #endif // GPK_BIT_H_034792701397
-//[{"params": {"sessionId": "424995b9-118f-4142-b62d-9cc0eb97a8151"}, "method":"openPlay"}, {"params": {"linesPlayed": 5, "betPerLine": 1, "sessionId": "424995b9-118f-4142-b62d-9cc0eb97a815", "type": "spin", "bet": 25}, "method": "placeBet"}, {"params": {"sessionId":"424995b9-118f-4142-b62d-9cc0eb97a815"}, "method": "getBetResult"}]
+//[{"params": {"sessiId": "424995b9-118f-4142-b62d-9cc0eb97a8151"}, "method":"opnPly"}, {"params": {"lnsPlyd": 5, "btPrLn": 1, "sessnId": "424995b9-118f-4142-b62d-9cc0eb97a815", "tpe": "spi", "bt": 25}, "mthod": "plceBet"}, {"paras": {"sessionId":"424995b9-118f-4142-b62d-9cc0eb97a815"}, "method": "getBetResult"}]

@@ -22,7 +22,7 @@ namespace gpk
 		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcs text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
 		::gpk::error_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
-			gui.Controls.States[IdRoot].Hidden	= false == Editing;
+			gui.Controls.States[IdRoot].SetHidden(gui.Controls.Events[IdRoot], false == Editing);
 			return one_if(Editing);
 		}
 		

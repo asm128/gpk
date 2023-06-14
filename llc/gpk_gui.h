@@ -4,8 +4,6 @@
 #include "gpk_ascii_color.h"
 #include "gpk_font.h"
 #include "gpk_tri2.h"
-#include "gpk_rect.h"
-#include "gpk_align.h"
 
 #include "gpk_sysevent.h"
 

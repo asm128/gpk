@@ -177,7 +177,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	::gpk::SDialog				& dialog					= *slider.Dialog;
 	::gpk::SControlTable		& controlTable				= dialog.GUI->Controls;
 	const int64_t				valueRange					= slider.ValueLimits.Max - slider.ValueLimits.Min;
-	if(controlTable.States[slider.IdButton].Pressed) {
+	if(controlTable.States[slider.IdButton].IsPressed()) {
 		if(dialog.Input->MouseCurrent.Position != dialog.Input->MousePrevious.Position) {
 			::gpk::SInput											& input										= *dialog.Input;
 			//const ::gpk::SGUIZoom									& zoom										= dialog.GUI->Zoom;
@@ -200,7 +200,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 		}
 	}
 	else
-		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].Pressed) {	//
+		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].IsPressed()) {	//
 			::gpk::SInput															& input										= *dialog.Input;
 			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
 			const ::gpk::n2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
@@ -292,16 +292,14 @@ stacxpr	const uint32_t									heightOfField								= 18;
 			placementMain.Area.Size.y	= controlClient.Area.Size.y + placementTitle.Area.Size.y + ::gpk::controlNCSpacing(placementMain).y + 1;
 		}
 
-		::gpk::SControl			& controlMain	= controlTable.Controls[control.IdGUIControl];
+		::gpk::SControlState			& controlMain	= controlTable.States[control.IdGUIControl];
 		if(-1 != controlMain.Parent)
 			gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, controlMain.Parent));
 		else
 			gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl));
 
 		::gpk::SControlState		& stateClient			= controlTable.States[control.IdClient];
-		if(fold != stateClient.Hidden)
-			(fold ? controlTable.Events[control.IdClient].Hide : controlTable.Events[control.IdClient].Show) = true;
-		stateClient.Hidden		= fold;
+		stateClient.SetHidden(controlTable.Events[control.IdClient], fold);
 		control.Settings.Unfolded	= !fold;
 	}
 	return one_if(false == control.Settings.Unfolded);
@@ -325,7 +323,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];
 	::gpk::SControlEvent		& controlTitle			= controlTable.Events[control.IdTitle];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
-	if(controlTitleState.Pressed) {
+	if(controlTitleState.IsPressed()) {
 		::gpk::n2<bool>								locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
 			::gpk::n2i32								mouseDeltas				= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};

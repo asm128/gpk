@@ -558,17 +558,17 @@
     <ClInclude Include="gpk_view_ppod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyed_bit_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_bit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_control.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_bit.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="keyed_bit_array.h">
+      <Filter>container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
