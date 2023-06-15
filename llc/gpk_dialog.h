@@ -86,7 +86,7 @@ namespace gpk
 		}
 
 		template<typename _TDialogControl>
-		::gpk::error_t			Create			(::gpk::pnco<_TDialogControl> & createdControl)	{
+		::gpk::cid_t			Create			(::gpk::pnco<_TDialogControl> & createdControl)	{
 			if(0 == GUI.get_ref())
 				GUI.create();
 			::gpk::SGUI				& gui				= *GUI;
@@ -98,7 +98,7 @@ namespace gpk
 				}
 
 			if(-1 == index)
-				gpk_necs(index = Controls.push_back({}));
+				gpk_necs(index = (::gpk::cid_t)Controls.push_back({}));
 
 			//::gpk::dialogCreate(createdControl);
 			//Controls[index]	= createdControl;
@@ -115,7 +115,7 @@ namespace gpk
 		}
 
 		template<typename _TDialogControl>
-		::gpk::error_t			Get				(cid_t index, ::gpk::pnco<_TDialogControl> & control)	{
+		::gpk::cid_t			Get				(cid_t index, ::gpk::pnco<_TDialogControl> & control)	{
 			Controls[index].as(control);
 			return index;
 		}
@@ -142,6 +142,7 @@ namespace gpk
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update();
+
 			return 0;
 		}
 	};

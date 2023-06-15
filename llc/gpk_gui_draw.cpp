@@ -113,7 +113,7 @@ static	::gpk::error_t	fillColorTableOld				(::gpk::SGUI & gui, ::gpk::GUI_COLOR_
 	colors[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM]	= (*gui.Colors->Palette)[colorCombo[::gpk::UI_CONTROL_AREA_BORDER_BOTTOM	]];
 	return 0;
 }
-static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, int32_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{
+static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iControl, bool disabled, ::gpk::view<::gpk::bgra> colors)					{
 	const ::gpk::SControlDraw	& draw							= gui.Controls.Draw		[iControl];
 	const ::gpk::SControlState	& state							= gui.Controls.States	[iControl];
 	const ::gpk::SControlMode	& mode							= gui.Controls.Modes	[iControl];
@@ -125,10 +125,10 @@ static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, int32_t iControl, b
 
 	return 0;
 }
-static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> & target)					{
+static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::v2<::gpk::bgra> & target)					{
 	::gpk::bgra					colors[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {}; // -- Fill color table
 	const bool					disabled						= ::gpk::controlDisabled(gui, iControl);
-	const ::gpk::SControlArea	& controlMetrics			= gui.Controls.Metrics[iControl];
+	const ::gpk::SControlArea	& controlMetrics				= gui.Controls.Metrics[iControl];
 	{
 		const ::gpk::SControlDraw	& controlDraw					= gui.Controls.Draw  [iControl];
 		::fillColorTable(gui, iControl, disabled, colors);
@@ -181,11 +181,11 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 	es_if(errored(::controlTextDraw(gui, iControl, target, disabled)));
 	return 0;
 }
-::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> target)								{
+::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::v2<::gpk::bgra> target)								{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
-			gui.Controls.SetUpdated(iOutdated, false);
+			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u16();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
@@ -200,13 +200,13 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 ::gpk::error_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::v2<::gpk::bgra> target)													{
 	if(gui.LastSize != target.metrics().u16() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
-			gui.Controls.SetUpdated(iOutdated, false);
+			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
 		gui.LastSize			= target.metrics().u16();
 		gui.LastZoom			= gui.Zoom;
 	}
 	gpk_necs(::gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
-		if(false == ::gpk::controlInvalid(gui, iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
-			es_if(errored(::gpk::controlDrawHierarchy(gui, iControl, target)));
+		if(false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
+			es_if(errored(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));
 	return 0;
 }

@@ -9,7 +9,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	typedef	int32_t			cid_t;
+	typedef	int16_t			cid_t;
 	typedef	const cid_t		ccid_t;
 	typedef	apod<cid_t>		acid;
 	typedef	view<cid_t>		vcid;

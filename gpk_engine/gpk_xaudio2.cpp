@@ -242,14 +242,14 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 
 	// Search for media
 	char strFilePath[ 4096 ] = {};
-	sprintf_s(strFilePath, "./%s", wavname);
+	sprintf_s(strFilePath, "./%s", ::gpk::toString(wavname).begin());
 
 	// Read in the wave file
 	const WAVEFORMATEX* pwfx = 0;
 	::gpk::view<const uint8_t> audioView			= {};
 	gpk_necs(DirectX::LoadWAVAudioFromFile( ::gpk::vcs{strFilePath}, WaveData, &pwfx, audioView));
 
-	assert(pwfx->nChannels == INPUTCHANNELS);
+	ree_if(pwfx->nChannels == INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
@@ -548,7 +548,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(const ::gpk::vcc & wavname, IXAudio2
 
 	// Search for media
 	char						strFilePath[4096]	= {};
-	sprintf_s(strFilePath, "./%s", wavname);
+	sprintf_s(strFilePath, "./%s", ::gpk::toString(wavname).begin());
 	wchar_t						wstrFilePath[4096]	= {};
 	size_t						count				= 0;
 	mbstowcs_s(&count, wstrFilePath, strFilePath, 4095);

@@ -9,13 +9,13 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SInputJoystick {
-		::gpk::n2i32				Position			= {};
-		::gpk::n3i32				Deltas				= {};
+		::gpk::n2i16				Position			= {};
+		::gpk::n3i16				Deltas				= {};
 		uint32_t					ButtonState			= 0;
 	};
 	struct SInputMouse {
-		::gpk::n2i32				Position			= {};
-		::gpk::n3i32				Deltas				= {};
+		::gpk::n2i16				Position			= {};
+		::gpk::n3i16				Deltas				= {};
 		::gpk::astu8 <32>			ButtonState			= {};
 		::gpk::astf64<32>			ButtonTime			= {};
 		::gpk::asti64<32>			ButtonStrength		= {};

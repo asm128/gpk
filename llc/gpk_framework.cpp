@@ -229,7 +229,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	case WM_MBUTTONUP		: { newEvent.Type = ::gpk::SYSEVENT_MOUSE_UP		; newEvent.Data.push_back(2); mainDisplay.EventQueueOld.push_back(newEvent); info_printf("%s", "M Up"		); input.MouseCurrent.ButtonState[2] = 0; mainDisplay.Repaint = true; } break;
 	case WM_MOUSEWHEEL		: {
 		info_printf("%s", "WM_MOUSEWHEEL");
-		int32_t									zDelta				= GET_WHEEL_DELTA_WPARAM(wParam);
+		int16_t									zDelta				= GET_WHEEL_DELTA_WPARAM(wParam);
 		input.MouseCurrent.Deltas.z			= zDelta;
 		mainDisplay.Repaint					= true;
 
@@ -240,7 +240,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		}
 	case WM_MOUSEMOVE		: {
 		verbose_printf("%s", "WM_MOUSEMOVE");
-		::gpk::n2<int16_t>						mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+		::gpk::n2i16							mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
 		input.MouseCurrent.Position.x		= ::gpk::clamp(mousePos.x, (int16_t)0, (int16_t)(mainDisplay.Size.x - 1));
 		input.MouseCurrent.Position.y		= ::gpk::clamp(mousePos.y, (int16_t)0, (int16_t)(mainDisplay.Size.y - 1));
 		input.MouseCurrent.Deltas.x			= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;

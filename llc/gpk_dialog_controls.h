@@ -136,7 +136,7 @@ namespace gpk
 
 	template<typename _tValue>
 	::gpk::error_t			tunerCreate							(::gpk::SDialog	& dialog)								{
-		int32_t						index								= -1;
+		::gpk::cid_t				index								= -1;
 		::gpk::pobj<::gpk::SDialogTuner<_tValue>>	tuner;
 		gpk_necs(index = dialog.Create(tuner));
 		tuner->ValueCurrent		= 0; //tuner->ValueLimits.Min;
@@ -151,7 +151,7 @@ namespace gpk
 			controlTable.Text			[iControl].Text						= (iControl == tuner->IdDecrease) ? "-" : "+";
 			controlTable.Draw			[iControl].UseNewPalettes			= true;
 			controlTable.Draw			[iControl].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
-			controlTable.Constraints	[iControl].AttachSizeToControl.y	= iControl;
+			controlTable.Constraints	[iControl].AttachSizeToControl.y	= (::gpk::cid_t)iControl;
 		}
 		tuner->SetValue(tuner->ValueCurrent);
 		controlTable.Text[tuner->IdGUIControl].Align		= ::gpk::ALIGN_CENTER;

@@ -31,11 +31,12 @@ namespace gpk
 			if(false == Editing)
 				return 0;
 
-			int32_t						handledControl		= 0;
+			cid_t						handledControl		= 0;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
 			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
-					return handledControl = iControl;
+					return ::gpk::error_t(handledControl = iControl);
+
 				return 0;
 			}));
 
@@ -81,7 +82,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t			inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent = -1);
+	::gpk::error_t			inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
 #endif // GPK_GUI_INPUTBOX_H_23611

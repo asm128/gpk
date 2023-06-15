@@ -2,8 +2,8 @@
 #include "gpk_gui_text.h"
 #include "gpk_gui_control_list.h"
 
-static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
-	int32_t						idMenu			= ::gpk::controlCreate(gui);
+static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
+	::gpk::cid_t				idMenu			= ::gpk::controlCreate(gui);
 	::gpk::SControlPlacement	& controlMenu	= gui.Controls.Placement[idMenu];
 	controlMenu.Area		= {0, 0, 0, 20};
 	controlMenu.Area.Size.y	= 20;
@@ -11,7 +11,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 	controlMenu.Border		= {};
 
 	::gpk::SControlConstraints	& controlMenuState	= gui.Controls.Constraints[idMenu];
-	controlMenuState.AttachSizeToControl.x	= (uint32_t)0;
+	controlMenuState.AttachSizeToControl.x	= (::gpk::cid_t)0;
 	controlMenuState.AttachSizeToControl.y	= -1;
 
 	::gpk::SControlPlacement	controlItem		= {};

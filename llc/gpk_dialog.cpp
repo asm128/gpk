@@ -54,7 +54,7 @@ static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogCol
 
 static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	::gpk::SGUI						& gui							= *dialog.GUI; 
-	gthrow_if(-1 == (dialog.Root = ::gpk::controlCreate(gui)), "%s", "Out of memory?");
+	gpk_necs(dialog.Root = ::gpk::controlCreate(gui));
 	gui.Controls.Placement	[dialog.Root].Margin					= {};
 	gui.Controls.Placement	[dialog.Root].Border					= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
@@ -90,7 +90,7 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 
 stacxpr	const uint32_t	heightOfField			= 18;
 ::gpk::error_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
-	int32_t						index					= -1;
+	cid_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necs(index = dialog.Create(checkBox));
@@ -104,7 +104,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::img<::gpk::bgra>		& imageCross				= dialog.ImageCrossBGRA;
 	if(controlTable.Events[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
-			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);
+			es_if(errored(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross)));
 
 			dialog.ImageCross.resize(imageCross.metrics());
 			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
@@ -125,8 +125,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 ::gpk::error_t			gpk::sliderCreate							(::gpk::SDialog & dialog)								{
 	int32_t						index										= -1;
 	::gpk::pobj<::gpk::SDialogSlider>	slider;
-	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
-	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
+	gpk_necs(index = dialog.Create(slider));
+	gpk_necs(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl));
 	::gpk::SControlTable						& controlTable								= dialog.GUI->Controls;
 	controlTable.Placement	[slider->IdGUIControl].Margin				= {};
 	controlTable.Placement	[slider->IdButton].Area.Size				= {16, 16};
@@ -220,7 +220,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	int32_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogEditBox>	editBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
-	gpk_necall(index = dialog.Create(editBox), "%s", "Out of memory?");
+	gpk_necs(index = dialog.Create(editBox));
 	controlTable.Draw[editBox->IdGUIControl].UseNewPalettes	= true;
 	controlTable.Draw[editBox->IdGUIControl].ColorMode		= ::gpk::GUI_COLOR_MODE_Flat;
 	::gpk::memcpy_s(controlTable.Draw[editBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
@@ -305,14 +305,14 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return one_if(false == control.Settings.Unfolded);
 }
 
-static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2<int32_t> mouseDeltas)																{
+static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2i16 mouseDeltas)																{
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
 	control.Settings.Dragging		= true;
 	if(false == locked.x)
-		controlMain.Area.Offset.x		+= (controlMain.Align & ::gpk::ALIGN_RIGHT) ? -(int16_t)mouseDeltas.x : (int16_t)mouseDeltas.x;
+		controlMain.Area.Offset.x	+= mouseDeltas.x;
 	if(false == locked.y)
-		controlMain.Area.Offset.y		+= (controlMain.Align & ::gpk::ALIGN_BOTTOM) ? -(int16_t)mouseDeltas.y : (int16_t)mouseDeltas.y;
+		controlMain.Area.Offset.y	+= mouseDeltas.y;
 	::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
 	return 0;
 }
@@ -324,9 +324,9 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	::gpk::SControlEvent		& controlTitle			= controlTable.Events[control.IdTitle];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
 	if(controlTitleState.IsPressed()) {
-		::gpk::n2<bool>								locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
+		::gpk::n2<bool>				locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
-			::gpk::n2i32								mouseDeltas				= -(dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
+			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
 				gpk_necs(::viewportDrag(control, controlMain, dialog, locked, mouseDeltas));
 		}
@@ -334,16 +334,16 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	else {
 		if(controlTitle.Execute && false == control.Settings.Dragging)
 			gpk_necs(::gpk::viewportFold(control, control.Settings.Unfolded));
-		control.Settings.Dragging				= false;
+		control.Settings.Dragging	= false;
 	}
 	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
 		if(true == control.Settings.Unfolded) {
-			::gpk::n2i16								clientFinalSize			= {controlMain.Area.Size};
-			clientFinalSize							-= ::gpk::controlNCSpacing(controlMain).i16();
-			clientFinalSize.y						-=  heightOfField + 1;
-			::gpk::SControlPlacement					& controlClient			= controlTable.Placement[control.IdClient];
-			controlClient.Area.Size					= clientFinalSize;
+			::gpk::n2i16				clientFinalSize			= {controlMain.Area.Size};
+			clientFinalSize			-= ::gpk::controlNCSpacing(controlMain).i16();
+			clientFinalSize.y		-=  heightOfField + 1;
+			::gpk::SControlPlacement	& controlClient			= controlTable.Placement[control.IdClient];
+			controlClient.Area.Size	= clientFinalSize;
 		}
-	control.SettingsOld						= control.Settings;
+	control.SettingsOld		= control.Settings;
 	return 0;
 }

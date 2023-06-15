@@ -27,11 +27,11 @@ namespace gpk
 	};
 
 	struct SEditor : public SEditorApplication {
-		::gpk::ai32			Dialogs;
-		::gpk::ai32			Buttons;
-		::gpk::ai32			Hover;
-		::gpk::ai32			Selection;
-		::gpk::ai32			Expand;
+		::gpk::acid			Dialogs;
+		::gpk::acid			Buttons;
+		::gpk::acid			Hover;
+		::gpk::acid			Selection;
+		::gpk::acid			Expand;
 
 		SEditorRigidBody	EditorRigidBody		= {};
 

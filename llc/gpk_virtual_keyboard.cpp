@@ -4,7 +4,7 @@
 
 ::gpk::error_t			gpk::virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, ::gpk::cid_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events) {
 	const ::gpk::cid_t			idKeyFirst			= vk.IdRoot + 1;
-	const ::gpk::cid_t			idKeyStop			= idKeyFirst + vk.Keys.size();
+	const ::gpk::cid_t			idKeyStop			= ::gpk::cid_t(idKeyFirst + vk.Keys.size());
 	if(::gpk::in_range<::gpk::cid_t>(iControl, idKeyFirst, idKeyStop)) {
 		const int32_t				iKey				= iControl - idKeyFirst;
 		const uint16_t				key					= vk.Keys[iKey];

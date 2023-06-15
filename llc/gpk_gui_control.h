@@ -190,12 +190,11 @@ namespace gpk
 		::gpk::apod<::gpk::SControlDraw			>	Draw			= {};
 		::gpk::apod<::gpk::SControlEvent		>	Events			= {};
 		::gpk::apod<::gpk::SRelativeBit			>	RelativeBit		= {};
-
 		::gpk::aobj<::gpk::SControlText			>	Text			= {};
 		::gpk::aobj<::gpk::acid					>	Children		= {};
 		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
 
-		::gpk::apod<::gpk::SSysEvent			>	EventQueueOld		= {};
+		::gpk::apod<::gpk::SSystemEvent			>	EventQueue		= {};
 
 		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (Events[iControl], value); }
 		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (Events[iControl], value); }
@@ -206,18 +205,17 @@ namespace gpk
 		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (Events[iControl], value); }
 		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (Events[iControl], value); }
 
-		inlcxpr	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
-		inlcxpr	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
-		inlcxpr	bool		IsHidden		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
-		inlcxpr	bool		IsFocused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
-		inlcxpr	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
-		inlcxpr	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
-		inlcxpr	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
-		inlcxpr	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
-
-
+		inline	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
+		inline	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
+		inline	bool		IsHidden		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
+		inline	bool		IsFocused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
+		inline	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
+		inline	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
+		inline	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
+		inline	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
 	};
-	::gpk::error_t			controlCreate					(::gpk::SControlTable & gui, ::gpk::vi16 defaultColors);
+
+	::gpk::cid_t		controlCreate					(::gpk::SControlTable & gui, ::gpk::vi16 defaultColors);
 } // namespace
 
 #endif // GPK_GUI_CONTROL_H_29038749823613

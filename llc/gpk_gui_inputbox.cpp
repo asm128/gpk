@@ -32,7 +32,7 @@
 		char						text[8]		= {};
 		sprintf_s(text, "%c", vk.Keys[iKey]);
 
-		int32_t						idKey			= ::gpk::controlCreate(gui);
+		::gpk::cid_t				idKey			= ::gpk::controlCreate(gui);
 		::gpk::SControlPlacement	& controlKey	= gui.Controls.Placement[idKey];
 		controlKey.Area.Size	= sizeKey;
 		controlKey.Area.Offset.x= int16_t((iKey % rowWidth) * sizeKey.x);
@@ -49,7 +49,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, int32_t iParent)	{
+::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};
 	gui.Controls.Placement	[inputBox.IdRoot].Margin	= {};

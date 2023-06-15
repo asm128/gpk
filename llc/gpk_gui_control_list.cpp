@@ -24,12 +24,12 @@
 		control.Area.Size.y		= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
+		case ::gpk::DIRECTION_RIGHT	:
 			control.Area.Size.x		= int16_t(fontCharSize.x * controlText.Text.size() + ::gpk::controlNCSpacing(control).x);
 			if(menu.IdControls.size() > iPrevItem)
 				control.Area.Offset.x	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().x;
 			break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
+		case ::gpk::DIRECTION_DOWN:
 			controlConstraints.AttachSizeToControl.x	= menu.IdControl;
 			if(menu.IdControls.size() > iPrevItem)
 				control.Area.Offset.y	= gui.Controls.Placement[menu.IdControls[iPrevItem]].Area.Limit().y;
@@ -46,17 +46,17 @@
 		::gpk::SControlText			& controlText		= gui.Controls.Text		[idControl];
 		switch(menu.Orientation) {
 		default:
-		case ::gpk::CONTROL_LIST_DIRECTION_HORIZONTAL	:
+		case ::gpk::DIRECTION_RIGHT	:
 			controlMenu.Area.Size.x	+= gui.Controls.Placement[idControl].Area.Size.x;
 			controlMenu.Area.Size.y	= ::gpk::max(controlMenu.Area.Size.y, gui.Controls.Placement[idControl].Area.Size.y);
 			break;
-		case ::gpk::CONTROL_LIST_DIRECTION_VERTICAL		:
+		case ::gpk::DIRECTION_DOWN		:
 			controlMenu.Area.Size.y	+= gui.Controls.Placement[idControl].Area.Size.y;
 			controlMenu.Area.Size.x	= ::gpk::max(controlMenu.Area.Size.x, (int16_t)(controlText.Text.size() * fontCharSize.x + ::gpk::controlNCSpacing(control).x));
 			break;
 		}
 	}
-	if(::gpk::CONTROL_LIST_DIRECTION_VERTICAL == menu.Orientation)
+	if(::gpk::DIRECTION_DOWN == menu.Orientation)
 		controlMenu.Area.Size.x	+= 16;
 
 	return 0;
@@ -66,7 +66,7 @@
 	if(menu.IdControl == -1)
 		gpk_necs(::gpk::controlListInitialize(gui, menu));
 
-	const int32_t				idControl				= ::gpk::controlCreate(gui);
+	const cid_t					idControl				= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
 	::gpk::controlSetParent(gui, idControl, menu.IdControl);
 	::gpk::SControlPlacement	& control				= gui.Controls.Placement[idControl];
@@ -151,10 +151,10 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
-	int32_t						result						= -1;
+::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
+	::gpk::cid_t				result						= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
-		int32_t						idControl					= ::gpk::controlCreate(gui);
+		::gpk::cid_t				idControl					= ::gpk::controlCreate(gui);
 		if(out_ids.size() > iButton)
 			out_ids[iButton]		= idControl;
 
@@ -196,8 +196,8 @@
 	return result;
 }
 
-::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
-	SControlPlacement			controlArgs					= {};
+::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
+	::gpk::SControlPlacement	controlArgs					= {};
 	controlArgs.Align		= controlAlign;
 	controlArgs.Area		= {offset, buttonSize.i16()};
 	controlArgs.Border		= {1, 1, 1, 1};

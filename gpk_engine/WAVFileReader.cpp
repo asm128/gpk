@@ -376,8 +376,7 @@ namespace
 		ScopedHandle						hFile				(safe_handle(CreateFileW(wszFileName.begin(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr)));
 #endif
 
-		if (!hFile)
-			return HRESULT_FROM_WIN32(GetLastError());
+		rve_if(HRESULT_FROM_WIN32(GetLastError()), !hFile, "%s", ::gpk::toString(szFileName).begin());
 
 		// Get the file size
 		FILE_STANDARD_INFO					fileInfo			= {};

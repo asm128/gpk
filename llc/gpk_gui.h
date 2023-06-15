@@ -44,8 +44,8 @@ namespace gpk
 
 		::gpk::SGUIZoom						LastZoom			= {};
 		::gpk::SGUIZoom						Zoom				= {};
-		uint32_t							SelectedFont		= 7;
-		uint32_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+		uint16_t							SelectedFont		= 7;
+		uint16_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 		::gpk::GUI_COLOR_MODE				ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool								InputModeTouch		= true;
 	};
