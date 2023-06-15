@@ -58,12 +58,13 @@ namespace gpk
 		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail				= {};
-		::gpk::aobj<::gpk::SSysEvent>		EventQueue					= {};
+		::gpk::aobj<::gpk::SSysEvent>		EventQueueOld				= {};
+		::gpk::aobj<::gpk::SSystemEvent>	EventQueueNew				= {};
 		::gpk::pobj<TOffscreen>				BackBuffer					= {};
 		::gpk::pobj<::gpk::SInput>			Input						= {};
-		::gpk::n2<uint16_t>					PreviousSize				= {};
-		::gpk::n2<uint16_t>					Size						= {320, 200};
-		::gpk::rect<uint16_t>		WindowedWindowRect			= {0, 0, 320, 200};
+		::gpk::n2u16						PreviousSize				= {};
+		::gpk::n2u16						Size						= {320, 200};
+		::gpk::rectu16						WindowedWindowRect			= {0, 0, 320, 200};
 
 		bool								Resized						: 1;
 		bool								Repaint						: 1;

@@ -570,6 +570,9 @@
     <ClInclude Include="keyed_bit_array.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_gui_control_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

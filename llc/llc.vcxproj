@@ -67,6 +67,7 @@
     <ClInclude Include="gpk_font.h" />
     <ClInclude Include="gpk_grid_color.h" />
     <ClInclude Include="gpk_gui_control.h" />
+    <ClInclude Include="gpk_gui_control_state.h" />
     <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
     <ClInclude Include="gpk_image_color.h" />

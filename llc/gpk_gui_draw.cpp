@@ -191,7 +191,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, int32_t iControl,
 	if(false == ::gpk::controlHidden(gui, iControl)) {
 		//::gpk::SControlMode		controlModes					= gui.Controls.Modes[iControl];
 		gpk_necs(::actualControlDraw(gui, iControl, target));
-		::gpk::vci32				children						= gui.Controls.Children[iControl];
+		::gpk::vccid				children						= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
 			gpk_necs(::gpk::controlDrawHierarchy(gui, children[iChild], target));
 	}

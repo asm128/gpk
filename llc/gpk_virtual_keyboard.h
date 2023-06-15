@@ -1,4 +1,5 @@
 #include "gpk_enum.h"
+#include "gpk_gui_control_state.h"
 
 #ifndef GPK_VIRTUAL_KEYBOARD_H_293874239874
 #define GPK_VIRTUAL_KEYBOARD_H_293874239874
@@ -29,17 +30,17 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SVirtualKeyboard {
-		int32_t			IdRoot;
-		::gpk::ai32		IdKeys;
+		::gpk::cid_t	IdRoot;
+		::gpk::acid		IdKeys;
 		::gpk::au16		Keys;
 
 		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
 	};
 
 	
-	::gpk::error_t			virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, int32_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events);
+	::gpk::error_t			virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, ::gpk::cid_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events);
 
-	//stainli	::gpk::error_t	virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, int32_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
+	//stainli	::gpk::error_t	virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, cid_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
 } // namespace 
 
 #endif // GPK_VIRTUAL_KEYBOARD_H_293874239874

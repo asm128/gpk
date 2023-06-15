@@ -18,7 +18,7 @@
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
 	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= window.Size.u16();
-	window.EventQueue[window.EventQueue.push_back({})] = newEvent;
+	window.EventQueueOld[window.EventQueueOld.push_back({})] = newEvent;
 	window.FullScreen						= false;
 	return 0;
 }
@@ -54,7 +54,7 @@
 	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
 	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
 	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= framework.Size.u16();
-	framework.EventQueue.push_back(newEvent);
+	framework.EventQueueOld.push_back(newEvent);
 	framework.FullScreen					= true;
 	return 0;
 }
@@ -79,7 +79,7 @@
 }
 
 ::gpk::error_t			gpk::windowUpdate							(::gpk::SWindow& displayInstance)											{
-	displayInstance.EventQueue.clear();
+	displayInstance.EventQueueOld.clear();
 	displayInstance.Resized					= false;
 	displayInstance.Repaint					= false;
 	bool										quit	= false;

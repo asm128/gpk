@@ -27,7 +27,7 @@ namespace gpk
 	::gpk::error_t	rasterFontLoad		(::gpk::SImageMonochrome<_sizeChunk> & image, const ::gpk::n2u8 & charSize, const ::gpk::vcu8 decoded)			{
 		const uint32_t		imageHeight			= charSize.y * 256;
 		gpk_necall(image.resize(charSize.x, imageHeight), "charSize: {%i, %i}", charSize.x, charSize.y);
-		memcpy(image.Texels.begin(), decoded.begin(), ::gpk::min(decoded.size(), charSize.x * imageHeight));
+		memcpy(image.Texels.begin(), decoded.begin(), ::gpk::min(image.Texels.byte_count(), decoded.byte_count()));
 		return 0;
 	}
 

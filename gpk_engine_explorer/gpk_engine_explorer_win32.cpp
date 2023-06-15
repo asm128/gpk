@@ -63,10 +63,10 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 	gpk_necs(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 
 	const ::gpk::FSysEvent		funcEvent				= [&app](const ::gpk::SSysEvent & sysEvent) { return ::processSystemEvent(app, sysEvent); };
-	gpk_necs(mainWindow.EventQueue.for_each(funcEvent));
+	gpk_necs(mainWindow.EventQueueOld.for_each(funcEvent));
 
 	::gpk::editorCreate(app.Editor);
-	//if(::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, 0, mainWindow.Input, mainWindow.EventQueue))
+	//if(::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, 0, mainWindow.Input, mainWindow.EventQueueOld))
 	//	return 1;
 
 	return 0;
@@ -81,13 +81,13 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 
 	const ::gpk::FSysEvent		funcEvent				= [&app](const ::gpk::SSysEvent & sysEvent) { return ::processSystemEvent(app, sysEvent); };
-	gpk_necs(mainWindow.EventQueue.for_each(funcEvent));
+	gpk_necs(mainWindow.EventQueueOld.for_each(funcEvent));
 
-	gpk_necs(::gpk::editorUpdate(app.Editor, *mainWindow.Input, {mainWindow.EventQueue}));
+	gpk_necs(::gpk::editorUpdate(app.Editor, *mainWindow.Input, {mainWindow.EventQueueOld}));
 	//::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
 	{
 		::gpk::STimer				timer;
-		//rvis_if(::gpk::APPLICATION_STATE_EXIT, ::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, frameInfo.Seconds.LastFrame, mainWindow.Input, mainWindow.EventQueue))
+		//rvis_if(::gpk::APPLICATION_STATE_EXIT, ::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, frameInfo.Seconds.LastFrame, mainWindow.Input, mainWindow.EventQueueOld))
 
 		timer.Frame();
 		//info_printf("Update engine in %f seconds", timer.LastTimeSeconds);

@@ -244,7 +244,7 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	::gpk::memcpy_s(controlTable.Draw[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
 	{ // Create field group
 		// Set up client area control
-		int32_t						idControl;
+		cid_t						idControl;
 		gpk_necs(viewport->IdClient = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl));		// Create group control array
 		::gpk::SControlPlacement	& control				= controlTable.Placement[idControl];
 		control.Area.Offset		= {0, heightOfField + 1};
@@ -255,8 +255,8 @@ stacxpr	const uint32_t									heightOfField								= 18;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->Viewport;
 	}
 	{ // Create section title
-		int32_t						idControl				= ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl);
-		gpk_necall(viewport->IdTitle = idControl, "%s", "????");	// Create group control array
+		cid_t						idControl;
+		gpk_necall(viewport->IdTitle = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl), "%s", "????");	// Create group control array
 
 		::gpk::SControlPlacement	& control				= controlTable.Placement[idControl];
 		control.Area.Offset		= {};

@@ -29,9 +29,9 @@ namespace gpk
 		};
 
 	struct SViewport {
-		int32_t					IdControl			= -1;
-		::gpk::asti32<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
-		int32_t					IdDesktopElement	= -1;
+		cid_t					IdControl			= (int32_t)-1;
+		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
+		cid_t					IdDesktopElement	= (int32_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
 	};
 

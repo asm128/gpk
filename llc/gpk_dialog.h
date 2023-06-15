@@ -21,16 +21,16 @@ namespace gpk
 
 	struct SDialog;
 	struct IDialogControl {
-		SDialog												* Dialog											= 0;
-		int32_t												IdGUIControl										= -1;
-		int32_t												IdParent											= -1;
-		uint64_t											DeleteControl										: 1;
+		SDialog					* Dialog			= 0;
+		cid_t					IdGUIControl		= (cid_t)-1;
+		cid_t					IdParent			= (cid_t)-1;
+		uint64_t				DeleteControl		: 1;
 
-		constexpr											IDialogControl										()													: DeleteControl(0) {}
-		virtual												~IDialogControl										();
+		constexpr				IDialogControl		()													: DeleteControl(0) {}
+		virtual					~IDialogControl		();
 
-		virtual	::gpk::error_t								Resize		(::gpk::n2<uint16_t>& newSize)					{ (void)newSize; return 0; }
-		virtual	::gpk::error_t								Update		()													= 0;
+		virtual	::gpk::error_t	Resize				(::gpk::n2<uint16_t>& newSize)					{ (void)newSize; return 0; }
+		virtual	::gpk::error_t	Update				()													= 0;
 	};
 	//template<typename _TDialogControl>
 	//::gpk::error_t										dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
@@ -54,15 +54,14 @@ namespace gpk
 
 	struct SDialog {
 		::gpk::pobj<::gpk::SDialogColors>	Colors					= {};
-		
-		int32_t					FocusedCurrent		= -1;
-		int32_t					FocusedPrevious		= -1;
-		int32_t					SelectedCurrent		= -1;
-		int32_t					SelectedPrevious	= -1;
-		::gpk::n2u16			LastSize			= {};
-		int32_t					Root				= -1;
-		::gpk::ai32				Buttons				= {};
 
+		cid_t					FocusedCurrent		= (cid_t)-1;
+		cid_t					FocusedPrevious		= (cid_t)-1;
+		cid_t					SelectedCurrent		= (cid_t)-1;
+		cid_t					SelectedPrevious	= (cid_t)-1;
+		::gpk::n2u16			LastSize			= {};
+		cid_t					Root				= (cid_t)-1;
+		::gpk::ai32				Buttons				= {};
 
 		::gpk::SControlMode		DefaultControlModes	= {};
 		::gpk::SControlDraw		DefaultControlDraw	= {};
@@ -79,7 +78,7 @@ namespace gpk
 
 		inline	::gpk::error_t	Focused			()	const	noexcept	{ return FocusedCurrent; }
 
-		::gpk::error_t			Focus			(int32_t iControl)		{ 
+		::gpk::error_t			Focus			(cid_t iControl)		{ 
 			ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
 			FocusedPrevious = FocusedCurrent; 
 			FocusedCurrent = iControl; 
@@ -91,10 +90,10 @@ namespace gpk
 			if(0 == GUI.get_ref())
 				GUI.create();
 			::gpk::SGUI				& gui				= *GUI;
-			int32_t					index				= -1;
+			cid_t					index				= (cid_t)-1;
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)	// Look for unused slot
 				if(0 == Controls[iControl].get_ref()) {
-					index				= iControl;
+					index				= (cid_t)iControl;
 					break;
 				}
 
@@ -116,7 +115,7 @@ namespace gpk
 		}
 
 		template<typename _TDialogControl>
-		::gpk::error_t			Get				(int32_t index, ::gpk::pnco<_TDialogControl> & control)	{
+		::gpk::error_t			Get				(cid_t index, ::gpk::pnco<_TDialogControl> & control)	{
 			Controls[index].as(control);
 			return index;
 		}

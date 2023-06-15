@@ -64,8 +64,8 @@
 	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
 	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
-	gui.Controls.States		[inputBox.VirtualKeyboard.IdRoot].SetHidden(gui.Controls.Events[inputBox.VirtualKeyboard.IdRoot], false);
-	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Align			= gui.Controls.Placement[inputBox.IdText].Align;
+	gui.Controls.SetHidden(inputBox.VirtualKeyboard.IdRoot, false);
+	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Align	= gui.Controls.Placement[inputBox.IdText].Align;
 	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
 		= gui.Controls.Placement	[inputBox.IdText].Area.Offset.y
 		+ gui.Controls.Placement	[inputBox.IdText].Area.Size.y
