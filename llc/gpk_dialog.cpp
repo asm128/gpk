@@ -89,7 +89,7 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 }
 
 stacxpr	const uint32_t	heightOfField			= 18;
-::gpk::error_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
+::gpk::cid_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
 	cid_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
@@ -122,12 +122,12 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return 0;
 }
 
-::gpk::error_t			gpk::sliderCreate							(::gpk::SDialog & dialog)								{
-	int32_t						index										= -1;
+::gpk::cid_t			gpk::sliderCreate							(::gpk::SDialog & dialog)								{
+	::gpk::cid_t				index										= -1;
 	::gpk::pobj<::gpk::SDialogSlider>	slider;
 	gpk_necs(index = dialog.Create(slider));
 	gpk_necs(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl));
-	::gpk::SControlTable						& controlTable								= dialog.GUI->Controls;
+	::gpk::SControlTable		& controlTable								= dialog.GUI->Controls;
 	controlTable.Placement	[slider->IdGUIControl].Margin				= {};
 	controlTable.Placement	[slider->IdButton].Area.Size				= {16, 16};
 	controlTable.Text		[slider->IdButton].Text						= "-";
@@ -136,15 +136,15 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	controlTable.Draw		[slider->IdButton].ColorMode				= ::gpk::GUI_COLOR_MODE_3D;
 	::gpk::memcpy_s(controlTable.Draw[slider->IdButton		].Palettes.Storage, dialog.Colors->Button		.Storage);
 	::gpk::memcpy_s(controlTable.Draw[slider->IdGUIControl	].Palettes.Storage, dialog.Colors->CheckBox	.Storage);
-	::gpk::SControlText							& tunerText									= controlTable.Text[slider->IdGUIControl];
-	tunerText.Text							= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
+	::gpk::SControlText			& tunerText									= controlTable.Text[slider->IdGUIControl];
+	tunerText.Text			= {slider->ValueString, (uint32_t)snprintf(slider->ValueString, ::gpk::size(slider->ValueString) - 2, "%lli", (long long int)slider->ValueCurrent)};
 	return index;
 }
 ::gpk::error_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, int64_t value)				{
 	::gpk::SDialog				& dialog				= *slider.Dialog;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	const uint64_t				newValue				= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
-	slider.ValueCurrent			= newValue;
+	slider.ValueCurrent		= newValue;
 
 	const double				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
 
@@ -216,8 +216,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	return 0;
 }
 
-::gpk::error_t			gpk::editBoxCreate		(::gpk::SDialog & dialog)								{
-	int32_t						index					= -1;
+::gpk::cid_t			gpk::editBoxCreate		(::gpk::SDialog & dialog)								{
+	::gpk::cid_t				index					= -1;
 	::gpk::pobj<::gpk::SDialogEditBox>	editBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necs(index = dialog.Create(editBox));
@@ -232,8 +232,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	}
 	return 0;
 }
-::gpk::error_t			gpk::viewportCreate		(::gpk::SDialog & dialog) {
-	int32_t						index					= -1;
+::gpk::cid_t			gpk::viewportCreate		(::gpk::SDialog & dialog) {
+	::gpk::cid_t				index					= -1;
 	::gpk::pobj<::gpk::SDialogViewport>	viewport;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necs(index = dialog.Create(viewport));
@@ -244,7 +244,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::memcpy_s(controlTable.Draw[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
 	{ // Create field group
 		// Set up client area control
-		cid_t						idControl;
+		::gpk::cid_t				idControl;
 		gpk_necs(viewport->IdClient = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl));		// Create group control array
 		::gpk::SControlPlacement	& control				= controlTable.Placement[idControl];
 		control.Area.Offset		= {0, heightOfField + 1};
@@ -255,7 +255,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->Viewport;
 	}
 	{ // Create section title
-		cid_t						idControl;
+		::gpk::cid_t				idControl;
 		gpk_necall(viewport->IdTitle = idControl = ::gpk::controlCreateChild(*dialog.GUI, viewport->IdGUIControl), "%s", "????");	// Create group control array
 
 		::gpk::SControlPlacement	& control				= controlTable.Placement[idControl];

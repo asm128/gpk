@@ -15,6 +15,7 @@ namespace gpk
 	template <typename T> using apo			= ::gpk::apobj<T>; 
 
 	template <typename T> using apaobj		= ::gpk::aobj<::gpk::paobj<T>>; 
+	template <typename T> using aapobj		= ::gpk::aobj<::gpk::apobj<T>>; 
 } // namespace
 
 #endif // GPK_APOBJ_H_0297349827348923611

@@ -8,28 +8,28 @@
 namespace gpk
 {
 	struct SDialogSlider;
-	::gpk::error_t			sliderCreate		(::gpk::SDialog					& dialog);
+	::gpk::cid_t			sliderCreate		(::gpk::SDialog					& dialog);
 	::gpk::error_t			sliderSetValue		(::gpk::SDialogSlider			& control, int64_t value);
 	::gpk::error_t			sliderUpdate		(::gpk::SDialogSlider			& control);
 
 	struct SDialogCheckBox;
-	::gpk::error_t			checkBoxCreate		(::gpk::SDialog					& dialog);
+	::gpk::cid_t			checkBoxCreate		(::gpk::SDialog					& dialog);
 	::gpk::error_t			checkBoxUpdate		(::gpk::SDialogCheckBox			& control);
 
 	struct SDialogEditBox;
-	::gpk::error_t			editBoxCreate		(::gpk::SDialog					& dialog);
+	::gpk::cid_t			editBoxCreate		(::gpk::SDialog					& dialog);
 	::gpk::error_t			editBoxUpdate		(::gpk::SDialogEditBox			& control);
 
 	struct SDialogViewport;
-	::gpk::error_t			viewportCreate		(::gpk::SDialog					& dialog);
+	::gpk::cid_t			viewportCreate		(::gpk::SDialog					& dialog);
 	::gpk::error_t			viewportUpdate		(::gpk::SDialogViewport			& control);
 	::gpk::error_t			viewportFold		(::gpk::SDialogViewport			& control, bool fold);
 	::gpk::error_t			viewportAdjustSize	(::gpk::n2<int16_t>		& sizeViewport, const ::gpk::n2<int16_t> & sizeClient);
 
-	stainli	::gpk::error_t	sliderCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogSlider		>	& createdControl)	 { int32_t index = -1; gpk_necs(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::error_t	checkBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogCheckBox	>	& createdControl)	 { int32_t index = -1; gpk_necs(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::error_t	editBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogEditBox	>	& createdControl)	 { int32_t index = -1; gpk_necs(index = editBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
-	stainli	::gpk::error_t	viewportCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogViewport	>	& createdControl)	 { int32_t index = -1; gpk_necs(index = viewportCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stainli	::gpk::cid_t	sliderCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogSlider		>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = sliderCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stainli	::gpk::cid_t	checkBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogCheckBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = checkBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stainli	::gpk::cid_t	editBoxCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogEditBox	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = editBoxCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
+	stainli	::gpk::cid_t	viewportCreate		(::gpk::SDialog			& dialog, ::gpk::pnco<SDialogViewport	>	& createdControl)	 { ::gpk::cid_t index = -1; gpk_necs(index = viewportCreate	(dialog)); dialog.Controls[index].as(createdControl); return index; }
 
 #pragma pack(push, 1)
 	struct SDialogViewportSettings {
@@ -135,7 +135,7 @@ namespace gpk
 	};
 
 	template<typename _tValue>
-	::gpk::error_t			tunerCreate							(::gpk::SDialog	& dialog)								{
+	::gpk::cid_t			tunerCreate							(::gpk::SDialog	& dialog)								{
 		::gpk::cid_t				index								= -1;
 		::gpk::pobj<::gpk::SDialogTuner<_tValue>>	tuner;
 		gpk_necs(index = dialog.Create(tuner));
@@ -159,8 +159,8 @@ namespace gpk
 	}
 
 	template<typename _tValue>	
-	stainli	::gpk::error_t	tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
-		int32_t						index								= -1; 
+	stainli	::gpk::cid_t	tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
+		::gpk::cid_t				index								= -1; 
 		gpk_necs(index = ::gpk::tunerCreate<_tValue>(dialog)); 
 		dialog.Controls[index].as(createdControl); 
 		return index;
