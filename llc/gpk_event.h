@@ -81,12 +81,12 @@ namespace gpk
 	}
 
 	template <typename _tEvntParent, typename _tEvntChild, typename _tPOD>
-	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, ::gpk::view<_tPOD> eventData) {
+	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, ::gpk::view<const _tPOD> eventData) {
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)eventData.begin(), eventData.byte_count()});
 	}
 
 	template <typename _tEvntParent, typename _tEvntChild, typename _tPOD>
-	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, _tPOD & childEventDataType) {
+	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, const _tPOD & childEventDataType) {
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)&childEventDataType, sizeof(_tPOD)});
 	}
 

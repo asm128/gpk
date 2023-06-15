@@ -42,13 +42,13 @@ namespace gpk
 	};
 
 	struct SDialogViewport : public ::gpk::IDialogControl {
-		int32_t					IdClose				= -1;
-		int32_t					IdMinimize			= -1;
-		int32_t					IdMaximize			= -1;
-		int32_t					IdScrollBarX		= -1;
-		int32_t					IdScrollBarY		= -1;
-		int32_t					IdTitle				= -1;
-		int32_t					IdClient			= -1;
+		cid_t					IdClose				= -1;
+		cid_t					IdMinimize			= -1;
+		cid_t					IdMaximize			= -1;
+		cid_t					IdScrollBarX		= -1;
+		cid_t					IdScrollBarY		= -1;
+		cid_t					IdTitle				= -1;
+		cid_t					IdClient			= -1;
 		SDialogViewportSettings	Settings			= {};
 		SDialogViewportSettings	SettingsOld			= {};
 
@@ -73,9 +73,8 @@ namespace gpk
 		typedef	::std::function<::gpk::error_t(::gpk::vcc & format, int64_t value, const ::gpk::minmax<int64_t> & limits)>	
 								TCallback;
 
-		int32_t					IdButton			= -1;
-
-		int32_t					Vertical			= false;
+		cid_t					IdButton			= (cid_t)-1;
+		bool					Vertical			= false;
 		::gpk::minmax<int64_t>	ValueLimits			= {0, 100};// 0x7fFFffFF};
 		int64_t					ValueCurrent		= -1;
 		char					ValueString	[64]	= {};
@@ -94,8 +93,8 @@ namespace gpk
 		typedef	::std::function<::gpk::error_t(::gpk::vcc & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
 								TCallback;
 
-		int32_t					IdDecrease			= -1;
-		int32_t					IdIncrease			= -1;
+		cid_t					IdDecrease			= -1;
+		cid_t					IdIncrease			= -1;
 
 		::gpk::minmax<_tValue>	ValueLimits			= {0, 0x7F};
 		_tValue					ValueCurrent		= 0;
