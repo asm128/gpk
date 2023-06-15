@@ -138,7 +138,7 @@ namespace gpk
 
 			gpk_necs(::gpk::guiProcessInput(gui, *inputState, frameEvents));
 
-			::gpk::au32				controlsToProcess			= {};
+			::gpk::acid				controlsToProcess			= {};
 			gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 			if(const int32_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
@@ -146,7 +146,7 @@ namespace gpk
 					::gpk::trim(trimmed);
 					::gpk::controlTextSet(gui, Dialog.Root + 1 + Field, ::gpk::label{trimmed});
 					InputBox.Edit(gui, false);
-					gui.Controls.States[InputBox.IdRoot].Hidden = true;
+					gui.Controls.SetHidden(InputBox.IdRoot, true);
 				}
 			}
 			else {
@@ -158,7 +158,7 @@ namespace gpk
 					default								: 
 					case ::gpk::UI_LOBBY_USER_GUID		: 
 					case ::gpk::UI_LOBBY_USER_Offline	: 
-						gui.Controls.States[InputBox.IdRoot].Hidden = true;
+						gui.Controls.SetHidden(InputBox.IdRoot, true);
 						break;
 					case ::gpk::UI_LOBBY_USER_Mail		: 
 					case ::gpk::UI_LOBBY_USER_Name		: 
@@ -170,7 +170,7 @@ namespace gpk
 						InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 						edit						= true;
 						Field						= (::gpk::UI_LOBBY_USER)(iControl - (Dialog.Root + 1));
-						gui.Controls.States[InputBox.IdRoot].Hidden = false;
+						gui.Controls.SetHidden(InputBox.IdRoot, false);
 						break;
 					}
 					InputBox.Edit(gui, edit);

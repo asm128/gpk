@@ -195,25 +195,25 @@ namespace gpk
 		::gpk::aobj<::gpk::acid					>	Children		= {};
 		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
 
-		::gpk::apod<::gpk::SSysEvent			>	EventQueue		= {};
+		::gpk::apod<::gpk::SSysEvent			>	EventQueueOld		= {};
 
-		inline	bool		SetHovered		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (Events[iControl], value); }
-		inline	bool		SetPressed		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (Events[iControl], value); }
-		inline	bool		SetHidden		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (Events[iControl], value); }
-		inline	bool		SetFocused		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (Events[iControl], value); }
-		inline	bool		SetSelected		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (Events[iControl], value); }
-		inline	bool		SetDisabled		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (Events[iControl], value); }
-		inline	bool		SetUpdated		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (Events[iControl], value); }
-		inline	bool		SetUnused		(uint32_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (Events[iControl], value); }
+		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (Events[iControl], value); }
+		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (Events[iControl], value); }
+		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (Events[iControl], value); }
+		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (Events[iControl], value); }
+		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (Events[iControl], value); }
+		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (Events[iControl], value); }
+		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (Events[iControl], value); }
+		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (Events[iControl], value); }
 
-		inlcxpr	bool		IsHovered		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
-		inlcxpr	bool		IsPressed		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
-		inlcxpr	bool		IsHidden		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
-		inlcxpr	bool		IsFocused		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
-		inlcxpr	bool		IsSelected		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
-		inlcxpr	bool		IsDisabled		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
-		inlcxpr	bool		IsUpdated		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
-		inlcxpr	bool		IsUnused		(uint32_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
+		inlcxpr	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
+		inlcxpr	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
+		inlcxpr	bool		IsHidden		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHidden   (); }
+		inlcxpr	bool		IsFocused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsFocused  (); }
+		inlcxpr	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
+		inlcxpr	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
+		inlcxpr	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
+		inlcxpr	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
 
 
 	};
