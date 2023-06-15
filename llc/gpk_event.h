@@ -67,8 +67,7 @@ namespace gpk
 
 	template <typename _tEvntParent, typename _tEvntChild>
 	static	::gpk::error_t	eventWrapChild		(::gpk::SEvent<_tEvntParent> & parentEvent, _tEvntChild childEventType, ::gpk::vcu8 eventData) {
-		::gpk::SEvent<_tEvntChild>	childEvent			= {childEventType, };
-		gpk_necs(childEvent.Data.append(eventData));
+		::gpk::SEventView<_tEvntChild>	childEvent			= {childEventType, eventData};
 		return childEvent.Save(parentEvent.Data);
 	}
 

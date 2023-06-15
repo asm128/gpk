@@ -35,7 +35,7 @@ namespace gpk
 	//template<typename _TDialogControl>
 	//::gpk::error_t										dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
 	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
-	//	ree_if(0 == ::gpk::ref_create(&newRef), "%s", "Out of memory?");
+	//	ree_if(0 == ::gpk::ref_create(&newRef));
 	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);
 	//	createdControl->Dialog									= this;
 	//	createdControl->IdGUIControl							= ::gpk::controlCreate(gui);
@@ -98,12 +98,12 @@ namespace gpk
 				}
 
 			if(-1 == index)
-				gpk_necall(index = Controls.push_back({}), "%s", "Out of memory?");
+				gpk_necs(index = Controls.push_back({}));
 
 			//::gpk::dialogCreate(createdControl);
 			//Controls[index]	= createdControl;
 			::gpk::gref<_TDialogControl>	* newRef	= 0;
-			ree_if(0 == ::gpk::ref_create(&newRef), "%s", "Out of memory?");
+			rees_if(0 == ::gpk::ref_create(&newRef));
 			Controls[index].set_ref((::gpk::gref<::gpk::IDialogControl>*)newRef);
 			Controls[index]->Dialog	= this;
 			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);

@@ -35,7 +35,7 @@ namespace gpk
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
 	};
 
-	::gpk::error_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport& viewport);
+	::gpk::error_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
 #pragma pack(pop)
 }
 

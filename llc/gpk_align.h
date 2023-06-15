@@ -17,11 +17,11 @@ namespace gpk
 		, ::gpk::ALIGN				align
 		)																		noexcept	{
 		coordRealigned		= coordToRealign;
- 			 if gbit_true(align, ::gpk::ALIGN_CENTER	) coordRealigned.x	+= (targetSize.x >> 1);
-		else if gbit_true(align, ::gpk::ALIGN_RIGHT		) coordRealigned.x	= targetSize.x - coordToRealign.x;
-												  
-			 if gbit_true(align, ::gpk::ALIGN_VCENTER	) coordRealigned.y	+= (targetSize.y >> 1);
-		else if gbit_true(align, ::gpk::ALIGN_BOTTOM	) coordRealigned.y	= targetSize.y - coordToRealign.y;
+ 			 if (::gpk::bit_true(align, ::gpk::ALIGN_CENTER)) coordRealigned.x += (targetSize.x >> 1);
+		else if (::gpk::bit_true(align, ::gpk::ALIGN_RIGHT )) coordRealigned.x = targetSize.x - 1 - coordToRealign.x;
+											  
+			 if (::gpk::bit_true(align, ::gpk::ALIGN_VCENTER)) coordRealigned.y += (targetSize.y >> 1);
+		else if (::gpk::bit_true(align, ::gpk::ALIGN_BOTTOM )) coordRealigned.y = targetSize.y - 1 - coordToRealign.y;
 		return coordRealigned;
 	}
 #pragma pack(pop)

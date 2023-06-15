@@ -59,8 +59,8 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	gui.Controls.Placement	[dialog.Root].Border					= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
 	gui.Controls.Modes	[dialog.Root].NoHover	= true;
-	gui.Controls.Modes	[dialog.Root].NoExecute	= true;
-	dialog.DefaultControlModes.NoHover			= 1;
+	//gui.Controls.Modes	[dialog.Root].NoExecute	= true;
+	//dialog.DefaultControlModes.NoHover			= 1;
 	dialog.DefaultControlDraw.FrameOut			= 1;
 	dialog.DefaultControlDraw.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
@@ -74,34 +74,34 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	return 0;
 }
 
-								::gpk::SDialog::SDialog			()										{ GUI.create(); ::dialogInitialize(*this); }
-								::gpk::SDialog::SDialog			(::gpk::pobj<::gpk::SGUI> & pgui)	{
+::gpk::SDialog::SDialog			()										{ GUI.create(); ::dialogInitialize(*this); }
+::gpk::SDialog::SDialog			(::gpk::pobj<::gpk::SGUI> & pgui)	{
 	if(!pgui)
 		pgui.create();
 	GUI								= pgui;
 	::dialogInitialize(*this);
 }
-								::gpk::SDialog::SDialog			(const ::gpk::pobj<::gpk::SGUI> & pgui)	{
+::gpk::SDialog::SDialog			(const ::gpk::pobj<::gpk::SGUI> & pgui)	{
 	GUI								= pgui;
 	if(!GUI)
 		GUI.create();
 	::dialogInitialize(*this);
 }
 
-stacxpr	const uint32_t									heightOfField								= 18;
-::gpk::error_t			gpk::checkBoxCreate							(::gpk::SDialog			& dialog)								{
-	int32_t																	index										= -1;
-	::gpk::pobj<::gpk::SDialogCheckBox>									checkBox;
-	::gpk::SControlTable													& controlTable								= dialog.GUI->Controls;
-	gpk_necall(index = dialog.Create(checkBox), "%s", "Out of memory?");
+stacxpr	const uint32_t	heightOfField			= 18;
+::gpk::error_t			gpk::checkBoxCreate		(::gpk::SDialog			& dialog)								{
+	int32_t						index					= -1;
+	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
+	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
+	gpk_necs(index = dialog.Create(checkBox));
 	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
 	::gpk::memcpy_s(controlTable.Draw[checkBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
 }
-::gpk::error_t			gpk::checkBoxUpdate							(::gpk::SDialogCheckBox	& checkbox)								{
-	::gpk::SDialog															& dialog									= *checkbox.Dialog;
-	::gpk::SControlTable													& controlTable								= dialog.GUI->Controls;
-	::gpk::img<::gpk::bgra>											& imageCross								= dialog.ImageCrossBGRA;
+::gpk::error_t			gpk::checkBoxUpdate			(::gpk::SDialogCheckBox	& checkbox)								{
+	::gpk::SDialog				& dialog					= *checkbox.Dialog;
+	::gpk::SControlTable		& controlTable				= dialog.GUI->Controls;
+	::gpk::img<::gpk::bgra>		& imageCross				= dialog.ImageCrossBGRA;
 	if(controlTable.Events[checkbox.IdGUIControl].Execute) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 			::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross);
@@ -109,10 +109,10 @@ stacxpr	const uint32_t									heightOfField								= 18;
 			dialog.ImageCross.resize(imageCross.metrics());
 			for(uint32_t iTexel = 0; iTexel < imageCross.Texels.size(); ++iTexel) {
 				if(imageCross.Texels[iTexel] == (::gpk::bgra)::gpk::BLACK)
-					dialog.ImageCross.View[iTexel]										=  true;
+					dialog.ImageCross.View[iTexel]	=  true;
 				else {
-					imageCross.Texels[iTexel].a											= 0;
-					dialog.ImageCross.View[iTexel]										= false;
+					imageCross.Texels[iTexel].a		= 0;
+					dialog.ImageCross.View[iTexel]	= false;
 				}
 			}
 		}
@@ -123,8 +123,8 @@ stacxpr	const uint32_t									heightOfField								= 18;
 }
 
 ::gpk::error_t			gpk::sliderCreate							(::gpk::SDialog & dialog)								{
-	int32_t										index										= -1;
-	::gpk::pobj<::gpk::SDialogSlider>			slider;
+	int32_t						index										= -1;
+	::gpk::pobj<::gpk::SDialogSlider>	slider;
 	gpk_necall(index = dialog.Create(slider), "%s", "Out of memory?");
 	gpk_necall(slider->IdButton = ::gpk::controlCreateChild(*dialog.GUI, slider->IdGUIControl), "%s", "Out of memory?");
 	::gpk::SControlTable						& controlTable								= dialog.GUI->Controls;
@@ -201,22 +201,22 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	}
 	else
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].IsPressed()) {	//
-			::gpk::SInput															& input										= *dialog.Input;
-			const int64_t															valuePage									= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
-			const ::gpk::n2<int16_t>											& controlButtonPosition						= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
+			::gpk::SInput				& input						= *dialog.Input;
+			const int64_t				valuePage					= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
+			const ::gpk::n2<int16_t>	& controlButtonPosition		= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
-				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
+				const int64_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
 				gpk_necs(::gpk::sliderSetValue(slider, finalValue));
 			}
 			else {
-				const int64_t															finalValue									= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
+				const int64_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
 				gpk_necs(::gpk::sliderSetValue(slider, finalValue));
 			}
 		}
 	return 0;
 }
 
-::gpk::error_t			gpk::editBoxCreate		(::gpk::SDialog			& dialog )								{
+::gpk::error_t			gpk::editBoxCreate		(::gpk::SDialog & dialog)								{
 	int32_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogEditBox>	editBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
@@ -232,14 +232,14 @@ stacxpr	const uint32_t									heightOfField								= 18;
 	}
 	return 0;
 }
-::gpk::error_t			gpk::viewportCreate		(::gpk::SDialog			& dialog)								{
+::gpk::error_t			gpk::viewportCreate		(::gpk::SDialog & dialog) {
 	int32_t						index					= -1;
 	::gpk::pobj<::gpk::SDialogViewport>	viewport;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necs(index = dialog.Create(viewport));
 	controlTable.Draw[viewport->IdGUIControl].UseNewPalettes	= true;
 	controlTable.Draw[viewport->IdGUIControl].FrameOut			= true;
-	controlTable.Modes[viewport->IdGUIControl].NoHover			= true;
+	//controlTable.Modes[viewport->IdGUIControl].NoHover			= true;
 	controlTable.Placement[viewport->IdGUIControl].Margin		= {};
 	::gpk::memcpy_s(controlTable.Draw[viewport->IdGUIControl].Palettes.Storage, dialog.Colors->Viewport.Storage);
 	{ // Create field group
