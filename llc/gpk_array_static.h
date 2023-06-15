@@ -44,28 +44,18 @@ namespace gpk
 	template<typename T, uint32_t _sizeArray>	
 	using astatic	= ::gpk::array_static<T, _sizeArray>;
 
-	template<uint32_t _sizeArray>	using astaticc		= ::gpk::array_static<char    , _sizeArray>;
-	template<uint32_t _sizeArray>	using astaticuc 	= ::gpk::array_static<uchar_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astaticu8 	= ::gpk::array_static<uint8_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astaticu16	= ::gpk::array_static<uint16_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using astaticu32	= ::gpk::array_static<uint32_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using astaticu64	= ::gpk::array_static<uint64_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using astatici8 	= ::gpk::array_static<int8_t  , _sizeArray>;
-	template<uint32_t _sizeArray>	using astatici16	= ::gpk::array_static<int16_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astatici32	= ::gpk::array_static<int32_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astatici64	= ::gpk::array_static<int64_t , _sizeArray>;
-
-	template<uint32_t _sizeArray>	using astc		= ::gpk::array_static<char    , _sizeArray>;
-	template<uint32_t _sizeArray>	using astuc 	= ::gpk::array_static<uchar_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astu8 	= ::gpk::array_static<uint8_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using astu16	= ::gpk::array_static<uint16_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using astu32	= ::gpk::array_static<uint32_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using astu64	= ::gpk::array_static<uint64_t, _sizeArray>;
-	template<uint32_t _sizeArray>	using asti8 	= ::gpk::array_static<int8_t  , _sizeArray>;
-	template<uint32_t _sizeArray>	using asti16	= ::gpk::array_static<int16_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using asti32	= ::gpk::array_static<int32_t , _sizeArray>;
-	template<uint32_t _sizeArray>	using asti64	= ::gpk::array_static<int64_t , _sizeArray>;
-
+	template<uint32_t _sizeArray>	using astaticc		= ::gpk::astatic<char     , _sizeArray>; template<uint32_t _sizeArray>	using astc			= ::gpk::astatic<char     , _sizeArray>; template<uint32_t _sizeArray>	using astchar	= ::gpk::astatic<char    , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticuc 	= ::gpk::astatic<uchar_t  , _sizeArray>; template<uint32_t _sizeArray>	using astuc 		= ::gpk::astatic<uchar_t  , _sizeArray>; template<uint32_t _sizeArray>	using astuchar 	= ::gpk::astatic<uchar_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu8 	= ::gpk::astatic<uint8_t  , _sizeArray>; template<uint32_t _sizeArray>	using astu8 		= ::gpk::astatic<uint8_t  , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu16	= ::gpk::astatic<uint16_t , _sizeArray>; template<uint32_t _sizeArray>	using astu16		= ::gpk::astatic<uint16_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu32	= ::gpk::astatic<uint32_t , _sizeArray>; template<uint32_t _sizeArray>	using astu32		= ::gpk::astatic<uint32_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticu64	= ::gpk::astatic<uint64_t , _sizeArray>; template<uint32_t _sizeArray>	using astu64		= ::gpk::astatic<uint64_t , _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici8 	= ::gpk::astatic<int8_t   , _sizeArray>; template<uint32_t _sizeArray>	using asti8 		= ::gpk::astatic<int8_t   , _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici16	= ::gpk::astatic<int16_t  , _sizeArray>; template<uint32_t _sizeArray>	using asti16		= ::gpk::astatic<int16_t  , _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici32	= ::gpk::astatic<int32_t  , _sizeArray>; template<uint32_t _sizeArray>	using asti32		= ::gpk::astatic<int32_t  , _sizeArray>;
+	template<uint32_t _sizeArray>	using astatici64	= ::gpk::astatic<int64_t  , _sizeArray>; template<uint32_t _sizeArray>	using asti64		= ::gpk::astatic<int64_t  , _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticf32	= ::gpk::astatic<float32_t, _sizeArray>; template<uint32_t _sizeArray>	using astf32		= ::gpk::astatic<float32_t, _sizeArray>;
+	template<uint32_t _sizeArray>	using astaticf64	= ::gpk::astatic<float64_t, _sizeArray>; template<uint32_t _sizeArray>	using astf64		= ::gpk::astatic<float64_t, _sizeArray>;
 #pragma pack(pop)
 
 	template <typename T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}
