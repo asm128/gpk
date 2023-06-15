@@ -166,7 +166,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		::viewportUpdate(gui, desktop, input, iViewport);
 	}
 
-	::gpk::au32													controlsToProcess						= {};
+	::gpk::acid					controlsToProcess						= {};
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 
 	bool																			inControlArea						= false;

@@ -11,10 +11,10 @@ namespace gpk
 	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SUIInputBox {
-		int32_t					IdRoot				= {};
-		int32_t					IdText				= {};
+		cid_t					IdRoot				= {};
+		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
-		::gpk::apod<char>		Text				= {};
+		::gpk::achar			Text				= {};
 		uint32_t				MaxLength			= 16;
 		bool					Editing				= false;
 
@@ -27,13 +27,13 @@ namespace gpk
 		}
 		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::SSysEvent> frameEvents, ::gpk::vcu32 processableControls) { 
+		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::SSysEvent> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
 			int32_t						handledControl		= 0;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](int32_t iControl) {
+			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
 					return handledControl = iControl;
 				return 0;

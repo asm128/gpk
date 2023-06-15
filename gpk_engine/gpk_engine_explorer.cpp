@@ -38,7 +38,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 }
 
 ::gpk::error_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::view<::gpk::SSysEvent> queuedEvents) {
-	::gpk::au32					controlsToProcess	= {};
+	::gpk::acid					controlsToProcess	= {};
 	::gpk::SGUI					& gui				= editor.GUI.GUI;
 	::gpk::guiProcessInput(gui, input, queuedEvents);
 
@@ -58,7 +58,7 @@ static	::gpk::error_t	menuInit		(::gpk::SGUI & gui, ::gpk::ai32 & idButtons) {
 		}
 	}
 	else {
-		::gpk::guiProcessControls(gui, controlsToProcess, [&](uint32_t iControl) {
+		::gpk::guiProcessControls(gui, controlsToProcess, [&](cid_t iControl) {
 			//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
 			editor.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
 			editor.InputBox.Edit(gui, gui.Controls.Events[iControl].Execute);

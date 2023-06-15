@@ -263,7 +263,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable,
 	return 0;
 }
 
-::gpk::error_t			gpk::controlCreateChild	(::gpk::SGUI & gui, int32_t iParent)						{
+::gpk::cid_t			gpk::controlCreateChild	(::gpk::SGUI & gui, int32_t iParent)						{
 	int32_t						idControl				= ::gpk::controlCreate(gui);
 	::gpk::controlSetParent(gui, idControl, iParent);
 	return idControl;
@@ -296,7 +296,7 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable,
 	return iControl;
 }
 
-::gpk::error_t			gpk::controlCreate		(::gpk::SGUI & gui)							{
+::gpk::cid_t			gpk::controlCreate		(::gpk::SGUI & gui)							{
 	gpk_necs(::uiColorsSetupDefault(gui.Colors));
 
 	if(0 == gui.Fonts.size())
@@ -671,17 +671,17 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	return 0;
 }
 
-::gpk::error_t			gpk::controlHidden		(const ::gpk::SGUI & gui, int32_t iControl)	{
+::gpk::error_t			gpk::controlHidden		(const ::gpk::SGUI & gui, cid_t iControl)	{
 	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].IsHidden();
 	return imHidden ? imHidden : (false == ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent) && ::gpk::controlHidden(gui, gui.Controls.States[iControl].Parent));
 }
 
-::gpk::error_t			gpk::controlDisabled	(const ::gpk::SGUI & gui, int32_t iControl)	{
+::gpk::error_t			gpk::controlDisabled	(const ::gpk::SGUI & gui, cid_t iControl)	{
 	bool						imDisabled				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].IsDisabled();
 	return imDisabled ? imDisabled : (false == ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent) && ::gpk::controlDisabled(gui, gui.Controls.States[iControl].Parent));
 }
 
-::gpk::error_t			gpk::controlMetricsInvalidate	(::gpk::SGUI & gui, int32_t iControl)	{
+::gpk::error_t			gpk::controlMetricsInvalidate	(::gpk::SGUI & gui, cid_t iControl)	{
 	gui.Controls.SetUpdated(iControl, false);
 	const ::gpk::vi32			& controlChildren		= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild)
@@ -690,7 +690,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	return 0;
 }
 
-::gpk::error_t			gpk::guiGetProcessableControls	(const ::gpk::SGUI & gui, ::gpk::au32& controlIndices)													{
+::gpk::error_t			gpk::guiGetProcessableControls	(const ::gpk::SGUI & gui, ::gpk::acid & controlIndices)													{
 	for(uint32_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {	// Only process root parents
 		const ::gpk::SControlState	& controlState					= gui.Controls.States[iControl];
 		if(controlState.IsUnused() || gui.Controls.Modes[iControl].NoExecute || ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl))
@@ -700,7 +700,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	return controlIndices.size();
 }
 
-::gpk::error_t			gpk::controlTextSet		(::gpk::SGUI & gui, int32_t iControl, const ::gpk::vcs& text)				{
+::gpk::error_t			gpk::controlTextSet		(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs& text)				{
 	::gpk::vcs					& oldText				= gui.Controls.Text[iControl].Text;
 	if(text.begin	() != oldText.begin()
 	 || text.size	() != oldText.size()
@@ -711,7 +711,7 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	return 0;
 }
 
-::gpk::error_t			gpk::controlFontSet		(::gpk::SGUI & gui, int32_t iControl, int16_t iFont)				{
+::gpk::error_t			gpk::controlFontSet		(::gpk::SGUI & gui, cid_t iControl, int16_t iFont)				{
 	int16_t						& oldText				= gui.Controls.Text[iControl].FontSelected;
 	if(iFont != oldText) {
 		oldText					= iFont;
@@ -720,15 +720,15 @@ static	::gpk::error_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInp
 	return 0;
 }
 
-::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute) {
-	::gpk::au32					controlsToProcess			= {};
+::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(cid_t iControl)> & funcOnExecute) {
+	::gpk::acid					controlsToProcess			= {};
 	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
 }
 
-::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcu32 controlsToProcess, const ::std::function<::gpk::error_t(uint32_t iControl)> & funcOnExecute) {
+::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::std::function<::gpk::error_t(cid_t iControl)> & funcOnExecute) {
 	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
-		const uint32_t				idControl					= controlsToProcess[iControl];
+		const ::gpk::cid_t			idControl					= controlsToProcess[iControl];
 		const ::gpk::SControlEvent	& controlState				= gui.Controls.Events[idControl];
 		if(controlState.Execute) {
 			info_printf("Executed control %i (0x%x).", idControl, idControl);
