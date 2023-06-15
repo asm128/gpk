@@ -151,7 +151,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 	int32_t						result						= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		int32_t						idControl					= ::gpk::controlCreate(gui);
@@ -196,7 +196,7 @@
 	return result;
 }
 
-::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vi32 out_ids) {
+::gpk::error_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, int32_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 	SControlPlacement			controlArgs					= {};
 	controlArgs.Align		= controlAlign;
 	controlArgs.Area		= {offset, buttonSize.i16()};
