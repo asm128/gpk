@@ -71,7 +71,7 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\gpk\gpk; </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../../gpk/gpk; </AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

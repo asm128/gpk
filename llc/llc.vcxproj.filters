@@ -764,6 +764,9 @@
     <ClCompile Include="gpk_gui_control_list.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="llc_header_checkingg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="gpk_config.json" />

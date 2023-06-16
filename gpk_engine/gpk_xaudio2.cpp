@@ -240,14 +240,10 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 ::gpk::error_t			gpk::AUDIO_STATE::PrepareAudio(const ::gpk::vcc & wavname) {
 	safe_destroySourceVoice(SourceVoice);
 
-	// Search for media
-	char strFilePath[ 4096 ] = {};
-	sprintf_s(strFilePath, "./%s", ::gpk::toString(wavname).begin());
-
 	// Read in the wave file
 	const WAVEFORMATEX* pwfx = 0;
 	::gpk::view<const uint8_t> audioView			= {};
-	gpk_necs(DirectX::LoadWAVAudioFromFile( ::gpk::vcs{strFilePath}, WaveData, &pwfx, audioView));
+	gpk_necs(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
 	ree_if(pwfx->nChannels == INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
 

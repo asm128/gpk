@@ -90,9 +90,6 @@
     <ClCompile Include="..\llc\gpk_gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\llc\gpk_gui_control.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\llc\gpk_gui_desktop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -201,7 +198,19 @@
     <ClCompile Include="..\llc\gpk_xml_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="llc_header_checkingg.cpp">
+    <ClCompile Include="..\llc\gpk_gui_control_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_gui_viewport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_gui_inputbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\gpk_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\llc\llc_header_checkingg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

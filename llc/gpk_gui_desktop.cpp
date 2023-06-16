@@ -147,7 +147,7 @@ static	::gpk::error_t	clearMenuHierarchy	(::gpk::SGUI & gui, ::gpk::SDesktop & d
 
 static	int64_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input, ::gpk::cid_t iViewport)							{
 	::gpk::SViewport			& vp				= desktop.Items.Viewports[iViewport];
-	if(gui.Controls.Events[vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].Execute)
+	if(gui.Controls.States[vp.IdControls[::gpk::VIEWPORT_CONTROL_CLOSE]].IsAction())
 		::gpk::desktopDeleteViewport(gui, desktop, iViewport);
 	else if(gui.Controls.IsPressed(vp.IdControls[::gpk::VIEWPORT_CONTROL_TITLE]))
 		::pushToFrontAndDisplace(gui, vp.IdControl, input);
@@ -180,14 +180,14 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 	//bool						anyControlPressed					= false;
 	for(uint32_t iControlToProcess = 0, countControls = controlsToProcess.size(); iControlToProcess < countControls; ++iControlToProcess) {
 		const uint32_t				iControl							= controlsToProcess[iControlToProcess];
-		const ::gpk::SControlEvent	& controlState						= gui.Controls.Events[iControl];
 		const ::gpk::SControlArea	& controlMetrics					= gui.Controls.Metrics[iControl];
+		const ::gpk::SControlState	& controlState						= gui.Controls.States[iControl];
 		if(iControl != (uint32_t)desktop.IdControl)
 			inControlArea			= inControlArea || ::gpk::in_range(gui.CursorPos.i16(), controlMetrics.Total.Global);
 		//if(controlState.Pressed && (int32_t)iControl != app.Desktop.IdControl)
 		//	anyControlPressed															= true;
 
-		if(controlState.Execute) {
+		if(controlState.IsAction()) {
 			info_printf("Executed %u.", iControl);
 			::clearMenuHierarchy(gui, desktop);
 		}
@@ -204,10 +204,9 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 
 		::gpk::SControlList					& parentMenu		= menus[menu.IndexParentList];
 		const ::gpk::SControlState			& parentItemState	= gui.Controls.States[parentMenu.IdControls[menu.IndexParentItem]];
-		const ::gpk::SControlEvent			& parentItemEvent	= gui.Controls.Events[parentMenu.IdControls[menu.IndexParentItem]];
 		if(parentItemState.IsHovered()) {
 			::unhideMenuHierarchy(gui, desktop, menu);
-			if(parentItemEvent.Execute) {
+			if(parentItemState.IsAction()) {
 				::clearMenuHierarchy(gui, desktop);
 				::selectMenuHierarchy(gui, desktop, menu);
 				selectedMenu																= true;
@@ -220,7 +219,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 				::unhideMenuHierarchy(gui, desktop, menu);
 
 			else if(parentMenu.IdSelected != menu.IndexParentItem)
-				controlStateMenu.SetHidden(gui.Controls.Events[menu.IdControl], true);
+				gui.Controls.SetHidden(menu.IdControl, true);
 		}
 	}
 
@@ -241,7 +240,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		::gpk::SControlList																& menu								= menus[iMenu];
 		bool																			eventFound							= false;
 		for(uint32_t iItem = 0, countItems = menu.IdControls.size(); iItem < countItems; ++iItem) {
-			if(false == gui.Controls.Events[menu.IdControls[iItem]].Execute)
+			if(false == gui.Controls.States[menu.IdControls[iItem]].IsAction())
 				continue;
 			if(desktop.Children[iMenu].size() < menu.IdControls.size())
 				desktop.Children[iMenu].resize(menu.IdControls.size(), -1);
@@ -265,10 +264,10 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		return 0;
 	controlList.IndexParentList = iParentControlList;
 	controlList.IndexParentItem	= iParentListItem;
-	::gpk::SControlState		& controlListStates			= gui.Controls.States[controlList.IdControl];
+	
 	if((desktop.Items.ControlLists.size() <= (uint32_t)iParentControlList) || desktop.Items.ControlLists.Unused[iParentControlList]) {
 		ree_if(-1 != iParentControlList, "Invalid parent control list: %i. List item: %i.", iParentControlList, iParentListItem);
-		controlListStates.SetHidden(gui.Controls.Events[controlList.IdControl], false);
+		gui.Controls.SetHidden(controlList.IdControl, false);
 	}
 	else { // update tree
 		::gpk::SControlList			& parentControlList			= desktop.Items.ControlLists[iParentControlList];
@@ -282,11 +281,11 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item: %i.", iParentListItem);
 		::gpk::SControlConstraints	& controlListConstraints	= gui.Controls.Constraints[controlList.IdControl];
 		if(iParentListItem == -1) 
-			controlListStates.SetHidden(gui.Controls.Events[controlList.IdControl], false);
+			gui.Controls.SetHidden(controlList.IdControl, false);
 		else {
 			controlList.Orientation	= ::gpk::DIRECTION_DOWN;
 			parentChildren[iParentListItem]	= iControlList;
-			controlListStates.SetHidden(gui.Controls.Events[controlList.IdControl], true);
+			gui.Controls.SetHidden(controlList.IdControl, true);
 			::gpk::controlListArrange(gui, parentControlList);
 			if(controlList.Orientation != ::gpk::DIRECTION_RIGHT)
 				controlListConstraints.DockToControl.Left	= parentControlList.IdControls[iParentListItem];

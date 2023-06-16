@@ -6,8 +6,6 @@
 #include "gpk_array_static.h"
 
 #include "gpk_image_color.h"
-#include "gpk_sysevent.h"
-
 
 #ifndef GPK_GUI_CONTROL_H_29038749823613
 #define GPK_GUI_CONTROL_H_29038749823613
@@ -38,10 +36,24 @@ namespace gpk
 		bool			YOffset				: 1; //
 		bool			XSize				: 1; //
 		bool			YSize				: 1; //
+
 		bool			BorderLeft			: 1; //
 		bool			BorderTop			: 1; //
 		bool			BorderRight			: 1; //
 		bool			BorderBottom		: 1; //
+		bool			MarginLeft			: 1; //
+		bool			MarginTop			: 1; //
+		bool			MarginRight			: 1; //
+		bool			MarginBottom		: 1; //
+
+		bool			MinXOffset			: 1; //
+		bool			MinYOffset			: 1; //
+		bool			MinXSize			: 1; //
+		bool			MinYSize			: 1; //
+		bool			MaxXOffset			: 1; //
+		bool			MaxYOffset			: 1; //
+		bool			MaxXSize			: 1; //
+		bool			MaxYSize			: 1; //
 	};
 
 	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, uint8_t)
@@ -53,7 +65,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_DISABLED	, 5);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_HOVER		, 6);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, SELECTED_PRESSED	, 7);
-	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, EXECUTE				, 8);
+	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, ACTION				, 8);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, OUTDATED			, 9);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, COUNT				, 10);
 	
@@ -133,6 +145,19 @@ namespace gpk
 		::gpk::tri2i16				Triangles	[8]		= {};
 	};
 
+	struct SControlRectangleGPU {
+		::gpk::rect2f32				Local				= {};
+		::gpk::rect2f32				Global				= {};
+	};
+
+	struct SControlAreaGPU {
+		::gpk::SControlRectangleGPU	Total				= {};
+		::gpk::SControlRectangleGPU	Client				= {};
+		::gpk::rect2f32				Text				= {};
+		::gpk::rect2f32				Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
+		::gpk::tri2f32				Triangles	[8]		= {};
+	};
+
 	struct SControlAttachId {
 		cid_t						IdControl			: 15;
 		cid_t						Total				: 1;
@@ -162,11 +187,10 @@ namespace gpk
 		::gpk::ALIGN				Align				= ::gpk::ALIGN_TOP_LEFT;
 	}; 
 
-	// The large amoutn of pointless casts written in this function is because idiots can't handle C types so some other retards decided to add this stupid rule into the standard .
-	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = ::gpk::recti32{ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom}.u16();	 }
-	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u16   & ncSpacing)	noexcept	{ ncSpacing = ::gpk::n2i32  {ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}.u16(); }
-	stincxp	::gpk::rectu16	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ::gpk::recti32		{ctl.Border.Left + ctl.Margin.Left, ctl.Border.Top + ctl.Margin.Top, ctl.Border.Right + ctl.Margin.Right, ctl.Border.Bottom + ctl.Margin.Bottom}.u16(); }
-	stincxp	::gpk::n2u16	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ::gpk::n2i32		{ctl.Border.Left + ctl.Margin.Left + ctl.Border.Right + ctl.Margin.Right, ctl.Border.Top + ctl.Margin.Top + ctl.Border.Bottom + ctl.Margin.Bottom}.u16(); }
+	stincxp	::gpk::rectu16	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
+	stacxpr	::gpk::n2u16	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2i32{rc.Left + rc.Right, rc.Top + rc.Bottom}.u16(); }
+	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
+	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u16   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
 
 	struct SControlText {
 		::gpk::vcs			Text				= {};
@@ -188,22 +212,22 @@ namespace gpk
 		::gpk::apod<::gpk::SControlConstraints	>	Constraints		= {};
 		::gpk::apod<::gpk::SControlMode			>	Modes			= {};
 		::gpk::apod<::gpk::SControlDraw			>	Draw			= {};
-		::gpk::apod<::gpk::SControlEvent		>	Events			= {};
 		::gpk::apod<::gpk::SRelativeBit			>	RelativeBit		= {};
 		::gpk::aobj<::gpk::SControlText			>	Text			= {};
-		::gpk::aobj<::gpk::acid					>	Children		= {};
 		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
+		::gpk::aobj<::gpk::acid					>	Children		= {};
+		//
+		::gpk::apobj<::gpk::SSystemEvent		>	EventQueue		= {};
 
-		::gpk::apod<::gpk::SSystemEvent			>	EventQueue		= {};
-
-		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (Events[iControl], value); }
-		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (Events[iControl], value); }
-		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (Events[iControl], value); }
-		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (Events[iControl], value); }
-		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (Events[iControl], value); }
-		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (Events[iControl], value); }
-		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (Events[iControl], value); }
-		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (Events[iControl], value); }
+		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (iControl, EventQueue, value); }
+		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (iControl, EventQueue, value); }
+		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (iControl, EventQueue, value); }
+		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (iControl, EventQueue, value); }
+		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (iControl, EventQueue, value); }
+		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (iControl, EventQueue, value); }
+		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (iControl, EventQueue, value); }
+		inline	bool		SetAction		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetAction   (iControl, EventQueue, value); }
+		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (iControl, EventQueue, value); }
 
 		inline	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
 		inline	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
@@ -212,6 +236,7 @@ namespace gpk
 		inline	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
 		inline	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
 		inline	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
+		inline	bool		IsAction		(cid_t iControl)		const	noexcept	{ return States[iControl].IsAction	(); }
 		inline	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
 	};
 

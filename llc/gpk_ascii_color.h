@@ -69,7 +69,7 @@ namespace gpk
 		};
 
 	// Swaps the background color and the font color.
-	inlcxpr	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return (ASCII_COLOR)(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
+	inlcxpr	ASCII_COLOR			ascii_color_invert		(const ASCII_COLOR color)				{ return ASCII_COLOR(((color & 0xF0) >> 4) | ((color & 0xF) << 4));	}
 }
 
 // BLINK	128

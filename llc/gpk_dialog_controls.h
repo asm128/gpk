@@ -52,7 +52,7 @@ namespace gpk
 		SDialogViewportSettings	Settings			= {};
 		SDialogViewportSettings	SettingsOld			= {};
 
-		virtual	::gpk::error_t	Update				()							{ return ::gpk::viewportUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::viewportUpdate(*this); }
 	};
 #pragma pack(pop)
 
@@ -60,13 +60,13 @@ namespace gpk
 		::gpk::minmax<uint32_t>	Selection			= {};
 		::gpk::apod<char>		String				= {};
 
-		virtual	::gpk::error_t	Update				()							{ return ::gpk::editBoxUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::editBoxUpdate(*this); }
 	};
 
 	struct SDialogCheckBox : public ::gpk::IDialogControl {
 		bool					Checked				= false;
 
-		virtual	::gpk::error_t	Update				()							{ return ::gpk::checkBoxUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::checkBoxUpdate(*this); }
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
@@ -85,7 +85,7 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				()							{ return ::gpk::sliderUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::sliderUpdate(*this); }
 	};
 
 	template<typename _tValue>
@@ -106,15 +106,28 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				()							{ 
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> eventsIn) { 
 			::gpk::SDialog				& dialog			= *Dialog;
 			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
-			if(controlTable.Events[IdDecrease].Execute || controlTable.Events[IdIncrease].Execute) {
-				if(controlTable.Events[IdDecrease].Execute)
-					return SetValue(ValueCurrent - 1);
-				else if(controlTable.Events[IdIncrease].Execute)
-					return SetValue(ValueCurrent + 1);
+			for(uint32_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
+				if(eventsIn[iEvent]->Type == ::gpk::SYSTEM_EVENT_GUI) {
+					::gpk::extractAndHandle<::gpk::SYSTEM_EVENT, ::gpk::EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & eventGui) {
+						switch(eventGui.Type) {
+						default: break;
+						case ::gpk::EVENT_GUI_CONTROL_StateChange: {
+							const ::gpk::SChangeControlState	stateChange		= *(const ::gpk::SChangeControlState*)eventGui.Data.begin();
+							if((stateChange.Set & ::gpk::GUI_CONTROL_FLAG_Action) && stateChange.Id == IdDecrease) 
+								 return SetValue(ValueCurrent - 1);
+							else if((stateChange.Set & ::gpk::GUI_CONTROL_FLAG_Action) && stateChange.Id == IdIncrease) 
+								return SetValue(ValueCurrent + 1);
+							break;
+						}
+						}
+						return 0;
+					});
+				}
 			}
+
 			return 0;
 		}
 

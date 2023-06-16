@@ -74,16 +74,20 @@
 #endif
 
 // These aliases make keyword width to be consistent and makes the code less verbose.
-#define inlcxpr	inline constexpr
-#define stacxpr	static constexpr
-#define stainli	static inline
-#define stincxp	static inline constexpr
 #define cnstxpr	constexpr
+#define inlcxpr	inline cnstxpr
+#define stacxpr	static cnstxpr
+#define stainli	static inline
+#define stincxp	stainli	cnstxpr
+#define nodscrd [[nodiscard]]
+#define nodcxpr nodscrd cnstxpr
+#define nodstin nodscrd stainli
+#define nodstxp nodscrd stacxpr
 
 namespace gpk
 {
 	// -- Returns 0 on little-endian machines
-	stainli	int				test_endianness			()		noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
+	stainli int				test_endianness			()		noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
 }
 
 #endif // GPK_PLATFORM_GLOBALS_H_298365465465

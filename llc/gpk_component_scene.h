@@ -14,11 +14,12 @@ namespace gpk {
 	GDEFINE_ENUM_VALUE(COMPONENT_FILE_TYPE, STL			, 1);
 	GDEFINE_ENUM_VALUE(COMPONENT_FILE_TYPE, PNG			, 2);
 
-	GDEFINE_ENUM_TYPE(BOUNDINGPRIMITIVE_TYPE, uint8_t); // bit field
+	GDEFINE_ENUM_TYPE(BOUNDINGPRIMITIVE_TYPE, uint8_t); //
 	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, SPHERE	, 1);
 	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, BOX		, 2);
-	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, PLANE	, 3);
+	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, GRID		, 3);
 	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, TORUS	, 4);
+	GDEFINE_ENUM_VALUE(BOUNDINGPRIMITIVE_TYPE, CYLINDER	, 5);
 
 	GDEFINE_FLAG_TYPE(GLIGHT_TYPE, uint8_t); // bit field
 	GDEFINE_FLAG_VALUE(GLIGHT_TYPE, NONE				, 0);
@@ -116,7 +117,7 @@ namespace gpk {
 		{}
 	};
 
-	struct SBodyVolume {
+	struct SBodyVolumeOld {
 		double							Radius							= 0;
 		::gpk::minmax<::gpk::n3f32>		Limits							= {{-1, -1, -1}, {1, 1, 1}};
 		::gpk::n3f32					Center							= {0, 0, 0};
@@ -261,7 +262,7 @@ namespace gpk {
 		::gpk::SKeyedArrayPOD<::gpk::SLight					>	Lights					= {};
 		::gpk::SKeyedArrayPOD<::gpk::SCamera				>	Cameras					= {};
 		::gpk::SKeyedArrayPOD<::gpk::SRenderNodeTransform	>	Transforms				= {};
-		::gpk::SKeyedArrayPOD<::gpk::SBodyVolume			>	BoundingVolumes			= {};
+		::gpk::SKeyedArrayPOD<::gpk::SBodyVolumeOld			>	BoundingVolumes			= {};
 		//
 		::gpk::SKeyedArrayOBJ<::gpk::SRenderNode>			Nodes					= {};
 		//

@@ -188,7 +188,7 @@ static	::gpk::error_t	uiColorsSetupDefault (::gpk::SGUIColors & guiColors) {
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_DISABLED	]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_HOVER		]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_SELECTED_PRESSED		]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
-	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_EXECUTE				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
+	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_ACTION				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	guiColors.DefaultColors[::gpk::GUI_CONTROL_PALETTE_OUTDATED				]	= (uint16_t)guiColors.Palettes.push_back({{::gpk::BLUE		, ::gpk::ORANGE	, ::gpk::YELLOW, ::gpk::MAGENTA, ::gpk::CYAN, {}, ::gpk::WHITE				,}});
 	return 0;
 }
@@ -261,7 +261,9 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 #endif
 			}
 	}
+#if defined(GPK_DEBUG_ENABLED)
 	gerror_if(childrenRemoved > 1, "Parent should not reference a child control more than once. References found: %i.", childrenRemoved);
+#endif
 	gui.Controls.SetUnused(iControl, true);
 	return 0;
 }
@@ -462,7 +464,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		controlMetrics.Text.Offset	+= controlMetrics.Client.Global.Offset.i16();
 	}
 	::buildControlGeometry(controlPlacement, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
-	controlState.SetUpdated(gui.Controls.Events[iControl], true);
+	gui.Controls.SetUpdated(iControl, true);
 	
 	return 0;
 }
@@ -483,37 +485,36 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	return 0;
 }
 
-static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SControlState & controlState, ::gpk::SControlEvent & controlEvent, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
+static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SControlState & controlState, const ::gpk::SInput & inputSystem, bool disabled)	noexcept	{
 	if(controlState.IsHovered()) {
 		if(inputSystem.ButtonDown(0) && false == controlState.IsPressed())
-			controlState.SetPressed(controlEvent, true);
+			gui.Controls.SetPressed(iControl, true);
 		else if(inputSystem.ButtonUp(0))
-			controlState.SetPressed(controlEvent, false);
+			gui.Controls.SetPressed(iControl, false);
 	}
 	else {
 		if(false == disabled) {
-			controlState.SetHovered(controlEvent, true);//controlFlags.Disabled;
+			gui.Controls.SetHovered(iControl, true);//controlFlags.Disabled;
 		}
 	}
 	return one_if(controlState.IsHovered());
 }
 
-static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput& input, ::gpk::cid_t iControl)														{
+static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::cid_t iControl)														{
 	//--------------------
 	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
-	::gpk::SControlEvent		& controlEvents			= gui.Controls.Events[iControl];
 	::gpk::cid_t				controlHovered			= -1;
 	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Metrics[iControl].Total.Global)) {
-		if(false == gui.Controls.Modes[iControl].NoHover) {
+		if(false == gui.Controls.Modes[iControl].NoHover) { // TODO: use states instead.
 			controlHovered		= iControl;
-			::updateGUIControlHovered(controlState, controlEvents, input, ::gpk::controlDisabled(gui, iControl));
+			::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl));
 		}
 	}
 	else {
-		controlState.SetHovered(controlEvents, false);
+		gui.Controls.SetHovered(iControl, false);
 
 		if(input.ButtonUp(0)) 
-			controlState.SetPressed(controlEvents, false);
+			gui.Controls.SetPressed(iControl, false);
 	}
 	{
 		::gpk::vcid					& children				= gui.Controls.Children[iControl];
@@ -523,7 +524,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 			::gpk::cid_t				controlPressed			= ::controlProcessInput(gui, input, children[iChild]);
 			if(gui.Controls.States.size() > (uint32_t)controlPressed) {
 				//controlState.Hover		= false;
-				controlState.SetPressed(controlEvents, false);
+				gui.Controls.SetPressed(iControl, false);
 				controlHovered			= controlPressed;
 			}
 		}
@@ -535,6 +536,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 	if(0 == gui.LastSize.LengthSquared()) 
 		return 0;
 
+	gui.Controls.EventQueue.clear();
 	es_if(errored(::gpk::guiUpdateMetrics(gui, gui.LastSize, false)));
 	::gpk::cid_t				controlHovered			= -1;
 	::gpk::acid					rootControlsToProcess	= {};
@@ -548,8 +550,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 		if(controlState.IsDisabled())
 			continue;
 
-		::gpk::SControlEvent		& controlEvent			= gui.Controls.Events[iControl];// Clear events that only last one tick.
-		controlEvent			= {};
+		gui.Controls.SetAction((::gpk::cid_t)iControl, false);
 
 		if(false == ::gpk::controlInvalid(gui, controlState.Parent))
 			continue;
@@ -570,14 +571,10 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 
 	for(uint32_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
-			::gpk::SControlState		& controlState		= gui.Controls.States[iControl];
-			controlState.SetHovered(gui.Controls.Events[iControl], false);;
+			gui.Controls.SetHovered((::gpk::cid_t)iControl, false);;
 			if(0 == input.MouseCurrent.ButtonState[0])
-				controlState.SetPressed(gui.Controls.Events[iControl], false);
+				gui.Controls.SetPressed((::gpk::cid_t)iControl, false);
 		}
-		//else {
-		//	verbose_printf("Hovered: %u.", iControl);
-		//}
 	}
 	return controlHovered;
 }
@@ -654,8 +651,8 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 ::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::std::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
 	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
 		const ::gpk::cid_t			idControl					= controlsToProcess[iControl];
-		const ::gpk::SControlEvent	& controlState				= gui.Controls.Events[idControl];
-		if(controlState.Execute) {
+		const ::gpk::SControlState	& controlState				= gui.Controls.States[idControl];
+		if(controlState.IsAction()) {
 			info_printf("Executed control %i (0x%x).", idControl, idControl);
 			return funcOnExecute(idControl);
 		}
@@ -670,7 +667,6 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable,
 	controlTable.Constraints[iControl]	= {};
 	controlTable.Modes		[iControl]	= {};
 	controlTable.Draw		[iControl]	= {};
-	controlTable.Events		[iControl]	= {};
 	controlTable.RelativeBit[iControl]	= {};
 	controlTable.Text		[iControl]	= {};
 	controlTable.Children	[iControl]	= ::gpk::vcid{};
@@ -701,7 +697,6 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable,
 		, controlTable.States			
 		, controlTable.Modes			
 		, controlTable.Draw			
-		, controlTable.Events			
 		, controlTable.RelativeBit		
 		, controlTable.Children		
 		, controlTable.Images			

@@ -29,8 +29,8 @@ namespace gpk
 		constexpr				IDialogControl		()													: DeleteControl(0) {}
 		virtual					~IDialogControl		();
 
-		virtual	::gpk::error_t	Resize				(::gpk::n2<uint16_t>& newSize)					{ (void)newSize; return 0; }
-		virtual	::gpk::error_t	Update				()													= 0;
+		virtual	::gpk::error_t	Resize				(const ::gpk::n2<uint16_t> & newSize)				{ (void)newSize; return 0; }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> eventsIn)	= 0;
 	};
 	//template<typename _TDialogControl>
 	//::gpk::error_t										dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
@@ -80,8 +80,8 @@ namespace gpk
 
 		::gpk::error_t			Focus			(cid_t iControl)		{ 
 			ree_if(Controls.size() <= (uint32_t)(iControl) && iControl != -1, "Invalid control index: %i.", iControl); 
-			FocusedPrevious = FocusedCurrent; 
-			FocusedCurrent = iControl; 
+			FocusedPrevious	= FocusedCurrent; 
+			FocusedCurrent	= iControl; 
 			return 0; 
 		}
 
@@ -120,7 +120,7 @@ namespace gpk
 			return index;
 		}
 
-		::gpk::error_t			Update			()	{
+		::gpk::error_t			Update			()		{
 			if(0 == GUI.get_ref())
 				GUI.create();
 
@@ -141,7 +141,7 @@ namespace gpk
 			//	gpk_necall(::gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
-					Controls[iControl]->Update();
+					Controls[iControl]->Update(gui.Controls.EventQueue);
 
 			return 0;
 		}

@@ -60,9 +60,11 @@
     <ClCompile Include="..\llc\gpk_geometry.cpp" />
     <ClCompile Include="..\llc\gpk_geometry_lh.cpp" />
     <ClCompile Include="..\llc\gpk_gui.cpp" />
-    <ClCompile Include="..\llc\gpk_gui_control.cpp" />
+    <ClCompile Include="..\llc\gpk_gui_control_list.cpp" />
     <ClCompile Include="..\llc\gpk_gui_desktop.cpp" />
     <ClCompile Include="..\llc\gpk_gui_draw.cpp" />
+    <ClCompile Include="..\llc\gpk_gui_inputbox.cpp" />
+    <ClCompile Include="..\llc\gpk_gui_viewport.cpp" />
     <ClCompile Include="..\llc\gpk_https_client.cpp" />
     <ClCompile Include="..\llc\gpk_http_client.cpp" />
     <ClCompile Include="..\llc\gpk_i2c.cpp" />
@@ -84,6 +86,7 @@
     <ClCompile Include="..\llc\gpk_rigidbody.cpp" />
     <ClCompile Include="..\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
+    <ClCompile Include="..\llc\gpk_scene.cpp" />
     <ClCompile Include="..\llc\gpk_spi.cpp" />
     <ClCompile Include="..\llc\gpk_stdstring.cpp" />
     <ClCompile Include="..\llc\gpk_stl.cpp" />
@@ -97,7 +100,7 @@
     <ClCompile Include="..\llc\gpk_window.cpp" />
     <ClCompile Include="..\llc\gpk_windows.cpp" />
     <ClCompile Include="..\llc\gpk_xml_reader.cpp" />
-    <ClCompile Include="llc_header_checkingg.cpp" />
+    <ClCompile Include="..\llc\llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\llc\gpk_adam7.h" />
@@ -331,7 +334,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CppLanguageStandard>c++1z</CppLanguageStandard>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib; $(StlIncludeDirectories);$(Sysroot)\usr\include;$(Sysroot)\usr\include\$(AndroidHeaderTriple);$(VS_NdkRoot)\sources\android\support\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ..\..\gpk\llc; ..\..\zlib; $(StlIncludeDirectories);$(Sysroot)\usr\include;$(Sysroot)\usr\include\$(AndroidHeaderTriple);$(VS_NdkRoot)\sources\android\support\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>-Wno-unused-value -Wno-misleading-indentation</AdditionalOptions>
       <PreprocessorDefinitions />
@@ -340,7 +343,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <CppLanguageStandard>c++1z</CppLanguageStandard>
-      <AdditionalIncludeDirectories>..\..\gpk\llc; ..\..\zlib; $(StlIncludeDirectories);$(Sysroot)\usr\include;$(Sysroot)\usr\include\$(AndroidHeaderTriple);$(VS_NdkRoot)\sources\android\support\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ..\..\gpk\llc; ..\..\zlib; $(StlIncludeDirectories);$(Sysroot)\usr\include;$(Sysroot)\usr\include\$(AndroidHeaderTriple);$(VS_NdkRoot)\sources\android\support\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalOptions>-Wno-unused-value -Wno-misleading-indentation</AdditionalOptions>
       <PreprocessorDefinitions />

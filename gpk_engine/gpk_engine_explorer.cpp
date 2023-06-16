@@ -61,7 +61,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 		::gpk::guiProcessControls(gui, controlsToProcess, [&](cid_t iControl) {
 			//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
 			editor.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
-			editor.InputBox.Edit(gui, gui.Controls.Events[iControl].Execute);
+			editor.InputBox.Edit(gui, true);
 			return 0;
 		});
 	}

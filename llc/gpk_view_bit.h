@@ -35,7 +35,7 @@ namespace gpk
 			return {Element, (uint8_t)Offset};
 		}
 		
-		bool					operator*		()				{
+		bool					operator*		()		const	{
 			gthrow_if(Element == &End, "Invalid index: %u.", uint32_t(&Element - &Begin) + Offset);
 			return (*Element) & (1ULL << Offset);
 		}

@@ -25,7 +25,7 @@ namespace gpk
 		TView					GetView			(uint32_t client, bool resize = false)			{ 
 			::gpk::au64					& data			= Bits[client]; 
 			if(resize && FieldNames.size() > data.bit_count()) 
-				gpk_necs(data.resize_bits(FieldNames.size())); 
+				gsthrow_if(data.resize_bits(FieldNames.size())); 
 
 			return {data.begin(), ::gpk::min(FieldNames.size(), data.bit_count())}; 
 		}
@@ -53,7 +53,7 @@ namespace gpk
 
 			const ::gpk::au64			& data			= Bits[client]; 
 			return (index < data.bit_count())
-				? TView{data.begin(), data.bit_count()}[index]
+				? TViewConst{data.begin(), data.bit_count()}[index]
 				: 0
 				;
 		}

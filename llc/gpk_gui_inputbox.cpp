@@ -10,7 +10,7 @@
 	keys.push_back('!');
 	keys.push_back('?');
 	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
-	gui.Controls.States[vk.IdRoot].SetHidden(gui.Controls.Events[vk.IdRoot], true);
+	gui.Controls.SetHidden(vk.IdRoot, true);
 	return vk.IdRoot;
 }
 

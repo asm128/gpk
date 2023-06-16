@@ -6,23 +6,24 @@
 
 namespace gpk
 {
-	template<typename _tBitField> stainli	_tBitField	bit_clear		(_tBitField & state, _tBitField bitsToClear)							noexcept	{ return (state & bitsToClear)				? state &= ~bitsToClear	: state; }
-	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField & state, _tBitField bitsToSet  )							noexcept	{ return ((state & bitsToSet) != bitsToSet)	? state |= bitsToSet	: state; }
-	template<typename _tBitField> stainli	_tBitField	bit_set			(_tBitField & state, _tBitField bitsToSet, bool value)					noexcept	{ return value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
-	template<typename _tBitField> stincxp	_tBitField	bit_test		(_tBitField state, _tBitField bitsToTest)								noexcept	{ return ((state & bitsToTest) == bitsToTest) ? bitsToTest : (_tBitField)0; }
-	template<typename _tBitField> stacxpr	_tBitField	bit_set_masked	(_tBitField & state, _tBitField mask, _tBitField bitsToSet, bool value)	noexcept	{ return bit_test(mask, bitsToSet) ? bit_set(state, bitsToSet, value) : (_tBitField)0; }
-	template<typename _tBitField> stacxpr	_tBitField	bit_test_masked	(_tBitField state, _tBitField mask, _tBitField value)					noexcept	{ return bit_test(mask, value) ? bit_test(state, value) : (_tBitField)0; }
-	template<typename _tBitField> stincxp	_tBitField	bit_true		(_tBitField state, _tBitField bitsToTest)								noexcept	{ return bit_test(state, bitsToTest); }
-	template<typename _tBitField> stacxpr	_tBitField	bit_false		(_tBitField state, _tBitField bitsToTest)								noexcept	{
-		const _tBitField	bitsThatMatch		= (state & bitsToTest);
-		return _tBitField((bitsThatMatch == bitsToTest) ? 0 : bitsToTest & ~bitsThatMatch);
+	template<typename _tBit> nodstxp	_tBit	bit_clear		(const _tBit state, const _tBit bitsToClear)					noexcept	{ return (state & bitsToClear)				? state & ~bitsToClear	: state; }
+	template<typename _tBit> nodstxp	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet  )					noexcept	{ return ((state & bitsToSet) != bitsToSet)	? state | bitsToSet	: state; }
+	template<typename _tBit> nodstxp	_tBit	bit_set			(const _tBit state, const _tBit bitsToSet, const bool value)	noexcept	{ return value ? bit_set(state, bitsToSet) : bit_clear(state, bitsToSet); }
+	template<typename _tBit> stacxpr	_tBit	bit_test		(const _tBit state, const _tBit bitsToTest)						noexcept	{ return ((state & bitsToTest) == bitsToTest) ? state : (_tBit)0; }
+
+	template<typename _tBit> nodstxp	_tBit	bit_set_masked	(const _tBit state, const _tBit mask, const _tBit bitsToSet, const bool value)	noexcept	{ return (mask & bitsToSet) ? bit_set(state, mask & bitsToSet, value) : (_tBit)0; }
+	template<typename _tBit> stincxp	_tBit	bit_test_masked	(const _tBit state, const _tBit mask, const _tBit value)						noexcept	{ return (mask & value) ? bit_test(state, mask & value) : (_tBit)0; }
+	template<typename _tBit> stincxp	_tBit	bit_true		(const _tBit state, const _tBit bitsToTest)										noexcept	{ return bit_test(state, bitsToTest); }
+	template<typename _tBit> stacxpr	_tBit	bit_false		(const _tBit state, const _tBit bitsToTest)										noexcept	{
+		const _tBit		bitsThatMatch		= (state & bitsToTest);
+		return _tBit((bitsThatMatch == bitsToTest) ? 0 : (state | bitsToTest) ? state | bitsToTest : -1);
 	}
 
-	template<typename _tBitField> cnstxpr	_tBitField	bit_make		(uint8_t bitIndex)	noexcept	{
+	template<typename _tBit> cnstxpr	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
 #if defined(GPK_DEBUG_ENABLED)
-		rve_if((_tBitField)-1LL, bitIndex >= (sizeof(_tBitField) * PLATFORM_BYTE_BIT_COUNT), "Invalid bit index: %i", bitIndex);
+		rve_if((_tBit)-1LL, bitIndex >= (sizeof(_tBit) * PLATFORM_BYTE_BIT_COUNT), "Invalid bit index: %i", bitIndex);
 #endif
-		return (_tBitField)(((_tBitField)1) << bitIndex);
+		return (_tBit)(((_tBit)1) << bitIndex);
 	}
 
 	template<typename _tField>

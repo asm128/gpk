@@ -25,7 +25,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
 	::gpk::SGUI					& gui						= *framework.GUI;
 	app.IdExit				= ::gpk::controlCreate(gui);
-	::gpk::SControl				& controlExit				= gui.Controls.Controls[app.IdExit];
+	::gpk::SControlPlacement	& controlExit				= gui.Controls.Placement[app.IdExit];
 	controlExit.Area		= {{0, 0}, {64, 20}};
 	controlExit.Border		= {1, 1, 1, 1};
 	controlExit.Margin		= {1, 1, 1, 1};
@@ -36,7 +36,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::SControlConstraints	& controlConstraints		= gui.Controls.Constraints[app.IdExit];
 	controlConstraints.AttachSizeToText.y	= app.IdExit;
 	controlConstraints.AttachSizeToText.x	= app.IdExit;
-	::gpk::controlSetParent(gui, app.IdExit, -1);
+	::gpk::controlSetParent(gui, app.IdExit, (::gpk::cid_t)-1);
 	::gpk::tcpipInitialize();
 	uint64_t					port						= 9998;
 	uint64_t					adapter						= 0;
@@ -167,17 +167,13 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	::gpk::SFramework			& framework					= app.Framework;
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 	::gpk::SGUI					& gui						= *framework.GUI;
-	::gpk::au32					controlsToProcess			= {};
-	::gpk::guiGetProcessableControls(gui, controlsToProcess);
-	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
-		uint32_t					idControl					= controlsToProcess[iControl];
-		const ::gpk::SControlState	& controlState				= gui.Controls.States[idControl];
-		if(controlState.Execute) {
-			info_printf("Executed %u.", idControl);
-			if(idControl == (uint32_t)app.IdExit)
+	::gpk::acid					controlsToProcess			= {};
+	::gpk::guiProcessControls(gui, [&app](::gpk::cid_t iControl) {
+			info_printf("Executed %u.", iControl);
+			if(iControl == (::gpk::cid_t)app.IdExit)
 				return 1;
-		}
-	}
+			return 0;
+		});
 	::gpk::apobj<::gpk::apobj<::gpk::SUDPMessage>>	& receivedPerClient		= app.ReceivedPerClient;
 	{	// pick up messages for later processing
 		::std::lock_guard			lock						(app.Server.Mutex);

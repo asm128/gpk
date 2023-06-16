@@ -16,7 +16,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	gui.ColorModeDefault												= ::gpk::GUI_COLOR_MODE_3D;
 	gui.ThemeDefault													= ::gpk::ASCII_COLOR_DARKGREEN * 16 + 7;
 	app.IdExit															= ::gpk::controlCreate(gui);
-	::gpk::SControl															& controlExit				= gui.Controls.Controls[app.IdExit];
+	::gpk::SControlPlacement												& controlExit				= gui.Controls.Placement[app.IdExit];
 	controlExit.Area													= {{0, 0}, {64, 20}};
 	controlExit.Border													= {10, 10, 10, 10};
 	controlExit.Margin													= {1, 1, 1, 1};
@@ -62,17 +62,14 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::gme::SApplication, "Module Explorer");
 	retval_ginfo_if(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
 
 	::gpk::SGUI						& gui						= *framework.GUI;
-	::gpk::au32						controlsToProcess			= {};
-	::gpk::guiGetProcessableControls(gui, controlsToProcess);
-	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
-		uint32_t						idControl					= controlsToProcess[iControl];
-		const ::gpk::SControlState		& controlState				= gui.Controls.States[idControl];
-		if(controlState.Execute) {
-			info_printf("Executed %u.", idControl);
-			if(idControl == (uint32_t)app.IdExit)
-				return 1;
-		}
-	}
+	::gpk::acid						controlsToProcess			= {};
+	if(::gpk::guiProcessControls(gui, [&app](::gpk::cid_t idControl) {
+		info_printf("Executed %u.", idControl);
+		if(idControl == app.IdExit)
+			return 1;
+		return 0;
+	})) 
+		return 1;
 	//timer.Frame();
 	//info_printf("Update time: %f.", (float)timer.LastTimeSeconds);
 	return 0;

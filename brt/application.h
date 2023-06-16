@@ -41,7 +41,7 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::ac			szCmdlineApp						= "";
 		::gpk::ac			szCmdlineFinal						= "";
 
-		int32_t				IdExit								= -1;
+		::gpk::cid_t		IdExit								= -1;
 
 		::std::mutex		LockGUI;
 		::std::mutex		LockRender;

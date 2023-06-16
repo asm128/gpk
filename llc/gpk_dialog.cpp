@@ -12,35 +12,35 @@ static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogCol
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY * 1.3	, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY	* 1.2	,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (uint16_t)palettes.push_back({{::gpk::GRAY	 			, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, ::gpk::LIGHTBLUE	, {}, ::gpk::WHITE				,}});
-	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
+	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 
 	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= (uint16_t)palettes.push_back({{::gpk::GRAY				, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE				,}});
 	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
 	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (uint16_t)palettes.push_back({{::gpk::GRAY	 	* 1.1	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
 	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, ::gpk::ORANGE		, {}, ::gpk::BLUE				,}});
-	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
+	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.Button			[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 
 	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		* 0.7	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE				,}});
 	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
 	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		* 0.85	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
 	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE				,}});
-	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
+	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.CheckBox		[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 
 	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		* 0.7	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE				,}});
 	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= (uint16_t)palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
 	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		* 0.85	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
 	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= (uint16_t)palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE				,}});
-	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
+	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.Viewport		[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= (uint16_t)palettes.push_back({{::gpk::BLUE				, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_NORMAL	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_NORMAL		]; palettes.push_back({{::gpk::WHITE		* 0.7	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, ::gpk::DARKGRAY	, {}, ::gpk::WHITE				,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_DISABLED]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_DISABLED	]; palettes.push_back({{::gpk::LIGHTGRAY			, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::LIGHTGRAY * 1.1	,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_HOVER	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_HOVER		]; palettes.push_back({{::gpk::WHITE		* 0.85	, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, ::gpk::GRAY		, {}, ::gpk::WHITE				,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_PRESSED	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_PRESSED	]; palettes.push_back({{::gpk::WHITE		 		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, ::gpk::BLUE		, {}, ::gpk::WHITE				,}});
-	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_EXECUTE	]; palettes.push_back({{::gpk::BLUE					, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
+	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_ACTION	]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_ACTION	]; palettes.push_back({{::gpk::BLUE					, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	dialogColors.ViewportTitle	[::gpk::GUI_CONTROL_PALETTE_OUTDATED]			= dialogColors.Button[::gpk::GUI_CONTROL_PALETTE_OUTDATED	]; palettes.push_back({{::gpk::BLUE					, ::gpk::ORANGE		, ::gpk::YELLOW		, ::gpk::MAGENTA	, ::gpk::CYAN		, {}, ::gpk::WHITE				,}});
 	for(uint32_t i=0; i < 4; ++i) {
 		dialogColors.Control		[::gpk::GUI_CONTROL_PALETTE_SELECTED + i]		= dialogColors.Control			[::gpk::GUI_CONTROL_PALETTE_NORMAL	+ i];
@@ -59,8 +59,6 @@ static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	gui.Controls.Placement	[dialog.Root].Border					= {};
 	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
 	gui.Controls.Modes	[dialog.Root].NoHover	= true;
-	//gui.Controls.Modes	[dialog.Root].NoExecute	= true;
-	//dialog.DefaultControlModes.NoHover			= 1;
 	dialog.DefaultControlDraw.FrameOut			= 1;
 	dialog.DefaultControlDraw.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
@@ -102,7 +100,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::SDialog				& dialog					= *checkbox.Dialog;
 	::gpk::SControlTable		& controlTable				= dialog.GUI->Controls;
 	::gpk::img<::gpk::bgra>		& imageCross				= dialog.ImageCrossBGRA;
-	if(controlTable.Events[checkbox.IdGUIControl].Execute) {
+	if(controlTable.IsAction(checkbox.IdGUIControl)) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 			es_if(errored(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross)));
 
@@ -282,7 +280,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 ::gpk::error_t			gpk::viewportFold		(::gpk::SDialogViewport	& control, bool fold)														{
 	if((fold && control.Settings.Unfolded) || (false == control.Settings.Unfolded && false == fold)) {
 		::gpk::SDialog				& dialog				= *control.Dialog;
-		::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
+		::gpk::SGUI					& gui					= *dialog.GUI;
+		::gpk::SControlTable		& controlTable			= gui.Controls;
 		::gpk::SControlPlacement	& placementMain			= controlTable.Placement[control.IdGUIControl];
 		::gpk::SControlPlacement	& placementTitle		= controlTable.Placement[control.IdTitle];
 		if(fold && control.Settings.Unfolded)
@@ -294,12 +293,12 @@ stacxpr	const uint32_t	heightOfField			= 18;
 
 		::gpk::SControlState			& controlMain	= controlTable.States[control.IdGUIControl];
 		if(-1 != controlMain.Parent)
-			gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, controlMain.Parent));
+			gpk_necs(::gpk::controlMetricsInvalidate(gui, controlMain.Parent));
 		else
-			gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl));
+			gpk_necs(::gpk::controlMetricsInvalidate(gui, control.IdGUIControl));
 
 		::gpk::SControlState		& stateClient			= controlTable.States[control.IdClient];
-		stateClient.SetHidden(controlTable.Events[control.IdClient], fold);
+		stateClient.SetHidden(control.IdClient, controlTable.EventQueue, fold);
 		control.Settings.Unfolded	= !fold;
 	}
 	return one_if(false == control.Settings.Unfolded);
@@ -308,11 +307,11 @@ stacxpr	const uint32_t	heightOfField			= 18;
 static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::SControlPlacement & controlMain, ::gpk::SDialog & dialog, ::gpk::n2<bool> locked, ::gpk::n2i16 mouseDeltas)																{
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.DPI.x, 1 / dialog.GUI->Zoom.DPI.y);
 	mouseDeltas.InPlaceScale(1 / dialog.GUI->Zoom.ZoomLevel);
-	control.Settings.Dragging		= true;
+	control.Settings.Dragging	= true;
 	if(false == locked.x)
-		controlMain.Area.Offset.x	+= mouseDeltas.x;
+		controlMain.Area.Offset.x	+= ((controlMain.Align & ::gpk::ALIGN_HCENTER) == ::gpk::ALIGN_RIGHT) ? -mouseDeltas.x : mouseDeltas.x;
 	if(false == locked.y)
-		controlMain.Area.Offset.y	+= mouseDeltas.y;
+		controlMain.Area.Offset.y	+= ((controlMain.Align & ::gpk::ALIGN_VCENTER) == ::gpk::ALIGN_BOTTOM) ? -mouseDeltas.y : mouseDeltas.y;
 	::gpk::controlMetricsInvalidate(*dialog.GUI, control.IdGUIControl);
 	return 0;
 }
@@ -321,7 +320,6 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	::gpk::SDialog				& dialog				= *control.Dialog;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];
-	::gpk::SControlEvent		& controlTitle			= controlTable.Events[control.IdTitle];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
 	if(controlTitleState.IsPressed()) {
 		::gpk::n2<bool>				locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
@@ -332,7 +330,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 		}
 	}
 	else {
-		if(controlTitle.Execute && false == control.Settings.Dragging)
+		if(controlTitleState.IsAction() && false == control.Settings.Dragging)
 			gpk_necs(::gpk::viewportFold(control, control.Settings.Unfolded));
 		control.Settings.Dragging	= false;
 	}

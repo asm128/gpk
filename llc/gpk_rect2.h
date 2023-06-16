@@ -13,7 +13,7 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
 		template <typename _t>
-		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.Cast<_t>(), Size.Cast<_t>()}; }
+		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.template Cast<_t>(), Size.template Cast<_t>()}; }
 
 		inlcxpr	rect2<uint8_t>	u8			()	const	noexcept	{ return Cast<uint8_t	>(); }
 		inlcxpr	rect2<uint16_t>	u16			()	const	noexcept	{ return Cast<uint16_t	>(); }

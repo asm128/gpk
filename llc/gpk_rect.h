@@ -9,9 +9,13 @@ namespace gpk
 	template<typename _tDimension>
 	struct rect {
 		typedef	_tDimension		T;
+		typedef	rect<T>			TRect;
+
 		T						Left, Top, Right, Bottom;
 
 		GPK_DEFAULT_OPERATOR(rect<T>, Left == other.Left && Top == other.Top && Right == other.Right && Bottom == other.Bottom); 
+
+		cnstxpr	TRect			operator+	(const TRect & other)					const	noexcept	{ return {T(Left + other.Left), T(Top + other.Top), T(Right + other.Right), T(Bottom + other.Bottom)}; }
 
 		inlcxpr	T				Width		()	const { return Right - Left; }
 		inlcxpr	T				Height		()	const { return Bottom - Top; }

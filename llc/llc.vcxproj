@@ -244,6 +244,7 @@
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
+    <ClCompile Include="llc_header_checkingg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />
@@ -363,7 +364,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -421,7 +422,7 @@
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>../../zlib/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../gpk/llc; ../../zlib/</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
