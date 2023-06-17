@@ -63,9 +63,10 @@ namespace gpk
 	}
 
 	// Description at http://en.wikipedia.org/wiki/UTF-8
-	::gpk::error_t						utf8FromCodePoint	(uint32_t codePoint, ::gpk::ac & hexDigits);
-	::gpk::error_t						digest				(const ::gpk::vcu8 & input, ::gpk::au32 & digest);
-	::gpk::error_t						digest				(const ::gpk::vcu8 & input, ::gpk::ac & digest);
+	::gpk::error_t			utf8FromCodePoint	(uint32_t codePoint, ::gpk::ac & hexDigits);
+	::gpk::error_t			digest				(const ::gpk::vcu8 & input, ::gpk::au32 & digest);
+	::gpk::error_t			digest				(const ::gpk::vcu8 & input, ::gpk::ac & digest);
+	stainli	::gpk::error_t	digest				(const ::gpk::vcc & input, ::gpk::ac & digest) { return ::gpk::digest(*(const ::gpk::vcu8*)&input, digest); }
 }
 
 #endif // GPK_ENCODING_H_209873982374

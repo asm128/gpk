@@ -137,8 +137,8 @@ namespace gpk
 
 #pragma pack(pop)
 
-	typedef	::gpk::view<::gpk::uchar_t		>	vuc;
-	typedef	::gpk::view<char				>	vc;
+	typedef	::gpk::view<::gpk::uchar_t		>	vuc, vuchar;
+	typedef	::gpk::view<char				>	vc, vchar;
 	typedef	::gpk::view<float				>	vf32;
 	typedef	::gpk::view<double				>	vf64;
 	typedef	::gpk::view<uint8_t				>	vu8;
@@ -150,8 +150,8 @@ namespace gpk
 	typedef	::gpk::view<int32_t				>	vi32;
 	typedef	::gpk::view<int64_t				>	vi64;
 
-	typedef	::gpk::view<const ::gpk::uchar_t>	vcuc;
-	typedef	::gpk::view<const char			>	vcc;
+	typedef	::gpk::view<const ::gpk::uchar_t>	vcuc, vcuchar;
+	typedef	::gpk::view<const char			>	vcc, vcchar;
 	typedef	::gpk::view<const float			>	vcf32;
 	typedef	::gpk::view<const double		>	vcf64;
 	typedef	::gpk::view<const uint8_t		>	vcu8;
