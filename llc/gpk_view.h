@@ -67,6 +67,12 @@ namespace gpk
 
 		// Methods
 
+		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, Count * sizeof(T)};			}
+		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, Count * sizeof(T)};			}
+		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, Count * sizeof(T)};			}
+		inlcxpr	view<char>			c			()							const	noexcept	{ return {(char*)Data, Count * sizeof(T)};			}
+		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, Count * sizeof(T)};			}
+
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}
 		inlcxpr	const uint32_t&	size			()							const	noexcept	{ return Count;			}

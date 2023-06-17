@@ -71,7 +71,9 @@ namespace gpk
 
 	::gpk::error_t			fileToMemorySecure		(::gpk::SLoadCache & recycle, const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, ::gpk::au8 & output);
 	::gpk::error_t			fileFromMemorySecure	(::gpk::SLoadCache & recycle, const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, const ::gpk::vcu8 & input);
+	stainli	::gpk::error_t	fileToMemorySecure		(::gpk::SLoadCache & recycle, const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, ::gpk::achar & output)		{ return ::gpk::fileToMemorySecure  (recycle, fileName, key, deflate, *(::gpk::au8*)&output); }
 
+	stainli	::gpk::error_t	fileToMemorySecure		(const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, ::gpk::achar & output)		{ ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure  (temp, fileName, key, deflate, *(::gpk::au8*)&output); }
 	stainli	::gpk::error_t	fileToMemorySecure		(const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, ::gpk::au8 & output)			{ ::gpk::SLoadCache temp; return ::gpk::fileToMemorySecure  (temp, fileName, key, deflate, output); }
 	stainli	::gpk::error_t	fileFromMemorySecure	(const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, const ::gpk::vcu8 & input)	{ ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure(temp, fileName, key, deflate, input); }
 } // namespace

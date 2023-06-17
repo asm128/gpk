@@ -101,7 +101,7 @@ namespace gpk
 	stainli	::gpk::error_t	jsonCompareNumber		(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareNumber	(node, views, other, views); }
 
 	struct SJSONFile {
-		::gpk::apod<char>		Bytes					= {};
+		::gpk::achar			Bytes					= {};
 		::gpk::SJSONReader		Reader					= {};
 	};
 
