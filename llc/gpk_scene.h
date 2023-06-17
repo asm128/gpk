@@ -41,11 +41,11 @@ namespace gpk
 	};
 
 	// --- Geometry generation: Cube.
-	::gpk::error_t										generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t										generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t										generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t										generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
-	::gpk::error_t										generateCubeGeometry
+	::gpk::error_t				generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
+	::gpk::error_t				generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
+	::gpk::error_t				generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
+	::gpk::error_t				generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t				generateCubeGeometry
 		( ::gpk::apod<::gpk::tri3f32> & out_Positions
 		, ::gpk::apod<::gpk::n3f32  > & out_Normals
 		, ::gpk::apod<::gpk::tri3f32> & out_NormalsVertex

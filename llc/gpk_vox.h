@@ -210,7 +210,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::error_t										Load					(::gpk::vcu8 & input) { 
+		::gpk::error_t				Load					(::gpk::vcu8 & input) { 
 			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 

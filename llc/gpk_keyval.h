@@ -31,7 +31,7 @@ namespace gpk
 
 	template<typename _tVal>
 				::gpk::error_t							find			(const ::gpk::vcs & keyToFind, const ::gpk::view<const ::gpk::TKeyValConstString> & keyvals, ::gpk::view<const _tVal>& out_val)		{
-		::gpk::error_t											index							= ::gpk::find(keyToFind, keyvals);
+		::gpk::error_t					index							= ::gpk::find(keyToFind, keyvals);
 		out_val								= (-1 == index) ? ::gpk::view<const _tVal>{} : ::gpk::view<const _tVal>{(const _tVal*)keyvals[index].Val.begin(), keyvals[index].Val.size()};
 		return index;
 	}
@@ -42,16 +42,16 @@ namespace gpk
 	template <typename _tNumeric>
 				::gpk::error_t							keyvalNumeric					(const ::gpk::vcs & key, const ::gpk::view<const ::gpk::TKeyValConstString> keyVals, _tNumeric & outputNumber)	{
 		uint64_t												value							= 0;
-		::gpk::error_t											indexKey						= ::gpk::keyvalNumeric(key, keyVals, &value);
+		::gpk::error_t					indexKey						= ::gpk::keyvalNumeric(key, keyVals, &value);
 		if(-1 != indexKey)
 			outputNumber										= *(_tNumeric*)&value;
 		return indexKey;
 	}
 
 	template <typename... _tArgs>
-	::gpk::error_t										keyValVerify					(const ::gpk::view<::gpk::TKeyValConstString> & environViews, const ::gpk::vcc & keyToVerify, const ::gpk::view<const ::gpk::vcc>& valueToVerify)	{
+	::gpk::error_t				keyValVerify					(const ::gpk::view<::gpk::TKeyValConstString> & environViews, const ::gpk::vcc & keyToVerify, const ::gpk::view<const ::gpk::vcc>& valueToVerify)	{
 		for(uint32_t iKey = 0; iKey < valueToVerify.size(); ++iKey) {
-			const ::gpk::error_t									val								= ::gpk::keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
+			const ::gpk::error_t			val								= ::gpk::keyValVerify(environViews, keyToVerify, valueToVerify[iKey]);
 			if(-1 != val)
 				return val;
 		}

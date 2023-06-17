@@ -182,7 +182,7 @@ static	::gpk::error_t	jsonTestAndCloseValue								(::gpk::SJSONReaderState & st
 
 static	::gpk::error_t	jsonParseStringCharacter							(::gpk::SJSONReaderState & stateReader, ::gpk::apod<::gpk::SJSONToken> & tokens, const ::gpk::vcc & jsonAsString)	{
 	::gpk::SJSONToken									currentElement										= {};
-	::gpk::error_t										errVal												= 0;
+	::gpk::error_t				errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
 		seterr_break_if(((::gpk::uchar_t)stateReader.CharCurrent) < 0x20 || ((::gpk::uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
@@ -278,7 +278,7 @@ static	::gpk::error_t	parseJsonNumber										(::gpk::SJSONReaderState & stateR
 	::gpk::SJSONToken									currentElement										= {stateReader.IndexCurrentElement, ::gpk::JSON_TYPE_INTEGER, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + sizeNum + (index - stateReader.IndexCurrentChar)}};
 	::gpk::vcc											numString											= {};
 	gpk_necs(jsonAsString.slice(numString, index, sizeNum));
-	::gpk::error_t										intCount											= ::gpk::parseIntegerDecimal(numString, currentElement.Value);
+	::gpk::error_t				intCount											= ::gpk::parseIntegerDecimal(numString, currentElement.Value);
 	if(intCount < (int32_t)sizeNum) {
 		currentElement.Type								= ::gpk::JSON_TYPE_DOUBLE;
 		double												finalValue											= (double)currentElement.Value;
@@ -336,7 +336,7 @@ static	::gpk::error_t	jsonTestAndCloseKey									(::gpk::SJSONReaderState & sta
 }
 
 static	::gpk::error_t	jsonCloseOrDiscardIfEmptyKeyOrVal					(::gpk::SJSONReaderState & stateReader, ::gpk::apod<::gpk::SJSONToken> & tokens, ::gpk::JSON_TYPE containerType) {
-	::gpk::error_t										errVal												= 0;
+	::gpk::error_t				errVal												= 0;
 	if(tokens[tokens.size() - 1].Type == containerType) {
 		json_info_printf("Discarding empty container element at index %i (%s). Level: %i", tokens.size() - 1, ::gpk::get_value_label(containerType).begin(), stateReader.NestLevel);
 		stateReader.IndexCurrentElement								= tokens[tokens.size() - 1].ParentIndex;
@@ -587,7 +587,7 @@ static	::gpk::error_t	jsonParseDocumentCharacter	(::gpk::SJSONReaderState & stat
 		const ::gpk::JSON_TYPE											typeOther					= childOther.Token->Type;
 		if(typeNode != typeOther)
 			return 0;
-		::gpk::error_t													result						= -1;
+		::gpk::error_t							result						= -1;
 		switch(typeNode) {
 		case ::gpk::JSON_TYPE_ARRAY		: result = ::gpk::jsonCompareArray	(childNode, views, childOther, otherViews); break;
 		case ::gpk::JSON_TYPE_OBJECT	: result = ::gpk::jsonCompareObject	(childNode, views, childOther, otherViews); break;
@@ -632,7 +632,7 @@ static	::gpk::error_t	decodeUnicodeEscapeSequence							(::gpk::vcc input, uint3
 }
 
 // this function only makes sense after reading the first `\u`
-::gpk::error_t												jsonToCodePoint										(::gpk::vcc input, uint32_t& unicode)			{
+::gpk::error_t			jsonToCodePoint										(::gpk::vcc input, uint32_t& unicode)			{
 	gpk_necall(::decodeUnicodeEscapeSequence(input, unicode), "Invalid escape sequence: %s.", input.begin());
 	if (unicode < 0xD800 || unicode > 0xDBFF)
 		return 0;

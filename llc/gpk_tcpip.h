@@ -22,8 +22,8 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-					::gpk::error_t									tcpipInitialize						();
-					::gpk::error_t									tcpipShutdown						();
+					::gpk::error_t			tcpipInitialize						();
+					::gpk::error_t			tcpipShutdown						();
 
 	enum TRANSPORT_PROTOCOL
 		{ TRANSPORT_PROTOCOL_UDP			= 0
@@ -53,25 +53,25 @@ namespace gpk
 									, &addr.IP[2]	\
 									, &addr.IP[3]	\
 
-					::gpk::error_t									tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4);
-					::gpk::error_t									tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port = 0);
-	stainli	::gpk::error_t									tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port = 0) { return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); }
-	stainli	::gpk::error_t									tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)							{
+					::gpk::error_t			tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4);
+					::gpk::error_t			tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port = 0);
+	stainli	::gpk::error_t			tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port = 0) { return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); }
+	stainli	::gpk::error_t			tcpipAddress						(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)							{
 		address.Port													= portRequested;
 		return ::gpk::tcpipAddress(portRequested, adapterIndex, mode, GPK_IPV4_EXPAND_PTR_IP(address));
 	}
 
-	stainli	::gpk::error_t									tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)	{
+	stainli	::gpk::error_t			tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)	{
 		address.Port													= portRequested;
 		return ::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, GPK_IPV4_EXPAND_PTR_IP(address), &address.Port);
 	}
 
-	stainli	::gpk::error_t									tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)	{
+	stainli	::gpk::error_t			tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4 & address)	{
 		address.Port													= portRequested;
 		return ::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, GPK_IPV4_EXPAND_PTR_IP(address), &address.Port);
 	}
 
-					::gpk::error_t									tcpipAddress		(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
+					::gpk::error_t			tcpipAddress		(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
 } // namespace
 
 #endif // GPK_TCPIP_H_2874982374

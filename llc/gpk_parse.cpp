@@ -63,7 +63,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 	return totalCharsProcessed;
 }
 
-::gpk::error_t								stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
+::gpk::error_t			stripLiteralsParseToken		(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;
@@ -97,7 +97,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 	return 0;
 }
 
-::gpk::error_t								stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
+::gpk::error_t			stripLiteralsParseLiteral	(::gpk::SStripLiteralState & work_state, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	(void)in_format;
 	switch(work_state.CharCurrent) {
 	default		: break;

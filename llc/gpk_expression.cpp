@@ -91,9 +91,9 @@ static	::gpk::error_t	expressionReaderCloseTerm							(::gpk::SExpressionReaderS
 	return 0;
 }
 
-			::gpk::error_t									expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, const ::gpk::vcc & expression)	{
+			::gpk::error_t			expressionReaderProcessStringCharacter				(::gpk::SExpressionReaderState & stateReader, ::gpk::apod<::gpk::SExpressionToken> & tokens, const ::gpk::vcc & expression)	{
 	::gpk::SExpressionToken											currentElement										= {};
-	::gpk::error_t													errVal												= 0;
+	::gpk::error_t							errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
 		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uint8_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);

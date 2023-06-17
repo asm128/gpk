@@ -33,7 +33,7 @@ namespace gpk
 		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> eventsIn)	= 0;
 	};
 	//template<typename _TDialogControl>
-	//::gpk::error_t										dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
+	//::gpk::error_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
 	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
 	//	ree_if(0 == ::gpk::ref_create(&newRef));
 	//	createdControl.set_ref((::gpk::gpk_ref<::gpk::IDialogControl>*)newRef);

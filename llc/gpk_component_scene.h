@@ -299,8 +299,8 @@ namespace gpk {
 
 		::gpk::SNodeRenderer									Renderer				= {};
 
-		::gpk::error_t											Create					(::gpk::vcs name);
-		::gpk::error_t											CreateFromFile			(::gpk::vcs filename);
+		::gpk::error_t					Create					(::gpk::vcs name);
+		::gpk::error_t					CreateFromFile			(::gpk::vcs filename);
 	};
 } // namespace
 

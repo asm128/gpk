@@ -68,7 +68,7 @@ namespace gpk
 	}
 
 	template<typename _tElement>
-						::gpk::error_t										integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
+						::gpk::error_t				integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
 		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next

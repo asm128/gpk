@@ -102,9 +102,9 @@ namespace gpk
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
 	};
 
-	::gpk::error_t																			httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
-	::gpk::error_t																			cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv);
-	::gpk::error_t																			cgiMain						(int argc, char** argv, char**envv);
+	::gpk::error_t							httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
+	::gpk::error_t							cgiRuntimeValuesLoad		(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv);
+	::gpk::error_t							cgiMain						(int argc, char** argv, char**envv);
 
 	struct SCGIFramework {
 		::gpk::vcc																	ModuleName					= {};

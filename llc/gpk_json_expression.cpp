@@ -42,7 +42,7 @@ static	::gpk::error_t	evaluateJSONBool		(const ::gpk::SJSONNode & jsonToEvaluate
 }
 
 static	::gpk::error_t	evaluateBoolResult		(const ::gpk::SJSONNode * jsonToEvaluate, int32_t indexNodeJSON, const ::gpk::vcc & boolView)	{
-	::gpk::error_t										evalResult								= -1;
+	::gpk::error_t				evalResult								= -1;
 	if(indexNodeJSON < 0)
 		evalResult										= (0 == boolView.size() || boolView == ::gpk::strZero || boolView == ::gpk::strBool[0] ||  boolView == ::gpk::strNull || boolView == ::gpk::strEmptyObj || boolView == ::gpk::strEmptyArr) ? 0 : 1;
 	else if(indexNodeJSON >= 0)
@@ -291,7 +291,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 
 ::gpk::error_t			gpk::jsonExpressionResolve				(const ::gpk::SExpressionReader & reader, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::vcc & output){
 	::gpk::SJSONExpressionSolver						results;
-	::gpk::error_t										jsonNodeResultOfEvaluation				= ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
+	::gpk::error_t				jsonNodeResultOfEvaluation				= ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
 	ree_if(-1 == jsonNodeResultOfEvaluation, "Failed to evaluate expression: %s.", reader.View.size() ? ::gpk::toString(reader.View[0]).begin() : "null");
 	for(uint32_t iResult = 0; iResult < results.Results.size(); ++iResult)
 		gpk_jexpr_info_printf("Result %u: '%s' | '%s'", iResult, ::gpk::toString(results.Results[iResult].Expression).begin(), ::gpk::toString(results.Results[iResult].Output).begin());
