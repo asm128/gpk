@@ -180,7 +180,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 	//bool						anyControlPressed					= false;
 	for(uint32_t iControlToProcess = 0, countControls = controlsToProcess.size(); iControlToProcess < countControls; ++iControlToProcess) {
 		const uint32_t				iControl							= controlsToProcess[iControlToProcess];
-		const ::gpk::SControlArea	& controlMetrics					= gui.Controls.Metrics[iControl];
+		const ::gpk::SControlArea	& controlMetrics					= gui.Controls.Area[iControl];
 		const ::gpk::SControlState	& controlState						= gui.Controls.States[iControl];
 		if(iControl != (uint32_t)desktop.IdControl)
 			inControlArea			= inControlArea || ::gpk::in_range(gui.CursorPos.i16(), controlMetrics.Total.Global);
@@ -214,7 +214,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		}
 		else {
 			::gpk::SControlState			& controlStateMenu					= gui.Controls.States[menu.IdControl];
-			const ::gpk::SControlArea		& controlListMetrics				= gui.Controls.Metrics[menu.IdControl];
+			const ::gpk::SControlArea		& controlListMetrics				= gui.Controls.Area[menu.IdControl];
 			if(::gpk::in_range(gui.CursorPos.i16(), controlListMetrics.Total.Global) && controlStateMenu.IsHidden() == false)
 				::unhideMenuHierarchy(gui, desktop, menu);
 

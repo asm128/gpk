@@ -25,6 +25,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Updated	, 0x40U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Action		, 0x80U);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Unused		, 0xFFU);
+	stacxpr	GUI_CONTROL_FLAG	GUI_CONTROL_FLAG_All	= GUI_CONTROL_FLAG_Unused;
+
 	inlcxpr	GUI_CONTROL_FLAG	isHidden		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hidden	); }
 	inlcxpr	GUI_CONTROL_FLAG	isDisabled		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Disabled	); }
 	inlcxpr	GUI_CONTROL_FLAG	isHovered		(const GUI_CONTROL_FLAG state, const GUI_CONTROL_FLAG mask)			noexcept	{ return bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered	); }
@@ -80,18 +82,14 @@ namespace gpk
 	};
 
 	template<typename _tState>
-	using TFuncSetMaskedValue = std::function<_tState(_tState & flag, _tState mask, bool value)>; 
+	using TFuncSetMaskedValue = std::function<_tState(void)>; 
 
 	template<typename _tState>
-	_tState				setValue		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, _tState & state, const _tState mask, const bool value
-		, TFuncSetMaskedValue<_tState> funcSetValue
-	) {
-		if(::gpk::bit_test(mask, state)) {
-			const _tState			oldState		= state;
-			state				= funcSetValue(state, mask, value);
-			if(oldState != state)
-				::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state);
-		}
+	_tState				setValue		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {
+		const _tState			oldState		= state;
+		state				= funcSetValue();
+		if(oldState != state)
+			::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state);
 		return state;
 	}
 
@@ -100,22 +98,15 @@ namespace gpk
 		GUI_CONTROL_FLAG	Flag			= {};
 		GUI_CONTROL_FLAG	Mask			= (GUI_CONTROL_FLAG)-1;
 
-		bool				SetHovered		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setHovered  ); }
-		bool				SetPressed		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setPressed  ); }
-		bool				SetHidden		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setHidden   ); }
-		bool				SetFocused		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setFocused  ); }
-		bool				SetSelected		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setSelected ); }
-		bool				SetDisabled		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setDisabled ); }
-		bool				SetUpdated		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setUpdated  ); }
-		bool				SetAction		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, Mask, value, setAction   ); }
-		bool				SetUnused		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{	
-			const GUI_CONTROL_FLAG	oldState		= Flag;
-			::gpk::setUnused(Flag, value);
-			if(oldState != Flag)
-				::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, Flag);
-			return ::gpk::bit_test(Flag, GUI_CONTROL_FLAG_Unused);
-		}
-
+		bool				SetHovered		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHovered (Flag, Mask, value); }); }
+		bool				SetPressed		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setPressed (Flag, Mask, value); }); }
+		bool				SetHidden		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setHidden  (Flag, Mask, value); }); }
+		bool				SetFocused		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setFocused (Flag, Mask, value); }); }
+		bool				SetSelected		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setSelected(Flag, Mask, value); }); }
+		bool				SetDisabled		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setDisabled(Flag, Mask, value); }); }
+		bool				SetUpdated		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUpdated (Flag, Mask, value); }); }
+		bool				SetAction		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setAction  (Flag, Mask, value); }); }
+		bool				SetUnused		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, bool value)	noexcept	{ return Flag = setValue<GUI_CONTROL_FLAG>(iControl, eventQueue, Flag, [this, &value]() { return setUnused  (Flag, value); }); }
 		inlcxpr	bool		IsHovered		()	const	noexcept	{ return isHovered  (Flag, Mask); }
 		inlcxpr	bool		IsPressed		()	const	noexcept	{ return isPressed  (Flag, Mask); }
 		inlcxpr	bool		IsHidden		()	const	noexcept	{ return isHidden   (Flag, Mask); }

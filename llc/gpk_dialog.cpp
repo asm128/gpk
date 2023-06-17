@@ -55,10 +55,12 @@ static	::gpk::error_t	dialogInitializeColors			(::gpk::SDialogColors & dialogCol
 static	::gpk::error_t	dialogInitialize				(::gpk::SDialog & dialog) {
 	::gpk::SGUI						& gui							= *dialog.GUI; 
 	gpk_necs(dialog.Root = ::gpk::controlCreate(gui));
-	gui.Controls.Placement	[dialog.Root].Margin					= {};
-	gui.Controls.Placement	[dialog.Root].Border					= {};
-	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl		= {dialog.Root, dialog.Root};
-	gui.Controls.Modes	[dialog.Root].NoHover	= true;
+	gui.Controls.Placement		[dialog.Root].Margin				= {};
+	gui.Controls.Placement		[dialog.Root].Border				= {};
+	gui.Controls.Constraints	[dialog.Root].AttachSizeToControl	= {dialog.Root, dialog.Root};
+	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
+	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Action;
+	gui.Controls.States			[dialog.Root].Mask					&= ~::gpk::GUI_CONTROL_FLAG_Pressed;
 	dialog.DefaultControlDraw.FrameOut			= 1;
 	dialog.DefaultControlDraw.UseNewPalettes	= 1;
 	if(!dialog.Colors) {
@@ -92,7 +94,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::pobj<::gpk::SDialogCheckBox>	checkBox;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
 	gpk_necs(index = dialog.Create(checkBox));
-	controlTable.Modes[checkBox->IdGUIControl]							= dialog.DefaultControlModes;
+	controlTable.States[checkBox->IdGUIControl].Mask	= dialog.DefaultControlMask;
 	::gpk::memcpy_s(controlTable.Draw[checkBox->IdGUIControl].Palettes.Storage, dialog.Colors->CheckBox.Storage);
 	return index;
 }
@@ -183,8 +185,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 			//	{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 			//	, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 			//	};
-			const ::gpk::n2f64			controlSliderPos			= controlTable.Metrics[slider.IdGUIControl].Client.Global.Offset.f64();
-			const ::gpk::n2f64			controlSliderSize			= controlTable.Metrics[slider.IdGUIControl].Client.Global.Size.f64();
+			const ::gpk::n2f64			controlSliderPos			= controlTable.Area[slider.IdGUIControl].Client.Global.Offset.f64();
+			const ::gpk::n2f64			controlSliderSize			= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f64();
 			::gpk::n2f64				effectiveSize				= controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f64();;
 			//
 
@@ -201,7 +203,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 		if(dialog.Input->ButtonDown(0) && controlTable.States[slider.IdGUIControl].IsPressed()) {	//
 			::gpk::SInput				& input						= *dialog.Input;
 			const int64_t				valuePage					= ::gpk::max((int64_t)1LL, (valueRange > 10) ? (int64_t)(valueRange * .1) : valueRange / 2);
-			const ::gpk::n2<int16_t>	& controlButtonPosition		= controlTable.Metrics[slider.IdButton].Total.Global.Offset;
+			const ::gpk::n2<int16_t>	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
 				const int64_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
 				gpk_necs(::gpk::sliderSetValue(slider, finalValue));
@@ -249,7 +251,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 		control.Area.Size		= {2, 2};
 		control.Margin			= {};
 		controlTable.Constraints[idControl].AttachSizeToControl.x	= idControl;
-		controlTable.Modes[idControl]			= dialog.DefaultControlModes;
+		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->Viewport;
 	}
 	{ // Create section title
@@ -262,7 +264,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 		control.Align			= ::gpk::ALIGN_TOP_LEFT;
 		control.Margin.Left		= 4;
 		controlTable.Constraints[idControl].AttachSizeToControl.x	= idControl;
-		controlTable.Modes[idControl]			= dialog.DefaultControlModes;
+		controlTable.States[idControl].Mask		= dialog.DefaultControlMask;
 		controlTable.Draw [idControl].Palettes	= dialog.Colors->ViewportTitle;
 		controlTable.Text [idControl].Text		= "Viewport";
 	}

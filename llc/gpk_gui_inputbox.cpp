@@ -51,9 +51,9 @@
 
 ::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
+	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};
 	gui.Controls.Placement	[inputBox.IdRoot].Margin	= {};
-	gui.Controls.Modes		[inputBox.IdRoot].NoHover	= true;
 	gui.Controls.Draw		[inputBox.IdRoot].NoBorder	= true;
 	gui.Controls.Draw		[inputBox.IdRoot].NoClient	= true;
 

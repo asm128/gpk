@@ -63,7 +63,7 @@ namespace gpk
 		cid_t					Root				= (cid_t)-1;
 		::gpk::ai32				Buttons				= {};
 
-		::gpk::SControlMode		DefaultControlModes	= {};
+		::gpk::GUI_CONTROL_FLAG	DefaultControlMask	= (::gpk::GUI_CONTROL_FLAG)-1;
 		::gpk::SControlDraw		DefaultControlDraw	= {};
 
 		::gpk::pobj<::gpk::SInput>					Input			= {};

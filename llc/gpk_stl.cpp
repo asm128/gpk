@@ -10,7 +10,7 @@
 	gpk_necall(fileInMemory.slice(out_Header, 0, 80), "Invalid file size: %u bytes.", fileInMemory.size());
 	if(fileInMemory.size() > 80) {
 		::gpk::vu8				triangleBytes			= {(uint8_t*)&fileInMemory[80], fileInMemory.size() - 80};
-		return ::gpk::viewReadForBobosData(out_Triangles, triangleBytes);
+		return ::gpk::viewReadLegacy(out_Triangles, triangleBytes);
 	}
 	return 0;
 }

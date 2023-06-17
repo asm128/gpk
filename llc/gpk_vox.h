@@ -164,8 +164,8 @@ namespace gpk
 		for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
 			::gpk::vcc					readKey					= {};
 			::gpk::vcc					readVal					= {};
-			bytesRead = ::gpk::viewReadForBobosData(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
-			bytesRead = ::gpk::viewReadForBobosData(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+			bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+			bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			attributes.push_back({readKey, readVal});
 		}
 		return 0;
@@ -275,7 +275,7 @@ namespace gpk
 						::gpk::SVOXChunkXYZI								newChunk			= {}; 
 		 				newChunk.Header									= readChunkHeader;
 						::gpk::view<const SVOXVoxel>					readChunkData		= {};
-						bytesRead										= ::gpk::viewReadForBobosData(readChunkData, input); 
+						bytesRead										= ::gpk::viewReadLegacy(readChunkData, input); 
 						input											= {input.begin() + bytesRead, input.size() - bytesRead}; 
 						newChunk.Data									= readChunkData;
 						for(uint32_t iVoxel = 0; iVoxel < newChunk.Data.size(); ++iVoxel) {
@@ -290,7 +290,7 @@ namespace gpk
 						bytesRead = sizeof(uint32_t	); const uint32_t countFrames = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 						for(uint32_t iFrame = 0; iFrame < countFrames; ++iFrame) {
 							::gpk::view<const char>					readVal		= {};
-							bytesRead = ::gpk::viewReadForBobosData(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+							bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							newChunk.ColorNames.push_back(readVal);
 						}
 						ChunksNote.push_back(newChunk);
@@ -303,7 +303,7 @@ namespace gpk
 						::gpk::voxDictLoad(newChunk.Attributes, input);
 
 						::gpk::view<const int32_t>			readChildren		= {};
-						bytesRead								= ::gpk::viewReadForBobosData(readChildren, input); 
+						bytesRead								= ::gpk::viewReadLegacy(readChildren, input); 
 						input									= {input.begin() + bytesRead, input.size() - bytesRead}; 
 						newChunk.IdChildren						= readChildren;
 						ChunksNode.push_back(newChunk);
@@ -339,8 +339,8 @@ namespace gpk
 							for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
 								::gpk::vcc							readKey		= {};
 								::gpk::vcc							readVal		= {};
-								bytesRead = ::gpk::viewReadForBobosData(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
-								bytesRead = ::gpk::viewReadForBobosData(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+								bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
+								bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 
 								// Welcome to the amazing fucked up way to store a transform in a binary file
 									 if(readKey == ::gpk::vcs{"_r"}) { newFrame.Rotation = readVal[0]; }

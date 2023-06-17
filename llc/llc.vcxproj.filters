@@ -91,6 +91,9 @@
     <Filter Include="http">
       <UniqueIdentifier>{f1c14652-08ae-4615-bfb2-4fa022661399}</UniqueIdentifier>
     </Filter>
+    <Filter Include="typedefs">
+      <UniqueIdentifier>{9c8faac4-2cef-4de2-b7d7-d1faadec19d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_array.h">
@@ -372,9 +375,6 @@
     <ClInclude Include="gpk_block.h">
       <Filter>cdn</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_font.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view.h">
       <Filter>view</Filter>
     </ClInclude>
@@ -534,29 +534,11 @@
     <ClInclude Include="gpk_view_color.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_n2.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_n3.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_image_color.h">
       <Filter>image</Filter>
     </ClInclude>
     <ClInclude Include="gpk_array_color.h">
       <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_pobj.h">
-      <Filter>pointer</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_ppod.h">
-      <Filter>pointer</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_pobj.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_view_ppod.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gui_control_list.h">
       <Filter>gui</Filter>
@@ -570,8 +552,29 @@
     <ClInclude Include="keyed_bit_array.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_font.h">
+      <Filter>image</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_gui_control_state.h">
-      <Filter>Header Files</Filter>
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_ppod.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_pobj.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n3.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n2.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_ppod.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_pobj.h">
+      <Filter>typedefs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -722,9 +725,6 @@
     <ClCompile Include="gpk_virtual_keyboard.cpp">
       <Filter>dialog</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_font.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_string_helper.cpp">
       <Filter>container</Filter>
     </ClCompile>
@@ -766,6 +766,9 @@
     </ClCompile>
     <ClCompile Include="llc_header_checkingg.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_font.cpp">
+      <Filter>image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

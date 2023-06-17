@@ -53,7 +53,7 @@ namespace gpk
 #pragma pack(pop)
 
 	template<typename T>
-	::gpk::error_t				viewReadForBobosData(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
+	::gpk::error_t				viewReadLegacy		(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t					elementCount		= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
@@ -61,7 +61,7 @@ namespace gpk
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
 	}
 	template<typename T>
-	::gpk::error_t				viewReadForBobosData(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
+	::gpk::error_t				viewReadLegacy		(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t					elementCount		= *(uint32_t*)input.begin();
 		ree_if((elementCount * sizeof(T)) > (input.size() - sizeof(uint32_t)), "Invalid input size: %u. Expected: %u", input.size(), elementCount * sizeof(T));
@@ -98,7 +98,7 @@ namespace gpk
 		::gpk::view<const _tPOD>		readView			= {}; 
 		uint32_t						bytesRead			= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input						= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		gpk_necs(input.slice(input, bytesRead));
 		output						= readView[0]; 
 		return 0;
 	}
@@ -109,7 +109,7 @@ namespace gpk
 	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::view<const _tPOD> & output) { 
 		uint32_t						bytesRead				= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
-		input						= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		gpk_necs(input.slice(input, bytesRead));
 		return 0;
 	}
 	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }

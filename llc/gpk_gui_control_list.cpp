@@ -96,13 +96,13 @@
 	if(-1 == palette.IdControl)
 		::gpk::paletteGridInitialize(gui, palette);
 
-	//gui.Controls.Metrics[palette.IdControl];
+	//gui.Controls.Area[palette.IdControl];
 
 	const ::gpk::n2u32			& gridMetrics				= colors.metrics();
 	palette.IdControls.resize(colors.size());
 	palette.Colors			= colors;
 
-	const ::gpk::n2f64			targetSize					= gui.Controls.Metrics[palette.IdControl].Client.Global.Size.f64(); //{256.0, 256.0};
+	const ::gpk::n2f64			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f64(); //{256.0, 256.0};
 	::gpk::n2f64				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(uint32_t y = 0; y < gridMetrics.y; ++y)
