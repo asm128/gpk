@@ -1,7 +1,7 @@
 #include "gpk_geometry_draw.h"
 
 ::gpk::error_t			gpk::drawTriangle
-	( const ::gpk::view2d<::gpk::bgra>	targetPixels
+	( const ::gpk::g8bgra	targetPixels
 	, const ::gpk::STrianglesIndexed	& geometry
 	, const int							iTriangle
 	, const ::gpk::m4f32				& matrixTransform
@@ -10,10 +10,10 @@
 	, const ::gpk::rgbaf				& lightColor
 	, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-	, ::gpk::view2d<const ::gpk::bgra>	textureImage
+	, ::gpk::grid<const ::gpk::bgra>	textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::apod<::gpk::rgbaf>			& lightColors
-	, ::gpk::view2d<uint32_t>			depthBuffer
+	, ::gpk::grid<uint32_t>			depthBuffer
 	) {
 	::gpk::triu32				triangleIndices		= *(const ::gpk::tri<uint32_t>*)&geometry.PositionIndices[iTriangle * 3];
 	::gpk::tri3f32				triangleWorld		= {geometry.Positions[triangleIndices.A], geometry.Positions[triangleIndices.B], geometry.Positions[triangleIndices.C]};

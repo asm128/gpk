@@ -1,5 +1,5 @@
 #include "gpk_array_static.h"
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_apod_serialize.h"
 
 #ifndef GPK_BLOCK_CONTAINER_H_230522

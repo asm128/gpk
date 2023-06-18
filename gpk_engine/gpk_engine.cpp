@@ -215,7 +215,7 @@ static ::gpk::error_t	createRenderNode
 		surface->Desc.Dimensions		= {32, 32};
 		surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::bgra));
 		memset(surface->Data.begin(), 0xFF, surface->Data.size());
-		::gpk::view2d<::gpk::bgra>	view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
+		::gpk::g8bgra	view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
 		::gpk::rgba					color					= {::gpk::ASCII_PALETTE[rand() % 16]};
 		for(uint32_t y = surface->Desc.Dimensions.y / 3; y < surface->Desc.Dimensions.y / 3U * 2U; ++y)
 		for(uint32_t x = 0; x < surface->Desc.Dimensions.x; ++x)

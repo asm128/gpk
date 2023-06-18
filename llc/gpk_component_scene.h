@@ -1,8 +1,7 @@
 #include "gpk_color.h"
 #include "gpk_matrix.h"
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_enum.h"
-#include "gpk_array.h"
 #include "gpk_stl.h"
 #include "gpk_png.h"
 
@@ -244,7 +243,7 @@ namespace gpk {
 	struct SNodeRenderer {
 		typedef	::gpk::apod<::gpk::n3u16>			TIndexBuffer			;
 		typedef	::gpk::apod<::gpk::n3f32>			TVertexBuffer			, TNormalBuffer,	TTangentBuffer;
-		typedef	::gpk::apod<::gpk::bgra>			TVertexColorBuffer		;
+		typedef	::gpk::a8bgra			TVertexColorBuffer		;
 		typedef	::gpk::apod<::gpk::n2f32>			TTexCoordBuffer			;
 		typedef	::gpk::apod<::gpk::SBlendIndices>	TBlendIndicesBuffer		;
 
@@ -275,15 +274,15 @@ namespace gpk {
 		, const ::gpk::m4f32		& view
 		, const ::gpk::m4f32		& projection
 		, const ::gpk::m4f32		& viewProjection
-		, ::gpk::view2d<::gpk::bgra>	target_image
-		, ::gpk::view2d<uint32_t>		target_depth
+		, ::gpk::g8bgra	target_image
+		, ::gpk::grid<uint32_t>		target_depth
 		);
 
 	::gpk::error_t					nodeRendererDraw
 		( ::gpk::SNodeRenderer			& renderer
 		, int32_t						iCamera
-		, ::gpk::view2d<::gpk::bgra>	target_image
-		, ::gpk::view2d<uint32_t>		target_depth
+		, ::gpk::g8bgra	target_image
+		, ::gpk::grid<uint32_t>		target_depth
 		, bool							drawHidden			= false
 		);
 

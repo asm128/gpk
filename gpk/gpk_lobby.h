@@ -191,7 +191,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Draw				(::gpk::view2d<::gpk::bgra> target) { 
+		::gpk::error_t								Draw				(::gpk::g8bgra target) { 
 			return ::gpk::guiDraw(*Dialog.GUI, target);
 		}
 	};

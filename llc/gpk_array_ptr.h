@@ -1,9 +1,9 @@
 #include "gpk_array_pobj.h"
-#include "gpk_ptr_pod.h"
 #include "gpk_array_pod.h"
+#include "gpk_ptr_pod.h"
 
-#ifndef GPK_PTR_H_0297349827348923611
-#define GPK_PTR_H_0297349827348923611
+#ifndef GPK_ARRAY_PTR_H_0297349827348923611
+#define GPK_ARRAY_PTR_H_0297349827348923611
 
 namespace gpk
 {
@@ -27,8 +27,6 @@ namespace gpk
 	typedef	::gpk::apapod<int16_t	>	apapodi16;
 	typedef	::gpk::apapod<int32_t	>	apapodi32;
 	typedef	::gpk::apapod<int64_t	>	apapodi64;
-
-
 } // namespace
 
-#endif // GPK_PTR_H_0297349827348923611
+#endif // GPK_ARRAY_PTR_H_0297349827348923617

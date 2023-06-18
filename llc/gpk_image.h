@@ -1,5 +1,5 @@
 #include "gpk_array_pod.h"
-#include "gpk_view_grid.h"
+#include "gpk_grid.h"
 #include "gpk_view_bit.h"
 #include "gpk_grid_scale.h"
 
@@ -12,18 +12,21 @@ namespace gpk
 	struct img {
 		typedef	_tColor				T;
 		typedef	const _tColor		TConst;
+		typedef	::gpk::view<T>		TView	;
+		typedef	::gpk::grid<T>		TGrid	;
+		typedef	::gpk::view<TConst>	TViewConst	;
 
 		::gpk::apod<T>				Texels		;
-		::gpk::v2<T>				View		;
+		::gpk::grid<T>				View		;
 
 		constexpr					img			()								= default;
-									img			(const ::gpk::v2<T> & other)	: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
+									img			(const ::gpk::grid<T> & other)	: Texels(other)			{ View = {Texels.begin(), other		.metrics()}; }
 									img			(const img<T> & other)			: Texels(other.Texels)	{ View = {Texels.begin(), other.View.metrics()}; }
 
-		inlcxpr	operator			v2<const T>	()						const	noexcept	{ return View; }
-		inline	operator			v2<T>		()								noexcept	{ return View; }
+		inlcxpr	operator			grid<const T>	()		const	noexcept	{ return View; }
+		inline	operator			grid<T>			()				noexcept	{ return View; }
 
-		img&						operator=	(const ::gpk::v2<T> & other) {
+		img&						operator=	(const ::gpk::grid<T> & other) {
 			Texels						= v1<const T>{other.begin(), other.size()};
 			View						= {Texels.begin(), other.metrics()};
 			return *this;
@@ -35,8 +38,8 @@ namespace gpk
 			return *this;
 		}
 
-		inline	::gpk::v1<T>			operator[]	(uint32_t index)						{ return View[index]; }
-		inline	const ::gpk::v1<TConst>	operator[]	(uint32_t index)	const				{ return View[index]; }
+		inline	TView				operator[]	(uint32_t index)							{ return View[index]; }
+		inline	TViewConst			operator[]	(uint32_t index)		const				{ return View[index]; }
 
 		inlcxpr	const T*			begin		()						const	noexcept	{ return View.begin		();	}
 		inlcxpr	const T*			end			()						const	noexcept	{ return View.end		();	}
@@ -184,7 +187,7 @@ namespace gpk
 
 
 	template<typename TColor>
-	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::v2<TColor> & out_view, const ::gpk::n2u16 & newSize)											{
+	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_colors.resize(newSize.x * newSize.y));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize)
 			out_view					= {out_colors.begin(), newSize.u32() };
@@ -192,7 +195,7 @@ namespace gpk
 	}
 
 	template<typename TColor>
-	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::v2<TColor> & out_view, const ::gpk::n2u16 & newSize, const TColor & newValue) {
+	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize, const TColor & newValue) {
 		gpk_necs(out_colors.resize(newSize.x * newSize.y, newValue));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize)
 			out_view					= {out_colors.begin(), newSize};
@@ -201,7 +204,7 @@ namespace gpk
 	}
 
 	template<typename TColor>
-	::gpk::error_t				updateSizeDependentImage	(::gpk::apod<TColor> & out_scaled, ::gpk::v2<TColor> & out_view, const ::gpk::v2<TColor> & in_view, const ::gpk::n2u16 & newSize)											{
+	::gpk::error_t				updateSizeDependentImage	(::gpk::apod<TColor> & out_scaled, ::gpk::grid<TColor> & out_view, const ::gpk::grid<TColor> & in_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_scaled.resize(newSize.x * newSize.y));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize ) {
 			out_view					= {out_scaled.begin(), newSize.x, newSize.y};
@@ -220,7 +223,7 @@ namespace gpk
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
 	template<typename TColor>
-	stainli	::gpk::error_t		updateSizeDependentImage	(::gpk::img<TColor> & out_texture, const ::gpk::v2<TColor> & in_view, const ::gpk::n2u16 & newSize) {
+	stainli	::gpk::error_t		updateSizeDependentImage	(::gpk::img<TColor> & out_texture, const ::gpk::grid<TColor> & in_view, const ::gpk::n2u16 & newSize) {
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}
 

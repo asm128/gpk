@@ -1,4 +1,4 @@
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_label.h"
 #include "gpk_apod_serialize.h"
 

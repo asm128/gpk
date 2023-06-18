@@ -1,6 +1,5 @@
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_gui.h"
-#include "gpk_enum.h"
 
 #ifndef GPK_DIALOG_H_67383889976
 #define GPK_DIALOG_H_67383889976

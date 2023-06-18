@@ -1,5 +1,5 @@
 ﻿#include "gpk_d3d.h"
-#include "gpk_view_grid.h"
+#include "gpk_grid.h"
 
 #include <dxgi1_4.h>
 #include <DirectXMath.h>

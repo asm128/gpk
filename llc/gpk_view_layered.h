@@ -1,4 +1,4 @@
-#include "gpk_view_grid.h"
+#include "gpk_grid.h"
 
 #ifndef GPK_LAYERED_VIEW_H_0923782
 #define GPK_LAYERED_VIEW_H_0923782
@@ -25,15 +25,15 @@ namespace gpk
 		}
 
 		// Operators
-							::gpk::view2d<_tElement>				operator[]		(uint32_t layer)																			{
+							::gpk::grid<_tElement>				operator[]		(uint32_t layer)																			{
 			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
 			gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer);
-			return ::gpk::view2d<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y);
+			return ::gpk::grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
-							::gpk::view2d<const _tElement>		operator[]		(uint32_t layer)														const				{
+							::gpk::grid<const _tElement>		operator[]		(uint32_t layer)														const				{
 			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
 			gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer);
-			return ::gpk::view2d<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y);
+			return ::gpk::grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
 
 		// Methods
@@ -48,7 +48,7 @@ namespace gpk
 };
 #pragma pack(pop)
 
-	// view2d common typedefs
+	// grid common typedefs
 	typedef				::gpk::view_layered<char			>	view3d_char				;
 	typedef				::gpk::view_layered<uint8_t			>	view3d_ubyte			;
 	typedef				::gpk::view_layered<int8_t			>	view3d_byte				;
@@ -63,7 +63,7 @@ namespace gpk
 	typedef				::gpk::view_layered<int32_t			>	view3d_int32			;
 	typedef				::gpk::view_layered<int64_t			>	view3d_int64			;
 
-	// view2d<const> common typedefs
+	// grid<const> common typedefs
 	typedef				::gpk::view_layered<const char	>	view3d_const_char		;
 	typedef				::gpk::view_layered<const uint8_t	>	view3d_const_ubyte		;
 	typedef				::gpk::view_layered<const int8_t	>	view3d_const_byte		;

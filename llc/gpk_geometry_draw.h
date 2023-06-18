@@ -11,7 +11,7 @@
 namespace gpk
 {
 	::gpk::error_t	drawTriangle
-		( ::gpk::view2d<::gpk::bgra>		targetPixels
+		( ::gpk::g8bgra		targetPixels
 		, const ::gpk::STrianglesIndexed	& geometry
 		, const int							iTriangle
 		, const ::gpk::m4f32				& matrixTransform
@@ -20,10 +20,10 @@ namespace gpk
 		, const ::gpk::rgbaf				& lightColor
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::view2d<const ::gpk::bgra>	textureImage
+		, ::gpk::grid<const ::gpk::bgra>	textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::apod<::gpk::rgbaf>			& lightColors
-		, ::gpk::view2d<uint32_t>			depthBuffer
+		, ::gpk::grid<uint32_t>			depthBuffer
 		);
 
 }

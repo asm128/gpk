@@ -1,6 +1,6 @@
 ﻿#include "DeviceResources.h"
 
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 
 #include <string>
 

@@ -1,5 +1,5 @@
 #include "gpk_engine_rendercolor.h"
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_matrix.h"
 
 #ifndef GPK_ENGINE_RENDERNODE_H

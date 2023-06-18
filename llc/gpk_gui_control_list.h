@@ -41,35 +41,35 @@ namespace gpk
 	}
 
 	struct SControlList {
-		cid_t					IdControl									= (cid_t)-1;
-		::gpk::DIRECTION		Orientation									= ::gpk::DIRECTION_RIGHT;
-		cid_t					IndexParentList								= (cid_t)-1;
-		cid_t					IndexParentItem								= (cid_t)-1;
-		::gpk::acid				IdControls									= {};
-		cid_t					IdSelected									= (cid_t)-1;
-		::gpk::acid				IdMultiselect								= {};
-		::gpk::ai64				Events										= {};
+		cid_t					IdControl				= (cid_t)-1;
+		::gpk::DIRECTION		Orientation				= ::gpk::DIRECTION_RIGHT;
+		cid_t					IndexParentList			= (cid_t)-1;
+		cid_t					IndexParentItem			= (cid_t)-1;
+		::gpk::acid				IdControls				= {};
+		cid_t					IdSelected				= (cid_t)-1;
+		::gpk::acid				IdMultiselect			= {};
+		::gpk::ai64				Events					= {};
 	};
 
-	::gpk::error_t			controlListInitialize						(::gpk::SGUI & gui, ::gpk::SControlList & menu);
-	::gpk::error_t			controlListArrange							(::gpk::SGUI & gui, ::gpk::SControlList & menu);
-	::gpk::error_t			controlListPush								(::gpk::SGUI & gui, ::gpk::SControlList & menu, const ::gpk::vcs & text, int64_t eventCode = -1);
+	::gpk::error_t			controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList & menu);
+	::gpk::error_t			controlListArrange		(::gpk::SGUI & gui, ::gpk::SControlList & menu);
+	::gpk::error_t			controlListPush			(::gpk::SGUI & gui, ::gpk::SControlList & menu, const ::gpk::vcs & text, int64_t eventCode = -1);
 
 	struct SPaletteGrid {
 		cid_t					IdControl				= -1;
 		::gpk::acid				IdControls				= {};
-		::gpk::v2<::gpk::bgra>	Colors					= {};
+		::gpk::g8bgra			Colors					= {};
 	};
 
 	struct SEditBox {
 		cid_t					IdControl				= -1;
 		::gpk::acid				IdControls				= {};
-		::gpk::v2<::gpk::bgra>	Colors					= {};
+		::gpk::g8bgra			Colors					= {};
 	};
 
 
 	::gpk::error_t			paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid & palette);
-	::gpk::error_t			paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid & palette, const ::gpk::v2bgra & colors);
+	::gpk::error_t			paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid & palette, const ::gpk::g8bgra & colors);
 }
 
 #endif // GPK_GUI_CONTROL_LIST_H_29037498023613

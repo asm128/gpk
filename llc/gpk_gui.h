@@ -50,7 +50,7 @@ namespace gpk
 
 	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::view<const ::gpk::SSysEvent> in_Events = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2u16 & targetSize, bool forceUpdate);
-	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::v2bgra target);
+	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::g8bgra target);
 	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::acid & controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI & gui);
 	::gpk::error_t			guiSelect						(::gpk::SGUI & gui, cid_t controlToSelect);
@@ -59,7 +59,7 @@ namespace gpk
 	::gpk::cid_t 			controlCreate					(::gpk::SGUI & gui);
 	::gpk::cid_t			controlCreateChild				(::gpk::SGUI & gui, cid_t iParent);
 	::gpk::error_t			controlSetParent				(::gpk::SGUI & gui, cid_t iControl, cid_t iParent);
-	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::v2bgra target);
+	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
 	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs & text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);

@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 #include "gpk_matrix.h"
 #include "gpk_tri2.h"
-#include "gpk_color.h"
+#include "gpk_array_color.h"
 #include "gpk_camera.h"
 
 #ifndef GPK_SCENE_H_203492837
@@ -83,25 +83,25 @@ namespace gpk
 
 
 	struct SRenderCache {
-		::gpk::apod<::gpk::n2i16>		TrianglePixelCoords					= {};
-		::gpk::apod<::gpk::trif32>		TrianglePixelWeights				= {};
-		::gpk::apod<::gpk::n2i16>		WireframePixelCoords				= {};
+		::gpk::apod<::gpk::n2i16>	TrianglePixelCoords					= {};
+		::gpk::apod<::gpk::trif32>	TrianglePixelWeights				= {};
+		::gpk::apod<::gpk::n2i16>	WireframePixelCoords				= {};
 
-		::gpk::apod<::gpk::tri3f32>		TransformedNormalsVertex			= {};
+		::gpk::apod<::gpk::tri3f32>	TransformedNormalsVertex			= {};
 
-		::gpk::ai32						Triangle3dIndices					= {};
-		::gpk::apod<::gpk::tri3f32>		Triangle3dToDraw					= {};
-		::gpk::apod<::gpk::tri3f32>		Triangle3dWorld						= {};
+		::gpk::ai32					Triangle3dIndices					= {};
+		::gpk::apod<::gpk::tri3f32>	Triangle3dToDraw					= {};
+		::gpk::apod<::gpk::tri3f32>	Triangle3dWorld						= {};
 
-		uint32_t						TrianglesDrawn						= 0;
-		uint32_t						PixelsDrawn							= 0;
-		uint32_t						PixelsSkipped						= 0;
+		uint32_t					TrianglesDrawn						= 0;
+		uint32_t					PixelsDrawn							= 0;
+		uint32_t					PixelsSkipped						= 0;
 	};
 
 	struct SColorsMaterial {
-		::gpk::apod<::gpk::bgra>	Ambient				= {};
-		::gpk::apod<::gpk::bgra>	Diffuse				= {};
-		::gpk::apod<::gpk::bgra>	Specular			= {};
+		::gpk::a8bgra				Ambient				= {};
+		::gpk::a8bgra				Diffuse				= {};
+		::gpk::a8bgra				Specular			= {};
 	};
 
 	struct SLightsDirectional {

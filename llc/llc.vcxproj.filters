@@ -126,7 +126,7 @@
     <ClInclude Include="gpk_view_bit.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_grid.h">
+    <ClInclude Include="gpk_grid.h">
       <Filter>view</Filter>
     </ClInclude>
     <ClInclude Include="gpk_view_layered.h">
@@ -414,9 +414,6 @@
     <ClInclude Include="gpk_complus.h">
       <Filter>pointer</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_ptr.h">
-      <Filter>pointer</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_ptr_obj.h">
       <Filter>pointer</Filter>
     </ClInclude>
@@ -528,9 +525,6 @@
     <ClInclude Include="gpk_color_type.h">
       <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_grid_color.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view_color.h">
       <Filter>view</Filter>
     </ClInclude>
@@ -574,6 +568,12 @@
       <Filter>typedefs</Filter>
     </ClInclude>
     <ClInclude Include="gpk_array_pobj.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_color.h">
+      <Filter>typedefs</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_ptr.h">
       <Filter>typedefs</Filter>
     </ClInclude>
   </ItemGroup>

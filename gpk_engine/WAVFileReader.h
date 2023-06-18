@@ -1,7 +1,7 @@
 // Functions for loading WAV audio files. Copyright (c) Microsoft Corporation. Licensed under the MIT License.
 // http://go.microsoft.com/fwlink/?LinkId=248929
 // http://go.microsoft.com/fwlink/?LinkID=615561
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_array.h"
 
 #ifdef GPK_WINDOWS

@@ -2,6 +2,7 @@
 #include "gpk_gui_text.h"
 #include "gpk_base64.h"
 #include "gpk_rect_align.h"
+#include "gpk_array_color.h"
 
 ::gpk::error_t			gpk::controlInvalid			(const ::gpk::SGUI & gui, cid_t iControl)				{
 	if(gui.Controls.States.size() <= uint32_t(iControl)	) 
@@ -11,7 +12,7 @@
 	return 0;
 }
 
-static	::gpk::error_t	paletteSetupDefault			(::gpk::apod<::gpk::bgra> & palette, const ::gpk::view<const ::gpk::bgra> & colors, uint32_t iShades)	{
+static	::gpk::error_t	paletteSetupDefault			(::gpk::a8bgra & palette, const ::gpk::view<const ::gpk::bgra> & colors, uint32_t iShades)	{
 	const uint32_t				newPaletteSize				= colors.size() * iShades;
 	if(palette.size() < newPaletteSize)
 		gpk_necs(palette.resize(newPaletteSize));
@@ -43,11 +44,11 @@ static	::gpk::error_t	paletteSetupDefault			(::gpk::apod<::gpk::bgra> & palette,
 }
 
 static	::gpk::error_t	themeSetupDefault						(const ::gpk::view<const ::gpk::bgra> & palette, int32_t iColor, ::gpk::SControlTheme & theme, uint32_t iShades)	{
-	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	]	= {};
-	::gpk::array_static<uint32_t, ::gpk::UI_CONTROL_AREA_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	]	= {};
+	::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboDisabled									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_DISABLED	]	= {};
+	::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboPressed 									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_PRESSED	]	= {};
+	::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboSelected									= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_SELECTED	]	= {};
+	::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboHover 										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_HOVER	]	= {};
+	::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>		& colorComboNormal										= theme.ColorCombos[::gpk::GUI_CONTROL_PALETTE_NORMAL	]	= {};
 
 	//const int32_t														colorBase												= iColor / iShades;
 	const int32_t														colorShade												= iColor % iShades;
@@ -106,7 +107,7 @@ static	::gpk::error_t	themeSetupDefault						(const ::gpk::view<const ::gpk::bgr
 	return 0;
 }
 
-static	::gpk::error_t	themeSetupDefault	(const ::gpk::apod<::gpk::bgra>& palette, ::gpk::apod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
+static	::gpk::error_t	themeSetupDefault	(const ::gpk::a8bgra & palette, ::gpk::apod<::gpk::SControlTheme>& themes, uint32_t iShades)	{
 	for(uint32_t iColor = 0; iColor < palette.size(); ++iColor) {
 		const int32_t				indexTheme			= themes.push_back({});
 		::gpk::SControlTheme		& theme				= themes[indexTheme];
@@ -115,7 +116,7 @@ static	::gpk::error_t	themeSetupDefault	(const ::gpk::apod<::gpk::bgra>& palette
 	return 0;
 }
 
-static	::gpk::error_t	initDefaults		(::gpk::pobj<::gpk::apod<::gpk::bgra>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
+static	::gpk::error_t	initDefaults		(::gpk::pobj<::gpk::a8bgra> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes) {
 	stacxpr	uint32_t			iShades				= 16;
 	static	::gpk::bgra			paletteColors []	=
 		// 16 Base colors
@@ -169,7 +170,7 @@ static	::gpk::error_t	initDefaults		(::gpk::pobj<::gpk::apod<::gpk::bgra>> & pal
 	return 0;
 }
 
-static	::gpk::error_t	paletteSetupDefaultColors	(::gpk::pobj<::gpk::apod<::gpk::bgra>> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes)	{
+static	::gpk::error_t	paletteSetupDefaultColors	(::gpk::pobj<::gpk::a8bgra> & palette, ::gpk::pobj<::gpk::apod<::gpk::SControlTheme>> & controlThemes)	{
 	static ::gpk::papod<::gpk::bgra>			globalDefaultPalette		= {};
 	static ::gpk::papod<::gpk::SControlTheme>	globalDefaultTheme			= {};
 	
@@ -499,25 +500,13 @@ static	::gpk::cid_t	updateGUIControlHovered	(::gpk::SGUI & gui, ::gpk::cid_t iCo
 			gui.Controls.SetHovered(iControl, true);//controlFlags.Disabled;
 		}
 	}
-	return one_if(controlState.IsHovered());
+	return controlState.IsHovered() ? iControl : -1;
 }
 
 static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::cid_t iControl)														{
 	//--------------------
 	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
 	::gpk::cid_t				controlHovered			= -1;
-	if(::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Area[iControl].Total.Global)) {
-		if(::gpk::GUI_CONTROL_FLAG_Hovered & gui.Controls.States[iControl].Mask) { // TODO: use states instead.
-			controlHovered		= iControl;
-			::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl));
-		}
-	}
-	else {
-		gui.Controls.SetHovered(iControl, false);
-
-		if(input.ButtonUp(0)) 
-			gui.Controls.SetPressed(iControl, false);
-	}
 	{
 		::gpk::vcid					& children				= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild) {
@@ -530,6 +519,14 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 				controlHovered			= controlPressed;
 			}
 		}
+	}
+	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Area[iControl].Total.Global))
+		controlHovered		= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl));
+	else {
+		gui.Controls.SetHovered(iControl, false);
+
+		if(input.ButtonUp(0)) 
+			gui.Controls.SetPressed(iControl, false);
 	}
 	return controlHovered;
 }
@@ -568,9 +565,6 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 		if(gui.Controls.States.size() > (uint32_t)controlPressed)
 			controlHovered			= controlPressed;
 	}
-	if(controlHovered == -1)
-		return gui.Controls.States.size();
-
 	for(uint32_t iControl = 0, countControls = gui.Controls.States.size(); iControl < countControls; ++iControl) {
 		if(iControl != (uint32_t)controlHovered) {
 			gui.Controls.SetHovered((::gpk::cid_t)iControl, false);;
@@ -578,6 +572,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 				gui.Controls.SetPressed((::gpk::cid_t)iControl, false);
 		}
 	}
+
 	return controlHovered;
 }
 

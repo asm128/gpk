@@ -141,7 +141,7 @@
     <ClInclude Include="gpk_platform.h" />
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_process.h" />
-    <ClInclude Include="gpk_ptr.h" />
+    <ClInclude Include="gpk_array_ptr.h" />
     <ClInclude Include="gpk_rigidbody.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_runtime.h" />
@@ -163,7 +163,7 @@
     <ClInclude Include="gpk_type_registry.h" />
     <ClInclude Include="gpk_view.h" />
     <ClInclude Include="gpk_view_bit.h" />
-    <ClInclude Include="gpk_view_grid.h" />
+    <ClInclude Include="gpk_grid.h" />
     <ClInclude Include="gpk_view_layered.h" />
     <ClInclude Include="gpk_view_manager.h" />
     <ClInclude Include="gpk_view_stream.h" />

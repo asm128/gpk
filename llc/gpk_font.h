@@ -1,4 +1,4 @@
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 #include "gpk_image.h"
 #include "gpk_base64.h"
 

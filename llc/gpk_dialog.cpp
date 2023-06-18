@@ -117,7 +117,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 			}
 		}
 		checkbox.Checked									= !checkbox.Checked;
-		controlTable.Images[checkbox.IdGUIControl].Image	= (false == checkbox.Checked) ? ::gpk::view2d<::gpk::bgra>{} : imageCross.View;
+		controlTable.Images[checkbox.IdGUIControl].Image	= (false == checkbox.Checked) ? ::gpk::g8bgra{} : imageCross.View;
 	}
 	return 0;
 }

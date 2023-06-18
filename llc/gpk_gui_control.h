@@ -191,7 +191,7 @@ namespace gpk
 
 	struct SControlImage {
 		::gpk::rtbgra8d32			Temp				= {};
-		::gpk::v2bgra				Image				= {};
+		::gpk::g8bgra				Image				= {};
 		::gpk::n2i16				ImageOffset			= {};
 		uint8_t						ImageAlign			= ::gpk::ALIGN_CENTER;
 		uint8_t						ImageInvertX		: 1;

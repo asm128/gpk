@@ -1,5 +1,5 @@
 #include "gpk_ro_gnd.h"
-#include "gpk_view_grid.h"
+#include "gpk_grid.h"
 #include "gpk_view_stream.h"
 #include "gpk_io.h"
 #include "gpk_file.h"
@@ -252,9 +252,9 @@ static	::gpk::error_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_
 	, TILE_FACE_FACING								facing_direction
 	, int32_t										textureIndex
 	, SModelNodeGND									& generated
-	, ::gpk::view2d<::gpk::STileMapping>			& out_mapping
+	, ::gpk::grid<::gpk::STileMapping>			& out_mapping
 	) {
-	::gpk::view2d<const ::gpk::STileGeometryGND>						geometryView										= {lstTileGeometryData.begin(), tileMapMetrics.Size};
+	::gpk::grid<const ::gpk::STileGeometryGND>						geometryView										= {lstTileGeometryData.begin(), tileMapMetrics.Size};
 	for(uint32_t y = 0; y < geometryView.metrics().y; ++y)
 	for(uint32_t x = 0; x < geometryView.metrics().x; ++x) {
 		const ::gpk::STileGeometryGND										& geometryTile										= geometryView[y][x];
@@ -307,7 +307,7 @@ static	::gpk::error_t	gndGenerateFaceGeometryTop								(uint32_t baseX, uint32_
 	return 0;
 }
 
-::gpk::error_t			gpk::blendGNDNormals				(const ::gpk::view2d<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::view2d<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes)			{
+::gpk::error_t			gpk::blendGNDNormals				(const ::gpk::grid<::gpk::STileGeometryGND> &tileGeometryView, const ::gpk::view<::gpk::STileSkinGND>& lstTileSkinData, const ::gpk::grid<::gpk::STileMapping>& tileMappingView, ::gpk::view<::gpk::SModelNodeGND> & gndModelNodes)			{
 	for(uint32_t y = 0; y < tileGeometryView.metrics().y - 1; ++y) {
 		const ::gpk::view<const ::gpk::STileGeometryGND	>			rowTileGeometry										= tileGeometryView	[y];
 		const ::gpk::view<const ::gpk::STileMapping		>			rowTileMapping										= tileMappingView	[y];

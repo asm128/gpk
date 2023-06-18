@@ -1,6 +1,6 @@
 #include "gpk_enum.h"
-#include "gpk_ptr.h"
-#include "gpk_color.h"
+#include "gpk_array_ptr.h"
+#include "gpk_array_color.h"
 #include "gpk_array_static.h"
 #include "gpk_quad2.h"
 #include "gpk_quad3.h"
@@ -156,7 +156,7 @@ namespace gpk
 	template<typename T>
 	struct SVoxelMap {
 		::gpk::n3u8							Dimensions;
-		::gpk::apod<::gpk::bgra>			Palette;
+		::gpk::a8bgra			Palette;
 		::gpk::apod<::gpk::SVoxel<uint8_t>>	Voxels;
 		::gpk::aobj<::gpk::SVoxelChunk<T>>	Chunks;
 		::gpk::apod<::gpk::n2u8>			ChunkPositions;

@@ -5,7 +5,7 @@
 #include "gpk_ptr_obj.h"
 #include "gpk_image.h"
 #include "gpk_rect.h"
-#include "gpk_color.h"
+#include "gpk_grid_color.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -74,7 +74,7 @@ namespace gpk
 		bool								FullScreen					: 1;
 	};
 
-	::gpk::error_t						windowPresentTarget			(::gpk::SWindow & windowInstance, const ::gpk::view2d<::gpk::bgra>& targetToPresent);
+	::gpk::error_t						windowPresentTarget			(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
 	::gpk::error_t						windowUpdate				(::gpk::SWindow & windowInstance);
 	::gpk::error_t						windowUpdateTick			(::gpk::SWindow & windowInstance);
 	::gpk::error_t						fullScreenExit				(::gpk::SWindow & windowInstance);

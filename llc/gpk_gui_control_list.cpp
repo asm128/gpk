@@ -92,7 +92,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::view2d<::gpk::bgra>& colors)			{
+::gpk::error_t			gpk::paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette, const ::gpk::g8bgra& colors)			{
 	if(-1 == palette.IdControl)
 		::gpk::paletteGridInitialize(gui, palette);
 

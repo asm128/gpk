@@ -77,7 +77,7 @@ namespace gpk
 	::gpk::error_t			pngDecode		(::gpk::SPNGData & pngData, ::gpk::img8bgra & out_Texture);
 	::gpk::error_t			pngDecode		(::gpk::SPNGData & pngData, ::gpk::imgu16	& out_Texture);
 	::gpk::error_t			pngDecode		(::gpk::SPNGData & pngData, ::gpk::imgu8	& out_Texture);
-	::gpk::error_t			pngFileWrite	(const ::gpk::v28bgra & out_ImageView, ::gpk::au8 & out_Bytes);
+	::gpk::error_t			pngFileWrite	(const ::gpk::gc8bgra & out_ImageView, ::gpk::au8 & out_Bytes);
 
 	stainli	::gpk::error_t	pngFileLoad		(const ::gpk::vcs	& filename	, ::gpk::img8bgra & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, filename	, out_Texture); }
 	stainli	::gpk::error_t	pngFileLoad		(const ::gpk::vcu8	& source	, ::gpk::img8bgra & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }

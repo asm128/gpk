@@ -56,7 +56,7 @@ static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated,
 	return 0;
 }
 
-::gpk::error_t			gpk::pngFileWrite		(const ::gpk::v2bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
+::gpk::error_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
 	stacxpr	const uint8_t												signature	[8]							= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::au8												safe_Bytes								= {};
 	safe_Bytes.append((uint8_t*)signature, 8);

@@ -1,5 +1,5 @@
 #include "gpk_enum.h"
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 
 #ifndef GPK_EXPRESSION_H_92837498237
 #define GPK_EXPRESSION_H_92837498237

@@ -81,12 +81,12 @@ static	::gpk::error_t	transformTriangles
 
 
 static	::gpk::error_t	drawBuffers
-	( ::gpk::v2bgra										& backBufferColors
-	, ::gpk::v2u32										backBufferDepth
+	( ::gpk::g8bgra										& backBufferColors
+	, ::gpk::gu32										backBufferDepth
 	, ::gpk::SVSOutput									& outVS
 	, ::gpk::SVSCache									& cacheVS
 	, const ::gpk::SRenderMaterial						& material
-	, ::gpk::v2cbgra									surface
+	, ::gpk::gc8bgra									surface
 	, const ::gpk::SEngineSceneConstants				& constants
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
@@ -127,8 +127,8 @@ static	::gpk::error_t	drawBuffers
 }
 
 ::gpk::error_t			gpk::drawScene									
-	( ::gpk::v2bgra							& backBufferColors
-	, ::gpk::v2u32							& backBufferDepth
+	( ::gpk::g8bgra							& backBufferColors
+	, ::gpk::gu32							& backBufferDepth
 	, ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
 	, const ::gpk::SEngineSceneConstants	& constants

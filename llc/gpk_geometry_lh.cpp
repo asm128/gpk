@@ -1,6 +1,6 @@
 #include "gpk_geometry_lh.h"
 
-::gpk::error_t			gpk::geometryBuildTileListFromImage		(::gpk::view2d<const ::gpk::bgra> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
+::gpk::error_t			gpk::geometryBuildTileListFromImage		(::gpk::grid<const ::gpk::bgra> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
 	{
 		::gpk::STile											newTile;
 		for(uint32_t z = 0, maxZ = image.metrics().y; z < maxZ ; ++z)
@@ -33,7 +33,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::geometryBuildGridFromTileList		(::gpk::SGeometryQuads & geometry, ::gpk::view2d<const ::gpk::STile> tiles, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale) {
+::gpk::error_t			gpk::geometryBuildGridFromTileList		(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> tiles, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale) {
 	::gpk::n2f32									texCoordUnits						= {1.0f / tiles.metrics().x, 1.0f / tiles.metrics().y};
 	for(uint32_t z = 0; z < tiles.metrics().y; ++z)
 	for(uint32_t x = 0; x < tiles.metrics().x; ++x) {

@@ -42,7 +42,7 @@ namespace gpk
 	inlcxpr	GUI_CONTROL_FLAG	setDisabled		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	noexcept	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Disabled	, value); }
 	inlcxpr	GUI_CONTROL_FLAG	setHovered		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	noexcept	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Hovered	, value); }
 	inlcxpr	GUI_CONTROL_FLAG	setPressed		(GUI_CONTROL_FLAG & state, const GUI_CONTROL_FLAG mask, bool value)	noexcept	{ 
-		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed)&& bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered)) 
+		return (value == false && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Pressed) && bit_test_masked(state, mask, GUI_CONTROL_FLAG_Hovered)) 
 			? state = bit_set_masked(bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value), mask, GUI_CONTROL_FLAG_Action, true)
 			: state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_Pressed, value)
 			; 

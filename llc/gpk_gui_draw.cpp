@@ -5,7 +5,7 @@
 #include "gpk_gui_text.h"
 #include "gpk_rect_align.h"
 
-static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::gpk::v2<::gpk::bgra> & target, bool bDisabled)				{
+static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::gpk::g8bgra & target, bool bDisabled)				{
 	::gpk::SControlState		& controlState		= gui.Controls.States	[iControl];
 	::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw	[iControl];
 	::gpk::bgra					colorFace			= {0xFF, 0x00, 0xFF, 0xFF};
@@ -117,7 +117,7 @@ static	::gpk::error_t	fillColorTable					(::gpk::SGUI & gui, ::gpk::cid_t iContr
 
 	return 0;
 }
-static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::v2<::gpk::bgra> & target)					{
+static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra & target)					{
 	::gpk::bgra					colors[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {}; // -- Fill color table
 	const bool					disabled						= ::gpk::controlDisabled(gui, iControl);
 	const ::gpk::SControlArea	& controlMetrics				= gui.Controls.Area[iControl];
@@ -173,7 +173,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	es_if(errored(::controlTextDraw(gui, iControl, target, disabled)));
 	return 0;
 }
-::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::v2<::gpk::bgra> target)								{
+::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
 	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
@@ -188,7 +188,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	}
 	return 0;
 }
-::gpk::error_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::v2<::gpk::bgra> target)													{
+::gpk::error_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
 	if(gui.LastSize != target.metrics().u16() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);

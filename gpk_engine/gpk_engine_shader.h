@@ -14,7 +14,7 @@ namespace gpk
 	::gpk::error_t			psSolid				(const ::gpk::SEngineSceneConstants & constants, const ::gpk::SPSIn & inPS, ::gpk::bgra & outputPixel);
 
 	template<typename _tCoord>
-	static	::gpk::error_t	drawLine			(const ::gpk::n2<uint16_t>& targetMetrics, const ::gpk::line3<_tCoord>& line, const ::gpk::m4f32 & mWVP, ::gpk::apod<::gpk::n3f32>& out_Points, ::gpk::v2u32 depth) {
+	static	::gpk::error_t	drawLine			(const ::gpk::n2u16 & targetMetrics, const ::gpk::line3<_tCoord> & line, const ::gpk::m4f32 & mWVP, ::gpk::apod<::gpk::n3f32>& out_Points, ::gpk::gu32 depth) {
 		::gpk::n3<_tCoord>			vA					= mWVP.Transform(line.A); 
 		::gpk::n3<_tCoord>			vB					= mWVP.Transform(line.B);
 		return ::gpk::drawLine(targetMetrics, ::gpk::line3<_tCoord>{vA, vB}, out_Points, depth);

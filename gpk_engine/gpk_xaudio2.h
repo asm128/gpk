@@ -3,7 +3,7 @@
 #ifdef GPK_WINDOWS
 
 #include "gpk_n3.h"
-#include "gpk_ptr.h"
+#include "gpk_array_ptr.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include "XAudio2Versions.h"

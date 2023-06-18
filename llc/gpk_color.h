@@ -211,11 +211,23 @@ namespace gpk
 				SColorFloat&	Clamp			()									noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
 	};	// struct
 
-	typedef ::gpk::SColorFloat					rgbaf	;
-	typedef ::gpk::SColorBGRA					bgra	;
-	typedef ::gpk::SColorBGR					bgr		;
-	typedef ::gpk::SColorRGBA					rgba	;
-	typedef ::gpk::SColorRGB					rgb		;
+	typedef ::gpk::SColorFloat					frgba	;
+	typedef ::gpk::SColorBGRA					u8bgra	;
+	typedef ::gpk::SColorBGR					u8bgr	;
+	typedef ::gpk::SColorRGBA					u8rgba	;
+	typedef ::gpk::SColorRGB					u8rgb	;
+
+	typedef const frgba							cfrgba	;
+	typedef const u8bgra						c8bgra	;
+	typedef const u8bgr							c8bgr	;
+	typedef const u8rgba						c8rgba	;
+	typedef const u8rgb							c8rgb	;
+
+	typedef frgba								rgbaf	;
+	typedef u8bgra								bgra	;
+	typedef u8bgr								bgr		;
+	typedef u8rgba								rgba	;
+	typedef u8rgb								rgb		;
 
 
 	stacxpr	::gpk::rgbaf	BLACK			= {0.0f , 0.0f               , 0.00f, 1.0f};

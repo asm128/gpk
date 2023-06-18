@@ -5,8 +5,8 @@ static	::gpk::error_t	drawOrderedVertices
 	( ::gpk::SNodeRenderer					& renderer
 	, const ::gpk::SRenderNode				& nodeToDraw
 	, ::gpk::m4f32				matrixWVP
-	, ::gpk::view2d<::gpk::bgra>	target_image
-	, ::gpk::view2d<uint32_t>			target_depth
+	, ::gpk::g8bgra	target_image
+	, ::gpk::grid<uint32_t>			target_depth
 	) {
 
 	::gpk::tri3f32							triangleTransformed		= {};
@@ -58,8 +58,8 @@ static	::gpk::error_t	drawOrderedVertices
 	, const ::gpk::m4f32			& view
 	, const ::gpk::m4f32			& projection
 	, const ::gpk::m4f32			& viewProjection
-	, ::gpk::view2d<::gpk::bgra>	target_image
-	, ::gpk::view2d<uint32_t>			target_depth
+	, ::gpk::g8bgra	target_image
+	, ::gpk::grid<uint32_t>			target_depth
 	) {
 	if(0 == target_image.size())
 		return 1;
@@ -87,8 +87,8 @@ static	::gpk::error_t	drawOrderedVertices
 ::gpk::error_t			gpk::nodeRendererDraw
 	( ::gpk::SNodeRenderer					& renderer
 	, int32_t								iCamera
-	, ::gpk::view2d<::gpk::bgra>	target_image
-	, ::gpk::view2d<uint32_t>			target_depth
+	, ::gpk::g8bgra	target_image
+	, ::gpk::grid<uint32_t>			target_depth
 	, bool									drawHidden
 	) {
 	if(0 == target_image.size())
