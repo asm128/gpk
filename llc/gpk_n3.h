@@ -158,17 +158,34 @@ namespace gpk
 			return *this;
 		}
 	};	// struct n3
-	typedef n3<float>		n3f32, n3f;
-	typedef n3<double>		n3f64, n3d;
-	typedef n3<uint8_t>		n3u8;
-	typedef n3<uint16_t>	n3u16;
-	typedef n3<uint32_t>	n3u32;
-	typedef n3<uint64_t>	n3u64;
-	typedef n3<int8_t>		n3i8;
-	typedef n3<int16_t>		n3i16;
-	typedef n3<int32_t>		n3i32;
-	typedef n3<int64_t>		n3i64;
+	typedef	n3<char>		n3char;
+	typedef	n3<uchar_t>		n3uchar;
+	typedef	n3<float>		n3f32;
+	typedef	n3<double>		n3f64;
+	typedef	n3<uint8_t>		n3u8;
+	typedef	n3<uint16_t>	n3u16;
+	typedef	n3<uint32_t>	n3u32;
+	typedef	n3<uint64_t>	n3u64;
+	typedef	n3<int8_t>		n3i8;
+	typedef	n3<int16_t>		n3i16;
+	typedef	n3<int32_t>		n3i32;
+	typedef	n3<int64_t>		n3i64;
 
+	typedef	const n3char	cn3char		;
+	typedef	const n3uchar	cn3uchar	;
+	typedef	const n3f32		cn3f32		;
+	typedef	const n3f64		cn3f64		;
+	typedef	const n3u8		cn3u8		;
+	typedef	const n3u16		cn3u16		;
+	typedef	const n3u32		cn3u32		;
+	typedef	const n3u64		cn3u64		;
+	typedef	const n3i8		cn3i8		;
+	typedef	const n3i16		cn3i16		;
+	typedef	const n3i32		cn3i32		;
+	typedef	const n3i64		cn3i64		;
+
+	typedef	minmax<n3char>	minmax3char;
+	typedef	minmax<n3uchar>	minmax3uchar;
 	typedef	minmax<n3f32>	minmax3f32;
 	typedef	minmax<n3f64>	minmax3f64;
 	typedef	minmax<n3u8 >	minmax3u8;

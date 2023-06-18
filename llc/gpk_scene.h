@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 #include "gpk_matrix.h"
 #include "gpk_tri2.h"
-#include "gpk_array_color.h"
+#include "gpk_apod_color.h"
 #include "gpk_camera.h"
 
 #ifndef GPK_SCENE_H_203492837
@@ -19,8 +19,8 @@ namespace gpk
 
 	template <typename _tElement, typename _tIndex>
 	struct SModelBufferIndexed {
-		::gpk::apod<_tIndex>				Indices										;
-		::gpk::apod<_tElement>				Values										;
+		::gpk::apod<_tIndex>	Indices										;
+		::gpk::apod<_tElement>	Values										;
 	};
 
 	template <typename _tAxis, typename _tIndex>
@@ -35,23 +35,23 @@ namespace gpk
 
 	template <typename _tUnit>
 	struct SModelPivot {
-		::gpk::n3	<_tUnit>						Scale										;
-		::gpk::quat	<_tUnit>						Orientation									;
-		::gpk::n3	<_tUnit>						Position									;
+		::gpk::n3	<_tUnit>	Scale										;
+		::gpk::quat	<_tUnit>	Orientation									;
+		::gpk::n3	<_tUnit>	Position									;
 	};
 
 	// --- Geometry generation: Cube.
-	::gpk::error_t				generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t				generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t				generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t				generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
-	::gpk::error_t				generateCubeGeometry
+	::gpk::error_t			generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
+	::gpk::error_t			generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
+	::gpk::error_t			generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
+	::gpk::error_t			generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t			generateCubeGeometry
 		( ::gpk::apod<::gpk::tri3f32> & out_Positions
 		, ::gpk::apod<::gpk::n3f32  > & out_Normals
 		, ::gpk::apod<::gpk::tri3f32> & out_NormalsVertex
 		, ::gpk::apod<::gpk::tri2f32> & out_UV
 		);
-	stainli	::gpk::error_t			generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
+	stainli	::gpk::error_t	generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
 		return ::gpk::generateCubeGeometry
 			( out_Geometry.Positions
 			, out_Geometry.NormalsTriangle

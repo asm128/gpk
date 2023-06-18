@@ -241,7 +241,7 @@ template<typename _tParams>
 static ::gpk::error_t	createEntityFromGeometry
 	( ::gpk::SEngine							& engine
 	, const ::gpk::vcc							name		
-	, const ::gpk::n3f							halfSizes
+	, const ::gpk::n3f32							halfSizes
 	, bool										createSkin
 	, const _tParams							& params
 	, ::gpk::SLinearPODMap<_tParams, uint32_t>	& recycleRenderNodeMap
@@ -332,7 +332,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 
 ::gpk::error_t			gpk::SEngine::CreateSphere(const SParamsSphere & params)	{ 
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Sphere"}, ::gpk::n3f{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Sphere"}, ::gpk::n3f32{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
 		, [params](::gpk::STrianglesIndexed & geometry) { 
 			return ::gpk::geometryBuildSphere(geometry, params); 
 		});
@@ -340,7 +340,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateGrid(const SParamsGrid & params)	{ 
 	stacxpr	float				radius					= .5f;
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f{radius, radius, radius}, true, params, ParamsGrid
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsGrid
 		, [params](::gpk::STrianglesIndexed & geometry) {
 			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
 			return 0;
@@ -349,7 +349,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateCylinder(const SParamsCylinder & params)	{ 
 	stacxpr	float				radius					= .5f;
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f{radius, radius, radius}, true, params, ParamsCylinder
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
 		, [params](::gpk::STrianglesIndexed & geometry) { 
 			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
 			return 0;

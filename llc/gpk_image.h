@@ -86,7 +86,7 @@ namespace gpk
 	typedef	img<double>		imgf64;
 
 	template<typename _tType>
-	struct SImageMonochrome {
+	struct imgmono {
 		typedef	_tType				T;
 		typedef	::gpk::view_bit<T>	TView;
 
@@ -94,25 +94,25 @@ namespace gpk
 		::gpk::view_bit<T>			View				;
 		uint32_t					Pitch				= 0;
 
-		cnstxpr						SImageMonochrome	()		noexcept	= default;
-									SImageMonochrome	(const ::gpk::view_bit<T> & other)
+		cnstxpr						imgmono	()		noexcept	= default;
+									imgmono	(const ::gpk::view_bit<T> & other)
 			:	Texels	(other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS))
 			,	View	(Texels.begin(), other.size())
 			,	Pitch	(other.Pitch)
 			{}
-									SImageMonochrome	(const ::gpk::SImageMonochrome<T> & other)
+									imgmono	(const ::gpk::imgmono<T> & other)
 			: Texels	(other.Texels)
 			, View		(Texels.begin(), other.View.size())
 			, Pitch		(other.Pitch)
 			{}
 
-		::gpk::SImageMonochrome<T>&	operator=			(const ::gpk::view_bit<T> & other) {
+		::gpk::imgmono<T>&	operator=			(const ::gpk::view_bit<T> & other) {
 			Texels						= {other.begin(), other.size() / TView::ELEMENT_BITS + one_if(other.size() % TView::ELEMENT_BITS)};
 			View						= {Texels.begin(), other.size()};
 			Pitch						= other.Pitch;
 			return *this;
 		}
-		::gpk::SImageMonochrome<T>&	operator=			(const ::gpk::SImageMonochrome<T> & other) {
+		::gpk::imgmono<T>&	operator=			(const ::gpk::imgmono<T> & other) {
 			Texels						= other.Texels;
 			View						= {Texels.begin(), other.View.size()};
 			Pitch						= other.Pitch;
@@ -128,9 +128,6 @@ namespace gpk
 			return 0;
 		}
 	}; // struct
-
-	template<typename T>	
-	using	imgmono				= ::gpk::SImageMonochrome<T>;
 
 	typedef	imgmono<uint64_t>	imgmonou64;
 

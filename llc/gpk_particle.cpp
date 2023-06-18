@@ -17,7 +17,7 @@
 	return Speed.remove_unordered(iParticle);
 }
 
-::gpk::error_t			gpk::SParticles3::Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed)	{
+::gpk::error_t			gpk::SParticles3::Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed)	{
 	Position	.push_back(position);
 	Direction	.push_back(direction);
 	return Speed.push_back(speed);

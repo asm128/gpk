@@ -340,7 +340,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::n3f32				& lightVector
 	, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::n3f32>			& lightPoints
 	, ::gpk::a8bgra			& lightColors
 	, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
@@ -385,7 +385,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::n3f32			& lightVector
 	, ::gpk::apod<::gpk::n2i16>		& pixelCoords
 	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f32>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
 	) {
@@ -429,7 +429,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::n3f32			& lightVector
 	, ::gpk::apod<::gpk::n2i16>		& pixelCoords
 	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f32>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
 	, ::gpk::grid<uint32_t>		depthBuffer
@@ -446,7 +446,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::n3f32			& lightVector
 	, ::gpk::apod<::gpk::n2i16>		& pixelCoords
 	, ::gpk::apod<::gpk::trif32>	& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::n3f32>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
 	, ::gpk::grid<uint32_t>		depthBuffer
@@ -538,7 +538,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::n3f32				& lightVector
 	, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra	textureImage
 	, ::gpk::grid<uint32_t>			depthBuffer
 	) {
 	::gpk::tri3f32				triangle			= geometry.Triangles		[iTriangle];
@@ -581,7 +581,7 @@ template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c
 	, const ::gpk::rgbaf				& lightColor
 	, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra	textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::a8bgra			& lightColors
 	, ::gpk::grid<uint32_t>			depthBuffer

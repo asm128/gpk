@@ -9,26 +9,26 @@ namespace gpk
 #pragma pack(push, 1)
 	// The following structure stores forces information for a 3D rigid body. These change almost every frame during runtime
 	struct SBodyForces {
-		::gpk::n3f									Velocity						= {};
-		::gpk::n3f									Acceleration					= {};
-		::gpk::n3f									Rotation						= {};
+		::gpk::n3f32		Velocity						= {};
+		::gpk::n3f32		Acceleration					= {};
+		::gpk::n3f32		Rotation						= {};
 	};
 
 	// The following structure stores mass information for a 3D rigid body. These almost never change during runtime
 	struct SBodyMass {
-		float										LinearDamping					= 1.0f;
-		float										AngularDamping					= 1.0f;
-		float										InverseMass						= 0;
-		::gpk::m3f									InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
+		float				LinearDamping					= 1.0f;
+		float				AngularDamping					= 1.0f;
+		float				InverseMass						= 0;
+		::gpk::m3f32			InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
 
-		inlcxpr	double								GetMass							()	{
+		inlcxpr	double		GetMass							()	{
 			return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass; 
 		}
 	};
 
 	struct SBodyCenter {
-		::gpk::n3f									Position						= {};
-		::gpk::quatf								Orientation						= {0, 0, 0, 1};
+		::gpk::n3f32		Position						= {};
+		::gpk::quatf32		Orientation						= {0, 0, 0, 1};
 	};
 
 	GDEFINE_ENUM_TYPE(BOUNDING_TYPE, uint8_t);
@@ -40,61 +40,61 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BOUNDING_TYPE, Inward	, 4);
 
 	struct SBodyFlags {
-		uint8_t										BVType							: 3;
-		uint8_t										Collides						: 1;
-		uint8_t										Active							: 1;
-		uint8_t										Falling							: 1;
-		uint8_t										UpdatedTransform				: 1;
-		uint8_t										UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
+		uint8_t				BVType							: 3;
+		uint8_t				Collides						: 1;
+		uint8_t				Active							: 1;
+		uint8_t				Falling							: 1;
+		uint8_t				UpdatedTransform				: 1;
+		uint8_t				UpdatedTensorWorld				: 1;	// Tell the object that our matrices are up to date
 	};
 
 	struct SBodyFrame {
-		::gpk::m3f									InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
-		::gpk::n3f									LastFrameAcceleration			= {0, 0, 0};
-		::gpk::n3f									AccumulatedForce				= {0, 0, 0};
-		::gpk::n3f									AccumulatedTorque				= {0, 0, 0};
+		::gpk::m3f32			InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
+		::gpk::n3f32		LastFrameAcceleration			= {0, 0, 0};
+		::gpk::n3f32		AccumulatedForce				= {0, 0, 0};
+		::gpk::n3f32		AccumulatedTorque				= {0, 0, 0};
 
-		int32_t										ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
+		int32_t				ClearAccumulators				()	{ AccumulatedForce = AccumulatedTorque = {}; return 0; }
 	};
 
 	struct SBodyVolume {
-		::gpk::n3f									HalfSizes						= {.5f, .5f, .5f};
+		::gpk::n3f32		HalfSizes						= {.5f, .5f, .5f};
 	};
 #pragma pack(pop)
-	void										updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f & transformLocal);
-	int32_t										integrateForces					(double duration, ::gpk::SBodyFrame & bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
-	int32_t										integratePosition				(double duration, double durationHalfSquared, ::gpk::SBodyFlags & bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
-	void										transformInertiaTensor			(::gpk::m3f & iitWorld, const ::gpk::m3f &iitBody, const ::gpk::m4f &rotmat);
+	void				updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 & transformLocal);
+	int32_t				integrateForces					(double duration, ::gpk::SBodyFrame & bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
+	int32_t				integratePosition				(double duration, double durationHalfSquared, ::gpk::SBodyFlags & bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
+	void				transformInertiaTensor			(::gpk::m3f32 & iitWorld, const ::gpk::m3f32 &iitBody, const ::gpk::m4f32 &rotmat);
 
 
 	struct SRigidBodyIntegrator {
-		::gpk::apod<::gpk::SBodyFrame	>			Frames							= {};
-		::gpk::apod<::gpk::SBodyFlags	>			Flags							= {};
-		::gpk::apod<::gpk::SBodyMass	>			Masses							= {};
-		::gpk::apod<::gpk::SBodyForces	>			Forces							= {};
-		::gpk::apod<::gpk::SBodyCenter	>			Centers							= {};
-		::gpk::apod<::gpk::SBodyVolume	>			BoundingVolumes					= {};
-		::gpk::apod<::gpk::m4f			>			TransformsLocal					= {};
+		::gpk::apod<::gpk::SBodyFrame	>	Frames							= {};
+		::gpk::apod<::gpk::SBodyFlags	>	Flags							= {};
+		::gpk::apod<::gpk::SBodyMass	>	Masses							= {};
+		::gpk::apod<::gpk::SBodyForces	>	Forces							= {};
+		::gpk::apod<::gpk::SBodyCenter	>	Centers							= {};
+		::gpk::apod<::gpk::SBodyVolume	>	BoundingVolumes					= {};
+		::gpk::apod<::gpk::m4f32		>	TransformsLocal					= {};
 
-		stacxpr	const ::gpk::m4f					MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
-		stacxpr	const ::gpk::m3f					MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
+		stacxpr	::gpk::m4f32				MatrixIdentity4					= {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
+		stacxpr	::gpk::m3f32				MatrixIdentity3					= {1,0,0,0,1,0,0,0,1};
 
-		::gpk::error_t								Load							(::gpk::vcu8 & input);
-		::gpk::error_t								Save							(::gpk::au8 & output)	const;
-		inline	::gpk::error_t						Load							(::gpk::vcc & input)			{ return Load(*((::gpk::vcu8*)&input)); }
-		inline	::gpk::error_t						Save							(::gpk::ai8 & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
+		::gpk::error_t						Load							(::gpk::vcu8 & input);
+		::gpk::error_t						Save							(::gpk::au8 & output)	const;
+		inline	::gpk::error_t				Load							(::gpk::vcc & input)			{ return Load(*((::gpk::vcu8*)&input)); }
+		inline	::gpk::error_t				Save							(::gpk::ai8 & output)	const	{ return Save(*((::gpk::apod<uint8_t>*)&output)); }
 
-		int32_t 									ZeroCenters						()	{ return Centers.fill({}); }
-		int32_t 									ZeroForces						()	{ return Forces.fill({}); }
-		int32_t 									ZeroFrames						()	{ return Frames.fill({}); }
+		int32_t 							ZeroCenters						()	{ return Centers.fill({}); }
+		int32_t 							ZeroForces						()	{ return Forces.fill({}); }
+		int32_t 							ZeroFrames						()	{ return Frames.fill({}); }
 
-		int32_t 									Reset							()	{
+		int32_t 							Reset							()	{
 			ZeroForces();
 			ZeroCenters();
 			return ZeroFrames();
 		}
 		
-		int32_t 									Clear							()	{
+		int32_t 							Clear							()	{
 			::gpk::clear(Frames, Flags, Forces, Masses, Centers, BoundingVolumes, TransformsLocal);
 			return 0;
 		}
@@ -106,7 +106,7 @@ namespace gpk
 			Masses					.push_back(::gpk::SBodyMass			{Masses				[iBody]});
 			Centers					.push_back(::gpk::SBodyCenter		{Centers			[iBody]});
 			BoundingVolumes			.push_back(::gpk::SBodyVolume		{BoundingVolumes	[iBody]});
-			return TransformsLocal	.push_back(::gpk::m4f				{TransformsLocal	[iBody]});
+			return TransformsLocal	.push_back(::gpk::m4f32				{TransformsLocal	[iBody]});
 		}
 
 		int32_t 									Create							()	{
@@ -132,9 +132,9 @@ namespace gpk
 			return indexFirstBody;
 		}
 
-		int32_t 									GetTransform					(uint32_t iBody, ::gpk::m4f	& transform)	{
+		int32_t 									GetTransform					(uint32_t iBody, ::gpk::m4f32	& transform)	{
 			::gpk::SBodyFlags								& bodyFlags						= Flags				[iBody];
-			::gpk::m4f										& bodyTransformLocal			= TransformsLocal	[iBody];
+			::gpk::m4f32										& bodyTransformLocal			= TransformsLocal	[iBody];
 			if(false == bodyFlags.UpdatedTransform || false == bodyFlags.UpdatedTensorWorld) {
 				if(false == bodyFlags.UpdatedTransform) {
 					::gpk::SBodyCenter								& bodyCenter					= Centers[iBody];
@@ -164,7 +164,7 @@ namespace gpk
 
 		int32_t										Integrate						(double duration)	{
 			const double									durationHalfSquared				= duration * duration * 0.5;
-			::gpk::m4f										dummy;
+			::gpk::m4f32										dummy;
 			for(uint32_t iBody = 0; iBody < Flags.size(); ++iBody) {
 				::gpk::SBodyFlags							& bodyFlags						= Flags[iBody];
 				if(false == bodyFlags.Active)

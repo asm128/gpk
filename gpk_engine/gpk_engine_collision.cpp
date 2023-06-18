@@ -5,10 +5,10 @@ static	::gpk::error_t	detectCylinder			(const ::gpk::SRigidBodyIntegrator & inte
 static	::gpk::error_t	detectCylinderAABB		(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t cylinder, uint32_t aabb, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) { (void)integrator, (void)cylinder, (void)aabb, (void)contactCache, (void)contactsDetected; return 0; }
 
 static	::gpk::error_t	detectSphere			(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t rigidBodyA, uint32_t rigidBodyB, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) {
-	const ::gpk::n3f				& radiusA				= integrator.BoundingVolumes[rigidBodyA].HalfSizes;
-	const ::gpk::n3f				& positionA				= integrator.Centers[rigidBodyA].Position;
-	const ::gpk::n3f				& radiusB				= integrator.BoundingVolumes[rigidBodyB].HalfSizes;
-	const ::gpk::n3f				& positionB				= integrator.Centers[rigidBodyB].Position;
+	const ::gpk::n3f32				& radiusA				= integrator.BoundingVolumes[rigidBodyA].HalfSizes;
+	const ::gpk::n3f32				& positionA				= integrator.Centers[rigidBodyA].Position;
+	const ::gpk::n3f32				& radiusB				= integrator.BoundingVolumes[rigidBodyB].HalfSizes;
+	const ::gpk::n3f32				& positionB				= integrator.Centers[rigidBodyB].Position;
 
 	const float						maxDistance				= radiusA.x + radiusB.x;
 	const float						collisionThreshold		= maxDistance * maxDistance;

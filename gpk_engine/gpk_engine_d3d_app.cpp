@@ -47,8 +47,8 @@
 }
 
 
-::gpk::error_t						gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f & lightPos, const ::gpk::n3f & cameraPosition, const gpk::n3f & cameraTarget)	{
-	::gpk::n3f								cameraFront						= (cameraTarget - cameraPosition).Normalize();
+::gpk::error_t						gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget)	{
+	::gpk::n3f32								cameraFront						= (cameraTarget - cameraPosition).Normalize();
 	::gpk::minmax<float>					nearFar 						= {.0001f, 10.0f}; 
 
 	::gpk::SEngineSceneConstants			& constants						= d3dScene.ConstantBufferScene;
@@ -97,7 +97,7 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f & lightPos, const ::gpk::n3f & cameraPosition, const gpk::n3f & cameraTarget) {
+::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget) {
 	{ // Set up render target for this frame
 		ID3D11DeviceContext3						* context							= d3dApp.DeviceResources->GetD3DDeviceContext();
 		const D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.

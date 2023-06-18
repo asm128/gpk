@@ -168,7 +168,7 @@ namespace gpk
 
 		int							IntegrateSpeed		(double secondsLastFrame);
 
-		int							Create				(const ::gpk::n3f & position, const ::gpk::n3f & direction, float speed);
+		int							Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed);
 		int							Remove				(int32_t iParticle);
 
 		::gpk::error_t				Load				(::gpk::vcu8 & input);

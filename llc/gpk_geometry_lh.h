@@ -123,7 +123,7 @@ namespace gpk
 		int16_t			Flags		;
 	};
 #pragma pack(pop)
-	::gpk::error_t	geometryBuildTileListFromImage	(::gpk::grid<const ::gpk::bgra> image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
+	::gpk::error_t	geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
 	::gpk::error_t	geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
 
 #pragma pack(push, 1)

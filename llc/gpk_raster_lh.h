@@ -56,7 +56,7 @@ namespace gpk
 		, const ::gpk::n3f32				& lightVector
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		, ::gpk::grid<uint32_t>			depthBuffer
@@ -71,7 +71,7 @@ namespace gpk
 		, const ::gpk::n3f32				& lightVector
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		, ::gpk::grid<uint32_t>			depthBuffer
@@ -114,7 +114,7 @@ namespace gpk
 		, const ::gpk::n3f32				& lightVector
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::grid<uint32_t>			depthBuffer
 		);
 	int				drawTriangle
@@ -127,7 +127,7 @@ namespace gpk
 		, const ::gpk::rgbaf				& lightColor
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::SLight3>		& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		, ::gpk::grid<uint32_t>			depthBuffer
@@ -141,7 +141,7 @@ namespace gpk
 		, const ::gpk::n3f32				& lightVector
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
@@ -155,7 +155,7 @@ namespace gpk
 		, const ::gpk::n3f32				& lightVector
 		, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 		, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-		, ::gpk::grid<const ::gpk::bgra>	textureImage
+		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		);

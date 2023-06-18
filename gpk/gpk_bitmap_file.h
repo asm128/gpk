@@ -1,4 +1,4 @@
-#include "gpk_array_color.h"
+#include "gpk_apod_color.h"
 #include "gpk_image_color.h"
 
 #ifndef GPK_BITMAP_FILE_H_236544263544352344

@@ -1,7 +1,7 @@
 #include "gpk_image_color.h"
 #include "gpk_array_static.h"
 #include "gpk_color_type.h"
-#include "gpk_array_color.h"
+#include "gpk_apod_color.h"
 #include "gpk_array.h"
 
 

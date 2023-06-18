@@ -1,4 +1,5 @@
-#include "gpk_array.h"
+#include "gpk_array_obj.h"
+#include "gpk_array_pod.h"
 
 #ifndef GPK_DEFLATE_H_92173498234
 #define GPK_DEFLATE_H_92173498234

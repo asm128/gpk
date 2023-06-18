@@ -6,6 +6,9 @@
 #include "gpk_font.h"
 #include "gpk_raster_lh.h"
 #include "gpk_grid_color.h"
+#include "gpk_apod_n2.h"
+#include "gpk_apod_n3.h"
+#include "gpk_apod_tri.h"
 
 #include <functional>
 
@@ -17,53 +20,53 @@ namespace gpk
 	
 #pragma pack(push, 1)
 	struct SEngineSceneConstants {
-		::gpk::m4f					View					= {}; 
-		::gpk::m4f					Perspective				= {}; 
-		::gpk::m4f					Screen					= {}; 
-		::gpk::m4f					VP						= {}; 
-		::gpk::m4f					VPS						= {}; 
-		::gpk::n3f					CameraPosition			= {}; 
-		float						CameraAngle				= 0;
-		::gpk::n3f					CameraFront				= {}; 
-		float						PaddingB				= 0;
-		::gpk::n3f					LightPosition			= {}; 
-		float						PaddingC				= 0;
-		::gpk::n3f					LightDirection			= {}; 
-		float						LightSpotPower			= 0;
+		::gpk::m4f32			View					= {}; 
+		::gpk::m4f32			Perspective				= {}; 
+		::gpk::m4f32			Screen					= {}; 
+		::gpk::m4f32			VP						= {}; 
+		::gpk::m4f32			VPS						= {}; 
+		::gpk::n3f32			CameraPosition			= {}; 
+		float					CameraAngle				= 0;
+		::gpk::n3f32			CameraFront				= {}; 
+		float					PaddingB				= 0;
+		::gpk::n3f32			LightPosition			= {}; 
+		float					PaddingC				= 0;
+		::gpk::n3f32			LightDirection			= {}; 
+		float					LightSpotPower			= 0;
 	};
 
 	struct SRenderMaterial {
-		::gpk::SRenderColor			Color;
-		::gpk::n3f32				Emission;
-		float						SpecularPower;
+		::gpk::SRenderColor		Color;
+		::gpk::n3f32			Emission;
+		float					SpecularPower;
 	};
 
 	struct SRenderNodeConstants {
-		::gpk::m4f32				Model;
-		::gpk::m4f32				ModelInverseTranspose;
-		::gpk::m4f32				MVP;
-		::gpk::SRenderMaterial		Material;
+		::gpk::m4f32			Model;
+		::gpk::m4f32			ModelInverseTranspose;
+		::gpk::m4f32			MVP;
+		::gpk::SRenderMaterial	Material;
 	};
 #pragma pack(pop)
 
 	struct SPSIn {
-		::gpk::n3f32				WeightedPosition	;
-		::gpk::n3f32				WeightedNormal		;
-		::gpk::n2f32				WeightedUV			;
-		::gpk::SRenderMaterial		Material			;
-		::gpk::gc8bgra				Surface				; 
+		::gpk::n3f32			WeightedPosition	;
+		::gpk::n3f32			WeightedNormal		;
+		::gpk::n2f32			WeightedUV			;
+		::gpk::SRenderMaterial	Material			;
+		::gpk::gc8bgra			Surface				; 
 	};
 
-	typedef ::gpk::error_t		(TFuncPixelShader)
+	typedef ::gpk::error_t	(TFuncPixelShader)
 		( const ::gpk::SEngineSceneConstants	& constants
 		, const ::gpk::SPSIn					& inPS
 		, ::gpk::bgra							& outputPixel
 		);
 
 	struct SVSCache {
-		::gpk::apod<::gpk::trif32>	TriangleWeights			= {};
-		::gpk::apod<::gpk::n2i16>	SolidPixelCoords		= {};
-		::gpk::apod<::gpk::n3f>		WireframePixelCoords	= {};
+		::gpk::atrif32			TriangleWeights			= {};
+		::gpk::an2i16			SolidPixelCoords		= {};
+		::gpk::an3f32			WireframePixelCoords	= {};
 	};
 
 	struct SVSOutput {

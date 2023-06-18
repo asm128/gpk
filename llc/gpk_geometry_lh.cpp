@@ -1,6 +1,6 @@
 #include "gpk_geometry_lh.h"
 
-::gpk::error_t			gpk::geometryBuildTileListFromImage		(::gpk::grid<const ::gpk::bgra> image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
+::gpk::error_t			gpk::geometryBuildTileListFromImage		(::gpk::gc8bgra image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
 	{
 		::gpk::STile											newTile;
 		for(uint32_t z = 0, maxZ = image.metrics().y; z < maxZ ; ++z)

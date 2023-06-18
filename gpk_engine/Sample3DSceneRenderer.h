@@ -73,7 +73,7 @@ namespace gpk
 			ib->GetDesc(&desc);
 
 			D3D11_RASTERIZER_DESC						rs								= {};
-			rs.FillMode								= D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME; 
+			rs.FillMode								= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
 			rs.CullMode								= D3D11_CULL_BACK;
 			rs.DepthClipEnable						= TRUE;
 
@@ -101,9 +101,9 @@ namespace gpk
 			DirectX::XMStoreFloat4x4((DirectX::XMFLOAT4X4*)&ConstantBufferScene.Perspective, DirectX::XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 
 			// Eye is at (0,0.7,1.5), looking at point (0,-0.1,0) with the up-vector along the y-axis.
-			static const DirectX::XMVECTORF32			eye								= { 0.0f, (float)sin(TotalSecondsElapsed) * 5, 5.5f, 0.0f };
-			static const DirectX::XMVECTORF32			at								= { 0.0f, -0.1f, 0.0f, 0.0f };
-			static const DirectX::XMVECTORF32			up								= { 0.0f, 1.0f, 0.0f, 0.0f };
+			const	DirectX::XMVECTORF32			eye								= { 0.0f, (float)sin(TotalSecondsElapsed) * 5, 5.5f, 0.0f };
+			stacxpr	DirectX::XMVECTORF32			at								= { 0.0f, -0.1f, 0.0f, 0.0f };
+			stacxpr	DirectX::XMVECTORF32			up								= { 0.0f, 1.0f, 0.0f, 0.0f };
 			DirectX::XMStoreFloat4x4((DirectX::XMFLOAT4X4*)&ConstantBufferScene.View, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
 			return 0;
 		}

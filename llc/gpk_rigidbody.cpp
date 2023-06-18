@@ -50,7 +50,7 @@ void								gpk::transformInertiaTensor	(::gpk::m3<float> & iitWorld, const ::gp
 	iitWorld._33						= t52*rotmat._13 + t57*rotmat._23 + t62*rotmat._33;
 }
 
-void								gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f & transformLocal)	{
+void								gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 & transformLocal)	{
 	//transformLocal.Scale( bodyTransform.Scale, true );
 	bodyTransform.Orientation.Normalize();
 	transformLocal.SetOrientation( bodyTransform.Orientation );
@@ -65,7 +65,7 @@ int32_t								gpk::integrateForces		(double duration, ::gpk::SBodyFrame& bodyFr
 	bodyForce.Velocity.AddScaled(bodyFrame.LastFrameAcceleration, (float)duration);	// Update linear velocity from both acceleration and impulse.
 
 	// -- Calculate angular acceleration from torque inputs.
-	const ::gpk::n3f						angularAcceleration			= bodyFrame.InverseInertiaTensorWorld.Transform(bodyFrame.AccumulatedTorque);
+	const ::gpk::n3f32						angularAcceleration			= bodyFrame.InverseInertiaTensorWorld.Transform(bodyFrame.AccumulatedTorque);
 	bodyForce.Rotation.AddScaled(angularAcceleration, duration);	// Update angular velocity from both acceleration and impulse.
 
 	// Impose drag.

@@ -46,16 +46,31 @@ namespace gpk
 				;
 		}
 	};
-	typedef tri2<float>		tri2f32, tri2f;
-	typedef tri2<double>	tri2f64, tri2d;
-	typedef tri2<uint8_t>	tri2u8;
-	typedef tri2<uint16_t>	tri2u16;
-	typedef tri2<uint32_t>	tri2u32;
-	typedef tri2<uint64_t>	tri2u64;
-	typedef tri2<int8_t>	tri2i8;
-	typedef tri2<int16_t>	tri2i16;
-	typedef tri2<int32_t>	tri2i32;
-	typedef tri2<int64_t>	tri2i64;
+	typedef	tri2<char>		tri2char;
+	typedef	tri2<uchar_t>	tri2uchar;
+	typedef	tri2<float>		tri2f32;
+	typedef	tri2<double>	tri2f64;
+	typedef	tri2<uint8_t>	tri2u8;
+	typedef	tri2<uint16_t>	tri2u16;
+	typedef	tri2<uint32_t>	tri2u32;
+	typedef	tri2<uint64_t>	tri2u64;
+	typedef	tri2<int8_t>	tri2i8;
+	typedef	tri2<int16_t>	tri2i16;
+	typedef	tri2<int32_t>	tri2i32;
+	typedef	tri2<int64_t>	tri2i64;
+
+	typedef	minmax<tri2char>	minmaxtri2char;
+	typedef	minmax<tri2uchar>	minmaxtri2uchar;
+	typedef	minmax<tri2f32>		minmaxtri2f32;
+	typedef	minmax<tri2f64>		minmaxtri2f64;
+	typedef	minmax<tri2u8 >		minmaxtri2u8;
+	typedef	minmax<tri2u16>		minmaxtri2u16;
+	typedef	minmax<tri2u32>		minmaxtri2u32;
+	typedef	minmax<tri2u64>		minmaxtri2u64;
+	typedef	minmax<tri2i8 >		minmaxtri2i8;
+	typedef	minmax<tri2i16>		minmaxtri2i16;
+	typedef	minmax<tri2i32>		minmaxtri2i32;
+	typedef	minmax<tri2i64>		minmaxtri2i64;
 #pragma pack(pop)
 
 	template<typename T>

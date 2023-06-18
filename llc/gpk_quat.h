@@ -154,8 +154,8 @@ namespace gpk
 		// just in case you need that function also
 	}; // struct quat
 
-	typedef quat<float>		quatf32, quatf;
-	typedef quat<double>	quatf64, quatd;
+	typedef quat<float>		quatf32;
+	typedef quat<double>	quatf64;
 	typedef quat<uint8_t>	quatu8;
 	typedef quat<uint16_t>	quatu16;
 	typedef quat<uint32_t>	quatu32;

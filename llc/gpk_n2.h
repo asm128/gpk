@@ -1,5 +1,7 @@
 #include "gpk_math.h"
 
+#include "gpk_functional.h"
+
 #ifndef GPK_N2_H_230515
 #define GPK_N2_H_230515
 
@@ -60,6 +62,40 @@ namespace gpk
 		inlcxpr	n2<float>	f32					()									const	noexcept	{ return Cast<float		>(); }
 		inlcxpr	n2<double>	f64					()									const	noexcept	{ return Cast<double	>(); }
 
+		typedef	FVoid<Tn2&>						TFuncForEach;
+		typedef	FVoid<uint32_t&, Tn2&>			TFuncEnumerate;
+
+		uint32_t			for_each			(const TFuncForEach & funcForEach)		const {
+			Tn2						offset				= {};
+			for(; offset.y < y; ++offset.y)
+			for(offset.x = 0; offset.x < x; ++offset.x) 
+				funcForEach(offset);
+
+			return offset.x * offset.y;
+		}
+
+		uint32_t			enumerate			(const TFuncEnumerate & funcForEachX, const TFuncEnumerate & funcForEachY)	const {
+			uint32_t				index				= 0;
+			Tn2						offset				= {};
+			for(; offset.y < y; ++offset.y) {
+				for(offset.x = 0; offset.x < x; ++offset.x, ++index) 
+					funcForEachX(index, offset);
+				
+				funcForEachY(index, offset);
+			}
+			return index;
+		}
+
+		uint32_t			enumerate			(const TFuncEnumerate & funcForEach)	const {
+			uint32_t				index				= 0;
+			Tn2						offset				= {};
+			for(; offset.y < y; ++offset.y)
+			for(offset.x = 0; offset.x < x; ++offset.x, ++index) 
+				funcForEach(index, offset);
+
+			return index;
+		}
+
 		//
 		template<typename _t>
 		inlcxpr	n2<_t>		Cast				()									const	noexcept	{ return {(_t)x, (_t)y}; }
@@ -67,6 +103,7 @@ namespace gpk
 		Tn2					Clamp				(const Tn2 & min, const Tn2 & max)	const	noexcept	{ return {::gpk::clamp(x, min.x, max.x), ::gpk::clamp(y, min.y, max.y)}; }
 		inlcxpr	Tn2			GetScaled			(double	scalar)						const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar)}; }
 		inlcxpr	Tn2			GetScaled			(double scalarx, double scalary)	const	noexcept	{ return {(T)(x * scalarx), (T)(y * scalary)}; }
+		inlcxpr	Tn2			GetScaled			(const Tn2 & scales)				const	noexcept	{ return {(T)(x * scales.x), (T)(y * scales.y)}; }
 		inline	Tn2			GetNormalized		()									const				{ const T sqLen = LengthSquared(); if(sqLen) { const double len = ::sqrt(sqLen); return {(T)(x / len), (T)(y / len)}; } else return {x, y};	}
 		cnstxpr	double		Dot					(const Tn2 & other)					const	noexcept	{ return x * other.x + y * other.y; }
 		cnstxpr	T			LengthSquared		()									const	noexcept	{ return x * x + y * y; }
@@ -95,6 +132,8 @@ namespace gpk
 			return *this;
 		}
 	};	// struct n2
+	typedef	n2<char>		n2char;
+	typedef	n2<uchar_t>		n2uchar;
 	typedef	n2<float>		n2f32;
 	typedef	n2<double>		n2f64;
 	typedef	n2<uint8_t>		n2u8;
@@ -106,6 +145,21 @@ namespace gpk
 	typedef	n2<int32_t>		n2i32;
 	typedef	n2<int64_t>		n2i64;
 
+	typedef	const n2char	cn2char		;
+	typedef	const n2uchar	cn2uchar	;
+	typedef	const n2f32		cn2f32		;
+	typedef	const n2f64		cn2f64		;
+	typedef	const n2u8		cn2u8		;
+	typedef	const n2u16		cn2u16		;
+	typedef	const n2u32		cn2u32		;
+	typedef	const n2u64		cn2u64		;
+	typedef	const n2i8		cn2i8		;
+	typedef	const n2i16		cn2i16		;
+	typedef	const n2i32		cn2i32		;
+	typedef	const n2i64		cn2i64		;
+
+	typedef	minmax<n2char>	minmax2char;
+	typedef	minmax<n2uchar>	minmax2uchar;
 	typedef	minmax<n2f32>	minmax2f32;
 	typedef	minmax<n2f64>	minmax2f64;
 	typedef	minmax<n2u8 >	minmax2u8;

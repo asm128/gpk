@@ -122,7 +122,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 	const ::d1::SCamera			& cameraSelected		= app.D1.MainGame.CameraSelected();
 	const ::gpk::SEngineScene	& engineScene			= *app.D1.MainGame.Pool.Engine.Scene;
 	const ::gpk::rgbaf			clearColor				= app.D1.AppUI.ClearColor;
-	const ::gpk::n3f			& lightPos				= app.D1.MainGame.LightPos;
+	const ::gpk::n3f32			& lightPos				= app.D1.MainGame.LightPos;
 
 	gpk_necs(::d1_win32::d3dAppDraw(app.D3DApp, engineScene, clearColor, lightPos, cameraSelected.Position, cameraSelected.Target));
 #else 

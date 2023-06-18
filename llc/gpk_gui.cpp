@@ -2,7 +2,7 @@
 #include "gpk_gui_text.h"
 #include "gpk_base64.h"
 #include "gpk_rect_align.h"
-#include "gpk_array_color.h"
+#include "gpk_apod_color.h"
 
 ::gpk::error_t			gpk::controlInvalid			(const ::gpk::SGUI & gui, cid_t iControl)				{
 	if(gui.Controls.States.size() <= uint32_t(iControl)	) 

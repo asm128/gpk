@@ -1,19 +1,14 @@
-#include "gpk_array_pobj.h"
+#include "gpk_aobj_pobj.h"
+#include "gpk_aobj_ppod.h"
 #include "gpk_array_pod.h"
-#include "gpk_ptr_pod.h"
 
 #ifndef GPK_ARRAY_PTR_H_0297349827348923611
 #define GPK_ARRAY_PTR_H_0297349827348923611
 
 namespace gpk
 {
-	template <typename T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
-	template <typename T> using papod		= ::gpk::pobj<::gpk::apod<T>>;
-
-	template <typename T> using vppod		= ::gpk::view<::gpk::ppod<T>>;
-	template <typename T> using vcppod		= ::gpk::view<const ::gpk::ppod<T>>;
-
-	template <typename T> using apapod		= ::gpk::aobj<::gpk::papod<T>>;
+	template <typename T> using papod	= ::gpk::pobj<::gpk::apod<T>>;
+	template <typename T> using apapod	= ::gpk::aobj<::gpk::papod<T>>;
 
 	typedef	::gpk::apapod<uchar_t	>	apapoduc;
 	typedef	::gpk::apapod<char		>	apapodc;

@@ -61,7 +61,7 @@ namespace gpk
 	}
 
 	template<typename _tColor>
-	static	::gpk::error_t	textLineRaster					(const ::gpk::n2u32 & targetMetrics, const ::gpk::n2u8 & fontCharSize, const ::gpk::rect2<int16_t> & targetRect, const ::gpk::SImageMonochrome<_tColor> & fontTexture, const ::gpk::vcs & textToRaster, ::gpk::apod<::gpk::n2u16> & dstCoords)		{
+	static	::gpk::error_t	textLineRaster					(const ::gpk::n2u32 & targetMetrics, const ::gpk::n2u8 & fontCharSize, const ::gpk::rect2<int16_t> & targetRect, const ::gpk::imgmono<_tColor> & fontTexture, const ::gpk::vcs & textToRaster, ::gpk::apod<::gpk::n2u16> & dstCoords)		{
 		const int32_t				charsPerRow						= fontTexture.Pitch / fontCharSize.x;
 		for(uint32_t iChar = 0, countChars = textToRaster.size(); iChar < countChars; ++iChar) {
 			const unsigned char			charToDraw						= (unsigned char)textToRaster[iChar];

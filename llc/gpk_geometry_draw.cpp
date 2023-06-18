@@ -10,7 +10,7 @@
 	, const ::gpk::rgbaf				& lightColor
 	, ::gpk::apod<::gpk::n2i16>			& pixelCoords
 	, ::gpk::apod<::gpk::trif32>		& pixelVertexWeights
-	, ::gpk::grid<const ::gpk::bgra>	textureImage
+	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::SLight3>		& lightPoints
 	, ::gpk::apod<::gpk::rgbaf>			& lightColors
 	, ::gpk::grid<uint32_t>			depthBuffer

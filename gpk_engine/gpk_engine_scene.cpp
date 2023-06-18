@@ -144,7 +144,7 @@ static	::gpk::error_t	drawBuffers
 			continue;
 		
 		const ::gpk::SRenderNodeTransforms				& transforms			= scene.RenderNodes.Transforms[iRenderNode];
-		const ::gpk::m4f								& worldTransform		= transforms.World;
+		const ::gpk::m4f32								& worldTransform		= transforms.World;
 		if((worldTransform.GetTranslation() - constants.CameraPosition).Normalize().Dot(constants.CameraFront) <= 0)
 			return 0;
 
