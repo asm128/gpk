@@ -14,40 +14,39 @@ namespace gpk
 	};
 
 #pragma pack(push, 1)
-	struct SParamsBox { 
-		::gpk::n3f32	Center			= {.5f, .5f, .5f};
-		::gpk::n3f32	HalfSizes		= {.5f, .5f, .5f};
+	struct SParamsBox {
+		::gpk::n3f32		Origin			= {.5f, .5f, .5f};
+		::gpk::n3f32		HalfSizes		= {.5f, .5f, .5f};
 
-		GPK_DEFAULT_OPERATOR(SParamsBox, HalfSizes == other.HalfSizes && Center == other.Center); 
+		GPK_DEFAULT_OPERATOR(SParamsBox, Origin == other.Origin && HalfSizes == other.HalfSizes); 
 	};
 
 	struct SParamsSphere { 
-		::gpk::n3f32		Center		= {};
-		float				Radius		= .5f;
-		uint16_t			Stacks		= 24;
-		uint16_t			Slices		= 24;
-		bool				Reverse		= false;
+		::gpk::n3f32		Origin			= {};
+		::gpk::n2u16		CellCount		= {2, 2};
+		bool				Reverse			= false;
+		float				Radius			= .5f;
 	
-		GPK_DEFAULT_OPERATOR(SParamsSphere, Center == other.Center && Radius == other.Radius && Stacks == other.Stacks && Slices == other.Slices && Reverse == other.Reverse); 
+		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && Radius == other.Radius && CellCount == other.CellCount && Reverse == other.Reverse); 
 	};
 
 	struct SParamsCylinder { 
-		::gpk::n3f32		Center			= {0, .5f};
+		::gpk::n3f32		Origin			= {0, .5f};
+		::gpk::n2u16		CellCount		= {2, 2};
+		bool				Reverse			= false;
 		float				DiameterRatio	= 1.0f;
 		::gpk::minmaxf32	Radius			= {.5f, .5f};
-		uint16_t			Stacks			= 1, Slices = 16;
-		bool				Reverse			= false;
 
-		GPK_DEFAULT_OPERATOR(SParamsCylinder, Center == other.Center && Radius == other.Radius && Stacks == other.Stacks && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio); 
+		GPK_DEFAULT_OPERATOR(SParamsCylinder, Origin == other.Origin && Radius == other.Radius && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio); 
 	};
 
 	struct SParamsGrid { 
-		::gpk::n2f32	Size				= {1, 1};
-		::gpk::n2f32	Center				= {.5f, .5f};
-		::gpk::n2u16	CellCount			= {2, 2};
-		bool			ReverseTriangles	= false;
+		::gpk::n2f32		Origin			= {.5f, .5f};
+		::gpk::n2u16		CellCount		= {2, 2};
+		bool				Outward			= false;
+		::gpk::n2f32		Size			= {1, 1};
 
-		GPK_DEFAULT_OPERATOR(SParamsGrid, Center == other.Center && CellCount == other.CellCount && ReverseTriangles == other.ReverseTriangles); 
+		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Outward == other.Outward); 
 	};																														
 #pragma pack(pop)
 

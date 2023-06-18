@@ -19,9 +19,9 @@ namespace gpk
 		);
 
 	struct SEngine {
-		::gpk::pobj<::gpk::SEngineScene>Scene				;
-		::gpk::SVirtualEntityManager	Entities			;
-		::gpk::SRigidBodyIntegrator		Integrator			;
+		::gpk::pobj<::gpk::SEngineScene>				Scene				;
+		::gpk::SVirtualEntityManager					Entities			;
+		::gpk::SRigidBodyIntegrator						Integrator			;
 
 		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox			;
 		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere		;
@@ -112,26 +112,26 @@ namespace gpk
 		::gpk::error_t					CreateRing			();
 		::gpk::error_t					CreateTriangle		();
 		::gpk::error_t					CreateBox			() { SParamsBox params = {}; return CreateBox(params); }
-		inline	::gpk::error_t			CreateSphere		(uint16_t stacks = 24, uint16_t slices = 24, float radius = .5f, const ::gpk::n3f32 & center = {}) { 
+		inline	::gpk::error_t			CreateSphere		(uint16_t slices = 24, uint16_t stacks = 24, float radius = .5f, const ::gpk::n3f32 & center = {}, bool reverse = false) { 
 			SParamsSphere			params			= {};
-			params.Stacks		= stacks;
-			params.Slices		= slices;
+			params.CellCount	= {slices, stacks};
 			params.Radius		= radius;
-			params.Center		= center;
+			params.Origin		= center;
+			params.Reverse		= reverse;
 			return CreateSphere(params); 
 		}
 		inline	::gpk::error_t			CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio) { 
 			SParamsCylinder			params;
 			params.DiameterRatio	= diameterRatio;
-			params.Slices		= slices;
-			params.Reverse		= reverse;
+			params.CellCount		= {slices, 1};
+			params.Reverse			= reverse;
 			return CreateCylinder(params); 
 		}
 		inline	::gpk::error_t			CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
 			SParamsGrid				params;
-			params.Center		= {.5f, .5f};
+			params.Origin		= {.5f, .5f};
 			params.CellCount	= cellCount;
-			params.ReverseTriangles	= topRight;
+			params.Outward	= topRight;
 			return CreateGrid(params); 
 		}
 

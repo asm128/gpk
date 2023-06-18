@@ -42,8 +42,8 @@
 
 
 static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::gpk::a8bgra & out_Colors, ::gpk::g8bgra& out_ImageView, const ::gpk::bgra & alphaKey, bool* out_alphaFound)		{
-	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, szFileName.begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
-	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", szFileName.begin());
+	HBITMAP						phBitmap					= (HBITMAP)LoadImageA(NULL, ::gpk::toString(szFileName).begin(), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_DEFAULTSIZE | LR_LOADFROMFILE);		// Use LoadImage() to get the image loaded into a DIBSection
+	ree_if(phBitmap == NULL, "Failed to load bitmap file: %s.", ::gpk::toString(szFileName).begin());
 
 	BITMAP						bm							= {};
 	GetObject(phBitmap, sizeof(BITMAP), &bm);		// Get the color depth of the DIBSection
@@ -63,17 +63,11 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC	(hMemDC);
 
-	const uint32_t				lenFilename					= (uint32_t)strlen(szFileName.begin());
-	::gpk::apod<char>			filename;
-	filename.resize(lenFilename + 1);
-	memset(&filename[0], 0, filename.size());
-	memcpy(&filename[0], &szFileName[0], lenFilename);
-	if('p' == filename[lenFilename - 2])
-		memcpy(&filename[lenFilename - 4], "png", 3);
-	else
-		memcpy(&filename[lenFilename - 3], "png", 3);
+	::gpk::apod<char>			filename					= szFileName;
+	filename.resize(filename.size() - 3);
+	filename.append_string("png");
 
-	::gpk::vcs					pngfn						= {filename.begin(), lenFilename};
+	::gpk::vcs					pngfn						= {filename};
 	::gpk::au8					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
 	::gpk::fileFromMemory(pngfn, filebytes);

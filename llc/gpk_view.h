@@ -33,13 +33,13 @@ namespace gpk
 		inlcxpr					view			(T (&elements)[Len])				noexcept	: Data(elements), Count(Len)										{}
 
 		template<size_t Len>
-		inlcxpr					view			(uint32_t elementCount, T (&elements)[Len])	: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{}
+		inlcxpr					view			(uint32_t elementCount, T (&elements)[Len])		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{}
 		inline					view			(T * elements, uint32_t elementCount)			: Data(elements), Count(elementCount)										{
 			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		template <size_t Len>
-		inline					view			(T (&elements)[Len], uint32_t elementCount)	: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{
+		inline					view			(T (&elements)[Len], uint32_t elementCount)		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{
 			gthrow_if(elementCount > Len, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)Len, elementCount);
 		}
 
@@ -67,11 +67,11 @@ namespace gpk
 
 		// Methods
 
-		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, Count * sizeof(T)};			}
-		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, Count * sizeof(T)};			}
-		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, Count * sizeof(T)};			}
-		inlcxpr	view<char>			c			()							const	noexcept	{ return {(char*)Data, Count * sizeof(T)};			}
-		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, Count * sizeof(T)};			}
+		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, byte_count()};			}
+		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};			}
+		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};			}
+		inlcxpr	view<char>			c			()							const	noexcept	{ return {(char*)Data, byte_count()};			}
+		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, byte_count()};			}
 
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}

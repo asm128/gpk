@@ -38,9 +38,13 @@ namespace gpk
 			GUI					= {};
 			Entities.clear();
 
+			::gpk::SParamsGrid		params			= {};
+			params.CellCount	= {4, 4};
+			params.Origin		= {1, 1};
+			params.Size			= {2, 2};
 			gpk_necs(Entities.resize(::gpk::get_value_count<GUI_ENTITY>()));
-			gpk_necs(Entities[GUI_ENTITY_Label]		= Engine.CreateGrid({{2.0f, 2.0f}, {1, 1}, {4, 4}}));
-			gpk_necs(Entities[GUI_ENTITY_Button]	= Engine.CreateGrid({{2.0f, 2.0f}, {1, 1}, {4, 4}}));
+			gpk_necs(Entities[GUI_ENTITY_Label]		= Engine.CreateGrid(params));
+			gpk_necs(Entities[GUI_ENTITY_Button]	= Engine.CreateGrid(params));
 
 			gpk_necs(Entities[GUI_ENTITY_Menu]		= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
 			gpk_necs(Entities[GUI_ENTITY_Viewport]	= Engine.Clone(Entities[GUI_ENTITY_Button], false, false, false));
