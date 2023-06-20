@@ -12,10 +12,10 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::n2uchar	>	an2uc	, an2uchar		;
 	typedef	::gpk::apod<::gpk::n2f32	>	an2f32	;
 	typedef	::gpk::apod<::gpk::n2f64	>	an2f64	;
-	typedef	::gpk::apod<::gpk::n2u8		>	an2ui8	;
-	typedef	::gpk::apod<::gpk::n2u16	>	an2ui16	;
-	typedef	::gpk::apod<::gpk::n2u32	>	an2ui32	;
-	typedef	::gpk::apod<::gpk::n2u64	>	an2ui64	;
+	typedef	::gpk::apod<::gpk::n2u8		>	an2u8	;
+	typedef	::gpk::apod<::gpk::n2u16	>	an2u16	;
+	typedef	::gpk::apod<::gpk::n2u32	>	an2u32	;
+	typedef	::gpk::apod<::gpk::n2u64	>	an2u64	;
 	typedef	::gpk::apod<::gpk::n2i8		>	an2i8	;
 	typedef	::gpk::apod<::gpk::n2i16	>	an2i16	;
 	typedef	::gpk::apod<::gpk::n2i32	>	an2i32	;

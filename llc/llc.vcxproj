@@ -81,6 +81,7 @@
     <ClInclude Include="gpk_line3.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_path.h" />
+    <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />

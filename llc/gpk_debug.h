@@ -7,6 +7,7 @@
 #define GPK_DEBUG_H_97826389432654
 
 #if defined(GPK_DEBUG_ENABLED)
+namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; } 
 #	define GPK_ERROR_PRINTF_ENABLED
 #	define GPK_WARNING_PRINTF_ENABLED
 #	define GPK_INFO_PRINTF_ENABLED
@@ -30,6 +31,7 @@
 #		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #	endif
 #else
+namespace gpk { stacxpr size_t DEBUG_BUILD = 0; } 
 #	define GPK_PLATFORM_CRT_BREAKPOINT()		do {} while(0)
 #	define GPK_PLATFORM_CRT_CHECK_MEMORY()		do {} while(0)
 #	define GPK_ERROR_PRINTF_ENABLED

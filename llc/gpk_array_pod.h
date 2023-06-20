@@ -237,6 +237,50 @@ namespace gpk
 	typedef apod<int32_t	>	ai32;
 	typedef apod<int64_t	>	ai64;
 
+
+	template<typename _tDimension>	using	aminmax	= ::gpk::apod<::gpk::minmax<_tDimension>>;
+	template<typename _tDimension>	using	arange	= ::gpk::apod<::gpk::range<_tDimension>>;
+	template<typename _tDimension>	using	aslice	= ::gpk::apod<::gpk::slice<_tDimension>>;
+	
+	typedef	::gpk::arange<char		>	arangec		, arangechar;
+	typedef	::gpk::arange<uchar_t	>	arangeuc	, arangeuchar;
+	typedef	::gpk::arange<float		>	arangef32	;
+	typedef	::gpk::arange<double	>	arangef64	;
+	typedef	::gpk::arange<uint8_t	>	arangeu8	;
+	typedef	::gpk::arange<uint16_t	>	arangeu16	;
+	typedef	::gpk::arange<uint32_t	>	arangeu32	;
+	typedef	::gpk::arange<uint64_t	>	arangeu64	;
+	typedef	::gpk::arange<int8_t	>	arangei8	;
+	typedef	::gpk::arange<int16_t	>	arangei16	;
+	typedef	::gpk::arange<int32_t	>	arangei32	;
+	typedef	::gpk::arange<int64_t	>	arangei64	;
+	
+	typedef	::gpk::aslice<char		>	aslicec		, aslicechar;
+	typedef	::gpk::aslice<uchar_t	>	asliceuc	, asliceuchar;
+	typedef	::gpk::aslice<float		>	aslicef32	;
+	typedef	::gpk::aslice<double	>	aslicef64	;
+	typedef	::gpk::aslice<uint8_t	>	asliceu8	;
+	typedef	::gpk::aslice<uint16_t	>	asliceu16	;
+	typedef	::gpk::aslice<uint32_t	>	asliceu32	;
+	typedef	::gpk::aslice<uint64_t	>	asliceu64	;
+	typedef	::gpk::aslice<int8_t	>	aslicei8	;
+	typedef	::gpk::aslice<int16_t	>	aslicei16	;
+	typedef	::gpk::aslice<int32_t	>	aslicei32	;
+	typedef	::gpk::aslice<int64_t	>	aslicei64	;
+	
+	typedef	::gpk::aminmax<char		>	aminmaxc	, aminmaxchar;
+	typedef	::gpk::aminmax<uchar_t	>	aminmaxuc	, aminmaxuchar;
+	typedef	::gpk::aminmax<float	>	aminmaxf32	;
+	typedef	::gpk::aminmax<double	>	aminmaxf64	;
+	typedef	::gpk::aminmax<uint8_t	>	aminmaxu8	;
+	typedef	::gpk::aminmax<uint16_t	>	aminmaxu16	;
+	typedef	::gpk::aminmax<uint32_t	>	aminmaxu32	;
+	typedef	::gpk::aminmax<uint64_t	>	aminmaxu64	;
+	typedef	::gpk::aminmax<int8_t	>	aminmaxi8	;
+	typedef	::gpk::aminmax<int16_t	>	aminmaxi16	;
+	typedef	::gpk::aminmax<int32_t	>	aminmaxi32	;
+	typedef	::gpk::aminmax<int64_t	>	aminmaxi64	;
+
 	::gpk::apod<char>			toString		(const ::gpk::vcc & strToLog);
 	stainli	::gpk::apod<char>	toString		(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
 

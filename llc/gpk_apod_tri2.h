@@ -12,13 +12,13 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::tri2uchar>	atri2uc	, atri2uchar		;
 	typedef	::gpk::apod<::gpk::tri2f32	>	atri2f32	;
 	typedef	::gpk::apod<::gpk::tri2f64	>	atri2f64	;
-	typedef	::gpk::apod<::gpk::tri2u8	>	atri2ui8	;
-	typedef	::gpk::apod<::gpk::tri2u16	>	atri2ui16	;
-	typedef	::gpk::apod<::gpk::tri2u32	>	atri2ui33	;
-	typedef	::gpk::apod<::gpk::tri2u64	>	atri2ui64	;
+	typedef	::gpk::apod<::gpk::tri2u8	>	atri2u8		;
+	typedef	::gpk::apod<::gpk::tri2u16	>	atri2u16	;
+	typedef	::gpk::apod<::gpk::tri2u32	>	atri2u32	;
+	typedef	::gpk::apod<::gpk::tri2u64	>	atri2u64	;
 	typedef	::gpk::apod<::gpk::tri2i8	>	atri2i8		;
 	typedef	::gpk::apod<::gpk::tri2i16	>	atri2i16	;
-	typedef	::gpk::apod<::gpk::tri2i32	>	atri2i33	;
+	typedef	::gpk::apod<::gpk::tri2i32	>	atri2i32	;
 	typedef	::gpk::apod<::gpk::tri2i64	>	atri2i64	;
 
 	template<typename _tDimension>	

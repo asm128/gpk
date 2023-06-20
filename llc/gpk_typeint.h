@@ -11,12 +11,10 @@
 
 namespace gpk
 {
-	typedef	char			char_t	;
-	typedef	unsigned char	uchar_t	;
-	typedef	const char_t	cchar_t ,cchar	;
-	typedef	const uchar_t	cuchar_t,cuchar	;
 	typedef	float			float32_t	;
 	typedef	double			float64_t	;
+	typedef	char			char_t  ;
+	typedef	unsigned char	uchar_t , uchar;
 
 	typedef	const int8_t	cint8_t 	;
 	typedef	const int16_t	cint16_t	;
@@ -28,6 +26,8 @@ namespace gpk
 	typedef	const uint64_t	cuint64_t	;
 	typedef	const float32_t	cfloat32_t	;
 	typedef	const float64_t	cfloat64_t	;
+	typedef	const char_t	cchar_t , cchar;
+	typedef	const uchar_t	cuchar_t, cuchar;
 
 	typedef int8_t		i8_t ;
 	typedef int16_t		i16_t;

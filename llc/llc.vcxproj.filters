@@ -1,278 +1,802 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files"><UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files"><UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files"><UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="base"><UniqueIdentifier>{4937e132-c0fb-4e28-9b6b-3d651109d61d}</UniqueIdentifier></Filter>
-    <Filter Include="cdn"><UniqueIdentifier>{78d360d6-28ed-4b69-85db-ddf562b0c070}</UniqueIdentifier></Filter>
-    <Filter Include="container"><UniqueIdentifier>{1ef7945b-1d26-41bf-9f58-c719dc22c61b}</UniqueIdentifier></Filter>
-    <Filter Include="d3d"><UniqueIdentifier>{ea9dc06f-264e-4565-a096-4c11804cfff7}</UniqueIdentifier></Filter>
-    <Filter Include="dialog"><UniqueIdentifier>{6a2f53ea-3719-45cb-bb6a-7d0fbac6c6fd}</UniqueIdentifier></Filter>
-    <Filter Include="encoding"><UniqueIdentifier>{590b9b3c-13a3-47f4-b44e-0b3325b6e83f}</UniqueIdentifier></Filter>
-    <Filter Include="file"><UniqueIdentifier>{09174e25-1a0a-48fa-8260-cd9a1627129f}</UniqueIdentifier></Filter>
-    <Filter Include="framework"><UniqueIdentifier>{00e9e4fa-dc46-4283-8be5-c9bbb75f37c3}</UniqueIdentifier></Filter>
-    <Filter Include="geometry"><UniqueIdentifier>{ff24d76d-cde5-4212-bb42-dad6a2761ba0}</UniqueIdentifier></Filter>
-    <Filter Include="gui"><UniqueIdentifier>{664dddcf-59a1-4493-9d90-03a134132997}</UniqueIdentifier></Filter>
-    <Filter Include="http"><UniqueIdentifier>{f1c14652-08ae-4615-bfb2-4fa022661399}</UniqueIdentifier></Filter>
-    <Filter Include="image"><UniqueIdentifier>{f4195222-cb50-42bc-852b-82e910fa82f9}</UniqueIdentifier></Filter>
-    <Filter Include="json"><UniqueIdentifier>{ac3e0dfb-a341-4cfc-9d60-2f3e7942b692}</UniqueIdentifier></Filter>
-    <Filter Include="math"><UniqueIdentifier>{5310ea78-5f6b-43e1-84b9-3d1339242565}</UniqueIdentifier></Filter>
-    <Filter Include="module"><UniqueIdentifier>{44a2e0ef-afbc-41f1-997d-e14bc91d131e}</UniqueIdentifier></Filter>
-    <Filter Include="physics"><UniqueIdentifier>{992ffe49-5b11-4efb-9bbb-bbf6ff0cf398}</UniqueIdentifier></Filter>
-    <Filter Include="pointer"><UniqueIdentifier>{38024203-df7b-41df-a297-207479159f38}</UniqueIdentifier></Filter>
-    <Filter Include="raster"><UniqueIdentifier>{e8645092-4536-4b63-a21f-b579b831c1f9}</UniqueIdentifier></Filter>
-    <Filter Include="scene"><UniqueIdentifier>{fcec14f7-f260-444f-a061-ed6786ff2ec2}</UniqueIdentifier></Filter>
-    <Filter Include="script"><UniqueIdentifier>{43572fcd-2b7d-4170-8b67-05cbc99e2451}</UniqueIdentifier></Filter>
-    <Filter Include="time"><UniqueIdentifier>{ba85012e-2adf-4370-9e35-d41543ba4943}</UniqueIdentifier></Filter>
-    <Filter Include="type"><UniqueIdentifier>{8e323843-176e-40a8-80a5-72904cecb15d}</UniqueIdentifier></Filter>
-    <Filter Include="typedefs"><UniqueIdentifier>{9c8faac4-2cef-4de2-b7d7-d1faadec19d5}</UniqueIdentifier></Filter>
-    <Filter Include="view"><UniqueIdentifier>{2af7f602-565c-43ba-a4b5-be22b1b04b6e}</UniqueIdentifier></Filter>
-    <Filter Include="voxel"><UniqueIdentifier>{3cc94a17-96ef-470b-b56b-d437dad4a752}</UniqueIdentifier></Filter>
-    <Filter Include="web_cgi"><UniqueIdentifier>{5c9ad974-22c6-4aef-a002-98fa32dacff5}</UniqueIdentifier></Filter>
-    <Filter Include="xml"><UniqueIdentifier>{975efb15-1710-468b-9a48-cd974da95602}</UniqueIdentifier></Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{4937e132-c0fb-4e28-9b6b-3d651109d61d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cdn">
+      <UniqueIdentifier>{78d360d6-28ed-4b69-85db-ddf562b0c070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="container">
+      <UniqueIdentifier>{1ef7945b-1d26-41bf-9f58-c719dc22c61b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d">
+      <UniqueIdentifier>{ea9dc06f-264e-4565-a096-4c11804cfff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dialog">
+      <UniqueIdentifier>{6a2f53ea-3719-45cb-bb6a-7d0fbac6c6fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="encoding">
+      <UniqueIdentifier>{590b9b3c-13a3-47f4-b44e-0b3325b6e83f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="file">
+      <UniqueIdentifier>{09174e25-1a0a-48fa-8260-cd9a1627129f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{00e9e4fa-dc46-4283-8be5-c9bbb75f37c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{ff24d76d-cde5-4212-bb42-dad6a2761ba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui">
+      <UniqueIdentifier>{664dddcf-59a1-4493-9d90-03a134132997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="http">
+      <UniqueIdentifier>{f1c14652-08ae-4615-bfb2-4fa022661399}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="image">
+      <UniqueIdentifier>{f4195222-cb50-42bc-852b-82e910fa82f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{ac3e0dfb-a341-4cfc-9d60-2f3e7942b692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{5310ea78-5f6b-43e1-84b9-3d1339242565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{44a2e0ef-afbc-41f1-997d-e14bc91d131e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{992ffe49-5b11-4efb-9bbb-bbf6ff0cf398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pointer">
+      <UniqueIdentifier>{38024203-df7b-41df-a297-207479159f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raster">
+      <UniqueIdentifier>{e8645092-4536-4b63-a21f-b579b831c1f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{fcec14f7-f260-444f-a061-ed6786ff2ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="script">
+      <UniqueIdentifier>{43572fcd-2b7d-4170-8b67-05cbc99e2451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="time">
+      <UniqueIdentifier>{ba85012e-2adf-4370-9e35-d41543ba4943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="type">
+      <UniqueIdentifier>{8e323843-176e-40a8-80a5-72904cecb15d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{2af7f602-565c-43ba-a4b5-be22b1b04b6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="voxel">
+      <UniqueIdentifier>{3cc94a17-96ef-470b-b56b-d437dad4a752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="web_cgi">
+      <UniqueIdentifier>{5c9ad974-22c6-4aef-a002-98fa32dacff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{975efb15-1710-468b-9a48-cd974da95602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aliases">
+      <UniqueIdentifier>{9c8faac4-2cef-4de2-b7d7-d1faadec19d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpk_adam7.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_aes.h"><Filter>encoding</Filter></ClInclude>
-    <ClInclude Include="gpk_align.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_aobj_pobj.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_aobj_ppod.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_color.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_n2.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_n3.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_serialize.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_tri.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_tri2.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_apod_tri3.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_app_impl.h"><Filter>framework</Filter></ClInclude>
-    <ClInclude Include="gpk_array.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_array_base.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_array_bit.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_array_obj.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_array_pod.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_array_ptr.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_array_static.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_ascii_color.h"><Filter>raster</Filter></ClInclude>
-    <ClInclude Include="gpk_ascii_target.h"><Filter>raster</Filter></ClInclude>
-    <ClInclude Include="gpk_astatic_serialize.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_auto_handler.h"><Filter>type</Filter></ClInclude>
-    <ClInclude Include="gpk_axis.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_base64.h"><Filter>encoding</Filter></ClInclude>
-    <ClInclude Include="gpk_bit.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_bitmap_target.h"><Filter>raster</Filter></ClInclude>
-    <ClInclude Include="gpk_block.h"><Filter>cdn</Filter></ClInclude>
-    <ClInclude Include="gpk_block_container.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_block_container_nts.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_camera.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_cdn.h"><Filter>cdn</Filter></ClInclude>
-    <ClInclude Include="gpk_cgi.h"><Filter>web_cgi</Filter></ClInclude>
-    <ClInclude Include="gpk_cgi_app_impl.h"><Filter>web_cgi</Filter></ClInclude>
-    <ClInclude Include="gpk_cgi_app_impl_v2.h"><Filter>web_cgi</Filter></ClInclude>
-    <ClInclude Include="gpk_cgi_module.h"><Filter>web_cgi</Filter></ClInclude>
-    <ClInclude Include="gpk_cgi_runtime.h"><Filter>web_cgi</Filter></ClInclude>
-    <ClInclude Include="gpk_chrono.h"><Filter>time</Filter></ClInclude>
-    <ClInclude Include="gpk_circle.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_collision.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_color.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_color_type.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_complus.h"><Filter>pointer</Filter></ClInclude>
-    <ClInclude Include="gpk_component_scene.h"><Filter>scene</Filter></ClInclude>
-    <ClInclude Include="gpk_coord.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_d3d.h"><Filter>d3d</Filter></ClInclude>
-    <ClInclude Include="gpk_datatype.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_debug.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_deflate.h"><Filter>encoding</Filter></ClInclude>
-    <ClInclude Include="gpk_dialog.h"><Filter>dialog</Filter></ClInclude>
-    <ClInclude Include="gpk_dialog_controls.h"><Filter>dialog</Filter></ClInclude>
-    <ClInclude Include="gpk_encoding.h"><Filter>encoding</Filter></ClInclude>
-    <ClInclude Include="gpk_enum.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_error.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_eval.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_event.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_expression.h"><Filter>script</Filter></ClInclude>
-    <ClInclude Include="gpk_file.h"><Filter>file</Filter></ClInclude>
-    <ClInclude Include="gpk_font.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_frameinfo.h"><Filter>time</Filter></ClInclude>
-    <ClInclude Include="gpk_framework.h"><Filter>framework</Filter></ClInclude>
-    <ClInclude Include="gpk_functional.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_geometry.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_geometry_draw.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_geometry_lh.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_grid.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_grid_color.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_grid_copy.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_grid_scale.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_grid_static.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_gui.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_control.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_control_list.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_control_state.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_desktop.h"><Filter>dialog</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_inputbox.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_text.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_gui_viewport.h"><Filter>gui</Filter></ClInclude>
-    <ClInclude Include="gpk_http.h"><Filter>http</Filter></ClInclude>
-    <ClInclude Include="gpk_http_client.h"><Filter>http</Filter></ClInclude>
-    <ClInclude Include="gpk_image.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_image_color.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_input.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_io.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_json.h"><Filter>json</Filter></ClInclude>
-    <ClInclude Include="gpk_json_expression.h"><Filter>json</Filter></ClInclude>
-    <ClInclude Include="gpk_keyval.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_label.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_label_manager.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_line.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_line2.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_line3.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_log.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_math.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_matrix.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_member_registry.h"><Filter>type</Filter></ClInclude>
-    <ClInclude Include="gpk_memory.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_model.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_module.h"><Filter>module</Filter></ClInclude>
-    <ClInclude Include="gpk_n2.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_n3.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_noise.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_parse.h"><Filter>script</Filter></ClInclude>
-    <ClInclude Include="gpk_particle.h"><Filter>physics</Filter></ClInclude>
-    <ClInclude Include="gpk_path.h"><Filter>file</Filter></ClInclude>
-    <ClInclude Include="gpk_platform.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_png.h"><Filter>image</Filter></ClInclude>
-    <ClInclude Include="gpk_process.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_ptr_nco.h"><Filter>pointer</Filter></ClInclude>
-    <ClInclude Include="gpk_ptr_obj.h"><Filter>pointer</Filter></ClInclude>
-    <ClInclude Include="gpk_ptr_pod.h"><Filter>pointer</Filter></ClInclude>
-    <ClInclude Include="gpk_quad.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_quad2.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_quad3.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_quat.h"><Filter>math</Filter></ClInclude>
-    <ClInclude Include="gpk_raster_lh.h"><Filter>raster</Filter></ClInclude>
-    <ClInclude Include="gpk_rect.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_rect2.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_rect3.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_rect_align.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_ref.h"><Filter>pointer</Filter></ClInclude>
-    <ClInclude Include="gpk_rigidbody.h"><Filter>physics</Filter></ClInclude>
-    <ClInclude Include="gpk_rsa.h"><Filter>encoding</Filter></ClInclude>
-    <ClInclude Include="gpk_runtime.h"><Filter>module</Filter></ClInclude>
-    <ClInclude Include="gpk_runtime_module.h"><Filter>module</Filter></ClInclude>
-    <ClInclude Include="gpk_safe.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_scene.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_size.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_sphere.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_stdsocket.h"><Filter>file</Filter></ClInclude>
-    <ClInclude Include="gpk_stdstring.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_stl.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_string.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_string_helper.h"><Filter>container</Filter></ClInclude>
-    <ClInclude Include="gpk_sync.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_sysevent.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_system_key.h"><Filter>framework</Filter></ClInclude>
-    <ClInclude Include="gpk_tcpip.h"><Filter>file</Filter></ClInclude>
-    <ClInclude Include="gpk_timer.h"><Filter>time</Filter></ClInclude>
-    <ClInclude Include="gpk_tri.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_tri2.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_tri3.h"><Filter>geometry</Filter></ClInclude>
-    <ClInclude Include="gpk_type_identifier.h"><Filter>type</Filter></ClInclude>
-    <ClInclude Include="gpk_type_registry.h"><Filter>type</Filter></ClInclude>
-    <ClInclude Include="gpk_typeint.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_view.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_bit.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_color.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_layered.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_manager.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_n2.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_n3.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_pobj.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_ppod.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_serialize.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_stream.h"><Filter>view</Filter></ClInclude>
-    <ClInclude Include="gpk_view_tri.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_tri2.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_view_tri3.h"><Filter>typedefs</Filter></ClInclude>
-    <ClInclude Include="gpk_virtual_keyboard.h"><Filter>dialog</Filter></ClInclude>
-    <ClInclude Include="gpk_vox.h"><Filter>voxel</Filter></ClInclude>
-    <ClInclude Include="gpk_voxel.h"><Filter>voxel</Filter></ClInclude>
-    <ClInclude Include="gpk_voxel_geometry.h"><Filter>voxel</Filter></ClInclude>
-    <ClInclude Include="gpk_window.h"><Filter>framework</Filter></ClInclude>
-    <ClInclude Include="gpk_windows.h"><Filter>base</Filter></ClInclude>
-    <ClInclude Include="gpk_xml_reader.h"><Filter>xml</Filter></ClInclude>
-    <ClInclude Include="keyed_bit_array.h"><Filter>container</Filter></ClInclude>
+    <ClInclude Include="gpk_adam7.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_aes.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_align.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_aobj_pobj.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_aobj_ppod.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_color.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_n2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_serialize.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_tri.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_tri2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_tri3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_app_impl.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_base.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_bit.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_obj.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_pod.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_ptr.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_static.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_color.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ascii_target.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_astatic_serialize.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_auto_handler.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_axis.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_base64.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bit.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_bitmap_target.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block.h">
+      <Filter>cdn</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_block_container_nts.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_camera.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cdn.h">
+      <Filter>cdn</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_app_impl.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_app_impl_v2.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_module.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cgi_runtime.h">
+      <Filter>web_cgi</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_chrono.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_circle.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_collision.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_color.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_color_type.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_complus.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_component_scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_coord.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_d3d.h">
+      <Filter>d3d</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_datatype.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_debug.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_deflate.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_dialog_controls.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_encoding.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_enum.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_error.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_eval.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_event.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_expression.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_file.h">
+      <Filter>file</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_font.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_frameinfo.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_framework.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_functional.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry_draw.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry_lh.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_color.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_copy.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_scale.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_grid_static.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_list.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_control_state.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_desktop.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_inputbox.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_text.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gui_viewport.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_http.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_http_client.h">
+      <Filter>http</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_image.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_image_color.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_input.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_io.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_json_expression.h">
+      <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyval.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_label.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_label_manager.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_line.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_line2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_line3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_log.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_member_registry.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_memory.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_model.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_module.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_n2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_n3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_noise.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_parse.h">
+      <Filter>script</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_particle.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_path.h">
+      <Filter>file</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_platform.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_png.h">
+      <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_process.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_nco.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_obj.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ptr_pod.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quad3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_quat.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_raster_lh.h">
+      <Filter>raster</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rect_align.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ref.h">
+      <Filter>pointer</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rigidbody.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_rsa.h">
+      <Filter>encoding</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_runtime_module.h">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_safe.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_scene.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_size.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sphere.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stdsocket.h">
+      <Filter>file</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stdstring.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stl.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sync.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_sysevent.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_key.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tcpip.h">
+      <Filter>file</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_timer.h">
+      <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri2.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_tri3.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_type_identifier.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_type_registry.h">
+      <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_typeint.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_bit.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_color.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_layered.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_manager.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_pobj.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_ppod.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_serialize.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_stream.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_tri.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_tri2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_tri3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_virtual_keyboard.h">
+      <Filter>dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_vox.h">
+      <Filter>voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_voxel.h">
+      <Filter>voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_voxel_geometry.h">
+      <Filter>voxel</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_window.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_windows.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_xml_reader.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="keyed_bit_array.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_pod_definition.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_adam7.cpp"><Filter>image</Filter></ClCompile>
-    <ClCompile Include="gpk_aes.cpp"><Filter>encoding</Filter></ClCompile>
-    <ClCompile Include="gpk_array.cpp"><Filter>container</Filter></ClCompile>
-    <ClCompile Include="gpk_ascii_target.cpp"><Filter>raster</Filter></ClCompile>
-    <ClCompile Include="gpk_base64.cpp"><Filter>encoding</Filter></ClCompile>
-    <ClCompile Include="gpk_block.cpp"><Filter>cdn</Filter></ClCompile>
-    <ClCompile Include="gpk_cgi.cpp"><Filter>web_cgi</Filter></ClCompile>
-    <ClCompile Include="gpk_cgi_main.cpp"><Filter>web_cgi</Filter></ClCompile>
-    <ClCompile Include="gpk_cgi_module.cpp"><Filter>web_cgi</Filter></ClCompile>
-    <ClCompile Include="gpk_cgi_runtime.cpp"><Filter>web_cgi</Filter></ClCompile>
-    <ClCompile Include="gpk_chrono.cpp"><Filter>time</Filter></ClCompile>
-    <ClCompile Include="gpk_component_scene.cpp"><Filter>scene</Filter></ClCompile>
-    <ClCompile Include="gpk_component_scene_draw.cpp"><Filter>scene</Filter></ClCompile>
-    <ClCompile Include="gpk_d3d.cpp"><Filter>d3d</Filter></ClCompile>
-    <ClCompile Include="gpk_datatype.cpp"><Filter>type</Filter></ClCompile>
-    <ClCompile Include="gpk_deflate.cpp"><Filter>encoding</Filter></ClCompile>
-    <ClCompile Include="gpk_dialog.cpp"><Filter>dialog</Filter></ClCompile>
-    <ClCompile Include="gpk_encoding.cpp"><Filter>encoding</Filter></ClCompile>
-    <ClCompile Include="gpk_expression.cpp"><Filter>script</Filter></ClCompile>
-    <ClCompile Include="gpk_file.cpp"><Filter>file</Filter></ClCompile>
-    <ClCompile Include="gpk_font.cpp"><Filter>image</Filter></ClCompile>
-    <ClCompile Include="gpk_framework.cpp"><Filter>framework</Filter></ClCompile>
-    <ClCompile Include="gpk_geometry.cpp"><Filter>geometry</Filter></ClCompile>
-    <ClCompile Include="gpk_geometry_draw.cpp"><Filter>geometry</Filter></ClCompile>
-    <ClCompile Include="gpk_geometry_lh.cpp"><Filter>geometry</Filter></ClCompile>
-    <ClCompile Include="gpk_gui.cpp"><Filter>gui</Filter></ClCompile>
-    <ClCompile Include="gpk_gui_control_list.cpp"><Filter>gui</Filter></ClCompile>
-    <ClCompile Include="gpk_gui_desktop.cpp"><Filter>dialog</Filter></ClCompile>
-    <ClCompile Include="gpk_gui_draw.cpp"><Filter>gui</Filter></ClCompile>
-    <ClCompile Include="gpk_gui_inputbox.cpp"><Filter>gui</Filter></ClCompile>
-    <ClCompile Include="gpk_gui_viewport.cpp"><Filter>gui</Filter></ClCompile>
-    <ClCompile Include="gpk_http_client.cpp"><Filter>http</Filter></ClCompile>
-    <ClCompile Include="gpk_https_client.cpp"><Filter>http</Filter></ClCompile>
-    <ClCompile Include="gpk_json.cpp"><Filter>json</Filter></ClCompile>
-    <ClCompile Include="gpk_json_expression.cpp"><Filter>json</Filter></ClCompile>
-    <ClCompile Include="gpk_keyval.cpp"><Filter>container</Filter></ClCompile>
-    <ClCompile Include="gpk_label.cpp"><Filter>container</Filter></ClCompile>
-    <ClCompile Include="gpk_log.cpp"><Filter>base</Filter></ClCompile>
-    <ClCompile Include="gpk_mapblock.cpp"><Filter>cdn</Filter></ClCompile>
-    <ClCompile Include="gpk_noise.cpp"><Filter>math</Filter></ClCompile>
-    <ClCompile Include="gpk_parse.cpp"><Filter>script</Filter></ClCompile>
-    <ClCompile Include="gpk_particle.cpp"><Filter>physics</Filter></ClCompile>
-    <ClCompile Include="gpk_path.cpp"><Filter>file</Filter></ClCompile>
-    <ClCompile Include="gpk_png.cpp"><Filter>image</Filter></ClCompile>
-    <ClCompile Include="gpk_png_write.cpp"><Filter>image</Filter></ClCompile>
-    <ClCompile Include="gpk_process.cpp"><Filter>base</Filter></ClCompile>
-    <ClCompile Include="gpk_raster_lh.cpp"><Filter>raster</Filter></ClCompile>
-    <ClCompile Include="gpk_rigidbody.cpp"><Filter>physics</Filter></ClCompile>
-    <ClCompile Include="gpk_rsa.cpp"><Filter>encoding</Filter></ClCompile>
-    <ClCompile Include="gpk_runtime_module.cpp"><Filter>module</Filter></ClCompile>
-    <ClCompile Include="gpk_scene.cpp"><Filter>geometry</Filter></ClCompile>
-    <ClCompile Include="gpk_stdstring.cpp"><Filter>view</Filter></ClCompile>
-    <ClCompile Include="gpk_stl.cpp"><Filter>geometry</Filter></ClCompile>
-    <ClCompile Include="gpk_string_helper.cpp"><Filter>container</Filter></ClCompile>
-    <ClCompile Include="gpk_tcpip.cpp"><Filter>file</Filter></ClCompile>
-    <ClCompile Include="gpk_timer.cpp"><Filter>time</Filter></ClCompile>
-    <ClCompile Include="gpk_type_registry.cpp"><Filter>type</Filter></ClCompile>
-    <ClCompile Include="gpk_view.cpp"><Filter>view</Filter></ClCompile>
-    <ClCompile Include="gpk_virtual_keyboard.cpp"><Filter>dialog</Filter></ClCompile>
-    <ClCompile Include="gpk_voxel_geometry.cpp"><Filter>voxel</Filter></ClCompile>
-    <ClCompile Include="gpk_window.cpp"><Filter>framework</Filter></ClCompile>
-    <ClCompile Include="gpk_windows.cpp"><Filter>base</Filter></ClCompile>
-    <ClCompile Include="gpk_xml_reader.cpp"><Filter>xml</Filter></ClCompile>
-    <ClCompile Include="llc_header_checkingg.cpp"><Filter>Source Files</Filter></ClCompile>
+    <ClCompile Include="gpk_adam7.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_aes.cpp">
+      <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_array.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_ascii_target.cpp">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_base64.cpp">
+      <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_block.cpp">
+      <Filter>cdn</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_main.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_module.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_cgi_runtime.cpp">
+      <Filter>web_cgi</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_chrono.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_component_scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_component_scene_draw.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_d3d.cpp">
+      <Filter>d3d</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_datatype.cpp">
+      <Filter>type</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_deflate.cpp">
+      <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_dialog.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_encoding.cpp">
+      <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_expression.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_file.cpp">
+      <Filter>file</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_font.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_framework.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry_draw.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_geometry_lh.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_control_list.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_desktop.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_draw.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_inputbox.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gui_viewport.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_http_client.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_https_client.cpp">
+      <Filter>http</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_json.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_json_expression.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_keyval.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_label.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_log.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_mapblock.cpp">
+      <Filter>cdn</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_noise.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_parse.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_particle.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_path.cpp">
+      <Filter>file</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_png.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_png_write.cpp">
+      <Filter>image</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_raster_lh.cpp">
+      <Filter>raster</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rigidbody.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rsa.cpp">
+      <Filter>encoding</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_runtime_module.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_scene.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stdstring.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stl.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_tcpip.cpp">
+      <Filter>file</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_timer.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_type_registry.cpp">
+      <Filter>type</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_view.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_virtual_keyboard.cpp">
+      <Filter>dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_voxel_geometry.cpp">
+      <Filter>voxel</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_window.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_windows.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_xml_reader.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="llc_header_checkingg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

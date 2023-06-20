@@ -12,13 +12,13 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::triuchar>	atriuc	, atriuchar		;
 	typedef	::gpk::apod<::gpk::trif32	>	atrif32	;
 	typedef	::gpk::apod<::gpk::trif64	>	atrif64	;
-	typedef	::gpk::apod<::gpk::triu8	>	atriui8	;
-	typedef	::gpk::apod<::gpk::triu16	>	atriui16	;
-	typedef	::gpk::apod<::gpk::triu32	>	atriui33	;
-	typedef	::gpk::apod<::gpk::triu64	>	atriui64	;
+	typedef	::gpk::apod<::gpk::triu8	>	atriu8	;
+	typedef	::gpk::apod<::gpk::triu16	>	atriu16	;
+	typedef	::gpk::apod<::gpk::triu32	>	atriu32	;
+	typedef	::gpk::apod<::gpk::triu64	>	atriu64	;
 	typedef	::gpk::apod<::gpk::trii8	>	atrii8		;
 	typedef	::gpk::apod<::gpk::trii16	>	atrii16	;
-	typedef	::gpk::apod<::gpk::trii32	>	atrii33	;
+	typedef	::gpk::apod<::gpk::trii32	>	atrii32	;
 	typedef	::gpk::apod<::gpk::trii64	>	atrii64	;
 
 	template<typename _tVertex>
