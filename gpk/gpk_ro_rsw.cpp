@@ -173,15 +173,15 @@
 	return rsw_stream.CursorPosition;
 }
 
-::gpk::error_t			gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, FILE								* input)							{
+::gpk::error_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, FILE * input)					{
 	(void)loaded, (void)input;
 	return 0;
 }
 
-::gpk::error_t			gpk::rswFileLoad											(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)							{
-	::gpk::au8									fileInMemory												= {};
+::gpk::error_t			gpk::rswFileLoad			(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input)	{
+	::gpk::au8					fileInMemory				= {};
 	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
-	uint64_t									unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
+	uint64_t					unk							= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;
 	info_printf("Unk64: 0x%llX.", unk);
 	info_printf("Parsing RSW file: %s.", input.begin());
