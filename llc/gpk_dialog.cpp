@@ -143,7 +143,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 ::gpk::error_t			gpk::sliderSetValue		(::gpk::SDialogSlider & slider, int64_t value)				{
 	::gpk::SDialog				& dialog				= *slider.Dialog;
 	::gpk::SControlTable		& controlTable			= dialog.GUI->Controls;
-	const uint64_t				newValue				= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
+	const int64_t				newValue				= ::gpk::max(::gpk::min(value, slider.ValueLimits.Max), slider.ValueLimits.Min);;
+	bool						updateMetrics			= slider.ValueCurrent != newValue;
 	slider.ValueCurrent		= newValue;
 
 	const double				proportion				= (slider.ValueCurrent - slider.ValueLimits.Min) * (1.0 / (slider.ValueLimits.Max - slider.ValueLimits.Min));
@@ -169,7 +170,8 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	gpk_necs(slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits));
 	gpk_necs(slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits));
 	gpk_necs(::gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, valueString));
-	gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl));
+	if(updateMetrics)
+		gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl));
 	return 0;
 }
 

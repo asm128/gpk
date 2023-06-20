@@ -39,9 +39,11 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u16			vertexCount					= params.CellCount + ::gpk::n2u16{1, 1};
 
+	// -- Generate texture coordinates
 	const ::gpk::n2f64			cellUnits					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
 	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u16 & coord) { geometry.TextureCoords.push_back(::gpk::n2u32{coord.x, (uint32_t)params.CellCount.y - coord.y}.f64().InPlaceScale(cellUnits).f32()); });
 
+	// -- Generate normals and positions
 	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
 	const ::gpk::n2f64			sliceScale					= ::gpk::n2f64{::gpk::math_2pi * cellUnits.x * reverseScale, ::gpk::math_pi * cellUnits.y};
 	for(uint32_t y = 0; y < vertexCount.y; ++y) {
@@ -91,7 +93,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u16 & coord) { geometry.TextureCoords.push_back(::gpk::n2u32{coord.x, (uint32_t)params.CellCount.y - coord.y}.f32().InPlaceScale(cellUnits).f32()); });
 	// -- Generate normals
-	geometry.Normals.resize(vertexCount.Area(), {0, 1, 0});	// All of the normals are the same for grids
+	geometry.Normals.resize(vertexCount.Area(), {0, 1, 0});	// The normals are all the same for grids
 
 	// -- Generate positions
 	const ::gpk::n2f64			scale						= params.Size.f64().InPlaceScale(cellUnits);
@@ -111,7 +113,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	const uint32_t				offsetPositionIndices		= geometry.PositionIndices	.size(); geometry.PositionIndices	.resize(geometry.PositionIndices.size() + 36);
 	const ::gpk::vc3f32			vertices					= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
 	for(uint32_t iVertex = offsetPositions; iVertex < geometry.Positions.size(); ++iVertex)
-		geometry.Positions[iVertex] = (vertices[iVertex] - params.Origin).Scale(params.HalfSizes.f32() * 2.0f);
+		geometry.Positions[iVertex]	= (vertices[iVertex] - params.Origin).Scale(params.HalfSizes * 2.0f);
 
 	//memcpy(&geometry.Positions		[0], ::gpk::VOXEL_FACE_VERTICES	, geometry.Positions		.byte_count());
 	memcpy(&geometry.Normals		[offsetNormals		], ::gpk::VOXEL_FACE_NORMALS, geometry.Normals		.byte_count());

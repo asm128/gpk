@@ -185,7 +185,7 @@ namespace gpk
 
 	struct SControlTheme {
 		::gpk::astatic<::gpk::astu32<::gpk::UI_CONTROL_AREA_COUNT>, ::gpk::GUI_CONTROL_PALETTE_COUNT>
-							ColorCombos			= {};
+									ColorCombos			= {};
 	};
 #pragma pack(pop)
 
@@ -211,15 +211,15 @@ namespace gpk
 		//
 		::gpk::apobj<::gpk::SSystemEvent		>	EventQueue		= {};
 
-		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered  (iControl, EventQueue, value); }
-		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed  (iControl, EventQueue, value); }
-		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden   (iControl, EventQueue, value); }
-		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused  (iControl, EventQueue, value); }
-		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected (iControl, EventQueue, value); }
-		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled (iControl, EventQueue, value); }
-		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated  (iControl, EventQueue, value); }
-		inline	bool		SetAction		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetAction   (iControl, EventQueue, value); }
-		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused   (iControl, EventQueue, value); }
+		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
+		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed (iControl, EventQueue, value); }
+		inline	bool		SetHidden		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHidden  (iControl, EventQueue, value); }
+		inline	bool		SetFocused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetFocused (iControl, EventQueue, value); }
+		inline	bool		SetSelected		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetSelected(iControl, EventQueue, value); }
+		inline	bool		SetDisabled		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetDisabled(iControl, EventQueue, value); }
+		inline	bool		SetUpdated		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUpdated (iControl, EventQueue, value); }
+		inline	bool		SetAction		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetAction  (iControl, EventQueue, value); }
+		inline	bool		SetUnused		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetUnused  (iControl, EventQueue, value); }
 
 		inline	bool		IsHovered		(cid_t iControl)		const	noexcept	{ return States[iControl].IsHovered  (); }
 		inline	bool		IsPressed		(cid_t iControl)		const	noexcept	{ return States[iControl].IsPressed  (); }
@@ -228,7 +228,7 @@ namespace gpk
 		inline	bool		IsSelected		(cid_t iControl)		const	noexcept	{ return States[iControl].IsSelected (); }
 		inline	bool		IsDisabled		(cid_t iControl)		const	noexcept	{ return States[iControl].IsDisabled (); }
 		inline	bool		IsUpdated		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUpdated  (); }
-		inline	bool		IsAction		(cid_t iControl)		const	noexcept	{ return States[iControl].IsAction	(); }
+		inline	bool		IsAction		(cid_t iControl)		const	noexcept	{ return States[iControl].IsAction   (); }
 		inline	bool		IsUnused		(cid_t iControl)		const	noexcept	{ return States[iControl].IsUnused   (); }
 	};
 
