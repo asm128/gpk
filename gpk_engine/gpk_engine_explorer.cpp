@@ -22,46 +22,45 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 }
 
 ::gpk::error_t			gpk::editorCreate	(::gpk::SEditor & editor) {
-	::gpk::SGUI					& gui				= editor.GUI.GUI;
-	gpk_necs(::gpk::inputBoxCreate(editor.InputBox, gui));
+	if(!editor.UI.GUI)
+		editor.UI.GUI.create();
 
-	//gui.Controls.States	[editor.InputBox.IdRoot].Hidden			= true;
-	gui.Controls.Placement[editor.InputBox.IdRoot].Align			= ::gpk::ALIGN_CENTER;
-	//gui.Controls.Controls	[editor.InputBox.IdRoot].Area.Offset.x = 240;
+	::gpk::SGUI					& gui				= *editor.UI.GUI;
+	gpk_necs(::gpk::inputBoxCreate(editor.UI.InputBox, gui));
 
-	//const ::gpk::eid_t			iEntityTopLeft		= editor.GUIEngine.CreateSquare(false);
-	//const ::gpk::eid_t			iEntityTopRight		= editor.GUIEngine.CreateSquare(true);
+	gui.Controls.Placement[editor.UI.InputBox.IdRoot].Align			= ::gpk::ALIGN_CENTER_BOTTOM;
 
 	gpk_necs(editor.Dialogs.resize(::gpk::get_value_count<::gpk::EDITOR_APP_DIALOG>()));
-	editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu] = ::menuInit(gui, editor.Buttons);
+	editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu] = ::menuInit(gui, editor.Menu);
 	return 0;
 }
 
 ::gpk::error_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::view<::gpk::SSysEvent> queuedEvents) {
 	::gpk::acid					controlsToProcess	= {};
-	::gpk::SGUI					& gui				= editor.GUI.GUI;
+
+	::gpk::SGUI					& gui				= *editor.UI.GUI;
 	::gpk::guiProcessInput(gui, input, queuedEvents);
 
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
-	if(int32_t result = editor.InputBox.Update(gui, editor.InputBox.VirtualKeyboard, queuedEvents, controlsToProcess)) {
+	if(int32_t result = editor.UI.InputBox.Update(gui, editor.UI.InputBox.VirtualKeyboard, queuedEvents, controlsToProcess)) {
 		if(result == INT_MAX) { // enter key pressed
 			::gpk::vcc					trimmed				= {};
-			gpk_necs(editor.InputBox.Text.slice(trimmed, 0, ::gpk::min(editor.InputBox.Text.size(), 128U)));
+			gpk_necs(editor.UI.InputBox.Text.slice(trimmed, 0, ::gpk::min(editor.UI.InputBox.Text.size(), 128U)));
 			gpk_necs(::gpk::trim(trimmed));
 			if(trimmed.size()) {
 				::gpk::pobj<::gpk::ac>	textInput;
 				textInput.create();
 				*textInput	= ::gpk::label(trimmed);
-				editor.InputHistory.push_back(textInput);
+				editor.UI.InputHistory.push_back(textInput);
 			}
-			editor.InputBox.Edit(gui, false);
+			editor.UI.InputBox.Edit(gui, false);
 		}
 	}
 	else {
 		::gpk::guiProcessControls(gui, controlsToProcess, [&](cid_t iControl) {
 			//uint32_t					offsetControl				= editor.Dialogs[::gpk::EDITOR_APP_DIALOG_Menu];
-			editor.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
-			editor.InputBox.Edit(gui, true);
+			editor.UI.InputBox.SetText(gui, gui.Controls.Text[iControl].Text);
+			editor.UI.InputBox.Edit(gui, true);
 			return 0;
 		});
 	}

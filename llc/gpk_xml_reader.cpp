@@ -340,7 +340,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 
 ::gpk::error_t			gpk::xmlParse			(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc)	{
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < xmlDoc.size(); ++reader.StateRead.IndexCurrentChar) {
-		if errored(::gpk::xmlParseCharacter(reader, xmlDoc)) {
+		if (errored(::gpk::xmlParseCharacter(reader, xmlDoc))) {
 			error_printf("Failed to parse XML:"
 				"\niCharacter		: %i ('%c')"
 				"\niNestLevel		: %i"

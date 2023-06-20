@@ -39,19 +39,30 @@ static	::gpk::error_t	updateSizeDependentResources(::SApplication & app) {
 	return 0;
 }
 
-static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SSysEvent & sysEvent) { 
-	switch(sysEvent.Type) {
-	default								: break;
-	case ::gpk::SYSEVENT_WINDOW_CREATE	: 
+
+static	::gpk::error_t	processScreenEvent		(::SApplication & app, const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { 
+	switch(screenEvent.Type) {
+	default: break;
+	case ::gpk::EVENT_SCREEN_Create:
 #if !defined(DISABLE_D3D11)
 		gpk_necs(app.D3DApp.Initialize(app.Framework.RootWindow.PlatformDetail.WindowHandle, app.D1.MainGame.Pool.Engine.Scene->Graphics));
 #endif
-	case ::gpk::SYSEVENT_WINDOW_RESIZE	: 
+	case ::gpk::EVENT_SCREEN_Resize: 
 		gpk_necs(::updateSizeDependentResources(app));
 		break;
 	}
 	return 0;
-};
+}
+
+static	::gpk::error_t	processSystemEventNew	(::SApplication & app, const ::gpk::SSystemEvent & sysEvent) { 
+	switch(sysEvent.Type) {
+	default: break;
+	case ::gpk::SYSTEM_EVENT_Screen:
+		es_if(errored(::gpk::eventExtractAndHandle<::gpk::EVENT_SCREEN>(sysEvent, [&app](const ::gpk::SEventView<::gpk::EVENT_SCREEN> & screenEvent) { return processScreenEvent(app, screenEvent); })));
+		break;
+	}
+	return 0;
+}
 
 ::gpk::error_t			setup					(::SApplication & app)											{
 #if !defined(DISABLE_D3D11)
@@ -62,8 +73,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 	mainWindow.Size			= {1280, 720};
 	gpk_necs(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 
-	const ::gpk::FSysEvent		funcEvent				= [&app](const ::gpk::SSysEvent & sysEvent) { return ::processSystemEvent(app, sysEvent); };
-	gpk_necs(mainWindow.EventQueueOld.for_each(funcEvent));
+	gpk_necs(mainWindow.EventQueueNew.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
 
 	::gpk::editorCreate(app.Editor);
 	//if(::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, 0, mainWindow.Input, mainWindow.EventQueueOld))
@@ -80,8 +90,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 
-	const ::gpk::FSysEvent		funcEvent				= [&app](const ::gpk::SSysEvent & sysEvent) { return ::processSystemEvent(app, sysEvent); };
-	gpk_necs(mainWindow.EventQueueOld.for_each(funcEvent));
+	gpk_necs(mainWindow.EventQueueNew.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
 
 	gpk_necs(::gpk::editorUpdate(app.Editor, *mainWindow.Input, {mainWindow.EventQueueOld}));
 	//::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
@@ -131,7 +140,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SS
 	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), 0xFF000030, (uint32_t)-1);
 	//gpk_necs(::d1::d1Draw(app.D1.AppUI, app.D1.MainGame, *backBuffer, framework.FrameInfo.Seconds.Total));
 
-	gpk_necs(::gpk::guiDraw(app.Editor.GUI.GUI, backBuffer->Color));
+	gpk_necs(::gpk::guiDraw(*app.Editor.UI.GUI, backBuffer->Color));
 
 	memcpy(framework.RootWindow.BackBuffer->Color.View.begin(), backBuffer->Color.View.begin(), backBuffer->Color.View.byte_count());
 #endif

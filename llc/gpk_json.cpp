@@ -448,7 +448,7 @@ static	::gpk::error_t	jsonParseDocumentCharacter	(::gpk::SJSONReaderState & stat
 		? ::jsonParseStringCharacter	(reader.StateRead, reader.Token, jsonAsString)
 		: ::jsonParseDocumentCharacter	(reader.StateRead, reader.Token, jsonAsString)
 		;
-	if errored(errVal) {
+	if (errored(errVal)) {
 		const bool					validElement				= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
 		const ::gpk::SJSONToken		* currentElement			= validElement ? &reader.Token[reader.StateRead.IndexCurrentElement] : 0;
 		json_error_printf("Error during read step. Malformed JSON?"

@@ -111,7 +111,7 @@ namespace gpk
 			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
 			for(uint32_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {
 				if(eventsIn[iEvent]->Type == ::gpk::SYSTEM_EVENT_GUI) {
-					::gpk::extractAndHandle<::gpk::SYSTEM_EVENT, ::gpk::EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & eventGui) {
+					::gpk::eventExtractAndHandle<::gpk::EVENT_GUI_CONTROL>(*eventsIn[iEvent], [this, &controlTable](const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & eventGui) {
 						switch(eventGui.Type) {
 						default: break;
 						case ::gpk::EVENT_GUI_CONTROL_StateChange: {

@@ -39,10 +39,10 @@ namespace gpk
 		}
 #elif defined(GPK_XCB)
 		typedef	::gpk::bgra					TOSWindowNativeTexel;
-			xcb_connection_t					* Connection				= {};
-			xcb_gcontext_t						GC							= {};
-			xcb_drawable_t						IdDrawable					= {};
-			xcb_drawable_t						IdDrawableBackPixmap		= {};
+		xcb_connection_t					* Connection				= {};
+		xcb_gcontext_t						GC							= {};
+		xcb_drawable_t						IdDrawable					= {};
+		xcb_drawable_t						IdDrawableBackPixmap		= {};
 
 											~SWindowPlatformDetail		()	{
 			if(uint32_t(-1) != GC) {
@@ -57,30 +57,30 @@ namespace gpk
 		typedef	::gpk::bgra					TTexel;
 		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
 
-		::gpk::SWindowPlatformDetail		PlatformDetail				= {};
-		::gpk::aobj<::gpk::SSysEvent>		EventQueueOld				= {};
-		::gpk::aobj<::gpk::SSystemEvent>	EventQueueNew				= {};
-		::gpk::pobj<TOffscreen>				BackBuffer					= {};
-		::gpk::pobj<::gpk::SInput>			Input						= {};
-		::gpk::n2u16						PreviousSize				= {};
-		::gpk::n2u16						Size						= {320, 200};
-		::gpk::rectu16						WindowedWindowRect			= {0, 0, 320, 200};
+		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
+		::gpk::aobj<::gpk::SSysEvent>		EventQueueOld			= {};
+		::gpk::apobj<::gpk::SSystemEvent>	EventQueueNew			= {};
+		::gpk::pobj<TOffscreen>				BackBuffer				= {};
+		::gpk::pobj<::gpk::SInput>			Input					= {};
+		::gpk::n2u16						PreviousSize			= {};
+		::gpk::n2u16						Size					= {320, 200};
+		::gpk::rectu16						WindowedWindowRect		= {0, 0, 320, 200};
 
-		bool								Resized						: 1;
-		bool								Repaint						: 1;
-		bool								NoDraw						: 1;
-		bool								MinOrMaxed					: 1;
-		bool								Closed						: 1;
-		bool								FullScreen					: 1;
+		bool								Resized					: 1;
+		bool								Repaint					: 1;
+		bool								NoDraw					: 1;
+		bool								MinOrMaxed				: 1;
+		bool								Closed					: 1;
+		bool								FullScreen				: 1;
 	};
 
-	::gpk::error_t						windowPresentTarget			(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
-	::gpk::error_t						windowUpdate				(::gpk::SWindow & windowInstance);
-	::gpk::error_t						windowUpdateTick			(::gpk::SWindow & windowInstance);
-	::gpk::error_t						fullScreenExit				(::gpk::SWindow & windowInstance);
-	::gpk::error_t						fullScreenEnter				(::gpk::SWindow & windowInstance);
+	::gpk::error_t						windowPresentTarget		(::gpk::SWindow & windowInstance, const ::gpk::g8bgra & targetToPresent);
+	::gpk::error_t						windowUpdate			(::gpk::SWindow & windowInstance);
+	::gpk::error_t						windowUpdateTick		(::gpk::SWindow & windowInstance);
+	::gpk::error_t						fullScreenExit			(::gpk::SWindow & windowInstance);
+	::gpk::error_t						fullScreenEnter			(::gpk::SWindow & windowInstance);
 
-	stainli ::gpk::error_t				fullScreenToggle			(::gpk::SWindow & windowInstance) { 
+	stainli ::gpk::error_t				fullScreenToggle		(::gpk::SWindow & windowInstance) { 
 		return windowInstance.FullScreen ? ::gpk::fullScreenExit(windowInstance) : ::gpk::fullScreenEnter(windowInstance); 
 	}
 

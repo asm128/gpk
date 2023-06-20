@@ -133,7 +133,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 	int32_t									fileSize					= (int32_t)ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	::gpk::error_t							result						= 0;
-	if errored(fileInMemory.resize(fileSize)) {
+	if (errored(fileInMemory.resize(fileSize))) {
 		error_printf("File too large? : %llu.", (uint64_t)fileSize);
 		result								= -1;
 	}

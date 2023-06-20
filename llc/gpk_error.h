@@ -24,10 +24,10 @@ namespace gpk
 }
 
 #if !defined(errored)
-#	define						errored(errVal)								((errVal) < 0) //(::gpk::failed(errVal))
+#	define						errored(errVal)								((::gpk::error_t)(errVal) < 0) //(::gpk::failed(errVal))
 #endif
 #if !defined(not_errored)
-#	define						not_errored(errVal)							(::gpk::succeeded(errVal))
+#	define						not_errored(errVal)							::gpk::succeeded((::gpk::error_t)(errVal))
 #endif
 
 #define GPK_CRASH()			{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.

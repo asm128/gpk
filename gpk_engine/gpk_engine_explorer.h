@@ -19,38 +19,47 @@ namespace gpk
 	struct SEditorLayout		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
 	struct SEditorSettings		{ ::gpk::acid IdControl = {}; int32_t IdEditable = -1; };
 
-	struct SEditorApplication {
-		::gpk::SUIInputBox	InputBox			= {};
-		::gpk::SEngineGUI	GUI					= {};
 
-		::gpk::apapodc		InputHistory;
+	struct SEditorProject {
+		::gpk::SGUI					GUI;
+		::gpk::SEngine				Engine;
 	};
 
-	struct SEditor : public SEditorApplication {
-		::gpk::acid			Dialogs;
-		::gpk::acid			Buttons;
-		::gpk::acid			Hover;
-		::gpk::acid			Selection;
-		::gpk::acid			Expand;
-
-		SEditorRigidBody	EditorRigidBody		= {};
-
-		SEditorImage		EditorImage			= {};
-		SEditorMesh			EditorMesh			= {};
-		SEditorScene		EditorScene			= {};
-		SEditorBuffer		EditorBuffer		= {};
-		SEditorSurface		EditorSurface		= {};
-
-		SEditorPalette		EditorPalette		= {};
-		SEditorLayout		EditorLayout		= {};
-		SEditorControl		EditorControl		= {};
-		SEditorControlText	EditorControlText	= {};
+	struct SEditorUI {
+		::gpk::pobj<::gpk::SGUI>	GUI					= {};
+		::gpk::SUIInputBox			InputBox			= {};
+		::gpk::apapodc				InputHistory;
 	};
 
-	::gpk::error_t		editorCreate	(::gpk::SEditor & editor);
-	::gpk::error_t		editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::view<::gpk::SSysEvent> systemEvents);
-	//::gpk::error_t	editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
-	//::gpk::error_t	editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
+	struct SEditor {
+		::gpk::SEditorUI			UI;
+		::gpk::acid					Dialogs;
+		::gpk::acid					Menu;
+	};
+
+	//struct SEditor : public SEditorApplication {
+	//	::gpk::acid			Hover;
+	//	::gpk::acid			Selection;
+	//	::gpk::acid			Expand;
+
+	//	SEditorRigidBody	EditorRigidBody		= {};
+
+	//	SEditorImage		EditorImage			= {};
+	//	SEditorMesh			EditorMesh			= {};
+	//	SEditorScene		EditorScene			= {};
+	//	SEditorBuffer		EditorBuffer		= {};
+	//	SEditorSurface		EditorSurface		= {};
+
+	//	SEditorPalette		EditorPalette		= {};
+	//	SEditorLayout		EditorLayout		= {};
+	//	SEditorControl		EditorControl		= {};
+	//	SEditorControlText	EditorControlText	= {};
+	//};
+
+	::gpk::error_t				editorCreate	(::gpk::SEditor & editor);
+	::gpk::error_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::view<::gpk::SSysEvent> systemEvents);
+	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
+	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
 } // namespace
 
 #endif // GPK_ENGINE_EXPLORER_H

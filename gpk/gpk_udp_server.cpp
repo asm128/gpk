@@ -80,7 +80,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						int											sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
 						::gpk::SUDPCommand							command								= {};						// Where to store received data
 						int											bytes_received						= 0;
-						if errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length)) {
+						if (errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 							uint32_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
 								warning_printf("%s", "Could not receive datagram.");
@@ -167,7 +167,7 @@ static	::gpk::error_t	serverListenTick				(::gpk::SUDPServer& serverInstance, co
 	::gpk::SUDPCommand								command							= {};							// Where to store received data
 	int												bytes_received					= 0;
 	sockaddr_in										sa_client						= {};							// Information about the client
-	if errored(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length)) {
+	if(errored(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length))) {
 		warning_printf("Could not receive datagram.");
 	}
 

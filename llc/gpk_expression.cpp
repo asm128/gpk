@@ -336,7 +336,7 @@ static	::gpk::error_t	expressionReaderProcessDocCharacter		(::gpk::SExpressionRe
 		? ::expressionReaderProcessStringCharacter	(stateReader, tokens, expression)
 		: ::expressionReaderProcessDocCharacter		(stateReader, tokens, expression)
 		;
-	if errored(result) {
+	if (errored(result)) {
 		const bool														validElement										= (uint32_t)reader.StateRead.IndexCurrentElement < reader.Token.size();
 		const ::gpk::SExpressionToken									* currentElement									= validElement ? &reader.Token[reader.StateRead.IndexCurrentElement] : 0;
 		error_printf("Error during read step. Malformed expression?"

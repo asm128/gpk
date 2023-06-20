@@ -89,14 +89,14 @@ namespace gpk
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)&childEventDataType, sizeof(_tPOD)});
 	}
 
-	template<typename _tParentEvent, typename _tChildEvent>
-	static	::gpk::error_t	extractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
+	template<typename _tChildEvent, typename _tParentEvent>
+	static	::gpk::error_t	eventExtractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
 		::gpk::SEventView<_tChildEvent>	childEvent; 
 		gpk_necs(parentEvent.ExtractChild(childEvent)); 
 		return funcHandleChild(childEvent);
 	}
 }
 
-#define gpk_warning_unhandled_event(eventUnhandled)		warning_printf("Unhandled %s event: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), eventUnhandled.Type, eventUnhandled.Type, (char)eventUnhandled.Type); 
+#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled %s event: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), eventUnhandled.Type, eventUnhandled.Type, (char)eventUnhandled.Type); 
 
 #endif // GPK_EVENT_H_230511

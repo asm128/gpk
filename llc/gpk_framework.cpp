@@ -15,8 +15,6 @@
 #	include <xcb/xcb_image.h>
 #endif
 
-
-
 static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
@@ -165,7 +163,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #if defined(GPK_WINDOWS)
 #	include <Windowsx.h>
 
-static	::RECT				minClientRect			= {100, 100, 100 + 320, 100 + 200};
+static	::RECT			minClientRect			= {100, 100, 100 + 320, 100 + 200};
 
 //extern				::SApplication				* g_ApplicationInstance						;
 static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)							{
@@ -194,31 +192,32 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	//if(!mainDisplay.Input)
 		//mainDisplay.Input.create();
 
-	::gpk::SInput							& input										= *mainDisplay.Input;
-	::gpk::SWindowPlatformDetail			& displayDetail								= mainDisplay.PlatformDetail;
+	::gpk::SInput						& input										= *mainDisplay.Input;
+	::gpk::SWindowPlatformDetail		& displayDetail								= mainDisplay.PlatformDetail;
 
-	::gpk::SSysEvent						newEvent;
-	::gpk::pobj<::gpk::SSystemEvent>		newSystemEvent;
+	::gpk::SSysEvent					newEvent;
+	::gpk::pobj<::gpk::SSystemEvent>	newSystemEvent;
 	switch(uMsg) {
 	default: break;
+	case WM_CLOSE			: es_if(errored(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueueNew))); ::DestroyWindow(hWnd); return 0;
+	case WM_DESTROY			: es_if(errored(::gpk::eventEnqueueScreenDestroy(mainDisplay.EventQueueNew))); 
+		displayDetail.WindowHandle									= 0;
+		mainDisplay.Closed											= true;
+		::PostQuitMessage(0);
+		return 0;
 	case WM_CREATE			: {
-		const CREATESTRUCTA						& createStruct			= *(const CREATESTRUCTA*)lParam;
-		RECT									rect					= {};
+		RECT								rect					= {};
 		GetClientRect(hWnd, &rect);
-		::gpk::n2<uint16_t>						newMetrics				= ::gpk::n2<uint16_t>{(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)}.u16();
-		newEvent.Type						= ::gpk::SYSEVENT_WINDOW_CREATE;
-		::gpk::savePOD(newEvent.Data, newMetrics); 
-		::gpk::savePOD(newEvent.Data, createStruct); 
-		mainDisplay.EventQueueOld.push_back(newEvent); 
+		::gpk::n2u16						newMetrics				= {(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)};
+		es_if(errored(::gpk::eventEnqueueScreenCreate(mainDisplay.EventQueueNew, {newMetrics, *(const CREATESTRUCTA*)lParam})));
 		break;
 	}
-	case WM_CLOSE			: { newEvent.Type = ::gpk::SYSEVENT_WINDOW_CLOSE	; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); ::DestroyWindow(hWnd); } break;
-	case WM_SHOWWINDOW		: { newEvent.Type = ::gpk::SYSEVENT_WINDOW_SHOW		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; } break;
-	case WM_CHAR			: { newEvent.Type = ::gpk::SYSEVENT_CHAR			; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; } break;
-	case WM_KEYDOWN			: { newEvent.Type = ::gpk::SYSEVENT_KEY_DOWN		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; } break;
-	case WM_KEYUP			: { newEvent.Type = ::gpk::SYSEVENT_KEY_UP			; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; } break;
-	case WM_SYSKEYDOWN		: { newEvent.Type = ::gpk::SYSEVENT_SYSKEY_DOWN		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; } break;
-	case WM_SYSKEYUP		: { newEvent.Type = ::gpk::SYSEVENT_SYSKEY_UP		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); ; mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; } break;
+	case WM_SHOWWINDOW		: { newEvent.Type = ::gpk::SYSEVENT_WINDOW_SHOW		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; } break;
+	case WM_CHAR			: { newEvent.Type = ::gpk::SYSEVENT_CHAR			; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; } break;
+	case WM_KEYDOWN			: { newEvent.Type = ::gpk::SYSEVENT_KEY_DOWN		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; } break;
+	case WM_KEYUP			: { newEvent.Type = ::gpk::SYSEVENT_KEY_UP			; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; } break;
+	case WM_SYSKEYDOWN		: { newEvent.Type = ::gpk::SYSEVENT_SYSKEY_DOWN		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; } break;
+	case WM_SYSKEYUP		: { newEvent.Type = ::gpk::SYSEVENT_SYSKEY_UP		; newEvent.Data.append((const uint8_t*)&wParam, sizeof(wParam)); mainDisplay.EventQueueOld.push_back(newEvent); if(wParam >= ::gpk::size(input.KeyboardPrevious.KeyState)) break; input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; } break;
 	case WM_LBUTTONDOWN		: { newEvent.Type = ::gpk::SYSEVENT_MOUSE_DOWN		; newEvent.Data.push_back(0); mainDisplay.EventQueueOld.push_back(newEvent); info_printf("%s", "L Down"	); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; } break;
 	case WM_LBUTTONDBLCLK	: { newEvent.Type = ::gpk::SYSEVENT_MOUSE_DBLCLK	; newEvent.Data.push_back(0); mainDisplay.EventQueueOld.push_back(newEvent); info_printf("%s", "L DClck"	); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; } break;
 	case WM_LBUTTONUP		: { newEvent.Type = ::gpk::SYSEVENT_MOUSE_UP		; newEvent.Data.push_back(0); mainDisplay.EventQueueOld.push_back(newEvent); info_printf("%s", "L Up"		); input.MouseCurrent.ButtonState[0] = 0; mainDisplay.Repaint = true; } break;
@@ -256,11 +255,10 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		}
 	case WM_ACTIVATE: {
 		switch(wParam) {
-		case WA_ACTIVE		: newEvent.Type = ::gpk::SYSEVENT_WINDOW_ACTIVATE  ; /*XInputEnable(1); */break; //Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
-		case WA_CLICKACTIVE	: newEvent.Type = ::gpk::SYSEVENT_WINDOW_ACTIVATE  ; /*XInputEnable(1); */break;  // Activated by a mouse click.
-		case WA_INACTIVE	: newEvent.Type = ::gpk::SYSEVENT_WINDOW_DEACTIVATE; /*XInputEnable(0); */break; 
+		case WA_ACTIVE		: es_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueueNew, 0))); /*XInputEnable(1); */break; // Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+		case WA_CLICKACTIVE	: es_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueueNew, 1))); /*XInputEnable(1); */break; // Activated by a mouse click.
+		case WA_INACTIVE	: es_if(errored(::gpk::eventEnqueueScreenDeactivate(mainDisplay.EventQueueNew, 0))); /*XInputEnable(0); */break; 
 		}
-		mainDisplay.EventQueueOld.push_back(newEvent); 
 		break;
 	}
 	case WM_SIZE			:
@@ -291,9 +289,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
 #endif
-				newEvent.Type					= ::gpk::SYSEVENT_WINDOW_RESIZE; 
-				newEvent.Data.append((const uint8_t*)&newMetrics, sizeof(newMetrics)); 
-				mainDisplay.EventQueueOld.push_back(newEvent); 
+				es_if(errored(::gpk::eventEnqueueScreenResize(mainDisplay.EventQueueNew, newMetrics)));
 			}
 		}
 		break;
@@ -301,11 +297,6 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		info_printf("%s", "WM_PAINT");
 		mainDisplay.Repaint											= true;
 		break;
-	case WM_DESTROY			:
-		displayDetail.WindowHandle									= 0;
-		mainDisplay.Closed											= true;
-		::PostQuitMessage(0);
-		return 0;
 	//case MM_JOY1BUTTONDOWN	: newEvent.Type = ::gpk::SYSEVENT_JOY_BUTTON_DOWN	; newEvent.Data.resize(1 + sizeof(LPARAM)); newEvent.Data[0] = 0; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
 	//case MM_JOY1BUTTONUP	: newEvent.Type = ::gpk::SYSEVENT_JOY_BUTTON_UP		; newEvent.Data.resize(1 + sizeof(LPARAM)); newEvent.Data[0] = 0; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been released.
 	//case MM_JOY1ZMOVE		: newEvent.Type = ::gpk::SYSEVENT_JOY_MOVE			; newEvent.Data.resize(1 + sizeof(LPARAM)); newEvent.Data[0] = 0; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID1 changed position in the z-direction.

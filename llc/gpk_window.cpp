@@ -4,10 +4,10 @@
 	if(false == window.FullScreen)
 		return 0;
 
-	window.Size								= window.WindowedWindowRect.Dimensions();
+	window.Size				= window.WindowedWindowRect.Dimensions();
 #if defined(GPK_WINDOWS)
-	HWND										windowHandle					= window.PlatformDetail.WindowHandle;
-	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
+	HWND						windowHandle					= window.PlatformDetail.WindowHandle;
+	DWORD						style							= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
 	SetWindowPos(windowHandle, NULL, window.WindowedWindowRect.Left, window.WindowedWindowRect.Top
 		, window.WindowedWindowRect.Right  - window.WindowedWindowRect.Left
@@ -15,30 +15,27 @@
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 #endif
-	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
-	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
-	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= window.Size.u16();
-	window.EventQueueOld[window.EventQueueOld.push_back({})] = newEvent;
-	window.FullScreen						= false;
+	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueueNew, window.Size)));
+	window.FullScreen		= false;
 	return 0;
 }
 
-::gpk::error_t			gpk::fullScreenEnter			(::gpk::SWindow & framework) {
-	if(framework.FullScreen)
+::gpk::error_t			gpk::fullScreenEnter		(::gpk::SWindow & window) {
+	if(window.FullScreen)
 		return 1;
 
 #if defined(GPK_WINDOWS)
-	HWND										windowHandle					= framework.PlatformDetail.WindowHandle;
-	MONITORINFO									monitor_info					= {sizeof(monitor_info)};
-	RECT										windowsRect						= {};
+	HWND						windowHandle				= window.PlatformDetail.WindowHandle;
+	MONITORINFO					monitor_info				= {sizeof(monitor_info)};
+	RECT						windowsRect					= {};
 	ree_if(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
-	framework.WindowedWindowRect.Top		= (uint16_t)windowsRect.top		;
-	framework.WindowedWindowRect.Left		= (uint16_t)windowsRect.left	;
-	framework.WindowedWindowRect.Right		= (uint16_t)windowsRect.right	;
-	framework.WindowedWindowRect.Bottom		= (uint16_t)windowsRect.bottom	;
+	window.WindowedWindowRect.Top		= (uint16_t)windowsRect.top		;
+	window.WindowedWindowRect.Left		= (uint16_t)windowsRect.left	;
+	window.WindowedWindowRect.Right		= (uint16_t)windowsRect.right	;
+	window.WindowedWindowRect.Bottom	= (uint16_t)windowsRect.bottom	;
 	ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
 
-	DWORD										style							= GetWindowLong(windowHandle, GWL_STYLE);
+	const DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
 	SetWindowPos(windowHandle, HWND_TOP, monitor_info.rcMonitor.left, monitor_info.rcMonitor.top
 		, monitor_info.rcMonitor.right - monitor_info.rcMonitor.left
@@ -46,24 +43,21 @@
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 
-	framework.Size							= 
+	window.Size				= 
 		{ uint16_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
 		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 #endif
-	::gpk::SSysEvent							newEvent						= {::gpk::SYSEVENT_WINDOW_RESIZE, };
-	newEvent.Data.resize(sizeof(::gpk::n2<uint16_t>));
-	(*(::gpk::n2<uint16_t>*)newEvent.Data.begin())	= framework.Size.u16();
-	framework.EventQueueOld.push_back(newEvent);
-	framework.FullScreen					= true;
+	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueueNew, window.Size)));
+	window.FullScreen		= true;
 	return 0;
 }
 
-::gpk::error_t			gpk::windowUpdateTick						(::gpk::SWindow& displayInstance)											{
-	bool										quit	= false;
+::gpk::error_t			gpk::windowUpdateTick		(::gpk::SWindow& displayInstance)											{
+	bool						quit						= false;
 #if defined(GPK_WINDOWS)
-	::MSG										msg											= {};
-	int											counter										= 0;
+	::MSG						msg							= {};
+	int							counter						= 0;
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_REMOVE) && (100 > counter++)) {
 		::TranslateMessage	(&msg);
 		::DispatchMessage	(&msg);
@@ -78,16 +72,17 @@
 	return quit ? 1 : 0;
 }
 
-::gpk::error_t			gpk::windowUpdate							(::gpk::SWindow& displayInstance)											{
+::gpk::error_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
+	displayInstance.EventQueueNew.clear();
 	displayInstance.EventQueueOld.clear();
-	displayInstance.Resized					= false;
-	displayInstance.Repaint					= false;
-	bool										quit	= false;
+	displayInstance.Resized	= false;
+	displayInstance.Repaint	= false;
+	bool						quit					= false;
 #if defined(GPK_WINDOWS)
-	::MSG										msg											= {};
+	::MSG						msg						= {};
 	while(::PeekMessage(&msg, displayInstance.PlatformDetail.WindowHandle, 0, 0, PM_NOREMOVE))
 		if(1 == windowUpdateTick(displayInstance))
-			quit									= true;
+			quit					= true;
 #elif defined(GPK_XCB)
 
 #endif
@@ -95,10 +90,10 @@
 }
 
 #if defined(GPK_WINDOWS)
-		::gpk::error_t					drawBuffer									(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
-	const uint32_t								bytesToCopy									= sizeof(::RGBQUAD) * colorArray.size();
-	const ::gpk::n2<uint16_t>				metricsSource								= colorArray.metrics().u16();
-	const ::gpk::n2<uint16_t>				prevSize									= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
+::gpk::error_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
+	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
+	const ::gpk::n2u16			metricsSource			= colorArray.metrics().u16();
+	const ::gpk::n2u16			prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight
 	 || width  != offscreenDetail.BitmapInfo.bmiHeader.biWidth 

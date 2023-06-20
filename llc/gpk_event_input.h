@@ -22,7 +22,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Down			, 2);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, DoubleClick		, 3);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Wheel			, 4);
-	stainli	::gpk::error_t	eventEnqueueMousePosition		(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Position		, coord ); }
+	stainli	::gpk::error_t	eventEnqueueMousePosition		(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Position		, coord ); }
 	stainli	::gpk::error_t	eventEnqueueMouseUp				(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Up			, button); }
 	stainli	::gpk::error_t	eventEnqueueMouseDown			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Down			, button); }
 	stainli	::gpk::error_t	eventEnqueueMouseDoubleClick	(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_DoubleClick	, button); }
@@ -33,10 +33,10 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, End				, 1);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Update			, 2);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Ownership		, 3);
-	stainli	::gpk::error_t	eventEnqueueTouchBegin			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Begin	, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchEnd			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_End		, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchUpdate			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Update	, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchOwnership		(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Ownership, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchBegin			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Begin	, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchEnd			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_End		, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchUpdate			(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Update	, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchOwnership		(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Ownership, coord); }
 
 	GDEFINE_ENUM_TYPE(EVENT_JOYPAD, uint8_t);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Move			, 0);
