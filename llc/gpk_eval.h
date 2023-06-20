@@ -92,9 +92,7 @@ namespace gpk
 #	define is_zero(your_int)		(0 == (your_int))				// returns true if the parameter is equal to zero
 #	define one_if_false(expression)	one_if(false == (expression));
 //
-#	define one_if_remainder(count, denominator)		(((count) + ((denominator) - 1)) / (denominator))	// returns one if there is a remainder
-#	define zero_if_remainder(count, denominator)	(one_if_remainder(count, denominator) ? 0 : 1)		// returns zero if there is a remainder
-#	define round_up(count, denominator)				((count) / (denominator) + one_if_remainder((count), (denominator)))	// returns one if there is a remainder
+#	define round_up(count, denominator)				(((count) + (denominator) - 1) / (denominator))	// 
 #endif
 
 } // namespace

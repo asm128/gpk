@@ -685,14 +685,14 @@ static	::gpk::error_t	controlInstanceReset	(::gpk::SControlTable & controlTable,
 
 	::gpk::cid_t				iControl				= -1;
 	gpk_necs(iControl = (::gpk::cid_t)::gpk::resize(controlTable.States.size() + 1
-		, controlTable.Placement		
-		, controlTable.Area			
-		, controlTable.Text			
-		, controlTable.Constraints		
-		, controlTable.States			
-		, controlTable.Draw			
-		, controlTable.Children		
-		, controlTable.Images			
+		, controlTable.States
+		, controlTable.Placement
+		, controlTable.Area
+		, controlTable.Constraints
+		, controlTable.Draw
+		, controlTable.Text
+		, controlTable.Images
+		, controlTable.Children
 		) - 1);
 	gpk_necs(::controlInstanceReset(controlTable, iControl, defaultColors));
 	return iControl;

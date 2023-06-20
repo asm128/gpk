@@ -27,10 +27,11 @@ namespace gpk
 
 		::gpk::apobj<::gpk::aeid>			Children		= {};
 
-		const ::gpk::SVirtualEntity&		operator[]		(uint32_t index)							const	{ return Entities[index]; }
-		SVirtualEntity&						operator[]		(uint32_t index)									{ return Entities[index]; }
+		const ::gpk::SVirtualEntity&		operator[]		(uint32_t index)	const	{ return Entities[index]; }
+		SVirtualEntity&						operator[]		(uint32_t index)			{ return Entities[index]; }
 
-		uint32_t							size			()											const	{ return Names.size(); }
+		uint32_t							size			()					const	{ return Names.size(); }
+		uint32_t							clear			()							{ ::gpk::clear(Entities, Names, Children); return 0; }
 
 		::gpk::error_t						Create			() {
 			Children.push_back({});

@@ -13,7 +13,7 @@ namespace gpk
 		::gpk::au32								RemainingSpace;
 
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::error_t						Clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
+		::gpk::error_t						clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
 		::gpk::error_t						Save						(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::saveView(output, RemainingSpace));
 			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
@@ -22,7 +22,7 @@ namespace gpk
 		}
 
 		::gpk::error_t						Load						(::gpk::vcu8 & input)			{
-			Clear();
+			clear();
 			gpk_necs(::gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
 			for(uint32_t iArray = 0; iArray < Blocks.size(); ++iArray)

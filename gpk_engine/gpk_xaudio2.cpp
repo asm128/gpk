@@ -241,33 +241,33 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	safe_destroySourceVoice(SourceVoice);
 
 	// Read in the wave file
-	const WAVEFORMATEX* pwfx = 0;
-	::gpk::view<const uint8_t> audioView			= {};
+	const WAVEFORMATEX			* pwfx				= 0;
+	::gpk::vcu8					audioView			= {};
 	gpk_necs(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
 	ree_if(pwfx->nChannels == INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
 
 	// Play the wave using a source voice that sends to both the submix and mastering voices
 	XAUDIO2_SEND_DESCRIPTOR		sendDescriptors[2]	= {};
-	sendDescriptors[0] = {XAUDIO2_SEND_USEFILTER, pMasterVoice}; // LPF direct-path
-	sendDescriptors[1] = {XAUDIO2_SEND_USEFILTER, pSubmixVoice};// LPF reverb-path -- omit for better performance at the cost of less realistic occlusion
-	const XAUDIO2_VOICE_SENDS sendList = { 2, sendDescriptors };
+	sendDescriptors[0]		= {XAUDIO2_SEND_USEFILTER, pMasterVoice}; // LPF direct-path
+	sendDescriptors[1]		= {XAUDIO2_SEND_USEFILTER, pSubmixVoice};// LPF reverb-path -- omit for better performance at the cost of less realistic occlusion
+	const XAUDIO2_VOICE_SENDS	sendList			= {2, sendDescriptors};
 
 	// create the source voice
 	gpk_hrcall(XAudio2->CreateSourceVoice(&SourceVoice, pwfx, 0, 2.0f, nullptr, &sendList));
 
 	// Submit the wave sample data using an XAUDIO2_BUFFER structure
 	XAUDIO2_BUFFER				buffer				= {};
-	buffer.pAudioData	= audioView.begin();
-	buffer.Flags		= XAUDIO2_END_OF_STREAM;
-	buffer.AudioBytes	= audioView.size();
-	buffer.LoopCount	= XAUDIO2_LOOP_INFINITE;
+	buffer.pAudioData		= audioView.begin();
+	buffer.Flags			= XAUDIO2_END_OF_STREAM;
+	buffer.AudioBytes		= audioView.size();
+	buffer.LoopCount		= XAUDIO2_LOOP_INFINITE;
 
 	gpk_hrcall(SourceVoice->SubmitSourceBuffer(&buffer));
 	gpk_hrcall(SourceVoice->Start(0));
-	Playing = true;
+	Playing					= true;
 
-	nFrameToApply3DAudio = 0;
+	nFrameToApply3DAudio	= 0;
 	return S_OK;
 }
 
@@ -275,44 +275,41 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 // Perform per-frame update of audio
 //-----------------------------------------------------------------------------
 ::gpk::error_t			gpk::AUDIO_STATE::UpdateAudio(double fElapsedTime) {
-
 	if( nFrameToApply3DAudio == 0 ) {
 		// Calculate listener orientation in x-z plane
 		if (vListenerPos.x != listener.Position.x
 		 || vListenerPos.z != listener.Position.z
 		) {
-			::gpk::n3f32 vDelta = vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z};
+			::gpk::n3f32				vDelta				= vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z};
 
-			fListenerAngle = float( atan2( vDelta.x, vDelta.z ) );
+			fListenerAngle			= float( atan2( vDelta.x, vDelta.z ) );
 
-			vDelta.y = 0.0f;
-			::gpk::n3f32 delta = { vDelta.x,vDelta.y,vDelta.z};
-			delta.Normalize();
+			vDelta.y				= 0.0f;
+			vDelta.Normalize();
 
-			listener.OrientFront.x = delta.x;
-			listener.OrientFront.y = 0.f;
-			listener.OrientFront.z = delta.z;
+			listener.OrientFront.x	= vDelta.x;
+			listener.OrientFront.y	= 0.f;
+			listener.OrientFront.z	= vDelta.z;
 		}
 
 		listener.pCone = fUseListenerCone ? (X3DAUDIO_CONE*)&Listener_DirectionalCone : NULL;
 		if (fUseInnerRadius) {
-			emitter.InnerRadius = 2.0f;
-			emitter.InnerRadiusAngle = X3DAUDIO_PI/4.0f;
+			emitter.InnerRadius			= 2.0f;
+			emitter.InnerRadiusAngle	= X3DAUDIO_PI/4.0f;
 		}
 		else {
-			emitter.InnerRadius = 0.0f;
-			emitter.InnerRadiusAngle = 0.0f;
+			emitter.InnerRadius			= 0.0f;
+			emitter.InnerRadiusAngle	= 0.0f;
 		}
 
-		if( fElapsedTime > 0 )
-		{
-			::gpk::n3f32 lVelocity = ( vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z} ) / fElapsedTime;
-			listener.Position = {vListenerPos.x, vListenerPos.y, vListenerPos.z};
-			listener.Velocity = {lVelocity.x, lVelocity.y, lVelocity.z};
+		if( fElapsedTime > 0 ) {
+			::gpk::n3f32				lVelocity			= ( vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z} ) / fElapsedTime;
+			listener.Position		= {vListenerPos.x, vListenerPos.y, vListenerPos.z};
+			listener.Velocity		= {lVelocity.x, lVelocity.y, lVelocity.z};
 
-			::gpk::n3f32 eVelocity = ( vEmitterPos - ::gpk::n3f32{emitter.Position.x, emitter.Position.y, emitter.Position.z} ) / fElapsedTime;
-			emitter.Position = {vEmitterPos.x, vEmitterPos.y, vEmitterPos.z};
-			emitter.Velocity = {eVelocity.x, eVelocity.y, eVelocity.z};
+			::gpk::n3f32				eVelocity			= ( vEmitterPos - ::gpk::n3f32{emitter.Position.x, emitter.Position.y, emitter.Position.z} ) / fElapsedTime;
+			emitter.Position		= {vEmitterPos.x, vEmitterPos.y, vEmitterPos.z};
+			emitter.Velocity		= {eVelocity.x, eVelocity.y, eVelocity.z};
 		}
 
 		uint32_t dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
@@ -325,7 +322,7 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 
 		X3DAudioCalculate( x3DInstance, &listener, &emitter, dwCalcFlags, &dspSettings );
 
-		IXAudio2SourceVoice* voice = SourceVoice;
+		IXAudio2SourceVoice			* voice				= SourceVoice;
 		if( voice ) {
 			voice->SetFrequencyRatio(FrequencyRatio * dspSettings.DopplerFactor);
 
@@ -342,7 +339,7 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 	}
 
 	++nFrameToApply3DAudio;
-	nFrameToApply3DAudio &= 1;
+	nFrameToApply3DAudio	&= 1;
 
 	return S_OK;
 }
@@ -352,7 +349,7 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 		return E_FAIL;
 
 	if( pSubmixVoice ) {
-		XAUDIO2FX_REVERB_PARAMETERS native;
+		XAUDIO2FX_REVERB_PARAMETERS		native;
 		ReverbConvertI3DL2ToNative( &g_PRESET_PARAMS[ nReverb ], &native );
 		pSubmixVoice->SetEffectParameters( 0, &native, sizeof( native ) );
 	}

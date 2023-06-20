@@ -326,7 +326,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	::gpk::SControlPlacement	& controlMain			= controlTable.Placement[control.IdGUIControl];
 	::gpk::SControlState		& controlTitleState		= controlTable.States[control.IdTitle];
 	if(controlTitleState.IsPressed()) {
-		::gpk::n2<bool>				locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
+		const ::gpk::n2<bool>		locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
 			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
@@ -336,6 +336,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	else {
 		if(controlTitleState.IsAction() && false == control.Settings.Dragging)
 			gpk_necs(::gpk::viewportFold(control, control.Settings.Unfolded));
+
 		control.Settings.Dragging	= false;
 	}
 	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)

@@ -31,9 +31,9 @@ namespace gpk
 			if(false == Editing)
 				return 0;
 
-			cid_t						handledControl		= 0;
+			cid_t						handledControl;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(::gpk::guiProcessControls(gui, processableControls, [&](cid_t iControl) {
+			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
 					return ::gpk::error_t(handledControl = iControl);
 

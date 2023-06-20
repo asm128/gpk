@@ -27,6 +27,7 @@ namespace gpk
 		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere		;
 		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder		;
 		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid			;
+		inline							SEngine				()								{ Scene.create(); }
 
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }

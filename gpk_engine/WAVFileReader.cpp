@@ -255,35 +255,35 @@ namespace
 		*pLoopStart = 0;
 		*pLoopLength = 0;
 
-		const uint8_t* wavEnd = wavData.end();
+		const uint8_t			* wavEnd		= wavData.end();
 
 		// Locate RIFF 'WAVE'
-		auto riffChunk = FindChunk(wavData, FOURCC_RIFF_TAG);
+		const RIFFChunk			* riffChunk		= FindChunk(wavData, FOURCC_RIFF_TAG);
 		if (!riffChunk || riffChunk->Size < 4)
 			return E_FAIL;
 
-		auto riffHeader = reinterpret_cast<const RIFFChunkHeader*>(riffChunk);
+		const RIFFChunkHeader	* riffHeader	= (const RIFFChunkHeader*)riffChunk;
 		if (riffHeader->Riff == FOURCC_XWMA_FILE_TAG)
 			return S_OK; // xWMA files do not contain loop information
 
 		rees_if(riffHeader->Riff != FOURCC_WAVE_FILE_TAG);
 
 		// Locate 'wsmp' (DLS Chunk)
-		auto ptr = reinterpret_cast<const uint8_t*>(riffHeader) + sizeof(RIFFChunkHeader);
+		const uint8_t			* ptr			= ((const uint8_t*)riffHeader) + sizeof(RIFFChunkHeader);
 		if ((ptr + sizeof(RIFFChunk)) > wavEnd)
 			return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 		auto dlsChunk = FindChunk({ptr, riffChunk->Size}, FOURCC_DLS_SAMPLE);
 		if (dlsChunk) {
-			ptr = reinterpret_cast<const uint8_t*>(dlsChunk) + sizeof(RIFFChunk);
+			ptr = ((const uint8_t*)dlsChunk) + sizeof(RIFFChunk);
 			if (ptr + dlsChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 			if (dlsChunk->Size >= sizeof(RIFFDLSSample)) {
-				auto dlsSample = reinterpret_cast<const RIFFDLSSample*>(ptr);
+				const RIFFDLSSample		* dlsSample		= (const RIFFDLSSample*)ptr;
 
 				if (dlsChunk->Size >= (dlsSample->Size + dlsSample->LoopCount * sizeof(DLSLoop))) {
-					auto loops = reinterpret_cast<const DLSLoop*>(ptr + dlsSample->Size);
+					const DLSLoop			* loops			= (const DLSLoop*)(ptr + dlsSample->Size);
 					for (uint32_t j = 0; j < dlsSample->LoopCount; ++j) {
 						if ((loops[j].LoopType == DLSLoop::LOOP_TYPE_FORWARD || loops[j].LoopType == DLSLoop::LOOP_TYPE_RELEASE)) {
 							// Return 'forward' loop
@@ -297,14 +297,14 @@ namespace
 		}
 
 		// Locate 'smpl' (Sample Chunk)
-		auto midiChunk = FindChunk({ptr, riffChunk->Size}, FOURCC_MIDI_SAMPLE);
+		const RIFFChunk			* midiChunk		= FindChunk({ptr, riffChunk->Size}, FOURCC_MIDI_SAMPLE);
 		if (midiChunk) {
-			ptr = (const uint8_t*)(midiChunk) + sizeof(RIFFChunk);
+			ptr					= ((const uint8_t*)midiChunk) + sizeof(RIFFChunk);
 			if (ptr + midiChunk->Size > wavEnd)
 				return HRESULT_FROM_WIN32(ERROR_HANDLE_EOF);
 
 			if (midiChunk->Size >= sizeof(RIFFMIDISample)) {
-				auto midiSample = (const RIFFMIDISample*)ptr;
+				const RIFFMIDISample	* midiSample		= (const RIFFMIDISample*)ptr;
 
 				if (midiChunk->Size >= (sizeof(RIFFMIDISample) + midiSample->LoopCount * sizeof(MIDILoop))) {
 					auto loops = (const MIDILoop*)(ptr + sizeof(RIFFMIDISample));
@@ -381,8 +381,8 @@ namespace
 		// Get the file size
 		FILE_STANDARD_INFO					fileInfo			= {};
 		rve_if(HRESULT_FROM_WIN32(GetLastError()), !GetFileInformationByHandleEx(hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo)), "File not found: '%s'", ::gpk::toString(szFileName).begin());
-		rve_if(E_FAIL, fileInfo.EndOfFile.HighPart > 0, "%s", "File is too big for 32-bit allocation, so reject read");
-		rve_if(E_FAIL, fileInfo.EndOfFile.LowPart < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT)), "%s", "Need at least enough data to have a valid minimal WAV file");
+		rve_if(E_FAIL, fileInfo.EndOfFile.HighPart > 0, "File is too big (%llu), so reject read", fileInfo.EndOfFile.QuadPart);
+		rve_if(E_FAIL, fileInfo.EndOfFile.LowPart < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT)), "Need at least %u bytes to have a valid minimal WAV file. Actual size: %u", sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT), fileInfo.EndOfFile.LowPart);
 
 		wavData.resize(fileInfo.EndOfFile.LowPart);
 		if (!ReadFile(hFile.get(), wavData.begin(), fileInfo.EndOfFile.LowPart, &bytesRead, nullptr))
