@@ -57,18 +57,18 @@ namespace gpk
 			return push_any(type, label, ::gpk::vcu8{(const u8*)&defaultValue, type & 0xF}); 
 		}
 
-		::gpk::error_t				push_u8			(::gpk::vcc label, u8    defaultValue = (u8   )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u16		(::gpk::vcc label, u16   defaultValue = (u16  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u32		(::gpk::vcc label, u32   defaultValue = (u32  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u64		(::gpk::vcc label, u64   defaultValue = (u64  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i8			(::gpk::vcc label, i8    defaultValue = (i8   )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i16		(::gpk::vcc label, i16   defaultValue = (i16  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i32		(::gpk::vcc label, i32   defaultValue = (i32  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i64		(::gpk::vcc label, i64   defaultValue = (i64  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_f32		(::gpk::vcc label, f32   defaultValue = (f32  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_f64		(::gpk::vcc label, f64   defaultValue = (f64  )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_uchar		(::gpk::vcc label, uchar defaultValue = (uchar)DEBUG_BUILD; ) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_char		(::gpk::vcc label, char  defaultValue = (char )DEBUG_BUILD; ) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u8			(::gpk::vcc label, u8    defaultValue = (u8   )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u16		(::gpk::vcc label, u16   defaultValue = (u16  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u32		(::gpk::vcc label, u32   defaultValue = (u32  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u64		(::gpk::vcc label, u64   defaultValue = (u64  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i8			(::gpk::vcc label, i8    defaultValue = (i8   )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i16		(::gpk::vcc label, i16   defaultValue = (i16  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i32		(::gpk::vcc label, i32   defaultValue = (i32  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i64		(::gpk::vcc label, i64   defaultValue = (i64  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_f32		(::gpk::vcc label, f32   defaultValue = (f32  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_f64		(::gpk::vcc label, f64   defaultValue = (f64  )DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_uchar		(::gpk::vcc label, uchar defaultValue = (uchar)DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_char		(::gpk::vcc label, char  defaultValue = (char )DEBUG_BUILD) { return push_any(label, defaultValue); }
 	};
 } // namespace 
 
