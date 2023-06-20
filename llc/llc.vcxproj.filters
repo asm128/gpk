@@ -603,6 +603,15 @@
     <ClInclude Include="gpk_pod_definition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_event_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_event_screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

@@ -198,6 +198,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	::gpk::SWindowPlatformDetail			& displayDetail								= mainDisplay.PlatformDetail;
 
 	::gpk::SSysEvent						newEvent;
+	::gpk::pobj<::gpk::SSystemEvent>		newSystemEvent;
 	switch(uMsg) {
 	default: break;
 	case WM_CREATE			: {

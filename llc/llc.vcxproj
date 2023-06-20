@@ -68,6 +68,8 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_event_input.h" />
+    <ClInclude Include="gpk_event_screen.h" />
     <ClInclude Include="gpk_geometry_draw.h" />
     <ClInclude Include="gpk_font.h" />
     <ClInclude Include="gpk_grid_color.h" />
@@ -83,6 +85,7 @@
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
+    <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
     <ClInclude Include="gpk_ptr_obj.h" />
