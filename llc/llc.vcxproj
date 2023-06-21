@@ -97,7 +97,6 @@
     <ClInclude Include="gpk_rect3.h" />
     <ClInclude Include="gpk_rect_align.h" />
     <ClInclude Include="gpk_ref.h" />
-    <ClInclude Include="gpk_sysevent.h" />
     <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_tri2.h" />
     <ClInclude Include="gpk_tri3.h" />

@@ -1,5 +1,6 @@
 #include "gpk_input.h"
-#include "gpk_sysevent.h"
+#include "gpk_event_input.h"
+#include "gpk_event_screen.h"
 
 #include "gpk_array_static.h"
 #include "gpk_ptr_obj.h"
@@ -58,8 +59,7 @@ namespace gpk
 		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
-		::gpk::aobj<::gpk::SSysEvent>		EventQueueOld			= {};
-		::gpk::apobj<::gpk::SSystemEvent>	EventQueueNew			= {};
+		::gpk::apobj<::gpk::SSystemEvent>	EventQueue				= {};
 		::gpk::pobj<TOffscreen>				BackBuffer				= {};
 		::gpk::pobj<::gpk::SInput>			Input					= {};
 		::gpk::n2u16						PreviousSize			= {};

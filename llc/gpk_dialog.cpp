@@ -328,7 +328,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	if(controlTitleState.IsPressed()) {
 		const ::gpk::n2<bool>		locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
-			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
+			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position).i16(); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
 				gpk_necs(::viewportDrag(control, controlMain, dialog, locked, mouseDeltas));
 		}

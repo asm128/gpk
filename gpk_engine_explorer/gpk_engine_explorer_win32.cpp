@@ -73,7 +73,7 @@ static	::gpk::error_t	processSystemEventNew	(::SApplication & app, const ::gpk::
 	mainWindow.Size			= {1280, 720};
 	gpk_necs(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 
-	gpk_necs(mainWindow.EventQueueNew.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
+	gpk_necs(mainWindow.EventQueue.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
 
 	::gpk::editorCreate(app.Editor);
 	//if(::d1::APP_STATE_Quit == ::d1::d1Update(app.D1, 0, mainWindow.Input, mainWindow.EventQueueOld))
@@ -90,9 +90,9 @@ static	::gpk::error_t	processSystemEventNew	(::SApplication & app, const ::gpk::
 
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
 
-	gpk_necs(mainWindow.EventQueueNew.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
+	gpk_necs(mainWindow.EventQueue.for_each([&app](const ::gpk::pobj<::gpk::SSystemEvent> & sysEvent) { return ::processSystemEventNew(app, *sysEvent); }));
 
-	gpk_necs(::gpk::editorUpdate(app.Editor, *mainWindow.Input, {mainWindow.EventQueueOld}));
+	gpk_necs(::gpk::editorUpdate(app.Editor, *mainWindow.Input, mainWindow.EventQueue));
 	//::gpk::SFrameInfo			& frameInfo				= framework.FrameInfo;
 	{
 		::gpk::STimer				timer;

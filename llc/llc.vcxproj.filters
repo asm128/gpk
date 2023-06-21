@@ -94,6 +94,9 @@
     <Filter Include="aliases">
       <UniqueIdentifier>{9c8faac4-2cef-4de2-b7d7-d1faadec19d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{33bc41b4-20b1-4ce6-85a6-0d2e0d7abaf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h">
@@ -504,12 +507,6 @@
     <ClInclude Include="gpk_sync.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_sysevent.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_system_key.h">
-      <Filter>framework</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_tcpip.h">
       <Filter>file</Filter>
     </ClInclude>
@@ -600,17 +597,20 @@
     <ClInclude Include="keyed_bit_array.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_pod_definition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_event_input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_system_event.h">
-      <Filter>Header Files</Filter>
+      <Filter>event</Filter>
     </ClInclude>
     <ClInclude Include="gpk_event_screen.h">
-      <Filter>Header Files</Filter>
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_system_key.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_pod_definition.h">
+      <Filter>type</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

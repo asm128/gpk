@@ -30,7 +30,15 @@ namespace gpk
 			other.Data				= 0;
 		}	// move ctor
 								array_obj			(const TArray & other)			: array_obj((const view<const T>&) other)	{}
-								array_obj			(const view<const T> & other)												{
+								array_obj			(const view<const T> & other)										{
+			uint32_t					newCount			= other.size();
+			if(newCount) {
+				gthrow_if(errored(reserve(newCount)), "Requested size: %u. ", (uint32_t)newCount);
+				for(; Count < newCount; ++Count)
+					new (&Data[Count]) T(other.begin()[Count]);
+			}
+		}
+								array_obj			(const view<T> & other)												{
 			uint32_t					newCount			= other.size();
 			if(newCount) {
 				gthrow_if(errored(reserve(newCount)), "Requested size: %u. ", (uint32_t)newCount);

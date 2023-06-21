@@ -35,7 +35,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 	return 0;
 }
 
-::gpk::error_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::view<::gpk::SSysEvent> queuedEvents) {
+::gpk::error_t			gpk::editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SSystemEvent> queuedEvents) {
 	::gpk::acid					controlsToProcess	= {};
 
 	::gpk::SGUI					& gui				= *editor.UI.GUI;

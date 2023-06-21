@@ -1,13 +1,13 @@
 #include "gpk_window.h"
 
-::gpk::error_t			gpk::fullScreenExit				(::gpk::SWindow & window) {
+::gpk::error_t			gpk::fullScreenExit			(::gpk::SWindow & window) {
 	if(false == window.FullScreen)
 		return 0;
 
 	window.Size				= window.WindowedWindowRect.Dimensions();
 #if defined(GPK_WINDOWS)
-	HWND						windowHandle					= window.PlatformDetail.WindowHandle;
-	DWORD						style							= GetWindowLong(windowHandle, GWL_STYLE);
+	HWND						windowHandle				= window.PlatformDetail.WindowHandle;
+	DWORD						style						= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style | WS_OVERLAPPEDWINDOW);
 	SetWindowPos(windowHandle, NULL, window.WindowedWindowRect.Left, window.WindowedWindowRect.Top
 		, window.WindowedWindowRect.Right  - window.WindowedWindowRect.Left
@@ -15,7 +15,7 @@
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 #endif
-	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueueNew, window.Size)));
+	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= false;
 	return 0;
 }
@@ -48,7 +48,7 @@
 		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 #endif
-	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueueNew, window.Size)));
+	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= true;
 	return 0;
 }
@@ -73,8 +73,7 @@
 }
 
 ::gpk::error_t			gpk::windowUpdate		(::gpk::SWindow& displayInstance)											{
-	displayInstance.EventQueueNew.clear();
-	displayInstance.EventQueueOld.clear();
+	displayInstance.EventQueue.clear();
 	displayInstance.Resized	= false;
 	displayInstance.Repaint	= false;
 	bool						quit					= false;

@@ -1,6 +1,7 @@
 #include "gpk_gui.h"
 #include "gpk_virtual_keyboard.h"
 #include "gpk_system_key.h"
+#include "gpk_event_input.h"
 
 #ifndef GPK_GUI_INPUTBOX_H_23611
 #define GPK_GUI_INPUTBOX_H_23611
@@ -27,7 +28,7 @@ namespace gpk
 		}
 		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::SSysEvent> frameEvents, ::gpk::vcid processableControls) { 
+		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> frameEventsNew, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -40,7 +41,7 @@ namespace gpk
 				return 0;
 			}));
 
-			::gpk::aobj<::gpk::SSysEvent>sysEvents			= frameEvents;
+			::gpk::apobj<::gpk::SSystemEvent>	sysEvents			= frameEventsNew;
 			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
@@ -50,33 +51,41 @@ namespace gpk
 					}
 					break;
 				case ::gpk::VK_EVENT_EDIT:
-						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(gpk::SYSTEM_KEY_Backspace)	; sysEvents.push_back(evt); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(gpk::SYSTEM_KEY_Enter	)	; sysEvents.push_back(evt); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(gpk::SYSTEM_KEY_Escape	)	; sysEvents.push_back(evt); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { ::gpk::SSysEvent evt{::gpk::SYSEVENT_KEY_DOWN,}; evt.Data.push_back(gpk::SYSTEM_KEY_Clear	)	; sysEvents.push_back(evt); } 
+						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace))); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	))); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	))); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Clear	))); } 
 				}
 			}
-			frameEvents				= sysEvents;
+			;
 			bool						enterKeyPressed		= false;
-			for(uint32_t iEvent = 0; iEvent < frameEvents.size(); ++iEvent) {
-				switch(frameEvents[iEvent].Type) {
-				default						: break;
-				case ::gpk::SYSEVENT_CHAR	:
-					if(Text.size() < MaxLength)
-						if(frameEvents[iEvent].Data[0] >= 0x20 && frameEvents[iEvent].Data[0] <= 0x7F) {
-							Text.push_back(frameEvents[iEvent].Data[0]);
-							::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+			sysEvents.for_each([this, &gui, &enterKeyPressed](auto ev) mutable { 
+				switch(ev->Type) { 
+				case ::gpk::SYSTEM_EVENT_Text: 
+					::gpk::eventExtractAndHandle<::gpk::EVENT_TEXT>(*ev, [this, &gui](auto cev) {
+						if(Text.size() < MaxLength)
+							if(cev.Data[0] >= 0x20 && cev.Data[0] <= 0x7F) {
+								Text.push_back(cev.Data[0]);
+								::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
+							}
+						return 0;
+					});
+					break; 
+				case ::gpk::SYSTEM_EVENT_Keyboard: 
+					::gpk::eventExtractAndHandle<::gpk::EVENT_KEYBOARD>(*ev, [this, &gui, &enterKeyPressed](auto kev) mutable {
+						if(kev.Type == ::gpk::EVENT_KEYBOARD_Down) {
+							switch(kev.Data[0]) {
+							case ::gpk::SYSTEM_KEY_Escape		: Edit(gui, false);			break;
+							case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
+							case ::gpk::SYSTEM_KEY_Backspace	: Text.pop_back();	::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+							case ::gpk::SYSTEM_KEY_Clear		: Text.clear();		::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+							}
 						}
-					break;
-				case ::gpk::SYSEVENT_KEY_DOWN:
-					switch(frameEvents[iEvent].Data[0]) {
-					case ::gpk::SYSTEM_KEY_Escape		: Edit(gui, false);			break;
-					case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
-					case ::gpk::SYSTEM_KEY_Backspace	: Text.pop_back()	; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
-					case ::gpk::SYSTEM_KEY_Clear		: Text.clear()		; ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
-					}
+						return 0; 
+					});
+					break; 
 				}
-			}
+			});
 			return enterKeyPressed ? INT_MAX : handledControl ? handledControl : 0;
 		}
 

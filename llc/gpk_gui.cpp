@@ -531,7 +531,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 	return controlHovered;
 }
 
-::gpk::error_t			gpk::guiProcessInput	(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::v1<const ::gpk::SSysEvent> sysEvents)	{
+::gpk::error_t			gpk::guiProcessInput	(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::vpobj<::gpk::SSystemEvent> sysEvents)	{
 	if(0 == gui.LastSize.LengthSquared()) 
 		return 0;
 
