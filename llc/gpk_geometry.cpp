@@ -98,7 +98,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	// -- Generate positions
 	const ::gpk::n2f64			scale						= params.Size.f64().InPlaceScale(cellUnits);
 	const ::gpk::n3f64			center						= {params.Origin.x, 0, params.Origin.y};
-	vertexCount.for_each([&geometry, scale, center, cellUnits](::gpk::n2u16 & coord) {
+	vertexCount.for_each([&geometry, scale, center](::gpk::n2u16 & coord) {
 		::gpk::n3f64				position					= {coord.x * scale.x, 0, coord.y * scale.y};
 		geometry.Positions.push_back((position - center).f32());
 	});
