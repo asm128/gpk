@@ -348,7 +348,7 @@ static ::gpk::error_t	createEntityFromGeometry
 }
 
 ::gpk::error_t			gpk::SEngine::CreateCylinder(const SParamsCylinder & params)	{ 
-	stacxpr	float				radius					= .5f;
+	const	float				radius					= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
 		, [params](::gpk::STrianglesIndexed & geometry) { 
 			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));

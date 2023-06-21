@@ -186,6 +186,16 @@ namespace gpk
 			return 0;
 		}
 
+		inline	const	SBodyFrame&					GetBodyFrame					(uint32_t iBody)	const	{ return Frames [iBody]; }
+		inline	const	SBodyForces&				GetBodyForces					(uint32_t iBody)	const	{ return Forces [iBody]; }
+		inline	const	SBodyMass&					GetBodyMass						(uint32_t iBody)	const	{ return Masses [iBody]; }
+		inline	const	SBodyCenter&				GetBodyCenter					(uint32_t iBody)	const	{ return Centers[iBody]; }
+		inline	SBodyFrame&							GetBodyFrame					(uint32_t iBody)			{ return Frames [iBody]; }
+		inline	SBodyForces&						GetBodyForces					(uint32_t iBody)			{ return Forces [iBody]; }
+		inline	SBodyMass&							GetBodyMass						(uint32_t iBody)			{ return Masses [iBody]; }
+		inline	SBodyCenter&						GetBodyCenter					(uint32_t iBody)			{ return Centers[iBody]; }
+
+
 		inline	bool								Active							(uint32_t iBody)									const	{ return Flags[iBody].Active; }
 		inline	bool								Collides						(uint32_t iBody)									const	{ return Flags[iBody].Collides; }
 		inline	float								GetMass							(uint32_t iBody)									const	{ return 1.0f / Masses[iBody].InverseMass; }

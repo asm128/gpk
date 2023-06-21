@@ -29,9 +29,19 @@ namespace gpk
 		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid			;
 		inline							SEngine				()								{ Scene.create(); }
 
-		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
-		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }
-		inline	::gpk::error_t			GetParentIndex		(uint32_t iEntity)		const	{ return Entities[iEntity].Parent; }
+		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)	const	{ return Entities[iEntity].RigidBody; }
+		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)	const	{ return Entities[iEntity].RenderNode; }
+		inline	::gpk::error_t			GetParentIndex		(uint32_t iEntity)	const	{ return Entities[iEntity].Parent; }
+
+		inline	const	SBodyFrame&		GetBodyFrame		(uint32_t iEntity)	const	{ return Integrator.GetBodyFrame	(Entities[iEntity].RigidBody); }
+		inline	const	SBodyForces&	GetBodyForces		(uint32_t iEntity)	const	{ return Integrator.GetBodyForces	(Entities[iEntity].RigidBody); }
+		inline	const	SBodyMass&		GetBodyMass			(uint32_t iEntity)	const	{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
+		inline	const	SBodyCenter&	GetBodyCenter		(uint32_t iEntity)	const	{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
+		inline	SBodyFrame&				GetBodyFrame		(uint32_t iEntity)			{ return Integrator.GetBodyFrame	(Entities[iEntity].RigidBody); }
+		inline	SBodyForces&			GetBodyForces		(uint32_t iEntity)			{ return Integrator.GetBodyForces	(Entities[iEntity].RigidBody); }
+		inline	SBodyMass&				GetBodyMass			(uint32_t iEntity)			{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
+		inline	SBodyCenter&			GetBodyCenter		(uint32_t iEntity)			{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
+
 
 		::gpk::error_t					Save				(::gpk::au8 & output)	const	{
 			gpk_necs(Scene		->Save(output));
@@ -132,7 +142,7 @@ namespace gpk
 			SParamsGrid				params;
 			params.Origin		= {.5f, .5f};
 			params.CellCount	= cellCount;
-			params.Outward	= topRight;
+			params.Outward		= topRight;
 			return CreateGrid(params); 
 		}
 
