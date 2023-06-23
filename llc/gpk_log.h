@@ -454,6 +454,16 @@ namespace gpk
 #	define rvws_if							retval_gswarn_if
 #	define rvis_if							retval_gsinfo_if
 #	define rvas_if							retval_gsalways_if
+
+#	define rve_if_failed(retVal, condition, format, ...)	rve_if(retval, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rvw_if_failed(retVal, condition, format, ...)	rvw_if(retval, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rvi_if_failed(retVal, condition, format, ...)	rvi_if(retval, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rva_if_failed(retVal, condition, format, ...)	rva_if(retval, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rves_if_failed(retVal, condition)				rves_if(retval, ::gpk::error_t(condition))
+#	define rvws_if_failed(retVal, condition)				rvws_if(retval, ::gpk::error_t(condition))
+#	define rvis_if_failed(retVal, condition)				rvis_if(retval, ::gpk::error_t(condition))
+#	define rvas_if_failed(retVal, condition)				rvas_if(retval, ::gpk::error_t(condition))
+
 #endif
 
 #ifndef rne_if
@@ -469,6 +479,15 @@ namespace gpk
 #	define rees_if							reterr_gserror_if
 #	define rews_if							reterr_gswarn_if
 #	define reis_if							reterr_gsinfo_if
+
+#	define ree_if_failed(condition, format, ...)	ree_if(-1, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rew_if_failed(condition, format, ...)	rew_if(-1, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rei_if_failed(condition, format, ...)	rei_if(-1, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rea_if_failed(condition, format, ...)	rea_if(-1, ::gpk::error_t(condition), format, __VA_ARGS__)
+#	define rees_if_failed(condition)				rees_if(-1, ::gpk::error_t(condition))
+#	define rews_if_failed(condition)				rews_if(-1, ::gpk::error_t(condition))
+#	define reis_if_failed(condition)				reis_if(-1, ::gpk::error_t(condition))
+#	define reas_if_failed(condition)				reas_if(-1, ::gpk::error_t(condition))
 #endif
 
 #ifndef rwe_if

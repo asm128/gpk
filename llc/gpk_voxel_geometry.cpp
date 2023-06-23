@@ -2,7 +2,7 @@
 
 
 static	::gpk::error_t	geometryVoxelFace
-	( ::gpk::STrianglesIndexed						& geometry
+	( ::gpk::SGeometryBuffers						& geometry
 	, const ::gpk::n3f32							& voxelPos
 	, const ::gpk::view<const ::gpk::n3f32>	& rawVertices
 	, const ::gpk::view<const uint8_t>				& rawIndices
@@ -24,7 +24,7 @@ static	::gpk::error_t	geometryVoxelFace
 ::gpk::error_t			gpk::geometryVoxelModel		(::gpk::SVoxelGeometry & output, const ::gpk::SVoxelMap<uint8_t> & voxelMap) {
 	const ::gpk::n3<uint8_t>	dimensions				= voxelMap.Dimensions;
 
-	::gpk::STrianglesIndexed	& geometry				= output.Geometry;
+	::gpk::SGeometryBuffers	& geometry				= output.Geometry;
 	::gpk::apod<::gpk::SRenderMaterialPaletted>		& materials				= output.Materials;
 
 	::gpk::SAABBGeometry		& aabbModel				= output.AABBModel;

@@ -19,6 +19,11 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Hide			,  9);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Constraints	, 10);
 
+	typedef ::gpk::SEvent            <EVENT_SCREEN>	SScreenEvent;
+	typedef ::gpk::SEventView        <EVENT_SCREEN>	SScreenEventView;
+	typedef ::gpk::FEventHandler     <EVENT_SCREEN>	FScreenEvent;
+	typedef ::gpk::FEventHandlerConst<EVENT_SCREEN>	FScreenEventConst;
+
 	struct SEventArgsScreenCreate {
 		::gpk::n2u16		Size;
 #ifdef GPK_WINDOWS

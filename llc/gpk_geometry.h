@@ -1,4 +1,4 @@
-#include "gpk_apod_n3.h"
+#include "gpk_geometry_buffers.h"
 #include "gpk_enum.h"
 
 #ifndef GPK_GEOMETRY_H
@@ -16,13 +16,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Cylinder		, 6);
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Torus		, 7);
 
-	struct STrianglesIndexed {
-		::gpk::apod<::gpk::n3f32>	Positions;
-		::gpk::apod<::gpk::n3f32>	Normals;
-		::gpk::apod<::gpk::n2f32>	TextureCoords;
-		::gpk::au32					PositionIndices;
-	};
-
 #pragma pack(push, 1)
 	struct SParamsBox {
 		::gpk::n3f32		Origin			= {.5f, .5f, .5f};
@@ -38,7 +31,7 @@ namespace gpk
 		float				DiameterRatio	= 1.0f;
 		float				Radius			= .5f;
 	
-		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && Radius == other.Radius && CellCount == other.CellCount && Reverse == other.Reverse); 
+		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius); 
 	};
 
 	struct SParamsCylinder { 
@@ -49,7 +42,7 @@ namespace gpk
 		::gpk::minmaxf32	Radius			= {.5f, .5f};
 		float				Length			= 1;
 
-		GPK_DEFAULT_OPERATOR(SParamsCylinder, Origin == other.Origin && Radius == other.Radius && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio); 
+		GPK_DEFAULT_OPERATOR(SParamsCylinder, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius && Length == other.Length); 
 	};
 
 	struct SParamsGrid { 
@@ -58,17 +51,27 @@ namespace gpk
 		bool				Outward			= false;
 		::gpk::n2f32		Size			= {1, 1};
 
-		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Outward == other.Outward); 
+		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Outward == other.Outward && Size == other.Size); 
 	};																														
+
+	struct SParamsHelix { 
+		::gpk::n2f32		Origin			= {0, .5f};
+		::gpk::n2u16		CellCount		= {9, 9};
+		::gpk::minmaxf32	Radius			= {.5f, .5f};	// TODO: Not working
+		float				Length			= 1;
+
+		GPK_DEFAULT_OPERATOR(SParamsHelix, Origin == other.Origin && CellCount == other.CellCount && Radius == other.Radius && Length == other.Length); 
+	};																														
+
 #pragma pack(pop)
+	::gpk::error_t	geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
+	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere	& params);
+	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);
+	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid		& params);
+	::gpk::error_t	geometryBuildHalfHelix	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
+	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
 
-
-	::gpk::error_t	geometryBuildBox		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsBox		& params);
-	::gpk::error_t	geometryBuildSphere		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsSphere	& params);
-	::gpk::error_t	geometryBuildCylinder	(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsCylinder	& params);
-	::gpk::error_t	geometryBuildGrid		(::gpk::STrianglesIndexed & geometry, const ::gpk::SParamsGrid		& params);
-
-
+	::gpk::error_t	geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
 
 } // namespace
 

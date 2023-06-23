@@ -120,7 +120,7 @@ static ::gpk::error_t	createBuffers
 }
 
 static ::gpk::error_t	createBuffers	
-	( const ::gpk::STrianglesIndexed	& geometry
+	( const ::gpk::SGeometryBuffers	& geometry
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
@@ -154,7 +154,7 @@ static ::gpk::error_t	createBuffers
 
 static ::gpk::error_t	createBuffers
 	( ::gpk::SRenderBufferManager		& bufferManager 
-	, const ::gpk::STrianglesIndexed	& geometry
+	, const ::gpk::SGeometryBuffers	& geometry
 	, uint32_t							& iIndicesVertex
 	, uint32_t							& iVertices
 	, uint32_t							& iNormals
@@ -171,7 +171,7 @@ static ::gpk::error_t	createBuffers
 
 static ::gpk::error_t	createRenderNode
 	( ::gpk::SEngineScene				& scene
-	, const ::gpk::STrianglesIndexed	& geometry
+	, const ::gpk::SGeometryBuffers	& geometry
 	, const ::gpk::vcc					name 
 	, bool								createSkin
 	) {
@@ -235,7 +235,7 @@ static ::gpk::error_t	createRenderNode
 	return iRenderNode;
 }
 
-typedef std::function<::gpk::error_t(::gpk::STrianglesIndexed&)> TGeometryFunc;
+typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;
 
 template<typename _tParams>
 static ::gpk::error_t	createEntityFromGeometry
@@ -257,7 +257,7 @@ static ::gpk::error_t	createEntityFromGeometry
 	if(recycleRenderNodeMap.size() > (uint32_t)reuse)
 		entity.RenderNode		= engine.Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
 	else {
-		::gpk::STrianglesIndexed	geometry;
+		::gpk::SGeometryBuffers	geometry;
 		gpk_necs(funcGeometry(geometry));
 		if(!engine.Scene)
 			engine.Scene.create();
@@ -270,7 +270,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateBox	(const ::gpk::SParamsBox & params)	{
 	int32_t						iEntity					= ::createEntityFromGeometry(*this, ::gpk::vcs{"Box"}, params.HalfSizes.f32(), false, params, ParamsBox
-		, [params](::gpk::STrianglesIndexed & geometry) { 
+		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildBox(geometry, params); 
 		});
 	::gpk::SVirtualEntity		& entity				= Entities[iEntity];
@@ -333,7 +333,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateSphere(const SParamsSphere & params)	{ 
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Sphere"}, ::gpk::n3f32{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
-		, [params](::gpk::STrianglesIndexed & geometry) { 
+		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildSphere(geometry, params); 
 		});
 }
@@ -341,8 +341,16 @@ static ::gpk::error_t	createEntityFromGeometry
 ::gpk::error_t			gpk::SEngine::CreateGrid(const SParamsGrid & params)	{ 
 	stacxpr	float				radius					= .5f;
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsGrid
-		, [params](::gpk::STrianglesIndexed & geometry) {
+		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
+			return 0;
+		});
+}
+::gpk::error_t			gpk::SEngine::CreateHalfHelix(const ::gpk::SParamsHelix & params)	{ 
+	stacxpr	float				radius					= .5f;
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Helix"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
+		, [params](::gpk::SGeometryBuffers & geometry) {
+			gpk_necs(::gpk::geometryBuildHalfHelix(geometry, params));
 			return 0;
 		});
 }
@@ -350,7 +358,7 @@ static ::gpk::error_t	createEntityFromGeometry
 ::gpk::error_t			gpk::SEngine::CreateCylinder(const SParamsCylinder & params)	{ 
 	const	float				radius					= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
-		, [params](::gpk::STrianglesIndexed & geometry) { 
+		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
 			return 0;
 		});

@@ -417,7 +417,7 @@
     <ClInclude Include="gpk_path.h">
       <Filter>file</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_platform.h">
+    <ClInclude Include="gpk_platform_globals.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="gpk_png.h">

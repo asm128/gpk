@@ -19,14 +19,16 @@ namespace gpk
 		);
 
 	struct SEngine {
-		::gpk::pobj<::gpk::SEngineScene>				Scene				;
-		::gpk::SVirtualEntityManager					Entities			;
-		::gpk::SRigidBodyIntegrator						Integrator			;
+		::gpk::pobj<::gpk::SEngineScene>				Scene			;
+		::gpk::SVirtualEntityManager					Entities		;
+		::gpk::SRigidBodyIntegrator						Integrator		;
 
-		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox			;
-		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere		;
-		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder		;
-		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid			;
+		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox		;
+		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere	;
+		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder	;
+		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid		;
+		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelix		;
+
 		inline							SEngine				()								{ Scene.create(); }
 
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)	const	{ return Entities[iEntity].RigidBody; }
@@ -115,22 +117,19 @@ namespace gpk
 
 		::gpk::error_t					CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t					CreateCamera		();
-		::gpk::error_t					CreateBox			(const SParamsBox & params);
-		::gpk::error_t					CreateSphere		(const SParamsSphere & params);
-		::gpk::error_t					CreateCylinder		(const SParamsCylinder & params);
-		::gpk::error_t					CreateGrid			(const SParamsGrid & params);
+		::gpk::error_t					CreateBox			(const ::gpk::SParamsBox		& params);
+		::gpk::error_t					CreateSphere		(const ::gpk::SParamsSphere		& params);
+		::gpk::error_t					CreateCylinder		(const ::gpk::SParamsCylinder	& params);
+		::gpk::error_t					CreateGrid			(const ::gpk::SParamsGrid		& params);
+		::gpk::error_t					CreateHalfHelix		(const ::gpk::SParamsHelix		& params);
+
 		::gpk::error_t					CreateCircle		();
 		::gpk::error_t					CreateRing			();
 		::gpk::error_t					CreateTriangle		();
-		::gpk::error_t					CreateBox			() { SParamsBox params = {}; return CreateBox(params); }
-		inline	::gpk::error_t			CreateSphere		(uint16_t slices = 24, uint16_t stacks = 24, float radius = .5f, const ::gpk::n3f32 & center = {}, bool reverse = false) { 
-			SParamsSphere			params			= {};
-			params.CellCount	= {slices, stacks};
-			params.Radius		= radius;
-			params.Origin		= center;
-			params.Reverse		= reverse;
-			return CreateSphere(params); 
-		}
+
+		inline	::gpk::error_t			CreateBox			()	{ return CreateBox({}); }
+		inline	::gpk::error_t			CreateSphere		()	{ return CreateSphere({}); }
+
 		inline	::gpk::error_t			CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio) { 
 			SParamsCylinder			params;
 			params.DiameterRatio	= diameterRatio;
@@ -138,6 +137,7 @@ namespace gpk
 			params.Reverse			= reverse;
 			return CreateCylinder(params); 
 		}
+
 		inline	::gpk::error_t			CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
 			SParamsGrid				params;
 			params.Origin		= {.5f, .5f};

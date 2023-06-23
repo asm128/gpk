@@ -142,7 +142,7 @@
 #include "gpk_line3.h"
 #include "gpk_image.h"
 #include "gpk_memory.h"
-#include "gpk_platform.h"
+#include "gpk_platform_globals.h"
 #include "gpk_rect_align.h"
 #include "gpk_array_bit.h"
 #include "gpk_grid.h"

@@ -505,14 +505,14 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 
 //
 ::gpk::error_t			gpk::geometryBuildCylinder	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale)	{
-	::gpk::n2f32									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
-	const double											radiusUnit					= 1.0 / stacks;
+	::gpk::n2f32				texCoordUnits				= {1.0f / slices, 1.0f / stacks};
+	const double				radiusUnit					= 1.0 / stacks;
 	for(uint32_t y = 0; y < stacks; ++y) {
-		double													radius						= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * y);
-		double													radiusNext					= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * (y + 1));
+		double						radius						= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * y);
+		double						radiusNext					= ::gpk::interpolate_linear(radiusYMin, radiusYMax, radiusUnit * (y + 1));
 		for(uint32_t z = 0; z < slices; ++z) {
 			{
-				::gpk::n2f32									texcoords	[4]				=
+				::gpk::n2f32				texcoords	[4]				=
 					{ {(z		) * texCoordUnits.x, (y		) * texCoordUnits.y}
 					, {(z + 1	) * texCoordUnits.x, (y		) * texCoordUnits.y}
 					, {(z		) * texCoordUnits.x, (y	+ 1	) * texCoordUnits.y}
@@ -529,7 +529,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 					, texcoords[3]
 					});
 			}
-			::gpk::n3f64									coords	[4]				=
+			::gpk::n3f64				coords	[4]					=
 				{ {1 * radius, (double)(y		)}
 				, {1 * radius, (double)(y		)}
 				, {1 * radiusNext, (double)(y + 1	)}
@@ -541,8 +541,8 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			coords[3].RotateY(::gpk::math_2pi / slices * (z + 1));
 
 			{
-				::gpk::tri3f32								triangleA			= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
-				::gpk::tri3f32								triangleB			= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
+				::gpk::tri3f32				triangleA					= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
+				::gpk::tri3f32				triangleB					= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
 				triangleA.Scale(scale);
 				triangleB.Scale(scale);
 				triangleA.Translate(gridCenter * -1);
@@ -559,11 +559,11 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 
 
 ::gpk::error_t			gpk::geometryBuildTender	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale)	{
-	::gpk::n2f32									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
+	::gpk::n2f32				texCoordUnits				= {1.0f / slices, 1.0f / stacks};
 	for(uint32_t z = 0; z < stacks; ++z)
 	for(uint32_t x = 0; x < slices; ++x)  {
 		{
-			::gpk::n2f32									texcoords	[4]				=
+			::gpk::n2f32				texcoords	[4]				=
 				{ {(z		) * texCoordUnits.y, (x		) * texCoordUnits.x}
 				, {(z		) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
 				, {(z + 1	) * texCoordUnits.y, (x		) * texCoordUnits.x}
@@ -580,12 +580,12 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 				, texcoords[3]
 				});
 		}
-		//const ::gpk::SSinCos									pairSinCos				= ::gpk::getSinCos(::gpk::math_2pi * z / slices);
-		//const double												px						= x * pairSinCos.Cos - z * pairSinCos.Sin;
-		//z														= (x * pairSinCos.Sin + z * pairSinCos.Cos);
-		//x														= px;
+		//const ::gpk::SSinCos		pairSinCos				= ::gpk::getSinCos(::gpk::math_2pi * z / slices);
+		//const double					px						= x * pairSinCos.Cos - z * pairSinCos.Sin;
+		//z							= (x * pairSinCos.Sin + z * pairSinCos.Cos);
+		//x							= px;
 		(void)radius;
-		::gpk::n3f64									coords	[4]				=
+		::gpk::n3f64				coords	[4]					=
 			{ {1 * radius, (double)(z		)}
 			, {1 * radius, (double)(z		)}
 			, {1 * radius, (double)(z + 1	)}
@@ -601,8 +601,8 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 		coords[3].Normalize();
 
 		{
-			::gpk::tri3f32								triangleA			= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
-			::gpk::tri3f32								triangleB			= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
+			::gpk::tri3f32				triangleA					= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
+			::gpk::tri3f32				triangleB					= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
 			triangleA.Scale(scale);
 			triangleB.Scale(scale);
 			triangleA.Translate(gridCenter * -1);
@@ -614,57 +614,3 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 	}
 	return 0;
 }
-
-//
-//
-//::gpk::error_t			gpk::geometryBuildSphere	(SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
-//	::gpk::n2f32									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
-//	for(uint32_t z = 0; z < stacks; ++z)
-//	for(uint32_t x = 0; x < slices; ++x)  {
-//		{
-//			::gpk::n2f32									texcoords	[4]				=
-//				{ {(z		) * texCoordUnits.y, (x		) * texCoordUnits.x}
-//				, {(z		) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
-//				, {(z + 1	) * texCoordUnits.y, (x		) * texCoordUnits.x}
-//				, {(z + 1	) * texCoordUnits.y, (x + 1	) * texCoordUnits.x}
-//				};
-//			geometry.TextureCoords.push_back(
-//				{ texcoords[0]
-//				, texcoords[2]
-//				, texcoords[1]
-//				});
-//			geometry.TextureCoords.push_back(
-//				{ texcoords[1]
-//				, texcoords[2]
-//				, texcoords[3]
-//				});
-//		}
-//		::gpk::n3f64									coords		[4]				=
-//			{ {sin(::gpk::math_pi * x		/slices) * cos(::gpk::math_2pi * z			/ stacks), cos(::gpk::math_pi * x		/slices), sin(::gpk::math_pi * x		/ slices) * sin(::gpk::math_2pi * z			/ stacks)}
-//			, {sin(::gpk::math_pi * (x + 1)	/slices) * cos(::gpk::math_2pi * z			/ stacks), cos(::gpk::math_pi * (x + 1) /slices), sin(::gpk::math_pi * (x + 1)	/ slices) * sin(::gpk::math_2pi * z			/ stacks)}
-//			, {sin(::gpk::math_pi * x		/slices) * cos(::gpk::math_2pi * (z + 1)	/ stacks), cos(::gpk::math_pi * x		/slices), sin(::gpk::math_pi * x		/ slices) * sin(::gpk::math_2pi * (z + 1)	/ stacks)}
-//			, {sin(::gpk::math_pi * (x + 1)	/slices) * cos(::gpk::math_2pi * (z + 1)	/ stacks), cos(::gpk::math_pi * (x + 1)	/slices), sin(::gpk::math_pi * (x + 1)	/ slices) * sin(::gpk::math_2pi * (z + 1)	/ stacks)}
-//			};
-//		{
-//			geometry.Normals.push_back(
-//				{ coords[0].Normalize().f32()
-//				, coords[2].Normalize().f32()
-//				, coords[1].Normalize().f32()
-//				});
-//			geometry.Normals.push_back(
-//				{ coords[1].Normalize().f32()
-//				, coords[2].Normalize().f32()
-//				, coords[3].Normalize().f32()
-//				});
-//		}
-//		{
-//			::gpk::tri3f32								triangleA			= {(coords[0] * radius).f32(), (coords[2] * radius).f32(), (coords[1] * radius).f32()};
-//			::gpk::tri3f32								triangleB			= {(coords[1] * radius).f32(), (coords[2] * radius).f32(), (coords[3] * radius).f32()};
-//			triangleA.Translate(gridCenter * -1);
-//			triangleB.Translate(gridCenter * -1);
-//			geometry.Triangles	.push_back(triangleA);
-//			geometry.Triangles	.push_back(triangleB);
-//		}
-//	}
-//	return 0;
-//}

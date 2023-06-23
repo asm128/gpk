@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
 /// Copyright 2017 - asm128
 #ifndef GPK_AUTO_HANDLER_H_0239840239840238321

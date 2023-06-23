@@ -1,5 +1,5 @@
 /// Copyright 2016-2017 - asm128
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
 #if defined GPK_ATMEL
 #	include <string.h>

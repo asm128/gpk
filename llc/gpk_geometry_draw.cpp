@@ -2,7 +2,7 @@
 
 ::gpk::error_t			gpk::drawTriangle
 	( const ::gpk::g8bgra	targetPixels
-	, const ::gpk::STrianglesIndexed	& geometry
+	, const ::gpk::SGeometryBuffers	& geometry
 	, const int							iTriangle
 	, const ::gpk::m4f32				& matrixTransform
 	, const ::gpk::m4f32				& matrixTransformView

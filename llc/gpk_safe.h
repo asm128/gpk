@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
 #ifndef GPK_SAFE_H_209934782093
 #define GPK_SAFE_H_209934782093
@@ -34,6 +34,8 @@
 
 #if defined(GPK_WINDOWS)
 #	ifndef gpk_safe_closehandle
+#		define WIN32_LEAN_AND_MEAN
+#		include <Windows.h>
 #		define gpk_safe_closehandle(p) do { if(INVALID_HANDLE_VALUE != (p)) { CloseHandle(p); (p) = INVALID_HANDLE_VALUE; } } while(0)
 #	endif
 #endif

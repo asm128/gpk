@@ -1,4 +1,4 @@
-#include "gpk_platform.h"
+#include "gpk_typeint.h"
 
 #include <functional>
 

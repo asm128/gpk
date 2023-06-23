@@ -65,13 +65,13 @@ namespace gpk
 		typedef	FVoid<Tn2&>						TFuncForEach;
 		typedef	FVoid<uint32_t&, Tn2&>			TFuncEnumerate;
 
-		uint32_t			for_each			(const TFuncForEach & funcForEach)		const {
+		T					for_each			(const TFuncForEach & funcForEach)		const {
 			Tn2						offset				= {};
 			for(; offset.y < y; ++offset.y)
 			for(offset.x = 0; offset.x < x; ++offset.x) 
 				funcForEach(offset);
 
-			return offset.x * offset.y;
+			return T(offset.x * offset.y);
 		}
 
 		uint32_t			enumerate			(const TFuncEnumerate & funcForEachX, const TFuncEnumerate & funcForEachY)	const {

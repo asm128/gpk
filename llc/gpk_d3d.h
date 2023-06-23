@@ -1,4 +1,3 @@
-#include "gpk_platform.h"
 #include "gpk_grid_color.h"
 
 #if defined(GPK_WINDOWS)
