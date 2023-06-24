@@ -73,7 +73,7 @@ namespace gpk
 
 		::gpk::SUDPClient					Client				= {};
 		::gpk::SDialog						Dialog				= {};
-		::gpk::SUIInputBox					InputBox			= {};
+		::gpk::SInputBox					InputBox			= {};
 		UI_LOBBY_USER						Field				= UI_LOBBY_USER_Offline;
 
 		uint64_t							IdRoom				= 0;

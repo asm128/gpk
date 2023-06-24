@@ -27,7 +27,7 @@ namespace gpk
 
 	struct SEditorUI {
 		::gpk::pobj<::gpk::SGUI>	GUI					= {};
-		::gpk::SUIInputBox			InputBox			= {};
+		::gpk::SInputBox			InputBox			= {};
 		::gpk::apapodc				InputHistory;
 	};
 

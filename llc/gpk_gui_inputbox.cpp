@@ -49,7 +49,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
+::gpk::error_t			gpk::inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent)	{
 	gpk_necs(inputBox.IdRoot = ::gpk::controlCreate(gui));
 	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};

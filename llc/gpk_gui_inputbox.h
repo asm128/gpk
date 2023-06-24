@@ -11,7 +11,7 @@ namespace gpk
 	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view<const uint16_t> & keys);
 	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
-	struct SUIInputBox {
+	struct SInputBox {
 		cid_t					IdRoot				= {};
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
@@ -91,7 +91,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t			inputBoxCreate		(::gpk::SUIInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
+	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
 #endif // GPK_GUI_INPUTBOX_H_23611
