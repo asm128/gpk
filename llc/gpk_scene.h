@@ -4,6 +4,7 @@
 #include "gpk_apod_color.h"
 #include "gpk_camera.h"
 
+// TODO: Throw away
 #ifndef GPK_SCENE_H_203492837
 #define GPK_SCENE_H_203492837
 
@@ -35,23 +36,23 @@ namespace gpk
 
 	template <typename _tUnit>
 	struct SModelPivot {
-		::gpk::n3	<_tUnit>	Scale										;
-		::gpk::quat	<_tUnit>	Orientation									;
-		::gpk::n3	<_tUnit>	Position									;
+		::gpk::n3	<_tUnit>	Scale		;
+		::gpk::quat	<_tUnit>	Orientation	;
+		::gpk::n3	<_tUnit>	Position	;
 	};
 
 	// --- Geometry generation: Cube.
-	::gpk::error_t			generateCubePositions					(::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t			generateCubeNormalsTriangle				(::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t			generateCubeNormalsVertex				(::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t			generateCubeUV							(::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t			generateCubePositions			(::gpk::apod<::gpk::tri3f32> & out_Positions);
+	::gpk::error_t			generateCubeNormalsTriangle		(::gpk::apod<::gpk::n3f32  > & out_Normals	);
+	::gpk::error_t			generateCubeNormalsVertex		(::gpk::apod<::gpk::tri3f32> & out_Normals	);
+	::gpk::error_t			generateCubeUV					(::gpk::apod<::gpk::tri2f32> & out_UV		);
 	::gpk::error_t			generateCubeGeometry
 		( ::gpk::apod<::gpk::tri3f32> & out_Positions
 		, ::gpk::apod<::gpk::n3f32  > & out_Normals
 		, ::gpk::apod<::gpk::tri3f32> & out_NormalsVertex
 		, ::gpk::apod<::gpk::tri2f32> & out_UV
 		);
-	stainli	::gpk::error_t	generateCubeGeometry					(::gpk::SModelGeometry<float>& out_Geometry)	{
+	stainli	::gpk::error_t	generateCubeGeometry			(::gpk::SModelGeometry<float>& out_Geometry)	{
 		return ::gpk::generateCubeGeometry
 			( out_Geometry.Positions
 			, out_Geometry.NormalsTriangle
@@ -60,18 +61,18 @@ namespace gpk
 			);
 	}
 
-	::gpk::error_t					generateGridPositions					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t					generateGridNormalsTriangle				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t					generateGridNormalsVertex				(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t					generateGridUV			(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
-	::gpk::error_t					generateGridGeometry
+	::gpk::error_t			generateGridPositions			(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
+	::gpk::error_t			generateGridNormalsTriangle		(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::n3f32  > & out_Normals	);
+	::gpk::error_t			generateGridNormalsVertex		(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
+	::gpk::error_t			generateGridUV					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t			generateGridGeometry
 		( const ::gpk::n2u16			& gridMetrics
 		, ::gpk::apod<::gpk::tri3f32>	& out_Positions
 		, ::gpk::apod<::gpk::n3f32  >	& out_Normals
 		, ::gpk::apod<::gpk::tri3f32>	& out_NormalsVertex
 		, ::gpk::apod<::gpk::tri2f32>	& out_UV
 		);
-	stainli	::gpk::error_t			generateGridGeometry					(const ::gpk::n2u16	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
+	stainli	::gpk::error_t	generateGridGeometry			(const ::gpk::n2u16	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
 		return ::gpk::generateGridGeometry
 			( gridMetrics
 			, out_Geometry.Positions
@@ -83,19 +84,19 @@ namespace gpk
 
 
 	struct SRenderCache {
-		::gpk::apod<::gpk::n2i16>	TrianglePixelCoords					= {};
-		::gpk::apod<::gpk::trif32>	TrianglePixelWeights				= {};
-		::gpk::apod<::gpk::n2i16>	WireframePixelCoords				= {};
+		::gpk::apod<::gpk::n2i16>	TrianglePixelCoords			= {};
+		::gpk::apod<::gpk::trif32>	TrianglePixelWeights		= {};
+		::gpk::apod<::gpk::n2i16>	WireframePixelCoords		= {};
 
-		::gpk::apod<::gpk::tri3f32>	TransformedNormalsVertex			= {};
+		::gpk::apod<::gpk::tri3f32>	TransformedNormalsVertex	= {};
 
-		::gpk::ai32					Triangle3dIndices					= {};
-		::gpk::apod<::gpk::tri3f32>	Triangle3dToDraw					= {};
-		::gpk::apod<::gpk::tri3f32>	Triangle3dWorld						= {};
+		::gpk::ai32					Triangle3dIndices			= {};
+		::gpk::apod<::gpk::tri3f32>	Triangle3dToDraw			= {};
+		::gpk::apod<::gpk::tri3f32>	Triangle3dWorld				= {};
 
-		uint32_t					TrianglesDrawn						= 0;
-		uint32_t					PixelsDrawn							= 0;
-		uint32_t					PixelsSkipped						= 0;
+		uint32_t					TrianglesDrawn				= 0;
+		uint32_t					PixelsDrawn					= 0;
+		uint32_t					PixelsSkipped				= 0;
 	};
 
 	struct SColorsMaterial {

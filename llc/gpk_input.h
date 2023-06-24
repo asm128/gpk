@@ -7,6 +7,7 @@
 
 namespace gpk
 {
+// TODO: REDO (this is heavily outdated and I think it should be heavily improved)
 #pragma pack(push, 1)
 	struct SInputJoystick {
 		::gpk::n2i16				Position			= {};

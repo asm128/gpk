@@ -97,6 +97,9 @@
     <Filter Include="event">
       <UniqueIdentifier>{33bc41b4-20b1-4ce6-85a6-0d2e0d7abaf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="models">
+      <UniqueIdentifier>{c4a3d5db-612d-4dd8-997a-c250f35e04df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h">
@@ -267,9 +270,6 @@
     <ClInclude Include="gpk_eval.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_event.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_expression.h">
       <Filter>script</Filter>
     </ClInclude>
@@ -343,9 +343,6 @@
       <Filter>http</Filter>
     </ClInclude>
     <ClInclude Include="gpk_image.h">
-      <Filter>image</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_image_color.h">
       <Filter>image</Filter>
     </ClInclude>
     <ClInclude Include="gpk_input.h">
@@ -480,9 +477,6 @@
     <ClInclude Include="gpk_safe.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_scene.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_size.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -494,9 +488,6 @@
     </ClInclude>
     <ClInclude Include="gpk_stdstring.h">
       <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_stl.h">
-      <Filter>geometry</Filter>
     </ClInclude>
     <ClInclude Include="gpk_string.h">
       <Filter>base</Filter>
@@ -537,9 +528,6 @@
     <ClInclude Include="gpk_view_bit.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_view_color.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_view_layered.h">
       <Filter>view</Filter>
     </ClInclude>
@@ -576,9 +564,6 @@
     <ClInclude Include="gpk_virtual_keyboard.h">
       <Filter>dialog</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_vox.h">
-      <Filter>voxel</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_voxel.h">
       <Filter>voxel</Filter>
     </ClInclude>
@@ -611,6 +596,33 @@
     </ClInclude>
     <ClInclude Include="gpk_pod_definition.h">
       <Filter>type</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_geometry_buffers.h">
+      <Filter>geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gltf.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_stl.h">
+      <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_view_color.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_astatic_color.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_image_color.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_vox.h">
+      <Filter>models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -764,14 +776,8 @@
     <ClCompile Include="gpk_runtime_module.cpp">
       <Filter>module</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_scene.cpp">
-      <Filter>geometry</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_stdstring.cpp">
       <Filter>view</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_stl.cpp">
-      <Filter>geometry</Filter>
     </ClCompile>
     <ClCompile Include="gpk_string_helper.cpp">
       <Filter>container</Filter>
@@ -805,6 +811,15 @@
     </ClCompile>
     <ClCompile Include="llc_header_checkingg.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_gltf.cpp">
+      <Filter>models</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_stl.cpp">
+      <Filter>models</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_scene.cpp">
+      <Filter>scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

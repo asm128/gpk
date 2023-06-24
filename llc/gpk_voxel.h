@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 #include "gpk_array_ptr.h"
 #include "gpk_apod_color.h"
-#include "gpk_array_static.h"
+#include "gpk_astatic_color.h"
 #include "gpk_quad2.h"
 #include "gpk_quad3.h"
 

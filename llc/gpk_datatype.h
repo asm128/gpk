@@ -2,7 +2,6 @@
 /// Copyright © 2011-2016: Pablo Ariel Zorrilla Cepeda
 #include "gpk_eval.h"
 #include "gpk_typeint.h"
-//#include "gpk_typeint.h"
 
 // --------------------------------------------------------------- DATA_TYPE ---------------------------------------------------------------
 #ifndef GPK_DATATYPE_H_263544625434625344652434321

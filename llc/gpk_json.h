@@ -83,16 +83,16 @@ namespace gpk
 	::gpk::error_t			jsonObjectKeyList		(const ::gpk::SJSONNode & node, ::gpk::ai32 & indices);
 	::gpk::error_t			jsonObjectKeyList		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, ::gpk::avcc & keys);
 	::gpk::error_t			jsonObjectKeyList		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, ::gpk::ai32 & indices, ::gpk::avcc & keys);
-	::gpk::error_t			jsonCompareNumber		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc> & otherViews);
-	::gpk::error_t			jsonCompareArray		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc> & otherViews);
-	::gpk::error_t			jsonCompareObject		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode& other, const ::gpk::view<::gpk::vcc> & otherViews);
+	::gpk::error_t			jsonCompareNumber		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & otherViews);
+	::gpk::error_t			jsonCompareArray		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & otherViews);
+	::gpk::error_t			jsonCompareObject		(const ::gpk::SJSONNode & node, const ::gpk::view<::gpk::vcc> & views, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & otherViews);
 
 
 	// Access functions: Iterate over children looking for keys or values.
 	stainli	::gpk::error_t	jsonObjectKeyCount		(const ::gpk::SJSONReader & reader, uint32_t iNode)									{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return ::gpk::jsonObjectKeyCount(*reader.Tree[iNode]); }
 	stainli	::gpk::error_t	jsonArraySize			(const ::gpk::SJSONReader & reader, uint32_t iNode)									{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return ::gpk::jsonArraySize(*reader.Tree[iNode]); }
 	stainli	::gpk::error_t	jsonArrayValueGet		(const ::gpk::SJSONReader & reader, uint32_t iNode, uint32_t indexOfValueToGet)		{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return ::gpk::jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
-	stainli	::gpk::error_t	jsonObjectValueGet		(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs& key)			{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return ::gpk::jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
+	stainli	::gpk::error_t	jsonObjectValueGet		(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key)			{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return ::gpk::jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
 	stainli	::gpk::error_t	jsonObjectKeyList		(const ::gpk::SJSONReader & reader, uint32_t iNode, ::gpk::ai32 & indices)			{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], indices);				}
 	stainli	::gpk::error_t	jsonObjectKeyList		(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::view<::gpk::vcc> & views, ::gpk::avcc & keys)							{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], views, keys);			}
 	stainli	::gpk::error_t	jsonObjectKeyList		(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::view<::gpk::vcc> & views, ::gpk::ai32 & indices, ::gpk::avcc & keys)	{ ree_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], views, indices, keys);	}

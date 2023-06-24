@@ -40,6 +40,7 @@
     <ClInclude Include="gpk_apod_tri3.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
+    <ClInclude Include="gpk_astatic_color.h" />
     <ClInclude Include="gpk_auto_handler.h" />
     <ClInclude Include="gpk_axis.h" />
     <ClInclude Include="gpk_base64.h" />
@@ -70,6 +71,7 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_event_input.h" />
     <ClInclude Include="gpk_event_screen.h" />
+    <ClInclude Include="gpk_geometry_buffers.h" />
     <ClInclude Include="gpk_geometry_draw.h" />
     <ClInclude Include="gpk_font.h" />
     <ClInclude Include="gpk_gltf.h" />
@@ -101,7 +103,6 @@
     <ClInclude Include="gpk_tri.h" />
     <ClInclude Include="gpk_tri2.h" />
     <ClInclude Include="gpk_tri3.h" />
-    <ClInclude Include="gpk_geometry_buffers.h" />
     <ClInclude Include="gpk_view_color.h" />
     <ClInclude Include="gpk_view_n3.h" />
     <ClInclude Include="gpk_view_pobj.h" />
