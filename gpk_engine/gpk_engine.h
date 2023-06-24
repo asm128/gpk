@@ -29,8 +29,6 @@ namespace gpk
 		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid		;
 		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelix		;
 
-		inline							SEngine				()								{ Scene.create(); }
-
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)	const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)	const	{ return Entities[iEntity].RenderNode; }
 		inline	::gpk::error_t			GetParentIndex		(uint32_t iEntity)	const	{ return Entities[iEntity].Parent; }
@@ -46,7 +44,10 @@ namespace gpk
 
 
 		::gpk::error_t					Save				(::gpk::au8 & output)	const	{
-			gpk_necs(Scene		->Save(output));
+			if(Scene)
+				gpk_necs(Scene->Save(output));
+			else 
+				gpk_necs(::gpk::SEngineScene{}.Save(output));
 			gpk_necs(Entities	.Save(output));
 			gpk_necs(Integrator	.Save(output));
 			return 0;
@@ -131,7 +132,7 @@ namespace gpk
 		inline	::gpk::error_t			CreateSphere		()	{ return CreateSphere({}); }
 
 		inline	::gpk::error_t			CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio) { 
-			SParamsCylinder			params;
+			SParamsCylinder			params			= {};
 			params.DiameterRatio	= diameterRatio;
 			params.CellCount		= {slices, 1};
 			params.Reverse			= reverse;
@@ -139,7 +140,7 @@ namespace gpk
 		}
 
 		inline	::gpk::error_t			CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
-			SParamsGrid				params;
+			SParamsGrid				params			= {};
 			params.Origin		= {.5f, .5f};
 			params.CellCount	= cellCount;
 			params.Outward		= topRight;
@@ -149,7 +150,7 @@ namespace gpk
 		::gpk::error_t					Update				(double secondsLastFrame)			{
 			Integrator.Integrate(secondsLastFrame);
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
-				::gpk::SVirtualEntity					& entity			= Entities[iEntity];
+				::gpk::SVirtualEntity				& entity			= Entities[iEntity];
 				if(entity.Parent != -1)
 					continue;
 

@@ -158,8 +158,12 @@ namespace gpk
 			return iNewNode;
 		}
 
-		::gpk::error_t						Save					(::gpk::au8 & output)		const	{
-			gpk_necs(Graphics		->Save(output));
+		::gpk::error_t						Save					(::gpk::au8 & output)	const	{
+			if(Graphics) 
+				gpk_necs(Graphics->Save(output));
+			else {
+				SEngineGraphics{}.Save(output);
+			}
 			gpk_necs(RenderNodes	 .Save(output));
 			//gpk_necs(RenderCache	 .Save(output));
 			return 0;

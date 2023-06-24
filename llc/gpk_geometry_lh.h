@@ -8,8 +8,8 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tAxis, typename _tColor> struct SLightPoint2{ ::gpk::n2f32 Position; _tColor Color; };
-	template<typename _tAxis, typename _tColor> struct SLightPoint3{ ::gpk::n3f32 Position; _tColor Color; };
+	template<typename _tAxis, typename _tColor> struct SLightPoint2 { ::gpk::n2f32 Position; _tColor Color; };
+	template<typename _tAxis, typename _tColor> struct SLightPoint3 { ::gpk::n3f32 Position; _tColor Color; };
 
 	struct SImageTag {
 		 COLOR_TYPE	ColorType;
@@ -60,31 +60,31 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(BUFFER_TYPE, POLYGON		, 1);
 #pragma pack(push, 1)
 	struct SGeometryGroupModes {
-		PRIMITIVE_TYPE	PrimitiveType	;
-		INDEX_MODE		IndexMode		;
+		PRIMITIVE_TYPE						PrimitiveType	;
+		INDEX_MODE							IndexMode		;
 
-		uint16_t		Transparent		: 1;
-		uint16_t		SkipSpecular	: 1;
-		uint16_t		SkipAmbient		: 1;
-		uint16_t		SkipDiffuse		: 1;
+		uint16_t							Transparent		: 1;
+		uint16_t							SkipSpecular	: 1;
+		uint16_t							SkipAmbient		: 1;
+		uint16_t							SkipDiffuse		: 1;
 	};
 
 	struct SGeometryGroup {
-		uint32_t					Geometry			= (uint32_t)-1;
-		uint32_t					Image				= (uint32_t)-1;
-		uint32_t					Material			= (uint32_t)-1;
-		::gpk::SGeometryGroupModes	Modes				= {};
-		::gpk::rangeu32				Slice				= {};
+		uint32_t							Geometry		= (uint32_t)-1;
+		uint32_t							Image			= (uint32_t)-1;
+		uint32_t							Material		= (uint32_t)-1;
+		::gpk::SGeometryGroupModes			Modes			= {};
+		::gpk::rangeu32						Slice			= {};
 	};
 #pragma pack(pop)
 
 	struct SModelNode {
-		::gpk::ai32					VertexBuffers	= {};
-		::gpk::ai32					Images			= {};
-		int32_t						IndexBuffer		= -1;
-		::gpk::SGeometryGroupModes	Modes			= {};
-		::gpk::rangeu16				RangeIndex		= {};
-		::gpk::rangeu16				RangeVertex		= {};
+		::gpk::ai32							VertexBuffers	= {};
+		::gpk::ai32							Images			= {};
+		int32_t								IndexBuffer		= -1;
+		::gpk::SGeometryGroupModes			Modes			= {};
+		::gpk::rangeu16						RangeIndex		= {};
+		::gpk::rangeu16						RangeVertex		= {};
 	};
 
 	struct SModelQuads {
@@ -116,12 +116,20 @@ namespace gpk
 	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale, const ::gpk::n3f32 & translation);
 #pragma pack(push, 1)
 	struct STile {
-		float			Height[4]	;
-		int16_t			Top			;
-		int16_t			Front		;
-		int16_t			Right		;
-		int16_t			Flags		;
+		float			Height	[4]	= {};
+		int16_t			Top			= -1;
+		int16_t			Front		= -1;
+		int16_t			Right		= -1;
+		int16_t			Flags		= -1;
 	};
+
+	template<typename _tIndex>
+	struct STileIndices {
+		_tIndex			Top		[4]	= {};
+		_tIndex			Front	[4]	= {};
+		_tIndex			Right	[4]	= {};
+	};
+
 #pragma pack(pop)
 	::gpk::error_t	geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
 	::gpk::error_t	geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);

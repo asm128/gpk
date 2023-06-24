@@ -115,6 +115,10 @@ namespace gpk
 #pragma pack(pop)
 
 	template<typename T>	using vbit	= ::gpk::view_bit<T>;
+	typedef	::gpk::view_bit<uint8_t>	vbitu8	;
+	typedef	::gpk::view_bit<uint16_t>	vbitu16	;
+	typedef	::gpk::view_bit<uint32_t>	vbitu32	;
+	typedef	::gpk::view_bit<uint64_t>	vbitu64	;
 
 	template<typename _tField>
 	::gpk::error_t			reverse_bits		(::gpk::view_bit<_tField> toReverse)													{

@@ -195,9 +195,6 @@
     <ClInclude Include="gpk_block_container_nts.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_camera.h">
-      <Filter>geometry</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_cdn.h">
       <Filter>cdn</Filter>
     </ClInclude>
@@ -623,6 +620,9 @@
     </ClInclude>
     <ClInclude Include="gpk_vox.h">
       <Filter>models</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_camera.h">
+      <Filter>scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
