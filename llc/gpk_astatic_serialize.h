@@ -12,7 +12,7 @@ namespace gpk
 		::gpk::view<const _tPOD>	readView					= {}; 
 		uint32_t					bytesRead					= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		gpk_necs(input.slice(input, bytesRead));
 		memcpy(output.begin(), readView.begin(), ::gpk::min(readView.byte_count(), ::gpk::view<_tPOD>{output}.byte_count()));
 		return 0;
 	}

@@ -81,6 +81,7 @@
     <ClInclude Include="gpk_gui_inputbox.h" />
     <ClInclude Include="gpk_gui_viewport.h" />
     <ClInclude Include="gpk_image_color.h" />
+    <ClInclude Include="gpk_img_serialize.h" />
     <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />

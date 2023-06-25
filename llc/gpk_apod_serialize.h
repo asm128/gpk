@@ -28,7 +28,7 @@ namespace gpk
 		::gpk::view<const T>			readView			= {}; 
 		uint32_t						bytesRead			= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		input						= {input.begin() + bytesRead, input.size() - bytesRead}; 
+		gpk_necs(input.slice(input, bytesRead));
 		output						= readView;// gpk_necs(output.append(readView)); 
 		return 0;
 	}

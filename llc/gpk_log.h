@@ -480,14 +480,14 @@ namespace gpk
 #	define rews_if							reterr_gswarn_if
 #	define reis_if							reterr_gsinfo_if
 
-#	define ree_if_failed(condition, format, ...)	ree_if(-1, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rew_if_failed(condition, format, ...)	rew_if(-1, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rei_if_failed(condition, format, ...)	rei_if(-1, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rea_if_failed(condition, format, ...)	rea_if(-1, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rees_if_failed(condition)				rees_if(-1, ::gpk::failed(::gpk::error_t(condition)))
-#	define rews_if_failed(condition)				rews_if(-1, ::gpk::failed(::gpk::error_t(condition)))
-#	define reis_if_failed(condition)				reis_if(-1, ::gpk::failed(::gpk::error_t(condition)))
-#	define reas_if_failed(condition)				reas_if(-1, ::gpk::failed(::gpk::error_t(condition)))
+#	define ree_if_failed(condition, format, ...)	ree_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rew_if_failed(condition, format, ...)	rew_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rei_if_failed(condition, format, ...)	rei_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rea_if_failed(condition, format, ...)	rea_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rees_if_failed(condition)				rees_if(::gpk::failed(::gpk::error_t(condition)))
+#	define rews_if_failed(condition)				rews_if(::gpk::failed(::gpk::error_t(condition)))
+#	define reis_if_failed(condition)				reis_if(::gpk::failed(::gpk::error_t(condition)))
+#	define reas_if_failed(condition)				reas_if(::gpk::failed(::gpk::error_t(condition)))
 
 #	define e_if_failed(condition, format, ...)	e_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
 #	define w_if_failed(condition, format, ...)	w_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
