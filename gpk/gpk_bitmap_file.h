@@ -1,5 +1,6 @@
 #include "gpk_apod_color.h"
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
+#include "gpk_grid_color.h"
 
 #ifndef GPK_BITMAP_FILE_H_236544263544352344
 #define GPK_BITMAP_FILE_H_236544263544352344
