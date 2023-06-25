@@ -455,14 +455,14 @@ namespace gpk
 #	define rvis_if							retval_gsinfo_if
 #	define rvas_if							retval_gsalways_if
 
-#	define rve_if_failed(retVal, condition, format, ...)	rve_if(retval, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rvw_if_failed(retVal, condition, format, ...)	rvw_if(retval, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rvi_if_failed(retVal, condition, format, ...)	rvi_if(retval, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rva_if_failed(retVal, condition, format, ...)	rva_if(retval, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
-#	define rves_if_failed(retVal, condition)				rves_if(retval, ::gpk::failed(::gpk::error_t(condition)))
-#	define rvws_if_failed(retVal, condition)				rvws_if(retval, ::gpk::failed(::gpk::error_t(condition)))
-#	define rvis_if_failed(retVal, condition)				rvis_if(retval, ::gpk::failed(::gpk::error_t(condition)))
-#	define rvas_if_failed(retVal, condition)				rvas_if(retval, ::gpk::failed(::gpk::error_t(condition)))
+#	define rve_if_failed(retVal, condition, format, ...)	rve_if(retVal, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rvw_if_failed(retVal, condition, format, ...)	rvw_if(retVal, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rvi_if_failed(retVal, condition, format, ...)	rvi_if(retVal, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rva_if_failed(retVal, condition, format, ...)	rva_if(retVal, ::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rves_if_failed(retVal, condition)				rves_if(retVal, ::gpk::failed(::gpk::error_t(condition)))
+#	define rvws_if_failed(retVal, condition)				rvws_if(retVal, ::gpk::failed(::gpk::error_t(condition)))
+#	define rvis_if_failed(retVal, condition)				rvis_if(retVal, ::gpk::failed(::gpk::error_t(condition)))
+#	define rvas_if_failed(retVal, condition)				rvas_if(retVal, ::gpk::failed(::gpk::error_t(condition)))
 
 #endif
 
