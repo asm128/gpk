@@ -119,8 +119,8 @@ static	::gpk::error_t	rtMain							(::gpk::SRuntimeValues & runtimeValues);					
 			info_printf("%s", "Application instance initialized successfully. Executing main loop...");																			\
 			while(true) {					\
 				::gpk::error_t			updateResult		= ::update(*app, false);			\
-				break_gsinfo_if(1 == updateResult);			\
-				break_gserror_if(errored(updateResult));	\
+				bis_if(1 == updateResult);			\
+				bes_if(errored(updateResult));	\
 				es_if(::draw(*app));				\
 			}					\
 			info_printf("%s", "Cleaning up application instance...");								\
@@ -194,8 +194,8 @@ static	::gpk::error_t	grt_Loop		(::SRuntimeState & runtimeState)	{			\
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");										\
 		while(true) {										\
 			updateResult	= ::update(*runtimeState.Application, false);												\
-			break_gsinfo_if(::gpk::APPLICATION_STATE_EXIT == updateResult);													\
-			break_gserror_if(errored(updateResult));															\
+			bis_if(::gpk::APPLICATION_STATE_EXIT == updateResult);													\
+			bes_if(errored(updateResult));															\
 			/*gerror_if(mainModule.Render(app), "Why would this ever happen?");	*/										\
 			/*Sleep(1);		*/								\
 		}													\

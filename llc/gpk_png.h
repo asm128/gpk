@@ -1,9 +1,9 @@
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
 #include "gpk_array_static.h"
 #include "gpk_color_type.h"
 #include "gpk_apod_color.h"
 #include "gpk_array.h"
-
+#include "gpk_grid_color.h"
 
 #ifndef GPK_PNG_H_0928374982374
 #define GPK_PNG_H_0928374982374

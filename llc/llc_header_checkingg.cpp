@@ -156,7 +156,7 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_inputbox.h"
 #include "gpk_gui_viewport.h"
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
 #include "gpk_path.h"
 #include "gpk_quad2.h"
 #include "gpk_quad3.h"
