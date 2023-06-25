@@ -615,7 +615,7 @@
     <ClInclude Include="gpk_astatic_color.h">
       <Filter>aliases</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_image_color.h">
+    <ClInclude Include="gpk_img_color.h">
       <Filter>aliases</Filter>
     </ClInclude>
     <ClInclude Include="gpk_event.h">

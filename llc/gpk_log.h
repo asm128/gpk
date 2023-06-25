@@ -37,10 +37,10 @@
 
 namespace gpk
 {
-	typedef	void										(*debug_print_t)				(const char* text, uint32_t textLen);
+	typedef	void		(*debug_print_t)				(const char* text, uint32_t textLen);
 
-	void												_gpk_print_system_errors		(const char* prefix, uint32_t prefixLen);
-	void												_base_debug_print				(const char* text, uint32_t textLen);
+	void				_gpk_print_system_errors		(const char* prefix, uint32_t prefixLen);
+	void				_base_debug_print				(const char* text, uint32_t textLen);
 
 #if defined(GPK_STDOUT_LOG_ENABLED)
 #	define base_debug_print(prefix, prefixLen)	do {			\
@@ -52,22 +52,22 @@ namespace gpk
 #endif
 
 	template<size_t prefixLength, typename... TArgs>
-	void												_gpk_debug_printf								(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
+	void				_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
 
-		char													timeString			[64]						= {};
+		char					timeString	[64]				= {};
 #if defined(GPK_WINDOWS)
-		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
 #else
-		size_t													stringLength									= snprintf(timeString, sizeof(timeString) - 2, "%lu:", ::gpk::timeCurrentInMs());
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%lu:", ::gpk::timeCurrentInMs());
 #endif
 		base_debug_print(timeString, (int)stringLength);
 		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
 		base_debug_print(prefix, prefixLength);
-		char													customDynamicString	[8192]						= {};
-		stringLength										= ::gpk::sprintf_s(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
+		char					customDynamicString	[8192]		= {};
+		stringLength		= ::gpk::sprintf_s(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);
@@ -78,7 +78,7 @@ namespace gpk
 		}
 	}
 	template<typename... _tArgs>
-	static	inline	constexpr	void					dummy		(_tArgs&&...)		{}
+	stincxp	void		dummy		(_tArgs&&...)		{}
 }
 
 #define	GPK_STRINGIFY(x) #x

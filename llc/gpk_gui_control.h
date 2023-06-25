@@ -5,7 +5,8 @@
 #include "gpk_align.h"
 #include "gpk_array_static.h"
 
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
+#include "gpk_grid_color.h"
 
 #ifndef GPK_GUI_CONTROL_H_29038749823613
 #define GPK_GUI_CONTROL_H_29038749823613

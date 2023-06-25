@@ -4,6 +4,7 @@
 #include "gpk_bitmap_target.h"
 #include "gpk_gui_text.h"
 #include "gpk_rect_align.h"
+#include "gpk_view_color.h"
 
 static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::gpk::g8bgra & target, bool bDisabled)				{
 	::gpk::SControlState		& controlState		= gui.Controls.States	[iControl];

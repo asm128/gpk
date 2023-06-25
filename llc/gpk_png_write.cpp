@@ -1,6 +1,6 @@
 #include "gpk_png.h"
 #include "zlib.h"
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
 
 static	unsigned long					g_crc_table	[256]						= {};	// Table of CRCs of all 8-bit messages.
 static	int32_t							g_crc_table_computed					= 0;	// Flag: has the table been computed? Initially false.

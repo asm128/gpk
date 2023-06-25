@@ -5,10 +5,10 @@
 
 namespace gpk
 {
-	typedef						int32_t					error_t;
+	typedef	int32_t	error_t;
 
-	stincxp		bool					failed					(const error_t errorCode)		noexcept	{ return errorCode < 0;		}
-	stincxp		bool					succeeded				(const error_t errorCode)		noexcept	{ return 0 <= errorCode;	}
+	stincxp	bool	failed		(const error_t errorCode)	noexcept	{ return errorCode < 0;		}
+	stincxp	bool	succeeded	(const error_t errorCode)	noexcept	{ return 0 <= errorCode;	}
 
 	stacxpr	::gpk::error_t OS_OK                = 0;
 	stacxpr	::gpk::error_t OS_ERROR             = -1;
@@ -24,12 +24,19 @@ namespace gpk
 }
 
 #if !defined(errored)
-#	define						errored(errVal)								((::gpk::error_t)(errVal) < 0) //(::gpk::failed(errVal))
+#	define	errored(errVal)			((::gpk::error_t)(errVal) < 0)
 #endif
 #if !defined(not_errored)
-#	define						not_errored(errVal)							::gpk::succeeded((::gpk::error_t)(errVal))
+#	define	not_errored(errVal)		::gpk::succeeded((::gpk::error_t)(errVal))
 #endif
 
-#define GPK_CRASH()			{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.
+#if !defined(if_failed)
+#	define	if_failed(errVal)		if((::gpk::error_t)(errVal) < 0)
+#endif
+#if !defined(if_succeeded)
+#	define	if_succeeded(errVal)	if((::gpk::error_t)(errVal) >= 0)
+#endif
+
+#define GPK_CRASH()	{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.
 
 #endif // GPK_ERROR_H_91823749823

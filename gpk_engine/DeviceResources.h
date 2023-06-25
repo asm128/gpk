@@ -17,32 +17,32 @@ namespace DX
 {
 #if defined(_DEBUG)
 	// Check for SDK Layer support.
-	stainli bool							SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)); }
+	stainli bool	SdkLayersAvailable			()							{ return SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)); }
 #endif
 	// Converts a length in device-independent pixels (DIPs) to a length in physical pixels. Round to nearest integer.
-	stainli float							ConvertDipsToPixels			(float dips, float dpi)		{ stacxpr	float dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
+	stainli float	ConvertDipsToPixels			(float dips, float dpi)		{ stacxpr	float dipsPerInch = 96.0f; return floorf(dips * dpi / dipsPerInch + 0.5f); } 
 
 	namespace DisplayMetrics
 	{
-		stacxpr	bool							SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
-		stacxpr	float							DpiThreshold				= 192.0f;	// 200% of standard desktop display.
-		stacxpr	float							WidthThreshold				= 1920.f;	// 1080p width.
-		stacxpr	float							HeightThreshold				= 1080.f;	// 1080p height.
+		stacxpr	bool	SupportHighResolutions		= false;	// High resolution displays can require a lot of GPU and battery power to render. High resolution phones, for example, may suffer from poor battery life if games attempt to render at 60 frames per second at full fidelity. The decision to render at full fidelity across all platforms and form factors should be deliberate.
+		stacxpr	float	DpiThreshold				= 192.0f;	// 200% of standard desktop display.
+		stacxpr	float	WidthThreshold				= 1920.f;	// 1080p width.
+		stacxpr	float	HeightThreshold				= 1080.f;	// 1080p height.
 		// The default thresholds that define a "high resolution" display. If the thresholds are exceeded and SupportHighResolutions is false, the dimensions will be scaled by 50%.
 	};
 
 	// Provides an interface for an application that owns DeviceResources to be notified of the device being lost or created.
 	struct IDeviceNotify {
-		virtual void							OnDeviceLost				() = 0;
-		virtual ::gpk::error_t					OnDeviceRestored			() = 0;
+		virtual void			OnDeviceLost				() = 0;
+		virtual ::gpk::error_t	OnDeviceRestored			() = 0;
 	};
 
 	// Controls all the DirectX device resources
 	struct D3DDeviceResources {
-		HWND									m_window					= 0;	// Cached reference to the Window.
-		DEVMODE									DeviceMode					= {sizeof(DEVMODE)};
+		HWND					m_window					= 0;	// Cached reference to the Window.
+		DEVMODE					DeviceMode					= {sizeof(DEVMODE)};
 
-		IDeviceNotify							* m_deviceNotify			= {};	// The IDeviceNotify can be held directly as it owns the DeviceResources.
+		IDeviceNotify			* m_deviceNotify			= {};	// The IDeviceNotify can be held directly as it owns the DeviceResources.
 
 		// Direct3D objects.
 		::gpk::pcom<ID3D11Device3>				m_d3dDevice;
@@ -198,7 +198,7 @@ namespace DX
 
 			D2D1_BITMAP_PROPERTIES1						bitmapProperties					= D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW, D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED), m_dpi, m_dpi);
 			::gpk::pcom<IDXGISurface2>					dxgiBackBuffer;
-			gwarn_if(errored(m_swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer))), "%s", "");
+			ws_if_failed(m_swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer)));
 			gpk_hrcall(m_d2dContext->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &m_d2dTargetBitmap));	// Create a Direct2D target bitmap associated with the swap chain back buffer and set it as the current target.
 
 			m_d2dContext->SetTarget(m_d2dTargetBitmap);

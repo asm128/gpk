@@ -112,7 +112,7 @@ static	::gpk::error_t	drawBuffers
 
 		trianglePixelCoords.clear();
 		triangleWeights.clear();
-		es_if(errored(::gpk::drawTriangle(offscreenMetrics.u32(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth)));
+		es_if_failed(::gpk::drawTriangle(offscreenMetrics.u32(), triPositions, trianglePixelCoords, triangleWeights, backBufferDepth));
 		//const bool													stripped					= surface[0][0] == ::gpk::bgra{gpk::WHITE};
 		for(uint32_t iCoord = 0; iCoord < trianglePixelCoords.size(); ++iCoord) {
 			const ::gpk::trif32							& vertexWeights				= triangleWeights[iCoord];

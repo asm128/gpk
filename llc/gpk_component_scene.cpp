@@ -114,25 +114,25 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 			 }
 		else if(command == ::gpk::vcs{"Ka"		}) {
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Ambient.r)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Ambient.r)[iAxis]));
 			info_printf("Material Ambient: [%f, %f, %f].", newMaterial.Ambient.r, newMaterial.Ambient.g, newMaterial.Ambient.b);
 		}
 		else if(command == ::gpk::vcs{"Kd"		}) {
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis]));
 			info_printf("Material Diffuse: [%f, %f, %f].", newMaterial.Diffuse.r, newMaterial.Diffuse.g, newMaterial.Diffuse.b);
 		}
 		else if(command == ::gpk::vcs{"Ks"		}) {
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&newMaterial.Diffuse.r)[iAxis]));
 			info_printf("Material Diffuse: [%f, %f, %f].", newMaterial.Diffuse.r, newMaterial.Diffuse.g, newMaterial.Diffuse.b);
 		}
 		else if(command == ::gpk::vcs{"d"		}) {
-			e_if(errored(::floatRead(numberReader, lineValues[1], newMaterial.Transparency)), "%s", "");
+			es_if_failed(::floatRead(numberReader, lineValues[1], newMaterial.Transparency));
 			info_printf("Material Transparency: %f.", newMaterial.Transparency);
 		}
 		else if(command == ::gpk::vcs{"Ns"		}) {
-			e_if(errored(::floatRead(numberReader, lineValues[1], newMaterial.Transparency)), "%s", "");
+			es_if_failed(::floatRead(numberReader, lineValues[1], newMaterial.Transparency));
 			info_printf("Material Specular factor: %f.", newMaterial.SpecularFactor);
 		}
 		else if(command == ::gpk::vcs{"illum"	}) { }
@@ -256,26 +256,26 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 		else if(command == ::gpk::vcs{"v"}) {
 			::gpk::n3f32						vertex			= {};
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis]));
 			info_printf("Vertex found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);
 			//scene.Renderer.Vertices[scene.Renderer.Nodes[newGroup.RenderNodes[0]].Vertices].push_back(vertex);
 		}
 		else if(command == ::gpk::vcs{"vt"}) {
 			::gpk::n2f32						texCoord		= {};
 			for(uint32_t iAxis = 0; iAxis < 2; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&texCoord.x)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&texCoord.x)[iAxis]));
 			info_printf("TexCoord found: [%f, %f, %f].", texCoord.x, texCoord.y);
 		}
 		else if(command == ::gpk::vcs{"vn"}) {
 			::gpk::n3f32						vertex			= {};
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis])), "%s", "");
+				es_if_failed(::floatRead(numberReader, lineValues[1 + iAxis], (&vertex.x)[iAxis]));
 			info_printf("Normal found: [%f, %f, %f].", vertex.x, vertex.y, vertex.z);
 		}
 		else if(command == ::gpk::vcs{"f"}) {
 			::gpk::n3<int32_t>						indices			= {};
 			for(uint32_t iAxis = 0; iAxis < 3; ++iAxis)
-				e_if(errored(::integerRead(numberReader, lineValues[1 + iAxis], (&indices.x)[iAxis])), "%s", "");
+				es_if_failed(::integerRead(numberReader, lineValues[1 + iAxis], (&indices.x)[iAxis]));
 			info_printf("Face found: [%i, %i, %i].", indices.x, indices.y, indices.z);
 		}
 		else if(command == ::gpk::vcs{"vp"}) {

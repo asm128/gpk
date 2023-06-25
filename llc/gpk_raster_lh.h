@@ -2,6 +2,7 @@
 #include "gpk_matrix.h"
 #include "gpk_color.h"
 #include "gpk_geometry_lh.h"
+#include "gpk_grid_color.h"
 
 #include "gpk_array_pod.h"
 #include "gpk_line2.h"
