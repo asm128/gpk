@@ -134,6 +134,8 @@ namespace gpk
 			Normalize();
 			return *this;
 		};
+
+		// TODO: Likely Y and Z are inverted. Please fix.
 		Tn3&				RotateX				(double theta)											{
 			const ::gpk::SSinCos	pairSinCos			= ::gpk::getSinCos(theta);
 			const double			pz					= y * pairSinCos.Cos - z * pairSinCos.Sin;

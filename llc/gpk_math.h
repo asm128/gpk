@@ -42,7 +42,7 @@ namespace gpk
 	stainli double	fabs	(double	f) { return ::fabs	(f); }
 	stainli double	atan	(double	f) { return ::atan	(f); }
 	stainli double	cos		(double	f) { return ::cos	(f); }
-8	stainli double	acos	(double	f) { return ::acos	(f); }
+	stainli double	acos	(double	f) { return ::acos	(f); }
 	stainli double	sin		(double	f) { return ::sin	(f); }
 	stainli double	asin	(double	f) { return ::asin	(f); }
 	stainli double	sqrt	(double	f) { return ::sqrt	(f); }
