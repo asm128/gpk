@@ -9,7 +9,7 @@
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
 #include "gpk_path.h"
-#include "gpk_image_color.h"
+#include "gpk_img_color.h"
 
 ::gpk::error_t				pngToFont
 	( ::gpk::img8bgra			& imageCache
