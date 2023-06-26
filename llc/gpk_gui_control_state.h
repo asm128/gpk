@@ -10,6 +10,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	typedef	int16_t			cid_t;
+	stacxpr	cid_t			CID_INVALID		= cid_t(-1);
 	typedef	const cid_t		ccid_t;
 	typedef	apod<cid_t>		acid;
 	typedef	view<cid_t>		vcid;

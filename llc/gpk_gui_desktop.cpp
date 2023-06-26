@@ -213,9 +213,8 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 			}
 		}
 		else {
-			::gpk::SControlState			& controlStateMenu					= gui.Controls.States[menu.IdControl];
 			const ::gpk::SControlArea		& controlListMetrics				= gui.Controls.Area[menu.IdControl];
-			if(::gpk::in_range(gui.CursorPos.i16(), controlListMetrics.Total.Global) && controlStateMenu.IsHidden() == false)
+			if(::gpk::in_range(gui.CursorPos.i16(), controlListMetrics.Total.Global) && ::gpk::controlHidden(gui, menu.IdControl))
 				::unhideMenuHierarchy(gui, desktop, menu);
 
 			else if(parentMenu.IdSelected != menu.IndexParentItem)

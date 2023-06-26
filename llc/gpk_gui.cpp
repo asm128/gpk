@@ -521,7 +521,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 		}
 	}
 	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Area[iControl].Total.Global))
-		controlHovered		= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl));
+		controlHovered		= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl));
 	else {
 		gui.Controls.SetHovered(iControl, false);
 
@@ -546,10 +546,13 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 		if(controlState.IsUnused())
 			continue;
 
+		gui.Controls.SetAction((::gpk::cid_t)iControl, false);
+
 		if(controlState.IsDisabled())
 			continue;
 
-		gui.Controls.SetAction((::gpk::cid_t)iControl, false);
+		if(::gpk::controlHidden(gui, (::gpk::cid_t)iControl))
+			continue;
 
 		if(false == ::gpk::controlInvalid(gui, controlState.Parent))
 			continue;
@@ -592,7 +595,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 
 ::gpk::error_t			gpk::controlHidden		(const ::gpk::SGUI & gui, ::gpk::cid_t iControl)	{
 	bool						imHidden				= ::gpk::controlInvalid(gui, iControl) || gui.Controls.States[iControl].IsHidden();
-	return imHidden ? imHidden : (false == ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent) && ::gpk::controlHidden(gui, gui.Controls.States[iControl].Parent));
+	return imHidden ? imHidden : (0 == ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent) && ::gpk::controlHidden(gui, gui.Controls.States[iControl].Parent));
 }
 
 ::gpk::error_t			gpk::controlDisabled	(const ::gpk::SGUI & gui, ::gpk::cid_t iControl)	{
