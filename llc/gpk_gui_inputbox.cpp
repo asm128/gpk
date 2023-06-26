@@ -54,7 +54,7 @@
 	gui.Controls.States		[inputBox.IdRoot].Mask		&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 	gui.Controls.Placement	[inputBox.IdRoot].Border	= {};
 	gui.Controls.Placement	[inputBox.IdRoot].Margin	= {};
-	gui.Controls.Draw		[inputBox.IdRoot].NoBorder	= true;
+	//gui.Controls.Draw		[inputBox.IdRoot].NoBorder	= true;
 	gui.Controls.Draw		[inputBox.IdRoot].NoClient	= true;
 
 	gpk_necs(inputBox.IdText = ::gpk::controlCreate(gui));
