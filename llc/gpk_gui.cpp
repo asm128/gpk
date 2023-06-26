@@ -316,16 +316,16 @@ static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControlPlacement & con
 	(void)scaledBorders;
 
 	const ::gpk::rect2i16		& rectTotal				= controlMetrics.Total.Global;
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		]	= rectTotal;
+	//finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		]	= rectTotal;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_CLIENT			]	= controlMetrics.Client.Global;
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_LEFT		]	= {rectTotal.Offset , ::gpk::n2i16{(int16_t)control.Border.Left, rectTotal.Size.y}};
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_TOP		]	= {rectTotal.Offset , ::gpk::n2i16{rectTotal.Size.x, (int16_t)control.Border.Top}};
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_RIGHT		]	= {rectTotal.Offset + ::gpk::n2i16{int16_t(rectTotal.Size.x - control.Border.Right), 0} , ::gpk::n2i16{(int16_t)control.Border.Right, controlMetrics.Total.Global.Size.y}};
 	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BORDER_BOTTOM	]	= {rectTotal.Offset + ::gpk::n2i16{0, int16_t(rectTotal.Size.y - control.Border.Bottom)}, ::gpk::n2i16{rectTotal.Size.x, (int16_t)control.Border.Bottom}};
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.x	+= control.Border.Left	;
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.y	+= control.Border.Top	;
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Size	.x	-= control.Border.Left	+ control.Border.Right	;
-	finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Size	.y	-= control.Border.Top	+ control.Border.Bottom	;
+	//finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.x	+= control.Border.Left	;
+	//finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Offset.y	+= control.Border.Top	;
+	//finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Size	.x	-= control.Border.Left	+ control.Border.Right	;
+	//finalRects[::gpk::GUI_CONTROL_AREA_OLD_BACKGROUND		].Size	.y	-= control.Border.Top	+ control.Border.Bottom	;
 
 	// --- Draw control corners
 	::gpk::n2i16				startOffset				= controlMetrics.Total.Global.Offset;
