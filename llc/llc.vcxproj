@@ -265,6 +265,7 @@
   <ItemGroup>
     <None Include="character_codes.json" />
     <None Include="copy_gpk_config.bat" />
+    <None Include="country_coords.json" />
     <None Include="cpp.hint" />
     <None Include="gpk_cgi_interceptor.json" />
     <None Include="gpk_config.json" />

@@ -832,5 +832,6 @@
     <None Include="gpk_cgi_interceptor.json" />
     <None Include="gpk_config.json" />
     <None Include="Makefile" />
+    <None Include="country_coords.json" />
   </ItemGroup>
 </Project>
