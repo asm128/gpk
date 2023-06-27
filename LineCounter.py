@@ -32,7 +32,7 @@ def parseLine(fnode, line):
 
 
 def checkFileExt( fname, ext ):
-	if( fname.find(ext) == len(fname)-len(ext) ):
+	if fname[0] != '.' and (fname.find(ext) == len(fname) - len(ext)):
 		return True
 	else:
 		return False

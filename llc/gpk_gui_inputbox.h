@@ -8,7 +8,7 @@
 
 namespace gpk
 {
-	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::view<const uint16_t> & keys);
+	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu16 & keys);
 	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
 
 	struct SInputBox {
@@ -28,20 +28,20 @@ namespace gpk
 		}
 		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> frameEventsNew, ::gpk::vcid processableControls) { 
+		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
 			cid_t						handledControl;
 			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](cid_t iControl) {
+			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
 				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
 					return ::gpk::error_t(handledControl = iControl);
 
 				return 0;
 			}));
 
-			::gpk::apobj<::gpk::SSystemEvent>	sysEvents			= frameEventsNew;
+			::gpk::apobj<::gpk::SSystemEvent>	sysEvents			= frameEvents;
 			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
