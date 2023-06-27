@@ -480,6 +480,13 @@ namespace gpk
 #	define rews_if							reterr_gswarn_if
 #	define reis_if							reterr_gsinfo_if
 
+#	define re_if							ret_gerror_if
+#	define rw_if							ret_gwarn_if
+#	define ri_if							ret_ginfo_if
+#	define res_if							ret_gserror_if
+#	define rws_if							ret_gswarn_if
+#	define ris_if							ret_gsinfo_if
+
 #	define ree_if_failed(condition, format, ...)	ree_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
 #	define rew_if_failed(condition, format, ...)	rew_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
 #	define rei_if_failed(condition, format, ...)	rei_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)

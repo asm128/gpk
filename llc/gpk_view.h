@@ -357,6 +357,7 @@ namespace gpk
 		return iValue;
 	}
 
+	// Returns the index of the start of the sequence if the latter found.
 	template<typename T>
 	::gpk::error_t					split					(const ::gpk::view<T> & sequenceToFind, const ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		const ::gpk::error_t				iValue					= ::gpk::find_sequence_pod(sequenceToFind, original);
@@ -365,11 +366,15 @@ namespace gpk
 			right							= {};
 		}
 		else {
+			gpk_necall(original.slice(right, iValue + sequenceToFind.size()), "%s", "Invalid slice");
 			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
-			const uint32_t						offsetRight				= iValue + sequenceToFind.size();
-			gpk_necall(original.slice(right, offsetRight, original.size() - offsetRight), "%s", "Invalid slice");
 		}
 		return iValue;
+	}
+
+	template<typename T>
+	inline	::gpk::error_t			split					(const ::gpk::view<T> & sequenceToFind, ::gpk::view<T> & inputOrLeft, ::gpk::view<T> & right) {
+		return ::gpk::split(sequenceToFind, inputOrLeft, inputOrLeft, right);
 	}
 
 	template<typename T>

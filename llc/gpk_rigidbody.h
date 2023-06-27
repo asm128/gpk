@@ -49,7 +49,7 @@ namespace gpk
 	};
 
 	struct SBodyFrame {
-		::gpk::m3f32			InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
+		::gpk::m3f32		InverseInertiaTensorWorld		= {1, 0, 0, 0, 1, 0, 0, 0, 1};
 		::gpk::n3f32		LastFrameAcceleration			= {0, 0, 0};
 		::gpk::n3f32		AccumulatedForce				= {0, 0, 0};
 		::gpk::n3f32		AccumulatedTorque				= {0, 0, 0};
@@ -164,23 +164,23 @@ namespace gpk
 
 		int32_t										Integrate						(double duration)	{
 			const double									durationHalfSquared				= duration * duration * 0.5;
-			::gpk::m4f32										dummy;
+			::gpk::m4f32									dummy;
 			for(uint32_t iBody = 0; iBody < Flags.size(); ++iBody) {
-				::gpk::SBodyFlags							& bodyFlags						= Flags[iBody];
+				::gpk::SBodyFlags								& bodyFlags						= Flags[iBody];
 				if(false == bodyFlags.Active)
 					continue;
 
 				GetTransform(iBody, dummy); // ensures tensor matrix is up to date
 
-				::gpk::SBodyFrame								& bodyFrame						= Frames[iBody];
-				::gpk::SBodyForces								& bodyForces					= Forces	[iBody];
-				::gpk::SBodyMass								& bodyMass						= Masses	[iBody];
-				::gpk::SBodyCenter								& bodyCenter					= Centers	[iBody];
+				::gpk::SBodyFrame							& bodyFrame						= Frames[iBody];
+				::gpk::SBodyForces							& bodyForces					= Forces	[iBody];
+				::gpk::SBodyMass							& bodyMass						= Masses	[iBody];
+				::gpk::SBodyCenter							& bodyCenter					= Centers	[iBody];
 				::gpk::integrateForces	(duration, bodyFrame, bodyForces, bodyMass);
 				::gpk::integratePosition(duration, durationHalfSquared, bodyFlags, bodyCenter, bodyForces);
 				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .01) {
-					bodyFlags.Active							= false;
-					bodyForces									= {};
+					bodyFlags.Active						= false;
+					bodyForces								= {};
 				}
 			}
 			return 0;

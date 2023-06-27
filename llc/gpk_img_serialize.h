@@ -7,9 +7,9 @@
 namespace gpk 
 {
 	template<typename TPod>
-	::gpk::error_t				saveImage					(::gpk::au8 & output, ::gpk::grid<TPod> input) {
+	::gpk::error_t				saveImage					(::gpk::au8 & output, const ::gpk::grid<TPod> & input) {
 		gpk_necs(::gpk::savePOD(output, input.metrics())); 
-		gpk_necs(::gpk::saveView(output, ::gpk::view<TPod>{input.begin(), input.size()})); 
+		gpk_necs(::gpk::saveView(output, ::gpk::view<const TPod>{input.begin(), input.size()})); 
 		return 0;
 	}
 

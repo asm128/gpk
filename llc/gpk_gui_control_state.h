@@ -2,6 +2,7 @@
 
 #include "gpk_bit.h"
 
+#define gpk_gui_printf verbose_printf
 
 #ifndef GPK_GUI_CONTROL_FLAG_H_29038749823613
 #define GPK_GUI_CONTROL_FLAG_H_29038749823613
@@ -68,11 +69,11 @@ namespace gpk
 		SChangeControlState			stateChange				= {iControl};
 		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
 		stateChange.Set			= ::gpk::bit_clear(newState, oldState);
-		info_printf("Control state change: %i", iControl);
+		gpk_gui_printf("Control state change: %i", iControl);
 		for(uint32_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
 			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((uint8_t)i);
-			if(bit & stateChange.Set  ) info_printf("State set  : (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
-			if(bit & stateChange.Clear) info_printf("State clear: (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
 		}
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_GUI, ::gpk::EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}
@@ -90,7 +91,7 @@ namespace gpk
 		const _tState			oldState		= state;
 		state				= funcSetValue();
 		if(oldState != state)
-			::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state);
+			es_if_failed(::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
 		return state;
 	}
 

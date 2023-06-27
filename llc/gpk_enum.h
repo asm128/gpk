@@ -6,7 +6,7 @@
 #ifndef GPK_ENUM_H_982364987234987234
 #define GPK_ENUM_H_982364987234987234
 
-#define gpk_enum_warning_printf // warning_printf
+#define enum_printf verbose_printf
 
 namespace gpk
 {
@@ -50,7 +50,7 @@ namespace gpk
 					value						= Values[i];
 					return 0;
 				}
-			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			enum_printf("Enumeration value not found! Name: %s.", ::gpk::toString(name).begin());
 			value						= INVALID_VALUE;
 			return -1;
 		}
@@ -60,7 +60,7 @@ namespace gpk
 					value						= Values[i];
 					return 0;
 				}
-			error_printf("Enumeration value not found! Name: %s.", name);
+			enum_printf("Enumeration value not found! Name: %s.", name);
 			value						= INVALID_VALUE;
 			return -1;
 		}
@@ -69,7 +69,7 @@ namespace gpk
 				if(name == Names[i])
 					return Values[i];
 			}
-			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			enum_printf("Enumeration value not found! Name: %s.", ::gpk::toString(name).begin());
 			return INVALID_VALUE;
 		}
 		::gpk::error_t				get_value_by_index		(uint32_t index, T & value)					const			{
@@ -77,7 +77,7 @@ namespace gpk
 				value						= Values[index];
 				return 0;
 			}
-			gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
+			enum_printf("Enumeration index out of range! Index: 0x%u.", index);
 			value						= INVALID_VALUE;
 			return -1;
 		}
@@ -91,14 +91,14 @@ namespace gpk
 				return 0;
 			}
 			value						= ::gpk::UNDEFINED_ENUM_VALUE_STR;
-			gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
+			enum_printf("Enumeration index out of range! Index: 0x%u.", index);
 			return -1;
 		}
 		::gpk::vcc					get_label_by_index		(uint32_t index)							const			{
 			if(index < Names.size())
 				return Names[index];
 			else {
-				gpk_enum_warning_printf("Enumeration index out of range! Index: 0x%u.", index);
+				enum_printf("Enumeration index out of range! Index: 0x%u.", index);
 				return ::gpk::UNDEFINED_ENUM_VALUE_STR;
 			}
 		}
@@ -108,7 +108,7 @@ namespace gpk
 					index						= (int32_t)i;
 					return index;
 				}
-			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			enum_printf("Enumeration value not found! Name: %s.", name.begin());
 			return index				= -1;
 		}
 		int32_t						get_value_index			(const ::gpk::vcc & name)					const			{
@@ -116,7 +116,7 @@ namespace gpk
 				if(name == Names[i])
 					return (int32_t)i;
 			}
-			error_printf("Enumeration value not found! Name: %s.", name.begin());
+			enum_printf("Enumeration value not found! Name: %s.", name.begin());
 			return -1;
 		}
 		::gpk::error_t				get_value_index			(const T & value, int32_t & index)		const			{
@@ -125,7 +125,7 @@ namespace gpk
 					index					= (int32_t)i;
 					return 0;
 				}
-			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return index							= -1;
 		}
 		int32_t						get_value_index			(const T & value)						const			{
@@ -133,7 +133,7 @@ namespace gpk
 				if(value == Values[i])
 					return (int32_t)i;
 			}
-			gpk_enum_warning_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: %llX.", (uint64_t)value);
 			return -1;
 		}
 		::gpk::error_t				get_value_label			(const T & value, ::gpk::vcc & name)	const			{
@@ -142,7 +142,7 @@ namespace gpk
 					name						= Names[i];
 					return 0;
 				}
-			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			name						= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
@@ -152,7 +152,7 @@ namespace gpk
 					name						= Descriptions[i];
 					return 0;
 				}
-			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			name						= ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 			return -1;
 		}
@@ -161,7 +161,7 @@ namespace gpk
 				if(value == Values[i])
 					return Names[i];
 			}
-			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		const ::gpk::vcc&			get_value_desc			(const T & value)						const			{
@@ -169,7 +169,7 @@ namespace gpk
 				if(value == Values[i])
 					return Descriptions[i];
 			}
-			gpk_enum_warning_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
+			enum_printf("Enumeration value not found! Value: 0x%llX.", (uint64_t)value);
 			return ::gpk::UNRESOLVED_ENUM_LABEL_STR;
 		}
 		::gpk::error_t				add_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	{

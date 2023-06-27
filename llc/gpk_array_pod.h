@@ -64,13 +64,13 @@ namespace gpk
 		inline	::gpk::error_t	clear				()										noexcept	{ return Count = 0; }
 		::gpk::error_t			clear_pointer		()										noexcept	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
 		// Returns the new size of the array
-		inline	::gpk::error_t	pop_back			()										noexcept	{
+		::gpk::error_t			pop_back			()										noexcept	{
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			*(u16*)&Data[--Count]		= 0;
 			return Count;
 		}
 		// Returns the new size of the array
-		inline	::gpk::error_t	pop_back			(T & oldValue)							noexcept	{
+		::gpk::error_t			pop_back			(T & oldValue)							noexcept	{
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			oldValue				= Data[--Count];
 			*(u16*)&Data[Count]		= 0;

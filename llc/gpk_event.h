@@ -6,6 +6,8 @@
 #ifndef GPK_EVENT_H_230511
 #define GPK_EVENT_H_230511
 
+#define gpk_event_printf verbose_printf
+
 namespace gpk
 {
 	template<typename _tEventType>
@@ -49,7 +51,7 @@ namespace gpk
 		inline	::gpk::error_t	ExtractChild		(::gpk::SEvent<_tEventTypeOther> & outputEvent)		const	{
 			::gpk::vcu8					input				= Data;
 			gpk_necs(outputEvent.Load(input));
-			info_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
+			gpk_event_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
 			return 0; 
 		}
 
@@ -57,7 +59,7 @@ namespace gpk
 		inline	::gpk::error_t	ExtractChild		(::gpk::SEventView<_tEventTypeOther> & outputEvent)	const	{
 			::gpk::vcu8					input				= Data;
 			gpk_necs(outputEvent.Load(input));
-			info_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
+			gpk_event_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
 			return 0; 
 		}
 	};
@@ -98,5 +100,6 @@ namespace gpk
 }
 
 #define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled %s event: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), eventUnhandled.Type, eventUnhandled.Type, (char)eventUnhandled.Type); 
+#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for %s! (0x%X)(%X)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), eventUnhandled.Type, eventUnhandled.Type, char(eventUnhandled.Type ? eventUnhandled.Type : ' ') ); 
 
 #endif // GPK_EVENT_H_230511

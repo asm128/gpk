@@ -77,8 +77,16 @@ namespace gpk
 							switch(kev.Data[0]) {
 							case ::gpk::SYSTEM_KEY_Escape		: Edit(gui, false);			break;
 							case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
-							case ::gpk::SYSTEM_KEY_Backspace	: Text.pop_back();	::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
-							case ::gpk::SYSTEM_KEY_Clear		: Text.clear();		::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text}); break;
+							case ::gpk::SYSTEM_KEY_Backspace	: 
+								if(Text.size()) {
+									gpk_necs(Text.pop_back());
+									gpk_necs(::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+								}
+								break;
+							case ::gpk::SYSTEM_KEY_Clear		: 
+								Text.clear();				
+								gpk_necs(::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+								break;
 							}
 						}
 						return 0; 
