@@ -1,8 +1,8 @@
 #include "gpk_system_event.h"
 #include "gpk_n2.h"
 
-#ifndef GPK_EVENT_SCREEN_H_209409823620
-#define GPK_EVENT_SCREEN_H_209409823620
+#ifndef GPK_EVENT_SCREEN_H_23627
+#define GPK_EVENT_SCREEN_H_23627
 
 namespace gpk
 {
@@ -44,4 +44,4 @@ namespace gpk
 	stainli	::gpk::error_t	eventEnqueueScreenResize		(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::n2u16 size)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Resize		, size); }
 } // namespace 
 
-#endif // GPK_EVENT_SCREEN_H_209409823620
+#endif // GPK_EVENT_SCREEN_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_ptr_obj.h"
 #include "gpk_array_obj.h"
 
-#ifndef GPK_APOBJ_H_0297349827348923611
-#define GPK_APOBJ_H_0297349827348923611
+#ifndef GPK_APOBJ_H_23627
+#define GPK_APOBJ_H_23627
 
 namespace gpk
 {
@@ -18,4 +18,4 @@ namespace gpk
 	template <typename T> using aapobj		= ::gpk::aobj<::gpk::apobj<T>>; 
 } // namespace
 
-#endif // GPK_APOBJ_H_0297349827348923611
+#endif // GPK_APOBJ_H_23627

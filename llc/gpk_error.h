@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_ERROR_H_91823749823
-#define GPK_ERROR_H_91823749823
+#ifndef GPK_ERROR_H_23627
+#define GPK_ERROR_H_23627
 
 namespace gpk
 {
@@ -39,4 +39,4 @@ namespace gpk
 
 #define GPK_CRASH()	{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.
 
-#endif // GPK_ERROR_H_91823749823
+#endif // GPK_ERROR_H_23627

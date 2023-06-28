@@ -1,8 +1,8 @@
 #include "gpk_array_pod.h"
 #include "gpk_n3.h"
 
-#ifndef GPK_RO_RSW_H_9283742893742893
-#define GPK_RO_RSW_H_9283742893742893
+#ifndef GPK_RO_RSW_H_23627
+#define GPK_RO_RSW_H_23627
 
 namespace gpk
 {
@@ -111,4 +111,4 @@ namespace gpk
 	::gpk::error_t		rswFileLoad		(::gpk::SRSWFileContents& loaded, const ::gpk::vcs	& input);
 }
 
-#endif // GPK_RO_RSW_H_9283742893742893
+#endif // GPK_RO_RSW_H_23627

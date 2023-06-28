@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_QUAD_H_230523
-#define GPK_QUAD_H_230523
+#ifndef GPK_QUAD_H_23627
+#define GPK_QUAD_H_23627
 
 namespace gpk 
 {
@@ -32,4 +32,4 @@ namespace gpk
 #pragma pack(pop)
 }
 
-#endif // GPK_QUAD_H_230523
+#endif // GPK_QUAD_H_23627

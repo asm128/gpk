@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_TCPIP_H_2874982374
-#define GPK_TCPIP_H_2874982374
+#ifndef GPK_TCPIP_H_23627
+#define GPK_TCPIP_H_23627
 
 namespace gpk
 {
@@ -74,4 +74,4 @@ namespace gpk
 					::gpk::error_t			tcpipAddress		(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP);
 } // namespace
 
-#endif // GPK_TCPIP_H_2874982374
+#endif // GPK_TCPIP_H_23627

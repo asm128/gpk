@@ -1,8 +1,8 @@
 #include "gpk_tri.h"
 #include "gpk_n3.h"
 
-#ifndef GPK_TRI3_H_230523
-#define GPK_TRI3_H_230523
+#ifndef GPK_TRI3_H_23627
+#define GPK_TRI3_H_23627
 
 namespace gpk 
 {
@@ -120,4 +120,4 @@ namespace gpk
 	::gpk::n3<T>	triangleWeight		(const ::gpk::tri<T> & weights, const ::gpk::tri3<T> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 } // namespace 
 
-#endif // GPK_TRI3_H_230523
+#endif // GPK_TRI3_H_23627

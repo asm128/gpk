@@ -8,8 +8,8 @@
 #	include <cmath>
 #endif
 
-#ifndef GPK_MATH_H_0237409283740982740928374
-#define GPK_MATH_H_0237409283740982740928374
+#ifndef GPK_MATH_H_23627
+#define GPK_MATH_H_23627
 
 namespace gpk
 {
@@ -69,4 +69,4 @@ namespace gpk
 #pragma pack(pop)
 }
 
-#endif // GPK_MATH_H_0237409283740982740928374
+#endif // GPK_MATH_H_23627

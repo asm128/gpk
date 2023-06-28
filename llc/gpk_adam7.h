@@ -1,7 +1,7 @@
 #include "gpk_image.h"
 
-#ifndef GPK_ADAM7_H_928734982734
-#define GPK_ADAM7_H_928734982734
+#ifndef GPK_ADAM7_H_23627
+#define GPK_ADAM7_H_23627
 
 namespace gpk
 {
@@ -33,4 +33,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // GPK_ADAM7_H_928734982734
+#endif // GPK_ADAM7_H_23627

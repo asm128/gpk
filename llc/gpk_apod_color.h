@@ -1,8 +1,8 @@
 #include "gpk_color.h"
 #include "gpk_array_pod.h"
 
-#ifndef GPK_APOD_COLOR_H_90238749823611
-#define GPK_APOD_COLOR_H_90238749823611
+#ifndef GPK_APOD_COLOR_H_23627
+#define GPK_APOD_COLOR_H_23627
 
 namespace gpk
 {
@@ -13,4 +13,4 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::rgb		>		a8rgb	;
 } // namespace
 
-#endif // GPK_APOD_COLOR_H_90238749823611
+#endif // GPK_APOD_COLOR_H_23627

@@ -11,8 +11,8 @@
 #	include <mutex>
 #endif
 
-#ifndef GPK_FRAMEWORK_H_20987347928
-#define GPK_FRAMEWORK_H_20987347928
+#ifndef GPK_FRAMEWORK_H_23627
+#define GPK_FRAMEWORK_H_23627
 
 namespace gpk
 {
@@ -72,4 +72,4 @@ namespace gpk
 	::gpk::error_t				mainWindowDestroy		(::gpk::SWindow & mainWindow);
 } // namespace
 
-#endif // GPK_FRAMEWORK_H_20987347928
+#endif // GPK_FRAMEWORK_H_23627

@@ -2,8 +2,8 @@
 #include "gpk_array_ptr.h"
 #include "gpk_matrix.h"
 
-#ifndef GPK_ENGINE_RENDERNODE_H
-#define GPK_ENGINE_RENDERNODE_H
+#ifndef GPK_ENGINE_RENDERNODE_H_23627
+#define GPK_ENGINE_RENDERNODE_H_23627
 
 namespace gpk 
 {
@@ -180,4 +180,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_RENDERNODE_H_23627

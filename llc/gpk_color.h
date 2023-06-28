@@ -1,8 +1,8 @@
 /// Copyright 2009-2017 - asm128
 #include "gpk_math.h"
 
-#ifndef GPK_COLOR_H_29734982734
-#define GPK_COLOR_H_29734982734
+#ifndef GPK_COLOR_H_23627
+#define GPK_COLOR_H_23627
 
 namespace gpk
 {
@@ -263,4 +263,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_COLOR_H_29734982734
+#endif // GPK_COLOR_H_23627

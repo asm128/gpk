@@ -1,7 +1,7 @@
 #include "gpk_n2.h"
 
-#ifndef GPK_RECT2_H_928374982364923524
-#define GPK_RECT2_H_928374982364923524
+#ifndef GPK_RECT2_H_23627
+#define GPK_RECT2_H_23627
 
 namespace gpk
 {
@@ -48,4 +48,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // GPK_RECT2_H_928374982364923524
+#endif // GPK_RECT2_H_23627

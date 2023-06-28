@@ -2,8 +2,8 @@
 
 #include "gpk_keyval.h"
 
-#ifndef GPK_ARRAY_OBJ_H_230518
-#define GPK_ARRAY_OBJ_H_230518
+#ifndef GPK_ARRAY_OBJ_H_23627
+#define GPK_ARRAY_OBJ_H_23627
 
 namespace gpk
 {
@@ -354,4 +354,4 @@ namespace gpk
 	::gpk::error_t							filterPrefix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
 	::gpk::error_t							filterPostfix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
 }
-#endif // GPK_ARRAY_OBJ_H_230518
+#endif // GPK_ARRAY_OBJ_H_23627

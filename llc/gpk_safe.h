@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_SAFE_H_209934782093
-#define GPK_SAFE_H_209934782093
+#ifndef GPK_SAFE_H_23627
+#define GPK_SAFE_H_23627
 
 #ifndef gpk_safe_free
 #	define gpk_safe_free(p) do { if(p) { free(p); p = 0; } } while(0)
@@ -40,4 +40,4 @@
 #	endif
 #endif
 
-#endif // GPK_SAFE_H_209934782093
+#endif // GPK_SAFE_H_23627

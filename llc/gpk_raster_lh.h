@@ -11,8 +11,8 @@
 
 #include <functional>
 
-#ifndef CED_DRAW_H_29837429837
-#define CED_DRAW_H_29837429837
+#ifndef CED_DRAW_H_23627
+#define CED_DRAW_H_23627
 
 namespace gpk
 {
@@ -162,4 +162,4 @@ namespace gpk
 		);
 } // namespace
 
-#endif // CED_DRAW_H_29837429837
+#endif // CED_DRAW_H_23627

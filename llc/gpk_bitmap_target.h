@@ -9,8 +9,8 @@
 
 #include <memory> // this is required for ::std::swap()
 
-#ifndef BITMAP_TARGET_H_98237498023745654654
-#define BITMAP_TARGET_H_98237498023745654654
+#ifndef BITMAP_TARGET_H_23627
+#define BITMAP_TARGET_H_23627
 
 namespace gpk
 {
@@ -354,4 +354,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // BITMAP_TARGET_H_98237498023745654654
+#endif // BITMAP_TARGET_H_23627

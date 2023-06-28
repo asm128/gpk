@@ -1,7 +1,7 @@
 #include "gpk_n2.h"
 
-#ifndef GPK_CIRCLE_H_9283749823649230524
-#define GPK_CIRCLE_H_9283749823649230524
+#ifndef GPK_CIRCLE_H_23627
+#define GPK_CIRCLE_H_23627
 
 namespace gpk
 {
@@ -26,4 +26,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_CIRCLE_H_9283749823649230524
+#endif // GPK_CIRCLE_H_23627

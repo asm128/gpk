@@ -2,8 +2,8 @@
 
 #include "gpk_functional.h"
 
-#ifndef GPK_N2_H_230515
-#define GPK_N2_H_230515
+#ifndef GPK_N2_H_23627
+#define GPK_N2_H_23627
 
 namespace gpk 
 {
@@ -189,4 +189,4 @@ namespace gpk
 
 #define gpk_xy(n2var) n2var.x, n2var.y
 
-#endif // GPK_N2_H_230515
+#endif // GPK_N2_H_23627

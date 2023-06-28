@@ -9,8 +9,8 @@
 
 #include <d3d11_3.h>
 
-#ifndef GPK_ENGINE_D3D_H_982734
-#define GPK_ENGINE_D3D_H_982734
+#ifndef GPK_ENGINE_D3D_H_23627
+#define GPK_ENGINE_D3D_H_23627
 
 namespace gpk
 {
@@ -20,6 +20,6 @@ namespace gpk
 	::gpk::error_t		d3dCreatePixelShadersFromEngineShaders	(ID3D11Device* pDevice, const ::gpk::SShaderManager & engineShaders, ::gpk::array_com<ID3D11PixelShader> & pixelShaders);
 } // namespace
 
-#endif // GPK_ENGINE_D3D_H_982734
+#endif // GPK_ENGINE_D3D_H_23627
 
 #endif // GPK_WINDOWS

@@ -15,8 +15,8 @@
 #include <cstdint>
 #include <memory>
 
-#ifndef WAVEBANKREADER_H_0924289
-#define WAVEBANKREADER_H_0924289
+#ifndef WAVEBANKREADER_H_23627
+#define WAVEBANKREADER_H_23627
 
 namespace DirectX
 {

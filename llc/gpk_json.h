@@ -1,8 +1,8 @@
 #include "gpk_enum.h"
 #include "gpk_array_ptr.h"
 
-#ifndef GPK_JSON_H_92749028348923
-#define GPK_JSON_H_92749028348923
+#ifndef GPK_JSON_H_23627
+#define GPK_JSON_H_23627
 
 namespace gpk
 {
@@ -120,4 +120,4 @@ namespace gpk
 	::gpk::error_t			jsonFieldsToMap			(::gpk::ai32 & indicesOfFields, const ::gpk::view<const ::gpk::SJSONFieldBinding> fields, const ::gpk::view<const ::gpk::TKeyValConstChar> fieldMaps);
 } // namespace
 
-#endif // GPK_JSON_H_92749028348923
+#endif // GPK_JSON_H_23627

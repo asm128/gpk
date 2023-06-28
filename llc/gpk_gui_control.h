@@ -8,8 +8,8 @@
 #include "gpk_img_color.h"
 #include "gpk_grid_color.h"
 
-#ifndef GPK_GUI_CONTROL_H_29038749823613
-#define GPK_GUI_CONTROL_H_29038749823613
+#ifndef GPK_GUI_CONTROL_H_23627
+#define GPK_GUI_CONTROL_H_23627
 
 namespace gpk
 {
@@ -235,4 +235,4 @@ namespace gpk
 	::gpk::cid_t		controlCreate					(::gpk::SControlTable & gui, ::gpk::vi16 defaultColors);
 } // namespace
 
-#endif // GPK_GUI_CONTROL_H_29038749823613
+#endif // GPK_GUI_CONTROL_H_23627

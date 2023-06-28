@@ -1,8 +1,8 @@
 #include "gpk_engine.h"
 #include "gpk_gui.h"
 
-#ifndef GPK_ENGINE_GUI_H_23610
-#define GPK_ENGINE_GUI_H_23610
+#ifndef GPK_ENGINE_GUI_H_23627
+#define GPK_ENGINE_GUI_H_23627
 
 namespace gpk 
 {
@@ -60,7 +60,7 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_ENGINE_GUI_H_23610
+#endif // GPK_ENGINE_GUI_H_23627
 
 //#ifdef CreateDialog
 //#	define GPK_CreateDialog_REDEFINE

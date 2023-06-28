@@ -7,8 +7,8 @@
 #	include <android/native_activity.h>
 #endif
 
-#ifndef GPK_RUNTIME_H_28903749028374
-#define GPK_RUNTIME_H_28903749028374
+#ifndef GPK_RUNTIME_H_23627
+#define GPK_RUNTIME_H_23627
 
 namespace gpk
 {
@@ -62,5 +62,5 @@ namespace gpk
 	};
 }
 
-#endif // GPK_RUNTIME_H_28903749028374
+#endif // GPK_RUNTIME_H_23627
 

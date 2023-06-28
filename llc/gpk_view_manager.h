@@ -1,7 +1,7 @@
 #include "gpk_block_container.h"
 
-#ifndef GPK_VIEW_MANAGER_H_29037492837
-#define GPK_VIEW_MANAGER_H_29037492837
+#ifndef GPK_VIEW_MANAGER_H_23627
+#define GPK_VIEW_MANAGER_H_23627
 
 namespace gpk
 {
@@ -77,4 +77,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_LABEL_MANAGER_H_29037492837
+#endif // GPK_LABEL_MANAGER_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_array_static.h"
 #include "gpk_color.h"
 
-#ifndef GPK_ASTATIC_COLOR_H_23624
-#define GPK_ASTATIC_COLOR_H_23624
+#ifndef GPK_ASTATIC_COLOR_H_23627
+#define GPK_ASTATIC_COLOR_H_23627
 
 namespace gpk
 {

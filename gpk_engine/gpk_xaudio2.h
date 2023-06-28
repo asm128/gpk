@@ -22,8 +22,8 @@
 #	include <Functiondiscoverykeys_devpkey.h>
 #endif
 
-#ifndef GPK_XAUDIO2_H_23611
-#define GPK_XAUDIO2_H_23611
+#ifndef GPK_XAUDIO2_H_23627
+#define GPK_XAUDIO2_H_23627
 
 namespace gpk
 {
@@ -118,7 +118,7 @@ namespace gpk
 		::gpk::error_t			PlayWave				(const ::gpk::vcc & wavname);
 	};
 } // namespace
-#endif // GPK_XAUDIO2_H_23611
+#endif // GPK_XAUDIO2_H_23627
 
 
 #endif // GPK_WINDOWS

@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_STRING_HELPER_H_928347928347
-#define GPK_STRING_HELPER_H_928347928347
+#ifndef GPK_STRING_HELPER_H_23627
+#define GPK_STRING_HELPER_H_23627
 
 namespace gpk
 {
@@ -13,4 +13,4 @@ namespace gpk
 	}
 }
 
-#endif // GPK_STRING_HELPER_H_928347928347
+#endif // GPK_STRING_HELPER_H_23627

@@ -5,8 +5,8 @@
 #include "gpk_camera.h"
 
 // TODO: Throw away
-#ifndef GPK_SCENE_H_203492837
-#define GPK_SCENE_H_203492837
+#ifndef GPK_SCENE_H_23627
+#define GPK_SCENE_H_23627
 
 namespace gpk
 {
@@ -218,4 +218,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_SCENE_H_203492837
+#endif // GPK_SCENE_H_23627

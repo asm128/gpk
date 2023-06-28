@@ -1,8 +1,8 @@
 /// Copyright 2010-2023 - asm128
 #include "gpk_typeint.h"
 
-#ifndef GPK_BIT_H_034792701397
-#define GPK_BIT_H_034792701397
+#ifndef GPK_BIT_H_23627
+#define GPK_BIT_H_23627
 
 namespace gpk
 {
@@ -39,5 +39,5 @@ namespace gpk
 	}
 }
 
-#endif // GPK_BIT_H_034792701397
+#endif // GPK_BIT_H_23627
 //[{"parms": {"sessiId": "424995b9-118f-4142-b62d-9cc0eb97a8151"}, "method":"opnPly"}, {"params": {"lnsPlyd": 5, "btPrLn": 1, "sessnId": "424995b9-118f-4142-b62d-9cc0eb97a815", "tpe": "spi", "bt": 25}, "mthod": "plceBet"}, {"paras": {"sessionId":"424995b9-118f-4142-b62d-9cc0eb97a815"}, "method": "getBtRslt"}]

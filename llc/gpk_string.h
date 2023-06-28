@@ -7,8 +7,8 @@
 #	include <cstring>
 #endif
 
-#ifndef GPK_STRING_H_56847984984
-#define GPK_STRING_H_56847984984
+#ifndef GPK_STRING_H_23627
+#define GPK_STRING_H_23627
 
 #include <cstddef>
 #include <cstdarg>
@@ -41,58 +41,58 @@ namespace gpk
 	}
 
 	stainli	int	_snprintf_s		(char* buffer, size_t bufferSize, size_t count, const char* format, ...)			{
-		va_list args;
+		va_list			args			= {};
 		va_start(args, format);
-		const int									result			= vsnprintf( buffer, ::gpk::max(count, bufferSize - 1), format, args );
+		const int		result			= vsnprintf( buffer, ::gpk::max(count, bufferSize - 1), format, args );
 		va_end(args);
 		return result;
 	}
 
 	template<size_t _bufferSize>
 	stainli	int	_snprintf_s		(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
-		va_list args;
+		va_list			args			= {};
 		va_start(args, format);
-		const int									result			= _snprintf_s( buffer, _bufferSize, count, format, args );
+		const int		result			= _snprintf_s( buffer, _bufferSize, count, format, args );
 		va_end(args);
 		return result;
 	}
 
 	//stainli	int	sprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
-	//	va_list args;
+	//	va_list			args			= ´{};
 	//	va_start(args, format);
-	//	const int									result			= vsprintf(buffer, format, args);
+	//	const int		result			= vsprintf(buffer, format, args);
 	//	va_end(args);
 	//	return result;
 	//}
 
 	stainli	int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
-		va_list args;
+		va_list			args			= {};
 		va_start(args, format);
-		const int									result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
+		const int		result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}
 
 	template<size_t _bufferSize>
 	stainli	int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
-		va_list args;
+		va_list			args			= {};
 		va_start(args, format);
-		const int									result			= std::vsnprintf(buffer, _bufferSize - 1, format, args);
+		const int		result			= std::vsnprintf(buffer, _bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}
 
 	stainli	int	sprintf_s		(char *buffer , uint32_t bufferSize, const char* format, ...)								{
-		va_list args;
+		va_list			args			= {};
 		va_start(args, format);
-		const int									result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
+		const int		result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
 		va_end(args);
 		return result;
 	}
 
-	template<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )												{ return strcat_s	(dst, _Size, src);				}
-	template<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )												{ return strcpy_s	(dst, _Size, src);				}
-	template<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )												{ return strncpy_s	(dst, src, _Size);				}
+	template<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )						{ return strcat_s	(dst, _Size, src);				}
+	template<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )						{ return strcpy_s	(dst, _Size, src);				}
+	template<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )						{ return strncpy_s	(dst, src, _Size);				}
 	stainli	int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
 	stainli	int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
 #if defined(GPK_WINDOWS)
@@ -100,4 +100,4 @@ namespace gpk
 #endif
 } // namespace
 
-#endif // GPK_STRING_H_56847984984
+#endif // GPK_STRING_H_23627

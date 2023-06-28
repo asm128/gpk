@@ -1,8 +1,8 @@
 #include "gpk_array_ptr.h"
 #include "gpk_gui.h"
 
-#ifndef GPK_DIALOG_H_67383889976
-#define GPK_DIALOG_H_67383889976
+#ifndef GPK_DIALOG_H_23627
+#define GPK_DIALOG_H_23627
 
 namespace gpk
 {
@@ -147,4 +147,4 @@ namespace gpk
 	};
 }
 
-#endif // GPK_DIALOG_H_67383889976
+#endif // GPK_DIALOG_H_23627

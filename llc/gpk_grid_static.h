@@ -1,8 +1,8 @@
 #include "gpk_array.h"
 #include "gpk_grid.h"
 
-#ifndef GPK_GRID_H_9802374982374
-#define GPK_GRID_H_9802374982374
+#ifndef GPK_GRID_H_23627
+#define GPK_GRID_H_23627
 
 namespace gpk
 {
@@ -47,4 +47,4 @@ namespace gpk
 	};
 }
 
-#endif // GPK_GRID_H_9802374982374
+#endif // GPK_GRID_H_23627

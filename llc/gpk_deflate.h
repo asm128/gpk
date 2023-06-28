@@ -1,8 +1,8 @@
 #include "gpk_array_obj.h"
 #include "gpk_array_pod.h"
 
-#ifndef GPK_DEFLATE_H_92173498234
-#define GPK_DEFLATE_H_92173498234
+#ifndef GPK_DEFLATE_H_23627
+#define GPK_DEFLATE_H_23627
 
 namespace gpk
 {
@@ -79,4 +79,4 @@ namespace gpk
 	stainli	::gpk::error_t	fileFromMemorySecure	(const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, const ::gpk::vcu8 & input)	{ ::gpk::SLoadCache temp; return ::gpk::fileFromMemorySecure(temp, fileName, key, deflate, input); }
 } // namespace
 
-#endif // GPK_DEFLATE_H_92173498234
+#endif // GPK_DEFLATE_H_23627

@@ -3,8 +3,8 @@
 #include "gpk_array_static.h"
 #include "gpk_tri.h"
 
-#ifndef GPK_RSM_H_02938402983
-#define GPK_RSM_H_02938402983
+#ifndef GPK_RSM_H_23627
+#define GPK_RSM_H_23627
 
 namespace gpk
 {
@@ -87,4 +87,4 @@ namespace gpk
 	::gpk::error_t							rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view<::gpk::SModelNodeRSM>& out_generated);
 } // namespace
 
-#endif // GPK_RSM_H_02938402983
+#endif // GPK_RSM_H_23627

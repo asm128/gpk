@@ -2,8 +2,8 @@
 #include "gpk_engine_scene.h"
 #include "gpk_raster_lh.h"
 
-#ifndef GPK_ENGINE_SHADER_FUNC_H
-#define GPK_ENGINE_SHADER_FUNC_H
+#ifndef GPK_ENGINE_SHADER_FUNC_H_23627
+#define GPK_ENGINE_SHADER_FUNC_H_23627
 
 namespace gpk
 {
@@ -23,4 +23,4 @@ namespace gpk
 }  // namespace
 
 
-#endif // GPK_ENGINE_SHADER_FUNC_H
+#endif // GPK_ENGINE_SHADER_FUNC_H_23627

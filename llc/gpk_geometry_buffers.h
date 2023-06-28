@@ -1,8 +1,8 @@
 #include "gpk_apod_n3.h"
 #include "gpk_apod_n2.h"
 
-#ifndef GPK_GEOMETRYBUFFERS_H_2023611
-#define GPK_GEOMETRYBUFFERS_H_2023611
+#ifndef GPK_GEOMETRYBUFFERS_H_23627
+#define GPK_GEOMETRYBUFFERS_H_23627
 
 namespace gpk
 {
@@ -15,4 +15,4 @@ namespace gpk
 	};
 } // gpk
 
-#endif // GPK_TRIANGLESINDEXED_H_2023611
+#endif // GPK_TRIANGLESINDEXED_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_line.h"
 #include "gpk_n3.h"
 
-#ifndef GPK_LINE3_H_9283749823649230523
-#define GPK_LINE3_H_9283749823649230523
+#ifndef GPK_LINE3_H_23627
+#define GPK_LINE3_H_23627
 
 namespace gpk
 {
@@ -39,4 +39,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_LINE3_H_9283749823649230523
+#endif // GPK_LINE3_H_23627

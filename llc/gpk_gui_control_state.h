@@ -4,8 +4,8 @@
 
 #define gpk_gui_printf verbose_printf
 
-#ifndef GPK_GUI_CONTROL_FLAG_H_29038749823613
-#define GPK_GUI_CONTROL_FLAG_H_29038749823613
+#ifndef GPK_GUI_CONTROL_FLAG_H_23627
+#define GPK_GUI_CONTROL_FLAG_H_23627
 
 namespace gpk
 {
@@ -125,7 +125,7 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_GUI_CONTROL_FLAG_H_29038749823613
+#endif // GPK_GUI_CONTROL_FLAG_H_23627
 
 
 	//GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG_EX, uint8_t)

@@ -1,8 +1,8 @@
 #include "gpk_quat.h"
 #include "gpk_tri3.h"
 
-#ifndef GPK_MATRIX_H_298374982374
-#define GPK_MATRIX_H_298374982374
+#ifndef GPK_MATRIX_H_23627
+#define GPK_MATRIX_H_23627
 
 namespace gpk
 {
@@ -747,4 +747,4 @@ namespace gpk
 #pragma pack(pop)
 }
 
-#endif // GPK_MATRIX_H_298374982374
+#endif // GPK_MATRIX_H_23627

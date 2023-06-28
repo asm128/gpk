@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_SIZE_H_928374982374
-#define GPK_SIZE_H_928374982374
+#ifndef GPK_SIZE_H_23627
+#define GPK_SIZE_H_23627
 
 namespace gpk
 {
@@ -12,4 +12,4 @@ namespace gpk
 	template<typename _t, size_t _sizeDepth, size_t _sizeWidth>	stincxp	uint32_t	byte_count	(const _t (&/*staticArray*/)[_sizeDepth][_sizeWidth])	noexcept	{ return ::gpk::size<_t>(_sizeDepth*_sizeWidth);	}
 }
 
-#endif // GPK_SIZE_H_928374982374
+#endif // GPK_SIZE_H_23627

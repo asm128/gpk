@@ -5,8 +5,8 @@
 #include "gpk_matrix.h"
 #include "gpk_raster_lh.h"
 
-#ifndef GPK_ENGINE_GEOMETRY_DRAW_H_23610
-#define GPK_ENGINE_GEOMETRY_DRAW_H_23610
+#ifndef GPK_ENGINE_GEOMETRY_DRAW_H_23627
+#define GPK_ENGINE_GEOMETRY_DRAW_H_23627
 
 namespace gpk
 {
@@ -28,4 +28,4 @@ namespace gpk
 
 }
 
-#endif // GPK_ENGINE_GEOMETRY_DRAW_H_23610
+#endif // GPK_ENGINE_GEOMETRY_DRAW_H_23627

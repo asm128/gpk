@@ -1,7 +1,7 @@
 #include "gpk_array_pod.h"
 
-#ifndef GPK_BASE64_H_23984293847
-#define GPK_BASE64_H_23984293847
+#ifndef GPK_BASE64_H_23627
+#define GPK_BASE64_H_23627
 
 namespace gpk
 {
@@ -47,4 +47,4 @@ namespace gpk
 	stainli	::gpk::error_t	base64DecodeFS	(const ::gpk::vcc &  in_base64  , ::gpk::ac & outputBinary) { return ::gpk::base64Decode(b64SymbolsFS, '=', *(::gpk::vcu8*)&in_base64	, *(::gpk::au8*)&outputBinary	); }
 } // namespace
 
-#endif // GPK_BASE64_H_23984293847
+#endif // GPK_BASE64_H_23627

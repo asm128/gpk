@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef GPK_POD_DEFINITION_H
-#define GPK_POD_DEFINITION_H
+#ifndef GPK_POD_DEFINITION_H_23627
+#define GPK_POD_DEFINITION_H_23627
 
 namespace gpk
 {
@@ -72,4 +72,4 @@ namespace gpk
 	};
 } // namespace 
 
-#endif // GPK_POD_DEFINITION_H
+#endif // GPK_POD_DEFINITION_H_23627

@@ -9,8 +9,8 @@
 
 #include <ppltasks.h>
 
-#ifndef DEVICERESOURCES_H_2387647892
-#define DEVICERESOURCES_H_2387647892
+#ifndef DEVICERESOURCES_H_23627
+#define DEVICERESOURCES_H_23627
 
 
 namespace DX 

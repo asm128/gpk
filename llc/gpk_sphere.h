@@ -1,7 +1,7 @@
 #include "gpk_n3.h"
 
-#ifndef GPK_SPHERE_H_92837498236492366
-#define GPK_SPHERE_H_92837498236492366
+#ifndef GPK_SPHERE_H_23627
+#define GPK_SPHERE_H_23627
 
 namespace gpk
 {
@@ -35,4 +35,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_SPHERE_H_92837498236492366
+#endif // GPK_SPHERE_H_23627

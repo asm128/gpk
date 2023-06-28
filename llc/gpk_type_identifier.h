@@ -1,8 +1,8 @@
 /// Copyright 2017 - asm128
 #include "gpk_label.h"
 
-#ifndef GPK_TYPE_IDENTIFIER_H_02397492873498
-#define GPK_TYPE_IDENTIFIER_H_02397492873498
+#ifndef GPK_TYPE_IDENTIFIER_H_23627
+#define GPK_TYPE_IDENTIFIER_H_23627
 
 namespace gpk
 {
@@ -18,4 +18,4 @@ namespace gpk
 } // namespace
 
 
-#endif // GPK_TYPE_IDENTIFIER_H_02397492873498
+#endif // GPK_TYPE_IDENTIFIER_H_23627

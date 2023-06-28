@@ -2,8 +2,8 @@
 #include "gpk_geometry.h"
 #include "gpk_geometry_lh.h"
 
-#ifndef GPK_VOXEL_GEOMETRY_H_098273498237423
-#define GPK_VOXEL_GEOMETRY_H_098273498237423
+#ifndef GPK_VOXEL_GEOMETRY_H_23627
+#define GPK_VOXEL_GEOMETRY_H_23627
 
 namespace gpk
 {

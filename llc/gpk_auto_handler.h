@@ -1,8 +1,8 @@
 #include "gpk_typeint.h"
 
 /// Copyright 2017 - asm128
-#ifndef GPK_AUTO_HANDLER_H_0239840239840238321
-#define GPK_AUTO_HANDLER_H_0239840239840238321
+#ifndef GPK_AUTO_HANDLER_H_23627
+#define GPK_AUTO_HANDLER_H_23627
 
 namespace gpk
 {
@@ -28,4 +28,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_AUTO_HANDLER_H_0239840239840238321
+#endif // GPK_AUTO_HANDLER_H_23627

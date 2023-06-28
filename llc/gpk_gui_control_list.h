@@ -1,7 +1,7 @@
 #include "gpk_gui.h"
 
-#ifndef GPK_GUI_CONTROL_LIST_H_29037498023613
-#define GPK_GUI_CONTROL_LIST_H_29037498023613
+#ifndef GPK_GUI_CONTROL_LIST_H_23627
+#define GPK_GUI_CONTROL_LIST_H_23627
 
 namespace gpk
 {
@@ -72,4 +72,4 @@ namespace gpk
 	::gpk::error_t			paletteGridColorsSet	(::gpk::SGUI & gui, ::gpk::SPaletteGrid & palette, const ::gpk::g8bgra & colors);
 }
 
-#endif // GPK_GUI_CONTROL_LIST_H_29037498023613
+#endif // GPK_GUI_CONTROL_LIST_H_23627

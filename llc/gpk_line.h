@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_LINE_H_9283749823649230523
-#define GPK_LINE_H_9283749823649230523
+#ifndef GPK_LINE_H_23627
+#define GPK_LINE_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_LINE_H_9283749823649230523
+#endif // GPK_LINE_H_23627

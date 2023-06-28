@@ -5,8 +5,8 @@
 #include "gpk_line2.h"
 #include "gpk_sphere.h"
 
-#ifndef GPK_COLLISION_H_209384
-#define GPK_COLLISION_H_209384
+#ifndef GPK_COLLISION_H_23627
+#define GPK_COLLISION_H_23627
 
 namespace gpk
 {
@@ -147,4 +147,4 @@ namespace gpk
 }
 
 
-#endif // GPK_COLLISION_H_209384
+#endif // GPK_COLLISION_H_23627

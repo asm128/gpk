@@ -1,7 +1,7 @@
 #include "gpk_n3.h"
 
-#ifndef GPK_CAMERA_H_20934702938492
-#define GPK_CAMERA_H_20934702938492
+#ifndef GPK_CAMERA_H_23627
+#define GPK_CAMERA_H_23627
 
 namespace gpk
 {
@@ -24,4 +24,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_CAMERA_H_20934702938492
+#endif // GPK_CAMERA_H_23627

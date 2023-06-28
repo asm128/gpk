@@ -3,8 +3,8 @@
 
 #include "gpk_apod_serialize.h"
 
-#ifndef GPK_ENGINE_ENTITY_H
-#define GPK_ENGINE_ENTITY_H
+#ifndef GPK_ENGINE_ENTITY_H_23627
+#define GPK_ENGINE_ENTITY_H_23627
 
 namespace gpk 
 {
@@ -74,4 +74,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_ENTITY_H_23627

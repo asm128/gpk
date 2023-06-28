@@ -1,7 +1,7 @@
 #include "gpk_color.h"
 
-#ifndef GPK_ENGINE_RENDERCOLOR_H
-#define GPK_ENGINE_RENDERCOLOR_H
+#ifndef GPK_ENGINE_RENDERCOLOR_H_23627
+#define GPK_ENGINE_RENDERCOLOR_H_23627
 
 namespace gpk 
 {
@@ -14,4 +14,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_RENDERCOLOR_H_23627

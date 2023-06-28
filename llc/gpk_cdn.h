@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_CDN_H_9286739238
-#define GPK_CDN_H_9286739238
+#ifndef GPK_CDN_H_23627
+#define GPK_CDN_H_23627
 
 namespace gpk
 {
@@ -41,4 +41,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace 
 
-#endif // GPK_CDN_H_9286739238
+#endif // GPK_CDN_H_23627

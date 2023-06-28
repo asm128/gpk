@@ -1,8 +1,8 @@
 #include "gpk_keyval.h"
 #include "gpk_array.h"
 
-#ifndef GPK_PROCESS_H_9823498236748932
-#define GPK_PROCESS_H_9823498236748932
+#ifndef GPK_PROCESS_H_23627
+#define GPK_PROCESS_H_23627
 
 namespace gpk
 {
@@ -10,4 +10,4 @@ namespace gpk
 	::gpk::error_t			environmentBlockFromEnviron					(::gpk::apod<char> & environmentBlock);
 } // namespace
 
-#endif // GPK_PROCESS_H_9823498236748932
+#endif // GPK_PROCESS_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_CHRONO_H_23611
-#define GPK_CHRONO_H_23611
+#ifndef GPK_CHRONO_H_23627
+#define GPK_CHRONO_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_CHRONO_H_23611
+#endif // GPK_CHRONO_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_WINDOWS_H_0289347890823
-#define GPK_WINDOWS_H_0289347890823
+#ifndef GPK_WINDOWS_H_23627
+#define GPK_WINDOWS_H_23627
 
 namespace gpk
 {

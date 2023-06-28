@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef GPK_SYSTEM_KEY_H_29387423526
-#define GPK_SYSTEM_KEY_H_29387423526
+#ifndef GPK_SYSTEM_KEY_H_23627
+#define GPK_SYSTEM_KEY_H_23627
 
 namespace gpk
 {
@@ -202,4 +202,4 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_FJ_jisho                    , 0x92);
 } // namespace
 
-#endif // GPK_SYSTEM_KEY_H_29387423526
+#endif // GPK_SYSTEM_KEY_H_23627

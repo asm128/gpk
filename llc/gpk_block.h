@@ -6,8 +6,8 @@
 #include "gpk_view_manager.h"
 #include "gpk_path.h"
 
-#ifndef GPK_BLOCK_H_9823749283749823
-#define GPK_BLOCK_H_9823749283749823
+#ifndef GPK_BLOCK_H_23627
+#define GPK_BLOCK_H_23627
 
 namespace gpk
 {
@@ -250,4 +250,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_BLOCK_H_9823749283749823
+#endif // GPK_BLOCK_H_23627

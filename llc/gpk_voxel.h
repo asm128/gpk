@@ -5,8 +5,8 @@
 #include "gpk_quad2.h"
 #include "gpk_quad3.h"
 
-#ifndef GPK_VOXEL_H_098273498237423
-#define GPK_VOXEL_H_098273498237423
+#ifndef GPK_VOXEL_H_23627
+#define GPK_VOXEL_H_23627
 
 namespace gpk
 {

@@ -1,7 +1,7 @@
 #include "gpk_gui.h"
 
-#ifndef GPK_GUI_VIEWPORT_H_29037498023610
-#define GPK_GUI_VIEWPORT_H_29037498023610
+#ifndef GPK_GUI_VIEWPORT_H_23627
+#define GPK_GUI_VIEWPORT_H_23627
 
 namespace gpk
 {
@@ -39,4 +39,4 @@ namespace gpk
 #pragma pack(pop)
 }
 
-#endif // GPK_GUI_VIEWPORT_H_29037498023610
+#endif // GPK_GUI_VIEWPORT_H_23627

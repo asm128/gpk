@@ -1,6 +1,6 @@
 /// Copyright 2010-2023 - asm128
-#ifndef GPK_PLATFORM_GLOBALS_H_298365465465
-#define GPK_PLATFORM_GLOBALS_H_298365465465
+#ifndef GPK_PLATFORM_GLOBALS_H_23627
+#define GPK_PLATFORM_GLOBALS_H_23627
 
 #if (defined(DEBUG) || defined(_DEBUG)) && (!defined(GPK_DISABLE_DEBUG)) && !defined(GPK_DEBUG_ENABLED)
 #	define GPK_DEBUG_ENABLED
@@ -90,4 +90,4 @@ namespace gpk
 	stainli int				test_endianness			()		noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
 }
 
-#endif // GPK_PLATFORM_GLOBALS_H_298365465465
+#endif // GPK_PLATFORM_GLOBALS_H_23627

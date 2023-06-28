@@ -1,7 +1,7 @@
 #include "gpk_grid.h"
 
-#ifndef GPK_LAYERED_VIEW_H_0923782
-#define GPK_LAYERED_VIEW_H_0923782
+#ifndef GPK_LAYERED_VIEW_H_23627
+#define GPK_LAYERED_VIEW_H_23627
 
 namespace gpk
 {
@@ -80,4 +80,4 @@ namespace gpk
 
 }
 
-#endif // GPK_LAYERED_VIEW_H_0923782
+#endif // GPK_LAYERED_VIEW_H_23627

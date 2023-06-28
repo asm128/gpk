@@ -2,8 +2,8 @@
 #include "gpk_tri2.h"
 #include "gpk_tri3.h"
 
-#ifndef CED_GEOMETRY_H_29234234
-#define CED_GEOMETRY_H_29234234
+#ifndef CED_GEOMETRY_H_23627
+#define CED_GEOMETRY_H_23627
 
 namespace gpk
 {
@@ -148,4 +148,4 @@ namespace gpk
 
 } // namespace
 
-#endif // CED_GEOMETRY_H_29234234
+#endif // CED_GEOMETRY_H_23627

@@ -8,8 +8,8 @@
 
 #include <mutex>
 
-#ifndef GPK_TEST_LOBBY_H_2078934982734
-#define GPK_TEST_LOBBY_H_2078934982734
+#ifndef GPK_TEST_LOBBY_H_23627
+#define GPK_TEST_LOBBY_H_23627
 
 namespace gpk
 {
@@ -198,4 +198,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_TEST_LOBBY_H_2078934982734
+#endif // GPK_TEST_LOBBY_H_23627

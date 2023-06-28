@@ -2,8 +2,8 @@
 #include "gpk_bit.h"
 #include "gpk_axis.h"
 
-#ifndef GPK_ALIGN_H_928374982364923524
-#define GPK_ALIGN_H_928374982364923524
+#ifndef GPK_ALIGN_H_23627
+#define GPK_ALIGN_H_23627
 
 namespace gpk
 {
@@ -27,4 +27,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_ALIGN_H_928374982364923524
+#endif // GPK_ALIGN_H_23627

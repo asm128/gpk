@@ -2,8 +2,8 @@
 #include "gpk_img_color.h"
 #include "gpk_grid_color.h"
 
-#ifndef GPK_BITMAP_FILE_H_236544263544352344
-#define GPK_BITMAP_FILE_H_236544263544352344
+#ifndef GPK_BITMAP_FILE_H_23627
+#define GPK_BITMAP_FILE_H_23627
 
 namespace gpk
 {
@@ -18,4 +18,4 @@ namespace gpk
 #endif
 }
 
-#endif // GPK_BITMAP_FILE_H_236544263544352344
+#endif // GPK_BITMAP_FILE_H_23627

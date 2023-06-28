@@ -4,8 +4,8 @@
 
 #include "gpk_view_serialize.h"
 
-#ifndef GPK_APOD_SERIALIZE_H_230520
-#define GPK_APOD_SERIALIZE_H_230520
+#ifndef GPK_APOD_SERIALIZE_H_23627
+#define GPK_APOD_SERIALIZE_H_23627
 
 namespace gpk
 {
@@ -37,4 +37,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_APOD_SERIALIZE_H_230520
+#endif // GPK_APOD_SERIALIZE_H_23627

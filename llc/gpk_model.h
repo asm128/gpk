@@ -1,7 +1,7 @@
 #include "gpk_matrix.h"
 
-#ifndef GPK_MODEL_H_2983472398
-#define GPK_MODEL_H_2983472398
+#ifndef GPK_MODEL_H_23627
+#define GPK_MODEL_H_23627
 
 namespace gpk
 {
@@ -26,4 +26,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_MODEL_H_2983472398
+#endif // GPK_MODEL_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_cgi_runtime.h"
 
-#ifndef GPK_CGI_APP_IMPL_H_92836492873648723
-#define GPK_CGI_APP_IMPL_H_92836492873648723
+#ifndef GPK_CGI_APP_IMPL_H_23627
+#define GPK_CGI_APP_IMPL_H_23627
 
 #ifdef GPK_WINDOWS
 	#define GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT()				\
@@ -34,4 +34,4 @@
 	int						main				(int argc, char** argv, char**envv)		{ return ::cgiMain(argc, argv, envv); }	\
 	GPK_CGI_CUSTOM_SYSTEM_ENTRY_POINT();
 
-#endif // GPK_CGI_APP_IMPL_H_92836492873648723
+#endif // GPK_CGI_APP_IMPL_H_23627

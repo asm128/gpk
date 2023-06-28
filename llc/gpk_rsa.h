@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_RSA_H_2018_10_23
-#define GPK_RSA_H_2018_10_23
+#ifndef GPK_RSA_H_23627
+#define GPK_RSA_H_23627
 
 namespace gpk
 {
@@ -34,4 +34,4 @@ namespace gpk
 	stainli	::gpk::error_t	gpcEncodeWithHash	(const ::gpk::vcc   & decrypted, uint64_t n, uint64_t key, uint64_t testKey, bool salt, ::gpk::au64 & encrypted)	{ return ::gpk::gpcEncodeWithHash(*(::gpk::vcu8*)&decrypted, n, key, testKey, salt, encrypted); }
 } // namespace
 
-#endif // GPK_RSA_H_2018_10_23
+#endif // GPK_RSA_H_23627

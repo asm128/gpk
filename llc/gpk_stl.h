@@ -1,8 +1,8 @@
 #include "gpk_array.h"
 #include "gpk_tri3.h"
 
-#ifndef GPK_STL_H
-#define GPK_STL_H
+#ifndef GPK_STL_H_23627
+#define GPK_STL_H_23627
 
 namespace gpk {
 #pragma pack(push, 1)
@@ -22,4 +22,4 @@ namespace gpk {
 	::gpk::error_t						stlFileLoad		(::gpk::vcu8 fileInMemory, ::gpk::vcu8 & out_Header, ::gpk::view<::gpk::SSTLTriangle>	& out_Triangles);
 }
 
-#endif // GPK_STL_H
+#endif // GPK_STL_H_23627

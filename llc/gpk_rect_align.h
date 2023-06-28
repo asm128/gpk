@@ -2,8 +2,8 @@
 #include "gpk_bit.h"
 #include "gpk_axis.h"
 
-#ifndef GPK_RECT_ALIGN_H_928374982364923524
-#define GPK_RECT_ALIGN_H_928374982364923524
+#ifndef GPK_RECT_ALIGN_H_23627
+#define GPK_RECT_ALIGN_H_23627
 
 namespace gpk
 {
@@ -45,4 +45,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // GPK_RECT_ALIGN_H_928374982364923524
+#endif // GPK_RECT_ALIGN_H_23627

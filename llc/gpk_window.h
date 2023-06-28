@@ -14,8 +14,8 @@
 #	include <xcb/xcb.h>
 #endif
 
-#ifndef GPK_DISPLAY_H_293874928374
-#define GPK_DISPLAY_H_293874928374
+#ifndef GPK_WINDOW_H_23627
+#define GPK_WINDOW_H_23627
 
 namespace gpk
 {
@@ -86,4 +86,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_DISPLAY_H_293874928374
+#endif // GPK_WINDOW_H_23627

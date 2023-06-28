@@ -4,8 +4,8 @@
 #include "gpk_array.h"
 #include "gpk_member_registry.h"
 
-#ifndef GPK_RUNTIME_MODULE_H_23084728934
-#define GPK_RUNTIME_MODULE_H_23084728934
+#ifndef GPK_RUNTIME_MODULE_H_23627
+#define GPK_RUNTIME_MODULE_H_23627
 
 #if !defined(GPK_WINDOWS)
 #	include <dlfcn.h>
@@ -52,4 +52,4 @@ namespace gpk
 
 }
 
-#endif // GPK_RUNTIME_MODULE_H_23084728934
+#endif // GPK_RUNTIME_MODULE_H_23627

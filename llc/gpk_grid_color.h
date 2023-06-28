@@ -1,8 +1,8 @@
 #include "gpk_color.h"
 #include "gpk_grid.h"
 
-#ifndef GPK_GRID_COLOR_H_90238749823611
-#define GPK_GRID_COLOR_H_90238749823611
+#ifndef GPK_GRID_COLOR_H_23627
+#define GPK_GRID_COLOR_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 	typedef	::gpk::grid<const ::gpk::rgb	>	gc8rgb	;
 } // namespace
 
-#endif // GPK_GRID_COLOR_H_90238749823611
+#endif // GPK_GRID_COLOR_H_23627

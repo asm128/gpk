@@ -2,8 +2,8 @@
 #include "gpk_n3.h"
 #include "gpk_array_static.h"
 
-#ifndef GPK_INPUT_H_2890374982734
-#define GPK_INPUT_H_2890374982734
+#ifndef GPK_INPUT_H_23627
+#define GPK_INPUT_H_23627
 
 namespace gpk
 {
@@ -49,4 +49,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_INPUT_H_2890374982734
+#endif // GPK_INPUT_H_23627

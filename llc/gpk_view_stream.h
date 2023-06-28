@@ -1,7 +1,7 @@
 #include "gpk_view.h"
 
-#ifndef GPK_STREAM_VIEW_H_992834928749283
-#define GPK_STREAM_VIEW_H_992834928749283
+#ifndef GPK_STREAM_VIEW_H_23627
+#define GPK_STREAM_VIEW_H_23627
 
 namespace gpk
 {
@@ -41,4 +41,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_STREAM_VIEW_H_992834928749283
+#endif // GPK_STREAM_VIEW_H_23627

@@ -3,8 +3,8 @@
 
 //#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 
-#ifndef GPK_DEBUG_H_97826389432654
-#define GPK_DEBUG_H_97826389432654
+#ifndef GPK_DEBUG_H_23627
+#define GPK_DEBUG_H_23627
 
 #if defined(GPK_DEBUG_ENABLED)
 namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; } 
@@ -41,4 +41,4 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = 0; }
 //#	define GPK_VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 #endif
 
-#endif // GPK_DEBUG_H_97826389432654
+#endif // GPK_DEBUG_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_ref.h"
 
-#ifndef GPK_PTR_NCO_H_0297349827220523
-#define GPK_PTR_NCO_H_0297349827220523
+#ifndef GPK_PTR_NCO_H_23627
+#define GPK_PTR_NCO_H_23627
 
 namespace gpk
 {
@@ -49,4 +49,4 @@ namespace gpk
 	template <typename T> using pi		= ::gpk::pnco<T>; 
 } // namespace
 
-#endif // GPK_PTR_NCO_H_0297349827220523
+#endif // GPK_PTR_NCO_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_gui_viewport.h"
 
-#ifndef GPK_GUI_DESKTOP_H_9283492374
-#define GPK_GUI_DESKTOP_H_9283492374
+#ifndef GPK_GUI_DESKTOP_H_23627
+#define GPK_GUI_DESKTOP_H_23627
 
 namespace gpk
 {
@@ -54,4 +54,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_GUI_DESKTOP_H_9283492374
+#endif // GPK_GUI_DESKTOP_H_23627

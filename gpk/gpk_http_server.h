@@ -1,7 +1,7 @@
 #include "gpk_connection.h"
 
-#ifndef GPK_HTTP_SERVER_H_28874928347
-#define GPK_HTTP_SERVER_H_28874928347
+#ifndef GPK_HTTP_SERVER_H_23627
+#define GPK_HTTP_SERVER_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_UDP_SERVER_H_28874928347
+#endif // GPK_UDP_SERVER_H_23627

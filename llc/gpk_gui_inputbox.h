@@ -3,8 +3,8 @@
 #include "gpk_system_key.h"
 #include "gpk_event_input.h"
 
-#ifndef GPK_GUI_INPUTBOX_H_23611
-#define GPK_GUI_INPUTBOX_H_23611
+#ifndef GPK_GUI_INPUTBOX_H_23627
+#define GPK_GUI_INPUTBOX_H_23627
 
 namespace gpk
 {
@@ -102,4 +102,4 @@ namespace gpk
 	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
 } // namespace
 
-#endif // GPK_GUI_INPUTBOX_H_23611
+#endif // GPK_GUI_INPUTBOX_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_NOISE_H_908237498237928734893
-#define GPK_NOISE_H_908237498237928734893
+#ifndef GPK_NOISE_H_23627
+#define GPK_NOISE_H_23627
 
 namespace gpk
 {
@@ -82,4 +82,4 @@ namespace gpk
 
 }
 
-#endif // GPK_NOISE_H_908237498237928734893
+#endif // GPK_NOISE_H_23627

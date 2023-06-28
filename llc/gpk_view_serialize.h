@@ -1,7 +1,7 @@
 #include "gpk_view.h"
 
-#ifndef GPK_VIEW_SERIALIZE_H_230520
-#define GPK_VIEW_SERIALIZE_H_230520
+#ifndef GPK_VIEW_SERIALIZE_H_23627
+#define GPK_VIEW_SERIALIZE_H_23627
 
 namespace gpk
 {
@@ -116,4 +116,4 @@ namespace gpk
 	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 } // namespace
 
-#endif // GPK_VIEW_SERIALIZE_H_230520
+#endif // GPK_VIEW_SERIALIZE_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_n3.h"
 
-#ifndef GPK_QUAT_H_230515
-#define GPK_QUAT_H_230515
+#ifndef GPK_QUAT_H_23627
+#define GPK_QUAT_H_23627
 
 namespace gpk 
 {
@@ -177,4 +177,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_QUAT_H_230515
+#endif // GPK_QUAT_H_23627

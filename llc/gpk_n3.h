@@ -1,7 +1,7 @@
 #include "gpk_n2.h"
 
-#ifndef GPK_N3_H_230515
-#define GPK_N3_H_230515
+#ifndef GPK_N3_H_23627
+#define GPK_N3_H_23627
 
 namespace gpk 
 {
@@ -210,4 +210,4 @@ namespace gpk
 
 #define gpk_xyz(n3var) n3var.x, n3var.y, n3var.z
 
-#endif // GPK_N3_H_230515
+#endif // GPK_N3_H_23627

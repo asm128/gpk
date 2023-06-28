@@ -11,8 +11,8 @@
     #include <unistd.h>
 #endif
 
-#ifndef GPK_STDSOCKET_H_9287349823
-#define GPK_STDSOCKET_H_9287349823
+#ifndef GPK_STDSOCKET_H_23627
+#define GPK_STDSOCKET_H_23627
 
 
 #if !defined(GPK_WINDOWS)
@@ -39,4 +39,4 @@ namespace gpk
 	stainli	::gpk::error_t					tcpipAddress						(SOCKET socket, ::gpk::SIPv4 & addr)				{ return tcpipAddress				(socket		, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
 } // namespace
 
-#endif // GPK_STDSOCKET_H_9287349823
+#endif // GPK_STDSOCKET_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_view_bit.h"
 #include "gpk_array.h"
 
-#ifndef ARRAY_BIT_ARRAY_H_29037498023612
-#define ARRAY_BIT_ARRAY_H_29037498023612
+#ifndef ARRAY_BIT_ARRAY_H_23627
+#define ARRAY_BIT_ARRAY_H_23627
 
 namespace gpk
 {

@@ -7,8 +7,8 @@
 #include "gpk_array_pod.h"		// for ::gpk::view<>
 #include <cfloat>
 
-#ifndef GPK_PARTICLE_H_29384923874
-#define GPK_PARTICLE_H_29384923874
+#ifndef GPK_PARTICLE_H_23627
+#define GPK_PARTICLE_H_23627
 
 namespace gpk
 {
@@ -176,4 +176,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_PARTICLE_H_29384923874
+#endif // GPK_PARTICLE_H_23627

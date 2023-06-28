@@ -5,8 +5,8 @@
 #include "gpk_array.h"
 #include "gpk_grid_color.h"
 
-#ifndef GPK_PNG_H_0928374982374
-#define GPK_PNG_H_0928374982374
+#ifndef GPK_PNG_H_23627
+#define GPK_PNG_H_23627
 
 namespace gpk
 {
@@ -83,4 +83,4 @@ namespace gpk
 	stainli	::gpk::error_t	pngFileLoad		(const ::gpk::vcu8	& source	, ::gpk::img8bgra & out_Texture)	{ ::gpk::SPNGData tempCache; return pngFileLoad(tempCache, source	, out_Texture); }
 } // namespace
 
-#endif // GPK_PNG_H_0928374982374
+#endif // GPK_PNG_H_23627

@@ -6,8 +6,8 @@
 #	include <cstdint>
 #endif
 
-#ifndef GPK_TYPEINT_H_29873490827342
-#define GPK_TYPEINT_H_29873490827342
+#ifndef GPK_TYPEINT_H_23627
+#define GPK_TYPEINT_H_23627
 
 namespace gpk
 {
@@ -102,8 +102,13 @@ namespace gpk
 
 }
 
-#define GPK_DEFAULT_OPERATOR(_otherType, ...)	\
-	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; } \
-	inlcxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#ifndef GPK_ANDROID
+#	define GPK_DEFAULT_OPERATOR(_otherType, ...)	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; }
+#else
+#	define GPK_DEFAULT_OPERATOR(_otherType, ...)	\
+		inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; } \
+		inlcxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#endif // GPK_ANDROID
 
-#endif // GPK_TYPEINT_H_29873490827342
+
+#endif // GPK_TYPEINT_H_23627

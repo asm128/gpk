@@ -1,7 +1,7 @@
 #include "gpk_array_pod.h"
 
-#ifndef GPK_FILE_H_2983749283
-#define GPK_FILE_H_2983749283
+#ifndef GPK_FILE_H_23627
+#define GPK_FILE_H_23627
 
 namespace gpk
 {
@@ -16,4 +16,4 @@ namespace gpk
 	stainli	::gpk::error_t	fileFromMemory	(const ::gpk::vcc & fileName, const ::gpk::vcc & fileInMemory)	{ return ::gpk::fileFromMemory	(fileName, *(const ::gpk::vcu8*)&fileInMemory);; }
 } // namespace
 
-#endif // GPK_FILE_H_2983749283
+#endif // GPK_FILE_H_23627

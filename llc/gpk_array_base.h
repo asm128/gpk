@@ -3,8 +3,8 @@
 #include "gpk_memory.h"
 #include "gpk_size.h"
 
-#ifndef GPK_ARRAY_BASE_H_230518
-#define GPK_ARRAY_BASE_H_230518
+#ifndef GPK_ARRAY_BASE_H_23627
+#define GPK_ARRAY_BASE_H_23627
 
 namespace gpk
 {
@@ -71,4 +71,4 @@ namespace gpk
 #pragma pack(pop)
 }
 
-#endif // GPK_ARRAY_BASE_H_230518
+#endif // GPK_ARRAY_BASE_H_23627

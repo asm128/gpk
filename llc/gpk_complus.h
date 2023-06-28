@@ -6,8 +6,8 @@
 
 #include <Unknwn.h>
 
-#ifndef GPK_COMPLUS_H_982734
-#define GPK_COMPLUS_H_982734
+#ifndef GPK_COMPLUS_H_23627
+#define GPK_COMPLUS_H_23627
 
 namespace gpk
 {
@@ -95,6 +95,6 @@ namespace gpk
 	template <typename T> using view_com	= ::gpk::vcom<T>;
 }
 
-#endif // GPK_COMPLUS_H_982734
+#endif // GPK_COMPLUS_H_23627
 
 #endif // GPK_WINDOWS - ignore the whole thing if not a Windows build

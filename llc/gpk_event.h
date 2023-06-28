@@ -3,8 +3,8 @@
 
 #include "gpk_apod_serialize.h"
 
-#ifndef GPK_EVENT_H_230511
-#define GPK_EVENT_H_230511
+#ifndef GPK_EVENT_H_23627
+#define GPK_EVENT_H_23627
 
 #define gpk_event_printf verbose_printf
 
@@ -99,7 +99,7 @@ namespace gpk
 	}
 }
 
-#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled %s event: %s (0x%llX)(%llX)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), (uint64_t)eventUnhandled.Type, (uint64_t)eventUnhandled.Type, (char)eventUnhandled.Type)
-#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for %s! %s (0x%llX)(%llX)(%c)", ::gpk::get_enum_namep(eventUnhandled.Type), ::gpk::get_value_namep(eventUnhandled.Type), (uint64_t)eventUnhandled.Type, (uint64_t)eventUnhandled.Type, (char)eventUnhandled.Type)
+#define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s' (0x%llX)(%lli)(%c)"	, ::gpk::get_enum_namep((eventUnhandled).Type), ::gpk::get_value_namep((eventUnhandled).Type), (uint64_t)(eventUnhandled).Type, (int64_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
+#define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s' (0x%llX)(%lli)(%c)"	, ::gpk::get_enum_namep((eventUnhandled).Type), ::gpk::get_value_namep((eventUnhandled).Type), (uint64_t)(eventUnhandled).Type, (int64_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
 
-#endif // GPK_EVENT_H_230511
+#endif // GPK_EVENT_H_23627

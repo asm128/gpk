@@ -1,8 +1,8 @@
 #include "gpk_typeint.h"
 #include "gpk_error.h"
 
-#ifndef GPK_SYNC_H_023749082374
-#define GPK_SYNC_H_023749082374
+#ifndef GPK_SYNC_H_23627
+#define GPK_SYNC_H_23627
 
 #if defined(GPK_ANDROID) || defined(GPK_LINUX)
 #	include <thread>
@@ -97,4 +97,4 @@ namespace gpk
 #endif
 }
 
-#endif // GPK_SYNC_H_023749082374
+#endif // GPK_SYNC_H_23627

@@ -2,8 +2,8 @@
 #include "gpk_aobj_ppod.h"
 #include "gpk_array_pod.h"
 
-#ifndef GPK_ARRAY_PTR_H_0297349827348923611
-#define GPK_ARRAY_PTR_H_0297349827348923611
+#ifndef GPK_ARRAY_PTR_H_23627
+#define GPK_ARRAY_PTR_H_23627
 
 namespace gpk
 {
@@ -37,4 +37,4 @@ namespace gpk
 	typedef	::gpk::aobj<::gpk::pai64	>	apai64;
 } // namespace
 
-#endif // GPK_ARRAY_PTR_H_0297349827348923617
+#endif // GPK_ARRAY_PTR_H_23627

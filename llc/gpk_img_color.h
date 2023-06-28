@@ -3,8 +3,8 @@
 #include "gpk_array_obj.h"
 #include "gpk_ptr_obj.h"
 
-#ifndef GPK_IMG_COLOR_H_90238749823611
-#define GPK_IMG_COLOR_H_90238749823611
+#ifndef GPK_IMG_COLOR_H_23627
+#define GPK_IMG_COLOR_H_23627
 
 namespace gpk
 {
@@ -42,4 +42,4 @@ namespace gpk
 	typedef aobj<::gpk::prtrgba8s8		>	aprtrgba8s8;
 } // namespace
 
-#endif // GPK_IMG_COLOR_H_90238749823611
+#endif // GPK_IMG_COLOR_H_23627

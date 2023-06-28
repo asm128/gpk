@@ -4,8 +4,8 @@
 #include "gpk_grid_copy.h"
 #include "gpk_bitmap_target.h"
 
-#ifndef GPK_GUI_TEXT_H_928734982734
-#define GPK_GUI_TEXT_H_928734982734
+#ifndef GPK_GUI_TEXT_H_23627
+#define GPK_GUI_TEXT_H_23627
 
 namespace gpk
 {
@@ -78,4 +78,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // GPK_GUI_TEXT_H_928734982734
+#endif // GPK_GUI_TEXT_H_23627

@@ -4,8 +4,8 @@
 #include "gpk_view.h"
 #include "gpk_module.h"
 
-#ifndef GPK_MEMBER_REGISTRY_H_9214982364982734
-#define GPK_MEMBER_REGISTRY_H_9214982364982734
+#ifndef GPK_MEMBER_REGISTRY_H_23627
+#define GPK_MEMBER_REGISTRY_H_23627
 
 #define GPKM_REGISTRY_NAME		gpk_member_registry
 #define GPKM_NAME(_memberName)	_gpk_info_##_memberName##_	// This mangles the member name for use as the type name.
@@ -60,4 +60,4 @@ namespace gpk {
 #define GPKM_REGISTRY(...)											GPKM_NAMED_REGISTRY(GPKM_REGISTRY_NAME, __VA_ARGS__)
 #define GPKM_GET_MEMBER_REGISTRY(objectType)						objectType::get_member_registry()
 
-#endif // GPK_MEMBER_REGISTRY_H_9214982364982734
+#endif // GPK_MEMBER_REGISTRY_H_23627

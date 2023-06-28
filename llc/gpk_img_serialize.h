@@ -1,8 +1,8 @@
 #include "gpk_image.h"
 #include "gpk_apod_serialize.h"
 
-#ifndef GPK_IMG_SERIALIZE_H_902387498237
-#define GPK_IMG_SERIALIZE_H_902387498237
+#ifndef GPK_IMG_SERIALIZE_H_23627
+#define GPK_IMG_SERIALIZE_H_23627
 
 namespace gpk 
 {
@@ -25,4 +25,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_IMG_SERIALIZE_H_902387498237
+#endif // GPK_IMG_SERIALIZE_H_23627

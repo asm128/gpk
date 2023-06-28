@@ -2,8 +2,8 @@
 #include "gpk_log.h"
 #include "gpk_memory.h"
 
-#ifndef GPK_REF_H_0297349827220523
-#define GPK_REF_H_0297349827220523
+#ifndef GPK_REF_H_23627
+#define GPK_REF_H_23627
 
 namespace gpk
 {
@@ -73,4 +73,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_REF_H_0297349827220523
+#endif // GPK_REF_H_23627

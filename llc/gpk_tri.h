@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_TRI_H_230516
-#define GPK_TRI_H_230516
+#ifndef GPK_TRI_H_23627
+#define GPK_TRI_H_23627
 
 namespace gpk 
 {
@@ -44,4 +44,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace 
 
-#endif // GPK_TRI_H_230516
+#endif // GPK_TRI_H_23627

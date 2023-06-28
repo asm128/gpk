@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef GPK_HTTP_H_23478298347928347
-#define GPK_HTTP_H_23478298347928347
+#ifndef GPK_HTTP_H_23627
+#define GPK_HTTP_H_23627
 
 namespace gpk
 {
@@ -165,4 +165,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_HTTP_H_23478298347928347
+#endif // GPK_HTTP_H_23627

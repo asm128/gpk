@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_PATH_H_2983749283
-#define GPK_PATH_H_2983749283
+#ifndef GPK_PATH_H_23627
+#define GPK_PATH_H_23627
 
 namespace gpk
 {
@@ -28,4 +28,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_PATH_H_2983749283
+#endif // GPK_PATH_H_23627

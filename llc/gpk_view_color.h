@@ -1,8 +1,8 @@
 #include "gpk_color.h"
 #include "gpk_view.h"
 
-#ifndef GPK_VIEW_COLOR_H_90238749823611
-#define GPK_VIEW_COLOR_H_90238749823611
+#ifndef GPK_VIEW_COLOR_H_23627
+#define GPK_VIEW_COLOR_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::u8rgb	>	vcrgb	, vc8rgb		;
 } // namespace
 
-#endif // GPK_VIEW_COLOR_H_90238749823611
+#endif // GPK_VIEW_COLOR_H_23627

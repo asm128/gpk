@@ -1,8 +1,8 @@
 #include "gpk_system_event.h"
 #include "gpk_n2.h"
 
-#ifndef GPK_EVENT_INPUT_H_209409823620
-#define GPK_EVENT_INPUT_H_209409823620
+#ifndef GPK_EVENT_INPUT_H_23627
+#define GPK_EVENT_INPUT_H_23627
 
 namespace gpk
 {	
@@ -53,4 +53,4 @@ namespace gpk
 	stainli	::gpk::error_t	eventEnqueueJoyPadDown		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Button_down, button); }
 } // namespace
 
-#endif // GPK_EVENT_INPUT_H_209409823620
+#endif // GPK_EVENT_INPUT_H_23627

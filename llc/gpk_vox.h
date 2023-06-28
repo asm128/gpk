@@ -5,8 +5,8 @@
 
 #include "gpk_n3.h"
 
-#ifndef GPK_VOX_H_9832347982
-#define GPK_VOX_H_9832347982
+#ifndef GPK_VOX_H_23627
+#define GPK_VOX_H_23627
 
 namespace gpk 
 {
@@ -370,4 +370,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_VOX_H_9832347982
+#endif // GPK_VOX_H_23627

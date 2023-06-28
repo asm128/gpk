@@ -1,7 +1,7 @@
 #include "gpk_ptr_nco.h"
 
-#ifndef GPK_PTR_OBJ_H_0297349827220523
-#define GPK_PTR_OBJ_H_0297349827220523
+#ifndef GPK_PTR_OBJ_H_23627
+#define GPK_PTR_OBJ_H_23627
 
 namespace gpk
 {
@@ -25,4 +25,4 @@ namespace gpk
 	template<typename T> using po	= ::gpk::pobj<T>; 
 } // namespace
 
-#endif // GPK_PTR_OBJ_H_0297349827220523
+#endif // GPK_PTR_OBJ_H_23627

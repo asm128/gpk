@@ -4,8 +4,8 @@
 
 #include "gpk_view_serialize.h"
 
-#ifndef GPK_ARRAY_POD_H_230518
-#define GPK_ARRAY_POD_H_230518
+#ifndef GPK_ARRAY_POD_H_23627
+#define GPK_ARRAY_POD_H_23627
 
 namespace gpk
 {
@@ -288,4 +288,4 @@ namespace gpk
 	::gpk::error_t				append_quoted					(::gpk::achar & output, ::gpk::vcc text);
 } // namespace
 
-#endif // GPK_ARRAY_POD_H_230518
+#endif // GPK_ARRAY_POD_H_23627

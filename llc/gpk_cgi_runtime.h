@@ -5,8 +5,8 @@
 #include "gpk_http.h"
 #include "gpk_n2.h"
 
-#ifndef GPK_CGI_RUNTIME_H_2938479283
-#define GPK_CGI_RUNTIME_H_2938479283
+#ifndef GPK_CGI_RUNTIME_H_23627
+#define GPK_CGI_RUNTIME_H_23627
 
 namespace gpk
 {
@@ -133,4 +133,4 @@ namespace gpk
 	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));														\
 	return 0;														\
 }
-#endif // GPK_CGI_RUNTIME_H_2938479283
+#endif // GPK_CGI_RUNTIME_H_23627

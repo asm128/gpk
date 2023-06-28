@@ -4,8 +4,8 @@
 #endif
 
 
-#ifndef GPK_TIMER_H_29837409823740928987652132
-#define GPK_TIMER_H_29837409823740928987652132
+#ifndef GPK_TIMER_H_23627
+#define GPK_TIMER_H_23627
 
 namespace gpk	//
 {
@@ -32,4 +32,4 @@ namespace gpk	//
 	};
 }
 
-#endif // GPK_TIMER_H_29837409823740928987652132
+#endif // GPK_TIMER_H_23627

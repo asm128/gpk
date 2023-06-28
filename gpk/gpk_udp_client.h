@@ -1,7 +1,7 @@
 #include "gpk_connection.h"
 
-#ifndef GPK_UDP_CLIENT_H_238947239847
-#define GPK_UDP_CLIENT_H_238947239847
+#ifndef GPK_UDP_CLIENT_H_23627
+#define GPK_UDP_CLIENT_H_23627
 
 namespace gpk
 {
@@ -17,4 +17,4 @@ namespace gpk
 	::gpk::error_t									clientUpdate				(::gpk::SUDPClient & client);
 }
 
-#endif // GPK_UDP_CLIENT_H_238947239847
+#endif // GPK_UDP_CLIENT_H_23627

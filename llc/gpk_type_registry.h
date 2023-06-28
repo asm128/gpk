@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_TYPE_REGISTRY_H_9028347293847
-#define GPK_TYPE_REGISTRY_H_9028347293847
+#ifndef GPK_TYPE_REGISTRY_H_23627
+#define GPK_TYPE_REGISTRY_H_23627
 
 namespace gpk
 {
@@ -43,4 +43,4 @@ namespace gpk
 	_type								_name
 }
 
-#endif // GPK_TYPE_REGISTRY_H_9028347293847
+#endif // GPK_TYPE_REGISTRY_H_23627

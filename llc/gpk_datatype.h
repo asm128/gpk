@@ -4,8 +4,8 @@
 #include "gpk_typeint.h"
 
 // --------------------------------------------------------------- DATA_TYPE ---------------------------------------------------------------
-#ifndef GPK_DATATYPE_H_263544625434625344652434321
-#define GPK_DATATYPE_H_263544625434625344652434321
+#ifndef GPK_DATATYPE_H_23627
+#define GPK_DATATYPE_H_23627
 
 namespace gpk
 {
@@ -543,4 +543,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_DATATYPE_H_263544625434625344652434321
+#endif // GPK_DATATYPE_H_23627

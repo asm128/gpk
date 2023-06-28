@@ -10,8 +10,8 @@
 
 #include <mmreg.h>
 
-#ifndef WAVFILEREADER_H_02397492830
-#define WAVFILEREADER_H_02397492830
+#ifndef WAVFILEREADER_H_23627
+#define WAVFILEREADER_H_23627
 
 namespace DirectX
 {

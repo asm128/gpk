@@ -1,7 +1,7 @@
 #include "gpk_error.h"
 
-#ifndef GPK_MODULE_H
-#define GPK_MODULE_H
+#ifndef GPK_MODULE_H_23627
+#define GPK_MODULE_H_23627
 
 #if defined(GPK_WINDOWS)
 #	define GPK_STDCALL				//__stdcall
@@ -61,4 +61,4 @@ namespace gpk
 }
 
 
-#endif // GPK_MODULE_H
+#endif // GPK_MODULE_H_23627

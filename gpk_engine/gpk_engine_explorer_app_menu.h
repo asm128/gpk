@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef GPK_ENGINE_EXPLORER_MENU_H
-#define GPK_ENGINE_EXPLORER_MENU_H
+#ifndef GPK_ENGINE_EXPLORER_MENU_H_23627
+#define GPK_ENGINE_EXPLORER_MENU_H_23627
 
 namespace gpk
 {	
@@ -46,4 +46,4 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EDITOR_APP_HELP, About, 0);
 } // namespace
 
-#endif // GPK_ENGINE_EXPLORER_MENU_H
+#endif // GPK_ENGINE_EXPLORER_MENU_H_23627

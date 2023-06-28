@@ -1,7 +1,7 @@
 #include "gpk_event.h"
 
-#ifndef GPK_SYSTEM_EVENT_H_209409823620
-#define GPK_SYSTEM_EVENT_H_209409823620
+#ifndef GPK_SYSTEM_EVENT_H_23627
+#define GPK_SYSTEM_EVENT_H_23627
 
 namespace gpk
 {
@@ -30,4 +30,4 @@ namespace gpk
 	stainli	::gpk::error_t	eventEnqueueRuntimeProcessEvent	(::gpk::apobj<::gpk::SSystemEvent> & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
 } // namespace 
 
-#endif // GPK_SYSTEM_EVENT_H_209409823620
+#endif // GPK_SYSTEM_EVENT_H_23627

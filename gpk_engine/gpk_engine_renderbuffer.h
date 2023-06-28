@@ -2,8 +2,8 @@
 #include "gpk_enum.h"
 #include "gpk_engine_container.h"
 
-#ifndef GPK_ENGINE_RENDERBUFFER_H
-#define GPK_ENGINE_RENDERBUFFER_H
+#ifndef GPK_ENGINE_RENDERBUFFER_H_23627
+#define GPK_ENGINE_RENDERBUFFER_H_23627
 
 namespace gpk 
 {
@@ -62,4 +62,4 @@ namespace gpk
 	typedef	::gpk::SLinearNamedMap<::gpk::SRenderBuffer>	SRenderBufferManager;
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_RENDERBUFFER_H_23627

@@ -5,8 +5,8 @@
 #include "gpk_stl.h"
 #include "gpk_png.h"
 
-#ifndef GPK_COMPONENT_SCENE_H_92384723
-#define GPK_COMPONENT_SCENE_H_92384723
+#ifndef GPK_COMPONENT_SCENE_H_23627
+#define GPK_COMPONENT_SCENE_H_23627
 
 namespace gpk {
 	GDEFINE_ENUM_TYPE(COMPONENT_FILE_TYPE, uint8_t); // bit field
@@ -303,4 +303,4 @@ namespace gpk {
 	};
 } // namespace
 
-#endif // GPK_COMPONENT_SCENE_H_92384723
+#endif // GPK_COMPONENT_SCENE_H_23627

@@ -1,7 +1,6 @@
 #include "gpk_error.h"
 #include "gpk_eval.h"
 #include "gpk_chrono.h" 
-#include "gpk_string.h"
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -9,8 +8,8 @@
 #	include <cstdio>
 #endif
 
-#ifndef GPK_LOG_H_8927349654687654365
-#define GPK_LOG_H_8927349654687654365
+#ifndef GPK_LOG_H_23627
+#define GPK_LOG_H_23627
 
 //#define GPK_NULLIFY_ALL_CONDITIONAL_ERROR_CHECKING
 #if !defined(DEBUG) && !defined(_DEBUG)
@@ -52,7 +51,7 @@ namespace gpk
 #endif
 
 	template<size_t prefixLength, typename... TArgs>
-	void				_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
+	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
 #endif
@@ -67,7 +66,7 @@ namespace gpk
 		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
 		base_debug_print(prefix, prefixLength);
 		char					customDynamicString	[8192]		= {};
-		stringLength		= ::gpk::sprintf_s(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
+		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);
@@ -515,4 +514,4 @@ namespace gpk
 #	define rwis_if							retwarn_gsinfo_if
 #endif
 
-#endif // GPK_LOG_H_8927349654687654365
+#endif // GPK_LOG_H_23627

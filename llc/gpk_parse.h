@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef GPK_PARSE_H_298374298347
-#define GPK_PARSE_H_298374298347
+#ifndef GPK_PARSE_H_23627
+#define GPK_PARSE_H_23627
 
 namespace gpk
 {
@@ -58,4 +58,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_PARSE_H_298374298347
+#endif // GPK_PARSE_H_23627

@@ -3,8 +3,8 @@
 #include "gpk_apod_serialize.h"
 #include "gpk_enum.h"
 
-#ifndef GPK_ENGINE_MAP_POD_H
-#define GPK_ENGINE_MAP_POD_H
+#ifndef GPK_ENGINE_MAP_POD_H_23627
+#define GPK_ENGINE_MAP_POD_H_23627
 
 namespace gpk
 {
@@ -61,4 +61,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_ENGINE_MAP_POD_H
+#endif // GPK_ENGINE_MAP_POD_H_23627

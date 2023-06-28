@@ -3,8 +3,8 @@
 #include "gpk_tri.h"
 #include "gpk_array_obj.h"
 
-#ifndef TERRAIN_H_289374982374
-#define TERRAIN_H_289374982374
+#ifndef TERRAIN_H_23627
+#define TERRAIN_H_23627
 
 namespace gpk
 {
@@ -145,4 +145,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // TERRAIN_H_289374982374
+#endif // TERRAIN_H_23627

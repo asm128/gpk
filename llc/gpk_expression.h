@@ -1,8 +1,8 @@
 #include "gpk_enum.h"
 #include "gpk_array_ptr.h"
 
-#ifndef GPK_EXPRESSION_H_92837498237
-#define GPK_EXPRESSION_H_92837498237
+#ifndef GPK_EXPRESSION_H_23627
+#define GPK_EXPRESSION_H_23627
 
 namespace gpk
 {
@@ -60,4 +60,4 @@ namespace gpk
 	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcc & expression);
 } // namespace
 
-#endif // GPK_EXPRESSION_H_92837498237
+#endif // GPK_EXPRESSION_H_23627

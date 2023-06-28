@@ -1,7 +1,7 @@
 #include "gpk_array.h"
 
-#ifndef GPK_ENCODING_H_209873982374
-#define GPK_ENCODING_H_209873982374
+#ifndef GPK_ENCODING_H_23627
+#define GPK_ENCODING_H_23627
 
 namespace gpk
 {
@@ -69,4 +69,4 @@ namespace gpk
 	stainli	::gpk::error_t	digest				(const ::gpk::vcc & input, ::gpk::ac & digest) { return ::gpk::digest(*(const ::gpk::vcu8*)&input, digest); }
 }
 
-#endif // GPK_ENCODING_H_209873982374
+#endif // GPK_ENCODING_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_enum.h"
 #include "gpk_gui_control_state.h"
 
-#ifndef GPK_VIRTUAL_KEYBOARD_H_293874239874
-#define GPK_VIRTUAL_KEYBOARD_H_293874239874
+#ifndef GPK_VIRTUAL_KEYBOARD_H_23627
+#define GPK_VIRTUAL_KEYBOARD_H_23627
 
 namespace gpk
 {
@@ -43,4 +43,4 @@ namespace gpk
 	//stainli	::gpk::error_t	virtualKeyboardHandleEvent	(::gpk::SVirtualKeyboard & vk, cid_t iControl) { return ::gpk::virtualKeyboardHandleEvent(vk, iControl, vk.Events); }
 } // namespace 
 
-#endif // GPK_VIRTUAL_KEYBOARD_H_293874239874
+#endif // GPK_VIRTUAL_KEYBOARD_H_23627

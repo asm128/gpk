@@ -2,8 +2,8 @@
 #include "gpk_n2.h"
 #include "gpk_enum.h"
 
-#ifndef GPK_ENGINE_RENDERMESH_H
-#define GPK_ENGINE_RENDERMESH_H
+#ifndef GPK_ENGINE_RENDERMESH_H_23627
+#define GPK_ENGINE_RENDERMESH_H_23627
 
 namespace gpk 
 {
@@ -62,4 +62,4 @@ namespace gpk
 	typedef	::gpk::SLinearNamedMap<::gpk::SGeometryMesh>	SMeshManager;
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_RENDERMESH_H_23627

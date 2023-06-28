@@ -1,8 +1,8 @@
 #include "gpk_quad.h"
 #include "gpk_n2.h"
 
-#ifndef GPK_QUAD2_H_230526
-#define GPK_QUAD2_H_230526
+#ifndef GPK_QUAD2_H_23627
+#define GPK_QUAD2_H_23627
 
 namespace gpk 
 {
@@ -32,4 +32,4 @@ namespace gpk
 	typedef quad2<int64_t>	quad2i64;
 #pragma pack(pop)
 }
-#endif // GPK_QUAD2_H_230526
+#endif // GPK_QUAD2_H_23627

@@ -8,8 +8,8 @@
 
 #include <memory> // this is required for ::std::swap()
 
-#ifndef GPK_ASCII_TARGET_H_29874982734
-#define GPK_ASCII_TARGET_H_29874982734
+#ifndef GPK_ASCII_TARGET_H_23627
+#define GPK_ASCII_TARGET_H_23627
 
 namespace gpk
 {
@@ -128,4 +128,4 @@ namespace gpk
 	}
 }
 
-#endif // GPK_ASCII_TARGET_H_29874982734
+#endif // GPK_ASCII_TARGET_H_23627

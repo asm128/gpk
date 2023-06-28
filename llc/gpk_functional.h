@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#ifndef GPK_FUNCTIONAL_H_230518
-#define GPK_FUNCTIONAL_H_230518
+#ifndef GPK_FUNCTIONAL_H_23627
+#define GPK_FUNCTIONAL_H_23627
 
 namespace gpk
 {
@@ -15,4 +15,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_FUNCTIONAL_H_230518
+#endif // GPK_FUNCTIONAL_H_23627

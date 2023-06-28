@@ -1,8 +1,8 @@
 /// Copyright 2009-2023 - asm128
 #include "gpk_enum.h"
 
-#ifndef GPK_COLOR_TYPE_H_297349823611
-#define GPK_COLOR_TYPE_H_297349823611
+#ifndef GPK_COLOR_TYPE_H_23627
+#define GPK_COLOR_TYPE_H_23627
 
 namespace gpk
 {
@@ -19,4 +19,4 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#endif // GPK_COLOR_TYPE_H_297349823611
+#endif // GPK_COLOR_TYPE_H_23627

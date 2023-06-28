@@ -3,8 +3,8 @@
 #include "gpk_view_bit.h"
 #include "gpk_grid_scale.h"
 
-#ifndef GPK_IMAGE_H_902387498237
-#define GPK_IMAGE_H_902387498237
+#ifndef GPK_IMAGE_H_23627
+#define GPK_IMAGE_H_23627
 
 namespace gpk
 {
@@ -226,4 +226,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_IMAGE_H_902387498237
+#endif // GPK_IMAGE_H_23627

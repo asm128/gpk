@@ -12,8 +12,8 @@
 
 #include <functional>
 
-#ifndef GPK_ENGINE_SCENE_H
-#define GPK_ENGINE_SCENE_H
+#ifndef GPK_ENGINE_SCENE_H_23627
+#define GPK_ENGINE_SCENE_H_23627
 
 namespace gpk 
 {

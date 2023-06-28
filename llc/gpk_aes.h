@@ -1,7 +1,7 @@
 #include "gpk_enum.h"
 
-#ifndef AES_H_28937498273423049
-#define AES_H_28937498273423049
+#ifndef GPK_AES_H_23627
+#define GPK_AES_H_23627
 
 namespace gpk
 {
@@ -98,4 +98,4 @@ namespace gpk
 	stainli	::gpk::error_t		aesDecode		(const ::gpk::vcu8 & messageEncrypted, const ::gpk::vcu8 & iv, const ::gpk::vcc & encryptionKey, ::gpk::AES_LEVEL level, ::gpk::ac & outputDecrypted)	{ return ::gpk::aesDecode(messageEncrypted, iv, *(const ::gpk::vcu8*)&encryptionKey, level, *(::gpk::au8*)&outputDecrypted); }
 }
 
-#endif //AES_H_28937498273423049
+#endif // GPK_AES_H_23627

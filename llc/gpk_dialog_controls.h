@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#ifndef GPK_DIALOG_CONTROLS_H_209837402937
-#define GPK_DIALOG_CONTROLS_H_209837402937
+#ifndef GPK_DIALOG_CONTROLS_H_23627
+#define GPK_DIALOG_CONTROLS_H_23627
 
 namespace gpk
 {
@@ -181,4 +181,4 @@ namespace gpk
 
 }
 
-#endif // GPK_DIALOG_CONTROLS_H_209837402937
+#endif // GPK_DIALOG_CONTROLS_H_23627

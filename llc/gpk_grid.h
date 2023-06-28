@@ -2,8 +2,8 @@
 #include "gpk_rect2.h"
 #include "gpk_n3.h"
 
-#ifndef GPK_GRID_VIEW_H_3423423
-#define GPK_GRID_VIEW_H_3423423
+#ifndef GPK_GRID_VIEW_H_23627
+#define GPK_GRID_VIEW_H_23627
 
 namespace gpk
 {
@@ -172,4 +172,4 @@ namespace gpk
 	};
 }
 
-#endif // GPK_GRID_VIEW_H_3423423
+#endif // GPK_GRID_VIEW_H_23627

@@ -1,8 +1,8 @@
 #include "gpk_matrix.h"
 #include "gpk_enum.h"
 
-#ifndef GPK_RIGIDBODY_H_234872398472341
-#define GPK_RIGIDBODY_H_234872398472341
+#ifndef GPK_RIGIDBODY_H_23627
+#define GPK_RIGIDBODY_H_23627
 
 namespace gpk
 {
@@ -273,4 +273,4 @@ namespace gpk
 		);
 } // namespace
 
-#endif // CED_RIGIDBODY_H_234872398472341
+#endif // CED_RIGIDBODY_H_23627

@@ -5,8 +5,8 @@
 #include "gpk_engine_map_pod.h"
 #include "gpk_geometry.h"
 
-#ifndef GPK_ENGINE_H
-#define GPK_ENGINE_H
+#ifndef GPK_ENGINE_H_23627
+#define GPK_ENGINE_H_23627
 
 namespace gpk 
 {
@@ -191,4 +191,4 @@ namespace gpk
 	::gpk::error_t			collisionDetect		(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected);
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_H_23627

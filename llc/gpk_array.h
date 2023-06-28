@@ -1,8 +1,8 @@
 #include "gpk_array_pod.h"
 #include "gpk_array_obj.h"
 
-#ifndef GPK_ARRAY_H_23610
-#define GPK_ARRAY_H_23610
+#ifndef GPK_ARRAY_H_23627
+#define GPK_ARRAY_H_23627
 
 namespace gpk
 {
@@ -23,4 +23,4 @@ namespace gpk
 	typedef	::gpk::aapod<int64_t	>	aaint64		, aai64;
 } // namespace 
 
-#endif // GPK_ARRAY_H_23610
+#endif // GPK_ARRAY_H_23627

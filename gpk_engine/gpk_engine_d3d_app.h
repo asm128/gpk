@@ -7,8 +7,8 @@
 #include "gpk_image.h"
 #include "gpk_file.h"
 
-#ifndef GPK_ENGINE_D3D_APP_H_28903749823
-#define GPK_ENGINE_D3D_APP_H_28903749823
+#ifndef GPK_ENGINE_D3D_APP_H_23627
+#define GPK_ENGINE_D3D_APP_H_23627
 
 namespace gpk
 {

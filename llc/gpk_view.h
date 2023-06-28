@@ -8,8 +8,8 @@
 #	include <cstring>
 #endif
 
-#ifndef GPK_ARRAY_VIEW_H_2398472395543
-#define GPK_ARRAY_VIEW_H_2398472395543
+#ifndef GPK_ARRAY_VIEW_H_23627
+#define GPK_ARRAY_VIEW_H_23627
 
 namespace gpk
 {
@@ -440,4 +440,4 @@ namespace gpk
 #define be2le_64(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 8})
 } // namespace
 
-#endif // GPK_ARRAY_VIEW_H_2398472395543
+#endif // GPK_ARRAY_VIEW_H_23627

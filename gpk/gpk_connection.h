@@ -8,8 +8,8 @@
 #	include <mutex>
 #endif
 
-#ifndef GPK_CONNECTION_H_20347892908347
-#define GPK_CONNECTION_H_20347892908347
+#ifndef GPK_CONNECTION_H_23627
+#define GPK_CONNECTION_H_23627
 
 namespace gpk
 {
@@ -147,5 +147,5 @@ namespace gpk
 
 }
 
-#endif // GPK_CONNECTION_H_20347892908347
+#endif // GPK_CONNECTION_H_23627
 

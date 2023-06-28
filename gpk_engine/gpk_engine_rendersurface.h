@@ -3,8 +3,8 @@
 #include "gpk_engine_container.h"
 #include "gpk_color_type.h"
 
-#ifndef GPK_ENGINE_RENDERIMAGE_H
-#define GPK_ENGINE_RENDERIMAGE_H
+#ifndef GPK_ENGINE_RENDERIMAGE_H_23627
+#define GPK_ENGINE_RENDERIMAGE_H_23627
 
 namespace gpk 
 {
@@ -30,4 +30,4 @@ namespace gpk
 	typedef	::gpk::SLinearNamedMap<::gpk::SSurface>	SSurfaceManager;
 } // namespace
 
-#endif
+#endif // GPK_ENGINE_RENDERIMAGE_H_23627

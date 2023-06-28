@@ -4,8 +4,8 @@
 #include <memory.h>
 #endif
 
-#ifndef GPK_EVAL_H_2983742983047239874
-#define GPK_EVAL_H_2983742983047239874
+#ifndef GPK_EVAL_H_23627
+#define GPK_EVAL_H_23627
 
 #if defined(GPK_WINDOWS)
 #	if defined(min)
@@ -103,7 +103,7 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_EVAL_H_2983742983047239874
+#endif // GPK_EVAL_H_23627
 
 
 

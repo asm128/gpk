@@ -1,8 +1,8 @@
 #include "gpk_geometry_buffers.h"
 #include "gpk_enum.h"
 
-#ifndef GPK_GEOMETRY_H
-#define GPK_GEOMETRY_H
+#ifndef GPK_GEOMETRY_H_23627
+#define GPK_GEOMETRY_H_23627
 
 namespace gpk
 {
@@ -75,4 +75,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_GEOMETRY_H
+#endif // GPK_GEOMETRY_H_23627

@@ -1,7 +1,7 @@
 #include "gpk_n3.h"
 
-#ifndef GPK_COORD_H_928374982364923322
-#define GPK_COORD_H_928374982364923322
+#ifndef GPK_COORD_H_23627
+#define GPK_COORD_H_23627
 
 namespace gpk
 {
@@ -15,4 +15,4 @@ namespace gpk
 #pragma pack(pop)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
 }
 
-#endif // GPK_COORD_H_928374982364923322
+#endif // GPK_COORD_H_23627

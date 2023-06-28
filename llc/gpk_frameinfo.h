@@ -1,7 +1,7 @@
 #include "gpk_typeint.h"
 
-#ifndef GPK_FRAMEINFO_H_928374654
-#define GPK_FRAMEINFO_H_928374654
+#ifndef GPK_FRAMEINFO_H_23627
+#define GPK_FRAMEINFO_H_23627
 
 namespace gpk
 {
@@ -55,4 +55,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_FRAMEINFO_H_928374654
+#endif // GPK_FRAMEINFO_H_23627

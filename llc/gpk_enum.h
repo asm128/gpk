@@ -3,8 +3,8 @@
 #include "gpk_array_pod.h"
 #include "gpk_array_obj.h"
 
-#ifndef GPK_ENUM_H_982364987234987234
-#define GPK_ENUM_H_982364987234987234
+#ifndef GPK_ENUM_H_23627
+#define GPK_ENUM_H_23627
 
 #define enum_printf verbose_printf
 
@@ -315,4 +315,4 @@ namespace gpk
 
 #define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(valueUnhandled), ::gpk::get_value_namep(valueUnhandled), valueUnhandled, valueUnhandled, (char)valueUnhandled)
 
-#endif // GPK_ENUM_H_982364987234987234
+#endif // GPK_ENUM_H_23627

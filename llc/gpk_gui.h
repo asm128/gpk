@@ -4,8 +4,8 @@
 
 #include "gpk_ascii_color.h"
 
-#ifndef GPK_GUI_H_2903874982374
-#define GPK_GUI_H_2903874982374
+#ifndef GPK_GUI_H_23627
+#define GPK_GUI_H_23627
 
 namespace gpk
 {
@@ -77,4 +77,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_GUI_H_2903874982374
+#endif // GPK_GUI_H_23627

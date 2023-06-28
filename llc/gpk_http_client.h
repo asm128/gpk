@@ -1,8 +1,8 @@
 #include "gpk_stdsocket.h"
 #include "gpk_http.h"
 
-#ifndef GPK_HTTP_CLIENT_H_23482394
-#define GPK_HTTP_CLIENT_H_23482394
+#ifndef GPK_HTTP_CLIENT_H_23627
+#define GPK_HTTP_CLIENT_H_23627
 
 namespace gpk
 {
@@ -46,4 +46,4 @@ namespace gpk
 
 }
 
-#endif // GPK_HTTP_CLIENT_H_23482394
+#endif // GPK_HTTP_CLIENT_H_23627
