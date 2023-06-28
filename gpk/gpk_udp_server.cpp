@@ -159,17 +159,16 @@ static	::gpk::error_t	serverAcceptClient				(::gpk::SUDPServer& serverInstance, 
 	return 0;
 }
 
-static	::gpk::error_t	serverListenTick				(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
+static	::gpk::error_t	serverListenTick	(::gpk::SUDPServer& serverInstance, const sockaddr_in & server)		{
 	serverInstance.Socket.close();
 	ree_if(INVALID_SOCKET == (serverInstance.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Could not create socket.");
 	gpk_necall(::bind(serverInstance.Socket, (sockaddr *)&server, sizeof(sockaddr_in)), "Could not bind name to socket.");	/* Bind address to socket */
-	int												client_length					= (int)sizeof(sockaddr_in);		// Length of client struct
-	::gpk::SUDPCommand								command							= {};							// Where to store received data
-	int												bytes_received					= 0;
-	sockaddr_in										sa_client						= {};							// Information about the client
-	if(errored(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length))) {
-		warning_printf("Could not receive datagram.");
-	}
+	int							client_length		= (int)sizeof(sockaddr_in);		// Length of client struct
+	::gpk::SUDPCommand			command				= {};	// Where to store received data
+	int							bytes_received		= 0;
+	sockaddr_in					sa_client			= {};	// Information about the client
+	reis_if_failed(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length));
+	rni_if(0 == bytes_received, "%s", "Offline?");
 
 	ree_if(command.Type		!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, "Invalid message type: 0x%x '%s'", command.Type, ::gpk::get_value_label(command.Type).begin()); 
 	ree_if(command.Command	!= ::gpk::ENDPOINT_COMMAND_DISCONNECT
@@ -178,34 +177,34 @@ static	::gpk::error_t	serverListenTick				(::gpk::SUDPServer& serverInstance, co
 
 	switch(command.Command) {
 	case ::gpk::ENDPOINT_COMMAND_CONNECT	: 
-		es_if(errored(::serverAcceptClient(serverInstance, command, sa_client)));
+		es_if_failed(::serverAcceptClient(serverInstance, command, sa_client));
 		::gpk::sleep(1);
 		break;
 	case ::gpk::ENDPOINT_COMMAND_DISCONNECT	: {
 		if(false == serverInstance.Listen)
 			break;
 
-		sockaddr_in										sa_srv							= {};							// Information about the client
+		sockaddr_in					sa_srv				= {};	// Information about the client
 		::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
-		::gpk::SIPv4									address								= {{}, 9999};
+		::gpk::SIPv4				address				= {{}, serverInstance.Address.Port};
 		::gpk::tcpipAddressFromSockaddr(sa_client, address);
 		ree_if(sa_client.sin_port != sa_srv.sin_port
 			|| memcmp(&sa_client.sin_addr	, &sa_srv.sin_addr	, sizeof(sa_srv.sin_addr))
 			|| memcmp(&sa_client.sin_family	, &sa_srv.sin_family, sizeof(sa_srv.sin_family))
 			, "Invalid server address: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address)
 		);
-		serverInstance.Listen						= false;	// Stop server.
+		serverInstance.Listen	= false;	// Stop server (this breaks the listen loop).
 		break;
 	}
 	}
 	return 0;
 }
 
-static	void								threadUpdateClients				(void* serverInstance)					{ ::updateClients(*(::gpk::SUDPServer*)serverInstance); }
-static	::gpk::error_t	server							(::gpk::SUDPServer& serverInstance)		{
-	serverInstance.Listen						= true;
+static	void			threadUpdateClients	(void* serverInstance)					{ ::updateClients(*(::gpk::SUDPServer*)serverInstance); }
+static	::gpk::error_t	server				(::gpk::SUDPServer& serverInstance)		{
+	serverInstance.Listen	= true;
 	gpk_necs(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
-	sockaddr_in										server								= {};
+	sockaddr_in					server				= {};
 	gpk_necs(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server));
 #if defined(GPK_WINDOWS)
 	_beginthread(::threadUpdateClients, 0, &serverInstance);
@@ -214,14 +213,14 @@ static	::gpk::error_t	server							(::gpk::SUDPServer& serverInstance)		{
 #endif
 	info_printf("Server running on %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(serverInstance.Address));
 	while(serverInstance.Listen) {	// Loop and get data from clients
-		::serverListenTick(serverInstance, server);
+		ws_if_failed(::serverListenTick(serverInstance, server));
 	}
 	serverInstance.Socket.close();
 	return 0;
 }
 
-static	void								threadServer					(void* pServerInstance)				{
-	::gpk::SUDPServer								& serverInstance				= *(::gpk::SUDPServer*)pServerInstance;
+static	void			threadServer					(void* pServerInstance)				{
+	::gpk::SUDPServer			& serverInstance				= *(::gpk::SUDPServer*)pServerInstance;
 	es_if(errored(server(serverInstance)))
 	else
 		info_printf("Server gracefully closed.");

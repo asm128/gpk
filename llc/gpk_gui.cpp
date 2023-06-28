@@ -642,9 +642,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 
 ::gpk::error_t			gpk::controlTextSet		(::gpk::SGUI & gui, ::gpk::cid_t iControl, const ::gpk::vcs & text)				{
 	::gpk::vcs					& oldText				= gui.Controls.Text[iControl].Text;
-	if(text.begin	() != oldText.begin()
-	 || text.size	() != oldText.size()
-	 ) {
+	if(text != oldText) {
 		oldText					= text;
 		gui.Controls.SetUpdated(iControl, false);
 	}
