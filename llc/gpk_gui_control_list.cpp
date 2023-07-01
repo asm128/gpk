@@ -1,13 +1,29 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
-::gpk::error_t			gpk::controlListInitialize			(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
+::gpk::cid_t			gpk::createScreenLayout(::gpk::SGUI & gui, ::gpk::cid_t parent) {
+	::gpk::cid_t				controlId;
+	gpk_necs(controlId = ::gpk::controlCreate(gui));
+
+	gui.Controls.Placement	[controlId].Border				= 
+	gui.Controls.Placement	[controlId].Margin				= {};
+	gui.Controls.Constraints[controlId].AttachSizeToControl	= {controlId, controlId};
+	gui.Controls.Draw		[controlId].NoClient			= true;
+	gui.Controls.States		[controlId].Mask				&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
+
+	if(parent != ::gpk::CID_INVALID)
+		gpk_necs(::gpk::controlSetParent(gui, controlId, parent));
+
+	return controlId;
+}
+
+::gpk::error_t			gpk::controlListInitialize	(::gpk::SGUI & gui, ::gpk::SControlList& menu)													{
 	menu					= {};
 	gpk_necall(menu.IdControl = ::gpk::controlCreate(gui), "%s", "Failed to create menu control!");
-	gui.Controls.Placement[menu.IdControl].Border				= {};
-	gui.Controls.Placement[menu.IdControl].Margin				= {};
-	gui.Controls.Text			[menu.IdControl].Text				= " ";
-	gui.Controls.Constraints	[menu.IdControl].AttachSizeToText	= {false, false};
+	gui.Controls.Placement	[menu.IdControl].Border				= {};
+	gui.Controls.Placement	[menu.IdControl].Margin				= {};
+	gui.Controls.Text		[menu.IdControl].Text				= " ";
+	gui.Controls.Constraints[menu.IdControl].AttachSizeToText	= {false, false};
 	//gui.Controls.Modes			[menu.IdControl].Design				= true;
 	return 0;
 }

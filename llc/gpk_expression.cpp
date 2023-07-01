@@ -372,7 +372,7 @@ static	::gpk::error_t	expressionReaderProcessDocCharacter		(::gpk::SExpressionRe
 	::gpk::SExpressionReaderState				& stateReader						= reader.StateRead;
 	::gpk::apod<::gpk::SExpressionToken>		& tokens							= reader.Token;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < expression.size(); ++stateReader.IndexCurrentChar) {
-		gpk_necall(::gpk::expressionReaderParseStep(reader, expression), "%s", "Unknown error.");
+		gpk_necs(::gpk::expressionReaderParseStep(reader, expression));
 		if(stateReader.IndexCurrentChar < expression.size() && expression[stateReader.IndexCurrentChar] == 0)
 			break;
 		gpk_necall(stateReader.NestLevel, "Nest level cannot be negative. Current level: %i.", stateReader.NestLevel);

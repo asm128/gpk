@@ -38,6 +38,17 @@ namespace gpk
 	template<typename _tUIEnum>
 	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids) {
 		return ::gpk::guiCreateControlList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
+	} 
+
+	::gpk::cid_t			createScreenLayout			(::gpk::SGUI & gui, ::gpk::cid_t parent = -1);
+
+	template<typename _tEnum>
+	::gpk::error_t			setupControlListWithRoot	(::gpk::SGUI & gui, ::gpk::acid & outIds, ::gpk::cid_t parent, const ::gpk::n2u16 & buttonSize, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER)		{
+		::gpk::cid_t				root						= outIds[outIds.push_back(::gpk::createScreenLayout(gui, parent))];
+		::gpk::vcvcc				labels						= ::gpk::get_value_labels<_tEnum>();
+		gpk_necs(labels.slice(labels, 1));
+
+		return ::gpk::guiCreateControlList(gui, labels, root, buttonSize, {}, controlAlign, textAlign, outIds);
 	}
 
 	struct SControlList {
