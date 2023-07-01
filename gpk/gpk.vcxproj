@@ -23,11 +23,13 @@
     <ClInclude Include="gpk_http_server.h" />
     <ClInclude Include="gpk_lobby.h" />
     <ClInclude Include="gpk_udp_client.h" />
+    <ClInclude Include="gpk_udp_client_app.h" />
     <ClInclude Include="gpk_udp_server.h" />
     <ClInclude Include="gpk_bitmap_file.h" />
     <ClInclude Include="gpk_ro_gnd.h" />
     <ClInclude Include="gpk_ro_rsm.h" />
     <ClInclude Include="gpk_ro_rsw.h" />
+    <ClInclude Include="gpk_udp_server_app.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp" />
@@ -36,7 +38,9 @@
     <ClCompile Include="gpk_ro_rsm.cpp" />
     <ClCompile Include="gpk_ro_rsw.cpp" />
     <ClCompile Include="gpk_udp_client.cpp" />
+    <ClCompile Include="gpk_udp_client_app.cpp" />
     <ClCompile Include="gpk_udp_server.cpp" />
+    <ClCompile Include="gpk_udp_server_app.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

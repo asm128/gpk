@@ -40,9 +40,8 @@
 		const ::gpk::SUDPCommand				udpCommand				= messageReceived->Command;
 		if( udpCommand.Type		!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST 
 		 || udpCommand.Command	!= ::gpk::ENDPOINT_COMMAND_PAYLOAD
-		) {
+		) 
 			continue;
-		}
 		gpk_necs(receivedMessages.push_back(messageReceived));
 		gpk_necs(client.Queue.Received.remove_unordered(iMessage--));
 	}

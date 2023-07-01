@@ -48,6 +48,12 @@
     <ClInclude Include="gpk_lobby.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_udp_client_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_udp_server_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_bitmap_file.cpp">
@@ -70,6 +76,12 @@
     </ClCompile>
     <ClCompile Include="gpk_ro_rsw.cpp">
       <Filter>ragnarok</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_udp_client_app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_udp_server_app.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

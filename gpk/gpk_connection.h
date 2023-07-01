@@ -146,8 +146,8 @@ namespace gpk
 		return 0;
 	}
 
-	typedef	::gpk::apo<::gpk::SUDPMessage>	TUDPQueue;
-	typedef	::gpk::apo<::gpk::au8>			TQueueSend;
+	typedef	::gpk::apobj<::gpk::SUDPMessage>	TUDPQueue;
+	typedef	::gpk::apobj<::gpk::au8>			TQueueSend;
 }
 
 #endif // GPK_CONNECTION_H_23627
