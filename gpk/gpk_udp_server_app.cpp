@@ -66,7 +66,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	es_if_failed(::gpk::serverPayloadCollect(server.UDP, server.QueueReceived));
 
 	server.UDP.Clients.enumerate([&server](uint32_t & iClient, ::gpk::pobj<::gpk::SUDPConnection> & client){
-		server.QueueToSend[iClient].for_each([&client](::gpk::pau8 & payload){
+		server.QueueToSend[iClient]->for_each([&client](::gpk::pau8 & payload) {
 			if(payload && payload->size())
 				gpk_necs(::gpk::connectionPushData(*client, client->Queue, *payload));
 

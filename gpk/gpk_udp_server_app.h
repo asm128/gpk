@@ -33,8 +33,8 @@ namespace gpk
 	struct SServer {
 		gpk::SUDPServer			UDP;
 
-		gpk::ao<gpk::TUDPQueue>	QueueReceived;
-		gpk::ao<gpk::TQueueSend>QueueToSend;
+		gpk::ao<gpk::TUDPQueue>		QueueReceived;
+		gpk::apobj<gpk::TQueueSend>	QueueToSend;	// A queue for each client
 
 		::gpk::vcs				Adapter				= "0";	// default
 		::gpk::vcs				Port				= "9865";
