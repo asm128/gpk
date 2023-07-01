@@ -89,6 +89,7 @@
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
+    <ClInclude Include="gpk_sun.h" />
     <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
+    <ClCompile Include="gpk_sun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

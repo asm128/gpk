@@ -627,6 +627,9 @@
     <ClInclude Include="gpk_img_serialize.h">
       <Filter>image</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_sun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -823,6 +826,9 @@
     </ClCompile>
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_sun.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
