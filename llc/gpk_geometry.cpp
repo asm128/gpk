@@ -117,7 +117,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	}
 
 	// -- Generate normals
-	gpk_necs(geometry.Normals.resize(vertexCount, {0, 1, 0}));	// The normals are all the same for a circle
+	gpk_necs(geometry.Normals.resize(vertexCount + 1, {0, 1, 0}));	// The normals are all the same for a circle
 
 	for(uint32_t iSlice = 0; iSlice < params.Slices; ++iSlice)
 		gpk_necs(geometry.PositionIndices.append({vertexOffset + 0, vertexOffset + iSlice + 1, vertexOffset + iSlice + 2}));

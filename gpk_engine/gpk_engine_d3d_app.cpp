@@ -47,9 +47,8 @@
 }
 
 
-::gpk::error_t						gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget)	{
-	::gpk::n3f32								cameraFront						= (cameraTarget - cameraPosition).Normalize();
-	::gpk::minmax<float>					nearFar 						= {.0001f, 10.0f}; 
+::gpk::error_t						gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar)	{
+	::gpk::n3f32							cameraFront						= (cameraTarget - cameraPosition).Normalize();
 
 	::gpk::SEngineSceneConstants			& constants						= d3dScene.ConstantBufferScene;
 	constants.CameraPosition			= cameraPosition;
@@ -97,7 +96,7 @@
 	return 0;
 }
 
-::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget) {
+::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar) {
 	{ // Set up render target for this frame
 		ID3D11DeviceContext3						* context							= d3dApp.DeviceResources->GetD3DDeviceContext();
 		const D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.
@@ -110,7 +109,7 @@
 		context->ClearDepthStencilView(d3dApp.DeviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);	
 	}
 	{ // Render 3d scene
-		gpk_necs(::gpk::d3dDrawEngineScene(d3dApp.Scene, engineScene, d3dApp.DeviceResources->GetLogicalSize().u16(), lightPos, cameraPosition, cameraTarget));
+		gpk_necs(::gpk::d3dDrawEngineScene(d3dApp.Scene, engineScene, d3dApp.DeviceResources->GetLogicalSize().u16(), lightPos, cameraPosition, cameraTarget, nearFar));
 	}
 	{ // Render GUI
 		gpk_necs(::gpk::d3dGUIDraw(*d3dApp.DeviceResources, d3dApp.GUIStuff)); 

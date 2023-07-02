@@ -25,7 +25,7 @@ namespace gpk
 		::gpk::m4f32			Screen					= {}; 
 		::gpk::m4f32			VP						= {}; 
 		::gpk::m4f32			VPS						= {}; 
-		::gpk::n3f32			CameraPosition			= {}; 
+		::gpk::n3f32			CameraPosition			= {};
 		float					CameraAngle				= 0;
 		::gpk::n3f32			CameraFront				= {}; 
 		float					PaddingB				= 0;

@@ -7,19 +7,19 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SCameraPoints {
-		::gpk::n3f32		Position	;
-		::gpk::n3f32		Target		;
+		::gpk::n3f32		Position	= {100, 25, 100};
+		::gpk::n3f32		Target		= {};
 	};
 
 	struct SCameraVectors {
-		::gpk::n3f32		Front		;
-		::gpk::n3f32		Up			;
-		::gpk::n3f32		Right		;
+		::gpk::n3f32		Front		= {1, 0, 0};
+		::gpk::n3f32		Up			= {0, 1, 0};
+		::gpk::n3f32		Right		= {0, 0, 1};
 	};
 
 	struct SCameraRange {
-		::gpk::minmaxf32	NearFar		;
-		double				Angle		;
+		::gpk::minmaxf32	NearFar		= {.01f, 10000.f};
+		double				Angle		= ::gpk::math_pi * .25;
 	};
 #pragma pack(pop)
 } // namespace

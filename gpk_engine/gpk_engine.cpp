@@ -92,10 +92,10 @@
 	entity.RigidBody		= this->Integrator.Create();
 
 	::gpk::SCamera				camera;
-	camera.Angle			= .25 * ::gpk::math_pi;
 	camera.Front			= {1, 0, 0};
 	camera.Up				= {0, 1, 0};
 	camera.Right			= {0, 0, 1};
+	camera.Angle			= .25 * ::gpk::math_pi;
 
 	Scene->RenderNodes.Cameras		[entity.RenderNode]->push_back(camera);
 	Scene->RenderNodes.Transforms	[entity.RenderNode]		= {};
@@ -422,8 +422,8 @@ static ::gpk::error_t	createEntityFromGeometry
 
 	::gpk::error_t				indexOrbit						= CreateCircle(paramsOrbit);
 	::gpk::error_t				indexOrbiter					= CreateSphere(paramsOrbiter);
-	Integrator.Delete(Entities[indexOrbit	].RigidBody);
-	Integrator.Delete(Entities[indexOrbiter	].RigidBody);
+	Integrator.Delete(Integrator.Frames.size() - 1);
+	Integrator.Delete(Integrator.Frames.size() - 1);
 
 	const ::gpk::error_t		bodyOrbit						= ::gpk::createOrbiter(Integrator
 		, mass

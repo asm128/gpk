@@ -60,10 +60,10 @@ namespace gpk
 	};
 
 	struct SCamera {
-		::gpk::n3f32				Front;
-		::gpk::n3f32				Right;
-		::gpk::n3f32				Up;
-		double						Angle;
+		::gpk::n3f32				Front	= {1, 0, 0};
+		::gpk::n3f32				Right	= {0, 0, 1};
+		::gpk::n3f32				Up		= {0, 1, 0};
+		double						Angle	= .25 * ::gpk::math_pi;
 	};
 #pragma pack(pop)
 
