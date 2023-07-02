@@ -211,9 +211,10 @@ namespace gpk
 	stacxpr	::gpk::vcc	STR_NULL		= {4, "null"};
 	stacxpr	::gpk::vcc	STR_TRUE		= {4, "true"};
 	stacxpr	::gpk::vcc	STR_FALSE		= {5, "false"};
-	stincxp	const char*	bool2char		(bool b)	{ return b ? ::gpk::STR_TRUE.begin() : ::gpk::STR_FALSE.begin(); } 
-	stincxp	uint8_t		bool2u8			(bool b)	{ return b ? 1 : 0; } 
-	stincxp	uint8_t		bool2i8			(bool b)	{ return b ? 1 : 0; } 
+	stincxp	const char*	bool2char		(bool b)		{ return b ? ::gpk::STR_TRUE.begin() : ::gpk::STR_FALSE.begin(); } 
+	stincxp	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
+	stincxp	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
+	inline	bool		char2bool		(::gpk::vcc b)	{ return b == ::gpk::STR_TRUE; } 
 
 
 	struct view_string : public view<char> {
