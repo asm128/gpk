@@ -333,40 +333,40 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 	}
 	return 0;
 }
+//
+//::gpk::error_t			gpk::geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
+//	(void)radius;
+//	for(uint32_t z = 0; z < stacks; ++z)
+//	for(uint32_t x = 0; x < slices; ++x)  {
+//		::gpk::n2f32									texcoords	[4]			=
+//			{ {0, 0}
+//			, {0, 1}
+//			, {1, 0}
+//			, {1, 1}
+//			};
+//		::gpk::n3f64									coords	[4]				=
+//			{ {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
+//			, {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1) /slices)}
+//			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
+//			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1)	/slices)}
+//			};
+//		::gpk::tri3f32								triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
+//		::gpk::tri3f32								triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
+//		::gpk::tri2f32								triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
+//		::gpk::tri2f32								triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
+//		triangleA.Translate(gridCenter * -1);
+//		triangleB.Translate(gridCenter * -1);
+//		geometry.Triangles		.push_back(triangleA);
+//		geometry.Triangles		.push_back(triangleB);
+//		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
+//		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f32());
+//		geometry.TextureCoords	.push_back(triangleATex);
+//		geometry.TextureCoords	.push_back(triangleBTex);
+//	}
+//	return 0;
+//}
 
-::gpk::error_t			gpk::geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
-	(void)radius;
-	for(uint32_t z = 0; z < stacks; ++z)
-	for(uint32_t x = 0; x < slices; ++x)  {
-		::gpk::n2f32									texcoords	[4]			=
-			{ {0, 0}
-			, {0, 1}
-			, {1, 0}
-			, {1, 1}
-			};
-		::gpk::n3f64									coords	[4]				=
-			{ {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
-			, {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1) /slices)}
-			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
-			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1)	/slices)}
-			};
-		::gpk::tri3f32								triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
-		::gpk::tri3f32								triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
-		::gpk::tri2f32								triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
-		::gpk::tri2f32								triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
-		triangleA.Translate(gridCenter * -1);
-		triangleB.Translate(gridCenter * -1);
-		geometry.Triangles		.push_back(triangleA);
-		geometry.Triangles		.push_back(triangleB);
-		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
-		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f32());
-		geometry.TextureCoords	.push_back(triangleATex);
-		geometry.TextureCoords	.push_back(triangleBTex);
-	}
-	return 0;
-}
-
-::gpk::error_t			gpk::geometryBuildHalfHelix	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale)	{
+::gpk::error_t			gpk::geometryBuildHelixHalf	(SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale)	{
 	::gpk::n2f32									texCoordUnits				= {1.0f / slices, 1.0f / stacks};
 	for(uint32_t z = 0; z < stacks; ++z)
 	for(uint32_t x = 0; x < slices; ++x)  {

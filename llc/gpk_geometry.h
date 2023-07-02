@@ -52,7 +52,7 @@ namespace gpk
 		::gpk::n2f32		Size			= {1, 1};
 
 		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Outward == other.Outward && Size == other.Size); 
-	};																														
+	};
 
 	struct SParamsHelix { 
 		::gpk::n2f32		Origin			= {0, .5f};
@@ -61,17 +61,17 @@ namespace gpk
 		float				Length			= 1;
 
 		GPK_DEFAULT_OPERATOR(SParamsHelix, Origin == other.Origin && CellCount == other.CellCount && Radius == other.Radius && Length == other.Length); 
-	};																														
+	};
 
 #pragma pack(pop)
 	::gpk::error_t	geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
 	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere		& params);
 	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);
 	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid		& params);
-	::gpk::error_t	geometryBuildHalfHelix	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
+	::gpk::error_t	geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
 	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-
-	::gpk::error_t	geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
+	::gpk::error_t	geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
+	//::gpk::error_t	geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
 
 } // namespace
 

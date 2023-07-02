@@ -124,7 +124,39 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount); 
 }
 
-::gpk::error_t			gpk::geometryBuildHalfHelix	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
+//
+::gpk::error_t			gpk::geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) { //(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter)	{
+	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const ::gpk::n2u16			vertexCount					= params.CellCount + ::gpk::n2u16{1, 1};
+
+	// -- Generate texture coordinates
+	const ::gpk::n2f64			cellUnits					= {1.0f / params.CellCount.x, 1.0f / params.CellCount.y};
+	geometry.TextureCoords	.reserve(vertexCount.Area());
+	geometry.Positions		.reserve(vertexCount.Area());
+	geometry.Normals		.reserve(vertexCount.Area());
+	vertexCount.for_each([&geometry, &params, cellUnits](::gpk::n2u16 & coord) { geometry.TextureCoords.push_back(::gpk::n2u32{coord.x, (uint32_t)params.CellCount.y - coord.y}.f32().InPlaceScale(cellUnits).f32()); });
+
+	//const double				lengthScale					= cellUnits.y * params.Length;
+	const ::gpk::n2f64			sliceScale					= ::gpk::n2f64{::gpk::math_2pi * cellUnits.x, ::gpk::math_pi * cellUnits.y};
+	const ::gpk::n3f64			center						= {params.Origin.x, 0, params.Origin.y};
+	for(uint32_t y = 0; y < vertexCount.y; ++y) {
+		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
+		for(uint32_t x = 0; x < vertexCount.x; ++x) {
+			::gpk::n3f64				position					= {sin(sliceScale.y * y) * sin(sliceScale.x * x) * radius, sin(sliceScale.y * y) * sin(::gpk::math_pi * x / params.CellCount.x) * params.Length, cos(sliceScale.x * x) * radius};
+			geometry.Positions.push_back((position - center).f32());
+		}
+	}
+	gpk_necs(::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount)); 
+	for(uint32_t iVertexIndex = 0; iVertexIndex < geometry.PositionIndices.size(); iVertexIndex += 3) {
+		const ::gpk::n3f32	a	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 0]];
+		const ::gpk::n3f32	b	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 1]];
+		const ::gpk::n3f32	c	= geometry.Positions[geometry.PositionIndices[iVertexIndex + 2]];
+		geometry.Normals.push_back((a - b).Normalize().Cross((a - c).Normalize()).Normalize());
+	}
+	return 0;
+}
+
+::gpk::error_t			gpk::geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u16			vertexCount					= params.CellCount + ::gpk::n2u16{1, 1};
 
@@ -159,7 +191,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 ::gpk::error_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
 	const uint32_t				vertexOffset				= geometry.Positions.size();
-	::gpk::geometryBuildHalfHelix(geometry, params);
+	::gpk::geometryBuildHelixHalf(geometry, params);
 	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
 	gpk_necs(geometry.TextureCoords	.append({&geometry.TextureCoords[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Positions		.append({&geometry.Positions	[vertexOffset], vertexCount}));

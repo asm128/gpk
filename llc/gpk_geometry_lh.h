@@ -106,7 +106,7 @@ namespace gpk
 
 	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
 	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildHalfHelix	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
+	::gpk::error_t	geometryBuildHelixHalf	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
 	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
 	::gpk::error_t	geometryBuildTender		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
 	::gpk::error_t	geometryBuildFigure0	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);

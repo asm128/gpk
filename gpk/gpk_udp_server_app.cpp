@@ -82,12 +82,12 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	return ::updateGUI(server, gui);
 }
 
-::gpk::error_t			gpk::processGUIEvent		(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
-	::gpk::SUDPServer			& udpServer		= server.UDP;
+::gpk::error_t			gpk::processGUIEvent	(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent) { 
+	::gpk::SUDPServer			& udpServer				= server.UDP;
 	switch(screenEvent.Type) {
 	default: break;
 	case ::gpk::EVENT_GUI_CONTROL_StateChange: {
-		const ::gpk::SChangeControlState	stateChange	= *(const ::gpk::SChangeControlState*)screenEvent.Data.begin();
+		const ::gpk::SChangeControlState	stateChange		= *(const ::gpk::SChangeControlState*)screenEvent.Data.begin();
 		if(0 == (stateChange.Set & ::gpk::GUI_CONTROL_FLAG_Action))
 			return 0;
 
@@ -97,7 +97,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 
 			switch(iInput) {
 			default: break;
-			case ::gpk::UI_SERVER_INPUT_Exit			: return 1;
+			case ::gpk::UI_SERVER_INPUT_Exit		: return 1;
 			case ::gpk::UI_SERVER_INPUT_Disconnect	: return 0;
 			case ::gpk::UI_SERVER_INPUT_Restart		: 
 				if(udpServer.Listen)

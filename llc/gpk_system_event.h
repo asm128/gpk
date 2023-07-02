@@ -14,6 +14,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Joypad		, 5);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Text		, 6);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, GUI		, 7);
+	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Audio		, 8);
+	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Camera		, 9);
 
 	typedef ::gpk::SEvent            <SYSTEM_EVENT> SSystemEvent;
 	typedef ::gpk::FEventHandler     <SYSTEM_EVENT>	FSystemEvent;
