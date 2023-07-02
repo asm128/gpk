@@ -34,6 +34,16 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
 	};
 
+	struct SParamsCircle { 
+		::gpk::n3f32		Origin			= {};
+		uint16_t			Slices			= 16;
+		bool				Reverse			= false;
+		float				DiameterRatio	= 1.0f;
+		float				Radius			= .5f;
+	
+		GPK_DEFAULT_OPERATOR(SParamsCircle, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+	};
+
 	struct SParamsCylinder { 
 		::gpk::n3f32		Origin			= {0, .5f};
 		::gpk::n2u16		CellCount		= {16, 2};
@@ -64,6 +74,7 @@ namespace gpk
 	};
 
 #pragma pack(pop)
+	::gpk::error_t	geometryBuildCircle		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle		& params);
 	::gpk::error_t	geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
 	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere		& params);
 	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);

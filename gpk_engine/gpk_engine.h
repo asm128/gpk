@@ -26,6 +26,7 @@ namespace gpk
 		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox		;
 		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere	;
 		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder	;
+		::gpk::SLinearPODMap<SParamsCircle	, uint32_t>	ParamsCircle	;
 		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid		;
 		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelixHalf	;
 		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelix		;
@@ -123,12 +124,23 @@ namespace gpk
 		::gpk::error_t					CreateBox			(const ::gpk::SParamsBox		& params);
 		::gpk::error_t					CreateSphere		(const ::gpk::SParamsSphere		& params);
 		::gpk::error_t					CreateCylinder		(const ::gpk::SParamsCylinder	& params);
+		::gpk::error_t					CreateCircle		(const ::gpk::SParamsCircle		& params);
 		::gpk::error_t					CreateGrid			(const ::gpk::SParamsGrid		& params);
 		::gpk::error_t					CreateHelixHalf		(const ::gpk::SParamsHelix		& params);
 		::gpk::error_t					CreateHelix			(const ::gpk::SParamsHelix		& params);
 		::gpk::error_t					CreateFigure0		(const ::gpk::SParamsHelix		& params);
+		::gpk::error_t					CreateOrbiter		
+			( double diameter
+			, double mass
+			, double distance
+			, double axialTilt_aka_obliquityToOrbit
+			, double rotation_period
+			, double rotation_unit
+			, double orbital_period
+			, double orbital_inclination
+			, double distance_scale
+			);
 
-		::gpk::error_t					CreateCircle		();
 		::gpk::error_t					CreateRing			();
 		::gpk::error_t					CreateTriangle		();
 

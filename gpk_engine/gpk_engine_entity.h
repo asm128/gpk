@@ -45,6 +45,18 @@ namespace gpk
 			return Entities.remove_unordered(index);
 		}
 
+		::gpk::error_t						SetParent		(uint32_t index, int32_t indexParent) {
+			for(uint32_t iParent = 0; iParent < Entities.size(); ++iParent) {
+				if(Children[iParent]) {
+					const int32_t oldChild				= Children[iParent]->find(index);
+					if(-1 != oldChild)
+						Children[iParent]->remove(oldChild);
+				}
+			}
+			Entities[index].Parent				= indexParent;
+			return (indexParent != -1) ? 0 : Children[indexParent]->push_back(index);
+		}
+
 		::gpk::error_t						Save			(::gpk::au8 & output) const { 
 			gpk_necs(::gpk::saveView(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {

@@ -119,6 +119,16 @@ namespace gpk
 			return TransformsLocal	.push_back(MatrixIdentity4);
 		}
 
+		int32_t 									Delete							(uint32_t iBody)	{
+			Frames					.remove_unordered(iBody);
+			Flags					.remove_unordered(iBody);
+			Forces					.remove_unordered(iBody);
+			Masses					.remove_unordered(iBody);
+			Centers					.remove_unordered(iBody);
+			BoundingVolumes			.remove_unordered(iBody);
+			return TransformsLocal	.remove_unordered(iBody);
+		}
+
 		int32_t 									Create							(uint32_t bodyCount)	{
 			const uint32_t									indexFirstBody					= Centers.size();
 			const uint32_t									newSize							= indexFirstBody + bodyCount;

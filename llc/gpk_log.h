@@ -442,6 +442,9 @@ namespace gpk
 #	define ce_if							continue_gerror_if
 #	define cw_if							continue_gwarn_if
 #	define ci_if							continue_ginfo_if
+#	define ces_if							continue_gserror_if
+#	define cws_if							continue_gswarn_if
+#	define cis_if							continue_gsinfo_if
 #endif
 
 #ifndef rve_if
@@ -503,6 +506,13 @@ namespace gpk
 #	define ws_if_failed(condition)				ws_if(::gpk::failed(::gpk::error_t(condition)))
 #	define is_if_failed(condition)				is_if(::gpk::failed(::gpk::error_t(condition)))
 #	define as_if_failed(condition)				as_if(::gpk::failed(::gpk::error_t(condition)))
+
+#	define ce_if_failed(condition, format, ...)	ce_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define cw_if_failed(condition, format, ...)	cw_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ci_if_failed(condition, format, ...)	ci_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ces_if_failed(condition)				ces_if(::gpk::failed(::gpk::error_t(condition)))
+#	define cws_if_failed(condition)				cws_if(::gpk::failed(::gpk::error_t(condition)))
+#	define cis_if_failed(condition)				cis_if(::gpk::failed(::gpk::error_t(condition)))
 #endif
 
 #ifndef rwe_if

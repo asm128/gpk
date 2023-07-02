@@ -99,6 +99,32 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount); 
 }
 
+::gpk::error_t			gpk::geometryBuildCircle	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle & params) {
+	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const uint32_t				vertexCount					= (uint32_t)params.Slices + 1;
+	const double				cellUnits					= 1.0 / params.Slices;
+	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
+	const double				sliceScale					= cellUnits * ::gpk::math_2pi * params.DiameterRatio * reverseScale;
+	const double				sliceOffset					= ::gpk::math_2pi * (1.0 - params.DiameterRatio);
+
+	// -- Generate positions and texture coordinates
+	gpk_necs(geometry.Positions		.push_back(::gpk::n3f32{.5f, 0, .5f} - params.Origin));	// The first vertex is the center of the circle
+	gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f32{.5f, .5f}));					// The first vertex is the center of the circle
+	for(uint32_t iSlice = 0; iSlice < vertexCount; ++iSlice) {
+		double						angle						= sliceScale * iSlice + sliceOffset;
+		gpk_necs(geometry.Positions		.push_back(::gpk::n3f64{params.Radius}.RotateY(angle).f32() - params.Origin));
+		gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f64{.5}.Rotate(angle).f32() + ::gpk::n2f32{.5f, .5f}));
+	}
+
+	// -- Generate normals
+	gpk_necs(geometry.Normals.resize(vertexCount, {0, 1, 0}));	// The normals are all the same for a circle
+
+	for(uint32_t iSlice = 0; iSlice < params.Slices; ++iSlice)
+		gpk_necs(geometry.PositionIndices.append({vertexOffset + 0, vertexOffset + iSlice + 1, vertexOffset + iSlice + 2}));
+
+	return 0; 
+}
+
 ::gpk::error_t			gpk::geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u16			vertexCount					= params.CellCount + ::gpk::n2u16{1, 1};

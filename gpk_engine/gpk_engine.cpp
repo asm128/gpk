@@ -57,6 +57,15 @@
 	return 0;
 }
 
+::gpk::error_t			gpk::SEngine::CreateRing		()	{ 	
+	int32_t						iEntity							= this->Entities.Create();
+	return iEntity;
+ }
+::gpk::error_t			gpk::SEngine::CreateTriangle	()	{ 	
+	int32_t						iEntity							= this->Entities.Create();
+	return iEntity;
+ }
+
 ::gpk::error_t			gpk::SEngine::CreateLight(::gpk::LIGHT_TYPE type) {
 	int32_t							iEntity				= this->Entities.Create();
 	::gpk::SVirtualEntity			& entity			= Entities[iEntity];
@@ -241,7 +250,7 @@ template<typename _tParams>
 static ::gpk::error_t	createEntityFromGeometry
 	( ::gpk::SEngine							& engine
 	, const ::gpk::vcc							name		
-	, const ::gpk::n3f32							halfSizes
+	, const ::gpk::n3f32						halfSizes
 	, bool										createSkin
 	, const _tParams							& params
 	, ::gpk::SLinearPODMap<_tParams, uint32_t>	& recycleRenderNodeMap
@@ -356,7 +365,7 @@ static ::gpk::error_t	createEntityFromGeometry
 }
 
 ::gpk::error_t			gpk::SEngine::CreateHelix		(const ::gpk::SParamsHelix & params)	{ 
-	stacxpr	float				radius							= .5f;
+	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Helix"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
@@ -365,7 +374,7 @@ static ::gpk::error_t	createEntityFromGeometry
 }
 
 ::gpk::error_t			gpk::SEngine::CreateFigure0		(const ::gpk::SParamsHelix & params)	{ 
-	stacxpr	float				radius							= .5f;
+	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Figure0"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
@@ -374,7 +383,7 @@ static ::gpk::error_t	createEntityFromGeometry
 }
 
 ::gpk::error_t			gpk::SEngine::CreateCylinder	(const SParamsCylinder & params)	{ 
-	const	float				radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
+	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
@@ -382,17 +391,55 @@ static ::gpk::error_t	createEntityFromGeometry
 		});
 }
 
-::gpk::error_t			gpk::SEngine::CreateCircle		()	{ 	
-	int32_t						iEntity							= this->Entities.Create();
-	return iEntity;
- }
-::gpk::error_t			gpk::SEngine::CreateRing		()	{ 	
-	int32_t						iEntity							= this->Entities.Create();
-	return iEntity;
- }
-::gpk::error_t			gpk::SEngine::CreateTriangle	()	{ 	
-	int32_t						iEntity							= this->Entities.Create();
-	return iEntity;
- }
+::gpk::error_t			gpk::SEngine::CreateCircle		(const SParamsCircle & params)	{ 
+	const float					radius							= params.Radius;
+	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Circle"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCircle
+		, [params](::gpk::SGeometryBuffers & geometry) { 
+			gpk_necs(::gpk::geometryBuildCircle(geometry, params));
+			return 0;
+		});
+}
 
- 
+::gpk::error_t			gpk::SEngine::CreateOrbiter		
+	( double radius
+	, double mass
+	, double distance
+	, double axialTilt_aka_obliquityToOrbit
+	, double rotation_period
+	, double rotation_unit
+	, double orbital_period
+	, double orbital_inclination
+	, double distance_scale
+	) {
+	::gpk::SParamsCircle		paramsOrbit						= {};
+	paramsOrbit.Origin		= {.5f, 0, .5f};
+	paramsOrbit.Slices		= 48;
+	paramsOrbit.Radius		= float(distance * distance_scale);
+
+	::gpk::SParamsSphere		paramsOrbiter					= {};
+	paramsOrbiter.Origin	= {.5f, 0, .5f};
+	paramsOrbiter.Radius	= (float)radius;
+
+	::gpk::error_t				indexOrbit						= CreateCircle(paramsOrbit);
+	::gpk::error_t				indexOrbiter					= CreateSphere(paramsOrbiter);
+	Integrator.Delete(Entities[indexOrbit	].RigidBody);
+	Integrator.Delete(Entities[indexOrbiter	].RigidBody);
+
+	const ::gpk::error_t		bodyOrbit						= ::gpk::createOrbiter(Integrator
+		, mass
+		, distance
+		, axialTilt_aka_obliquityToOrbit
+		, rotation_period
+		, rotation_unit
+		, orbital_period
+		, orbital_inclination
+		, distance_scale
+		);
+
+	Entities[indexOrbit		].RigidBody	= bodyOrbit + 0;
+	Entities[indexOrbiter	].RigidBody	= bodyOrbit + 1;
+
+	Entities.Entities[indexOrbiter	].Parent	= indexOrbit;
+	Entities.Children[indexOrbit	]->push_back(indexOrbiter);
+	return 0;
+}
