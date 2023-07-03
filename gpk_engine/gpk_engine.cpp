@@ -438,7 +438,8 @@ static ::gpk::error_t	createEntityFromGeometry
 
 	Entities[indexOrbit		].RigidBody	= bodyOrbit + 0;
 	Entities[indexOrbiter	].RigidBody	= bodyOrbit + 1;
-
+	this->SetPhysicsActive(bodyOrbit + 0, true);
+	this->SetPhysicsActive(bodyOrbit + 1, true);
 	Entities.Entities[indexOrbiter	].Parent	= indexOrbit;
 	Entities.Children[indexOrbit	]->push_back(indexOrbiter);
 	return 0;
