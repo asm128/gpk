@@ -21,9 +21,15 @@
 
 ::gpk::apod<char>		gpk::toString			(const ::gpk::vcc & strToLog)	{
 	::gpk::apod<char>			sprintfable				= strToLog;
+	if(sprintfable.size() && sprintfable[sprintfable.size() - 1] == 0) { // it already contains a null, so resize it to avoid counting it as part of the array.
+		sprintfable.resize(sprintfable.size() - 1);
+		return sprintfable;
+	}
+
 	es_if(::gpk::failed(sprintfable.push_back(0)))
 	else
 		es_if(::gpk::failed(sprintfable.resize(sprintfable.size()-1)));
+
 	return sprintfable;
 }
 
