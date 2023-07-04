@@ -2,8 +2,8 @@
 #include "gpk_n2.h"
 #include "gpk_file.h"
 
-#ifndef GPK_FILE_H_23627
-#define GPK_FILE_H_23627
+#ifndef GPK_ENGINE_FILE_H_23627
+#define GPK_ENGINE_FILE_H_23627
 
 namespace gpk 
 {
@@ -45,4 +45,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_FILE_H_230508
+#endif // GPK_ENGINE_FILE_H_23627

@@ -25,36 +25,21 @@
     <Filter Include="hlsl">
       <UniqueIdentifier>{6f0c05b2-b6f7-4a9a-8bfb-5eda7a1181bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{cbce9e49-87e6-4244-b2ba-101a0c73bc6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="astronomical">
+      <UniqueIdentifier>{e45540bf-f2cd-4ee1-a13a-bdc8b2ccd907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="container">
+      <UniqueIdentifier>{057ba543-985b-4a4b-a337-aa6d6664697e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gpk_engine_rendermesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_rendernode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_rendersurface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine_entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_renderbuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_rendercolor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_file.h">
@@ -64,9 +49,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_gui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_engine_map_pod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_explorer.h">
@@ -102,15 +84,42 @@
     <ClInclude Include="gpk_xaudio2.h">
       <Filter>xaudio2</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_engine_renderbuffer.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendercolor.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendermesh.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendernode.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_rendersurface.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_shader.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_celestial_body.h">
+      <Filter>astronomical</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_container.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_map_pod.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_planetary_system.h">
+      <Filter>astronomical</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_engine_scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_engine_shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_engine_file.cpp">
@@ -139,6 +148,18 @@
     </ClCompile>
     <ClCompile Include="WAVFileReader.cpp">
       <Filter>xaudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_shader.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_celestial_body.cpp">
+      <Filter>astronomical</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_planetary_system.cpp">
+      <Filter>astronomical</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +194,9 @@
     </None>
     <None Include="ShaderShared2D.hlsli">
       <Filter>hlsl</Filter>
+    </None>
+    <None Include="deploy_data.bat">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

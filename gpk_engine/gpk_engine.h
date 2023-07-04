@@ -24,13 +24,13 @@ namespace gpk
 		::gpk::SRigidBodyIntegrator						Integrator		;
 
 		::gpk::SLinearPODMap<SParamsBox		, uint32_t>	ParamsBox		;
-		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere	;
-		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder	;
 		::gpk::SLinearPODMap<SParamsCircle	, uint32_t>	ParamsCircle	;
+		::gpk::SLinearPODMap<SParamsCylinder, uint32_t>	ParamsCylinder	;
+		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsFigure0	;
 		::gpk::SLinearPODMap<SParamsGrid	, uint32_t>	ParamsGrid		;
 		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelixHalf	;
 		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsHelix		;
-		::gpk::SLinearPODMap<SParamsHelix	, uint32_t>	ParamsFigure0	;
+		::gpk::SLinearPODMap<SParamsSphere	, uint32_t>	ParamsSphere	;
 
 		inline	::gpk::error_t			GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t			GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }
