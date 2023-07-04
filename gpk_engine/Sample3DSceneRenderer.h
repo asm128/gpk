@@ -24,7 +24,6 @@ namespace gpk
 		::gpk::acom<ID3D11ShaderResourceView>	ShaderResourceView;
 
 		// System resources for cube geometry.
-		::gpk::SRenderNodeConstants				ConstantBufferModel				= {};
 		::gpk::SEngineSceneConstants			ConstantBufferScene				= {};
 
 		// Variables used with the rendering loo
@@ -48,9 +47,9 @@ namespace gpk
 			IndexBuffer		.clear();
 		}
 
-		void									Render							(uint32_t iMesh, ::gpk::rangeu32 indexRange, uint32_t iTexture, uint32_t iShader) {
+		void									Render							(uint32_t iMesh, ::gpk::rangeu32 indexRange, uint32_t iTexture, uint32_t iShader, const::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
-			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &ConstantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
+			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 
 			// Each vertex is one instance of the VertexPositionColor struct.

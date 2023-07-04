@@ -7,9 +7,10 @@
 #include "gpk_view_n2.h"
 #include "gpk_view_tri.h"
 
+template <typename _tIndex>
 static	::gpk::error_t	transformTriangles					
 	( ::gpk::SVSOutput		& output
-	, ::gpk::vcu16			indices			
+	, ::gpk::view<const _tIndex>	indices			
 	, ::gpk::vc3f32			positions	
 	, ::gpk::vc3f32			normals		
 	, ::gpk::vc2f32			uv			
@@ -17,11 +18,11 @@ static	::gpk::error_t	transformTriangles
 	, const ::gpk::m4f32	& worldTransform	
 	, const ::gpk::n3f32	& cameraFront
 )	{ 
-	::gpk::vctriu16				view_indices			= {(const ::gpk::triu16*)indices.begin(), indices.size() / 3};
+	::gpk::vctri<_tIndex>				view_indices			= {(const ::gpk::tri<_tIndex>*)indices.begin(), indices.size() / 3};
 	const ::gpk::m4f32			mWVPS					= worldTransform * projection;
 
 	for(uint32_t iTriangle = 0; iTriangle < view_indices.size(); ++iTriangle) {
-		const ::gpk::triu16			vertexIndices			= view_indices[iTriangle];
+		const ::gpk::tri<_tIndex>	vertexIndices			= view_indices[iTriangle];
 		::gpk::tri3f32				transformedNormals		= {normals[vertexIndices.A], normals[vertexIndices.B], normals[vertexIndices.C]};
 		::gpk::transformDirection(transformedNormals, worldTransform);
 		transformedNormals.A.Normalize();
@@ -68,15 +69,32 @@ static	::gpk::error_t	transformTriangles
 
 	const ::gpk::SRenderNodeTransforms	& transforms	= scene.RenderNodes.Transforms[iRenderNode];
 	const ::gpk::m4f32			& worldTransform		= transforms.World;
-	const ::gpk::vcu16			indices					= (mesh.GeometryBuffers.size() > 0) ? ::gpk::vcu16	{(const uint16_t	*)scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)}	: ::gpk::vcu16{};
+
 	const ::gpk::vc3f32			positions				= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
 	const ::gpk::vc3f32			normals					= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
 	const ::gpk::vc2f32			uv						= (mesh.GeometryBuffers.size() > 3) ? ::gpk::vc2f32	{(const ::gpk::n2f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::n2f32)}	: ::gpk::vc2f32{};
 
-	const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
 
 	renderCache.VertexShaderOutput	= {};
-	::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
+
+	if(mesh.GeometryBuffers.size()) {
+		::gpk::pobj<::gpk::SRenderBuffer>	indexBuffer		= scene.Graphics->Buffers[mesh.GeometryBuffers[0]];
+		if(indexBuffer->Desc.Format.TotalBytes() == 1) {
+			const ::gpk::vcu8			indices					= ::gpk::vcu8{(const uint8_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint8_t)};
+			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
+		}
+		else if(indexBuffer->Desc.Format.TotalBytes() == 2) {
+			const ::gpk::vcu16			indices					= ::gpk::vcu16{(const uint16_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)};
+			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
+		}
+		else if(indexBuffer->Desc.Format.TotalBytes() == 4) {
+			const ::gpk::vcu32			indices					= ::gpk::vcu32{(const uint32_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint16_t)};
+			const ::gpk::SGeometrySlice	slice					= (renderNode.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[renderNode.Slice] : ::gpk::SGeometrySlice{{0, indices.size() / 3}};
+			::transformTriangles(renderCache.VertexShaderOutput, indices, positions, normals, uv, constants.VPS, worldTransform, constants.CameraFront);
+		}
+	}
 	return 0;
 }
 
@@ -143,6 +161,8 @@ static	::gpk::error_t	drawBuffers
 		const ::gpk::SRenderNode						& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
 		if(renderNode.Mesh >= scene.Graphics->Meshes.size())
 			continue;
+
+		info_printf("Mesh name: %s", scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 		
 		const ::gpk::SRenderNodeTransforms				& transforms			= scene.RenderNodes.Transforms[iRenderNode];
 		const ::gpk::m4f32								& worldTransform		= transforms.World;

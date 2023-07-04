@@ -62,6 +62,8 @@
 	constants.VP						= constants.View * constants.Perspective;
 	constants.VPS						= constants.VP * constants.Screen;
 
+	::gpk::SRenderNodeConstants				nodeConstants					= {};
+
 	for(uint32_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
 		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
@@ -73,7 +75,6 @@
 
 		const ::gpk::SRenderNodeTransforms		& transforms					= engineScene.RenderNodes.Transforms[iNode];
 
-		::gpk::SRenderNodeConstants				& nodeConstants					= d3dScene.ConstantBufferModel;
 		nodeConstants.MVP					= (transforms.World * constants.View * constants.Perspective).GetTranspose();
 		nodeConstants.Model					= transforms.World.GetTranspose();
 		nodeConstants.ModelInverseTranspose	= transforms.WorldInverseTranspose.GetTranspose();
@@ -91,7 +92,7 @@
 		const ::gpk::SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
-		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader);
+		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, nodeConstants);
 	}
 	return 0;
 }
