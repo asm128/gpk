@@ -6,13 +6,17 @@
 #	endif
 #	include <Windows.h>
 #elif defined(GPK_ANDROID) || defined(GPK_LINUX)
+#	include "gpk_string.h"
 #	include <dirent.h>
-#endif
-
-#if defined(GPK_ANDROID) || defined(GPK_LINUX)
+#	include <sys/stat.h>
 //#	include <sys/types.h>
 //#	include <unistd.h>
+#else
+#	include "gpk_string.h"
+#	include <dirent.h>
 #	include <sys/stat.h>
+//#	include <sys/types.h>
+//#	include <unistd.h>
 #endif
 
 ::gpk::error_t			gpk::findLastSlash			(const ::gpk::vcc & path)		{

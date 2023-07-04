@@ -126,7 +126,7 @@ static	::gpk::error_t	processSystemEventNew	(::SApplication & app, const ::gpk::
 #if !defined(DISABLE_D3D11) 
 	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
 	
-	gpk_necs(::gpk::guiDraw(*app.D1.AppUI.Dialog.GUI, app.D3DApp.GUIStuff.RenderTarget));
+	gpk_necs(::gpk::guiDraw(*app.Editor.AppUI.Dialog.GUI, app.D3DApp.GUIStuff.RenderTarget));
 
 	const ::d1::SCamera			& cameraSelected		= app.D1.MainGame.CameraSelected();
 	const ::gpk::SEngineScene	& engineScene			= *app.D1.MainGame.Pool.Engine.Scene;

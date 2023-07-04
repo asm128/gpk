@@ -2,6 +2,10 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_label.h"
 
+#ifndef GPK_WINDOWS
+#	include "gpk_string.h"
+#endif
+
 ::gpk::error_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
 	::gpk::au16					keys;
 	for(uint16_t i = 1; i < 255; ++i) {
