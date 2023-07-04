@@ -14,8 +14,8 @@ namespace gpk
 		::gpk::ai32							Entity;
 	};
 
-	::gpk::error_t			planetarySystemSetup		(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
-	::gpk::error_t			planetarySystemSetup		(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath);
+	::gpk::error_t			planetarySystemSetup		(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
+	::gpk::error_t			planetarySystemSetup		(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath);
 } // namespace
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701

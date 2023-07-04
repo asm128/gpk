@@ -1,4 +1,5 @@
-#include "gpk_engine.h"
+#include "gpk_engine_map_pod.h"
+
 #include "gpk_json.h"
 
 #ifndef GPK_ENGINE_CELESTIAL_BODY
