@@ -1,6 +1,7 @@
 #include "gpk_datatype.h"
 #include "gpk_enum.h"
 #include "gpk_engine_container.h"
+#include "gpk_geometry_buffers.h"
 
 #ifndef GPK_ENGINE_RENDERBUFFER_H_23627
 #define GPK_ENGINE_RENDERBUFFER_H_23627
@@ -34,32 +35,57 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SRenderBufferDescription {
-		::gpk::SDataTypeID							Format				= {};
-		BUFFER_USAGE								Usage				= {};
-		uint8_t										PitchStride			= {};
-		uint16_t									PitchRow			: 15;
-		uint16_t									Frequency			: 1;
+		::gpk::SDataTypeID			Format			= {};
+		BUFFER_USAGE				Usage			= {};
+		uint8_t						PitchStride		= {};
+		uint16_t					PitchRow		: 15;
+		uint16_t					Frequency		: 1;
 	};
 #pragma pack(pop)
 
 	struct SRenderBuffer {
-		SRenderBufferDescription					Desc			= {};
-		::gpk::au8									Data			= {};
+		SRenderBufferDescription	Desc			= {};
+		::gpk::au8					Data			= {};
 
-		::gpk::error_t								Save			(::gpk::apod<uint8_t> & output)	const	{ 			
+		::gpk::error_t				Save			(::gpk::apod<uint8_t> & output)	const	{ 			
 			gpk_necs(::gpk::savePOD	(output, Desc));
 			gpk_necs(::gpk::saveView(output, Data));
 			return 0; 
 		}
 
-		::gpk::error_t								Load			(::gpk::vcu8 & input)	{ 
+		::gpk::error_t				Load			(::gpk::vcu8 & input)	{ 
 			gpk_necs(::gpk::loadPOD (input, Desc));
 			gpk_necs(::gpk::loadView(input, Data));
 			return 0;
 		}
 	};
 
+	::gpk::error_t				createBuffers
+		( uint32_t						vertexCount
+		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
+		, ::gpk::pobj<SRenderBuffer>	& pVertices
+		, ::gpk::pobj<SRenderBuffer>	& pNormals
+		, ::gpk::pobj<SRenderBuffer>	& pUV
+		);
+
+	::gpk::error_t				createBuffers
+		( const ::gpk::SGeometryBuffers	& geometry
+		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
+		, ::gpk::pobj<SRenderBuffer>	& pVertices
+		, ::gpk::pobj<SRenderBuffer>	& pNormals
+		, ::gpk::pobj<SRenderBuffer>	& pUV
+		);
+
 	typedef	::gpk::SLinearNamedMap<::gpk::SRenderBuffer>	SRenderBufferManager;
+
+	::gpk::error_t				createBuffers
+		( SRenderBufferManager			& bufferManager 
+		, const ::gpk::SGeometryBuffers	& geometry
+		, uint32_t						& iIndicesVertex
+		, uint32_t						& iVertices
+		, uint32_t						& iNormals
+		, uint32_t						& iUV
+		);
 } // namespace
 
 #endif // GPK_ENGINE_RENDERBUFFER_H_23627

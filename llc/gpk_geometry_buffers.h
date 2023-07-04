@@ -15,4 +15,4 @@ namespace gpk
 	};
 } // gpk
 
-#endif // GPK_TRIANGLESINDEXED_H_23627
+#endif // GPK_GEOMETRYBUFFERS_H_23627

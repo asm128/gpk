@@ -102,7 +102,7 @@
 	return iEntity;
 }
 
-static ::gpk::error_t	createBuffers	
+::gpk::error_t			gpk::createBuffers	
 	( uint32_t							vertexCount
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
@@ -128,14 +128,14 @@ static ::gpk::error_t	createBuffers
 	return 0;
 }
 
-static ::gpk::error_t	createBuffers	
-	( const ::gpk::SGeometryBuffers	& geometry
+::gpk::error_t			gpk::createBuffers	
+	( const ::gpk::SGeometryBuffers		& geometry
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
 	) {
-	gpk_necs(::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
+	gpk_necs(::gpk::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
 
 	pVertices	->Data.resize(geometry.Positions	.byte_count());
 	pNormals	->Data.resize(geometry.Normals		.byte_count());
@@ -161,16 +161,16 @@ static ::gpk::error_t	createBuffers
 	return 0;
 }
 
-static ::gpk::error_t	createBuffers
-	( ::gpk::SRenderBufferManager		& bufferManager 
+::gpk::error_t			gpk::createBuffers
+	( ::gpk::SRenderBufferManager	& bufferManager 
 	, const ::gpk::SGeometryBuffers	& geometry
-	, uint32_t							& iIndicesVertex
-	, uint32_t							& iVertices
-	, uint32_t							& iNormals
-	, uint32_t							& iUV
+	, uint32_t						& iIndicesVertex
+	, uint32_t						& iVertices
+	, uint32_t						& iNormals
+	, uint32_t						& iUV
 	) {
 	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex, pVertices, pNormals, pUV;
-	gpk_necs(::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
+	gpk_necs(::gpk::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
 	gpk_necs(iIndicesVertex			= (uint32_t)bufferManager.push_back(pIndicesVertex));
 	gpk_necs(iVertices				= (uint32_t)bufferManager.push_back(pVertices));
 	gpk_necs(iNormals				= (uint32_t)bufferManager.push_back(pNormals));
@@ -178,107 +178,8 @@ static ::gpk::error_t	createBuffers
 	return 0;
 }
 
-static ::gpk::error_t	createRenderNode
-	( ::gpk::SEngineScene				& scene
-	, const ::gpk::SGeometryBuffers	& geometry
-	, const ::gpk::vcc					name 
-	, bool								createSkin
-	) {
-	uint32_t					iIndicesVertex			= 0;
-	uint32_t					iVertices				= 0;
-	uint32_t					iNormals				= 0;
-	uint32_t					iUV						= 0;
-	::createBuffers(scene.Graphics->Buffers, geometry, iIndicesVertex, iVertices, iNormals, iUV);
-
-	uint32_t					iMesh					= (uint32_t)scene.Graphics->Meshes.Create();
-	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= scene.Graphics->Meshes[iMesh];
-	scene.Graphics->Meshes.Names[iMesh] = name;
-	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
-
-	mesh->Desc.Mode			= ::gpk::MESH_MODE_List;
-	mesh->Desc.Type			= ::gpk::GEOMETRY_TYPE_Triangle;
-	mesh->Desc.NormalMode	= ::gpk::NORMAL_MODE_Point;
-
-
-	uint32_t					iRenderNode				= scene.RenderNodes.Create();
-	::gpk::SRenderNode			& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
-	renderNode.Mesh			= iMesh;
-	if(createSkin) {
-		uint32_t					iSkin					= (uint32_t)scene.Graphics->Skins.Create();
-		::gpk::pobj<::gpk::SSkin>	& skin					= scene.Graphics->Skins.Elements[iSkin];
-		skin->Material.Color.Ambient	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]) * .1f;
-		skin->Material.Color.Diffuse	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
-		skin->Material.Color.Specular	= ::gpk::WHITE;
-		skin->Material.SpecularPower	= 0.5f;
-
-		uint32_t					iSurface				= (uint32_t)scene.Graphics->Surfaces.Create();
-		skin->Textures.push_back(iSurface);
-
-		skin->Material.Color.Ambient	*= .1f;
-
-		::gpk::pobj<::gpk::SSurface>	& surface			= scene.Graphics->Surfaces[iSurface];
-		surface->Desc.ColorType			= ::gpk::COLOR_TYPE_BGRA;
-		surface->Desc.MethodCompression	= 0;
-		surface->Desc.MethodFilter		= 0;
-		surface->Desc.MethodInterlace	= 0;
-		surface->Desc.Dimensions		= {32, 32};
-		surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::bgra));
-		memset(surface->Data.begin(), 0xFF, surface->Data.size());
-		::gpk::g8bgra	view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
-		::gpk::rgba					color					= {::gpk::ASCII_PALETTE[rand() % 16]};
-		for(uint32_t y = surface->Desc.Dimensions.y / 3; y < surface->Desc.Dimensions.y / 3U * 2U; ++y)
-		for(uint32_t x = 0; x < surface->Desc.Dimensions.x; ++x)
-			view[y][x]	= color;
-
-
-		mesh->GeometrySlices.resize(1);	// 
-
-		::gpk::SGeometrySlice		& slice					= mesh->GeometrySlices[0];
-		slice.Slice				= {0, geometry.PositionIndices.size()};
-
-		renderNode.Skin			= iSkin;
-		renderNode.Slice		= 0;
-		scene.Graphics->Shaders[renderNode.Shader = scene.Graphics->Shaders.push_back({})].create(::gpk::psSolid);
-		scene.Graphics->Shaders.Names[renderNode.Shader] = "psSolid";
-	}
-	return iRenderNode;
-}
-
-typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;
-
-template<typename _tParams>
-static ::gpk::error_t	createEntityFromGeometry
-	( ::gpk::SEngine							& engine
-	, const ::gpk::vcc							name		
-	, const ::gpk::n3f32						halfSizes
-	, bool										createSkin
-	, const _tParams							& params
-	, ::gpk::SLinearPODMap<_tParams, uint32_t>	& recycleRenderNodeMap
-	, const TGeometryFunc						& funcGeometry
-	) {
-	int32_t						iEntity					= engine.Entities.Create();
-	engine.Entities.Names[iEntity]	= name;
-
-	::gpk::SVirtualEntity		& entity				= engine.Entities[iEntity];
-	engine.Integrator.BoundingVolumes[entity.RigidBody = engine.Integrator.Create()].HalfSizes = halfSizes;
-
-	int32_t						reuse					= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
-	if(recycleRenderNodeMap.size() > (uint32_t)reuse)
-		entity.RenderNode		= engine.Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
-	else {
-		::gpk::SGeometryBuffers	geometry;
-		gpk_necs(funcGeometry(geometry));
-		if(!engine.Scene)
-			engine.Scene.create();
-		entity.RenderNode		= ::createRenderNode(*engine.Scene, geometry, name, createSkin);
-		recycleRenderNodeMap.push_back(params, entity.RenderNode);
-	}
-
-	return iEntity;
-};
-
 ::gpk::error_t			gpk::SEngine::CreateBox	(const ::gpk::SParamsBox & params)	{
-	int32_t						iEntity					= ::createEntityFromGeometry(*this, ::gpk::vcs{"Box"}, params.HalfSizes.f32(), false, params, ParamsBox
+	int32_t						iEntity					= CreateEntityFromGeometry(::gpk::vcs{"Box"}, params.HalfSizes.f32(), false, params, ParamsBox
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildBox(geometry, params); 
 		});
@@ -340,7 +241,7 @@ static ::gpk::error_t	createEntityFromGeometry
 }
 
 ::gpk::error_t			gpk::SEngine::CreateSphere		(const SParamsSphere & params)	{ 
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Sphere"}, ::gpk::n3f32{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
+	return CreateEntityFromGeometry(::gpk::vcs{"Sphere"}, ::gpk::n3f32{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildSphere(geometry, params); 
 		});
@@ -348,7 +249,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateGrid		(const SParamsGrid & params)	{ 
 	stacxpr	float				radius							= .5f;
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Grid"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsGrid
+	return CreateEntityFromGeometry(::gpk::vcs{"Grid"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsGrid
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
 			return 0;
@@ -357,7 +258,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateHelixHalf	(const ::gpk::SParamsHelix & params)	{ 
 	stacxpr	float				radius							= .5f;
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Helix half"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(::gpk::vcs{"Helix half"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildHelixHalf(geometry, params));
 			return 0;
@@ -366,7 +267,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateHelix		(const ::gpk::SParamsHelix & params)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Helix"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(::gpk::vcs{"Helix"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
 			return 0;
@@ -375,7 +276,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateFigure0		(const ::gpk::SParamsHelix & params)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Figure0"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(::gpk::vcs{"Figure0"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
 			return 0;
@@ -384,7 +285,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateCylinder	(const SParamsCylinder & params)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
+	return CreateEntityFromGeometry(::gpk::vcs{"Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
 			return 0;
@@ -393,7 +294,7 @@ static ::gpk::error_t	createEntityFromGeometry
 
 ::gpk::error_t			gpk::SEngine::CreateCircle		(const SParamsCircle & params)	{ 
 	const float					radius							= params.Radius;
-	return ::createEntityFromGeometry(*this, ::gpk::vcs{"Circle"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCircle
+	return CreateEntityFromGeometry(::gpk::vcs{"Circle"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCircle
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(::gpk::geometryBuildCircle(geometry, params));
 			return 0;

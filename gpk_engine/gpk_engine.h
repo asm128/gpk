@@ -45,6 +45,13 @@ namespace gpk
 		inline	SBodyMass&				GetBodyMass			(uint32_t iEntity)				{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
 		inline	SBodyCenter&			GetBodyCenter		(uint32_t iEntity)				{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
 
+		::gpk::error_t					Load				(::gpk::vcu8 & input) {
+			gpk_necs(Scene		->Load(input));
+			gpk_necs(Entities	.Load(input));
+			gpk_necs(Integrator	.Load(input));
+			return 0;
+		}
+
 		::gpk::error_t					Save				(::gpk::au8 & output)	const	{
 			if(Scene)
 				gpk_necs(Scene->Save(output));
@@ -55,10 +62,16 @@ namespace gpk
 			gpk_necs(Integrator	.Save(output));
 			return 0;
 		}
-		::gpk::error_t					Load				(::gpk::vcu8 & input) {
-			gpk_necs(Scene		->Load(input));
-			gpk_necs(Entities	.Load(input));
-			gpk_necs(Integrator	.Load(input));
+
+		::gpk::error_t					Update				(double secondsLastFrame)			{
+			Integrator.Integrate(secondsLastFrame);
+			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
+				::gpk::SVirtualEntity				& entity			= Entities[iEntity];
+				if(entity.Parent != -1)
+					continue;
+
+				es_if(errored(::gpk::updateEntityTransforms(iEntity, entity, Entities, Integrator, Scene->RenderNodes)));
+			}
 			return 0;
 		}
 
@@ -156,23 +169,41 @@ namespace gpk
 		}
 
 		inline	::gpk::error_t			CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
-			SParamsGrid							params			= {};
+			SParamsGrid							params				= {};
 			params.Origin					= {.5f, .5f};
 			params.CellCount				= cellCount;
 			params.Outward					= topRight;
 			return CreateGrid(params); 
 		}
 
-		::gpk::error_t					Update				(double secondsLastFrame)			{
-			Integrator.Integrate(secondsLastFrame);
-			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
-				::gpk::SVirtualEntity				& entity			= Entities[iEntity];
-				if(entity.Parent != -1)
-					continue;
+		typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;
 
-				es_if(errored(::gpk::updateEntityTransforms(iEntity, entity, Entities, Integrator, Scene->RenderNodes)));
+		template<typename _tParams>
+		::gpk::error_t					CreateEntityFromGeometry
+			( const ::gpk::vcc							name		
+			, const ::gpk::n3f32						halfSizes
+			, bool										createSkin
+			, const _tParams							& params
+			, ::gpk::SLinearPODMap<_tParams, uint32_t>	& recycleRenderNodeMap
+			, const TGeometryFunc						& funcGeometry
+			) {
+			int32_t								iEntity				= Entities.Create();
+			Entities.Names[iEntity]			= name;
+
+			::gpk::SVirtualEntity				& entity			= Entities[iEntity];
+			Integrator.BoundingVolumes[entity.RigidBody = Integrator.Create()].HalfSizes = halfSizes;
+
+			int32_t								reuse				= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
+			if(recycleRenderNodeMap.size() > (uint32_t)reuse)
+				entity.RenderNode				= Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
+			else {
+				::gpk::SGeometryBuffers	geometry;
+				gpk_necs(funcGeometry(geometry));
+				entity.RenderNode				= Scene->CreateRenderNode(geometry, name, createSkin);
+				recycleRenderNodeMap.push_back(params, entity.RenderNode);
 			}
-			return 0;
+
+			return iEntity;
 		}
 	};
 

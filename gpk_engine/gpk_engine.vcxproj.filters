@@ -122,12 +122,6 @@
     <ClCompile Include="gpk_engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_engine_file.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_engine_soundbuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_engine_collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

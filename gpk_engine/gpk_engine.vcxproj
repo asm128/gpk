@@ -218,8 +218,6 @@
     <ClCompile Include="gpk_engine_explorer.cpp" />
     <ClCompile Include="gpk_engine_scene.cpp" />
     <ClCompile Include="gpk_engine_shader.cpp" />
-    <ClCompile Include="gpk_engine_soundbuffer.cpp" />
-    <ClCompile Include="gpk_engine_file.cpp" />
     <ClCompile Include="WaveBankReader.cpp" />
     <ClCompile Include="WAVFileReader.cpp" />
   </ItemGroup>

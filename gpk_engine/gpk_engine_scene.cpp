@@ -186,3 +186,68 @@ static	::gpk::error_t	drawBuffers
 	}
 	return 0;
 }
+
+::gpk::error_t			gpk::SEngineScene::CreateRenderNode
+	( const ::gpk::SGeometryBuffers		& geometry
+	, const ::gpk::vcc					name 
+	, bool								createSkin
+	) {
+	uint32_t					iIndicesVertex			= 0;
+	uint32_t					iVertices				= 0;
+	uint32_t					iNormals				= 0;
+	uint32_t					iUV						= 0;
+	::gpk::createBuffers(Graphics->Buffers, geometry, iIndicesVertex, iVertices, iNormals, iUV);
+
+	uint32_t					iMesh					= (uint32_t)Graphics->Meshes.Create();
+	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Graphics->Meshes[iMesh];
+	Graphics->Meshes.Names[iMesh] = name;
+	mesh->GeometryBuffers.append({iIndicesVertex, iVertices, iNormals, iUV});
+
+	mesh->Desc.Mode			= ::gpk::MESH_MODE_List;
+	mesh->Desc.Type			= ::gpk::GEOMETRY_TYPE_Triangle;
+	mesh->Desc.NormalMode	= ::gpk::NORMAL_MODE_Point;
+
+
+	uint32_t					iRenderNode				= RenderNodes.Create();
+	::gpk::SRenderNode			& renderNode			= RenderNodes.RenderNodes[iRenderNode];
+	renderNode.Mesh			= iMesh;
+	if(createSkin) {
+		uint32_t					iSkin					= (uint32_t)Graphics->Skins.Create();
+		::gpk::pobj<::gpk::SSkin>	& skin					= Graphics->Skins.Elements[iSkin];
+		skin->Material.Color.Ambient	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]) * .1f;
+		skin->Material.Color.Diffuse	= ::gpk::bgra(::gpk::ASCII_PALETTE[3]);
+		skin->Material.Color.Specular	= ::gpk::WHITE;
+		skin->Material.SpecularPower	= 0.5f;
+
+		uint32_t					iSurface				= (uint32_t)Graphics->Surfaces.Create();
+		skin->Textures.push_back(iSurface);
+
+		skin->Material.Color.Ambient	*= .1f;
+
+		::gpk::pobj<::gpk::SSurface>	& surface			= Graphics->Surfaces[iSurface];
+		surface->Desc.ColorType	= ::gpk::COLOR_TYPE_BGRA;
+		surface->Desc.MethodCompression	= 0;
+		surface->Desc.MethodFilter		= 0;
+		surface->Desc.MethodInterlace	= 0;
+		surface->Desc.Dimensions		= {32, 32};
+		surface->Data.resize(surface->Desc.Dimensions.Area() * sizeof(::gpk::bgra));
+		memset(surface->Data.begin(), 0xFF, surface->Data.size());
+		::gpk::g8bgra				view					= {(::gpk::bgra*)surface->Data.begin(), surface->Desc.Dimensions.u32()};
+		::gpk::rgba					color					= {::gpk::ASCII_PALETTE[rand() % 16]};
+		for(uint32_t y = surface->Desc.Dimensions.y / 3; y < surface->Desc.Dimensions.y / 3U * 2U; ++y)
+		for(uint32_t x = 0; x < surface->Desc.Dimensions.x; ++x)
+			view[y][x]				= color;
+
+
+		mesh->GeometrySlices.resize(1);	// 
+
+		::gpk::SGeometrySlice		& slice					= mesh->GeometrySlices[0];
+		slice.Slice				= {0, geometry.PositionIndices.size()};
+
+		renderNode.Skin			= iSkin;
+		renderNode.Slice		= 0;
+		Graphics->Shaders[renderNode.Shader = Graphics->Shaders.push_back({})].create(::gpk::psSolid);
+		Graphics->Shaders.Names[renderNode.Shader] = "psSolid";
+	}
+	return iRenderNode;
+}

@@ -5,15 +5,15 @@ static	::gpk::error_t	detectCylinder			(const ::gpk::SRigidBodyIntegrator & inte
 static	::gpk::error_t	detectCylinderAABB		(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t cylinder, uint32_t aabb, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) { (void)integrator, (void)cylinder, (void)aabb, (void)contactCache, (void)contactsDetected; return 0; }
 
 static	::gpk::error_t	detectSphere			(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t rigidBodyA, uint32_t rigidBodyB, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) {
-	const ::gpk::n3f32				& radiusA				= integrator.BoundingVolumes[rigidBodyA].HalfSizes;
-	const ::gpk::n3f32				& positionA				= integrator.Centers[rigidBodyA].Position;
-	const ::gpk::n3f32				& radiusB				= integrator.BoundingVolumes[rigidBodyB].HalfSizes;
-	const ::gpk::n3f32				& positionB				= integrator.Centers[rigidBodyB].Position;
+	const ::gpk::n3f32			& radiusA				= integrator.BoundingVolumes[rigidBodyA].HalfSizes;
+	const ::gpk::n3f32			& positionA				= integrator.Centers[rigidBodyA].Position;
+	const ::gpk::n3f32			& radiusB				= integrator.BoundingVolumes[rigidBodyB].HalfSizes;
+	const ::gpk::n3f32			& positionB				= integrator.Centers[rigidBodyB].Position;
 
-	const float						maxDistance				= radiusA.x + radiusB.x;
-	const float						collisionThreshold		= maxDistance * maxDistance;
+	const float					maxDistance				= radiusA.x + radiusB.x;
+	const float					collisionThreshold		= maxDistance * maxDistance;
 	contactCache.CenterDistance	= positionB - positionA;
-	const float						distanceSquared			= (float)contactCache.CenterDistance.LengthSquared();
+	const float					distanceSquared			= (float)contactCache.CenterDistance.LengthSquared();
 	if(distanceSquared >= collisionThreshold) 
 		return 0;
 
@@ -25,7 +25,7 @@ static	::gpk::error_t	detectSphere			(const ::gpk::SRigidBodyIntegrator & integr
 static	::gpk::error_t	detectSphereAABB		(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t bodySphere, uint32_t bodyAABB    , ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) { (void)integrator, (void)bodySphere, (void)bodyAABB, (void)contactCache, (void)contactsDetected; return 0; }
 static	::gpk::error_t	detectSphereCylinder	(const ::gpk::SRigidBodyIntegrator & integrator, uint32_t bodySphere, uint32_t bodyCylinder, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) { (void)integrator, (void)bodySphere, (void)bodyCylinder, (void)contactCache, (void)contactsDetected; return 0; }
 static	::gpk::error_t	detectSame				(const ::gpk::SRigidBodyIntegrator & integrator, ::gpk::BOUNDING_TYPE bvA, uint32_t rigidBodyA, uint32_t rigidBodyB, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) {
-	::gpk::error_t					result					= -1;
+	::gpk::error_t				result					= -1;
 	switch(bvA) {
 	default								: warning_printf("Unsupported type: (%i) %s.", bvA, ::gpk::get_value_namep(bvA)); break; 
 	case ::gpk::BOUNDING_TYPE_Sphere	: result = ::detectSphere  (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected); break; 
@@ -36,7 +36,7 @@ static	::gpk::error_t	detectSame				(const ::gpk::SRigidBodyIntegrator & integra
 }
 
 static	::gpk::error_t	collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & integrator, ::gpk::BOUNDING_TYPE bvA, ::gpk::BOUNDING_TYPE bvB, uint32_t rigidBodyA, uint32_t rigidBodyB, ::gpk::SContact & contactCache, ::gpk::apod<::gpk::SContact> & contactsDetected) {
-	::gpk::error_t					result					= 0;
+	::gpk::error_t				result					= 0;
 	if(bvA == bvB) 
 		return detectSame(integrator, bvA, rigidBodyA, rigidBodyB, contactCache, contactsDetected);
 
@@ -64,22 +64,22 @@ static	::gpk::error_t	collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & i
 }
 
 ::gpk::error_t			gpk::collisionDetect	(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected) {
-	uint32_t						count					= contactsDetected.size();
+	uint32_t					count					= contactsDetected.size();
 	for(::gpk::SContact	contact	= {totalSeconds}; contact.EntityA < engine.Entities.size(); ++contact.EntityA) {
-		const ::gpk::SVirtualEntity		& entityA				= engine.Entities[contact.EntityA];
+		const ::gpk::SVirtualEntity	& entityA				= engine.Entities[contact.EntityA];
 		if(entityA.RigidBody >= engine.Integrator.Flags.size())
 			continue;
 
-		const ::gpk::SBodyFlags	& flagsA				= engine.Integrator.Flags[entityA.RigidBody];
+		const ::gpk::SBodyFlags		& flagsA				= engine.Integrator.Flags[entityA.RigidBody];
 		if(false == flagsA.Collides)
 			continue;
 
 		for(contact.EntityB = contact.EntityA + 1; contact.EntityB < engine.Entities.size(); ++contact.EntityB) {
-			const ::gpk::SVirtualEntity		& entityB				= engine.Entities[contact.EntityB];
+			const ::gpk::SVirtualEntity	& entityB				= engine.Entities[contact.EntityB];
 			if(entityB.RigidBody >= engine.Integrator.Flags.size())
 				continue;
 
-			const ::gpk::SBodyFlags	& flagsB				= engine.Integrator.Flags[entityB.RigidBody];
+			const ::gpk::SBodyFlags		& flagsB				= engine.Integrator.Flags[entityB.RigidBody];
 			if(false == flagsB.Collides)
 				continue;
 
