@@ -343,5 +343,9 @@
 	this->SetPhysicsActive(bodyOrbit + 1, true);
 	Entities.Entities[indexOrbiter	].Parent	= indexOrbit;
 	Entities.Children[indexOrbit	]->push_back(indexOrbiter);
+
+	for(uint32_t i = 0; i < 1000; ++i)
+		Integrator.Integrate(3600);
+
 	return 0;
 }

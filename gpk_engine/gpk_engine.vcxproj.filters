@@ -172,6 +172,24 @@
     <FxCompile Include="vsGUI.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="psCylinder.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psCylinderIn.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psGrid.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psSphereAxis.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psSphereMeridian.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="psSphereSolid.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShaderShared.hlsli">
@@ -192,5 +210,6 @@
     <None Include="deploy_data.bat">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="gpk_solar_system.json" />
   </ItemGroup>
 </Project>

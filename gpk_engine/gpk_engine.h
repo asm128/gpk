@@ -144,14 +144,14 @@ namespace gpk
 		::gpk::error_t					CreateFigure0		(const ::gpk::SParamsHelix		& params);
 		::gpk::error_t					CreateOrbiter		
 			( double diameter
+			, double orbital_inclination
+			, double orbital_period
 			, double mass
+			, double axialTilt
 			, double distance
-			, double axialTilt_aka_obliquityToOrbit
+			, double distance_scale
 			, double rotation_period
 			, double rotation_unit
-			, double orbital_period
-			, double orbital_inclination
-			, double distance_scale
 			);
 
 		::gpk::error_t					CreateRing			();

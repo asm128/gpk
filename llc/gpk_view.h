@@ -111,10 +111,10 @@ namespace gpk
 		inline	::gpk::error_t	fill			(const T & value, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)		{ for(; offset < ::gpk::min(Count, stop); ++offset) Data[offset] = value; return Count; }
 
 
-		typedef	FVoid<T&>						TFuncForEach;
-		typedef	FVoid<const T&>					TFuncForEachConst;
-		typedef	FVoid<u32&, T&>					TFuncEnumerate;
-		typedef	FVoid<u32&, const T&>			TFuncEnumerateConst;
+		typedef	FVoid<T&>				TFuncForEach;
+		typedef	FVoid<const T&>			TFuncForEachConst;
+		typedef	FVoid<u32&, T&>			TFuncEnumerate;
+		typedef	FVoid<u32&, const T&>	TFuncEnumerateConst;
 
 		::gpk::error_t			for_each		(const TFuncForEach        & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
 		::gpk::error_t			for_each		(const TFuncForEachConst   & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
@@ -132,6 +132,10 @@ namespace gpk
 		::gpk::error_t			find			(const TFuncFindConst & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
 		::gpk::error_t			find			(const T & value, uint32_t offset = 0)						const	{ for(; offset < Count; ++offset) if(Data[offset] == value) return (::gpk::error_t)offset; return -1; }
 	
+		template<typename _tVal> ::gpk::error_t	max	(_tVal & maxFound, const FTransform<_tVal, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMax = 0; for(; offset < Count; ++offset) { _tVal value = funcComparand(Data[offset]); if(value > maxFound) { iMax = offset; maxFound = value; } } return iMax; }
+		template<typename _tVal> ::gpk::error_t	min	(_tVal & minFound, const FTransform<_tVal, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMin = 0; for(; offset < Count; ++offset) { _tVal value = funcComparand(Data[offset]); if(value < minFound) { iMin = offset; minFound = value; } } return iMin; }
+		template<typename _tVal> ::gpk::error_t	max	(const FTransform<_tVal, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tVal maxFound; return max(maxFound, funcComparand, offset); }
+		template<typename _tVal> ::gpk::error_t	min	(const FTransform<_tVal, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tVal minFound; return min(minFound, funcComparand, offset); }
 	}; // view<>
 
 	template<typename T>	using	view_array	= ::gpk::view<T>;

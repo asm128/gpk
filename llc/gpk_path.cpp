@@ -151,7 +151,7 @@
 		::gpk::achar				name						= ::gpk::vcs{drnt->d_name, (uint32_t)-1};
 		if (name != curDir && name != parDir) {
 			if(drnt->d_type == DT_DIR && false == listFolders)
-				continuewithoutTrailingSlash
+				continue;
 			int32_t						lenPath						= snprintf(sPath, ::gpk::size(sPath) - 2, "%s/%s", withoutTrailingSlash.begin(), drnt->d_name);
 			info_printf("Path: %s.", sPath);
 			gpk_necall(output.push_back(::gpk::vcc{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list.");

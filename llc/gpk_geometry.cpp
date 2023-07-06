@@ -108,10 +108,10 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	const double				sliceOffset					= ::gpk::math_2pi * (1.0 - params.DiameterRatio);
 
 	// -- Generate positions and texture coordinates
-	gpk_necs(geometry.Positions		.push_back(::gpk::n3f32{.5f, 0, .5f} - params.Origin));	// The first vertex is the center of the circle
+	gpk_necs(geometry.Positions		.push_back(params.Origin));	// The first vertex is the center of the circle
 	gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f32{.5f, .5f}));					// The first vertex is the center of the circle
-	for(uint32_t iSlice = 0; iSlice < vertexCount; ++iSlice) {
-		double						angle						= sliceScale * iSlice + sliceOffset;
+	for(uint32_t iVertex = 0; iVertex < vertexCount; ++iVertex) {
+		double						angle						= sliceScale * iVertex + sliceOffset;
 		gpk_necs(geometry.Positions		.push_back(::gpk::n3f64{params.Radius}.RotateY(angle).f32() - params.Origin));
 		gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f64{.5}.Rotate(angle).f32() + ::gpk::n2f32{.5f, .5f}));
 	}
@@ -119,8 +119,8 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	// -- Generate normals
 	gpk_necs(geometry.Normals.resize(vertexCount + 1, {0, 1, 0}));	// The normals are all the same for a circle
 
-	for(uint32_t iSlice = 0; iSlice < params.Slices; ++iSlice)
-		gpk_necs(geometry.PositionIndices.append({vertexOffset + 0, vertexOffset + iSlice + 1, vertexOffset + iSlice + 2}));
+	for(uint32_t iSlice = 0, sliceCount = params.Slices + 1; iSlice < sliceCount; ++iSlice)
+		gpk_necs(geometry.PositionIndices.append({vertexOffset + 0, vertexOffset + iSlice + 1, vertexOffset + iSlice + 0}));
 
 	return 0; 
 }
