@@ -344,8 +344,8 @@
 	Entities.Entities[indexOrbiter	].Parent	= indexOrbit;
 	Entities.Children[indexOrbit	]->push_back(indexOrbiter);
 
-	for(uint32_t i = 0; i < 1000; ++i)
-		Integrator.Integrate(3600);
+	for(uint32_t i = 0; i < 100; ++i)
+		Integrator.Integrate(36000);
 
 	return 0;
 }
