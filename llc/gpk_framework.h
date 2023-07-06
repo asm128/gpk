@@ -53,7 +53,7 @@ namespace gpk
 		::gpk::SWindow				RootWindow				= {};
 		::gpk::STimer				Timer					= {};
 		::gpk::SFrameInfo			FrameInfo				= {};
-		::gpk::SFrameworkSettings	Settings				= {1, };
+		::gpk::SFrameworkSettings	Settings				= {};
 		::gpk::SJSONFile			JSONConfig				= {};
 
 		::std::mutex				LockGUI;

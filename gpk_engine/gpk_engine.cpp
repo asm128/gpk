@@ -12,38 +12,38 @@
 	, ::gpk::SRenderNodeManager				& renderNodes
 	)
 {
-	const ::gpk::pau32			& children						= managedEntities.Children[iEntity];
+	const ::gpk::pau32			& children				= managedEntities.Children[iEntity];
 	if(-1 != entity.RenderNode) {
-		::gpk::SRenderNodeTransforms	& transforms					= renderNodes.Transforms[entity.RenderNode];
-		::gpk::m4f32					& worldTransform				= transforms.World;
+		::gpk::SRenderNodeConstants	& transforms			= renderNodes.Transforms[entity.RenderNode];
+		::gpk::m4f32				& worldTransform		= transforms.Model;
 		if(-1 == entity.RigidBody)
-			worldTransform				= ::gpk::m4f32::GetIdentity();
+			worldTransform			= ::gpk::m4f32::GetIdentity();
 		else {
 			integrator.GetTransform(entity.RigidBody, worldTransform);
 		}
 
-		worldTransform = renderNodes.BaseTransforms[entity.RenderNode].World * worldTransform;
+		worldTransform = renderNodes.BaseTransforms[entity.RenderNode].Model * worldTransform;
 
 		if(-1 != entity.Parent) {
-			const ::gpk::SVirtualEntity					& entityParent					= managedEntities.Entities[entity.Parent];
+			const ::gpk::SVirtualEntity	& entityParent			= managedEntities.Entities[entity.Parent];
 			if(-1 != entityParent.RenderNode)
-				worldTransform							= worldTransform * renderNodes.Transforms[entityParent.RenderNode].World;
+				worldTransform			= worldTransform * renderNodes.Transforms[entityParent.RenderNode].Model;
 			else if(-1 != entityParent.RigidBody) {
-				worldTransform							= worldTransform * integrator.TransformsLocal[entityParent.RigidBody];
+				worldTransform			= worldTransform * integrator.TransformsLocal[entityParent.RigidBody];
 			}
 		}
-		transforms.WorldInverse					= worldTransform.GetInverse();
-		transforms.WorldInverseTranspose		= transforms.WorldInverse.GetTranspose();
+		transforms.ModelInverse				= worldTransform.GetInverse();
+		transforms.ModelInverseTranspose	= transforms.ModelInverse.GetTranspose();
 	}
 	else if(-1 != entity.RigidBody) {
 		::gpk::m4f32							& worldTransform				= integrator.TransformsLocal[entity.RigidBody];
 		integrator.GetTransform(entity.RigidBody, worldTransform);
 		if(-1 != entity.Parent) {
-			const ::gpk::SVirtualEntity					& entityParent					= managedEntities.Entities[entity.Parent];
+			const ::gpk::SVirtualEntity				& entityParent					= managedEntities.Entities[entity.Parent];
 			if(-1 != entityParent.RenderNode)
-				worldTransform							= worldTransform * renderNodes.Transforms[entityParent.RenderNode].World;
+				worldTransform						= worldTransform * renderNodes.Transforms[entityParent.RenderNode].Model;
 			else if(-1 != entityParent.RigidBody) {
-				worldTransform							= worldTransform * integrator.TransformsLocal[entityParent.RigidBody];
+				worldTransform						= worldTransform * integrator.TransformsLocal[entityParent.RigidBody];
 			}
 		}
 	}

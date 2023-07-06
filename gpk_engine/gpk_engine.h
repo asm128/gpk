@@ -97,8 +97,8 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		inline	::gpk::error_t			SetMeshScale		(uint32_t iEntity, const ::gpk::n3f32 & scale)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].World.Scale(scale, true); return 0; }
-		inline	::gpk::error_t			SetMeshPosition		(uint32_t iEntity, const ::gpk::n3f32 & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].World.SetTranslation(position, false); return 0; }
+		inline	::gpk::error_t			SetMeshScale		(uint32_t iEntity, const ::gpk::n3f32 & scale)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); return 0; }
+		inline	::gpk::error_t			SetMeshPosition		(uint32_t iEntity, const ::gpk::n3f32 & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.SetTranslation(position, false); return 0; }
 		::gpk::error_t					SetColorDiffuse		(uint32_t iEntity, const ::gpk::rgbaf & diffuse)				{ Scene->Graphics->Skins[Scene->RenderNodes[GetRenderNode(iEntity)].Skin]->Material.Color.Diffuse = diffuse; return 0; }
 		::gpk::error_t					SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcs name) {
 			const uint32_t						iShader				= Scene->RenderNodes[GetRenderNode(iEntity)].Shader;

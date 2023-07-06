@@ -62,8 +62,6 @@
 	constants.VP						= constants.View * constants.Perspective;
 	constants.VPS						= constants.VP * constants.Screen;
 
-	::gpk::SRenderNodeConstants				nodeConstants					= {};
-
 	for(uint32_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
 		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
@@ -73,11 +71,12 @@
 		if(node.Mesh >= engineScene.Graphics->Meshes.size())
 			continue;
 
-		const ::gpk::SRenderNodeTransforms		& transforms					= engineScene.RenderNodes.Transforms[iNode];
+		::gpk::SRenderNodeConstants				nodeConstants					= engineScene.RenderNodes.Transforms[iNode];
 
-		nodeConstants.MVP					= (transforms.World * constants.View * constants.Perspective).GetTranspose();
-		nodeConstants.Model					= transforms.World.GetTranspose();
-		nodeConstants.ModelInverseTranspose	= transforms.WorldInverseTranspose.GetTranspose();
+		nodeConstants.MVP					= (nodeConstants.Model * constants.View * constants.Perspective).GetTranspose();
+		nodeConstants.Model					= nodeConstants.Model.GetTranspose();
+		nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverseTranspose.GetTranspose();
+		nodeConstants.NodeSize				= engineScene.RenderNodes.BaseTransforms[iNode].NodeSize; // Have to update this some other way.
 
 		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());

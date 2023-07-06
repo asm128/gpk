@@ -26,59 +26,72 @@ namespace gpk
 		uint32_t					Skin			= (uint32_t)-1;
 	};
 
-	struct SRenderNodeTransforms {
-		::gpk::m4f32					World					= ::gpk::m4f32::GetIdentity();
-		::gpk::m4f32					WorldInverse			= ::gpk::m4f32::GetIdentity();
-		::gpk::m4f32					WorldInverseTranspose	= ::gpk::m4f32::GetIdentity();
+	struct SRenderMaterial {
+		::gpk::SRenderColor		Color			= {};
+		::gpk::n3f32			Emission		= {};
+		float					SpecularPower	= {};
 	};
-	
+	stacxpr size_t		SRENDERMATERIALSIZE = sizeof(SRenderMaterial);
+
+	struct SRenderNodeConstants {
+		::gpk::SRenderMaterial	Material				= {};
+		::gpk::m4f32			MVP						= ::gpk::m4f32::GetIdentity();
+		::gpk::m4f32			Model					= ::gpk::m4f32::GetIdentity();
+		::gpk::m4f32			ModelInverse			= ::gpk::m4f32::GetIdentity();
+		::gpk::m4f32			ModelInverseTranspose	= ::gpk::m4f32::GetIdentity();
+		::gpk::n3f32			NodeSize				= {}; 
+		float					PaddingC				= 0;
+	};
+	stacxpr size_t		SRENDERNODECONSTANTSSIZE = sizeof(SRenderNodeConstants);
+
+
 	GDEFINE_ENUM_TYPE(LIGHT_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Directional	, 0);
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Point		, 1);
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Spot			, 2);
 
 	struct SLightSpot {
-		::gpk::n3f32				Direction;
-		::gpk::SRenderColor			Color;
-		float						SpotPower;
-		float						Range;
+		::gpk::n3f32			Direction;
+		::gpk::SRenderColor		Color;
+		float					SpotPower;
+		float					Range;
 	};
 
 	struct SLightPoint {
-		::gpk::SRenderColor			Color;
-		float						Range;
+		::gpk::SRenderColor		Color;
+		float					Range;
 	};
 
 	struct SLightDirectional {
-		::gpk::n3f32				Direction;
-		::gpk::SRenderColor			Color;
+		::gpk::n3f32			Direction;
+		::gpk::SRenderColor		Color;
 	};
 
 	struct SLight {
-		::gpk::LIGHT_TYPE			Type;
-		uint16_t					Index;
+		::gpk::LIGHT_TYPE		Type;
+		uint16_t				Index;
 	};
 
 	struct SCamera {
-		::gpk::n3f32				Front	= {1, 0, 0};
-		::gpk::n3f32				Right	= {0, 0, 1};
-		::gpk::n3f32				Up		= {0, 1, 0};
-		double						Angle	= .25 * ::gpk::math_pi;
+		::gpk::n3f32			Front	= {1, 0, 0};
+		::gpk::n3f32			Right	= {0, 0, 1};
+		::gpk::n3f32			Up		= {0, 1, 0};
+		double					Angle	= .25 * ::gpk::math_pi;
 	};
 #pragma pack(pop)
 
 	struct SRenderNodeManager {
-		::gpk::apod<::gpk::SRenderNode				>			RenderNodes			= {};
-		::gpk::apod<::gpk::SRenderNodeFlags			>			Flags				= {};
-		::gpk::apod<::gpk::SRenderNodeTransforms	>			Transforms			= {};
-		::gpk::apod<::gpk::SRenderNodeTransforms	>			BaseTransforms		= {};
-		::gpk::apobj<::gpk::apod<::gpk::SLight	>	>			Lights				= {};
-		::gpk::apobj<::gpk::apod<::gpk::SCamera	>	>			Cameras				= {};
-			 
-		// 	 
-		::gpk::apobj<::gpk::apod<::gpk::SLightDirectional	>>	LightsDirectional	= {};
-		::gpk::apobj<::gpk::apod<::gpk::SLightPoint			>>	LightsPoint			= {};
-		::gpk::apobj<::gpk::apod<::gpk::SLightSpot			>>	LightsSpot			= {};
+		::gpk::apod<::gpk::SRenderNode>				RenderNodes			= {};
+		::gpk::apod<::gpk::SRenderNodeFlags>		Flags				= {};
+		::gpk::apod<::gpk::SRenderNodeConstants>	Transforms			= {};
+		::gpk::apod<::gpk::SRenderNodeConstants>	BaseTransforms		= {};
+		//
+		::gpk::apobj<::gpk::apod<::gpk::SLight>>			Lights				= {};	// Map each light to either LightsDirectional, LightsPoint or LightsSpot
+		::gpk::apobj<::gpk::apod<::gpk::SCamera>>			Cameras				= {};	// Currently one camera type
+		//
+		::gpk::apobj<::gpk::apod<::gpk::SLightDirectional>>	LightsDirectional	= {};
+		::gpk::apobj<::gpk::apod<::gpk::SLightPoint>>		LightsPoint			= {};
+		::gpk::apobj<::gpk::apod<::gpk::SLightSpot>>		LightsSpot			= {};
 
 		const ::gpk::SRenderNode&			operator[]		(uint32_t index)							const	{ return RenderNodes[index]; }
 		SRenderNode&						operator[]		(uint32_t index)									{ return RenderNodes[index]; }
@@ -161,8 +174,8 @@ namespace gpk
 		}
 
 		::gpk::error_t						Clone		(uint32_t iNode)	{
-			gpk_necs(Transforms		.push_back(::gpk::SRenderNodeTransforms					{Transforms		[iNode]}));
-			gpk_necs(BaseTransforms	.push_back(::gpk::SRenderNodeTransforms					{BaseTransforms	[iNode]}));
+			gpk_necs(Transforms		.push_back(::gpk::SRenderNodeConstants					{Transforms		[iNode]}));
+			gpk_necs(BaseTransforms	.push_back(::gpk::SRenderNodeConstants					{BaseTransforms	[iNode]}));
 			gpk_necs(Lights			.push_back(::gpk::pobj<::gpk::apod<::gpk::SLight	>>	{Lights			[iNode]}));
 			gpk_necs(Cameras		.push_back(::gpk::pobj<::gpk::apod<::gpk::SCamera	>>	{Cameras		[iNode]}));
 			gpk_necs(Flags			.push_back(::gpk::SRenderNodeFlags						{Flags			[iNode]}));

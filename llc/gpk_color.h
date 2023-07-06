@@ -176,11 +176,25 @@ namespace gpk
 		cnstxpr					SColorFloat		(const SColorFloat & color)				noexcept	= default;
 		cnstxpr					SColorFloat		(f32 r_, f32 g_, f32 b_, f32 a_=1.0f)	noexcept	: color_rgba<float>{r_, g_, b_, a_}						{}
 		cnstxpr					SColorFloat		(const float* rgbaColor)							: color_rgba<float>{rgbaColor[0], rgbaColor[1], rgbaColor[2], rgbaColor[3]}	{}
-		cnstxpr					SColorFloat		(SColorBGRA Color)						noexcept	: color_rgba<float>
-			{ Color.r * BYTE_SCALE
-			, Color.g * BYTE_SCALE
-			, Color.b * BYTE_SCALE
-			, Color.a * BYTE_SCALE
+		cnstxpr					SColorFloat		(SColorBGRA color)						noexcept	: color_rgba<float>
+			{ color.r * BYTE_SCALE
+			, color.g * BYTE_SCALE
+			, color.b * BYTE_SCALE
+			, color.a * BYTE_SCALE
+			} {}
+
+		cnstxpr					SColorFloat		(::gpk::bgr8 color, uint8_t alpha)		noexcept	: color_rgba<float>
+			{ color.r * BYTE_SCALE
+			, color.g * BYTE_SCALE
+			, color.b * BYTE_SCALE
+			, alpha * BYTE_SCALE
+			} {}
+
+		cnstxpr					SColorFloat		(::gpk::rgbf32 color, float alpha)		noexcept	: color_rgba<float>
+			{ color.r 
+			, color.g 
+			, color.b 
+			, alpha 
 			} {}
 
 		COLOR_RGBA_OPERATOR_MEMBERS(SColorFloat); 
@@ -209,6 +223,8 @@ namespace gpk
 		cnstxpr	SColorFloat		operator /		(float scalar)				const				{ return {r / scalar,	g / scalar,	b / scalar};													}
 
 				SColorFloat&	Clamp			()									noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
+
+		cnstxpr	::gpk::rgbf32	rgb				()							const				{ return {r, g, b}; }
 	};	// struct
 
 	typedef ::gpk::SColorFloat					frgba	;

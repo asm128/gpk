@@ -190,6 +190,9 @@
     <FxCompile Include="psSphereSolid.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="psGridRuler.hlsl">
+      <Filter>hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShaderShared.hlsli">

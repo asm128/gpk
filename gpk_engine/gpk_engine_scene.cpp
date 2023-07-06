@@ -67,8 +67,8 @@ static	::gpk::error_t	transformTriangles
 	const ::gpk::SGeometryMesh	& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
 	verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iRenderNode, renderNode.Mesh, renderNode.Slice, scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 
-	const ::gpk::SRenderNodeTransforms	& transforms	= scene.RenderNodes.Transforms[iRenderNode];
-	const ::gpk::m4f32			& worldTransform		= transforms.World;
+	const ::gpk::SRenderNodeConstants	& transforms	= scene.RenderNodes.Transforms[iRenderNode];
+	const ::gpk::m4f32			& worldTransform		= transforms.Model;
 
 	const ::gpk::vc3f32			positions				= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
 	const ::gpk::vc3f32			normals					= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
@@ -107,13 +107,14 @@ static	::gpk::error_t	drawBuffers
 	, const ::gpk::SRenderMaterial						& material
 	, ::gpk::gc8bgra									surface
 	, const ::gpk::SEngineSceneConstants				& constants
+	, const ::gpk::SRenderNodeConstants					& nodeConstants
 	, const ::std::function<::gpk::TFuncPixelShader>	& ps
 	) {	// 
 	::gpk::atrif32				& triangleWeights			= cacheVS.TriangleWeights		;
 	::gpk::an2i16				& trianglePixelCoords		= cacheVS.SolidPixelCoords		;
 	const ::gpk::n2u16			offscreenMetrics			= backBufferColors.metrics().u16();
 	const ::gpk::n3f32			lightDirectionNormalized	= ::gpk::n3f32{constants.LightDirection}.Normalize();
-	::gpk::SPSIn				inPS						= {};
+	::gpk::SPSIn				inPS						= {nodeConstants};
 	inPS.Surface			= surface;
 	inPS.Material			= material;
 
@@ -154,31 +155,32 @@ static	::gpk::error_t	drawBuffers
 ) {	//
 	static ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
 	for(uint32_t iRenderNode = 0, countNodes = scene.RenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
-		const ::gpk::SRenderNodeFlags					& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
+		const ::gpk::SRenderNodeFlags	& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
 		if(renderNodeFlags.NoDraw)
 			continue;
 
-		const ::gpk::SRenderNode						& renderNode			= scene.RenderNodes.RenderNodes[iRenderNode];
+		const ::gpk::SRenderNode		& renderNode		= scene.RenderNodes.RenderNodes[iRenderNode];
 		if(renderNode.Mesh >= scene.Graphics->Meshes.size())
 			continue;
 
 		info_printf("Mesh name: %s", scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 		
-		const ::gpk::SRenderNodeTransforms				& transforms			= scene.RenderNodes.Transforms[iRenderNode];
-		const ::gpk::m4f32								& worldTransform		= transforms.World;
+		::gpk::SRenderNodeConstants		transforms			= scene.RenderNodes.Transforms[iRenderNode];
+		transforms.NodeSize	= scene.RenderNodes.BaseTransforms[iRenderNode].NodeSize;
+		const ::gpk::m4f32				& worldTransform	= transforms.Model;
 		if((worldTransform.GetTranslation() - constants.CameraPosition).Normalize().Dot(constants.CameraFront) <= 0)
 			return 0;
 
 		ce_if(errored(::transformTriangles(renderCache, scene, constants, iRenderNode)), "iRenderNode %i", iRenderNode);
 
-		const ::gpk::SSkin										& skin						= *scene.Graphics->Skins.Elements[renderNode.Skin];
-		const ::gpk::SRenderMaterial							& material					= skin.Material;
-		const uint32_t											tex							= skin.Textures[0];
-		const ::gpk::SSurface									& surface					= *scene.Graphics->Surfaces[tex];
-		const ::std::function<::gpk::TFuncPixelShader>			& fx
+		const ::gpk::SSkin				& skin				= *scene.Graphics->Skins.Elements[renderNode.Skin];
+		const ::gpk::SRenderMaterial	& material			= skin.Material;
+		const uint32_t					tex					= skin.Textures[0];
+		const ::gpk::SSurface			& surface			= *scene.Graphics->Surfaces[tex];
+		const ::std::function<::gpk::TFuncPixelShader>	& fx
 			= (renderNode.Shader >= scene.Graphics->Shaders.size()) ? defaultShader : *scene.Graphics->Shaders[renderNode.Shader];
 
-		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u32()}, constants, fx);
+		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u32()}, constants, transforms, fx);
 	}
 
 	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().u16();

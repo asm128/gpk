@@ -28,34 +28,26 @@ namespace gpk
 		::gpk::n3f32			CameraPosition			= {};
 		float					CameraAngle				= 0;
 		::gpk::n3f32			CameraFront				= {}; 
-		float					PaddingB				= 0;
-		::gpk::n3f32			LightPosition			= {}; 
-		float					PaddingC				= 0;
+		float					PaddingA				= 0;
 		::gpk::n3f32			LightDirection			= {}; 
 		float					LightSpotPower			= 0;
+		::gpk::n3f32			LightPosition			= {}; 
+		float					PaddingB				= 0;
 	};
+	stacxpr size_t		SENGINESCENECONSTANTSSIZE = sizeof(SEngineSceneConstants);
 
-	struct SRenderMaterial {
-		::gpk::SRenderColor		Color;
-		::gpk::n3f32			Emission;
-		float					SpecularPower;
-	};
-
-	struct SRenderNodeConstants {
-		::gpk::m4f32			Model;
-		::gpk::m4f32			ModelInverseTranspose;
-		::gpk::m4f32			MVP;
-		::gpk::SRenderMaterial	Material;
-	};
-#pragma pack(pop)
 
 	struct SPSIn {
+		const ::gpk::SRenderNodeConstants & NodeConstants;
 		::gpk::n3f32			WeightedPosition	;
 		::gpk::n3f32			WeightedNormal		;
 		::gpk::n2f32			WeightedUV			;
 		::gpk::SRenderMaterial	Material			;
 		::gpk::gc8bgra			Surface				; 
 	};
+
+	stacxpr size_t		SPSINSIZE = sizeof(SPSIn);
+#pragma pack(pop)
 
 	typedef ::gpk::error_t	(TFuncPixelShader)
 		( const ::gpk::SEngineSceneConstants	& constants
