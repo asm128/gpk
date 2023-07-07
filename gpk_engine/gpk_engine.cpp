@@ -327,14 +327,14 @@
 	Integrator.Delete(Integrator.Frames.size() - 1);
 
 	const ::gpk::error_t		bodyOrbit						= ::gpk::createOrbiter(Integrator
+		, orbital_inclination
+		, orbital_period
 		, mass
-		, distance
 		, axialTilt_aka_obliquityToOrbit
+		, distance
+		, distance_scale
 		, rotation_period
 		, rotation_unit
-		, orbital_period
-		, orbital_inclination
-		, distance_scale
 		);
 
 	Entities[indexOrbit		].RigidBody	= bodyOrbit + 0;
@@ -347,5 +347,5 @@
 	for(uint32_t i = 0; i < 100; ++i)
 		Integrator.Integrate(36000);
 
-	return 0;
+	return indexOrbit;
 }

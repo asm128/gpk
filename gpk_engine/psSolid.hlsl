@@ -5,5 +5,5 @@ float4 main(PixelShaderInput input) : SV_TARGET {
 	
 	float fLighting = saturate(dot(normalize(LightDirectionAndSpotPower.xyz), normalize(input.world.normal)));
 	fLighting = min( max( fLighting, .1f ), 0.5f);
-	return vDiffuse * fLighting;
+	return float4((vDiffuse * fLighting).rgb, Diffuse.a * vDiffuse.a);
 }

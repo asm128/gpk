@@ -188,7 +188,7 @@ namespace gpk
 				::gpk::SBodyCenter					& bodyCenter					= Centers	[iBody];
 				::gpk::integrateForces	(duration, bodyFrame, bodyForces, bodyMass);
 				::gpk::integratePosition(duration, durationHalfSquared, bodyFlags, bodyCenter, bodyForces);
-				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .01) {
+				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .0001) {
 					bodyFlags.Active				= false;
 					bodyForces						= {};
 				}
@@ -217,6 +217,8 @@ namespace gpk
 
 		inline	void						SetActive						(uint32_t iBody, bool active)								{ Flags[iBody].Active	= active; }
 		inline	void						SetCollides						(uint32_t iBody, bool collides)								{ Flags[iBody].Collides	= collides; }
+		inline	void						SetHalfSizes					(uint32_t iBody, const ::gpk::n3f32 & halfSizes)			{ BoundingVolumes[iBody].HalfSizes	= halfSizes; }
+		
 		inline	void						SetMassInverse					(uint32_t iBody, float inverseMass)							{ Masses[iBody].InverseMass = inverseMass; }
 		inline	void						SetMass							(uint32_t iBody, float mass)								{ Masses[iBody].InverseMass = 1.0f / mass; }
 		inline	void						AddForce						(uint32_t iBody, const ::gpk::n3f32 & force)				{ Frames[iBody].AccumulatedForce += force; }

@@ -54,7 +54,7 @@ namespace gpk
 				}
 			}
 			Entities[index].Parent			= indexParent;
-			return (indexParent != -1) ? 0 : Children[indexParent]->push_back(index);
+			return (indexParent == -1) ? 0 : Children[indexParent]->push_back(index);
 		}
 
 		::gpk::error_t					Save			(::gpk::au8 & output) const { 

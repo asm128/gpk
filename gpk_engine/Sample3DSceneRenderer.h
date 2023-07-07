@@ -75,9 +75,26 @@ namespace gpk
 			rs.FillMode								= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
 			rs.CullMode								= D3D11_CULL_BACK;
 			rs.DepthClipEnable						= TRUE;
+		
 
-			::gpk::pcom<ID3D11RasterizerState>			prs;
+			D3D11_BLEND_DESC				blendDesc	= {};
+			blendDesc.RenderTarget[0].BlendEnable = TRUE;
+			blendDesc.RenderTarget[0].SrcBlend =
+			blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+			blendDesc.RenderTarget[0].DestBlend =
+			blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+			blendDesc.RenderTarget[0].BlendOp =
+			blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+			blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+			blendDesc.AlphaToCoverageEnable = false;
+
+			::gpk::pcom<ID3D11BlendState>		alphaBlendState;
+			::gpk::pcom<ID3D11RasterizerState>	prs;
+			DeviceResources->GetD3DDevice()->CreateBlendState(&blendDesc, &alphaBlendState);
 			DeviceResources->GetD3DDevice()->CreateRasterizerState(&rs, &prs);
+
+			context->OMSetBlendState(alphaBlendState, 0, 0xFFFFFFFF);
 			context->RSSetState(prs);
 		    context->PSSetSamplers( 0, 1, &SamplerStates[0] );
 			context->PSSetShaderResources( 0, 1, &ShaderResourceView[iTexture] );

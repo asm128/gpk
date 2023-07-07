@@ -35,7 +35,7 @@
 	D3D11_RASTERIZER_DESC					rs							= {};
 	rs.FillMode							= D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME; 
 	rs.CullMode							= D3D11_CULL_BACK;
-	rs.DepthClipEnable					= FALSE;
+	rs.DepthClipEnable					= TRUE;
 
 	::gpk::pcom<ID3D11RasterizerState>		prs;
 	gpk_hrcall(d3dResources.GetD3DDevice()->CreateRasterizerState(&rs, &prs));

@@ -9,7 +9,7 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 		: Diffuse
 		;
 
-	float4				diffuse					= diffuseFactor ? float4((materialColor * diffuseFactor).rgb * max(.65f, rand(input.world.uv)), materialColor.a) : float4(0, 0, 0, 1);
+	float4				diffuse					= diffuseFactor ? float4((materialColor * diffuseFactor).rgb * max(.65f, rand(input.world.uv)), materialColor.a) : float4(0, 0, 0, materialColor.a);
 	float2				scaledUV				= float2(input.world.uv.x * 2, input.world.uv.y);
 	if( distance(scaledUV, float2(0, 0)) < .05
 	 || distance(scaledUV, float2(1, 1)) < .05

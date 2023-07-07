@@ -43,5 +43,5 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 			materialColor	= float4(saturate(ambient + diffuse + specular).xyz, 1.0f);
 		}
 	}
-	return materialColor;
+	return float4(materialColor.rgb, Diffuse.a);
 }

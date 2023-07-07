@@ -85,7 +85,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	// -- Generate normals and positions
 	const double				reverseScale				= params.Reverse ? -1.0 : 1.0;
 	const ::gpk::n2f64			sliceScale					= ::gpk::n2f64{::gpk::math_2pi * cellUnits.x * reverseScale * params.DiameterRatio, ::gpk::math_pi * cellUnits.y};
-	const double				sliceOffset					= ::gpk::math_pi * (1.0 - params.DiameterRatio);
+	const double				sliceOffset					= ::gpk::math_pi * (1.0 - params.DiameterRatio) * .5;
 	for(uint32_t y = 0; y < vertexCount.y; ++y) {
 		const double				currentY					= sliceScale.y * y;
 		const double				currentRadius				= sin(currentY);
@@ -138,7 +138,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	const double				lengthScale					= cellUnits.y * params.Length;
 	const ::gpk::n3f64			normalBase					= gpk::n3f64{params.Length, -(params.Radius.Max - params.Radius.Min)}.Normalize() * reverseScale;
 	const double				sliceScale					= cellUnits.x * ::gpk::math_2pi * params.DiameterRatio * reverseScale;
-	const double				sliceOffset					= ::gpk::math_pi * (1.0 - params.DiameterRatio);
+	const double				sliceOffset					= ::gpk::math_pi * (1.0 - params.DiameterRatio) * .5;
 	vertexCount.for_each([&geometry, &normalBase, sliceScale, sliceOffset](::gpk::n2u16 & coord) { geometry.Normals.push_back((::gpk::n3f64{normalBase}.RotateY(sliceScale * coord.x + sliceOffset)).f32()); });
 
 	// -- Generate positions

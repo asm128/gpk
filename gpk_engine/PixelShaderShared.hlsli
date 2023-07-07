@@ -8,7 +8,7 @@ static const float		LIGHT_FACTOR_SPECULAR_POWER		= 30.0f;
 
 float4					lightCalcDiffuse				(float4 diffuseMaterial, float3 normalW, float3 lightVecW) {
 	float						lightFactor						= max(dot(lightVecW, normalW), 0.0f);
-	return lightFactor ? float4((diffuseMaterial * (float)lightFactor).rgb, diffuseMaterial.a) : float4(0, 0, 0, 1);
+	return lightFactor ? float4((diffuseMaterial * (float)lightFactor).rgb, diffuseMaterial.a) : float4(0, 0, 0, diffuseMaterial.a);
 }
 
 float4					lightCalcAmbient				(float4 ambientMaterial, float4 ambientLight) {

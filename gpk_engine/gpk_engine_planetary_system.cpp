@@ -1,6 +1,7 @@
 #include "gpk_engine_planetary_system.h"
 #include "gpk_stdstring.h"
 #include "gpk_json_expression.h"
+#include "gpk_engine_shader.h"
 
 //static	::gpk::error_t	setupPlanet		(::gpk::SSolarSystem & /*solarSystem*/, ::gpk::SEngine & /*engine*/, const ::gpk::SJSONReader & /*jsonData*/) { return 0; }
 //static	::gpk::error_t	setupStar		(::gpk::SSolarSystem & /*solarSystem*/, ::gpk::SEngine & /*engine*/, const ::gpk::SJSONReader & /*jsonData*/) { return 0; }
@@ -57,6 +58,41 @@
 	return iFurthest;
 }
 
+//static	::gpk::error_t	setupSolarSystemEntities	(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine) {
+//	{	// planets
+//		::gpk::SParamsSphere		params			= {};
+//		params.CellCount		= {24, 24};
+//		//params.Origin			= {};
+//		params.Origin			= {0, .5};
+//
+//		params.Radius			= .5f;
+//		params.Reverse			= false;
+//		params.DiameterRatio	= 1.f;
+//
+//		gpk_necs(solarSystem.EntityBody.push_back(engine.CreateSphere(params)));
+//	}
+//
+//	gpk_necs(engine.SetShader(solarSystem.EntityBody[0], ::gpk::psSphereAxis, "psSphereAxis"));
+//	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+//		gpk_necs(solarSystem.EntityBody.push_back(engine.Clone(solarSystem.EntityBody[0], true, true, true)));
+//
+//	{	// orbits circles
+//		::gpk::SParamsCircle		params	= {};
+//		params.Slices			= 24;
+//		params.Origin			= {};
+//		params.Radius			= .5f;
+//		params.Reverse			= false;
+//		params.DiameterRatio	= 1.f;
+//		gpk_necs(solarSystem.EntityOrbit.push_back(engine.CreateCircle(params)));
+//	}
+//
+//	gpk_necs(engine.SetShader(solarSystem.EntityOrbit[0], ::gpk::psGridRuler, "psGridRuler"));
+//	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
+//		gpk_necs(solarSystem.EntityOrbit.push_back(engine.Clone(solarSystem.EntityOrbit[0], true, true, true)));
+//
+//	return 0;
+//}
+
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine) {
 	int32_t						iFurthest					= solarSystem.Body.Values.max<float>([](const ::gpk::SCelestialBody & body){ return body.Detail.Planet.DistanceFromSun; });
 	for(uint32_t iPlanet = 0; iPlanet < solarSystem.Body.Keys.size(); ++iPlanet) {
@@ -72,7 +108,7 @@
 			, bodyData.Detail.Planet.LengthOfDay
 			, 24
 			);
-		gpk_necs(solarSystem.Entity.push_back(iEntity));
+		gpk_necs(solarSystem.EntityOrbit.push_back(iEntity));
 	}
 	return 0;
 }

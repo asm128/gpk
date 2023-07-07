@@ -19,5 +19,5 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 	float4				diffuse					= lightCalcDiffuse(surfacecolor, normal, lightVecW);
 	float4				ambient					= surfacecolor * .1f;
 	
-	return (0 == surfacecolor.g) ? float4(1, 0, 0, 1) : float4((ambient + diffuse + specular).rgb, surfacecolor.a);
+	return (0 == surfacecolor.g) ? float4(1, 0, 0, Diffuse.a * surfacecolor.a) : float4((ambient + diffuse + specular).rgb, Diffuse.a);
 }

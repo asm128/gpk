@@ -34,7 +34,7 @@ namespace gpk
 
 		template<size_t Len>
 		inlcxpr					view			(uint32_t elementCount, T (&elements)[Len])		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{}
-		inline					view			(T * elements, uint32_t elementCount)			: Data(elements), Count(elementCount)										{
+		inline					view			(T * elements, uint32_t elementCount)			: Data(elements), Count(elementCount)								{
 			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
@@ -67,11 +67,11 @@ namespace gpk
 
 		// Methods
 
-		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, byte_count()};			}
-		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};			}
-		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};			}
+		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
+		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
 		inlcxpr	view<char>			c			()							const	noexcept	{ return {(char*)Data, byte_count()};			}
-		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, byte_count()};			}
+		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, byte_count()};		}
 
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}
@@ -256,18 +256,18 @@ namespace gpk
 
 
 	template <typename T>
-	::gpk::error_t					reverse								(::gpk::view<T> elements)																			{
-		const uint32_t						lastElement							= elements.size() - 1;
+	::gpk::error_t			reverse					(::gpk::view<T> elements)													{
+		const uint32_t				lastElement				= elements.size() - 1;
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
-			T								old									= elements[i];
-			elements[i]						= elements[lastElement - i];
-			elements[lastElement - i]		= old;
+			T							old						= elements[i];
+			elements[i]					= elements[lastElement - i];
+			elements[lastElement - i]	= old;
 		}
 		return 0;
 	}
 
 	template<typename T>
-	::gpk::error_t					find					(const T & valueToFind, const ::gpk::view<const T> & target, uint32_t offset = 0)				{
+	::gpk::error_t			find					(const T & valueToFind, const ::gpk::view<const T> & target, uint32_t offset = 0)		{
 		for(uint32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
 			if(valueToFind == target[iOffset])
 				return (int32_t)iOffset;
@@ -275,7 +275,7 @@ namespace gpk
 	}
 
 	template<typename T>
-	::gpk::error_t					rfind					(const T & valueToFind, const ::gpk::view<const T> & target, int32_t offset = 0)				{
+	::gpk::error_t					rfind					(const T & valueToFind, const ::gpk::view<const T> & target, int32_t offset = 0)		{
 		for(uint32_t iOffset = target.size() - 1 - offset; iOffset < target.size(); --iOffset)
 			if(valueToFind == target[iOffset])
 				return iOffset;

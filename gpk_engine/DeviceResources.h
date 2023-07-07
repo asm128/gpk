@@ -126,7 +126,7 @@ namespace DX
 				swapChainDesc.BufferCount				= 2;									// Use double-buffering to minimize latency.
 				swapChainDesc.SwapEffect				= DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Microsoft Store apps must use this SwapEffect.
 				swapChainDesc.Scaling					= scaling;
-				swapChainDesc.AlphaMode					= DXGI_ALPHA_MODE_IGNORE;
+				swapChainDesc.AlphaMode					= DXGI_ALPHA_MODE_UNSPECIFIED;
 
 
 				//DXGI_SWAP_CHAIN_FULLSCREEN_DESC			swapChainDescFS				= {0};

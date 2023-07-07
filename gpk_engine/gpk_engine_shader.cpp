@@ -55,23 +55,28 @@
 	, const ::gpk::SPSIn					& inPS
 	, ::gpk::bgra							& outputPixel
 	) { 
-	::gpk::n3f32				lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
-	double						diffuseFactor			= ::gpk::max(lightVecW.Dot(inPS.WeightedNormal.Normalized()), 0.0);
-	::gpk::rgbaf				materialColor			= inPS.Material.Color.Diffuse;
-	::gpk::rgbaf				diffuse					= diffuseFactor ? ::gpk::rgbaf(((materialColor * (double)diffuseFactor) * ::gpk::max(.65, ::gpk::noise2D(uint32_t(inPS.WeightedUV.x * 10000), uint32_t(inPS.WeightedUV.y * 10000), 10000))).rgb(), materialColor.a) : ::gpk::BLACK;
 	::gpk::n2f32				scaledUV				= {inPS.WeightedUV.x * inPS.NodeConstants.NodeSize.x, inPS.WeightedUV.y * inPS.NodeConstants.NodeSize.z};
-	if( 0.05f > (scaledUV - ::gpk::n2f32{0, 0}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, 0}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{0, inPS.NodeConstants.NodeSize.z}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, inPS.NodeConstants.NodeSize.z}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x * .5f, inPS.NodeConstants.NodeSize.z}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x * .5f, 0}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, inPS.NodeConstants.NodeSize.z * .5f}).Length()
-	 || 0.05f > (scaledUV - ::gpk::n2f32{0, inPS.NodeConstants.NodeSize.z * .5f}).Length()
+	if( 0.0025f > (scaledUV - ::gpk::n2f32{0, 0}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, 0}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{0, inPS.NodeConstants.NodeSize.z}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, inPS.NodeConstants.NodeSize.z}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x * .5f, inPS.NodeConstants.NodeSize.z}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x * .5f, 0}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{inPS.NodeConstants.NodeSize.x, inPS.NodeConstants.NodeSize.z * .5f}).LengthSquared()
+	 || 0.0025f > (scaledUV - ::gpk::n2f32{0, inPS.NodeConstants.NodeSize.z * .5f}).LengthSquared()
 	) {
 		return 0;
 	}
 	else {
+		::gpk::n3f32				lightVecW				= (constants.LightPosition - inPS.WeightedPosition).Normalize();
+		double						diffuseFactor			= ::gpk::max(lightVecW.Dot(inPS.WeightedNormal.Normalized()), 0.0);
+		::gpk::rgbaf				materialColor			= 
+			 ( (scaledUV.x > inPS.NodeConstants.NodeSize.x * .5 - .005 && scaledUV.x < inPS.NodeConstants.NodeSize.x * .5 + .005) 
+			|| (scaledUV.y > inPS.NodeConstants.NodeSize.z * .5 - .005 && scaledUV.y < inPS.NodeConstants.NodeSize.z * .5 + .005)
+			)	? ::gpk::rgbaf(::gpk::WHITE.rgb(), inPS.Material.Color.Diffuse.a)
+				: inPS.Material.Color.Diffuse
+				;
+		::gpk::rgbaf				diffuse					= diffuseFactor ? ::gpk::rgbaf(((materialColor * (double)diffuseFactor) * ::gpk::max(.65, ::gpk::noise2D(uint32_t(inPS.WeightedUV.x * 10000), uint32_t(inPS.WeightedUV.y * 10000), 10000))).rgb(), materialColor.a) : ::gpk::BLACK;
 		return outputPixel = diffuse.Clamp();
 	}
 }

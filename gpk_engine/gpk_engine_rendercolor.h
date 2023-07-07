@@ -7,9 +7,9 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SRenderColor {
-		::gpk::rgbaf							Diffuse;
-		::gpk::rgbaf							Ambient;
-		::gpk::rgbaf							Specular;
+		::gpk::rgbaf							Diffuse		= ::gpk::RED;
+		::gpk::rgbaf							Ambient		= ::gpk::GREEN;
+		::gpk::rgbaf							Specular	= ::gpk::LIGHTGRAY;
 	};
 #pragma pack(pop)
 } // namespace

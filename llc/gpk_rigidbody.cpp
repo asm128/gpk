@@ -87,12 +87,15 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 }
 
 ::gpk::error_t			gpk::initOrbiterOrbit			
-	( ::gpk::SBodyCenter	& orbitTransform
+	( ::gpk::SBodyCenter	& orbitCenter
 	, ::gpk::SBodyForces	& orbitForces	
 	, double				orbital_inclination
 	, double				orbital_period
 	) {
-	orbitTransform.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
+	orbitCenter	= {};
+	orbitForces	= {};	
+	orbitCenter.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
+	orbitCenter.Orientation.Normalize();
 	orbitForces.Rotation	= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
 	return 0;
 }
@@ -108,11 +111,14 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	, double				rotation_period
 	, double				rotation_unit
 	) {
+		planetCenter	= {};
+		planetForces	= {};	
+		planetMass		= {};
 		planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
 		planetCenter.Position.x	= float(distance_scale * distance);
 
 		planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
-
+		planetCenter.Orientation.Normalize();
 		planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
 		planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
 	return 0;
@@ -132,9 +138,9 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	const ::gpk::error_t		indexFirstBody				= bodies.Create(2);
 	::gpk::initOrbiterOrbit(bodies.Centers[indexFirstBody] = {}, bodies.Forces[indexFirstBody] = {}, orbital_inclination, orbital_period);
 	::gpk::initOrbiterBody
-		( bodies.Centers[indexFirstBody + 1] = {}
-		, bodies.Forces	[indexFirstBody + 1] = {}
-		, bodies.Masses	[indexFirstBody + 1] = {}
+		( bodies.Centers[indexFirstBody + 1]
+		, bodies.Forces	[indexFirstBody + 1]
+		, bodies.Masses	[indexFirstBody + 1]
 		, mass
 		, axialTilt
 		, distance

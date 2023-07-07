@@ -97,7 +97,14 @@ namespace gpk
 			return iEntityNew;
 		}
 
-		inline	::gpk::error_t			SetMeshScale		(uint32_t iEntity, const ::gpk::n3f32 & scale)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); return 0; }
+		inline	::gpk::error_t			SetNodeSize			(uint32_t iEntity, const ::gpk::n3f32 & size)					{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].NodeSize = size; return 0; }
+		inline	::gpk::error_t			SetMeshScale		(uint32_t iEntity, const ::gpk::n3f32 & scale, bool halfSizes)	{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.Scale(scale, true); 
+			if(halfSizes) {
+				gpk_necs(SetHalfSizes(iEntity, scale * .5f));
+				gpk_necs(SetNodeSize(iEntity, scale));
+			}
+			return 0; 
+		}
 		inline	::gpk::error_t			SetMeshPosition		(uint32_t iEntity, const ::gpk::n3f32 & position)				{ Scene->RenderNodes.BaseTransforms[GetRenderNode(iEntity)].Model.SetTranslation(position, false); return 0; }
 		::gpk::error_t					SetColorDiffuse		(uint32_t iEntity, const ::gpk::rgbaf & diffuse)				{ Scene->Graphics->Skins[Scene->RenderNodes[GetRenderNode(iEntity)].Skin]->Material.Color.Diffuse = diffuse; return 0; }
 		::gpk::error_t					SetShader			(uint32_t iEntity, const ::std::function<::gpk::TFuncPixelShader> & shader, ::gpk::vcs name) {
@@ -116,7 +123,9 @@ namespace gpk
 		inline	::gpk::error_t			GetOrientation		(uint32_t iEntity, ::gpk::quatf32 & orientation)		const	{ Integrator.GetOrientation	(GetRigidBody(iEntity), orientation);		return 0; }
 		inline	::gpk::error_t			SetPhysicsActive	(uint32_t iEntity, bool active)									{ Integrator.SetActive		(GetRigidBody(iEntity), active);			return 0; }
 		inline	::gpk::error_t			SetCollides			(uint32_t iEntity, bool collides)								{ Integrator.SetCollides	(GetRigidBody(iEntity), collides);			return 0; }
+		inline	::gpk::error_t			SetHalfSizes		(uint32_t iEntity, const ::gpk::n3f32 & halfSizes)				{ Integrator.SetHalfSizes	(GetRigidBody(iEntity), halfSizes);			return 0; }
 		inline	::gpk::error_t			SetMass				(uint32_t iEntity, float mass)									{ Integrator.SetMass		(GetRigidBody(iEntity), mass);				return 0; }
+		inline	::gpk::error_t			SetMassInverse		(uint32_t iEntity, float inverseMass)							{ Integrator.SetMassInverse	(GetRigidBody(iEntity), inverseMass);		return 0; }
 		inline	::gpk::error_t			SetPosition			(uint32_t iEntity, const ::gpk::n3f32 & position)				{ Integrator.SetPosition	(GetRigidBody(iEntity), position);			return 0; }
 		inline	::gpk::error_t			SetVelocity			(uint32_t iEntity, const ::gpk::n3f32 & velocity)				{ Integrator.SetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
 		inline	::gpk::error_t			SetAcceleration		(uint32_t iEntity, const ::gpk::n3f32 & acceleration)			{ Integrator.SetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
@@ -174,6 +183,13 @@ namespace gpk
 			params.CellCount				= cellCount;
 			params.Outward					= topRight;
 			return CreateGrid(params); 
+		}
+
+		inline	::gpk::error_t			CreateHelix			(::gpk::n2u16 cellCount) { 
+			SParamsHelix						params				= {};
+			params.Origin.y					= .5f;
+			params.CellCount				= cellCount;
+			return CreateHelix(params); 
 		}
 
 		typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;

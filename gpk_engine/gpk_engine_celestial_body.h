@@ -38,7 +38,6 @@ namespace gpk
 	};
 
 	struct SDetailPlanet {
-		int32_t					Parent					;
 		float					Mass					; // 0.330		// (10^24 kg)	
 		uint32_t				Diameter				; // 4879		// (km)
 		uint32_t				Density					; // 5427		// (kg/m3)
@@ -61,6 +60,7 @@ namespace gpk
 		bool					GlobalMagneticField		; // true
 		float					RadiusPolar				;	// (km)
 		float					RadiusEquatorial		;	// (km)
+		int32_t					Parent					;
 	};
 
 	struct SCelestialBody {
