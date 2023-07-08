@@ -1,6 +1,7 @@
 #include "gpk_engine_celestial_body.h"
 #include "gpk_engine.h"
 #include "gpk_json.h"
+#include "gpk_view_color.h"
 
 #ifndef GPK_PLANETARY_SYSTEM_H_23701
 #define GPK_PLANETARY_SYSTEM_H_23701
@@ -75,6 +76,8 @@ namespace gpk
 			, rotationUnit
 			);
 	}
+	::gpk::error_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
+	::gpk::error_t			planetarySystemCreateEntities	(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine);
 } // namespace
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701
