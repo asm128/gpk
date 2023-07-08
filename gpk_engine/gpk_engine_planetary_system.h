@@ -16,7 +16,7 @@ namespace gpk
 		::gpk::aeid							EntityBody;
 	};
 
-	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine);
+	//::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine);
 	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
 	stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
 		::gpk::SJSONFile			jsonFile				= {};
@@ -24,8 +24,8 @@ namespace gpk
 		return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 	}
 
-	stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonData    ), "%s", ::gpk::toString(jsonData.View[0]).begin());	return ::gpk::planetarySystemSetup(planetarySystem, engine); }
-	stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						return ::gpk::planetarySystemSetup(planetarySystem, engine); }
+	//stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonData    ), "%s", ::gpk::toString(jsonData.View[0]).begin());	return ::gpk::planetarySystemSetup(planetarySystem, engine); }
+	//stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						return ::gpk::planetarySystemSetup(planetarySystem, engine); }
 
 	stainli	::gpk::error_t	initOrbiterOrbit		(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& orbitCenter, ::gpk::SBodyForces & orbitForces) {
 		return ::gpk::initOrbiterOrbit(orbitCenter, orbitForces, bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod);

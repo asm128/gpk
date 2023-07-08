@@ -19,7 +19,7 @@ namespace gpk
 		float				LinearDamping					= 1.0f;
 		float				AngularDamping					= 1.0f;
 		float				InverseMass						= 0;
-		::gpk::m3f32			InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
+		::gpk::m3f32		InverseAngularMassTensor		= {1,0,0,0,1,0,0,0,1};
 
 		inlcxpr	double		GetMass							()	{
 			return (InverseMass == 0) ? DBL_MAX : 1.0 / InverseMass; 
@@ -188,7 +188,7 @@ namespace gpk
 				::gpk::SBodyCenter					& bodyCenter					= Centers	[iBody];
 				::gpk::integrateForces	(duration, bodyFrame, bodyForces, bodyMass);
 				::gpk::integratePosition(duration, durationHalfSquared, bodyFlags, bodyCenter, bodyForces);
-				if(bodyForces.Acceleration.LengthSquared() < .01 && bodyForces.Velocity.LengthSquared() < .01 && bodyForces.Rotation.LengthSquared() < .0001) {
+				if(bodyForces.Acceleration.LengthSquared() < .001 && bodyForces.Velocity.LengthSquared() < .001 && bodyForces.Rotation.LengthSquared() < .00000001) {
 					bodyFlags.Active				= false;
 					bodyForces						= {};
 				}

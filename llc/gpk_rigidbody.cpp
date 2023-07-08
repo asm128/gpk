@@ -111,16 +111,16 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	, double				rotation_period
 	, double				rotation_unit
 	) {
-		planetCenter	= {};
-		planetForces	= {};	
-		planetMass		= {};
-		planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
-		planetCenter.Position.x	= float(distance_scale * distance);
+	planetCenter	= {};
+	planetForces	= {};	
+	planetMass		= {};
+	planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
+	planetCenter.Position.x	= float(distance_scale * distance);
 
-		planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
-		planetCenter.Orientation.Normalize();
-		planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
-		planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
+	planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
+	planetCenter.Orientation.Normalize();
+	planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
+	planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
 	return 0;
 }
 
