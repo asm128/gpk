@@ -7,7 +7,7 @@ cbuffer SRenderNodeConstants : register(b0) {
 	matrix				Model;
 	matrix				ModelInverse;
 	matrix				ModelInverseTranspose;
-	float4				NodeSize;	// .w or .a for the specular power
+	float4				NodeSize;	// 
 };
 
 cbuffer SEngineSceneConstants : register(b1) {

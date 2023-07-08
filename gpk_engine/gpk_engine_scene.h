@@ -28,7 +28,7 @@ namespace gpk
 		::gpk::n3f32			CameraPosition			= {};
 		float					CameraAngle				= 0;
 		::gpk::n3f32			CameraFront				= {}; 
-		float					PaddingA				= 0;
+		float					Time					= 0;
 		::gpk::n3f32			LightDirection			= {}; 
 		float					LightSpotPower			= 0;
 		::gpk::n3f32			LightPosition			= {}; 

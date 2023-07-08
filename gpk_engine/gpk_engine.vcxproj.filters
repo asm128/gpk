@@ -193,6 +193,15 @@
     <FxCompile Include="psGridRuler.hlsl">
       <Filter>hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="psSun.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psOrbit.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psGasGiant.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShaderShared.hlsli">

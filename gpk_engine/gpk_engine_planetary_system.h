@@ -12,11 +12,8 @@ namespace gpk
 		::gpk::SCelestialBodyMap			Body;
 		::gpk::apod<::gpk::CELESTIAL_BODY>	Type;
 		::gpk::ai32							Parent;
-		::gpk::aeid							EntityOrbit;
-		::gpk::aeid							EntityBody;
 	};
 
-	//::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine);
 	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
 	stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
 		::gpk::SJSONFile			jsonFile				= {};
@@ -24,21 +21,27 @@ namespace gpk
 		return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 	}
 
-	//stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonData    ), "%s", ::gpk::toString(jsonData.View[0]).begin());	return ::gpk::planetarySystemSetup(planetarySystem, engine); }
-	//stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						return ::gpk::planetarySystemSetup(planetarySystem, engine); }
+	struct SPlanetarySystemEntityMap {
+		::gpk::aeid					GravityCenters;
+		::gpk::aeid					Orbits;
+		::gpk::aeid					Bodies;
+	};
 
-	stainli	::gpk::error_t	initOrbiterOrbit		(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& orbitCenter, ::gpk::SBodyForces & orbitForces) {
-		return ::gpk::initOrbiterOrbit(orbitCenter, orbitForces, bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod);
-	}
+	struct SEnginePlanetarySystem {
+		SPlanetarySystem			PlanetarySystem;
+		SPlanetarySystemEntityMap	EntityMap;
+	};
 
-	stainli	::gpk::error_t	initOrbiterBody
-		( const SCelestialBody	& bodyData
-		, float					distanceScale
-		, float					rotationUnit
-		, ::gpk::SBodyCenter	& planetCenter
-		, ::gpk::SBodyForces	& planetForces
-		, ::gpk::SBodyMass		& planetMass
-		) {
+	::gpk::error_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, const ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
+	::gpk::error_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
+	::gpk::error_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
+
+	stainli	::gpk::error_t	planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData    ), "%s", ::gpk::toString(jsonData.View[0]).begin());	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); }
+	stainli	::gpk::error_t	planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); }
+
+	stainli	::gpk::error_t	initOrbiterOrbit				(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& orbitCenter, ::gpk::SBodyForces & orbitForces)	{ return ::gpk::initOrbiterOrbit(orbitCenter, orbitForces, bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod); }
+	stainli	::gpk::error_t	initOrbiterOrbit				(const SCelestialBody & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex)				{ return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces[rigidBodyIndex], bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod); }
+	stainli	::gpk::error_t	initOrbiterBody					(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& planetCenter, ::gpk::SBodyForces & planetForces, ::gpk::SBodyMass	& planetMass, float distanceScale, float rotationUnit) {
 		return ::gpk::initOrbiterBody
 			( planetCenter
 			, planetForces
@@ -51,12 +54,6 @@ namespace gpk
 			, rotationUnit
 			);
 	}
-
-
-	stainli	::gpk::error_t	initOrbiterOrbit		(const SCelestialBody & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex) {
-		return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces [rigidBodyIndex], bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod);
-	}
-
 	stainli	::gpk::error_t	initOrbiterBody
 		( const SCelestialBody			& bodyData
 		, ::gpk::SRigidBodyIntegrator	& integrator
@@ -76,8 +73,7 @@ namespace gpk
 			, rotationUnit
 			);
 	}
-	::gpk::error_t			planetarySystemReset			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine, const ::gpk::vc8bgra & colors);
-	::gpk::error_t			planetarySystemCreateEntities	(::gpk::SPlanetarySystem & solarSystem, ::gpk::SEngine & engine);
+
 } // namespace
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701
