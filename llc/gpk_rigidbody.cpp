@@ -97,6 +97,7 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	orbitCenter.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
 	orbitCenter.Orientation.Normalize();
 	orbitForces.Rotation	= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
+	orbitForces.Rotation	= orbitCenter.Orientation.RotateVector(orbitForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
 	return 0;
 }
 

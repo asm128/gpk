@@ -73,11 +73,16 @@
 
 		::gpk::SRenderNodeConstants				nodeConstants					= engineScene.RenderNodes.Transforms[iNode];
 
+		nodeConstants.Model					= engineScene.RenderNodes.BaseTransforms[iNode].Model * nodeConstants.Model;
+		nodeConstants.ModelInverse			= nodeConstants.Model.GetInverse();
+		nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverse.GetTranspose();
 		nodeConstants.MVP					= (nodeConstants.Model * constants.View * constants.Perspective).GetTranspose();
+
 		nodeConstants.Model					= nodeConstants.Model.GetTranspose();
 		nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverseTranspose.GetTranspose();
 		nodeConstants.NodeSize				= engineScene.RenderNodes.BaseTransforms[iNode].NodeSize; // Have to update this some other way.
 
+		
 		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
 

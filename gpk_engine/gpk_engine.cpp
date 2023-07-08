@@ -22,8 +22,6 @@
 			integrator.GetTransform(entity.RigidBody, worldTransform);
 		}
 
-		worldTransform = renderNodes.BaseTransforms[entity.RenderNode].Model * worldTransform;
-
 		if(-1 != entity.Parent) {
 			const ::gpk::SVirtualEntity	& entityParent			= managedEntities.Entities[entity.Parent];
 			if(-1 != entityParent.RenderNode)
@@ -32,6 +30,8 @@
 				worldTransform			= worldTransform * integrator.TransformsLocal[entityParent.RigidBody];
 			}
 		}
+
+		//worldTransform = renderNodes.BaseTransforms[entity.RenderNode].Model * worldTransform;
 		transforms.ModelInverse				= worldTransform.GetInverse();
 		transforms.ModelInverseTranspose	= transforms.ModelInverse.GetTranspose();
 	}

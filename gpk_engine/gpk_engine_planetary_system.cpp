@@ -145,7 +145,7 @@ static	::gpk::error_t	initOrbit(::gpk::SEngine & engine, int32_t iOrbiter, int32
 		scale					*= distanceScale * 2;
 	else
 		scale					= {1, 1, 1};
-	//gpk_necs(engine.SetMeshScale(iEntity, scale, true));
+	gpk_necs(engine.SetMeshScale(iEntity, scale, true));
 	gpk_necs(engine.SetShader	(iEntity, ::gpk::psGridRuler, "psGridRuler"));
 	gpk_necs(engine.SetHidden	(iEntity, 0 == iOrbiter));
 	return 0;
@@ -159,9 +159,10 @@ static	::gpk::error_t	initBody				(::gpk::SEngine & engine, int32_t iOrbiter, in
 	gpk_necs(engine.SetCollides	(iEntity, false));
 
 	::gpk::n3f32				scale					= {diameter, diameter, diameter};
-	if(4 == iOrbiter) {}
-		//scale					*= distanceScale * .000125f;
-	else if(iOrbiter)
+	//if(4 == iOrbiter) {}
+	//	//scale					*= distanceScale * .000125f;
+	//else 
+	if(iOrbiter)
 		scale					*= distanceScale * .000125f;
 	else
 		scale					= SUN_SCALE;
@@ -197,7 +198,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 	) {
 	float						fFurthest				= 0;
 	solarSystem.Body.Values.max<float>(fFurthest, [](const ::gpk::SCelestialBody & body){ return body.Detail.Planet.DistanceFromSun; });
-	const float					distanceScale			= 1.0f / fFurthest * 10;
+	const float					distanceScale			= 1.0f / fFurthest * 5;
 	const float					rotationUnit			= 24;
 
 	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
@@ -220,6 +221,6 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 	}
 
-	//engine.Update(86400 * 1000);
+	engine.Update(86400 * 1000);
 	return 0;
 }
