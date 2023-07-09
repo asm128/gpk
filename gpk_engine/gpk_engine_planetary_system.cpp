@@ -109,9 +109,9 @@ static	::gpk::error_t	initBody				(::gpk::SEngine & engine, int32_t iEntity, boo
 	gpk_necs(engine.SetCollides		(iEntity, false));
 
 	::gpk::n3f32				scale					= {diameter, diameter, diameter};
-	scale					= isStar ? SUN_SCALE : scale * distanceScale * 2;
+	scale					= isStar ? SUN_SCALE : scale * distanceScale;
 	gpk_necs(engine.SetMeshScale(iEntity, scale, true));
-	::gpk::TFuncPixelShader		& ps					= isStar ? ::gpk::psSphereAxis	: ringSystem ? ::gpk::psSphereMeridian			: ::gpk::psSphereSolid		;
+	::gpk::TFuncPixelShader		& ps					= isStar ? ::gpk::psSphereAxis	: ringSystem ? ::gpk::psSphereMeridian	: ::gpk::psSphereSolid		;
 	const ::gpk::vcc			psName					= isStar ? ::gpk::vcs{"psSun"}	: ringSystem ? ::gpk::vcs{"psGasGiant"}	: ::gpk::vcs{"psSphereSolid"};
 	gpk_necs(engine.SetShader	(iEntity, ps, psName));
 	gpk_necs(engine.SetHidden	(iEntity, false));
@@ -165,6 +165,6 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 	}
 
-	engine.Update(86400 * 365 * 4);
+	engine.Update(365 * .5);
 	return 0;
 }
