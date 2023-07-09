@@ -8,18 +8,18 @@
 
 namespace gpk
 {
-	stainli	::gpk::error_t	initOrbiterOrbit				(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& orbitCenter, ::gpk::SBodyForces & orbitForces)	{ return ::gpk::initOrbiterOrbit(orbitCenter, orbitForces, bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod); }
-	stainli	::gpk::error_t	initOrbiterOrbit				(const SCelestialBody & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex)				{ return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces[rigidBodyIndex], bodyData.Detail.Planet.OrbitalInclination, bodyData.Detail.Planet.OrbitalPeriod); }
+	stainli	::gpk::error_t	initOrbiterOrbit				(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& orbitCenter, ::gpk::SBodyForces & orbitForces)	{ return ::gpk::initOrbiterOrbit(orbitCenter, orbitForces, bodyData.OrbitalInclination, bodyData.OrbitalPeriod); }
+	stainli	::gpk::error_t	initOrbiterOrbit				(const SCelestialBody & bodyData, ::gpk::SRigidBodyIntegrator & integrator, int32_t rigidBodyIndex)				{ return ::gpk::initOrbiterOrbit(integrator.Centers[rigidBodyIndex], integrator.Forces[rigidBodyIndex], bodyData.OrbitalInclination, bodyData.OrbitalPeriod); }
 	stainli	::gpk::error_t	initOrbiterBody					(const ::gpk::SCelestialBody & bodyData, ::gpk::SBodyCenter	& planetCenter, ::gpk::SBodyForces & planetForces, ::gpk::SBodyMass	& planetMass, float distanceScale, float rotationUnit) {
 		return ::gpk::initOrbiterBody
 			( planetCenter
 			, planetForces
 			, planetMass
-			, bodyData.Detail.Planet.Mass
-			, bodyData.Detail.Planet.ObliquityToOrbit
-			, bodyData.Detail.Planet.DistanceFromSun
+			, bodyData.Mass
+			, bodyData.ObliquityToOrbit
+			, bodyData.DistanceFromParent
 			, distanceScale
-			, bodyData.Detail.Planet.RotationPeriod
+			, bodyData.RotationPeriod
 			, rotationUnit
 			);
 	}
@@ -34,11 +34,11 @@ namespace gpk
 			( integrator.Centers[rigidBodyIndex]
 			, integrator.Forces [rigidBodyIndex]
 			, integrator.Masses [rigidBodyIndex]
-			, bodyData.Detail.Planet.Mass
-			, bodyData.Detail.Planet.ObliquityToOrbit
-			, bodyData.Detail.Planet.DistanceFromSun
+			, bodyData.Mass
+			, bodyData.ObliquityToOrbit
+			, bodyData.DistanceFromParent
 			, distanceScale
-			, bodyData.Detail.Planet.RotationPeriod
+			, bodyData.RotationPeriod
 			, rotationUnit
 			);
 	}
