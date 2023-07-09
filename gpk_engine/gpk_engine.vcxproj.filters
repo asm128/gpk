@@ -105,19 +105,25 @@
     <ClInclude Include="gpk_engine_shader.h">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_celestial_body.h">
-      <Filter>astronomical</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine_container.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_map_pod.h">
+    <ClInclude Include="gpk_linear_map_pod.h">
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_planetary_system.h">
       <Filter>astronomical</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_gameplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_celestial_body.h">
+      <Filter>astronomical</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_planetary_system.h">
+      <Filter>astronomical</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_celestial_body.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,10 +158,13 @@
     <ClCompile Include="gpk_engine_shader.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_engine_celestial_body.cpp">
+    <ClCompile Include="gpk_celestial_body.cpp">
       <Filter>astronomical</Filter>
     </ClCompile>
     <ClCompile Include="gpk_engine_planetary_system.cpp">
+      <Filter>astronomical</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_planetary_system.cpp">
       <Filter>astronomical</Filter>
     </ClCompile>
   </ItemGroup>

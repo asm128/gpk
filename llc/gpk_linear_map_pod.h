@@ -3,13 +3,13 @@
 #include "gpk_apod_serialize.h"
 #include "gpk_enum.h"
 
-#ifndef GPK_ENGINE_MAP_POD_H_23627
-#define GPK_ENGINE_MAP_POD_H_23627
+#ifndef GPK_LINEAR_MAP_POD_H_23627
+#define GPK_LINEAR_MAP_POD_H_23627
 
 namespace gpk
 {
 	template <typename _tKey, typename _tValue> 
-	struct SLinearPODMap {
+	struct linear_map_pod {
 		typedef _tValue		T;
 		typedef _tKey		K;
 
@@ -41,9 +41,7 @@ namespace gpk
 		}
 
 		::gpk::error_t		Clone			(const K & key, uint32_t index)	{ 
-			T						& newElement	= Values[Values.push_back({})]; 
-			const T					& srcElement	= Values[index];
-			newElement			= srcElement;
+			Values[Values.push_back({})] = Values[index]; 
 			return Keys.push_back(key); 
 		}
 
@@ -59,6 +57,8 @@ namespace gpk
 			return 0; 
 		}
 	};
+	template <typename _tKey, typename _tValue> 
+	using	lmpod	= linear_map_pod<_tKey, _tValue>;
 } // namespace
 
-#endif // GPK_ENGINE_MAP_POD_H_23627
+#endif // GPK_LINEAR_MAP_POD_H_23627

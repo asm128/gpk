@@ -301,51 +301,18 @@
 		});
 }
 
-::gpk::error_t			gpk::SEngine::CreateOrbiter		
-	( double radius
-	, double mass
-	, double distance
-	, double axialTilt_aka_obliquityToOrbit
-	, double rotation_period
-	, double rotation_unit
-	, double orbital_period
-	, double orbital_inclination
-	, double distance_scale
-	) {
-	::gpk::SParamsCircle		paramsOrbit						= {};
-	paramsOrbit.Origin		= {.5f, 0, .5f};
-	paramsOrbit.Slices		= 48;
-	paramsOrbit.Radius		= float(distance * distance_scale);
+::gpk::error_t			gpk::SEngine::CreateImageFromFile(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName) {
+	char						filePath	[2048]	= {};
+	sprintf_s(filePath, "%s/%s", ::gpk::toString(fileFolder).begin(), ::gpk::toString(fileName).begin());
+	int32_t						index				= Images.Keys.find(filePath);
+	if(index != -1)
+		return Images.Values[index];
 
-	::gpk::SParamsSphere		paramsOrbiter					= {};
-	paramsOrbiter.Origin	= {.5f, 0, .5f};
-	paramsOrbiter.Radius	= (float)radius;
-
-	::gpk::error_t				indexOrbit						= CreateCircle(paramsOrbit);
-	::gpk::error_t				indexOrbiter					= CreateSphere(paramsOrbiter);
-	Integrator.Delete(Integrator.Frames.size() - 1);
-	Integrator.Delete(Integrator.Frames.size() - 1);
-
-	const ::gpk::error_t		bodyOrbit						= ::gpk::createOrbiter(Integrator
-		, orbital_inclination
-		, orbital_period
-		, mass
-		, axialTilt_aka_obliquityToOrbit
-		, distance
-		, distance_scale
-		, rotation_period
-		, rotation_unit
-		);
-
-	Entities[indexOrbit		].RigidBody	= bodyOrbit + 0;
-	Entities[indexOrbiter	].RigidBody	= bodyOrbit + 1;
-	this->SetPhysicsActive(bodyOrbit + 0, true);
-	this->SetPhysicsActive(bodyOrbit + 1, true);
-	Entities.Entities[indexOrbiter	].Parent	= indexOrbit;
-	Entities.Children[indexOrbit	]->push_back(indexOrbiter);
-
-	for(uint32_t i = 0; i < 100; ++i)
-		Integrator.Integrate(36000);
-
-	return indexOrbit;
+	index					= Scene->Graphics->Surfaces.Create(::gpk::label(filePath));
+	::gpk::pobj<::gpk::SSurface>	& surface			= Scene->Graphics->Surfaces[index];
+	gpk_necs(::gpk::pngFileLoad(PNGCache, filePath, surface->Data));
+	surface->Desc.Dimensions	= PNGCache.Header.Size.u16();
+	surface->Desc.BitDepth		= PNGCache.Header.BitDepth;
+	surface->Desc.ColorType		= PNGCache.Header.ColorType;
+	return 0; 
 }

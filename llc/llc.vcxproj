@@ -85,6 +85,7 @@
     <ClInclude Include="gpk_line.h" />
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
+    <ClInclude Include="gpk_linear_map_pod.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_pod_definition.h" />

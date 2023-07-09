@@ -5,6 +5,7 @@
 #include "gpk_adam7.h"
 #include "gpk_file.h"
 #include "gpk_bit.h"
+#include "gpk_deflate.h"
 
 #include "gpk_view_color.h"
 
@@ -983,39 +984,6 @@ static	::gpk::error_t	defilterInterlaced			(::gpk::SPNGData & pngData)									{
 	return 0;
 }
 
-static	::gpk::error_t	pngInflate					(const ::gpk::vu8 & deflated, ::gpk::au8 & inflated)							{
-	z_stream					strm						= {};
-	int							ret							= inflateInit(&strm);	 // allocate inflate state
-	if (ret != Z_OK)
-		return ret;
-
-	strm.avail_in			= deflated.size();
-	strm.avail_out			= inflated.size();
-	strm.next_in			= (Bytef *)deflated.begin();
-	strm.next_out			= (Bytef *)inflated.begin();
-	ret						= ::inflate(&strm, Z_NO_FLUSH);
-	ree_if(ret == Z_STREAM_ERROR, "%s", "ZIP Error");  // state not clobbered
-	switch (ret) {
-	case Z_NEED_DICT		:
-		ret						= Z_DATA_ERROR;     // and fall through
-	case Z_VERSION_ERROR	:
-	case Z_STREAM_ERROR		:
-	case Z_DATA_ERROR		:
-	case Z_MEM_ERROR		:
-		(void)inflateEnd(&strm);
-		return -1;
-	}
-	if(ret != Z_STREAM_END && ret != Z_OK) {
-		(void)inflateEnd(&strm);
-		error_printf("%s", "Failed to decompress?");
-		return -1;
-	}
-	inflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)inflated.begin()));
-	ret						= ::inflateEnd(&strm);
-	verbose_printf("inflateEnd: %u.", (uint32_t)ret);
-	return 0;
-}
-
 stainli	::gpk::error_t	pngFilePrintInfo			(::gpk::SPNGData & pngData) {
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
 	verbose_printf("----- PNG File Info summary: "
@@ -1061,51 +1029,22 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 
 ::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::img8bgra & out_Texture) {
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
-	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
-	if(imageHeader.MethodInterlace)
-		return ::pngDecodeInterlaced
-			( pngData.Header.BitDepth
-			, pngData.Header.ColorType
-			, pngData.Scanlines
-			, pngData.Palette
-			, pngData.Adam7Sizes
-			, out_Texture.View
-			);
-	else
-		return ::pngDecode
-			( pngData.Header.BitDepth
-			, pngData.Header.ColorType
-			, pngData.Scanlines
-			, pngData.Palette
-			, out_Texture.View
-			);
+	gpk_necs(out_Texture.resize(imageHeader.Size));
+	return gpk::pngDecode(pngData, out_Texture.View);
 }
-
 ::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::imgu16 & out_Texture) {
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
-	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
-	if(imageHeader.MethodInterlace)
-		return ::pngDecodeInterlaced
-			( pngData.Header.BitDepth
-			, pngData.Header.ColorType
-			, pngData.Scanlines
-			, pngData.Palette
-			, pngData.Adam7Sizes
-			, out_Texture.View
-			);
-	else
-		return ::pngDecode
-			( pngData.Header.BitDepth
-			, pngData.Header.ColorType
-			, pngData.Scanlines
-			, pngData.Palette
-			, out_Texture.View
-			);
+	gpk_necs(out_Texture.resize(imageHeader.Size));
+	return gpk::pngDecode(pngData, out_Texture.View);
 }
-
 ::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::imgu8 & out_Texture) {
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
-	gpk_necall(out_Texture.resize(imageHeader.Size), "%s", "Invalid image size?");
+	gpk_necs(out_Texture.resize(imageHeader.Size));
+	return gpk::pngDecode(pngData, out_Texture.View);
+}
+
+::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::g8bgra out_Texture) {
+	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
 	if(imageHeader.MethodInterlace)
 		return ::pngDecodeInterlaced
 			( pngData.Header.BitDepth
@@ -1113,7 +1052,7 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 			, pngData.Scanlines
 			, pngData.Palette
 			, pngData.Adam7Sizes
-			, out_Texture.View
+			, out_Texture
 			);
 	else
 		return ::pngDecode
@@ -1121,25 +1060,60 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 			, pngData.Header.ColorType
 			, pngData.Scanlines
 			, pngData.Palette
-			, out_Texture.View
+			, out_Texture
 			);
 }
 
-::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcs & filename, ::gpk::img8bgra & out_Texture)	{
-	gpk_necall(::gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
-	return ::gpk::pngDecode(pngData, out_Texture);
+::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::gu16 out_Texture) {
+	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
+	if(imageHeader.MethodInterlace)
+		return ::pngDecodeInterlaced
+			( pngData.Header.BitDepth
+			, pngData.Header.ColorType
+			, pngData.Scanlines
+			, pngData.Palette
+			, pngData.Adam7Sizes
+			, out_Texture
+			);
+	else
+		return ::pngDecode
+			( pngData.Header.BitDepth
+			, pngData.Header.ColorType
+			, pngData.Scanlines
+			, pngData.Palette
+			, out_Texture
+			);
 }
 
-::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcu8 & source, ::gpk::img8bgra & out_Texture) {
-	gpk_necs(::gpk::pngFileLoad(pngData, source));
-	return ::gpk::pngDecode(pngData, out_Texture);
+::gpk::error_t			gpk::pngDecode				(::gpk::SPNGData & pngData, ::gpk::gu8 out_Texture) {
+	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
+	if(imageHeader.MethodInterlace)
+		return ::pngDecodeInterlaced
+			( pngData.Header.BitDepth
+			, pngData.Header.ColorType
+			, pngData.Scanlines
+			, pngData.Palette
+			, pngData.Adam7Sizes
+			, out_Texture
+			);
+	else
+		return ::pngDecode
+			( pngData.Header.BitDepth
+			, pngData.Header.ColorType
+			, pngData.Scanlines
+			, pngData.Palette
+			, out_Texture
+			);
 }
 
-::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcs & filename	)	{
-	::gpk::au8					fileInMemory				= {};
-	gpk_necall(::gpk::fileToMemory(filename, fileInMemory), "Failed to load .png file: %s", filename.begin());
-	return ::gpk::pngFileLoad(pngData, fileInMemory);
-}
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu16   & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u16 ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u16 *)out_Data.begin(), pngData.Header.Size}); }
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu8    & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u8  ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u8  *)out_Data.begin(), pngData.Header.Size}); }
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
+
+
+stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1024 * 1;
+stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 1;
 
 ::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcu8 & source	)	{
 	::gpk::au32					indicesIDAT;
@@ -1154,15 +1128,55 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 		}
 	}
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
-	const uint32_t				aSuitableWidth				= ::scanLineSizeFromFormat(imageHeader.ColorType, imageHeader.BitDepth, imageHeader.Size.x);
-	gpk_necall(pngData.Inflated.resize(aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y), "Failed to resize. Requested size: %u.", aSuitableWidth * 2 * imageHeader.Size.y + imageHeader.Size.y);
-	gpk_necall(::pngInflate(pngData.Deflated, pngData.Inflated), "%s", "Failed to decompress!");
+	pngData.Inflated.clear();
+	gpk_necs(::gpk::arrayInflate(pngData.Deflated.cu8(), pngData.Inflated, ::INFLATE_CHUNK_SIZE));
 	::pngFilePrintInfo(pngData);
 
 	uint32_t					bytesPerPixel				= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
-	ree_if(errored(bytesPerPixel), "%s", "Invalid format! Color Type: %u. Bit Depth: %u.");
-	return imageHeader.MethodInterlace 
+	gpk_necall(bytesPerPixel, "%s", "Invalid format! Color Type: %u. Bit Depth: %u.");
+	gpk_necs(imageHeader.MethodInterlace 
 		? ::defilterInterlaced   (pngData)
 		: ::defilterNonInterlaced(pngData, bytesPerPixel)
-		;
+		);
+	return 0;
+}
+
+::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcs & filename	)	{
+	::gpk::au8					fileInMemory				= {};
+	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	return ::gpk::pngFileLoad(pngData, fileInMemory);
+}
+
+::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcu8 &   source, ::gpk::au8 & out_Data) { 
+	gpk_necs(::gpk::pngFileLoad(pngData, source)); 
+	return ::gpk::pngDecode(pngData, out_Data); 
+}
+
+::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcs  & filename, ::gpk::au8 & out_Data) { 
+	::gpk::au8					fileInMemory				= {};
+	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	return ::gpk::pngFileLoad(pngData, fileInMemory.cu8(), out_Data);
+}
+
+::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcu8 &   source, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { 
+	gpk_necs(::gpk::pngFileLoad(pngData, source)); 
+	return ::gpk::pngDecode(pngData, out_Data, out_View); 
+}
+
+::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcs  & filename, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { 
+	::gpk::au8					fileInMemory				= {};
+	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	return ::gpk::pngFileLoad(pngData, fileInMemory.cu8(), out_Data, out_View);
+}
+
+::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcu8 & source, ::gpk::img8bgra & out_Texture) {
+	gpk_necs(::gpk::pngFileLoad(pngData, source));
+	gpk_necs(out_Texture.resize(pngData.Header.Size));
+	return ::gpk::pngDecode(pngData, out_Texture.View);
+}
+
+::gpk::error_t			gpk::pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcs & filename, ::gpk::img8bgra & out_Texture)	{
+	gpk_necall(::gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
+	gpk_necs(out_Texture.resize(pngData.Header.Size));
+	return ::gpk::pngDecode(pngData, out_Texture.View);
 }

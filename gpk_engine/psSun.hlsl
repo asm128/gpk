@@ -18,13 +18,13 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 	float				randWeight				= getSurfaceWeight(relativeToCenter);
 	const float4		colorBody				= float4(randColor.rgb, Diffuse.a);
 
-	randColor		*= .25;
+	randWeight		*= .25;
 	const float4		colorMarkerX			= saturate(float4(1, randWeight, randWeight, Diffuse.a));
 	const float4		colorMarkerY			= saturate(float4(randWeight, 1, randWeight, Diffuse.a));
 	const float4		colorMarkerZ			= saturate(float4(randWeight, randWeight, 1, Diffuse.a));
 
 
-	const float			markerRadius			= .035f;
+	const float			markerRadius			= .05f;
 	const bool			markY
 		=  markerRadius >=  0.5f - relativeToCenter.y
 		|| markerRadius <= -0.5f - relativeToCenter.y

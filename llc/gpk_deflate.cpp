@@ -94,7 +94,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 			break;
 		}
 		ree_if(ret < 0, "Failed to decompress? inflate error: %i.", ret);
-		const uint32_t				inflatedSize			= (uint32_t)((uint8_t*)strm.next_out - block.begin());
+		const uint32_t				inflatedSize			= (uint32_t)((const uint8_t*)strm.next_out - block.begin());
 		gpk_necall(inflated.append(block.begin(), inflatedSize), "%s", "Out of memory?");
 		if(ret == Z_STREAM_END)
 			break;
@@ -104,8 +104,8 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1024 * 32;
-stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 32;
+stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
+stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
 
 ::gpk::error_t			gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcs nameFileSrc)					{
 	::gpk::au8					rawFileInMemory				= {};

@@ -1,4 +1,4 @@
-#include "gpk_engine_celestial_body.h"
+#include "gpk_celestial_body.h"
 
 ::gpk::error_t			gpk::printStar		(const ::gpk::SDetailStar & body) {
 	info_printf(
