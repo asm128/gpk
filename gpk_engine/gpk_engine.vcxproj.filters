@@ -117,6 +117,9 @@
     <ClInclude Include="gpk_engine_planetary_system.h">
       <Filter>astronomical</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_engine_gameplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">

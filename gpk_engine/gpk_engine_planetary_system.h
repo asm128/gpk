@@ -15,11 +15,7 @@ namespace gpk
 	};
 
 	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
-	stainli	::gpk::error_t	planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
-		::gpk::SJSONFile			jsonFile				= {};
-		gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath), "%s", ::gpk::toString(jsonFilePath).begin());
-		return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
-	}
+	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath);
 
 	struct SPlanetarySystemEntityMap {
 		::gpk::aeid					GravityCenters;

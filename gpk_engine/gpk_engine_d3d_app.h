@@ -16,38 +16,44 @@ namespace gpk
 	struct SD3DGUIResources {
 		typedef	::gpk::img<_tColor>				TRenderTarget;
 
-		TRenderTarget							RenderTarget				= {};
+		TRenderTarget							RenderTarget		= {};
 
 		// We need to render the GUI separately to compose DirectX target from a dynamic texture.
-		::gpk::pcom<ID3D11Buffer>				VertexBuffer		;
-		::gpk::pcom<ID3D11Buffer>				IndexBuffer			;
-		::gpk::pcom<ID3D11SamplerState>			SamplerStates		;
-		::gpk::pcom<ID3D11InputLayout>			InputLayout			;
-		::gpk::pcom<ID3D11VertexShader>			VertexShader		;
-		::gpk::pcom<ID3D11PixelShader>			PixelShader			;
-		::gpk::pcom<ID3D11Buffer>				ConstantBuffer		;
-		::gpk::pcom<ID3D11ShaderResourceView>	ShaderResourceView	;
-		::gpk::pcom<ID3D11Buffer>				ConstantBufferNode, ConstantBufferScene;
-		::gpk::pcom<ID3D11ShaderResourceView>	SRV					;	// - Size-dependent
-		::gpk::pcom<ID3D11Texture2D>			Texture2D			;	// - Size-dependent
+		::gpk::pcom<ID3D11BlendState>			BlendState			= {};
+		::gpk::pcom<ID3D11RasterizerState>		RasterizerState		= {};
+		::gpk::pcom<ID3D11SamplerState>			SamplerState		= {};
+		::gpk::pcom<ID3D11DepthStencilState>	DepthStencilState	= {};	// - Size-dependent
+		//															= {}
+		::gpk::pcom<ID3D11Buffer>				IndexBuffer			= {};
+		::gpk::pcom<ID3D11Buffer>				VertexBuffer		= {};
+		::gpk::pcom<ID3D11Buffer>				ConstantBufferScene	= {};
+		::gpk::pcom<ID3D11Buffer>				ConstantBufferNode	= {};
+		::gpk::pcom<ID3D11InputLayout>			InputLayout			= {};
+		::gpk::pcom<ID3D11VertexShader>			VertexShader		= {};
+		::gpk::pcom<ID3D11PixelShader>			PixelShader			= {};
+		::gpk::pcom<ID3D11ShaderResourceView>	ShaderResourceView	= {};
+		::gpk::pcom<ID3D11Texture2D>			Texture2D			= {};	// - Size-dependent
 
-		void					ReleaseDeviceResources		() {
-			SRV						= {};
-			Texture2D				= {};
-			VertexBuffer			= {};
+		void					ReleaseDeviceResources				() {
+			BlendState				= {};
+			RasterizerState			= {};
+			SamplerState			= {};
+			DepthStencilState		= {};
+
 			IndexBuffer				= {};
-			SamplerStates			= {};
+			VertexBuffer			= {};
+			ConstantBufferScene		= {};
+			ConstantBufferNode		= {};
 			InputLayout				= {};
 			VertexShader			= {};
 			PixelShader				= {};
-			ConstantBuffer			= {};
 			ShaderResourceView		= {};
-			ConstantBufferNode		= ConstantBufferScene = {};
+			Texture2D				= {};
 		}
 
 		::gpk::error_t				CreateSizeDependentResources	(ID3D11Device3 * d3dDevice, ::gpk::n2u16 windowSize)	{
 			gpk_necs(RenderTarget.resize(windowSize.u32(), {0, 0, 0, 0}));
-			gpk_necs(::gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, SRV, RenderTarget));
+			gpk_necs(::gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
 			return 0;
 		}
 
@@ -95,7 +101,7 @@ namespace gpk
 				gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 				gpk_hrcall(d3dDevice->CreatePixelShader(&filePS[0], filePS.size(), nullptr, &pixelShader));
-				PixelShader					= pixelShader;
+				PixelShader				= pixelShader;
 			}
 
 			{
@@ -121,7 +127,7 @@ namespace gpk
 				vertexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;
 				::gpk::pcom<ID3D11Buffer>		d3dBuffer;
 				gpk_hrcall(d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &d3dBuffer));
-				IndexBuffer					= d3dBuffer;
+				IndexBuffer				= d3dBuffer;
 			}
 			// 3515504948
 			{
@@ -137,9 +143,52 @@ namespace gpk
 
 				::gpk::pcom<ID3D11SamplerState>	samplerState;
 				gpk_hrcall(d3dDevice->CreateSamplerState(&samDesc, &samplerState));
-				SamplerStates				= samplerState;
+				SamplerState						= samplerState;
 			}
+			{ // straight
+				D3D11_BLEND_DESC				blendDesc				= {};
+				blendDesc.RenderTarget[0].BlendEnable			= TRUE;
+				blendDesc.RenderTarget[0].SrcBlend				=
+				blendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_SRC_ALPHA;
+				blendDesc.RenderTarget[0].DestBlend				=
+				blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_INV_SRC_ALPHA;
+				blendDesc.RenderTarget[0].BlendOp				=
+				blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+				blendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+				::gpk::pcom<ID3D11BlendState>	blendState;
+				gpk_hrcall(d3dDevice->CreateBlendState(&blendDesc, &blendState));
+				BlendState					= blendState;
+			}
+			{
+				D3D11_RASTERIZER_DESC			rsDesc					= {};
+				rsDesc.FillMode				= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
+				rsDesc.CullMode				= D3D11_CULL_BACK;
+				rsDesc.DepthClipEnable		= false;
+				::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
+				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
+				RasterizerState					= rasterizerState;
+			}
+			{ // disabled
+				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
+				depthStencilDesc.DepthEnable		= FALSE;
+				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
+				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
+				depthStencilDesc.StencilEnable		= 0;
+				depthStencilDesc.StencilReadMask	= D3D11_DEFAULT_STENCIL_READ_MASK;
+				depthStencilDesc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;
 
+				depthStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.BackFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+				::gpk::pcom<ID3D11DepthStencilState>	depthStencilState;
+				gpk_hrcall(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+				DepthStencilState				= depthStencilState;
+			}
 			return 0;
 		}
 
@@ -193,10 +242,11 @@ namespace gpk
 			return 0;
 		}
 		::gpk::error_t			CreateDeviceResources	(const ::gpk::SEngineGraphics & engineGraphics)	{
-			gpk_necs(Scene		.CreateDeviceResources(DeviceResources->GetD3DDevice()));
+			ID3D11Device3				* pd3dDevice			= DeviceResources->GetD3DDevice();
+			gpk_necs(Scene		.CreateDeviceResources(pd3dDevice));
 			gpk_necs(Text		.CreateDeviceResources(DeviceResources->GetD2DDeviceContext()));
-			gpk_necs(GUIStuff	.CreateDeviceResources(DeviceResources->GetD3DDevice()));
-			gpk_necs(CreateDeviceDependentEngineResources(DeviceResources->GetD3DDevice(), engineGraphics));
+			gpk_necs(GUIStuff	.CreateDeviceResources(pd3dDevice));
+			gpk_necs(CreateDeviceDependentEngineResources(pd3dDevice, engineGraphics));
 			return 0; 
 		}
 

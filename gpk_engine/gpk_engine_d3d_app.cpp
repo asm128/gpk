@@ -9,8 +9,11 @@
 	gpk_hrcall(d3dResources.GetD3DDeviceContext()->Map(guiStuff.Texture2D.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedTexture));
 	if(mappedTexture.pData) {
 		for(uint32_t y = 0; y < guiStuff.RenderTarget.metrics().y; ++y) {
-			::gpk::vcbgra			scanLine					= guiStuff.RenderTarget[y];
-			memcpy(&((char*)mappedTexture.pData)[y * mappedTexture.RowPitch], scanLine.begin(), scanLine.byte_count());
+			::gpk::vcbgra			scanLineSrc					= guiStuff.RenderTarget[y];
+			::gpk::vbgra			scanLineDst					= {(::gpk::bgra*)(&((char*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
+			memcpy(scanLineDst.begin(), scanLineSrc.begin(), scanLineSrc.byte_count());
+			//for(uint32_t x = 0; x < scanLineDst.size(); ++x)
+			//	 scanLineDst.begin()[x].a	= scanLineDst.begin()[x].a;
 		}
 	}
 
@@ -28,20 +31,12 @@
 	context->IASetInputLayout		(guiStuff.InputLayout);
 	context->VSSetShader			(guiStuff.VertexShader, nullptr, 0);	// Attach our vertex shader.
 	context->PSSetShader			(guiStuff.PixelShader, nullptr, 0);	// Attach our pixel shader.
-
-	D3D11_BUFFER_DESC						desc						= {};
-	ib->GetDesc(&desc);
-
-	D3D11_RASTERIZER_DESC					rs							= {};
-	rs.FillMode							= D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME; 
-	rs.CullMode							= D3D11_CULL_BACK;
-	rs.DepthClipEnable					= TRUE;
-
-	::gpk::pcom<ID3D11RasterizerState>		prs;
-	gpk_hrcall(d3dResources.GetD3DDevice()->CreateRasterizerState(&rs, &prs));
-	context->RSSetState(prs);
-	context->PSSetSamplers(0, 1, &guiStuff.SamplerStates);
-	context->PSSetShaderResources(0, 1, &guiStuff.SRV);
+	context->RSSetState				(guiStuff.RasterizerState);
+	context->PSSetSamplers			(0, 1, &guiStuff.SamplerState);
+	context->PSSetShaderResources	(0, 1, &guiStuff.ShaderResourceView);
+	context->OMSetBlendState		(guiStuff.BlendState, 0, 0xFFFFFFFF);
+	context->OMSetDepthStencilState	(guiStuff.DepthStencilState, 0);
+	//
 	context->DrawIndexed(6, 0, 0);	// Draw the objects.
 	return 0;
 }
@@ -95,7 +90,7 @@
 		const ::gpk::SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
-		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, nodeConstants);
+		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
 	return 0;
 }

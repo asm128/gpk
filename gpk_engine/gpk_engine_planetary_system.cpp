@@ -31,6 +31,12 @@
 	return 0;
 }
 
+::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
+	::gpk::SJSONFile			jsonFile					= {};
+	gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath), "%s", ::gpk::toString(jsonFilePath).begin());
+	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
+}
+
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
 	::gpk::avcc					stellarBodyNames			= {};
 	::gpk::ai32					stellarBodyIndices;
@@ -83,18 +89,17 @@
 	return iFurthest;
 }
 
-
-static	::gpk::error_t	textureNumber		(::gpk::g8bgra view, uint32_t number, const ::gpk::SRasterFont & font) { 
-	char						strNumber[4]			= {};
+static	::gpk::error_t	textureNumber				(::gpk::g8bgra view, uint32_t number, const ::gpk::SRasterFont & font) { 
+	char						strNumber[4]				= {};
 	sprintf_s(strNumber, "%i", number);
-	const ::gpk::rect2i16		targetRect				= 
+	const ::gpk::rect2i16		targetRect					= 
 		{ {int16_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), int16_t(view.metrics().y / 2 - font.CharSize.y / 2)}
 		, font.CharSize.i16()
 		};
 	::gpk::apod<::gpk::n2u16>	coords;
 	::gpk::textLineRaster(view.metrics(), font.CharSize, targetRect, font.Texture, strNumber, coords);
 	for(uint32_t iCoord = 0; iCoord < coords.size(); ++iCoord) {
-		const ::gpk::n2u16			coord					= coords[iCoord];
+		const ::gpk::n2u16			coord						= coords[iCoord];
 		view[coord.y][coord.x]	= ::gpk::BLACK;
 	}
 	return 0; 
@@ -209,11 +214,11 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		::gpk::rgbaf				color					= colors[iOrbiter];
 		const ::gpk::eid_t			entities[2]				= {entityMap.Orbits[iOrbiter], entityMap.Bodies[iOrbiter]};
 		for(uint32_t i = 0; i < 2; ++i) {
-			color.a					= i ? .75f : .05f;
+			color.a					= i ? 1 : .05f;
 			::initSkin(engine, color, iOrbiter, entities[i]);
 		}
 	}
 
-	engine.Update(86400 * 1000);
+	engine.Update(86400 * 365 * 4);
 	return 0;
 }

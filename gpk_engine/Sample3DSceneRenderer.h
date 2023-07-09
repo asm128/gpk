@@ -22,7 +22,10 @@ namespace gpk
 		::gpk::acom<ID3D11Buffer		>		ConstantBuffer;
 		::gpk::acom<ID3D11SamplerState	>		SamplerStates;
 		::gpk::acom<ID3D11ShaderResourceView>	ShaderResourceView;
-
+		::gpk::acom<ID3D11BlendState>			BlendState;
+		::gpk::acom<ID3D11RasterizerState>		RasterizerState;
+		::gpk::acom<ID3D11DepthStencilState>	DepthStencilState;
+		
 		// System resources for cube geometry.
 		::gpk::SEngineSceneConstants			ConstantBufferScene				= {};
 
@@ -39,15 +42,20 @@ namespace gpk
 		}
 
 		void									ReleaseDeviceResources			() {
-			VertexShader	.clear();
-			InputLayout		.clear();
-			PixelShader		.clear();
-			ConstantBuffer	.clear();
-			VertexBuffer	.clear();
-			IndexBuffer		.clear();
+			VertexBuffer		.clear();
+			IndexBuffer			.clear();
+			InputLayout			.clear();
+			VertexShader		.clear();
+			PixelShader			.clear();
+			ConstantBuffer		.clear();
+			SamplerStates		.clear();
+			ShaderResourceView	.clear();
+			BlendState			.clear();
+			RasterizerState		.clear();
+			DepthStencilState	.clear();
 		}
 
-		void									Render							(uint32_t iMesh, ::gpk::rangeu32 indexRange, uint32_t iTexture, uint32_t iShader, const::gpk::SRenderNodeConstants & constantBufferModel) {
+		void									Render							(uint32_t iMesh, ::gpk::rangeu32 indexRange, uint32_t iTexture, uint32_t iShader, bool alpha, const::gpk::SRenderNodeConstants & constantBufferModel) {
 			auto										context							= DeviceResources->GetD3DDeviceContext();
 			context->UpdateSubresource1(ConstantBuffer[0], 0, NULL, &constantBufferModel, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
 			context->UpdateSubresource1(ConstantBuffer[1], 0, NULL, &ConstantBufferScene, 0, 0, 0);	// Prepare the constant buffer to send it to the graphics device.
@@ -62,8 +70,10 @@ namespace gpk
 			context->IASetIndexBuffer		(ib, DXGI_FORMAT_R16_UINT, 0);// Each index is one 16-bit unsigned integer (short).
 			context->IASetPrimitiveTopology	(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			context->IASetInputLayout		(InputLayout[0]);
+
 			context->VSSetShader			(VertexShader[0], nullptr, 0);	// Attach our vertex shader.
 			context->VSSetConstantBuffers1	(0, 1, &ConstantBuffer[0], nullptr, nullptr);	// Send the constant buffer to the graphics device.
+
 			context->PSSetConstantBuffers1	(0, 1, &ConstantBuffer[0], nullptr, nullptr);	// Send the constant buffer to the graphics device.
 			context->PSSetConstantBuffers1	(1, 1, &ConstantBuffer[1], nullptr, nullptr);	// Send the constant buffer to the graphics device.
 			context->PSSetShader			(PixelShader[iShader], nullptr, 0);	// Attach our pixel shader.
@@ -71,33 +81,14 @@ namespace gpk
 			D3D11_BUFFER_DESC							desc							= {};
 			ib->GetDesc(&desc);
 
-			D3D11_RASTERIZER_DESC						rs								= {};
-			rs.FillMode								= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
-			rs.CullMode								= D3D11_CULL_BACK;
-			rs.DepthClipEnable						= TRUE;
-		
-
-			D3D11_BLEND_DESC				blendDesc	= {};
-			blendDesc.RenderTarget[0].BlendEnable = TRUE;
-			blendDesc.RenderTarget[0].SrcBlend =
-			blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-			blendDesc.RenderTarget[0].DestBlend =
-			blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-			blendDesc.RenderTarget[0].BlendOp =
-			blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-			blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-
-			blendDesc.AlphaToCoverageEnable = false;
-
-			::gpk::pcom<ID3D11BlendState>		alphaBlendState;
-			::gpk::pcom<ID3D11RasterizerState>	prs;
-			DeviceResources->GetD3DDevice()->CreateBlendState(&blendDesc, &alphaBlendState);
-			DeviceResources->GetD3DDevice()->CreateRasterizerState(&rs, &prs);
-
-			context->OMSetBlendState(alphaBlendState, 0, 0xFFFFFFFF);
-			context->RSSetState(prs);
 		    context->PSSetSamplers( 0, 1, &SamplerStates[0] );
 			context->PSSetShaderResources( 0, 1, &ShaderResourceView[iTexture] );
+
+			context->RSSetState(RasterizerState[alpha ? 1 : 0]);
+	
+			context->OMSetBlendState(BlendState[alpha ? 1 : 0], 0, 0xFFFFFFFF);
+			context->OMSetDepthStencilState(DepthStencilState[alpha ? 1 : 0], 0xFF);
+
 			context->DrawIndexed(indexRange.Count, indexRange.Offset, 0);	// Draw the objects.
 		}
 
@@ -125,14 +116,7 @@ namespace gpk
 		}
 
 		::gpk::error_t							CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
-			SamplerStates		= {};
-			InputLayout			= {};
-			VertexShader		= {};
-			ConstantBuffer		= {};
-			//VertexBuffer		= {};
-			//IndexBuffer			= {};
-			//PixelShader			= {};
-			//ShaderResourceView	= {};
+			ReleaseDeviceResources();
 			{
 				// Create a sampler state
 				D3D11_SAMPLER_DESC							samDesc						= {};
@@ -179,6 +163,112 @@ namespace gpk
 				constantBufferDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
 				gpk_hrcall(d3dDevice->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer));
 				ConstantBuffer.push_back(constantBuffer);
+			}
+			{
+				D3D11_BLEND_DESC				blendDesc		= {};
+				blendDesc.RenderTarget[0].BlendEnable			= 0;
+				blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+				::gpk::pcom<ID3D11BlendState>	blendState;
+				gpk_hrcall(d3dDevice->CreateBlendState(&blendDesc, &blendState));
+				BlendState.push_back(blendState);
+			}
+			{ // straight
+				D3D11_BLEND_DESC				blendDesc	= {};
+				blendDesc.RenderTarget[0].BlendEnable			= TRUE;
+				blendDesc.RenderTarget[0].SrcBlend				=
+				blendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_SRC_ALPHA;
+				blendDesc.RenderTarget[0].DestBlend				=
+				blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_INV_SRC_ALPHA;
+				blendDesc.RenderTarget[0].BlendOp				=
+				blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+				blendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+				::gpk::pcom<ID3D11BlendState>	blendState;
+				gpk_hrcall(d3dDevice->CreateBlendState(&blendDesc, &blendState));
+				BlendState.push_back(blendState);
+			}
+			{ // premultiplied
+				D3D11_BLEND_DESC				blendDesc	= {};
+				blendDesc.RenderTarget[0].BlendEnable			= TRUE;
+				blendDesc.RenderTarget[0].SrcBlend				=
+				blendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_ONE;
+				blendDesc.RenderTarget[0].DestBlend				=
+				blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_INV_SRC_ALPHA;
+				blendDesc.RenderTarget[0].BlendOp				=
+				blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+				blendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+				::gpk::pcom<ID3D11BlendState>	blendState;
+				gpk_hrcall(d3dDevice->CreateBlendState(&blendDesc, &blendState));
+				BlendState.push_back(blendState);
+			}
+			{ // additiv
+				D3D11_BLEND_DESC				blendDesc	= {};
+				blendDesc.RenderTarget[0].BlendEnable			= TRUE;
+				blendDesc.RenderTarget[0].SrcBlend				=
+				blendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_SRC_ALPHA;
+				blendDesc.RenderTarget[0].DestBlend				=
+				blendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_ONE;
+				blendDesc.RenderTarget[0].BlendOp				=
+				blendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+				blendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+				::gpk::pcom<ID3D11BlendState>	blendState;
+				gpk_hrcall(d3dDevice->CreateBlendState(&blendDesc, &blendState));
+				BlendState.push_back(blendState);
+			}
+			{
+				D3D11_RASTERIZER_DESC			rsDesc							= {};
+				rsDesc.FillMode				= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
+				rsDesc.CullMode				= D3D11_CULL_BACK;
+				rsDesc.DepthClipEnable		= false;
+				::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
+				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
+				RasterizerState.push_back(rasterizerState);
+			}
+			{
+				D3D11_RASTERIZER_DESC			rsDesc							= {};
+				rsDesc.FillMode				= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
+				rsDesc.CullMode				= D3D11_CULL_BACK;
+				rsDesc.DepthClipEnable		= false;
+				::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
+				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
+				RasterizerState.push_back(rasterizerState);
+			}
+			{ // enabled
+				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
+				depthStencilDesc.DepthEnable		= TRUE;
+				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
+				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
+				depthStencilDesc.StencilEnable		= 0;
+				depthStencilDesc.StencilReadMask	= D3D11_DEFAULT_STENCIL_READ_MASK;
+				depthStencilDesc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+				depthStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
+				::gpk::pcom<ID3D11DepthStencilState>	depthStencilState;
+				gpk_hrcall(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+				DepthStencilState.push_back(depthStencilState);
+			}
+			{ // disabled
+				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
+				depthStencilDesc.DepthEnable		= 0;
+				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
+				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
+				depthStencilDesc.StencilEnable		= 0;
+				depthStencilDesc.StencilReadMask	= D3D11_DEFAULT_STENCIL_READ_MASK;
+				depthStencilDesc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+				depthStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.BackFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilPassOp			= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.BackFace.StencilFailOp			= D3D11_STENCIL_OP_KEEP;
+				::gpk::pcom<ID3D11DepthStencilState>	depthStencilState;
+				gpk_hrcall(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+				DepthStencilState.push_back(depthStencilState);
 			}
 			return 0;
 		}
