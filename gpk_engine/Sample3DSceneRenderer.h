@@ -117,13 +117,26 @@ namespace gpk
 
 		::gpk::error_t							CreateDeviceResources			(ID3D11Device3 * d3dDevice)	{
 			ReleaseDeviceResources();
-			{
-				// Create a sampler state
+			{	// Create a point sampler state for fonts 
 				D3D11_SAMPLER_DESC							samDesc						= {};
 				samDesc.Filter							= D3D11_FILTER_MIN_MAG_MIP_POINT;
 				samDesc.AddressU						= D3D11_TEXTURE_ADDRESS_CLAMP;
 				samDesc.AddressV						= D3D11_TEXTURE_ADDRESS_CLAMP;
 				samDesc.AddressW						= D3D11_TEXTURE_ADDRESS_CLAMP;
+				samDesc.MaxAnisotropy					= 1;
+				samDesc.ComparisonFunc					= D3D11_COMPARISON_ALWAYS;
+				samDesc.MaxLOD							= D3D11_FLOAT32_MAX;
+
+				::gpk::pcom<ID3D11SamplerState>				samplerState;
+				gpk_hrcall(d3dDevice->CreateSamplerState(&samDesc, &samplerState));
+				SamplerStates.push_back(samplerState);
+			}
+			{	// Create a sampler state for diffuse map
+				D3D11_SAMPLER_DESC							samDesc						= {};
+				samDesc.Filter							= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+				samDesc.AddressU						= D3D11_TEXTURE_ADDRESS_WRAP;
+				samDesc.AddressV						= D3D11_TEXTURE_ADDRESS_WRAP;
+				samDesc.AddressW						= D3D11_TEXTURE_ADDRESS_WRAP;
 				samDesc.MaxAnisotropy					= 1;
 				samDesc.ComparisonFunc					= D3D11_COMPARISON_ALWAYS;
 				samDesc.MaxLOD							= D3D11_FLOAT32_MAX;

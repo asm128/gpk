@@ -26,7 +26,7 @@ namespace gpk
 
 	struct SParamsSphere { 
 		::gpk::n3f32		Origin			= {};
-		::gpk::n2u16		CellCount		= {16, 16};
+		::gpk::n2u16		CellCount		= {32, 32};
 		bool				Reverse			= false;
 		float				DiameterRatio	= 1.0f;
 		float				Radius			= .5f;

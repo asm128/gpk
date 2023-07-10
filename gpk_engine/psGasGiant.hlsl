@@ -4,15 +4,16 @@
 float4			main					(PixelShaderInput input) : SV_TARGET {
 	float2				relativeToCenter		= input.world.uv - float2(.5f, .5f);
 	relativeToCenter.x	*= 2;
-	float4				materialColor			= Diffuse;
+	float4				sampleColor				= texDiffuse.Sample(samplerLinear, input.world.uv);
+	float4				materialColor			= sampleColor;
 	bool				shade					= false;
 	float				ambientFactor			= LIGHT_FACTOR_AMBIENT;
 	const float3		lightVecW				= normalize(LightPosition.xyz - input.world.position);
 	const float3		normal					= normalize(input.world.normal);
 	const float			diffuseFactor			= dot(normal, lightVecW);
 	if(distance(float2(0.0f, 0.0f), relativeToCenter) >= .175f) {
-		const bool			equator					= (relativeToCenter.y < .20f) && (relativeToCenter.y > -.20f);
-		materialColor	= equator ? Diffuse : saturate(Diffuse + GPK_WHITE * abs(relativeToCenter.y));
+		//const bool			equator					= (relativeToCenter.y < .20f) && (relativeToCenter.y > -.20f);
+		//materialColor	= equator ? materialColor : saturate(materialColor + materialColor * abs(relativeToCenter.y));
 		shade			= true;
 		ambientFactor	= .35f;
 	}
@@ -24,7 +25,7 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 		float4				surfacecolor				= texDiffuse.Sample(samplerLinear, fetchCoord);
 	
 		if((surfacecolor.r + surfacecolor.g + surfacecolor.b) != 0) {
-			materialColor	= GPK_WHITE;
+			//materialColor	+= materialColor * abs(relativeToCenter.y);
 			shade			= uint(rand(input.world.uv * diffuseFactor) * 10) % 2;
 			ambientFactor	= .35f;
 		}

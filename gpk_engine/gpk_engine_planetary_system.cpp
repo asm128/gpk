@@ -52,8 +52,24 @@ static	::gpk::error_t	textureNumber				(::gpk::g8bgra view, uint32_t number, con
 }
 
 ::gpk::error_t			gpk::planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
+	::gpk::SPNGData				pngCache				= {};
+	stacxpr char				fileFolder	[]			= "../gpk_data/images";
+	char						fileName	[1024]		= {};
+	int32_t						iBackground				= 0;
+
+	{
+		::gpk::SParamsSphere		params					= {{}, {32, 32}, true, 1, 2};
+		gpk_necs(iBackground = engine.CreateSphere(params));
+		gpk_necs(engine.SetColorDiffuse(iBackground, {1.0f, 1.0f, 1.0f, 1.0f}));
+		gpk_necs(engine.SetShader(iBackground, ::gpk::psSphereAxis, "psBackgroundMilkyWay"));
+		sprintf_s(fileName, "%s.png", "STScI-H-Whale_galaxy-NASA.Hubble_Space_Telescope.ESA-h-4467x1217");
+		int32_t						iImage;
+		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
+		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(iBackground)];
+		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
+	}
 	{	// planets
-		::gpk::SParamsSphere		params			= {{}, {24, 24}};
+		::gpk::SParamsSphere		params	= {{}, {32, 32}};
 		gpk_necs(entityMap.Bodies.push_back(engine.CreateSphere(params)));
 		gpk_necs(engine.SetColorDiffuse(entityMap.Bodies[0], {.0f, 0.0f, 1.0f, 1}));
 	}
@@ -62,13 +78,12 @@ static	::gpk::error_t	textureNumber				(::gpk::g8bgra view, uint32_t number, con
 	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
 		gpk_necs(entityMap.Bodies.push_back(engine.Clone(entityMap.Bodies[0], true, true, true)));
 
-	::gpk::SPNGData				pngCache				= {};
 	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
-		solarSystem.Body.Keys;
-		stacxpr char				fileFolder	[]			= "../gpk_data/images";
-		char						fileName	[64]		= {};
-		sprintf_s(fileName, "%s_color.png", ::gpk::toString(solarSystem.Body.Keys[0]).begin());
-		es_if(engine.CreateImageFromFile(fileFolder, fileName));
+		sprintf_s(fileName, "%s_color.png", ::gpk::toString(solarSystem.Body.Keys[iOrbiter]).begin());
+		int32_t						iImage;
+		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
+		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(entityMap.Bodies[iOrbiter])];
+		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
 
 	{	// orbits circles
@@ -85,7 +100,7 @@ static	::gpk::error_t	textureNumber				(::gpk::g8bgra view, uint32_t number, con
 			engine.Entities.SetParent(entityMap.Orbits[iOrbiter], entityMap.Bodies[3]);
 	}
 
-	return 0;
+	return iBackground;
 }
 
 static	::gpk::error_t	initOrbit				(::gpk::SEngine & engine, int32_t iOrbiter, int32_t iEntity, float distanceFromCenter, float distanceScale) {

@@ -34,6 +34,9 @@
     <Filter Include="container">
       <UniqueIdentifier>{057ba543-985b-4a4b-a337-aa6d6664697e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{b16f18f5-8f27-48c7-974e-b5e1ef424ca9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine.h">
@@ -114,9 +117,6 @@
     <ClInclude Include="gpk_engine_planetary_system.h">
       <Filter>astronomical</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_gameplay.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_celestial_body.h">
       <Filter>astronomical</Filter>
     </ClInclude>
@@ -125,6 +125,12 @@
     </ClInclude>
     <ClInclude Include="gpk_engine_celestial_body.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_game.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_game_stage.h">
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +218,9 @@
       <Filter>astronomical</Filter>
     </FxCompile>
     <FxCompile Include="psGasGiant.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psBackgroundMilkyWay.hlsl">
       <Filter>astronomical</Filter>
     </FxCompile>
   </ItemGroup>

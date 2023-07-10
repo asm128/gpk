@@ -31,7 +31,6 @@
 			}
 		}
 
-		//worldTransform = renderNodes.BaseTransforms[entity.RenderNode].Model * worldTransform;
 		transforms.ModelInverse				= worldTransform.GetInverse();
 		transforms.ModelInverseTranspose	= transforms.ModelInverse.GetTranspose();
 	}
@@ -314,5 +313,5 @@
 	surface->Desc.Dimensions	= PNGCache.Header.Size.u16();
 	surface->Desc.BitDepth		= PNGCache.Header.BitDepth;
 	surface->Desc.ColorType		= PNGCache.Header.ColorType;
-	return 0; 
+	return index; 
 }

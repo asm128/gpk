@@ -14,10 +14,12 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 	float2				relativeToCenter		= input.world.uv - float2(.5f, .5f);
 	relativeToCenter.x	*= 2;
 	
+	float				colorFactor				= abs(rand(input.world.uv * sin(CameraFront.w * 2))) + .5f;
+	float4				sampleColor				= texDiffuse.Sample(samplerLinear, input.world.uv * getSurfaceWeight(input.world.uv));
 	float4				randColor				= getSurfaceColor(relativeToCenter);
+	float4				colorBody				= float4(sampleColor.rgb * .25 + float3(sampleColor.r, sampleColor.g * .25f, 0) * abs(sin(CameraFront.w)) + randColor.rgb, Diffuse.a);
 	float				randWeight				= getSurfaceWeight(relativeToCenter);
-	const float4		colorBody				= float4(randColor.rgb, Diffuse.a);
-
+	//colorBody.r		= 1.0f;
 	randWeight		*= .25;
 	const float4		colorMarkerX			= saturate(float4(1, randWeight, randWeight, Diffuse.a));
 	const float4		colorMarkerY			= saturate(float4(randWeight, 1, randWeight, Diffuse.a));
@@ -45,5 +47,5 @@ float4			main					(PixelShaderInput input) : SV_TARGET {
 		: markZ	? colorMarkerZ
 		: colorBody;
 
-	return surfaceColor;
+	return float4(surfaceColor.rgb * colorFactor, Diffuse.a);
 }
