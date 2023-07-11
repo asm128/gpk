@@ -161,8 +161,9 @@ namespace gpk
 				if(cloneSurfaces) {
 					if(Graphics->Skins[idSkin]) {
 						::gpk::SSkin						& newSkin			= *Graphics->Skins[idSkin];
-						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture)
+						for(uint32_t iTexture = 0; iTexture < newSkin.Textures.size(); ++iTexture) {
 							newSkin.Textures[iTexture]			= Graphics->Surfaces.Clone(newSkin.Textures[iTexture]);
+						}
 					}
 				}
 			}

@@ -208,7 +208,7 @@ namespace gpk
 
 			int32_t						reuse				= recycleRenderNodeMap.Keys.find([params](const _tParams & value) { return params == value; }, 0);
 			if(recycleRenderNodeMap.size() > (uint32_t)reuse)
-				entity.RenderNode		= Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
+				entity.RenderNode		= Scene->Clone(recycleRenderNodeMap.Values[reuse], true, true, true);
 			else {
 				::gpk::SGeometryBuffers		geometry;
 				gpk_necs(funcGeometry(geometry));
