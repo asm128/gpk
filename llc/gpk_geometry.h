@@ -44,8 +44,18 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SParamsCircle, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
 	};
 
+	struct SParamsRing { 
+		::gpk::n3f32		Origin			= {};
+		uint16_t			Slices			= 16;
+		bool				Reverse			= false;
+		float				DiameterRatio	= 1.0f;
+		::gpk::minmaxf32	Radius			= {.45f, .5f};
+	
+		GPK_DEFAULT_OPERATOR(SParamsRing, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+	};
+
 	struct SParamsCylinder { 
-		::gpk::n3f32		Origin			= {0, .5f};
+		::gpk::n3f32		Origin			= {};
 		::gpk::n2u16		CellCount		= {16, 2};
 		bool				Reverse			= false;
 		float				DiameterRatio	= 1.0f;
@@ -74,16 +84,16 @@ namespace gpk
 	};
 
 #pragma pack(pop)
-	::gpk::error_t	geometryBuildCircle		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle		& params);
-	::gpk::error_t	geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
-	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere		& params);
-	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);
-	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid		& params);
-	::gpk::error_t	geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
-	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-	::gpk::error_t	geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-	//::gpk::error_t	geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-
+	::gpk::error_t		geometryBuildCircle		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle		& params);
+	::gpk::error_t		geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
+	::gpk::error_t		geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere		& params);
+	::gpk::error_t		geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);
+	::gpk::error_t		geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid		& params);
+	::gpk::error_t		geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
+	::gpk::error_t		geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
+	::gpk::error_t		geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
+	::gpk::error_t		geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing		& params);
+	//::gpk::error_t		geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
 } // namespace
 
 #endif // GPK_GEOMETRY_H_23627

@@ -12,6 +12,7 @@ namespace gpk
 		::gpk::aeid					GravityCenters;
 		::gpk::aeid					Orbits;
 		::gpk::aeid					Bodies;
+		::gpk::aeid					Rings;
 	};
 
 	struct SEnginePlanetarySystem {

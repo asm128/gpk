@@ -92,8 +92,9 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	, double				orbital_inclination
 	, double				orbital_period
 	) {
-	orbitCenter	= {};
-	orbitForces	= {};	
+	orbitCenter				= {};
+	orbitForces				= {};	
+
 	orbitCenter.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
 	orbitCenter.Orientation.Normalize();
 	orbitForces.Rotation	= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
@@ -101,7 +102,58 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	return 0;
 }
 
-::gpk::error_t			gpk::initOrbiterBody
+::gpk::error_t			gpk::initOrbiterMassBody
+	( ::gpk::SBodyCenter	& planetCenter
+	, ::gpk::SBodyForces	& planetForces		
+	, ::gpk::SBodyMass		& planetMass		
+	, double				mass
+	, double				axialTilt
+	, double				rotation_period
+	, double				rotation_unit
+	) {
+	planetCenter			= {};
+	planetForces			= {};	
+	planetMass				= {};
+
+	planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
+	planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
+	planetCenter.Orientation.Normalize();
+	planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
+	planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
+	return 0;
+}
+
+::gpk::error_t			gpk::initOrbiterGravityCenter
+	( ::gpk::SBodyCenter	& planetCenter
+	, ::gpk::SBodyForces	& planetForces		
+	, ::gpk::SBodyMass		& planetMass		
+	, double				distance
+	, double				distance_scale
+	) {
+	planetCenter	= {};
+	planetForces	= {};	
+	planetMass		= {};
+	planetMass.InverseMass	= 1;
+	planetCenter.Position.x	= float(distance_scale * distance);
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::gpk::error_t			gpk::initOrbiterBodyWithGravityCenter
 	( ::gpk::SBodyCenter	& planetCenter
 	, ::gpk::SBodyForces	& planetForces		
 	, ::gpk::SBodyMass		& planetMass		
@@ -125,6 +177,7 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	return 0;
 }
 
+
 ::gpk::error_t			gpk::createOrbiter
 	( ::gpk::SRigidBodyIntegrator	& bodies
 	, double						orbital_inclination
@@ -138,7 +191,7 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	) {
 	const ::gpk::error_t		indexFirstBody				= bodies.Create(2);
 	::gpk::initOrbiterOrbit(bodies.Centers[indexFirstBody] = {}, bodies.Forces[indexFirstBody] = {}, orbital_inclination, orbital_period);
-	::gpk::initOrbiterBody
+	::gpk::initOrbiterBodyWithGravityCenter
 		( bodies.Centers[indexFirstBody + 1]
 		, bodies.Forces	[indexFirstBody + 1]
 		, bodies.Masses	[indexFirstBody + 1]

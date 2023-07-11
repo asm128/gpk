@@ -243,6 +243,8 @@
     <None Include="deploy_data.bat">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="gpk_solar_system.json" />
+    <None Include="gpk_solar_system.json">
+      <Filter>astronomical</Filter>
+    </None>
   </ItemGroup>
 </Project>

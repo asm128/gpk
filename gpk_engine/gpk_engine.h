@@ -31,7 +31,9 @@ namespace gpk
 		::gpk::lmpod<SParamsHelix	, uint32_t>	ParamsHelixHalf	;
 		::gpk::lmpod<SParamsHelix	, uint32_t>	ParamsHelix		;
 		::gpk::lmpod<SParamsSphere	, uint32_t>	ParamsSphere	;
+		::gpk::lmpod<SParamsRing	, uint32_t>	ParamsRing		;
 		::gpk::lmpod<::gpk::vcc		, uint32_t>	Images			;
+
 		::gpk::SPNGData							PNGCache		= {};
 
 		inline	::gpk::error_t		GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
@@ -47,7 +49,7 @@ namespace gpk
 		inline	SBodyMass&			GetBodyMass			(uint32_t iEntity)				{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
 		inline	SBodyCenter&		GetBodyCenter		(uint32_t iEntity)				{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
 
-		::gpk::error_t				Load				(::gpk::vcu8 & input) {
+		::gpk::error_t				Load				(::gpk::vcu8 & input)			{
 			gpk_necs(Scene		->Load(input));
 			gpk_necs(Entities	.Load(input));
 			gpk_necs(Integrator	.Load(input));
@@ -65,7 +67,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t				Update				(double secondsLastFrame)			{
+		::gpk::error_t				Update				(double secondsLastFrame)		{
 			Integrator.Integrate(secondsLastFrame);
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				::gpk::SVirtualEntity			& entity			= Entities[iEntity];
@@ -145,15 +147,17 @@ namespace gpk
 
 		::gpk::error_t			CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t			CreateCamera		();
+
 		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox		& params);
 		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere		& params);
 		::gpk::error_t			CreateCylinder		(const ::gpk::SParamsCylinder	& params);
 		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle		& params);
-		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
+		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRing		& params);
 		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid		& params);
 		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix		& params);
 		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix		& params);
 		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix		& params);
+		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
 
 
 		::gpk::error_t			CreateRing			();
@@ -206,7 +210,7 @@ namespace gpk
 			if(recycleRenderNodeMap.size() > (uint32_t)reuse)
 				entity.RenderNode		= Scene->Clone(recycleRenderNodeMap.Values[reuse], false, false, false);
 			else {
-				::gpk::SGeometryBuffers	geometry;
+				::gpk::SGeometryBuffers		geometry;
 				gpk_necs(funcGeometry(geometry));
 				entity.RenderNode		= Scene->CreateRenderNode(geometry, name, createSkin);
 				recycleRenderNodeMap.push_back(params, entity.RenderNode);

@@ -94,7 +94,7 @@
 		, "parent"					: "Sun"
 		},
 	"Moon" :							 
-		{ "type"					: "planet"
+		{ "type"					: "moon"
 		, "mass"					: 0.073
 		, "diameter"				: 3475
 		, "density"					: 3340

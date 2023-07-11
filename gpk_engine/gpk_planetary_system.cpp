@@ -30,7 +30,7 @@
 			cws_if_failed(indexProperty = ::gpk::jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "type")) // ?? no type? shouldn't happen
 			else {
 				::gpk::vcc					strType						= jsonData.View[indexProperty]; 
-				bodyType				= (::gpk::vcs("star") == strType) ? ::gpk::CELESTIAL_BODY_Star : ::gpk::CELESTIAL_BODY_Planet;
+				bodyType				= (::gpk::vcs("star") == strType) ? ::gpk::CELESTIAL_BODY_Star : (::gpk::vcs("moon") == strType) ? ::gpk::CELESTIAL_BODY_Moon : ::gpk::CELESTIAL_BODY_Planet;
 			}
 
 			::gpk::SCelestialBody		bodyProperties				= {};

@@ -1,6 +1,7 @@
 #include "gpk_geometry.h"
 #include "gpk_voxel.h"
 #include "gpk_view_n3.h"
+#include "gpk_sphere.h"
 
 ::gpk::error_t			gpk::geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox & params) {
 	const uint32_t				offsetPositions				= geometry.Positions		.size(); geometry.Positions			.resize(geometry.Positions		.size() + 24);
@@ -224,5 +225,23 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	gpk_necs(geometry.Normals		.append({&geometry.Normals		[vertexOffset], vertexCount}));
 	geometry.Positions	.for_each([](::gpk::n3f32 & coord){ coord.z *= -1; coord.y *= -1; }, vertexOffset);
 	geometry.Normals	.for_each([](::gpk::n3f32 & coord){ coord.z *= -1; coord.y *= -1; }, vertexOffset);
+	return 0;
+}
+
+::gpk::error_t			gpk::geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing & params) {
+	const uint32_t				vertexOffset				= geometry.Positions.size();
+	gpk_necall(::gpk::geometryBuildGrid(geometry, {{}, params.Slices, 1}), "params.Slices: %i", params.Slices);
+	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
+	geometry.Positions.enumerate([params, &geometry](const uint32_t & index, const ::gpk::n3f32 & position) {
+			const double				weight						= position.x * ::gpk::math_2pi;
+			const ::gpk::SSinCos		sinCos						= {sin(weight), -cos(weight)};
+			const ::gpk::n3f64			relativePosOuter			= {sinCos.Sin * params.Radius.Max, 0, sinCos.Cos * params.Radius.Max};
+			const ::gpk::n3f64			relativePosInner			= {sinCos.Sin * params.Radius.Min, 0, sinCos.Cos * params.Radius.Min};
+			::gpk::n3f32				& posOuter					= geometry.Positions[index];
+			::gpk::n3f32				& posInner					= geometry.Positions[index + params.Slices + 1];
+			posInner				= params.Origin + relativePosInner.f32();
+			posOuter				= params.Origin + relativePosOuter.f32();
+		}, vertexOffset, vertexCount >> 1
+	);
 	return 0;
 }

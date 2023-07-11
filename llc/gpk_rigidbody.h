@@ -279,7 +279,15 @@ namespace gpk
 		, double	orbital_period
 		);
 
-	::gpk::error_t			initOrbiterBody
+	::gpk::error_t			initOrbiterGravityCenter
+		( ::gpk::SBodyCenter	& planetCenter
+		, ::gpk::SBodyForces	& planetForces
+		, ::gpk::SBodyMass		& planetMass
+		, double	distance
+		, double	distance_scale
+		);
+
+	::gpk::error_t			initOrbiterBodyWithGravityCenter
 		( ::gpk::SBodyCenter	& planetCenter
 		, ::gpk::SBodyForces	& planetForces
 		, ::gpk::SBodyMass		& planetMass
@@ -287,6 +295,16 @@ namespace gpk
 		, double	axialTilt
 		, double	distance
 		, double	distance_scale
+		, double	rotation_period
+		, double	rotation_unit
+		);
+
+	::gpk::error_t			initOrbiterMassBody
+		( ::gpk::SBodyCenter	& planetCenter
+		, ::gpk::SBodyForces	& planetForces
+		, ::gpk::SBodyMass		& planetMass
+		, double	mass
+		, double	axialTilt
 		, double	rotation_period
 		, double	rotation_unit
 		);

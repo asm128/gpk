@@ -34,7 +34,7 @@ namespace gpk
 		::gpk::pcom<ID3D11ShaderResourceView>	ShaderResourceView	= {};
 		::gpk::pcom<ID3D11Texture2D>			Texture2D			= {};	// - Size-dependent
 
-		void					ReleaseDeviceResources				() {
+		void					ReleaseDeviceResources		() {
 			BlendState				= {};
 			RasterizerState			= {};
 			SamplerState			= {};
@@ -51,102 +51,102 @@ namespace gpk
 			Texture2D				= {};
 		}
 
-		::gpk::error_t				CreateSizeDependentResources	(ID3D11Device3 * d3dDevice, ::gpk::n2u16 windowSize)	{
+		::gpk::error_t			CreateSizeDependentResources(ID3D11Device3 * d3dDevice, ::gpk::n2u16 windowSize)	{
 			gpk_necs(RenderTarget.resize(windowSize.u32(), {0, 0, 0, 0}));
 			gpk_necs(::gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
 			return 0;
 		}
 
-		::gpk::error_t				CreateDeviceResources		(ID3D11Device3 * d3dDevice)	{
+		::gpk::error_t			CreateDeviceResources		(ID3D11Device3 * d3dDevice)	{
 			{		
-				::gpk::pcom<ID3D11Buffer>		constantBuffer;
-				D3D11_BUFFER_DESC				constantBufferDesc	= {sizeof(::gpk::SRenderNodeConstants)};
-				constantBufferDesc.BindFlags	= D3D11_BIND_CONSTANT_BUFFER;
+				::gpk::pcom<ID3D11Buffer>	constantBuffer;
+				D3D11_BUFFER_DESC			constantBufferDesc			= {sizeof(::gpk::SRenderNodeConstants)};
+				constantBufferDesc.BindFlags= D3D11_BIND_CONSTANT_BUFFER;
 				gpk_hrcall(d3dDevice->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer));
-				ConstantBufferNode			= constantBuffer;
+				ConstantBufferNode		= constantBuffer;
 			}
 			{
-				::gpk::pcom<ID3D11Buffer>		constantBuffer;
-				D3D11_BUFFER_DESC				constantBufferDesc	= {sizeof(::gpk::SEngineSceneConstants)};
-				constantBufferDesc.BindFlags	= D3D11_BIND_CONSTANT_BUFFER;
+				::gpk::pcom<ID3D11Buffer>	constantBuffer;
+				D3D11_BUFFER_DESC			constantBufferDesc			= {sizeof(::gpk::SEngineSceneConstants)};
+				constantBufferDesc.BindFlags= D3D11_BIND_CONSTANT_BUFFER;
 				gpk_hrcall(d3dDevice->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer));
-				ConstantBufferScene			= constantBuffer;
+				ConstantBufferScene		= constantBuffer;
 			}
 			{
 				// Load shaders asynchronously.
 				::gpk::pcom<ID3D11InputLayout>	inputLayout	;
 				::gpk::pcom<ID3D11VertexShader>	vertexShader;
 
-				::gpk::vcs						shaderName				= "vsGUI";
-				char							shaderFileName	[1024]	= {};
+				::gpk::vcs					shaderName					= "vsGUI";
+				char						shaderFileName	[1024]		= {};
 				cnstxpr	D3D11_INPUT_ELEMENT_DESC	vertexDesc []		=
-					{	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-					,	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+					{ { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+					, { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					};
-				sprintf_s(shaderFileName, "%s.cso", shaderName.begin()) ;
-				::gpk::ai8						fileVS;
+				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
+
+				::gpk::ai8					fileVS;
 				gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, fileVS));
 				// After the vertex shader file is loaded, create the shader and input layout.
 				gpk_hrcall(d3dDevice->CreateVertexShader(&fileVS[0], fileVS.size(), nullptr, &vertexShader));
 				gpk_hrcall(d3dDevice->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileVS[0], fileVS.size(), &inputLayout)); 
-				InputLayout					= inputLayout;
-				VertexShader				= vertexShader;
+				InputLayout				= inputLayout;
+				VertexShader			= vertexShader;
 			}
 			{
-				::gpk::vcs						shaderName				= "psGUI";
-				char							shaderFileName	[1024]	= {};
+				::gpk::vcs					shaderName							= "psGUI";
+				char						shaderFileName	[1024]				= {};
 				::gpk::pcom<ID3D11PixelShader>	pixelShader;
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
-				::gpk::ai8						filePS;
+				::gpk::ai8					filePS;
 				gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 				gpk_hrcall(d3dDevice->CreatePixelShader(&filePS[0], filePS.size(), nullptr, &pixelShader));
 				PixelShader				= pixelShader;
 			}
-
 			{
-	#pragma pack(push, 1)
+#pragma pack(push, 1)
 				struct SPosUV  {
 					::gpk::n3f32		Position;
 					::gpk::n2f32		UV;
 				};
-	#pragma pack(pop)
-				constexpr SPosUV				vertices[4]				= {{{-1, 1}, {0, 0}},{{1, 1}, {1, 0}},{{-1, -1}, {0, 1}}, {{1, -1}, {1, 1}}};
+#pragma pack(pop)
+				constexpr SPosUV			vertices[4]				= {{{-1, 1}, {0, 0}},{{1, 1}, {1, 0}},{{-1, -1}, {0, 1}}, {{1, -1}, {1, 1}}};
 
-				D3D11_SUBRESOURCE_DATA			vertexBufferData		= {vertices};
-				D3D11_BUFFER_DESC				vertexBufferDesc		= {sizeof(SPosUV) * 4};
+				D3D11_SUBRESOURCE_DATA		vertexBufferData		= {vertices};
+				D3D11_BUFFER_DESC			vertexBufferDesc		= {sizeof(SPosUV) * 4};
 				vertexBufferDesc.BindFlags	= D3D11_BIND_VERTEX_BUFFER;
-				::gpk::pcom<ID3D11Buffer>		d3dBuffer;
+				::gpk::pcom<ID3D11Buffer>	d3dBuffer;
 				gpk_hrcall(d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &d3dBuffer));
 				VertexBuffer				= d3dBuffer;
 			}
 			{
-				constexpr uint16_t				indices[]				= {0, 1, 2, 1, 3, 2};
-				D3D11_SUBRESOURCE_DATA			vertexBufferData		= {indices};
-				D3D11_BUFFER_DESC				vertexBufferDesc		= {sizeof(uint16_t) * 6};
+				constexpr uint16_t			indices[]							= {0, 1, 2, 1, 3, 2};
+				D3D11_SUBRESOURCE_DATA		vertexBufferData					= {indices};
+				D3D11_BUFFER_DESC			vertexBufferDesc					= {sizeof(uint16_t) * 6};
 				vertexBufferDesc.BindFlags	= D3D11_BIND_INDEX_BUFFER;
-				::gpk::pcom<ID3D11Buffer>		d3dBuffer;
+				::gpk::pcom<ID3D11Buffer>	d3dBuffer;
 				gpk_hrcall(d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &d3dBuffer));
 				IndexBuffer				= d3dBuffer;
 			}
 			// 3515504948
 			{
 				// Create a sampler state
-				D3D11_SAMPLER_DESC				samDesc					= {};
-				samDesc.Filter				= D3D11_FILTER_MIN_MAG_MIP_POINT;
-				samDesc.AddressU			= D3D11_TEXTURE_ADDRESS_CLAMP;
-				samDesc.AddressV			= D3D11_TEXTURE_ADDRESS_CLAMP;
-				samDesc.AddressW			= D3D11_TEXTURE_ADDRESS_CLAMP;
-				samDesc.MaxAnisotropy		= 1;
-				samDesc.ComparisonFunc		= D3D11_COMPARISON_ALWAYS;
-				samDesc.MaxLOD				= D3D11_FLOAT32_MAX;
+				D3D11_SAMPLER_DESC			samDesc					= {};
+				samDesc.Filter			= D3D11_FILTER_MIN_MAG_MIP_POINT;
+				samDesc.AddressU		= D3D11_TEXTURE_ADDRESS_CLAMP;
+				samDesc.AddressV		= D3D11_TEXTURE_ADDRESS_CLAMP;
+				samDesc.AddressW		= D3D11_TEXTURE_ADDRESS_CLAMP;
+				samDesc.MaxAnisotropy	= 1;
+				samDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;
+				samDesc.MaxLOD			= D3D11_FLOAT32_MAX;
 
 				::gpk::pcom<ID3D11SamplerState>	samplerState;
 				gpk_hrcall(d3dDevice->CreateSamplerState(&samDesc, &samplerState));
-				SamplerState						= samplerState;
+				SamplerState			= samplerState;
 			}
 			{ // straight
-				D3D11_BLEND_DESC				blendDesc				= {};
+				D3D11_BLEND_DESC			blendDesc				= {};
 				blendDesc.RenderTarget[0].BlendEnable			= TRUE;
 				blendDesc.RenderTarget[0].SrcBlend				=
 				blendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_SRC_ALPHA;
@@ -160,16 +160,16 @@ namespace gpk
 				BlendState					= blendState;
 			}
 			{
-				D3D11_RASTERIZER_DESC			rsDesc					= {};
-				rsDesc.FillMode				= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
-				rsDesc.CullMode				= D3D11_CULL_BACK;
-				rsDesc.DepthClipEnable		= false;
+				D3D11_RASTERIZER_DESC		rsDesc					= {};
+				rsDesc.FillMode			= D3D11_FILL_SOLID; // D3D11_FILL_WIREFRAME; // 
+				rsDesc.CullMode			= D3D11_CULL_BACK;
+				rsDesc.DepthClipEnable	= false;
 				::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
 				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
-				RasterizerState					= rasterizerState;
+				RasterizerState			= rasterizerState;
 			}
 			{ // disabled
-				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
+				D3D11_DEPTH_STENCIL_DESC	depthStencilDesc				= {};
 				depthStencilDesc.DepthEnable		= FALSE;
 				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
 				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
@@ -194,7 +194,7 @@ namespace gpk
 
 	};
 
-	::gpk::error_t			d3dGUIDraw							(::DX::D3DDeviceResources & d3dResources, ::gpk::SD3DGUIResources<::gpk::bgra> & guiStuff);
+	::gpk::error_t			d3dGUIDraw				(::DX::D3DDeviceResources & d3dResources, ::gpk::SD3DGUIResources<::gpk::bgra> & guiStuff);
 
 	struct SD3DApplication : DX::IDeviceNotify {
 		::gpk::pobj<::gpk::SEngineGraphics>		EngineGraphics;
@@ -235,7 +235,7 @@ namespace gpk
 		}
 		// Notifies renderers that device resources may now be recreated.
 
-		::gpk::error_t			CreateDeviceDependentEngineResources	(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
+		::gpk::error_t			CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
 			gpk_necs(::gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
 			gpk_necs(::gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
 			gpk_necs(::gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
@@ -250,7 +250,7 @@ namespace gpk
 			return 0; 
 		}
 
-		::gpk::error_t			CreateSizeDependentResources	(::gpk::n2u16 windowSize)	{
+		::gpk::error_t			CreateSizeDependentResources(::gpk::n2u16 windowSize)	{
 			gpk_necs(Scene		.CreateSizeDependentResources(DeviceResources->GetOutputSize(), DeviceResources->GetOrientationTransform3D()));
 			gpk_necs(GUIStuff	.CreateSizeDependentResources(DeviceResources->GetD3DDevice(), windowSize));
 			return 0;
@@ -263,8 +263,8 @@ namespace gpk
 		}
 	};
 
-	::gpk::error_t	d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar);
-	::gpk::error_t	d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar);
+	::gpk::error_t			d3dDrawEngineScene		(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar);
+	::gpk::error_t			d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar);
 };
 
 #endif // GPK_ENGINE_D3D_APP_H_28903749823
