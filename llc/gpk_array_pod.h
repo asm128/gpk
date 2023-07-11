@@ -150,7 +150,7 @@ namespace gpk
 					memcpy(newData, Data, index * sizeof(T));
 				newData[index]			= newValue;
 				if(Data)
-					memcpy(&newData[index + 1], &Data[index], Count - index);
+					memcpy(&newData[index + 1], &Data[index], (Count - index) * sizeof(T));
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
@@ -177,7 +177,7 @@ namespace gpk
 					memcpy(newData, Data, index * sizeof(T));
 				memcpy(&newData[index], chainToInsert, chainLength * sizeof(T));
 				if(Data)
-					memcpy(&newData[index + chainLength], &Data[index], Count - index);
+					memcpy(&newData[index + chainLength], &Data[index], (Count - index) * sizeof(T));
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
