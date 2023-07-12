@@ -260,5 +260,53 @@
 		, "ring_system"				: false
 		, "global_magnetic_field"	: "unknown"
 		, "parent"					: "Sun"
+		},
+	"Io" :							 
+		{ "type"					: "moon"
+		, "mass"					: 0.073
+		, "diameter"				: 3475
+		, "density"					: 3340
+		, "gravity"					: 1.6
+		, "escape_velocity"			: 2.4
+		, "rotation_period"			: 655.7
+		, "length_of_day"			: 708.7
+		, "distance_from_sun"		: 0.422
+		, "perihelion"				: 0.363
+		, "aphelion"				: 0.460
+		, "orbital_period"			: 27.3
+		, "orbital_velocity"		: 1.0
+		, "orbital_inclination"		: 5.1
+		, "orbital_eccentricity"	: 0.055
+		, "obliquity_to_orbit"		: 6.7
+		, "mean_temperature"		: -20
+		, "surface_pressure"		: 0
+		, "number_of_moons"			: 0
+		, "ring_system"				: false
+		, "global_magnetic_field"	: false
+		, "parent"					: "Jupiter"
+		},
+	"Ganymede" :							 
+		{ "type"					: "moon"
+		, "mass"					: 0.073
+		, "diameter"				: 3475
+		, "density"					: 3340
+		, "gravity"					: 1.6
+		, "escape_velocity"			: 2.4
+		, "rotation_period"			: 655.7
+		, "length_of_day"			: 708.7
+		, "distance_from_sun"		: 0.422
+		, "perihelion"				: 0.363
+		, "aphelion"				: 0.460
+		, "orbital_period"			: 27.3
+		, "orbital_velocity"		: 1.0
+		, "orbital_inclination"		: 5.1
+		, "orbital_eccentricity"	: 0.055
+		, "obliquity_to_orbit"		: 6.7
+		, "mean_temperature"		: -20
+		, "surface_pressure"		: 0
+		, "number_of_moons"			: 0
+		, "ring_system"				: false
+		, "global_magnetic_field"	: false
+		, "parent"					: "Jupiter"
 		}
 }

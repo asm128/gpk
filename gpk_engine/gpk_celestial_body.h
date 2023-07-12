@@ -70,12 +70,15 @@ namespace gpk
 	stacxpr	size_t		s0					= sizeof(SDetailPlanet);
 	stacxpr	size_t		s1					= sizeof(SDetailStar);
 
-	::gpk::error_t		loadStar			(::gpk::SDetailStar   & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
-	::gpk::error_t		loadPlanet			(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
-	::gpk::error_t		loadCelestialBody	(::gpk::SCelestialBody& body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
-	::gpk::error_t		printStar			(const ::gpk::SDetailStar & body);
-	::gpk::error_t		printPlanet			(const ::gpk::SDetailPlanet & body);
+	::gpk::error_t		loadStar			(::gpk::SDetailStar    & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
+	::gpk::error_t		loadPlanet			(::gpk::SDetailPlanet  & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
+	::gpk::error_t		loadCelestialBody	(::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody);
+	::gpk::error_t		printStar			(const ::gpk::SDetailStar    & body);
+	::gpk::error_t		printPlanet			(const ::gpk::SDetailPlanet  & body);
 	::gpk::error_t		printCelestialBody	(const ::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type);
+
+	CELESTIAL_BODY		bodyTypeFromString	(::gpk::vcc bodyType);
+
 } // namespace
 
 #endif // GPK_CELESTIAL_BODY
