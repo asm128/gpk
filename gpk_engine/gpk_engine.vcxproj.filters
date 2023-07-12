@@ -135,6 +135,9 @@
     <ClInclude Include="gpk_orbiter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_tile_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">

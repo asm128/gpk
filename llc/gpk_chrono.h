@@ -15,6 +15,12 @@ namespace gpk
 		uint64_t				Modified			= 0;
 		uint64_t				Saved				= 0;
 	};
+
+	struct SDaylight {
+		uint64_t				TimeOffset		= {};
+		uint32_t				OffsetMinutes	= 90;
+		float					ExtraRatio		= .5;
+	};
 #pragma pack(pop)
 
 } // namespace

@@ -186,6 +186,7 @@
     <ClInclude Include="gpk_engine_planetary_system.h" />
     <ClInclude Include="gpk_orbiter.h" />
     <ClInclude Include="gpk_planetary_system.h" />
+    <ClInclude Include="gpk_tile_map.h" />
     <ClInclude Include="gpk_xaudio2.h" />
     <ClInclude Include="gpk_engine_d3d_app.h" />
     <ClInclude Include="DeviceResources.h" />

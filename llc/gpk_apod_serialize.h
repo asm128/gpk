@@ -9,7 +9,7 @@
 
 namespace gpk
 {
-	::gpk::error_t				keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::view<const ::gpk::vcc> & keysToSave, ::gpk::au8 & output);
+	::gpk::error_t				keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::vcvcc & keysToSave, ::gpk::au8 & output);
 
 	template<typename T>
 	::gpk::error_t				saveView			(::gpk::au8 & output, const ::gpk::view<T> & headerToWrite)	{
