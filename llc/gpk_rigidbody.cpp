@@ -1,5 +1,6 @@
 #include "gpk_rigidbody.h"
 #include "gpk_apod_serialize.h"
+#include "gpk_axis.h"
 
 ::gpk::error_t			gpk::SRigidBodyIntegrator::Load		(::gpk::vcu8 & input) { 
 	gpk_necs(::gpk::loadView(input, Frames			));
@@ -86,72 +87,61 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	return 0;
 }
 
-::gpk::error_t			gpk::initOrbiterOrbit			
-	( ::gpk::SBodyCenter	& orbitCenter
-	, ::gpk::SBodyForces	& orbitForces	
-	, double				orbital_inclination
-	, double				orbital_period
-	) {
+stainli double			degreesToRadians			(double degrees) {
+	return ::gpk::math_2pi / 360.0 * degrees;
+}
+
+// Calculate the axial inclination of the planet IN RADIANS
+template<typename _tQuat>
+static ::gpk::error_t	orientationFromEuler		(::gpk::AXIS iAxis, double axialTilt, ::gpk::quat<_tQuat> & orientation) {
+	switch(iAxis) {
+	case ::gpk::AXIS_X_NEGATIVE: orientation.MakeFromEuler(_tQuat(-degreesToRadians(axialTilt)), 0, 0); break;
+	case ::gpk::AXIS_X_POSITIVE: orientation.MakeFromEuler(_tQuat( degreesToRadians(axialTilt)), 0, 0); break;
+	case ::gpk::AXIS_Y_NEGATIVE: orientation.MakeFromEuler(0, _tQuat(-degreesToRadians(axialTilt)), 0); break;
+	case ::gpk::AXIS_Y_POSITIVE: orientation.MakeFromEuler(0, _tQuat( degreesToRadians(axialTilt)), 0); break;
+	case ::gpk::AXIS_Z_NEGATIVE: orientation.MakeFromEuler(0, 0, _tQuat(-degreesToRadians(axialTilt))); break;
+	case ::gpk::AXIS_Z_POSITIVE: orientation.MakeFromEuler(0, 0, _tQuat( degreesToRadians(axialTilt))); break;
+	}
+	orientation.Normalize();
+	return 0;
+}
+
+// Calculate the rotation velocity of the planet IN EARTH DAYS
+template<typename _tAxis, typename _tQuat>
+static ::gpk::error_t	orbiterRotation				(::gpk::AXIS iAxis, double rotation_period, double rotation_unit, const ::gpk::quat<_tQuat> & orientation, ::gpk::n3<_tAxis> & rotation) {
+	switch(iAxis) {
+	case ::gpk::AXIS_X_NEGATIVE: rotation = {-_tAxis(::gpk::math_2pi / rotation_period * rotation_unit), 0, 0}; break;
+	case ::gpk::AXIS_X_POSITIVE: rotation = { _tAxis(::gpk::math_2pi / rotation_period * rotation_unit), 0, 0}; break;
+	case ::gpk::AXIS_Y_NEGATIVE: rotation = {0, -_tAxis(::gpk::math_2pi / rotation_period * rotation_unit), 0}; break;
+	case ::gpk::AXIS_Y_POSITIVE: rotation = {0,  _tAxis(::gpk::math_2pi / rotation_period * rotation_unit), 0}; break;
+	case ::gpk::AXIS_Z_NEGATIVE: rotation = {0, 0, -_tAxis(::gpk::math_2pi / rotation_period * rotation_unit)}; break;
+	case ::gpk::AXIS_Z_POSITIVE: rotation = {0, 0,  _tAxis(::gpk::math_2pi / rotation_period * rotation_unit)}; break;
+	}
+	rotation				= orientation.RotateVector(rotation);		// Rotate our calculated torque in relation to the planetary axis
+	return 0;
+}
+
+::gpk::error_t			gpk::initOrbiterOrbit	(::gpk::SBodyCenter & orbitCenter , ::gpk::SBodyForces & orbitForces, double orbital_inclination, double rotation_period, double rotation_unit) {
 	orbitCenter				= {};
 	orbitForces				= {};	
-
-	orbitCenter.Orientation.MakeFromEuler( (float)(::gpk::math_2pi / 360.0 * orbital_inclination), 0.0f, 0.0f );	// Calculate the orbital tilt IN RADIANS
-	orbitCenter.Orientation.Normalize();
-	orbitForces.Rotation	= {0.0f, (float)(::gpk::math_2pi / orbital_period), 0.0f};			// Set the orbital rotation velocity IN EARTH DAYS
-	orbitForces.Rotation	= orbitCenter.Orientation.RotateVector(orbitForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
+	::orientationFromEuler(::gpk::AXIS_X_POSITIVE, orbital_inclination, orbitCenter.Orientation);
+	::orbiterRotation(::gpk::AXIS_Y_NEGATIVE, rotation_period, rotation_unit, orbitCenter.Orientation, orbitForces.Rotation);
 	return 0;
 }
 
-::gpk::error_t			gpk::initOrbiterMassBody
-	( ::gpk::SBodyCenter	& planetCenter
-	, ::gpk::SBodyForces	& planetForces		
-	, ::gpk::SBodyMass		& planetMass		
-	, double				mass
-	, double				axialTilt
-	, double				rotation_period
-	, double				rotation_unit
-	) {
+::gpk::error_t			gpk::initOrbiterBody	(::gpk::SBodyCenter & planetCenter, ::gpk::SBodyForces & planetForces, double axialTilt, double	rotation_period, double	rotation_unit) {
 	planetCenter			= {};
 	planetForces			= {};	
-	planetMass				= {};
-
-	planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
-	planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
-	planetCenter.Orientation.Normalize();
-	planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
-	planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
+	::orientationFromEuler(::gpk::AXIS_X_POSITIVE, axialTilt, planetCenter.Orientation);
+	::orbiterRotation(::gpk::AXIS_Y_NEGATIVE, rotation_period, rotation_unit, planetCenter.Orientation, planetForces.Rotation);
 	return 0;
 }
 
-::gpk::error_t			gpk::initOrbiterGravityCenter
-	( ::gpk::SBodyCenter	& planetCenter
-	, ::gpk::SBodyForces	& planetForces		
-	, ::gpk::SBodyMass		& planetMass		
-	, double				distance
-	, double				distance_scale
-	) {
-	planetCenter	= {};
-	planetForces	= {};	
-	planetMass		= {};
-	planetMass.InverseMass	= 1;
+::gpk::error_t			gpk::initOrbiterCenter	(::gpk::SBodyCenter & planetCenter, double distance, double distance_scale) {
+	planetCenter			= {};
 	planetCenter.Position.x	= float(distance_scale * distance);
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ::gpk::error_t			gpk::initOrbiterBodyWithGravityCenter
 	( ::gpk::SBodyCenter	& planetCenter
@@ -164,16 +154,11 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	, double				rotation_period
 	, double				rotation_unit
 	) {
-	planetCenter	= {};
-	planetForces	= {};	
-	planetMass		= {};
 	planetMass.InverseMass	= mass ? float(1.0 / mass) : 0;
-	planetCenter.Position.x	= float(distance_scale * distance);
-
-	planetCenter.Orientation.MakeFromEuler((float)(::gpk::math_2pi / 360.0 * axialTilt), 0, 0);					// Calculate the axial inclination of the planet IN RADIANS
-	planetCenter.Orientation.Normalize();
-	planetForces.Rotation	= { 0.0f, -(float)(::gpk::math_2pi / rotation_unit * rotation_period), 0.0f };	// Calculate the rotation velocity of the planet IN EARTH DAYS
-	planetForces.Rotation	= planetCenter.Orientation.RotateVector(planetForces.Rotation);		// Rotate our calculated torque in relation to the planetary axis
+	::gpk::initOrbiterCenter(planetCenter, distance, distance_scale);
+	planetForces			= {};	
+	::orientationFromEuler(::gpk::AXIS_X_POSITIVE, axialTilt, planetCenter.Orientation);
+	::orbiterRotation(::gpk::AXIS_Y_NEGATIVE, rotation_period, rotation_unit, planetCenter.Orientation, planetForces.Rotation);
 	return 0;
 }
 
@@ -182,6 +167,7 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	( ::gpk::SRigidBodyIntegrator	& bodies
 	, double						orbital_inclination
 	, double						orbital_period
+	, double						orbital_unit
 	, double						mass
 	, double						axialTilt
 	, double						distance
@@ -190,7 +176,7 @@ void					gpk::updateTransform		(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32
 	, double						rotation_unit
 	) {
 	const ::gpk::error_t		indexFirstBody				= bodies.Create(2);
-	::gpk::initOrbiterOrbit(bodies.Centers[indexFirstBody] = {}, bodies.Forces[indexFirstBody] = {}, orbital_inclination, orbital_period);
+	::gpk::initOrbiterOrbit(bodies.Centers[indexFirstBody] = {}, bodies.Forces[indexFirstBody] = {}, orbital_inclination, orbital_period, orbital_unit);
 	::gpk::initOrbiterBodyWithGravityCenter
 		( bodies.Centers[indexFirstBody + 1]
 		, bodies.Forces	[indexFirstBody + 1]

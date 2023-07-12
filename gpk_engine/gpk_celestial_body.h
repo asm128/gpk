@@ -1,4 +1,5 @@
 #include "gpk_json.h"
+#include "gpk_orbiter.h"
 
 #ifndef GPK_CELESTIAL_BODY_2379
 #define GPK_CELESTIAL_BODY_2379
@@ -45,20 +46,14 @@ namespace gpk
 		float				RadiusEquatorial		= {};	// (km)						// 21
 		float				Perihelion				= {}; // 46.0		// (10^6 km)	//
 		float				Aphelion				= {}; // 69.8		// (10^6 km)	// 9
-		float				LengthOfDay				= {}; // 4222.6		// (hours)		//
 		bool				RingSystem				= {}; // false						//
 	};
 
-	struct SCelestialBody {
+	struct SCelestialBody : public SOrbiter {
 		float				Mass					= {}; // 0.330		// (10^24 kg)	//	
 		uint32_t			Diameter				= {}; // 4879		// (km)			// 1
-		float				DistanceFromParent		= {}; // 57.9		// (10^6 km)	// 7
-		float				OrbitalPeriod			= {}; // 88.0		// (days)		//
 		float				OrbitalVelocity			= {}; // 47.4		// (km/s)		// 11
-		float				OrbitalInclination		= {}; // 7.0		// (degrees)	//
 		float				OrbitalEccentricity		= {}; // 0.205						// 13
-		float				ObliquityToOrbit		= {}; // 0.034		// (degrees)	//
-		float				RotationPeriod			= {}; // 1407.6		// (hours)		// 5
 		float				EscapeVelocity			= {}; // 4.3		// (km/s)		//
 		union UBody {
 			SDetailPlanet		Planet	;

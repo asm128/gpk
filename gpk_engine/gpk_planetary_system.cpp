@@ -47,8 +47,8 @@
 		const ::gpk::CELESTIAL_BODY	bodyType					= ::gpk::bodyTypeFromString(strType);
 		::gpk::SCelestialBody		bodyProperties				= {};
 		cws_if_failed(::gpk::loadCelestialBody(bodyProperties, bodyType, jsonData, jsonIndexStellarBody + 2));
-		if(fFurthest < bodyProperties.DistanceFromParent) {
-			fFurthest				= bodyProperties.DistanceFromParent;
+		if(fFurthest < bodyProperties.OrbitRadius) {
+			fFurthest				= bodyProperties.OrbitRadius;
 			iFurthest				= iPlanet;
 		}
 		gpk_necs(solarSystem.Type.push_back(bodyType));

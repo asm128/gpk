@@ -187,9 +187,9 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 	, const ::gpk::vc8bgra						& colors
 	) {
 	float						fFurthest				= 0;
-	solarSystem.Body.Values.max<float>(fFurthest, [](const ::gpk::SCelestialBody & body){ return body.DistanceFromParent; });
+	solarSystem.Body.Values.max<float>(fFurthest, [](const ::gpk::SCelestialBody & body){ return body.OrbitRadius; });
 	const double				distanceScale			= 1.0 / fFurthest * 10;
-	const double				rotationUnit			= 24;
+	const double				rotationUnit			= 23.9;
 
 	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
 		const ::gpk::SCelestialBody	& body					= solarSystem.Body.Values[iOrbiter];
@@ -197,16 +197,16 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		const bool					isMoon					= solarSystem.Type[iOrbiter] == ::gpk::CELESTIAL_BODY_Moon;
 		{
 			const uint32_t				iEntity					= entityMap.Orbits[iOrbiter];
-			gpk_necs(::gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity)));
+			gpk_necs(::gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
 
-			double						orbitRadius				= body.DistanceFromParent;// + body.Diameter * .0005;
+			double						orbitRadius				= body.OrbitRadius;// + body.Diameter * .0005;
 			if(isMoon)
-				orbitRadius	*= 50.f;
+				orbitRadius	*= 25.f;
 			gpk_necs(::initOrbit(engine, iOrbiter, iEntity, orbitRadius, distanceScale));
 		}
 		{
 			const uint32_t				iEntity					= entityMap.GravityCenters[iOrbiter];
-			gpk_necs(::gpk::initOrbiterGravityCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? 50 : 1)));
+			gpk_necs(::gpk::initOrbiterCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? 25 : 1)));
 			gpk_necs(::initGravityCenter(engine, iEntity, isStar, body.Diameter, distanceScale * .0001, body.Detail.Planet.RingSystem));
 		}
 		{
@@ -222,6 +222,6 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 	}
 
-	engine.Update(365 * .5);
+	//engine.Update(365);
 	return 0;
 }

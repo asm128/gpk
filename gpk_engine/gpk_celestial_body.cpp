@@ -50,7 +50,6 @@
 		" \nRadiusEquatorial		: %f"
 		" \nPerihelion				: %f"
 		" \nAphelion				: %f"
-		" \nLengthOfDay				: %f"
 		" \nRingSystem				: %s"
 		, body.Gravity					
 		, body.SurfacePressure			
@@ -62,7 +61,6 @@
 		, body.RadiusEquatorial		
 		, body.Perihelion				
 		, body.Aphelion				
-		, body.LengthOfDay				
 		, ::gpk::bool2char(body.RingSystem)
 		);
 	return 0;
@@ -72,7 +70,7 @@
 	info_printf(
 		" \nMass				: %f"
 		" \nDiameter			: %u"
-		" \nDistanceFromParent	: %f"
+		" \nOrbitRadius			: %f"
 		" \nOrbitalPeriod		: %f"
 		" \nOrbitalVelocity		: %f"
 		" \nOrbitalInclination	: %f"
@@ -80,9 +78,10 @@
 		" \nObliquityToOrbit	: %f"
 		" \nRotationPeriod		: %f"
 		" \nEscapeVelocity		: %f"
+		" \nLengthOfDay			: %f"
 		, body.Mass					
 		, body.Diameter				
-		, body.DistanceFromParent		
+		, body.OrbitRadius		
 		, body.OrbitalPeriod			
 		, body.OrbitalVelocity			
 		, body.OrbitalInclination		
@@ -90,6 +89,7 @@
 		, body.ObliquityToOrbit		
 		, body.RotationPeriod			
 		, body.EscapeVelocity			
+		, body.LengthOfDay				
 		);
 	switch(type) {
 	default:
@@ -102,7 +102,6 @@
 ::gpk::error_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
 	ws_if_failed(::gpk::jsonObjectGetInteger(jsonData, jsonIndexStellarBody, "density"				, body.Density				));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "gravity"				, body.Gravity				));
-	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "length_of_day"		, body.LengthOfDay			));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "perihelion"			, body.Perihelion			));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "aphelion"				, body.Aphelion				));
 	ws_if_failed(::gpk::jsonObjectGetInteger(jsonData, jsonIndexStellarBody, "mean_temperature"		, body.MeanTemperature		));
@@ -137,7 +136,7 @@
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "escape_velocity"			, body.EscapeVelocity		));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "mass"						, body.Mass					));
 	ws_if_failed(::gpk::jsonObjectGetInteger(jsonData, jsonIndexStellarBody, "diameter"					, body.Diameter				));
-	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "distance_from_sun"		, body.DistanceFromParent	));
+	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "distance_from_sun"		, body.OrbitRadius	));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "escape_velocity"			, body.EscapeVelocity		));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "rotation_period"			, body.RotationPeriod		));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "orbital_period"			, body.OrbitalPeriod		));
@@ -145,6 +144,7 @@
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "orbital_inclination"		, body.OrbitalInclination	));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "orbital_eccentricity"		, body.OrbitalEccentricity	));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "obliquity_to_orbit"		, body.ObliquityToOrbit		));
+	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "length_of_day"			, body.LengthOfDay			));
 
 	switch(type) {
 	default:

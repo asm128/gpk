@@ -123,14 +123,17 @@
     <ClInclude Include="gpk_planetary_system.h">
       <Filter>astronomical</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_celestial_body.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_engine_game.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_game_stage.h">
       <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_engine_celestial_body.h">
+      <Filter>astronomical</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_orbiter.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

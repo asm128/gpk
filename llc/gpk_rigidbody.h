@@ -272,21 +272,11 @@ namespace gpk
 
 	};
 
-	::gpk::error_t			initOrbiterOrbit
-		( ::gpk::SBodyCenter	& orbitTransform
-		, ::gpk::SBodyForces	& orbitForces
-		, double	orbital_inclination
-		, double	orbital_period
-		);
+	::gpk::error_t			initOrbiterOrbit	(::gpk::SBodyCenter & orbitCenter , ::gpk::SBodyForces & orbitForces, double orbital_inclination, double orbital_period, double orbital_unit);
+	::gpk::error_t			initOrbiterBody		(::gpk::SBodyCenter & planetCenter, ::gpk::SBodyForces & planetForces, double axialTilt, double	rotation_period, double	rotation_unit);
+	::gpk::error_t			initOrbiterCenter	(::gpk::SBodyCenter & planetCenter, double distance, double distance_scale);
 
-	::gpk::error_t			initOrbiterGravityCenter
-		( ::gpk::SBodyCenter	& planetCenter
-		, ::gpk::SBodyForces	& planetForces
-		, ::gpk::SBodyMass		& planetMass
-		, double	distance
-		, double	distance_scale
-		);
-
+	// deprecated
 	::gpk::error_t			initOrbiterBodyWithGravityCenter
 		( ::gpk::SBodyCenter	& planetCenter
 		, ::gpk::SBodyForces	& planetForces
@@ -298,21 +288,12 @@ namespace gpk
 		, double	rotation_period
 		, double	rotation_unit
 		);
-
-	::gpk::error_t			initOrbiterMassBody
-		( ::gpk::SBodyCenter	& planetCenter
-		, ::gpk::SBodyForces	& planetForces
-		, ::gpk::SBodyMass		& planetMass
-		, double	mass
-		, double	axialTilt
-		, double	rotation_period
-		, double	rotation_unit
-		);
-
+	// deprecated
 	::gpk::error_t			createOrbiter
 		( ::gpk::SRigidBodyIntegrator	& bodies
 		, double	orbital_inclination
 		, double	orbital_period
+		, double	orbital_unit
 		, double	mass
 		, double	axialTilt
 		, double	distance
