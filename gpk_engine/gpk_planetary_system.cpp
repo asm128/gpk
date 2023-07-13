@@ -1,20 +1,5 @@
 #include "gpk_planetary_system.h"
-#include "gpk_stdstring.h"
 
-::gpk::CELESTIAL_BODY	gpk::bodyTypeFromString		(::gpk::vcc bodyType) { 
-	if(2 > bodyType.size())
-		return (::gpk::CELESTIAL_BODY)-1;
-
-	::gpk::achar				typeCased					= bodyType;
-	const ::gpk::vcvcc			labels						= ::gpk::get_value_labels<::gpk::CELESTIAL_BODY>();
-	::gpk::toupper(typeCased[0]);
-	::gpk::tolower(::gpk::vc{&typeCased[1], typeCased.size() - 1});
-	for(uint32_t iType = 0; iType < labels.size(); ++iType) {
-		if(labels[iType] == typeCased)
-			return ::gpk::get_enum<::gpk::CELESTIAL_BODY>().Values[iType];
-	}
-	return (::gpk::CELESTIAL_BODY)-1;
-}
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
 	gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath), "%s", ::gpk::toString(jsonFilePath).begin());

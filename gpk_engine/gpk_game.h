@@ -1,4 +1,4 @@
-#include "gpk_engine_game_stage.h"
+#include "gpk_game_stage.h"
 
 #ifndef GPK_ENGINE_GAME_H_23627
 #define GPK_ENGINE_GAME_H_23627

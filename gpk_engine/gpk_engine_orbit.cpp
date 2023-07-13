@@ -9,7 +9,17 @@
 ::gpk::error_t			gpk::initOrbitCenter	(::gpk::SBodyCenter & orbitCenter, ::gpk::AXIS rotationAxis, double orbital_inclination, double distance) {
 	orbitCenter				= {};
 	::gpk::orientationFromEuler(rotationAxis, orbital_inclination, orbitCenter.Orientation);
-	orbitCenter.Position.x	= float(distance);
+	switch(rotationAxis) {
+	case ::gpk::AXIS_X_NEGATIVE:
+	case ::gpk::AXIS_X_POSITIVE: orbitCenter.Position.x	= float(distance); break;
+	case ::gpk::AXIS_Y_NEGATIVE:
+	case ::gpk::AXIS_Y_POSITIVE: orbitCenter.Position.y	= float(distance); break;
+	case ::gpk::AXIS_Z_NEGATIVE:
+	case ::gpk::AXIS_Z_POSITIVE: orbitCenter.Position.z	= float(distance); break;
+	}
+	switch(rotationAxis) {
+		
+	}
 	return 0;
 }
 

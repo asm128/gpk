@@ -16,6 +16,13 @@ namespace gpk
 	//GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Asteroid	, 5);
 	//GDEFINE_ENUM_VALUE(CELESTIAL_BODY, Comet		, 6);
 
+	GDEFINE_ENUM_TYPE (PLANET_TYPE, uint8_t);
+	GDEFINE_ENUM_VALUE(PLANET_TYPE, Dwarf		, 0);
+	GDEFINE_ENUM_VALUE(PLANET_TYPE, Terrestrial	, 1);
+	GDEFINE_ENUM_VALUE(PLANET_TYPE, GasGiant	, 2);
+	GDEFINE_ENUM_VALUE(PLANET_TYPE, IceGiant	, 3);
+	GDEFINE_ENUM_VALUE(PLANET_TYPE, MassiveSolid, 4);
+
 	struct SDetailStar {
 		float			SurfaceGravity			= {};	// 274.0		// (eq.) (m/s2)		// 5
 		float			CentralPressure			= {};	// 2.477		// x 1011	bar		// 15
@@ -41,13 +48,14 @@ namespace gpk
 		uint32_t		Density					= {};	// 5427		// (kg/m3)		//
 		uint32_t		MeanTemperature			= {};	// 167		// (Celsius)	// 15
 		uint32_t		NumberOfMoons			= {};	// 0			// 				// 17
-		bool			GlobalMagneticField		= {};	// true						// 19
 		float			RadiusPolar				= {};	// (km)						//
 		float			RadiusEquatorial		= {};	// (km)						// 21
 		float			Perihelion				= {};	// 46.0		// (10^6 km)	//
 		float			Aphelion				= {};	// 69.8		// (10^6 km)	// 9
-		bool			RingSystem				= {};	// false						//
 		float			LengthOfDay				= {};	//
+		bool			RingSystem				= {};	// false						//
+		bool			GlobalMagneticField		= {};	// true						// 19
+		PLANET_TYPE		Subtype					= {};
 	};
 
 	struct SCelestialBody : public SOrbiter {
@@ -74,6 +82,7 @@ namespace gpk
 	::gpk::error_t	printCelestialBody		(const ::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type);
 
 	CELESTIAL_BODY	bodyTypeFromString		(::gpk::vcc bodyType);
+	PLANET_TYPE		bodySubtypeFromString	(::gpk::vcc bodyType);
 } // namespace
 
 #endif // GPK_CELESTIAL_BODY

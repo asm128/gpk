@@ -243,9 +243,14 @@ namespace gpk
 	};
 
 	template <typename _tEnum, size_t _sLen>
-	_tEnum														get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::get_enum<_tEnum>().get_value({valueLabel, _sLen - 1}); }
-	template <typename _tEnum>	_tEnum							get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<_tEnum>().get_value(valueLabel); }
+	_tEnum								get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::get_enum<_tEnum>().get_value({valueLabel, _sLen - 1}); }
+	template <typename _tEnum>	_tEnum	get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<_tEnum>().get_value(valueLabel); }
 
+	template <typename _tEnum>	_tEnum	get_value_camelcased(const ::gpk::vcc & uncased)			{
+		::gpk::achar							camelCased;
+		::gpk::camelCase(uncased, camelCased);
+		return ::gpk::get_enum<_tEnum>().get_value(camelCased); 
+	}
 	template <typename _tEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<_tEnum>().Values.size(); }
 	template <typename _tEnum>	const ::gpk::vcc&				get_value_label		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }
 	template <typename _tEnum>	const ::gpk::vcc&				get_value_namev		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }

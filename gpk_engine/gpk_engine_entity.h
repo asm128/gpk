@@ -9,15 +9,18 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	typedef	uint32_t			eid_t;
+	typedef	uint32_t		eid_t;
+	stacxpr	eid_t			EID_INVALID		= eid_t(-1);
 
-	typedef	apod<eid_t>			aeid;
-	typedef	view<const eid_t>	vceid;
+	typedef	const eid_t		ceid_t;
+	typedef	apod<eid_t>		aeid;
+	typedef	view<eid_t>		veid;
+	typedef	view<ceid_t>	vceid;
 
 	struct SVirtualEntity {
 		uint32_t						RenderNode		= (uint32_t)-1;
 		uint32_t						RigidBody		= (uint32_t)-1;
-		eid_t							Parent			= (eid_t)-1;
+		eid_t							Parent			= EID_INVALID;
 	};
 #pragma pack(pop)
 

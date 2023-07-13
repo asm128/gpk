@@ -126,10 +126,10 @@
     <ClInclude Include="gpk_planetary_system.h">
       <Filter>astronomical</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_game.h">
+    <ClInclude Include="gpk_game.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_game_stage.h">
+    <ClInclude Include="gpk_game_stage.h">
       <Filter>game</Filter>
     </ClInclude>
     <ClInclude Include="gpk_rigid_body.h">
@@ -142,6 +142,12 @@
       <Filter>physics</Filter>
     </ClInclude>
     <ClInclude Include="gpk_tile_map.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_spaceship.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_weapon.h">
       <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -244,7 +250,21 @@
     <FxCompile Include="psSunfire.hlsl">
       <Filter>astronomical</Filter>
     </FxCompile>
-    <FxCompile Include="psGravityCenter.hlsl" />
+    <FxCompile Include="psDwarf.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psGravityCenter.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psIceGiant.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psMassiveSolid.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psTerrestrial.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShaderShared.hlsli">

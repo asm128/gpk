@@ -284,6 +284,8 @@ namespace gpk
 	::gpk::apod<char>			toString		(const ::gpk::vcc & strToLog);
 	stainli	::gpk::apod<char>	toString		(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
 
+	::gpk::error_t				camelCase		(::gpk::vcc input, ::gpk::achar & camelCased);
+
 	::gpk::error_t				join							(::gpk::achar & query, char separator, ::gpk::view<const gpk::vcc> fields);
 	::gpk::error_t				append_quoted					(::gpk::achar & output, ::gpk::vcc text);
 } // namespace

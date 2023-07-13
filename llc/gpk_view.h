@@ -215,6 +215,8 @@ namespace gpk
 	stacxpr	::gpk::vcc	STR_NULL		= {4, "null"};
 	stacxpr	::gpk::vcc	STR_TRUE		= {4, "true"};
 	stacxpr	::gpk::vcc	STR_FALSE		= {5, "false"};
+
+	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::STR_TRUE : ::gpk::STR_FALSE).begin(); } 
 	stincxp	const char*	bool2char		(bool b)		{ return b ? ::gpk::STR_TRUE.begin() : ::gpk::STR_FALSE.begin(); } 
 	stincxp	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
 	stincxp	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 

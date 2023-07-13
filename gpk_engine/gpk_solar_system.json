@@ -23,6 +23,7 @@
 		},
 	"Mercury" :
 		{ "type"					: "planet"
+		, "subtype"					: "terrestrial"
 		, "mass"					: 0.330
 		, "diameter"				: 4879
 		, "density"					: 5427
@@ -44,9 +45,10 @@
 		, "ring_system"				: false
 		, "global_magnetic_field"	: true
 		, "parent"					: "Sun"
-		},
+	},
 	"Venus" :							
 		{ "type"					: "planet"
+		, "subtype"					: "terrestrial"
 		, "mass"					: 4.87
 		, "diameter"				: 12104
 		, "density"					: 5243
@@ -71,6 +73,7 @@
 		},
 	"Earth" :							
 		{ "type"					: "planet"
+		, "subtype"					: "terrestrial"
 		, "mass"					: 5.97
 		, "diameter"				: 12756
 		, "density"					: 5514
@@ -95,6 +98,7 @@
 		},
 	"Moon" :							 
 		{ "type"					: "moon"
+		, "subtype"					: "terrestrial"
 		, "mass"					: 0.073
 		, "diameter"				: 3475
 		, "density"					: 3340
@@ -119,6 +123,7 @@
 		},
 	"Mars" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "terrestrial"
 		, "mass"					: 0.642
 		, "diameter"				: 6792
 		, "density"					: 3933
@@ -143,6 +148,7 @@
 		},
 	"Jupiter" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "gas_giant"
 		, "mass"					: 1898.0
 		, "diameter"				: 142984
 		, "density"					: 1326
@@ -167,6 +173,7 @@
 		},
 	"Saturn" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "gas_giant"
 		, "mass"					: 568.0
 		, "diameter"				: 120536
 		, "density"					: 687
@@ -191,6 +198,7 @@
 		},
 	"Uranus" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "ice_giant"
 		, "mass"					: 86.8
 		, "diameter"				: 51118
 		, "density"					: 1271
@@ -215,6 +223,7 @@
 		},
 	"Neptune" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "ice_giant"
 		, "mass"					: 102.0
 		, "diameter"				: 49528
 		, "density"					: 1638
@@ -239,6 +248,7 @@
 		},
 	"Pluto" :							 
 		{ "type"					: "planet"
+		, "subtype"					: "dwarf"
 		, "mass"					: 0.0146
 		, "diameter"				: 2370
 		, "density"					: 2095

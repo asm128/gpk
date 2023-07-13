@@ -12,7 +12,6 @@ namespace gpk
 
 	::gpk::error_t			tolower		(::gpk::view<char> input);
 	::gpk::error_t			toupper		(::gpk::view<char> input);
-
 	::gpk::error_t			stoull		(const ::gpk::vcc & input, uint64_t & output);
 }
 #endif // GPK_STDSTRING_H_23627

@@ -8,10 +8,17 @@
 
 stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 
-//static	::gpk::error_t	setupPlanet		(::gpk::SSolarSystem & /*solarSystem*/, ::gpk::SEngine & /*engine*/, const ::gpk::SJSONReader & /*jsonData*/) { return 0; }
-//static	::gpk::error_t	setupStar		(::gpk::SSolarSystem & /*solarSystem*/, ::gpk::SEngine & /*engine*/, const ::gpk::SJSONReader & /*jsonData*/) { return 0; }
-::gpk::error_t			gpk::planetarySystemSetup	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
-	stacxpr	uint8_t				MAX_COLORS					= 16;
+::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ 
+	gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%s", ::gpk::toString(jsonData.View[0]).begin());	
+	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
+}
+::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ 
+	gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
+	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
+}
+
+::gpk::error_t			gpk::planetarySystemSetup(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
+	stacxpr	uint8_t				MAX_COLORS				= 16;
 	stacxpr	::gpk::astatic<::gpk::bgra, MAX_COLORS>	PLANET_COLORS	=
 		{ ::gpk::YELLOW
 		, ::gpk::ORANGE
@@ -35,7 +42,34 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 	return 0;
 }
 
-::gpk::error_t			gpk::planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
+static	::gpk::error_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(5, "psOrbit")) {	// Gravity cemters
+	::gpk::SParamsRing			params					= {{}, 32};
+	int32_t						iEntity;
+	gpk_necs(iEntity = engine.CreateRingFlat(params));
+	gpk_necs(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, .5}));
+	gpk_necs(engine.SetShader		(iEntity, ::gpk::psGridRuler, shaderName));
+	return iEntity;
+}
+
+static	::gpk::error_t	createGravityCenter		(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(15, "psGravityCenter")) {	// Gravity cemters
+	::gpk::SParamsSphere		params					= {{}, {8, 8}};
+	int32_t						iEntity;
+	gpk_necs(iEntity = engine.CreateSphere(params));
+	gpk_necs(engine.SetColorDiffuse	(iEntity, {.0f, 0.0f, 1.0f, .5f}));
+	gpk_necs(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
+	return iEntity;
+}
+
+static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(5, "psSun")) {	// Gravity cemters
+	::gpk::SParamsSphere		params					= {{}, {32, 32}};
+	int32_t						iEntity;
+	gpk_necs(iEntity = engine.CreateSphere(params));
+	gpk_necs(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, 1.0f}));
+	gpk_necs(engine.SetShader		(iEntity, ::gpk::psSphereSolid, shaderName));
+	return iEntity;
+}
+
+::gpk::error_t			gpk::planetarySystemCreateEntities(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
 	::gpk::SPNGData				pngCache				= {};
 	stacxpr char				fileFolder	[]			= "../gpk_data/images";
 	char						fileName	[1024]		= {};
@@ -53,22 +87,13 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
 
-	{	// Gravity cemters
-		::gpk::SParamsSphere		params					= {{}, {8, 8}};
-		gpk_necs(entityMap.GravityCenters.push_back(engine.CreateSphere(params)));
-		gpk_necs(engine.SetColorDiffuse(entityMap.GravityCenters[0], {.0f, 0.0f, 1.0f, .5f}));
-		gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereSolid, "psGravityCenter"));
-	}
+	gpk_necs(entityMap.GravityCenters.push_back(::createGravityCenter(engine)));
 	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
 		gpk_necs(entityMap.GravityCenters.push_back(engine.Clone(entityMap.GravityCenters[0], true, true, true)));
+
 	gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereAxis, "psSunfire"));
 	
-	{	// Planets
-		::gpk::SParamsSphere		params					= {{}, {32, 32}};
-		gpk_necs(entityMap.Bodies.push_back(engine.CreateSphere(params)));
-		gpk_necs(engine.SetColorDiffuse(entityMap.Bodies[0], {.0f, 0.0f, 1.0f, 1}));
-		gpk_necs(engine.SetShader(entityMap.Bodies[0], ::gpk::psSphereAxis, "psSun"));
-	}
+	gpk_necs(entityMap.Bodies.push_back(::createOrbiterBody(engine)));
 	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
 		gpk_necs(entityMap.Bodies.push_back(engine.Clone(entityMap.Bodies[0], true, true, true)));
 
@@ -80,12 +105,7 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
 
-	{	// Orbits circles
-		::gpk::SParamsRing			params					= {{}, 32};
-		gpk_necs(entityMap.Orbits.push_back(engine.CreateRingFlat(params)));
-		gpk_necs(engine.SetColorDiffuse(entityMap.Orbits[0], {.0f, 1.0f, 0.0f, .5}));
-		gpk_necs(engine.SetShader(entityMap.Orbits[0], ::gpk::psGridRuler, "psOrbit"));
-	}
+	gpk_necs(entityMap.Orbits.push_back(::createOrbiterOrbit(engine)));
 	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
 		gpk_necs(entityMap.Orbits.push_back(engine.Clone(entityMap.Orbits[0], true, false, false)));
 
@@ -101,6 +121,7 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
 		if(-1 != solarSystem.Parent[iOrbiter])
 			engine.Entities.SetParent(entityMap.Orbits[iOrbiter], entityMap.GravityCenters[solarSystem.Parent[iOrbiter]]);
+
 		engine.Entities.SetParent(entityMap.GravityCenters[iOrbiter], entityMap.Orbits[iOrbiter]);
 		engine.Entities.SetParent(entityMap.Bodies[iOrbiter], entityMap.GravityCenters[iOrbiter]);
 		//engine.Entities.SetParent(entityMap.Rings[iOrbiter], entityMap.GravityCenters[iOrbiter]);

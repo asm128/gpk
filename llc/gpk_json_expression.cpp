@@ -24,11 +24,11 @@ static	::gpk::error_t	evaluateJSONBool		(const ::gpk::SJSONNode & jsonToEvaluate
 	int32_t												evalResult								= -1;
 	if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_NULL)
 		evalResult										= 0;
-	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_BOOL)
+	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_BOOLEAN)
 		evalResult										= (boolView == ::gpk::strBool[1]) ? 1 : 0;
 	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_INTEGER)
 		evalResult										= jsonToEvaluate.Token->Value == 0 ? 0 : 1;
-	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_DOUBLE)
+	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_DECIMAL)
 		evalResult										= jsonToEvaluate.Token->Value == 0 ? 0 : 1;
 	else if(jsonToEvaluate.Token->Type == ::gpk::JSON_TYPE_STRING)
 		evalResult										= boolView.size() ? 1 : 0;
@@ -190,7 +190,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 								lastResult.Output								= output;
 							}
 							else if((currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_INTEGER	)
-								 || (currentType == ::gpk::JSON_TYPE_DOUBLE		&& resultType == ::gpk::JSON_TYPE_DOUBLE	)
+								 || (currentType == ::gpk::JSON_TYPE_DECIMAL		&& resultType == ::gpk::JSON_TYPE_DECIMAL	)
 							) {
 								double												valueLeft				= 0;
 								double												valueRight				= 0;
@@ -205,22 +205,22 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}
-							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_DOUBLE) {
+							else if(currentType == ::gpk::JSON_TYPE_INTEGER	&& resultType == ::gpk::JSON_TYPE_DECIMAL) {
 								const double 										valueLeft				= (double)currentJSON->Token->Value;
 								double 												valueRight				= 0;
 								memcpy(&valueRight, &resultJSON->Token->Value, sizeof(uint64_t));
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}
-							else if(currentType == ::gpk::JSON_TYPE_DOUBLE && resultType == ::gpk::JSON_TYPE_INTEGER) {
+							else if(currentType == ::gpk::JSON_TYPE_DECIMAL && resultType == ::gpk::JSON_TYPE_INTEGER) {
 								const double 										valueRight				= (double)resultJSON->Token->Value;
 								double 												valueLeft				= 0;
 								memcpy(&valueLeft, &currentJSON->Token->Value, sizeof(uint64_t));
 								lastResult.SetBoolCarry(valueLeft == valueRight, output);
 								lastResult.Output								= output;
 							}
-							else if(::gpk::JSON_TYPE_BOOL == resultType		|| ::gpk::JSON_TYPE_NULL == resultType
-								 || ::gpk::JSON_TYPE_BOOL == currentType	|| ::gpk::JSON_TYPE_NULL == currentType	) {
+							else if(::gpk::JSON_TYPE_BOOLEAN == resultType	|| ::gpk::JSON_TYPE_NULL == resultType
+								 || ::gpk::JSON_TYPE_BOOLEAN == currentType	|| ::gpk::JSON_TYPE_NULL == currentType	) {
 								const int32_t										prevResult							= ::evaluateAndClearBoolCarry	(lastResult, currentJSON, (int32_t)indexNodeJSON, currentView);
 								const int32_t										evalResult							= ::evaluateBoolResult			(resultJSON, indexOfResolvedSubExpression, viewOfExpressionResult);;
 								lastResult.SetBoolCarry(evalResult == prevResult, output);

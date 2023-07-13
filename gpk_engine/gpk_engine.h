@@ -148,15 +148,15 @@ namespace gpk
 		::gpk::error_t			CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t			CreateCamera		();
 
-		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox		& params);
-		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere		& params);
-		::gpk::error_t			CreateCylinder		(const ::gpk::SParamsCylinder	& params);
-		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle		& params);
-		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRing		& params);
-		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid		& params);
-		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix		& params);
-		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix		& params);
-		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix		& params);
+		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateCylinder		(const ::gpk::SParamsCylinder	& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRing		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
 
 
