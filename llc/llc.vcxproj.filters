@@ -462,9 +462,6 @@
     <ClInclude Include="gpk_ref.h">
       <Filter>pointer</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_rigidbody.h">
-      <Filter>physics</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_rsa.h">
       <Filter>encoding</Filter>
     </ClInclude>
@@ -775,9 +772,6 @@
     </ClCompile>
     <ClCompile Include="gpk_raster_lh.cpp">
       <Filter>raster</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_rigidbody.cpp">
-      <Filter>physics</Filter>
     </ClCompile>
     <ClCompile Include="gpk_rsa.cpp">
       <Filter>encoding</Filter>

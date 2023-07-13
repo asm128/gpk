@@ -64,7 +64,7 @@ namespace gpk
 			gpk_necs(::gpk::loadView(input, Coords)); 
 			gpk_necs(::gpk::loadView(input, Stamps)); 
 			uint32_t					blockCount			= {};
-			gpk_necs(::gpk::loadPOD(input, blockCount)); 
+			gpk_necs(::gpk::loadPOD (input, blockCount)); 
 			gpk_necs(Blocks.reserve(blockCount));
 			for(uint32_t iMap = 0; iMap < blockCount; ++iMap) {
 				::gpk::pobj<STileBlock>		block;

@@ -104,7 +104,6 @@
 #include "gpk_model.h"
 #include "gpk_type_identifier.h"
 #include "gpk_type_registry.h"
-#include "gpk_rigidbody.h"
 #include "gpk_tri.h"
 #include "gpk_spi.h"
 #include "gpk_bit.h"

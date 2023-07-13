@@ -159,7 +159,6 @@
     <ClInclude Include="gpk_png.h" />
     <ClInclude Include="gpk_process.h" />
     <ClInclude Include="gpk_array_ptr.h" />
-    <ClInclude Include="gpk_rigidbody.h" />
     <ClInclude Include="gpk_rsa.h" />
     <ClInclude Include="gpk_runtime.h" />
     <ClInclude Include="gpk_runtime_module.h" />
@@ -248,7 +247,6 @@
     <ClCompile Include="gpk_png.cpp" />
     <ClCompile Include="gpk_png_write.cpp" />
     <ClCompile Include="gpk_process.cpp" />
-    <ClCompile Include="gpk_rigidbody.cpp" />
     <ClCompile Include="gpk_rsa.cpp" />
     <ClCompile Include="gpk_runtime_module.cpp" />
     <ClCompile Include="gpk_stdstring.cpp" />

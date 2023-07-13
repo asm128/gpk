@@ -37,6 +37,9 @@
     <Filter Include="game">
       <UniqueIdentifier>{b16f18f5-8f27-48c7-974e-b5e1ef424ca9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{0838e94a-49aa-4c82-8cb6-ac45d3c7a882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_engine.h">
@@ -129,21 +132,21 @@
     <ClInclude Include="gpk_engine_game_stage.h">
       <Filter>game</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_celestial_body.h">
-      <Filter>astronomical</Filter>
+    <ClInclude Include="gpk_rigid_body.h">
+      <Filter>physics</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_orbiter.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_engine_orbit.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_orbit.h">
+      <Filter>physics</Filter>
     </ClInclude>
     <ClInclude Include="gpk_tile_map.h">
-      <Filter>Header Files</Filter>
+      <Filter>game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_engine_collision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_engine_explorer.cpp">
@@ -178,6 +181,15 @@
     </ClCompile>
     <ClCompile Include="gpk_planetary_system.cpp">
       <Filter>astronomical</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_orbit.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_collision.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_rigid_body.cpp">
+      <Filter>physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

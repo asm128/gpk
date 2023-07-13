@@ -1,5 +1,5 @@
 #include "gpk_engine_planetary_system.h"
-#include "gpk_engine_celestial_body.h"
+#include "gpk_engine_orbit.h"
 
 #include "gpk_stdstring.h"
 #include "gpk_json_expression.h"
@@ -116,7 +116,7 @@ static	::gpk::error_t	initOrbit				(::gpk::SEngine & engine, int32_t iOrbiter, i
 		scale					*= distanceScale * 2;
 	else
 		scale					= {.01f, .01f, .01f};
-	gpk_necs(engine.SetMeshScale(iEntity, scale.f32(), true));
+	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f64{scale.x * 1.001, scale.y, scale.z * 1.001}.f32(), true));
 	gpk_necs(engine.SetHidden	(iEntity, false));
 	return 0;
 }
@@ -187,7 +187,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 	, const ::gpk::vc8bgra						& colors
 	) {
 	float						fFurthest				= 0;
-	solarSystem.Body.Values.max<float>(fFurthest, [](const ::gpk::SCelestialBody & body){ return body.OrbitRadius; });
+	solarSystem.Body.Values.max<float>(fFurthest, [](const ::gpk::SCelestialBody & body){ return body.Orbit.Radius; });
 	const double				distanceScale			= 1.0 / fFurthest * 10;
 	const double				rotationUnit			= 23.9;
 
@@ -199,7 +199,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 			const uint32_t				iEntity					= entityMap.Orbits[iOrbiter];
 			gpk_necs(::gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
 
-			double						orbitRadius				= body.OrbitRadius;// + body.Diameter * .0005;
+			double						orbitRadius				= body.Orbit.Radius;// + body.Diameter * .0005;
 			if(isMoon)
 				orbitRadius	*= 25.f;
 			gpk_necs(::initOrbit(engine, iOrbiter, iEntity, orbitRadius, distanceScale));
@@ -217,7 +217,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		::gpk::rgbaf				color					= colors[iOrbiter];
 		const ::gpk::eid_t			entities[3]				= {entityMap.Orbits[iOrbiter], entityMap.GravityCenters[iOrbiter], entityMap.Bodies[iOrbiter]};
 		for(uint32_t i = 0; i < 2; ++i) {
-			color.a					= i ? (i == 2) ? 1 : .25f : .05f;
+			color.a					= i ? (i == 2) ? 1 : .25f : .125f;
 			gpk_necs(::initSkin(engine, color, iOrbiter, entities[i]));
 		}
 	}
