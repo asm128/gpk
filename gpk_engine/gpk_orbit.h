@@ -13,7 +13,7 @@ namespace gpk
 		float		AxialTilt			= {}; // degrees
 		float		RotationPeriod		= {}; // in units
 		float		RotationUnit		= {}; // 
-		::gpk::AXIS	RotationAxis		= ::gpk::AXIS_Y_NEGATIVE; // 
+		::gpk::AXIS	RotationAxis		= ::gpk::AXIS_Y_POSITIVE; // 
 		::gpk::AXIS	TiltAxis			= ::gpk::AXIS_X_POSITIVE; // 
 	};
 
@@ -54,6 +54,20 @@ namespace gpk
 		case ::gpk::AXIS_Z_POSITIVE: rotation = {0, 0,  rotationValue}; break;
 		}
 		rotation				= orientation.RotateVector(rotation);		// Rotate our calculated torque in relation to the planetary axis
+		return 0;
+	}
+
+	// Calculate the rotation velocity of the planet IN EARTH DAYS
+	template<typename _tAxis, typename _tAxisOrientation>
+	static ::gpk::error_t	orbitCenter			(::gpk::AXIS iAxis, double position, ::gpk::n3<_tAxis> & center) {
+		switch(iAxis) {
+		case ::gpk::AXIS_X_NEGATIVE: center = {-position, 0, 0}; break;
+		case ::gpk::AXIS_X_POSITIVE: center = { position, 0, 0}; break;
+		case ::gpk::AXIS_Y_NEGATIVE: center = {0, -position, 0}; break;
+		case ::gpk::AXIS_Y_POSITIVE: center = {0,  position, 0}; break;
+		case ::gpk::AXIS_Z_NEGATIVE: center = {0, 0, -position}; break;
+		case ::gpk::AXIS_Z_POSITIVE: center = {0, 0,  position}; break;
+		}
 		return 0;
 	}
 

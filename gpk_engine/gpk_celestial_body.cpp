@@ -146,6 +146,8 @@
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "orbital_eccentricity"		, body.OrbitalEccentricity	));
 	ws_if_failed(::gpk::jsonObjectGetDecimal(jsonData, jsonIndexStellarBody, "obliquity_to_orbit"		, body.Body.AxialTilt		));
 	body.Body.Radius		= body.Diameter * .5f;
+	body.Body.TiltAxis		= ::gpk::AXIS_X_POSITIVE;
+	body.Orbit.TiltAxis		= ::gpk::AXIS_Y_NEGATIVE;
 	switch(type) {
 	default:
 	case ::gpk::CELESTIAL_BODY_Planet: ::gpk::loadPlanet(body.Detail.Planet, jsonData, jsonIndexStellarBody); break;

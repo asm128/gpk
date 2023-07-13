@@ -54,13 +54,14 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 	}
 
 	{	// Gravity cemters
-		::gpk::SParamsSphere		params					= {{}, {32, 32}};
+		::gpk::SParamsSphere		params					= {{}, {8, 8}};
 		gpk_necs(entityMap.GravityCenters.push_back(engine.CreateSphere(params)));
 		gpk_necs(engine.SetColorDiffuse(entityMap.GravityCenters[0], {.0f, 0.0f, 1.0f, .5f}));
-		gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereAxis, "psSphereSolid"));
+		gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereSolid, "psGravityCenter"));
 	}
 	for(uint32_t iOrbiter = 1; iOrbiter < solarSystem.Body.size(); ++iOrbiter)
 		gpk_necs(entityMap.GravityCenters.push_back(engine.Clone(entityMap.GravityCenters[0], true, true, true)));
+	gpk_necs(engine.SetShader(entityMap.GravityCenters[0], ::gpk::psSphereAxis, "psSunfire"));
 	
 	{	// Planets
 		::gpk::SParamsSphere		params					= {{}, {32, 32}};

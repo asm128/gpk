@@ -32,6 +32,15 @@ float4					lightCalcSpecular				(float4 specularMaterial, float4 specularLight, 
 	}
 }
 
-float rand (float2 uv) {
+float					rand							(float2 uv) {
 	return frac(sin(dot(uv,float2(12.9898,78.233)))*43758.5453123);
 }
+
+float					wave3							(float3 position, float3 center, float distanceScale, float timeScale) {
+	return max(0.0f, sin(distance(position, center) * distanceScale + CameraFront.w * timeScale));
+}
+
+float					wave2							(float2 position, float3 center, float distanceScale, float timeScale) {
+	return max(0.0f, sin((distance(position, center.xz * .5f) * distanceScale - CameraFront.w * (.005f / center.z)) * 3.14159f * timeScale));
+}
+

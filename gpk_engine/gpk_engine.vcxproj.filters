@@ -241,6 +241,10 @@
     <FxCompile Include="psBackgroundMilkyWay.hlsl">
       <Filter>astronomical</Filter>
     </FxCompile>
+    <FxCompile Include="psSunfire.hlsl">
+      <Filter>astronomical</Filter>
+    </FxCompile>
+    <FxCompile Include="psGravityCenter.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PixelShaderShared.hlsli">
