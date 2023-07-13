@@ -17,9 +17,6 @@
 	case ::gpk::AXIS_Z_NEGATIVE:
 	case ::gpk::AXIS_Z_POSITIVE: orbitCenter.Position.z	= float(distance); break;
 	}
-	switch(rotationAxis) {
-		
-	}
 	return 0;
 }
 
