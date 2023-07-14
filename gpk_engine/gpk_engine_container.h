@@ -20,19 +20,41 @@ namespace gpk
 		inline	const TPObj&		operator[]		(::gpk::vcc key)	const	{ return Elements[Names.find(key)]; }
 		inline	TPObj&				operator[]		(::gpk::vcc key)			{ return Elements[Names.find(key)]; }
 
-		inlcxpr	uint32_t			size			()										const	{ return Names.size(); }
-		inline	::gpk::error_t		find			(::gpk::vcc key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
+		inlcxpr	uint32_t			size			()											const	{ return Names.size(); }
+		inline	::gpk::error_t		find			(const ::gpk::vcc key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
 
-		::gpk::error_t				push_back		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ Names.push_back(name); return Elements.push_back(instance); }
-		::gpk::error_t				Create			(const ::gpk::vcc name = {})									{ Names.push_back(name); return Elements.push_back({}); }
-		::gpk::error_t				Delete			(uint32_t index)												{ Names.remove_unordered(index); return Elements.remove_unordered(index); }
+		::gpk::error_t				pushOrReuse		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ 
+			//for(uint32_t iElement = 0; iElement < Elements.size(); ++iElement) {
+			//	const TPObj & element = Elements[iElement];
+			//	if(!element || element.get_ref()->References == 1) {
+			//		Names[iElement]		= name;
+			//		Elements[iElement]	= instance;
+			//		return iElement;
+			//	}
+			//}
+			Names.push_back(name); 
+			return Elements.push_back(instance); 
+		}
+
+		inline	::gpk::error_t		push_back		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ return pushOrReuse(instance, name); }
+		inline	::gpk::error_t		Create			(const ::gpk::vcc name = {})									{ return pushOrReuse({}, name); }
+
+		::gpk::error_t				Delete			(uint32_t index)												{ 
+			Names.remove_unordered(index); 
+			return Elements.remove_unordered(index); 
+		}
+
 		::gpk::error_t				Clone			(uint32_t index)												{ 
-			TPObj							& newElement	= Elements[Elements.push_back({})]; 
+			int32_t							iNew;
+			gpk_necall(iNew = Create(Names[index]), "index: %i", index);
 			const TPObj						& srcElement	= Elements[index];
 			if(srcElement) {
-				*newElement.create()		= *srcElement;
+				TPObj							& newElement	= Elements[iNew]; 
+				if(!newElement)
+					newElement.create();
+				*newElement					= *srcElement;
 			}
-			return Names.push_back(::gpk::vcc{Names[index]}); 
+			return iNew; 
 		}
 
 		::gpk::error_t				Save			(::gpk::au8 & output) const { 

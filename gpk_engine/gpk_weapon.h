@@ -1,17 +1,19 @@
 #include "gpk_particle.h"
 #include "gpk_enum.h"
+#include "gpk_array.h"
+#include "gpk_apod_serialize.h"
 
 #ifndef GPK_GALAXY_HELL_WEAPON_H
 #define GPK_GALAXY_HELL_WEAPON_H
 
-namespace ghg 
+namespace gpk 
 {
 	struct SShots	{
-		::gpk::aobj<::gpk::apod<::gpk::n3f32>>	DistanceToTargets	= {};
+		::gpk::aapod<::gpk::n3f32>	DistanceToTargets	= {};
 		::gpk::af32					Lifetime			= {};
 		::gpk::af32					Brightness			= {};
-		::gpk::apod<::gpk::n3f32>	PositionDraw		= {};
-		::gpk::apod<::gpk::n3f32>	PositionPrev		= {};
+		::gpk::an3f32				PositionDraw		= {};
+		::gpk::an3f32				PositionPrev		= {};
 		::gpk::SParticles3			Particles			= {};
 
 		int							Remove				(uint32_t iShot)			{
@@ -172,7 +174,7 @@ namespace ghg
 		bool			CoolingDown			;//= false;
 		float			Overheat			;//= 0;
 
-		int				Create				(::ghg::SShots & shots, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed, float brightness, float lifetime)	{
+		int				Create				(::gpk::SShots & shots, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed, float brightness, float lifetime)	{
 			if(Delay < MaxDelay)
 				return 0;
 
@@ -181,7 +183,7 @@ namespace ghg
 			return shots.SpawnForced(position, direction, speed, brightness, lifetime);
 		}
 
-		int				SpawnDirected		(::ghg::SShots & shots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
+		int				SpawnDirected		(::gpk::SShots & shots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
 			if(Delay < MaxDelay)
 				return 0;
 
@@ -190,7 +192,7 @@ namespace ghg
 			return shots.SpawnForcedDirected(Stability * stabilityFactor, position, direction, speedDebris, brightness, lifetime);
 		}
 
-		int				SpawnDirected		(::ghg::SShots & shots, uint32_t countShots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
+		int				SpawnDirected		(::gpk::SShots & shots, uint32_t countShots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
 			if(Delay < MaxDelay || 0 == countShots)
 				return 0;
 

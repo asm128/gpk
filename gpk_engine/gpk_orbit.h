@@ -18,8 +18,8 @@ namespace gpk
 	};
 
 	struct SOrbiter {
-		SOrbit			Body;
-		SOrbit			Orbit;
+		SOrbit			Body ;	// The mass or energy body representing the object orbiting around a center.
+		SOrbit			Orbit;	// The orbit around the center the body orbits around.
 	};
 #pragma pack(pop)
 
