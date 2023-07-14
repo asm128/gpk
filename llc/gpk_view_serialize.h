@@ -78,8 +78,8 @@ namespace gpk
 		headerToRead				= {(input.size() > counterWidth) ? (const T*)&input[counterWidth] : 0, elementCount};
 		return counterWidth + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
+	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
+	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
 
 	template<typename T>
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
@@ -90,8 +90,8 @@ namespace gpk
 		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
 		return counterWidth + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vi8 & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
-	template<typename T>	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vc  & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
+	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vi8 & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
+	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vc  & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
 
 	template<typename _tPOD> 
 	::gpk::error_t				loadPOD				(::gpk::vcu8 & input, _tPOD & output) { 
@@ -102,8 +102,8 @@ namespace gpk
 		output						= readView[0]; 
 		return 0;
 	}
-	template<typename _tPOD> ::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD> ::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
+	template<typename _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
+	template<typename _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
 
 	template<typename _tPOD> 
 	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::view<const _tPOD> & output) { 
@@ -112,8 +112,8 @@ namespace gpk
 		gpk_necs(input.slice(input, bytesRead));
 		return 0;
 	}
-	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD> ::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
+	template<typename _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
+	template<typename _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 } // namespace
 
 #endif // GPK_VIEW_SERIALIZE_H_23627

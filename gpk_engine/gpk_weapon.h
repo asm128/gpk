@@ -159,20 +159,20 @@ namespace gpk
 
 	// One per orbiter
 	struct SWeapon {
-		WEAPON_TYPE		Type				;//= WEAPON_TYPE_Gun;
-		WEAPON_LOAD		Load				;//= WEAPON_LOAD_Bullet;
-		WEAPON_DAMAGE	DamageType			;//= WEAPON_DAMAGE_Pierce;
-		uint8_t			ParticleCount		;//= 1;
-		float			MaxDelay			;//= .1;
-		float			Delay				;//= 0;
-		float			Cooldown			;//= 1;
-		float			OverheatPerShot		;//= 0;
-		float			Stability			;//= 1.0;
-		float			Speed				;//= 150;
-		int32_t			Damage				;//= 1;
-		float			ShotLifetime		;//= 0;
-		bool			CoolingDown			;//= false;
-		float			Overheat			;//= 0;
+		WEAPON_TYPE		Type				= {};	//= WEAPON_TYPE_Gun;
+		WEAPON_LOAD		Load				= {};	//= WEAPON_LOAD_Bullet;
+		WEAPON_DAMAGE	DamageType			= {};	//= WEAPON_DAMAGE_Pierce;
+		uint8_t			ParticleCount		= {};	//= 1;
+		float			MaxDelay			= {};	//= .1;
+		float			Delay				= {};	//= 0;
+		float			Cooldown			= {};	//= 1; aka Reload
+		float			OverheatPerShot		= {};	//= 0;
+		float			Stability			= {};	//= 1.0;
+		float			Speed				= {};	//= 150;
+		int32_t			Damage				= {};	//= 1;
+		float			ShotLifetime		= {};	//= 0;
+		bool			CoolingDown			= {};	//= false;
+		float			Overheat			= {};	//= 0;
 
 		int				Create				(::gpk::SShots & shots, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed, float brightness, float lifetime)	{
 			if(Delay < MaxDelay)

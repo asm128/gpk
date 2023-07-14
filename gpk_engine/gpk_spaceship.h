@@ -64,7 +64,6 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SSpaceshipOrbiter {
-		uint32_t		Entity			= (uint32_t)-1;
 		SHIP_PART_TYPE	Type			= SHIP_PART_TYPE_Cargo;
 		int32_t			Health			= 0;
 		uint32_t		MaxHealth		= 0;
@@ -87,15 +86,14 @@ namespace gpk
 
 	struct SSpaceshipCore {
 		// Generally constants, little or no variation during level gameplay
-		int32_t			Entity			;
-		int32_t			Team			;
-		int32_t			MaxNitro		;
+		int32_t			Team			= {};
+		int32_t			MaxNitro		= {};
 
 		// Variable, may change at any time during 
-		int32_t			Health			;
-		double			Nitro			;
-		uint32_t		AvailableNitros	;
-		double			TimePlayed		;
+		int32_t			Health			= {};
+		double			Nitro			= {};
+		uint32_t		AvailableNitros	= {};
+		double			TimePlayed		= {};
 	};
 #pragma pack(pop)
 
@@ -184,7 +182,6 @@ namespace gpk
 
 			Orbiters.clear();
 			gpk_necs(::gpk::loadView(input, Orbiters));
-			gpk_necs(WeaponDistanceToTargets.resize(Orbiters.size()));
 			gpk_necs(ShipOrbiterActionQueue	.resize(Orbiters.size()));
 			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter)
 				gpk_necall(::gpk::loadView(input, ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
@@ -192,6 +189,7 @@ namespace gpk
 			Weapons.clear();
 			gpk_necs(::gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());
+			gpk_necs(WeaponDistanceToTargets.resize(Weapons.size()));
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
 				gpk_necall(::gpk::loadView(input, WeaponDistanceToTargets[iWeapon]), "iWeapon: %i", iWeapon);
 				gpk_necall(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
