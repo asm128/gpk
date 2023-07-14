@@ -1,5 +1,6 @@
 #include "gpk_enum.h"
 #include "gpk_n2.h"
+#include "gpk_range.h"
 
 #ifndef GPK_XML_READER_H_23627
 #define GPK_XML_READER_H_23627

@@ -7,6 +7,7 @@
 
 #include "gpk_img_color.h"
 #include "gpk_grid_color.h"
+#include "gpk_minmax_n2.h"
 
 #ifndef GPK_GUI_CONTROL_H_23627
 #define GPK_GUI_CONTROL_H_23627

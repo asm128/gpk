@@ -1,6 +1,7 @@
 #include "gpk_png.h"
 #include "gpk_tri2.h"
 #include "gpk_tri3.h"
+#include "gpk_range.h"
 
 #ifndef CED_GEOMETRY_H_23627
 #define CED_GEOMETRY_H_23627

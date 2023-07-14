@@ -624,11 +624,56 @@
     <ClInclude Include="gpk_img_serialize.h">
       <Filter>image</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_sun.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="gpk_range.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_slice.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_gauge.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_minmax.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_range.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_minmax_n2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_minmax_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_minmax.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gauge.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_slice.h">
+      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="gpk_linear_map_pod.h">
-      <Filter>Header Files</Filter>
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_range_n2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_range_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_slice_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_slice_n2.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gauge_n3.h">
+      <Filter>aliases</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gauge_n2.h">
+      <Filter>aliases</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -823,9 +868,6 @@
     </ClCompile>
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_sun.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

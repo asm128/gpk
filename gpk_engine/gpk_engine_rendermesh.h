@@ -1,6 +1,8 @@
 #include "gpk_engine_container.h"
-#include "gpk_n2.h"
+
 #include "gpk_enum.h"
+
+#include "gpk_range_n2.h"
 
 #ifndef GPK_ENGINE_RENDERMESH_H_23627
 #define GPK_ENGINE_RENDERMESH_H_23627

@@ -158,19 +158,6 @@ namespace gpk
 	typedef	const n2i32		cn2i32		;
 	typedef	const n2i64		cn2i64		;
 
-	typedef	minmax<n2char>	minmax2char;
-	typedef	minmax<n2uchar>	minmax2uchar;
-	typedef	minmax<n2f32>	minmax2f32;
-	typedef	minmax<n2f64>	minmax2f64;
-	typedef	minmax<n2u8 >	minmax2u8;
-	typedef	minmax<n2u16>	minmax2u16;
-	typedef	minmax<n2u32>	minmax2u32;
-	typedef	minmax<n2u64>	minmax2u64;
-	typedef	minmax<n2i8 >	minmax2i8;
-	typedef	minmax<n2i16>	minmax2i16;
-	typedef	minmax<n2i32>	minmax2i32;
-	typedef	minmax<n2i64>	minmax2i64;
-
 	template<typename _tValue>
 	stacxpr	bool	in_range	(const ::gpk::n2<_tValue>& valueToTest, const ::gpk::n2<_tValue>& rangeStart, const ::gpk::n2<_tValue>& rangeStop)	noexcept	{
 		return	::gpk::in_range(valueToTest.x, rangeStart.x, rangeStop.x)

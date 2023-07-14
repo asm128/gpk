@@ -150,6 +150,9 @@
     <ClInclude Include="gpk_weapon.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_sun.h">
+      <Filter>game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">
@@ -196,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="gpk_rigid_body.cpp">
       <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_sun.cpp">
+      <Filter>game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

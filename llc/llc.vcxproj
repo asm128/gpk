@@ -22,7 +22,11 @@
     <ClInclude Include="gpk_adam7.h" />
     <ClInclude Include="gpk_aes.h" />
     <ClInclude Include="gpk_align.h" />
+    <ClInclude Include="gpk_apod_gauge.h" />
+    <ClInclude Include="gpk_apod_minmax.h" />
+    <ClInclude Include="gpk_apod_range.h" />
     <ClInclude Include="gpk_apod_serialize.h" />
+    <ClInclude Include="gpk_apod_slice.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_array.h" />
     <ClInclude Include="gpk_array_base.h" />
@@ -71,6 +75,9 @@
     <ClInclude Include="gpk_dialog_controls.h" />
     <ClInclude Include="gpk_event_input.h" />
     <ClInclude Include="gpk_event_screen.h" />
+    <ClInclude Include="gpk_gauge.h" />
+    <ClInclude Include="gpk_gauge_n2.h" />
+    <ClInclude Include="gpk_gauge_n3.h" />
     <ClInclude Include="gpk_geometry_buffers.h" />
     <ClInclude Include="gpk_geometry_draw.h" />
     <ClInclude Include="gpk_font.h" />
@@ -86,11 +93,19 @@
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
     <ClInclude Include="gpk_linear_map_pod.h" />
+    <ClInclude Include="gpk_minmax.h" />
+    <ClInclude Include="gpk_minmax_n2.h" />
+    <ClInclude Include="gpk_minmax_n3.h" />
     <ClInclude Include="gpk_n3.h" />
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
-    <ClInclude Include="gpk_sun.h" />
+    <ClInclude Include="gpk_range.h" />
+    <ClInclude Include="gpk_range_n2.h" />
+    <ClInclude Include="gpk_range_n3.h" />
+    <ClInclude Include="gpk_slice.h" />
+    <ClInclude Include="gpk_slice_n2.h" />
+    <ClInclude Include="gpk_slice_n3.h" />
     <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
     <ClInclude Include="gpk_ptr_nco.h" />
@@ -261,7 +276,6 @@
     <ClCompile Include="gpk_xml_reader.cpp" />
     <ClCompile Include="gpk_font.cpp" />
     <ClCompile Include="llc_header_checkingg.cpp" />
-    <ClCompile Include="gpk_sun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

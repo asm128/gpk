@@ -11,6 +11,8 @@
 
 #include "deflate.h"
 
+#include "gpk_range.h"
+
 stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 
 ::gpk::error_t			gpk::crcGenerate			(const ::gpk::vcu8 & bytes, uint64_t & crc)	{

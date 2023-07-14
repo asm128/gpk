@@ -1,5 +1,6 @@
 #include "gpk_tri.h"
 #include "gpk_n3.h"
+#include "gpk_minmax.h"
 
 #ifndef GPK_TRI3_H_23627
 #define GPK_TRI3_H_23627

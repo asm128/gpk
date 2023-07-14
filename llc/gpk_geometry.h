@@ -1,5 +1,6 @@
 #include "gpk_geometry_buffers.h"
 #include "gpk_enum.h"
+#include "gpk_minmax.h"
 
 #ifndef GPK_GEOMETRY_H_23627
 #define GPK_GEOMETRY_H_23627

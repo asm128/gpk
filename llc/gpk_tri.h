@@ -29,18 +29,18 @@ namespace gpk
 	typedef	tri<int32_t>	trii32;
 	typedef	tri<int64_t>	trii64;
 
-	typedef	minmax<trichar>		minmaxtrichar;
-	typedef	minmax<triuchar>	minmaxtriuchar;
-	typedef	minmax<trif32>		minmaxtrif32;
-	typedef	minmax<trif64>		minmaxtrif64;
-	typedef	minmax<triu8 >		minmaxtriu8;
-	typedef	minmax<triu16>		minmaxtriu16;
-	typedef	minmax<triu32>		minmaxtriu32;
-	typedef	minmax<triu64>		minmaxtriu64;
-	typedef	minmax<trii8 >		minmaxtrii8;
-	typedef	minmax<trii16>		minmaxtrii16;
-	typedef	minmax<trii32>		minmaxtrii32;
-	typedef	minmax<trii64>		minmaxtrii64;
+	//typedef	minmax<trichar>		minmaxtrichar;
+	//typedef	minmax<triuchar>	minmaxtriuchar;
+	//typedef	minmax<trif32>		minmaxtrif32;
+	//typedef	minmax<trif64>		minmaxtrif64;
+	//typedef	minmax<triu8 >		minmaxtriu8;
+	//typedef	minmax<triu16>		minmaxtriu16;
+	//typedef	minmax<triu32>		minmaxtriu32;
+	//typedef	minmax<triu64>		minmaxtriu64;
+	//typedef	minmax<trii8 >		minmaxtrii8;
+	//typedef	minmax<trii16>		minmaxtrii16;
+	//typedef	minmax<trii32>		minmaxtrii32;
+	//typedef	minmax<trii64>		minmaxtrii64;
 #pragma pack(pop)
 } // namespace 
 
