@@ -1,7 +1,7 @@
 #include "gpk_game_stage.h"
 
-#ifndef GPK_ENGINE_GAME_H_23627
-#define GPK_ENGINE_GAME_H_23627
+#ifndef GPK_GAME_H
+#define GPK_GAME_H
 
 namespace gpk
 {
@@ -23,7 +23,6 @@ namespace gpk
 	};
 
 	typedef ::gpk::apod<SStageState>	astagestate;
-
 #pragma pack(pop)
 
 	struct SGame {
@@ -48,4 +47,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_ENGINE_GAMEPLAY_H_23627
+#endif // GPK_GAME_H

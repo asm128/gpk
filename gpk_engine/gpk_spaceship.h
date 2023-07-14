@@ -1,4 +1,5 @@
 #include "gpk_weapon.h"
+#include "gpk_gauge.h"
 
 #ifndef GPK_SPACESHIP_H
 #define GPK_SPACESHIP_H
@@ -64,36 +65,34 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SSpaceshipOrbiter {
-		SHIP_PART_TYPE	Type			= SHIP_PART_TYPE_Cargo;
-		int32_t			Health			= 0;
-		uint32_t		MaxHealth		= 0;
-		uint32_t		Weapon			= (uint32_t)-1;
-		uint32_t		ActiveAction	= ~0U;
+		SHIP_PART_TYPE		Type			= SHIP_PART_TYPE_Cargo;
+		::gpk::gaugemaxi32	Health			= {};
+		uint32_t			Weapon			= (uint32_t)-1;
+		uint32_t			ActiveAction	= ~0U;
 	};
 
 	struct SSpaceshipScore {
-		uint64_t		Score			= 0;
-		uint64_t		Hits			= 0;
-		uint64_t		Shots			= 0;
-		uint64_t		Bullets			= 0;
-		uint64_t		DamageDone		= 0;
-		uint64_t		DamageReceived	= 0;
-		uint64_t		HitsSurvived	= 0;
-		uint32_t		OrbitersLost	= 0;
-		uint32_t		KilledShips		= 0;
-		uint32_t		KilledOrbiters	= 0;
+		uint64_t			Score			= 0;
+		uint64_t			Hits			= 0;
+		uint64_t			Shots			= 0;
+		uint64_t			Bullets			= 0;
+		uint64_t			DamageDone		= 0;
+		uint64_t			DamageReceived	= 0;
+		uint64_t			HitsSurvived	= 0;
+		uint32_t			OrbitersLost	= 0;
+		uint32_t			KilledShips		= 0;
+		uint32_t			KilledOrbiters	= 0;
 	};
 
 	struct SSpaceshipCore {
 		// Generally constants, little or no variation during level gameplay
-		int32_t			Team			= {};
-		int32_t			MaxNitro		= {};
+		int32_t				Team			= {};
+		::gpk::gaugemaxf32	Nitro			= {};
 
 		// Variable, may change at any time during 
-		int32_t			Health			= {};
-		double			Nitro			= {};
-		uint32_t		AvailableNitros	= {};
-		double			TimePlayed		= {};
+		int32_t				Health			= {};
+		uint32_t			AvailableNitros	= {};
+		double				TimePlayed		= {};
 	};
 #pragma pack(pop)
 
@@ -126,7 +125,7 @@ namespace gpk
 			int32_t							totalHealth			= 0;
 			::gpk::vcu16					shipCoreParts		= ShipParts[iShipCore];
 			for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
-				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health;
+				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 
 			return totalHealth;
 		}
@@ -139,7 +138,7 @@ namespace gpk
 
 				::gpk::vcu16					shipCoreParts		= ShipParts[iShipCore];
 				for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
-					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health;
+					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 			}
 			return totalHealth;
 		}

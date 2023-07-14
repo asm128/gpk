@@ -2,6 +2,7 @@
 #include "gpk_enum.h"
 #include "gpk_array.h"
 #include "gpk_apod_serialize.h"
+#include "gpk_gauge.h"
 
 #ifndef GPK_GALAXY_HELL_WEAPON_H
 #define GPK_GALAXY_HELL_WEAPON_H
@@ -85,6 +86,12 @@ namespace gpk
 	};
 
 #pragma pack(push, 1)
+
+	GDEFINE_ENUM_TYPE(WEAPON_ACTION, uint16_t);
+	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Shoot		, 0x0);
+	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Cooldown	, 0x1);
+	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Target	, 0x2);
+
 	GDEFINE_ENUM_TYPE(WEAPON_DAMAGE, uint16_t);
 	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Pierce	, 0x0);
 	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Impact	, 0x1);
@@ -128,34 +135,33 @@ namespace gpk
 
 	// One per value combination
 	struct SWeaponLoad {
-		WEAPON_LOAD		Type			;//= WEAPON_LOAD_Bullet;
-		WEAPON_DAMAGE	DamageType		;//= WEAPON_DAMAGE_Pierce;
-		uint8_t			ParticleCount	;//= 1;
-		float			Delay			;//= .1;
-		int32_t			Damage			;//= 1;
-		float			Lifetime		;//= 0;
-		float			Speed			;//= 150;
-		float			Weight			;//= 150;
-		//uint32_t		Color			;
-
+		WEAPON_LOAD		Type				= {};//= WEAPON_LOAD_Bullet;
+		WEAPON_DAMAGE	DamageType			= {};//= WEAPON_DAMAGE_Pierce;
+		uint8_t			ParticleCount		= {};//= 1;
+		float			Delay				= {};//= .1;
+		int32_t			Damage				= {};//= 1;
+		float			Lifetime			= {};//= 0;
+		float			Speed				= {};//= 150;
+		float			Weight				= {};//= 150;
+		//uint32_t		Color				= {};
 	};
-
+	
 	// One per value combinatiom
 	struct SWeaponType {
-		WEAPON_TYPE		Type				;//= WEAPON_TYPE_Gun;
-		WEAPON_DAMAGE	DamageType			;//= WEAPON_DAMAGE_Pierce;
-		int32_t			DamageMultiplier	;//= 1;
-		float			Cooldown			;//= 1;
-		float			Stability			;//= 1.0;
-		float			ShotLifetime		;//= 0;
-		float			SpeedMultiplier		;//= 150;
+		WEAPON_TYPE		Type				= {};//= WEAPON_TYPE_Gun;
+		WEAPON_DAMAGE	DamageType			= {};//= WEAPON_DAMAGE_Pierce;
+		int32_t			DamageMultiplier	= {};//= 1;
+		float			Cooldown			= {};//= 1;
+		float			Stability			= {};//= 1.0;
+		float			ShotLifetime		= {};//= 0;
+		float			SpeedMultiplier		= {};//= 150;
 	};
 
-	// One per orbiter
-	struct SWeaponState {
-		bool			CoolingDown			;//= false;
-		float			Overheat			;//= 0;
-	};
+	//struct SWeaponLoad {
+	//	gaugemaxf32		Delay				= {};	//= .1;
+	//	gaugemaxf32		Overheat			= {};	//= 1; aka Reload
+	//	bool			CoolingDown			= {};	//= false;
+	//};
 
 	// One per orbiter
 	struct SWeapon {
@@ -163,37 +169,35 @@ namespace gpk
 		WEAPON_LOAD		Load				= {};	//= WEAPON_LOAD_Bullet;
 		WEAPON_DAMAGE	DamageType			= {};	//= WEAPON_DAMAGE_Pierce;
 		uint8_t			ParticleCount		= {};	//= 1;
-		float			MaxDelay			= {};	//= .1;
-		float			Delay				= {};	//= 0;
-		float			Cooldown			= {};	//= 1; aka Reload
-		float			OverheatPerShot		= {};	//= 0;
+		gaugemaxf32		Delay				= {};	// Time in seconds between a shot and the next
+		gaugemaxf32		Overheat			= {};	// Cooldown/Reload time in seconds
+		float			OverheatPerShot		= {};	// 
 		float			Stability			= {};	//= 1.0;
 		float			Speed				= {};	//= 150;
 		int32_t			Damage				= {};	//= 1;
 		float			ShotLifetime		= {};	//= 0;
 		bool			CoolingDown			= {};	//= false;
-		float			Overheat			= {};	//= 0;
 
-		int				Create				(::gpk::SShots & shots, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed, float brightness, float lifetime)	{
-			if(Delay < MaxDelay)
+		int				Shoot				(::gpk::SShots & shots, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed, float brightness, float lifetime)	{
+			if(Delay.Value < Delay.Limit)
 				return 0;
 
-			Delay			= 0;
-			Overheat		+= OverheatPerShot;
+			Delay.Value		= 0;
+			Overheat.Value	+= OverheatPerShot;
 			return shots.SpawnForced(position, direction, speed, brightness, lifetime);
 		}
 
-		int				SpawnDirected		(::gpk::SShots & shots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
-			if(Delay < MaxDelay)
+		int				ShootDirected		(::gpk::SShots & shots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
+			if(Delay.Value < Delay.Limit)
 				return 0;
 
-			Delay			= 0;
-			Overheat		+= OverheatPerShot;
+			Delay.Value		= 0;
+			Overheat.Value	+= OverheatPerShot;
 			return shots.SpawnForcedDirected(Stability * stabilityFactor, position, direction, speedDebris, brightness, lifetime);
 		}
 
-		int				SpawnDirected		(::gpk::SShots & shots, uint32_t countShots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
-			if(Delay < MaxDelay || 0 == countShots)
+		int				ShootDirected		(::gpk::SShots & shots, uint32_t countShots, double stabilityFactor, const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speedDebris, float brightness, float lifetime)	{
+			if(Delay.Value < Delay.Limit || 0 == countShots)
 				return 0;
 
 			int32_t				indexFirst			= -1;
@@ -203,8 +207,8 @@ namespace gpk
 			for(uint32_t iDebris = 0; iDebris < (countShots - 1); ++iDebris)
 				shots.SpawnForcedDirected(Stability * stabilityFactor, position, direction, speedDebris, brightness, lifetime);
 
-			Delay			= 0;
-			Overheat		+= OverheatPerShot;
+			Delay.Value		= 0;
+			Overheat.Value	+= OverheatPerShot;
 			return indexFirst;
 		}
 	};
