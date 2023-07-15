@@ -45,25 +45,37 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SParamsCircle, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
 	};
 
-	struct SParamsRing { 
+	struct SParamsRingSide { 
 		::gpk::n3f32		Origin			= {};
 		uint16_t			Slices			= 16;
 		bool				Reverse			= false;
 		float				DiameterRatio	= 1.0f;
 		::gpk::minmaxf32	Radius			= {.45f, .5f};
 	
-		GPK_DEFAULT_OPERATOR(SParamsRing, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+		GPK_DEFAULT_OPERATOR(SParamsRingSide, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
 	};
 
-	struct SParamsCylinder { 
+	struct SParamsRing { 
+		::gpk::n3f32		Origin			= {};
+		::gpk::n2u16		CellCount		= {16, 1};
+		bool				Reverse			= false;
+		float				DiameterRatio	= 1.0f;
+		::gpk::minmaxf32	RadiusYMin		= {.45f, .5f};
+		::gpk::minmaxf32	RadiusYMax		= {.45f, .5f};
+		float				Height			= 1;
+
+		GPK_DEFAULT_OPERATOR(SParamsRing, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && RadiusYMin == other.RadiusYMin && RadiusYMax == other.RadiusYMax && Height == other.Height);
+	};
+
+	struct SParamsCylinderWall { 
 		::gpk::n3f32		Origin			= {};
 		::gpk::n2u16		CellCount		= {16, 2};
 		bool				Reverse			= false;
 		float				DiameterRatio	= 1.0f;
 		::gpk::minmaxf32	Radius			= {.5f, .5f};
-		float				Length			= 1;
+		float				Height			= 1;
 
-		GPK_DEFAULT_OPERATOR(SParamsCylinder, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius && Length == other.Length); 
+		GPK_DEFAULT_OPERATOR(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius && Height == other.Height); 
 	};
 
 	struct SParamsGrid { 
@@ -85,16 +97,17 @@ namespace gpk
 	};
 
 #pragma pack(pop)
-	::gpk::error_t		geometryBuildCircle		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle		& params);
-	::gpk::error_t		geometryBuildBox		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox		& params);
-	::gpk::error_t		geometryBuildSphere		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere		& params);
-	::gpk::error_t		geometryBuildCylinder	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinder	& params);
-	::gpk::error_t		geometryBuildGrid		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid		& params);
-	::gpk::error_t		geometryBuildHelixHalf	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);	// TODO: Rewrite
-	::gpk::error_t		geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-	::gpk::error_t		geometryBuildFigure0	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
-	::gpk::error_t		geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing		& params);
-	//::gpk::error_t		geometryBuildShape		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix		& params);
+	::gpk::error_t		geometryBuildCircle			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
+	::gpk::error_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
+	::gpk::error_t		geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
+	::gpk::error_t		geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	::gpk::error_t		geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
+	::gpk::error_t		geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
+	::gpk::error_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	::gpk::error_t		geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
+	::gpk::error_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	::gpk::error_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing			& params);
+
 } // namespace
 
 #endif // GPK_GEOMETRY_H_23627

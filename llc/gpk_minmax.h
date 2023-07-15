@@ -8,7 +8,7 @@ namespace gpk
 #pragma pack(push, 1)
 	template<typename T> 
 	struct minmax {
-		T							Min, Max;
+		T						Min, Max;
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Max == other.Max && Min == other.Min);
 

@@ -1,5 +1,8 @@
 #include "gpk_weapon.h"
 #include "gpk_gauge.h"
+#include "gpk_aobj_ppod.h"
+#include "gpk_array_ptr.h"
+#include "gpk_view_n3.h"
 
 #ifndef GPK_SPACESHIP_H
 #define GPK_SPACESHIP_H
@@ -95,6 +98,32 @@ namespace gpk
 		double				TimePlayed		= {};
 	};
 #pragma pack(pop)
+	template<typename _tPOD> 
+	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+		::gpk::view<const _tPOD>	viewToLoad;
+		gpk_necall(::gpk::loadView(input, viewToLoad), "index: %i", index);
+		if(0 == viewToLoad.size()) {
+			if(index < output.size()) {
+				::gpk::papod<_tPOD>	& block	= output[index];
+				if(block)
+					block->clear();
+			}
+		}
+		else {
+			if(index >= output.size()) {
+				::gpk::papod<_tPOD>	block;
+				*block.create()		= viewToLoad;
+				gpk_necall(output.push_back(block), "index: %i", index);
+			}
+			else {
+				::gpk::papod<_tPOD>	& block	= output[index];
+				if(!block)
+					block.create();
+				*block				= viewToLoad;
+			}
+		}
+		return 0;
+	}
 
 	struct SSpaceshipManager {
 		::gpk::apod<::gpk::SSpaceshipScore	>	ShipScores					= {}; // One per core
@@ -102,10 +131,10 @@ namespace gpk
 		::gpk::aobj<::gpk::au16				>	ShipParts					= {}; // One per core, each one mapping to a list of orbiters.
 
 		::gpk::apod<::gpk::SSpaceshipOrbiter>	Orbiters					= {};	// One per orbiter	
-		::gpk::aobj<::gpk::an3f32			>	WeaponDistanceToTargets		= {};	// One per orbiter, each one mapping to a list of orbiters
+		::gpk::apobj<::gpk::an3f32			>	WeaponDistanceToTargets		= {};	// One per orbiter, each one mapping to a list of orbiters
 		::gpk::apod<::gpk::SWeapon			>	Weapons						= {};	// One per orbiter	
 		::gpk::aobj<::gpk::SShots			>	Shots						= {};	// One per weapon
-		::gpk::aapod<::gpk::SHIP_ACTION		>	ShipOrbiterActionQueue		= {};
+		::gpk::apapod<::gpk::SHIP_ACTION	>	ShipOrbiterActionQueue		= {};
 
 		int32_t						Clear				()	{
 			::gpk::clear
@@ -157,15 +186,23 @@ namespace gpk
 			info_printf("Saved %s, %i", "ShipScores	", ShipScores	.size());
 			info_printf("Saved %s, %i", "ShipCores	", ShipCores	.size());
 	
+			// Orbiters
 			gpk_necs(::gpk::saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter)
-				gpk_necall(::gpk::saveView(output, ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
-
+			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size())
+					gpk_necall(::gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+				else
+					gpk_necall(::gpk::saveView(output, ::gpk::vc3f32{}), "iShipOrbiter: %i", iShipOrbiter);
+			}
+			// Weapons
 			gpk_necs(::gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
-				gpk_necall(::gpk::saveView(output, WeaponDistanceToTargets[iWeapon]), "iWeapon: %i", iWeapon);
+				if(WeaponDistanceToTargets[iWeapon] && WeaponDistanceToTargets[iWeapon]->size())
+					gpk_necall(::gpk::saveView(output, *WeaponDistanceToTargets[iWeapon]), "iWeapon: %i", iWeapon);
+				else
+					gpk_necall(::gpk::saveView(output, ::gpk::vc3f32{}), "iWeapon: %i", iWeapon);
 				gpk_necall(Shots[iWeapon].Save(output), "iWeapon: %i", iWeapon);
 			}
 			return 0; 
@@ -181,16 +218,17 @@ namespace gpk
 
 			Orbiters.clear();
 			gpk_necs(::gpk::loadView(input, Orbiters));
-			gpk_necs(ShipOrbiterActionQueue	.resize(Orbiters.size()));
-			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter)
-				gpk_necall(::gpk::loadView(input, ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+			gpk_necs(ShipOrbiterActionQueue.reserve(Orbiters.size()));
+			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
+				gpk_necs(::gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
+			}
 
 			Weapons.clear();
 			gpk_necs(::gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());
-			gpk_necs(WeaponDistanceToTargets.resize(Weapons.size()));
+			gpk_necs(WeaponDistanceToTargets.reserve(Weapons.size()));
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
-				gpk_necall(::gpk::loadView(input, WeaponDistanceToTargets[iWeapon]), "iWeapon: %i", iWeapon);
+				gpk_necs(::gpk::loadView(input, WeaponDistanceToTargets, iWeapon));
 				gpk_necall(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
 			}
 			return 0; 

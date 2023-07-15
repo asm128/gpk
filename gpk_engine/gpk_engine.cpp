@@ -286,11 +286,11 @@
 		});
 }
 
-::gpk::error_t			gpk::SEngine::CreateCylinder	(const ::gpk::SParamsCylinder & params, ::gpk::vcs entityName)	{ 
+::gpk::error_t			gpk::SEngine::CreateCylinderWall(const ::gpk::SParamsCylinderWall & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{8, "Cylinder"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinder
+	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{8, "Cylinder Wall"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsCylinderWall
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
+			gpk_necs(::gpk::geometryBuildCylinderWall(geometry, params));
 			return 0;
 		});
 }
@@ -303,11 +303,11 @@
 			return 0;
 		});
 }
-::gpk::error_t			gpk::SEngine::CreateRingFlat	(const ::gpk::SParamsRing & params, ::gpk::vcs entityName)	{ 
+::gpk::error_t			gpk::SEngine::CreateRingSide	(const ::gpk::SParamsRingSide & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= params.Radius.Max;
-	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{4, "Ring"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRing
+	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{4, "Ring Side"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildRingFlat(geometry, params));
+			gpk_necs(::gpk::geometryBuildRingSide(geometry, params));
 			return 0;
 		});
 }

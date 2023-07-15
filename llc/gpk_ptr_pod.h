@@ -10,7 +10,6 @@ namespace gpk
 	public:
 		typedef _tPOD			T;
 		typedef	::gpk::pnco<T>	TNCOPtr;
-		typedef	::gpk::pobj<T>	TPODtr;
 		typedef	::gpk::gref<T>	TRef;
 
 		using	TNCOPtr			::Reference;

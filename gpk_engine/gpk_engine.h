@@ -23,15 +23,17 @@ namespace gpk
 		::gpk::SVirtualEntityManager			Entities		;
 		::gpk::SRigidBodyIntegrator				Integrator		;
 
-		::gpk::lmpod<SParamsBox		, uint32_t>	ParamsBox		;
-		::gpk::lmpod<SParamsCircle	, uint32_t>	ParamsCircle	;
-		::gpk::lmpod<SParamsCylinder, uint32_t>	ParamsCylinder	;
-		::gpk::lmpod<SParamsHelix	, uint32_t>	ParamsFigure0	;
-		::gpk::lmpod<SParamsGrid	, uint32_t>	ParamsGrid		;
-		::gpk::lmpod<SParamsHelix	, uint32_t>	ParamsHelixHalf	;
-		::gpk::lmpod<SParamsHelix	, uint32_t>	ParamsHelix		;
-		::gpk::lmpod<SParamsSphere	, uint32_t>	ParamsSphere	;
-		::gpk::lmpod<SParamsRing	, uint32_t>	ParamsRing		;
+		::gpk::lmpod<SParamsBox			, uint32_t>	ParamsBox		;
+		::gpk::lmpod<SParamsCircle		, uint32_t>	ParamsCircle	;
+		::gpk::lmpod<SParamsCylinderWall, uint32_t>	ParamsCylinderWall	;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsFigure0	;
+		::gpk::lmpod<SParamsGrid		, uint32_t>	ParamsGrid		;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelixHalf	;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelix		;
+		::gpk::lmpod<SParamsSphere		, uint32_t>	ParamsSphere	;
+		::gpk::lmpod<SParamsRing		, uint32_t>	ParamsRing		;
+		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingSide	;
+
 		::gpk::lmpod<::gpk::vcc		, uint32_t>	Images			;
 
 		::gpk::SPNGData							PNGCache		= {};
@@ -148,15 +150,17 @@ namespace gpk
 		::gpk::error_t			CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t			CreateCamera		();
 
-		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateCylinder		(const ::gpk::SParamsCylinder	& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRing		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateCylinderWall	(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateRing			(const ::gpk::SParamsRing			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
+
 		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
 
 
@@ -166,12 +170,12 @@ namespace gpk
 		inline	::gpk::error_t	CreateBox			()	{ return CreateBox({}); }
 		inline	::gpk::error_t	CreateSphere		()	{ return CreateSphere({}); }
 
-		inline	::gpk::error_t	CreateCylinder		(uint16_t slices, bool reverse, float diameterRatio) { 
-			SParamsCylinder				params				= {};
+		inline	::gpk::error_t	CreateCylinderWall	(uint16_t slices, bool reverse, float diameterRatio) { 
+			SParamsCylinderWall				params				= {};
 			params.DiameterRatio	= diameterRatio;
 			params.CellCount		= {slices, 1};
 			params.Reverse			= reverse;
-			return CreateCylinder(params); 
+			return CreateCylinderWall(params); 
 		}
 
 		inline	::gpk::error_t	CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
