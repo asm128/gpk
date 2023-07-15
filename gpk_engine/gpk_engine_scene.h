@@ -173,11 +173,14 @@ namespace gpk
 	};
 
 	::gpk::error_t							drawScene
-		( ::gpk::g8bgra							backBufferColors
-		, ::gpk::gu32							backBufferDepth
-		, ::gpk::SEngineRenderCache				& renderCache
-		, const ::gpk::SEngineScene				& scene
-		, const ::gpk::SEngineSceneConstants	& constants
+		( ::gpk::g8bgra				backBufferColors
+		, ::gpk::gu32				backBufferDepth
+		, ::gpk::SEngineRenderCache	& renderCache
+		, const ::gpk::SEngineScene	& scene
+		, const ::gpk::n3f32		& cameraPosition
+		, const ::gpk::n3f32		& cameraTarget
+		, const ::gpk::n3f32		& cameraUp
+		, const ::gpk::minmaxf32	& nearFar
 		);
 
 } // namespace

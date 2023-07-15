@@ -1,4 +1,4 @@
-#include "gpk_n3.h"
+#include "gpk_minmax_n3.h"
 
 #ifndef GPK_CAMERA_H_23627
 #define GPK_CAMERA_H_23627

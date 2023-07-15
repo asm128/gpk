@@ -239,7 +239,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 		::gpk::rgbaf				color					= colors[iOrbiter];
 		const ::gpk::eid_t			entities[3]				= {entityMap.Orbits[iOrbiter], entityMap.GravityCenters[iOrbiter], entityMap.Bodies[iOrbiter]};
-		for(uint32_t i = 0; i < 2; ++i) {
+		for(uint32_t i = 0; i < 3; ++i) {
 			color.a					= i ? (i == 2) ? 1 : .25f : .125f;
 			gpk_necs(::initSkin(engine, color, iOrbiter, entities[i]));
 		}

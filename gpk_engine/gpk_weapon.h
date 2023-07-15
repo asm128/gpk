@@ -86,29 +86,53 @@ namespace gpk
 	};
 
 #pragma pack(push, 1)
+	GDEFINE_FLAG_TYPE(AMMO_CLASS, int32_t);
+	// these are the ammo classes that I can think of right now
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, None			,	0x00000UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Arrow		,	0x00001UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Bullet		,	0x00002UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Grenade		,	0x00004UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Rocket		,	0x00008UL);	
+	//
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Ray			,	0x00010UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Dart			,	0x00020UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Flame		,	0x00040UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Fluid		,	0x00080UL);	
+	//
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Shot			,	0x00100UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Knife		,	0x00200UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Rock			,	0x00400UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Shrapnel		,	0x00800UL);	
+	//
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Boomerang	,	0x01000UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Lightning	,	0x02000UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Hook			,	0x04000UL);	
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Wave			,	0x08000UL);	
+	//
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Blast		,	0x010000UL);
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Singularity	,	0x020000UL);
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Temporized	,	0x100000UL);
+	GDEFINE_FLAG_VALUE(AMMO_CLASS, Detonable	,	0x200000UL);
 
 	GDEFINE_ENUM_TYPE(WEAPON_ACTION, uint16_t);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Shoot		, 0x0);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Cooldown	, 0x1);
 	GDEFINE_ENUM_VALUE(WEAPON_ACTION, Target	, 0x2);
 
-	GDEFINE_ENUM_TYPE(WEAPON_DAMAGE, uint16_t);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Pierce	, 0x0);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Impact	, 0x1);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Wave		, 0x2);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Burn		, 0x4);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Shock		, 0x8);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Magnetic	, 0x10);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Radiation	, 0x20);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Poison	, 0x40);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Plasma	, 0x80);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Light		, 0x100);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Sound		, 0x200);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, EMP		, 0x400);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Gravity	, 0x800);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Health	, 0x1000);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Speed		, 0x2000);
-	GDEFINE_ENUM_VALUE(WEAPON_DAMAGE, Power		, 0x4000);
+	GDEFINE_ENUM_TYPE (DAMAGE_TYPE, uint16_t);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Pierce		, 0x0);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Impact		, 0x1);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Wave		, 0x2);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Burn		, 0x4);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Shock		, 0x8);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Magnetic	, 0x10);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Radiation	, 0x20);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Poison		, 0x40);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Plasma		, 0x80);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Light		, 0x100);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Sound		, 0x200);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, EMP			, 0x400);
+	GDEFINE_ENUM_VALUE(DAMAGE_TYPE, Gravity		, 0x800);
 
 	GDEFINE_ENUM_TYPE(WEAPON_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Gun			, 0);
@@ -120,9 +144,9 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Mothership	, 6);
 	GDEFINE_ENUM_VALUE(WEAPON_TYPE, Shield		, 7);
 
-	GDEFINE_ENUM_TYPE(WEAPON_LOAD, uint8_t);
+	GDEFINE_ENUM_TYPE (WEAPON_LOAD, uint8_t);
 	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Bullet		, 0);
-	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Shell		, 1);
+	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Shot		, 1);
 	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Ray			, 2);
 	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Cannonball	, 3);
 	GDEFINE_ENUM_VALUE(WEAPON_LOAD, Rocket		, 4);
@@ -134,9 +158,9 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(WEAPON_EFFECT, Pierce	, 0);
 
 	// One per value combination
-	struct SWeaponLoad {
+	struct SWeaponLoadDesc {
 		WEAPON_LOAD		Type				= {};//= WEAPON_LOAD_Bullet;
-		WEAPON_DAMAGE	DamageType			= {};//= WEAPON_DAMAGE_Pierce;
+		DAMAGE_TYPE		DamageType			= {};//= WEAPON_DAMAGE_Pierce;
 		uint8_t			ParticleCount		= {};//= 1;
 		float			Delay				= {};//= .1;
 		int32_t			Damage				= {};//= 1;
@@ -149,7 +173,7 @@ namespace gpk
 	// One per value combinatiom
 	struct SWeaponType {
 		WEAPON_TYPE		Type				= {};//= WEAPON_TYPE_Gun;
-		WEAPON_DAMAGE	DamageType			= {};//= WEAPON_DAMAGE_Pierce;
+		DAMAGE_TYPE		DamageType			= {};//= WEAPON_DAMAGE_Pierce;
 		int32_t			DamageMultiplier	= {};//= 1;
 		float			Cooldown			= {};//= 1;
 		float			Stability			= {};//= 1.0;
@@ -157,17 +181,17 @@ namespace gpk
 		float			SpeedMultiplier		= {};//= 150;
 	};
 
-	//struct SWeaponLoad {
-	//	gaugemaxf32		Delay				= {};	//= .1;
-	//	gaugemaxf32		Overheat			= {};	//= 1; aka Reload
-	//	bool			CoolingDown			= {};	//= false;
-	//};
+	struct SWeaponLoadState {
+		gaugemaxf32		Delay				= {};	//= .1;
+		gaugemaxf32		Overheat			= {};	//= 1; aka Reload
+		bool			CoolingDown			= {};	//= false;
+	};
 
 	// One per orbiter
 	struct SWeapon {
 		WEAPON_TYPE		Type				= {};	//= WEAPON_TYPE_Gun;
 		WEAPON_LOAD		Load				= {};	//= WEAPON_LOAD_Bullet;
-		WEAPON_DAMAGE	DamageType			= {};	//= WEAPON_DAMAGE_Pierce;
+		DAMAGE_TYPE		DamageType			= {};	//= WEAPON_DAMAGE_Pierce;
 		uint8_t			ParticleCount		= {};	//= 1;
 		gaugemaxf32		Delay				= {};	// Time in seconds between a shot and the next
 		gaugemaxf32		Overheat			= {};	// Cooldown/Reload time in seconds

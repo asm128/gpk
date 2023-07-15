@@ -67,17 +67,18 @@ static	::gpk::error_t	transformTriangles
 	const ::gpk::SGeometryMesh	& mesh					= *scene.Graphics->Meshes[renderNode.Mesh];
 	verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iRenderNode, renderNode.Mesh, renderNode.Slice, scene.Graphics->Meshes.Names[renderNode.Mesh].begin());
 
-	const ::gpk::SRenderNodeConstants	& transforms	= scene.RenderNodes.Transforms[iRenderNode];
-	const ::gpk::m4f32			& worldTransform		= transforms.Model;
-
-	const ::gpk::vc3f32			positions				= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
-	const ::gpk::vc3f32			normals					= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
-	const ::gpk::vc2f32			uv						= (mesh.GeometryBuffers.size() > 3) ? ::gpk::vc2f32	{(const ::gpk::n2f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::n2f32)}	: ::gpk::vc2f32{};
-
 
 	renderCache.VertexShaderOutput	= {};
 
 	if(mesh.GeometryBuffers.size()) {
+		::gpk::SRenderNodeConstants	transforms				= scene.RenderNodes.Transforms[iRenderNode];
+		const ::gpk::m4f32			& worldTransform		= transforms.Model;
+
+		const ::gpk::vc3f32			positions				= (mesh.GeometryBuffers.size() > 1) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[1]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
+		const ::gpk::vc3f32			normals					= (mesh.GeometryBuffers.size() > 2) ? ::gpk::vc3f32	{(const ::gpk::n3f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[2]]->Data.size() / sizeof(const ::gpk::n3f32)}	: ::gpk::vc3f32{};
+		const ::gpk::vc2f32			uv						= (mesh.GeometryBuffers.size() > 3) ? ::gpk::vc2f32	{(const ::gpk::n2f32*)scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[3]]->Data.size() / sizeof(const ::gpk::n2f32)}	: ::gpk::vc2f32{};
+
+		transforms.Model					= scene.RenderNodes.BaseTransforms[iRenderNode].Model * transforms.Model;
 		::gpk::pobj<::gpk::SRenderBuffer>	indexBuffer		= scene.Graphics->Buffers[mesh.GeometryBuffers[0]];
 		if(indexBuffer->Desc.Format.TotalBytes() == 1) {
 			const ::gpk::vcu8			indices					= ::gpk::vcu8{(const uint8_t*)indexBuffer->Data.begin(), scene.Graphics->Buffers[mesh.GeometryBuffers[0]]->Data.size() / sizeof(const uint8_t)};
@@ -151,8 +152,25 @@ static	::gpk::error_t	drawBuffers
 	, ::gpk::gu32							backBufferDepth
 	, ::gpk::SEngineRenderCache				& renderCache
 	, const ::gpk::SEngineScene				& scene
-	, const ::gpk::SEngineSceneConstants	& constants
+	, const ::gpk::n3f32		& cameraPosition
+	, const ::gpk::n3f32		& cameraTarget
+	, const ::gpk::n3f32		& cameraUp
+	, const ::gpk::minmaxf32	& nearFar
 ) {	//
+	const ::gpk::n3f32			cameraFront			= (cameraTarget - cameraPosition).Normalize();
+	const ::gpk::n2u16			offscreenMetrics	= backBufferColors.metrics16();
+
+	::gpk::SEngineSceneConstants	constants		= {};
+	constants.CameraPosition	= cameraPosition;
+	constants.CameraFront		= cameraFront;
+	constants.LightPosition		= {0, 0, 0};
+
+	constants.View.LookAt(cameraPosition, cameraTarget, cameraUp);
+	constants.Perspective.FieldOfView(.25 * ::gpk::math_pi, offscreenMetrics.x / (double)offscreenMetrics.y, nearFar.Min, nearFar.Max);
+	constants.Screen.ViewportLH(offscreenMetrics);
+	constants.VP			= constants.View * constants.Perspective;
+	constants.VPS			= constants.VP * constants.Screen;
+
 	static ::std::function<::gpk::TFuncPixelShader>	defaultShader			= {::gpk::psSolid};
 	for(uint32_t iRenderNode = 0, countNodes = scene.RenderNodes.RenderNodes.size(); iRenderNode < countNodes; ++iRenderNode) {
 		const ::gpk::SRenderNodeFlags	& renderNodeFlags		= scene.RenderNodes.Flags[iRenderNode];
@@ -183,7 +201,6 @@ static	::gpk::error_t	drawBuffers
 		drawBuffers(backBufferColors, backBufferDepth, renderCache.VertexShaderOutput, renderCache.VertexShaderCache, material, {(const ::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u32()}, constants, transforms, fx);
 	}
 
-	const ::gpk::n2<uint16_t>					offscreenMetrics		= backBufferColors.metrics().u16();
 	::gpk::apod<::gpk::n3f32>					& wireframePixelCoords	= renderCache.VertexShaderCache.WireframePixelCoords;
 
 	// ---- Draw axis vectors at the origin (0, 0, 0)
