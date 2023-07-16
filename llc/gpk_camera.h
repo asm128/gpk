@@ -7,7 +7,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SCameraPoints {
-		::gpk::n3f32		Position	= {-0.5f, .05f, -.125f};
+		::gpk::n3f32		Position	= {-0.45f, .05f, -.125f};
 		::gpk::n3f32		Target		= {};
 	};
 
