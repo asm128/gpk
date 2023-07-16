@@ -28,10 +28,10 @@ enum SQUARE_MODE
 	};
 
 template<typename _tIndex>
-static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u16 cellCount, bool clockwise, bool outward) {
+static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u16 cellCount, bool counterClockwise, bool outward) {
 	const uint16_t				pitch						= cellCount.x + 1;								// 2 3 
 	const uint16_t				totalVertices				= pitch * (cellCount.y + 1); 
-	const ::gpk::astu32<4>		indices						= clockwise ? ::gpk::astu32<4>{{0U, 1U, pitch, uint32_t(pitch + 1U)}} : ::gpk::astu32<4>{{1U, 0U, uint32_t(pitch + 1U), pitch}};	// 0 1 2 3
+	const ::gpk::astu32<4>		indices						= counterClockwise ? ::gpk::astu32<4>{{1U, 0U, uint32_t(pitch + 1U), pitch}} : ::gpk::astu32<4>{{0U, 1U, pitch, uint32_t(pitch + 1U)}};	// 0 1 2 3
 	const uint32_t				indices_modes[2][6]			=
 		{ {indices[0], indices[2], indices[3], indices[0], indices[3], indices[1]}
 		, {indices[0], indices[2], indices[1], indices[1], indices[2], indices[3]}
