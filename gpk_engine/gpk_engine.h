@@ -172,7 +172,7 @@ namespace gpk
 
 		inline	::gpk::error_t	CreateCylinderWall	(uint16_t slices, bool reverse, float diameterRatio) { 
 			SParamsCylinderWall				params				= {};
-			params.DiameterRatio	= diameterRatio;
+			params.Circumference	= diameterRatio;
 			params.CellCount		= {slices, 1};
 			params.Reverse			= reverse;
 			return CreateCylinderWall(params); 

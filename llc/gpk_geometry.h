@@ -29,53 +29,53 @@ namespace gpk
 		::gpk::n3f32		Origin			= {};
 		::gpk::n2u16		CellCount		= {32, 32};
 		bool				Reverse			= false;
-		float				DiameterRatio	= 1.0f;
+		float				Circumference	= 1.0f;
 		float				Radius			= .5f;
 	
-		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+		GPK_DEFAULT_OPERATOR(SParamsSphere, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius);
 	};
 
 	struct SParamsCircle { 
 		::gpk::n3f32		Origin			= {};
 		uint16_t			Slices			= 16;
 		bool				Reverse			= false;
-		float				DiameterRatio	= 1.0f;
+		float				Circumference	= 1.0f;
 		float				Radius			= .5f;
 	
-		GPK_DEFAULT_OPERATOR(SParamsCircle, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+		GPK_DEFAULT_OPERATOR(SParamsCircle, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius);
 	};
 
 	struct SParamsRingSide { 
 		::gpk::n3f32		Origin			= {};
 		uint16_t			Slices			= 16;
 		bool				Reverse			= false;
-		float				DiameterRatio	= 1.0f;
+		float				Circumference	= 1.0f;
 		::gpk::minmaxf32	Radius			= {.45f, .5f};
 	
-		GPK_DEFAULT_OPERATOR(SParamsRingSide, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius);
+		GPK_DEFAULT_OPERATOR(SParamsRingSide, Origin == other.Origin && Slices == other.Slices && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius);
 	};
 
 	struct SParamsRing { 
 		::gpk::n3f32		Origin			= {};
 		::gpk::n2u16		CellCount		= {16, 1};
 		bool				Reverse			= false;
-		float				DiameterRatio	= 1.0f;
+		float				Circumference	= 1.0f;
 		::gpk::minmaxf32	RadiusYMin		= {.45f, .5f};
 		::gpk::minmaxf32	RadiusYMax		= {.45f, .5f};
 		float				Height			= 1;
 
-		GPK_DEFAULT_OPERATOR(SParamsRing, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && RadiusYMin == other.RadiusYMin && RadiusYMax == other.RadiusYMax && Height == other.Height);
+		GPK_DEFAULT_OPERATOR(SParamsRing, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && RadiusYMin == other.RadiusYMin && RadiusYMax == other.RadiusYMax && Height == other.Height);
 	};
 
 	struct SParamsCylinderWall { 
 		::gpk::n3f32		Origin			= {};
 		::gpk::n2u16		CellCount		= {16, 2};
 		bool				Reverse			= false;
-		float				DiameterRatio	= 1.0f;
+		float				Circumference	= 1.0f;
 		::gpk::minmaxf32	Radius			= {.5f, .5f};
 		float				Height			= 1;
 
-		GPK_DEFAULT_OPERATOR(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && DiameterRatio == other.DiameterRatio && Radius == other.Radius && Height == other.Height); 
+		GPK_DEFAULT_OPERATOR(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius && Height == other.Height); 
 	};
 
 	struct SParamsGrid { 
