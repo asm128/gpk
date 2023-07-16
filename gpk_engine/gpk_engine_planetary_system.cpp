@@ -45,7 +45,7 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 static	::gpk::error_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(5, "psOrbit")) {	// Gravity cemters
 	::gpk::SParamsRingSide		params					= {{}, 32};
 	int32_t						iEntity;
-	gpk_necs(iEntity = engine.CreateRingSide(params));
+	gpk_necs(iEntity = engine.CreateRingFlat(params));
 	gpk_necs(engine.SetColorDiffuse	(iEntity, {1.0f, 1.0f, 1.0f, .5}));
 	gpk_necs(engine.SetShader		(iEntity, ::gpk::psGridRuler, shaderName));
 	return iEntity;

@@ -33,6 +33,7 @@ namespace gpk
 		::gpk::lmpod<SParamsSphere		, uint32_t>	ParamsSphere	;
 		::gpk::lmpod<SParamsRing		, uint32_t>	ParamsRing		;
 		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingSide	;
+		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingFlat	;
 
 		::gpk::lmpod<::gpk::vcc		, uint32_t>	Images			;
 
@@ -156,42 +157,13 @@ namespace gpk
 		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle			& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateRing			(const ::gpk::SParamsRing			& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = {});
+		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
 		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
 
 		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
-
-
-		::gpk::error_t			CreateRing			();
-		::gpk::error_t			CreateTriangle		();
-
-		inline	::gpk::error_t	CreateBox			()	{ return CreateBox({}); }
-		inline	::gpk::error_t	CreateSphere		()	{ return CreateSphere({}); }
-
-		inline	::gpk::error_t	CreateCylinderWall	(uint16_t slices, bool reverse, float diameterRatio) { 
-			SParamsCylinderWall				params				= {};
-			params.Circumference	= diameterRatio;
-			params.CellCount		= {slices, 1};
-			params.Reverse			= reverse;
-			return CreateCylinderWall(params); 
-		}
-
-		inline	::gpk::error_t	CreateGrid			(::gpk::n2u16 cellCount, bool topRight) { 
-			SParamsGrid					params				= {};
-			params.Origin			= {.5f, .5f};
-			params.CellCount		= cellCount;
-			params.Outward			= topRight;
-			return CreateGrid(params); 
-		}
-
-		inline	::gpk::error_t	CreateHelix			(::gpk::n2u16 cellCount) { 
-			SParamsHelix				params				= {};
-			params.Origin.y			= .5f;
-			params.CellCount		= cellCount;
-			return CreateHelix(params); 
-		}
 
 		typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;
 

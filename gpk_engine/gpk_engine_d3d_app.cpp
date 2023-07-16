@@ -41,44 +41,61 @@
 	return 0;
 }
 
+static	::gpk::error_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeManager, uint32_t iNode, const ::gpk::SEngineSceneConstants & constants, ::gpk::SRenderNodeConstants	& nodeConstants) {
+	nodeConstants			= nodeManager.Transforms[iNode];
 
-::gpk::error_t						gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar)	{
-	::gpk::n3f32							cameraFront						= (cameraTarget - cameraPosition).Normalize();
+	nodeConstants.Model					= nodeManager.BaseTransforms[iNode].Model * nodeConstants.Model;
+	nodeConstants.ModelInverse			= nodeConstants.Model.GetInverse();
+	nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverse.GetTranspose();
+	nodeConstants.MVP					= nodeConstants.Model * constants.View * constants.Perspective;
 
-	::gpk::SEngineSceneConstants			& constants						= d3dScene.ConstantBufferScene;
-	constants.CameraPosition			= cameraPosition;
-	constants.CameraFront				= cameraFront;
-	constants.LightPosition				= lightPos;
-	constants.LightDirection			= {0, -1, 0};
+	nodeConstants.Model					= nodeConstants.Model.GetTranspose();
+	nodeConstants.ModelInverse			= nodeConstants.ModelInverse.GetTranspose();
+	nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverseTranspose.GetTranspose();
+	nodeConstants.MVP					= nodeConstants.MVP.GetTranspose();
+	nodeConstants.NodeSize				= nodeManager.BaseTransforms[iNode].NodeSize; // Have to update this some other way.
+	return 0;
+}
+
+::gpk::error_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar)	{
+	::gpk::n3f32				cameraFront				= (cameraTarget - cameraPosition).Normalize();
+
+	::gpk::SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;
+	constants.CameraPosition= cameraPosition;
+	constants.CameraFront	= cameraFront;
+	constants.LightPosition	= lightPos;
+	constants.LightDirection= {0, -1, 0};
 
 	constants.View.LookAt(cameraPosition, cameraTarget, {0, 1, 0});
 	constants.Perspective.FieldOfView(.25 * ::gpk::math_pi, targetMetrics.x / (double)targetMetrics.y, nearFar.Min, nearFar.Max);
 	constants.Screen.ViewportLH(targetMetrics);
-	constants.VP						= constants.View * constants.Perspective;
-	constants.VPS						= constants.VP * constants.Screen;
+	constants.VP			= constants.View * constants.Perspective;
+	constants.VPS			= constants.VP * constants.Screen;
 
+	::gpk::au32								solid;
+	::gpk::au32								alpha;
 	for(uint32_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
 		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
-		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		if(flags.NoDraw)
 			continue;
 
+		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		if(node.Mesh >= engineScene.Graphics->Meshes.size())
 			continue;
 
-		::gpk::SRenderNodeConstants				nodeConstants					= engineScene.RenderNodes.Transforms[iNode];
-
-		nodeConstants.Model					= engineScene.RenderNodes.BaseTransforms[iNode].Model * nodeConstants.Model;
-		nodeConstants.ModelInverse			= nodeConstants.Model.GetInverse();
-		nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverse.GetTranspose();
-		nodeConstants.MVP					= (nodeConstants.Model * constants.View * constants.Perspective).GetTranspose();
-
-		nodeConstants.Model					= nodeConstants.Model.GetTranspose();
-		nodeConstants.ModelInverseTranspose	= nodeConstants.ModelInverseTranspose.GetTranspose();
-		nodeConstants.NodeSize				= engineScene.RenderNodes.BaseTransforms[iNode].NodeSize; // Have to update this some other way.
+		const ::gpk::SSkin						& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		if(skin.Material.Color.Diffuse.a < 1)
+			alpha.push_back(iNode);
+		else
+			solid.push_back(iNode);
+	}
+	for(uint32_t iSolid = 0; iSolid < solid.size(); ++iSolid) {
+		uint32_t								iNode							= solid[iSolid];
+		::gpk::SRenderNodeConstants				nodeConstants;
+		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
 		
+		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
 		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
-		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
 
 		uint32_t				indexCount			= 0;
 		if(mesh.GeometryBuffers.size() > 0) {
@@ -90,8 +107,30 @@
 		const ::gpk::SGeometrySlice				slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
 		nodeConstants.Material				= skin.Material;
 
+		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
 		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
+	for(uint32_t iAlpha  = 0; iAlpha < alpha.size(); ++iAlpha) {
+		uint32_t								iNode							= alpha[iAlpha];
+		::gpk::SRenderNodeConstants				nodeConstants;
+		getNodeTransform(engineScene.RenderNodes, iNode, constants, nodeConstants);
+		
+		const ::gpk::SRenderNode				& node							= engineScene.RenderNodes.RenderNodes[iNode];
+		const ::gpk::SGeometryMesh				& mesh							= *engineScene.Graphics->Meshes[node.Mesh];
+		uint32_t				indexCount			= 0;
+		if(mesh.GeometryBuffers.size() > 0) {
+			auto					pindices			= engineScene.Graphics->Buffers[mesh.GeometryBuffers[0]];
+			indexCount			= pindices->Data.size() / pindices->Desc.Format.TotalBytes();
+		}
+
+		const ::gpk::SSkin			& skin							= *engineScene.Graphics->Skins.Elements[node.Skin];
+		const ::gpk::SGeometrySlice	slice							= (node.Slice < mesh.GeometrySlices.size()) ? mesh.GeometrySlices[node.Slice] : ::gpk::SGeometrySlice{{0, indexCount / 3}};
+		nodeConstants.Material	= skin.Material;
+
+		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
+		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
+	}
+
 	return 0;
 }
 

@@ -17,12 +17,6 @@ namespace gpk
 		::gpk::n3f32	Rotation	;
 		::gpk::n3f32	Position	;
 	};
-
-	//struct SCamera {
-	//	::gpk::n3f32	Position	= {-0.000001f, 100, 0};
-	//	::gpk::n3f32	Target		= {};
-	//	::gpk::n3f32	Up			= {0, 1, 0};
-	//};
 #pragma pack(pop)
 } // namespace
 

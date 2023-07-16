@@ -56,15 +56,6 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::SEngine::CreateRing		()	{ 	
-	int32_t						iEntity							= this->Entities.Create();
-	return iEntity;
- }
-::gpk::error_t			gpk::SEngine::CreateTriangle	()	{ 	
-	int32_t						iEntity							= this->Entities.Create();
-	return iEntity;
- }
-
 ::gpk::error_t			gpk::SEngine::CreateLight(::gpk::LIGHT_TYPE type) {
 	int32_t							iEntity				= this->Entities.Create();
 	::gpk::SVirtualEntity			& entity			= Entities[iEntity];
@@ -308,6 +299,14 @@
 	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{9, "Ring Side"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(::gpk::geometryBuildRingSide(geometry, params));
+			return 0;
+		});
+}
+::gpk::error_t			gpk::SEngine::CreateRingFlat	(const ::gpk::SParamsRingSide & params, ::gpk::vcs entityName)	{ 
+	const float					radius							= params.Radius.Max;
+	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{9, "Ring flat"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingFlat
+		, [params](::gpk::SGeometryBuffers & geometry) { 
+			gpk_necs(::gpk::geometryBuildRingFlat(geometry, params));
 			return 0;
 		});
 }

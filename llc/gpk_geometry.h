@@ -81,10 +81,11 @@ namespace gpk
 	struct SParamsGrid { 
 		::gpk::n2f32		Origin			= {.5f, .5f};
 		::gpk::n2u16		CellCount		= {9, 9};
+		bool				Reverse			= false;
 		bool				Outward			= false;
 		::gpk::n2f32		Size			= {1, 1};
 
-		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Outward == other.Outward && Size == other.Size); 
+		GPK_DEFAULT_OPERATOR(SParamsGrid, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Outward == other.Outward && Size == other.Size); 
 	};
 
 	struct SParamsHelix { 
@@ -106,6 +107,7 @@ namespace gpk
 	::gpk::error_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
 	::gpk::error_t		geometryBuildFigure0		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);
 	::gpk::error_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
+	::gpk::error_t		geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
 	::gpk::error_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing			& params);
 
 } // namespace

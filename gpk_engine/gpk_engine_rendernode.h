@@ -1,6 +1,7 @@
 #include "gpk_engine_rendercolor.h"
 #include "gpk_array_ptr.h"
 #include "gpk_matrix.h"
+#include "gpk_camera.h"
 
 #ifndef GPK_ENGINE_RENDERNODE_H_23627
 #define GPK_ENGINE_RENDERNODE_H_23627
@@ -72,12 +73,7 @@ namespace gpk
 		uint16_t				Index;
 	};
 
-	struct SCamera {
-		::gpk::n3f32			Front	= {1, 0, 0};
-		::gpk::n3f32			Right	= {0, 0, 1};
-		::gpk::n3f32			Up		= {0, 1, 0};
-		double					Angle	= .25 * ::gpk::math_pi;
-	};
+	struct SCamera : SCameraPoints, SCameraRange, SCameraVectors {};
 #pragma pack(pop)
 
 	struct SRenderNodeManager {

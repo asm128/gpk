@@ -87,7 +87,8 @@ namespace gpk
 			context->RSSetState(RasterizerState[alpha ? 1 : 0]);
 	
 			context->OMSetBlendState(BlendState[alpha ? 1 : 0], 0, 0xFFFFFFFF);
-			context->OMSetDepthStencilState(DepthStencilState[alpha ? 1 : 0], 0xFF);
+			//context->OMSetDepthStencilState(DepthStencilState[alpha ? 1 : 0], 0xFF);
+			context->OMSetDepthStencilState(DepthStencilState[0], 0xFF);
 
 			context->DrawIndexed(indexRange.Count, indexRange.Offset, 0);	// Draw the objects.
 		}

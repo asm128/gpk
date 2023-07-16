@@ -12,13 +12,13 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(PLAYER_MODE, Human		, 1);
 
 	struct SPlayerInventory {
-		uint32_t			OffsetStage			= 0;
-		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
+		//::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
 
 	struct SGamePlayer {
-		uint32_t			OffsetStage			= 0;
+		::gpk::vcc			Name				= "Player 1";
 		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
+		uint32_t			Color				= 0xFFFF0000;
 	};
 
 	GDEFINE_ENUM_TYPE(PLAY_MODE, uint8_t);
