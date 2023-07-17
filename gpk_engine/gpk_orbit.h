@@ -26,9 +26,9 @@ namespace gpk
 	stincxp	double			degreesToRadians		(double degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
 
 	// Calculate the axial inclination of the planet IN RADIANS
-	template<typename __tAxis>
-	static ::gpk::error_t	orientationFromEuler	(::gpk::AXIS iAxis, double axialTilt, ::gpk::quat<__tAxis> & orientation) {
-		const __tAxis				rotationValue			= __tAxis(degreesToRadians(axialTilt));
+	template<typename _tAxis>
+	static ::gpk::error_t	orientationFromEuler	(::gpk::AXIS iAxis, double axialTilt, ::gpk::quat<_tAxis> & orientation) {
+		const _tAxis				rotationValue			= _tAxis(degreesToRadians(axialTilt));
 		switch(iAxis) {
 		case ::gpk::AXIS_X_NEGATIVE: orientation.MakeFromEuler(-rotationValue, 0, 0); break;
 		case ::gpk::AXIS_X_POSITIVE: orientation.MakeFromEuler( rotationValue, 0, 0); break;

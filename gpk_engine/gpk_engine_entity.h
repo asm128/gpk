@@ -49,15 +49,14 @@ namespace gpk
 		}
 
 		::gpk::error_t					SetParent		(uint32_t index, int32_t indexParent) {
-			for(uint32_t iParent = 0; iParent < Entities.size(); ++iParent) {
-				if(Children[iParent]) {
-					const int32_t						oldChild		= Children[iParent]->find(index);
-					if(-1 != oldChild)
-						Children[iParent]->remove(oldChild);
-				}
+			::gpk::eid_t						& oldParent		= Entities[index].Parent;
+			if(oldParent < Entities.size() && Children[oldParent]) {
+				const int32_t						oldIndex		= Children[oldParent]->find(index);
+				if(oldIndex >= 0)
+					Children[oldParent]->remove(oldIndex);
 			}
-			Entities[index].Parent			= indexParent;
-			return (indexParent == -1) ? 0 : Children[indexParent]->push_back(index);
+			oldParent						= indexParent;
+			return (indexParent < 0) ? 0 : Children[indexParent]->push_back(index);
 		}
 
 		::gpk::error_t					Save			(::gpk::au8 & output) const { 

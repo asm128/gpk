@@ -245,6 +245,6 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 	}
 
-	//engine.Update(365);
+	engine.Update(365);
 	return 0;
 }
