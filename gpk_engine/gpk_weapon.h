@@ -1,8 +1,8 @@
+#include "gpk_gauge.h"
+
 #include "gpk_particle.h"
 #include "gpk_enum.h"
-#include "gpk_array.h"
 #include "gpk_apod_serialize.h"
-#include "gpk_gauge.h"
 
 #ifndef GPK_WEAPON_H
 #define GPK_WEAPON_H
@@ -245,6 +245,37 @@ namespace gpk
 		int64_t		OverheatTime	= 0;
 	};
 #pragma pack(pop)
+
+	struct SWeaponManager {
+		::gpk::apod<::gpk::SWeapon>	Weapons			= {};	// 
+		::gpk::aobj<::gpk::SShots >	Shots			= {};	// One per weapon
+		::gpk::apobj<::gpk::an3f32>	WeaponTargets	= {};	// One per weapon
+
+		int32_t						Clear					()		{ ::gpk::clear(Weapons, Shots, WeaponTargets); return 0; }
+		::gpk::error_t				Save					(::gpk::au8 & output)	const	{ 
+			gpk_necs(::gpk::saveView(output, Weapons));
+			info_printf("Saved %s, %i", "Weapons", Weapons.size());
+			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+				if(WeaponTargets[iWeapon] && WeaponTargets[iWeapon]->size())
+					gpk_necall(::gpk::saveView(output, *WeaponTargets[iWeapon]), "iWeapon: %i", iWeapon);
+				else
+					gpk_necall(::gpk::saveView(output, ::gpk::vc3f32{}), "iWeapon: %i", iWeapon);
+				gpk_necall(Shots[iWeapon].Save(output), "iWeapon: %i", iWeapon);
+			}
+			return 0;
+		}
+		::gpk::error_t				Load				(::gpk::vcu8 & input) { 
+			Weapons.clear();
+			gpk_necs(::gpk::loadView(input, Weapons));
+			Shots.resize(Weapons.size());
+			gpk_necs(WeaponTargets.reserve(Weapons.size()));
+			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
+				gpk_necs(::gpk::loadView(input, WeaponTargets, iWeapon));
+				gpk_necall(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
+			}
+			return 0;
+		}
+	};
 } // namespace
 
 #endif // GPK_GALAXY_HELL_WEAPON_H

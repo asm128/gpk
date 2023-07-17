@@ -6,7 +6,6 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(PLAYER_MODE, uint8_t);
 	GDEFINE_ENUM_VALUE(PLAYER_MODE, AI			, 0);
 	GDEFINE_ENUM_VALUE(PLAYER_MODE, Human		, 1);
@@ -25,6 +24,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(PLAY_MODE, Offline		, 0);
 	GDEFINE_ENUM_VALUE(PLAY_MODE, Online		, 1);
 
+#pragma pack(push, 1)
 	struct SGameSetup {
 		uint32_t			OffsetStage			= 0;
 		::gpk::PLAY_MODE	PlayMode			= (::gpk::PLAY_MODE)::gpk::PLAY_MODE_Offline;
@@ -36,9 +36,9 @@ namespace gpk
 		bool				Paused				= false;
 		double				CameraSwitchDelay	= 0;
 	};
+#pragma pack(pop)
 
 	typedef ::gpk::apod<SStageState>	astagestate;
-#pragma pack(pop)
 
 	struct SGame {
 		SGameSetup			Setup				= {};

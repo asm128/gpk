@@ -14,6 +14,20 @@ namespace gpk
 		::gpk::SCelestialBodyMap			Body;
 		::gpk::apod<::gpk::CELESTIAL_BODY>	Type;
 		::gpk::ai32							Parent;
+
+		::gpk::error_t				Save			(::gpk::au8 & output)	const	{ 
+			gpk_necs(Body.Save(output));
+			gpk_necs(::gpk::saveView(output, Type));
+			gpk_necs(::gpk::saveView(output, Parent));
+			return 0;
+		}
+
+		::gpk::error_t				Load			(::gpk::vcu8 & input)	{ 
+			gpk_necs(Body.Load(input));
+			gpk_necs(::gpk::loadView(input, Type));
+			gpk_necs(::gpk::loadView(input, Parent));
+			return 0;
+		}
 	};
 
 	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
