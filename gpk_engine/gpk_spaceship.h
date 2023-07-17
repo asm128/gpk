@@ -99,27 +99,29 @@ namespace gpk
 	};
 #pragma pack(pop)
 	template<typename _tPOD> 
-	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+	::gpk::error_t			loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		gpk_necall(::gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
-			if(index < output.size()) {
-				::gpk::papod<_tPOD>	& block	= output[index];
+			if(index >= output.size()) 
+				gpk_necall(output.resize(index + 1), "index: %i", index);
+			else {
+				::gpk::papod<_tPOD>			& block				= output[index];
 				if(block)
 					block->clear();
 			}
 		}
 		else {
 			if(index >= output.size()) {
-				::gpk::papod<_tPOD>	block;
-				*block.create()		= viewToLoad;
+				::gpk::papod<_tPOD>			block;
+				*block.create()			= viewToLoad;
 				gpk_necall(output.push_back(block), "index: %i", index);
 			}
 			else {
-				::gpk::papod<_tPOD>	& block	= output[index];
+				::gpk::papod<_tPOD>			& block				= output[index];
 				if(!block)
 					block.create();
-				*block				= viewToLoad;
+				*block					= viewToLoad;
 			}
 		}
 		return 0;

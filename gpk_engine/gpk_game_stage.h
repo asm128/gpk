@@ -5,7 +5,6 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
 	GDEFINE_ENUM_TYPE(MATCH_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Free			, 0);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Survival		, 1);
@@ -13,19 +12,12 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Deathmatch	, 3);
 	GDEFINE_ENUM_VALUE(MATCH_TYPE, Tactical		, 4);
 
-	//GDEFINE_ENUM_TYPE(SCENE_TYPE, uint8_t);Likely not needed
-	//GDEFINE_ENUM_VALUE(SCENE_TYPE, OuterSpace	, 0);
-	//GDEFINE_ENUM_VALUE(SCENE_TYPE, Planetary	, 1);
-	//GDEFINE_ENUM_VALUE(SCENE_TYPE, Submarine	, 2);
-
+#pragma pack(push, 1)
 	struct SStageSetup {
-		uint16_t			CountPlayers			= {};
+		uint64_t			Seed					= {};
+		uint16_t			Players					= {};
 		MATCH_TYPE			MatchType				= {};
 		MATCH_TYPE			MatchFlags				= {};
-		uint32_t			Padding					= {};
-		uint64_t			Seed					= {};
-		//SCENE_TYPE			SceneType				= {};
-		//SCENE_TYPE			SceneFlags				= {};
 	};
 
 	struct SStageTime {
@@ -38,6 +30,20 @@ namespace gpk
 		double				RelativeSpeedTarget		= 20;
 		double				RelativeSpeedCurrent	= -50;
 		double				AccelerationControl		= 0;
+
+		double				Update					(double seconds, double relativeAcceleration) {
+			if(AccelerationControl > 0)
+				RelativeSpeedCurrent	+= seconds * relativeAcceleration;
+			else if(AccelerationControl < 0)
+				RelativeSpeedCurrent	-= seconds * relativeAcceleration;
+			else { // == 0
+				if(RelativeSpeedCurrent > RelativeSpeedTarget)
+					RelativeSpeedCurrent	-= seconds * relativeAcceleration;
+				else if(RelativeSpeedCurrent < RelativeSpeedTarget)
+					RelativeSpeedCurrent	+= seconds * relativeAcceleration;
+			}
+			return RelativeSpeedCurrent;
+		}
 	};
 
 	struct SRelativeTime {

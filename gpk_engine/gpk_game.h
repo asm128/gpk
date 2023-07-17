@@ -14,20 +14,21 @@ namespace gpk
 		//::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
 
-	struct SGamePlayer {
+	struct SPlayer {
 		::gpk::vcc			Name				= "Player 1";
-		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 		uint32_t			Color				= 0xFFFF0000;
+		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
 
-	GDEFINE_ENUM_TYPE(PLAY_MODE, uint8_t);
-	GDEFINE_ENUM_VALUE(PLAY_MODE, Offline		, 0);
-	GDEFINE_ENUM_VALUE(PLAY_MODE, Online		, 1);
+	GDEFINE_ENUM_TYPE(NETWORK_MODE, uint8_t);
+	GDEFINE_ENUM_VALUE(NETWORK_MODE, Offline, 0);
+	GDEFINE_ENUM_VALUE(NETWORK_MODE, LAN	, 1);
+	GDEFINE_ENUM_VALUE(NETWORK_MODE, Online	, 2);
 
 #pragma pack(push, 1)
 	struct SGameSetup {
 		uint32_t			OffsetStage			= 0;
-		::gpk::PLAY_MODE	PlayMode			= (::gpk::PLAY_MODE)::gpk::PLAY_MODE_Offline;
+		::gpk::NETWORK_MODE	NetworkMode			= ::gpk::NETWORK_MODE_Offline;
 	};
 
 	struct SGameState {
