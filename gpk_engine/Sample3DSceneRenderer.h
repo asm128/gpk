@@ -87,8 +87,7 @@ namespace gpk
 			context->RSSetState(RasterizerState[alpha ? 1 : 0]);
 	
 			context->OMSetBlendState(BlendState[alpha ? 1 : 0], 0, 0xFFFFFFFF);
-			//context->OMSetDepthStencilState(DepthStencilState[alpha ? 1 : 0], 0xFF);
-			context->OMSetDepthStencilState(DepthStencilState[0], 0xFF);
+			context->OMSetDepthStencilState(DepthStencilState[alpha ? 1 : 0], 0xFF);
 
 			context->DrawIndexed(indexRange.Count, indexRange.Offset, 0);	// Draw the objects.
 		}
@@ -263,11 +262,28 @@ namespace gpk
 				gpk_hrcall(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
 				DepthStencilState.push_back(depthStencilState);
 			}
+			{ // alpha
+				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
+				depthStencilDesc.DepthEnable		= TRUE;
+				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ZERO;
+				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
+				depthStencilDesc.StencilEnable		= 0;
+				depthStencilDesc.StencilReadMask	= D3D11_DEFAULT_STENCIL_READ_MASK;
+				depthStencilDesc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;
+
+				depthStencilDesc.FrontFace.StencilFunc			= D3D11_COMPARISON_ALWAYS;
+				depthStencilDesc.FrontFace.StencilDepthFailOp	= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilPassOp		= D3D11_STENCIL_OP_KEEP;
+				depthStencilDesc.FrontFace.StencilFailOp		= D3D11_STENCIL_OP_KEEP;
+				::gpk::pcom<ID3D11DepthStencilState>	depthStencilState;
+				gpk_hrcall(d3dDevice->CreateDepthStencilState(&depthStencilDesc, &depthStencilState));
+				DepthStencilState.push_back(depthStencilState);
+			}
 			{ // disabled
 				D3D11_DEPTH_STENCIL_DESC		depthStencilDesc				= {};
 				depthStencilDesc.DepthEnable		= 0;
-				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ALL;
-				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_LESS;
+				depthStencilDesc.DepthWriteMask		= D3D11_DEPTH_WRITE_MASK_ZERO;
+				depthStencilDesc.DepthFunc			= D3D11_COMPARISON_NEVER;
 				depthStencilDesc.StencilEnable		= 0;
 				depthStencilDesc.StencilReadMask	= D3D11_DEFAULT_STENCIL_READ_MASK;
 				depthStencilDesc.StencilWriteMask	= D3D11_DEFAULT_STENCIL_WRITE_MASK;

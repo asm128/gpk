@@ -30,8 +30,8 @@ namespace gpk
 
 		::gpk::apobj<::gpk::aeid>		Children		= {};
 
-		const ::gpk::SVirtualEntity&	operator[]		(uint32_t index)	const	{ return Entities[index]; }
-		SVirtualEntity&					operator[]		(uint32_t index)			{ return Entities[index]; }
+		const ::gpk::SVirtualEntity&	operator[]		(uint32_t id)		const	{ return Entities[id]; }
+		SVirtualEntity&					operator[]		(uint32_t id)				{ return Entities[id]; }
 
 		uint32_t						size			()					const	{ return Names.size(); }
 		uint32_t						clear			()							{ ::gpk::clear(Entities, Names, Children); return 0; }
@@ -42,21 +42,28 @@ namespace gpk
 			return Entities.push_back({});
 		}
 
-		::gpk::error_t					Delete			(uint32_t index) {
-			Children.remove_unordered(index);
-			Names.remove_unordered(index);
-			return Entities.remove_unordered(index);
+		::gpk::error_t					Delete			(uint32_t id) {
+			Children.remove_unordered(id);
+			Names.remove_unordered(id);
+			return Entities.remove_unordered(id);
 		}
 
-		::gpk::error_t					SetParent		(uint32_t index, int32_t indexParent) {
-			::gpk::eid_t						& oldParent		= Entities[index].Parent;
+		::gpk::error_t					GetIndexParent	(uint32_t id)					const	{ return Entities[id].Parent; }
+		::gpk::error_t					GetIndexChild	(uint32_t id, int32_t iChild)	const	{ return (*Children[id])[iChild]; }
+		const ::gpk::SVirtualEntity&	GetParent		(uint32_t id)					const	{ return Entities[GetIndexParent(id)]; }
+		const ::gpk::SVirtualEntity&	GetChild		(uint32_t id, int32_t iChild)	const	{ return Entities[GetIndexChild	(id, iChild)]; }
+		SVirtualEntity&					GetParent		(uint32_t id)							{ return Entities[GetIndexParent(id)]; }
+		SVirtualEntity&					GetChild		(uint32_t id, int32_t iChild)			{ return Entities[GetIndexChild	(id, iChild)]; }
+
+		::gpk::error_t					SetParent		(uint32_t id, uint32_t idParent)		{
+			::gpk::eid_t						& oldParent		= Entities[id].Parent;
 			if(oldParent < Entities.size() && Children[oldParent]) {
-				const int32_t						oldIndex		= Children[oldParent]->find(index);
+				const int32_t						oldIndex		= Children[oldParent]->find(id);
 				if(oldIndex >= 0)
-					Children[oldParent]->remove(oldIndex);
+					gpk_necall(Children[oldParent]->remove(oldIndex), "oldParent: %i, oldIndex: %i.", oldParent, oldIndex);
 			}
-			oldParent						= indexParent;
-			return (indexParent < 0) ? 0 : Children[indexParent]->push_back(index);
+			oldParent						= idParent;
+			return (0 > (int32_t)idParent) ? 0 : Children[idParent]->push_back(id);
 		}
 
 		::gpk::error_t					Save			(::gpk::au8 & output) const { 
