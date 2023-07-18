@@ -14,62 +14,76 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SStageSetup {
-		uint64_t			Seed					= {};
-		uint16_t			Players					= {};
-		MATCH_TYPE			MatchType				= {};
-		MATCH_TYPE			MatchFlags				= {};
+		uint64_t		Seed					= {};
+		uint16_t		Players					= {};
+		MATCH_TYPE		MatchType				= {};
+		uint8_t			Padding1				= {};
+		uint32_t		Padding4				= {};
 	};
+	stacxpr	size_t SIZE_SSTAGESETUP = sizeof(SStageSetup);
 
 	struct SStageTime {
-		uint64_t			Started					= {};	// Timestamp
-		uint64_t			Loaded					= {};	// Timestamp
-		double				Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
+		uint64_t		Started					= {};	// Timestamp
+		uint64_t		Loaded					= {};	// Timestamp
+		double			Played					= {};	// This one represents the real-world time played, incremented on every tick while not paused.
 	};
 
 	struct SRelativeSpeed {
-		double				RelativeSpeedTarget		= 20;
-		double				RelativeSpeedCurrent	= -50;
-		double				AccelerationControl		= 0;
+		float			Current					= -50;
+		float			Target					= 20;
+		float			Step					= 20;
+		float			AccelerationControl		= 0;
 
-		double				Update					(double seconds, double relativeAcceleration) {
+		float			ClampEpsilon			(double epsilon = 0.0001) {
+			const float			diff					= Target - Current;
+			if(fabsf(diff < epsilon))
+				Current			= Target;
+			return diff;
+		}
+
+		float			Update					(double seconds) {
 			if(AccelerationControl)
-				RelativeSpeedCurrent	+= seconds * relativeAcceleration * AccelerationControl;
-			else { 
-				if(RelativeSpeedCurrent > RelativeSpeedTarget)
-					RelativeSpeedCurrent	-= seconds * relativeAcceleration;
-				else if(RelativeSpeedCurrent < RelativeSpeedTarget)
-					RelativeSpeedCurrent	+= seconds * relativeAcceleration;
+				return Current += float(seconds * Step * AccelerationControl);
+
+			const bool			slowdown				= Current > Target;
+			if(slowdown || Current < Target) {
+				Current			+= float(seconds * Step) * (slowdown ? -1 : 1);
+				ClampEpsilon();
 			}
-			return RelativeSpeedCurrent;
+			return Current;
 		}
 	};
+	stacxpr	size_t SIZE_SRELATIVESPEED = sizeof(SRelativeSpeed);
 
 	struct SRelativeTime {
-		double				Scale					= 1.0f;
-		double				Seconds					= 0;		// Relative seconds elapsed--could be the real-world time scaled by the `Scale` member. 
-		double				Step					= -.35f;	// the amount in which the scale decreases or increases PER SECOND.
+		float			Scale					= 1.0f;
+		float			Step					= -.35f;	// the amount in which the scale decreases or increases PER SECOND.
+		double			Seconds					= 0;		// Relative seconds elapsed--could be the real-world time scaled by the `Scale` member. 
 
-		double				Update					(double seconds, double fasting) {
+		double			Update					(double realSeconds, float fasting) {
 			if(Step < 0) {
-				Scale	+= seconds * Step;
+				Scale			+= float(realSeconds * Step);
 				if(Scale < .1)
-					Step	= fasting;
+					Step			= fasting;
 			}
 			else if(Scale < .999999) {
-				Scale	+= seconds * Step;
+				Scale			+= float(realSeconds * Step);
 				if(Scale > 1.0f)
-					Scale	= 1.0f;
+					Scale			= 1.0f;
 			}
-			return seconds * Scale;
+			Seconds			+= realSeconds * Scale;
+			return realSeconds * Scale;
 		}
 	};
+	stacxpr	size_t SIZE_SRELATIVETIME = sizeof(SRelativeTime);
 
 	struct SStageState {
-		SStageSetup			Constants				= {};	// This sets up the root/default game mode
-		SStageTime			Time					= {};	// This is  
-		SRelativeTime		SimulatedTime			= {};	// this one represents the elapsed virtual-reality time. It gets scaled by special effects.
-		SRelativeSpeed		BackgroundSpeed			= {};	// this one represents the speed in which the background planets and stars move. 
+		SStageSetup		Constants				= {};	// This sets up the root/default game mode
+		SStageTime		Time					= {};	// This is  
+		SRelativeTime	SimulatedTime			= {};	// this one represents the elapsed virtual-reality time. It gets scaled by special effects.
+		SRelativeSpeed	BackgroundSpeed			= {};	// this one represents the speed in which the background planets and stars move. 
 	};
+	stacxpr	size_t SIZE_SSTAGESTATE = sizeof(SStageState);
 #pragma pack(pop)
 } // namespace
 
