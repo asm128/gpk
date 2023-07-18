@@ -32,7 +32,7 @@ namespace gpk
 	};
 
 	struct SGameState {
-		uint64_t			Stage				= 0;
+		uint32_t			Stage				= 0;
 		SStageTime			UserTime			= {};
 		bool				Paused				= false;
 		double				CameraSwitchDelay	= 0;
