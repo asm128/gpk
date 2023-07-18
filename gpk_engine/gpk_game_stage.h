@@ -32,11 +32,9 @@ namespace gpk
 		double				AccelerationControl		= 0;
 
 		double				Update					(double seconds, double relativeAcceleration) {
-			if(AccelerationControl > 0)
-				RelativeSpeedCurrent	+= seconds * relativeAcceleration;
-			else if(AccelerationControl < 0)
-				RelativeSpeedCurrent	-= seconds * relativeAcceleration;
-			else { // == 0
+			if(AccelerationControl)
+				RelativeSpeedCurrent	+= seconds * relativeAcceleration * AccelerationControl;
+			else { 
 				if(RelativeSpeedCurrent > RelativeSpeedTarget)
 					RelativeSpeedCurrent	-= seconds * relativeAcceleration;
 				else if(RelativeSpeedCurrent < RelativeSpeedTarget)
@@ -49,7 +47,21 @@ namespace gpk
 	struct SRelativeTime {
 		double				Scale					= 1.0f;
 		double				Seconds					= 0;		// Relative seconds elapsed--could be the real-world time scaled by the `Scale` member. 
-		double				Slowing					= .35f;
+		double				Step					= -.35f;	// the amount in which the scale decreases or increases PER SECOND.
+
+		double				Update					(double seconds, double fasting) {
+			if(Step < 0) {
+				Scale	+= seconds * Step;
+				if(Scale < .1)
+					Step	= fasting;
+			}
+			else if(Scale < .999999) {
+				Scale	+= seconds * Step;
+				if(Scale > 1.0f)
+					Scale	= 1.0f;
+			}
+			return seconds * Scale;
+		}
 	};
 
 	struct SStageState {
