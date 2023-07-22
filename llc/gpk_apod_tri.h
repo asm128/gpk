@@ -21,7 +21,7 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::trii32	>	atrii32	;
 	typedef	::gpk::apod<::gpk::trii64	>	atrii64	;
 
-	template<typename _tVertex>
+	tplt<tpnm _tVertex>
 	using		atri	= ::gpk::apod<::gpk::tri<_tVertex>>;
 #pragma pack(pop)
 } // namespace

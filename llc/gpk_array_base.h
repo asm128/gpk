@@ -8,10 +8,10 @@
 
 namespace gpk
 {
-	template<typename... _Args>	
+	tplt<tpnm... _Args>	
 	void						clear					(_Args&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
 
-	template<typename... _tArgs>
+	tplt<tpnm... _tArgs>
 	::gpk::error_t				resize					(uint32_t newSize, _tArgs&&... args)		{
 		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize)..., 0};
@@ -26,7 +26,7 @@ namespace gpk
 		return newSize;
 	}
 
-	template<typename... _tArgs>
+	tplt<tpnm... _tArgs>
 	::gpk::error_t				resize_obj				(uint32_t newSize, _tArgs&&... args)		{
 		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize,{})..., 0};
@@ -43,7 +43,7 @@ namespace gpk
 
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
-	template<typename T>
+	tplt<tpnm T>
 	class array_base : public view<T> {
 		static	uint32_t		calc_reserve_count		(const uint32_t newCountRequested, uint32_t & outCount)	noexcept	{ 
 			stacxpr	uint32_t			MAX_COUNT				= 0x7FFFFFFFU;

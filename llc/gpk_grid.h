@@ -8,7 +8,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template <typename _tCell>
+	tplt <tpnm _tCell>
 	class grid {
 	protected:
 		// Properties / Member Variables
@@ -22,7 +22,7 @@ namespace gpk
 			gthrow_if(0 == data && Size.x && Size.y, "Invalid parameters. Size: {x:%u, y:%u}, pointer: %p.", width, height, data);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 		inline						grid			(T* data, const ::gpk::n2u32 & gridMetrics)		: grid(data, gridMetrics.x, gridMetrics.y) {}
-		template<size_t _tWidth, size_t _tHeight>
+		tplt<size_t _tWidth, size_t _tHeight>
 		inlcxpr						grid			(T (&data)[_tHeight][_tWidth])		noexcept	: Data{&data[0][0]}, Size{_tWidth, _tHeight} {}
 
 		inlcxpr	operator			grid<const T>	()							const	noexcept	{ return {Data, Size}; }
@@ -54,7 +54,7 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template<typename TDim, typename TColor>
+	tplt<tpnm TDim, tpnm TColor>
 	static	::gpk::error_t		drawRectangle			(::gpk::grid<TColor> & target, const TColor & value, const ::gpk::rect2<TDim> & rectangle)		{
 		const int32_t					xCount					= ::gpk::min((int32_t)target.metrics().x - ::gpk::max((int32_t)rectangle.Offset.x, (int32_t)0), (int32_t)rectangle.Size.x + ::gpk::min((int32_t)rectangle.Offset.x, (int32_t)0));
 		const int32_t					yCount					= ::gpk::min((int32_t)target.metrics().y - ::gpk::max((int32_t)rectangle.Offset.y, (int32_t)0), (int32_t)rectangle.Size.y + ::gpk::min((int32_t)rectangle.Offset.y, (int32_t)0));

@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tDimension>
+	tplt<tpnm _tDimension>
 	struct rect {
 		typedef	_tDimension		T;
 		typedef	rect<T>			TRect;
@@ -21,7 +21,7 @@ namespace gpk
 		inlcxpr	T				Height		()	const { return Bottom - Top; }
 		cnstxpr ::gpk::n2<T>	Dimensions	()	const { return {Width(), Height()}; }
 
-		template <typename _t>
+		tplt <tpnm _t>
 		inlcxpr	rect<_t>		Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }
 
 		inlcxpr	rect<uint8_t>	u8			()	const	noexcept	{ return Cast<uint8_t	>(); }

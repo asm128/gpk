@@ -207,7 +207,7 @@
 				itemConstraints.DockToControl.Bottom	= out_ids[iButton - 1];
 
 		}
-		gpk_necall(::gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a template and macro for this pattern
+		gpk_necall(::gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a tplt and macro for this pattern
 	}
 	return result;
 }

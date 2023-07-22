@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tKey>
+	tplt<tpnm _tKey>
 	struct keyed_bit_array {
 		typedef	_tKey			K;
 		typedef	gpk::vbit<u64>	TView;

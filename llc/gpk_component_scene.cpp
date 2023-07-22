@@ -4,7 +4,7 @@
 #include "gpk_json.h"
 #include "gpk_label.h"
 
-template<typename _tNumber>
+tplt<tpnm _tNumber>
 static	::gpk::error_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, _tNumber & out_value){
 	readerCache								= {};
 	gpk_necs(::gpk::jsonParse(readerCache, in_string));

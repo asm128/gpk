@@ -9,8 +9,8 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tAxis, typename _tColor> struct SLightPoint2 { ::gpk::n2f32 Position; _tColor Color; };
-	template<typename _tAxis, typename _tColor> struct SLightPoint3 { ::gpk::n3f32 Position; _tColor Color; };
+	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint2 { ::gpk::n2f32 Position; _tColor Color; };
+	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint3 { ::gpk::n3f32 Position; _tColor Color; };
 
 	struct SImageTag {
 		 COLOR_TYPE	ColorType;
@@ -124,7 +124,7 @@ namespace gpk
 		int16_t			Flags		= -1;
 	};
 
-	template<typename _tIndex>
+	tplt<tpnm _tIndex>
 	struct STileIndices {
 		_tIndex			Top		[4]	= {};
 		_tIndex			Front	[4]	= {};

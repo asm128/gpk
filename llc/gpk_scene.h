@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	template <typename _tUnit>
+	tplt <tpnm _tUnit>
 	struct SModelGeometry {
 		::gpk::apod<::gpk::tri3<_tUnit>>	Positions									;
 		::gpk::apod<::gpk::n3  <_tUnit>>	NormalsTriangle								;
@@ -18,13 +18,13 @@ namespace gpk
 		::gpk::apod<::gpk::tri2<_tUnit>>	UVs											;
 	};
 
-	template <typename _tElement, typename _tIndex>
+	tplt <tpnm _tElement, tpnm _tIndex>
 	struct SModelBufferIndexed {
 		::gpk::apod<_tIndex>	Indices										;
 		::gpk::apod<_tElement>	Values										;
 	};
 
-	template <typename _tAxis, typename _tIndex>
+	tplt <tpnm _tAxis, tpnm _tIndex>
 	struct SModelGeometryIndexed {
 		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	Positions					;
 		::gpk::SModelBufferIndexed<::gpk::n3	<_tAxis>, _tIndex>	NormalsTriangle				;
@@ -34,7 +34,7 @@ namespace gpk
 
 	};
 
-	template <typename _tUnit>
+	tplt <tpnm _tUnit>
 	struct SModelPivot {
 		::gpk::n3	<_tUnit>	Scale		;
 		::gpk::quat	<_tUnit>	Orientation	;

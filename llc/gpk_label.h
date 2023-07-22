@@ -18,7 +18,7 @@ namespace gpk
 
 		label&				operator=		(const label & other)			noexcept	= default;
 
-		template<size_t _stringLength>
+		tplt<size_t _stringLength>
 		inline 				label			(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)	noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
 		inline 				label			(const ::gpk::vcs & other)											noexcept	: label(other.begin(), other.size())							{}
 

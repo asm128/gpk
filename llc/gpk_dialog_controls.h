@@ -88,7 +88,7 @@ namespace gpk
 		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::sliderUpdate(*this); }
 	};
 
-	template<typename _tValue>
+	tplt<tpnm _tValue>
 	struct SDialogTuner : public ::gpk::IDialogControl {
 		typedef	::std::function<::gpk::error_t(::gpk::vcc & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
 								TCallback;
@@ -147,7 +147,7 @@ namespace gpk
 		}
 	};
 
-	template<typename _tValue>
+	tplt<tpnm _tValue>
 	::gpk::cid_t			tunerCreate							(::gpk::SDialog	& dialog)								{
 		::gpk::cid_t				index								= -1;
 		::gpk::pobj<::gpk::SDialogTuner<_tValue>>	tuner;
@@ -171,7 +171,7 @@ namespace gpk
 		return index;
 	}
 
-	template<typename _tValue>	
+	tplt<tpnm _tValue>	
 	stainli	::gpk::cid_t	tunerCreate							(::gpk::SDialog & dialog, ::gpk::pnco<::gpk::SDialogTuner<_tValue>>	& createdControl)	 { 
 		::gpk::cid_t				index								= -1; 
 		gpk_necs(index = ::gpk::tunerCreate<_tValue>(dialog)); 

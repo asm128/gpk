@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	template <typename _tElementWithSaveLoad> 
+	tplt <tpnm _tElementWithSaveLoad> 
 	struct SLinearNamedMap {
 		typedef _tElementWithSaveLoad	T;
 		typedef ::gpk::pobj<T>			TPObj;

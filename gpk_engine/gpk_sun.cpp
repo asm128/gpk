@@ -3,7 +3,7 @@
 
 double					gpk::calcSunlightFactor(double daylightRatioExtra, uint32_t daylightOffsetMinutes)	{ 
 	const double				sunAngleFactor			= ::gpk::calcSunPosition().Dot(::gpk::n3f32{0, 1}.RotateZ(::gpk::SCALE_DAY_MINUTES_TO_RADIANS * daylightOffsetMinutes));
-	return ::gpk::clamp(sunAngleFactor + daylightRatioExtra, 0.0, 1.0);
+	return ::gpk::clamped(sunAngleFactor + daylightRatioExtra, 0.0, 1.0);
 }
 
 ::gpk::n3f32			gpk::calcSunPosition	()	{ 

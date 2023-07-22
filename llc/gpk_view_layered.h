@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template <typename _tElement>
+	tplt <tpnm _tElement>
 	class view_layered {
 	protected:
 		// Properties / Member Variables

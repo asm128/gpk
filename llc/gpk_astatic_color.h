@@ -6,11 +6,11 @@
 
 namespace gpk
 {
-	template<size_t _pixelCount> using	astfrgba	= ::gpk::astatic<::gpk::frgba	, _pixelCount>;
-	template<size_t _pixelCount> using	astu8bgra	= ::gpk::astatic<::gpk::u8bgra	, _pixelCount>;
-	template<size_t _pixelCount> using	astu8bgr	= ::gpk::astatic<::gpk::u8bgr	, _pixelCount>;
-	template<size_t _pixelCount> using	astu8rgba	= ::gpk::astatic<::gpk::u8rgba	, _pixelCount>;
-	template<size_t _pixelCount> using	astu8rgb	= ::gpk::astatic<::gpk::u8rgb	, _pixelCount>;
+	tplt<size_t _pixelCount> using	astfrgba	= ::gpk::astatic<::gpk::frgba	, _pixelCount>;
+	tplt<size_t _pixelCount> using	astu8bgra	= ::gpk::astatic<::gpk::u8bgra	, _pixelCount>;
+	tplt<size_t _pixelCount> using	astu8bgr	= ::gpk::astatic<::gpk::u8bgr	, _pixelCount>;
+	tplt<size_t _pixelCount> using	astu8rgba	= ::gpk::astatic<::gpk::u8rgba	, _pixelCount>;
+	tplt<size_t _pixelCount> using	astu8rgb	= ::gpk::astatic<::gpk::u8rgb	, _pixelCount>;
 
 } // namespace
 

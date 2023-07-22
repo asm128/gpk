@@ -7,7 +7,7 @@
 #include "gpk_view_n2.h"
 #include "gpk_view_tri.h"
 
-template <typename _tIndex>
+tplt <tpnm _tIndex>
 static	::gpk::error_t	transformTriangles					
 	( ::gpk::SVSOutput		& output
 	, ::gpk::view<const _tIndex>	indices			

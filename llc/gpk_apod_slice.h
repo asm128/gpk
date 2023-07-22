@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	aslice	= ::gpk::apod<::gpk::slice<_tDimension>>;
 
 	typedef	::gpk::aslice<char		>	aslicec		, aslicechar;

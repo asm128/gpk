@@ -78,8 +78,19 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius && Height == other.Height); 
 	};
 
+	struct SParamsDisc { 
+		::gpk::n3f32		Origin			= {};
+		::gpk::n2u16		CellCount		= {16, 2};
+		bool				Reverse			= false;
+		float				Circumference	= 1.0f;
+		::gpk::minmaxf32	Radius			= {.5f, .5f};
+		float				Height			= 1;
+
+		GPK_DEFAULT_OPERATOR(SParamsCylinderWall, Origin == other.Origin && CellCount == other.CellCount && Reverse == other.Reverse && Circumference == other.Circumference && Radius == other.Radius && Height == other.Height); 
+	};
+
 	struct SParamsGrid { 
-		::gpk::n2f32		Origin			= {.5f, .5f};
+		::gpk::n3f32		Origin			= {.5f, 0, .5f};
 		::gpk::n2u16		CellCount		= {9, 9};
 		bool				Reverse			= false;
 		bool				Outward			= false;
@@ -89,7 +100,7 @@ namespace gpk
 	};
 
 	struct SParamsHelix { 
-		::gpk::n2f32		Origin			= {0, .5f};
+		::gpk::n3f32		Origin			= {0, .5f};
 		::gpk::n2u16		CellCount		= {9, 9};
 		::gpk::minmaxf32	Radius			= {.5f, .5f};	// TODO: Not working
 		float				Length			= 1;
@@ -102,6 +113,7 @@ namespace gpk
 	::gpk::error_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
 	::gpk::error_t		geometryBuildSphere			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere			& params);
 	::gpk::error_t		geometryBuildCylinderWall	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
+	::gpk::error_t		geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall	& params);
 	::gpk::error_t		geometryBuildGrid			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsGrid			& params);
 	::gpk::error_t		geometryBuildHelixHalf		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);	// TODO: Rewrite
 	::gpk::error_t		geometryBuildHelix			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix			& params);

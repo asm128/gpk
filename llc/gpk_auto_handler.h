@@ -7,7 +7,7 @@
 namespace gpk
 {
 	 // I have no idea how to call this type so I'm really sorry. Something about raii maybe?
-	template<typename _tHandle, _tHandle _vDefault>
+	tplt<tpnm _tHandle, _tHandle _vDefault>
 	struct auto_handler {
 		typedef	auto_handler<_tHandle, _vDefault>	TWrapper;
 

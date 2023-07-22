@@ -223,7 +223,7 @@ namespace gpk {
 		TTriangleWeightBuffer			TriangleWeightBuffer			= {};
 	};
 
-	template<typename _tContainer, typename _tValue>
+	tplt<tpnm _tContainer, tpnm _tValue>
 	struct SKeyedArray {
 		::gpk::aobj<::gpk::vcc>			Names	;
 		_tContainer						Values	;
@@ -238,8 +238,8 @@ namespace gpk {
 		}
 	};
 
-	template<typename _tValue>	struct SKeyedArrayPOD : public ::gpk::SKeyedArray<::gpk::apod<_tValue>, _tValue> {};
-	template<typename _tValue>	struct SKeyedArrayOBJ : public ::gpk::SKeyedArray<::gpk::aobj<_tValue>, _tValue> {};
+	tplt<tpnm _tValue>	struct SKeyedArrayPOD : public ::gpk::SKeyedArray<::gpk::apod<_tValue>, _tValue> {};
+	tplt<tpnm _tValue>	struct SKeyedArrayOBJ : public ::gpk::SKeyedArray<::gpk::aobj<_tValue>, _tValue> {};
 
 	struct SNodeRenderer {
 		typedef	::gpk::apod<::gpk::n3u16>			TIndexBuffer			;

@@ -15,12 +15,12 @@ namespace gpk
 	cnstxpr	bool		operator==			(const color_struct_type & other)	const	noexcept	{ return b == other.b && g == other.g && r == other.r; } \
 	cnstxpr	bool		operator!=			(const color_struct_type & other)	const	noexcept	{ return b != other.b || g != other.g || r != other.r; } \
 
-	template <typename _tBase> struct color_bgr		{ _tBase b, g, r;    COLOR_RGB_OPERATOR_MEMBERS (color_bgr ); };
-	template <typename _tBase> struct color_rgb		{ _tBase r, g, b;    COLOR_RGB_OPERATOR_MEMBERS (color_rgb ); };
-	template <typename _tBase> struct color_bgra	{ _tBase b, g, r, a; COLOR_RGBA_OPERATOR_MEMBERS(color_bgra); };
-	template <typename _tBase> struct color_rgba	{ _tBase r, g, b, a; COLOR_RGBA_OPERATOR_MEMBERS(color_rgba); };
-	template <typename _tBase> struct color_abgr	{ _tBase a, b, g, r; COLOR_RGBA_OPERATOR_MEMBERS(color_abgr); };
-	template <typename _tBase> struct color_argb	{ _tBase a, r, g, b; COLOR_RGBA_OPERATOR_MEMBERS(color_argb); };
+	tplt <tpnm _tBase> struct color_bgr		{ _tBase b, g, r;    COLOR_RGB_OPERATOR_MEMBERS (color_bgr ); };
+	tplt <tpnm _tBase> struct color_rgb		{ _tBase r, g, b;    COLOR_RGB_OPERATOR_MEMBERS (color_rgb ); };
+	tplt <tpnm _tBase> struct color_bgra	{ _tBase b, g, r, a; COLOR_RGBA_OPERATOR_MEMBERS(color_bgra); };
+	tplt <tpnm _tBase> struct color_rgba	{ _tBase r, g, b, a; COLOR_RGBA_OPERATOR_MEMBERS(color_rgba); };
+	tplt <tpnm _tBase> struct color_abgr	{ _tBase a, b, g, r; COLOR_RGBA_OPERATOR_MEMBERS(color_abgr); };
+	tplt <tpnm _tBase> struct color_argb	{ _tBase a, r, g, b; COLOR_RGBA_OPERATOR_MEMBERS(color_argb); };
 
 	typedef	uint16_t		SColor16;
 
@@ -65,10 +65,10 @@ namespace gpk
 
 
 		cnstxpr	bool			operator ==		(uint32_t other)			const	noexcept	{ return other == *((const uint32_t*)this);			}
-		cnstxpr	SColorRGBA		operator *		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamp(r * (uint16_t)color.r, 0, 255)	, (u8)::gpk::clamp(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(b * (uint16_t)color.b, 0, 255)	, a};	}
-		cnstxpr	SColorRGBA		operator +		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamp(r + (uint16_t)color.r, 0, 255)	, (u8)::gpk::clamp(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(b + (uint16_t)color.b, 0, 255)	, a};	}
-		cnstxpr	SColorRGBA		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamp(r * scalar, 0.0 , 255.0)		, (u8)::gpk::clamp(g * scalar, 0.0 , 255.0 )		, (u8)::gpk::clamp(b * scalar, 0.0,  255.0 )		, a};	}
-		cnstxpr	SColorRGBA		operator /		(double scalar)				const				{ return {(u8)::gpk::clamp(r / scalar, 0.0 , 255.0)		, (u8)::gpk::clamp(g / scalar, 0.0 , 255.0 )		, (u8)::gpk::clamp(b / scalar, 0.0,  255.0 )		, a};	}
+		cnstxpr	SColorRGBA		operator *		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamped(r * (uint16_t)color.r, 0, 255)	, (u8)::gpk::clamped(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(b * (uint16_t)color.b, 0, 255)	, a};	}
+		cnstxpr	SColorRGBA		operator +		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamped(r + (uint16_t)color.r, 0, 255)	, (u8)::gpk::clamped(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(b + (uint16_t)color.b, 0, 255)	, a};	}
+		cnstxpr	SColorRGBA		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamped(r * scalar, 0.0 , 255.0)		, (u8)::gpk::clamped(g * scalar, 0.0 , 255.0 )		, (u8)::gpk::clamped(b * scalar, 0.0,  255.0 )		, a};	}
+		cnstxpr	SColorRGBA		operator /		(double scalar)				const				{ return {(u8)::gpk::clamped(r / scalar, 0.0 , 255.0)		, (u8)::gpk::clamped(g / scalar, 0.0 , 255.0 )		, (u8)::gpk::clamped(b / scalar, 0.0,  255.0 )		, a};	}
 	};	// struct
 
 	// Stores BGRA color channels
@@ -92,15 +92,15 @@ namespace gpk
 		cnstxpr	bool			operator==		(uint32_t other)			const	noexcept	{ return other == *((const uint32_t*)this);			}
 		cnstxpr	SColorBGRA		operator*		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::min(b * (uint16_t)color.b, 255)	, (u8)::gpk::min(g * (uint16_t)color.g, 255)	,(u8)::gpk::min(r * (uint16_t)color.r, 255), a};			}
 		cnstxpr	SColorBGRA		operator+		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::min(b + (uint16_t)color.b, 255)	, (u8)::gpk::min(g + (uint16_t)color.g, 255)	,(u8)::gpk::min(r + (uint16_t)color.r, 255), a};			}
-		cnstxpr	SColorBGRA		operator-		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamp(b - (int16_t)color.b, 0, 255), (u8)::gpk::clamp(g - (int16_t)color.g, 0, 255),(u8)::gpk::clamp(r - (int16_t)color.r, 0, 255), a};	}
-		cnstxpr	SColorBGRA		operator*		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamp(b * scalar, 0.0f, 255.0f)	, (u8)::gpk::clamp(g * scalar, 0.0f, 255.0f)	,(u8)::gpk::clamp(r * scalar, 0.0f, 255.0f), a};			}
-		cnstxpr	SColorBGRA		operator/		(float scalar)				const				{ return {(u8)::gpk::clamp(b / scalar, 0.0f, 255.0f)	, (u8)::gpk::clamp(g / scalar, 0.0f, 255.0f)	,(u8)::gpk::clamp(r / scalar, 0.0f, 255.0f), a};			}
-		cnstxpr	SColorBGRA		operator*		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamp(b * scalar, 0.0,  255.0 )	, (u8)::gpk::clamp(g * scalar, 0.0 , 255.0 )	,(u8)::gpk::clamp(r * scalar, 0.0, 255.0),	a};				}
-		cnstxpr	SColorBGRA		operator/		(double scalar)				const				{ return {(u8)::gpk::clamp(b / scalar, 0.0,  255.0 )	, (u8)::gpk::clamp(g / scalar, 0.0 , 255.0 )	,(u8)::gpk::clamp(r / scalar, 0.0, 255.0),	a};				}
-				SColorBGRA&		operator*=		(float scalar)						noexcept	{ b = (u8)::gpk::clamp(b * scalar, 0.0f, 255.0f); g = (u8)::gpk::clamp(g * scalar, 0.0f, 255.0f); r = (u8)::gpk::clamp(r * scalar, 0.0f, 255.0f);	return *this; }
-				SColorBGRA&		operator/=		(float scalar)									{ b = (u8)::gpk::clamp(b / scalar, 0.0f, 255.0f); g = (u8)::gpk::clamp(g / scalar, 0.0f, 255.0f); r = (u8)::gpk::clamp(r / scalar, 0.0f, 255.0f);	return *this; }
-				SColorBGRA&		operator*=		(double scalar)						noexcept	{ b = (u8)::gpk::clamp(b * scalar, 0.0,  255.0 ); g = (u8)::gpk::clamp(g * scalar, 0.0 , 255.0 ); r = (u8)::gpk::clamp(r * scalar, 0.0, 255.0);		return *this; }
-				SColorBGRA&		operator/=		(double scalar)									{ b = (u8)::gpk::clamp(b / scalar, 0.0,  255.0 ); g = (u8)::gpk::clamp(g / scalar, 0.0 , 255.0 ); r = (u8)::gpk::clamp(r / scalar, 0.0, 255.0);		return *this; }
+		cnstxpr	SColorBGRA		operator-		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamped(b - (int16_t)color.b, 0, 255), (u8)::gpk::clamped(g - (int16_t)color.g, 0, 255),(u8)::gpk::clamped(r - (int16_t)color.r, 0, 255), a};	}
+		cnstxpr	SColorBGRA		operator*		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamped(b * scalar, 0.0f, 255.0f)	, (u8)::gpk::clamped(g * scalar, 0.0f, 255.0f)	,(u8)::gpk::clamped(r * scalar, 0.0f, 255.0f), a};			}
+		cnstxpr	SColorBGRA		operator/		(float scalar)				const				{ return {(u8)::gpk::clamped(b / scalar, 0.0f, 255.0f)	, (u8)::gpk::clamped(g / scalar, 0.0f, 255.0f)	,(u8)::gpk::clamped(r / scalar, 0.0f, 255.0f), a};			}
+		cnstxpr	SColorBGRA		operator*		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamped(b * scalar, 0.0,  255.0 )	, (u8)::gpk::clamped(g * scalar, 0.0 , 255.0 )	,(u8)::gpk::clamped(r * scalar, 0.0, 255.0),	a};				}
+		cnstxpr	SColorBGRA		operator/		(double scalar)				const				{ return {(u8)::gpk::clamped(b / scalar, 0.0,  255.0 )	, (u8)::gpk::clamped(g / scalar, 0.0 , 255.0 )	,(u8)::gpk::clamped(r / scalar, 0.0, 255.0),	a};				}
+				SColorBGRA&		operator*=		(float scalar)						noexcept	{ b = (u8)::gpk::clamped(b * scalar, 0.0f, 255.0f); g = (u8)::gpk::clamped(g * scalar, 0.0f, 255.0f); r = (u8)::gpk::clamped(r * scalar, 0.0f, 255.0f);	return *this; }
+				SColorBGRA&		operator/=		(float scalar)									{ b = (u8)::gpk::clamped(b / scalar, 0.0f, 255.0f); g = (u8)::gpk::clamped(g / scalar, 0.0f, 255.0f); r = (u8)::gpk::clamped(r / scalar, 0.0f, 255.0f);	return *this; }
+				SColorBGRA&		operator*=		(double scalar)						noexcept	{ b = (u8)::gpk::clamped(b * scalar, 0.0,  255.0 ); g = (u8)::gpk::clamped(g * scalar, 0.0 , 255.0 ); r = (u8)::gpk::clamped(r * scalar, 0.0, 255.0);		return *this; }
+				SColorBGRA&		operator/=		(double scalar)									{ b = (u8)::gpk::clamped(b / scalar, 0.0,  255.0 ); g = (u8)::gpk::clamped(g / scalar, 0.0 , 255.0 ); r = (u8)::gpk::clamped(r / scalar, 0.0, 255.0);		return *this; }
 
 				SColorBGRA&		FromBGR16		(const SColor16 & other)			noexcept	{ b = u8((other & 0x1F) / float(0x1F) * 255); g = u8(((other & 0x07E0) >> 5) / float(0x3F) * 255); r = u8(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
 				SColorBGRA&		FromRGB16		(const SColor16 & other)			noexcept	{ r = u8((other & 0x1F) / float(0x1F) * 255); g = u8(((other & 0x07E0) >> 5) / float(0x3F) * 255); b = u8(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
@@ -126,14 +126,14 @@ namespace gpk
 		cnstxpr	bool			operator !=		(const SColorRGBA & other)	const	noexcept	{ return r != other.r || g != other.g || b != other.b;	}
 		cnstxpr	bool			operator ==		(const SColor16   & other)	const	noexcept	{ return (SColor16)(*this) == other;					}
 		cnstxpr	bool			operator !=		(const SColor16   & other)	const	noexcept	{ return (SColor16)(*this) != other;					}
-		cnstxpr	SColorRGB		operator *		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamp(r * scalar, 0.0f, 255.0f), (u8)::gpk::clamp(g * scalar, 0.0f, 255.0f),	(u8)::gpk::clamp(b * scalar, 0.0f, 255.0f)}; }
-		cnstxpr	SColorRGB		operator /		(float scalar)				const				{ return {(u8)::gpk::clamp(r / scalar, 0.0f, 255.0f), (u8)::gpk::clamp(g / scalar, 0.0f, 255.0f),	(u8)::gpk::clamp(b / scalar, 0.0f, 255.0f)}; }
-		cnstxpr	SColorRGB		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamp(r * scalar, 0.0,  255.0),  (u8)::gpk::clamp(g * scalar, 0.0,  255.0),	(u8)::gpk::clamp(b * scalar, 0.0,  255.0)};  }
-		cnstxpr	SColorRGB		operator /		(double scalar)				const				{ return {(u8)::gpk::clamp(r / scalar, 0.0,  255.0),  (u8)::gpk::clamp(g / scalar, 0.0,  255.0),	(u8)::gpk::clamp(b / scalar, 0.0,  255.0)};  }
-		cnstxpr	SColorRGB		operator *		(const SColorRGB  & color)	const	noexcept	{ return {(u8)::gpk::clamp(r * (uint16_t)color.r, 0, 255), (u8)::gpk::clamp(g * (uint16_t)color.g, 0, 255), (u8)::gpk::clamp(b * (uint16_t)color.b, 0, 255)};			}
-		cnstxpr	SColorRGB		operator +		(const SColorRGB  & color)	const	noexcept	{ return {(u8)::gpk::clamp(r + (uint16_t)color.r, 0, 255), (u8)::gpk::clamp(g + (uint16_t)color.g, 0, 255), (u8)::gpk::clamp(b + (uint16_t)color.b, 0, 255)};			}
-		cnstxpr	SColorRGBA		operator *		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamp(r * (uint16_t)color.r, 0, 255), (u8)::gpk::clamp(g * (uint16_t)color.g, 0, 255), (u8)::gpk::clamp(b * (uint16_t)color.b, 0, 255), color.a};	}
-		cnstxpr	SColorRGBA		operator +		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamp(r + (uint16_t)color.r, 0, 255), (u8)::gpk::clamp(g + (uint16_t)color.g, 0, 255), (u8)::gpk::clamp(b + (uint16_t)color.b, 0, 255), color.a};	}
+		cnstxpr	SColorRGB		operator *		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamped(r * scalar, 0.0f, 255.0f), (u8)::gpk::clamped(g * scalar, 0.0f, 255.0f),	(u8)::gpk::clamped(b * scalar, 0.0f, 255.0f)}; }
+		cnstxpr	SColorRGB		operator /		(float scalar)				const				{ return {(u8)::gpk::clamped(r / scalar, 0.0f, 255.0f), (u8)::gpk::clamped(g / scalar, 0.0f, 255.0f),	(u8)::gpk::clamped(b / scalar, 0.0f, 255.0f)}; }
+		cnstxpr	SColorRGB		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamped(r * scalar, 0.0,  255.0),  (u8)::gpk::clamped(g * scalar, 0.0,  255.0),	(u8)::gpk::clamped(b * scalar, 0.0,  255.0)};  }
+		cnstxpr	SColorRGB		operator /		(double scalar)				const				{ return {(u8)::gpk::clamped(r / scalar, 0.0,  255.0),  (u8)::gpk::clamped(g / scalar, 0.0,  255.0),	(u8)::gpk::clamped(b / scalar, 0.0,  255.0)};  }
+		cnstxpr	SColorRGB		operator *		(const SColorRGB  & color)	const	noexcept	{ return {(u8)::gpk::clamped(r * (uint16_t)color.r, 0, 255), (u8)::gpk::clamped(g * (uint16_t)color.g, 0, 255), (u8)::gpk::clamped(b * (uint16_t)color.b, 0, 255)};			}
+		cnstxpr	SColorRGB		operator +		(const SColorRGB  & color)	const	noexcept	{ return {(u8)::gpk::clamped(r + (uint16_t)color.r, 0, 255), (u8)::gpk::clamped(g + (uint16_t)color.g, 0, 255), (u8)::gpk::clamped(b + (uint16_t)color.b, 0, 255)};			}
+		cnstxpr	SColorRGBA		operator *		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamped(r * (uint16_t)color.r, 0, 255), (u8)::gpk::clamped(g * (uint16_t)color.g, 0, 255), (u8)::gpk::clamped(b * (uint16_t)color.b, 0, 255), color.a};	}
+		cnstxpr	SColorRGBA		operator +		(const SColorRGBA & color)	const	noexcept	{ return {(u8)::gpk::clamped(r + (uint16_t)color.r, 0, 255), (u8)::gpk::clamped(g + (uint16_t)color.g, 0, 255), (u8)::gpk::clamped(b + (uint16_t)color.b, 0, 255), color.a};	}
 	};	// struct
 
 	// Stores BGR color channels
@@ -157,14 +157,14 @@ namespace gpk
 		cnstxpr	bool			operator !=		(const SColorBGRA & other)	const	noexcept	{ return r != other.r || g != other.g || b != other.b;	}
 		cnstxpr	bool			operator ==		(const SColor16   & other)	const	noexcept	{ return (SColor16)(*this) == other;					}
 		cnstxpr	bool			operator !=		(const SColor16   & other)	const	noexcept	{ return (SColor16)(*this) != other;					}
-		cnstxpr	SColorBGR		operator *		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamp(b * scalar, 0.0f, 255.0f), (u8)::gpk::clamp(g * scalar, 0.0f, 255.0f), (u8)::gpk::clamp(r * scalar, 0.0f, 255.0f)};	}
-		cnstxpr	SColorBGR		operator /		(float scalar)				const				{ return {(u8)::gpk::clamp(b / scalar, 0.0f, 255.0f), (u8)::gpk::clamp(g / scalar, 0.0f, 255.0f), (u8)::gpk::clamp(r / scalar, 0.0f, 255.0f)};	}
-		cnstxpr	SColorBGR		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamp(b * scalar, 0.0,  255.0) , (u8)::gpk::clamp(g * scalar, 0.0,  255.0) , (u8)::gpk::clamp(r * scalar, 0.0,  255.0)};	}
-		cnstxpr	SColorBGR		operator /		(double scalar)				const				{ return {(u8)::gpk::clamp(b / scalar, 0.0,  255.0) , (u8)::gpk::clamp(g / scalar, 0.0,  255.0) , (u8)::gpk::clamp(r / scalar, 0.0,  255.0)};	}
-		cnstxpr	SColorBGR		operator *		(const SColorBGR  & color)	const	noexcept	{ return {(u8)::gpk::clamp(b * (uint16_t)color.b, 0, 255) , (u8)::gpk::clamp(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(r * (uint16_t)color.r, 0, 255)};			}
-		cnstxpr	SColorBGR		operator +		(const SColorBGR  & color)	const	noexcept	{ return {(u8)::gpk::clamp(b + (uint16_t)color.b, 0, 255) , (u8)::gpk::clamp(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(r + (uint16_t)color.r, 0, 255)};			}
-		cnstxpr	SColorBGRA		operator *		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamp(b * (uint16_t)color.b, 0, 255) , (u8)::gpk::clamp(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(r * (uint16_t)color.r, 0, 255), color.a};	}
-		cnstxpr	SColorBGRA		operator +		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamp(b + (uint16_t)color.b, 0, 255) , (u8)::gpk::clamp(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamp(r + (uint16_t)color.r, 0, 255), color.a};	}
+		cnstxpr	SColorBGR		operator *		(float scalar)				const	noexcept	{ return {(u8)::gpk::clamped(b * scalar, 0.0f, 255.0f), (u8)::gpk::clamped(g * scalar, 0.0f, 255.0f), (u8)::gpk::clamped(r * scalar, 0.0f, 255.0f)};	}
+		cnstxpr	SColorBGR		operator /		(float scalar)				const				{ return {(u8)::gpk::clamped(b / scalar, 0.0f, 255.0f), (u8)::gpk::clamped(g / scalar, 0.0f, 255.0f), (u8)::gpk::clamped(r / scalar, 0.0f, 255.0f)};	}
+		cnstxpr	SColorBGR		operator *		(double scalar)				const	noexcept	{ return {(u8)::gpk::clamped(b * scalar, 0.0,  255.0) , (u8)::gpk::clamped(g * scalar, 0.0,  255.0) , (u8)::gpk::clamped(r * scalar, 0.0,  255.0)};	}
+		cnstxpr	SColorBGR		operator /		(double scalar)				const				{ return {(u8)::gpk::clamped(b / scalar, 0.0,  255.0) , (u8)::gpk::clamped(g / scalar, 0.0,  255.0) , (u8)::gpk::clamped(r / scalar, 0.0,  255.0)};	}
+		cnstxpr	SColorBGR		operator *		(const SColorBGR  & color)	const	noexcept	{ return {(u8)::gpk::clamped(b * (uint16_t)color.b, 0, 255) , (u8)::gpk::clamped(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(r * (uint16_t)color.r, 0, 255)};			}
+		cnstxpr	SColorBGR		operator +		(const SColorBGR  & color)	const	noexcept	{ return {(u8)::gpk::clamped(b + (uint16_t)color.b, 0, 255) , (u8)::gpk::clamped(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(r + (uint16_t)color.r, 0, 255)};			}
+		cnstxpr	SColorBGRA		operator *		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamped(b * (uint16_t)color.b, 0, 255) , (u8)::gpk::clamped(g * (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(r * (uint16_t)color.r, 0, 255), color.a};	}
+		cnstxpr	SColorBGRA		operator +		(const SColorBGRA & color)	const	noexcept	{ return {(u8)::gpk::clamped(b + (uint16_t)color.b, 0, 255) , (u8)::gpk::clamped(g + (uint16_t)color.g, 0, 255)	, (u8)::gpk::clamped(r + (uint16_t)color.r, 0, 255), color.a};	}
 
 				SColorBGR&		FromBGR16		(const SColor16   & other)			noexcept	{ b = u8((other & 0x1F) / float(0x1F) * 255); g = u8(((other & 0x07E0) >> 5) / float(0x3F) * 255); r = u8(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
 				SColorBGR&		FromRGB16		(const SColor16   & other)			noexcept	{ r = u8((other & 0x1F) / float(0x1F) * 255); g = u8(((other & 0x07E0) >> 5) / float(0x3F) * 255); b = u8(((other & 0xF800) >> 11) / float(0x1F) * 255);	return *this; }
@@ -222,7 +222,7 @@ namespace gpk
 		cnstxpr	SColorFloat		operator /		(double scalar)				const				{ return {(float)(r / scalar), (float)(g / scalar), (float)(b / scalar), a};						}
 		cnstxpr	SColorFloat		operator /		(float scalar)				const				{ return {r / scalar,	g / scalar,	b / scalar};													}
 
-				SColorFloat&	Clamp			()									noexcept	{ r = ::gpk::clamp(r, 0.0f, 1.0f); g = ::gpk::clamp(g, 0.0f, 1.0f); b = ::gpk::clamp(b, 0.0f, 1.0f); return *this;	}
+				SColorFloat&	Clamp			()									noexcept	{ r = ::gpk::clamped(r, 0.0f, 1.0f); g = ::gpk::clamped(g, 0.0f, 1.0f); b = ::gpk::clamped(b, 0.0f, 1.0f); return *this;	}
 
 		cnstxpr	::gpk::rgbf32	rgb				()							const				{ return {r, g, b}; }
 	};	// struct

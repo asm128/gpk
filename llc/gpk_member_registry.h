@@ -38,7 +38,7 @@
 
 namespace gpk {
 #pragma pack(push, 1)
-	template <typename... _tArgs>	struct member_registry {
+	tplt <tpnm... _tArgs>	struct member_registry {
 		stincxp	const uint32_t										get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);							}
 		stainli	const ::gpk::view<const ::gpk::STypeIdentifier	>&	get_types						()										{ static const ::gpk::STypeIdentifier	results[] = {{{			_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}	}; static const ::gpk::view<const ::gpk::STypeIdentifier	> results_view = {results}; return results_view;	}
 		stainli	const ::gpk::view<const ::gpk::label			>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
@@ -49,7 +49,7 @@ namespace gpk {
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 
-	template<typename _tStruct>
+	tplt<tpnm _tStruct>
 	inline	::gpk::error_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
 } // namespace

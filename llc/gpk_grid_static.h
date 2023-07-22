@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename T, size_t _sizeWidth, size_t _sizeDepth>
+	tplt<tpnm T, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public grid<T> {
 							typedef										T									TCell;
 							typedef										grid<T>							TGridView;

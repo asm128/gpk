@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	aminmax	= ::gpk::apod<::gpk::minmax<_tDimension>>;
 
 	typedef	::gpk::aminmax<char		>	aminmaxc	, aminmaxchar;

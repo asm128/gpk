@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template <typename _tInt>
+	tplt <tpnm _tInt>
 	struct bit_proxy {
 		typedef	_tInt			T;
 
@@ -18,7 +18,7 @@ namespace gpk
 		bit_proxy&				operator=		(bool value)			{ value ? Element |= (1ULL << Offset) : Element &= ~(1ULL << Offset); return *this; }
 	};
 
-	template <typename _tInt>
+	tplt <tpnm _tInt>
 	struct bit_iterator {
 		typedef	_tInt			T;
 
@@ -59,7 +59,7 @@ namespace gpk
 		}
 	};
 
-	template <typename _tInt>
+	tplt <tpnm _tInt>
 	class view_bit {
 	protected:
 		// Properties / Member Variables
@@ -80,10 +80,10 @@ namespace gpk
 			gthrow_if(bitCount && 0 == data, "Invalid parameters. Element count: %u.", bitCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		template <size_t _length>
+		tplt <size_t _length>
 		inlcxpr					view_bit		(T (&data)[_length])		noexcept	: Data(data), Count(_length * ELEMENT_BITS)											{}
 
-		template <size_t _length>
+		tplt <size_t _length>
 		inline					view_bit		(T (&data)[_length], uint32_t bitCount)	: Data(data), Count(::gpk::min(uint32_t(_length * ELEMENT_BITS), bitCount))	{
 			gthrow_if(bitCount > (_length * ELEMENT_BITS), "Out of range count. Max count: %u. Requested: %u.", _length * ELEMENT_BITS, bitCount);
 		}
@@ -114,13 +114,13 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	template<typename T>	using vbit	= ::gpk::view_bit<T>;
+	tplt<tpnm T>	using vbit	= ::gpk::view_bit<T>;
 	typedef	::gpk::view_bit<uint8_t>	vbitu8	;
 	typedef	::gpk::view_bit<uint16_t>	vbitu16	;
 	typedef	::gpk::view_bit<uint32_t>	vbitu32	;
 	typedef	::gpk::view_bit<uint64_t>	vbitu64	;
 
-	template<typename _tField>
+	tplt<tpnm _tField>
 	::gpk::error_t			reverse_bits		(::gpk::view_bit<_tField> toReverse)													{
 		const uint32_t				countBits			= toReverse.size() / 2;
 		const uint32_t				lastBitIndex		= toReverse.size() - 1;

@@ -660,7 +660,7 @@ static	::gpk::error_t	pngScanlineDecode_0_bits(::gpk::gu8 & out_View, const ::gp
 // const std::function & pngScanlineDecode_6_8;
 // const std::function & pngScanlineDecode_3_8;
 
-template<typename _tPixel>
+tplt<tpnm _tPixel>
 static	::gpk::error_t	pngDecode
 	( const int32_t							bitDepth
 	, const int32_t							colorType
@@ -682,7 +682,7 @@ static	::gpk::error_t	pngDecode
 	} // switch(colorType
 }
 
-template<typename _tPixel>
+tplt<tpnm _tPixel>
 static	::gpk::error_t	pngDecodeInterlaced
 	( const int32_t							bitDepth
 	, const int32_t							colorType

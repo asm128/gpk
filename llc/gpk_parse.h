@@ -9,7 +9,7 @@ namespace gpk
 	stacxpr	::gpk::vcc		DIGITS_HEX						= ::gpk::vcc{16, "0123456789abcdef"};
 	stacxpr	::gpk::vcc		DIGITS_DECIMAL					= ::gpk::vcc{10, "0123456789"};
 	::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t * number_);
-	template<typename _tInt>	
+	tplt<tpnm _tInt>	
 	inline	::gpk::error_t	parseIntegerDecimal				(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
 		uint64_t					number							= 0; 
 		::gpk::error_t				countDigits; 
@@ -18,7 +18,7 @@ namespace gpk
 		return countDigits; 
 	}
 
-	template<typename _tInt>	
+	tplt<tpnm _tInt>	
 	inline	::gpk::error_t	parseIntegerHexadecimal			(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
 		uint64_t					number							= 0; 
 		::gpk::error_t countDigits;

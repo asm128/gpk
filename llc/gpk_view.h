@@ -14,7 +14,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template <typename _tVal>
+	tplt <tpnm _tVal>
 	class view {
 	protected:
 		// Properties / Member Variables
@@ -29,16 +29,16 @@ namespace gpk
 		inlcxpr					view			()									noexcept	= default;
 		inlcxpr					view			(const view<T> & other)				noexcept	= default;
 
-		template<size_t Len>
+		tplt<size_t Len>
 		inlcxpr					view			(T (&elements)[Len])				noexcept	: Data(elements), Count(Len)										{}
 
-		template<size_t Len>
+		tplt<size_t Len>
 		inlcxpr					view			(uint32_t elementCount, T (&elements)[Len])		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{}
 		inline					view			(T * elements, uint32_t elementCount)			: Data(elements), Count(elementCount)								{
 			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		template <size_t Len>
+		tplt <size_t Len>
 		inline					view			(T (&elements)[Len], uint32_t elementCount)		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{
 			gthrow_if(elementCount > Len, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)Len, elementCount);
 		}
@@ -66,18 +66,18 @@ namespace gpk
 		}
 
 		// Methods
+		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(Count * sizeof(T));	}
+		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
-		inlcxpr	view<u8>			u8			()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
-		inlcxpr	view<cu8>			u8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
-		inlcxpr	view<cu8>			cu8			()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
-		inlcxpr	view<char>			c			()							const	noexcept	{ return {(char*)Data, byte_count()};			}
-		inlcxpr	view<const char>	cc			()							const	noexcept	{ return {(const char*)Data, byte_count()};		}
+		inlcxpr	view<u8>		u8				()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
+		inlcxpr	view<cu8>		u8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inlcxpr	view<cu8>		cu8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inlcxpr	view<char>		c				()							const	noexcept	{ return {(char*)Data, byte_count()};			}
+		inlcxpr	view<cchar_t>	cc				()							const	noexcept	{ return {(const char*)Data, byte_count()};		}
 
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}
 		inlcxpr	const uint32_t&	size			()							const	noexcept	{ return Count;			}
-		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(Count * sizeof(T));	}
-		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
 		inline	T*				begin			()									noexcept	{ return Data;			}
 		inline	T*				end				()									noexcept	{ return Data + Count;	}
@@ -111,39 +111,32 @@ namespace gpk
 		inline	::gpk::error_t	fill			(const T & value, uint32_t offset = 0, uint32_t stop = 0xFFFFFFFFU)		{ for(; offset < ::gpk::min(Count, stop); ++offset) Data[offset] = value; return Count; }
 
 
-		typedef	FVoid<T&>				TFuncForEach;
-		typedef	FVoid<const T&>			TFuncForEachConst;
-		typedef	FVoid<u32&, T&>			TFuncEnumerate;
-		typedef	FVoid<u32&, const T&>	TFuncEnumerateConst;
-
-		::gpk::error_t			for_each		(const TFuncForEach        & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
-		::gpk::error_t			for_each		(const TFuncForEachConst   & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
-		::gpk::error_t			enumerate		(const TFuncEnumerate      & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
-		::gpk::error_t			enumerate		(const TFuncEnumerateConst & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
+		::gpk::error_t			for_each		(const ::gpk::TFuncForEach       <T> & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
+		::gpk::error_t			for_each		(const ::gpk::TFuncForEachConst  <T> & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
+		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerate     <T> & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
+		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerateConst<T> & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
 		// 
-		::gpk::error_t			for_each		(const TFuncForEach        & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
-		::gpk::error_t			for_each		(const TFuncForEachConst   & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
-		::gpk::error_t			enumerate		(const TFuncEnumerate      & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
-		::gpk::error_t			enumerate		(const TFuncEnumerateConst & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
+		::gpk::error_t			for_each		(const ::gpk::TFuncForEach       <T> & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
+		::gpk::error_t			for_each		(const ::gpk::TFuncForEachConst  <T> & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
+		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerate     <T> & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
+		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerateConst<T> & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
 
-		typedef	FBool<T&>						TFuncFind;
-		typedef	FBool<const T&>					TFuncFindConst;
-		::gpk::error_t			find			(const TFuncFind      & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
-		::gpk::error_t			find			(const TFuncFindConst & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
+		::gpk::error_t			find			(const FBool<T&>		& funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
+		::gpk::error_t			find			(const FBool<const T&>	& funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
 		::gpk::error_t			find			(const T & value, uint32_t offset = 0)						const	{ for(; offset < Count; ++offset) if(Data[offset] == value) return (::gpk::error_t)offset; return -1; }
 	
-		template<typename _tMax> ::gpk::error_t	max	(_tMax & maxFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMax = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value > maxFound) { iMax = offset; maxFound = value; } } return iMax; }
-		template<typename _tMax> ::gpk::error_t	min	(_tMax & minFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMin = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value < minFound) { iMin = offset; minFound = value; } } return iMin; }
-		template<typename _tMax> ::gpk::error_t	max	(const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tMax maxFound; return max(maxFound, funcComparand, offset); }
-		template<typename _tMax> ::gpk::error_t	min	(const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tMax minFound; return min(minFound, funcComparand, offset); }
+		tplt<tpnm _tMax> ::gpk::error_t	max	(_tMax & maxFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMax = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value > maxFound) { iMax = offset; maxFound = value; } } return iMax; }
+		tplt<tpnm _tMax> ::gpk::error_t	min	(_tMax & minFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMin = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value < minFound) { iMin = offset; minFound = value; } } return iMin; }
+		tplt<tpnm _tMax> ::gpk::error_t	max	(const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tMax maxFound; return max(maxFound, funcComparand, offset); }
+		tplt<tpnm _tMax> ::gpk::error_t	min	(const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tMax minFound; return min(minFound, funcComparand, offset); }
 	}; // view<>
 
-	template<typename T>	using	view_array	= ::gpk::view<T>;
-	template<typename T>	using	view1d		= ::gpk::view<T>;
-	template<typename T>	using	v1			= ::gpk::view<T>;
+	tplt<tpnm T>	using	view_array	= ::gpk::view<T>;
+	tplt<tpnm T>	using	view1d		= ::gpk::view<T>;
+	tplt<tpnm T>	using	v1			= ::gpk::view<T>;
 
-	template<typename T>	inlcxpr	uint32_t	size		(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.size();			}
-	template<typename T>	inlcxpr	uint32_t	byte_count	(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
+	tplt<tpnm T>	inlcxpr	uint32_t	size		(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.size();			}
+	tplt<tpnm T>	inlcxpr	uint32_t	byte_count	(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
 
 #pragma pack(pop)
 
@@ -224,19 +217,19 @@ namespace gpk
 
 
 	struct view_string : public view<char> {
-		inlcxpr				view_string				()													= default;
-		inlcxpr				view_string				(const view<char> & other)				noexcept	: view(other)				{}
-							view_string				(char * inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		template<u32 Len>	view_string				(char (&inputString)[Len])				noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		template<u32 Len>	view_string				(char (&inputString)[Len], uint32_t length)			: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		inlcxpr			view_string				()													= default;
+		inlcxpr			view_string				(const view<char> & other)				noexcept	: view(other)				{}
+						view_string				(char * inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
+		tplt<u32 Len>	view_string				(char (&inputString)[Len])				noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		tplt<u32 Len>	view_string				(char (&inputString)[Len], uint32_t length)			: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
 	};
 
 	struct view_const_string : public view<const char> {
-		inlcxpr				view_const_string		()													= default;
-		inlcxpr				view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
-							view_const_string		(const char* inputString, uint32_t length)			: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		template<u32 Len>	view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		template<u32 Len>	view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		inlcxpr			view_const_string		()													= default;
+		inlcxpr			view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
+						view_const_string		(const char* inputString, uint32_t length)			: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
+		tplt<u32 Len>	view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		tplt<u32 Len>	view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
 	};
 
 	typedef	::gpk::view_string					vs;
@@ -247,7 +240,8 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::vs		>	vcvs;
 	typedef	::gpk::view<const ::gpk::vcs	>	vcvcs;
 
-	cnstxpr ::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
+	stacxpr	::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
+	stacxpr	::gpk::vcs		VCS_EMPTY				= ::gpk::vcc{0, ""};
 
 	::gpk::error_t			rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
 	::gpk::error_t			ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
@@ -257,7 +251,7 @@ namespace gpk
 	stainli	::gpk::error_t	trim					(::gpk::vcc & trimmed) 	{ return trim(trimmed, trimmed); }
 
 
-	template <typename T>
+	tplt <tpnm T>
 	::gpk::error_t			reverse					(::gpk::view<T> elements)													{
 		const uint32_t				lastElement				= elements.size() - 1;
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
@@ -268,7 +262,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t			find					(const T & valueToFind, const ::gpk::view<const T> & target, uint32_t offset = 0)		{
 		for(uint32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
 			if(valueToFind == target[iOffset])
@@ -276,7 +270,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					rfind					(const T & valueToFind, const ::gpk::view<const T> & target, int32_t offset = 0)		{
 		for(uint32_t iOffset = target.size() - 1 - offset; iOffset < target.size(); --iOffset)
 			if(valueToFind == target[iOffset])
@@ -284,7 +278,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					find_sequence_obj		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
 			bool								equal					= true;
@@ -300,7 +294,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					rfind_sequence_obj		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
 			bool								equal					= true;
@@ -316,7 +310,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					find_sequence_pod		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset)
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(T)))
@@ -324,7 +318,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					rfind_sequence_pod		(const ::gpk::view<T> & sequence, const ::gpk::view<T>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)
 			if(0 == memcmp(sequence.begin(), &target[iOffset], sequence.size() * sizeof(T)))
@@ -335,7 +329,7 @@ namespace gpk
 	stainli	::gpk::error_t			find_string				(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::find_sequence_pod (toFind, target, offset); }
 	stainli	::gpk::error_t			rfind_string			(const ::gpk::vcs & toFind, const ::gpk::vcc & target, uint32_t offset = 0) { return ::gpk::rfind_sequence_pod(toFind, target, offset); }
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					split					(const T & valueToFind, const ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		const ::gpk::error_t				iValue					= ::gpk::find(valueToFind, original);
 		if(0 > iValue) {
@@ -350,7 +344,7 @@ namespace gpk
 		return iValue;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					splitAt					(const T & valueToFind, const ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		const ::gpk::error_t				iValue					= ::gpk::find(valueToFind, original);
 		if(0 > iValue) { // Read until the end unless fragment is found.
@@ -365,7 +359,7 @@ namespace gpk
 	}
 
 	// Returns the index of the start of the sequence if the latter found.
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					split					(const ::gpk::view<T> & sequenceToFind, const ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		const ::gpk::error_t				iValue					= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) {
@@ -379,12 +373,12 @@ namespace gpk
 		return iValue;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	inline	::gpk::error_t			split					(const ::gpk::view<T> & sequenceToFind, ::gpk::view<T> & inputOrLeft, ::gpk::view<T> & right) {
 		return ::gpk::split(sequenceToFind, inputOrLeft, inputOrLeft, right);
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					splitAt					(const ::gpk::view<T> & sequenceToFind, const ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		const ::gpk::error_t				iValue					= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) { // Read until the end unless fragment is found.
@@ -398,7 +392,7 @@ namespace gpk
 		return iValue;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					max						(::gpk::view<T> input, T ** result) {
 		ree_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		*result							= &input[0];
@@ -413,7 +407,7 @@ namespace gpk
 		return iMax;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t					min						(::gpk::view<T> input, T ** result) {
 		ree_if(0 == input.size(), "%s", "Cannot get reference to max element of an empty array.");
 		*result							= &input[0];
@@ -428,14 +422,14 @@ namespace gpk
 		return iMin;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	T&							max						(::gpk::view<T> input) {
 		T								* result				= 0;
 		gthrow_if(errored(::gpk::max(input, &result)), "%s", "");
 		return *result;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	T&							min						(::gpk::view<T> input) {
 		T								* result				= 0;
 		gthrow_if(errored(::gpk::min(input, &result)), "%s", "");

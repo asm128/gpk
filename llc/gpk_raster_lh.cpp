@@ -18,7 +18,7 @@
 	 && (position.y >= 0 && position.y < (int32_t)pixels.metrics().y)
 	) {
 		::gpk::bgra					& targetPixel = pixels[position.y][position.x];
-		targetPixel				= {color.b, color.g, color.r, (uint8_t)::gpk::clamp(targetPixel.a + (uint32_t)color.a, 0U, 255U)};
+		targetPixel				= {color.b, color.g, color.r, (uint8_t)::gpk::clamped(targetPixel.a + (uint32_t)color.a, 0U, 255U)};
 		return 1;
 	}
 	return 0;
@@ -197,8 +197,8 @@ static	double		orient2d		(const ::gpk::line2i16 & segment, const ::gpk::n2i16 & 
 static	double		orient2d		(const ::gpk::line3f32 & segment, const ::gpk::n2i16 & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 static	double		orient2d		(const ::gpk::line2f32 & segment, const ::gpk::n2i16 & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 
-template <typename _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
-template <typename _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
+tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
+tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
 
 ::gpk::error_t			gpk::drawTriangle		(::gpk::g8bgra pixels, const ::gpk::tri2<int16_t> & triangle, ::gpk::bgra color){
 	// Compute triangle bounding box

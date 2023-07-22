@@ -1,10 +1,12 @@
 /// Copyright 2010-2022 - asm128
 #include "gpk_platform_globals.h"
 
+// Uncomment these to toggle behavior
 //#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+//#define GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
 
-#ifndef GPK_DEBUG_H_23627
-#define GPK_DEBUG_H_23627
+#ifndef GPK_DEBUG_H
+#define GPK_DEBUG_H
 
 #if defined(GPK_DEBUG_ENABLED)
 namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; } 
@@ -15,6 +17,9 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; }
 //#	define GPK_VERBOSE_PRINTF_ENABLED
 #	ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
 #		define GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
+#	endif
+#	ifndef GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
+#		define GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
 #	endif
 #	if defined(GPK_ANDROID) || defined(GPK_LINUX)
 #		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
@@ -41,4 +46,4 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = 0; }
 //#	define GPK_VERBOSE_PRINTF_ENABLED	// Uncomment as needed
 #endif
 
-#endif // GPK_DEBUG_H_23627
+#endif // GPK_DEBUG_H

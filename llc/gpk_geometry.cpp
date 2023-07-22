@@ -10,7 +10,7 @@
 	const uint32_t				offsetPositionIndices		= geometry.PositionIndices	.size(); geometry.PositionIndices	.resize(offsetPositionIndices	+ 36);
 	const ::gpk::vc3f32			vertices					= {&::gpk::VOXEL_FACE_VERTICES[0].A, 24};
 	for(uint32_t iVertex = offsetPositions; iVertex < geometry.Positions.size(); ++iVertex)
-		geometry.Positions[iVertex]	= (vertices[iVertex] - params.Origin).Scale(params.HalfSizes * 2.0f);
+		geometry.Positions[iVertex]	= vertices[iVertex].Scaled(params.HalfSizes * 2.0f) - params.Origin;
 
 	//memcpy(&geometry.Positions		[0], ::gpk::VOXEL_FACE_VERTICES	, geometry.Positions		.byte_count());
 	memcpy(&geometry.Normals		[offsetNormals		], ::gpk::VOXEL_FACE_NORMALS, geometry.Normals		.byte_count());
@@ -27,7 +27,7 @@ enum SQUARE_MODE
 	, SQUARE_MODE_TOP_RIGHT
 	};
 
-template<typename _tIndex>
+tplt<tpnm _tIndex>
 static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionIndices, uint32_t vertexOffset, const ::gpk::n2u16 cellCount, bool counterClockwise, bool outward) {
 	const uint16_t				pitch						= cellCount.x + 1;								// 2 3 
 	const uint16_t				totalVertices				= pitch * (cellCount.y + 1); 
@@ -67,10 +67,9 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 	// -- Generate positions
 	const ::gpk::n2f64			scale						= params.Size.f64().InPlaceScale(cellUnits);
-	const ::gpk::n3f64			center						= {params.Origin.x, 0, params.Origin.y};
-	vertexCount.for_each([&geometry, scale, center](::gpk::n2u16 & coord) {
+	vertexCount.for_each([&geometry, scale, params](::gpk::n2u16 & coord) {
 		const ::gpk::n3f64			position					= {coord.x * scale.x, 0, coord.y * scale.y};
-		geometry.Positions.push_back((position - center).f32());
+		geometry.Positions.push_back(position.f32() - params.Origin);
 	});
 	return ::geometryBuildGridIndices(geometry.PositionIndices, vertexOffset, params.CellCount, params.Reverse, params.Outward); 
 }
@@ -109,7 +108,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	const double				sliceOffset					= 0; //::gpk::math_2pi * (1.0 - params.Circumference);
 
 	// -- Generate positions and texture coordinates
-	gpk_necs(geometry.Positions		.push_back(params.Origin));	// The first vertex is the center of the circle
+	gpk_necs(geometry.Positions		.push_back(-params.Origin));	// The first vertex is the center of the circle
 	gpk_necs(geometry.TextureCoords	.push_back(::gpk::n2f32{.5f, .5f}));					// The first vertex is the center of the circle
 	for(uint32_t iVertex = 0; iVertex < vertexCount; ++iVertex) {
 		double						angle						= sliceScale * iVertex + sliceOffset;
@@ -165,12 +164,11 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 	//const double				lengthScale					= cellUnits.y * params.Length;
 	const ::gpk::n2f64			sliceScale					= ::gpk::n2f64{::gpk::math_2pi * cellUnits.x, ::gpk::math_pi * cellUnits.y};
-	const ::gpk::n3f64			center						= {params.Origin.x, 0, params.Origin.y};
 	for(uint32_t y = 0; y < vertexCount.y; ++y) {
 		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
 		for(uint32_t x = 0; x < vertexCount.x; ++x) {
 			::gpk::n3f64				position					= {sin(sliceScale.y * y) * sin(sliceScale.x * x) * radius, sin(sliceScale.y * y) * sin(::gpk::math_pi * x / params.CellCount.x) * params.Length, cos(sliceScale.x * x) * radius};
-			geometry.Positions.push_back((position - center).f32());
+			geometry.Positions.push_back(position.f32() - params.Origin);
 		}
 	}
 	const uint32_t				indexOffset				= geometry.PositionIndices.size();
@@ -197,12 +195,11 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 	//const double				lengthScale					= cellUnits.y * params.Length;
 	const ::gpk::n2f64			sliceScale					= ::gpk::n2f64{::gpk::math_2pi * cellUnits.x, ::gpk::math_pi * cellUnits.y};
-	const ::gpk::n3f64			center						= {params.Origin.x, 0, params.Origin.y};
 	for(uint32_t y = 0; y < vertexCount.y; ++y) {
 		const double				radius						= ::gpk::interpolate_linear(params.Radius.Min, params.Radius.Max, cellUnits.y * y);
 		for(uint32_t x = 0; x < vertexCount.x; ++x) {
 			::gpk::n3f64				position					= {sin(sliceScale.y * y) * sin(sliceScale.x * x) * radius, sin(sliceScale.y * y) * cos(::gpk::math_pi * x / params.CellCount.x) * params.Length, cos(sliceScale.x * x) * radius};
-			geometry.Positions.push_back((position - center).f32());
+			geometry.Positions.push_back(position.f32() - params.Origin);
 		}
 	}
 
@@ -243,8 +240,8 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 			const ::gpk::n3f64			relativePosInner			= {sinCos.Sin * params.Radius.Min, 0, sinCos.Cos * params.Radius.Min};
 			::gpk::n3f32				& posOuter					= geometry.Positions[index];
 			::gpk::n3f32				& posInner					= geometry.Positions[index + params.Slices + 1];
-			posInner				= params.Origin + relativePosInner.f32();
-			posOuter				= params.Origin + relativePosOuter.f32();
+			posInner				= (relativePosInner.f32() * -1.f) - params.Origin;
+			posOuter				= (relativePosOuter.f32() * -1.f) - params.Origin;
 		}, vertexOffset, vertexOffset + (vertexCount >> 1)
 	);
 	return 0;
@@ -252,7 +249,6 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 ::gpk::error_t			gpk::geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
 	gpk_necs(::gpk::geometryBuildRingSide(geometry, params));
-	//
 	::gpk::SParamsRingSide		paramsSide					= params;
 	paramsSide.Reverse		= true;
 	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
@@ -260,13 +256,12 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 }
 
 ::gpk::error_t			gpk::geometryBuildRing		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRing & params) {
-	//const uint32_t				vertexOffset				= geometry.Positions.size();
 	::gpk::SParamsRingSide		paramsSide					= {};
 	paramsSide.Origin		= params.Origin;
 	paramsSide.Slices		= params.CellCount.x;
 	paramsSide.Radius		= params.RadiusYMin;
+	paramsSide.Reverse		= true;	// looking down
 	paramsSide.Circumference= params.Circumference;
-	paramsSide.Reverse		= true;
 	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
 	{
 		::gpk::SParamsCylinderWall	paramsWall					= {};
@@ -274,18 +269,34 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 		paramsWall.CellCount	= params.CellCount;
 		paramsWall.Radius		= {params.RadiusYMin.Max, params.RadiusYMax.Max};
 		paramsWall.Circumference= params.Circumference;
-		paramsWall.Reverse		= false;
 		paramsWall.Height		= params.Height;
 		gpk_necs(::gpk::geometryBuildCylinderWall(geometry, paramsWall));
-		//
+		////
 		paramsWall.Radius		= {params.RadiusYMin.Min, params.RadiusYMax.Min};
 		paramsWall.Reverse		= true;
 		gpk_necs(::gpk::geometryBuildCylinderWall(geometry, paramsWall));
 	}
 	//
-	paramsSide.Origin.y		+= params.Height;
+	paramsSide.Origin.y		-= params.Height;
 	paramsSide.Radius		= params.RadiusYMax;
-	paramsSide.Reverse		= false;
+	paramsSide.Reverse		= false;	// looking up
 	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
 	return 0;
 }
+
+::gpk::error_t			gpk::geometryBuildDisc		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCylinderWall & params) {
+	::gpk::SParamsCircle		cap							= {};
+	cap.Origin				= params.Origin;
+	cap.Radius				= params.Radius.Min;
+	cap.Reverse				= true;
+	gpk_necs(::gpk::geometryBuildCircle(geometry, cap));
+
+	gpk_necs(::gpk::geometryBuildCylinderWall(geometry, params));
+
+	cap.Reverse				= false;
+	cap.Radius				= params.Radius.Max;
+	cap.Origin.y			-= params.Height;
+	gpk_necs(::gpk::geometryBuildCircle(geometry, cap));
+	return 0;
+}
+

@@ -53,7 +53,7 @@ namespace gpk
 	}
 
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
-	template<typename _tCoord>
+	tplt<tpnm _tCoord>
 	stainli	::gpk::error_t	drawTriangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::tri2<_tCoord>& triangle)		{
 		::gpk::n2i32				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
@@ -73,7 +73,7 @@ namespace gpk
 	}
 
 	// Bresenham's line algorithm
-	template<typename _tCoord>
+	tplt<tpnm _tCoord>
 	static	::gpk::error_t	drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{
 		float						x1					= (float)line.A.x
 			,						y1					= (float)line.A.y

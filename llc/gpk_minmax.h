@@ -6,19 +6,24 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T> 
+	tplt<tpnm T> 
 	struct minmax {
+		typedef minmax<T>		TMinMax;
+
+		stincxp	TMinMax			from		(T value)				noexcept			{ return {value, value}; }
+
 		T						Min, Max;
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Max == other.Max && Min == other.Min);
 
 		inlcxpr	T				Length		()				const	noexcept	{ return T(Max - Min); }
-		inlcxpr	T				Clamp		(T value)		const	noexcept	{ return ::gpk::clamp(value, Min, Max); }
+		inlcxpr	T				Middle		()				const	noexcept	{ return Min + Length() / 2; }
+		inlcxpr	T				Clamp		(T value)		const	noexcept	{ return ::gpk::clamped(value, Min, Max); }
 		T						Weighted	(double weight)	const	noexcept	{ return T(Min + Length() * weight); }
 		double					Weight		(T value)		const	noexcept	{ return 1.0 / Length() * (value - Min); }
 		double					WeightClamp	(T value)		const	noexcept	{ return Weight(Clamp(value)); }
 
-		template<typename _tOther>
+		tplt<tpnm _tOther>
 		inlcxpr	minmax<_tOther>	Cast		()				const	noexcept	{ return{(_tOther)Min, (_tOther)Max}; }
 
 		inlcxpr	minmax<char>	c			()				const	noexcept	{ return Cast<char		>(); }
@@ -33,6 +38,9 @@ namespace gpk
 		inlcxpr	minmax<i64>		i64			()				const	noexcept	{ return Cast<int64_t	>(); }
 		inlcxpr	minmax<f32>		f32			()				const	noexcept	{ return Cast<float		>(); }
 		inlcxpr	minmax<f64>		f64			()				const	noexcept	{ return Cast<double	>(); }
+
+		inline	TMinMax&		Set			(T value)				noexcept	{ Min = Max = value; return *this; }
+		inline	TMinMax&		From		(T value)				noexcept	{ Min = Max = value; return *this; }
 	};
 #pragma pack(pop)
 	typedef	minmax<char		>	minmaxchar;

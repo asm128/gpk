@@ -7,18 +7,18 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tDimension>	struct line2 : public line<::gpk::n2<_tDimension>>		{
+	tplt<tpnm _tDimension>	struct line2 : public line<::gpk::n2<_tDimension>>		{
 		typedef	_tDimension		T;
 		typedef	::gpk::n2<T>	TVertex;
 		using line<TVertex>::	A;
 		using line<TVertex>::	B;
 		using line<TVertex>::	line;
 
-		template<typename _tOther>
+		tplt<tpnm _tOther>
 		line2<_tOther>			Cast		()		const	noexcept		{
 			return
-				{ A.template Cast<_tOther>()
-				, B.template Cast<_tOther>()
+				{ A.tplt Cast<_tOther>()
+				, B.tplt Cast<_tOther>()
 				};
 		}
 	};
@@ -33,14 +33,14 @@ namespace gpk
 	typedef line2<int32_t>	line2i32;
 	typedef line2<int64_t>	line2i64;
 
-	template<typename T> stincxp	T		rise		(const ::gpk::line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
-	template<typename T> stincxp	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
-	template<typename T> stincxp	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
-	template<typename T> stacxpr	T		orient2d	(const ::gpk::line2<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
-	template<typename T> stainli	double	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
+	tplt<tpnm T> stincxp	T		rise		(const ::gpk::line2<T> & line)									noexcept	{ return line.B.y - line.A.y;		}
+	tplt<tpnm T> stincxp	T		run			(const ::gpk::line2<T> & line)									noexcept	{ return line.B.x - line.A.x;		}
+	tplt<tpnm T> stincxp	T		slope		(const ::gpk::line2<T> & line)												{ return rise(line) / run(line);	}
+	tplt<tpnm T> stacxpr	T		orient2d	(const ::gpk::line2<T> & segment, const ::gpk::n2<T> & point)	noexcept	{ return (segment.B.x - segment.A.x) * (point.y - segment.A.y) - (segment.B.y - segment.A.y) * (point.x - segment.A.x); }
+	tplt<tpnm T> stainli	double	determinant	(const ::gpk::line2<T>& line)									noexcept	{ return ::gpk::determinant((double)line.A.x, (double)line.A.y, (double)line.B.x, (double)line.B.y); }
 #pragma pack(pop)
 	// ---- Collision
-	//template<typename T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
+	//tplt<tpnm T> static	bool	raySegmentIntersect	(n2<_tElement> r_d, n2<_tElement> r_p, n2<_tElement> s_d, n2<_tElement> s_p)								{
 	//	const double	t2		= (r_d.x * (s_p.y - r_p.y) + r_d.y * (r_p.x - s_p.x)) / (s_d.x * r_d.y - s_d.y * r_d.x);
 	//	const double	t1		= (s_p.x + s_d.x * t2 - r_p.x) / r_d.x;	// Plug the value of T2 to get T1
 	//	return (t2 > 0 && 0 < t2 && t2 < 1);

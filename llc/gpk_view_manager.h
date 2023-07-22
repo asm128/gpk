@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	template<typename T>
+	tplt<tpnm T>
 	class CViewManager	{
 		stacxpr	uint32_t						BLOCK_SIZE					= 0xFFFF;
 

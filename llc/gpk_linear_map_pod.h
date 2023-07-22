@@ -8,7 +8,7 @@
 
 namespace gpk
 {
-	template <typename _tKey, typename _tValue> 
+	tplt <tpnm _tKey, tpnm _tValue> 
 	struct linear_map_pod {
 		typedef _tValue		T;
 		typedef _tKey		K;
@@ -57,7 +57,7 @@ namespace gpk
 			return 0; 
 		}
 	};
-	template <typename _tKey, typename _tValue> 
+	tplt <tpnm _tKey, tpnm _tValue> 
 	using	lmpod	= linear_map_pod<_tKey, _tValue>;
 } // namespace
 

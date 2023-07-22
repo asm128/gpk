@@ -11,7 +11,7 @@
 namespace gpk
 {
 // Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		line_line_intersect
 		( const ::gpk::line2<TAxis>	& line1
 		, const ::gpk::line2<TAxis>	& line2
@@ -45,7 +45,7 @@ namespace gpk
 
 	// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
 	// returns t value of intersection and intersection point q
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	int32_t				intersectRaySphere
 		( const ::gpk::n3<TAxis>		& position
 		, const ::gpk::n3<TAxis>		& direction
@@ -65,14 +65,14 @@ namespace gpk
 			return 0;
 
 		t					= (float)(-b - sqrt(discr));	// Ray now found to intersect sphere, compute smallest t value of intersection
-		if (t < 0.0f)	// If t is negative, ray started inside sphere so clamp t to zero
+		if (t < 0.0f)	// If t is negative, ray started inside sphere so clamped t to zero
 			t					= 0.0f;
 
 		q					= position + direction * t;
 		return 1;
 	}
 
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		point_in_segment
 		( const ::gpk::line2<TAxis>	& segment
 		, const ::gpk::n2<TAxis>	& point
@@ -85,7 +85,7 @@ namespace gpk
 				) ? 1 :  0;
 	}
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		line_segment_intersect
 		( const ::gpk::line2<TAxis>	& line
 		, const ::gpk::line2<TAxis>	& segment
@@ -97,7 +97,7 @@ namespace gpk
 	}
 
 	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		segment_segment_intersect
 		( const ::gpk::line2<TAxis>	& segment1
 		, const ::gpk::line2<TAxis>	& segment2
@@ -109,7 +109,7 @@ namespace gpk
 	}
 
 
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		buildAABBSegments
 		( const ::gpk::n2<TAxis>	& center
 		, const TAxis				halfSizeBox
@@ -127,7 +127,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename TAxis>
+	tplt<tpnm TAxis>
 	::gpk::error_t		buildAABBSegments
 		( const ::gpk::rect2<TAxis>	& rect
 		, ::gpk::line2<TAxis>		& left

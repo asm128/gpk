@@ -6,8 +6,8 @@
 
 namespace gpk
 {
-	template <typename T>	using aaobj		= ::gpk::aobj<::gpk::aobj<T>>; 
-	template <typename T>	using aapod		= ::gpk::aobj<::gpk::apod<T>>; 
+	tplt <tpnm T>	using aaobj		= ::gpk::aobj<::gpk::aobj<T>>; 
+	tplt <tpnm T>	using aapod		= ::gpk::aobj<::gpk::apod<T>>; 
 
 	typedef	::gpk::aapod<uchar_t	>	aauchar		;
 	typedef	::gpk::aapod<char		>	aachar		;

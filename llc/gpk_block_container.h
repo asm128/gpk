@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	template<typename T, size_t _size>
+	tplt<tpnm T, size_t _size>
 	class block_container {
 		::gpk::appod<::gpk::astatic<T, _size>>	Blocks;
 		::gpk::au32								RemainingSpace;

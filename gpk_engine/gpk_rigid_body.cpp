@@ -29,7 +29,7 @@
 	return 0; 
 }
 
-void					gpk::transformInertiaTensor	(::gpk::m3<float> & iitWorld, const ::gpk::m3<float> &iitBody, const ::gpk::m4f32 &rotmat)		{
+void					gpk::transformInertiaTensor	(::gpk::m3f32 & iitWorld, const ::gpk::m3f32 & iitBody, const ::gpk::m4f32 & rotmat)		{
 	const float					t4							= rotmat._11*iitBody._11 + rotmat._21*iitBody._12 + rotmat._31*iitBody._13;
 	const float					t9							= rotmat._11*iitBody._21 + rotmat._21*iitBody._22 + rotmat._31*iitBody._23;
 	const float					t14							= rotmat._11*iitBody._31 + rotmat._21*iitBody._32 + rotmat._31*iitBody._33;
@@ -58,7 +58,7 @@ void					gpk::updateTransform	(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 
 	transformLocal.SetTranslation(bodyTransform.Position, false);
 }
 
-::gpk::error_t			gpk::integrateForces	(double duration, ::gpk::SBodyFrame& bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass) {
+::gpk::error_t			gpk::integrateForces	(double duration, ::gpk::SBodyFrame & bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass) {
 	// -- Calculate linear acceleration from force inputs.
 	bodyFrame.LastFrameAcceleration	= bodyForce.Acceleration;
 	bodyFrame.LastFrameAcceleration.AddScaled(bodyFrame.AccumulatedForce, bodyMass.InverseMass);
@@ -76,8 +76,7 @@ void					gpk::updateTransform	(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 
 	return 0;
 }
 
-// ------------- Adjust positions
-::gpk::error_t			gpk::integratePosition	(double duration, double durationHalfSquared, ::gpk::SBodyFlags& bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces) {
+::gpk::error_t			gpk::integratePosition	(double duration, double durationHalfSquared, ::gpk::SBodyFlags & bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces) {
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, duration);
 	bodyTransform.Position		.AddScaled(bodyForces.Velocity, durationHalfSquared);
 	bodyTransform.Orientation	.AddScaled(bodyForces.Rotation, duration);	// Update angular position.

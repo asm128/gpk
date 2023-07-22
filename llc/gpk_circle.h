@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename T> 
+	tplt<tpnm T> 
 	struct circle { 
 		double			Radius; 
 		::gpk::n2<T>	Center; 

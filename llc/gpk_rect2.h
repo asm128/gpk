@@ -1,19 +1,19 @@
 #include "gpk_n2.h"
 
-#ifndef GPK_RECT2_H_23627
-#define GPK_RECT2_H_23627
+#ifndef GPK_RECT2_H
+#define GPK_RECT2_H
 
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T>
+	tplt<tpnm T>
 	struct rect2 {
 		::gpk::n2<T>			Offset, Size;
 
 		GPK_DEFAULT_OPERATOR(rect2<T>, Offset	== other.Offset	&& Size == other.Size);
 
-		template <typename _t>
-		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.template Cast<_t>(), Size.template Cast<_t>()}; }
+		tplt <tpnm _t>
+		inlcxpr	rect2<_t>		Cast		()	const	noexcept	{ return {Offset.tplt Cast<_t>(), Size.tplt Cast<_t>()}; }
 
 		inlcxpr	rect2<uint8_t>	u8			()	const	noexcept	{ return Cast<uint8_t	>(); }
 		inlcxpr	rect2<uint16_t>	u16			()	const	noexcept	{ return Cast<uint16_t	>(); }
@@ -40,7 +40,7 @@ namespace gpk
 	typedef rect2<int64_t>	rect2i64;
 #pragma pack(pop)
 
-	template<typename T>
+	tplt<tpnm T>
 	stacxpr	bool	in_range	(const ::gpk::n2<T>& pointToTest, const ::gpk::rect2<T>& area)	noexcept	{
 		return	::gpk::in_range(pointToTest.x, area.Offset.x, (T)(area.Offset.x + area.Size.x))
 			&&	::gpk::in_range(pointToTest.y, area.Offset.y, (T)(area.Offset.y + area.Size.y))
@@ -48,4 +48,4 @@ namespace gpk
 	}
 } // namespace
 
-#endif // GPK_RECT2_H_23627
+#endif // GPK_RECT2_H

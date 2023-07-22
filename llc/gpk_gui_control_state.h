@@ -84,10 +84,10 @@ namespace gpk
 		cid_t				Parent	= -1; 
 	};
 
-	template<typename _tState>
+	tplt<tpnm _tState>
 	using TFuncSetMaskedValue = std::function<_tState(void)>; 
 
-	template<typename _tState>
+	tplt<tpnm _tState>
 	_tState				setValue		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {
 		const _tState			oldState		= state;
 		state				= funcSetValue();

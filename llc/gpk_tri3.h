@@ -8,7 +8,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	template<typename _tDimension>	struct tri3 : public tri<::gpk::n3<_tDimension>>		{
+	tplt<tpnm _tDimension>	struct tri3 : public tri<::gpk::n3<_tDimension>>		{
 		typedef	_tDimension		T;
 		typedef	::gpk::n3<T>	TVertex;
 
@@ -28,12 +28,12 @@ namespace gpk
 		inlcxpr	tri3<int32_t>	u32			()		const	noexcept	{ return {A.u32(), B.u32(), C.u32()}; }
 		inlcxpr	tri3<int64_t>	u64			()		const	noexcept	{ return {A.u64(), B.u64(), C.u64()}; }
 
-		template<typename _tOther>
+		tplt<tpnm _tOther>
 		tri3<_tOther>			Cast		()		const	noexcept		{
 			return
-				{ A.template Cast<_tOther>()
-				, B.template Cast<_tOther>()
-				, C.template Cast<_tOther>()
+				{ A.tplt Cast<_tOther>()
+				, B.tplt Cast<_tOther>()
+				, C.tplt Cast<_tOther>()
 				};
 		}
 		bool					CulledX		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
@@ -102,14 +102,14 @@ namespace gpk
 	typedef	minmax<tri3i64>		minmaxtri3i64;
 #pragma pack(pop)
 
-	template<typename T>
+	tplt<tpnm T>
 	tri3<T>&		translate			(::gpk::tri3<T> & triangle, const ::gpk::n3<T> & translation)	{
 		triangle.A		+= translation;
 		triangle.B		+= translation;
 		triangle.C		+= translation;
 		return triangle;
 	}
-	template<typename T>
+	tplt<tpnm T>
 	tri3<T>&		scale				(::gpk::tri3<T> & triangle, const ::gpk::n3<T> & scale)			{
 		triangle.A.Scale(scale);
 		triangle.B.Scale(scale);
@@ -117,7 +117,7 @@ namespace gpk
 		return triangle;
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::n3<T>	triangleWeight		(const ::gpk::tri<T> & weights, const ::gpk::tri3<T> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 } // namespace 
 

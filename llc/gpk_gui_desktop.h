@@ -7,7 +7,7 @@
 namespace gpk
 {
 
-	template <typename _tElement>
+	tplt <tpnm _tElement>
 	struct SRecyclableElementContainer {
 		::gpk::view_bit<uint64_t>	Unused;
 		::gpk::aobj<_tElement>		Elements;

@@ -22,9 +22,9 @@ namespace gpk
 
 	stainli	uint64_t	powui				(const uint32_t	base, const uint32_t exponent)				noexcept	{ uint64_t result = 1; for(uint32_t i = 0; i < exponent; ++i) result *= base; return result;	}
 
-	template<typename _tNumber>
+	tplt<tpnm _tNumber>
 	stincxp	double		sqrt_safe			(_tNumber _valueSquared)									noexcept	{ return _valueSquared ? sqrt(_valueSquared) : 0;		}
-	template<typename _tNumber>
+	tplt<tpnm _tNumber>
 	cnstxpr	_tNumber	interpolate_linear	(const _tNumber a, const _tNumber b, const double factor)	noexcept	{ return (_tNumber)(a * (1.0 - factor) + b * factor);	}
 
 	struct SSinCos { double Sin, Cos; };

@@ -8,7 +8,7 @@
 
 namespace gpk
 {
-	template<typename _tColor>
+	tplt<tpnm _tColor>
 	struct img {
 		typedef	_tColor				T;
 		typedef	const _tColor		TConst;
@@ -85,7 +85,7 @@ namespace gpk
 	typedef	img<float>		imgf32;
 	typedef	img<double>		imgf64;
 
-	template<typename _tType>
+	tplt<tpnm _tType>
 	struct imgmono {
 		typedef	_tType				T;
 		typedef	::gpk::view_bit<T>	TView;
@@ -131,7 +131,7 @@ namespace gpk
 
 	typedef	imgmono<uint64_t>	imgmonou64;
 
-	template<typename _tColor, typename _tDepthStencil>
+	tplt<tpnm _tColor, tpnm _tDepthStencil>
 	struct rt {
 		typedef _tColor						TColor;
 		typedef _tDepthStencil				TDepth;
@@ -170,10 +170,10 @@ namespace gpk
 		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize, const TColor & color, const TDepth & depth)	noexcept	{ return resize(newSize.u32(), color, depth); }
 	};
 
-	template<typename TColor, typename TDepth>
+	tplt<tpnm TColor, tpnm TDepth>
 	using	SRenderTarget	= rt<TColor, TDepth>;
 
-	template<typename TColor, typename TDepth>
+	tplt<tpnm TColor, tpnm TDepth>
 	::gpk::error_t				clearTarget			(::gpk::rt<TColor, TDepth> & targetToClear)		{
 		::gpk::img<TColor>				& offscreen			= targetToClear.Color;
 		::gpk::img<TDepth>				& offscreenDepth	= targetToClear.DepthStencil;
@@ -183,7 +183,7 @@ namespace gpk
 	}
 
 
-	template<typename TColor>
+	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_colors.resize(newSize.x * newSize.y));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize)
@@ -191,7 +191,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename TColor>
+	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize, const TColor & newValue) {
 		gpk_necs(out_colors.resize(newSize.x * newSize.y, newValue));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize)
@@ -200,7 +200,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename TColor>
+	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentImage	(::gpk::apod<TColor> & out_scaled, ::gpk::grid<TColor> & out_view, const ::gpk::grid<TColor> & in_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_scaled.resize(newSize.x * newSize.y));		// Update size-dependent resources.
 		if( out_view.metrics().u16() != newSize ) {
@@ -211,15 +211,15 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename TColor>
+	tplt<tpnm TColor>
 	stainli	::gpk::error_t		updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, const ::gpk::n2u16 & newSize) {
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize);
 	}
-	template<typename TColor>
+	tplt<tpnm TColor>
 	stainli	::gpk::error_t		updateSizeDependentTarget	(::gpk::img<TColor> & out_texture, const ::gpk::n2u16 & newSize, const TColor & newValue) {
 		return updateSizeDependentTarget(out_texture.Texels, out_texture.View, newSize, newValue);
 	}
-	template<typename TColor>
+	tplt<tpnm TColor>
 	stainli	::gpk::error_t		updateSizeDependentImage	(::gpk::img<TColor> & out_texture, const ::gpk::grid<TColor> & in_view, const ::gpk::n2u16 & newSize) {
 		return updateSizeDependentImage(out_texture.Texels, out_texture.View, in_view, newSize);
 	}

@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	agauge	= ::gpk::apod<::gpk::gauge<_tDimension>>;
 
 	typedef	::gpk::agauge<char		>	agaugec		, agaugechar;

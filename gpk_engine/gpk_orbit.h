@@ -26,7 +26,7 @@ namespace gpk
 	stincxp	double			degreesToRadians		(double degrees) { return ::gpk::math_2pi / 360.0 * degrees; }
 
 	// Calculate the axial inclination of the planet IN RADIANS
-	template<typename _tAxis>
+	tplt<tpnm _tAxis>
 	static ::gpk::error_t	orientationFromEuler	(::gpk::AXIS iAxis, double axialTilt, ::gpk::quat<_tAxis> & orientation) {
 		const _tAxis				rotationValue			= _tAxis(degreesToRadians(axialTilt));
 		switch(iAxis) {
@@ -42,7 +42,7 @@ namespace gpk
 	}
 
 	// Calculate the rotation velocity of the planet IN EARTH DAYS
-	template<typename _tAxis, typename _tAxisOrientation>
+	tplt<tpnm _tAxis, tpnm _tAxisOrientation>
 	static ::gpk::error_t	orbitRotation			(::gpk::AXIS iAxis, double rotation_period, double rotation_unit, const ::gpk::quat<_tAxisOrientation> & orientation, ::gpk::n3<_tAxis> & rotation) {
 		const _tAxis				rotationValue			= _tAxis(::gpk::math_2pi / rotation_period * rotation_unit);
 		switch(iAxis) {
@@ -58,7 +58,7 @@ namespace gpk
 	}
 
 	// Calculate the rotation velocity of the planet IN EARTH DAYS
-	template<typename _tAxis, typename _tAxisOrientation>
+	tplt<tpnm _tAxis, tpnm _tAxisOrientation>
 	static ::gpk::error_t	orbitCenter			(::gpk::AXIS iAxis, double position, ::gpk::n3<_tAxis> & center) {
 		switch(iAxis) {
 		case ::gpk::AXIS_X_NEGATIVE: center = {-position, 0, 0}; break;

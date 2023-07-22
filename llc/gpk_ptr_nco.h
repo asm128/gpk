@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	template<typename _tNCO>
+	tplt<tpnm _tNCO>
 	class pnco {
 	protected:
 		::gpk::gref<_tNCO>		* Reference	= 0;
@@ -39,14 +39,14 @@ namespace gpk
 		inlcxpr	const TRef*		set_ref		(TRef * ref)						noexcept	{ TRef * oldInstance = Reference; Reference = ref; ::gpk::ref_release(&oldInstance); return Reference; }
 		inline	::gpk::error_t	clear		()									noexcept	{ return ::gpk::ref_release(&Reference); }
 
-		template<typename _tNCOOther>
+		tplt<tpnm _tNCOOther>
 		inline	_tNCO*			as			(_tNCOOther* * other)				noexcept	{ return *other = (Reference ? dynamic_cast<_tNCOOther*>(Reference->Instance) : 0); }
 
-		template<typename _tNCOOther>
+		tplt<tpnm _tNCOOther>
 		inline	_tNCO*			as			(::gpk::pnco<_tNCOOther> & other)	noexcept	{ other = {(::gpk::gref<_tNCOOther>*)::gpk::ref_acquire(Reference)}; return 0; }
 	};
-	template <typename T> using pn		= ::gpk::pnco<T>; 
-	template <typename T> using pi		= ::gpk::pnco<T>; 
+	tplt <tpnm T> using pn		= ::gpk::pnco<T>; 
+	tplt <tpnm T> using pi		= ::gpk::pnco<T>; 
 } // namespace
 
 #endif // GPK_PTR_NCO_H_23627

@@ -12,7 +12,7 @@ namespace gpk
 
 	::gpk::STypeRegistry&				typeRegistrySingleton					()		noexcept;
 
-	template<typename _t>
+	tplt<tpnm _t>
 	struct STypeRegistrator {
 
 		operator							int										()					{ return 0; }

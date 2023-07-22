@@ -109,8 +109,8 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 			xcb_motion_notify_event_t			* mev				= (xcb_motion_notify_event_t*)ev;
 			int32_t								xPos				= mev->same_screen ? mev->event_x : mev->root_x;
 			int32_t								yPos				= mev->same_screen ? mev->event_y : mev->root_y;
-			input.MouseCurrent.Position.x	= ::gpk::clamp(xPos, 0, (int32_t)mainWindow.Size.x);
-			input.MouseCurrent.Position.y	= ::gpk::clamp(yPos, 0, (int32_t)mainWindow.Size.y);
+			input.MouseCurrent.Position.x	= ::gpk::clamped(xPos, 0, (int32_t)mainWindow.Size.x);
+			input.MouseCurrent.Position.y	= ::gpk::clamped(yPos, 0, (int32_t)mainWindow.Size.y);
 			input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 			input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 			//info_printf("Mouse position: %i, %i", input.MouseCurrent.Position.x, input.MouseCurrent.Position.y);
@@ -238,8 +238,8 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	case WM_MOUSEWHEEL		: verbose_printf("WM_MOUSEWHEEL    '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseWheel		(mainDisplay.EventQueue, input.MouseCurrent.Deltas.z = GET_WHEEL_DELTA_WPARAM(wParam))); mainDisplay.Repaint = true; break;
 	case WM_MOUSEMOVE		: {
 		::gpk::n2i16						mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
-		input.MouseCurrent.Position.x	= (int16_t)::gpk::clamp(mousePos.x, (int16_t)0, (int16_t)(mainDisplay.Size.x - 1));
-		input.MouseCurrent.Position.y	= (int16_t)::gpk::clamp(mousePos.y, (int16_t)0, (int16_t)(mainDisplay.Size.y - 1));
+		input.MouseCurrent.Position.x	= (int16_t)::gpk::clamped(mousePos.x, (int16_t)0, (int16_t)(mainDisplay.Size.x - 1));
+		input.MouseCurrent.Position.y	= (int16_t)::gpk::clamped(mousePos.y, (int16_t)0, (int16_t)(mainDisplay.Size.y - 1));
 		input.MouseCurrent.Deltas.x		= input.MouseCurrent.Position.x - input.MousePrevious.Position.x;
 		input.MouseCurrent.Deltas.y		= input.MouseCurrent.Position.y - input.MousePrevious.Position.y;
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
@@ -315,8 +315,8 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	//	}
 	//	::gpk::SInputJoystick											& joystickCurrent							= input.JoystickCurrent	[iJoystick];
 	//	::gpk::SInputJoystick											& joystickPrevious							= input.JoystickPrevious[iJoystick];
-	//	joystickCurrent.Position.x								= ::gpk::clamp(joyPos.x, (uint16_t)0, (uint16_t)mainDisplay.Size.x);
-	//	joystickCurrent.Position.y								= ::gpk::clamp(joyPos.y, (uint16_t)0, (uint16_t)mainDisplay.Size.y);
+	//	joystickCurrent.Position.x								= ::gpk::clamped(joyPos.x, (uint16_t)0, (uint16_t)mainDisplay.Size.x);
+	//	joystickCurrent.Position.y								= ::gpk::clamped(joyPos.y, (uint16_t)0, (uint16_t)mainDisplay.Size.y);
 	//	joystickCurrent.Deltas.x								= joystickCurrent.Position.x - joystickPrevious.Position.x;
 	//	joystickCurrent.Deltas.y								= joystickCurrent.Position.y - joystickPrevious.Position.y;
 	//	if(joystickCurrent.Deltas.x || joystickCurrent.Deltas.y)

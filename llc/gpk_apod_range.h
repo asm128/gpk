@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	arange	= ::gpk::apod<::gpk::range<_tDimension>>;
 
 	typedef	::gpk::arange<char		>	arangec		, arangechar;

@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	template<typename _tType>
+	tplt<tpnm _tType>
 	struct array_bit {
 		typedef	_tType			T;
 		typedef	::gpk::vbit<T>	TView;
@@ -45,7 +45,7 @@ namespace gpk
 		}
 	}; // struct
 
-	template<typename T>	
+	tplt<tpnm T>	
 	using	abit	= ::gpk::array_bit<T>;
 
 	typedef	abit<uint64_t>	abitu64;

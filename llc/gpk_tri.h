@@ -6,7 +6,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	template<typename _tVertex>
+	tplt<tpnm _tVertex>
 	struct tri { 
 		_tVertex	A, B, C; 
 

@@ -119,7 +119,7 @@ namespace gpk
 
 	stacxpr	float						VOXEL_UV_SCALE				= 1.0 / 16; // 1/16 is the standard for Minecraft texture mapping format
 
-	template<typename T, uint16_t _width = 16>
+	tplt<tpnm T, uint16_t _width = 16>
 	struct SVoxelLayer {
 		stacxpr	uint32_t					WIDTH						= _width;
 		stacxpr	uint32_t					DEPTH						= WIDTH;
@@ -128,7 +128,7 @@ namespace gpk
 		T											Cells	[DEPTH][WIDTH]		= {};
 	};
 
-	template <typename _uIndex>
+	tplt <tpnm _uIndex>
 	struct SVoxel {
 		::gpk::n3<_uIndex>							Position;
 		_uIndex											ColorIndex;
@@ -148,12 +148,12 @@ namespace gpk
 
 #pragma pack(pop)
 
-	template<typename T>
+	tplt<tpnm T>
 	struct SVoxelChunk {
 		::gpk::apobj<::gpk::SVoxelLayer<T>>	Layers						= {};
 	};
 
-	template<typename T>
+	tplt<tpnm T>
 	struct SVoxelMap {
 		::gpk::n3u8							Dimensions;
 		::gpk::a8bgra			Palette;

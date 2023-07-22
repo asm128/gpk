@@ -6,7 +6,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tVertex> 
+	tplt<tpnm _tVertex> 
 	struct quad	{
 		typedef _tVertex	T;
 		typedef quad<T>		TQuad;

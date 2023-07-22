@@ -7,8 +7,8 @@
 
 namespace gpk
 {
-	template<typename T> using papod	= ::gpk::pobj<::gpk::apod<T>>;
-	template<typename T> using apapod	= ::gpk::aobj<::gpk::papod<T>>;
+	tplt<tpnm T> using papod	= ::gpk::pobj<::gpk::apod<T>>;
+	tplt<tpnm T> using apapod	= ::gpk::aobj<::gpk::papod<T>>;
 
 	typedef	::gpk::papod<uchar_t	>	pauchar;
 	typedef	::gpk::papod<char		>	pachar;

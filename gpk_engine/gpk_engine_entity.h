@@ -3,8 +3,8 @@
 
 #include "gpk_apod_serialize.h"
 
-#ifndef GPK_ENGINE_ENTITY_H_23627
-#define GPK_ENGINE_ENTITY_H_23627
+#ifndef GPK_ENGINE_ENTITY_H
+#define GPK_ENGINE_ENTITY_H
 
 namespace gpk 
 {
@@ -18,9 +18,9 @@ namespace gpk
 	typedef	view<ceid_t>	vceid;
 
 	struct SVirtualEntity {
-		uint32_t						RenderNode		= (uint32_t)-1;
-		uint32_t						RigidBody		= (uint32_t)-1;
-		eid_t							Parent			= EID_INVALID;
+		uint32_t				RenderNode		= (uint32_t)-1;
+		uint32_t				RigidBody		= (uint32_t)-1;
+		::gpk::eid_t			Parent			= EID_INVALID;
 	};
 #pragma pack(pop)
 
@@ -30,8 +30,8 @@ namespace gpk
 
 		::gpk::apobj<::gpk::aeid>		Children		= {};
 
-		const ::gpk::SVirtualEntity&	operator[]		(uint32_t id)		const	{ return Entities[id]; }
-		SVirtualEntity&					operator[]		(uint32_t id)				{ return Entities[id]; }
+		const ::gpk::SVirtualEntity&	operator[]		(::gpk::eid_t id)	const	{ return Entities[id]; }
+		SVirtualEntity&					operator[]		(::gpk::eid_t id)			{ return Entities[id]; }
 
 		uint32_t						size			()					const	{ return Names.size(); }
 		uint32_t						clear			()							{ ::gpk::clear(Entities, Names, Children); return 0; }
@@ -42,20 +42,21 @@ namespace gpk
 			return Entities.push_back({});
 		}
 
-		::gpk::error_t					Delete			(uint32_t id) {
+		::gpk::error_t					Delete			(::gpk::eid_t id) {
 			Children.remove_unordered(id);
 			Names.remove_unordered(id);
 			return Entities.remove_unordered(id);
 		}
 
-		::gpk::error_t					GetIndexParent	(uint32_t id)					const	{ return Entities[id].Parent; }
-		::gpk::error_t					GetIndexChild	(uint32_t id, int32_t iChild)	const	{ return (*Children[id])[iChild]; }
-		const ::gpk::SVirtualEntity&	GetParent		(uint32_t id)					const	{ return Entities[GetIndexParent(id)]; }
-		const ::gpk::SVirtualEntity&	GetChild		(uint32_t id, int32_t iChild)	const	{ return Entities[GetIndexChild	(id, iChild)]; }
-		SVirtualEntity&					GetParent		(uint32_t id)							{ return Entities[GetIndexParent(id)]; }
-		SVirtualEntity&					GetChild		(uint32_t id, int32_t iChild)			{ return Entities[GetIndexChild	(id, iChild)]; }
+		::gpk::error_t					GetIndexParent	(::gpk::eid_t id)					const	{ return Entities[id].Parent; }
+		::gpk::error_t					GetIndexChild	(::gpk::eid_t id, int32_t iChild)	const	{ return (*Children[id])[iChild]; }
+		const ::gpk::SVirtualEntity&	GetParent		(::gpk::eid_t id)					const	{ return Entities[GetIndexParent(id)]; }
+		const ::gpk::SVirtualEntity&	GetChild		(::gpk::eid_t id, int32_t iChild)	const	{ return Entities[GetIndexChild	(id, iChild)]; }
+		SVirtualEntity&					GetParent		(::gpk::eid_t id)							{ return Entities[GetIndexParent(id)]; }
+		SVirtualEntity&					GetChild		(::gpk::eid_t id, int32_t iChild)			{ return Entities[GetIndexChild	(id, iChild)]; }
 
-		::gpk::error_t					SetParent		(uint32_t id, uint32_t idParent)		{
+		::gpk::error_t					SetParent		(::gpk::eid_t id, ::gpk::eid_t idParent)		{
+			ree_if(idParent != ::gpk::EID_INVALID && idParent >= Entities.size(), "Invalid parent for entity %i, %i", id, idParent);
 			::gpk::eid_t						& oldParent		= Entities[id].Parent;
 			if(oldParent < Entities.size() && Children[oldParent]) {
 				const int32_t						oldIndex		= Children[oldParent]->find(id);
@@ -96,4 +97,4 @@ namespace gpk
 	};
 } // namespace
 
-#endif // GPK_ENGINE_ENTITY_H_23627
+#endif // GPK_ENGINE_ENTITY_H

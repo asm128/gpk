@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	template<typename _tOBJ>
+	tplt<tpnm _tOBJ>
 	class pobj : public ::gpk::pnco<_tOBJ> {
 	public:
 		typedef _tOBJ			T;
@@ -18,11 +18,11 @@ namespace gpk
 		inline	const T*		operator->	()		const	noexcept	{ return Reference->Instance;														}
 		inline	T*				operator->	()				noexcept	{ return (0 == Reference) ? ::gpk::ref_create(&Reference) : Reference->Instance;	}
 
-		template<typename... _tArgsConstructor>
+		tplt<tpnm... _tArgsConstructor>
 		inline	T*				create		(_tArgsConstructor &&... argsConstructor)	noexcept	{ return ::gpk::ref_create(&Reference, argsConstructor...);							}
 		inline	T*				allocate	()											noexcept	{ return ::gpk::ref_allocate(&Reference);											}
 	};
-	template<typename T> using po	= ::gpk::pobj<T>; 
+	tplt<tpnm T> using po	= ::gpk::pobj<T>; 
 } // namespace
 
 #endif // GPK_PTR_OBJ_H_23627

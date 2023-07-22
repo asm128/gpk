@@ -95,7 +95,7 @@ namespace gpk
 		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
 	}
 
-	template<typename _tWithLoad, typename _tState> 
+	tplt<tpnm _tWithLoad, tpnm _tState> 
 	::gpk::error_t						processUDPClientQueueEvents	
 		( _tWithLoad						& eventCache
 		, uint32_t							iClient
@@ -121,7 +121,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tWithLoad, typename _tState> 
+	tplt<tpnm _tWithLoad, tpnm _tState> 
 	stainli	::gpk::error_t				processUDPClientQueueEvents	
 		( uint32_t							iClient
 		, ::gpk::vcpobj<::gpk::SUDPMessage>	clientQueue
@@ -132,7 +132,7 @@ namespace gpk
 		return ::gpk::processUDPClientQueueEvents(eventCache, iClient, clientQueue, state, funcProcessRequest);
 	}
 
-	template<typename _tEvent, typename _tState> 
+	tplt<tpnm _tEvent, tpnm _tState> 
 	::gpk::error_t						processUDPEvents
 		( ::gpk::view<::gpk::apobj<::gpk::SUDPMessage>>	queueReceived
 		, _tState										& state

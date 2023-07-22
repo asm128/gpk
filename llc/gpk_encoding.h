@@ -29,7 +29,7 @@ namespace gpk
 	::gpk::error_t						saltDataSalt			(const ::gpk::vcu8 & binary, ::gpk::au8 & salted);
 	::gpk::error_t						saltDataUnsalt			(const ::gpk::vcu8 & salted, ::gpk::au8 & binary);
 
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	::gpk::error_t						rleEncode				(const ::gpk::view<_tBase> & decoded, ::gpk::au8 & encoded) {
 		uint32_t								idxLatest				= 0;
 		stacxpr	const uint32_t					sizeBlock				= sizeof(_tBase) + 1;
@@ -49,7 +49,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	::gpk::error_t						rleDecode			(const ::gpk::vcu8 & encoded, ::gpk::apod<_tBase>& decoded) {
 		stacxpr	const uint32_t					sizeBlock			= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {

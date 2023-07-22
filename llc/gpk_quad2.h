@@ -7,7 +7,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tDimension> 
+	tplt<tpnm _tDimension> 
 	struct quad2 : public ::gpk::quad<::gpk::n2<_tDimension>> {
 		typedef _tDimension		T;
 		typedef	n2<T>			TVertex;

@@ -34,10 +34,10 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::trii32		>	vctrii32;
 	typedef	::gpk::view<const ::gpk::trii64		>	vctrii64;
 
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	vtri		= ::gpk::view<::gpk::tri<_tDimension>>;
 
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	vctri	= ::gpk::view<const ::gpk::tri<_tDimension>>;
 #pragma pack(pop)
 } // namespace

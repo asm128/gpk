@@ -6,12 +6,12 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T> 
+	tplt<tpnm T> 
 	struct range {	
 		T							Offset, Count;	
 		
 		GPK_DEFAULT_OPERATOR(range <T>, Offset == other.Offset && Count == other.Count); 
-		template<typename _tOther> 
+		tplt<tpnm _tOther> 
 		inlcxpr	range<_tOther>		Cast		()		const	noexcept	{ return{(_tOther)Offset, (_tOther)Count}; } 
 
 		inlcxpr	range<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }

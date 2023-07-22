@@ -19,38 +19,44 @@ namespace gpk
 		);
 
 	struct SEngine {
-		::gpk::pobj<::gpk::SEngineScene>		Scene			;
-		::gpk::SVirtualEntityManager			Entities		;
-		::gpk::SRigidBodyIntegrator				Integrator		;
+		::gpk::pobj<::gpk::SEngineScene>	Scene			;
+		::gpk::SVirtualEntityManager		Entities		;
+		::gpk::SRigidBodyIntegrator			Integrator		;
 
-		::gpk::lmpod<SParamsBox			, uint32_t>	ParamsBox		;
-		::gpk::lmpod<SParamsCircle		, uint32_t>	ParamsCircle	;
+		::gpk::lmpod<SParamsBox			, uint32_t>	ParamsBox			;
+		::gpk::lmpod<SParamsCircle		, uint32_t>	ParamsCircle		;
 		::gpk::lmpod<SParamsCylinderWall, uint32_t>	ParamsCylinderWall	;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsFigure0	;
-		::gpk::lmpod<SParamsGrid		, uint32_t>	ParamsGrid		;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelixHalf	;
-		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelix		;
-		::gpk::lmpod<SParamsSphere		, uint32_t>	ParamsSphere	;
-		::gpk::lmpod<SParamsRing		, uint32_t>	ParamsRing		;
-		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingSide	;
-		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingFlat	;
+		::gpk::lmpod<SParamsCylinderWall, uint32_t>	ParamsDisc			;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsFigure0		;
+		::gpk::lmpod<SParamsGrid		, uint32_t>	ParamsGrid			;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelixHalf		;
+		::gpk::lmpod<SParamsHelix		, uint32_t>	ParamsHelix			;
+		::gpk::lmpod<SParamsSphere		, uint32_t>	ParamsSphere		;
+		::gpk::lmpod<SParamsRing		, uint32_t>	ParamsRing			;
+		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingSide		;
+		::gpk::lmpod<SParamsRingSide	, uint32_t>	ParamsRingFlat		;
 
-		::gpk::lmpod<::gpk::vcc		, uint32_t>	Images			;
+		::gpk::lmpod<::gpk::vcc, uint32_t>	Images			= {};
 
-		::gpk::SPNGData							PNGCache		= {};
+		::gpk::SPNGData						PNGCache		= {};
 
 		inline	::gpk::error_t		GetRigidBody		(uint32_t iEntity)		const	{ return Entities[iEntity].RigidBody; }
 		inline	::gpk::error_t		GetRenderNode		(uint32_t iEntity)		const	{ return Entities[iEntity].RenderNode; }
 		inline	::gpk::error_t		GetParentIndex		(uint32_t iEntity)		const	{ return Entities[iEntity].Parent; }
+		inline	::gpk::error_t		GetChildCount		(uint32_t iEntity)		const	{ const ::gpk::papod<::gpk::eid_t> & children = Entities.Children[iEntity]; return children ? children->size() : 0; }
+		inline	::gpk::vceid		GetChildren			(uint32_t iEntity)		const	{ const ::gpk::papod<::gpk::eid_t> & children = Entities.Children[iEntity]; return children ? ::gpk::vceid{*children} : ::gpk::vceid{}; }
+		inline	::gpk::veid			GetChildren			(uint32_t iEntity)				{ ::gpk::papod<::gpk::eid_t> & children = Entities.Children[iEntity]; return children ? *children : ::gpk::veid{}; }
 
-		inline	const SBodyFrame&	GetBodyFrame		(uint32_t iEntity)		const	{ return Integrator.GetBodyFrame	(Entities[iEntity].RigidBody); }
-		inline	const SBodyForces&	GetBodyForces		(uint32_t iEntity)		const	{ return Integrator.GetBodyForces	(Entities[iEntity].RigidBody); }
-		inline	const SBodyMass&	GetBodyMass			(uint32_t iEntity)		const	{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
-		inline	const SBodyCenter&	GetBodyCenter		(uint32_t iEntity)		const	{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
-		inline	SBodyFrame&			GetBodyFrame		(uint32_t iEntity)				{ return Integrator.GetBodyFrame	(Entities[iEntity].RigidBody); }
-		inline	SBodyForces&		GetBodyForces		(uint32_t iEntity)				{ return Integrator.GetBodyForces	(Entities[iEntity].RigidBody); }
-		inline	SBodyMass&			GetBodyMass			(uint32_t iEntity)				{ return Integrator.GetBodyMass		(Entities[iEntity].RigidBody); }
-		inline	SBodyCenter&		GetBodyCenter		(uint32_t iEntity)				{ return Integrator.GetBodyCenter	(Entities[iEntity].RigidBody); }
+		inline	const SBodyFlags&	GetBodyFlags		(uint32_t iEntity)		const	{ return Integrator.GetBodyFlags (Entities[iEntity].RigidBody); }
+		inline	const SBodyFrame&	GetBodyFrame		(uint32_t iEntity)		const	{ return Integrator.GetBodyFrame (Entities[iEntity].RigidBody); }
+		inline	const SBodyForces&	GetBodyForces		(uint32_t iEntity)		const	{ return Integrator.GetBodyForces(Entities[iEntity].RigidBody); }
+		inline	const SBodyMass&	GetBodyMass			(uint32_t iEntity)		const	{ return Integrator.GetBodyMass  (Entities[iEntity].RigidBody); }
+		inline	const SBodyCenter&	GetBodyCenter		(uint32_t iEntity)		const	{ return Integrator.GetBodyCenter(Entities[iEntity].RigidBody); }
+		inline	SBodyFlags&			GetBodyFlags		(uint32_t iEntity)				{ return Integrator.GetBodyFlags (Entities[iEntity].RigidBody); }
+		inline	SBodyFrame&			GetBodyFrame		(uint32_t iEntity)				{ return Integrator.GetBodyFrame (Entities[iEntity].RigidBody); }
+		inline	SBodyForces&		GetBodyForces		(uint32_t iEntity)				{ return Integrator.GetBodyForces(Entities[iEntity].RigidBody); }
+		inline	SBodyMass&			GetBodyMass			(uint32_t iEntity)				{ return Integrator.GetBodyMass  (Entities[iEntity].RigidBody); }
+		inline	SBodyCenter&		GetBodyCenter		(uint32_t iEntity)				{ return Integrator.GetBodyCenter(Entities[iEntity].RigidBody); }
 
 		::gpk::error_t				Load				(::gpk::vcu8 & input)			{
 			gpk_necs(Scene		->Load(input));
@@ -123,6 +129,8 @@ namespace gpk
 		inline	::gpk::error_t	IsPhysicsActive		(uint32_t iEntity)										const	{ return Integrator.Active	(Entities[iEntity].RigidBody) ? 1 : 0; }
 		inline	float			GetMass				(uint32_t iEntity)										const	{ return Integrator.GetMass	(Entities[iEntity].RigidBody);	}
 
+		inline	::gpk::error_t	InvalidateTransform	(uint32_t iEntity)												{ Integrator.Flags[GetRigidBody(iEntity)].UpdatedTransform = false;		return 0; }
+
 		inline	::gpk::error_t	GetPosition			(uint32_t iEntity, ::gpk::n3f32 & position)				const	{ Integrator.GetPosition	(GetRigidBody(iEntity), position);			return 0; }
 		inline	::gpk::error_t	GetVelocity			(uint32_t iEntity, ::gpk::n3f32 & velocity)				const	{ Integrator.GetVelocity	(GetRigidBody(iEntity), velocity);			return 0; }
 		inline	::gpk::error_t	GetAcceleration		(uint32_t iEntity, ::gpk::n3f32 & acceleration)			const	{ Integrator.GetAcceleration(GetRigidBody(iEntity), acceleration);		return 0; }
@@ -151,23 +159,25 @@ namespace gpk
 		::gpk::error_t			CreateLight			(::gpk::LIGHT_TYPE type);
 		::gpk::error_t			CreateCamera		();
 
-		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateCylinderWall	(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateRing			(const ::gpk::SParamsRing			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
-		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = {});
+
+		::gpk::error_t			CreateDisc			(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);		
+		::gpk::error_t			CreateBox			(const ::gpk::SParamsBox			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateSphere		(const ::gpk::SParamsSphere			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateCylinderWall	(const ::gpk::SParamsCylinderWall	& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateCircle		(const ::gpk::SParamsCircle			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateRing			(const ::gpk::SParamsRing			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateRingSide		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateRingFlat		(const ::gpk::SParamsRingSide		& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateGrid			(const ::gpk::SParamsGrid			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateHelixHalf		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateHelix			(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
+		::gpk::error_t			CreateFigure0		(const ::gpk::SParamsHelix			& params, ::gpk::vcs entityName = ::gpk::VCS_EMPTY);
 
 		::gpk::error_t			CreateImageFromFile	(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName);
 
 		typedef std::function<::gpk::error_t(::gpk::SGeometryBuffers&)> TGeometryFunc;
 
-		template<typename _tParams>
+		tplt<tpnm _tParams>
 		::gpk::error_t			CreateEntityFromGeometry
 			( const ::gpk::vcc							name		
 			, const ::gpk::n3f32						halfSizes

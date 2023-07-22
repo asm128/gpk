@@ -9,7 +9,7 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	//------------------------------------------------------------------------------------------------------------
-	template <typename TCoord, typename TTarget>
+	tplt <tpnm TCoord, tpnm TTarget>
 	::gpk::n2<TCoord>&		realignCoord
 		( const ::gpk::n2<TTarget>	& targetSize
 		, const ::gpk::n2<TCoord>	& coordToRealign

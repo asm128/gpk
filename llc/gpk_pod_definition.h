@@ -51,7 +51,7 @@ namespace gpk
 			return Labels.push_back(label); 
 		}
 
-		template<typename _tValue>
+		tplt<tpnm _tValue>
 		::gpk::error_t				push_any		(const ::gpk::vcc label, const _tValue defaultValue) { 
 			const ::gpk::C_TYPE				type			= ::gpk::toCType(defaultValue); 
 			return push_any(type, label, ::gpk::vcu8{(const u8*)&defaultValue, type & 0xF}); 

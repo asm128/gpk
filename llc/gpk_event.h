@@ -10,7 +10,7 @@
 
 namespace gpk
 {
-	template<typename _tEventType>
+	tplt<tpnm _tEventType>
 	struct SEventView {
 		_tEventType				Type;
 		::gpk::vcu8				Data;
@@ -27,10 +27,10 @@ namespace gpk
 			return 0;
 		}
 	};
-	template<typename T> using FEventViewHandler		= std::function<::gpk::error_t(      ::gpk::SEventView<T>&)>;
-	template<typename T> using FEventViewHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEventView<T>&)>;
+	tplt<tpnm T> using FEventViewHandler		= std::function<::gpk::error_t(      ::gpk::SEventView<T>&)>;
+	tplt<tpnm T> using FEventViewHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEventView<T>&)>;
 
-	template<typename _tEventType>
+	tplt<tpnm _tEventType>
 	struct SEvent {
 		_tEventType				Type				= {};
 		::gpk::au8				Data				= {};
@@ -47,7 +47,7 @@ namespace gpk
 			return 0;
 		}
 
-		template<typename _tEventTypeOther>
+		tplt<tpnm _tEventTypeOther>
 		inline	::gpk::error_t	ExtractChild		(::gpk::SEvent<_tEventTypeOther> & outputEvent)		const	{
 			::gpk::vcu8					input				= Data;
 			gpk_necs(outputEvent.Load(input));
@@ -55,7 +55,7 @@ namespace gpk
 			return 0; 
 		}
 
-		template<typename _tEventTypeOther>
+		tplt<tpnm _tEventTypeOther>
 		inline	::gpk::error_t	ExtractChild		(::gpk::SEventView<_tEventTypeOther> & outputEvent)	const	{
 			::gpk::vcu8					input				= Data;
 			gpk_necs(outputEvent.Load(input));
@@ -64,16 +64,16 @@ namespace gpk
 		}
 	};
 
-	template<typename T> using FEventHandler		= std::function<::gpk::error_t(      ::gpk::SEvent<T>&)>;
-	template<typename T> using FEventHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEvent<T>&)>;
+	tplt<tpnm T> using FEventHandler		= std::function<::gpk::error_t(      ::gpk::SEvent<T>&)>;
+	tplt<tpnm T> using FEventHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEvent<T>&)>;
 
-	template <typename _tEvntParent, typename _tEvntChild>
+	tplt <tpnm _tEvntParent, tpnm _tEvntChild>
 	static	::gpk::error_t	eventWrapChild		(::gpk::SEvent<_tEvntParent> & parentEvent, _tEvntChild childEventType, ::gpk::vcu8 eventData) {
 		::gpk::SEventView<_tEvntChild>	childEvent			= {childEventType, eventData};
 		return childEvent.Save(parentEvent.Data);
 	}
 
-	template <typename _tEvntParent, typename _tEvntChild>
+	tplt <tpnm _tEvntParent, tpnm _tEvntChild>
 	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, ::gpk::vcu8 eventData) {
 		::gpk::pobj<::gpk::SEvent<_tEvntParent>>	parentEvent			= {};
 		parentEvent->Type = parentEventType;
@@ -81,17 +81,17 @@ namespace gpk
 		return eventQueue.push_back(parentEvent);
 	}
 
-	template <typename _tEvntParent, typename _tEvntChild, typename _tPOD>
+	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, ::gpk::view<const _tPOD> eventData) {
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)eventData.begin(), eventData.byte_count()});
 	}
 
-	template <typename _tEvntParent, typename _tEvntChild, typename _tPOD>
+	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	static	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEvent<_tEvntParent>> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, const _tPOD & childEventDataType) {
 		return ::gpk::eventEnqueueChild(eventQueue, parentEventType, childEventType, ::gpk::vcu8{(const uint8_t*)&childEventDataType, sizeof(_tPOD)});
 	}
 
-	template<typename _tChildEvent, typename _tParentEvent>
+	tplt<tpnm _tChildEvent, tpnm _tParentEvent>
 	static	::gpk::error_t	eventExtractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
 		::gpk::SEventView<_tChildEvent>	childEvent; 
 		gpk_necs(parentEvent.ExtractChild(childEvent)); 

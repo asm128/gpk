@@ -6,13 +6,13 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T> 
+	tplt<tpnm T> 
 	struct slice {	
 		T							Begin, End;		
 		
 		GPK_DEFAULT_OPERATOR(slice <T>, Begin  == other.Begin  && End   == other.End  ); 
 
-		template<typename _tOther> 
+		tplt<tpnm _tOther> 
 		inlcxpr	slice<_tOther>		Cast		()		const	noexcept	{ return{(_tOther)Begin , (_tOther)End  }; } 
 
 		inlcxpr	slice<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }

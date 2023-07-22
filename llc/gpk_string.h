@@ -48,7 +48,7 @@ namespace gpk
 		return result;
 	}
 
-	template<size_t _bufferSize>
+	tplt<size_t _bufferSize>
 	stainli	int	_snprintf_s		(char (&buffer)[_bufferSize], size_t count, const char* format, ...)				{
 		va_list			args			= {};
 		va_start(args, format);
@@ -73,7 +73,7 @@ namespace gpk
 		return result;
 	}
 
-	template<size_t _bufferSize>
+	tplt<size_t _bufferSize>
 	stainli	int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
 		va_list			args			= {};
 		va_start(args, format);
@@ -90,9 +90,9 @@ namespace gpk
 		return result;
 	}
 
-	template<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )						{ return strcat_s	(dst, _Size, src);				}
-	template<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )						{ return strcpy_s	(dst, _Size, src);				}
-	template<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )						{ return strncpy_s	(dst, src, _Size);				}
+	tplt<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )						{ return strcat_s	(dst, _Size, src);				}
+	tplt<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )						{ return strcpy_s	(dst, _Size, src);				}
+	tplt<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )						{ return strncpy_s	(dst, src, _Size);				}
 	stainli	int	_vsnprintf_s	( char* buffer, size_t bufferSize, size_t count, const char* format, va_list args )	{ return vsnprintf	(buffer, ::gpk::max(count, bufferSize - 1), format, args);	}
 	stainli	int	vsprintf_s		( char *buffer, size_t bufferSize, const char *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
 #if defined(GPK_WINDOWS)

@@ -6,7 +6,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename T> 
+	tplt<tpnm T> 
 	struct gaugemax { 
 		T							Limit;	// Inclusive
 		T							Value;	
@@ -14,11 +14,11 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limit == other.Limit && Value == other.Value); 
 
 		cnstxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
-		inlcxpr	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamp(Value, (T)0, Limit); }
-		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamp(value, 0, Limit); }
+		inlcxpr	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
+		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamped(value, 0, Limit); }
 		T							SetWeighted		(double weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
 
-		template<typename _tOther>
+		tplt<tpnm _tOther>
 		gaugemax<_tOther>			Cast		()		const	noexcept	{ return {(_tOther)Limit, (_tOther)Value}; }
 
 		inlcxpr	minmax<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }
@@ -33,19 +33,20 @@ namespace gpk
 		inlcxpr	minmax<double>		f64			()		const	noexcept	{ return Cast<double	>(); }
 	};
 
-	template<typename T> 
+	tplt<tpnm T> 
 	struct gaugeminmax { 
 		minmax<T>					Limits;	// Inclusive
 		T							Value;	
 
 		GPK_DEFAULT_OPERATOR(minmax<T>, Limits == other.Limits && Value == other.Value); 
 
-		inlcxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
+		inlcxpr	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
+		cnstxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
 		inlcxpr	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
 		T							SetClamp	(T value)		noexcept	{ return Value = Limits.Clamp(value); }
 		T							SetWeighted	(double weight)	noexcept	{ return Set(Limits.Weighted(weight)); }
 
-		template<typename _tOther>
+		tplt<tpnm _tOther>
 		gaugeminmax<_tOther>		Cast		()		const	noexcept	{ return {Limits.Cast<_tOther>(), (_tOther)Value}; }
 
 		inlcxpr	minmax<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }

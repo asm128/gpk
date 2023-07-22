@@ -172,66 +172,20 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::SEngine::CreateBox	(const ::gpk::SParamsBox & params, ::gpk::vcs entityName)	{
-	int32_t						iEntity					= CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{3, "Box"}, params.HalfSizes.f32(), false, params, ParamsBox
+::gpk::error_t			gpk::SEngine::CreateBox			(const ::gpk::SParamsBox & params, ::gpk::vcs entityName)	{
+	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{3, "Box"}, params.HalfSizes, true, params, ParamsBox
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildBox(geometry, params); 
 		});
-	::gpk::SVirtualEntity		& entity				= Entities[iEntity];
-	::gpk::SRenderNode			& renderNode			= Scene->RenderNodes[entity.RenderNode];
+}
 
-	uint32_t					iMesh					= renderNode.Mesh;
-	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Scene->Graphics->Meshes[iMesh];
-	renderNode.Mesh			= (uint32_t)-1;
-	mesh->GeometrySlices.resize(6);	// one per face
-
-	uint32_t					offsetIndex				= 0;
-	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
-		uint32_t					iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
-		::gpk::pobj<::gpk::SSkin>	& skin					= Scene->Graphics->Skins.Elements[iSkin];
-
-		uint32_t					iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
-		::gpk::pobj<::gpk::SSurface>& surface				= Scene->Graphics->Surfaces[iSurface];
-		surface->Desc.ColorType				= ::gpk::COLOR_TYPE_BGRA;
-		surface->Desc.MethodCompression		= 0;
-		surface->Desc.MethodFilter			= 0;
-		surface->Desc.MethodInterlace		= 0;
-		surface->Desc.Dimensions			= {1, 1};
-		surface->Data.resize(1 * sizeof(::gpk::bgra));
-		*(::gpk::bgra*)&surface->Data[0]	= ::gpk::rgba{::gpk::VOXEL_PALETTE[iFace]};
-		skin->Textures.push_back(iSurface);
-
-		skin->Material.Color.Ambient		= ::gpk::bgra(::gpk::ASCII_PALETTE[1 + iFace]);
-		skin->Material.Color.Diffuse		= ::gpk::bgra(::gpk::ASCII_PALETTE[1 + iFace]);
-		skin->Material.Color.Specular		= ::gpk::WHITE;
-		skin->Material.SpecularPower		= 0.5f;
-
-		skin->Material.Color.Ambient		*= .1f;
-
-		::gpk::SGeometrySlice		& slice					= mesh->GeometrySlices[iFace];
-		slice.Slice				= {offsetIndex, 6};
-		offsetIndex				+= slice.Slice.Count;
-
-		int32_t						iFaceEntity				= Entities.Create();
-		uint32_t					iFaceRenderNode			= Scene->RenderNodes.Create();
-		::gpk::SVirtualEntity		& faceEntity			= Entities[iFaceEntity];
-		::gpk::SRenderNode			& faceRenderNode		= Scene->RenderNodes.RenderNodes[iFaceRenderNode];
-
-		faceRenderNode.Mesh		= iMesh;
-		faceRenderNode.Slice	= iFace;
-		faceRenderNode.Skin		= iSkin;
-		Scene->Graphics->Shaders[faceRenderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
-		Scene->Graphics->Shaders.Names[faceRenderNode.Shader] = "psSolid";
-
-		//faceEntity.RigidBody				= Integrator.Create();
-		faceEntity.Parent					= iEntity;
-		faceEntity.RenderNode				= iFaceRenderNode;
-		this->Entities.Names	[iFaceEntity]	= ::gpk::get_value_label((VOXEL_FACE)iFace);
-
-		this->Entities.Children[iEntity]->push_back(iFaceEntity);
-	}
-
-	return iEntity;
+::gpk::error_t			gpk::SEngine::CreateDisc		(const ::gpk::SParamsCylinderWall & params, ::gpk::vcs entityName)	{
+	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
+	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{4, "Disc"}, ::gpk::n3f32{radius, params.Height * .5f, radius}, true, params, ParamsDisc
+		, [params](::gpk::SGeometryBuffers & geometry) { 
+			gpk_necs(::gpk::geometryBuildDisc(geometry, params));
+			return 0;
+		});
 }
 
 ::gpk::error_t			gpk::SEngine::CreateSphere		(const ::gpk::SParamsSphere & params, ::gpk::vcs entityName)	{ 
@@ -311,7 +265,7 @@
 		});
 }
 
-::gpk::error_t			gpk::SEngine::CreateRing	(const ::gpk::SParamsRing & params, ::gpk::vcs entityName)	{ 
+::gpk::error_t			gpk::SEngine::CreateRing		(const ::gpk::SParamsRing & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.RadiusYMax.Max, params.RadiusYMin.Max);
 	return CreateEntityFromGeometry(entityName.size() ? entityName : ::gpk::vcc{4, "Ring"}, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRing
 		, [params](::gpk::SGeometryBuffers & geometry) { 
@@ -335,3 +289,62 @@
 	surface->Desc.ColorType		= PNGCache.Header.ColorType;
 	return index; 
 }
+
+//
+//	int32_t						iEntity					= CreateBox();
+//	::gpk::SVirtualEntity		& entity				= Entities[iEntity];
+//	::gpk::SRenderNode			& renderNode			= Scene->RenderNodes[entity.RenderNode];
+//
+//	uint32_t					iMesh					= renderNode.Mesh;
+//	::gpk::pobj<::gpk::SGeometryMesh>	& mesh			= Scene->Graphics->Meshes[iMesh];
+//	Scene->Graphics->Skins[renderNode.Skin]->Material.Color.Diffuse.a = .25f;
+//	mesh->GeometrySlices.resize(6);	// one per face
+//
+//	uint32_t					offsetIndex				= 0;
+//	for(uint32_t iFace = 0; iFace < 6; ++iFace) {
+//		uint32_t					iSkin					= (uint32_t)Scene->Graphics->Skins.Create();
+//		::gpk::pobj<::gpk::SSkin>	& skin					= Scene->Graphics->Skins.Elements[iSkin];
+//
+//		uint32_t					iSurface				= (uint32_t)Scene->Graphics->Surfaces.Create();
+//		::gpk::pobj<::gpk::SSurface>& surface				= Scene->Graphics->Surfaces[iSurface];
+//		surface->Desc.ColorType				= ::gpk::COLOR_TYPE_BGRA;
+//		surface->Desc.MethodCompression		= 0;
+//		surface->Desc.MethodFilter			= 0;
+//		surface->Desc.MethodInterlace		= 0;
+//		surface->Desc.Dimensions			= {1, 1};
+//		surface->Data.resize(1 * sizeof(::gpk::bgra));
+//		*(::gpk::bgra*)&surface->Data[0]	= ::gpk::rgba{::gpk::VOXEL_PALETTE[iFace]};
+//		skin->Textures.push_back(iSurface);
+//
+//		skin->Material.Color.Ambient		= ::gpk::bgra(::gpk::ASCII_PALETTE[1 + iFace]);
+//		skin->Material.Color.Diffuse		= ::gpk::bgra(::gpk::ASCII_PALETTE[1 + iFace]);
+//		skin->Material.Color.Specular		= ::gpk::WHITE;
+//		skin->Material.SpecularPower		= 0.5f;
+//
+//		skin->Material.Color.Ambient		*= .1f;
+//
+//		::gpk::SGeometrySlice		& slice					= mesh->GeometrySlices[iFace];
+//		slice.Slice				= {offsetIndex, 6};
+//		offsetIndex				+= slice.Slice.Count;
+//
+//		int32_t						iFaceEntity				= Entities.Create();
+//		uint32_t					iFaceRenderNode			= Scene->RenderNodes.Create();
+//		::gpk::SVirtualEntity		& faceEntity			= Entities[iFaceEntity];
+//		::gpk::SRenderNode			& faceRenderNode		= Scene->RenderNodes.RenderNodes[iFaceRenderNode];
+//
+//		faceRenderNode.Mesh		= iMesh;
+//		faceRenderNode.Slice	= iFace;
+//		faceRenderNode.Skin		= iSkin;
+//		Scene->Graphics->Shaders[faceRenderNode.Shader = Scene->Graphics->Shaders.push_back({})].create(::gpk::psSolid);
+//		Scene->Graphics->Shaders.Names[faceRenderNode.Shader] = "psSolid";
+//
+//		//faceEntity.RigidBody				= Integrator.Create();
+//		faceEntity.Parent					= iEntity;
+//		faceEntity.RenderNode				= iFaceRenderNode;
+//		this->Entities.Names	[iFaceEntity]	= ::gpk::get_value_label((VOXEL_FACE)iFace);
+//
+//		this->Entities.Children[iEntity]->push_back(iFaceEntity);
+//	}
+//
+//	return iEntity;
+//}

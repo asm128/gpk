@@ -12,7 +12,7 @@
 
 namespace gpk
 {
-	template<typename _tColor>
+	tplt<tpnm _tColor>
 	struct SD3DGUIResources {
 		typedef	::gpk::img<_tColor>				TRenderTarget;
 

@@ -21,7 +21,7 @@ namespace gpk
 	typedef	::gpk::apod<::gpk::tri2i32	>	atri2i32	;
 	typedef	::gpk::apod<::gpk::tri2i64	>	atri2i64	;
 
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using		atri2	= ::gpk::apod<::gpk::tri2<_tDimension>>;
 #pragma pack(pop)
 } // namespace

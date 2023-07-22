@@ -9,10 +9,10 @@ namespace gpk
 {
 #pragma pack(push, 1)
 
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	vn3		= ::gpk::view<::gpk::n3<_tDimension>>;
 
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using	vcn3	= ::gpk::view<const ::gpk::n3<_tDimension>>;
 
 	typedef	::gpk::vn3<char >	vn3c	, vn3char	;

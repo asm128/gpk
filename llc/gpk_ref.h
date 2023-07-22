@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	template<typename _tInstance>
+	tplt<tpnm _tInstance>
 	struct gref {
 		typedef	_tInstance	T;
 
@@ -15,14 +15,14 @@ namespace gpk
 		refcount_t			References;
 	};
 
-	template<typename _tNCO>
+	tplt<tpnm _tNCO>
 	::gpk::gref<_tNCO>*		ref_acquire				(::gpk::gref<_tNCO> * gpk_reference)	noexcept	{
 		if(gpk_reference)
 			gpk_sync_increment(gpk_reference->References);
 		return gpk_reference;
 	};
 
-	template<typename _tNCO>
+	tplt<tpnm _tNCO>
 	::gpk::error_t			ref_release				(::gpk::gref<_tNCO>* * gpk_reference) {
 		typedef	::gpk::gref<_tNCO>	TRef;
 		TRef						* oldRef				= *gpk_reference;
@@ -42,7 +42,7 @@ namespace gpk
 		return 0;
 	};
 
-	template<typename T>
+	tplt<tpnm T>
 	T*						ref_allocate			(::gpk::gref<T>* * gpk_reference)	noexcept	{
 		typedef	::gpk::gref<T>	TRef;
 		TRef						* newRef				= (TRef*)::gpk::gpk_malloc(sizeof(TRef));
@@ -59,7 +59,7 @@ namespace gpk
 		return (*gpk_reference)->Instance;
 	};
 
-	template<typename _tOBJ, typename... _tArgs>
+	tplt<tpnm _tOBJ, tpnm... _tArgs>
 	_tOBJ*					ref_create				(::gpk::gref<_tOBJ>* * gpk_reference, _tArgs&&... argsConstructor)	{
 		typedef	::gpk::gref<_tOBJ>	TRef;
 		TRef						* newRef				= 0;

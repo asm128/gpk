@@ -98,7 +98,7 @@ namespace gpk
 		double				TimePlayed		= {};
 	};
 #pragma pack(pop)
-	template<typename _tPOD> 
+	tplt<tpnm _tPOD> 
 	::gpk::error_t			loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		gpk_necall(::gpk::loadView(input, viewToLoad), "index: %i", index);

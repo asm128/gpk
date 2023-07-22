@@ -31,7 +31,7 @@ namespace gpk
 		virtual	::gpk::error_t	Resize				(const ::gpk::n2<uint16_t> & newSize)				{ (void)newSize; return 0; }
 		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> eventsIn)	= 0;
 	};
-	//template<typename _TDialogControl>
+	//tplt<tpnm _TDialogControl>
 	//::gpk::error_t				dialogCreate										(::gpk::SGUI & gui, ::gpk::pnco<_TDialogControl>& createdControl)	{
 	//	::gpk::gpk_ref<_TDialogControl>								* newRef							= 0;
 	//	ree_if(0 == ::gpk::ref_create(&newRef));
@@ -84,7 +84,7 @@ namespace gpk
 			return 0; 
 		}
 
-		template<typename _TDialogControl>
+		tplt<tpnm _TDialogControl>
 		::gpk::cid_t			Create			(::gpk::pnco<_TDialogControl> & createdControl)	{
 			if(0 == GUI.get_ref())
 				GUI.create();
@@ -113,7 +113,7 @@ namespace gpk
 			return index;
 		}
 
-		template<typename _TDialogControl>
+		tplt<tpnm _TDialogControl>
 		::gpk::cid_t			Get				(cid_t index, ::gpk::pnco<_TDialogControl> & control)	{
 			Controls[index].as(control);
 			return index;

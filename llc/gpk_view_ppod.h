@@ -6,8 +6,8 @@
 
 namespace gpk
 {
-	template <typename T>	using vppod		= ::gpk::view<::gpk::ppod<T>>;
-	template <typename T>	using vcppod	= ::gpk::view<const ::gpk::ppod<T>>;
+	tplt <tpnm T>	using vppod		= ::gpk::view<::gpk::ppod<T>>;
+	tplt <tpnm T>	using vcppod	= ::gpk::view<const ::gpk::ppod<T>>;
 } // namespace
 
 #endif // GPK_VIEW_PPOD_H_23627

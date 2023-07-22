@@ -50,7 +50,7 @@ namespace gpk
 	::gpk::error_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);
 	::gpk::error_t			processGUIEvent		(::gpk::SServer & server, ::gpk::SGUI & gui, const ::gpk::SEventView<::gpk::EVENT_GUI_CONTROL> & screenEvent);
 
-	template<typename _tEvent, typename _tState> 
+	tplt<tpnm _tEvent, tpnm _tState> 
 	::gpk::error_t			processUDPEvents
 		( ::gpk::vcpobj<SServer>	servers
 		, _tState					& state

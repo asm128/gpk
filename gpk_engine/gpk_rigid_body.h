@@ -64,7 +64,7 @@ namespace gpk
 	void				updateTransform					(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 & transformLocal);
 	int32_t				integrateForces					(double duration, ::gpk::SBodyFrame & bodyFrame, ::gpk::SBodyForces & bodyForce, const ::gpk::SBodyMass & bodyMass);
 	int32_t				integratePosition				(double duration, double durationHalfSquared, ::gpk::SBodyFlags & bodyFlags, ::gpk::SBodyCenter & bodyTransform, const ::gpk::SBodyForces & bodyForces);
-	void				transformInertiaTensor			(::gpk::m3f32 & iitWorld, const ::gpk::m3f32 &iitBody, const ::gpk::m4f32 &rotmat);
+	void				transformInertiaTensor			(::gpk::m3f32 & iitWorld, const ::gpk::m3f32 & iitBody, const ::gpk::m4f32 &rotmat);
 
 
 	struct SRigidBodyIntegrator {
@@ -182,7 +182,7 @@ namespace gpk
 
 				GetTransform(iBody, dummy); // ensures tensor matrix is up to date
 
-				::gpk::SBodyFrame					& bodyFrame						= Frames[iBody];
+				::gpk::SBodyFrame					& bodyFrame						= Frames	[iBody];
 				::gpk::SBodyForces					& bodyForces					= Forces	[iBody];
 				::gpk::SBodyMass					& bodyMass						= Masses	[iBody];
 				::gpk::SBodyCenter					& bodyCenter					= Centers	[iBody];
@@ -196,10 +196,12 @@ namespace gpk
 			return 0;
 		}
 
-		inline	const	SBodyFrame&			GetBodyFrame					(uint32_t iBody)	const	{ return Frames [iBody]; }
-		inline	const	SBodyForces&		GetBodyForces					(uint32_t iBody)	const	{ return Forces [iBody]; }
-		inline	const	SBodyMass&			GetBodyMass						(uint32_t iBody)	const	{ return Masses [iBody]; }
-		inline	const	SBodyCenter&		GetBodyCenter					(uint32_t iBody)	const	{ return Centers[iBody]; }
+		inline	const SBodyFlags&			GetBodyFlags					(uint32_t iBody)	const	{ return Flags  [iBody]; }
+		inline	const SBodyFrame&			GetBodyFrame					(uint32_t iBody)	const	{ return Frames [iBody]; }
+		inline	const SBodyForces&			GetBodyForces					(uint32_t iBody)	const	{ return Forces [iBody]; }
+		inline	const SBodyMass&			GetBodyMass						(uint32_t iBody)	const	{ return Masses [iBody]; }
+		inline	const SBodyCenter&			GetBodyCenter					(uint32_t iBody)	const	{ return Centers[iBody]; }
+		inline	SBodyFlags&					GetBodyFlags					(uint32_t iBody)			{ return Flags  [iBody]; }
 		inline	SBodyFrame&					GetBodyFrame					(uint32_t iBody)			{ return Frames [iBody]; }
 		inline	SBodyForces&				GetBodyForces					(uint32_t iBody)			{ return Forces [iBody]; }
 		inline	SBodyMass&					GetBodyMass						(uint32_t iBody)			{ return Masses [iBody]; }

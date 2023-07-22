@@ -33,7 +33,7 @@ namespace gpk
 
 	::gpk::error_t				blockConfigLoad				(::gpk::SBlockConfig & out_config, const ::gpk::SJSONReader & reader, int32_t iNode, const ::gpk::SBlockConfig & configDefault = {{}, 65535, 0});
 
-	template<typename _tBlock>
+	tplt<tpnm _tBlock>
 	struct SMapTable {
 		::gpk::au32		Id;
 		::gpk::apobj<_tBlock>		Block;
@@ -62,7 +62,7 @@ namespace gpk
 	::gpk::error_t				blockFileName				(::gpk::ac & fileName, const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName);
 	::gpk::error_t				blockFilePath				(::gpk::ac & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath);
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::vcc & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
 		(void)maxBlocksInMemory;
 		loadedBytes.clear();
@@ -77,14 +77,14 @@ namespace gpk
 		return indexBlock;
 	}
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath, uint64_t idRecord)								{
 		::gpk::apod<char>				fileName					= {};
 		gpk_necs(::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::error_t				blockMapSave				(const ::gpk::vcu8 & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)								{
 		::gpk::ac						finalPath					= {};
 		gpk_necs(::gpk::blockFilePath(finalPath, dbName, dbPath));
@@ -93,7 +93,7 @@ namespace gpk
 		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
 
-	template<typename _tMapBlock>
+	tplt<tpnm _tMapBlock>
 	::gpk::error_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::vcc & dbPath, ::gpk::ac & outputData) {
 		::gpk::SRecordMap				recordMap;
 		::gpk::apod<char>				fileBytes;
@@ -114,7 +114,7 @@ namespace gpk
 
 	//stainli	uint32_t				mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
 
-	template<typename _tMapBlock>
+	tplt<tpnm _tMapBlock>
 	int64_t						mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToFind)	{
 		::gpk::au32			idBlocks					= mapTable.Id;
 		::gpk::au32			blocksToSkip;
@@ -181,7 +181,7 @@ namespace gpk
 		return -1;
 	}
 
-	template<typename _tMapBlock>
+	tplt<tpnm _tMapBlock>
 	int64_t						mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToAdd)	{
 		int64_t							idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
 		ree_if(0 <= idRecord, "Sequence already registered: %s.", ::gpk::toString(sequenceToAdd).begin());

@@ -8,7 +8,7 @@
 namespace gpk
 {
 	//------------------------------------------------------------------------------------------------------------
-	template <typename T, typename TTarget>
+	tplt <tpnm T, tpnm TTarget>
 	::gpk::rect2<T>&		realignRectangle
 		(	const ::gpk::n2<TTarget>	& targetSize
 		,	const ::gpk::rect2<T>		& rectangleToRealign
@@ -26,7 +26,7 @@ namespace gpk
 		return rectangleRealigned;
 	}
 
-	template <typename T>
+	tplt <tpnm T>
 	::gpk::rect2<T>&		dockRectangle
 		(	const ::gpk::rect2<T>	& rectangleToDockTo
 		,	const ::gpk::rect2<T>	& rectangleToDock

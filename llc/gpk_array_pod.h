@@ -11,7 +11,7 @@
 namespace gpk
 {
 	// This class is optimized to contain POD instances and won't work for C++ objects that require calling constructors/destructors.
-	template<typename _tPOD>
+	tplt<tpnm _tPOD>
 	struct array_pod : public array_base<_tPOD> {
 		typedef	_tPOD			T						;
 		typedef	view<T>			TView					;
@@ -41,7 +41,7 @@ namespace gpk
 			gsthrow_if(resize(other.size()) != (int32_t)other.size());
 			memcpy(Data, other.begin(), other.byte_count());
 		}
-		template<size_t _count>
+		tplt<size_t _count>
 								array_pod			(const T (&other)[_count])							{
 			gsthrow_if(resize(_count) != (int32_t)_count);
 			memcpy(Data, other, _count * sizeof(T));
@@ -54,7 +54,7 @@ namespace gpk
 				memcpy(Data, other.begin(), other.byte_count());
 			return *this;
 		}
-		template<size_t sizeStatic>
+		tplt<size_t sizeStatic>
 		TArray&					operator =			(const T (&init)[sizeStatic])						{
 			gsthrow_if(resize(sizeStatic) != sizeStatic);
 			memcpy(Data, init, Count * sizeof(T));
@@ -83,10 +83,10 @@ namespace gpk
 			gpk_necs(resize(oldSize + 1, newValue));
 			return oldSize;
 		}
-		template<size_t _len>
+		tplt<size_t _len>
 		inline	::gpk::error_t	append_string		(const T (&newChain)[_len])				noexcept	{ return append(newChain, (uint32_t)strnlen(newChain, (uint32_t)_len)); }
 		inline	::gpk::error_t	append_string		(const ::gpk::vcs & newChain)			noexcept	{ return append(newChain.begin(), newChain.size()); }
-		template<size_t _len>
+		tplt<size_t _len>
 		inline	::gpk::error_t	append				(const T (&newChain)[_len])				noexcept	{ return append(newChain, (uint32_t)_len); }
 		inline	::gpk::error_t	append				(const ::gpk::view<const T> & newChain)	noexcept	{ return append(newChain.begin(), newChain.size());	}
 		::gpk::error_t			append				(const T * chainToAppend, uint32_t chainLength)		noexcept	{
@@ -192,7 +192,7 @@ namespace gpk
 			*(u16*)&Data[newCount]	= 0;
 			return Count = newCount;
 		}
-		template<size_t _chainLength>
+		tplt<size_t _chainLength>
 		inline	::gpk::error_t	insert				(uint32_t index, const T (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (uint32_t)_chainLength); }
 		inline	::gpk::error_t	insert				(uint32_t index, ::gpk::view<const T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
@@ -222,8 +222,8 @@ namespace gpk
 		}
 	}; // array_pod
 
-	template <typename T>	using apod		= ::gpk::array_pod<T>;
-	template <typename T>	using ap		= ::gpk::apod	<T>;
+	tplt <tpnm T>	using apod		= ::gpk::array_pod<T>;
+	tplt <tpnm T>	using ap		= ::gpk::apod	<T>;
 
 	typedef apod<uchar_t	>	auchar, auc;
 	typedef apod<char		>	achar , ac ;

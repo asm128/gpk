@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	template <typename T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
+	tplt <tpnm T> using appod		= ::gpk::aobj<::gpk::ppod<T>>;
 } // namespace
 
 #endif // GPK_ARRAY_PPOD_H_23627

@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	struct SParticle2Forces {
 		typedef	::gpk::n2<_tElement>	TCoord;
 
@@ -28,7 +28,7 @@ namespace gpk
 		}
 	};
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	struct SParticle2 {
 		// The member variables are organized such that matches the order in which they are used.
 		::gpk::n2<_tElement>		Position					= {};
@@ -50,7 +50,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 	// This basically does FinalPosition = InitialPosition + Velocity * Time.
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	stainli	void			particleIntegratePosition
 		(	const ::gpk::n2<_tElement>	& velocity
 		,	const double				timeElapsed
@@ -61,7 +61,7 @@ namespace gpk
 		position				+= velocity * timeElapsedHalfSquared;
 	}
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::error_t			integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
 		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
@@ -74,7 +74,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	struct SParticle2Integrator {
 		typedef	::gpk::SParticle2	<_tElement>	TParticle;
 		typedef	::gpk::n2			<_tElement>	TCoord;
@@ -118,7 +118,7 @@ namespace gpk
 		}
 	};
 
-	template<typename _tParticleType>
+	tplt<tpnm _tParticleType>
 	struct SParticleBinding {
 		typedef	_tParticleType	TParticleType;
 
@@ -126,7 +126,7 @@ namespace gpk
 		int32_t					IndexParticlePhysics						= -1;
 	};
 
-	template<typename _tParticleType, typename _tCoord>
+	tplt<tpnm _tParticleType, tpnm _tCoord>
 	::gpk::error_t			addParticle
 		(	const _tParticleType										& particleType
 		,	::gpk::apod<::gpk::SParticleBinding<_tParticleType>>	& particleInstances
@@ -140,7 +140,7 @@ namespace gpk
 		return particleInstances.push_back(newInstance);
 	}
 
-	template<typename _tParticleType, typename _tCoord>
+	tplt<tpnm _tParticleType, tpnm _tCoord>
 	struct SParticleSystem {
 		typedef	::gpk::SParticleBinding<_tParticleType>	TParticleInstance;
 		typedef	::gpk::SParticle2Integrator<_tCoord>	TIntegrator;
@@ -149,7 +149,7 @@ namespace gpk
 		TIntegrator						Integrator									= {};
 	};
 
-	template<typename _tParticleType, typename _tCoord>
+	tplt<tpnm _tParticleType, tpnm _tCoord>
 	stainli	::gpk::error_t			addParticle					(const _tParticleType& particleType, ::gpk::SParticleSystem<_tParticleType, _tCoord> & particleSystem,	const ::gpk::SParticle2<_tCoord> & particleDefinition)	{
 		return addParticle(particleType, particleSystem.Instances, particleSystem.Integrator, particleDefinition);
 	}

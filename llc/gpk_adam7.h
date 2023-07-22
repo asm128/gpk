@@ -12,7 +12,7 @@ namespace gpk
 		, ::gpk::n2u32	& offsetBase
 		);
 
-	template<typename _tTexel>
+	tplt<tpnm _tTexel>
 	static	::gpk::error_t	adam7Interlace		(::gpk::view<::gpk::img<_tTexel>> images, ::gpk::grid<_tTexel> & out_View)				{
 		for(uint32_t iImage = 0; iImage < images.size(); ++iImage) {
 			::gpk::n2u32				offsetMultiplier	= {1, 1};

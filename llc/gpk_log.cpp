@@ -45,12 +45,11 @@ void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
 
 static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
 #if defined(GPK_WINDOWS)
-	if(nullptr == buffer)
-		return -1;
-	if(0 == lastError)
-		return 0;
-	const DWORD							size							= ::FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)(lastError & 0xFFFFFFFF), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, bufferSize, NULL);
-	return (::gpk::error_t)size;
+	rees_if(0 == buffer);
+	return lastError 
+		? ::FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, (DWORD)(lastError & 0xFFFFFFFF), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buffer, bufferSize, NULL)
+		: 0
+		;
 #else
 	(void) bufferSize;
 	sprintf(buffer, "%u.", (uint32_t)lastError);
@@ -88,4 +87,16 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 		base_debug_print(bufferError2, (uint32_t)stringLength);
 		base_debug_print("\n", 1);
 	}
+
+#ifdef GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
+#	ifdef GPK_WINDOWS
+#		define gpkClearSystemError() SetLastError(0)
+#	else
+#		define gpkClearSystemError() do{} while(0)
+#	endif
+#else
+#	define gpkClearSystemError() do{} while(0)
+#endif
+
+	gpkClearSystemError();
 }

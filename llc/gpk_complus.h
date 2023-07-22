@@ -11,7 +11,7 @@
 
 namespace gpk
 {
-	template<typename TUnknown> 
+	tplt<tpnm TUnknown> 
 	::gpk::error_t		safe_release	(TUnknown ** storage) { 
 		IUnknown*				p				= *storage;
 		if(p) { 
@@ -21,7 +21,7 @@ namespace gpk
 		return 0;
 	}
 
-	template<typename TUnknown> 
+	tplt<tpnm TUnknown> 
 	::gpk::error_t		safe_addref		(TUnknown ** storage, TUnknown * toAcquire) { 
 		::gpk::error_t			result			= 0;
 		IUnknown*				p				= *storage;
@@ -35,7 +35,7 @@ namespace gpk
 		return result; 
 	}
 
-	template<typename _tNCO>
+	tplt<tpnm _tNCO>
 	class ptr_com {
 	protected:
 		_tNCO				* Unknown			= 0;
@@ -70,7 +70,7 @@ namespace gpk
 		inlcxpr	const TRef*		set_ref			(TRef* ref)							noexcept	{ ::gpk::safe_addref(&Unknown, ref); return Unknown; }
 		inlcxpr	TRef*			get				()							const	noexcept	{ return Unknown; }
 
-		template<typename _tNCOOther>
+		tplt<tpnm _tNCOOther>
 		inline	::gpk::error_t	as				(_tNCOOther** other)				noexcept	{ 
 			_tNCOOther*					old				= *other;
 			*other					= {};
@@ -80,7 +80,7 @@ namespace gpk
 			return hr;
 		}
 
-		template<typename _tNCOOther>
+		tplt<tpnm _tNCOOther>
 		inline	::gpk::error_t	as				(::gpk::ptr_com<_tNCOOther>& other)	noexcept	{ 
 			::gpk::ptr_com<_tNCOOther>	old				= other;
 			other					= {};
@@ -88,11 +88,11 @@ namespace gpk
 			return hr;
 		}
 	};
-	template <typename T> using pcom		= ::gpk::ptr_com<T>;
-	template <typename T> using acom		= ::gpk::aobj<::gpk::pcom<T>>;
-	template <typename T> using vcom		= ::gpk::view<::gpk::pcom<T>>;
-	template <typename T> using array_com	= ::gpk::acom<T>;
-	template <typename T> using view_com	= ::gpk::vcom<T>;
+	tplt <tpnm T> using pcom		= ::gpk::ptr_com<T>;
+	tplt <tpnm T> using acom		= ::gpk::aobj<::gpk::pcom<T>>;
+	tplt <tpnm T> using vcom		= ::gpk::view<::gpk::pcom<T>>;
+	tplt <tpnm T> using array_com	= ::gpk::acom<T>;
+	tplt <tpnm T> using view_com	= ::gpk::vcom<T>;
 }
 
 #endif // GPK_COMPLUS_H_23627

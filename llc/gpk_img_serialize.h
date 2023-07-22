@@ -6,14 +6,14 @@
 
 namespace gpk 
 {
-	template<typename TPod>
+	tplt<tpnm TPod>
 	::gpk::error_t				saveImage					(::gpk::au8 & output, const ::gpk::grid<TPod> & input) {
 		gpk_necs(::gpk::savePOD(output, input.metrics())); 
 		gpk_necs(::gpk::saveView(output, ::gpk::view<const TPod>{input.begin(), input.size()})); 
 		return 0;
 	}
 
-	template<typename TPod>
+	tplt<tpnm TPod>
 	::gpk::error_t				loadImage					(::gpk::vcu8 & input, ::gpk::img<TPod> & output) {
 		output.Texels.clear();
 		::gpk::n2u32					metrics						= {};

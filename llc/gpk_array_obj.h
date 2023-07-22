@@ -7,7 +7,7 @@
 
 namespace gpk
 {
-	template<typename _tObj>
+	tplt<tpnm _tObj>
 	struct array_obj : public array_base<_tObj> {
 		typedef	_tObj			T						;
 		typedef	view<T>			TView					;
@@ -49,7 +49,7 @@ namespace gpk
 								array_obj			(::std::initializer_list<T> init)				{
 			gthrow_if(errored(append(init.begin(), (uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
 		}
-		template<size_t _count>
+		tplt<size_t _count>
 								array_obj			(const T (&other)[_count])							{
 			gthrow_if(errored(append(other, (uint32_t)_count)), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)_count);
 		}
@@ -101,7 +101,7 @@ namespace gpk
 		}
 
 		// Returns the new size of the array.
-		template <typename... _tArgs>
+		tplt <tpnm... _tArgs>
 		::gpk::error_t			resize				(uint32_t newCount, _tArgs&&... constructorArgs)											{
 			gpk_necs(reserve(newCount));
 			for(; Count < newCount; ++Count)
@@ -169,7 +169,7 @@ namespace gpk
 
 			return Count;
 		}
-		template<size_t _len>
+		tplt<size_t _len>
 		inline	::gpk::error_t	append				(const T (&newChain)[_len])							noexcept	{ return append(newChain, (uint32_t)_len); }
 		inline	::gpk::error_t	append				(const ::gpk::view<const T> & newChain)				noexcept	{ return append(newChain.begin(), newChain.size());	}
 		::gpk::error_t			append				(const T * chainToAppend, uint32_t chainLength)		noexcept	{
@@ -253,17 +253,17 @@ namespace gpk
 			return Count = newCount;
 		}
 
-		template<size_t _chainLength>
+		tplt<size_t _chainLength>
 		inline	::gpk::error_t	insert				(uint32_t index, const T* (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (uint32_t)_chainLength); }
 		inline	::gpk::error_t	insert				(uint32_t index, ::gpk::view<const T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 
 	}; // array_obj
 
-	template <typename T>	using aobj		= ::gpk::array_obj<T>; 
-	template <typename T>	using ao		= ::gpk::aobj<T>; 
+	tplt <tpnm T>	using aobj		= ::gpk::array_obj<T>; 
+	tplt <tpnm T>	using ao		= ::gpk::aobj<T>; 
 
-	template <typename T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
-	template <typename T>	using av		= ::gpk::aview	<T>; 
+	tplt <tpnm T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
+	tplt <tpnm T>	using av		= ::gpk::aview	<T>; 
 
 	typedef	::gpk::aview<uchar_t	>	avuc;
 	typedef	::gpk::aview<char		>	avc;
@@ -293,7 +293,7 @@ namespace gpk
 	typedef	::gpk::aview<const int64_t	>	avci64;
 
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t							split					(const ::gpk::view<const T> & target, const T & separator, ::gpk::aobj<::gpk::view<const T>> & split)	{
 		uint32_t									lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
@@ -309,7 +309,7 @@ namespace gpk
 		return (int32_t)split.size();
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t							split					(const ::gpk::view<const T> & target, const ::gpk::view<const T>& separators, ::gpk::aobj<::gpk::view<const T>> & split)	{
 		uint32_t									lastOffset				= 0;
 		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
@@ -327,7 +327,7 @@ namespace gpk
 		return (int32_t)split.size();
 	}
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t							split					(const ::gpk::vcs & target, const T & separator, ::gpk::aobj<::gpk::vcs> & split)	{
 		int32_t										lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {

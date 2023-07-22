@@ -52,7 +52,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t				viewReadLegacy		(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t					elementCount		= *(uint32_t*)input.begin();
@@ -60,7 +60,7 @@ namespace gpk
 		headerToRead				= {(input.size() > sizeof(uint32_t)) ? (const T*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t				viewReadLegacy		(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
 		ree_if(input.size() < 4, "Invalid input size: %u", input.size());
 		const uint32_t					elementCount		= *(uint32_t*)input.begin();
@@ -68,7 +68,7 @@ namespace gpk
 		headerToRead				= {(input.size() > sizeof(uint32_t)) ? (T*)&input[sizeof(uint32_t)] : 0, elementCount};
 		return sizeof(uint32_t) + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t				viewRead			(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{
 		const SSerializedViewHeader		& header			= *(const SSerializedViewHeader*)input.begin();
 		const uint32_t					elementCount		= header.ActualCount();
@@ -78,10 +78,10 @@ namespace gpk
 		headerToRead				= {(input.size() > counterWidth) ? (const T*)&input[counterWidth] : 0, elementCount};
 		return counterWidth + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
-	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
+	tplt<tpnm T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
+	tplt<tpnm T>	stainli	::gpk::error_t	viewRead	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead(headerToRead, *(const ::gpk::vcu8*)&input); }
 
-	template<typename T>
+	tplt<tpnm T>
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, const ::gpk::vu8 & input)	{
 		const uint32_t					elementCount		= ((const SSerializedViewHeader*)input.begin())->ActualCount();
 		const uint32_t					counterWidth		= ((const SSerializedViewHeader*)input.begin())->ActualWidth();
@@ -90,10 +90,10 @@ namespace gpk
 		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
 		return counterWidth + headerToRead.size() * sizeof(T);
 	}
-	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vi8 & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
-	template<typename T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vc  & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
+	tplt<tpnm T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vi8 & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
+	tplt<tpnm T>	stainli	::gpk::error_t	viewRead	(::gpk::view<T> & headerToRead, const ::gpk::vc  & input)			{ return viewRead(headerToRead, *(const ::gpk::vu8*)&input); }
 
-	template<typename _tPOD> 
+	tplt<tpnm _tPOD> 
 	::gpk::error_t				loadPOD				(::gpk::vcu8 & input, _tPOD & output) { 
 		::gpk::view<const _tPOD>		readView			= {}; 
 		uint32_t						bytesRead			= 0;
@@ -102,18 +102,18 @@ namespace gpk
 		output						= readView[0]; 
 		return 0;
 	}
-	template<typename _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
+	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
+	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
 
-	template<typename _tPOD> 
+	tplt<tpnm _tPOD> 
 	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::view<const _tPOD> & output) { 
 		uint32_t						bytesRead				= 0;
 		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
 		gpk_necs(input.slice(input, bytesRead));
 		return 0;
 	}
-	template<typename _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-	template<typename _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
+	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
+	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 } // namespace
 
 #endif // GPK_VIEW_SERIALIZE_H_23627

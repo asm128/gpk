@@ -38,7 +38,7 @@
 
 #if defined(GPK_WINDOWS)
 //#	pragma warning(disable : 4592)		// We needed this because of a bug in the compiler causing our static const variables to throw a warning as if its constructor was defined as constexpr.
-//#	pragma warning(disable : 6326)		// Bogus potential comparison of a constant with another constant for static template functionality.
+//#	pragma warning(disable : 6326)		// Bogus potential comparison of a constant with another constant for static tplt functionality.
 #	pragma warning(disable : 4706)		// Enable assignment within conditional expression. We do this constantly inside our macros in a completely valid way.
 #endif
 
@@ -83,11 +83,13 @@
 #define nodcxpr nodscrd cnstxpr
 #define nodstin nodscrd stainli
 #define nodstxp nodscrd stacxpr
+#define tpnm	typename
+#define tplt	template
 
 namespace gpk
 {
 	// -- Returns 0 on little-endian machines
-	stainli int				test_endianness			()		noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
+	nodstin int		test_endianness		()	noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
 }
 
 #endif // GPK_PLATFORM_GLOBALS_H_23627

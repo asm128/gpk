@@ -8,7 +8,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tDimension>	
+	tplt<tpnm _tDimension>	
 	using		an2		= ::gpk::apod<::gpk::n2<_tDimension>>;
 
 	typedef	::gpk::an2<char	>	an2c	, an2char		;

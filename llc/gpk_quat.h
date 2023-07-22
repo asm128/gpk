@@ -5,7 +5,7 @@
 
 namespace gpk 
 {
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	struct quat {
 		_tBase					x, y, z, w;
 
@@ -43,7 +43,7 @@ namespace gpk
 		Tq&						operator*=				(double scalar)								noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this;	}
 		Tq&						operator/=				(double scalar)											{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this;	}
 
-		template<typename _t>
+		tplt<tpnm _t>
 		inlcxpr	quat<_t>		Cast					()									const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
 		cnstxpr	_tBase			LengthSquared			()									const	noexcept	{ return x * x + y * y + z * z + w * w;	}
 		inlcxpr	double			Length					()									const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}

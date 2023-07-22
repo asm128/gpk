@@ -33,7 +33,6 @@
 #		//endif
 #	endif
 #endif
-
 namespace gpk
 {
 	typedef	void		(*debug_print_t)				(const char* text, uint32_t textLen);
@@ -50,7 +49,7 @@ namespace gpk
 #	define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
 #endif
 
-	template<size_t prefixLength, typename... TArgs>
+	tplt<size_t prefixLength, tpnm... TArgs>
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", prefix);
@@ -71,12 +70,12 @@ namespace gpk
 #if defined(GPK_STDOUT_LOG_ENABLED)
 		printf("%s", customDynamicString);
 #endif
+
 		base_debug_print(customDynamicString, (int)stringLength);
-		if(2 >= severity) {
+		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
-		}
 	}
-	template<typename... _tArgs>
+	tplt<tpnm... _tArgs>
 	stincxp	void		dummy		(_tArgs&&...)		{}
 }
 
@@ -86,7 +85,7 @@ namespace gpk
 #if !defined(GPK_WINDOWS)
 #	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "):", format, ##__VA_ARGS__)
 #else
-#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)	do { ::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__); } while(0)
 #endif
 
 #ifndef always_printf

@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	struct m4 {
 		typedef				m4<_tBase>	_tMat4, TMatrix4;
 		typedef				n3<_tBase>			Tn3;
@@ -158,9 +158,9 @@ namespace gpk
 			}
 			_41	= vTranslation.x; _42 = vTranslation.y; _43 = vTranslation.z;
 		}
-		template<typename _tNearFar>
+		tplt<tpnm _tNearFar>
 		inline	void							FieldOfView					(double fAngle, double fAspect, const ::gpk::minmax<_tNearFar> & nearFar)	{ return FieldOfView(fAngle, fAspect, nearFar.Min, nearFar.Max); } // FoV
-		template<typename _tNearFar>
+		tplt<tpnm _tNearFar>
 		void									FieldOfView					(double fAngle, double fAspect, _tNearFar zNear, _tNearFar zFar)			{
 			double										fTan						= tan( fAngle / 2.0 );
 			_11 = (_tBase)(1.0 / ( fAspect * fTan )				);
@@ -487,14 +487,14 @@ namespace gpk
 			return *this;
 		}
 	};	// struct
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::tri3<_tElement> &	transform			(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
 		triangle.A					= transform.Transform(triangle.A);
 		triangle.B					= transform.Transform(triangle.B);
 		triangle.C					= transform.Transform(triangle.C);
 		return triangle;
 	}
-	template<typename _tElement>
+	tplt<tpnm _tElement>
 	::gpk::tri3<_tElement> &	transformDirection	(::gpk::tri3<_tElement> & triangle, const ::gpk::m4<_tElement> & transform)									{
 		triangle.A					= transform.TransformDirection(triangle.A);
 		triangle.B					= transform.TransformDirection(triangle.B);
@@ -502,7 +502,7 @@ namespace gpk
 		return triangle;
 	}
 
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	struct m3 {
 		typedef				m3<_tBase>	_tMat3;
 		typedef				n3<_tBase>		_TCoord3D;

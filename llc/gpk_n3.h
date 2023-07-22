@@ -6,7 +6,7 @@
 namespace gpk 
 {
 #pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	template<typename _tBase>
+	tplt<tpnm _tBase>
 	struct n3 {
 		typedef	_tBase		T;
 		T					x, y, z;
@@ -14,36 +14,39 @@ namespace gpk
 		typedef	n3<T>		Tn3;
 		typedef	n2<T>		Tn2;
 
+		stincxp	Tn3			from				(T value)									noexcept	{ return {value, value, value}; }
+
+		//
+		GPK_DEFAULT_OPERATOR(Tn3, x == other.x && y == other.y && z == other.z);
+
 		//
 		cnstxpr	Tn3			operator+			(const Tn3 & other)					const	noexcept	{ return {x + other.x, y + other.y, z + other.z}; }
 		cnstxpr	Tn3			operator-			(const Tn3 & other)					const	noexcept	{ return {x - other.x, y - other.y, z - other.z}; }
-		cnstxpr	Tn3			operator*			(double scalar)						const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar), (T)(z * scalar)}; }
-		cnstxpr	Tn3			operator/			(double scalar)						const				{ return {(T)(x / scalar), (T)(y / scalar), (T)(z / scalar)}; }
-		cnstxpr	Tn3			operator*			(int64_t scalar)					const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar), (T)(z * scalar)}; }
-		cnstxpr	Tn3			operator/			(int64_t scalar)					const				{ return {(T)(x / scalar), (T)(y / scalar), (T)(z / scalar)}; }
-		cnstxpr	Tn3			operator*			(uint64_t scalar)					const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar), (T)(z * scalar)}; }
-		cnstxpr	Tn3			operator/			(uint64_t scalar)					const				{ return {(T)(x / scalar), (T)(y / scalar), (T)(z / scalar)}; }
-		cnstxpr	Tn3			operator*			(int32_t scalar)					const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar), (T)(z * scalar)}; }
-		cnstxpr	Tn3			operator/			(int32_t scalar)					const				{ return {(T)(x / scalar), (T)(y / scalar), (T)(z / scalar)}; }
-		cnstxpr	Tn3			operator*			(uint32_t scalar)					const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar), (T)(z * scalar)}; }
-		cnstxpr	Tn3			operator/			(uint32_t scalar)					const				{ return {(T)(x / scalar), (T)(y / scalar), (T)(z / scalar)}; }
+		cnstxpr	Tn3			operator*			(double scalar)						const	noexcept	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cnstxpr	Tn3			operator/			(double scalar)						const				{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cnstxpr	Tn3			operator*			(int64_t scalar)					const	noexcept	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cnstxpr	Tn3			operator/			(int64_t scalar)					const				{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cnstxpr	Tn3			operator*			(uint64_t scalar)					const	noexcept	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cnstxpr	Tn3			operator/			(uint64_t scalar)					const				{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cnstxpr	Tn3			operator*			(int32_t scalar)					const	noexcept	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cnstxpr	Tn3			operator/			(int32_t scalar)					const				{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cnstxpr	Tn3			operator*			(uint32_t scalar)					const	noexcept	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cnstxpr	Tn3			operator/			(uint32_t scalar)					const				{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		//
 		Tn3&				operator+=			(const Tn3 & other)							noexcept	{ x += other.x; y += other.y; z += other.z;	return *this; }
 		Tn3&				operator-=			(const Tn3 & other)							noexcept	{ x -= other.x; y -= other.y; z -= other.z;	return *this; }
-		Tn3&				operator*=			(double scalar)								noexcept	{ x = (T)(x * scalar); y = (T)(y * scalar); z = (T)(z * scalar); return *this; }
-		Tn3&				operator/=			(double scalar)											{ x = (T)(x / scalar); y = (T)(y / scalar); z = (T)(z / scalar); return *this; }
-		Tn3&				operator*=			(int64_t scalar)							noexcept	{ x = (T)(x * scalar); y = (T)(y * scalar); z = (T)(z * scalar); return *this; }
-		Tn3&				operator/=			(int64_t scalar)										{ x = (T)(x / scalar); y = (T)(y / scalar); z = (T)(z / scalar); return *this; }
-		Tn3&				operator*=			(int32_t scalar)							noexcept	{ x = (T)(x * scalar); y = (T)(y * scalar); z = (T)(z * scalar); return *this; }
-		Tn3&				operator/=			(int32_t scalar)										{ x = (T)(x / scalar); y = (T)(y / scalar); z = (T)(z / scalar); return *this; }
-		Tn3&				operator*=			(uint32_t scalar)							noexcept	{ x = (T)(x * scalar); y = (T)(y * scalar); z = (T)(z * scalar); return *this; }
-		Tn3&				operator/=			(uint32_t scalar)										{ x = (T)(x / scalar); y = (T)(y / scalar); z = (T)(z / scalar); return *this; }
-		Tn3&				operator*=			(uint64_t scalar)							noexcept	{ x = (T)(x * scalar); y = (T)(y * scalar); z = (T)(z * scalar); return *this; }
-		Tn3&				operator/=			(uint64_t scalar)										{ x = (T)(x / scalar); y = (T)(y / scalar); z = (T)(z / scalar); return *this; }
+		Tn3&				operator*=			(double scalar)								noexcept	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				operator/=			(double scalar)											{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				operator*=			(int64_t scalar)							noexcept	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				operator/=			(int64_t scalar)										{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				operator*=			(int32_t scalar)							noexcept	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				operator/=			(int32_t scalar)										{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				operator*=			(uint32_t scalar)							noexcept	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				operator/=			(uint32_t scalar)										{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				operator*=			(uint64_t scalar)							noexcept	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				operator/=			(uint64_t scalar)										{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
 		//
-		cnstxpr	bool		operator==			(const Tn3 & other)					const	noexcept	{ return x == other.x && y == other.y && z == other.z; }
-		inlcxpr	bool		operator!=			(const Tn3 & other)					const	noexcept	{ return !operator==(other); }
-		cnstxpr	Tn3			operator-			()									const	noexcept	{ return {x*-1, y*-1, z*-1}; }
+		cnstxpr	Tn3			operator-			()									const	noexcept	{ return {T(x*-1), T(y*-1), T(z*-1)}; }
 		//
 		inlcxpr	Tn2			xx					()									const	noexcept	{ return {x, x}; }
 		inlcxpr	Tn2			xy					()									const	noexcept	{ return {x, y}; }
@@ -85,6 +88,9 @@ namespace gpk
 		inlcxpr	Tn3			zzy					()									const	noexcept	{ return {z, z, y}; }
 		inlcxpr	Tn3			zzz					()									const	noexcept	{ return {z, z, z}; }
 
+		tplt<tpnm _t2>
+		inlcxpr	n3<_t2>		Cast				()									const	noexcept	{ return {(_t2)x, (_t2)y, (_t2)z}; }
+
 		inlcxpr	n3<uint8_t>	u8					()									const	noexcept	{ return Cast<uint8_t	>(); }
 		inlcxpr	n3<uint16_t>u16					()									const	noexcept	{ return Cast<uint16_t	>(); }
 		inlcxpr	n3<uint32_t>u32					()									const	noexcept	{ return Cast<uint32_t	>(); }
@@ -97,10 +103,27 @@ namespace gpk
 		inlcxpr	n3<double>	f64					()									const	noexcept	{ return Cast<double	>(); }
 
 		//
-		template<typename _t2>
-		inlcxpr	n3<_t2>		Cast				()									const	noexcept	{ return {(_t2)x, (_t2)y, (_t2)z}; }
-		inlcxpr	T			Area				()									const				{ return x * y * z; }
-		inlcxpr	Tn3			Clamp				(const Tn3 & min, const Tn3 & max)	const	noexcept	{ return {::gpk::clamp(x, min.x, max.x), ::gpk::clamp(y, min.y, max.y), ::gpk::clamp(z, min.z, max.z)}; }
+		inlcxpr	Tn3&		Area				()									const	noexcept	{ return x * y * z; }
+		inlcxpr	Tn3			Clamp				(const Tn3 & min, const Tn3 & max)	const	noexcept	{ return {::gpk::clamped(x, min.x, max.x), ::gpk::clamped(y, min.y, max.y), ::gpk::clamped(z, min.z, max.z)}; }
+		inline	Tn3&		Set					(T value)									noexcept	{ x = y = z = value; return *this; }
+		inline	Tn3&		From				(T value)									noexcept	{ x = y = z = value; return *this; }
+
+		int					SetAxis				(uint32_t axisIndex, T value) {
+			switch(axisIndex) { 
+			case 0: x = value; return 0; 
+			case 1: y = value; return 1; 
+			case 2: z = value; return 2; 
+			}
+			return -1;
+		}
+		int					SetOthers			(uint32_t axisExcluded, T value) {
+			switch(axisExcluded) { 
+			case 0: y = z = value; break; 
+			case 1: x = z = value; break; 
+			case 2: x = y = value; break; 
+			}
+			return -1;
+		}
 
 		inline	Tn3&		Scale				(double scalar)								noexcept	{ return *this *= scalar; }
 		inline	Tn3&		Scale				(const Tn3 & other)							noexcept	{ x *= other.x; y *= other.y; z *= other.z; return *this; }
