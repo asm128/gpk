@@ -52,32 +52,32 @@ namespace gpk
 		bool		 Right			: 1;
 	};
 
-	stacxpr	::gpk::quad3f32				VOXEL_FACE_VERTICES	[6]		= 
+	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_VERTICES			= {
 		{ {{0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1}}  // Top		(y = 1)
 		, {{1, 0, 0}, {1, 1, 0}, {1, 0, 1}, {1, 1, 1}}	// Front	(x = 1)
 		, {{0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}}	// Right	(z = 1)
 		, {{0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1}}  // Bottom	(y = 0)
 		, {{0, 0, 0}, {0, 1, 0}, {0, 0, 1}, {0, 1, 1}}	// Back		(x = 0)
 		, {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}}	// Left		(z = 0)
-		}; 
+		}}; 
 
-	stacxpr	::gpk::quad2f32				VOXEL_FACE_UV	[6]		= 
+	stacxpr	::gpk::astatic<::gpk::quad2f32, 6>	VOXEL_FACE_UV	= {
 		{ {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Top		
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Front	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Right	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Bottom	
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Back		
 		, {{0, 0}, {1, 0}, {0, 1}, {1, 1}}	// Left		
-		};
+		}};
 
-	stacxpr	::gpk::quad3f32				VOXEL_FACE_NORMALS	[6]		= 
+	stacxpr	::gpk::astatic<::gpk::quad3f32, 6>	VOXEL_FACE_NORMALS	= {
 		{ {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}, {0, 1, 0}}	// Top		
 		, {{1, 0, 0}, {1, 0, 0}, {1, 0, 0}, {1, 0, 0}}	// Front	
 		, {{0, 0, 1}, {0, 0, 1}, {0, 0, 1}, {0, 0, 1}}	// Right	
 		, {{0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}}	// Bottom	
 		, {{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}}	// Back		
 		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
-		};
+		}};
 
 	stacxpr	::gpk::n3f32				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
 	stacxpr	::gpk::quadu8				VOXEL_FACE_NORMAL_INDICES	[6]		= 

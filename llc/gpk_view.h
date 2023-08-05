@@ -205,15 +205,16 @@ namespace gpk
 	typedef	::gpk::view<vcf32	>	vvcf32;
 	typedef	::gpk::view<vcf64	>	vvcf64;
 
-	stacxpr	::gpk::vcc	STR_NULL		= {4, "null"};
-	stacxpr	::gpk::vcc	STR_TRUE		= {4, "true"};
-	stacxpr	::gpk::vcc	STR_FALSE		= {5, "false"};
+	stacxpr	::gpk::vcc	VCC_NULL		= {4, "null"};
+	stacxpr	::gpk::vcc	VCC_TRUE		= {4, "true"};
+	stacxpr	::gpk::vcc	VCC_FALSE		= {5, "false"};
 
-	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::STR_TRUE : ::gpk::STR_FALSE).begin(); } 
-	stincxp	const char*	bool2char		(bool b)		{ return b ? ::gpk::STR_TRUE.begin() : ::gpk::STR_FALSE.begin(); } 
+	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); } 
+	stincxp	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); } 
+	stincxp	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; } 
 	stincxp	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
 	stincxp	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
-	inline	bool		char2bool		(::gpk::vcc b)	{ return b == ::gpk::STR_TRUE; } 
+	inline	bool		vcc2bool		(::gpk::vcc b)	{ return b == ::gpk::VCC_TRUE; } 
 
 
 	struct view_string : public view<char> {
@@ -241,7 +242,7 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::vcs	>	vcvcs;
 
 	stacxpr	::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
-	stacxpr	::gpk::vcs		VCS_EMPTY				= ::gpk::vcc{0, ""};
+	stacxpr	::gpk::vcs		VCSAFE					= ::gpk::vcc{0, ""};
 
 	::gpk::error_t			rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
 	::gpk::error_t			ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);

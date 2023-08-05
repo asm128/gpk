@@ -66,7 +66,7 @@ static	::gpk::error_t	collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & i
 ::gpk::error_t			gpk::collisionDetect	(const ::gpk::SEngine & engine, double totalSeconds, ::gpk::apod<::gpk::SContact> & contactsDetected) {
 	uint32_t					count					= contactsDetected.size();
 	for(::gpk::SContact	contact	= {totalSeconds}; contact.EntityA < engine.Entities.size(); ++contact.EntityA) {
-		const ::gpk::SVirtualEntity	& entityA				= engine.Entities[contact.EntityA];
+		const ::gpk::SEntity	& entityA				= engine.Entities[contact.EntityA];
 		if(entityA.RigidBody >= engine.Integrator.Flags.size())
 			continue;
 
@@ -75,7 +75,7 @@ static	::gpk::error_t	collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & i
 			continue;
 
 		for(contact.EntityB = contact.EntityA + 1; contact.EntityB < engine.Entities.size(); ++contact.EntityB) {
-			const ::gpk::SVirtualEntity	& entityB				= engine.Entities[contact.EntityB];
+			const ::gpk::SEntity	& entityB				= engine.Entities[contact.EntityB];
 			if(entityB.RigidBody >= engine.Integrator.Flags.size())
 				continue;
 

@@ -43,8 +43,8 @@ namespace gpk
 		inline	TMinMax&		From		(T value)				noexcept	{ Min = Max = value; return *this; }
 	};
 #pragma pack(pop)
-	typedef	minmax<char		>	minmaxchar;
-	typedef	minmax<uchar_t	>	minmaxuchar;
+	typedef	minmax<char		>	minmaxchar, minmaxc;
+	typedef	minmax<uchar_t	>	minmaxuchar, minmaxuc;
 	typedef minmax<float	>	minmaxf32;
 	typedef minmax<double	>	minmaxf64;
 	typedef minmax<uint8_t	>	minmaxu8;

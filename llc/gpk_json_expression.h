@@ -8,8 +8,8 @@ namespace gpk
 {
 	static const ::gpk::vcs					strEmptyObj				= "{}"		;
 	static const ::gpk::vcs					strEmptyArr				= "[]"		;
-	stacxpr	::gpk::vcc						strNull					= STR_NULL	;
-	stacxpr	::gpk::vcc						strBool		[2]			= {STR_FALSE, STR_TRUE};
+	stacxpr	::gpk::vcc						strNull					= VCC_NULL	;
+	stacxpr	::gpk::vcc						strBool		[2]			= {VCC_FALSE, VCC_TRUE};
 	static const ::gpk::vcs					strZero					= "0"		;
 #pragma pack(push, 1)
 	struct SEvaluationStepResult {

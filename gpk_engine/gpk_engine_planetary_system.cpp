@@ -188,7 +188,7 @@ static	::gpk::error_t	textureNumber			(::gpk::g8bgra view, uint32_t number, cons
 }
 
 static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, int32_t iOrbiter, int32_t iEntity) {
-	const ::gpk::SVirtualEntity	& entity				= engine.Entities[iEntity];
+	const ::gpk::SEntity	& entity				= engine.Entities[iEntity];
 	const ::gpk::SRenderNode	& renderNode			= engine.Scene->RenderNodes[entity.RenderNode];
 	::gpk::SSkin				& skin					= *engine.Scene->Graphics->Skins[renderNode.Skin];
 	::gpk::SSurface				& surface				= *engine.Scene->Graphics->Surfaces[skin.Textures[0]];

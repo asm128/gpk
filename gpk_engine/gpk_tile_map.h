@@ -78,6 +78,6 @@ namespace gpk
 		}
 	};
 
-} // namespace ssiege
+} // namespace ssg
 
 #endif // GPK_TILE_MAP
