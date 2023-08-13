@@ -153,6 +153,9 @@
     <ClInclude Include="gpk_sun.h">
       <Filter>game</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_engine_geometry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_engine.cpp">
@@ -202,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="gpk_sun.cpp">
       <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_engine_renderbuffer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

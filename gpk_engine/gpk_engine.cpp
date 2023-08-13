@@ -77,7 +77,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateCamera() {
 	int32_t						iEntity						= this->Entities.Create();
-	::gpk::SEntity		& entity					= Entities[iEntity];
+	::gpk::SEntity				& entity					= Entities[iEntity];
 	entity.RenderNode		= Scene->RenderNodes.Create();
 	entity.RigidBody		= this->Integrator.Create();
 
@@ -94,82 +94,6 @@
 	gpk_necs(iSphere = CreateSphere({}), "Camera reference");
 	gpk_necs(Entities.SetParent(iSphere, iEntity));
 	return iEntity;
-}
-
-::gpk::error_t			gpk::createBuffers	
-	( uint32_t							vertexCount
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
-	) {
-	::gpk::clear(pIndicesVertex, pVertices, pNormals, pUV);
-	pVertices	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
-	pVertices	->Desc.Usage	= ::gpk::BUFFER_USAGE_Position;
-
-	pNormals	->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_3;
-	pNormals	->Desc.Usage	= ::gpk::BUFFER_USAGE_Normal;
-
-	pUV			->Desc.Format	= ::gpk::DATA_TYPE_FLOAT32_2;
-	pUV			->Desc.Usage	= ::gpk::BUFFER_USAGE_UV;
-
-	pIndicesVertex->Desc.Usage	= ::gpk::BUFFER_USAGE_Index;
-	pIndicesVertex->Desc.Format	
-		= (vertexCount > 0xFFFF) ? ::gpk::DATA_TYPE_UINT32
-		: (vertexCount > 0x00FF) ? ::gpk::DATA_TYPE_UINT16
-		: ::gpk::DATA_TYPE_UINT8
-		;
-	return 0;
-}
-
-::gpk::error_t			gpk::createBuffers	
-	( const ::gpk::SGeometryBuffers		& geometry
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pIndicesVertex
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pVertices
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
-	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
-	) {
-	gpk_necs(::gpk::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
-
-	pVertices	->Data.resize(geometry.Positions	.byte_count());
-	pNormals	->Data.resize(geometry.Normals		.byte_count());
-	pUV			->Data.resize(geometry.TextureCoords.byte_count());
-	memcpy(&pVertices	->Data[0], geometry.Positions		.begin(), pVertices	->Data.size());
-	memcpy(&pNormals	->Data[0], geometry.Normals			.begin(), pNormals	->Data.size());
-	memcpy(&pUV			->Data[0], geometry.TextureCoords	.begin(), pUV		->Data.size());
-	if(geometry.Positions.size() > 0xFFFF) {
-		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count());
-		memcpy(pIndicesVertex->Data.begin(), geometry.PositionIndices.begin(), pIndicesVertex->Data.size());
-	}
-	else if(geometry.Positions.size() > 0xFF) {
-		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 1);
-		::gpk::vu16					viewIndices					= ::gpk::vu16{(uint16_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-		viewIndices.enumerate([&geometry](uint32_t index, uint16_t & value){ value = (uint16_t)geometry.PositionIndices[index]; }, 0);
-	}
-	else {
-		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 2);
-		::gpk::vu8					viewIndices					= ::gpk::vu8{(uint8_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-		viewIndices.enumerate([&geometry](uint32_t index, uint8_t & value){ value = (uint8_t)geometry.PositionIndices[index]; }, 0);
-	}
-
-	return 0;
-}
-
-::gpk::error_t			gpk::createBuffers
-	( ::gpk::SRenderBufferManager	& bufferManager 
-	, const ::gpk::SGeometryBuffers	& geometry
-	, uint32_t						& iIndicesVertex
-	, uint32_t						& iVertices
-	, uint32_t						& iNormals
-	, uint32_t						& iUV
-	) {
-	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex, pVertices, pNormals, pUV;
-	gpk_necs(::gpk::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
-	gpk_necs(iIndicesVertex			= (uint32_t)bufferManager.push_back(pIndicesVertex));
-	gpk_necs(iVertices				= (uint32_t)bufferManager.push_back(pVertices));
-	gpk_necs(iNormals				= (uint32_t)bufferManager.push_back(pNormals));
-	gpk_necs(iUV					= (uint32_t)bufferManager.push_back(pUV));
-	return 0;
 }
 
 ::gpk::error_t			gpk::SEngine::CreateBox			(const ::gpk::SParamsBox & params, ::gpk::vcs entityName)	{

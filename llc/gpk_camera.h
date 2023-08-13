@@ -18,7 +18,7 @@ namespace gpk
 	};
 
 	struct SCameraRange {
-		::gpk::minmaxf32	NearFar		= {.01f, 1000.f};
+		::gpk::minmaxf32	NearFar		= {.0001f, 100.f};
 		double				Angle		= ::gpk::math_pi * .25;
 		double				Zoom		= 1.0;
 	};

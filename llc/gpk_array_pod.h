@@ -227,8 +227,8 @@ namespace gpk
 
 	typedef apod<uchar_t	>	auchar, auc;
 	typedef apod<char		>	achar , ac ;
-	typedef apod<float_t	>	af32;
-	typedef apod<double_t	>	af64;
+	typedef apod<float		>	af32;
+	typedef apod<double		>	af64;
 	typedef apod<uint8_t	>	au8	;
 	typedef apod<uint16_t	>	au16;
 	typedef apod<uint32_t	>	au32;

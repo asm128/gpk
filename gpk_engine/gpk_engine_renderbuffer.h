@@ -68,24 +68,8 @@ namespace gpk
 		, ::gpk::pobj<SRenderBuffer>	& pUV
 		);
 
-	::gpk::error_t				createBuffers
-		( const ::gpk::SGeometryBuffers	& geometry
-		, ::gpk::pobj<SRenderBuffer>	& pIndicesVertex
-		, ::gpk::pobj<SRenderBuffer>	& pVertices
-		, ::gpk::pobj<SRenderBuffer>	& pNormals
-		, ::gpk::pobj<SRenderBuffer>	& pUV
-		);
-
 	typedef	::gpk::SLinearNamedMap<::gpk::SRenderBuffer>	SRenderBufferManager;
 
-	::gpk::error_t				createBuffers
-		( SRenderBufferManager			& bufferManager 
-		, const ::gpk::SGeometryBuffers	& geometry
-		, uint32_t						& iIndicesVertex
-		, uint32_t						& iVertices
-		, uint32_t						& iNormals
-		, uint32_t						& iUV
-		);
 } // namespace
 
 #endif // GPK_ENGINE_RENDERBUFFER_H_23627

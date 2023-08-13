@@ -180,6 +180,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="gpk_celestial_body.h" />
+    <ClInclude Include="gpk_engine_geometry.h" />
     <ClInclude Include="gpk_engine_orbit.h" />
     <ClInclude Include="gpk_game.h" />
     <ClInclude Include="gpk_game_stage.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="gpk_celestial_body.cpp" />
     <ClCompile Include="gpk_engine_orbit.cpp" />
     <ClCompile Include="gpk_engine_planetary_system.cpp" />
+    <ClCompile Include="gpk_engine_renderbuffer.cpp" />
     <ClCompile Include="gpk_rigid_body.cpp" />
     <ClCompile Include="gpk_sun.cpp" />
     <ClCompile Include="gpk_xaudio2.cpp" />
