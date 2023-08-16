@@ -6,32 +6,33 @@
 namespace gpk
 {
 	stacxpr	uint8_t				tail_width			(uint32_t count) 	{
-		//	 if(count > 0x3FFFFFFF) return 4; else 
-			 if(count > 0x003FFFFF) return 3;
-		else if(count > 0x00003FFF) return 2;
-		else if(count > 0x0000003F) return 1;
-		else
-			return 0;
+		//return (count > 0x3FFFFFFF) ? 4
+		return uint8_t
+			( (count > 0x003FFFFF) ? 3
+			: (count > 0x00003FFF) ? 2
+			: (count > 0x0000003F) ? 1
+			: 0
+			);
 	}
+	
 	stincxp	uint8_t				header_width		(uint32_t count)	{ return tail_width(count) + 1; }
 
 	stacxpr	uint8_t				tail_multiplier		(uint32_t count)	{
-		//	 if(count > 0x3FFFFFFF) return (count & 0x3F00000000) >> 32; else 
-			 if(count > 0x003FFFFF) return uint8_t((count & 0x3F000000) >> 24);
-		else if(count > 0x00003FFF) return uint8_t((count & 0x003F0000) >> 16);
-		else if(count > 0x0000003F) return uint8_t((count & 0x00003F00) >> 8);
-		else
-			return (uint8_t)count;
+		//return (count > 0x3FFFFFFF) ? (count & 0x3F00000000) >> 32
+		return uint8_t
+			( (count > 0x003FFFFF) ? ((count & 0x3F000000) >> 24)
+			: (count > 0x00003FFF) ? ((count & 0x003F0000) >> 16)
+			: (count > 0x0000003F) ? ((count & 0x00003F00) >> 8)
+			: count
+			);
 	}
 	stacxpr	uint32_t			tail_base			(uint32_t count)	{
-		//	 if(count > 0x3FFFFFFF) return (count & 0xFFFFFFFFU) >> 8; else 
-			 if(count > 0x003FFFFF) return count & 0x00FFFFFFU;
-		else if(count > 0x00003FFF) return count & 0x0000FFFFU;
-		else if(count > 0x0000003F) return count & 0x000000FFU;
-		else
-			return 0;
+		//return (count > 0x3FFFFFFF) ? (count & 0xFFFFFFFFU) >> 8
+		return (count > 0x003FFFFF) ? count & 0x00FFFFFFU
+			 : (count > 0x00003FFF) ? count & 0x0000FFFFU
+			 : (count > 0x0000003F) ? count & 0x000000FFU
+			 : 0;
 	}
-
 #pragma pack(push, 1)
 	struct SSerializedViewHeader { 
 		uint8_t						TailWidth			: 2;
@@ -40,14 +41,13 @@ namespace gpk
 
 		inlcxpr uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
 		cnstxpr	uint32_t			ElementCount		()	const	noexcept	{
-			switch(TailWidth) {
-			case 0: return Multiplier;
-			case 1: return (uint32_t(Multiplier) <<  8) + *(uint8_t *)&Tail;
-			case 2: return (uint32_t(Multiplier) << 16) + *(uint16_t*)&Tail;
-			case 3: return (uint32_t(Multiplier) << 24) + (((*(uint32_t*)this) & 0xFFFFFF00U) >> 8);
-			//case 4: return Multiplier * Tail;
-			}
-			return Multiplier;
+			return (0 == TailWidth) ? Multiplier
+				 : (1 == TailWidth) ? (uint32_t(Multiplier) <<  8) + *(uint8_t *)&Tail
+				 : (2 == TailWidth) ? (uint32_t(Multiplier) << 16) + *(uint16_t*)&Tail
+				 : (3 == TailWidth) ? (uint32_t(Multiplier) << 24) + (((*(uint32_t*)this) & 0xFFFFFF00U) >> 8)
+				//: (4 == TailWidth) ? 
+				 : Multiplier 
+				 ;
 		}
 
 		tplt<tpnm T>

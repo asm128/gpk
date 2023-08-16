@@ -9,11 +9,7 @@
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
-#elif defined(GPK_LINUX)
-#	define GPK_STDCALL
-#	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
-#	define GPK_MODULE_API_IMPORT
-#elif defined(GPK_ANDROID)
+#elif defined(GPK_LINUX) ||  defined(GPK_ANDROID) ||  defined(GPK_ESP32)
 #	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define GPK_MODULE_API_IMPORT
@@ -35,10 +31,14 @@
 #	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
 #	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		(moduleAddr)
 #	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		GetProcAddress((HMODULE)moduleHandle, symbolName)
-#else
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID)
 #	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
 #	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
 #	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		dlsym	(moduleHandle, symbolName)
+#else
+#	define	GPK_LOAD_MODULE(moduleName)								::gpk::nully(moduleName)
+#	define	GPK_FREE_MODULE(moduleAddr)								::gpk::nully(moduleAddr)
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		::gpk::nully(moduleHandle, symbolName)
 #endif
 
 #if defined GPK_WINDOWS

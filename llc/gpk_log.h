@@ -77,6 +77,8 @@ namespace gpk
 	}
 	tplt<tpnm... _tArgs>
 	stincxp	void		dummy		(_tArgs&&...)		{}
+	tplt<tpnm... _tArgs>
+	stincxp	void*		nully		(_tArgs&&...)		{ return 0; }
 }
 
 #define	GPK_STRINGIFY(x) #x

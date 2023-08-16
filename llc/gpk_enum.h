@@ -234,12 +234,12 @@ namespace gpk
 		//
 		inlcxpr				genum_value				()										= default;
 		inlcxpr				genum_value				(const genum_value & other)				= default;
-		inlcxpr				genum_value				(const T & value)						: Value((T)value), Name(::gpk::get_enum<T>().get_value_name(value))				{}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name)																: Value((T)value), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value(value, name, name, name);			}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & description)								: Value((T)value), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, name, description);		}
-		inlcxpr				genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)value), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, title, description);	}
+							genum_value				(const T & value)						: Value((T)value), Name(::gpk::get_enum<T>().get_value_name(value))				{}
+							genum_value				(const T & value, const ::gpk::vcc & name)																: Value((T)value), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value(value, name, name, name);			}
+							genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & description)								: Value((T)value), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, name, description);		}
+							genum_value				(const T & value, const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)value), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value(value, name, title, description);	}
 
-		inlcxpr	operator	const	T&		()			const	{ return Value; }
+		inlcxpr	operator	const	T&				()			const	{ return Value; }
 	};
 
 	tplt <tpnm _tEnum, size_t _sLen>
@@ -275,9 +275,9 @@ namespace gpk
 		//
 		inlcxpr				genum_value_auto	()									= default;
 		inlcxpr				genum_value_auto	(const genum_value_auto & other)	= default;
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name)															: Value((T)0), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value_auto(name, name, name);			Value = ::gpk::get_value<T>(name); }
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value((T)0), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, name, description);		Value = ::gpk::get_value<T>(name); }
-		inlcxpr				genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)0), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, title, description);	Value = ::gpk::get_value<T>(name); }
+							genum_value_auto	(const ::gpk::vcc & name)															: Value((T)0), Name(name), Title(name), Description(name)			{ ::gpk::get_enum<T>().add_value_auto(name, name, name);			Value = ::gpk::get_value<T>(name); }
+							genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & description)							: Value((T)0), Name(name), Title(name), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, name, description);		Value = ::gpk::get_value<T>(name); }
+							genum_value_auto	(const ::gpk::vcc & name, const ::gpk::vcc & title, const ::gpk::vcc & description)	: Value((T)0), Name(name), Title(title), Description(description)	{ ::gpk::get_enum<T>().add_value_auto(name, title, description);	Value = ::gpk::get_value<T>(name); }
 
 		inlcxpr	operator	const	T&		()			const	{ return Value; }
 	};
