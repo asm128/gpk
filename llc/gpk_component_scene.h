@@ -3,8 +3,10 @@
 #include "gpk_array_ptr.h"
 #include "gpk_enum.h"
 #include "gpk_stl.h"
-#include "gpk_png.h"
 #include "gpk_range.h"
+#include "gpk_apod_color.h"
+#include "gpk_grid_color.h"
+#include "gpk_img_color.h"
 
 #ifndef GPK_COMPONENT_SCENE_H_23627
 #define GPK_COMPONENT_SCENE_H_23627
