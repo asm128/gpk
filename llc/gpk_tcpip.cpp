@@ -44,18 +44,20 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::tcpipAddressToSockaddr					(const uint8_t* a1, const uint8_t* a2, const uint8_t* a3, const uint8_t* a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
-	sockaddr_ipv4								= {AF_INET, port ? htons(*port) : (uint16_t)0};
+::gpk::error_t			gpk::tcpipAddressToSockaddr					(const uint8_t a1, const uint8_t a2, const uint8_t a3, const uint8_t a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
+	sockaddr_ipv4				= {};
+	sockaddr_ipv4.sin_family	= AF_INET;
+	sockaddr_ipv4.sin_port		= port ? htons(*port) : (uint16_t)0;
 #if defined(GPK_WINDOWS)
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1 ? *a1 : 0;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2 ? *a2 : 0;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3 ? *a3 : 0;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4 ? *a4 : 0;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4;
 #else
-	sockaddr_ipv4.sin_addr.s_addr				=  a1 ? ((unsigned int)*a1) <<  0 : 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a2 ? ((unsigned int)*a2) <<  8 : 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a3 ? ((unsigned int)*a3) << 16 : 0;
-	sockaddr_ipv4.sin_addr.s_addr				|= a4 ? ((unsigned int)*a4) << 24 : 0;
+	sockaddr_ipv4.sin_addr.s_addr				=  ((unsigned int)a1) <<  0;
+	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a2) <<  8;
+	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a3) << 16;
+	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a4) << 24;
 #endif
 	return 0;
 }

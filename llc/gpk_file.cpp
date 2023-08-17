@@ -9,13 +9,13 @@
 #		define WIN32_LEAN_AND_MEAN
 #	endif
 #	include <Windows.h>
-#elif defined(GPK_ANDROID) || defined(GPK_LINUX)
+#elif defined(GPK_ANDROID) || defined(GPK_LINUX) || defined(GPK_ESP32)
 #	include <dirent.h>
 #endif
 
 int64_t								gpk::fileSize				(const ::gpk::vcc	& fileNameSrc)								{
 	FILE									* fp						= 0;
-	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
+	ree_if(0 != ::gpk::fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
 	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
 #if defined(GPK_WINDOWS)
 	if(0 != _fseeki64(fp, 0, SEEK_END)) {
@@ -53,7 +53,7 @@ static	::gpk::error_t	fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const u
 		gpk_necall(snprintf(fileNameDst, ::gpk::size(fileNameDst) - 2, "%s.%.2u", fileNameSrc.begin(), iPart), "File name too large: %s.", fileNameSrc.begin());
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
 		FILE									* fpDest					= 0;
-		ree_if(0 != fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
+		ree_if(0 != ::gpk::fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
 		uint32_t								countBytes					= (iPart == countParts - 1) ? fileInMemory.size() - offsetPart : sizePartMax;
 		ree_if(countBytes != fwrite(&fileInMemory[offsetPart], 1, countBytes, fpDest), "Failed to write part %u of %u bytes to disk. Disk full?", iPart, countBytes);
@@ -69,7 +69,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
 	FILE						* fp						= 0;
 	ree_if(0 == fp, "%s", "Files larger than 3gb still not supported.");
-	ree_if(0 != fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
+	ree_if(0 != ::gpk::fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
 	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
 
 	::gpk::ai8					partInMemory;
@@ -84,7 +84,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 		gpk_necall(snprintf(fileNameDst, ::gpk::size(fileNameDst) - 2, "%s.%.2u", fileNameSrc.begin(), iPart), "File name too large: %s.", fileNameSrc.begin());
 		info_printf("Creating part %u: '%s'.", iPart, fileNameDst);
 		FILE									* fpDest					= 0;
-		ree_if(0 != fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
+		ree_if(0 != ::gpk::fopen_s(&fpDest, fileNameDst, "wb"), "Failed to open file: %s.", fileNameDst);
 		ree_if(0 == fpDest, "Failed to create file: %s.", fileNameDst);
 		int64_t									countBytes					= (iPart == countParts - 1) ? sizeFile - offsetPart : sizePartMax;
 		ree_if(countBytes != (int64_t)fwrite(partInMemory.begin(), 1, (uint32_t)countBytes, fpDest), "Failed to write part %u of %u bytes to disk. Disk full?", iPart, countBytes);
@@ -112,7 +112,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 	gpk_necall(snprintf(fileNameSrc, ::gpk::size(fileNameSrc) - 2, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
 	FILE									* fpDest					= 0;
 	::gpk::apod<char>						finalPathName				= ::gpk::toString(fileNameDst);
-	fopen_s(&fpDest, finalPathName.begin(), "wb");
+	::gpk::fopen_s(&fpDest, finalPathName.begin(), "wb");
 	ree_if(0 == fpDest, "Failed to create file: %s.", finalPathName.begin());
 	::gpk::apod<int8_t>						fileInMemory				= {};
 	// Load each .split part and write it to the destionation file.
@@ -127,7 +127,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 
 ::gpk::error_t			gpk::fileToMemory			(const ::gpk::vcc & fileName, ::gpk::au8 & fileInMemory)		{
 	FILE									* fp						= 0;
-	int32_t									fileErr						= fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
+	int32_t									fileErr						= ::gpk::fopen_s(&fp, ::gpk::toString(fileName).begin(), "rb");
 	rvw_if((fileErr > 0) ? -fileErr : fileErr, 0 != fileErr || 0 == fp, "Cannot open file: %s.", ::gpk::toString(fileName).begin());
 	fseek(fp, 0, SEEK_END);
 	int32_t									fileSize					= (int32_t)ftell(fp);
@@ -149,7 +149,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 
 ::gpk::error_t			gpk::fileFromMemory			(const ::gpk::vcc & fileName, const ::gpk::vcu8 & fileInMemory)	{
 	FILE									* fp						= 0;
-	ree_if(0 != fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
+	ree_if(0 != ::gpk::fopen_s(&fp, ::gpk::toString(fileName).begin(), "wb"), "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	ree_if(0 == fp, "Failed to create file for writing: %s.", ::gpk::toString(fileName).begin());
 	::gpk::error_t							result						= 0;
 	if(fileInMemory.size() != fwrite(fileInMemory.begin(), 1, fileInMemory.size(), fp)) {

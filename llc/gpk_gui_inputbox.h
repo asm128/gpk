@@ -3,6 +3,8 @@
 #include "gpk_system_key.h"
 #include "gpk_event_input.h"
 
+#include <limits.h>
+
 #ifndef GPK_GUI_INPUTBOX_H_23627
 #define GPK_GUI_INPUTBOX_H_23627
 

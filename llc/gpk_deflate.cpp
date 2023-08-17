@@ -122,7 +122,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
 	const ::gpk::au8			& compressedContentsPacked	= folderPackage.CompressedContentsPacked	;
 	{
 		FILE						* fp						= 0;
-		fopen_s(&fp, ::gpk::toString(nameFileDst).begin(), "wb");
+		::gpk::fopen_s(&fp, ::gpk::toString(nameFileDst).begin(), "wb");
 		ree_if(0 == fp, "Failed to create file: %s.", ::gpk::toString(nameFileDst).begin());
 		fwrite(&fileHeader							, 1, sizeof(::gpk::SPackHeader)			, fp);
 		fwrite(compressedTableFiles		.begin	()	, 1, compressedTableFiles		.size()	, fp);
@@ -237,7 +237,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
  			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), lenPath})), "Failed to create foder: %s.", finalPathName.begin());
 			finalPathName[indexSlash]	= '/';
 		}
-		fopen_s(&fp, finalPathName.begin(), "wb");
+		::gpk::fopen_s(&fp, finalPathName.begin(), "wb");
 		ce_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());
 		ce_if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
 	}

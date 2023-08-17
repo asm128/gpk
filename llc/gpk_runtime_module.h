@@ -7,7 +7,7 @@
 #ifndef GPK_RUNTIME_MODULE_H_23627
 #define GPK_RUNTIME_MODULE_H_23627
 
-#if !defined(GPK_WINDOWS)
+#if defined(GPK_LINUX) || defined(GPK_ANDROID)
 #	include <dlfcn.h>
 #endif
 

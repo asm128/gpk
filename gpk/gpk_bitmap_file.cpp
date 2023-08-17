@@ -114,7 +114,7 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 #else
 	FILE						* source					= 0;
 
-	fopen_s(&source, filename.begin(), "rb");
+	::gpk::fopen_s(&source, filename.begin(), "rb");
 	if(0 == source) {
 		error_printf("Failed to open file: %s. File not found?", filename.begin());
 		return -1;
