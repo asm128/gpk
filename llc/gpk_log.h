@@ -181,11 +181,11 @@ namespace gpk
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
 #if !defined(GPK_WINDOWS)
-#		define gthrow_if(condition, format, ...)	if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1); error_printf(format, ##__VA_ARGS__); gpk_throw("");	} 
-#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'", #condition); gpk_throw("");	} 
+#		define gthrow_if(condition, format, ...)	if(condition) { error_printf("Condition: '%s'.", #condition); error_printf(format, ##__VA_ARGS__); gpk_throw("");	} 
+#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'.", #condition); gpk_throw("");	} 
 #	else
-#		define gthrow_if(condition, format, ...)	if(condition) { base_debug_print("Condition: " #condition "\n", (uint32_t)-1); error_printf(format, __VA_ARGS__); gpk_throw(""); } 
-#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'", #condition); gpk_throw("");	}													  
+#		define gthrow_if(condition, format, ...)	if(condition) { error_printf("Condition: '%s'.", #condition); error_printf(format, __VA_ARGS__); gpk_throw(""); } 
+#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'.", #condition); gpk_throw("");	}													  
 #	endif
 #	else
 //#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
@@ -196,17 +196,17 @@ namespace gpk
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
-#		define gserror_if(condition)							if(condition) { error_printf	("Condition: '%s'", #condition); }
-#		define gswarn_if(condition)								if(condition) { warning_printf	("Condition: '%s'", #condition); }
-#		define gsinfo_if(condition)								if(condition) { info_printf		("Condition: '%s'", #condition); }
+#		define gserror_if(condition)							if(condition) { error_printf	("Condition: '%s'.", #condition); }
+#		define gswarn_if(condition)								if(condition) { warning_printf	("Condition: '%s'.", #condition); }
+#		define gsinfo_if(condition)								if(condition) { info_printf		("Condition: '%s'.", #condition); }
 #		if !defined(GPK_WINDOWS)
-#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: %s", #condition); error_printf		(format, ##__VA_ARGS__);	} 
-#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: %s", #condition); warning_printf	(format, ##__VA_ARGS__);	} 
-#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: %s", #condition); info_printf		(format, ##__VA_ARGS__);	} 
+#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf	(format, ##__VA_ARGS__);} 
+#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf(format, ##__VA_ARGS__);} 
+#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf	(format, ##__VA_ARGS__);} 
 #		else							
-#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: %s", "" #condition "\n"); error_printf		(format, __VA_ARGS__);	 } 
-#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: %s", "" #condition "\n"); warning_printf	(format, __VA_ARGS__);	 } 
-#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: %s", "" #condition "\n"); info_printf		(format, __VA_ARGS__);	 } 
+#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf	(format, __VA_ARGS__);	} 
+#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf(format, __VA_ARGS__);	} 
+#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf	(format, __VA_ARGS__);	} 
 #		endif
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
@@ -221,45 +221,45 @@ namespace gpk
 #endif
 
 #ifndef ret_gerror_if
-#	define ret_gserror_if(condition)						if(condition) { error_printf	("Condition: %s", #condition); return; } 
-#	define ret_gswarn_if(condition)							if(condition) { warning_printf	("Condition: %s", #condition); return; } 
-#	define ret_gsinfo_if(condition)							if(condition) { info_printf		("Condition: %s", #condition); return; } 
-#	define ret_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: %s", #condition); error_printf		(format, __VA_ARGS__); return;	} 
-#	define ret_gwarn_if(condition, format, ...)				if(condition) { warning_printf	("Condition: %s", #condition); warning_printf	(format, __VA_ARGS__); return;	} 
-#	define ret_ginfo_if(condition, format, ...)				if(condition) { info_printf		("Condition: %s", #condition); info_printf		(format, __VA_ARGS__); return;	} 
+#	define ret_gserror_if(condition)						if(condition) { error_printf	("Condition: '%s'.", #condition); return; } 
+#	define ret_gswarn_if(condition)							if(condition) { warning_printf	("Condition: '%s'.", #condition); return; } 
+#	define ret_gsinfo_if(condition)							if(condition) { info_printf		("Condition: '%s'.", #condition); return; } 
+#	define ret_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); return;	} 
+#	define ret_gwarn_if(condition, format, ...)				if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); return;	} 
+#	define ret_ginfo_if(condition, format, ...)				if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); return;	} 
 #endif
 
 #ifndef break_gerror_if
-#	define break_gserror_if(condition)						if(condition) { error_printf	("Condition: %s", #condition); break;	}
-#	define break_gswarn_if(condition)						if(condition) { warning_printf	("Condition: %s", #condition); break;	}
-#	define break_gsinfo_if(condition)						if(condition) { info_printf		("Condition: %s", #condition); break;	}
-#	define break_gsverbose_if(condition)					if(condition) { verbose_printf	("Condition: %s", #condition); break;	}
-#	define break_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: %s", #condition); error_printf		(format, __VA_ARGS__); break;	}
-#	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	("Condition: %s", #condition); warning_printf	(format, __VA_ARGS__); break;	}
-#	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		("Condition: %s", #condition); info_printf		(format, __VA_ARGS__); break;	}
-#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	("Condition: %s", #condition); verbose_printf	(format, __VA_ARGS__); break;	}
+#	define break_gserror_if(condition)						if(condition) { error_printf	("Condition: '%s'.", #condition); break;	}
+#	define break_gswarn_if(condition)						if(condition) { warning_printf	("Condition: '%s'.", #condition); break;	}
+#	define break_gsinfo_if(condition)						if(condition) { info_printf		("Condition: '%s'.", #condition); break;	}
+#	define break_gsverbose_if(condition)					if(condition) { verbose_printf	("Condition: '%s'.", #condition); break;	}
+#	define break_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); break;	}
+#	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); break;	}
+#	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); break;	}
+#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	("Condition: '%s'.", #condition); verbose_printf	(format, __VA_ARGS__); break;	}
 #endif
 
 #ifndef continue_gerror_if
-#	define continue_gserror_if(condition)					if(condition) { error_printf	("Condition: %s", #condition); continue; }
-#	define continue_gswarn_if(condition)					if(condition) { warning_printf	("Condition: %s", #condition); continue; }
-#	define continue_gsinfo_if(condition)					if(condition) { info_printf		("Condition: %s", #condition); continue; }
-#	define continue_gerror_if(condition, format, ...)		if(condition) { error_printf_nb	("Condition: %s", #condition); error_printf		(format, __VA_ARGS__); continue; }
-#	define continue_gwarn_if(condition, format, ...)		if(condition) { warning_printf	("Condition: %s", #condition); warning_printf	(format, __VA_ARGS__); continue; }
-#	define continue_ginfo_if(condition, format, ...)		if(condition) { info_printf		("Condition: %s", #condition); info_printf		(format, __VA_ARGS__); continue; }
+#	define continue_gserror_if(condition)					if(condition) { error_printf	("Condition: '%s'.", #condition); continue; }
+#	define continue_gswarn_if(condition)					if(condition) { warning_printf	("Condition: '%s'.", #condition); continue; }
+#	define continue_gsinfo_if(condition)					if(condition) { info_printf		("Condition: '%s'.", #condition); continue; }
+#	define continue_gerror_if(condition, format, ...)		if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); continue; }
+#	define continue_gwarn_if(condition, format, ...)		if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); continue; }
+#	define continue_ginfo_if(condition, format, ...)		if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); continue; }
 #endif
 
 #ifndef retval_gerror_if
-#	define retval_gserror_if(retVal, condition)					if(condition) { error_printf	("Condition: %s", #condition); return retVal; } 
-#	define retval_gswarn_if(retVal, condition)					if(condition) { warning_printf	("Condition: %s", #condition); return retVal; } 
-#	define retval_gsinfo_if(retVal, condition)					if(condition) { info_printf		("Condition: %s", #condition); return retVal; } 
-#	define retval_gsverbose_if(retVal, condition)				if(condition) { verbose_printf	("Condition: %s", #condition); return retVal; } 
-#	define retval_gsalways_if(retVal, condition)				if(condition) { always_printf	("Condition: %s", #condition); return retVal; } 
-#	define retval_gerror_if(retVal, condition, format, ...)		if(condition) { error_printf_nb	("Condition: %s", #condition); error_printf		(format, __VA_ARGS__); return retVal; } 
-#	define retval_gwarn_if(retVal, condition, format, ...)		if(condition) { warning_printf	("Condition: %s", #condition); warning_printf	(format, __VA_ARGS__); return retVal; } 
-#	define retval_ginfo_if(retVal, condition, format, ...)		if(condition) { info_printf		("Condition: %s", #condition); info_printf		(format, __VA_ARGS__); return retVal; } 
-#	define retval_gverbose_if(retVal, condition, format, ...)	if(condition) { verbose_printf	("Condition: %s", #condition); verbose_printf	(format, __VA_ARGS__); return retVal; } 
-#	define retval_galways_if(retVal, condition, format, ...)	if(condition) { always_printf	("Condition: %s", #condition); always_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_gserror_if(retVal, condition)					if(condition) { error_printf	("Condition: '%s'.", #condition); return retVal; } 
+#	define retval_gswarn_if(retVal, condition)					if(condition) { warning_printf	("Condition: '%s'.", #condition); return retVal; } 
+#	define retval_gsinfo_if(retVal, condition)					if(condition) { info_printf		("Condition: '%s'.", #condition); return retVal; } 
+#	define retval_gsverbose_if(retVal, condition)				if(condition) { verbose_printf	("Condition: '%s'.", #condition); return retVal; } 
+#	define retval_gsalways_if(retVal, condition)				if(condition) { always_printf	("Condition: '%s'.", #condition); return retVal; } 
+#	define retval_gerror_if(retVal, condition, format, ...)		if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); return retVal; } 
+#	define retval_gwarn_if(retVal, condition, format, ...)		if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_ginfo_if(retVal, condition, format, ...)		if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); return retVal; } 
+#	define retval_gverbose_if(retVal, condition, format, ...)	if(condition) { verbose_printf	("Condition: '%s'.", #condition); verbose_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_galways_if(retVal, condition, format, ...)	if(condition) { always_printf	("Condition: '%s'.", #condition); always_printf	(format, __VA_ARGS__); return retVal; } 
 #endif
 
 #ifndef retnul_gerror_if
