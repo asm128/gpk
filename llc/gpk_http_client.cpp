@@ -2,7 +2,7 @@
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
 
-#if defined(GPK_WINDOWS)
+#ifdef GPK_WINDOWS
 #	include <WS2tcpip.h>
 #else
 #	include <unistd.h>
@@ -87,17 +87,17 @@ static	::gpk::error_t	httpClientRequestConstruct
 }
 
 // get sockaddr, IPv4 or IPv6:
-void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
+void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
 ::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4					& clientToConnect
-	,	::gpk::HTTP_METHOD					method
+	(	const ::gpk::SIPv4		& clientToConnect
+	,	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
 	,	const ::gpk::vcc		& body
-	,	::gpk::SHTTPResponse				& out_received
+	,	::gpk::SHTTPResponse	& out_received
 	) {
-	::gpk::apod<char>					bytesRequest;
+	::gpk::achar				bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
 	const ::gpk::SIPv4							& address						= clientToConnect;
 
@@ -252,13 +252,13 @@ void *									get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_I
 }
 
 ::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4					& clientToConnect
-	,	::gpk::HTTP_METHOD					method
-	,	const ::gpk::vcs		& hostName
-	,	const ::gpk::vcs		& path
-	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcc		& body
-	,	::gpk::apod<char>			& out_received
+	(	const ::gpk::SIPv4	& clientToConnect
+	,	::gpk::HTTP_METHOD	method
+	,	const ::gpk::vcs	& hostName
+	,	const ::gpk::vcs	& path
+	,	const ::gpk::vcs	& contentType
+	,	const ::gpk::vcc	& body
+	,	::gpk::apod<char>	& out_received
 	) {
 	::gpk::SHTTPResponse						response;
 	gpk_necall(::gpk::httpClientRequest

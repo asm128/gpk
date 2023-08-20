@@ -50,28 +50,40 @@ namespace gpk
 #endif
 
 	tplt<size_t prefixLength, tpnm... TArgs>
+#if defined(GPK_WINDOWS)
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
-#if defined(GPK_STDOUT_LOG_ENABLED)
-		printf("%s", prefix);
+		char					timeString	[64]				= {};
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
+		base_debug_print(timeString, (int)stringLength);
+		base_debug_print(prefix, prefixLength);
+#else
+	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* function, const char* format, const TArgs... args)			{
+		char					timeString	[64]				= {};
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%lu|", ::gpk::timeCurrentInMs());
+		base_debug_print(timeString, (int)stringLength);
+		base_debug_print(prefix, prefixLength);
+		base_debug_print("{", 1);
+		base_debug_print(function, strlen(function));
+		base_debug_print("}:", 2);
 #endif
 
-		char					timeString	[64]				= {};
-#if defined(GPK_WINDOWS)
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu:", ::gpk::timeCurrentInMs());
+#ifdef GPK_ESP32
+		if(format) {
+			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
+			if(char * customDynamicString = (char*)malloc(bufferSize)) {
+				stringLength	= snprintf(customDynamicString, bufferSize - 2, format, args...);
+				customDynamicString[::gpk::min(stringLength, bufferSize - 2)] = '\n';
+				customDynamicString[::gpk::min(stringLength + 1, bufferSize - 1)] = 0;
+				base_debug_print(customDynamicString, (int)stringLength);
+				free(customDynamicString);
+			}
+		}
 #else
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%lu:", ::gpk::timeCurrentInMs());
-#endif
-		base_debug_print(timeString, (int)stringLength);
-		//printf("%llu", ::gpk::timeCurrentInMs()); do something to print the timestamp of each log message
-		base_debug_print(prefix, prefixLength);
-		char					customDynamicString	[8192]		= {};
+		char					customDynamicString	[1024 * 12]	= {};
 		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
-#if defined(GPK_STDOUT_LOG_ENABLED)
-		printf("%s", customDynamicString);
-#endif
-
 		base_debug_print(customDynamicString, (int)stringLength);
+#endif
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
 	}
@@ -85,9 +97,9 @@ namespace gpk
 #define	GPK_TOSTRING(x)  GPK_STRINGIFY(x)
 
 #if !defined(GPK_WINDOWS)
-#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "):", format, ##__VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
 #else
-#	define debug_printf(severity, severityStr, format, ...)	do { ::gpk::_gpk_debug_printf(severity, ":" #severity ":" severityStr ":" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__); } while(0)
+#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #endif
 
 #ifndef always_printf
@@ -102,10 +114,10 @@ namespace gpk
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
 #if !defined(GPK_WINDOWS)
 #		define error_printf(format, ...)					do { debug_printf(1, "error", format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
-#		define error_printf_nb(format, ...)					do { debug_printf(1, "error", format, ##__VA_ARGS__); } while(0)
+#		define error_printf_nb(format, ...)					debug_printf(1, "error", format, ##__VA_ARGS__)
 #else
 #		define error_printf(format, ...)					do { debug_printf(1, "error", format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
-#		define error_printf_nb(format, ...)					do { debug_printf(1, "error", format, __VA_ARGS__); } while(0)
+#		define error_printf_nb(format, ...)					debug_printf(1, "error", format, __VA_ARGS__)
 #endif
 #	else
 #		define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
@@ -473,6 +485,9 @@ namespace gpk
 #	define rne_if							retnul_gerror_if
 #	define rnw_if							retnul_gwarn_if
 #	define rni_if							retnul_ginfo_if
+#	define rnes_if							retnul_gserror_if
+#	define rnws_if							retnul_gswarn_if
+#	define rnis_if							retnul_gsinfo_if
 #endif
 
 #ifndef ree_if
@@ -499,6 +514,16 @@ namespace gpk
 #	define reis_if_failed(condition)				reis_if(::gpk::failed(::gpk::error_t(condition)))
 #	define reas_if_failed(condition)				reas_if(::gpk::failed(::gpk::error_t(condition)))
 
+#	define re_if_failed(condition, format, ...)	re_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rw_if_failed(condition, format, ...)	rw_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ri_if_failed(condition, format, ...)	ri_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ra_if_failed(condition, format, ...)	ra_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define res_if_failed(condition)				res_if(::gpk::failed(::gpk::error_t(condition)))
+#	define rws_if_failed(condition)				rws_if(::gpk::failed(::gpk::error_t(condition)))
+#	define ris_if_failed(condition)				ris_if(::gpk::failed(::gpk::error_t(condition)))
+#	define ras_if_failed(condition)				ras_if(::gpk::failed(::gpk::error_t(condition)))
+
+
 #	define e_if_failed(condition, format, ...)	e_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
 #	define w_if_failed(condition, format, ...)	w_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
 #	define i_if_failed(condition, format, ...)	i_if(::gpk::failed(::gpk::error_t(condition)), format, __VA_ARGS__)
@@ -514,6 +539,43 @@ namespace gpk
 #	define ces_if_failed(condition)				ces_if(::gpk::failed(::gpk::error_t(condition)))
 #	define cws_if_failed(condition)				cws_if(::gpk::failed(::gpk::error_t(condition)))
 #	define cis_if_failed(condition)				cis_if(::gpk::failed(::gpk::error_t(condition)))
+
+///
+
+#	define ree_if_succeeded(condition, format, ...)	ree_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rew_if_succeeded(condition, format, ...)	rew_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rei_if_succeeded(condition, format, ...)	rei_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rea_if_succeeded(condition, format, ...)	rea_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rees_if_succeeded(condition)				rees_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define rews_if_succeeded(condition)				rews_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define reis_if_succeeded(condition)				reis_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define reas_if_succeeded(condition)				reas_if(::gpk::succeeded(::gpk::error_t(condition)))
+
+#	define re_if_succeeded(condition, format, ...)	re_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define rw_if_succeeded(condition, format, ...)	rw_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ri_if_succeeded(condition, format, ...)	ri_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ra_if_succeeded(condition, format, ...)	ra_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define res_if_succeeded(condition)				res_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define rws_if_succeeded(condition)				rws_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define ris_if_succeeded(condition)				ris_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define ras_if_succeeded(condition)				ras_if(::gpk::succeeded(::gpk::error_t(condition)))
+
+
+#	define e_if_succeeded(condition, format, ...)	e_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define w_if_succeeded(condition, format, ...)	w_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define i_if_succeeded(condition, format, ...)	i_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define a_if_succeeded(condition, format, ...)	a_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define es_if_succeeded(condition)				es_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define ws_if_succeeded(condition)				ws_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define is_if_succeeded(condition)				is_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define as_if_succeeded(condition)				as_if(::gpk::succeeded(::gpk::error_t(condition)))
+
+#	define ce_if_succeeded(condition, format, ...)	ce_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define cw_if_succeeded(condition, format, ...)	cw_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ci_if_succeeded(condition, format, ...)	ci_if(::gpk::succeeded(::gpk::error_t(condition)), format, __VA_ARGS__)
+#	define ces_if_succeeded(condition)				ces_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define cws_if_succeeded(condition)				cws_if(::gpk::succeeded(::gpk::error_t(condition)))
+#	define cis_if_succeeded(condition)				cis_if(::gpk::succeeded(::gpk::error_t(condition)))
 #endif
 
 #ifndef rwe_if

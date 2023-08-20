@@ -221,12 +221,14 @@ namespace gpk
 		}
 	};
 
-	tplt <tpnm _tEnum>	inline	::gpk::enum_definition<_tEnum>&	get_enum	()					noexcept	{ return ::gpk::enum_definition<_tEnum>::get();	}
-	tplt <tpnm _tEnum>	inline	::gpk::enum_definition<_tEnum>&	get_enum	(const _tEnum & )	noexcept	{ return ::gpk::enum_definition<_tEnum>::get();	}
+	tplt <tpnm TEnum>	inline	::gpk::enum_definition<TEnum>&	get_enum	()					noexcept	{ return ::gpk::enum_definition<TEnum>::get();	}
+	tplt <tpnm TEnum>	inline	::gpk::enum_definition<TEnum>&	get_enum	(const TEnum & )	noexcept	{ return ::gpk::enum_definition<TEnum>::get();	}
 
 	// This type is used to initialize an enumeration value.
-	tplt <tpnm T>
+	tplt <tpnm _tEnum>
 	struct genum_value {
+		typedef	_tEnum		T;
+		
 		T					Value					= ::gpk::enum_definition<T>::INVALID_VALUE;
 		::gpk::vcc			Name					= INVALID_ENUM_VALUE_STR;
 		::gpk::vcc			Title					= INVALID_ENUM_VALUE_STR;
@@ -242,29 +244,29 @@ namespace gpk
 		inlcxpr	operator	const	T&				()			const	{ return Value; }
 	};
 
-	tplt <tpnm _tEnum, size_t _sLen>
-	_tEnum								get_value			(const char (&valueLabel)[_sLen])		{ return ::gpk::get_enum<_tEnum>().get_value({valueLabel, _sLen - 1}); }
-	tplt <tpnm _tEnum>	_tEnum	get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<_tEnum>().get_value(valueLabel); }
+	tplt <tpnm TEnum, size_t nameLen>
+	TEnum						get_value			(const char (&valueLabel)[nameLen])		{ return ::gpk::get_enum<TEnum>().get_value(::gpk::vcs{valueLabel}); }
+	tplt <tpnm TEnum>	TEnum	get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<TEnum>().get_value(valueLabel); }
 
-	tplt <tpnm _tEnum>	_tEnum	get_value_camelcased(const ::gpk::vcc & uncased)			{
+	tplt <tpnm TEnum>	TEnum	get_value_camelcased(const ::gpk::vcc & uncased)			{
 		::gpk::achar							camelCased;
 		::gpk::camelCase(uncased, camelCased);
-		return ::gpk::get_enum<_tEnum>().get_value(camelCased); 
+		return ::gpk::get_enum<TEnum>().get_value(camelCased); 
 	}
-	tplt <tpnm _tEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<_tEnum>().Values.size(); }
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_value_label		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_value_namev		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit); }
-	tplt <tpnm _tEnum>	const char*						get_value_namep		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_label(statusBit).begin(); }
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_value_descv		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_desc (statusBit); }
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_value_descp		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_desc (statusBit); }
-	tplt <tpnm _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_labels	()										{ return ::gpk::get_enum<_tEnum>().Names; }
-	tplt <tpnm _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_names		()										{ return ::gpk::get_enum<_tEnum>().Names; }
-	tplt <tpnm _tEnum>	const ::gpk::view<::gpk::vcc>&	get_value_descs		()										{ return ::gpk::get_enum<_tEnum>().Names; }
-	tplt <tpnm _tEnum>	int32_t							get_value_index		(const _tEnum & statusBit)				{ return ::gpk::get_enum<_tEnum>().get_value_index(statusBit); }
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::get_enum<_tEnum>().Name;			}
-	tplt <tpnm _tEnum>	const ::gpk::vcc&				get_enum_namev		(const _tEnum & )			noexcept	{ return ::gpk::get_enum<_tEnum>().Name;			}
-	tplt <tpnm _tEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::get_enum<_tEnum>().Name.begin();	}
-	tplt <tpnm _tEnum>	const char*						get_enum_namep		(const _tEnum & )			noexcept	{ return ::gpk::get_enum<_tEnum>().Name.begin();	}
+	tplt <tpnm TEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<TEnum>().Values.size(); }
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_label		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_namev		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
+	tplt <tpnm TEnum>	const char*						get_value_namep		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit).begin(); }
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_descv		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_desc (statusBit); }
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_descp		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_desc (statusBit); }
+	tplt <tpnm TEnum>	const ::gpk::vvcc&				get_value_labels	()										{ return ::gpk::get_enum<TEnum>().Names; }
+	tplt <tpnm TEnum>	const ::gpk::vvcc&				get_value_names		()										{ return ::gpk::get_enum<TEnum>().Names; }
+	tplt <tpnm TEnum>	const ::gpk::vvcc&				get_value_descs		()										{ return ::gpk::get_enum<TEnum>().Names; }
+	tplt <tpnm TEnum>	int32_t							get_value_index		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_index(statusBit); }
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::get_enum<TEnum>().Name;			}
+	tplt <tpnm TEnum>	const ::gpk::vcc&				get_enum_namev		(const TEnum & )			noexcept	{ return ::gpk::get_enum<TEnum>().Name;			}
+	tplt <tpnm TEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
+	tplt <tpnm TEnum>	const char*						get_enum_namep		(const TEnum & )			noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
 
 	tplt <tpnm T>
 	struct genum_value_auto {

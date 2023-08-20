@@ -675,6 +675,12 @@
     <ClInclude Include="gpk_gauge_n2.h">
       <Filter>aliases</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_queue_async.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_queue_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

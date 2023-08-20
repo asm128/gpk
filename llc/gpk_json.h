@@ -116,17 +116,17 @@ namespace gpk
 
 	// TODO: Finish
 	//::gpk::error_t	jsonObjectGetIntegerAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
-	//::gpk::error_t	jsonObjectGetIntegerAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
-	//::gpk::error_t	jsonObjectGetIntegerAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
-	//::gpk::error_t	jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
+	::gpk::error_t	jsonObjectGetIntegerAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
+	::gpk::error_t	jsonObjectGetIntegerAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
+	::gpk::error_t	jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
 	//::gpk::error_t	jsonObjectGetDecimalAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
-	//::gpk::error_t	jsonObjectGetDecimalAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
+	::gpk::error_t	jsonObjectGetDecimalAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
 	//::gpk::error_t	jsonObjectGetStringAsInteger (const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
 	//::gpk::error_t	jsonObjectGetStringAsBoolean (const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
 	//::gpk::error_t	jsonObjectGetStringAsDecimal (const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
-	//::gpk::error_t	jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
+	::gpk::error_t	jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
 	//::gpk::error_t	jsonObjectGetBooleanAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
-	//::gpk::error_t	jsonObjectGetBooleanAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
+	::gpk::error_t	jsonObjectGetBooleanAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
 	// 
 	//::gpk::error_t	jsonObjectGetAsString	(const ::gpk::SJSONReader & reader, uint32_t iNode, vcc		& value);
 	//::gpk::error_t	jsonObjectGetAsBoolean	(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);

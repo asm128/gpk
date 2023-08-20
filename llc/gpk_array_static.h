@@ -57,6 +57,19 @@ namespace gpk
 	tplt<uint32_t _sizeArray>	using asti64	= ::gpk::astatic<int64_t  , _sizeArray>; tplt<uint32_t _sizeArray>	using astatici64	= ::gpk::asti64	<_sizeArray>; 
 	tplt<uint32_t _sizeArray>	using astf32	= ::gpk::astatic<float32_t, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticf32	= ::gpk::astf32	<_sizeArray>; 
 	tplt<uint32_t _sizeArray>	using astf64	= ::gpk::astatic<float64_t, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticf64	= ::gpk::astf64	<_sizeArray>; 
+
+	tplt<uint32_t _sizeArray>	using astvcc	= ::gpk::astatic<::gpk::vcc		, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcc	= ::gpk::astvcc  <_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcuc 	= ::gpk::astvcuc <_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcu8 	= ::gpk::astatic<::gpk::vcu8 	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcu8 	= ::gpk::astvcu8 <_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcu16	= ::gpk::astatic<::gpk::vcu16	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcu16	= ::gpk::astvcu16<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcu32	= ::gpk::astatic<::gpk::vcu32	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcu32	= ::gpk::astvcu32<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcu64	= ::gpk::astatic<::gpk::vcu64	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcu64	= ::gpk::astvcu64<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvci8 	= ::gpk::astatic<::gpk::vci8 	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvci8 	= ::gpk::astvci8 <_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvci16	= ::gpk::astatic<::gpk::vci16	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvci16	= ::gpk::astvci16<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvci32	= ::gpk::astatic<::gpk::vci32	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvci32	= ::gpk::astvci32<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvci64	= ::gpk::astatic<::gpk::vci64	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvci64	= ::gpk::astvci64<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcf32	= ::gpk::astatic<::gpk::vcf32	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcf32	= ::gpk::astvcf32<_sizeArray>; 
+	tplt<uint32_t _sizeArray>	using astvcf64	= ::gpk::astatic<::gpk::vcf64	, _sizeArray>; tplt<uint32_t _sizeArray>	using astaticvcf64	= ::gpk::astvcf64<_sizeArray>; 
 #pragma pack(pop)
 
 	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return (uint32_t)(nSize);					}

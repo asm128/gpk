@@ -100,6 +100,7 @@
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_pod_definition.h" />
     <ClInclude Include="gpk_quad3.h" />
+    <ClInclude Include="gpk_queue_event.h" />
     <ClInclude Include="gpk_range.h" />
     <ClInclude Include="gpk_range_n2.h" />
     <ClInclude Include="gpk_range_n3.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="gpk_sphere.h" />
     <ClInclude Include="gpk_view_n2.h" />
     <ClInclude Include="keyed_bit_array.h" />
+    <ClInclude Include="gpk_queue_async.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />

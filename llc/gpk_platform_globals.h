@@ -79,10 +79,15 @@
 #define stacxpr	static cnstxpr
 #define stainli	static inline
 #define stincxp	stainli	cnstxpr
+
 #define nodscrd [[nodiscard]]
+#define nodinli nodscrd inline
+#define ndincxp nodscrd inlcxpr
 #define nodcxpr nodscrd cnstxpr
 #define nodstin nodscrd stainli
 #define nodstxp nodscrd stacxpr
+#define ndstinx nodstin cnstxpr
+
 #define tpnm	typename
 #define tplt	template
 

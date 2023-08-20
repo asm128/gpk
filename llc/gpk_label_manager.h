@@ -6,8 +6,11 @@
 namespace gpk
 {
 	class CLabelManager	{
+#ifdef GPK_ESP32
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
+#else
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
-
+#endif
 		::gpk::block_container_nts<BLOCK_SIZE>	Characters;
 		::gpk::vcc							Empty;
 

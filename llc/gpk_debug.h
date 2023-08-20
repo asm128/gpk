@@ -21,10 +21,25 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; }
 #	ifndef GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
 #		define GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
 #	endif
-#	if defined(GPK_ANDROID) || defined(GPK_LINUX)
-#		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
-#		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
-#	elif defined(GPK_WINDOWS)
+#	ifndef GPK_WINDOWS
+#       ifndef GPK_ESP32
+#		    define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
+#		    define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
+#     	else
+#		    define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
+#       	ifndef GPK_DEBUG_ENABLED
+#		        define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
+#       	else
+#       		include <esp_heap_caps.h>
+#       		include <freertos/FreeRTOS.h>
+#       		include <freertos/task.h>
+#       		define GPK_PLATFORM_CRT_CHECK_MEMORY() do { \
+        			info_printf("Available heap RAM: %u bytes.", heap_caps_get_free_size(MALLOC_CAP_8BIT)); \
+        			info_printf("Unused stack size: %u bytes.", uxTaskGetStackHighWaterMark(NULL)); \
+        		} while(0)
+#       	endif
+#       endif
+#	else
 #		include <crtdbg.h>
 #		if defined GPK_USE_DEBUG_BREAK_ON_ERROR_LOG
 #			define GPK_PLATFORM_CRT_BREAKPOINT		(void)_CrtDbgBreak
@@ -32,8 +47,6 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; }
 #			define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		endif
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory
-#	else
-#		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #	endif
 #else
 namespace gpk { stacxpr size_t DEBUG_BUILD = 0; } 

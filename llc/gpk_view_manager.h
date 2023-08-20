@@ -7,8 +7,11 @@ namespace gpk
 {
 	tplt<tpnm T>
 	class CViewManager	{
-		stacxpr	uint32_t						BLOCK_SIZE					= 0xFFFF;
-
+#ifdef GPK_ESP32
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
+#else
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
+#endif
 		::gpk::block_container<T, BLOCK_SIZE>	Cells;
 
 	public:
