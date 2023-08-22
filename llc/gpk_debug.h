@@ -33,10 +33,7 @@ namespace gpk { stacxpr size_t DEBUG_BUILD = (size_t)-1; }
 #       		include <esp_heap_caps.h>
 #       		include <freertos/FreeRTOS.h>
 #       		include <freertos/task.h>
-#       		define GPK_PLATFORM_CRT_CHECK_MEMORY() do { \
-        			info_printf("Available heap RAM: %u bytes.", heap_caps_get_free_size(MALLOC_CAP_8BIT)); \
-        			info_printf("Unused stack size: %u bytes.", uxTaskGetStackHighWaterMark(NULL)); \
-        		} while(0)
+#       		define GPK_PLATFORM_CRT_CHECK_MEMORY() do { info_printf("Available RAM - Heap: %u bytes, Stack: %u bytes.", heap_caps_get_free_size(MALLOC_CAP_8BIT), uxTaskGetStackHighWaterMark(NULL)); } while(0)
 #       	endif
 #       endif
 #	else
