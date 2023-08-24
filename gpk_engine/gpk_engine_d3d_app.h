@@ -168,15 +168,15 @@ namespace gpk
 				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
 				RasterizerState			= rasterizerState;
 			}
-			{
-				D3D11_RASTERIZER_DESC		rsDesc					= {};
-				rsDesc.FillMode			= D3D11_FILL_WIREFRAME;
-				rsDesc.CullMode			= D3D11_CULL_BACK;
-				rsDesc.DepthClipEnable	= false;
-				::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
-				gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
-				RasterizerState			= rasterizerState;
-			}
+			//{
+			//	D3D11_RASTERIZER_DESC		rsDesc					= {};
+			//	rsDesc.FillMode			= D3D11_FILL_WIREFRAME;
+			//	rsDesc.CullMode			= D3D11_CULL_BACK;
+			//	rsDesc.DepthClipEnable	= false;
+			//	::gpk::pcom<ID3D11RasterizerState>	rasterizerState;
+			//	gpk_hrcall(d3dDevice->CreateRasterizerState(&rsDesc, &rasterizerState));
+			//	RasterizerState			= rasterizerState;
+			//}
 			{ // disabled
 				D3D11_DEPTH_STENCIL_DESC	depthStencilDesc				= {};
 				depthStencilDesc.DepthEnable		= FALSE;
