@@ -214,7 +214,7 @@ namespace gpk
 	stincxp	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; } 
 	stincxp	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
 	stincxp	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
-	inline	bool		vcc2bool		(::gpk::vcc b)	{ return b == ::gpk::VCC_TRUE; } 
+	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return 0 != b.size() && b != VCC_FALSE; } 
 
 
 	struct view_string : public view<char> {
@@ -226,7 +226,7 @@ namespace gpk
 	};
 
 	struct view_const_string : public view<const char> {
-		inlcxpr			view_const_string		()													= default;
+		inlcxpr			view_const_string		()													: view(0, "") 				{}
 		inlcxpr			view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
 						view_const_string		(const char* inputString, uint32_t length)			: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
 		tplt<u32 Len>	view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
@@ -242,7 +242,6 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::vcs	>	vcvcs;
 
 	stacxpr	::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
-	stacxpr	::gpk::vcs		VCSAFE					= ::gpk::vcc{0, ""};
 
 	::gpk::error_t			rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
 	::gpk::error_t			ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
