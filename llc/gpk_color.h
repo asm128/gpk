@@ -15,12 +15,25 @@ namespace gpk
 	cnstxpr	bool		operator==			(const color_struct_type & other)	const	noexcept	{ return b == other.b && g == other.g && r == other.r; } \
 	cnstxpr	bool		operator!=			(const color_struct_type & other)	const	noexcept	{ return b != other.b || g != other.g || r != other.r; } \
 
-	tplt <tpnm _tBase> struct color_bgr		{ _tBase b, g, r;    COLOR_RGB_OPERATOR_MEMBERS (color_bgr ); };
-	tplt <tpnm _tBase> struct color_rgb		{ _tBase r, g, b;    COLOR_RGB_OPERATOR_MEMBERS (color_rgb ); };
-	tplt <tpnm _tBase> struct color_bgra	{ _tBase b, g, r, a; COLOR_RGBA_OPERATOR_MEMBERS(color_bgra); };
-	tplt <tpnm _tBase> struct color_rgba	{ _tBase r, g, b, a; COLOR_RGBA_OPERATOR_MEMBERS(color_rgba); };
-	tplt <tpnm _tBase> struct color_abgr	{ _tBase a, b, g, r; COLOR_RGBA_OPERATOR_MEMBERS(color_abgr); };
-	tplt <tpnm _tBase> struct color_argb	{ _tBase a, r, g, b; COLOR_RGBA_OPERATOR_MEMBERS(color_argb); };
+	tplt <tpnm _tBase> struct color_a								{ _tBase a; GPK_DEFAULT_OPERATOR(color_a	, a == other.a); };
+	tplt <tpnm _tBase> struct color_b								{ _tBase b; GPK_DEFAULT_OPERATOR(color_b	, b == other.b); };
+	tplt <tpnm _tBase> struct color_r								{ _tBase r; GPK_DEFAULT_OPERATOR(color_r	, r == other.r); };
+
+	tplt <tpnm _tBase> struct color_ab		: color_a	<_tBase>	{ _tBase b; GPK_DEFAULT_OPERATOR(color_ab	, color_a	<_tBase>::operator==(other) && b == other.b); };
+	tplt <tpnm _tBase> struct color_abg		: color_ab	<_tBase>	{ _tBase g; GPK_DEFAULT_OPERATOR(color_abg	, color_ab	<_tBase>::operator==(other) && g == other.g); };
+	tplt <tpnm _tBase> struct color_abgr	: color_abg	<_tBase>	{ _tBase r; GPK_DEFAULT_OPERATOR(color_abgr	, color_abg	<_tBase>::operator==(other) && r == other.r); };
+
+	tplt <tpnm _tBase> struct color_ar		: color_a	<_tBase>	{ _tBase r; GPK_DEFAULT_OPERATOR(color_ar	, color_a	<_tBase>::operator==(other) && r == other.r); };
+	tplt <tpnm _tBase> struct color_arg		: color_ar	<_tBase>	{ _tBase g; GPK_DEFAULT_OPERATOR(color_arg	, color_ar	<_tBase>::operator==(other) && g == other.g); };
+	tplt <tpnm _tBase> struct color_argb	: color_arg	<_tBase>	{ _tBase b; GPK_DEFAULT_OPERATOR(color_argb	, color_arg	<_tBase>::operator==(other) && b == other.b); };
+
+	tplt <tpnm _tBase> struct color_bg		: color_b<_tBase>		{ _tBase g; GPK_DEFAULT_OPERATOR(color_bg	, color_b	<_tBase>::operator==(other) && g == other.g); };
+	tplt <tpnm _tBase> struct color_bgr		: color_bg<_tBase>		{ _tBase r; GPK_DEFAULT_OPERATOR(color_bgr	, color_bg	<_tBase>::operator==(other) && r == other.r); };
+	tplt <tpnm _tBase> struct color_bgra	: color_bgr<_tBase>		{ _tBase a; GPK_DEFAULT_OPERATOR(color_bgra	, color_bgr	<_tBase>::operator==(other) && a == other.a); };
+
+	tplt <tpnm _tBase> struct color_rg		: color_r<_tBase>		{ _tBase g; GPK_DEFAULT_OPERATOR(color_rg	, color_r	<_tBase>::operator==(other) && g == other.g); };
+	tplt <tpnm _tBase> struct color_rgb		: color_rg<_tBase>		{ _tBase b; GPK_DEFAULT_OPERATOR(color_rgb	, color_rg	<_tBase>::operator==(other) && b == other.b); };
+	tplt <tpnm _tBase> struct color_rgba	: color_rgb<_tBase>		{ _tBase a; GPK_DEFAULT_OPERATOR(color_rgba	, color_rgb	<_tBase>::operator==(other) && a == other.a); };
 
 	typedef	uint16_t		SColor16;
 
@@ -44,6 +57,27 @@ namespace gpk
 	typedef color_rgba<f32>	rgbaf32;
 	typedef color_abgr<f32>	abgrf32;
 	typedef color_argb<f32>	argbf32;
+
+	typedef const color_bgr <u8>	cbgr8 ;
+	typedef const color_rgb <u8>	crgb8 ;
+	typedef const color_bgra<u8>	cbgra8;
+	typedef const color_rgba<u8>	crgba8;
+	typedef const color_abgr<u8>	cabgr8;
+	typedef const color_argb<u8>	cargb8;
+
+	typedef const color_bgr <u16>	cbgr16 ;
+	typedef const color_rgb <u16>	crgb16 ;
+	typedef const color_bgra<u16>	cbgra16;
+	typedef const color_rgba<u16>	crgba16;
+	typedef const color_abgr<u16>	cabgr16;
+	typedef const color_argb<u16>	cargb16;
+
+	typedef const color_bgr <f32>	cbgrf32;
+	typedef const color_rgb <f32>	crgbf32;
+	typedef const color_bgra<f32>	cbgraf32;
+	typedef const color_rgba<f32>	crgbaf32;
+	typedef const color_abgr<f32>	cabgrf32;
+	typedef const color_argb<f32>	cargbf32;
 
 	cnstxpr	float			BYTE_SCALE			= 1.0f / 255.0f;
 
