@@ -50,8 +50,7 @@
 		}
 	}
 	out_composed.push_back(0);
-	out_composed.resize(out_composed.size() - 1);
-	return 0;
+	return out_composed.resize(out_composed.size() - 1);
 }
 
 ::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {

@@ -46,12 +46,12 @@
 		if(0 == tempName.size())
 			return 1;
 
-		::gpk::fileToMemory(tempName, temp);
+		::gpk::fileToMemory({tempName}, temp);
 		temp.append((const uint8_t*)&curTime, sizeof(uint64_t));
 		temp.append(environmentBlockToSave);
 		temp.push_back('\r');
 		temp.push_back('\n');
-		::gpk::fileFromMemory({tempName.begin(), tempName.size()}, temp);
+		::gpk::fileFromMemory({tempName}, temp);
 		::gpk::aobj<::gpk::TKeyValConstString>	environViewsTest;
 		::gpk::keyValConstStringDeserialize(environmentBlockToSave, environViewsTest);
 		//for(uint32_t iEnviron = 0; iEnviron < environViews.size(); ++iEnviron)

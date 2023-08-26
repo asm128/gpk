@@ -1,6 +1,7 @@
 #include "gpk_file.h"
 #include "gpk_io.h"
 #include "gpk_string.h"
+#include "gpk_path.h"
 
 #include <new>
 
@@ -18,33 +19,33 @@
 
 #define gpk_file_info_printf info_printf
 
-int64_t								gpk::fileSize				(const ::gpk::vcc	& fileNameSrc)								{
+int64_t								gpk::fileSize				(::gpk::vcs fileName)								{
 	FILE									* fp						= 0;
-	ree_if(0 != ::gpk::fopen_s(&fp, fileNameSrc.begin(), "rb"), "Failed to open file: %s.", fileNameSrc.begin());
-	ree_if(0 == fp, "Failed to open file: %s.", fileNameSrc.begin());
+	ree_if(0 != ::gpk::fopen_s(&fp, fileName.begin(), "rb"), "Failed to open file: %s.", fileName.begin());
+	ree_if(0 == fp, "Failed to open file: %s.", fileName.begin());
 #if defined(GPK_WINDOWS)
 	if(0 != _fseeki64(fp, 0, SEEK_END)) {
-		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
+		error_printf("%s", "Unknown error reading file: '%s'.", fileName.begin());
 		fclose(fp);
 		return -1;
 	}
 	const int64_t							fileSize					= _ftelli64(fp);
 #else
 	if(0 != fseek(fp, 0, SEEK_END)) {
-		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
+		error_printf("%s", "Unknown error reading file: '%s'.", fileName.begin());
 		fclose(fp);
 		return -1;
 	}
 	const int64_t							fileSize					= ftell(fp);
 #endif
 	if(0 > fileSize)
-		error_printf("%s", "Unknown error reading file: '%s'.", fileNameSrc.begin());
+		error_printf("%s", "Unknown error reading file: '%s'.", fileName.begin());
 	fclose(fp);
 	return fileSize;
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static	::gpk::error_t	fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+static	::gpk::error_t	fileSplitSmall				(::gpk::vcs fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	::gpk::apod<int8_t>						fileInMemory;
 	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
@@ -68,7 +69,7 @@ static	::gpk::error_t	fileSplitSmall				(const ::gpk::vcc	& fileNameSrc, const u
 }
 
 // This function is useful for splitting files smaller than 4gb very quick.
-static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	int64_t						sizeFile					= ::gpk::fileSize(fileNameSrc);
 	ree_if(errored(sizeFile), "Failed to open file %s.", fileNameSrc.begin());
@@ -99,7 +100,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 }
 
 // Splits a file into file.## parts.
-::gpk::error_t			gpk::fileSplit				(const ::gpk::vcc	& fileNameSrc, const uint32_t sizePartMax) {
+::gpk::error_t			gpk::fileSplit				(::gpk::vcs fileNameSrc, const uint32_t sizePartMax) {
 	// -- Get file size to determine which algorithm to use.
 	// -- For files smaller than 3gb, we use a fast algorithm that loads the entire file in memory.
 	// -- For files of, or larger than, 3gb, we use a fast algorithm that loads chunks of 1gb in memory for writing the parts.
@@ -111,7 +112,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 }
 
 // Joins a file split into file.## parts.
-::gpk::error_t			gpk::fileJoin				(const ::gpk::vcc & fileNameDst)	{
+::gpk::error_t			gpk::fileJoin				(::gpk::vcs fileNameDst)	{
 	char						fileNameSrc	[1024]			= {};
 	uint32_t					iFile						= 0;
 	gpk_necall(snprintf(fileNameSrc, ::gpk::size(fileNameSrc) - 2, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
@@ -133,9 +134,9 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 
 #define GPK_DEBUG_FILE_CONTENTS
 
-::gpk::error_t			gpk::fileToMemory			(const ::gpk::vcc & usfileName, ::gpk::au8 & fileInMemory)		{
+::gpk::error_t			gpk::fileToMemory			(::gpk::vcs usfileName, ::gpk::au8 & fileInMemory)		{
 	const ::gpk::achar			fileName					= ::gpk::toString(usfileName);
-	gpk_file_info_printf("Reading '%s'.", fileName.begin());
+	gpk_file_info_printf("Loading '%s'.", fileName.begin());
 
 	::gpk::error_t				result						= 0;
 #ifdef GPK_ESP32
@@ -167,14 +168,14 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 #endif
 
 #ifdef GPK_DEBUG_FILE_CONTENTS
-	gpk_file_info_printf("'%s' loaded:\n%s\n", fileName.begin(), ::gpk::toString(fileInMemory).begin());
+	gpk_file_info_printf("'%s' loaded successfully. Size: %u:\n%s\n", fileName.begin(), fileInMemory.size(), ::gpk::toString(fileInMemory).begin());
 #else
-	gpk_file_info_printf("'%s' loaded successfully.", fileName.begin());
+	gpk_file_info_printf("'%s' loaded successfully. Size: %u.", fileName.begin(), fileInMemory.size());
 #endif
 	return result;
 }
 
-::gpk::error_t			gpk::fileFromMemory			(const ::gpk::vcc & usfileName, const ::gpk::vcu8 & fileInMemory, bool append)	{
+::gpk::error_t			gpk::fileFromMemory			(::gpk::vcs usfileName, const ::gpk::vcu8 & fileInMemory, bool append)	{
 	const ::gpk::achar			fileName					= ::gpk::toString(usfileName);
 #ifdef GPK_DEBUG_FILE_CONTENTS
 	gpk_file_info_printf("%s '%s':\n%s\n", append ? "Appending to" : "Writing", fileName.begin(), ::gpk::toString(fileInMemory).begin());
@@ -202,7 +203,7 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 	return result;
 }
 
-::gpk::error_t			gpk::fileDelete				(const ::gpk::vcc & usfileName)	{
+::gpk::error_t			gpk::fileDelete				(::gpk::vcs usfileName)	{
 	const ::gpk::achar			fileName					= ::gpk::toString(usfileName);
 	gpk_file_info_printf("Deleting '%s'.", fileName.begin());
 
@@ -218,3 +219,19 @@ static	::gpk::error_t	fileSplitLarge				(const ::gpk::vcc	& fileNameSrc, const u
 	gpk_file_info_printf("'%s' deleted successfully.", fileName.begin());
 	return 0;
 }
+
+::gpk::error_t			gpk::fileToMemory	(::gpk::vcs folderPath, ::gpk::vcs fileName, ::gpk::au8 & fileBytes) {
+	::gpk::achar			filePath			= {};
+	gpk_necall(::gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	gpk_necall(::gpk::fileToMemory({filePath}, fileBytes), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	return 0;
+}
+
+
+::gpk::error_t			gpk::fileFromMemory	(::gpk::vcs folderPath, ::gpk::vcs fileName, const ::gpk::vcu8 & fileInMemory, bool append) {
+	::gpk::achar			filePath			= {}; 
+	gpk_necall(::gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	gpk_necall(::gpk::fileFromMemory({filePath}, fileInMemory, append), "folderPath: '%s', fileName: '%s', append: %s.", folderPath.begin(), fileName.begin(), ::gpk::bool2char(append));
+	return 0;
+}
+
