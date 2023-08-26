@@ -69,7 +69,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 	::gpk::SFrameInfo							& frameInfo									= framework.FrameInfo;
 	::gpk::STimer								& timer										= framework.Timer;
 	timer		.Frame();
-	frameInfo	.Frame(::gpk::min((unsigned long long)timer.LastTimeMicroseconds, 200000ULL));
+	frameInfo	.Frame(::gpk::min(timer.LastTimeMicroseconds, (uint64_t)200000));
 #if defined(GPK_XCB)
 	::gpk::pobj<::gpk::rt<::gpk::bgra, uint32_t>>
 												& guiRenderTarget			= framework.RootWindow.BackBuffer;

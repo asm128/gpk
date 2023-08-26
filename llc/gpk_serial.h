@@ -37,7 +37,9 @@ namespace gpk
 		SSerialPlaftormDetail	PlatformDetail	= {};
 		::gpk::vcc				Port			= "";
 
+#ifdef GPK_WINDOWS
 								~SSerial		() { gpk_safe_closehandle(PlatformDetail.Handle); }
+#endif
 
 		::gpk::error_t			Write			(::gpk::vcu8 dataToSend)	const {
 			uint32_t					sizeSent		= (uint32_t)-1;
