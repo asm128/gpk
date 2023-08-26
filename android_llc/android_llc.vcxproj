@@ -83,7 +83,6 @@
     <ClCompile Include="..\llc\gpk_png_write.cpp" />
     <ClCompile Include="..\llc\gpk_process.cpp" />
     <ClCompile Include="..\llc\gpk_raster_lh.cpp" />
-    <ClCompile Include="..\llc\gpk_rigidbody.cpp" />
     <ClCompile Include="..\llc\gpk_rsa.cpp" />
     <ClCompile Include="..\llc\gpk_runtime_module.cpp" />
     <ClCompile Include="..\llc\gpk_scene.cpp" />
@@ -93,7 +92,6 @@
     <ClCompile Include="..\llc\gpk_string_helper.cpp" />
     <ClCompile Include="..\llc\gpk_tcpip.cpp" />
     <ClCompile Include="..\llc\gpk_timer.cpp" />
-    <ClCompile Include="..\llc\gpk_type_registry.cpp" />
     <ClCompile Include="..\llc\gpk_view.cpp" />
     <ClCompile Include="..\llc\gpk_virtual_keyboard.cpp" />
     <ClCompile Include="..\llc\gpk_voxel_geometry.cpp" />
@@ -191,11 +189,9 @@
     <ClInclude Include="..\llc\gpk_parse.h" />
     <ClInclude Include="..\llc\gpk_particle.h" />
     <ClInclude Include="..\llc\gpk_path.h" />
-    <ClInclude Include="..\llc\gpk_platform.h" />
     <ClInclude Include="..\llc\gpk_platform_error.h" />
     <ClInclude Include="..\llc\gpk_png.h" />
     <ClInclude Include="..\llc\gpk_process.h" />
-    <ClInclude Include="..\llc\gpk_ptr.h" />
     <ClInclude Include="..\llc\gpk_ptr_nco.h" />
     <ClInclude Include="..\llc\gpk_ptr_obj.h" />
     <ClInclude Include="..\llc\gpk_ptr_pod.h" />
@@ -221,7 +217,6 @@
     <ClInclude Include="..\llc\gpk_string.h" />
     <ClInclude Include="..\llc\gpk_string_helper.h" />
     <ClInclude Include="..\llc\gpk_sync.h" />
-    <ClInclude Include="..\llc\gpk_sysevent.h" />
     <ClInclude Include="..\llc\gpk_tcpip.h" />
     <ClInclude Include="..\llc\gpk_timer.h" />
     <ClInclude Include="..\llc\gpk_tri.h" />
@@ -232,7 +227,6 @@
     <ClInclude Include="..\llc\gpk_type_registry.h" />
     <ClInclude Include="..\llc\gpk_view.h" />
     <ClInclude Include="..\llc\gpk_view_bit.h" />
-    <ClInclude Include="..\llc\gpk_view_grid.h" />
     <ClInclude Include="..\llc\gpk_view_layered.h" />
     <ClInclude Include="..\llc\gpk_view_manager.h" />
     <ClInclude Include="..\llc\gpk_view_serialize.h" />

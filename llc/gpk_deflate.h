@@ -29,8 +29,14 @@ namespace gpk
 		::gpk::avcc				Names							;
 	};
 
+
+#ifdef GPK_ESP32
+	stacxpr	uint32_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
+	stacxpr	uint32_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
+#else
 	stacxpr	uint32_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
 	stacxpr	uint32_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 32;
+#endif	
 
 	::gpk::error_t			arrayDeflate			(const ::gpk::vcu8 & inflated, ::gpk::au8 & deflated, const uint32_t chunkSize = ::gpk::DEFLATE_DEFAULT_CHUNK_SIZE);
 	::gpk::error_t			arrayInflate			(const ::gpk::vcu8 & deflated, ::gpk::au8 & inflated, const uint32_t chunkSize = ::gpk::INFLATE_DEFAULT_CHUNK_SIZE);

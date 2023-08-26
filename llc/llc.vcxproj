@@ -272,7 +272,6 @@
     <ClCompile Include="gpk_string_helper.cpp" />
     <ClCompile Include="gpk_tcpip.cpp" />
     <ClCompile Include="gpk_timer.cpp" />
-    <ClCompile Include="gpk_type_registry.cpp" />
     <ClCompile Include="gpk_view.cpp" />
     <ClCompile Include="gpk_windows.cpp" />
     <ClCompile Include="gpk_xml_reader.cpp" />

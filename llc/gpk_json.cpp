@@ -286,12 +286,12 @@ static	::gpk::error_t	parseSign					(const ::gpk::vcc & strNumber, bool & isNega
 	uint32_t					index						= 0;
 	if(index < strNumber.size() && strNumber[index] == '+')
 		++index;
-	if(isNegative = index < strNumber.size() && strNumber[index] == '-') {
+	if((isNegative = index < strNumber.size() && strNumber[index] == '-')) {
 		++index;
 	}
 	if(index < strNumber.size() && strNumber[index] == '+')
 		++index;
-	if(isFloat = index < strNumber.size() && strNumber[index] == '.') {
+	if((isFloat = index < strNumber.size() && strNumber[index] == '.')) {
 		++index;
 	}
 	return (::gpk::error_t)index;

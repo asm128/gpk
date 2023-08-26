@@ -150,9 +150,6 @@
     <ClCompile Include="..\llc\gpk_raster_lh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\llc\gpk_rigidbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\llc\gpk_rsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -175,9 +172,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\llc\gpk_type_registry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\llc\gpk_view.cpp">
@@ -452,9 +446,6 @@
     <ClInclude Include="..\llc\gpk_path.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\llc\gpk_platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\llc\gpk_platform_error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -462,9 +453,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_process.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\llc\gpk_ptr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_ptr_nco.h">
@@ -542,9 +530,6 @@
     <ClInclude Include="..\llc\gpk_sync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\llc\gpk_sysevent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\llc\gpk_tcpip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -573,9 +558,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_view_bit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\llc\gpk_view_grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\llc\gpk_view_layered.h">

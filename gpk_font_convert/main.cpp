@@ -97,7 +97,7 @@ int						main					() {
 		}
 		::gpk::au8					pngBytes;
 		::gpk::pngFileWrite(imageFixed, pngBytes);
-		::gpk::fileFromMemory(filenameOutput, pngBytes);
+		::gpk::fileFromMemory({filenameOutput}, pngBytes);
 
 		filenameOutput[filenameOutput.size() - 3]		= 'b';
 		filenameOutput[filenameOutput.size() - 2]		= '6';

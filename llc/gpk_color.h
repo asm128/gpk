@@ -85,11 +85,11 @@ namespace gpk
 	struct SColorRGBA : public ::gpk::rgba8 {
 								SColorRGBA		()									noexcept	= default;
 		cnstxpr					SColorRGBA		(const SColorRGBA &)				noexcept	= default;
-		cnstxpr					SColorRGBA		(u8 r_, u8 g_, u8 b_, u8 a_=0xff)	noexcept	: color_rgba<u8>{r_, g_, b_, a_}						{}
+		cnstxpr					SColorRGBA		(u8 r_, u8 g_, u8 b_, u8 a_=0xff)	noexcept	: color_rgba<u8>{{{{r_}, g_}, b_}, a_}						{}
 		cnstxpr					SColorRGBA		(uint32_t other)					noexcept	: color_rgba<u8>
-			{ u8(((other & 0x000000FF) >>  0))
-			, u8(((other & 0x0000FF00) >>  8))
-			, u8(((other & 0x00FF0000) >> 16))
+			{ {{{u8(((other & 0x000000FF) >>  0))}
+			, u8(((other & 0x0000FF00) >>  8))	 }
+			, u8(((other & 0x00FF0000) >> 16))	 }
 			, u8(((other & 0xFF000000) >> 24))
 			}
 		{}
@@ -109,12 +109,12 @@ namespace gpk
 	struct SColorBGRA : public ::gpk::bgra8 {
 								SColorBGRA		()									noexcept	= default;
 		cnstxpr					SColorBGRA		(const SColorBGRA &)				noexcept	= default;
-		cnstxpr					SColorBGRA		(const SColorRGBA & other)			noexcept	: color_bgra<u8>{other.b, other.g, other.r, other.a} {}
-		cnstxpr					SColorBGRA		(u8 b_, u8 g_, u8 r_, u8 a_=0xff)	noexcept	: color_bgra<u8>{b_, g_, r_, a_} {}
+		cnstxpr					SColorBGRA		(const SColorRGBA & other)			noexcept	: color_bgra<u8>{{{{other.b}, other.g}, other.r}, other.a} {}
+		cnstxpr					SColorBGRA		(u8 b_, u8 g_, u8 r_, u8 a_=0xff)	noexcept	: color_bgra<u8>{{{{b_}, g_}, r_}, a_} {}
 		cnstxpr					SColorBGRA		(uint32_t other)					noexcept	: color_bgra<u8>
-			{ u8(((other & 0x000000FF) >>  0)) 
-			, u8(((other & 0x0000FF00) >>  8))
-			, u8(((other & 0x00FF0000) >> 16))
+			{ {{{u8(((other & 0x000000FF) >>  0)) }
+			, u8(((other & 0x0000FF00) >>  8))	  }
+			, u8(((other & 0x00FF0000) >> 16))	  }
 			, u8(((other & 0xFF000000) >> 24))
 			}
 		{}
@@ -144,10 +144,10 @@ namespace gpk
 	struct SColorRGB : public ::gpk::rgb8 {
 								SColorRGB		()									noexcept	= default;
 		cnstxpr					SColorRGB		(const SColorRGB & other)			noexcept	= default;
-		cnstxpr					SColorRGB		(u8 r_, u8 g_, u8 b_)				noexcept	: color_rgb<u8>{r_, g_, b_} {}
+		cnstxpr					SColorRGB		(u8 r_, u8 g_, u8 b_)				noexcept	: color_rgb<u8>{{{r_}, g_}, b_} {}
 		cnstxpr					SColorRGB		(uint32_t other)					noexcept	: color_rgb<u8>
-			{ u8(((other & 0x000000FF) >>  0))
-			, u8(((other & 0x0000FF00) >>  8))
+			{ {{u8(((other & 0x000000FF) >>  0))}
+			, u8(((other & 0x0000FF00) >>  8))	}
 			, u8(((other & 0x00FF0000) >> 16))
 			}
 		{}
@@ -174,10 +174,10 @@ namespace gpk
 	struct SColorBGR : public ::gpk::color_bgr<u8> {
 								SColorBGR		()									noexcept	= default;
 		cnstxpr					SColorBGR		(const SColorBGR & other)			noexcept	= default;
-		cnstxpr					SColorBGR		(u8 b_, u8 g_, u8 r_)				noexcept	: color_bgr<u8>{b_, g_, r_} {}
+		cnstxpr					SColorBGR		(u8 b_, u8 g_, u8 r_)				noexcept	: color_bgr<u8>{{{b_}, g_}, r_} {}
 		cnstxpr					SColorBGR		(uint32_t other)					noexcept	: color_bgr<u8>
-			{ u8(((other & 0x000000FF) >>  0))
-			, u8(((other & 0x0000FF00) >>  8))
+			{ {{u8(((other & 0x000000FF) >>  0))}
+			, u8(((other & 0x0000FF00) >>  8))	}
 			, u8(((other & 0x00FF0000) >> 16))
 			}
 		{}
@@ -208,26 +208,26 @@ namespace gpk
 	struct SColorFloat : public ::gpk::rgbaf32 {
 								SColorFloat		()										noexcept	= default;
 		cnstxpr					SColorFloat		(const SColorFloat & color)				noexcept	= default;
-		cnstxpr					SColorFloat		(f32 r_, f32 g_, f32 b_, f32 a_=1.0f)	noexcept	: color_rgba<float>{r_, g_, b_, a_}						{}
-		cnstxpr					SColorFloat		(const float* rgbaColor)							: color_rgba<float>{rgbaColor[0], rgbaColor[1], rgbaColor[2], rgbaColor[3]}	{}
+		cnstxpr					SColorFloat		(f32 r_, f32 g_, f32 b_, f32 a_=1.0f)	noexcept	: color_rgba<float>{{{{r_}, g_}, b_}, a_}						{}
+		cnstxpr					SColorFloat		(const float* rgbaColor)							: color_rgba<float>{{{{rgbaColor[0]}, rgbaColor[1]}, rgbaColor[2]}, rgbaColor[3]}	{}
 		cnstxpr					SColorFloat		(SColorBGRA color)						noexcept	: color_rgba<float>
-			{ color.r * BYTE_SCALE
-			, color.g * BYTE_SCALE
-			, color.b * BYTE_SCALE
+			{ {{{color.r * BYTE_SCALE}
+			, color.g * BYTE_SCALE	 }
+			, color.b * BYTE_SCALE	 }
 			, color.a * BYTE_SCALE
 			} {}
 
 		cnstxpr					SColorFloat		(::gpk::bgr8 color, uint8_t alpha)		noexcept	: color_rgba<float>
-			{ color.r * BYTE_SCALE
-			, color.g * BYTE_SCALE
-			, color.b * BYTE_SCALE
+			{ {{{color.r * BYTE_SCALE}
+			, color.g * BYTE_SCALE	 }
+			, color.b * BYTE_SCALE	 }
 			, alpha * BYTE_SCALE
 			} {}
 
 		cnstxpr					SColorFloat		(::gpk::rgbf32 color, float alpha)		noexcept	: color_rgba<float>
-			{ color.r 
-			, color.g 
-			, color.b 
+			{ {{{color.r }
+			, color.g }
+			, color.b }
 			, alpha 
 			} {}
 
@@ -258,7 +258,7 @@ namespace gpk
 
 				SColorFloat&	Clamp			()									noexcept	{ r = ::gpk::clamped(r, 0.0f, 1.0f); g = ::gpk::clamped(g, 0.0f, 1.0f); b = ::gpk::clamped(b, 0.0f, 1.0f); return *this;	}
 
-		cnstxpr	::gpk::rgbf32	rgb				()							const				{ return {r, g, b}; }
+		cnstxpr	::gpk::rgbf32	rgb				()							const				{ return {{{r}, g}, b}; }
 	};	// struct
 
 	typedef ::gpk::SColorFloat					frgba	;

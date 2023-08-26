@@ -842,9 +842,6 @@
     <ClCompile Include="gpk_timer.cpp">
       <Filter>time</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_type_registry.cpp">
-      <Filter>type</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_view.cpp">
       <Filter>view</Filter>
     </ClCompile>

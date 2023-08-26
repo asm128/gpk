@@ -1111,9 +1111,13 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 ::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
 
 
+#ifdef GPK_ESP32
+stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1;
+stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
+#else
 stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1024 * 1;
-stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 1;
-
+stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
+#endif
 ::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcu8 & source	)	{
 	::gpk::au32					indicesIDAT;
 	gpk_necall(::pngActualFileLoad(source, pngData, indicesIDAT), "%s", "Failed to read png stream! Corrupt file?");
