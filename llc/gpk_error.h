@@ -37,6 +37,10 @@ namespace gpk
 #	define	if_succeeded(errVal)	if((::gpk::error_t)(errVal) >= 0)
 #endif
 
-#define GPK_CRASH()	{ uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; }	// No throw? Just crash.
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO) 
+#	define GPK_CRASH()	do { uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) { for(uint32_t j = 0; j < 1000; ++j) delay(1); _tasdas[i] = 0xFFFFFFFF00000000ULL; } } while(0)	// No throw? Just crash.
+#else
+#	define GPK_CRASH()	do { uint64_t * _tasdas = 0; for(uint32_t i = 0; i < 0xFFFFFFFF; ++i) _tasdas[i] = 0xFFFFFFFF00000000ULL; } while(0)	// No throw? Just crash.
+#endif
 
 #endif // GPK_ERROR_H_23627

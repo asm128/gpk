@@ -1,6 +1,6 @@
 #include "gpk_png.h"
 #include "gpk_img_color.h"
-#include "deflate.h"
+#include "gpk_deflate.h"
 
 static	unsigned long	g_crc_table[256]		= {};	// Table of CRCs of all 8-bit messages.
 static	int32_t			g_crc_table_computed	= 0;	// Flag: has the table been computed? Initially false.
@@ -31,38 +31,13 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 	return c;
 }
 
-static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated, ::gpk::au8& deflated)		{
-    int							ret;
-	z_stream					strm					= {};
-    ret						= deflateInit(&strm, Z_BEST_COMPRESSION);
-    if (ret != Z_OK)
-        return ret;
-    strm.avail_in			= inflated.size();
-    strm.next_in			= (Bytef*)inflated.begin();
-    strm.avail_out			= deflated.size();
-    strm.next_out			= (Bytef*)deflated.begin();
-    ret						= deflate(&strm, Z_FINISH);    /* no bad return value */
-    if(ret == Z_STREAM_ERROR) {
-	   (void)deflateEnd(&strm);
-		error_printf("Failed to compress: 0x%x.", ret);  /* state not clobbered */
-		return -1;
-	}
-    (void)deflateEnd(&strm);
-    gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	/* all input will be used */
-    gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				/* stream will be complete */
-	deflated.resize((uint32_t)((ptrdiff_t)strm.next_out - (ptrdiff_t)deflated.begin()));
-    /* clean up and return */
-	info_printf("deflateEnd: %u.", (uint32_t)ret);
-	return 0;
-}
-
 ::gpk::error_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
 	stacxpr	const uint8_t		signature	[8]			= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
 	::gpk::au8					safe_Bytes				= {};
-	safe_Bytes.append((uint8_t*)signature, 8);
+	safe_Bytes.append(signature);
 
 	uint32_t					chunkSize				= sizeof(::gpk::SPNGIHDR);
-	stacxpr	const char			typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
+	stacxpr	const uint8_t		typeIHDR	[4]			= {'I', 'H', 'D', 'R'};
 	int32_t						crc						= 0;
 	::gpk::SPNGIHDR				imageHeader				= {};
 	imageHeader.Size				= in_imageView.metrics();
@@ -77,7 +52,7 @@ static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated,
 	be2le_32(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	uint32_t					crcDataStart			= safe_Bytes.size();
-	safe_Bytes.append((const uint8_t*)typeIHDR, 4);
+	safe_Bytes.append(typeIHDR);
 	safe_Bytes.append((const uint8_t*)&imageHeader, sizeof(::gpk::SPNGIHDR));
 	crc						= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le_32(crc);
@@ -95,7 +70,6 @@ static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated,
 		colorDst.b				= colorSrc.b;
 		colorDst.a				= colorSrc.a;
 	}
-	::gpk::au8						deflated;
 	::gpk::imgu8					filtered				= {};
 	filtered.resize(::gpk::n2u32{convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
 	const uint32_t					scanlineWidthUnfiltered	= convertedScanlines.View.metrics().x * 4;
@@ -103,33 +77,35 @@ static	::gpk::error_t	pngDeflate				(const ::gpk::view<const uint8_t>& inflated,
 		filtered[y][0]				= 0;
 		memcpy(&filtered[y][1], &convertedScanlines[y][0], scanlineWidthUnfiltered);
 	}
-	gpk_necall(deflated.resize(filtered.Texels.size() * 2 + 65535), "%s", "Out of memory?");
-	gpk_necall(::pngDeflate({(const uint8_t*)filtered.Texels.begin(), filtered.Texels.size()}, deflated), "%s", "Failed to compress! Out of memory?");
 
-	stacxpr	const char				typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
+	::gpk::au8						deflated;
+	gpk_necall(::gpk::arrayDeflate({filtered.Texels}, deflated), "%s", "Failed to compress! Out of memory?");
+
 	chunkSize					= deflated.size();
 	be2le_32(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
-	safe_Bytes.append((const uint8_t*)typeIDAT, 4);
-	safe_Bytes.append((const uint8_t*)deflated.begin(), deflated.size());
+
+	stacxpr	const uint8_t			typeIDAT	[4]			= {'I', 'D', 'A', 'T'};
+	safe_Bytes.append(typeIDAT);
+	safe_Bytes.append(deflated);
 	crc							= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le_32(crc);
 	safe_Bytes.append((const uint8_t*)&crc, 4);
 
 	chunkSize					= 0;
 	crc							= 0;
-	stacxpr	const char				typeIEND	[4]			= {'I', 'E', 'N', 'D'};
+	stacxpr	const uint8_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
 	be2le_32(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
-	safe_Bytes.append((const uint8_t*)typeIEND, 4);
+	safe_Bytes.append(typeIEND);
 	crc							= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
 	be2le_32(crc);
 	safe_Bytes.append((const uint8_t*)&crc, 4);
 
 	int32_t							oldSize					= out_Bytes.size();
-	gpk_necall(out_Bytes.resize(oldSize + safe_Bytes.size()), "%s", "Out of memory?");
+	gpk_necs(out_Bytes.resize(oldSize + safe_Bytes.size()));
 	memcpy(&out_Bytes[oldSize], safe_Bytes.begin(), safe_Bytes.size());
 	return 0;
 }
