@@ -135,8 +135,8 @@ namespace gpk
 	tplt<tpnm T>	using	view1d		= ::gpk::view<T>;
 	tplt<tpnm T>	using	v1			= ::gpk::view<T>;
 
-	tplt<tpnm T>	inlcxpr	uint32_t	size		(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.size();			}
-	tplt<tpnm T>	inlcxpr	uint32_t	byte_count	(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
+	tplt<tpnm T>	ndstinx	uint32_t	size		(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.size();			}
+	tplt<tpnm T>	ndstinx	uint32_t	byte_count	(const ::gpk::view<T> & viewToTest)	noexcept	{ return viewToTest.byte_count();	}
 
 #pragma pack(pop)
 
@@ -209,12 +209,12 @@ namespace gpk
 	stacxpr	::gpk::vcc	VCC_TRUE		= {4, "true"};
 	stacxpr	::gpk::vcc	VCC_FALSE		= {5, "false"};
 
+	ndstinx	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; } 
+	ndstinx	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); } 
+	ndstinx	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
+	ndstinx	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
 	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); } 
-	stincxp	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); } 
-	stincxp	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; } 
-	stincxp	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
-	stincxp	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
-	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return 0 != b.size() && b != VCC_FALSE; } 
+	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return b.size() && b != VCC_FALSE; } 
 
 
 	struct view_string : public view<char> {
