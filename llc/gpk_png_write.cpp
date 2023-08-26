@@ -79,7 +79,7 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 	}
 
 	::gpk::au8						deflated;
-	gpk_necall(::gpk::arrayDeflate({filtered.Texels}, deflated), "%s", "Failed to compress! Out of memory?");
+	gpk_necall(::gpk::arrayDeflate(filtered.Texels.cu8(), deflated), "%s", "Failed to compress! Out of memory?");
 
 	chunkSize					= deflated.size();
 	be2le_32(chunkSize);
