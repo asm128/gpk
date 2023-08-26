@@ -1,4 +1,4 @@
-#include "gpk_color.h"
+#include "gpk_view_color.h"
 #include "gpk_array_pod.h"
 
 #ifndef GPK_APOD_COLOR_H_23627
