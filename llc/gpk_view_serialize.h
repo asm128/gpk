@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	stacxpr	uint8_t				tail_width			(uint32_t count) 	{
+	nodstxp	uint8_t				tail_width			(uint32_t count) 	{
 		//return (count > 0x3FFFFFFF) ? 4
 		return uint8_t
 			( (count > 0x003FFFFF) ? 3
@@ -15,9 +15,9 @@ namespace gpk
 			);
 	}
 	
-	stincxp	uint8_t				header_width		(uint32_t count)	{ return tail_width(count) + 1; }
+	ndstinx	uint8_t				header_width		(uint32_t count)	{ return tail_width(count) + 1; }
 
-	stacxpr	uint8_t				tail_multiplier		(uint32_t count)	{
+	nodstxp	uint8_t				tail_multiplier		(uint32_t count)	{
 		//return (count > 0x3FFFFFFF) ? (count & 0x3F00000000) >> 32
 		return uint8_t
 			( (count > 0x003FFFFF) ? ((count & 0x3F000000) >> 24)
@@ -26,7 +26,7 @@ namespace gpk
 			: count
 			);
 	}
-	stacxpr	uint32_t			tail_base			(uint32_t count)	{
+	nodstxp	uint32_t			tail_base			(uint32_t count)	{
 		//return (count > 0x3FFFFFFF) ? (count & 0xFFFFFFFFU) >> 8
 		return (count > 0x003FFFFF) ? count & 0x00FFFFFFU
 			 : (count > 0x00003FFF) ? count & 0x0000FFFFU
@@ -39,7 +39,7 @@ namespace gpk
 		uint8_t						Multiplier			: 6;
 		uint32_t					Tail				= 0;
 
-		inlcxpr uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
+		ndincxp uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
 		cnstxpr	uint32_t			ElementCount		()	const	noexcept	{
 			return (0 == TailWidth) ? Multiplier
 				 : (1 == TailWidth) ? (uint32_t(Multiplier) <<  8) + *(uint8_t *)&Tail
@@ -51,7 +51,7 @@ namespace gpk
 		}
 
 		tplt<tpnm T>
-		cnstxpr	uint32_t			DataSize			()	const	noexcept	{ return ElementCount() * sizeof(T); }
+		ndincxp uint32_t			DataSize			()	const	noexcept	{ return ElementCount() * sizeof(T); }
 	};
 #pragma pack(pop)
 	tplt<tpnm T, tpnm TByte>
@@ -95,12 +95,10 @@ namespace gpk
 
 	tplt<tpnm _tPOD> 
 	::gpk::error_t				loadPOD				(::gpk::vcu8 & input, _tPOD & output) { 
-		::gpk::view<const _tPOD>		readView			= {}; 
-		uint32_t						bytesRead			= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(readView, input)); 
-		gpk_necs(input.slice(input, bytesRead));
-		output						= readView[0]; 
-		return 0;
+		rees_if(input.byte_count() < sizeof(_tPOD));
+		memcpy(&output, input.begin(), sizeof(_tPOD));
+		gpk_necs(input.slice(input, sizeof(_tPOD)));
+		return sizeof(_tPOD);
 	}
 	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
 	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }

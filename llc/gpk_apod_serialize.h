@@ -19,10 +19,10 @@ namespace gpk
 		gpk_necs(output.append({(const uint8_t*)headerToWrite.begin(), headerToWrite.byte_count()}));
 		return counterWidth + headerToWrite.byte_count();
 	}
-	tplt<tpnm T> ::gpk::error_t	saveView(::gpk::ai8 & output, const ::gpk::view<T> & headerToWrite) { return ::gpk::saveView(headerToWrite, *(const ::gpk::au8*)&output); }
+	tplt<tpnm T> ::gpk::error_t	saveView(::gpk::ai8 & output, const ::gpk::view<T> & headerToWrite) { return ::gpk::saveView(*(::gpk::au8*)&output, headerToWrite); }
 
-	tplt<tpnm T> ::gpk::error_t	savePOD	(::gpk::au8 & output, const T & input)						{ return ::gpk::saveView(output, ::gpk::view<const T>{&input, 1}); }
-	tplt<tpnm T> ::gpk::error_t	savePOD	(::gpk::ai8 & output, const T & input)						{ return ::gpk::saveView(output, ::gpk::view<const T>{&input, 1}); }
+	tplt<tpnm T> ::gpk::error_t			savePOD	(::gpk::au8 & output, const T & input)	{ gpk_necs(output.append((const uint8_t*)&input, sizeof(T))); return sizeof(T); }
+	tplt<tpnm T> stainli ::gpk::error_t	savePOD	(::gpk::ai8 & output, const T & input)	{ return ::gpk::savePOD(*(::gpk::au8*)&output, input); }
 
 	tplt<tpnm T> 
 	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::apod<T> & output) { 

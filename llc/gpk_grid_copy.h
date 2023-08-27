@@ -73,7 +73,7 @@ namespace gpk
 		const int32_t				stopXDst					= int32_t(srcMetrics.x) + ::gpk::min(0, (int32_t)dstRect.Offset.x) - ::gpk::min<_tCoord>(srcOffset.x, 0);
 		const int32_t				maxY						= ::gpk::min(::gpk::min(stopYDst - (int32_t)srcOffset.y, (int32_t)dstMetrics.y - offsetDst.y), int32_t(dstRect.Size.y/* - dstRect.Offset.y*/));
 		const int32_t				maxX						= ::gpk::min(::gpk::min(stopXDst - (int32_t)srcOffset.x, (int32_t)dstMetrics.x - offsetDst.x), int32_t(dstRect.Size.x/* - dstRect.Offset.x*/));
-		return (maxX > 0) ? ::gpk::grid_raster_alpha_bit_ex(src, srcMetrics, ::gpk::n2i32{maxX, maxY}.u32(), offsetDst, offsetSrc, dstCoords) : 0;
+		return (maxX > 0) ? ::gpk::grid_raster_alpha_bit_ex(src, srcMetrics, ::gpk::n2i32{maxX, maxY}.Clamp({}, dstMetrics.i32()).u32(), offsetDst, offsetSrc, dstCoords) : 0;
 	}
 
 	// -----------------------------------------------
