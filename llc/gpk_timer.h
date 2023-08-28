@@ -1,5 +1,5 @@
 #include "gpk_typeint.h"	// for int64_t
-#if !defined(GPK_WINDOWS)
+#if !defined(GPK_WINDOWS) && !defined(GPK_ATMEL) && !defined(GPK_CMSIS) && !defined(GPK_ARDUINO) && !defined(GPK_ESP32)
 #	include <chrono>
 #endif
 
@@ -19,12 +19,14 @@ namespace gpk	//
 		double			Frame					()		noexcept;	// Calculate time elapsed since the last Frame() or Reset() call.
 
 	private:
-#if defined(GPK_WINDOWS)
-		int64_t			CountsPerSecond			= 0;
+#if defined(GPK_WINDOWS) || defined(GPK_ARDUINO) || defined(GPK_CMSIS) || defined(GPK_ESP32)
 		int64_t			PrevTimeStamp			= 0;
 		int64_t			CurrentTimeStamp		= 0;
+#	ifndef GPK_ATMEL
+		int64_t			CountsPerSecond			= 0;
 		double			SecondsPerCount			= 0;
 		double			MicrosecondsPerCount	= 0;
+#	endif
 #else
 		::std::chrono::high_resolution_clock::time_point	PrevTimeStamp		= {};
 		::std::chrono::high_resolution_clock::time_point	CurrentTimeStamp	= {};

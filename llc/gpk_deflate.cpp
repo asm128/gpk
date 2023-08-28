@@ -237,7 +237,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
 		gpk_safe_fclose(fp);
 		const ::gpk::vcs			& fileName					= virtualFolder.Names		[iFile];
 		const ::gpk::vcu8			& fileContent				= virtualFolder.Contents	[iFile];
-		snprintf(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", destinationPath.size(), fileName.size());
+		snprintf(bufferFormat.begin(), bufferFormat.size(), "%%.%us%%.%us", (unsigned int)destinationPath.size(), (unsigned int)fileName.size());
 		snprintf(finalPathName.begin(), finalPathName.size(), bufferFormat.begin(), destinationPath.begin(), fileName.begin());
 		info_printf("File found (%u): %s. Size: %u.", iFile, finalPathName.begin(), fileContent.size());
 		uint32_t					lenPath						= (uint32_t)strlen(finalPathName.begin());

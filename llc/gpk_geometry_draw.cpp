@@ -63,7 +63,7 @@
 			double						lightFactorPoint		= vectorToLight.Dot(normal);
 			if(lightToPoint.Length() > light.Range || lightFactorPoint <= 0)
 				continue;
-			double						invAttenuation			= ::std::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
+			double						invAttenuation			= ::gpk::max(0.0, 1.0 - (lightToPoint.Length() / light.Range));
 			fragmentColor			+= (texelColor * lightColors[iLight] * invAttenuation).Clamp();
 		}
 		 (void)lightColor;

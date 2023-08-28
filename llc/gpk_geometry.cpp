@@ -76,7 +76,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 }
 
 ::gpk::error_t			gpk::geometryBuildSphere	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsSphere & params) {
-	const uint32_t				vertexOffset				= geometry.Positions.size();
+	const uint32_t				 vertexOffset				= geometry.Positions.size();
 	const ::gpk::n2u16			vertexCount					= params.CellCount + ::gpk::n2u16{1, 1};
 
 	// -- Generate texture coordinates

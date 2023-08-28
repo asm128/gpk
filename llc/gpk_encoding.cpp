@@ -4,8 +4,13 @@
 #include "gpk_chrono.h"
 #include "gpk_parse.h"
 
-#include <ctime>
-#include <random>
+
+#ifdef GPK_ATMEL
+#	include <time.h>
+#else
+#	include <ctime>
+#	include <random>
+#endif
 
 ::gpk::error_t			gpk::saltDataSalt				(const ::gpk::vcu8 & binary, ::gpk::au8 & salted)				{
 	gpk_necs(salted.resize(binary.size() * 2));
@@ -208,7 +213,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 		for(uint32_t j = 0; j < 32; j++)
 			filtered[j]										+= filtered[i + j];
 	}
-	digest.append({filtered.begin(), ::gpk::min(32U, filtered.size())});
+	digest.append({filtered.begin(), ::gpk::min((uint32_t)32U, filtered.size())});
 	return 0;
 }
 
@@ -244,7 +249,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 			filtered[j]				+= filtered[i + j];
 	}
 	char						temp		[32]				= {};
-	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), 8U); ++i) {
+	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), (uint32_t)8U); ++i) {
 		snprintf(temp, ::gpk::size(temp) - 2, "%i", filtered[i]);
 		gpk_necs(digest.append_string(temp));
 	}

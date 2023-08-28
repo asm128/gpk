@@ -78,7 +78,7 @@ namespace gpk
 		char					ValueString	[64]	= {};
 
 		TCallback				FuncValueFormat		= []	(::gpk::vcc & format, int64_t, const ::gpk::minmax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
-		TCallback				FuncGetString		= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::minmax<int64_t> &)	mutable	{ 
+		TCallback				FuncGetString		= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::minmax<int64_t> &)			{ 
 			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};
@@ -99,7 +99,7 @@ namespace gpk
 		char					ValueString	[64]	= {};
 
 		TCallback				FuncValueFormat	= [this](::gpk::vcc & format, _tValue/*value*/, const ::gpk::minmax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
-		TCallback				FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::minmax<_tValue> &)		mutable	{ 
+		TCallback				FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::minmax<_tValue> &)			{ 
 			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};

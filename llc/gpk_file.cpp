@@ -212,6 +212,7 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 #elif defined(GPK_WINDOWS)
 	ree_if(FALSE == DeleteFileA(fileName.begin()), "Failed to delete '%s'.", fileName.begin());
 #elif defined(GPK_ANDROID)
+#elif defined(GPK_ATMEL)
 #else
 	gpk_necall(unlink(fileName.begin()), "Failed to delete '%s'.", fileName.begin());
 #endif

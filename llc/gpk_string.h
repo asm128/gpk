@@ -66,6 +66,32 @@ namespace gpk
 	//	return result;
 	//}
 
+#ifdef GPK_ATMEL
+	stainli	int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
+		va_list			args			= {};
+		va_start(args, format);
+		const int		result			= ::vsnprintf(buffer, bufferSize - 1, format, args);
+		va_end(args);
+		return result;
+	}
+
+	tplt<size_t _bufferSize>
+	stainli	int	sprintf_s		(char (&buffer)[_bufferSize], const char* format, ...)								{
+		va_list			args			= {};
+		va_start(args, format);
+		const int		result			= ::vsnprintf(buffer, _bufferSize - 1, format, args);
+		va_end(args);
+		return result;
+	}
+
+	stainli	int	sprintf_s		(char *buffer , uint32_t bufferSize, const char* format, ...)								{
+		va_list			args			= {};
+		va_start(args, format);
+		const int		result			= ::vsnprintf(buffer, bufferSize - 1, format, args);
+		va_end(args);
+		return result;
+	}
+#else
 	stainli	int	vsprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
 		va_list			args			= {};
 		va_start(args, format);
@@ -90,7 +116,7 @@ namespace gpk
 		va_end(args);
 		return result;
 	}
-
+#endif
 	tplt<size_t _Size> stainli	int	strcat_s		( char (&dst)[_Size], const char *src )						{ return strcat_s	(dst, _Size, src);				}
 	tplt<size_t _Size> stainli	int	strcpy_s		( char (&dst)[_Size], const char *src )						{ return strcpy_s	(dst, _Size, src);				}
 	tplt<size_t _Size> stainli	int	strncpy_s		( char (&dst)[_Size], const char *src )						{ return strncpy_s	(dst, src, _Size);				}

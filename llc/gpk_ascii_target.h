@@ -9,7 +9,7 @@
 #ifdef GPK_ATMEL
 #	include <stdlib.h> // this is required for ::std::swap() //include <MemoryFree.h>
 #else
-#	include <utility> // this is required for ::std::swap()
+#	include <memory> // this is required for ::std::swap()
 #endif
 //#include <memory> // this is required for ::std::swap()
 
