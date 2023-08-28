@@ -343,7 +343,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	, ::gpk::gc8bgra					textureImage
 	, ::gpk::apod<::gpk::n3f32>			& lightPoints
 	, ::gpk::a8bgra			& lightColors
-	, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+	, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::n2f32			imageUnit				= {textureImage.metrics().x - 0.000001f, textureImage.metrics().y - 0.000001f};
 	double						lightFactorDirectional	= normal.Dot(lightVector);
@@ -450,7 +450,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	, ::gpk::apod<::gpk::n3f32>		& lightPoints
 	, ::gpk::a8bgra		& lightColors
 	, ::gpk::grid<uint32_t>		depthBuffer
-	, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+	, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 	) {
 	const ::gpk::tri3f32		& triangle			= geometry.Triangles	[iTriangle];;
 	const ::gpk::tri2f32		& triangleTexCoords	= geometry.TextureCoords[iTriangle];

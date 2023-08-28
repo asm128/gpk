@@ -3,6 +3,12 @@
 #include "gpk_memory.h"
 #include "gpk_size.h"
 
+#ifndef GPK_ATMEL
+#	include <initializer_list>
+#else
+#	include "gpk_std_initializer_list.h"
+#endif
+
 #ifndef GPK_ARRAY_BASE_H_23627
 #define GPK_ARRAY_BASE_H_23627
 

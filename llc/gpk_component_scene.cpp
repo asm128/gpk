@@ -61,7 +61,7 @@ static	::gpk::error_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SS
 		boundingVolume.Limits.Max.y				= ::gpk::max(triangle.Triangle.A.z, ::gpk::max(triangle.Triangle.B.z, ::gpk::max(triangle.Triangle.C.z, boundingVolume.Limits.Max.y)));
 		boundingVolume.Limits.Max.z				= ::gpk::max(triangle.Triangle.A.y, ::gpk::max(triangle.Triangle.B.y, ::gpk::max(triangle.Triangle.C.y, boundingVolume.Limits.Max.z)));
 	}
-	boundingVolume.Center					= boundingVolume.Limits.Min + (boundingVolume.Limits.Max - boundingVolume.Limits.Min) / 2;
+	boundingVolume.Center					= boundingVolume.Limits.Min + (boundingVolume.Limits.Max - boundingVolume.Limits.Min) / 2.0;
 	boundingVolume.Radius					= ::gpk::max(boundingVolume.Limits.Min.Length(), boundingVolume.Limits.Max.Length()) / 2;
 	boundingVolume.Type						= ::gpk::BOUNDINGPRIMITIVE_TYPE_SPHERE;
 	for(uint32_t iVertex = 0; iVertex < bufferVertices.size(); ++iVertex)

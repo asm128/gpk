@@ -9,11 +9,11 @@
 #ifndef GPK_EVAL_H_23627
 #define GPK_EVAL_H_23627
 
-#if defined(GPK_WINDOWS) || defined(GPK_ARDUINO)
-#	if defined(min)
+#if defined(GPK_WINDOWS) || defined(GPK_ARDUINO) || defined(GPK_ATMEL)
+#	ifdef min
 #		undef min
 #	endif
-#	if defined(max)
+#	ifdef max
 #		undef max
 #	endif
 #	if !defined(NOMINMAX)
@@ -52,7 +52,7 @@ namespace gpk
 //#endif
 
 #pragma pack(pop)
-#ifndef true_if
+#ifndef true_if 
 #	define true_if(expression)				((expression) ? true : false)	// returns true  if the parameter evaluates to true
 #	define false_if(expression)				((expression) ? false : true)	// returns false if the parameter evaluates to true
 #	define one_if(expression)				((expression) ? 1 : 0)			// returns one   if the parameter evaluates to true

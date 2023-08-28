@@ -3,7 +3,11 @@
 #include "gpk_apod_serialize.h"
 #include "gpk_slice.h"
 
-#include <ctime>
+#ifdef GPK_ATMEL
+#	include <time.h>
+#else
+#	include <ctime>
+#endif
 
 ::gpk::error_t			gpk::querystring_split	(const ::gpk::vcc & input_string, ::gpk::aobj<::gpk::vcc>& output_views)		{
 	if(0 == input_string.size())

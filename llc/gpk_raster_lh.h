@@ -9,7 +9,7 @@
 #include "gpk_line3.h"
 #include "gpk_circle.h"
 
-#include <functional>
+#include "gpk_functional.h"
 
 #ifndef CED_DRAW_H_23627
 #define CED_DRAW_H_23627
@@ -76,7 +76,7 @@ namespace gpk
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
 		, ::gpk::grid<uint32_t>			depthBuffer
-		, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+		, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 		);
 
 	int				drawQuadTriangle
@@ -145,7 +145,7 @@ namespace gpk
 		, ::gpk::gc8bgra	textureImage
 		, ::gpk::apod<::gpk::n3f32>			& lightPoints
 		, ::gpk::a8bgra			& lightColors
-		, const ::std::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
+		, const ::gpk::function<::gpk::error_t(::gpk::g8bgra targetPixels, const ::gpk::n2i16 & pixelCoord, const ::gpk::bgra & color)> & funcSetPixel
 		);
 
 	int				drawPixels

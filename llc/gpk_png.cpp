@@ -654,10 +654,10 @@ static	::gpk::error_t	pngScanlineDecode_0_bits(::gpk::gu8 & out_View, const ::gp
 	return 0;
 }
 
-// const std::function & pngScanlineDecode_2_8;
-// const std::function & pngScanlineDecode_4_8;
-// const std::function & pngScanlineDecode_6_8;
-// const std::function & pngScanlineDecode_3_8;
+// const gpk::function & pngScanlineDecode_2_8;
+// const gpk::function & pngScanlineDecode_4_8;
+// const gpk::function & pngScanlineDecode_6_8;
+// const gpk::function & pngScanlineDecode_3_8;
 
 tplt<tpnm _tPixel>
 static	::gpk::error_t	pngDecode

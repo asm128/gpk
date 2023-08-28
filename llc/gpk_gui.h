@@ -71,8 +71,8 @@ namespace gpk
 	::gpk::error_t			controlInvalid					(const ::gpk::SGUI & gui, cid_t iControl);
 
 
-	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
-	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::std::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
+	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
 
 
 } // namespace

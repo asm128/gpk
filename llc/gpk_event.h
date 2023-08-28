@@ -30,10 +30,10 @@ namespace gpk
 	tplt<tpnm T> using SEView 					= ::gpk::SEventView<T>;
 	tplt<tpnm T> using TEViewQueue 				= ::gpk::aobj<::gpk::SEView<T>>;
 
-	tplt<tpnm T> using FEViewHandler			= std::function<::gpk::error_t(      ::gpk::SEView<T>&)>;
-	tplt<tpnm T> using FEViewHandlerConst		= std::function<::gpk::error_t(const ::gpk::SEView<T>&)>;
-	tplt<tpnm T> using FEventViewHandler		= std::function<::gpk::error_t(      ::gpk::SEView<T>&)>;
-	tplt<tpnm T> using FEventViewHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEView<T>&)>;
+	tplt<tpnm T> using FEViewHandler			= ::gpk::function<::gpk::error_t(      ::gpk::SEView<T>&)>;
+	tplt<tpnm T> using FEViewHandlerConst		= ::gpk::function<::gpk::error_t(const ::gpk::SEView<T>&)>;
+	tplt<tpnm T> using FEventViewHandler		= ::gpk::function<::gpk::error_t(      ::gpk::SEView<T>&)>;
+	tplt<tpnm T> using FEventViewHandlerConst	= ::gpk::function<::gpk::error_t(const ::gpk::SEView<T>&)>;
 
 	tplt<tpnm _tEventType>
 	struct SEvent {
@@ -69,8 +69,8 @@ namespace gpk
 		}
 	};
 
-	tplt<tpnm T> using FEventHandler		= std::function<::gpk::error_t(      ::gpk::SEvent<T>&)>;
-	tplt<tpnm T> using FEventHandlerConst	= std::function<::gpk::error_t(const ::gpk::SEvent<T>&)>;
+	tplt<tpnm T> using FEventHandler		= ::gpk::function<::gpk::error_t(      ::gpk::SEvent<T>&)>;
+	tplt<tpnm T> using FEventHandlerConst	= ::gpk::function<::gpk::error_t(const ::gpk::SEvent<T>&)>;
 
 	tplt<tpnm T> using PEvent 				= ::gpk::pobj <::gpk::SEvent<T>>;
 	tplt<tpnm T> using TEventQueue 			= ::gpk::apobj<::gpk::SEvent<T>>;
@@ -100,7 +100,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tChildEvent, tpnm _tParentEvent>
-	static	::gpk::error_t	eventExtractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::std::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
+	static	::gpk::error_t	eventExtractAndHandle	(const ::gpk::SEvent<_tParentEvent> & parentEvent, const ::gpk::function<::gpk::error_t (const ::gpk::SEventView<_tChildEvent> &)> & funcHandleChild) {
 		::gpk::SEView<_tChildEvent>	childEvent; 
 		gpk_necs(parentEvent.ExtractChild(childEvent)); 
 		return funcHandleChild(childEvent);

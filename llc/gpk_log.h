@@ -1,11 +1,12 @@
 #include "gpk_error.h"
-#include "gpk_eval.h"
 #include "gpk_chrono.h" 
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
 #	include <string.h>
+#	include "gpk_eval.h"
 #else
+#	include "gpk_eval.h"
 #	include <cstdio>
 #endif
 
@@ -81,6 +82,12 @@ namespace gpk
 		}
 #else
 #	if defined(GPK_ARDUINO)
+#		ifdef min
+#			undef min
+#		endif
+#		ifdef max
+#			undef max
+#		endif
 		char					customDynamicString	[128]		= {};
 #	else
 		char					customDynamicString	[1024 * 12]	= {};

@@ -332,7 +332,7 @@ namespace gpk
 		int32_t										lastOffset				= 0;
 		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::vcs							newView					= {&target[lastOffset], (uint32_t)::gpk::max(0, iChar - lastOffset)};
+				const ::gpk::vcs							newView					= {&target[lastOffset], (uint32_t)::gpk::max((int32_t)0, int32_t(iChar - lastOffset))};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;

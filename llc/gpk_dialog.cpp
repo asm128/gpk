@@ -196,7 +196,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 
 			::gpk::n2f64				currentValue				= input.MouseCurrent.Position.f64();
 			const ::gpk::n2f64			valueUnit					= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
-			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f64() / 2;
+			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f64() / 2.0;
 			currentValue.x			*= valueUnit.x;
 			currentValue.y			*= valueUnit.y;
 

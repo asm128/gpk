@@ -107,7 +107,8 @@ namespace gpk
 				rees_if(0 == newData);
 				if(Data)
 					memcpy(newData, Data, this->byte_count());
-					*(u16*)&newData[Count]	= 0;
+					
+				*(u16*)&newData[Count]	= 0;
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;

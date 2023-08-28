@@ -85,7 +85,7 @@ namespace gpk
 	};
 
 	tplt<tpnm _tState>
-	using TFuncSetMaskedValue = std::function<_tState(void)>; 
+	using TFuncSetMaskedValue = ::gpk::function<_tState(void)>; 
 
 	tplt<tpnm _tState>
 	_tState				setValue		(::gpk::cid_t iControl, ::gpk::apobj<SSystemEvent> & eventQueue, _tState & state, TFuncSetMaskedValue<_tState> funcSetValue) {

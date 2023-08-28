@@ -4,12 +4,14 @@
 #ifndef GPK_SYNC_H_23627
 #define GPK_SYNC_H_23627
 
-#if defined(GPK_ANDROID) || defined(GPK_LINUX) || defined(GPK_ESP32) || defined(GPK_ARDUINO)
-#	include <thread>
-#	include <chrono>
-#elif defined(GPK_WINDOWS)
+#if defined(GPK_WINDOWS)
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
+#elif defined(GPK_ATMEL)
+#	include <Arduino.h>
+#elif defined(GPK_ANDROID) || defined(GPK_LINUX) || defined(GPK_ESP32)
+#	include <thread>
+#	include <chrono>
 #endif
 namespace gpk
 {
@@ -55,7 +57,11 @@ namespace gpk
 #	define LEAVE_SHARED_SECTION(Name)			(Name).unlock()
 #	define DELETE_SHARED_SECTION(Name)			(0)
 
+#	ifdef GPK_ATMEL
+	stainli ::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ ::delay(milliseconds); return 0; }
+#	else
 	stainli ::gpk::error_t	sleep	(uint32_t milliseconds)		noexcept	{ std::this_thread::sleep_for (std::chrono::milliseconds(milliseconds)); return 0; }
+#	endif
 #endif
 
 #if defined(GPK_MTSUPPORT)

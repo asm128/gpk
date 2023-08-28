@@ -1,6 +1,7 @@
 /// Copyright 2010-2017 - asm128
 #include "gpk_eval.h"
 #if defined(GPK_ATMEL)
+#	include <stdlib.h>
 #else
 #	include <malloc.h>
 #	include <memory.h>
@@ -48,7 +49,7 @@ namespace gpk
 	}
 #elif defined(GPK_ATMEL)
 	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
-	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }
+	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::malloc(size + 1); return p; }
 #else
 	stainli	void						gpk_free					(void* ptr)									noexcept	{ ::free(ptr);											}
 	stainli	void*						gpk_malloc					(size_t size)								noexcept	{ int8_t* p = (int8_t*)::memalign(GPK_MALLOC_ALIGN, size + 1); return p; }

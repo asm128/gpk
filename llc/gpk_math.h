@@ -2,6 +2,7 @@
 
 #if defined(GPK_ATMEL)
 #	include <math.h>
+#	include <stdlib.h>
 #else
 #	include <cmath>
 #endif
@@ -34,22 +35,17 @@ namespace gpk
 	// [c d]
 	cnstxpr	double		determinant			(double a, double b, double c, double d)					noexcept	{ return a * d - b * c; }
 
-#if defined(GPK_ATMEL)
+#if defined(GPK_WINDOWS) || defined(GPK_ATMEL)
+#	if defined(GPK_WINDOWS)
+	stainli int		abs		(int	f) { return ::abs	(f); }
+	stainli double	abs		(double	f) { return ::abs	(f); }
+#	else
 #	ifdef abs
 #		undef abs
-#	endif // abs
+#	endif
 	stainli int		abs		(int	f) { return ::abs	(f); }
 	stainli double	abs		(double	f) { return ::abs	(f); }
-	stainli double	fabs	(double	f) { return ::fabs	(f); }
-	stainli double	atan	(double	f) { return ::atan	(f); }
-	stainli double	cos		(double	f) { return ::cos	(f); }
-	stainli double	acos	(double	f) { return ::acos	(f); }
-	stainli double	sin		(double	f) { return ::sin	(f); }
-	stainli double	asin	(double	f) { return ::asin	(f); }
-	stainli double	sqrt	(double	f) { return ::sqrt	(f); }
-#elif defined(GPK_WINDOWS)
-	stainli int		abs		(int	f) { return ::abs	(f); }
-	stainli double	abs		(double	f) { return ::abs	(f); }
+#	endif
 	stainli double	fabs	(double	f) { return ::fabs	(f); }
 	stainli double	atan	(double	f) { return ::atan	(f); }
 	stainli double	cos		(double	f) { return ::cos	(f); }
@@ -67,7 +63,8 @@ namespace gpk
 	using	std::asin	;
 	using	std::sqrt	;
 #endif
+
 #pragma pack(pop)
-}
+} // namespace
 
 #endif // GPK_MATH_H_23627

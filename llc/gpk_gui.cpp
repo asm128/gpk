@@ -624,13 +624,13 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 	return controlIndices.size();
 }
 
-::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::std::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
+::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
 	::gpk::acid					controlsToProcess			= {};
 	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
 	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
 }
 
-::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::std::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
+::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
 	for(uint32_t iControl = 0, countControls = controlsToProcess.size(); iControl < countControls; ++iControl) {
 		const ::gpk::cid_t			idControl					= controlsToProcess[iControl];
 		const ::gpk::SControlState	& controlState				= gui.Controls.States[idControl];

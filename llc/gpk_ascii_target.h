@@ -6,7 +6,12 @@
 #include "gpk_circle.h"
 #include "gpk_rect2.h"
 
-#include <memory> // this is required for ::std::swap()
+#ifdef GPK_ATMEL
+#	include <stdlib.h> // this is required for ::std::swap() //include <MemoryFree.h>
+#else
+#	include <utility> // this is required for ::std::swap()
+#endif
+//#include <memory> // this is required for ::std::swap()
 
 #ifndef GPK_ASCII_TARGET_H_23627
 #define GPK_ASCII_TARGET_H_23627
@@ -31,8 +36,8 @@ namespace gpk
 #pragma pack(pop)
 
 	stainli	::gpk::error_t	drawRectangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::rect2<int32_t>& rectangle)	{
-		for(int32_t y = (int32_t)::gpk::max(0, rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = (int32_t)::gpk::max(0, rectangle.Offset.x), xStop = ::gpk::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y), yStop = ::gpk::min((int32_t)(rectangle.Offset.y + rectangle.Size.y), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max((int32_t)0, (int32_t)rectangle.Offset.x), xStop = ::gpk::min((int32_t)(rectangle.Offset.x + rectangle.Size.x), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			asciiTarget.Characters	[y][x]											= value.Character;
 			asciiTarget.Colors		[y][x]											= value.Color;
 		}
@@ -40,8 +45,8 @@ namespace gpk
 	}
 
 	stainli	::gpk::error_t	drawCircle			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::circlei32 & circle)			{
-		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max((int32_t)0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius)), xStop = ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			::gpk::n2i32				cellCurrent			= {x, y};
 			double						distance			= (cellCurrent - circle.Center).Length();
 			if(distance < circle.Radius) {
@@ -57,8 +62,8 @@ namespace gpk
 	stainli	::gpk::error_t	drawTriangle		(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::tri2<_tCoord>& triangle)		{
 		::gpk::n2i32				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
 		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
-		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(areaMin.x, 0), xStop = ::gpk::min(areaMax.x, (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max((int32_t)areaMin.y, (int32_t)0), yStop = ::gpk::min(areaMax.y, (int32_t)asciiTarget.metrics().y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max((int32_t)areaMin.x, (int32_t)0), xStop = ::gpk::min(areaMax.x, (int32_t)asciiTarget.metrics().x); x < xStop; ++x) {
 			const ::gpk::n2i32			cellCurrent			= {x, y};
 			// Determine barycentric coordinates
 			int							w0					= ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -72,6 +77,16 @@ namespace gpk
 		return 0;
 	}
 
+#ifndef GPK_ATMEL
+	using ::std::swap;
+#else
+	template <class _Ty>
+	inline constexpr void swap(_Ty& _Left, _Ty& _Right) noexcept {
+		_Ty _Tmp = _Left;
+		_Left    = _Right;
+		_Right   = _Tmp;
+	}
+#endif
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
 	static	::gpk::error_t	drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{
@@ -82,12 +97,12 @@ namespace gpk
 			;
 		const bool					steep				= (fabs(y2 - y1) > fabs(x2 - x1));
 		if(steep){
-			::std::swap(x1, y1);
-			::std::swap(x2, y2);
+			::gpk::swap(x1, y1);
+			::gpk::swap(x2, y2);
 		}
 		if(x1 > x2) {
-			::std::swap(x1, x2);
-			::std::swap(y1, y2);
+			::gpk::swap(x1, x2);
+			::gpk::swap(y1, y2);
 		}
 		const float					dx					= x2 - x1;
 		const float					dy					= fabs(y2 - y1);
@@ -96,8 +111,8 @@ namespace gpk
 		int32_t						y					= (int32_t)y1;
 		if(steep) {
 			for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
-				if( false == ::gpk::in_range(x, 0, (int32_t)asciiTarget.metrics().y)
-				 || false == ::gpk::in_range(y, 0, (int32_t)asciiTarget.metrics().x)
+				if( false == ::gpk::in_range(x, (int32_t)0, (int32_t)asciiTarget.metrics().y)
+				 || false == ::gpk::in_range(y, (int32_t)0, (int32_t)asciiTarget.metrics().x)
 				 )
 					continue;
 				asciiTarget.Characters	[x][y]	= value.Character;
@@ -111,8 +126,8 @@ namespace gpk
 		}
 		else {
 			for(int32_t x = (int32_t)x1, xStop = (int32_t)x2; x < xStop; ++x) {
-				if( false == ::gpk::in_range(y, 0, (int32_t)asciiTarget.metrics().y)
-				 || false == ::gpk::in_range(x, 0, (int32_t)asciiTarget.metrics().x)
+				if( false == ::gpk::in_range(y, (int32_t)0, (int32_t)asciiTarget.metrics().y)
+				 || false == ::gpk::in_range(x, (int32_t)0, (int32_t)asciiTarget.metrics().x)
 				 )
 					continue;
 				asciiTarget.Characters	[y][x]	= value.Character;
