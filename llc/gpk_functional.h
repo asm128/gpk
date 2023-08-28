@@ -1,6 +1,6 @@
 #include "gpk_typeint.h"
 
-#ifdef GPK_ARDUINO
+#ifdef GPK_ATMEL
 #	include <ustd_functional.h>
 #else
 #	include <functional>
@@ -11,7 +11,7 @@
 
 namespace gpk
 {
-#ifdef GPK_ARDUINO
+#ifdef GPK_ATMEL
 	tplt<tpnm _tFunction>	
 	using	function	= ::ustd::function<_tFunction>;
 #else
