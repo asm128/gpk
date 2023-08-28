@@ -7,7 +7,9 @@ namespace gpk
 {
 	tplt<tpnm T>
 	class CViewManager	{
-#ifdef GPK_ESP32
+#if defined(GPK_ARDUINO)
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
+#elif defined(GPK_ESP32)
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
 #else
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;

@@ -30,7 +30,7 @@ namespace gpk
 	};
 
 
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	stacxpr	uint32_t		DEFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
 	stacxpr	uint32_t		INFLATE_DEFAULT_CHUNK_SIZE		= 1024 * 4;
 #else

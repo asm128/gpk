@@ -4,6 +4,7 @@
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
+#	include <string.h>
 #else
 #	include <cstdio>
 #endif
@@ -59,7 +60,7 @@ namespace gpk
 #else
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* function, const char* format, const TArgs... args)			{
 		char					timeString	[64]				= {};
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%lu|", ::gpk::timeCurrentInMs());
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
 		base_debug_print(timeString, (int)stringLength);
 		base_debug_print(prefix, prefixLength);
 		base_debug_print("{", 1);
@@ -67,7 +68,7 @@ namespace gpk
 		base_debug_print("}:", 2);
 #endif
 
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) 
 		if(format) {
 			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
 			if(char * customDynamicString = (char*)malloc(bufferSize)) {
@@ -79,7 +80,11 @@ namespace gpk
 			}
 		}
 #else
+#	if defined(GPK_ARDUINO)
+		char					customDynamicString	[128]		= {};
+#	else
 		char					customDynamicString	[1024 * 12]	= {};
+#	endif
 		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 		base_debug_print(customDynamicString, (int)stringLength);

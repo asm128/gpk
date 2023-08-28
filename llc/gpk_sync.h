@@ -4,7 +4,7 @@
 #ifndef GPK_SYNC_H_23627
 #define GPK_SYNC_H_23627
 
-#if defined(GPK_ANDROID) || defined(GPK_LINUX) || defined(GPK_ESP32)
+#if defined(GPK_ANDROID) || defined(GPK_LINUX) || defined(GPK_ESP32) || defined(GPK_ARDUINO)
 #	include <thread>
 #	include <chrono>
 #elif defined(GPK_WINDOWS)

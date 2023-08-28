@@ -1,8 +1,6 @@
 #include "gpk_dialog.h"
 #include "gpk_dialog_controls.h"
-#ifndef GPK_ESP32
-#	include "gpk_png.h"
-#endif
+#include "gpk_png.h"
 
 								::gpk::IDialogControl::~IDialogControl		() { 
 	if(-1 != IdGUIControl && DeleteControl && Dialog->GUI) 
@@ -106,7 +104,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::img<::gpk::bgra>		& imageCross				= dialog.ImageCrossBGRA;
 	if(controlTable.IsAction(checkbox.IdGUIControl)) {
 		if(dialog.ImageCross.Texels.size() < 4) {
-#ifndef GPK_ESP32
+#if !(defined(GPK_ESP32) || defined(GPK_ARDUINO))
 			es_if(errored(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross)));
 #endif
 

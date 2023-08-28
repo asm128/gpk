@@ -6,7 +6,9 @@
 namespace gpk
 {
 	class CLabelManager	{
-#ifdef GPK_ESP32
+#if defined(GPK_ARDUINO)
+		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 >> 1;
+#elif defined(GPK_ESP32)
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 4;
 #else
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
@@ -28,7 +30,7 @@ namespace gpk
 			Texts		.push_back(Empty.begin()); 
 		}
 
-		::gpk::error_t						Save	(::gpk::au8 & output)						const	{
+		::gpk::error_t						Save		(::gpk::au8 & output)						const	{
 			gpk_necs(::gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Texts[iArray], Counts[iArray]));
@@ -36,7 +38,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load	(::gpk::vcu8 & input) {
+		::gpk::error_t						Load		(::gpk::vcu8 & input) {
 			gpk_necs(::gpk::loadView(input, Counts));
 			::gpk::vcc					out_view; 
 			uint32_t					offsetByte					= 0;
@@ -50,8 +52,8 @@ namespace gpk
 			return 0;
 		}
 
-		inline	::gpk::error_t				Size						()					const	noexcept	{ return Texts.size(); }
-		inline	::gpk::vcc					View						(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
+		inline	::gpk::error_t				Size		()					const	noexcept	{ return Texts.size(); }
+		inline	::gpk::vcc					View		(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
 		inline	::gpk::error_t				View		(const char* elements, uint16_t count)	{ ::gpk::vcc out_view; return View(elements, count, out_view); }
 
 		::gpk::error_t						Index		(const ::gpk::vcc & elements) {

@@ -1,13 +1,15 @@
 #include "gpk_typeint.h"
 
-#if !defined(GPK_ATMEL)
-#include <memory.h>
+#ifdef GPK_ATMEL
+#	include <string.h>
+#else
+#	include <memory.h>
 #endif
 
 #ifndef GPK_EVAL_H_23627
 #define GPK_EVAL_H_23627
 
-#if defined(GPK_WINDOWS)
+#if defined(GPK_WINDOWS) || defined(GPK_ARDUINO)
 #	if defined(min)
 #		undef min
 #	endif
@@ -38,7 +40,7 @@ namespace gpk
 				return false;
 		return true;
 	}
-#if !defined(GPK_ATMEL)
+//#if !defined(GPK_ATMEL)
 	tplt<>	nodinli	bool	equal	(const double	* other, const double	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(double	)*count); }
 	tplt<>	nodinli	bool	equal	(const float	* other, const float	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(float		)*count); }
 	tplt<>	nodinli	bool	equal	(const int32_t	* other, const int32_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int32_t	)*count); }
@@ -47,7 +49,7 @@ namespace gpk
 	tplt<>	nodinli	bool	equal	(const uint16_t	* other, const uint16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint16_t	)*count); }
 	tplt<>	nodinli	bool	equal	(const int8_t	* other, const int8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int8_t	)*count); }
 	tplt<>	nodinli	bool	equal	(const uint8_t	* other, const uint8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint8_t	)*count); }
-#endif
+//#endif
 
 #pragma pack(pop)
 #ifndef true_if

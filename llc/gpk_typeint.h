@@ -106,7 +106,7 @@ namespace gpk
 	stincxp	TTriplet	dim3		(TValue value)				noexcept			{ return {value, value, value}; }
 }
 
-#if !defined(GPK_ANDROID) && !defined(GPK_ESP32)
+#if !defined(GPK_ANDROID) && !defined(GPK_ESP32) && !defined(GPK_ARDUINO)
 #	define GPK_DEFAULT_OPERATOR(_otherType, ...)	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; }
 #else
 #	define GPK_DEFAULT_OPERATOR(_otherType, ...)	\

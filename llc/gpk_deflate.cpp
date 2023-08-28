@@ -9,7 +9,7 @@
 #include "gpk_noise.h"
 #include "gpk_apod_serialize.h"
 
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 #else
 #	include "deflate.h"
 #endif
@@ -47,7 +47,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 }
 
 ::gpk::error_t			gpk::arrayDeflate		(const ::gpk::vcu8 & inflated, ::gpk::au8 & deflated, const uint32_t chunkSize)	{
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	deflated				= inflated;
 #else
 	z_stream					strm					= {};
@@ -80,7 +80,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 }
 
 ::gpk::error_t			gpk::arrayInflate		(const ::gpk::vcu8 & deflated, ::gpk::au8 & inflated, const uint32_t chunkSize)	{
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	inflated				= deflated;
 #else
 	z_stream					strm					= {};

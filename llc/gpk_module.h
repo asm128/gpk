@@ -9,7 +9,7 @@
 #	define GPK_MODULE_API_IMPORT	__declspec(dllimport)
 #	define WIN32_LEAN_AND_MEAN
 #	include <Windows.h>
-#elif defined(GPK_LINUX) ||  defined(GPK_ANDROID) ||  defined(GPK_ESP32)
+#elif defined(GPK_LINUX) || defined(GPK_ANDROID) || defined(GPK_ESP32) || defined(GPK_ARDUINO)
 #	define GPK_STDCALL
 #	define GPK_MODULE_API_EXPORT	__attribute__((visibility("default")))
 #	define GPK_MODULE_API_IMPORT

@@ -2,8 +2,6 @@
 
 #if defined(GPK_ATMEL)
 #	include <math.h>
-#elif defined(GPK_WINDOWS)
-#	include <math.h>
 #else
 #	include <cmath>
 #endif
@@ -37,6 +35,9 @@ namespace gpk
 	cnstxpr	double		determinant			(double a, double b, double c, double d)					noexcept	{ return a * d - b * c; }
 
 #if defined(GPK_ATMEL)
+#	ifdef abs
+#		undef abs
+#	endif // abs
 	stainli int		abs		(int	f) { return ::abs	(f); }
 	stainli double	abs		(double	f) { return ::abs	(f); }
 	stainli double	fabs	(double	f) { return ::fabs	(f); }

@@ -2,6 +2,21 @@
 #ifndef GPK_PLATFORM_GLOBALS_H_23627
 #define GPK_PLATFORM_GLOBALS_H_23627
 
+#if (!defined(GPK_ANDROID)) && (defined(ANDROID) || defined(__ANDROID__))
+#	define GPK_ANDROID
+#elif (!defined(GPK_LINUX)) && defined(__linux__)
+#	define GPK_LINUX
+#elif (!defined(GPK_ESP32)) && (defined(ESP32) || defined(ARDUINO_ARCH_ESP32))
+#	define GPK_ESP32
+#elif (!defined(GPK_ARDUINO)) && defined(__ARDUINO__)
+#	define GPK_ARDUINO
+#elif (!defined(GPK_WINDOWS)) && (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64))
+#	define GPK_WINDOWS
+#elif !defined(GPK_ST) && !defined(GPK_CMSIS) && !defined(GPK_ESP32) && !defined(GPK_ATMEL) && !defined(GPK_ARDUINO)
+#	error "Unsupported platform."
+#	define GPK_UNKNOWN
+#endif
+
 #if (defined(DEBUG) || defined(_DEBUG)) && (!defined(GPK_DISABLE_DEBUG)) && !defined(GPK_DEBUG_ENABLED)
 #	define GPK_DEBUG_ENABLED
 #	if !defined(USE_DEBUG_BREAK_ON_ERROR_LOG)
@@ -13,16 +28,6 @@
 #	define GPK_MTSUPPORT
 #endif
 
-#if (!defined(GPK_ANDROID)) && (defined(ANDROID) || defined(__ANDROID__))
-#	define GPK_ANDROID
-#elif (!defined(GPK_LINUX)) && defined(__linux__)
-#	define GPK_LINUX
-#elif (!defined(GPK_WINDOWS)) && (defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64))
-#	define GPK_WINDOWS
-#elif !defined(GPK_ST) && !defined(GPK_CMSIS) && !defined(GPK_ESP32) && !defined(GPK_ATMEL)
-#	error "Unsupported platform."
-#	define GPK_UNKNOWN
-#endif
 
 #ifdef __GNUC__
 #	define UNUSED __attribute__((__unused__))
@@ -67,10 +72,9 @@
 #endif
 
 #if defined(GPK_ATMEL)
-#	include "initializer_list.h"
+//#	include "initializer_list.h"
 #else
 #	include <initializer_list>
-#	include <new>
 #endif
 
 // These aliases make keyword width to be consistent and makes the code less verbose.

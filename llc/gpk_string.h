@@ -3,16 +3,17 @@
 
 #if defined GPK_ATMEL
 #	include <string.h>
+#	include <stdarg.h>
+#	include <stdio.h>
 #else
 #	include <cstring>
+#	include <cstdarg>
+#	include <cstdio>
 #endif
 
 #ifndef GPK_STRING_H_23627
 #define GPK_STRING_H_23627
 
-#include <cstddef>
-#include <cstdarg>
-#include <cstdio>
 
 namespace gpk
 {
@@ -58,7 +59,7 @@ namespace gpk
 	}
 
 	//stainli	int	sprintf_s		(char *buffer, size_t bufferSize, const char *format, ...)							{
-	//	va_list			args			= ´{};
+	//	va_list			args			= {};
 	//	va_start(args, format);
 	//	const int		result			= vsprintf(buffer, format, args);
 	//	va_end(args);

@@ -110,10 +110,10 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	snprintf(port, ::gpk::size(port) - 2, "%u", (0 == address.Port) ? 80 : address.Port);
 	addrinfo									* servinfo						= 0;
     int32_t										rv								= getaddrinfo(addr, port, &hints, &servinfo);
-#ifndef GPK_ESP32
-	ree_if(0 != rv, "getaddrinfo: %i-%s.", rv, gai_strerror(rv));
-#else
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	ree_if(0 != rv, "getaddrinfo: %i.", rv);
+#else
+	ree_if(0 != rv, "getaddrinfo: %i-%s.", rv, gai_strerror(rv));
 #endif
 	::gpk::auto_socket_close					sockfd;
 

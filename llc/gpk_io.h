@@ -1,7 +1,11 @@
 #include "gpk_log.h"
 #include "gpk_string.h"
 
-#include <cstdio>
+#ifdef GPK_ARDUINO
+#	include <stdio.h>
+#else
+#	include <cstdio>
+#endif
 
 #ifndef GPK_IO_H_56847984984__
 #define GPK_IO_H_56847984984__

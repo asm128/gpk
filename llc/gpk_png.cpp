@@ -1111,7 +1111,7 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 ::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
 
 
-#ifdef GPK_ESP32
+#if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1;
 stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
 #else
