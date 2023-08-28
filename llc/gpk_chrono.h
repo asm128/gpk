@@ -5,9 +5,15 @@
 
 namespace gpk
 {
+#if defined(GPK_ANDROID) || defined(GPK_LINUX)
+	long long				timeCurrent			();
+	long long				timeCurrentInMs		();
+	long long				timeCurrentInUs		();
+#else
 	int64_t					timeCurrent			();
 	int64_t					timeCurrentInMs		();
 	int64_t					timeCurrentInUs		();
+#endif
 #pragma pack(push, 1)
 	struct STimestamps {	
 		uint64_t				Created				= 0;

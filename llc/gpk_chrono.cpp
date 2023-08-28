@@ -6,18 +6,21 @@
 //
 //    std::cout << nanosec.count() << " nanoseconds since epoch" "\n";
 //    std::cout << nanosec.count()/(1000000000.0 *60.0 *60.0) << " hours since epoch" "\n";
+namespace gpk 
+{
+	using ::std::chrono::time_point;
+	using ::std::chrono::system_clock;
+	using ::std::chrono::microseconds;
+	using ::std::chrono::milliseconds;
+	using ::std::chrono::duration_cast;
 
-int64_t											gpk::timeCurrent							()										{
-	::std::chrono::time_point<::std::chrono::system_clock>		nowclock						= ::std::chrono::system_clock::now();
-	return std::chrono::system_clock::to_time_t(nowclock);
-}
-
-int64_t											gpk::timeCurrentInUs						()										{
-	::std::chrono::time_point<::std::chrono::system_clock>		nowclock						= ::std::chrono::system_clock::now();
-	return ::std::chrono::duration_cast<::std::chrono::microseconds>(nowclock.time_since_epoch()).count();
-}
-
-int64_t											gpk::timeCurrentInMs						()										{
-	::std::chrono::time_point<::std::chrono::system_clock>		nowclock						= ::std::chrono::system_clock::now();
-	return ::std::chrono::duration_cast<::std::chrono::milliseconds>(nowclock.time_since_epoch()).count();
-}
+#if defined(GPK_ANDROID) || defined(GPK_LINUX)
+	long long	timeCurrent		()	{ time_point<system_clock> nowclock = system_clock::now(); return system_clock::to_time_t(nowclock); }
+	long long	timeCurrentInUs	()	{ time_point<system_clock> nowclock = system_clock::now(); return duration_cast<microseconds>(nowclock.time_since_epoch()).count(); }
+	long long	timeCurrentInMs	()	{ time_point<system_clock> nowclock = system_clock::now(); return duration_cast<milliseconds>(nowclock.time_since_epoch()).count(); }
+#else
+	int64_t		timeCurrent		()	{ time_point<system_clock> nowclock = system_clock::now(); return system_clock::to_time_t(nowclock); }
+	int64_t		timeCurrentInUs	()	{ time_point<system_clock> nowclock = system_clock::now(); return duration_cast<microseconds>(nowclock.time_since_epoch()).count(); }
+	int64_t		timeCurrentInMs	()	{ time_point<system_clock> nowclock = system_clock::now(); return duration_cast<milliseconds>(nowclock.time_since_epoch()).count(); }
+#endif
+} // namespace
