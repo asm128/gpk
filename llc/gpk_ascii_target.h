@@ -5,13 +5,7 @@
 #include "gpk_line2.h"
 #include "gpk_circle.h"
 #include "gpk_rect2.h"
-
-#ifdef GPK_ATMEL
-#	include <stdlib.h> // this is required for ::std::swap() //include <MemoryFree.h>
-#else
-#	include <memory> // this is required for ::std::swap()
-#endif
-//#include <memory> // this is required for ::std::swap()
+#include "gpk_swap.h"
 
 #ifndef GPK_ASCII_TARGET_H_23627
 #define GPK_ASCII_TARGET_H_23627
@@ -77,16 +71,7 @@ namespace gpk
 		return 0;
 	}
 
-#ifndef GPK_ATMEL
-	using ::std::swap;
-#else
-	template <class _Ty>
-	inline constexpr void swap(_Ty& _Left, _Ty& _Right) noexcept {
-		_Ty _Tmp = _Left;
-		_Left    = _Right;
-		_Right   = _Tmp;
-	}
-#endif
+
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
 	static	::gpk::error_t	drawLine			(::gpk::SASCIITarget & asciiTarget, const ::gpk::SASCIICell & value, const ::gpk::line2<_tCoord>& line)				{

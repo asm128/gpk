@@ -11,7 +11,7 @@
 #	include <sys/stat.h>
 //#	include <sys/types.h>
 //#	include <unistd.h>
-#else
+#elif !defined(GPK_ATMEL)
 #	include "gpk_string.h"
 #	include <dirent.h>
 #	include <sys/stat.h>
@@ -19,6 +19,39 @@
 //#	include <unistd.h>
 #endif
 
+::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
+	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
+#ifndef GPK_ATMEL
+	char						folder[1024]				= {};
+	int32_t						offsetBar					= -1;
+	do {
+		++offsetBar;
+		offsetBar				= ::gpk::find(separator, pathName, offsetBar);
+		if(0 == offsetBar) {
+			if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
+				break;
+			continue;
+		}
+		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
+		if(0 == strcmp(".", folder))
+			continue;
+#if defined(GPK_WINDOWS)
+		if(!CreateDirectoryA(folder, NULL)) {
+			DWORD						err							= GetLastError();
+			ree_if(err != ERROR_ALREADY_EXISTS, "Failed to create directory: %s. hr: (%u)", folder, err);
+		}
+#else
+		struct stat st = {0};
+		if (stat(folder, &st) == -1) {
+			mkdir(folder, 0700);
+		}
+#endif
+		if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
+			break;
+	} while(true);
+#endif
+	return 0;
+}
 ::gpk::error_t			gpk::findLastSlash			(const ::gpk::vcc & path)		{
 	int32_t						indexOfStartOfFileName0		= ::gpk::rfind('\\', path);
 	int32_t						indexOfStartOfFileName1		= ::gpk::rfind('/', path);
@@ -51,38 +84,6 @@
 	}
 	out_composed.push_back(0);
 	return out_composed.resize(out_composed.size() - 1);
-}
-
-::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
-	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
-	char						folder[1024]				= {};
-	int32_t						offsetBar					= -1;
-	do {
-		++offsetBar;
-		offsetBar				= ::gpk::find(separator, pathName, offsetBar);
-		if(0 == offsetBar) {
-			if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
-				break;
-			continue;
-		}
-		gpk_necall(strncpy_s(folder, pathName.begin(), (offsetBar < 0) ? pathName.size() : offsetBar), "String buffer overflow? Path size: %u.", pathName.size());
-		if(0 == strcmp(".", folder))
-			continue;
-#if defined(GPK_WINDOWS)
-		if(!CreateDirectoryA(folder, NULL)) {
-			DWORD						err							= GetLastError();
-			ree_if(err != ERROR_ALREADY_EXISTS, "Failed to create directory: %s. hr: (%u)", folder, err);
-		}
-#else
-		struct stat st = {0};
-		if (stat(folder, &st) == -1) {
-			mkdir(folder, 0700);
-		}
-#endif
-		if(offsetBar < 0 || offsetBar == (int32_t)pathName.size() - 1)
-			break;
-	} while(true);
-	return 0;
 }
 
 ::gpk::error_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<::gpk::vcc> & output, const ::gpk::vcc extension)					{

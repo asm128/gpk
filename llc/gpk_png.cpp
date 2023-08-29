@@ -8,6 +8,10 @@
 
 #include "gpk_view_color.h"
 
+#ifdef abs
+#	undef abs
+#endif
+
 static	::gpk::error_t	scanLineSizeFromFormat	(int32_t colorType, int32_t bitDepth, int32_t imageWidth)	{
 	int32_t																		scanLineWidth									= imageWidth;
 	switch(bitDepth) {
@@ -862,9 +866,9 @@ static	::gpk::error_t	pngDefilterAverage		(::gpk::vu8 & scanline, const ::gpk::v
 
 static	::gpk::error_t	paethPredictor			(int32_t left, int32_t above, int32_t upperleft)	{
 	int32_t						p						= left + above - upperleft;	// initial estimate
-	int32_t						pa						= ::gpk::abs(p - left		); // distances to a, b, c
-	int32_t						pb						= ::gpk::abs(p - above		); // a = left, b = above, c = upper left
-	int32_t						pc						= ::gpk::abs(p - upperleft	); //
+	int32_t						pa						= ::gpk::abs(int(p - left		)); // distances to a, b, c
+	int32_t						pb						= ::gpk::abs(int(p - above		)); // a = left, b = above, c = upper left
+	int32_t						pc						= ::gpk::abs(int(p - upperleft	)); //
 	if (pa <= pb && pa <= pc)	// return nearest of a,b,c, breaking ties in order a,b,c.
 		return left;
 	return (pb <= pc) ? above : upperleft;

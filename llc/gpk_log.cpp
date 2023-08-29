@@ -2,8 +2,11 @@
 #include "gpk_string.h"
 #include "gpk_size.h"
 
-#include <cstdio>
-
+#ifdef GPK_ATMEL
+#	include <stdio.h>
+#else
+#	include <cstdio>
+#endif
 #if defined(GPK_ANDROID)
 #	include <android/log.h>
 #	define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO , "gpk_app", __VA_ARGS__))

@@ -7,7 +7,8 @@
 #include "gpk_line3.h"
 #include "gpk_circle.h"
 
-#include <memory> // this is required for ::std::swap()
+#include "gpk_swap.h" // this is required for ::gpk::swap()
+
 
 #ifndef BITMAP_TARGET_H_23627
 #define BITMAP_TARGET_H_23627
@@ -53,7 +54,7 @@ namespace gpk
 		const int32_t				yMin					= ::gpk::min(y1, y2);
 		const int32_t				yMax					= ::gpk::max(y1, y2);
 		const int32_t				yStop					= ::gpk::min(yMax, (int32_t)target.metrics().y);
-		int32_t						y						= ::gpk::max(yMin, 0);
+		int32_t						y						= ::gpk::max(yMin, (int32_t)0);
 		for(; y < yStop; ++y)
 			target[y][x]			= value;
 		return y;
@@ -66,7 +67,7 @@ namespace gpk
 		const int32_t				xMin					= ::gpk::min(x1, x2);
 		const int32_t				xMax					= ::gpk::max(x1, x2);
 		const int32_t				xStop					= ::gpk::min(xMax, (int32_t)target.metrics().x);
-		int32_t						x						= ::gpk::max(xMin, 0);
+		int32_t						x						= ::gpk::max(xMin, (int32_t)0);
 		for(; x < xStop; ++x)
 			target[y][x]			= value;
 		return x;
@@ -75,9 +76,9 @@ namespace gpk
 	// This implementation is incorrect. The problem is that it draws borders even if it shuoldn't. I never tested it but I believe that's what the code says.
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	drawRectangleBorder		(::gpk::grid<_tColor> & bitmapTarget, const _tColor & value, const ::gpk::rect2<_tCoord> & rectangle)		{
-		int32_t						yStart					= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.y);
+		int32_t						yStart					= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.y);
 		int32_t						yStop					= ::gpk::min((int32_t)rectangle.Offset.y + (int32_t)rectangle.Size.y, (int32_t)bitmapTarget.metrics().y);
-		int32_t						xStart					= (int32_t)::gpk::max(0, (int32_t)rectangle.Offset.x);
+		int32_t						xStart					= (int32_t)::gpk::max((int32_t)0, (int32_t)rectangle.Offset.x);
 		int32_t						xStop					= ::gpk::min((int32_t)rectangle.Offset.x + (int32_t)rectangle.Size.x, (int32_t)bitmapTarget.metrics().x);
 		if(yStart >= yStop || xStart >= xStop)
 			return 0;
@@ -96,8 +97,8 @@ namespace gpk
 		int32_t						xStop				= ::gpk::min((int32_t)(circle.Center.x + circle.Radius + 2), (int32_t)bitmapTarget.metrics().x);
 		double						radiusSquared		= circle.Radius * circle.Radius;
 		int32_t						pixelsDrawn			= 0;
-		const int32_t				startY				= ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius));
-		const int32_t				startX				= ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius));
+		const int32_t				startY				= ::gpk::max((int32_t)0, (int32_t)(circle.Center.y - circle.Radius));
+		const int32_t				startX				= ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius));
 		for(int32_t y = startY, yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = startX; x < xStop; ++x) {
 			::gpk::n2i32				cellCurrent			= {x, y};
@@ -122,8 +123,8 @@ namespace gpk
 		int32_t						xStop				= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double						radiusSquared		= circle.Radius * circle.Radius;
 		int32_t						pixelsDrawn			= 0;
-		for(int32_t y = ::gpk::max(0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max((int32_t)0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
 			::gpk::n2i32				cellCurrent			= {x, y};
 			double						distanceSquared		= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
@@ -148,8 +149,8 @@ namespace gpk
 		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t				xStop				= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
 		int32_t						pixelsDrawn			= 0;
-		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max(areaMin.y, (int32_t)0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max(areaMin.x, (int32_t)0); x < xStop; ++x) {
 			const ::gpk::n2i16			cellCurrent			= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
 			int							w0					= ::gpk::orient2d({triangle.B.i16(), triangle.A.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -175,8 +176,8 @@ namespace gpk
 		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t				xStop				= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
 		int32_t						pixelsDrawn			= 0;
-		for(int32_t y = ::gpk::max(areaMin.y, 0), yStop = ::gpk::min(areaMax.y, (int32_t)targetMetrics.y); y < yStop; ++y)
-		for(int32_t x = ::gpk::max(areaMin.x, 0); x < xStop; ++x) {
+		for(int32_t y = ::gpk::max(areaMin.y, (int32_t)0), yStop = ::gpk::min(areaMax.y, (int32_t)targetMetrics.y); y < yStop; ++y)
+		for(int32_t x = ::gpk::max(areaMin.x, (int32_t)0); x < xStop; ++x) {
 			const ::gpk::n2i32			cellCurrent			= {x, y};
 			// Determine barycentric coordinates
 			int32_t						w0					= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
@@ -198,6 +199,7 @@ namespace gpk
 
 	typedef	::gpk::error_t	(*gpk_raster_callback)	(void* bitmapTarget, const ::gpk::n2u32 & bitmapMetrics, const ::gpk::n2u32 & cellPos, const void* value);
 
+
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	rasterLine			(::gpk::grid<_tColor> & bitmapTarget, const _tColor & value, const ::gpk::line2<_tCoord> & line, gpk_raster_callback callback)				{
@@ -205,12 +207,12 @@ namespace gpk
 		::gpk::n2f32				B					= line.B.f32();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
-			::std::swap(A.x, A.y);
-			::std::swap(B.x, B.y);
+			::gpk::swap(A.x, A.y);
+			::gpk::swap(B.x, B.y);
 		}
 		if(A.x > B.x) {
-			::std::swap(A.x, B.x);
-			::std::swap(A.y, B.y);
+			::gpk::swap(A.x, B.x);
+			::gpk::swap(A.y, B.y);
 		}
 		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
@@ -219,7 +221,7 @@ namespace gpk
 		int32_t						pixelsDrawn			= 0;
 		if(steep) {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(x, 0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(y, 0, (int32_t)bitmapTarget.metrics().x)) {
+				if(::gpk::in_range(x, (int32_t)0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(y, (int32_t)0, (int32_t)bitmapTarget.metrics().x)) {
 					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(uint32_t)x, (uint32_t)y}, &value);
 					++pixelsDrawn;
 				}
@@ -232,7 +234,7 @@ namespace gpk
 		}
 		else {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(y, 0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(x, 0, (int32_t)bitmapTarget.metrics().x)) {
+				if(::gpk::in_range(y, (int32_t)0, (int32_t)bitmapTarget.metrics().y) && ::gpk::in_range(x, (int32_t)0, (int32_t)bitmapTarget.metrics().x)) {
 					callback(bitmapTarget.begin(), bitmapTarget.metrics(), {(uint32_t)x, (uint32_t)y}, &value);
 					++pixelsDrawn;
 				}
@@ -258,12 +260,12 @@ namespace gpk
 
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
-			::std::swap(A.x, A.y);
-			::std::swap(B.x, B.y);
+			::gpk::swap(A.x, A.y);
+			::gpk::swap(B.x, B.y);
 		}
 		if(A.x > B.x) {
-			::std::swap(A.x, B.x);
-			::std::swap(A.y, B.y);
+			::gpk::swap(A.x, B.x);
+			::gpk::swap(A.y, B.y);
 		}
 		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
@@ -272,7 +274,7 @@ namespace gpk
 		int32_t						pixelsDrawn			= 0;
 		if(steep) {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(x, 0, (int32_t)target.metrics().y) && ::gpk::in_range(y, 0, (int32_t)target.metrics().x)) {
+				if(::gpk::in_range(x, (int32_t)0, (int32_t)target.metrics().y) && ::gpk::in_range(y, (int32_t)0, (int32_t)target.metrics().x)) {
 					target[x][y]				= value;
 					++pixelsDrawn;
 				}
@@ -285,7 +287,7 @@ namespace gpk
 		}
 		else {
 			for(int32_t x = (int32_t)A.x, xStop = (int32_t)B.x; x < xStop; ++x) {
-				if(::gpk::in_range(y, 0, (int32_t)target.metrics().y) && ::gpk::in_range(x, 0, (int32_t)target.metrics().x)) {
+				if(::gpk::in_range(y, (int32_t)0, (int32_t)target.metrics().y) && ::gpk::in_range(x, (int32_t)0, (int32_t)target.metrics().x)) {
 					target[y][x]				= value;
 					++pixelsDrawn;
 				}
@@ -306,12 +308,12 @@ namespace gpk
 		::gpk::n2f32				B					= line.B.f32();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
-			::std::swap(A.x, A.y);
-			::std::swap(B.x, B.y);
+			::gpk::swap(A.x, A.y);
+			::gpk::swap(B.x, B.y);
 		}
 		if(A.x > B.x) {
-			::std::swap(A.x, B.x);
-			::std::swap(A.y, B.y);
+			::gpk::swap(A.x, B.x);
+			::gpk::swap(A.y, B.y);
 		}
 		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
