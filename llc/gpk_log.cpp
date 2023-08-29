@@ -73,28 +73,31 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 		base_debug_print(bufferError, (uint32_t)stringLength);
 		base_debug_print("\n", 1);
 	}
+#ifndef GPK_ATMEL
 	lastSystemError					= errno;
 	if(lastSystemError) {
 		base_debug_print("\n", 1);
-#if defined(GPK_WINDOWS)
+#	if defined(GPK_WINDOWS)
 		::strerror_s(bufferError, (int)lastSystemError);
 		{
-#else
+#	else
 		const char * serr = ::strerror((int)lastSystemError);
 		if(serr) {
 			strcpy_s(bufferError, serr);
-#endif
+#	endif
 			char								bufferError2[256]				= {};
-#if defined(GPK_WINDOWS)
+#	if defined(GPK_WINDOWS)
 			size_t								stringLength					= ::snprintf(bufferError2, ::gpk::size(bufferError2) - 2, "Last system error: 0x%llX '%s'.", lastSystemError, bufferError);
-#else
+#	else
 			size_t								stringLength					= ::snprintf(bufferError2, ::gpk::size(bufferError2) - 2, "Last system error: 0x%llX '%s'.", (unsigned long long)lastSystemError, bufferError);
-#endif
+#	endif
 			base_debug_print(prefix, prefixLen);
 			base_debug_print(bufferError2, (uint32_t)stringLength);
 			base_debug_print("\n", 1);
 		}
 	}
+
+#endif// GPK_ATMEL
 
 #ifdef GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
 #	ifdef GPK_WINDOWS

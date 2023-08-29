@@ -15,6 +15,8 @@ namespace gpk
 {
 #if defined(GPK_ATMEL)
 	int64_t		timeCurrent		()	{ return time(0); }
+	int64_t		timeCurrentInMs	()	{ return time(0) * 1000; }
+	int64_t		timeCurrentInUs	()	{ return time(0) * 1000000; }
 #else
 	using ::std::chrono::time_point;
 	using ::std::chrono::system_clock;
