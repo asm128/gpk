@@ -39,15 +39,15 @@ namespace gpk
 		uint8_t						Multiplier			: 6;
 		uint32_t					Tail				= 0;
 
-		ndincxp uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
-		cnstxpr	uint32_t			ElementCount		()	const	noexcept	{
-			return (0 == TailWidth) ? Multiplier
-				 : (1 == TailWidth) ? (uint32_t(Multiplier) <<  8) + *(uint8_t *)&Tail
-				 : (2 == TailWidth) ? (uint32_t(Multiplier) << 16) + *(uint16_t*)&Tail
-				 : (3 == TailWidth) ? (uint32_t(Multiplier) << 24) + (((*(uint32_t*)this) & 0xFFFFFF00U) >> 8)
-				//: (4 == TailWidth) ? 
-				 : Multiplier 
-				 ;
+		ndincxp	uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
+		nodscrd	uint32_t			ElementCount		()	const	noexcept	{
+			switch(TailWidth) {
+			default:
+			case 0: return Multiplier;
+			case 1: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 1); return (uint32_t(Multiplier) <<  8) + tail; } //*(uint8_t *)&Tail;
+			case 2: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 2); return (uint32_t(Multiplier) << 16) + tail; } //*(uint16_t*)&Tail;;
+			case 3: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 3); return (uint32_t(Multiplier) << 24) + tail; } //(((*(uint32_t*)this) & 0xFFFFFF00U) >> 8);
+			}
 		}
 
 		tplt<tpnm T>

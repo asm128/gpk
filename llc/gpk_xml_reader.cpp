@@ -5,7 +5,7 @@
 #include "gpk_parse.h"
 #include "gpk_file.h"
 
-#define xml_info_printf(...) // info_printf
+#define xml_info_printf(...) ::gpk::dummy(__VA_ARGS__)// info_printf
 
 //stacxpr	::gpk::astatic<const char, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 

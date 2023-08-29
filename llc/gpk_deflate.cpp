@@ -117,8 +117,8 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 	return 0;
 }
 
-stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
-stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= 1024 * 1024 * 4;
+stacxpr	uint32_t		DEFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
+stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 
 ::gpk::error_t			gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcs nameFileSrc)					{
 	::gpk::au8					rawFileInMemory				= {};
