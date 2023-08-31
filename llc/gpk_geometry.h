@@ -8,6 +8,18 @@
 
 namespace gpk
 {
+#ifdef GPK_ATMEL
+	enum SHAPE_TYPE : uint8_t
+		{ SHAPE_TYPE_Custom		= 0
+		, SHAPE_TYPE_Rectangle	= 1
+		, SHAPE_TYPE_Circle		= 2
+		, SHAPE_TYPE_Ring		= 3
+		, SHAPE_TYPE_Cube		= 4
+		, SHAPE_TYPE_Sphere		= 5
+		, SHAPE_TYPE_Cylinder	= 6
+		, SHAPE_TYPE_Torus		= 7
+		};
+#else
 	GDEFINE_ENUM_TYPE(SHAPE_TYPE, uint8_t);
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Custom		, 0);
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Rectangle	, 1);
@@ -17,6 +29,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Sphere		, 5);
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Cylinder		, 6);
 	GDEFINE_ENUM_VALUE(SHAPE_TYPE, Torus		, 7);
+#endif
 
 #pragma pack(push, 1)
 	struct SParamsBox {
@@ -116,6 +129,8 @@ namespace gpk
 	};
 
 #pragma pack(pop)
+
+#ifndef GPK_ATMEL
 	::gpk::error_t		geometryBuildCircleSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsCircle			& params);
 	::gpk::error_t		geometryBuildDisc			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc			& params);
 	::gpk::error_t		geometryBuildBox			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsBox			& params);
@@ -129,7 +144,7 @@ namespace gpk
 	::gpk::error_t		geometryBuildRingSide		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
 	::gpk::error_t		geometryBuildRingFlat		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide		& params);
 	::gpk::error_t		geometryBuildRing			(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsTube			& params);
-
+#endif
 } // namespace
 
 #endif // GPK_GEOMETRY_H_23627
