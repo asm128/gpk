@@ -28,7 +28,7 @@ namespace gpk
 			gui.Controls.SetHidden(IdRoot, false == Editing);
 			return one_if(Editing);
 		}
-		
+#ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
 		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
@@ -98,7 +98,7 @@ namespace gpk
 			});
 			return enterKeyPressed ? INT_MAX : handledControl ? handledControl : 0;
 		}
-
+#endif // GPK_ATMEL
 	};
 
 	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);

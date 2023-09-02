@@ -3,6 +3,8 @@
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
 #include "gpk_parse.h"
+#ifndef GPK_ATMEL
+
 
 #if defined(GPK_WINDOWS)
 #	include <WS2tcpip.h>
@@ -189,6 +191,7 @@
 	return iAddress;
 }
 
+#endif
 ::gpk::error_t			gpk::tcpipAddress		(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4 & remoteIP) {
 	gpk_necs(::gpk::parseIntegerDecimal(strRemotePort, (remoteIP.Port = 0)));
 	if(strRemoteIP.size()) {

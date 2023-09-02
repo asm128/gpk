@@ -299,19 +299,30 @@ namespace gpk
 	stincxp	EnumName			operator |					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
 	tplt<EnumName> const char*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
 
-#define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
-	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName		__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName})
+#ifdef GPK_ATMEL
+#	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue) \
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
 
-#define GDEFINE_ENUM_AVALUE(EnumName, ValueName) static	const EnumName	EnumName##_##ValueName	= (EnumName)::gpk::genum_value_auto<EnumName>({sizeof(#ValueName) - 1, #ValueName})
+#	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription) \
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
 
-#define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)				\
-	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName		__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName}, {sizeof(EnumDescription) - 1, EnumDescription})
+#	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription) \
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
+#else
+#	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
+	stacxpr	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName})
 
-#define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription)				\
-	stacxpr	const EnumName		EnumName##_##ValueName			= (EnumName)(EnumValue);	\
-	static	const EnumName		__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName}, {sizeof(EnumTitle) - 1, EnumTitle}, {sizeof(EnumDescription) - 1, EnumDescription})
+#	define GDEFINE_ENUM_AVALUE(EnumName, ValueName) static	const EnumName	EnumName##_##ValueName	= (EnumName)::gpk::genum_value_auto<EnumName>({sizeof(#ValueName) - 1, #ValueName})
+
+#	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)				\
+	stacxpr	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName}, {sizeof(EnumDescription) - 1, EnumDescription})
+
+#	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription)				\
+	stacxpr	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
+	static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, #ValueName}, {sizeof(EnumTitle) - 1, EnumTitle}, {sizeof(EnumDescription) - 1, EnumDescription})
+#endif
 
 #define GDEFINE_FLAG_TYPE		GDEFINE_ENUM_TYPE
 #define GDEFINE_FLAG_VALUE		GDEFINE_ENUM_VALUE

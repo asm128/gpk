@@ -1,4 +1,7 @@
 #include "gpk_raster_lh.h"
+
+#ifndef GPK_ATMEL
+
 #include <algorithm>
 
 ::gpk::error_t			gpk::pixelBlend			(::gpk::g8bgra pixels, ::gpk::n2i16 position, ::gpk::bgra color)	{
@@ -633,3 +636,5 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	}
 	return countPixels;
 }
+
+#endif

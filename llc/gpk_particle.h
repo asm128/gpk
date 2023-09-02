@@ -1,6 +1,10 @@
 #include "gpk_apod_n3.h"
-#include <cfloat>
 
+#ifndef GPK_ATMEL		
+#	include <cfloat>
+#else
+#	include <float.h>
+#endif
 #ifndef GPK_PARTICLE_H_23627
 #define GPK_PARTICLE_H_23627
 
@@ -161,10 +165,10 @@ namespace gpk
 		::gpk::an3f32					Direction			= {};
 		::gpk::af32						Speed				= {};
 
-		int								IntegrateSpeed		(double secondsLastFrame);
+		::gpk::error_t					IntegrateSpeed		(double secondsLastFrame);
 
-		int								Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed);
-		int								Remove				(int32_t iParticle);
+		::gpk::error_t					Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed);
+		::gpk::error_t					Remove				(int32_t iParticle);
 
 		::gpk::error_t					Load				(::gpk::vcu8 & input);
 		::gpk::error_t					Save				(::gpk::au8 & output)	const;

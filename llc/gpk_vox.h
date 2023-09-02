@@ -236,7 +236,7 @@ namespace gpk
 						::gpk::view<::gpk::bgra>	bgraView = {(::gpk::bgra*)newChunk.Data.begin(), 256};
 						for(uint32_t iColor = 0; iColor < bgraView.size(); ++iColor) {
 							::gpk::bgra									& bgra				= bgraView[iColor];
-							std::swap(bgra.r, bgra.b);
+							::gpk::swap(bgra.r, bgra.b);
 						}
 					}
 

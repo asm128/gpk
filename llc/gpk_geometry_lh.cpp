@@ -1,3 +1,4 @@
+#ifndef GPK_ATMEL
 #include "gpk_geometry_lh.h"
 
 ::gpk::error_t			gpk::geometryBuildTileListFromImage		(::gpk::gc8bgra image, ::gpk::apod<::gpk::STile> & out_tiles, uint32_t imagePitch)	{
@@ -614,3 +615,5 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 	}
 	return 0;
 }
+
+#endif

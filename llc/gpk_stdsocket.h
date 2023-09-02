@@ -2,6 +2,8 @@
 #include "gpk_safe.h"
 #include "gpk_tcpip.h"
 
+#ifndef GPK_ATMEL		
+
 #if defined(GPK_WINDOWS)
 #	include <WinSock2.h>
 #else
@@ -13,7 +15,6 @@
 
 #ifndef GPK_STDSOCKET_H_23627
 #define GPK_STDSOCKET_H_23627
-
 
 #if !defined(GPK_WINDOWS)
 typedef int SOCKET;
@@ -39,4 +40,7 @@ namespace gpk
 	stainli	::gpk::error_t	tcpipAddress				(SOCKET socket, ::gpk::SIPv4 & addr)				{ return tcpipAddress				(socket		, &addr.IP[0], &addr.IP[1], &addr.IP[2], &addr.IP[3], &addr.Port); }
 } // namespace
 
+
 #endif // GPK_STDSOCKET_H_23627
+
+#endif // GPK_ATMEL

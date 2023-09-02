@@ -2,6 +2,8 @@
 #include "gpk_parse.h"
 #include "gpk_stdstring.h"
 
+#ifndef GPK_ATMEL		
+
 #ifdef GPK_WINDOWS
 #	include <WS2tcpip.h>
 #else
@@ -304,3 +306,5 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 //
 // <?xml version="1.0" encoding="utf-8"?>
 // <string xmlns="http://clearforest.com/">string</string>
+
+#endif

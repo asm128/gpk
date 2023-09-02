@@ -1,3 +1,5 @@
+#ifndef GPK_ATMEL
+
 #include "gpk_geometry.h"
 #include "gpk_voxel.h"
 #include "gpk_view_n3.h"
@@ -313,3 +315,5 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	return 0;
 }
 
+
+#endif

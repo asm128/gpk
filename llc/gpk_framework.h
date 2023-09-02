@@ -7,7 +7,7 @@
 #include "gpk_file.h"
 #include "gpk_parse.h"
 
-#if !defined(GPK_ATMEL)
+#ifndef GPK_ATMEL
 #	include <mutex>
 #endif
 
@@ -56,7 +56,9 @@ namespace gpk
 		::gpk::SFrameworkSettings	Settings				= {};
 		::gpk::SJSONFile			JSONConfig				= {};
 
+#ifndef GPK_ATMEL
 		::std::mutex				LockGUI;
+#endif
 
 		inline						SFramework				(::gpk::SRuntimeValues & runtimeValues, ::gpk::vcs fileNameJSONConfig = "gpk_config.json")
 			: RuntimeValues(runtimeValues), FileNameJSONConfig(fileNameJSONConfig) {

@@ -30,8 +30,10 @@
 }
 
 ::gpk::error_t			gpk::environmentBlockFromEnviron(::gpk::apod<char> & environmentBlock)	{
+#ifndef GPK_ATMEL
     for (char **env = environ; *env; ++env)
 		environmentBlock.append(*env, (uint32_t)strlen(*env) + 1);
+#endif
 	environmentBlock.push_back(0);
 
 	// The following function retrieves the process's environment block using GetEnvironmentStrings and adds it to the environmentBlock parameter.
