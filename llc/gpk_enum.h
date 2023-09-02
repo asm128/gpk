@@ -328,31 +328,31 @@ namespace gpk
 {
 #ifdef GPK_ATMEL
 	enum RESULT : ::gpk::error_t
-		{ RESULT_OK                = 0
-		, RESULT_ERROR             = -1
-		, RESULT_BUSY              = -2
-		, RESULT_TIMEOUT           = -3
-		, RESULT_FULL              = -4
-		, RESULT_EMPTY             = -5
-		, RESULT_OVERRUN           = -6
-		, RESULT_NOT_AVAILABLE     = -7
-		, RESULT_NOT_FOUND         = -8
-		, RESULT_INVALID_PARAMETER = -9
-		, RESULT_FORBIDDEN         = -1
+		{ RESULT_OK                = ::gpk::OS_OK                
+		, RESULT_ERROR             = ::gpk::OS_ERROR             
+		, RESULT_BUSY              = ::gpk::OS_BUSY              
+		, RESULT_TIMEOUT           = ::gpk::OS_TIMEOUT           
+		, RESULT_FULL              = ::gpk::OS_FULL              
+		, RESULT_EMPTY             = ::gpk::OS_EMPTY             
+		, RESULT_OVERRUN           = ::gpk::OS_OVERRUN           
+		, RESULT_NOT_AVAILABLE     = ::gpk::OS_NOT_AVAILABLE     
+		, RESULT_NOT_FOUND         = ::gpk::OS_NOT_FOUND         
+		, RESULT_INVALID_PARAMETER = ::gpk::OS_INVALID_PARAMETER 
+		, RESULT_FORBIDDEN         = ::gpk::OS_FORBIDDEN         
 		};
 #else
 	GDEFINE_ENUM_TYPE (RESULT, ::gpk::error_t);
-	GDEFINE_ENUM_VALUE(RESULT, OK                , 0);
-	GDEFINE_ENUM_VALUE(RESULT, ERROR             , -1);
-	GDEFINE_ENUM_VALUE(RESULT, BUSY              , -2);
-	GDEFINE_ENUM_VALUE(RESULT, TIMEOUT           , -3);
-	GDEFINE_ENUM_VALUE(RESULT, FULL              , -4);
-	GDEFINE_ENUM_VALUE(RESULT, EMPTY             , -5);
-	GDEFINE_ENUM_VALUE(RESULT, OVERRUN           , -6);
-	GDEFINE_ENUM_VALUE(RESULT, NOT_AVAILABLE     , -7);
-	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , -8);
-	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , -9);
-	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , -10);
+	GDEFINE_ENUM_VALUE(RESULT, OK                , ::gpk::OS_OK                );
+	GDEFINE_ENUM_VALUE(RESULT, ERROR             , ::gpk::OS_ERROR             );
+	GDEFINE_ENUM_VALUE(RESULT, BUSY              , ::gpk::OS_BUSY              );
+	GDEFINE_ENUM_VALUE(RESULT, TIMEOUT           , ::gpk::OS_TIMEOUT           );
+	GDEFINE_ENUM_VALUE(RESULT, FULL              , ::gpk::OS_FULL              );
+	GDEFINE_ENUM_VALUE(RESULT, EMPTY             , ::gpk::OS_EMPTY             );
+	GDEFINE_ENUM_VALUE(RESULT, OVERRUN           , ::gpk::OS_OVERRUN           );
+	GDEFINE_ENUM_VALUE(RESULT, NOT_AVAILABLE     , ::gpk::OS_NOT_AVAILABLE     );
+	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , ::gpk::OS_NOT_FOUND         );
+	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , ::gpk::OS_INVALID_PARAMETER );
+	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , ::gpk::OS_FORBIDDEN         );
 #endif
 }
 
