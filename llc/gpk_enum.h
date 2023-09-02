@@ -28,7 +28,7 @@ namespace gpk
 		::gpk::avcc					Names					= {};
 		::gpk::avcc					Titles					= {};
 		::gpk::avcc					Descriptions			= {};
-		
+
 		stainli	enum_definition<T>&	get						()															{
 			static	enum_definition<T>		valueRegistry;
 			return valueRegistry;
@@ -200,12 +200,12 @@ namespace gpk
 			for(uint32_t i=0, count = Names.size(); i < count; ++i) {
 				ree_if(name == Names[i], "Enumeration value already defined! Type: '%s'. Value: 0x%llX. Previous name: %s. New name: %s. Second definition ignored..."
 					, Name		.begin()
-					, (uint64_t)Values[i]	
+					, (uint64_t)Values[i]
 					, Names[i]	.begin()
 					, name		.begin()
 					);
 			}
-			const T							value					= (T)Values.size();	
+			const T							value					= (T)Values.size();
 			uint32_t						newIndex				= Values.push_back(value);
 			gpk_necs(newIndex);
 			gpk_necs(Names.push_back(name));
@@ -228,7 +228,7 @@ namespace gpk
 	tplt <tpnm _tEnum>
 	struct genum_value {
 		typedef	_tEnum		T;
-		
+
 		T					Value					= ::gpk::enum_definition<T>::INVALID_VALUE;
 		::gpk::vcc			Name					= INVALID_ENUM_VALUE_STR;
 		::gpk::vcc			Title					= INVALID_ENUM_VALUE_STR;
@@ -251,7 +251,7 @@ namespace gpk
 	tplt <tpnm TEnum>	TEnum	get_value_camelcased(const ::gpk::vcc & uncased)			{
 		::gpk::achar							camelCased;
 		::gpk::camelCase(uncased, camelCased);
-		return ::gpk::get_enum<TEnum>().get_value(camelCased); 
+		return ::gpk::get_enum<TEnum>().get_value(camelCased);
 	}
 	tplt <tpnm TEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<TEnum>().Values.size(); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_label		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
@@ -320,6 +320,40 @@ namespace gpk
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
-#define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: %s (0x%X)(%X)(%c)", ::gpk::get_enum_namep(valueUnhandled), ::gpk::get_value_namep(valueUnhandled), valueUnhandled, valueUnhandled, (char)valueUnhandled)
+#define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: (0x%X)(%X)(%c) %s", ::gpk::get_enum_namep(valueUnhandled), valueUnhandled, valueUnhandled, (char)valueUnhandled, ::gpk::get_value_namep(valueUnhandled))
+#define gpk_enum_value_info(_enumValue)					info_printf("'%s' value: (0x%X)(%X)(%c) '%s'", ::gpk::get_enum_namep(_enumValue), _enumValue, _enumValue, (char)_enumValue, ::gpk::get_value_namep(_enumValue))
+
+
+namespace gpk
+{
+#ifdef GPK_ATMEL
+	enum RESULT : ::gpk::error_t
+		{ RESULT_OK                = 0
+		, RESULT_ERROR             = -1
+		, RESULT_BUSY              = -2
+		, RESULT_TIMEOUT           = -3
+		, RESULT_FULL              = -4
+		, RESULT_EMPTY             = -5
+		, RESULT_OVERRUN           = -6
+		, RESULT_NOT_AVAILABLE     = -7
+		, RESULT_NOT_FOUND         = -8
+		, RESULT_INVALID_PARAMETER = -9
+		, RESULT_FORBIDDEN         = -1
+		};
+#else
+	GDEFINE_ENUM_TYPE (RESULT, ::gpk::error_t);
+	GDEFINE_ENUM_VALUE(RESULT, OK                , 0);
+	GDEFINE_ENUM_VALUE(RESULT, ERROR             , -1);
+	GDEFINE_ENUM_VALUE(RESULT, BUSY              , -2);
+	GDEFINE_ENUM_VALUE(RESULT, TIMEOUT           , -3);
+	GDEFINE_ENUM_VALUE(RESULT, FULL              , -4);
+	GDEFINE_ENUM_VALUE(RESULT, EMPTY             , -5);
+	GDEFINE_ENUM_VALUE(RESULT, OVERRUN           , -6);
+	GDEFINE_ENUM_VALUE(RESULT, NOT_AVAILABLE     , -7);
+	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , -8);
+	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , -9);
+	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , -10);
+#endif
+}
 
 #endif // GPK_ENUM_H_23627

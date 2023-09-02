@@ -42,8 +42,11 @@ namespace gpk
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_event	, 3);
 #endif
 	typedef ::gpk::SEvent            <::gpk::SYSTEM_EVENT>	SSystemEvent;
+	typedef ::gpk::SEView            <::gpk::SYSTEM_EVENT>	SEViewSystem;
 	typedef ::gpk::FEventHandler     <::gpk::SYSTEM_EVENT>	FSystemEvent;
 	typedef ::gpk::FEventHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEventConst;
+	typedef ::gpk::FEViewHandler     <::gpk::SYSTEM_EVENT>	FSystemEView;
+	typedef ::gpk::FEViewHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEViewConst;
 
 	typedef ::gpk::pobj <::gpk::SSystemEvent>				PSystemEvent;
 	typedef ::gpk::apobj<::gpk::SSystemEvent>				TQueueSystemEvent;
