@@ -289,14 +289,14 @@ namespace gpk
 // Defines the enumeration type, the invalid value (-1) and the flag operators
 #define GDEFINE_ENUM_TYPE(EnumName, IntType)																			\
 	enum EnumName : IntType {};				\
-	static	const uint32_t			__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);	\
-	stincxp	EnumName				operator &					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
-	stincxp	EnumName				operator ~					(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
-	stincxp	EnumName				operator ^					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
-	stainli	EnumName&				operator |=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
-	stainli	EnumName&				operator &=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
-	stainli	EnumName&				operator ^=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
-	stincxp	EnumName				operator |					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
+	static	const uint32_t		__sei_##EnumName##enumInit	= ::gpk::enum_definition<EnumName>::init(#EnumName);	\
+	stincxp	EnumName			operator &					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a & (IntType)b);				}	\
+	stincxp	EnumName			operator ~					(EnumName  a)				noexcept	{ return (EnumName)		(~(IntType)a);					}	\
+	stincxp	EnumName			operator ^					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a ^ (IntType)b);				}	\
+	stainli	EnumName&			operator |=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) |= (IntType)b); }	\
+	stainli	EnumName&			operator &=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
+	stainli	EnumName&			operator ^=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
+	stincxp	EnumName			operator |					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
 	tplt<EnumName> const char*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
 
 #define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\

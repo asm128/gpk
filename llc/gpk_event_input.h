@@ -7,7 +7,9 @@
 namespace gpk
 {	
 	GDEFINE_ENUM_TYPE(EVENT_TEXT, uint8_t);
-	GDEFINE_ENUM_VALUE(EVENT_TEXT, Char, 0);
+	GDEFINE_ENUM_VALUE(EVENT_TEXT, Char		, 0);
+	GDEFINE_ENUM_VALUE(EVENT_TEXT, Position	, 1);
+	GDEFINE_ENUM_VALUE(EVENT_TEXT, Cursor	, 2);
 	stainli	::gpk::error_t	eventEnqueueTextChar		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint32_t utf8)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Text, ::gpk::EVENT_TEXT_Char, utf8); }
 
 	GDEFINE_ENUM_TYPE (EVENT_KEYBOARD, uint8_t);

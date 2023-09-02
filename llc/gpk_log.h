@@ -51,19 +51,28 @@ namespace gpk
 #	define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
 #endif
 
-	tplt<size_t prefixLength, tpnm... TArgs>
 #if defined(GPK_WINDOWS)
+	tplt<size_t prefixLength, tpnm... TArgs>
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
 		char					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
 		base_debug_print(timeString, (int)stringLength);
 		base_debug_print(prefix, prefixLength);
 #else
+#ifndef GPK_ATMEL
+	tplt<size_t prefixLength, tpnm... TArgs>
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* function, const char* format, const TArgs... args)			{
 		char					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
 		base_debug_print(timeString, (int)stringLength);
-		base_debug_print(prefix, prefixLength);
+#else
+	tplt<tpnm... TArgs>
+	static	void		_gpk_debug_printf				(int severity, const char * prefix, const char* function, const char* format, const TArgs... args)			{
+		char					timeString	[64]				= {};
+		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
+		base_debug_print(timeString, (int)stringLength);
+#endif
+		base_debug_print(prefix, strlen(prefix));
 		base_debug_print("{", 1);
 		base_debug_print(function, strlen(function));
 		base_debug_print("}:", 2);
@@ -92,12 +101,18 @@ namespace gpk
 #	else
 		char					customDynamicString	[1024 * 12]	= {};
 #	endif
+
+//#ifdef GPK_ATMEL
+//		size_t					stringLength;
+//#endif
 		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 		base_debug_print(customDynamicString, (int)stringLength);
 #endif
+#ifndef GPK_ATMEL
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
+#endif
 	}
 	tplt<tpnm... _tArgs>
 	stincxp	void		dummy		(_tArgs&&...)		{}
@@ -109,7 +124,11 @@ namespace gpk
 #define	GPK_TOSTRING(x)  GPK_STRINGIFY(x)
 
 #if !defined(GPK_WINDOWS)
+#ifdef GPK_ATMEL
+#	define debug_printf(...) ::gpk::dummy(__VA_ARGS__)  //(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
+#else
 #	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
+#endif
 #else
 #	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #endif

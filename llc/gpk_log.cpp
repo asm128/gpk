@@ -38,6 +38,9 @@ void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
 #elif defined(GPK_ANDROID)
 			LOGI("%s", text);
 #elif defined(GPK_ST)
+#elif defined(GPK_ATMEL)
+#elif defined(GPK_ESP32)
+#elif defined(GPK_ARDUINO)
 #else
 			printf("%s", text);
 #endif
@@ -45,6 +48,7 @@ void					gpk::_base_debug_print			(const char* text, uint32_t textLen)									{
 	}
 }
 
+#ifndef GPK_ATMEL
 static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
 #if defined(GPK_WINDOWS)
 	rees_if(0 == buffer);
@@ -58,8 +62,10 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 	return 0;
 #endif
 }
+#endif
 
 		void					gpk::_gpk_print_system_errors	(const char* prefix, uint32_t prefixLen)								{
+#ifndef GPK_ATMEL
 	char								bufferError[256]				= {};
 #if defined(GPK_WINDOWS)
 	int64_t								lastSystemError					= ::GetLastError() & 0xFFFFFFFFFFFFFFFFLL;
@@ -110,4 +116,5 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 #endif
 
 	gpkClearSystemError();
+#endif
 }

@@ -78,6 +78,10 @@
 #endif
 
 // These aliases make keyword width to be consistent and makes the code less verbose.
+#define vltl	volatile
+#define tpnm	typename
+#define tplt	template
+
 #define cnstxpr	constexpr
 #define inlcxpr	inline cnstxpr
 #define stacxpr	static cnstxpr
@@ -92,8 +96,6 @@
 #define nodstxp nodscrd stacxpr
 #define ndstinx nodstin cnstxpr
 
-#define tpnm	typename
-#define tplt	template
 
 namespace gpk
 {
