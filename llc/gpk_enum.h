@@ -337,21 +337,6 @@ namespace gpk
 
 namespace gpk
 {
-#ifdef GPK_ATMEL
-	enum RESULT : ::gpk::error_t
-		{ RESULT_OK                = ::gpk::OS_OK                
-		, RESULT_ERROR             = ::gpk::OS_ERROR             
-		, RESULT_BUSY              = ::gpk::OS_BUSY              
-		, RESULT_TIMEOUT           = ::gpk::OS_TIMEOUT           
-		, RESULT_FULL              = ::gpk::OS_FULL              
-		, RESULT_EMPTY             = ::gpk::OS_EMPTY             
-		, RESULT_OVERRUN           = ::gpk::OS_OVERRUN           
-		, RESULT_NOT_AVAILABLE     = ::gpk::OS_NOT_AVAILABLE     
-		, RESULT_NOT_FOUND         = ::gpk::OS_NOT_FOUND         
-		, RESULT_INVALID_PARAMETER = ::gpk::OS_INVALID_PARAMETER 
-		, RESULT_FORBIDDEN         = ::gpk::OS_FORBIDDEN         
-		};
-#else
 	GDEFINE_ENUM_TYPE (RESULT, ::gpk::error_t);
 	GDEFINE_ENUM_VALUE(RESULT, OK                , ::gpk::OS_OK                );
 	GDEFINE_ENUM_VALUE(RESULT, ERROR             , ::gpk::OS_ERROR             );
@@ -364,7 +349,6 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , ::gpk::OS_NOT_FOUND         );
 	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , ::gpk::OS_INVALID_PARAMETER );
 	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , ::gpk::OS_FORBIDDEN         );
-#endif
 }
 
 #endif // GPK_ENUM_H_23627

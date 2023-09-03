@@ -1,5 +1,6 @@
 #include "gpk_error.h"
 #include "gpk_chrono.h" 
+#include "gpk_size.h"
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>
@@ -8,6 +9,10 @@
 #else
 #	include "gpk_eval.h"
 #	include <cstdio>
+#endif
+
+#ifdef GPK_ARDUINO
+#	include <WString.h>
 #endif
 
 #ifndef GPK_LOG_H_23627
@@ -37,18 +42,26 @@
 #endif
 namespace gpk
 {
-	typedef	void		(*debug_print_t)				(const char* text, uint32_t textLen);
+	typedef	void		(*log_write_t)				(const char * text, uint32_t textLen);
+	typedef	void		(*log_print_t)				(const char * text);
 
-	void				_gpk_print_system_errors		(const char* prefix, uint32_t prefixLen);
-	void				_base_debug_print				(const char* text, uint32_t textLen);
+	void				_gpk_print_system_errors		(const char * prefix, uint32_t prefixLen);
+	void				_base_log_print					(const char * text);
+	void				_base_log_write					(const char * text, uint32_t textLen);
 
-#if defined(GPK_STDOUT_LOG_ENABLED)
-#	define base_debug_print(prefix, prefixLen)	do {			\
-		::gpk::_base_debug_print(prefix, (uint32_t)prefixLen);	\
-		printf("%s", prefix);								\
-	} while(0)
-#else 
-#	define base_debug_print(prefix, prefixLen)	::gpk::_base_debug_print(prefix, (uint32_t)prefixLen)
+#ifdef GPK_ARDUINO
+	typedef	void		(*log_print_P_t)				(const __FlashStringHelper * text);
+	void				_base_log_print_P				(const __FlashStringHelper * text);
+#endif
+
+#define base_log_write(text, textLen)	::gpk::_base_log_write(text, textLen)
+#define base_log_print(text)			::gpk::_base_log_print(text)
+#ifdef GPK_ARDUINO
+#	define base_log_print_F(text)			::gpk::_base_log_print_P(F(text))
+#	define base_log_print_P(text)			::gpk::_base_log_print_P(text)
+#	define condition_print(condition)		::gpk::_base_log_print_P(F("\n" #condition "\n"))
+#else
+#	define condition_print(condition)		::gpk::_base_log_print("\n" #condition "\n")
 #endif
 
 #if defined(GPK_WINDOWS)
@@ -56,28 +69,27 @@ namespace gpk
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* format, const TArgs... args)			{
 		char					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
-		base_debug_print(timeString, (int)stringLength);
-		base_debug_print(prefix, prefixLength);
+		base_log_write(timeString, (int)stringLength);
+		base_log_write(prefix, prefixLength);
 #else
 #ifndef GPK_ATMEL
 	tplt<size_t prefixLength, tpnm... TArgs>
 	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char* function, const char* format, const TArgs... args)			{
 		char					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
-		base_debug_print(timeString, (int)stringLength);
+		base_log_write(timeString, (int)stringLength);
+		base_log_write(prefix, strlen(prefix));
+		base_log_write("{", 1);
+		base_log_write(function, strlen(function));
+		base_log_write("}:", 2);
 #else
 	tplt<tpnm... TArgs>
-	static	void		_gpk_debug_printf				(int severity, const char * prefix, const char* function, const char* format, const TArgs... args)			{
-		char					timeString	[64]				= {};
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
-		base_debug_print(timeString, (int)stringLength);
+	static	void		_gpk_debug_printf				(const char* function, const __FlashStringHelper* format, const TArgs... args)			{
+		base_log_print_F("{");
+		base_log_print(function);
+		base_log_print_F("}:");
 #endif
-		base_debug_print(prefix, strlen(prefix));
-		base_debug_print("{", 1);
-		base_debug_print(function, strlen(function));
-		base_debug_print("}:", 2);
 #endif
-
 #if defined(GPK_ESP32) 
 		if(format) {
 			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
@@ -85,7 +97,7 @@ namespace gpk
 				stringLength	= snprintf(customDynamicString, bufferSize - 2, format, args...);
 				customDynamicString[::gpk::min(stringLength, bufferSize - 2)] = '\n';
 				customDynamicString[::gpk::min(stringLength + 1, bufferSize - 1)] = 0;
-				base_debug_print(customDynamicString, (int)stringLength);
+				base_log_write(customDynamicString, (int)stringLength);
 				free(customDynamicString);
 			}
 		}
@@ -97,18 +109,20 @@ namespace gpk
 #		ifdef max
 #			undef max
 #		endif
-		char					customDynamicString	[128]		= {};
+		char					customDynamicString	[64]		= {};
 #	else
 		char					customDynamicString	[1024 * 12]	= {};
 #	endif
 
-//#ifdef GPK_ATMEL
-//		size_t					stringLength;
-//#endif
+#ifdef GPK_ATMEL
+		size_t 					stringLength					= snprintf_P(customDynamicString, sizeof(customDynamicString) - 1, (const char*)format, args...);
+#else
 		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
-		base_debug_print(customDynamicString, (int)stringLength);
 #endif
+		base_log_write(customDynamicString, (uint32_t)stringLength);
+#endif
+
 #ifndef GPK_ATMEL
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
@@ -125,7 +139,7 @@ namespace gpk
 
 #if !defined(GPK_WINDOWS)
 #ifdef GPK_ATMEL
-#	define debug_printf(...) ::gpk::dummy(__VA_ARGS__)  //(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
+#	define debug_printf(severity, severityStr, format, ...)	do{ base_log_print_F(#severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")"); ::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__); base_log_print_F("\n"); } while(0) //::gpk::_gpk_debug_printf("(" GPK_TOSTRING(__LINE__) ")", "")
 #else
 #	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
 #endif
@@ -212,11 +226,11 @@ namespace gpk
 #ifndef gthrow_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_THROW
 #if !defined(GPK_WINDOWS)
-#		define gthrow_if(condition, format, ...)	if(condition) { error_printf("Condition: '%s'.", #condition); error_printf(format, ##__VA_ARGS__); gpk_throw("");	} 
-#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'.", #condition); gpk_throw("");	} 
+#		define gthrow_if(condition, format, ...)	if(condition) { condition_print(#condition); error_printf(format, ##__VA_ARGS__); gpk_throw("");	} 
+#		define gsthrow_if(condition)				if(condition) { condition_print(#condition); gpk_throw("");	} 
 #	else
-#		define gthrow_if(condition, format, ...)	if(condition) { error_printf("Condition: '%s'.", #condition); error_printf(format, __VA_ARGS__); gpk_throw(""); } 
-#		define gsthrow_if(condition)				if(condition) { error_printf("Condition: '%s'.", #condition); gpk_throw("");	}													  
+#		define gthrow_if(condition, format, ...)	if(condition) { condition_print(#condition); error_printf(format, __VA_ARGS__); gpk_throw(""); } 
+#		define gsthrow_if(condition)				if(condition) { condition_print(#condition); gpk_throw("");	}													  
 #	endif
 #	else
 //#	pragma warning(disable:4552)	// this was required because "condition" may have had no side effect.
@@ -227,17 +241,17 @@ namespace gpk
 
 #ifndef gerror_if
 #	ifndef GPK_NULLIFY_CONDITIONAL_LOG
-#		define gserror_if(condition)							if(condition) { error_printf	("Condition: '%s'.", #condition); }
-#		define gswarn_if(condition)								if(condition) { warning_printf	("Condition: '%s'.", #condition); }
-#		define gsinfo_if(condition)								if(condition) { info_printf		("Condition: '%s'.", #condition); }
+#		define gserror_if(condition)							if(condition) { condition_print(#condition); }
+#		define gswarn_if(condition)								if(condition) { condition_print(#condition); }
+#		define gsinfo_if(condition)								if(condition) { condition_print(#condition); }
 #		if !defined(GPK_WINDOWS)
-#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf	(format, ##__VA_ARGS__);} 
-#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf(format, ##__VA_ARGS__);} 
-#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf	(format, ##__VA_ARGS__);} 
+#			define gerror_if(condition, format, ...)				if(condition) { condition_print(#condition); error_printf	(format, ##__VA_ARGS__);} 
+#			define gwarn_if(condition, format, ...)					if(condition) { condition_print(#condition); warning_printf(format, ##__VA_ARGS__);} 
+#			define ginfo_if(condition, format, ...)					if(condition) { condition_print(#condition); info_printf	(format, ##__VA_ARGS__);} 
 #		else							
-#			define gerror_if(condition, format, ...)				if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf	(format, __VA_ARGS__);	} 
-#			define gwarn_if(condition, format, ...)					if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf(format, __VA_ARGS__);	} 
-#			define ginfo_if(condition, format, ...)					if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf	(format, __VA_ARGS__);	} 
+#			define gerror_if(condition, format, ...)				if(condition) { condition_print(#condition); error_printf	(format, __VA_ARGS__);	} 
+#			define gwarn_if(condition, format, ...)					if(condition) { condition_print(#condition); warning_printf(format, __VA_ARGS__);	} 
+#			define ginfo_if(condition, format, ...)					if(condition) { condition_print(#condition); info_printf	(format, __VA_ARGS__);	} 
 #		endif
 #	else
 //#	pragma warning(disable:4552)	// this is required because "condition" may have no side effect.
@@ -252,45 +266,45 @@ namespace gpk
 #endif
 
 #ifndef ret_gerror_if
-#	define ret_gserror_if(condition)						if(condition) { error_printf	("Condition: '%s'.", #condition); return; } 
-#	define ret_gswarn_if(condition)							if(condition) { warning_printf	("Condition: '%s'.", #condition); return; } 
-#	define ret_gsinfo_if(condition)							if(condition) { info_printf		("Condition: '%s'.", #condition); return; } 
-#	define ret_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); return;	} 
-#	define ret_gwarn_if(condition, format, ...)				if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); return;	} 
-#	define ret_ginfo_if(condition, format, ...)				if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); return;	} 
+#	define ret_gserror_if(condition)						if(condition) { condition_print(#condition); return; } 
+#	define ret_gswarn_if(condition)							if(condition) { condition_print(#condition); return; } 
+#	define ret_gsinfo_if(condition)							if(condition) { condition_print(#condition); return; } 
+#	define ret_gerror_if(condition, format, ...)			if(condition) { condition_print(#condition); error_printf	(format, __VA_ARGS__); return;	} 
+#	define ret_gwarn_if(condition, format, ...)				if(condition) { condition_print(#condition); warning_printf	(format, __VA_ARGS__); return;	} 
+#	define ret_ginfo_if(condition, format, ...)				if(condition) { condition_print(#condition); info_printf	(format, __VA_ARGS__); return;	} 
 #endif
 
 #ifndef break_gerror_if
-#	define break_gserror_if(condition)						if(condition) { error_printf	("Condition: '%s'.", #condition); break;	}
-#	define break_gswarn_if(condition)						if(condition) { warning_printf	("Condition: '%s'.", #condition); break;	}
-#	define break_gsinfo_if(condition)						if(condition) { info_printf		("Condition: '%s'.", #condition); break;	}
-#	define break_gsverbose_if(condition)					if(condition) { verbose_printf	("Condition: '%s'.", #condition); break;	}
-#	define break_gerror_if(condition, format, ...)			if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); break;	}
-#	define break_gwarn_if(condition, format, ...)			if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); break;	}
-#	define break_ginfo_if(condition, format, ...)			if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); break;	}
-#	define break_gverbose_if(condition, format, ...)		if(condition) { verbose_printf	("Condition: '%s'.", #condition); verbose_printf	(format, __VA_ARGS__); break;	}
+#	define break_gserror_if(condition)						if(condition) { condition_print(#condition); break;	}
+#	define break_gswarn_if(condition)						if(condition) { condition_print(#condition); break;	}
+#	define break_gsinfo_if(condition)						if(condition) { condition_print(#condition); break;	}
+#	define break_gsverbose_if(condition)					if(condition) { condition_print(#condition); break;	}
+#	define break_gerror_if(condition, format, ...)			if(condition) { condition_print(#condition); error_printf	(format, __VA_ARGS__); break;	}
+#	define break_gwarn_if(condition, format, ...)			if(condition) { condition_print(#condition); warning_printf	(format, __VA_ARGS__); break;	}
+#	define break_ginfo_if(condition, format, ...)			if(condition) { condition_print(#condition); info_printf	(format, __VA_ARGS__); break;	}
+#	define break_gverbose_if(condition, format, ...)		if(condition) { condition_print(#condition); verbose_printf	(format, __VA_ARGS__); break;	}
 #endif
 
 #ifndef continue_gerror_if
-#	define continue_gserror_if(condition)					if(condition) { error_printf	("Condition: '%s'.", #condition); continue; }
-#	define continue_gswarn_if(condition)					if(condition) { warning_printf	("Condition: '%s'.", #condition); continue; }
-#	define continue_gsinfo_if(condition)					if(condition) { info_printf		("Condition: '%s'.", #condition); continue; }
-#	define continue_gerror_if(condition, format, ...)		if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); continue; }
-#	define continue_gwarn_if(condition, format, ...)		if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); continue; }
-#	define continue_ginfo_if(condition, format, ...)		if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); continue; }
+#	define continue_gserror_if(condition)					if(condition) { condition_print(#condition); continue; }
+#	define continue_gswarn_if(condition)					if(condition) { condition_print(#condition); continue; }
+#	define continue_gsinfo_if(condition)					if(condition) { condition_print(#condition); continue; }
+#	define continue_gerror_if(condition, format, ...)		if(condition) { condition_print(#condition); error_printf	(format, __VA_ARGS__); continue; }
+#	define continue_gwarn_if(condition, format, ...)		if(condition) { condition_print(#condition); warning_printf	(format, __VA_ARGS__); continue; }
+#	define continue_ginfo_if(condition, format, ...)		if(condition) { condition_print(#condition); info_printf	(format, __VA_ARGS__); continue; }
 #endif
 
 #ifndef retval_gerror_if
-#	define retval_gserror_if(retVal, condition)					if(condition) { error_printf	("Condition: '%s'.", #condition); return retVal; } 
-#	define retval_gswarn_if(retVal, condition)					if(condition) { warning_printf	("Condition: '%s'.", #condition); return retVal; } 
-#	define retval_gsinfo_if(retVal, condition)					if(condition) { info_printf		("Condition: '%s'.", #condition); return retVal; } 
-#	define retval_gsverbose_if(retVal, condition)				if(condition) { verbose_printf	("Condition: '%s'.", #condition); return retVal; } 
-#	define retval_gsalways_if(retVal, condition)				if(condition) { always_printf	("Condition: '%s'.", #condition); return retVal; } 
-#	define retval_gerror_if(retVal, condition, format, ...)		if(condition) { error_printf_nb	("Condition: '%s'.", #condition); error_printf		(format, __VA_ARGS__); return retVal; } 
-#	define retval_gwarn_if(retVal, condition, format, ...)		if(condition) { warning_printf	("Condition: '%s'.", #condition); warning_printf	(format, __VA_ARGS__); return retVal; } 
-#	define retval_ginfo_if(retVal, condition, format, ...)		if(condition) { info_printf		("Condition: '%s'.", #condition); info_printf		(format, __VA_ARGS__); return retVal; } 
-#	define retval_gverbose_if(retVal, condition, format, ...)	if(condition) { verbose_printf	("Condition: '%s'.", #condition); verbose_printf	(format, __VA_ARGS__); return retVal; } 
-#	define retval_galways_if(retVal, condition, format, ...)	if(condition) { always_printf	("Condition: '%s'.", #condition); always_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_gserror_if(retVal, condition)					if(condition) { condition_print(#condition); return retVal; } 
+#	define retval_gswarn_if(retVal, condition)					if(condition) { condition_print(#condition); return retVal; } 
+#	define retval_gsinfo_if(retVal, condition)					if(condition) { condition_print(#condition); return retVal; } 
+#	define retval_gsverbose_if(retVal, condition)				if(condition) { condition_print(#condition); return retVal; } 
+#	define retval_gsalways_if(retVal, condition)				if(condition) { condition_print(#condition); return retVal; } 
+#	define retval_gerror_if(retVal, condition, format, ...)		if(condition) { condition_print(#condition); error_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_gwarn_if(retVal, condition, format, ...)		if(condition) { condition_print(#condition); warning_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_ginfo_if(retVal, condition, format, ...)		if(condition) { condition_print(#condition); info_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_gverbose_if(retVal, condition, format, ...)	if(condition) { condition_print(#condition); verbose_printf	(format, __VA_ARGS__); return retVal; } 
+#	define retval_galways_if(retVal, condition, format, ...)	if(condition) { condition_print(#condition); always_printf	(format, __VA_ARGS__); return retVal; } 
 #endif
 
 #ifndef retnul_gerror_if
@@ -337,7 +351,8 @@ namespace gpk
 #	define gpk_rve_ecall(retVal, gpkl_call, format, ...) do {				\
 		::gpk::error_t gpk_errCall_ = (gpkl_call);  						\
 		if(gpk_errCall_ < 0) {												\
-			debug_printf(0, "error", "%s: 0x%X.", #gpkl_call, gpk_errCall_);																			\
+			condition_print(gpkl_call);										\
+			debug_printf(0, "error", "0x%X.", gpk_errCall_);				\
 			error_printf(format, __VA_ARGS__); 								\
 			return retVal; 													\
 		}																	\
@@ -350,7 +365,8 @@ namespace gpk
 #	define gpk_rve_ewcall(retVal, gpkl_call, format, ...) do {				\
 		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 					\
 			if(gpk_errCall_ < 0) {											\
-				debug_printf(0, "error", "%s: 0x%X.", #gpkl_call, gpk_errCall_);																		\
+				condition_print(gpkl_call);										\
+				debug_printf(0, "error", "0x%X.", gpk_errCall_);				\
 				error_printf(format, __VA_ARGS__); 							\
 				return retval; 												\
 			}																\

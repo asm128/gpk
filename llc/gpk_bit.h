@@ -19,9 +19,11 @@ namespace gpk
 		return _tBit((bitsThatMatch == bitsToTest) ? 0 : (state | bitsToTest) ? state | bitsToTest : -1);
 	}
 
-	tplt<tpnm _tBit> cnstxpr	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
-#if defined(GPK_DEBUG_ENABLED)
+#ifdef GPK_DEBUG_ENABLED
+	tplt<tpnm _tBit> 			_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
 		rve_if((_tBit)-1LL, bitIndex >= (sizeof(_tBit) * PLATFORM_BYTE_BIT_COUNT), "Invalid bit index: %i", bitIndex);
+#else
+	tplt<tpnm _tBit> cnstxpr	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
 #endif
 		return (_tBit)(((_tBit)1) << bitIndex);
 	}

@@ -5,22 +5,6 @@
 
 namespace gpk
 {
-#ifdef GPK_ATMEL
-	enum SYSTEM_EVENT : uint8_t
-		{ SYSTEM_EVENT_Runtime	=  0
-		, SYSTEM_EVENT_Screen	=  1
-		, SYSTEM_EVENT_Keyboard	=  2
-		, SYSTEM_EVENT_Mouse	=  3
-		, SYSTEM_EVENT_Touch	=  4
-		, SYSTEM_EVENT_Joypad	=  5
-		, SYSTEM_EVENT_Text		=  6
-		, SYSTEM_EVENT_GUI		=  7
-		, SYSTEM_EVENT_Audio	=  8
-		, SYSTEM_EVENT_Camera	=  9
-		, SYSTEM_EVENT_Raster	= 10
-		, SYSTEM_EVENT_Device	= 11
-		};
-#else
 	GDEFINE_ENUM_TYPE(SYSTEM_EVENT, uint8_t);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Runtime	, 0);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Screen		, 1);
@@ -35,27 +19,26 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Raster		,10);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Device		,11);
 
-	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, uint8_t);
-	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Init			, 0);
-	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Exit			, 1);
-	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_queue	, 2);
-	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_event	, 3);
-#endif
 	typedef ::gpk::SEvent            <::gpk::SYSTEM_EVENT>	SSystemEvent;
 	typedef ::gpk::SEView            <::gpk::SYSTEM_EVENT>	SEViewSystem;
 	typedef ::gpk::FEventHandler     <::gpk::SYSTEM_EVENT>	FSystemEvent;
 	typedef ::gpk::FEventHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEventConst;
 	typedef ::gpk::FEViewHandler     <::gpk::SYSTEM_EVENT>	FSystemEView;
 	typedef ::gpk::FEViewHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEViewConst;
-
 	typedef ::gpk::pobj <::gpk::SSystemEvent>				PSystemEvent;
 	typedef ::gpk::apobj<::gpk::SSystemEvent>				TQueueSystemEvent;
 
+	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, uint8_t);
+	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Init			, 0);
+	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Exit			, 1);
+	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_queue	, 2);
+	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_event	, 3);
+
 #pragma pack(push, 1)
 	struct SDeviceEvent {
-		const ::gpk::SYSTEM_EVENT	SystemEvent = ::gpk::SYSTEM_EVENT_Device;
-		const uint8_t				DataSize 	= 4;
-		::gpk::error_t				DeviceEvent	= {};
+		const ::gpk::SYSTEM_EVENT			SystemEvent = ::gpk::SYSTEM_EVENT_Device;
+		const ::gpk::SSerializedViewHeader	DataSize 	= {0, 4};
+		::gpk::error_t						DeviceEvent	= {};
 	};
 #pragma pack(pop)
 
