@@ -91,7 +91,7 @@ static	::gpk::error_t	httpClientRequestConstruct
 // get sockaddr, IPv4 or IPv6:
 void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET) ? &(((struct sockaddr_in*)sa)->sin_addr) : (void*)&(((struct sockaddr_in6*)sa)->sin6_addr); }
 ::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4		& clientToConnect
+	(	const ::gpk::SIPv4Endpoint		& clientToConnect
 	,	::gpk::HTTP_METHOD		method
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
@@ -101,7 +101,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	) {
 	::gpk::achar				bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
-	const ::gpk::SIPv4							& address						= clientToConnect;
+	const ::gpk::SIPv4Endpoint							& address						= clientToConnect;
 
 	addrinfo									hints							= {};
     hints.ai_family							= AF_UNSPEC;
@@ -254,7 +254,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 }
 
 ::gpk::error_t			gpk::httpClientRequest
-	(	const ::gpk::SIPv4	& clientToConnect
+	(	const ::gpk::SIPv4Endpoint	& clientToConnect
 	,	::gpk::HTTP_METHOD	method
 	,	const ::gpk::vcs	& hostName
 	,	const ::gpk::vcs	& path

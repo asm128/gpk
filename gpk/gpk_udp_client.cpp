@@ -22,7 +22,7 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "%s", "??");
 	sockaddr_in														sa_client									= {};				/* Information about the server */
 
-	::gpk::SIPv4 localAddr;
+	::gpk::SIPv4Endpoint localAddr;
 	::gpk::tcpipAddress(rand() % (1024*32) + (1024*32), 0, ::gpk::TRANSPORT_PROTOCOL_UDP, localAddr);
 	::gpk::tcpipAddressToSockaddr(localAddr, sa_client);
 	if(-1 == ::bind(client.Socket, (sockaddr*)&sa_client, sizeof(sockaddr_in)))
@@ -34,7 +34,7 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
 	int																received_bytes								= recvfrom(client.Socket.Handle, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, &sa_length);
 	rew_if(-1 == received_bytes, "Failed to receive connect response from '%u.%u.%u.%u:%u'.", GPK_IPV4_EXPAND(client.AddressConnect));
-	::gpk::SIPv4													temp										= {};
+	::gpk::SIPv4Endpoint													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address! Expected: %u.%u.%u.%u:%u. Received from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.AddressConnect), GPK_IPV4_EXPAND(temp));
 	client.Address												= temp;
@@ -69,7 +69,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 			received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 			continue;
 		}	/* Receive time */
-		::gpk::SIPv4													temp										= {};
+		::gpk::SIPv4Endpoint													temp										= {};
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 		if(*(uint32_t*)temp.IP == *(uint32_t*)client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			if(temp.Port == client.Address.Port)

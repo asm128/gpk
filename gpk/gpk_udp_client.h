@@ -6,7 +6,7 @@
 namespace gpk
 {
 	struct SUDPClient : public ::gpk::SUDPConnection {
-		::gpk::SIPv4						AddressConnect;
+		::gpk::SIPv4Endpoint						AddressConnect;
 		int16_t								AdapterIndex;
 		::gpk::apobj<::gpk::SUDPMessage>	CacheSend;	// This is only to speed up message processing.
 		::gpk::apobj<::gpk::SUDPMessage>	CacheSent;	// This is only to speed up message processing.

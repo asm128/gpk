@@ -38,7 +38,7 @@ namespace gpk
 	struct SDeviceEvent {
 		const ::gpk::SYSTEM_EVENT			SystemEvent = ::gpk::SYSTEM_EVENT_Device;
 		const ::gpk::SSerializedViewHeader	DataSize 	= {0, 4};
-		::gpk::error_t						DeviceEvent	= {};
+		::gpk::RESULT						DeviceEvent	= {};
 	};
 #pragma pack(pop)
 

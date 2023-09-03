@@ -65,7 +65,7 @@ namespace gpk
 	struct SUDPConnection {
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
-		::gpk::SIPv4						Address						= {};	// Local for servers, remote for clients
+		::gpk::SIPv4Endpoint				Address						= {};	// Local for servers, remote for clients
 		uint64_t							LastPing					= 0;
 		uint64_t							FirstPing					= 0;
 		uint64_t							KeyPing						= 0;
@@ -75,7 +75,7 @@ namespace gpk
 	struct STCPConnection {
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
-		::gpk::SIPv4						Address						= {};
+		::gpk::SIPv4Endpoint				Address						= {};
 		uint64_t							LastPing					= 0;
 		uint64_t							FirstPing					= 0;
 		uint64_t							KeyPing						= 0;

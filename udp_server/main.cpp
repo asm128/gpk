@@ -5,7 +5,7 @@
 int main() {
 	::gpk::tcpipInitialize();
 	sockaddr_in				sa_server				= {};
-	::gpk::SIPv4			addrLocal				= {{}, 9898};
+	::gpk::SIPv4Endpoint			addrLocal				= {{}, 9898};
 	::gpk::tcpipAddress(0, 9898, 1, ::gpk::TRANSPORT_PROTOCOL_UDP, addrLocal);
 	::gpk::tcpipAddressToSockaddr(addrLocal, sa_server);
 
@@ -14,7 +14,7 @@ int main() {
 	gpk_necall(::bind(handle, (sockaddr *)&sa_server, sizeof(sockaddr_in)), "Failed to bind listener to address");
 	info_printf("Server listening on %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(addrLocal));
 	while(true) {
-		::gpk::SIPv4			addrLocalClient			= addrLocal;
+		::gpk::SIPv4Endpoint			addrLocalClient			= addrLocal;
 		addrLocalClient.Port = 0;
 		SOCKET					clientHandle			= socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -26,7 +26,7 @@ int main() {
 		int						client_length			= sizeof(sa_client);
 		char					connectReceived			= 0;
 		gpk_necall(::recvfrom(handle, (char*)&connectReceived, (int)sizeof(char), 0, (sockaddr*)&sa_client, &client_length), "Failed to receive connect request.");
-		::gpk::SIPv4			addrRemote;
+		::gpk::SIPv4Endpoint			addrRemote;
 		::gpk::tcpipAddressFromSockaddr(sa_client, addrRemote);
 		info_printf("Received connect request: %c from %u.%u.%u.%u:%u.", connectReceived, GPK_IPV4_EXPAND(addrRemote));
 

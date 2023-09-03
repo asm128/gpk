@@ -116,7 +116,7 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4 & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<const char>& strRemotePort)	{
+static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4Endpoint & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<const char>& strRemotePort)	{
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 

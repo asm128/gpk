@@ -12,7 +12,7 @@ int main() {
 #else
 		::gpk::tcpipAddressToSockaddr({{201,235,131,233}, 9898}, sa_server);
 #endif
-		::gpk::SIPv4		addrRemote			= {};
+		::gpk::SIPv4Endpoint		addrRemote			= {};
 		SOCKET				handle				= socket(AF_INET, SOCK_DGRAM, 0);
 #if defined GPK_WINDOWS
 		u_long				iMode				= 1;

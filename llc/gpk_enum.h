@@ -354,6 +354,8 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , ::gpk::OS_INVALID_PARAMETER );
 	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , ::gpk::OS_FORBIDDEN         );
 	GDEFINE_ENUM_VALUE(RESULT, RESTART           , ::gpk::OS_RESTART           );
+	GDEFINE_ENUM_VALUE(RESULT, WAKE_UP           , ::gpk::OS_WAKE_UP           );
+	GDEFINE_ENUM_VALUE(RESULT, SLEEP             , ::gpk::OS_SLEEP             );
 }
 
 #endif // GPK_ENUM_H_23627

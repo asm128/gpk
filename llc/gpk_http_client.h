@@ -13,7 +13,7 @@ namespace gpk
 	};
 
 	::gpk::error_t					httpClientRequest
-		(	const ::gpk::SIPv4			& remoteAddress
+		(	const ::gpk::SIPv4Endpoint			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
 		,	const ::gpk::vcs			& hostName
 		,	const ::gpk::vcs			& path
@@ -23,7 +23,7 @@ namespace gpk
 		);
 
 	::gpk::error_t					httpClientRequest
-		(	const ::gpk::SIPv4			& remoteAddress
+		(	const ::gpk::SIPv4Endpoint			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
 		,	const ::gpk::vcs			& hostName
 		,	const ::gpk::vcs			& path
@@ -33,7 +33,7 @@ namespace gpk
 		);
 
 	//::gpk::error_t					httpsClientRequest
-	//	(	const ::gpk::SIPv4			& remoteAddress
+	//	(	const ::gpk::SIPv4Endpoint			& remoteAddress
 	//	,	::gpk::HTTP_METHOD			method
 	//	,	const ::gpk::vcs			& hostName
 	//	,	const ::gpk::vcs			& path
