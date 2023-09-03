@@ -87,6 +87,7 @@ namespace gpk
 			return -1;
 		}
 
+		inlcxpr	uint32_t	Index				(uint32_t width) 						const	noexcept	{ return y * width + x; }
 		inlcxpr	T			Area				()										const	noexcept	{ return x * y; }
 		Tn2					Clamp				(const Tn2 & min, const Tn2 & max)		const	noexcept	{ return {::gpk::clamped(x, min.x, max.x), ::gpk::clamped(y, min.y, max.y)}; }
 		inlcxpr	Tn2			GetScaled			(double	scalar)							const	noexcept	{ return {(T)(x * scalar), (T)(y * scalar)}; }
@@ -106,7 +107,7 @@ namespace gpk
 			const double			px					= x * pairSinCos.Cos - y * pairSinCos.Sin;
 			y					= T(x * pairSinCos.Sin + y * pairSinCos.Cos);
 			x					= (T)px;
-			return *this;
+			return *this;	
 		}
 		inline	Tn2&		InPlaceScale		(double scalar)									noexcept	{ return *this *= scalar; }
 		tplt<tpnm _t>

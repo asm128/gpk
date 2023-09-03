@@ -38,7 +38,7 @@
 #endif
 
 
-#ifdef GPK_ARDUINO
+#ifdef GPK_ATMEL
 void					gpk::_base_log_print_P			(const __FlashStringHelper* text)									{
 	if(text) {
 		if(gpk_log_print_P)

@@ -300,14 +300,18 @@ namespace gpk
 	tplt<EnumName> const char*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
 
 #ifdef GPK_ATMEL
-#	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue) \
-	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
+#	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)					\
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);	\
+	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, F(#ValueName)})
 
-#	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription) \
-	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
+#	define GDEFINE_ENUM_VALUED(EnumName, ValueName, EnumValue, EnumDescription)		\
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);		\
+	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, F(#ValueName)})
 
-#	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription) \
-	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);
+#	define GDEFINE_ENUM_VALTD(EnumName, ValueName, EnumValue, EnumTitle, EnumDescription)	\
+	stacxpr	const EnumName	EnumName##_##ValueName	= (EnumName)(EnumValue);				\
+	//static	const EnumName	__sei_##EnumName##_##ValueName	= (EnumName)::gpk::genum_value<EnumName>((EnumName)(EnumValue), {sizeof(#ValueName) - 1, F(#ValueName)})
+	
 #else
 #	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)									\
 	stacxpr	const EnumName	EnumName##_##ValueName			= (EnumName)(EnumValue);	\
@@ -349,6 +353,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , ::gpk::OS_NOT_FOUND         );
 	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , ::gpk::OS_INVALID_PARAMETER );
 	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , ::gpk::OS_FORBIDDEN         );
+	GDEFINE_ENUM_VALUE(RESULT, RESTART           , ::gpk::OS_RESTART           );
 }
 
 #endif // GPK_ENUM_H_23627

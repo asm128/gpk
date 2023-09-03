@@ -21,6 +21,7 @@ namespace gpk
 	stacxpr	::gpk::error_t OS_NOT_FOUND         = -8;
 	stacxpr	::gpk::error_t OS_INVALID_PARAMETER = -9;
 	stacxpr	::gpk::error_t OS_FORBIDDEN         = -10;
+	stacxpr	::gpk::error_t OS_RESTART           = -11;
 }
 
 #if !defined(errored)

@@ -7,25 +7,6 @@
 
 namespace gpk
 {
-#ifdef GPK_ATMEL
-	enum EVENT_RASTER : uint8_t
-		{ EVENT_RASTER_Clear		=  0
-		, EVENT_RASTER_Pixel		=  1
-		, EVENT_RASTER_Line			=  2
-		, EVENT_RASTER_Outline		=  3
-		, EVENT_RASTER_Fill			=  4
-		, EVENT_RASTER_BitBlt		=  5
-		, EVENT_RASTER_Text			=  6
-		, EVENT_RASTER_Font			=  7
-		, EVENT_RASTER_FontIndex	=  8
-		, EVENT_RASTER_FontColor	=  9
-		, EVENT_RASTER_Color		= 10
-		, EVENT_RASTER_ColorIndex	= 11
-		, EVENT_RASTER_Palette		= 12
-		, EVENT_RASTER_PaletteIndex	= 13
-		, EVENT_RASTER_PaletteColor	= 14
-		};
-#else
 	GDEFINE_ENUM_TYPE (EVENT_RASTER, uint8_t);
 	GDEFINE_ENUM_VALUE(EVENT_RASTER, Clear			,  0);
 	GDEFINE_ENUM_VALUE(EVENT_RASTER, Pixel			,  1);
@@ -37,12 +18,13 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_RASTER, Font			,  7);
 	GDEFINE_ENUM_VALUE(EVENT_RASTER, FontIndex		,  8);
 	GDEFINE_ENUM_VALUE(EVENT_RASTER, FontColor		,  9);
-	GDEFINE_ENUM_VALUE(EVENT_RASTER, Color			, 10);
-	GDEFINE_ENUM_VALUE(EVENT_RASTER, ColorIndex		, 11);
-	GDEFINE_ENUM_VALUE(EVENT_RASTER, Palette		, 12);
-	GDEFINE_ENUM_VALUE(EVENT_RASTER, PaletteIndex	, 13);
-	GDEFINE_ENUM_VALUE(EVENT_RASTER, PaletteColor	, 14);
-#endif
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, FontBackground	, 10);
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, Color			, 11);
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, ColorIndex		, 12);
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, Palette		, 13);
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, PaletteIndex	, 14);
+	GDEFINE_ENUM_VALUE(EVENT_RASTER, PaletteColor	, 15);
+
 	typedef ::gpk::SEvent            <EVENT_RASTER>	SEventRaster;
 	typedef ::gpk::SEventView        <EVENT_RASTER>	SEViewRaster;
 	typedef ::gpk::FEventHandler     <EVENT_RASTER>	FRasterEvent;

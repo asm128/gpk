@@ -49,14 +49,14 @@ namespace gpk
 	void				_base_log_print					(const char * text);
 	void				_base_log_write					(const char * text, uint32_t textLen);
 
-#ifdef GPK_ARDUINO
+#ifdef GPK_ATMEL
 	typedef	void		(*log_print_P_t)				(const __FlashStringHelper * text);
 	void				_base_log_print_P				(const __FlashStringHelper * text);
 #endif
 
 #define base_log_write(text, textLen)	::gpk::_base_log_write(text, textLen)
 #define base_log_print(text)			::gpk::_base_log_print(text)
-#ifdef GPK_ARDUINO
+#ifdef GPK_ATMEL
 #	define base_log_print_F(text)			::gpk::_base_log_print_P(F(text))
 #	define base_log_print_P(text)			::gpk::_base_log_print_P(text)
 #	define condition_print(condition)		::gpk::_base_log_print_P(F("\n" #condition "\n"))
@@ -90,7 +90,7 @@ namespace gpk
 		base_log_print_F("}:");
 #endif
 #endif
-#if defined(GPK_ESP32) 
+#ifdef GPK_ESP32
 		if(format) {
 			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
 			if(char * customDynamicString = (char*)malloc(bufferSize)) {
