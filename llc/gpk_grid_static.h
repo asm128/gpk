@@ -8,17 +8,17 @@ namespace gpk
 {
 	tplt<tpnm T, size_t _sizeWidth, size_t _sizeDepth>
 	struct grid_static : public grid<T> {
-							typedef										T									TCell;
-							typedef										grid<T>							TGridView;
+		typedef	T			TCell;
+		typedef	grid<T>		TGridView;
 
-		stacxpr	const uint32_t								Width									= (uint32_t)_sizeWidth;
-		stacxpr	const uint32_t								Depth									= (uint32_t)_sizeDepth;
+		stacxpr	uint32_t	Width									= (uint32_t)_sizeWidth;
+		stacxpr	uint32_t	Depth									= (uint32_t)_sizeDepth;
 
-							TCell										Cells	[_sizeDepth][_sizeWidth]		= {};
+				TCell		Cells	[_sizeDepth][_sizeWidth]		= {};
 
-		inlcxpr												grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
+		inlcxpr				grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-							::gpk::error_t								read					(const int8_t* input, uint32_t* inout_bytesRead)						{
+		::gpk::error_t		read					(const int8_t* input, uint32_t* inout_bytesRead)						{
 			ree_if(0 == input, "%s", "Invalid input pointer!");
 			TGridView															inputGrid								= {(T*)input, Width, Depth};
 			*inout_bytesRead												+= sizeof(T) * Width * Depth;
@@ -29,7 +29,7 @@ namespace gpk
 			return 0;
 		}
 
-							::gpk::error_t								write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
+		::gpk::error_t		write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
 			ree_if(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
 			if(0 != inout_bytesWritten)
 				*inout_bytesWritten												+= sizeof(T) * Width * Depth;	// Just return the size required to store this.

@@ -342,20 +342,25 @@ namespace gpk
 namespace gpk
 {
 	GDEFINE_ENUM_TYPE (RESULT, ::gpk::error_t);
-	GDEFINE_ENUM_VALUE(RESULT, OK                , ::gpk::OS_OK                );
-	GDEFINE_ENUM_VALUE(RESULT, ERROR             , ::gpk::OS_ERROR             );
-	GDEFINE_ENUM_VALUE(RESULT, BUSY              , ::gpk::OS_BUSY              );
-	GDEFINE_ENUM_VALUE(RESULT, TIMEOUT           , ::gpk::OS_TIMEOUT           );
-	GDEFINE_ENUM_VALUE(RESULT, FULL              , ::gpk::OS_FULL              );
-	GDEFINE_ENUM_VALUE(RESULT, EMPTY             , ::gpk::OS_EMPTY             );
-	GDEFINE_ENUM_VALUE(RESULT, OVERRUN           , ::gpk::OS_OVERRUN           );
-	GDEFINE_ENUM_VALUE(RESULT, NOT_AVAILABLE     , ::gpk::OS_NOT_AVAILABLE     );
-	GDEFINE_ENUM_VALUE(RESULT, NOT_FOUND         , ::gpk::OS_NOT_FOUND         );
-	GDEFINE_ENUM_VALUE(RESULT, INVALID_PARAMETER , ::gpk::OS_INVALID_PARAMETER );
-	GDEFINE_ENUM_VALUE(RESULT, FORBIDDEN         , ::gpk::OS_FORBIDDEN         );
-	GDEFINE_ENUM_VALUE(RESULT, RESTART           , ::gpk::OS_RESTART           );
-	GDEFINE_ENUM_VALUE(RESULT, WAKE_UP           , ::gpk::OS_WAKE_UP           );
-	GDEFINE_ENUM_VALUE(RESULT, SLEEP             , ::gpk::OS_SLEEP             );
+	GDEFINE_ENUM_VALUE(RESULT, Ok                , ::gpk::OS_OK                );
+	GDEFINE_ENUM_VALUE(RESULT, Error             , ::gpk::OS_ERROR             );
+	GDEFINE_ENUM_VALUE(RESULT, Busy              , ::gpk::OS_BUSY              );
+	GDEFINE_ENUM_VALUE(RESULT, Timeout           , ::gpk::OS_TIMEOUT           );
+	GDEFINE_ENUM_VALUE(RESULT, Full              , ::gpk::OS_FULL              );
+	GDEFINE_ENUM_VALUE(RESULT, Empty             , ::gpk::OS_EMPTY             );
+	GDEFINE_ENUM_VALUE(RESULT, Overrun           , ::gpk::OS_OVERRUN           );
+	GDEFINE_ENUM_VALUE(RESULT, Not_available     , ::gpk::OS_NOT_AVAILABLE     );
+	GDEFINE_ENUM_VALUE(RESULT, Not_found         , ::gpk::OS_NOT_FOUND         );
+	GDEFINE_ENUM_VALUE(RESULT, Invalid_parameter , ::gpk::OS_INVALID_PARAMETER );
+	GDEFINE_ENUM_VALUE(RESULT, Forbidden         , ::gpk::OS_FORBIDDEN         );
+	GDEFINE_ENUM_VALUE(RESULT, Restart           , ::gpk::OS_RESTART           );
+	GDEFINE_ENUM_VALUE(RESULT, Wake_up           , ::gpk::OS_WAKE_UP           );
+	GDEFINE_ENUM_VALUE(RESULT, Sleep             , ::gpk::OS_SLEEP             );
+	GDEFINE_ENUM_VALUE(RESULT, Offline           , ::gpk::OS_OFFLINE           );
+	GDEFINE_ENUM_VALUE(RESULT, Connecting        , ::gpk::OS_CONNECTING        );
+	GDEFINE_ENUM_VALUE(RESULT, Connected         , ::gpk::OS_CONNECTED         );
+	GDEFINE_ENUM_VALUE(RESULT, Missing_data      , ::gpk::OS_MISSING_DATA      );
+	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , ::gpk::OS_NO_MEMORY         );
 }
 
 #endif // GPK_ENUM_H_23627
