@@ -106,6 +106,10 @@ namespace gpk
 		return funcHandleChild(childEvent);
 	}
 
+	typedef ::gpk::SEvent            <::gpk::RESULT>	SEventResult;
+	typedef ::gpk::SEventView        <::gpk::RESULT>	SEViewResult;
+	typedef ::gpk::FEventHandler     <::gpk::RESULT>	FResultEvent;
+	typedef ::gpk::FEventHandlerConst<::gpk::RESULT>	FResultEventConst;
 }
 
 #define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s' (0x%llX)(%lli)(%c)"	, ::gpk::get_enum_namep((eventUnhandled).Type), ::gpk::get_value_namep((eventUnhandled).Type), (uint64_t)(eventUnhandled).Type, (int64_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))

@@ -59,9 +59,9 @@ namespace gpk
 #ifdef GPK_ATMEL
 #	define base_log_print_F(text)			::gpk::_base_log_print_P(F(text))
 #	define base_log_print_P(text)			::gpk::_base_log_print_P(text)
-#	define condition_print(condition)		::gpk::_base_log_print_P(F("Condition: (" #condition ").\n"))
+#	define condition_print(condition)		base_log_print_F("(" #condition ")\n")
 #else
-#	define condition_print(condition)		::gpk::_base_log_print("Condition: (" #condition ").\n")
+#	define condition_print(condition)		base_log_print(__FILE__ "(" GPK_TOSTRING(__LINE__) "): (" #condition ").\n")
 #endif
 
 #if defined(GPK_WINDOWS)
@@ -97,7 +97,7 @@ namespace gpk
 				stringLength	= snprintf(customDynamicString, bufferSize - 2, format, args...);
 				customDynamicString[::gpk::min(stringLength, bufferSize - 2)] = '\n';
 				customDynamicString[::gpk::min(stringLength + 1, bufferSize - 1)] = 0;
-				base_log_write(customDynamicString, (int)stringLength);
+				base_log_write(customDynamicString, (int)::gpk::min(stringLength + 1, bufferSize - 1));
 				free(customDynamicString);
 			}
 		}
@@ -109,7 +109,7 @@ namespace gpk
 #		ifdef max
 #			undef max
 #		endif
-		char					customDynamicString	[64]		= {};
+		char					customDynamicString	[128]		= {};
 #	else
 		char					customDynamicString	[1024 * 12]	= {};
 #	endif
@@ -120,7 +120,7 @@ namespace gpk
 		stringLength		= snprintf(customDynamicString, sizeof(customDynamicString) - 2, format, args...);
 		customDynamicString[::gpk::min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #endif
-		base_log_write(customDynamicString, (uint32_t)stringLength);
+		base_log_write(customDynamicString, (uint32_t)::gpk::min(sizeof(customDynamicString) - 1, stringLength));
 #endif
 
 #ifndef GPK_ATMEL
@@ -345,14 +345,19 @@ namespace gpk
 #	define retwarn_ginfo_if(condition, format, ...)			retval_ginfo_if		(1, condition, format, __VA_ARGS__)
 #endif
 
+#ifndef GPK_ARDUINO
+#	ifndef F
+#		define F(text) text
+#	endif
+#endif
 
 #if defined (GPK_ERROR_PRINTF_ENABLED)
+#ifdef GPK_ATMEL
 // Non-propagable retval_error call.
 #	define gpk_rve_ecall(retVal, gpkl_call, format, ...) do {				\
 		::gpk::error_t gpk_errCall_ = (gpkl_call);  						\
 		if(gpk_errCall_ < 0) {												\
-			condition_print(gpkl_call);										\
-			debug_printf(0, "error", "0x%X.", gpk_errCall_);				\
+			::gpk::_gpk_debug_printf(#gpkl_call, F(" -> %i-%u-(0x%x)"), gpk_errCall_, gpk_errCall_, gpk_errCall_);	\
 			error_printf(format, __VA_ARGS__); 								\
 			return retVal; 													\
 		}																	\
@@ -365,8 +370,7 @@ namespace gpk
 #	define gpk_rve_ewcall(retVal, gpkl_call, format, ...) do {				\
 		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 					\
 			if(gpk_errCall_ < 0) {											\
-				condition_print(gpkl_call);										\
-				debug_printf(0, "error", "0x%X.", gpk_errCall_);				\
+				::gpk::_gpk_debug_printf(#gpkl_call, F(" -> %i-%u-(0x%x)"), gpk_errCall_, gpk_errCall_, gpk_errCall_);	\
 				error_printf(format, __VA_ARGS__); 							\
 				return retval; 												\
 			}																\
@@ -379,6 +383,35 @@ namespace gpk
 		}																	\
 	} while(0)
 
+#else
+// Non-propagable retval_error call.
+#	define gpk_rve_ecall(retVal, gpkl_call, format, ...) do {				\
+		::gpk::error_t gpk_errCall_ = (gpkl_call);  						\
+		if(gpk_errCall_ < 0) {												\
+			error_printf(format, __VA_ARGS__); 								\
+			return retVal; 													\
+		}																	\
+		else {																\
+			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
+		}																	\
+	} while(0)
+
+// Non-propagable retval_error error-warning call.
+#	define gpk_rve_ewcall(retVal, gpkl_call, format, ...) do {				\
+		if(::gpk::error_t gpk_errCall_ = (gpkl_call)) { 					\
+			if(gpk_errCall_ < 0) {											\
+				error_printf(format, __VA_ARGS__); 							\
+				return retval; 												\
+			}																\
+			else {															\
+				warning_printf("%s: 0x%X.", #gpkl_call, gpk_errCall_);				\
+			}																\
+		}																	\
+		else {																\
+			success_printf("%s: Success (0x%X).", #gpkl_call, gpk_errCall_);																			\
+		}																	\
+	} while(0)
+#endif
 //
 #	define gpk_rv_hrcall(retVal, hr_call) do {								\
 		::HRESULT errCall_ = (hr_call);  									\

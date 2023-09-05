@@ -53,7 +53,10 @@ namespace gpk
 		tplt<tpnm T>
 		ndincxp uint32_t			DataSize			()	const	noexcept	{ return ElementCount() * sizeof(T); }
 	};
+
+	nodstxp	SSerializedViewHeader	viewHeader	(uint32_t payloadSize) { return {tail_width(payloadSize), tail_multiplier(payloadSize), tail_base(payloadSize)}; }
 #pragma pack(pop)
+
 	tplt<tpnm T, tpnm TByte>
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
 		const SSerializedViewHeader		& header			= *(const SSerializedViewHeader*)input.begin();

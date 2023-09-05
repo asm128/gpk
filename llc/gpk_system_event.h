@@ -27,6 +27,11 @@ namespace gpk
 	typedef ::gpk::FEViewHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEViewConst;
 	typedef ::gpk::pobj <::gpk::SSystemEvent>				PSystemEvent;
 	typedef ::gpk::apobj<::gpk::SSystemEvent>				TQueueSystemEvent;
+	
+	template<typename _t>
+	stainli	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
+		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Device, eventType, eventData); 
+	}
 
 	//GDEFINE_ENUM_TYPE (EVENT_RUNTIME, uint8_t);
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Init			, 0);
@@ -36,9 +41,15 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SDeviceEvent {
-		const ::gpk::SYSTEM_EVENT			SystemEvent = ::gpk::SYSTEM_EVENT_Device;
-		const ::gpk::SSerializedViewHeader	DataSize 	= {0, 4};
-		::gpk::RESULT						DeviceEvent	= {};
+		const ::gpk::SYSTEM_EVENT	SystemEvent 	= ::gpk::SYSTEM_EVENT_Device;
+		const uint8_t				TailWidth		: 2;
+		const uint8_t				Multiplier		: 6;
+		::gpk::RESULT				DeviceEvent		= ::gpk::RESULT_Error;
+									SDeviceEvent	()
+			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
+			, TailWidth   {::gpk::viewHeader(sizeof(::gpk::RESULT)).TailWidth}
+			, Multiplier  {::gpk::viewHeader(sizeof(::gpk::RESULT)).Multiplier}
+			{}
 	};
 #pragma pack(pop)
 
@@ -46,6 +57,6 @@ namespace gpk
 	//stainli	::gpk::error_t	eventEnqueueRuntimeExit			(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Exit			, ::gpk::EVENT_RUNTIME_Exit			); }
 	//stainli	::gpk::error_t	eventEnqueueRuntimeProcessQueue	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_queue, ::gpk::EVENT_RUNTIME_Process_queue); }
 	//stainli	::gpk::error_t	eventEnqueueRuntimeProcessEvent	(::gpk::TQueueSystemEvent & queue)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Runtime, ::gpk::EVENT_RUNTIME_Process_event, ::gpk::EVENT_RUNTIME_Process_event); }
-} // namespace 
+} // namespace
 
 #endif // GPK_SYSTEM_EVENT_H_23627
