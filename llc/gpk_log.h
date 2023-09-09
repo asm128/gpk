@@ -31,9 +31,9 @@
 #	define retval_gwarn_if		vwf_if	
 #	define retval_ginfo_if		vif_if	
 #	define retval_gverbose_if	vvf_if		
-#	define ret_gserror_if(condition)					if_true_logf_and_return(error_printf, condition, )
-#	define ret_gswarn_if(condition)						if_true_logf_and_return(warning_printf, condition, )
-#	define ret_gsinfo_if(condition)						if_true_logf_and_return(info_printf, condition, )
+#	define ret_gserror_if(condition)					if_true_log_and_return(error_printf, condition)
+#	define ret_gswarn_if(condition)						if_true_log_and_return(warning_printf, condition)
+#	define ret_gsinfo_if(condition)						if_true_log_and_return(info_printf, condition)
 #	define ret_gerror_if(condition, format, ...)		if_true_logf_and_return(error_printf, condition, format, __VA_ARGS__)
 #	define ret_gwarn_if(condition, format, ...)			if_true_logf_and_return(warning_printf, condition, format, __VA_ARGS__)
 #	define ret_ginfo_if(condition, format, ...)			if_true_logf_and_return(info_printf, condition, format, __VA_ARGS__)
@@ -57,11 +57,6 @@
 #	define retwarn_gerror_if(condition, format, ...)vef_if(1, condition, format, __VA_ARGS__)
 #	define retwarn_gwarn_if(condition, format, ...)	vwf_if(1, condition, format, __VA_ARGS__)
 #	define retwarn_ginfo_if(condition, format, ...)	vif_if(1, condition, format, __VA_ARGS__)
-#endif
-
-#ifndef es_if
-#	define es_if							gserror_if
-
 #endif
 
 #ifndef re_if
