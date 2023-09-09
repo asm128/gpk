@@ -58,7 +58,7 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 #endif
 			break_ginfo_if(1 == updateResult, "Application requested termination.");
 			break_gerror_if(errored(updateResult), "update() returned error.");
-			//gerror_if(mainModule.Render(app), "Why would this ever happen?");
+			//ef_if(mainModule.Render(app), "Why would this ever happen?");
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
 	}

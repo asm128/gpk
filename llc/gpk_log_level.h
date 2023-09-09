@@ -66,7 +66,7 @@ namespace gpk
 		size_t 					stringLength					= snprintf_P(customDynamicString, sizeof(customDynamicString) - 1, (const char*)format, args...);
 		customDynamicString[min(stringLength, (size_t)sizeof(customDynamicString)-1)] = '\n';
 	#else
-		char					customDynamicString	[1024 * 12]	= {};
+		char					customDynamicString	[fmtLen + 1024 * 32]	= {};
 		stringLength		= ::gpk::sprintf_s(customDynamicString, format, args...);
 		customDynamicString[min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 #	endif
