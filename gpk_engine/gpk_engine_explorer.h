@@ -57,7 +57,7 @@ namespace gpk
 	//};
 
 	::gpk::error_t				editorCreate	(::gpk::SEditor & editor);
-	::gpk::error_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SSystemEvent> systemEvents);
+	::gpk::error_t				editorUpdate	(::gpk::SEditor & editor, ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> systemEvents);
 	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SLayoutEditor & editor);
 	//::gpk::error_t			editorCreate	(::gpk::SGUI & gui, ::gpk::SPaletteEditor & editor);
 } // namespace

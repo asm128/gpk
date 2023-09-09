@@ -119,7 +119,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SSystemEvent> frameEvents) { 
+		::gpk::error_t								Update				(const ::gpk::pobj<::gpk::SInput> & inputState, ::gpk::vpobj<::gpk::SEventSystem> frameEvents) { 
 			if(!Dialog.Input) {
 				Dialog.Input								= inputState;
 			}

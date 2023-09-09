@@ -49,7 +49,7 @@ namespace gpk
 		bool								InputModeTouch		= true;
 	};
 
-	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::vpobj<::gpk::SSystemEvent> in_Events = {});
+	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> in_Events = {});
 	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2u16 & targetSize, bool forceUpdate);
 	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::g8bgra target);
 	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::acid & controlIndices);

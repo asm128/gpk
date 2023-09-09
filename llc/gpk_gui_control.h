@@ -210,7 +210,7 @@ namespace gpk
 		::gpk::aobj<::gpk::SControlImage		>	Images			= {};
 		::gpk::aobj<::gpk::acid					>	Children		= {};
 		//
-		::gpk::apobj<::gpk::SSystemEvent		>	EventQueue		= {};
+		::gpk::apobj<::gpk::SEventSystem		>	EventQueue		= {};
 
 		inline	bool		SetHovered		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetHovered (iControl, EventQueue, value); }
 		inline	bool		SetPressed		(cid_t iControl, bool value)	noexcept	{ return States[iControl].SetPressed (iControl, EventQueue, value); }

@@ -50,7 +50,7 @@ namespace gpk
 		SDialogViewportSettings	Settings			= {};
 		SDialogViewportSettings	SettingsOld			= {};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::viewportUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::viewportUpdate(*this); }
 	};
 #pragma pack(pop)
 
@@ -58,13 +58,13 @@ namespace gpk
 		::gpk::minmax<uint32_t>	Selection			= {};
 		::gpk::apod<char>		String				= {};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::editBoxUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::editBoxUpdate(*this); }
 	};
 
 	struct SDialogCheckBox : public ::gpk::IDialogControl {
 		bool					Checked				= false;
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::checkBoxUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::checkBoxUpdate(*this); }
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
@@ -83,7 +83,7 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> )	{ return ::gpk::sliderUpdate(*this); }
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> )	{ return ::gpk::sliderUpdate(*this); }
 	};
 
 	tplt<tpnm _tValue>
@@ -104,7 +104,7 @@ namespace gpk
 			return 0; 
 		};
 
-		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> eventsIn) { 
+		virtual	::gpk::error_t	Update				(::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> eventsIn) { 
 			::gpk::SDialog				& dialog			= *Dialog;
 			::gpk::SControlTable		& controlTable		= dialog.GUI->Controls;
 			for(uint32_t iEvent = 0; iEvent < eventsIn.size(); ++iEvent) {

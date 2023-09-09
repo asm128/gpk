@@ -30,7 +30,7 @@ namespace gpk
 		}
 #ifndef GPK_ATMEL		
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SSystemEvent>> frameEvents, ::gpk::vcid processableControls) { 
+		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
 			if(false == Editing)
 				return 0;
 
@@ -43,7 +43,7 @@ namespace gpk
 				return 0;
 			}));
 
-			::gpk::apobj<::gpk::SSystemEvent>	sysEvents			= frameEvents;
+			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
 			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:

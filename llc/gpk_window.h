@@ -59,7 +59,7 @@ namespace gpk
 		typedef	::gpk::rt<TTexel, uint32_t>	TOffscreen;
 
 		::gpk::SWindowPlatformDetail		PlatformDetail			= {};
-		::gpk::apobj<::gpk::SSystemEvent>	EventQueue				= {};
+		::gpk::apobj<::gpk::SEventSystem>	EventQueue				= {};
 		::gpk::pobj<TOffscreen>				BackBuffer				= {};
 		::gpk::pobj<::gpk::SInput>			Input					= {};
 		::gpk::n2u16						PreviousSize			= {};

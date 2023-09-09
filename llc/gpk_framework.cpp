@@ -197,7 +197,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	::gpk::SInput						& input										= *mainDisplay.Input;
 	::gpk::SWindowPlatformDetail		& displayDetail								= mainDisplay.PlatformDetail;
 
-	::gpk::pobj<::gpk::SSystemEvent>	newSystemEvent;
+	::gpk::pobj<::gpk::SEventSystem>	newSystemEvent;
 	switch(uMsg) {
 	default: break;
 	case WM_CLOSE			: e_if(errored(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueue))); ::DestroyWindow(hWnd); return 0;

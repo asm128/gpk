@@ -31,22 +31,22 @@ namespace gpk
 	typedef ::gpk::FEventHandlerConst<EVENT_RASTER>	FRasterEventConst;
 
 	template<typename _t>
-	stainli	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::EVENT_RASTER eventType, _t & eventData)	{ 
+	stainli	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::EVENT_RASTER eventType, _t & eventData)	{ 
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Raster, eventType, eventData); 
 	}
 
-	stainli	::gpk::error_t	eventEnqueueRasterClear			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Clear			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterOutline		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Outline		, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterFill			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Fill			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterBitBlt		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_BitBlt			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterText			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Text			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterFont			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Font			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterFontIndex		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_FontIndex		, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterColor			(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Color			, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterColorIndex	(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_ColorIndex		, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterPalette		(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Palette		, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterPaletteIndex	(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_PaletteIndex	, key); }
-	stainli	::gpk::error_t	eventEnqueueRasterPaletteColor	(::gpk::apobj<::gpk::SSystemEvent> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_PaletteColor	, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterClear			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Clear			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterOutline		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Outline		, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterFill			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Fill			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterBitBlt		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_BitBlt			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterText			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Text			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterFont			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Font			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterFontIndex		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_FontIndex		, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterColor			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Color			, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterColorIndex	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_ColorIndex		, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterPalette		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_Palette		, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterPaletteIndex	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_PaletteIndex	, key); }
+	stainli	::gpk::error_t	eventEnqueueRasterPaletteColor	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::EVENT_RASTER_PaletteColor	, key); }
 } // namespace 
 
 #endif // GPK_EVENT_RASTER_H

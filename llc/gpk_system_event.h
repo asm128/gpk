@@ -19,17 +19,17 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Raster		,10);
 	GDEFINE_ENUM_VALUE(SYSTEM_EVENT, Device		,11);
 
-	typedef ::gpk::SEvent            <::gpk::SYSTEM_EVENT>	SSystemEvent;
+	typedef ::gpk::SEvent            <::gpk::SYSTEM_EVENT>	SEventSystem;
 	typedef ::gpk::SEView            <::gpk::SYSTEM_EVENT>	SEViewSystem;
-	typedef ::gpk::FEventHandler     <::gpk::SYSTEM_EVENT>	FSystemEvent;
-	typedef ::gpk::FEventHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEventConst;
-	typedef ::gpk::FEViewHandler     <::gpk::SYSTEM_EVENT>	FSystemEView;
-	typedef ::gpk::FEViewHandlerConst<::gpk::SYSTEM_EVENT>	FSystemEViewConst;
-	typedef ::gpk::pobj <::gpk::SSystemEvent>				PSystemEvent;
-	typedef ::gpk::apobj<::gpk::SSystemEvent>				TQueueSystemEvent;
+	typedef ::gpk::FEventHandler     <::gpk::SYSTEM_EVENT>	FEventSystem;
+	typedef ::gpk::FEventHandlerConst<::gpk::SYSTEM_EVENT>	FEventSystemConst;
+	typedef ::gpk::FEViewHandler     <::gpk::SYSTEM_EVENT>	FEViewSystem;
+	typedef ::gpk::FEViewHandlerConst<::gpk::SYSTEM_EVENT>	FEViewSystemConst;
+	typedef ::gpk::pobj <::gpk::SEventSystem>				PEventSystem;
+	typedef ::gpk::apobj<::gpk::SEventSystem>				TQueueSystemEvent;
 	
 	template<typename _t>
-	stainli	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SSystemEvent> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
+	stainli	::gpk::error_t	eventEnqueueChild	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::RESULT eventType, _t & eventData)	{ 
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Device, eventType, eventData); 
 	}
 
