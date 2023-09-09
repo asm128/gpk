@@ -66,7 +66,7 @@ namespace gpk
 #			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if_true_block_log	(gpk_logFunction, (condition), statement) 	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #		else
 #			define if_true_logf(gpk_logFunction, condition, format, ...)					if(condition) { gpk_logFunction(#condition "-> " format, ##__VA_ARGS__); }						// - Log condition and custom formatted string args if (condition) == true.
-#			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if(condition) block_log(gpk_logFunction, statement, #condition "-> " format, ##__VA_ARGS__)		// - Conditional block with custom statement preceded by a log call with custom formatted string args.
+#			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if(condition) block_logf(gpk_logFunction, statement, #condition "-> " format, ##__VA_ARGS__)		// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #		endif
 #	endif
 #endif // if_true_logf

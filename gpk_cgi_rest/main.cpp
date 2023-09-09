@@ -16,12 +16,12 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 	{	// Attempt to load config file.
 		::gpk::vcs					fileNameJSONConfig				= "gpk_config.json";
 		rew_if(errored(::gpk::fileToMemory(fileNameJSONConfig, fileJSONConfig)), "Failed to load config JSON file! File not found? File name: %s.", fileNameJSONConfig.begin());
-		gwarn_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
+		wf_if(::gpk::jsonParse(jsonConfig, {fileJSONConfig.begin(), fileJSONConfig.size()}), "Failed to read json! Not a valid json file? File name: %s.", fileNameJSONConfig.begin());
 	}
 	{ // attempt to load address from config file.
 		{ //
 			::gpk::vcs					jsonIP							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_ip"}, jsonConfig, 0, jsonIP)), "Failed to load config from json! Last contents found: %s.", jsonIP.begin())
 			else {
 				info_printf("Remote IP: %s.", jsonIP.begin());
 				ef_if(errored(::gpk::tcpipAddress(jsonIP, {}, bestClient.AddressConnect)), "Failed to read IP address from JSON config file: %s.", jsonIP.begin());	// turn the string into a SIPv4Endpoint struct.
@@ -30,7 +30,7 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 		{ // load port from config file
 			bestClient.AddressConnect.Port	= 9998;
 			::gpk::vcs					jsonPort							= {};
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"application.gpk_cgi_rest.remote_port"}, jsonConfig, 0, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				uint64_t					port								= 0;
 				::gpk::parseIntegerDecimal(jsonPort, port);

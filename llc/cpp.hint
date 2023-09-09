@@ -19,7 +19,7 @@
 #define gthrow_if
 #define gsthrow_if
 #define ef_if
-#define gwarn_if
+#define wf_if
 #define ginfo_if
 #define gserror_if
 #define gswarn_if
@@ -30,7 +30,7 @@
 #define gpk_hrcall
 #define gpk_hrecall
 #define ef_if
-#define gwarn_if
+#define wf_if
 #define ginfo_if
 #define gserror_if
 #define gswarn_if

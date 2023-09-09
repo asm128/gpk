@@ -188,11 +188,15 @@ namespace gpk
 #endif
 
 #ifndef gthrow_if
-#	define gsthrow_if(condition)	if_true_log_and_throw(error_printf, condition)
-#ifndef GPK_WINDOWS
-#		define gthrow_if(condition, format, ...)	if_true_logf_and_throw(error_printf, condition, format, ##__VA_ARGS__)
+#	define gsthrow_if(condition)	if_true_log_and_throw(error_printf, (condition))
+#	ifndef GPK_WINDOWS
+#		define gthrow_if(condition, format, ...)	if_true_logf_and_throw(error_printf, (condition), format, ##__VA_ARGS__)
 #	else
-#		define gthrow_if(condition, format, ...)	if_true_logf_and_throw(error_printf, condition, format, __VA_ARGS__)
+#		ifndef GPK_ANDROID
+#			define gthrow_if(condition, format, ...)	if_true_logf_and_throw(error_printf, (condition), format, ##__VA_ARGS__)
+#		else
+#			define gthrow_if(condition, format, ...)	if_true_logf_and_throw(error_printf, (condition), format, __VA_ARGS__)
+#		endif
 #	endif
 #endif
 
