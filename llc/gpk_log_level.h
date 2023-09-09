@@ -72,7 +72,7 @@ namespace gpk
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
 #	endif
-		base_log_write(customDynamicString, (uint32_t)min(sizeof(customDynamicString) - 1, stringLength));
+		base_log_write(customDynamicString, (uint32_t)min(sizeof(customDynamicString), stringLength + 1));
 #endif
 	}
 
