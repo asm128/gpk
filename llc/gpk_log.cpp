@@ -110,6 +110,8 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 }
 #endif
 
+
+#ifndef GPK_ARDUINO
 		void					gpk::_gpk_print_system_errors	(const char* prefix, uint32_t prefixLen)								{
 #ifndef GPK_ATMEL
 	char								bufferError[256]				= {};
@@ -148,7 +150,6 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 			base_log_write("\n", 1);
 		}
 	}
-
 #endif// GPK_ATMEL
 
 #ifdef GPK_CLEAR_SYSTEM_ERROR_ON_ERROR_LOG
@@ -164,3 +165,4 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 	gpkClearSystemError();
 #endif
 }
+#endif

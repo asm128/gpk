@@ -142,36 +142,6 @@
 #	define bes_if_failed if_fail_be
 #	define bws_if_failed if_fail_bw
 #	define bis_if_failed if_fail_bi
-#	define ree_if_succeeded(condition, format, ...)	ree_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define rew_if_succeeded(condition, format, ...)	rew_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define rei_if_succeeded(condition, format, ...)	rei_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define rea_if_succeeded(condition, format, ...)	rea_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define rees_if_succeeded(condition)				rees_if	(0 <= gpk::error_t(condition))
-#	define rews_if_succeeded(condition)				rews_if	(0 <= gpk::error_t(condition))
-#	define reis_if_succeeded(condition)				reis_if	(0 <= gpk::error_t(condition))
-#	define reas_if_succeeded(condition)				reas_if	(0 <= gpk::error_t(condition))
-#	define re_if_succeeded(condition, format, ...)	re_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define rw_if_succeeded(condition, format, ...)	rw_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define ri_if_succeeded(condition, format, ...)	ri_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define ra_if_succeeded(condition, format, ...)	ra_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define res_if_succeeded(condition)				res_if	(0 <= gpk::error_t(condition))
-#	define rws_if_succeeded(condition)				rws_if	(0 <= gpk::error_t(condition))
-#	define ris_if_succeeded(condition)				ris_if	(0 <= gpk::error_t(condition))
-#	define ras_if_succeeded(condition)				ras_if	(0 <= gpk::error_t(condition))
-#	define e_if_succeeded(condition, format, ...)	ef_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define w_if_succeeded(condition, format, ...)	wf_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define i_if_succeeded(condition, format, ...)	if_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define a_if_succeeded(condition, format, ...)	af_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define es_if_succeeded(condition)				e_if	(0 <= gpk::error_t(condition))
-#	define ws_if_succeeded(condition)				w_if	(0 <= gpk::error_t(condition))
-#	define is_if_succeeded(condition)				i_if	(0 <= gpk::error_t(condition))
-#	define as_if_succeeded(condition)				a_if	(0 <= gpk::error_t(condition))
-#	define ce_if_succeeded(condition, format, ...)	ce_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define cw_if_succeeded(condition, format, ...)	cw_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define ci_if_succeeded(condition, format, ...)	ci_if	(0 <= gpk::error_t(condition), format, __VA_ARGS__)
-#	define ces_if_succeeded(condition)				ces_if	(0 <= gpk::error_t(condition))
-#	define cws_if_succeeded(condition)				cws_if	(0 <= gpk::error_t(condition))
-#	define cis_if_succeeded(condition)				cis_if	(0 <= gpk::error_t(condition))
 #	define rwe_if							retwarn_gerror_if
 #	define rww_if							retwarn_gwarn_if
 #	define rwi_if							retwarn_ginfo_if

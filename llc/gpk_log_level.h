@@ -18,7 +18,7 @@
 
 namespace gpk
 {
-#ifndef GPK_ATMEL
+#ifndef GPK_ARDUINO
 	void				_gpk_print_system_errors		(const char * prefix, uint32_t prefixLen);
 #endif
 
@@ -69,13 +69,10 @@ namespace gpk
 		char					customDynamicString	[fmtLen + 1024 * 32]	= {};
 		stringLength		= ::gpk::sprintf_s(customDynamicString, format, args...);
 		customDynamicString[min(stringLength, sizeof(customDynamicString)-2)] = '\n';
-#	endif
-	base_log_write(customDynamicString, (uint32_t)min(sizeof(customDynamicString) - 1, stringLength));
-#endif
-
-#ifndef GPK_ATMEL
 		if(2 >= severity)
 			::gpk::_gpk_print_system_errors(prefix, prefixLength);
+#	endif
+		base_log_write(customDynamicString, (uint32_t)min(sizeof(customDynamicString) - 1, stringLength));
 #endif
 	}
 
