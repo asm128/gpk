@@ -91,7 +91,7 @@
 	Scene->RenderNodes.Transforms	[entity.RenderNode]		= {};
 
 	int32_t						iSphere;
-	gpk_necs(iSphere = CreateSphere({}), "Camera reference");
+	gpk_necs(iSphere = CreateSphere({}, "Camera reference"));
 	gpk_necs(Entities.SetParent(iSphere, iEntity));
 	return iEntity;
 }

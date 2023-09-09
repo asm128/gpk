@@ -784,8 +784,8 @@ static	::gpk::error_t	pngActualFileLoad		(const ::gpk::vcu8 & source, ::gpk::SPN
 		gpk_necall(png_stream.read_pod(chunkRead.CRC)						, "%s", "Failed to read PNG! File corrupt?");
 		be2le_32(chunkRead.CRC);
 		uint32_t					crcGenerated			= ::gpk::get_crc({&source[crcDataStart], sizeChunk + 4});
-		gerror_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
-		gpk_necall(pngData.Chunks.push_back(chunkRead), "%s", "Out of memory?");
+		ef_if(crcGenerated != chunkRead.CRC, "Invalid CRC: File: %X, Generated: %X.", chunkRead.CRC, crcGenerated);
+		gpk_necs(pngData.Chunks.push_back(chunkRead));
 		break_gverbose_if(0 == memcmp(chunkRead.Type, "IEND", 4), "%s", "Found IEND chunk (image end).");
 	}
 
@@ -930,7 +930,7 @@ static	::gpk::error_t	pngScanlineDefilter		(const ::gpk::vcu8 & scanlineFilters,
 			}
 		}
 	}
-	gwarn_if(countPasses > 1, "Decoding passess executed: %u.", countPasses);
+	wf_if(countPasses > 1, "Decoding passess executed: %u.", countPasses);
 	return 0;
 }
 

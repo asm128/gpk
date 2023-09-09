@@ -43,20 +43,20 @@ static	::gpk::error_t	collisionDetectAny		(const ::gpk::SRigidBodyIntegrator & i
 	switch(bvA) {
 	case ::gpk::BOUNDING_TYPE_Sphere	: 
 		switch(bvB) { // rigid body A is Sphere
-		case ::gpk::BOUNDING_TYPE_AABB		: gsinfo_if(result = ::detectSphereAABB		(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
-		case ::gpk::BOUNDING_TYPE_Cylinder	: gsinfo_if(result = ::detectSphereCylinder	(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_AABB		: i_if(result = ::detectSphereAABB		(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_Cylinder	: i_if(result = ::detectSphereCylinder	(integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
 		}  // switch bvB
 		break;
 	case ::gpk::BOUNDING_TYPE_Cylinder	: 
 		switch(bvB) { // rigid body A is Cylinder
-		case ::gpk::BOUNDING_TYPE_AABB		: gsinfo_if(result = ::detectCylinderAABB  (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
-		case ::gpk::BOUNDING_TYPE_Sphere	: gsinfo_if(result = ::detectSphereCylinder(integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_AABB		: i_if(result = ::detectCylinderAABB  (integrator, rigidBodyA, rigidBodyB, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_Sphere	: i_if(result = ::detectSphereCylinder(integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
 		}  // switch bvB
 		break;
 	case ::gpk::BOUNDING_TYPE_AABB		: 
 		switch(bvB) { // rigid body A is AABB
-		case ::gpk::BOUNDING_TYPE_Cylinder	: gsinfo_if(result = ::detectCylinderAABB(integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
-		case ::gpk::BOUNDING_TYPE_Sphere	: gsinfo_if(result = ::detectSphereAABB  (integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_Cylinder	: i_if(result = ::detectCylinderAABB(integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
+		case ::gpk::BOUNDING_TYPE_Sphere	: i_if(result = ::detectSphereAABB  (integrator, rigidBodyB, rigidBodyA, contactCache, contactsDetected)); break; 
 		}  // switch bvB
 		break;
 	} // switch bvA

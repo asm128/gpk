@@ -105,7 +105,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	if(controlTable.IsAction(checkbox.IdGUIControl)) {
 		if(dialog.ImageCross.Texels.size() < 4) {
 #if !(defined(GPK_ESP32) || defined(GPK_ARDUINO))
-			es_if(errored(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross)));
+			e_if(errored(::gpk::pngFileLoad("../gpk_data/images/cross.png", imageCross)));
 #endif
 
 			dialog.ImageCross.resize(imageCross.metrics());

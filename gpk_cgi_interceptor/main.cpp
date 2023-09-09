@@ -77,7 +77,7 @@ static	::gpk::error_t								createChildProcess
 static	::gpk::error_t								writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcc chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD													dwWritten				= 0;
 	bool													bSuccess				= false;
-	e_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "Failed to write to child process' standard input.");
+	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
 	ree_if(false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }
@@ -209,7 +209,7 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 		appState.Process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 		::gpk::vcc									content_body			= {runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size()};
 		if(content_body.size())
-			e_if(errored(::writeToPipe(appState.IOHandles, content_body)), "Failed to write request content to process' stdin.");
+			ef_if(errored(::writeToPipe(appState.IOHandles, content_body)), "%s", "Failed to write request content to process' stdin.");
 		gerror_if(errored(::createChildProcess(appState.Process, environmentBlock, szCmdlineApp, szCmdlineFinal)), "Failed to create child process: %s.", szCmdlineApp.begin());	// Create the child process.
 		_beginthread(::threadReadFromPipe, 0, &appState);
 		SThreadStateRead							state;

@@ -115,7 +115,7 @@ static	::gpk::error_t	createChildProcess
 static	::gpk::error_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu8 chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD						dwWritten				= 0;
 	bool						bSuccess				= false;
-	e_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "Failed to write to child process' standard input.");
+	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
 	ree_if(false == (CloseHandle(handles.ChildStd_IN_Write) ? true : false), "%s", "Failed to close the pipe handle so the child process stops reading.");
 	return bSuccess ? 0 : -1;
 }
@@ -204,9 +204,9 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 				::gpk::vcu8					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
 				::gpk::error_t				contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu8{(const uint8_t*)"\0", 1}, payload);
-				ce_if(errored(contentOffset), "Failed to find environment block stop code.");
+				cef_if(errored(contentOffset), "%s", "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
-					e_if(errored(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2})), "Failed to write request content to process' stdin.");
+					ef_if(errored(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2})), "%s", "Failed to write request content to process' stdin.");
 				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
 			}
 		}

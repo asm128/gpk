@@ -144,7 +144,7 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 	ree_if(!fp, "Cannot open file: %s.", fileName.begin());
 	const int32_t				fileSize					= (int32_t)fp.size();
 	fileInMemory.clear();
-	gpk_necs(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %i. Available memory: %i.", fp.size(), heap_caps_get_free_size(MALLOC_CAP_8BIT));
+	gpk_necall(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %i. Available memory: %i.", fp.size(), heap_caps_get_free_size(MALLOC_CAP_8BIT));
 	rees_if(fileSize != fp.readBytes((char*)fileInMemory.begin(), fileSize));
 	fp.close();
 #else

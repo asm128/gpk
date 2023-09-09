@@ -87,7 +87,7 @@ namespace gpk
 				if(entity.Parent != -1)
 					continue;
 
-				es_if(errored(::gpk::updateEntityTransforms(iEntity, entity, Entities, Integrator, Scene->RenderNodes)));
+				e_if(errored(::gpk::updateEntityTransforms(iEntity, entity, Entities, Integrator, Scene->RenderNodes)));
 			}
 			return 0;
 		}

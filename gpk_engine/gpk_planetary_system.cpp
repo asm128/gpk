@@ -2,7 +2,7 @@
 
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
-	gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath), "%s", ::gpk::toString(jsonFilePath).begin());
+	gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath));
 	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 

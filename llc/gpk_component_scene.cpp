@@ -198,7 +198,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 				matFilename.push_back('/');
 				matFilename.append(lineValues[1]);
 			}
-			e_if(::createFromMTL(scene, matFilename, materialIndices), "Failed to load material file '%s'.", ::gpk::toString(matFilename).begin());
+			ef_if(::createFromMTL(scene, matFilename, materialIndices), "Failed to load material file '%s'.", ::gpk::toString(matFilename).begin());
 		}
 	}
 

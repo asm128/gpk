@@ -41,12 +41,12 @@ namespace gpk
 		tplt<size_t Len>
 		inlcxpr					view			(uint32_t elementCount, T (&elements)[Len])		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{}
 		inline					view			(T * elements, uint32_t elementCount)			: Data(elements), Count(elementCount)								{
-			gthrow_if(0 == elements && 0 != elementCount, "Invalid parameters: %p, %u.", elements, elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
+			gthrow_if(0 == elements && 0 != elementCount, "%u -> 0.", elementCount);	// Crash if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		tplt <size_t Len>
 		inline					view			(T (&elements)[Len], uint32_t elementCount)		: Data(elements), Count(::gpk::min((uint32_t)Len, elementCount))	{
-			gthrow_if(elementCount > Len, "Element count out of range. Max count: %u. Requested: %u.", (uint32_t)Len, elementCount);
+			gthrow_if(elementCount > Len, "%u > %u", elementCount, (uint32_t)Len);
 		}
 
 		// Operators
@@ -54,12 +54,12 @@ namespace gpk
 
 		T&						operator[]		(uint32_t index)								{
 			gsthrow_if(0 == Data);
-			gthrow_if(index >= Count, "Invalid index: %i. Count: %i.", index, Count);
+			gthrow_if(index >= Count, "%i >= %i.", index, Count);
 			return Data[index];
 		}
 		const T&				operator[]		(uint32_t index)			const				{
 			gsthrow_if(0 == Data);
-			gthrow_if(index >= Count, "Invalid index: %i. Count: %i.", index, Count);
+			gthrow_if(index >= Count, "%i >= %i.", index, Count);
 			return Data[index];
 		}
 		bool					operator!=		(const TConstView & other)	const				{ return  !operator==(other); } // I had to add this for the android build not supporting C++20.
@@ -89,18 +89,18 @@ namespace gpk
 		inline	T*				end				()									noexcept	{ return Data + Count;	}
 
 		::gpk::error_t			slice			(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)				{
-			ree_if(offset > Count, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)Count, offset);
+			reterr_gerror_if(offset > Count, "%u > %u", offset, (uint32_t)Count);
 			const uint32_t				newSize			= Count - offset;
 			if(count != (uint32_t)-1)
-				ree_if(count > newSize, "Out of range. Max size: %u. Requested: %u.", (uint32_t)newSize, count);
+				ree_if(count > newSize, "%u > %u", count, (uint32_t)newSize);
 			out						= {&Data[offset], ::gpk::min(newSize, count)};
 			return out.size();
 		}
 		::gpk::error_t			slice			(TConstView & out, uint32_t offset, uint32_t count = (uint32_t)-1)	const	{
-			ree_if(offset > Count, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)Count, offset);
+			ree_if(offset > Count, "%u > %u", offset, (uint32_t)Count);
 			const uint32_t				newSize			= Count - offset;
 			if(count != (uint32_t)-1)
-				ree_if(count > newSize, "Out of range. Max size: %u. Requested: %u.", (uint32_t)newSize, count);
+				ree_if(count > newSize, "%u > %u", count, (uint32_t)newSize);
 			out						= {&Data[offset], ::gpk::min(newSize, count)};
 			return out.size();
 		}
@@ -358,8 +358,8 @@ namespace gpk
 			right							= {};
 		}
 		else {
-			gpk_necall(original.slice(left, 0, (uint32_t)iValue), "%s", "Invalid slice");
-			gpk_necall(original.slice(right, iValue, (uint32_t)original.size() - iValue), "%s", "Invalid slice");
+			gpk_necs(original.slice(left, 0, (uint32_t)iValue));
+			gpk_necs(original.slice(right, iValue, (uint32_t)original.size() - iValue));
 		}
 		return iValue;
 	}
@@ -373,8 +373,8 @@ namespace gpk
 			right							= {};
 		}
 		else {
-			gpk_necall(original.slice(right, iValue + sequenceToFind.size()), "%s", "Invalid slice");
-			gpk_necall(original.slice(left, 0, iValue), "%s", "Invalid slice");
+			gpk_necs(original.slice(right, iValue + sequenceToFind.size()));
+			gpk_necs(original.slice(left, 0, iValue));
 		}
 		return iValue;
 	}

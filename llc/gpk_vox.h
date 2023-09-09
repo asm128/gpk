@@ -1,3 +1,6 @@
+
+#include "gpk_swap.h"
+
 #include "gpk_array_static.h"
 #include "gpk_file.h"
 #include "gpk_parse.h"

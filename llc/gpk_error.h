@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	typedef	int32_t	error_t;
+	typedef	int32_t	error_t, err_t;
 
 	stincxp	bool	failed		(const error_t errorCode)	noexcept	{ return errorCode < 0;		}
 	stincxp	bool	succeeded	(const error_t errorCode)	noexcept	{ return 0 <= errorCode;	}

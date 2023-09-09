@@ -12,9 +12,9 @@
 
 ::gpk::error_t			gpk::join				(::gpk::apod<char> & query, char separator, ::gpk::vcvcc fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
-		gpk_necs(query.append(fields[iField]), "%i", iField);
+		gpk_necall(query.append(fields[iField]), "%i", iField);
 		if(++iField < fields.size())
-			gpk_necs(query.push_back(separator), "%i", iField);
+			gpk_necall(query.push_back(separator), "%i", iField);
 	}
 	return 0;
 }

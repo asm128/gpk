@@ -73,6 +73,7 @@
     <ClInclude Include="gpk_deflate.h" />
     <ClInclude Include="gpk_dialog.h" />
     <ClInclude Include="gpk_dialog_controls.h" />
+    <ClInclude Include="gpk_log_level.h" />
     <ClInclude Include="gpk_event_input.h" />
     <ClInclude Include="gpk_event_screen.h" />
     <ClInclude Include="gpk_gauge.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="gpk_line2.h" />
     <ClInclude Include="gpk_line3.h" />
     <ClInclude Include="gpk_linear_map_pod.h" />
+    <ClInclude Include="gpk_log_core.h" />
     <ClInclude Include="gpk_minmax.h" />
     <ClInclude Include="gpk_minmax_n2.h" />
     <ClInclude Include="gpk_minmax_n3.h" />

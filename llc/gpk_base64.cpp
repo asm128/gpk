@@ -47,8 +47,8 @@ static	::gpk::error_t	base64EncodeTriplet								(const ::gpk::vcc & base64Symbo
 		if(1 == modTriplet) // pad with another '='
 			out_base64[out_base64.size() - 2]						= base64PadSymbol;
 	}
-	gpk_necall(out_base64.push_back(0), "%s", "Out of memory?"); // add a null byte at the end for safety.
-	gpk_necall(out_base64.resize(out_base64.size() - 1), "%s", "There are no known reasons for this to fail so it probably indicates memory corruption or something really bad."); // restore the count to ignore the null byte just added.
+	gpk_necs(out_base64.push_back(0)); // add a null byte at the end for safety.
+	gpk_necs(out_base64.resize(out_base64.size() - 1)); // restore the count to ignore the null byte just added.
 	return 0;
 }
 

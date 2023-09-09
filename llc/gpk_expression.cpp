@@ -7,9 +7,9 @@ static	::gpk::error_t	expressionReaderViews					(::gpk::apod<::gpk::SExpressionT
 		const ::gpk::SExpressionToken								& type									 = tokens[iTag];
 		if(iTag && (::gpk::EXPRESSION_READER_TYPE_TERM_INDEX == type.Type || ::gpk::EXPRESSION_READER_TYPE_TERM_KEY == type.Type || ::gpk::EXPRESSION_READER_TYPE_LITERAL
 			== type.Type) && (type.Span.End - type.Span.Begin) <= expression.size()) // doesn't count for root expression
-			gpk_necall(views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2}), "%s", "Out of memory?");
+			gpk_necs(views.push_back({&expression[type.Span.Begin + 1], type.Span.End - type.Span.Begin - 2}));
 		else
-			gpk_necall(views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin}), "%s", "Out of memory?");
+			gpk_necs(views.push_back({&expression[type.Span.Begin], type.Span.End - type.Span.Begin}));
 	}
 	return 0;
 }
@@ -110,7 +110,7 @@ static	::gpk::error_t	expressionReaderCloseTerm							(::gpk::SExpressionReaderS
 		seterr_break_if(expression.size() - stateReader.IndexCurrentChar < 4, "End of stream during unicode code point parsing. JSON length: %s. Current index: %u.", expression.size(), stateReader.IndexCurrentChar);
 		info_printf("Unicode code point found: %4.4s", &expression[stateReader.IndexCurrentChar]);
 		currentElement												= {stateReader.IndexCurrentElement, ::gpk::EXPRESSION_READER_TYPE_CODEPOINT, {stateReader.IndexCurrentChar, stateReader.IndexCurrentChar + 4}};
-		seterr_if(errored(tokens.push_back(currentElement)), "%s", "Out of memory?");
+		seterr_if(errored(tokens.push_back(currentElement)), "%s", "");
 		stateReader.CurrentElement									= &tokens[stateReader.IndexCurrentElement];
 		stateReader.IndexCurrentChar								+= 3;	// Parse unicode code point
 		break;

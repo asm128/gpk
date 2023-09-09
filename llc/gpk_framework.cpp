@@ -132,7 +132,7 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())
-			es_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
+			e_if(errored(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
 	}
 #endif
 	::gpk::SGUI						& gui				= *framework.GUI;
@@ -200,8 +200,8 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	::gpk::pobj<::gpk::SSystemEvent>	newSystemEvent;
 	switch(uMsg) {
 	default: break;
-	case WM_CLOSE			: es_if(errored(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueue))); ::DestroyWindow(hWnd); return 0;
-	case WM_DESTROY			: es_if(errored(::gpk::eventEnqueueScreenDestroy(mainDisplay.EventQueue))); 
+	case WM_CLOSE			: e_if(errored(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueue))); ::DestroyWindow(hWnd); return 0;
+	case WM_DESTROY			: e_if(errored(::gpk::eventEnqueueScreenDestroy(mainDisplay.EventQueue))); 
 		displayDetail.WindowHandle									= 0;
 		mainDisplay.Closed											= true;
 		::PostQuitMessage(0);
@@ -210,34 +210,34 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		RECT								rect					= {};
 		GetClientRect(hWnd, &rect);
 		::gpk::n2u16						newMetrics				= {(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)};
-		es_if(errored(::gpk::eventEnqueueScreenCreate(mainDisplay.EventQueue, {newMetrics, *(const CREATESTRUCTA*)lParam})));
+		e_if(errored(::gpk::eventEnqueueScreenCreate(mainDisplay.EventQueue, {newMetrics, *(const CREATESTRUCTA*)lParam})));
 		break;
 	}
 	case WM_SHOWWINDOW		: { 
 		if(0 == wParam) {
-			es_if(errored(::gpk::eventEnqueueScreenHide(mainDisplay.EventQueue, (uint8_t)lParam))); 
+			e_if(errored(::gpk::eventEnqueueScreenHide(mainDisplay.EventQueue, (uint8_t)lParam))); 
 		} 
 		else {
-			es_if(errored(::gpk::eventEnqueueScreenShow(mainDisplay.EventQueue, (uint8_t)lParam)));
+			e_if(errored(::gpk::eventEnqueueScreenShow(mainDisplay.EventQueue, (uint8_t)lParam)));
 			mainDisplay.Repaint = true; 
 		}
 		break;
 	}
-	case WM_CHAR			: verbose_printf("WM_CHAR          '%u'.", wParam); es_if_failed(gpk::eventEnqueueTextChar			(mainDisplay.EventQueue, (uint32_t)wParam)); mainDisplay.Repaint = true; break;
-	case WM_KEYDOWN			: verbose_printf("WM_KEYDOWN       '%u'.", wParam); es_if_failed(gpk::eventEnqueueKeyboardDown		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_KEYUP			: verbose_printf("WM_KEYUP         '%u'.", wParam); es_if_failed(gpk::eventEnqueueKeyboardUp		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYDOWN		: verbose_printf("WM_SYSKEYDOWN    '%u'.", wParam); es_if_failed(gpk::eventEnqueueKeyboardSysDown	(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
-	case WM_SYSKEYUP		: verbose_printf("WM_SYSKEYUP      '%u'.", wParam); es_if_failed(gpk::eventEnqueueKeyboardSysUp		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
-	case WM_LBUTTONDOWN		: verbose_printf("WM_LBUTTONDOWN   '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
-	case WM_RBUTTONDOWN		: verbose_printf("WM_RBUTTONDOWN   '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
-	case WM_MBUTTONDOWN		: verbose_printf("WM_MBUTTONDOWN   '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
-	case WM_LBUTTONUP		: verbose_printf("WM_LBUTTONUP     '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseUp			(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 0; mainDisplay.Repaint = true; break;
-	case WM_RBUTTONUP		: verbose_printf("WM_RBUTTONUP     '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseUp			(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 0; mainDisplay.Repaint = true; break;
-	case WM_MBUTTONUP		: verbose_printf("WM_MBUTTONUP     '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseUp			(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 0; mainDisplay.Repaint = true; break;
-	case WM_LBUTTONDBLCLK	: verbose_printf("WM_LBUTTONDBLCLK '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDoubleClick	(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
-	case WM_RBUTTONDBLCLK	: verbose_printf("WM_RBUTTONDBLCLK '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDoubleClick	(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
-	case WM_MBUTTONDBLCLK	: verbose_printf("WM_MBUTTONDBLCLK '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseDoubleClick	(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
-	case WM_MOUSEWHEEL		: verbose_printf("WM_MOUSEWHEEL    '%u'.", wParam); es_if_failed(gpk::eventEnqueueMouseWheel		(mainDisplay.EventQueue, input.MouseCurrent.Deltas.z = GET_WHEEL_DELTA_WPARAM(wParam))); mainDisplay.Repaint = true; break;
+	case WM_CHAR			: verbose_printf("WM_CHAR          '%u'.", wParam); if_fail_e(gpk::eventEnqueueTextChar				(mainDisplay.EventQueue, (uint32_t)wParam)); mainDisplay.Repaint = true; break;
+	case WM_KEYDOWN			: verbose_printf("WM_KEYDOWN       '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardDown			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
+	case WM_KEYUP			: verbose_printf("WM_KEYUP         '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardUp			(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
+	case WM_SYSKEYDOWN		: verbose_printf("WM_SYSKEYDOWN    '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysDown		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 1; mainDisplay.Repaint = true; break;
+	case WM_SYSKEYUP		: verbose_printf("WM_SYSKEYUP      '%u'.", wParam); if_fail_e(gpk::eventEnqueueKeyboardSysUp		(mainDisplay.EventQueue, (uint8_t )wParam)); if(wParam < ::gpk::size(input.KeyboardPrevious.KeyState)) input.KeyboardCurrent.KeyState[(uint32_t)wParam] = 0; mainDisplay.Repaint = true; break;
+	case WM_LBUTTONDOWN		: verbose_printf("WM_LBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
+	case WM_RBUTTONDOWN		: verbose_printf("WM_RBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
+	case WM_MBUTTONDOWN		: verbose_printf("WM_MBUTTONDOWN   '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDown			(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
+	case WM_LBUTTONUP		: verbose_printf("WM_LBUTTONUP     '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseUp				(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 0; mainDisplay.Repaint = true; break;
+	case WM_RBUTTONUP		: verbose_printf("WM_RBUTTONUP     '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseUp				(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 0; mainDisplay.Repaint = true; break;
+	case WM_MBUTTONUP		: verbose_printf("WM_MBUTTONUP     '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseUp				(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 0; mainDisplay.Repaint = true; break;
+	case WM_LBUTTONDBLCLK	: verbose_printf("WM_LBUTTONDBLCLK '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDoubleClick		(mainDisplay.EventQueue, 0)); input.MouseCurrent.ButtonState[0] = 1; mainDisplay.Repaint = true; break;
+	case WM_RBUTTONDBLCLK	: verbose_printf("WM_RBUTTONDBLCLK '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDoubleClick		(mainDisplay.EventQueue, 1)); input.MouseCurrent.ButtonState[1] = 1; mainDisplay.Repaint = true; break;
+	case WM_MBUTTONDBLCLK	: verbose_printf("WM_MBUTTONDBLCLK '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseDoubleClick		(mainDisplay.EventQueue, 2)); input.MouseCurrent.ButtonState[2] = 1; mainDisplay.Repaint = true; break;
+	case WM_MOUSEWHEEL		: verbose_printf("WM_MOUSEWHEEL    '%u'.", wParam); if_fail_e(gpk::eventEnqueueMouseWheel			(mainDisplay.EventQueue, input.MouseCurrent.Deltas.z = GET_WHEEL_DELTA_WPARAM(wParam))); mainDisplay.Repaint = true; break;
 	case WM_MOUSEMOVE		: {
 		::gpk::n2i16						mousePos		= {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
 		input.MouseCurrent.Position.x	= (int16_t)::gpk::clamped(mousePos.x, (int16_t)0, (int16_t)(mainDisplay.Size.x - 1));
@@ -247,15 +247,15 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
 			mainDisplay.Repaint				= true;
 
-		es_if(errored(::gpk::eventEnqueueMousePosition(mainDisplay.EventQueue, input.MouseCurrent.Position))); 
+		e_if(errored(::gpk::eventEnqueueMousePosition(mainDisplay.EventQueue, input.MouseCurrent.Position))); 
 
 		break;
 		}
 	case WM_ACTIVATE: {
 		switch(wParam) {
-		case WA_ACTIVE		: es_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 0))); /*XInputEnable(1); */break; // Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
-		case WA_CLICKACTIVE	: es_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 1))); /*XInputEnable(1); */break; // Activated by a mouse click.
-		case WA_INACTIVE	: es_if(errored(::gpk::eventEnqueueScreenDeactivate(mainDisplay.EventQueue, 0))); /*XInputEnable(0); */break; 
+		case WA_ACTIVE		: e_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 0))); /*XInputEnable(1); */break; // Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+		case WA_CLICKACTIVE	: e_if(errored(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 1))); /*XInputEnable(1); */break; // Activated by a mouse click.
+		case WA_INACTIVE	: e_if(errored(::gpk::eventEnqueueScreenDeactivate(mainDisplay.EventQueue, 0))); /*XInputEnable(0); */break; 
 		}
 		break;
 	}
@@ -287,7 +287,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
 #endif
-				es_if(errored(::gpk::eventEnqueueScreenResize(mainDisplay.EventQueue, newMetrics)));
+				e_if(errored(::gpk::eventEnqueueScreenResize(mainDisplay.EventQueue, newMetrics)));
 			}
 		}
 		break;
@@ -295,12 +295,12 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		info_printf("%s", "WM_PAINT");
 		mainDisplay.Repaint		= true;
 		break;
-	//case MM_JOY1BUTTONDOWN	: es_if(errored(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
-	//case MM_JOY1BUTTONUP		: es_if(errored(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been released.
-	//case MM_JOY1ZMOVE			: es_if(errored(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID1 changed position in the z-direction.
-	//case MM_JOY2BUTTONDOWN	: es_if(errored(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been pressed.
-	//case MM_JOY2BUTTONUP		: es_if(errored(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been released.
-	//case MM_JOY2ZMOVE			: es_if(errored(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID2 changed position in the x- or y-direction
+	//case MM_JOY1BUTTONDOWN	: e_if(errored(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
+	//case MM_JOY1BUTTONUP		: e_if(errored(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been released.
+	//case MM_JOY1ZMOVE			: e_if(errored(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID1 changed position in the z-direction.
+	//case MM_JOY2BUTTONDOWN	: e_if(errored(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been pressed.
+	//case MM_JOY2BUTTONUP		: e_if(errored(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been released.
+	//case MM_JOY2ZMOVE			: e_if(errored(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID2 changed position in the x- or y-direction
 	//case MM_JOY1MOVE		: 
 	//case MM_JOY2MOVE		: { 
 	//	const char							iJoystick					= (MM_JOY2MOVE == uMsg) ? 1 : 0;

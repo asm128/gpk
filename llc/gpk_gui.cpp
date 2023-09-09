@@ -244,7 +244,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 	if(recursive) { // Delete children first.
 		::gpk::acid					children				= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			e_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
+			ef_if(errored(::gpk::controlDelete(gui, children[iChild], true)), "Failed to delete control! Invalid control id? %i.", children[iChild]);
 	}
 	// Remove from parent list
 	const ::gpk::cid_t			indexParent				= gui.Controls.States[iControl].Parent;
@@ -265,7 +265,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 			}
 	}
 #if defined(GPK_DEBUG_ENABLED)
-	gerror_if(childrenRemoved > 1, "Parent should not reference a child control more than once. References found: %i.", childrenRemoved);
+	ef_if(childrenRemoved > 1, "Parent should not reference a child control more than once. References found: %i.", childrenRemoved);
 #endif
 	gui.Controls.SetUnused(iControl, true);
 	return 0;
@@ -302,7 +302,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 
 	gui.Controls.SetUpdated(iParent , false);
 	gui.Controls.SetUpdated(iControl, false);
-	gpk_necall(children.push_back(iControl), "%s", "Out of memory?");
+	gpk_necs(children.push_back(iControl));
 	return 0;
 }
 

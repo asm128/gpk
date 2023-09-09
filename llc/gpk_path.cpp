@@ -186,7 +186,7 @@
 		int32_t						lenPath						= snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, withoutTrailingSlash.begin(), fdFile.cFileName);
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			::gpk::error_t				newFolderIndex				= pathContents.Folders.push_back({});
-			gpk_necall(newFolderIndex, "%s", "Out of memory?");
+			gpk_necs(newFolderIndex);
 			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unknown error!");
 			verbose_printf("Directory: %s.", sPath);
 		}
@@ -211,7 +211,7 @@
 			int32_t						lenPath						= snprintf(sPath, ::gpk::size(sPath) - 2, "%s/%s", withoutTrailingSlash.begin(), drnt->d_name);
 			if(drnt->d_type == DT_DIR) {
 				::gpk::error_t				newFolderIndex				= pathContents.Folders.push_back({});
-				gpk_necall(newFolderIndex, "%s", "Out of memory?");
+				gpk_necs(newFolderIndex);
 				gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unkown error!");
 				info_printf("Directory: %s.", sPath);
 			}

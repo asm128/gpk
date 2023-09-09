@@ -28,6 +28,12 @@ namespace gpk
 		return (_tBit)(((_tBit)1) << bitIndex);
 	}
 
+//#ifdef GPK_BIGENDIAN
+//	stincxp	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF000000 >> (byteIndex * 8)) & bytes) >> ((sizeof(bytes) - byteIndex) * 8); }
+//#else
+//	stincxp	uint8_t		le_byte_at		(uint32_t bytes, uint8_t byteIndex)	noexcept	{ return ((0xFF << (byteIndex * 8)) & bytes) >> (byteIndex * 8); }
+//#endif
+
 	tplt<tpnm _tField>
 	static	_tField			reverse_bitfield	(_tField input, const int32_t bitDepth)	{
 		const uint32_t				sizeType			= (uint32_t)(sizeof(_tField) * 8);
@@ -42,4 +48,3 @@ namespace gpk
 }
 
 #endif // GPK_BIT_H_23627
-//[{"parms": {"sessiId": "424995b9-118f-4142-b62d-9cc0eb97a8151"}, "method":"opnPly"}, {"params": {"lnsPlyd": 5, "btPrLn": 1, "sessnId": "424995b9-118f-4142-b62d-9cc0eb97a815", "tpe": "spi", "bt": 25}, "mthod": "plceBet"}, {"paras": {"sessionId":"424995b9-118f-4142-b62d-9cc0eb97a815"}, "method": "getBtRslt"}]

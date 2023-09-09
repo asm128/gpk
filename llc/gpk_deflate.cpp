@@ -31,7 +31,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 ::gpk::error_t			gpk::crcGenerateAndAppend	(::gpk::au8 & bytes)	{
 	uint64_t					crcToStore					= 0;
 	::gpk::crcGenerate(bytes, crcToStore);
-	gpk_necall(bytes.append((const uint8_t*)&crcToStore, sizeof(uint64_t)), "%s", "Out of memory?");;
+	gpk_necs(bytes.append((const uint8_t*)&crcToStore, sizeof(uint64_t)));;
 	return 0;
 }
 
@@ -42,7 +42,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 	::gpk::crcGenerate({bytes.begin(), startOfCRC}, check);
 	const uint64_t				found						= *(uint64_t*)&bytes[startOfCRC];
 	ree_if(check != found, "CRC Check failed: Stored: %llu. Calculated: %llu.", found, check);
-	gpk_necall(bytes.resize(bytes.size() - 8), "%s", "Out of memory?");
+	gpk_necs(bytes.resize(bytes.size() - 8));
 	return 0;
 }
 
@@ -58,21 +58,21 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 	strm.avail_in			= inflated.size();
 	strm.next_in			= (Bytef*)inflated.begin();
 	::gpk::au8					block;
-	gpk_necall(block.resize(chunkSize), "%s", "Out of memory?");
+	gpk_necs(block.resize(chunkSize));
 	while(true) {
 		strm.avail_out			= block.size();
 		strm.next_out			= (Bytef*)block.begin();
 		ret						= deflate(&strm, Z_FINISH);    // no bad return value
-		be_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered
+		bef_if(ret == Z_STREAM_ERROR, "Failed to compress: 0x%x.", ret);  // state not clobbered
 		const uint32_t				deflatedSize			= (uint32_t)((uint8_t*)strm.next_out - block.begin());
-		gpk_necall(deflated.append(block.begin(), deflatedSize), "%s", "Out of memory?");
+		gpk_necs(deflated.append(block.begin(), deflatedSize));
 		if(ret == Z_STREAM_END)
 			break;
 	}
 	int							ret_end					= deflateEnd(&strm);
-	gerror_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	// all input will be used
+	ef_if(strm.avail_in != 0, "%s", "Not all of the input bytes were consumed.");	// all input will be used
 	ree_if(ret < 0, "%s", "Unknown error");												// stream will be complete
-	gerror_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				// stream will be complete
+	ef_if(ret != Z_STREAM_END && ret != Z_OK, "%s", "Unknown error");				// stream will be complete
 	ree_if(ret_end == Z_STREAM_ERROR, "deflateEnd() returned %s", "Z_STREAM_ERROR");
 	info_printf("deflateEnd: %u.", (uint32_t)ret);
 #endif
@@ -91,7 +91,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 	strm.avail_in			= (uint32_t)deflated.size();
 	strm.next_in			= (Bytef *)deflated.begin();
 	::gpk::au8					block;
-	gpk_necall(block.resize(chunkSize), "%s", "Out of memory?");
+	gpk_necs(block.resize(chunkSize));
 	while(true) {
 		strm.avail_out			= (uint32_t)block.size();
 		strm.next_out			= (Bytef *)block.begin();
@@ -107,7 +107,7 @@ stacxpr	const uint32_t	GPK_CRC_CRC_SEED			= 18973;
 		}
 		ree_if(ret < 0, "Failed to decompress? inflate error: %i.", ret);
 		const uint32_t				inflatedSize			= (uint32_t)((const uint8_t*)strm.next_out - block.begin());
-		gpk_necall(inflated.append(block.begin(), inflatedSize), "%s", "Out of memory?");
+		gpk_necs(inflated.append(block.begin(), inflatedSize));
 		if(ret == Z_STREAM_END)
 			break;
 	}
@@ -245,12 +245,12 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 		if(-1 != indexSlash) { // Create path if any specified.
 			finalPathName[indexSlash]	= 0;
 			lenPath						= (uint32_t)strlen(finalPathName.begin());
- 			ce_if(errored(::gpk::pathCreate({finalPathName.begin(), lenPath})), "Failed to create foder: %s.", finalPathName.begin());
+ 			cef_if(errored(::gpk::pathCreate({finalPathName.begin(), lenPath})), "Failed to create foder: %s.", finalPathName.begin());
 			finalPathName[indexSlash]	= '/';
 		}
 		::gpk::fopen_s(&fp, finalPathName.begin(), "wb");
-		ce_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());
-		ce_if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
+		cef_if(0 == fp, "Failed to create file: %s.", finalPathName.begin());
+		cef_if(fileContent.size() != fwrite(fileContent.begin(), 1, fileContent.size(), fp), "Failed to write file: %s. Disk full?", finalPathName.begin());
 	}
 	gpk_safe_fclose(fp);
 	return 0;

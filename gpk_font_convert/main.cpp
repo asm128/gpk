@@ -72,12 +72,12 @@ int						main					() {
 	::gpk::vcc					extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
 		::gpk::vcc					filenameInput			= fontFiles[iFile];
-		ci_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
+		cif_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
 		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
-		ce_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
+		cef_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
 		::gpk::aobj<::gpk::vcc>		splitFileName;

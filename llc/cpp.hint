@@ -18,7 +18,7 @@
 #define gpk_throw
 #define gthrow_if
 #define gsthrow_if
-#define gerror_if
+#define ef_if
 #define gwarn_if
 #define ginfo_if
 #define gserror_if
@@ -29,7 +29,7 @@
 #define gpk_newcall
 #define gpk_hrcall
 #define gpk_hrecall
-#define gerror_if
+#define ef_if
 #define gwarn_if
 #define ginfo_if
 #define gserror_if

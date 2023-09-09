@@ -42,7 +42,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
-						es_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)));
+						e_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)));
 					sockets.fd_array[sockets.fd_count]		= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -54,7 +54,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 				clientsToProcess.clear();
 				{
 					::std::lock_guard							lock								(serverInstance.Mutex);
-					bi_if(0 == serverInstance.Clients.size(), "%s", "No clients to process. Server closed?");
+					bi_if(0 == serverInstance.Clients.size());
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
 							::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
@@ -83,7 +83,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						if (errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 							uint32_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
-								warning_printf("%s", "Could not receive datagram.");
+								warning_printf("%s", "'lastError != WSAEMSGSIZE' - Could not receive datagram.");
 								::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 								if(lastError == WSAENETRESET || lastError == WSAENOTSOCK)
 									client.State = ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
@@ -97,7 +97,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 							continue;
 						}
-						e_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+						ef_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 						if(INVALID_SOCKET != client.Socket)
 							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 						::select(0, &sockets, 0, 0, &wait_time);
@@ -221,7 +221,7 @@ static	::gpk::error_t	server					(::gpk::SUDPServer& serverInstance)		{
 
 static	void			threadServer			(void* pServerInstance)				{
 	::gpk::SUDPServer			& serverInstance		= *(::gpk::SUDPServer*)pServerInstance;
-	es_if(errored(server(serverInstance)))
+	e_if(errored(server(serverInstance)))
 	else
 		info_printf("Server gracefully closed.");
 
@@ -253,7 +253,7 @@ static	void			threadServer			(void* pServerInstance)				{
 		::gpk::sleep(100);
 	} while(10 > ++attempt && serverInstance.Clients.size());
 
-	ginfo_if(attempt < 10, "Listening socket closed with %u disconnect attempt%s.", attempt, (attempt > 1) ? "s":"");
+	if_if(attempt < 10, "Listening socket closed with %u disconnect attempt%s.", attempt, (attempt > 1) ? "s":"");
 	return 0;
 }
 

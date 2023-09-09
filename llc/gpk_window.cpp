@@ -129,7 +129,7 @@
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
-	e_if(FALSE == ::BitBlt(hdc, 0, 0
+	ef_if(FALSE == ::BitBlt(hdc, 0, 0
 		, ::gpk::min(metricsSource.x, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth)
 		, ::gpk::min(metricsSource.y, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight)
 		, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY)
@@ -149,7 +149,7 @@
 	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
 	::HDC					dc											= ::GetDC(windowHandle);
 	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
-	e_if(errored(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
+	ef_if(errored(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
 #elif defined(GPK_XCB)
 	(void)displayInstance; (void)targetToPresent;

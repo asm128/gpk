@@ -63,12 +63,16 @@
 #	define GPK_DISABLE_CPP_EXCEPTIONS
 #endif
 
-#if !defined(GPK_WINDOWS)
-	#if defined(GPK_ATMEL)
-	#	include <stddef.h>
-	#else
-	#	include <cstddef>
-	#endif
+#ifdef GPK_WINDOWS
+#	include <cstdint>
+#else
+#	if defined(GPK_ATMEL)
+#		include <stddef.h>
+#		include <stdint.h>
+#	else
+#		include <cstddef>
+#		include <cstdint>
+#	endif
 #endif
 
 #if defined(GPK_ATMEL)
@@ -96,11 +100,22 @@
 #define nodstxp nodscrd stacxpr
 #define ndstinx nodstin cnstxpr
 
+#define	GPK_STRINGIFY(x) #x
+#define	GPK_TOSTRING(x)  GPK_STRINGIFY(x)
 
 namespace gpk
 {
+#if defined(GPK_ANDROID) || defined(GPK_CLANG)
+#	pragma clang diagnostic push
+#	pragma clang diagnostic ignored "-Wtautological-constant-out-of-range-compare"
+#endif
 	// -- Returns 0 on little-endian machines
-	nodstin int		test_endianness		()	noexcept	{ const unsigned short test = 0xFF00; return (((const unsigned char*)&test)[0] == 0xFFU) ? 1 : 0; }
+
+	nodstin int		test_endianness		()	noexcept	{ stacxpr uint16_t test = 0xFF00U; return (((const  char*)&test)[0] == 0xFFU) ? 1 : 0; }
+
+#if defined(GPK_ANDROID) || defined(GPK_CLANG)
+#	pragma clang diagnostic pop
+#endif
 }
 
 #endif // GPK_PLATFORM_GLOBALS_H_23627

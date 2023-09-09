@@ -122,7 +122,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
     // loop through all the results and connect to the first we can
 	addrinfo									* currentServinfo				= 0;
     for(currentServinfo = servinfo; currentServinfo != NULL; currentServinfo = currentServinfo->ai_next) {
-        ce_if(INVALID_SOCKET == (sockfd.Handle = socket(currentServinfo->ai_family, currentServinfo->ai_socktype, currentServinfo->ai_protocol)), "%s", "client: socket");
+        ce_if(INVALID_SOCKET == (sockfd.Handle = socket(currentServinfo->ai_family, currentServinfo->ai_socktype, currentServinfo->ai_protocol)));
         if(-1 == connect(sockfd, currentServinfo->ai_addr, (int)currentServinfo->ai_addrlen)) {
             gpk_safe_closesocket(sockfd.Handle);
             error_printf("%s", "client: connect");

@@ -99,9 +99,9 @@
 				info_printf("%s", "Application instance initialized successfully. Executing main loop...");	\
 				while(true) {																				\
 					::gpk::error_t			updateResult		= ::update(*app, false);					\
-					bis_if(1 == updateResult);																\
-					bes_if(errored(updateResult));															\
-					es_if(::draw(*app));																	\
+					bi_if(1 == updateResult);																\
+					be_if(errored(updateResult));															\
+					e_if(::draw(*app));																	\
 				}																							\
 				info_printf("%s", "Cleaning up application instance...");									\
 				::cleanup(*app);																			\
@@ -155,7 +155,7 @@
 					updateResult	= ::update(*runtimeState.Application, false);									\
 					bis_if(::gpk::APPLICATION_STATE_EXIT == updateResult);											\
 					bes_if(errored(updateResult));																	\
-					/*gerror_if(mainModule.Render(app), "Why would this ever happen?");	*/							\
+					/*ef_if(mainModule.Render(app), "Why would this ever happen?");	*/							\
 					/*Sleep(1);		*/																				\
 				}																									\
 				gpk_sync_decrement(runtimeState.RenderThreadUsers);	/* Report we're done	*/						\

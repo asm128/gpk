@@ -20,7 +20,7 @@ static	::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_
 	const ::gpk::XML_TOKEN	parentType					= (parentIndex >= 0) ? reader.Token[parentIndex].Type : (::gpk::XML_TOKEN)-1;
 	(void)parentType;
 	const uint32_t			offsetChar					= (iStartCharacter == -1) ? reader.StateRead.IndexCurrentChar : iStartCharacter;
-	gpk_necall(reader.StateRead.IndexCurrentElement	= reader.Token.push_back({token, {offsetChar, 0}, parentIndex}), "%s", "Out of memory?");
+	gpk_necs(reader.StateRead.IndexCurrentElement	= reader.Token.push_back({token, {offsetChar, 0}, parentIndex}));
 	xml_info_printf("Opening element type: %i (%s) at index %i."
 		"\nNest level: %i"
 		"\nParent index: %i"

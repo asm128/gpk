@@ -1,5 +1,5 @@
 /// This file is part of the Game Object Data System
-/// Copyright © 2011-2016: Pablo Ariel Zorrilla Cepeda
+/// Copyright ï¿½ 2011-2016: Pablo Ariel Zorrilla Cepeda
 #include "gpk_eval.h"
 #include "gpk_typeint.h"
 
@@ -123,9 +123,9 @@ namespace gpk
 				);
 		}
 		inlcxpr	bool		operator==		(const DATA_TYPE& other)	const				{
-			return	SizeInBits		+ 1	==			(GTYPEID_ELEMENTSIZE	(other))
+			return	SizeInBits		+ 1	==	uint32_t(GTYPEID_ELEMENTSIZE	(other))
 				&&	ElementPad			==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
-				&&	ElementCount	+ 1	== (uint32_t)GTYPEID_ELEMENTCOUNT	(other)
+				&&	ElementCount	+ 1	==	uint32_t(GTYPEID_ELEMENTCOUNT	(other))
 				&&	IsBigEndian			==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
 				&&	IsFloat				==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
 				&&	IsNorm				==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)

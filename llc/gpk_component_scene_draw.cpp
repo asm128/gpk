@@ -122,7 +122,7 @@ static	::gpk::error_t	drawOrderedVertices
 	}
 	for(uint32_t iNode = 0; iNode < renderer.RenderCache.NodesToRender.size(); ++iNode) {
 		const uint32_t												indexNode				= renderer.RenderCache.NodesToRender[iNode];
-		e_if(errored(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth)), "Failed to render node %i", indexNode);
+		ef_if(errored(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth)), "Failed to render node %i", indexNode);
 	}
 	return 0;
 }

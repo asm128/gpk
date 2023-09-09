@@ -684,6 +684,12 @@
     <ClInclude Include="gpk_gtl_command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_log_level.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_log_core.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">

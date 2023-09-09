@@ -25,7 +25,7 @@ namespace gpk
 
 		inlcxpr					array_pod			()										noexcept	= default;
 								array_pod			(::std::initializer_list<T> init)				{
-			gthrow_if(errored(resize((uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
+			gthrow_if(errored(resize((uint32_t)init.size())), "init.size() -> %u.", (uint32_t)init.size());
 			memcpy(Data, init.begin(), Count * sizeof(T));
 		}
 								array_pod			(array_pod<T> && other)					noexcept	{
@@ -66,13 +66,13 @@ namespace gpk
 		::gpk::error_t			clear_pointer		()										noexcept	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
 		// Returns the new size of the array
 		::gpk::error_t			pop_back			()										noexcept	{
-			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
+			rees_if(0 == Count);
 			*(u16*)&Data[--Count]		= 0;
 			return Count;
 		}
 		// Returns the new size of the array
 		::gpk::error_t			pop_back			(T & oldValue)							noexcept	{
-			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
+			rees_if(0 == Count);
 			oldValue				= Data[--Count];
 			*(u16*)&Data[Count]		= 0;
 			return Count;
@@ -142,7 +142,7 @@ namespace gpk
 		}
 		// returns the new size of the list or -1 on failure.
 		::gpk::error_t			insert				(uint32_t index, const T & newValue)	noexcept	{
-			ree_if(index > Count, "Invalid index: %u.", index);
+			ree_if(index > Count, "%u > %u", index, Count);
 			const uint32_t				newCount			= Count + 1;
 			if(Size < newCount) {
 				T							* newData			= 0;
@@ -168,7 +168,7 @@ namespace gpk
 		}
 		// returns the new size of the list or -1 on failure.
 		::gpk::error_t			insert				(uint32_t index, const T* chainToInsert, uint32_t chainLength)	noexcept	{
-			ree_if(index > Count, "Invalid index: %u.", index);
+			ree_if(index > Count, "%u > %u", index, Count);
 
 			const uint32_t				newCount			= Count + chainLength;
 			if(Size < newCount) {
@@ -198,7 +198,7 @@ namespace gpk
 		inline	::gpk::error_t	insert				(uint32_t index, ::gpk::view<const T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 		::gpk::error_t			remove_unordered	(uint32_t index)												noexcept	{
-			ree_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "%u >= %u.", index, Count);
 			Data[index]				= Data[--Count];
 			*(u16*)&Data[Count]		= 0;
 			return Count;
@@ -207,12 +207,12 @@ namespace gpk
 		::gpk::error_t			erase				(const T* address)												noexcept	{
 			const ptrdiff_t				ptrDiff				= ptrdiff_t(address) - (ptrdiff_t)Data;
 			const uint32_t				index				= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(T));
-			ree_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "%u >= %u. p: 0x%p", index, Count, address);
 			return remove(index);
 		}
 		// returns the new array size or -1 if failed.
 		::gpk::error_t			remove				(uint32_t index)													noexcept	{
-			ree_if(index >= Count, "Invalid index: %u.", index);
+			ree_if(index >= Count, "%u >= %u.", index, Count);
 			--Count;
 			while(index < Count) {
 				Data[index]				= Data[index + 1];

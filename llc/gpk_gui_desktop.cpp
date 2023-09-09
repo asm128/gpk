@@ -41,7 +41,7 @@
 		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
 			gpk_necall(::gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
 		else
-			gerror_if(childControlListIndex != -1, "%s", "");
+			ef_if(childControlListIndex != -1, "%s", "");
 	}
 	if(desktop.Items.ControlLists.size() > (uint32_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
 		if (desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)

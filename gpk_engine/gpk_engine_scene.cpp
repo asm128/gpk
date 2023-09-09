@@ -189,7 +189,7 @@ static	::gpk::error_t	drawBuffers
 		if((worldTransform.GetTranslation() - constants.CameraPosition).Normalize().Dot(constants.CameraFront) <= 0)
 			return 0;
 
-		ce_if(errored(::transformTriangles(renderCache, scene, constants, iRenderNode)), "iRenderNode %i", iRenderNode);
+		cef_if(errored(::transformTriangles(renderCache, scene, constants, iRenderNode)), "iRenderNode %i", iRenderNode);
 
 		const ::gpk::SSkin				& skin				= *scene.Graphics->Skins.Elements[renderNode.Skin];
 		const ::gpk::SRenderMaterial	& material			= skin.Material;

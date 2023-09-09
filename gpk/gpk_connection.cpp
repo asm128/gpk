@@ -132,12 +132,12 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		payloadHeader.Size					= messageToSend.Payload.size();
 		if(messageToSend.Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE) {
 			payloadHeader.MessageId				= messageToSend.Time;
-			ce_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			gpk_necs(messageCacheSent.push_back(pMessageToSend));
 			info_printf("Sent response to message id: %llx", payloadHeader.MessageId);
 		}
 		else {
-			ce_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
+			cef_if(messageToSend.Payload.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "Maximum allowed payload size is only %u bytes.", ::gpk::UDP_PAYLOAD_SIZE_LIMIT);
 			::gpk::view_stream<uint8_t>				sendStream;
 			::gpk::au8					ardellEncoded;
 			payloadHeader.MessageId				= ::hashFromTime(messageToSend.Time);
@@ -179,7 +179,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 				}
 			}
 
-			ce_if((int)sendStream.CursorPosition != ::sendto(client.Socket, (const char*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sendStream.CursorPosition != ::sendto(client.Socket, (const char*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
 			{
 				gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
@@ -235,7 +235,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		if(messageToSend.Command.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 			payloadsToSend.push_back(pMessageToSend);
 		else {
-			ce_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			//pMessageToSend->Time										= currentTime;
 			gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
 			gpk_necs(messageCacheSent.push_back(pMessageToSend));

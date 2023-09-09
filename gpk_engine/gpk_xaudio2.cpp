@@ -453,7 +453,7 @@ static	::gpk::error_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::a
 	for( unsigned int j = 0; j < count; ++j ) {
 		::gpk::pcom<IDeviceInformation>	deviceInfo;
 		HRESULT hr;
-		ce_if(FAILED(hr = devices->GetAt(j, &deviceInfo)), "0x%X", hr); 
+		cef_if(FAILED(hr = devices->GetAt(j, &deviceInfo)), "0x%X", hr); 
 
 		HString					id;
 		HString					name;

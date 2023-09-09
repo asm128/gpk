@@ -43,7 +43,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 			if(keys.size() > k)
 				keys[k].Public		= i;
 			else
-				gpk_necall(keys.push_back({i}), "%s", "Out of memory?");
+				gpk_necs(keys.push_back({i}));
 
 			uint64_t				cd				= ::commonDivisor(t, keys[(uint32_t)k].Public);
 			if(cd > 0) {
@@ -62,7 +62,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 ::gpk::error_t			gpk::rsaEncode	(const ::gpk::vcu8 & decrypted, uint64_t n, uint64_t key, uint64_t testkey, ::gpk::au64 & encrypted) {
 	uint32_t				offset			= encrypted.size();
 	uint32_t				i				= 0;
-	gpk_necall(encrypted.resize(offset + decrypted.size()), "%s", "Out of memory?");
+	gpk_necs(encrypted.resize(offset + decrypted.size()));
 	const uint8_t			* pDec	= decrypted.begin();
 	uint64_t				* pEnc	= &encrypted[offset];
 	while(i < decrypted.size()) {
@@ -79,9 +79,9 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 		::gpk::au8				decryptTest		= {};
 		::gpk::rsaDecode({&pEnc[offset], encrypted.size() - offset}, n, testkey, decryptTest);
 		::gpk::vcu8				filter_view		= {&pDec[offset], decrypted.size() - offset};
-		gerror_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
+		ef_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest = 0; iTest < decryptTest.size(); ++iTest) {
-			gerror_if(decryptTest[iTest] != filter_view[iTest], "%s", "Error!");
+			ef_if(decryptTest[iTest] != filter_view[iTest], "%s", "Error!");
 		}
 	}
 	return i;
@@ -91,7 +91,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 ::gpk::error_t			gpk::rsaDecode	(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, ::gpk::au8 & decrypted) {
 	uint32_t				offset			= decrypted.size();
 	uint32_t				i				= 0;
-	gpk_necall(decrypted.resize(offset + encrypted.size() + 1), "%s", "Out of memory?");
+	gpk_necs(decrypted.resize(offset + encrypted.size() + 1));
 	uint8_t					* pDecrypted	= &decrypted[offset];
 	const uint64_t			* pEncrypted	= encrypted.begin();
 	while(i < encrypted.size()) {
@@ -126,7 +126,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 ::gpk::error_t		gpcFilterSub			(::gpk::vu8 & scanline, uint32_t bpp) {
 	::gpk::au8				filtered;
 	const uint32_t			countBytes				= scanline.size();
-	gpk_necall(filtered.resize(countBytes), "%s", "Out of memory?");
+	gpk_necs(filtered.resize(countBytes));
 	uint8_t					* pScanline				= scanline.begin();
 	{ // generate filtered bytes
 		uint8_t					* pFiltered				= filtered.begin();
@@ -143,7 +143,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 
 ::gpk::error_t		gpcFilterSub2	(::gpk::vu8 & scanline, uint32_t bpp) {
 	::gpk::au8				filtered;
-	gpk_necall(filtered.resize(scanline.size()), "%s", "Out of memory?");;
+	gpk_necs(filtered.resize(scanline.size()));;
 	uint8_t					* pScanline				= scanline.begin();
 	{ // generate filtered bytes
 		uint8_t					* pFiltered				= filtered.begin();
@@ -172,23 +172,23 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 
 	::gpk::au8								filtered;
 	if(false == salt) {
-		gpk_necall(::gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered), "Failed to encode Ardell. %s", "Out of memory?");
+		gpk_necs(::gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered));
 	}
 	else { //
 		::gpk::au8								salted;
-		gpk_necall(::gpk::saltDataSalt(decrypted, salted), "Failed to add salt. %s", "Out of memory?");
-		gpk_necall(::gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered), "Failed to encode Ardell. %s", "Out of memory?");
+		gpk_necs(::gpk::saltDataSalt(decrypted, salted));
+		gpk_necs(::gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered));
 	}
 
 	::gpk::vu8								filter_view							= filtered;
 	::gpcFilter0Apply(filter_view);
-	gpk_necall(::gpk::rsaEncode(filter_view, n, key, testkey, encrypted), "%s", "Out of memory?");
+	gpk_necs(::gpk::rsaEncode(filter_view, n, key, testkey, encrypted));
 	if(testkey) {
 		::gpk::au8								decryptTest							= {};
-		::gpk::rsaDecode(encrypted, n, testkey, decryptTest);
-		gerror_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
+		gpk_necs(::gpk::rsaDecode(encrypted, n, testkey, decryptTest));
+		ef_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest =0; iTest < decryptTest.size(); ++iTest) {
-			gerror_if(decryptTest[iTest] != (int8_t)filter_view[iTest], "%s", "Error!");
+			ef_if(decryptTest[iTest] != (int8_t)filter_view[iTest], "%s", "Error!");
 		}
 	}
 	filter_view									= {(uint8_t*)&encrypted[offset], (encrypted.size() - offset) * (uint32_t)sizeof(uint64_t)};
@@ -203,20 +203,20 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	::gpk::au64								defiltered							(encrypted);
 	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Remove(defilter_view);
-	gpk_necall(::gpk::rsaDecode(defiltered, n, key, decrypted), "Failed to decode RSA. %s", "Out of memory?");
+	gpk_necs(::gpk::rsaDecode(defiltered, n, key, decrypted));
 	::gpk::vu8								filter_view							({(uint8_t*)&decrypted[offset], decrypted.size() - offset});
 	::gpcFilter0Remove(filter_view);
 	::gpk::au8								defiltered2							= {};
 	gpk_necall(::gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
 	if(false == salt) {
-		gpk_necall(decrypted.resize(offset + defiltered2.size() + 1), "%s", "Out of memory?");
+		gpk_necs(decrypted.resize(offset + defiltered2.size() + 1));
 		for(uint32_t j=0; j < defiltered2.size(); ++j)
 			decrypted[offset + j]				= defiltered2[j];
 	}
 	else {
 		::gpk::au8								unsalted;
-		gpk_necall(::gpk::saltDataUnsalt(defiltered2, unsalted), "Failed to remove salt. %s", "Out of memory?");;
-		gpk_necall(decrypted.resize(offset + unsalted.size() + 1), "%s", "Out of memory?");
+		gpk_necs(::gpk::saltDataUnsalt(defiltered2, unsalted));
+		gpk_necs(decrypted.resize(offset + unsalted.size() + 1));
 		for(uint32_t j=0; j < unsalted.size(); ++j)
 			decrypted[offset + j]						= unsalted[j];
 	}
@@ -240,7 +240,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	verbose_printf("prehash found: %llx. Size of decrypted data: %u. Size of data without hash appended: %u.", hash, decrypted.size(), decrypted.size() - sizeof(uint64_t));
 
 	uint64_t								checkhash							= 0;
-	gpk_necall(decrypted.resize(decrypted.size() - sizeof(uint64_t)), "%s", "Out of memory?");
+	gpk_necs(decrypted.resize(decrypted.size() - sizeof(uint64_t)));
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
 		const uint64_t							hashedChar							= ::gpk::noise1DBase((i - (uint64_t)decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		checkhash							+= hashedChar;
@@ -271,9 +271,9 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	if(testkey) {
 		::gpk::au8								decryptTest							= {};
 		gpk_necs(::gpk::gpcDecode(encrypted, n, testkey, salt, decryptTest));
-		gerror_if(decryptTest.size() != prehashed.size(), "%s", "Error!");
+		e_if(decryptTest.size() != prehashed.size());
 		for(uint32_t i =0; i < decryptTest.size(); ++i) {
-			gerror_if(decryptTest[i] != prehashed[i], "%s", "Error!");
+			ef_if(decryptTest[i] != prehashed[i], "%i != %i", decryptTest[i], prehashed[i]);
 		}
 	}
 
@@ -281,7 +281,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	for(uint32_t i = encryptedStart, maxEncrypted = encrypted.size() - 1; i < maxEncrypted; ++i)
 		posthash									+= ::gpk::noise1DBase((i - encryptedStart) * encrypted[i] + ::gpk::noise1DBase(encrypted[i + 1]), ::gpk::NOISE_SEED);
 
-	gpk_necall(encrypted.push_back(posthash), "%s", "Out of memory?");
+	gpk_necs(encrypted.push_back(posthash));
 	verbose_printf("posthash: %llx.", posthash);
 	return 0;
 }

@@ -18,7 +18,6 @@ namespace gpk
 	typedef	::gpk::view<const ::gpk::u8rgba	>	vcrgba	, vc8rgba	;
 	typedef	::gpk::view<const ::gpk::u8rgb	>	vcrgb	, vc8rgb		;
 
-
 	::gpk::error_t 		vcu82bgra8	(const ::gpk::vcu8 & bytes, ::gpk::bgra8 & colorToSet);
 	::gpk::error_t 		vcu82bgr8	(const ::gpk::vcu8 & bytes, ::gpk::bgr8 & colorToSet);
 } // namespace
