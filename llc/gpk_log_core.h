@@ -62,8 +62,8 @@ namespace gpk
 #		define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)		if(condition) block_logf(gpk_logFunction, statement, #condition "-> " format, __VA_ARGS__)	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #	else
 #		ifdef GPK_ATMEL																																																											
-#			define if_true_logf(gpk_logFunction, condition, format, ...)					if_true_log			(gpk_logFunction, (condition))				// - Log condition and custom formatted string args if (condition) == true.
-#			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if_true_block_log	(gpk_logFunction, (condition), statement) 	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
+#			define if_true_logf(gpk_logFunction, condition, format, ...)					if_true_log			(gpk_logFunction, condition)				// - Log condition and custom formatted string args if (condition) == true.
+#			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if_true_block_log	(gpk_logFunction, condition, statement) 	// - Conditional block with custom statement preceded by a log call with custom formatted string args.
 #		else
 #			define if_true_logf(gpk_logFunction, condition, format, ...)					if(condition) { gpk_logFunction(#condition "-> " format, ##__VA_ARGS__); }						// - Log condition and custom formatted string args if (condition) == true.
 #			define if_true_block_logf(gpk_logFunction, condition, statement, format, ...)	if(condition) block_logf(gpk_logFunction, statement, #condition "-> " format, ##__VA_ARGS__)		// - Conditional block with custom statement preceded by a log call with custom formatted string args.
@@ -73,18 +73,18 @@ namespace gpk
 
 
 #ifdef if_true_log
-#	define if_true_log_and_break(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, (condition), break)						// - Log condition and break if (condition) == true.
-#	define if_true_log_and_continue(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, (condition), continue)					// - Log condition and continue if (condition) == true.
-#	define if_true_log_and_throw(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, (condition), gpk_throw(#condition))			// - Log condition and return if (condition) == true.
-#	define if_true_log_and_return(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, (condition), return)						// - Log condition and return if (condition) == true.
-#	define if_true_log_and_return_value(gpk_logFunction, valueToReturn, condition)	if_true_block_log(gpk_logFunction, (condition), return (valueToReturn))		// - Log condition and return some value if (condition) == true.
+#	define if_true_log_and_break(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, condition, break)						// - Log condition and break if (condition) == true.
+#	define if_true_log_and_continue(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, condition, continue)					// - Log condition and continue if (condition) == true.
+#	define if_true_log_and_throw(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, condition, gpk_throw(#condition))			// - Log condition and return if (condition) == true.
+#	define if_true_log_and_return(gpk_logFunction, condition)						if_true_block_log(gpk_logFunction, condition, return)						// - Log condition and return if (condition) == true.
+#	define if_true_log_and_return_value(gpk_logFunction, valueToReturn, condition)	if_true_block_log(gpk_logFunction, condition, return (valueToReturn))		// - Log condition and return some value if (condition) == true.
 #endif // if_true_log
 #ifdef if_true_logf
-#	define if_true_logf_and_break(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, (condition), break, format, __VA_ARGS__)			// - Log formatted string and break if (condition) == true.
-#	define if_true_logf_and_continue(gpk_logFunction, condition, format, ...)				if_true_block_logf(gpk_logFunction, (condition), continue, format, __VA_ARGS__)			// - Log formatted string and continue if (condition) == true.
-#	define if_true_logf_and_throw(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, (condition), gpk_throw(#condition), format, __VA_ARGS__)			// - Log condition and return if (condition) == true.
-#	define if_true_logf_and_return(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, (condition), return, format, __VA_ARGS__)			// - Log formatted string and return if (condition) == true.
-#	define if_true_logf_and_return_value(gpk_logFunction, value, condition, format, ...)	if_true_block_logf(gpk_logFunction, (condition), return (value), format, __VA_ARGS__)	// - Log formatted string and return some value if (condition) == true.
+#	define if_true_logf_and_break(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, condition, break, format, __VA_ARGS__)			// - Log formatted string and break if (condition) == true.
+#	define if_true_logf_and_continue(gpk_logFunction, condition, format, ...)				if_true_block_logf(gpk_logFunction, condition, continue, format, __VA_ARGS__)			// - Log formatted string and continue if (condition) == true.
+#	define if_true_logf_and_throw(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, condition, gpk_throw(#condition), format, __VA_ARGS__)			// - Log condition and return if (condition) == true.
+#	define if_true_logf_and_return(gpk_logFunction, condition, format, ...)					if_true_block_logf(gpk_logFunction, condition, return, format, __VA_ARGS__)			// - Log formatted string and return if (condition) == true.
+#	define if_true_logf_and_return_value(gpk_logFunction, value, condition, format, ...)	if_true_block_logf(gpk_logFunction, condition, return (value), format, __VA_ARGS__)	// - Log formatted string and return some value if (condition) == true.
 #endif // if_true_log
 
 #ifdef if_true_log
