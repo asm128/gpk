@@ -22,7 +22,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	::gpk::SFramework			& framework					= app.Framework;
 	::gpk::SWindow				& mainWindow				= framework.RootWindow;
 	mainWindow.Size			= {320, 200};
-	gerror_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
+	ef_if(errored(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input)), "Failed to create main window why?!");
 	::gpk::SGUI					& gui						= *framework.GUI;
 	app.IdExit				= ::gpk::controlCreate(gui);
 	::gpk::SControlPlacement	& controlExit				= gui.Controls.Placement[app.IdExit];
@@ -44,18 +44,18 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 		::gpk::vcc					jsonPort					= {};
 		const ::gpk::SJSONReader	& jsonReader				= framework.JSONConfig.Reader;
 		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve(::gpk::vcs{"application.brt"}, jsonReader, 0, app.ProcessFileName);
-		gwarn_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
+		wf_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_app_name"}, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.executable_path"		}, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_app_name"}, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"process.command_line_params"	}, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"					}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
 			}
 			jsonPort = "";
-			gwarn_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonReader, indexObjectApp, jsonPort)), "Failed to load config from json! Last contents found: %s.", jsonPort.begin())
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, adapter);
 				info_printf("Adapter: %u.", (uint32_t)adapter);
@@ -207,7 +207,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 				cef_if(errored(contentOffset), "%s", "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					ef_if(errored(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2})), "%s", "Failed to write request content to process' stdin.");
-				gerror_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
+				ef_if(errored(::createChildProcess(app.ClientProcesses[iClient], environmentBlock, app.szCmdlineApp, app.szCmdlineFinal)), "Failed to create child process: %s.", app.ProcessFileName.begin());	// Create the child process.
 			}
 		}
 	}

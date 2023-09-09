@@ -98,11 +98,11 @@ static	::gpk::error_t				loadConfig
 	}
 	{ // load port from config file
 		const int32_t							indexObjectApp			= ::gpk::jsonExpressionResolve("application.gpk_cgi_interceptor", jsonReader, 0, processFileName);
-		gwarn_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.gpk_cgi_interceptor", fileNameJSONConfig.begin())
+		wf_if(errored(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.gpk_cgi_interceptor", fileNameJSONConfig.begin())
 		else {
-			gwarn_if(errored(::gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, processFileName	)), "Failed to load config from json! Last contents found: %s.", processFileName	.begin())
-			gwarn_if(errored(::gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, processMockPath	)), "Failed to load config from json! Last contents found: %s.", processMockPath	.begin())
-			gwarn_if(errored(::gpk::jsonExpressionResolve("process.command_line_params"		, jsonReader, indexObjectApp, processParams		)), "Failed to load config from json! Last contents found: %s.", processParams		.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, processFileName	)), "Failed to load config from json! Last contents found: %s.", processFileName	.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, processMockPath	)), "Failed to load config from json! Last contents found: %s.", processMockPath	.begin())
+			wf_if(errored(::gpk::jsonExpressionResolve("process.command_line_params"		, jsonReader, indexObjectApp, processParams		)), "Failed to load config from json! Last contents found: %s.", processParams		.begin())
 		}
 	}
 	szCmdlineApp						= processFileName;
@@ -210,7 +210,7 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 		::gpk::vcc									content_body			= {runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size()};
 		if(content_body.size())
 			ef_if(errored(::writeToPipe(appState.IOHandles, content_body)), "%s", "Failed to write request content to process' stdin.");
-		gerror_if(errored(::createChildProcess(appState.Process, environmentBlock, szCmdlineApp, szCmdlineFinal)), "Failed to create child process: %s.", szCmdlineApp.begin());	// Create the child process.
+		ef_if(errored(::createChildProcess(appState.Process, environmentBlock, szCmdlineApp, szCmdlineFinal)), "Failed to create child process: %s.", szCmdlineApp.begin());	// Create the child process.
 		_beginthread(::threadReadFromPipe, 0, &appState);
 		SThreadStateRead							state;
 		while(false == gpk_sync_compare_exchange(state.DoneReading, true, true)) {
