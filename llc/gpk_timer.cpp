@@ -50,6 +50,7 @@ double					gpk::STimer::Frame		()				noexcept				{
 	CurrentTimeStamp		= ::std::chrono::high_resolution_clock::now();
 	LastTimeMicroseconds	= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds>(CurrentTimeStamp - PrevTimeStamp).count();
 #	endif
+	PrevTimeStamp			= CurrentTimeStamp;
 	return LastTimeSeconds	= LastTimeMicroseconds * MICROSECOND_SCALE;
 #endif
 }
