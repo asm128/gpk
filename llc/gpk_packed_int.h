@@ -33,15 +33,22 @@ namespace gpk
 			 : (count > 0x0000003F) ? count & 0x000000FFU
 			 : 0;
 	}
-
+	tplt<tpnm _tInt>
+	nodstxp	uint8_t			width_field_size	()		{ 
+		return (sizeof(_tInt) > 8) ? 4
+			: (sizeof(_tInt) > 4) ? 3
+			: (sizeof(_tInt) > 2) ? 2
+			: (sizeof(_tInt) > 1) ? 1 
+			: 1; 
+	};
 #pragma pack(push, 1)
-	tplt<tpnm _tInt = int32_t, uint8_t widthField = 2>
+	tplt<tpnm _tInt = int32_t, uint8_t widthField = width_field_size<_tInt>()>
 	struct packed_int { 
 		typedef _tInt	T;
 
-		T				TailWidth		: widthField;
-		T				Multiplier		: 8 - widthField;
-		T				Tail			: (sizeof(T) - 1) * 8;
+		const	T		TailWidth		: widthField;
+		const	T		Multiplier		: 8 - widthField;
+		const	T		Tail			: (sizeof(T) - 1) * 8;
 
 		inlcxpr			packed_int		()												: TailWidth{}, Multiplier{}, Tail{} {}
 		inlcxpr			packed_int		(const T & value)								: TailWidth{tail_width(value)}, Multiplier{tail_multiplier(value)}, Tail{tail_base(value)} {}
@@ -49,13 +56,12 @@ namespace gpk
 
 		ndincxp	uint8_t	ValueWidth		() 	const	noexcept	{ return uint8_t(1 + TailWidth); }
 		nodscrd	T		Value			()	const	noexcept	{
-			switch(TailWidth) {
-			default:
-			case 0: return Multiplier;
-			case 1: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 1); return T((T(Multiplier) << (1 * 8)) + tail); }
-			case 2: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 2); return T((T(Multiplier) << (2 * 8)) + tail); }
-			case 3: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 3); return T((T(Multiplier) << (3 * 8)) + tail); }
-			}
+			if(0 == TailWidth)
+				return Multiplier;
+
+			T tail = 0; 
+			memcpy(&tail, ((const char*)this) + 1, TailWidth); 
+			return T((T(Multiplier) << (TailWidth * 8)) + tail); 
 		}
 
 	};
@@ -67,6 +73,8 @@ namespace gpk
 	typedef packed_int<int64_t>		packedi64;
 
 	ndstinx	::gpk::packedu32	pack_int	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
+	ndstinx	::gpk::packedu32	int_pack	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
+	ndstinx	::gpk::packedu32	int_unpack	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
 }
 
 #endif // GPK_PACKED_INT_H
