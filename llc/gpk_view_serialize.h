@@ -7,12 +7,6 @@
 
 namespace gpk
 {
-
-#pragma pack(push, 1)
-
-	nodstxp	packedu32	viewHeader	(uint32_t payloadSize) { return {tail_width(payloadSize), tail_multiplier(payloadSize), tail_base(payloadSize)}; }
-#pragma pack(pop)
-
 	tplt<tpnm T, tpnm TByte>
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
 		const packedu32					& header			= *(const packedu32*)input.begin();

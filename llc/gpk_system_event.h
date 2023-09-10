@@ -47,8 +47,8 @@ namespace gpk
 		::gpk::RESULT				DeviceEvent		= ::gpk::RESULT_Error;
 									SDeviceEvent	()
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::viewHeader(sizeof(::gpk::RESULT)).TailWidth}
-			, Multiplier  {::gpk::viewHeader(sizeof(::gpk::RESULT)).Multiplier}
+			, TailWidth   {::gpk::tail_width(sizeof(::gpk::RESULT))}
+			, Multiplier  {::gpk::tail_multiplier(sizeof(::gpk::RESULT))}
 			{}
 	};
 #pragma pack(pop)

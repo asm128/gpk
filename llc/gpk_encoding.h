@@ -14,17 +14,17 @@ namespace gpk
 	::gpk::error_t						ardellEncode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output);
 	::gpk::error_t						ardellDecode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output);
 
-	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vcu8 & input, int key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
-	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, int key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
-	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vci8 & input, int key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu8*)&input, key, salt, output); }
-	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, int key, bool salt, ::gpk::ai8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au8*)&output); }
-	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vcc  & input, int key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu8*)&input, key, salt, output); }
-	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, int key, bool salt, ::gpk::ac  & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au8*)&output); }
+	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, input, key, salt, output); }
+	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, output); }
+	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vci8 & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu8*)&input, key, salt, output); }
+	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::ai8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au8*)&output); }
+	stainli	::gpk::error_t				ardellEncode			(const ::gpk::vcc  & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellEncode(tempCache, *(const ::gpk::vcu8*)&input, key, salt, output); }
+	stainli	::gpk::error_t				ardellDecode			(const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::ac  & output)	{ ::gpk::ai32 tempCache; return ::gpk::ardellDecode(tempCache, input, key, salt, *(::gpk::au8*)&output); }
 
-	stainli	::gpk::error_t				ardellEncode			(::gpk::ai32 & cache, const ::gpk::vci8 & input, int key, bool salt, ::gpk::au8 & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu8*)&input, key, salt, output); }
-	stainli	::gpk::error_t				ardellDecode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, int key, bool salt, ::gpk::ai8 & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au8*)&output); }
-	stainli	::gpk::error_t				ardellEncode			(::gpk::ai32 & cache, const ::gpk::vcc  & input, int key, bool salt, ::gpk::au8 & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu8*)&input, key, salt, output); }
-	stainli	::gpk::error_t				ardellDecode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, int key, bool salt, ::gpk::ac  & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au8*)&output); }
+	stainli	::gpk::error_t				ardellEncode			(::gpk::ai32 & cache, const ::gpk::vci8 & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu8*)&input, key, salt, output); }
+	stainli	::gpk::error_t				ardellDecode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::ai8 & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au8*)&output); }
+	stainli	::gpk::error_t				ardellEncode			(::gpk::ai32 & cache, const ::gpk::vcc  & input, uint64_t key, bool salt, ::gpk::au8 & output)	{ return ::gpk::ardellEncode(cache, *(const ::gpk::vcu8*)&input, key, salt, output); }
+	stainli	::gpk::error_t				ardellDecode			(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::ac  & output)	{ return ::gpk::ardellDecode(cache, input, key, salt, *(::gpk::au8*)&output); }
 
 	::gpk::error_t						saltDataSalt			(const ::gpk::vcu8 & binary, ::gpk::au8 & salted);
 	::gpk::error_t						saltDataUnsalt			(const ::gpk::vcu8 & salted, ::gpk::au8 & binary);
@@ -50,7 +50,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tBase>
-	::gpk::error_t						rleDecode			(const ::gpk::vcu8 & encoded, ::gpk::apod<_tBase>& decoded) {
+	::gpk::error_t						rleDecode			(const ::gpk::vcu8 & encoded, ::gpk::apod<_tBase> & decoded) {
 		stacxpr	const uint32_t					sizeBlock			= sizeof(_tBase) + 1;
   		for(uint32_t iIn = 0; iIn < encoded.size(); iIn += sizeBlock) {
 			const _tBase 							& current			= *(_tBase*)&encoded[iIn];

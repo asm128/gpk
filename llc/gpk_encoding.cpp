@@ -84,7 +84,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::ardellEncode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
+::gpk::error_t			gpk::ardellEncode				(ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	char						saltValue		[4]				= {};
 	if (salt)
@@ -126,7 +126,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::ardellDecode				(::gpk::apod<int32_t> & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)		{
+::gpk::error_t			gpk::ardellDecode				(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	const int32_t				keyFinal[8]						=
 		{ (int32_t)(11 + (key % 233))
