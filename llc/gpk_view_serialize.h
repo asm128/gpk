@@ -34,24 +34,48 @@ namespace gpk
 			 : 0;
 	}
 #pragma pack(push, 1)
-	struct SSerializedViewHeader { 
-		uint8_t						TailWidth			: 2;
-		uint8_t						Multiplier			: 6;
-		uint32_t					Tail				= 0;
+	tplt<tpnm _tInt = int32_t, uint8_t widthField = 2>
+	struct packed_int { 
+		typedef _tInt	T;
+		uint8_t			TailWidth		: widthField;
+		uint8_t			Multiplier		: 8 - widthField;
+		T				Tail			= 0;
 
-		ndincxp	uint8_t				CounterWidth		() 	const	noexcept	{ return TailWidth + 1; }
-		nodscrd	uint32_t			ElementCount		()	const	noexcept	{
+		ndincxp	uint8_t	ValueWidth		() 	const	noexcept	{ return TailWidth + 1; }
+		nodscrd	T		Value			()	const	noexcept	{
 			switch(TailWidth) {
 			default:
 			case 0: return Multiplier;
-			case 1: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 1); return (uint32_t(Multiplier) <<  8) + tail; } //*(uint8_t *)&Tail;
-			case 2: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 2); return (uint32_t(Multiplier) << 16) + tail; } //*(uint16_t*)&Tail;;
-			case 3: { uint32_t tail = 0; memcpy(&tail, ((const char*)this) + 1, 3); return (uint32_t(Multiplier) << 24) + tail; } //(((*(uint32_t*)this) & 0xFFFFFF00U) >> 8);
+			case 1: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 1); return T((T(Multiplier) << (1 * 8)) + tail); }
+			case 2: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 2); return T((T(Multiplier) << (2 * 8)) + tail); }
+			case 3: { T tail = 0; memcpy(&tail, ((const char*)this) + 1, 3); return T((T(Multiplier) << (3 * 8)) + tail); }
 			}
 		}
 
+	};
+
+	typedef packed_int<uint32_t>	packedu32;
+	typedef packed_int<int32_t>		packedi32;
+	typedef packed_int<uint64_t>	packedu64;
+	typedef packed_int<int64_t>		packedi64;
+
+	struct SSerializedViewHeader : packed_int<uint32_t> { 
+		using packed_int<uint32_t>::Value		; 
+		using packed_int<uint32_t>::ValueWidth	; 
+		using packed_int<uint32_t>::packed_int	; 
+
+		inlcxpr	SSerializedViewHeader() noexcept = default;
+		inlcxpr	SSerializedViewHeader
+			( uint8_t tailWidth		
+			, uint8_t multiplier	
+			, uint32_t tail			
+			) : packed_int{tailWidth, multiplier, tail} {} 
+
 		tplt<tpnm T>
 		ndincxp uint32_t			DataSize			()	const	noexcept	{ return ElementCount() * sizeof(T); }
+		ndincxp	uint8_t				CounterWidth		() 	const	noexcept	{ return ValueWidth(); }
+		nodinli	uint32_t			ElementCount		()	const	noexcept	{ return Value(); }
+
 	};
 
 	nodstxp	SSerializedViewHeader	viewHeader	(uint32_t payloadSize) { return {tail_width(payloadSize), tail_multiplier(payloadSize), tail_base(payloadSize)}; }

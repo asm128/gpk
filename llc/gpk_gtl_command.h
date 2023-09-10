@@ -34,7 +34,7 @@ namespace gpk
 	stacxpr	size_t	GTL_COMMAND_SIZE	= sizeof(SGTLCommand);
 	struct SGTLPayloadHeader {
 		::gpk::SGTLCommand					Command			;
-		uint32_t							IdSender		;
+		uint64_t							IdSender		;
 		uint32_t							IdMessage		;
 		::gpk::SSerializedViewHeader		CounterHeader	;
 	};
@@ -56,6 +56,20 @@ namespace gpk
 		::std::mutex						MutexReceive;
 #endif
 	};
+
+	GDEFINE_ENUM_TYPE (GTL_STATE, uint8_t)
+	GDEFINE_ENUM_VALUE(GTL_STATE, Disconnected	, 0);
+	GDEFINE_ENUM_VALUE(GTL_STATE, Handshake		, 1);	// - Payload 0: Request connect. - Payload 1: Confirm connect
+	GDEFINE_ENUM_VALUE(GTL_STATE, Idle			, 2);	// - Payload 0: Single payload. - Payload 1: Payload combo.
+
+	struct SGTLConnection {
+		::gpk::SGTLClientQueue	Queue			= {};
+		uint64_t				LastPing		= 0;
+		uint64_t				FirstPing		= 0;
+		uint64_t				KeyPing			= 0;
+		::gpk::GTL_STATE		State			= ::gpk::GTL_STATE_Disconnected;
+	};
+
 } // namespace
 
 #endif // GPK_GTL_COMMAND_H

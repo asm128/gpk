@@ -6,23 +6,20 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	struct SIPv4_ {
+	struct SIPv4 {
 						uint8_t											IP		[4]							;
-						uint16_t										Port								;
 
-		inline			bool											operator!=			(const SIPv4_ & other)	const	noexcept	{ return !operator==(other); }
-						bool											operator==			(const SIPv4_ & other)	const	noexcept	{
+		inline			bool											operator!=			(const SIPv4 & other)	const	noexcept	{ return !operator==(other); }
+						bool											operator==			(const SIPv4 & other)	const	noexcept	{
 			return IP[0]	== other.IP[0]
 				&& IP[1]	== other.IP[1]
 				&& IP[2]	== other.IP[2]
 				&& IP[3]	== other.IP[3]
-				&& Port		== other.Port
 				;
 		}
 	};	
 
-	struct SIPv4Endpoint {
-						uint8_t											IP		[4]							;
+	struct SIPv4Endpoint : SIPv4 {
 						uint16_t										Port								;
 
 		inline			bool											operator!=			(const SIPv4Endpoint& other)	const	noexcept	{ return !operator==(other); }
