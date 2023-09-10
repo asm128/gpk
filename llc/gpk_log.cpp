@@ -24,21 +24,12 @@
 #	endif
 #endif
 
-#ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-#	include <Stream.h>
-extern Stream & GPKLogStream;
-#endif
-
+#if (defined(GPK_WINDOWS) || defined(GPK_ANDROID))
 static void default_base_log_write(const char * text, uint32_t textLen) {
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text); (void)textLen;
 #elif defined(GPK_ANDROID)
 	LOGI("%s", text); (void)textLen;
-#elif defined(GPK_ST)
-#elif defined(GPK_ARDUINO)
-	GPKLogStream.write(text, textLen);
-#elif defined(GPK_ATMEL)
-#elif defined(GPK_ESP32)
 #else
 	printf("%s", text); (void)textLen;
 #endif
@@ -49,24 +40,21 @@ static void default_base_log_print(const char * text) {
 	OutputDebugStringA(text);
 #elif defined(GPK_ANDROID)
 	LOGI("%s", text);
-#elif defined(GPK_ST)
-#elif defined(GPK_ARDUINO)
-	GPKLogStream.print(text);
-#elif defined(GPK_ATMEL)
-#elif defined(GPK_ESP32)
 #else
 	printf("%s", text);
 #endif
 }
-
 ::gpk::log_write_t		gpk_log_write					= default_base_log_write;
 ::gpk::log_print_t		gpk_log_print					= default_base_log_print;
+#else
+::gpk::log_write_t		gpk_log_write					= {};
+::gpk::log_print_t		gpk_log_print					= {};
+#endif
+
 void					gpk::_base_log_print			(const char* text)						{ if(gpk_log_print && text) ::gpk_log_print(text); }
 void					gpk::_base_log_write			(const char* text, uint32_t textLen)	{ if(gpk_log_write && text && textLen) ::gpk_log_write(text, textLen); }
-
 #ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-static	void			default_base_log_print_P		(const __FlashStringHelper * text)		{ GPKLogStream.print(text); }
-::gpk::log_print_P_t	gpk_log_print_P					= default_base_log_print_P;
+::gpk::log_print_P_t	gpk_log_print_P					= {};
 void					gpk::_base_log_print_P			(const __FlashStringHelper* text)		{ if(gpk_log_print_P && text) ::gpk_log_print_P(text); }
 #endif
 
