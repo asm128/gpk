@@ -12,16 +12,19 @@ namespace gpk
 {
 	tplt<tpnm _tEventType>
 	struct SEventView {
-		_tEventType				Type;
-		::gpk::vcu8				Data;
+		typedef	_tEventType			T;
+		typedef	SEventView<T>		TEView;
 
-		::gpk::error_t			Save				(::gpk::au8 & output)	const	{
+		T				Type		= {};
+		::gpk::vcu8		Data		= {};
+
+		::gpk::error_t	Save		(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::savePOD (output, Type));
 			gpk_necs(::gpk::saveView(output, Data));
 			return 0;
 		}
 
-		::gpk::error_t			Load				(::gpk::vcu8 & input)			{
+		::gpk::error_t	Load		(::gpk::vcu8 & input)			{
 			gpk_necs(::gpk::loadPOD (input, Type));
 			gpk_necs(::gpk::loadView(input, Data));
 			return 0;
@@ -37,32 +40,46 @@ namespace gpk
 
 	tplt<tpnm _tEventType>
 	struct SEvent {
-		_tEventType				Type				= {};
-		::gpk::au8				Data				= {};
+		typedef _tEventType			T;
+		typedef ::gpk::SEView<T>	TEView;
+		typedef ::gpk::SEvent<T>	TEvent;
 
-		::gpk::error_t			Save				(::gpk::au8 & output)	const	{
+		T				Type		= {};
+		::gpk::au8		Data		= {};
+
+						SEvent		(const TEvent &)							= default;
+		constexpr		SEvent		(T type = {})						: Type(type) {}
+						SEvent		(T type, const ::gpk::vcu8 data)	: Type(type), Data(data.cu8()) {}
+						SEvent		(const TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
+
+		TEvent&			operator= 	(const TEvent &)				= default;
+		TEvent&			operator= 	(const TEView & eventView)		{ Type = eventView.Type; Data = eventView.Data; return *this; }
+
+		operator		TEView		()						const	{ return {Type, Data.cu8()}; }
+
+		::gpk::error_t	Save		(::gpk::au8 & output)	const	{
 			gpk_necs(::gpk::savePOD(output, Type));
 			gpk_necs(::gpk::saveView(output, Data));
 			return 0;
 		}
 
-		::gpk::error_t			Load				(::gpk::vcu8 & input)			{
+		::gpk::error_t	Load		(::gpk::vcu8 & input)			{
 			gpk_necs(::gpk::loadPOD(input, Type));
 			gpk_necs(::gpk::loadView(input, Data));
 			return 0;
 		}
 
-		tplt<tpnm _tEventTypeOther>
-		inline	::gpk::error_t	ExtractChild		(::gpk::SEvent<_tEventTypeOther> & outputEvent)		const	{
-			::gpk::vcu8					input				= Data;
+		tplt<tpnm _tETypeOther>
+		::gpk::error_t	ExtractChild(::gpk::SEvent<_tETypeOther> & outputEvent)		const	{
+			::gpk::vcu8			input				= Data;
 			gpk_necs(outputEvent.Load(input));
 			gpk_event_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
 			return 0; 
 		}
 
-		tplt<tpnm _tEventTypeOther>
-		inline	::gpk::error_t	ExtractChild		(::gpk::SEventView<_tEventTypeOther> & outputEvent)	const	{
-			::gpk::vcu8					input				= Data;
+		tplt<tpnm _tETypeOther>
+		::gpk::error_t	ExtractChild(::gpk::SEView<_tETypeOther> & outputEvent)	const	{
+			::gpk::vcu8			input				= Data;
 			gpk_necs(outputEvent.Load(input));
 			gpk_event_printf("%s", ::gpk::get_value_namep(outputEvent.Type)); 
 			return 0; 
@@ -108,8 +125,12 @@ namespace gpk
 
 	typedef ::gpk::SEvent            <::gpk::RESULT>	SEventResult;
 	typedef ::gpk::SEventView        <::gpk::RESULT>	SEViewResult;
-	typedef ::gpk::FEventHandler     <::gpk::RESULT>	FResultEvent;
-	typedef ::gpk::FEventHandlerConst<::gpk::RESULT>	FResultEventConst;
+	typedef ::gpk::FEventHandler     <::gpk::RESULT>	FEventResult;
+	typedef ::gpk::FEventHandlerConst<::gpk::RESULT>	FEventResultConst;
+	typedef ::gpk::SEvent            <::gpk::COMMAND>	SEventCommand;
+	typedef ::gpk::SEventView        <::gpk::COMMAND>	SEViewCommand;
+	typedef ::gpk::FEventHandler     <::gpk::COMMAND>	FEventCommand;
+	typedef ::gpk::FEventHandlerConst<::gpk::COMMAND>	FEventCommandConst;
 }
 
 #define gpk_warning_unhandled_event(eventUnhandled)	warning_printf("Unhandled '%s' event: '%s' (0x%llX)(%lli)(%c)"	, ::gpk::get_enum_namep((eventUnhandled).Type), ::gpk::get_value_namep((eventUnhandled).Type), (uint64_t)(eventUnhandled).Type, (int64_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
