@@ -361,6 +361,27 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(RESULT, Connected         , ::gpk::OS_CONNECTED         );
 	GDEFINE_ENUM_VALUE(RESULT, Missing_data      , ::gpk::OS_MISSING_DATA      );
 	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , ::gpk::OS_NO_MEMORY         );
+
+	GDEFINE_ENUM_TYPE (COMMAND, ::gpk::error_t);
+	GDEFINE_ENUM_VALUE(COMMAND, Ok                , ::gpk::OS_OK                );
+	GDEFINE_ENUM_VALUE(COMMAND, Error             , ::gpk::OS_ERROR             & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Busy              , ::gpk::OS_BUSY              & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Timeout           , ::gpk::OS_TIMEOUT           & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Full              , ::gpk::OS_FULL              & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Empty             , ::gpk::OS_EMPTY             & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Overrun           , ::gpk::OS_OVERRUN           & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Not_available     , ::gpk::OS_NOT_AVAILABLE     & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Not_found         , ::gpk::OS_NOT_FOUND         & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Invalid_parameter , ::gpk::OS_INVALID_PARAMETER & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Forbidden         , ::gpk::OS_FORBIDDEN         & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Restart           , ::gpk::OS_RESTART           & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Wake_up           , ::gpk::OS_WAKE_UP           & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Sleep             , ::gpk::OS_SLEEP             & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Offline           , ::gpk::OS_OFFLINE           & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Connecting        , ::gpk::OS_CONNECTING        & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Connected         , ::gpk::OS_CONNECTED         & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, Missing_data      , ::gpk::OS_MISSING_DATA      & ~0x80000000);
+	GDEFINE_ENUM_VALUE(COMMAND, No_Memory         , ::gpk::OS_NO_MEMORY         & ~0x80000000);
 }
 
 #endif // GPK_ENUM_H_23627
