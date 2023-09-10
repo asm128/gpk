@@ -55,12 +55,14 @@ namespace gpk
 		}
 
 	};
+#pragma pack(pop)
 
 	typedef packed_int<uint32_t>	packedu32;
 	typedef packed_int<int32_t>		packedi32;
 	typedef packed_int<uint64_t>	packedu64;
 	typedef packed_int<int64_t>		packedi64;
-#pragma pack(pop)
+
+	ndstinx	::gpk::packedu32		pack_int	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
 
 }
 

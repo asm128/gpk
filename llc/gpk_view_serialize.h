@@ -9,36 +9,18 @@ namespace gpk
 {
 
 #pragma pack(push, 1)
-	struct SSerializedViewHeader : packed_int<uint32_t, 2> { 
-		using packed_int<uint32_t>::Value		; 
-		using packed_int<uint32_t>::ValueWidth	; 
-		using packed_int<uint32_t>::packed_int	; 
 
-		inlcxpr	SSerializedViewHeader() noexcept = default;
-		inlcxpr	SSerializedViewHeader
-			( uint8_t tailWidth		
-			, uint8_t multiplier	
-			, uint32_t tail			
-			) : packed_int{tailWidth, multiplier, tail} {} 
-
-		tplt<tpnm T>
-		ndincxp uint32_t			DataSize			()	const	noexcept	{ return ElementCount() * sizeof(T); }
-		ndincxp	uint8_t				CounterWidth		() 	const	noexcept	{ return ValueWidth(); }
-		nodinli	uint32_t			ElementCount		()	const	noexcept	{ return Value(); }
-
-	};
-
-	nodstxp	SSerializedViewHeader	viewHeader	(uint32_t payloadSize) { return {tail_width(payloadSize), tail_multiplier(payloadSize), tail_base(payloadSize)}; }
+	nodstxp	packedu32	viewHeader	(uint32_t payloadSize) { return {tail_width(payloadSize), tail_multiplier(payloadSize), tail_base(payloadSize)}; }
 #pragma pack(pop)
 
 	tplt<tpnm T, tpnm TByte>
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
-		const SSerializedViewHeader		& header			= *(const SSerializedViewHeader*)input.begin();
-		const uint32_t					counterWidth		= header.CounterWidth();
+		const packedu32					& header			= *(const packedu32*)input.begin();
+		const uint32_t					counterWidth		= header.ValueWidth();
 		ree_if(input.size() < counterWidth, "Invalid input size: %u", input.size());
 
-		const uint32_t					elementCount		= header.ElementCount();
-		const uint32_t					dataSize			= header.DataSize<T>();
+		const uint32_t					elementCount		= header.Value();
+		const uint32_t					dataSize			= sizeof(T) * elementCount;
 		ree_if(dataSize > (input.size() - counterWidth), "Invalid input size: %u. Expected: %u.", input.size(), dataSize);
 
 		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};

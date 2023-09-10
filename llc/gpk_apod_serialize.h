@@ -13,8 +13,8 @@ namespace gpk
 
 	tplt<tpnm T>
 	::gpk::error_t				saveView			(::gpk::au8 & output, const ::gpk::view<T> & headerToWrite)	{
-		::gpk::SSerializedViewHeader	viewHeader			= {tail_width(headerToWrite.size()), tail_multiplier(headerToWrite.size()), tail_base(headerToWrite.size())};
-		const uint32_t					counterWidth		= viewHeader.CounterWidth();
+		::gpk::packedu32				viewHeader			= {tail_width(headerToWrite.size()), tail_multiplier(headerToWrite.size()), tail_base(headerToWrite.size())};
+		const uint32_t					counterWidth		= viewHeader.ValueWidth();
 		gpk_necs(output.append({(const uint8_t*)&viewHeader, counterWidth}));
 		gpk_necs(output.append({(const uint8_t*)headerToWrite.begin(), headerToWrite.byte_count()}));
 		return counterWidth + headerToWrite.byte_count();
