@@ -33,9 +33,10 @@ void					gpk::STimer::Reset		()				noexcept				{
 double					gpk::STimer::Frame		()				noexcept				{
 #if defined(GPK_WINDOWS) || defined(GPK_CMSIS) 
 #	ifdef GPK_WINDOWS
+	const int64_t	currentTimeStamp		= 0;
 	QueryPerformanceCounter((::LARGE_INTEGER*)&currentTimeStamp);
 #	elif defined(GPK_CMSIS)
-	const int64_t currentTimeStamp		= osKernelGetTickCount();
+	const int64_t	currentTimeStamp		= osKernelGetTickCount();
 #	endif
 	LastTimeSeconds			= (currentTimeStamp - PrevTimeStamp) * SecondsPerCount;
 	LastTimeMicroseconds	= uint64_t((currentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
@@ -43,10 +44,10 @@ double					gpk::STimer::Frame		()				noexcept				{
 	return LastTimeSeconds;
 #else
 #	ifdef GPK_ARDUINO
-	const int64_t currentTimeStamp		= (int64_t)micros();
+	const int64_t	currentTimeStamp	= (int64_t)micros();
 	LastTimeMicroseconds	= currentTimeStamp - PrevTimeStamp;
 #	else
-	const auto currentTimeStamp		= ::std::chrono::high_resolution_clock::now();
+	const auto		currentTimeStamp		= ::std::chrono::high_resolution_clock::now();
 	LastTimeMicroseconds	= (int64_t)::std::chrono::duration_cast<std::chrono::microseconds>(currentTimeStamp - PrevTimeStamp).count();
 #	endif
 	PrevTimeStamp			= currentTimeStamp;
