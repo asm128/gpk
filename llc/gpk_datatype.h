@@ -52,8 +52,8 @@ namespace gpk
 #define	GTYPEID_ISFLOAT(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_FLOAT			& _dataTypeID ))		// returns true if the element bits represent a floating point number
 #define	GTYPEID_ISBIGENDIAN(	_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_IS_BIG_ENDIAN		& _dataTypeID ))		// returns true if the element bits has the bits inverted
 #define	GTYPEID_ELEMENTPAD(		_dataTypeID )	(0U != ( ::gpk::DATA_TYPE_HAS_INNER_PADDING	& _dataTypeID ))		// returns true if the elements have inner padding to next byte size
-#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)							// returns the element count (up to 1024k elements)
-#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(( 0x7FU		& _dataTypeID) + 1U)								// returns the element size in bits (up to 128 bits)
+#define	GTYPEID_ELEMENTCOUNT(	_dataTypeID )	(uint32_t((0x0FFFFF00U	& _dataTypeID) >> 8) + 1U)							// returns the element count (up to 1024k elements)
+#define	GTYPEID_ELEMENTSIZE(	_dataTypeID )	(uint32_t( 0x7FU		& _dataTypeID) + 1U)								// returns the element size in bits (up to 128 bits)
 
 // Return the byte count of the element type (ElementSize/8). Note: this funcion pads leading bits to next byte size.
 #define	GTYPEID_ELEMENTBYTES( _dataTypeID )		((GTYPEID_ELEMENTSIZE( _dataTypeID )/8)	+ one_if(GTYPEID_ELEMENTSIZE( _dataTypeID ) % 8))
@@ -123,13 +123,13 @@ namespace gpk
 				);
 		}
 		inlcxpr	bool		operator==		(const DATA_TYPE& other)	const				{
-			return	SizeInBits		+ 1	==	uint32_t(GTYPEID_ELEMENTSIZE	(other))
-				&&	ElementPad			==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
-				&&	ElementCount	+ 1	==	uint32_t(GTYPEID_ELEMENTCOUNT	(other))
-				&&	IsBigEndian			==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
-				&&	IsFloat				==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
-				&&	IsNorm				==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)
-				&&	IsSigned			==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
+			return	uint32_t(SizeInBits) + 1	==	uint32_t(GTYPEID_ELEMENTSIZE	(other))
+				&&	ElementPad					==			(GTYPEID_ELEMENTPAD		(other) ? 1U : 0U)
+				&&	uint32_t(ElementCount) + 1	==	uint32_t(GTYPEID_ELEMENTCOUNT	(other))
+				&&	IsBigEndian					==			(GTYPEID_ISBIGENDIAN	(other) ? 1U : 0U)
+				&&	IsFloat						==			(GTYPEID_ISFLOAT		(other) ? 1U : 0U)
+				&&	IsNorm						==			(GTYPEID_ISNORMALIZED	(other) ? 1U : 0U)
+				&&	IsSigned					==			(GTYPEID_ISSIGNED		(other) ? 0U : 1U)
 				;
 		}
 		inlcxpr	bool		operator==		(const SDataTypeID& other)	const				{
