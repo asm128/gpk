@@ -28,29 +28,28 @@ void					gpk::STimer::Reset		()				noexcept				{
 	PrevTimeStamp			= ::std::chrono::high_resolution_clock::now();
 #	endif
 #endif
-	CurrentTimeStamp		= PrevTimeStamp;
 }
 
 double					gpk::STimer::Frame		()				noexcept				{
 #if defined(GPK_WINDOWS) || defined(GPK_CMSIS) 
 #	ifdef GPK_WINDOWS
-	QueryPerformanceCounter((::LARGE_INTEGER*)&CurrentTimeStamp);
+	QueryPerformanceCounter((::LARGE_INTEGER*)&currentTimeStamp);
 #	elif defined(GPK_CMSIS)
-	CurrentTimeStamp		= osKernelGetTickCount();
+	const int64_t currentTimeStamp		= osKernelGetTickCount();
 #	endif
-	LastTimeSeconds			= (CurrentTimeStamp - PrevTimeStamp) * SecondsPerCount;
-	LastTimeMicroseconds	= uint64_t((CurrentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
-	PrevTimeStamp			= CurrentTimeStamp;
+	LastTimeSeconds			= (currentTimeStamp - PrevTimeStamp) * SecondsPerCount;
+	LastTimeMicroseconds	= uint64_t((currentTimeStamp - PrevTimeStamp) * MicrosecondsPerCount);
+	PrevTimeStamp			= currentTimeStamp;
 	return LastTimeSeconds;
 #else
 #	ifdef GPK_ARDUINO
-	CurrentTimeStamp		= micros();
-	LastTimeMicroseconds	= CurrentTimeStamp - PrevTimeStamp;
+	const int64_t currentTimeStamp		= (int64_t)micros();
+	LastTimeMicroseconds	= currentTimeStamp - PrevTimeStamp;
 #	else
-	CurrentTimeStamp		= ::std::chrono::high_resolution_clock::now();
-	LastTimeMicroseconds	= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds>(CurrentTimeStamp - PrevTimeStamp).count();
+	const auto currentTimeStamp		= ::std::chrono::high_resolution_clock::now();
+	LastTimeMicroseconds	= (int64_t)::std::chrono::duration_cast<std::chrono::microseconds>(currentTimeStamp - PrevTimeStamp).count();
 #	endif
-	PrevTimeStamp			= CurrentTimeStamp;
+	PrevTimeStamp			= currentTimeStamp;
 	return LastTimeSeconds	= LastTimeMicroseconds * MICROSECOND_SCALE;
 #endif
 }

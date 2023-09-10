@@ -21,7 +21,6 @@ namespace gpk	//
 	private:
 #if defined(GPK_WINDOWS) || defined(GPK_ARDUINO) || defined(GPK_CMSIS) || defined(GPK_ESP32)
 		int64_t			PrevTimeStamp			= 0;
-		int64_t			CurrentTimeStamp		= 0;
 #	ifndef GPK_ATMEL
 		int64_t			CountsPerSecond			= 0;
 		double			SecondsPerCount			= 0;
@@ -29,7 +28,6 @@ namespace gpk	//
 #	endif
 #else
 		::std::chrono::high_resolution_clock::time_point	PrevTimeStamp		= {};
-		::std::chrono::high_resolution_clock::time_point	CurrentTimeStamp	= {};
 #endif
 	};
 }
