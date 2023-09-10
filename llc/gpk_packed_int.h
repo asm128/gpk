@@ -33,17 +33,21 @@ namespace gpk
 			 : (count > 0x0000003F) ? count & 0x000000FFU
 			 : 0;
 	}
+
 #pragma pack(push, 1)
 	tplt<tpnm _tInt = int32_t, uint8_t widthField = 2>
 	struct packed_int { 
 		typedef _tInt	T;
-		uint8_t			TailWidth		: widthField;
-		uint8_t			Multiplier		: 8 - widthField;
-		T				Tail			= 0;
 
-		inlcxpr			packed_int		(uint8_t tailWidth = 0, uint8_t multiplier = 0, T tail = 0) 
-			:TailWidth(tailWidth), Multiplier(multiplier), Tail(tail) {}
-		ndincxp	uint8_t	ValueWidth		() 	const	noexcept	{ return TailWidth + 1; }
+		T				TailWidth		: widthField;
+		T				Multiplier		: 8 - widthField;
+		T				Tail			: (sizeof(T) - 1) * 8;
+
+		inlcxpr			packed_int		()												: TailWidth{}, Multiplier{}, Tail{} {}
+		inlcxpr			packed_int		(const T & value)								: TailWidth{tail_width(value)}, Multiplier{tail_multiplier(value)}, Tail{tail_base(value)} {}
+		inlcxpr			packed_int		(uint8_t tailWidth, uint8_t multiplier, T tail)	: TailWidth(tailWidth), Multiplier(multiplier), Tail(tail) {}
+
+		ndincxp	uint8_t	ValueWidth		() 	const	noexcept	{ return uint8_t(1 + TailWidth); }
 		nodscrd	T		Value			()	const	noexcept	{
 			switch(TailWidth) {
 			default:
@@ -62,8 +66,7 @@ namespace gpk
 	typedef packed_int<uint64_t>	packedu64;
 	typedef packed_int<int64_t>		packedi64;
 
-	ndstinx	::gpk::packedu32		pack_int	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
-
+	ndstinx	::gpk::packedu32	pack_int	(uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; }
 }
 
 #endif // GPK_PACKED_INT_H
