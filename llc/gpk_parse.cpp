@@ -32,7 +32,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol) {
 			if(symbolList[iSymbol] == sourceChar) {
 				bSymbolProcessed							= true;
-				gpk_necall(stringToParse.push_back(sourceChar), "%s", "Failed to append character! Out of memory?");
+				gpk_necs(stringToParse.push_back(sourceChar));
 				++iChar;
 				++totalCharsProcessed;
 				break;
@@ -42,7 +42,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_necall(::gpk::reverse(stringToParse), "%s", "Cannot reverse string for parsing! How could this ever happen?");		// we assigned the digits backwards so we need to reverse the string.
+	gpk_necs(::gpk::reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
 	uint64_t										number										= 0;
 	totalCharsProcessed							= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
@@ -79,7 +79,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 		}
 		out_types[work_state.IndexCurrentElement].Span.End	= work_state.IndexCurrentChar + 1;
 		work_state.InsideToken						= false;
-		gpk_necall(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}), "Failed to push_back(). %s", "Out of memory?");
+		gpk_necs(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_LITERAL, {work_state.IndexCurrentChar + 1, work_state.IndexCurrentChar + 1}}));
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
 	case '\\'	:
 		if(false == work_state.Escaping) {
@@ -106,7 +106,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 			break;	// do nothing if this bracket is escaped
 		out_types[out_types.size() - 1].Span.End	= work_state.IndexCurrentChar;
 		work_state.InsideToken						= true;
-		gpk_necall(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_TOKEN, {work_state.IndexCurrentChar, work_state.IndexCurrentChar}}), "Failed to push_back(). %s", "Out of memory?");
+		gpk_necs(work_state.IndexCurrentElement = out_types.push_back({-1, ::gpk::STRIP_LITERAL_TYPE_TOKEN, {work_state.IndexCurrentChar, work_state.IndexCurrentChar}}));
 		work_state.CurrentElement					= &out_types[work_state.IndexCurrentElement];
 		// do work
 		break;
@@ -142,7 +142,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 ::gpk::error_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
-		gpk_necall(::gpk::stripLiteralParseStep(stateReading, out_types, in_format), "%s", "Parse step failed.");
+		gpk_necs(::gpk::stripLiteralParseStep(stateReading, out_types, in_format));
 	}
 	return 0;
 }
@@ -164,7 +164,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 		if(0 >= lenView)
 			continue;
 		view										= {&in_format[offsetView], lenView};
-		gpk_necall(out_views.push_back(view), "%s", "Failed to push back. Out of memory?");
+		gpk_necs(out_views.push_back(view));
 	}
 	return 0;
 }

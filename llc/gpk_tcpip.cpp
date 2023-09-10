@@ -3,6 +3,35 @@
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
 #include "gpk_parse.h"
+
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::view<const char> & strRemoteIP, const ::gpk::view<const char> & strRemotePort, ::gpk::SIPv4Endpoint & remoteIP) {
+	gpk_necs(::gpk::parseIntegerDecimal(strRemotePort, (remoteIP.Port = 0)));
+	if(strRemoteIP.size()) {
+		uint32_t					iOffset					= 0;
+		uint32_t					iEnd					= 0;
+		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
+			while(iEnd < strRemoteIP.size()) {
+				char curChar = strRemoteIP[iEnd];
+				if( curChar == '.'
+				 ||	curChar == ':'
+				 ||	curChar == '\0'
+				 || (iEnd - iOffset) > 3	// 3 digit max
+				)
+					break;
+				++iEnd;
+			}
+			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, (remoteIP.IP[iVal] = 0));
+			iOffset					= iEnd + 1;
+			iEnd					= iOffset;
+		}
+		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
+			if(strRemotePort.size())
+				gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
+		}
+	}
+	return 0;
+}
+
 #ifndef GPK_ATMEL
 
 
@@ -30,7 +59,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::tcpipAddressFromSockaddr				(const sockaddr_in& sockaddr_ipv4, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)	{
+::gpk::error_t			gpk::tcpipAddressFromSockaddr				(const sockaddr_in & sockaddr_ipv4, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t * port)	{
 #if defined(GPK_WINDOWS)
 	gpk_safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	gpk_safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
@@ -72,47 +101,47 @@
 }
 
 ::gpk::error_t			gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
-	char											host_name[257]								= {};
+	char						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
 
 ::gpk::error_t			gpk::tcpipAddress			(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
-	char											portString			[16]					= {};
+	char						portString			[16]					= {};
 	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
-	::addrinfo										hints											= {};
-	hints.ai_family								= AF_INET;
-	hints.ai_socktype							= (TRANSPORT_PROTOCOL_TCP == mode) ? SOCK_STREAM	: SOCK_DGRAM	;
-	hints.ai_protocol							= (TRANSPORT_PROTOCOL_TCP == mode) ? IPPROTO_TCP	: IPPROTO_UDP	;
+	::addrinfo					hints											= {};
+	hints.ai_family			= AF_INET;
+	hints.ai_socktype		= (TRANSPORT_PROTOCOL_TCP == mode) ? SOCK_STREAM	: SOCK_DGRAM	;
+	hints.ai_protocol		= (TRANSPORT_PROTOCOL_TCP == mode) ? IPPROTO_TCP	: IPPROTO_UDP	;
 
-	const ::addrinfo								* createdAddrInfo								= 0;
+	const ::addrinfo			* createdAddrInfo								= 0;
 	ree_if(errored(::getaddrinfo(szHostName, portString, &hints, (::addrinfo**)&createdAddrInfo)), "gettaddrinfo failed for host_name: %s, port: %s", szHostName, portString);
 	//sockaddr_in6									* sockaddr_ipv6									= 0;
 
-	uint32_t										iAddress										= 0;
-	bool											addressFound									= false;
+	uint32_t					iAddress										= 0;
+	bool						addressFound									= false;
 	for(const addrinfo* ptr = createdAddrInfo; ptr != NULL; ptr = ptr->ai_next)  {	// Retrieve each address and print out the hex bytes
 		verbose_printf("getaddrinfo response at index %u.", iAddress);
 		verbose_printf("Flags: 0x%x.", ptr->ai_flags);
 		verbose_printf("%s", "Family: ");
-		char											ipstringbuffer	[46]							= {};
+		char						ipstringbuffer	[46]							= {};
 #if defined(GPK_WINDOWS)
-		wchar_t											ipwstringbuffer	[46]							= {};
+		wchar_t						ipwstringbuffer	[46]							= {};
 #endif
-		::sockaddr										* sockaddr_ip									=  0;
-		::sockaddr_in									* sockaddr_ipv4									=  0;
-		::sockaddr_in6									* sockaddr_ipv6									=  0;
+		::sockaddr					* sockaddr_ip									=  0;
+		::sockaddr_in				* sockaddr_ipv4									=  0;
+		::sockaddr_in6				* sockaddr_ipv6									=  0;
 		(void)sockaddr_ip	;
 		(void)sockaddr_ipv4	;
 		(void)sockaddr_ipv6	;
 		//DWORD dwRetval;
 #if defined(GPK_WINDOWS)
-		int32_t											iRetval;
-		DWORD											ipbufferlength									= 46;
+		int32_t						iRetval;
+		DWORD						ipbufferlength									= 46;
 #else
-		uint32_t										ipbufferlength									= 46;
+		uint32_t					ipbufferlength									= 46;
 #endif
 		switch (ptr->ai_family)  {
 		default			:	verbose_printf("Other %li.", ptr->ai_family	); break;
@@ -191,31 +220,4 @@
 	return iAddress;
 }
 
-#endif
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::view<const char>& strRemoteIP, const ::gpk::view<const char>& strRemotePort, ::gpk::SIPv4Endpoint & remoteIP) {
-	gpk_necs(::gpk::parseIntegerDecimal(strRemotePort, (remoteIP.Port = 0)));
-	if(strRemoteIP.size()) {
-		uint32_t					iOffset					= 0;
-		uint32_t					iEnd					= 0;
-		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
-			while(iEnd < strRemoteIP.size()) {
-				char curChar = strRemoteIP[iEnd];
-				if( curChar == '.'
-				 ||	curChar == ':'
-				 ||	curChar == '\0'
-				 || (iEnd - iOffset) > 3	// 3 digit max
-				)
-					break;
-				++iEnd;
-			}
-			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, (remoteIP.IP[iVal] = 0));
-			iOffset					= iEnd + 1;
-			iEnd					= iOffset;
-		}
-		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
-			if(strRemotePort.size())
-				gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
-		}
-	}
-	return 0;
-}
+#endif // GPK_ATMEL

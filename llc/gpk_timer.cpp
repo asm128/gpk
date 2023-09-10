@@ -2,16 +2,17 @@
 
 #ifdef GPK_WINDOWS
 #	include <Windows.h>
-#elif defined(GPK_ATMEL)
+#elif defined(GPK_ARDUINO)
 #	include <Arduino.h>
+#elif defined(GPK_CMSIS)
 #endif
 
 stacxpr	double			MICROSECOND_SCALE		= 0.000001;
 
 void					gpk::STimer::Reset		()				noexcept				{
 	LastTimeSeconds			= double(LastTimeMicroseconds = 0);
-#if defined(GPK_WINDOWS) || defined(GPK_CMSIS) || defined(GPK_ESP32)
-#	if defined(GPK_WINDOWS)
+#if defined(GPK_WINDOWS) || defined(GPK_CMSIS) 
+#	ifdef GPK_WINDOWS
 	QueryPerformanceFrequency((::LARGE_INTEGER*)&CountsPerSecond);
 	QueryPerformanceCounter((::LARGE_INTEGER*)&PrevTimeStamp);
 #	elif defined(GPK_CMSIS)
@@ -21,7 +22,7 @@ void					gpk::STimer::Reset		()				noexcept				{
 	SecondsPerCount			= 1.0 / CountsPerSecond;
 	MicrosecondsPerCount	= 1.0 / (CountsPerSecond * MICROSECOND_SCALE);
 #else
-#	if defined(GPK_ATMEL) || defined(GPK_ARDUINO)
+#	ifdef GPK_ARDUINO
 	PrevTimeStamp			= micros();
 #	else
 	PrevTimeStamp			= ::std::chrono::high_resolution_clock::now();
@@ -31,8 +32,8 @@ void					gpk::STimer::Reset		()				noexcept				{
 }
 
 double					gpk::STimer::Frame		()				noexcept				{
-#if defined(GPK_WINDOWS) || defined(GPK_CMSIS) || defined(GPK_ESP32)
-#	if defined(GPK_WINDOWS)
+#if defined(GPK_WINDOWS) || defined(GPK_CMSIS) 
+#	ifdef GPK_WINDOWS
 	QueryPerformanceCounter((::LARGE_INTEGER*)&CurrentTimeStamp);
 #	elif defined(GPK_CMSIS)
 	CurrentTimeStamp		= osKernelGetTickCount();
@@ -42,14 +43,13 @@ double					gpk::STimer::Frame		()				noexcept				{
 	PrevTimeStamp			= CurrentTimeStamp;
 	return LastTimeSeconds;
 #else
-#	if defined(GPK_ATMEL) || defined(GPK_ARDUINO)
-		CurrentTimeStamp		= micros();
-		LastTimeMicroseconds	= CurrentTimeStamp - PrevTimeStamp;
+#	ifdef GPK_ARDUINO
+	CurrentTimeStamp		= micros();
+	LastTimeMicroseconds	= CurrentTimeStamp - PrevTimeStamp;
 #	else
-		CurrentTimeStamp		= ::std::chrono::high_resolution_clock::now();
-		auto						timeDifference			= CurrentTimeStamp - PrevTimeStamp;
-		LastTimeMicroseconds	= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds>(timeDifference).count();
+	CurrentTimeStamp		= ::std::chrono::high_resolution_clock::now();
+	LastTimeMicroseconds	= (uint64_t)::std::chrono::duration_cast<std::chrono::microseconds>(CurrentTimeStamp - PrevTimeStamp).count();
 #	endif
-		return LastTimeSeconds	= LastTimeMicroseconds * MICROSECOND_SCALE;
+	return LastTimeSeconds	= LastTimeMicroseconds * MICROSECOND_SCALE;
 #endif
 }
