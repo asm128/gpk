@@ -213,6 +213,7 @@
     <ClInclude Include="gpk_sphere.h" />
     <ClInclude Include="gpk_view_n2.h" />
     <ClInclude Include="gpk_gtl_command.h" />
+    <ClInclude Include="gpk_packed_int.h" />
     <ClInclude Include="keyed_bit_array.h" />
     <ClInclude Include="gpk_queue_async.h" />
   </ItemGroup>

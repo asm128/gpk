@@ -690,6 +690,9 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_packed_int.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
