@@ -106,10 +106,10 @@ namespace gpk
 	stincxp	TTriplet	dim3	(TValue value)					noexcept	{ return {value, value, value}; }
 
 	tplt<tpnm _tInt>	
-	stincxp	uint8_t		byte_at	(_tInt value, uint8_t index)	noexcept	{ return uint8_t((value & (_tInt(0xFFU) << (8 * index))) >> (8 * index)); }
+	ndstinx	uint8_t		byte_at	(_tInt value, uint8_t index)	noexcept	{ return uint8_t((value & (_tInt(0xFFU) << (8 * index))) >> (8 * index)); }
 
 	tplt<tpnm _tInt>	
-	stincxp	_tInt		byte_to	(uint8_t byte, uint8_t index)	noexcept	{ return _tInt(byte) << (8 * index); }
+	ndstinx	_tInt		byte_to	(uint8_t byte, uint8_t index)	noexcept	{ return _tInt(byte) << (8 * index); }
 
 }
 

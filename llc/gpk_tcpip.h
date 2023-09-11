@@ -7,11 +7,14 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-
+	::gpk::error_t		tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4);
+	::gpk::error_t		tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4, uint16_t & port);
 
 	struct SIPv4 {
 		uint32_t			IP					= {};
 		
+							SIPv4				(gpk::vcs strIP)							{ ::gpk::tcpipAddress(strIP, IP); }
+							
 		inlcxpr				SIPv4				()								noexcept	= default;
 		inlcxpr				SIPv4				(const SIPv4 &)					noexcept	= default;
 		inlcxpr				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
@@ -96,9 +99,13 @@ namespace gpk
 							, (uint32_t)::gpk::byte_at(addr.IP, 3)	\
 							, (uint32_t)addr.Port
 
-			::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4);
+	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & strIP, ::gpk::SIPv4 & ipv4) { return ::gpk::tcpipAddress(strIP, ipv4.IP); }
+
+			::gpk::error_t	tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
 			::gpk::error_t	tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
 	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0) { return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); }
+
+			::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4);
 	stainli	::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4Endpoint & address)							{
 		address.Port			= portRequested;
 		uint8_t						addr[4]				= {};

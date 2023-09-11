@@ -1,43 +1,54 @@
 #include "gpk_tcpip.h"
-#include "gpk_log.h"
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
 #include "gpk_parse.h"
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strRemoteIP, const ::gpk::vcs & strRemotePort, ::gpk::SIPv4Endpoint & remoteIP) {
-	gpk_necs(::gpk::parseIntegerDecimal(strRemotePort, (remoteIP.Port = 0)));
-	if(strRemoteIP.size()) {
-		uint32_t					iOffset					= 0;
-		uint32_t					iEnd					= 0;
-		remoteIP.IP				= 0;
-		for(uint8_t iVal = 0; iVal < 4; ++iVal) {
-			while(iEnd < strRemoteIP.size()) {
-				char curChar = strRemoteIP[iEnd];
-				if( curChar == '.'
-				 ||	curChar == ':'
-				 ||	curChar == '\0'
-				 || (iEnd - iOffset) > 3	// 3 digit max
-				)
-					break;
-				++iEnd;
-			}
-			uint8_t			valueRead	= 0;
-			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, valueRead);
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & address, uint16_t & port) {
+	uint32_t					iOffset					= ::gpk::tcpipAddress(strIP, address);
+	return (iOffset < strIP.size())
+		? iOffset + ::gpk::parseIntegerDecimal({&strIP[iOffset], strIP.size() - iOffset}, port)
+		: iOffset
+		;
+}
 
-			remoteIP.IP	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4)	{
+	ipv4					= 0;
+	if(0 == strIP.size()) 
+		return 0;
 
-			iOffset		= iEnd + 1;
-			iEnd		= iOffset;
+	uint32_t					iOffset					= 0;
+	uint32_t					iEnd					= 0;
+	for(uint8_t iVal = 0; iVal < 4 && iOffset < strIP.size(); ++iVal) {
+		while(iEnd < strIP.size()) {
+			char curChar = strIP[iEnd];
+			if( curChar == '.'
+			 || curChar == ':'
+			 || curChar == '\0'
+			 || (iEnd - iOffset) > 3	// 3 digit max
+			)
+				break;
+			++iEnd;
 		}
-		if(0 == strRemotePort.size() && iOffset < strRemoteIP.size()) {
-			gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
-		}
+		uint8_t			valueRead	= 0;
+		::gpk::parseIntegerDecimal({&strIP[iOffset], iEnd - iOffset}, valueRead);
+
+		ipv4	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
+
+		iOffset		= iEnd + 1;
+		iEnd		= iOffset;
 	}
-	return 0;
+	return iOffset;
+}
+
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, const ::gpk::vcs & strPort, ::gpk::SIPv4Endpoint & ipv4) {
+	if(0 == strPort.size()) 
+		return ::gpk::tcpipAddress(strIP, ipv4.IP, ipv4.Port);
+
+	const uint32_t				iOffset					= ::gpk::tcpipAddress(strIP, ipv4.IP);
+	return iOffset + ::gpk::parseIntegerDecimal(strPort, ipv4.Port);
 }
 
 #ifndef GPK_ATMEL
-
 
 #if defined(GPK_WINDOWS)
 #	include <WS2tcpip.h>
@@ -63,55 +74,91 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::tcpipAddressFromSockaddr				(const sockaddr_in & sockaddr_ipv4, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t * port)	{
+::gpk::error_t			gpk::tcpipAddressFromSockaddr		(const sockaddr_in & sockaddr_ipv4, uint32_t & address, uint16_t & port) {
+	port 	= (uint16_t)ntohs(sockaddr_ipv4.sin_port);
+#ifndef GPK_WINDOWS
+	address	= sockaddr_ipv4.sin_addr.s_addr;
+#else
+	address	= ::gpk::SIPv4
+		{ sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1
+		, sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2
+		, sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3
+		, sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4
+		};
+#endif
+	return 0;
+}
+
+::gpk::error_t			gpk::tcpipAddressFromSockaddr	(const sockaddr_in & sockaddr_ipv4, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t * port)	{
 #if defined(GPK_WINDOWS)
 	gpk_safe_assign(a1, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1);
 	gpk_safe_assign(a2, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2);
 	gpk_safe_assign(a3, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3);
 	gpk_safe_assign(a4, (uint8_t)sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4);
 #else
-	gpk_safe_assign(a1, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x000000FF) >>  0));
-	gpk_safe_assign(a2, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x0000FF00) >>  8));
-	gpk_safe_assign(a3, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0x00FF0000) >> 16));
-	gpk_safe_assign(a4, (uint8_t)((sockaddr_ipv4.sin_addr.s_addr & 0xFF000000) >> 24));
+	gpk_safe_assign(a1, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 0));
+	gpk_safe_assign(a2, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 1));
+	gpk_safe_assign(a3, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 2));
+	gpk_safe_assign(a4, ::gpk::byte_at(sockaddr_ipv4.sin_addr.s_addr, 3));
 #endif
 	gpk_safe_assign(port, (uint16_t)ntohs(sockaddr_ipv4.sin_port));
 	return 0;
 }
-
-::gpk::error_t			gpk::tcpipAddressToSockaddr					(const uint8_t a1, const uint8_t a2, const uint8_t a3, const uint8_t a4, const uint16_t* port, sockaddr_in & sockaddr_ipv4)	{
+::gpk::error_t			gpk::tcpipAddressToSockaddr		(uint32_t address, uint16_t port, sockaddr_in & sockaddr_ipv4) {
 	sockaddr_ipv4				= {};
 	sockaddr_ipv4.sin_family	= AF_INET;
-	sockaddr_ipv4.sin_port		= port ? htons(*port) : (uint16_t)0;
-#if defined(GPK_WINDOWS)
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3;
-	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4;
+	sockaddr_ipv4.sin_port		= port ? htons(port) : (uint16_t)0;
+#ifndef GPK_WINDOWS
+	sockaddr_ipv4.sin_addr.s_addr				=  address;
 #else
-	sockaddr_ipv4.sin_addr.s_addr				=  ((unsigned int)a1) <<  0;
-	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a2) <<  8;
-	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a3) << 16;
-	sockaddr_ipv4.sin_addr.s_addr				|= ((unsigned int)a4) << 24;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= ::gpk::byte_at(address, 0);
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= ::gpk::byte_at(address, 1);
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= ::gpk::byte_at(address, 2);
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= ::gpk::byte_at(address, 3);
 #endif
 	return 0;
 }
 
-::gpk::error_t			gpk::tcpipAddress							(SOCKET socket, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port) {
-	sockaddr_in										sockaddr_ipv4								= {};
-	socklen_t										len											= sizeof(sockaddr_in);
+::gpk::error_t			gpk::tcpipAddressToSockaddr		(uint8_t a1, uint8_t a2, uint8_t a3, uint8_t a4, uint16_t port, sockaddr_in & sockaddr_ipv4)	{
+	sockaddr_ipv4				= {};
+	sockaddr_ipv4.sin_family	= AF_INET;
+	sockaddr_ipv4.sin_port		= port ? htons(port) : (uint16_t)0;
+#ifndef GPK_WINDOWS
+	sockaddr_ipv4.sin_addr.s_addr				=  ::gpk::SIPv4{a1, a2, a3, a4};
+#else
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b1		= a1;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b2		= a2;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b3		= a3;
+	sockaddr_ipv4.sin_addr.S_un.S_un_b.s_b4		= a4;
+#endif
+	return 0;
+}
+
+::gpk::error_t			gpk::tcpipAddress	(SOCKET socket, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t * port) {
+	sockaddr_in					sockaddr_ipv4		= {};
+	socklen_t					len					= sizeof(sockaddr_in);
 	ree_if(getsockname(socket, (sockaddr*)&sockaddr_ipv4, &len) != 0, "%s", "getpeername failed.");
 	return ::gpk::tcpipAddressFromSockaddr(sockaddr_ipv4, a1, a2, a3, a4, port);
 }
 
-::gpk::error_t			gpk::tcpipAddress							(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
+::gpk::error_t			gpk::tcpipAddress	(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
 	char						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
+::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
+	::gpk::SIPv4Endpoint 	addr; 
+	gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port);
+	gpk_safe_assign(a1, ::gpk::byte_at(addr.IP, 0));
+	gpk_safe_assign(a2, ::gpk::byte_at(addr.IP, 1));
+	gpk_safe_assign(a3, ::gpk::byte_at(addr.IP, 2));
+	gpk_safe_assign(a4, ::gpk::byte_at(addr.IP, 3));	
+	gpk_safe_assign(port, addr.Port);		
+	return 0;
+}
 
-::gpk::error_t			gpk::tcpipAddress			(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
-	char						portString			[16]					= {};
+::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port) {
+	char						portString			[6]					= {};
 	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
@@ -159,7 +206,7 @@
 			verbose_printf("IPv4 address %s", ipstringbuffer);
 			// Copy address
 			if(adapterIndex == iAddress) {
-				::gpk::tcpipAddressFromSockaddr(*sockaddr_ipv4, a1, a2, a3, a4, port);
+				::gpk::tcpipAddressFromSockaddr(*sockaddr_ipv4, address, port);
 				//printf("\tIPv4 address %s\n", inet_ntoa(sockaddr_ipv4->sin_addr) );
 				addressFound								= true;
 			}
