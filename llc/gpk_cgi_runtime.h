@@ -97,7 +97,7 @@ namespace gpk
 		::gpk::aobj<::gpk::TKeyValConstString>												QueryStringKeyVals			= {};
 		::gpk::aobj<::gpk::TKeyValConstString>												FormKeyVals					= {};
 		::gpk::aobj<::gpk::TKeyValConstString>												EnvironViews				= {};
-		::gpk::SIPv4Endpoint																			RemoteIP					= {};
+		::gpk::SIPv4End																			RemoteIP					= {};
 		::gpk::SCGIRequestContent																Content						= {};
 		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
 	};

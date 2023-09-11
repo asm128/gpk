@@ -37,8 +37,9 @@ namespace gpk
 				, ::gpk::byte_at(IP, 3) 
 				};
 		}
-		operator			gpk::astchar<16>	()						const	noexcept	{
-			gpk::astchar<16>	result;
+		template<size_t buflen>
+		operator			gpk::astchar<buflen>	()						const	noexcept	{
+			gpk::astchar<buflen>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u"
 				, ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1)
@@ -60,13 +61,18 @@ namespace gpk
 		}
 	};	
 
-	struct SIPv4Endpoint : SIPv4 {
+
+	typedef struct SIPv4End : SIPv4 {
 		uint16_t			Port				= {};
 
-		GPK_DEFAULT_OPERATOR(SIPv4Endpoint, IP == other.IP && Port == other.Port);
+		GPK_DEFAULT_OPERATOR(SIPv4End, IP == other.IP && Port == other.Port);
 
-		operator			gpk::astchar<22>	()						const	noexcept	{
-			gpk::astchar<22>	result;
+		template<size_t buflen>
+		operator			gpk::astchar<buflen>	()		const	noexcept	{
+			if(0 == Port)
+				return *(const SIPv4*)this;
+
+			gpk::astchar<buflen>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u:%u"
 				, ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1)
@@ -76,7 +82,10 @@ namespace gpk
 				);
 			return result; 
 		}
-	};
+	} SIPv4Endpoint;
+
+	tplt<size_t count> using	astipv4		= ::gpk::astatic<::gpk::SIPv4, count>;
+	tplt<size_t count> using	astipv4end	= ::gpk::astatic<::gpk::SIPv4End, count>;
 #pragma pack(pop)
 
 	::gpk::error_t			tcpipInitialize						();
@@ -101,35 +110,38 @@ namespace gpk
 
 	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & strIP, ::gpk::SIPv4 & ipv4) { return ::gpk::tcpipAddress(strIP, ipv4.IP); }
 
-			::gpk::error_t	tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
-			::gpk::error_t	tcpipAddress		(const char* hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
-	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcc & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0) { return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); }
 
+			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
+			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
+
+	stainli	::gpk::error_t	tcpipAddress		(::gpk::vcs hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0) { 
+		return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); 
+	}
+	stainli	::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)				{
+		uint16_t port = 0;
+		return gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, address, port);
+	}
+
+			::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address);
 			::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4);
-	stainli	::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4Endpoint & address)							{
+	stainli	::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)							{
 		address.Port			= portRequested;
-		uint8_t						addr[4]				= {};
-		gpk_necs(::gpk::tcpipAddress(portRequested, adapterIndex, mode, &addr[0], &addr[1], &addr[2], &addr[3]));
-		address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]};
+		gpk_necs(::gpk::tcpipAddress(portRequested, adapterIndex, mode, address.IP));
 		return 0;
 	}
-	stainli	::gpk::error_t	tcpipAddress		(const char * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4Endpoint & address)	{
+	stainli	::gpk::error_t	tcpipAddress		(const char * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
 		address.Port			= portRequested;
-		uint8_t						addr[4]				= {};
-		gpk_necs(::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port));
-		address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]};
+		gpk_necs(::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, address.IP, address.Port));
 		return 0;
 	}
 
-	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4Endpoint & address)	{
+	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
 		address.Port													= portRequested;
-		uint8_t						addr[4]				= {};
-		gpk_necs(::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, &addr[0], &addr[1], &addr[2], &addr[3], &address.Port));
-		address.IP = SIPv4{addr[0], addr[1], addr[2], addr[3]};
+		gpk_necs(::gpk::tcpipAddress(hostName.begin(), portRequested, adapterIndex, mode, address.IP, address.Port));
 		return 0;
 	}
 
-	::gpk::error_t			tcpipAddress		(const ::gpk::vcs & strRemoteIP, const ::gpk::vcs & strRemotePort, ::gpk::SIPv4Endpoint & remoteIP);
+	::gpk::error_t			tcpipAddress		(const ::gpk::vcs & strRemoteIP, const ::gpk::vcs & strRemotePort, ::gpk::SIPv4End & remoteIP);
 } // namespace
 
 #endif // GPK_TCPIP_H_23627

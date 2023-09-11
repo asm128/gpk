@@ -9,7 +9,7 @@ namespace gpk
 		::gpk::auto_socket_close			Socket;
 		::gpk::apobj<::gpk::SUDPConnection>	Clients;
 		::std::mutex						Mutex;
-		::gpk::SIPv4Endpoint						Address								= {};
+		::gpk::SIPv4End						Address								= {};
 		int16_t								AdapterIndex;
 		bool								Listen								= false;
 		int32_t								Timeout								= 3000000;	// Kill clients timeout

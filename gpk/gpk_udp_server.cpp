@@ -90,7 +90,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 								break;
 							}
 						}
-						::gpk::SIPv4Endpoint								address								= {{}, 9999};
+						::gpk::SIPv4End								address								= {{}, 9999};
 						::gpk::tcpipAddressFromSockaddr(sa_client, address);
 						if(client.Address != address) {
 							warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
@@ -186,7 +186,7 @@ static	::gpk::error_t	serverListenTick		(::gpk::SUDPServer& serverInstance, cons
 
 		sockaddr_in					sa_srv				= {};	// Information about the client
 		::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
-		::gpk::SIPv4Endpoint				address				= {{}, serverInstance.Address.Port};
+		::gpk::SIPv4End				address				= {{}, serverInstance.Address.Port};
 		::gpk::tcpipAddressFromSockaddr(sa_client, address);
 		ree_if(sa_client.sin_port != sa_srv.sin_port
 			|| memcmp(&sa_client.sin_addr	, &sa_srv.sin_addr	, sizeof(sa_srv.sin_addr))

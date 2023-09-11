@@ -30,7 +30,7 @@
 			++iEnd;
 		}
 		uint8_t			valueRead	= 0;
-		::gpk::parseIntegerDecimal({&strIP[iOffset], iEnd - iOffset}, valueRead);
+		gpk_necs(::gpk::parseIntegerDecimal({&strIP[iOffset], iEnd - iOffset}, valueRead));
 
 		ipv4	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
 
@@ -40,7 +40,7 @@
 	return iOffset;
 }
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, const ::gpk::vcs & strPort, ::gpk::SIPv4Endpoint & ipv4) {
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, const ::gpk::vcs & strPort, ::gpk::SIPv4End & ipv4) {
 	if(0 == strPort.size()) 
 		return ::gpk::tcpipAddress(strIP, ipv4.IP, ipv4.Port);
 
@@ -146,9 +146,16 @@
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
-::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4, uint16_t* port)				{
-	::gpk::SIPv4Endpoint 	addr; 
-	gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port);
+
+::gpk::error_t			gpk::tcpipAddress	(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)										{
+	char						host_name[257]								= {};
+	gethostname(host_name, 256);
+	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, address);
+}
+
+::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t * a4, uint16_t * port)				{
+	::gpk::SIPv4End 		addr; 
+	gpk_necs(gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
 	gpk_safe_assign(a1, ::gpk::byte_at(addr.IP, 0));
 	gpk_safe_assign(a2, ::gpk::byte_at(addr.IP, 1));
 	gpk_safe_assign(a3, ::gpk::byte_at(addr.IP, 2));
