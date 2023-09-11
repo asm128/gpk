@@ -36,7 +36,7 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	rew_if(-1 == received_bytes, "Failed to receive connect response from '%u.%u.%u.%u:%u'.", GPK_IPV4_EXPAND(client.AddressConnect));
 	::gpk::SIPv4Endpoint													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
-	ree_if(*(uint32_t*)temp.IP != *(uint32_t*)client.AddressConnect.IP, "Invalid server response address! Expected: %u.%u.%u.%u:%u. Received from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.AddressConnect), GPK_IPV4_EXPAND(temp));
+	ree_if(temp.IP != client.AddressConnect.IP, "Invalid server response address! Expected: %u.%u.%u.%u:%u. Received from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(client.AddressConnect), GPK_IPV4_EXPAND(temp));
 	client.Address												= temp;
 	int																wsae										= WSAGetLastError() ;
 	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed to receive connect response from address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
@@ -71,7 +71,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 		}	/* Receive time */
 		::gpk::SIPv4Endpoint													temp										= {};
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
-		if(*(uint32_t*)temp.IP == *(uint32_t*)client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
+		if(temp.IP == client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			if(temp.Port == client.Address.Port)
 				es_if(errored(::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer)));
 		}

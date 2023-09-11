@@ -4,11 +4,12 @@
 #include "gpk_stdsocket.h"
 #include "gpk_parse.h"
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::view<const char> & strRemoteIP, const ::gpk::view<const char> & strRemotePort, ::gpk::SIPv4Endpoint & remoteIP) {
+::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strRemoteIP, const ::gpk::vcs & strRemotePort, ::gpk::SIPv4Endpoint & remoteIP) {
 	gpk_necs(::gpk::parseIntegerDecimal(strRemotePort, (remoteIP.Port = 0)));
 	if(strRemoteIP.size()) {
 		uint32_t					iOffset					= 0;
 		uint32_t					iEnd					= 0;
+		remoteIP.IP				= 0;
 		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				char curChar = strRemoteIP[iEnd];
@@ -20,13 +21,15 @@
 					break;
 				++iEnd;
 			}
-			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, (remoteIP.IP[iVal] = 0));
+			uint8_t			valueRead	= 0;
+			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, valueRead);
+
+			remoteIP.IP	|= uint32_t(valueRead) << iVal;
 			iOffset					= iEnd + 1;
 			iEnd					= iOffset;
 		}
-		if(0 == strRemotePort.size() && iOffset != strRemoteIP.size()) {
-			if(strRemotePort.size())
-				gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
+		if(0 == strRemotePort.size() && iOffset < strRemoteIP.size()) {
+			gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
 		}
 	}
 	return 0;
