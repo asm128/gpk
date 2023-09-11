@@ -7,10 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tInt>
-	stincxp	uint8_t		byte_at		(_tInt value, uint8_t index) {	
-		return uint8_t((value & (_tInt(0xFFU) << (8 * index))) >> (8 * index)); 
-	}
+
 
 	struct SIPv4 {
 		uint32_t			IP					= {};
@@ -20,10 +17,10 @@ namespace gpk
 		inlcxpr				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
 		cnstxpr				SIPv4				(uint8_t _0, uint8_t _1, uint8_t _2, uint8_t _3 = 0)
 			: IP
-			{ (uint32_t(_0) << 0) // 
-			| (uint32_t(_1) << 1) // 
-			| (uint32_t(_2) << 2) // 
-			| (uint32_t(_3) << 3) // 
+			{ ::gpk::byte_to<uint32_t>(_0, 0) // 
+			| ::gpk::byte_to<uint32_t>(_1, 1) // 
+			| ::gpk::byte_to<uint32_t>(_2, 2) // 
+			| ::gpk::byte_to<uint32_t>(_3, 3) // 
 			} {}
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
