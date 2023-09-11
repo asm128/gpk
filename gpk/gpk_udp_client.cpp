@@ -16,10 +16,10 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	sockaddr_in														sa_server									= {};				/* Information about the server */
 	socklen_t														sa_length									= sizeof(struct sockaddr_in);
 	client.Socket.close();
-	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "%s", "??");
+	gpk_necs(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server));
 	sa_server.sin_port											= htons(client.AddressConnect.Port);
 	ree_if(INVALID_SOCKET == (client.Socket.Handle = socket(AF_INET, SOCK_DGRAM, 0)), "Failed to create socket for address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
-	gpk_necall(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server), "%s", "??");
+	gpk_necs(::gpk::tcpipAddressToSockaddr(client.AddressConnect, sa_server));
 	sockaddr_in														sa_client									= {};				/* Information about the server */
 
 	::gpk::SIPv4Endpoint localAddr;

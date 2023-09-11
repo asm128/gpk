@@ -124,7 +124,7 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4Endpoint & remoteIP, const ::gpk
 		uint32_t					iOffset			= 0;
 		uint32_t					iEnd			= 0;
 		remoteIP.IP				= 0;
-		for(uint32_t iVal = 0; iVal < 4; ++iVal) {
+		for(uint8_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
 				const char curChar = strRemoteIP[iEnd];
 				if( curChar == '.'
@@ -138,7 +138,7 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4Endpoint & remoteIP, const ::gpk
 			uint8_t			valueRead	= 0;
 			::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], iEnd - iOffset}, valueRead);
 
-			remoteIP.IP	|= uint32_t(valueRead) << iVal;
+			remoteIP.IP	|= ::gpk::byte_to<uint32_t>(valueRead, iVal);
 
 			iOffset		= iEnd + 1;
 			iEnd		= iOffset;
