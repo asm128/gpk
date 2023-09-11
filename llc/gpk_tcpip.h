@@ -17,10 +17,10 @@ namespace gpk
 		inlcxpr				SIPv4				(uint32_t little_endian)		noexcept	: IP(little_endian) {}
 		cnstxpr				SIPv4				(uint8_t _0, uint8_t _1, uint8_t _2, uint8_t _3 = 0)
 			: IP
-			{ ::gpk::byte_to<uint32_t>(_0, 0) // 
-			| ::gpk::byte_to<uint32_t>(_1, 1) // 
-			| ::gpk::byte_to<uint32_t>(_2, 2) // 
-			| ::gpk::byte_to<uint32_t>(_3, 3) // 
+			{ ::gpk::byte_to<uint32_t>(_0, 0)
+			| ::gpk::byte_to<uint32_t>(_1, 1)
+			| ::gpk::byte_to<uint32_t>(_2, 2)
+			| ::gpk::byte_to<uint32_t>(_3, 3)
 			} {}
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
@@ -37,14 +37,24 @@ namespace gpk
 		operator			gpk::astchar<16>	()						const	noexcept	{
 			gpk::astchar<16>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u"
-				, ::gpk::byte_at(IP, 0) // IP[0] // 
-				, ::gpk::byte_at(IP, 1) // IP[1] // 
-				, ::gpk::byte_at(IP, 2) // IP[2] // 
-				, ::gpk::byte_at(IP, 3) // IP[3] // 
-			);
+				, ::gpk::byte_at(IP, 0)
+				, ::gpk::byte_at(IP, 1)
+				, ::gpk::byte_at(IP, 2)
+				, ::gpk::byte_at(IP, 3)
+				);
 			return result; 
 		}
 
+		tplt<size_t bufferSize>
+		::gpk::error_t 		print				(char (&target)[bufferSize])	const	noexcept	{
+			return sprintf_s(target, "%u.%u.%u.%u"
+				, ::gpk::byte_at(IP, 0)
+				, ::gpk::byte_at(IP, 1)
+				, ::gpk::byte_at(IP, 2)
+				, ::gpk::byte_at(IP, 3)
+				);
+
+		}
 	};	
 
 	struct SIPv4Endpoint : SIPv4 {
@@ -55,12 +65,12 @@ namespace gpk
 		operator			gpk::astchar<22>	()						const	noexcept	{
 			gpk::astchar<22>	result;
 			sprintf_s(result.Storage, "%u.%u.%u.%u:%u"
-				, ::gpk::byte_at(IP, 0) // 
-				, ::gpk::byte_at(IP, 1) // 
-				, ::gpk::byte_at(IP, 2) // 
-				, ::gpk::byte_at(IP, 3) // 
+				, ::gpk::byte_at(IP, 0)
+				, ::gpk::byte_at(IP, 1)
+				, ::gpk::byte_at(IP, 2)
+				, ::gpk::byte_at(IP, 3)
 				, Port
-			);
+				);
 			return result; 
 		}
 	};
