@@ -36,14 +36,22 @@ namespace gpk
 			return ::gpk::equal(other.begin(), this->begin(), this->size());
 		}
 		// Methods
-		inline	T*				begin						()													noexcept	{ return Storage;				}
-		inline	T*				end							()													noexcept	{ return Storage + _elementCount;	}
+		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(size() * sizeof(T));	}
+		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
-		inlcxpr	const T*		begin						()											const	noexcept	{ return Storage;				}
-		inlcxpr	const T*		end							()											const	noexcept	{ return Storage + _elementCount;	}
+		inlcxpr	view<uint8_t>	u8				()									noexcept	{ return {(uint8_t*)Storage, byte_count()};		}
+		inline	view<cuint8_t>	u8				()							const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
+		inlcxpr	view<cuint8_t>	cu8				()							const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
+		inline	view<char>		c				()									noexcept	{ return {(char*)Storage, byte_count()};			}
+		inlcxpr	view<cchar_t>	cc				()							const	noexcept	{ return {(const char*)Storage, byte_count()};		}
 
-		inlcxpr	const uint32_t&	size						()											const	noexcept	{ return SIZE; }
-		inlcxpr	uint32_t		byte_count					()											const	noexcept	{ return (uint32_t)(_elementCount * sizeof(T));	}
+		inline	T*				begin						()						noexcept	{ return Storage;				}
+		inline	T*				end							()						noexcept	{ return Storage + _elementCount;	}
+
+		inlcxpr	const T*		begin						()				const	noexcept	{ return Storage;				}
+		inlcxpr	const T*		end							()				const	noexcept	{ return Storage + _elementCount;	}
+
+		inlcxpr	const uint32_t&	size						()				const	noexcept	{ return SIZE; }
 
 		::gpk::error_t			slice			(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)				{
 			ree_if(offset > SIZE, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)SIZE, offset);
@@ -63,34 +71,37 @@ namespace gpk
 		}
 	};
 
-	tplt<tpnm T, uint32_t _elementCount>	
+	tplt<tpnm T, uint32_t _elementCount>
 	using astatic	= ::gpk::array_static<T, _elementCount>;
 
-	tplt<uint32_t _elementCount>	using astc		= ::gpk::astatic<char     , _elementCount>; tplt<uint32_t _elementCount>	using astaticc		= ::gpk::astc	<_elementCount>; tplt<uint32_t _elementCount>	using astchar	= ::gpk::astatic<char    , _elementCount>;
-	tplt<uint32_t _elementCount>	using astuc 	= ::gpk::astatic<uchar_t  , _elementCount>; tplt<uint32_t _elementCount>	using astaticuc 	= ::gpk::astuc 	<_elementCount>; tplt<uint32_t _elementCount>	using astuchar 	= ::gpk::astatic<uchar_t , _elementCount>;
-	tplt<uint32_t _elementCount>	using astu8 	= ::gpk::astatic<uint8_t  , _elementCount>; tplt<uint32_t _elementCount>	using astaticu8 	= ::gpk::astu8 	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astu16	= ::gpk::astatic<uint16_t , _elementCount>; tplt<uint32_t _elementCount>	using astaticu16	= ::gpk::astu16	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astu32	= ::gpk::astatic<uint32_t , _elementCount>; tplt<uint32_t _elementCount>	using astaticu32	= ::gpk::astu32	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astu64	= ::gpk::astatic<uint64_t , _elementCount>; tplt<uint32_t _elementCount>	using astaticu64	= ::gpk::astu64	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using asti8 	= ::gpk::astatic<int8_t   , _elementCount>; tplt<uint32_t _elementCount>	using astatici8 	= ::gpk::asti8 	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using asti16	= ::gpk::astatic<int16_t  , _elementCount>; tplt<uint32_t _elementCount>	using astatici16	= ::gpk::asti16	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using asti32	= ::gpk::astatic<int32_t  , _elementCount>; tplt<uint32_t _elementCount>	using astatici32	= ::gpk::asti32	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using asti64	= ::gpk::astatic<int64_t  , _elementCount>; tplt<uint32_t _elementCount>	using astatici64	= ::gpk::asti64	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astf32	= ::gpk::astatic<float32_t, _elementCount>; tplt<uint32_t _elementCount>	using astaticf32	= ::gpk::astf32	<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astf64	= ::gpk::astatic<float64_t, _elementCount>; tplt<uint32_t _elementCount>	using astaticf64	= ::gpk::astf64	<_elementCount>; 
+	tplt<uint32_t _count>	using astvcs	= ::gpk::astatic<::gpk::vcs	, _count>; tplt<uint32_t _count>	using astaticvcs	= ::gpk::astvcs	<_count>;
+	tplt<uint32_t _count>	using astvs		= ::gpk::astatic<::gpk::vs	, _count>; tplt<uint32_t _count>	using astaticvs		= ::gpk::astvs	<_count>;
 
-	tplt<uint32_t _elementCount>	using astvcc	= ::gpk::astatic<::gpk::vcc		, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcc	= ::gpk::astvcc  <_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcuc 	= ::gpk::astvcuc <_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcu8 	= ::gpk::astatic<::gpk::vcu8 	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcu8 	= ::gpk::astvcu8 <_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcu16	= ::gpk::astatic<::gpk::vcu16	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcu16	= ::gpk::astvcu16<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcu32	= ::gpk::astatic<::gpk::vcu32	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcu32	= ::gpk::astvcu32<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcu64	= ::gpk::astatic<::gpk::vcu64	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcu64	= ::gpk::astvcu64<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvci8 	= ::gpk::astatic<::gpk::vci8 	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvci8 	= ::gpk::astvci8 <_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvci16	= ::gpk::astatic<::gpk::vci16	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvci16	= ::gpk::astvci16<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvci32	= ::gpk::astatic<::gpk::vci32	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvci32	= ::gpk::astvci32<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvci64	= ::gpk::astatic<::gpk::vci64	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvci64	= ::gpk::astvci64<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcf32	= ::gpk::astatic<::gpk::vcf32	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcf32	= ::gpk::astvcf32<_elementCount>; 
-	tplt<uint32_t _elementCount>	using astvcf64	= ::gpk::astatic<::gpk::vcf64	, _elementCount>; tplt<uint32_t _elementCount>	using astaticvcf64	= ::gpk::astvcf64<_elementCount>; 
+	tplt<uint32_t _count>	using astc		= ::gpk::astatic<char     , _count>; tplt<uint32_t _count>	using astaticc		= ::gpk::astc	<_count>; tplt<uint32_t _count>	using astchar	= ::gpk::astatic<char    , _count>;
+	tplt<uint32_t _count>	using astuc 	= ::gpk::astatic<uchar_t  , _count>; tplt<uint32_t _count>	using astaticuc 	= ::gpk::astuc 	<_count>; tplt<uint32_t _count>	using astuchar	= ::gpk::astatic<uchar_t , _count>;
+	tplt<uint32_t _count>	using astu8 	= ::gpk::astatic<uint8_t  , _count>; tplt<uint32_t _count>	using astaticu8 	= ::gpk::astu8 	<_count>;
+	tplt<uint32_t _count>	using astu16	= ::gpk::astatic<uint16_t , _count>; tplt<uint32_t _count>	using astaticu16	= ::gpk::astu16	<_count>;
+	tplt<uint32_t _count>	using astu32	= ::gpk::astatic<uint32_t , _count>; tplt<uint32_t _count>	using astaticu32	= ::gpk::astu32	<_count>;
+	tplt<uint32_t _count>	using astu64	= ::gpk::astatic<uint64_t , _count>; tplt<uint32_t _count>	using astaticu64	= ::gpk::astu64	<_count>;
+	tplt<uint32_t _count>	using asti8 	= ::gpk::astatic<int8_t   , _count>; tplt<uint32_t _count>	using astatici8 	= ::gpk::asti8 	<_count>;
+	tplt<uint32_t _count>	using asti16	= ::gpk::astatic<int16_t  , _count>; tplt<uint32_t _count>	using astatici16	= ::gpk::asti16	<_count>;
+	tplt<uint32_t _count>	using asti32	= ::gpk::astatic<int32_t  , _count>; tplt<uint32_t _count>	using astatici32	= ::gpk::asti32	<_count>;
+	tplt<uint32_t _count>	using asti64	= ::gpk::astatic<int64_t  , _count>; tplt<uint32_t _count>	using astatici64	= ::gpk::asti64	<_count>;
+	tplt<uint32_t _count>	using astf32	= ::gpk::astatic<float32_t, _count>; tplt<uint32_t _count>	using astaticf32	= ::gpk::astf32	<_count>;
+	tplt<uint32_t _count>	using astf64	= ::gpk::astatic<float64_t, _count>; tplt<uint32_t _count>	using astaticf64	= ::gpk::astf64	<_count>;
+
+	tplt<uint32_t _count>	using astvcc	= ::gpk::astatic<::gpk::vcc		, _count>; tplt<uint32_t _count>	using astaticvcc	= ::gpk::astvcc  <_count>;
+	tplt<uint32_t _count>	using astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, _count>; tplt<uint32_t _count>	using astaticvcuc 	= ::gpk::astvcuc <_count>;
+	tplt<uint32_t _count>	using astvcu8 	= ::gpk::astatic<::gpk::vcu8 	, _count>; tplt<uint32_t _count>	using astaticvcu8 	= ::gpk::astvcu8 <_count>;
+	tplt<uint32_t _count>	using astvcu16	= ::gpk::astatic<::gpk::vcu16	, _count>; tplt<uint32_t _count>	using astaticvcu16	= ::gpk::astvcu16<_count>;
+	tplt<uint32_t _count>	using astvcu32	= ::gpk::astatic<::gpk::vcu32	, _count>; tplt<uint32_t _count>	using astaticvcu32	= ::gpk::astvcu32<_count>;
+	tplt<uint32_t _count>	using astvcu64	= ::gpk::astatic<::gpk::vcu64	, _count>; tplt<uint32_t _count>	using astaticvcu64	= ::gpk::astvcu64<_count>;
+	tplt<uint32_t _count>	using astvci8 	= ::gpk::astatic<::gpk::vci8 	, _count>; tplt<uint32_t _count>	using astaticvci8 	= ::gpk::astvci8 <_count>;
+	tplt<uint32_t _count>	using astvci16	= ::gpk::astatic<::gpk::vci16	, _count>; tplt<uint32_t _count>	using astaticvci16	= ::gpk::astvci16<_count>;
+	tplt<uint32_t _count>	using astvci32	= ::gpk::astatic<::gpk::vci32	, _count>; tplt<uint32_t _count>	using astaticvci32	= ::gpk::astvci32<_count>;
+	tplt<uint32_t _count>	using astvci64	= ::gpk::astatic<::gpk::vci64	, _count>; tplt<uint32_t _count>	using astaticvci64	= ::gpk::astvci64<_count>;
+	tplt<uint32_t _count>	using astvcf32	= ::gpk::astatic<::gpk::vcf32	, _count>; tplt<uint32_t _count>	using astaticvcf32	= ::gpk::astvcf32<_count>;
+	tplt<uint32_t _count>	using astvcf64	= ::gpk::astatic<::gpk::vcf64	, _count>; tplt<uint32_t _count>	using astaticvcf64	= ::gpk::astvcf64<_count>;
 #pragma pack(pop)
 
 	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return uint32_t(nSize);				}

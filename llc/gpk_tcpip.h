@@ -7,8 +7,8 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	::gpk::error_t		tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4);
-	::gpk::error_t		tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4, uint16_t & port);
+	::gpk::error_t		tcpipAddress		(::gpk::vcs strIP, uint32_t & ipv4);
+	::gpk::error_t		tcpipAddress		(::gpk::vcs strIP, uint32_t & ipv4, uint16_t & port);
 
 	struct SIPv4 {
 		uint32_t			IP					= {};
@@ -39,25 +39,27 @@ namespace gpk
 		}
 		template<size_t buflen>
 		operator			gpk::astchar<buflen>	()						const	noexcept	{
-			gpk::astchar<buflen>	result;
-			sprintf_s(result.Storage, "%u.%u.%u.%u"
-				, ::gpk::byte_at(IP, 0)
-				, ::gpk::byte_at(IP, 1)
-				, ::gpk::byte_at(IP, 2)
-				, ::gpk::byte_at(IP, 3)
-				);
+			gpk::astchar<buflen>	result	= {};
+			print(result.Storage);
+			return result;
+		}
+
+		template<size_t buflen>
+		gpk::astchar<min((size_t)16, buflen)>	toString			(char separator = '.')						const	noexcept	{
+			gpk::astchar<min((size_t)16, buflen)>	result	= {};
+			print(result.Storage, separator);
 			return result; 
 		}
 
 		tplt<size_t bufferSize>
-		::gpk::error_t 		print				(char (&target)[bufferSize])	const	noexcept	{
-			return sprintf_s(target, "%u.%u.%u.%u"
+		::gpk::error_t 		print				(char (&target)[bufferSize], char separator = '.')	const	noexcept	{
+			const char format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
+			return sprintf_s(target, format
 				, ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1)
 				, ::gpk::byte_at(IP, 2)
 				, ::gpk::byte_at(IP, 3)
 				);
-
 		}
 	};	
 
@@ -108,7 +110,7 @@ namespace gpk
 							, (uint32_t)::gpk::byte_at(addr.IP, 3)	\
 							, (uint32_t)addr.Port
 
-	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & strIP, ::gpk::SIPv4 & ipv4) { return ::gpk::tcpipAddress(strIP, ipv4.IP); }
+	stainli	::gpk::error_t	tcpipAddress		(::gpk::vcs strIP, ::gpk::SIPv4 & ipv4) { return ::gpk::tcpipAddress(strIP, ipv4.IP); }
 
 
 			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
@@ -141,7 +143,7 @@ namespace gpk
 		return 0;
 	}
 
-	::gpk::error_t			tcpipAddress		(const ::gpk::vcs & strRemoteIP, const ::gpk::vcs & strRemotePort, ::gpk::SIPv4End & remoteIP);
+	::gpk::error_t			tcpipAddress		(::gpk::vcs strAddress, ::gpk::vcs strPort, ::gpk::SIPv4End & ipv4end);
 } // namespace
 
 #endif // GPK_TCPIP_H_23627

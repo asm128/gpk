@@ -2,8 +2,9 @@
 #include "gpk_windows.h"
 #include "gpk_stdsocket.h"
 #include "gpk_parse.h"
+#include "gpk_json.h"
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & address, uint16_t & port) {
+::gpk::error_t			gpk::tcpipAddress		(::gpk::vcs strIP, uint32_t & address, uint16_t & port) {
 	uint32_t					iOffset					= ::gpk::tcpipAddress(strIP, address);
 	return (iOffset < strIP.size())
 		? iOffset + ::gpk::parseIntegerDecimal({&strIP[iOffset], strIP.size() - iOffset}, port)
@@ -11,8 +12,20 @@
 		;
 }
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, uint32_t & ipv4)	{
+::gpk::error_t			jsonTcpipAddress		(gpk::vcs strIP, uint32_t & ipv4) {
+	::gpk::SJSONReader			reader					= {};
+	gpk_necall(::gpk::jsonParse(reader, strIP), "Failed to parse ip from string: '%s'.", ::gpk::toString(strIP).begin());
 	ipv4					= 0;
+	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 0)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 0); }
+	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 1)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 1); }
+	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 2)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 2); }
+	{ int32_t iToken; gpk_necs(iToken = ::gpk::jsonArrayValueGet(reader, 0, 3)); ipv4 |= ::gpk::byte_to<uint32_t>((uint8_t)reader[iToken]->Token->Value, 3); }
+	return 0;
+}
+
+::gpk::error_t			gpk::tcpipAddress		(gpk::vcs strIP, uint32_t & ipv4)	{
+	ipv4					= 0;
+	::gpk::ltrim(strIP);
 	if(0 == strIP.size()) 
 		return 0;
 
@@ -21,7 +34,11 @@
 	for(uint8_t iVal = 0; iVal < 4 && iOffset < strIP.size(); ++iVal) {
 		while(iEnd < strIP.size()) {
 			char curChar = strIP[iEnd];
-			if( curChar == '.'
+			if(0 == iVal && curChar == '[') 
+				return jsonTcpipAddress(strIP, ipv4);
+
+			if( curChar == ','
+			 || curChar == '.'
 			 || curChar == ':'
 			 || curChar == '\0'
 			 || (iEnd - iOffset) > 3	// 3 digit max
@@ -40,7 +57,7 @@
 	return iOffset;
 }
 
-::gpk::error_t			gpk::tcpipAddress		(const ::gpk::vcs & strIP, const ::gpk::vcs & strPort, ::gpk::SIPv4End & ipv4) {
+::gpk::error_t			gpk::tcpipAddress		(::gpk::vcs strIP, ::gpk::vcs strPort, ::gpk::SIPv4End & ipv4) {
 	if(0 == strPort.size()) 
 		return ::gpk::tcpipAddress(strIP, ipv4.IP, ipv4.Port);
 
