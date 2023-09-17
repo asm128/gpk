@@ -173,12 +173,16 @@
 ::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t * a4, uint16_t * port)				{
 	::gpk::SIPv4End 		addr; 
 	gpk_necs(gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
-	gpk_safe_assign(a1, ::gpk::byte_at(addr.IP, 0));
-	gpk_safe_assign(a2, ::gpk::byte_at(addr.IP, 1));
-	gpk_safe_assign(a3, ::gpk::byte_at(addr.IP, 2));
-	gpk_safe_assign(a4, ::gpk::byte_at(addr.IP, 3));	
+	gpk_safe_assign(a1, addr[0]);
+	gpk_safe_assign(a2, addr[1]);
+	gpk_safe_assign(a3, addr[2]);
+	gpk_safe_assign(a4, addr[3]);	
 	gpk_safe_assign(port, addr.Port);		
 	return 0;
+}
+
+::gpk::error_t		gpk::tcpipAddress		(::gpk::vcs hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port) { 
+	return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); 
 }
 
 ::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port) {

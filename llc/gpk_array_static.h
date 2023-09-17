@@ -1,3 +1,4 @@
+#include "gpk_cpow.h"
 #include "gpk_view.h"
 
 #ifndef GPK_ARRAY_STATIC_H_23627
@@ -8,68 +9,67 @@ namespace gpk
 #pragma pack(push, 1)
 	tplt<tpnm _tVal, uint32_t _elementCount>
 	struct array_static	{
-		typedef	_tVal			T;
-		typedef	view<const T>	TConstView;
-		typedef	view<T>			TView;
+		stacxpr	const uint32_t	SIZE	= _elementCount;
 
-		stacxpr	const uint32_t	SIZE						= _elementCount;
+		typedef	_tVal					T;
+		typedef array_static<T, SIZE>	TAStatic;
+		typedef	view<const T>			TConstView;
+		typedef	view<T>					TView;
 
-		T						Storage	[_elementCount]		;
+		T						Storage	[SIZE]	;
 
-		operator				view<T>						()																{ return {Storage, _elementCount}; }
-		operator				view<const T>				()											const	noexcept	{ return {Storage, _elementCount}; }
+		operator				view<T>			()															{ return {Storage, SIZE}; }
+		operator				view<const T>	()										const	noexcept	{ return {Storage, SIZE}; }
 
-		inline	const T&		operator[]					(uint32_t index)							const				{
-			gthrow_if(index >= _elementCount, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_elementCount);
-			return Storage[index];
-		}
-		inline	T&				operator[]					(uint32_t index)												{
-			gthrow_if(index >= _elementCount, "Invalid index: %i. Size: %i.", (int32_t)index, (int32_t)_elementCount);
-			return Storage[index];
-		}
-		bool					operator!=					(const ::gpk::view<const T>& other)	const				{ return !operator==(other); }
-		bool					operator==					(const ::gpk::view<const T>& other)	const				{
-			if(this->size() != other.size())
-				return false;
-			if(this->begin() == other.begin())
-				return true;
-			return ::gpk::equal(other.begin(), this->begin(), this->size());
-		}
+		inline	const T&		operator[]		(uint32_t index)						const				{ gthrow_if(index >= SIZE, GPK_FMT_U32_GE_U32, (int32_t)index, (int32_t)SIZE); return Storage[index]; }
+		inline	T&				operator[]		(uint32_t index)											{ gthrow_if(index >= SIZE, GPK_FMT_U32_GE_U32, (int32_t)index, (int32_t)SIZE); return Storage[index]; }
+		GPK_DEFAULT_OPERATOR(TAStatic
+			, (this->size() != other.size()) ? false
+			: (this->begin() == other.begin()) ? true
+			: ::gpk::equal(other.begin(), this->begin(), this->size())
+			);
+		//bool					operator!=		(const ::gpk::view<const T>& other)		const				{ return !operator==(other); }
+		//bool					operator==		(const ::gpk::view<const T>& other)		const				{
+		//	return (this->size() != other.size()) ? false
+		//		: (this->begin() == other.begin()) ? true
+		//		: ::gpk::equal(other.begin(), this->begin(), this->size())
+		//		;
+		//}
 		// Methods
-		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(size() * sizeof(T));	}
-		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
+		inlcxpr	uint32_t		byte_count		()										const	noexcept	{ return uint32_t(SIZE * sizeof(T));	}
+		inlcxpr	uint32_t		bit_count		()										const	noexcept	{ return byte_count() * 8U;	}
 
-		inlcxpr	view<uint8_t>	u8				()									noexcept	{ return {(uint8_t*)Storage, byte_count()};		}
-		inline	view<cuint8_t>	u8				()							const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
-		inlcxpr	view<cuint8_t>	cu8				()							const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
-		inline	view<char>		c				()									noexcept	{ return {(char*)Storage, byte_count()};			}
-		inlcxpr	view<cchar_t>	cc				()							const	noexcept	{ return {(const char*)Storage, byte_count()};		}
+		inlcxpr	view<uint8_t>	u8				()												noexcept	{ return {(uint8_t*)Storage, byte_count()};		}
+		inline	view<cuint8_t>	u8				()										const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
+		inlcxpr	view<cuint8_t>	cu8				()										const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
+		inline	view<char>		c				()												noexcept	{ return {(char*)Storage, byte_count()};			}
+		inlcxpr	view<cchar_t>	cc				()										const	noexcept	{ return {(const char*)Storage, byte_count()};		}
 
-		inline	T*				begin						()						noexcept	{ return Storage;				}
-		inline	T*				end							()						noexcept	{ return Storage + _elementCount;	}
+		inlcxpr	const uint32_t&	size			()										const	noexcept	{ return SIZE; }
 
-		inlcxpr	const T*		begin						()				const	noexcept	{ return Storage;				}
-		inlcxpr	const T*		end							()				const	noexcept	{ return Storage + _elementCount;	}
-
-		inlcxpr	const uint32_t&	size						()				const	noexcept	{ return SIZE; }
+		inline	T*				begin			()												noexcept	{ return Storage;			}
+		inline	T*				end				()												noexcept	{ return Storage + SIZE;	}
+		inlcxpr	const T*		begin			()										const	noexcept	{ return Storage;			}
+		inlcxpr	const T*		end				()										const	noexcept	{ return Storage + SIZE;	}
 
 		::gpk::error_t			slice			(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)				{
-			ree_if(offset > SIZE, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)SIZE, offset);
+			ree_if(offset > SIZE, GPK_FMT_U32_GT_U32, offset, (uint32_t)SIZE);
 			const uint32_t				newSize			= SIZE - offset;
 			if(count != (uint32_t)-1)
-				ree_if(count > newSize, "Out of range. Max size: %u. Requested: %u.", (uint32_t)newSize, count);
+				ree_if(count > newSize, GPK_FMT_U32_GT_U32, count, (uint32_t)newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
 			return out.size();
 		}
 		::gpk::error_t			slice			(TConstView & out, uint32_t offset, uint32_t count = (uint32_t)-1)	const	{
-			ree_if(offset > SIZE, "Out of range. Max offset: %u. Requested: %u.", (uint32_t)SIZE, offset);
+			ree_if(offset > SIZE, GPK_FMT_U32_GT_U32, offset, (uint32_t)SIZE);
 			const uint32_t				newSize			= SIZE - offset;
 			if(count != (uint32_t)-1)
-				ree_if(count > newSize, "Out of range. Max size: %u. Requested: %u.", (uint32_t)newSize, count);
+				ree_if(count > newSize, GPK_FMT_U32_GT_U32, count, (uint32_t)newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
 			return out.size();
 		}
 	};
+#pragma pack(pop)
 
 	tplt<tpnm T, uint32_t _elementCount>
 	using astatic	= ::gpk::array_static<T, _elementCount>;
@@ -102,7 +102,6 @@ namespace gpk
 	tplt<uint32_t _count>	using astvci64	= ::gpk::astatic<::gpk::vci64	, _count>; tplt<uint32_t _count>	using astaticvci64	= ::gpk::astvci64<_count>;
 	tplt<uint32_t _count>	using astvcf32	= ::gpk::astatic<::gpk::vcf32	, _count>; tplt<uint32_t _count>	using astaticvcf32	= ::gpk::astvcf32<_count>;
 	tplt<uint32_t _count>	using astvcf64	= ::gpk::astatic<::gpk::vcf64	, _count>; tplt<uint32_t _count>	using astaticvcf64	= ::gpk::astvcf64<_count>;
-#pragma pack(pop)
 
 	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return uint32_t(nSize);				}
 	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<T, nSize> viewToTest)		noexcept	{ return uint32_t(sizeof(T) * nSize);	}
@@ -137,6 +136,100 @@ namespace gpk
 	tplt<tpnm T, size_t _nSize>
 	::gpk::error_t			find		(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
 		return ::gpk::find(element, ::gpk::view<const T>{target}, offset);
+	}
+
+
+	stainli gpk::astchar<11>	str			(float32_t	arg) { gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
+	stainli gpk::astchar<21>	str			(float64_t	arg) { gpk::astchar<21> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
+	stincxp	gpk::astchar<5 >	str			(uint8_t	arg) { return {{char(((arg / 1) % 10) + '0'), char(((arg / 10) % 10) + '0'), char(((arg / 100) % 10) + '0'), 0}}; }
+	stincxp	gpk::astchar<7 >	str			(uint16_t	arg) { return {{char(((arg / 1) % 10) + '0'), char(((arg / 10) % 10) + '0'), char(((arg / 100) % 10) + '0'), char(((arg / 1000) % 10) + '0'), char(((arg / 10000) % 10) + '0'), 0}}; }
+	stincxp gpk::astchar<11>	str			(uint32_t	arg) { //gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
+		return { 
+			{ digit<9>(arg, 10)
+			, digit<8>(arg, 10)
+			, digit<7>(arg, 10)
+			, digit<6>(arg, 10)
+			, digit<5>(arg, 10)
+			, digit<4>(arg, 10)
+			, digit<3>(arg, 10)
+			, digit<2>(arg, 10)
+			, digit<1>(arg, 10)
+			, digit<0>(arg, 10)
+			, 0
+			}
+		}; 
+	}
+	stincxp gpk::astchar<21>	str			(uint64_t	arg) { //gpk::astchar<21> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U64, arg); return dest; } 
+		return { 
+			{ char(((arg / cpow<19>(10)) % 10) + '0')
+			, char(((arg / cpow<18>(10)) % 10) + '0')
+			, char(((arg / cpow<17>(10)) % 10) + '0')
+			, char(((arg / cpow<16>(10)) % 10) + '0')
+			, char(((arg / cpow<15>(10)) % 10) + '0')
+			, char(((arg / cpow<14>(10)) % 10) + '0')
+			, char(((arg / cpow<13>(10)) % 10) + '0')
+			, char(((arg / cpow<12>(10)) % 10) + '0')
+			, char(((arg / cpow<11>(10)) % 10) + '0')
+			, char(((arg / cpow<10>(10)) % 10) + '0')
+			, char(((arg / cpow<9>(10)) % 10) + '0')
+			, char(((arg / cpow<8>(10)) % 10) + '0')
+			, char(((arg / cpow<7>(10)) % 10) + '0')
+			, char(((arg / cpow<6>(10)) % 10) + '0')
+			, char(((arg / cpow<5>(10)) % 10) + '0')
+			, char(((arg / cpow<4>(10)) % 10) + '0')
+			, char(((arg / cpow<3>(10)) % 10) + '0')
+			, char(((arg / cpow<2>(10)) % 10) + '0')
+			, char(((arg / cpow<1>(10)) % 10) + '0')
+			, char(((arg / cpow<0>(10)) % 10) + '0')
+			, 0
+			}
+		}; 
+	}
+	stincxp	gpk::astchar<5 >	str			(int8_t		arg) { return (arg >= 0) ? str(uint8_t	(arg)) : gpk::astchar<5 >{{'-', char(((arg / 2) % 10) + '0'), char((((arg / 2) / 10) % 10) + '0'), char((((arg / 2) / 100) % 10) + '0'), 0}}; }
+	stincxp	gpk::astchar<7 >	str			(int16_t	arg) { return (arg >= 0) ? str(uint16_t	(arg)) : gpk::astchar<7 >{{'-', char(((arg / 2) % 10) + '0'), char((((arg / 2) / 10) % 10) + '0'), char((((arg / 2) / 100) % 10) + '0'), char((((arg / 2) / 1000) % 10) + '0'), char((((arg / 2) / 10000) % 10) + '0'), 0}}; }
+	stincxp gpk::astchar<11>	str			(int32_t	arg) { //gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
+		return (arg >= 0) ? str((uint32_t)arg) 
+			: gpk::astchar<11>{ 
+				{ '-'
+				, char(((arg / cpow<8>(10)) % 10) + '0')
+				, char(((arg / cpow<7>(10)) % 10) + '0')
+				, char(((arg / cpow<6>(10)) % 10) + '0')
+				, char(((arg / cpow<5>(10)) % 10) + '0')
+				, char(((arg / cpow<4>(10)) % 10) + '0')
+				, char(((arg / cpow<3>(10)) % 10) + '0')
+				, char(((arg / cpow<2>(10)) % 10) + '0')
+				, char(((arg / cpow<1>(10)) % 10) + '0')
+				, char(((arg / cpow<0>(10)) % 10) + '0')
+				, 0
+				}
+			};
+	}	
+	stincxp gpk::astchar<21>	str			(int64_t	arg) { 
+		return (arg >= 0) ? str((uint64_t)arg) 
+			: gpk::astchar<21>{
+				{ '-'
+				, char(((arg / cpow<18>(10)) % 10) + '0')
+				, char(((arg / cpow<17>(10)) % 10) + '0')
+				, char(((arg / cpow<16>(10)) % 10) + '0')
+				, char(((arg / cpow<15>(10)) % 10) + '0')
+				, char(((arg / cpow<14>(10)) % 10) + '0')
+				, char(((arg / cpow<13>(10)) % 10) + '0')
+				, char(((arg / cpow<12>(10)) % 10) + '0')
+				, char(((arg / cpow<11>(10)) % 10) + '0')
+				, char(((arg / cpow<10>(10)) % 10) + '0')
+				, char(((arg / cpow<9>(10)) % 10) + '0')
+				, char(((arg / cpow<8>(10)) % 10) + '0')
+				, char(((arg / cpow<7>(10)) % 10) + '0')
+				, char(((arg / cpow<6>(10)) % 10) + '0')
+				, char(((arg / cpow<5>(10)) % 10) + '0')
+				, char(((arg / cpow<4>(10)) % 10) + '0')
+				, char(((arg / cpow<3>(10)) % 10) + '0')
+				, char(((arg / cpow<2>(10)) % 10) + '0')
+				, char(((arg / cpow<1>(10)) % 10) + '0')
+				, char(((arg / cpow<0>(10)) % 10) + '0')
+				, 0
+				}
+			};
 	}
 } // namespace
 

@@ -11,11 +11,11 @@ namespace gpk
 	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
 		const packedu32					& header			= *(const packedu32*)input.begin();
 		const uint32_t					counterWidth		= header.ValueWidth();
-		ree_if(input.size() < counterWidth, "Invalid input size: %u", input.size());
+		ree_if(input.size() < counterWidth, GPK_FMT_U32_LT_U32, input.size(), counterWidth);
 
 		const uint32_t					elementCount		= header.Value();
 		const uint32_t					dataSize			= sizeof(T) * elementCount;
-		ree_if(dataSize > (input.size() - counterWidth), "Invalid input size: %u. Expected: %u.", input.size(), dataSize);
+		ree_if(dataSize > (input.size() - counterWidth), "%" GPK_FMT_U32 " > (%" GPK_FMT_U32 "-%" GPK_FMT_U32 ").", dataSize, input.size(), counterWidth);
 
 		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
 		return counterWidth + dataSize;

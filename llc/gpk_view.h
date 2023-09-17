@@ -121,7 +121,7 @@ namespace gpk
 		::gpk::error_t			for_each		(const ::gpk::TFuncForEachConst  <T> & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(Data[offset]); return offset; }
 		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerate     <T> & funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
 		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerateConst<T> & funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); return offset; }
-		// 
+		//
 		::gpk::error_t			for_each		(const ::gpk::TFuncForEach       <T> & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
 		::gpk::error_t			for_each		(const ::gpk::TFuncForEachConst  <T> & funcForEach, uint32_t offset, uint32_t stop)	const	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); return offset; }
 		::gpk::error_t			enumerate		(const ::gpk::TFuncEnumerate     <T> & funcForEach, uint32_t offset, uint32_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); return offset; }
@@ -130,7 +130,7 @@ namespace gpk
 		::gpk::error_t			find			(const FBool<T&>		& funcForEach, uint32_t offset = 0)			{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
 		::gpk::error_t			find			(const FBool<const T&>	& funcForEach, uint32_t offset = 0)	const	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) return (::gpk::error_t)offset; return -1; }
 		::gpk::error_t			find			(const T & value, uint32_t offset = 0)						const	{ for(; offset < Count; ++offset) if(Data[offset] == value) return (::gpk::error_t)offset; return -1; }
-	
+
 		tplt<tpnm _tMax> ::gpk::error_t	max	(_tMax & maxFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMax = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value > maxFound) { iMax = offset; maxFound = value; } } return iMax; }
 		tplt<tpnm _tMax> ::gpk::error_t	min	(_tMax & minFound, const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)	const	{ int32_t iMin = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value < minFound) { iMin = offset; minFound = value; } } return iMin; }
 		tplt<tpnm _tMax> ::gpk::error_t	max	(const FTransform<_tMax, const T &> & funcComparand, uint32_t offset = 0)					const	{ _tMax maxFound; return max(maxFound, funcComparand, offset); }
@@ -215,12 +215,12 @@ namespace gpk
 	stacxpr	::gpk::vcc	VCC_TRUE		= {4, "true"};
 	stacxpr	::gpk::vcc	VCC_FALSE		= {5, "false"};
 
-	ndstinx	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; } 
-	ndstinx	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); } 
-	ndstinx	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; } 
-	ndstinx	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; } 
-	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); } 
-	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return b.size() && b != VCC_FALSE; } 
+	ndstinx	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; }
+	ndstinx	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); }
+	ndstinx	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; }
+	ndstinx	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; }
+	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); }
+	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return b.size() && b != VCC_FALSE; }
 
 
 	struct view_string : public view<char> {
@@ -232,34 +232,43 @@ namespace gpk
 	};
 
 	struct view_const_string : public view<const char> {
-		inlcxpr			view_const_string		()													: view(0, "") 				{}
-		inlcxpr			view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
-						view_const_string		(const char* inputString, uint32_t length)			: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		tplt<u32 Len>	view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		tplt<u32 Len>	view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		using vcc			::begin;
+
+		inlcxpr				view_const_string		()													: view(0, "") 				{}
+		inlcxpr				view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
+		tplt<u32 Len>		view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		tplt<u32 Len>		view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+							view_const_string		(const char* inputString, uint32_t length)			: view(inputString ? inputString : "", length)	{
+			if(length == (uint32_t)-1) 
+				Count 				= (uint32_t)strlen(begin());
+		}
+
+		inlcxpr	operator	const char*				()	const	{ return begin(); }
 	};
 
 	typedef	::gpk::view_string					vs;
 	typedef	::gpk::view_const_string			vcs;
+
+	stainli gpk::vcs		str					(const gpk::vcs & arg)	{ return arg; } 
+	stainli gpk::vcs		str					(const gpk::vs & arg)	{ return arg.cc(); } 
 
 	typedef	::gpk::view<::gpk::vs			>	vvs;
 	typedef	::gpk::view<::gpk::vcs			>	vvcs;
 	typedef	::gpk::view<const ::gpk::vs		>	vcvs;
 	typedef	::gpk::view<const ::gpk::vcs	>	vcvcs;
 
-	stacxpr	::gpk::vcc		TRIM_CHARACTERS			= " \t\b\n\r";
+	stacxpr	::gpk::vcc		TRIM_CHARACTERS		= " \t\b\n\r";
 
-	::gpk::error_t			rtrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
-	::gpk::error_t			ltrim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
-	::gpk::error_t			trim					(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
-	stainli	::gpk::error_t	rtrim					(::gpk::vcc & trimmed) 	{ return rtrim(trimmed, trimmed); }
-	stainli	::gpk::error_t	ltrim					(::gpk::vcc & trimmed) 	{ return ltrim(trimmed, trimmed); }
-	stainli	::gpk::error_t	trim					(::gpk::vcc & trimmed) 	{ return trim(trimmed, trimmed); }
-
+	::gpk::error_t			rtrim				(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
+	::gpk::error_t			ltrim				(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
+	::gpk::error_t			trim				(::gpk::vcc & trimmed, const ::gpk::vcc & original, const ::gpk::vcc & characters = ::gpk::TRIM_CHARACTERS);
+	stainli	::gpk::error_t	rtrim				(::gpk::vcc & trimmed) 	{ return rtrim(trimmed, trimmed); }
+	stainli	::gpk::error_t	ltrim				(::gpk::vcc & trimmed) 	{ return ltrim(trimmed, trimmed); }
+	stainli	::gpk::error_t	trim				(::gpk::vcc & trimmed) 	{ return trim(trimmed, trimmed); }
 
 	tplt <tpnm T>
-	::gpk::error_t			reverse					(::gpk::view<T> elements)													{
-		const uint32_t				lastElement				= elements.size() - 1;
+	::gpk::error_t			reverse				(::gpk::view<T> elements)													{
+		const uint32_t				lastElement			= elements.size() - 1;
 		for(uint32_t i = 0, swapCount = elements.size() / 2; i < swapCount; ++i) {
 			T							old						= elements[i];
 			elements[i]					= elements[lastElement - i];
@@ -441,6 +450,7 @@ namespace gpk
 		gthrow_if(errored(::gpk::min(input, &result)), "%s", "");
 		return *result;
 	}
+
 
 #define be2le_16(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 4})

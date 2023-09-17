@@ -239,13 +239,12 @@ namespace gpk
 	typedef apod<int32_t	>	ai32;
 	typedef apod<int64_t	>	ai64;
 
-	::gpk::apod<char>			toString		(const ::gpk::vcc & strToLog);
-	stainli	::gpk::apod<char>	toString		(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
+	gpk::achar				toString	(const ::gpk::vcc & strToLog);
+	stainli	gpk::achar		toString	(const ::gpk::vcu8 & strToLog) { return ::gpk::toString(*(const ::gpk::vcc*)&strToLog); }
 
-	::gpk::error_t				camelCase		(::gpk::vcc input, ::gpk::achar & camelCased);
+	::gpk::error_t			camelCase		(::gpk::vcc input, ::gpk::achar & camelCased);
 
-	::gpk::error_t				join							(::gpk::achar & query, char separator, ::gpk::view<const gpk::vcc> fields);
-	::gpk::error_t				append_quoted					(::gpk::achar & output, ::gpk::vcc text);
+	::gpk::error_t			join			(::gpk::achar & query, char separator, ::gpk::vcvcc fields);
 } // namespace
 
 #endif // GPK_ARRAY_POD_H_23627

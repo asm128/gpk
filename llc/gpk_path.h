@@ -23,6 +23,7 @@ namespace gpk
 	}	// Recursive
 
 	// this function was ceated in order to work around the problem of the JSON system returning pointers to the original string, without having the opportunity of processing escaped path slashes.
+	::gpk::error_t						pathNameCompose			(::gpk::apod<char> & out_composed, ::gpk::vcs fileName, ::gpk::vcs path = {}, ::gpk::vcs extension = {});
 	::gpk::error_t						pathNameCompose			(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed);
 	::gpk::error_t						findLastSlash			(const ::gpk::vcc & path);
 

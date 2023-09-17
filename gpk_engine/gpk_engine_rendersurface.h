@@ -1,6 +1,6 @@
 #include "gpk_color.h"
 #include "gpk_n2.h"
-#include "gpk_engine_container.h"
+#include "gpk_linear_map_pobj.h"
 #include "gpk_color_type.h"
 
 #ifndef GPK_ENGINE_RENDERIMAGE_H_23627
@@ -27,7 +27,7 @@ namespace gpk
 		::gpk::error_t				Load			(::gpk::vcu8 & input)			{ gpk_necs(::gpk::loadPOD(input, Desc)); return ::gpk::loadView(input, Data); }
 	};
 
-	typedef	::gpk::SLinearNamedMap<::gpk::SSurface>	SSurfaceManager;
+	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSurface>	SSurfaceManager;
 } // namespace
 
 #endif // GPK_ENGINE_RENDERIMAGE_H_23627

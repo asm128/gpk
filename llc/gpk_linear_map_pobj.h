@@ -2,13 +2,13 @@
 #include "gpk_label.h"
 #include "gpk_apod_serialize.h"
 
-#ifndef GPK_ENGINE_CONTAINER_H_23627
-#define GPK_ENGINE_CONTAINER_H_23627
+#ifndef GPK_LINEAR_MAP_POBJ_H_23627
+#define GPK_LINEAR_MAP_POBJ_H_23627
 
 namespace gpk
 {
 	tplt <tpnm _tElementWithSaveLoad> 
-	struct SLinearNamedMap {
+	struct gpk_linear_map_pobj {
 		typedef _tElementWithSaveLoad	T;
 		typedef ::gpk::pobj<T>			TPObj;
 
@@ -23,22 +23,12 @@ namespace gpk
 		inlcxpr	uint32_t			size			()											const	{ return Names.size(); }
 		inline	::gpk::error_t		find			(const ::gpk::vcc key, uint32_t offset = 0)	const	{ return Names.find(key, offset); }
 
-		::gpk::error_t				pushOrReuse		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ 
-			//for(uint32_t iElement = 0; iElement < Elements.size(); ++iElement) {
-			//	const TPObj & element = Elements[iElement];
-			//	if(!element || element.get_ref()->References == 1) {
-			//		Names[iElement]		= name;
-			//		Elements[iElement]	= instance;
-			//		return iElement;
-			//	}
-			//}
+		::gpk::error_t				push_back		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ 
 			Names.push_back(name); 
 			return Elements.push_back(instance); 
 		}
 
-		inline	::gpk::error_t		push_back		(const ::gpk::pobj<T> & instance, const ::gpk::vcc name = {})	{ return pushOrReuse(instance, name); }
-		inline	::gpk::error_t		Create			(const ::gpk::vcc name = {})									{ return pushOrReuse({}, name); }
-
+		inline	::gpk::error_t		Create			(const ::gpk::vcc name = {})									{ return push_back({}, name); }
 		::gpk::error_t				Delete			(uint32_t index)												{ 
 			Names.remove_unordered(index); 
 			return Elements.remove_unordered(index); 
@@ -81,4 +71,4 @@ namespace gpk
 
 } // namespace
 
-#endif // GPK_ENGINE_CONTAINER_H_23627
+#endif // GPK_LINEAR_MAP_POBJ_H_23627

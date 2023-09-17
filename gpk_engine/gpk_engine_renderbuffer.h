@@ -1,6 +1,6 @@
 #include "gpk_datatype.h"
 #include "gpk_enum.h"
-#include "gpk_engine_container.h"
+#include "gpk_linear_map_pobj.h"
 #include "gpk_geometry_buffers.h"
 
 #ifndef GPK_ENGINE_RENDERBUFFER_H_23627
@@ -68,7 +68,7 @@ namespace gpk
 		, ::gpk::pobj<SRenderBuffer>	& pUV
 		);
 
-	typedef	::gpk::SLinearNamedMap<::gpk::SRenderBuffer>	SRenderBufferManager;
+	typedef	::gpk::gpk_linear_map_pobj<::gpk::SRenderBuffer>	SRenderBufferManager;
 
 } // namespace
 

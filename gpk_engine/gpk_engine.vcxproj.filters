@@ -111,10 +111,7 @@
     <ClInclude Include="gpk_engine_shader.h">
       <Filter>scene</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_engine_container.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_linear_map_pod.h">
+    <ClInclude Include="gpk_linear_keymap.h">
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_engine_planetary_system.h">

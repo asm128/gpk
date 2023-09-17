@@ -166,6 +166,6 @@
 #include "gpk_view_n3.h"
 #include "gpk_view_pobj.h"
 #include "gpk_view_ppod.h"
-#include "keyed_bit_array.h"
+#include "gpk_keyed_bit_array.h"
 #include "gpk_gui.h"
 #include "gpk_window.h"

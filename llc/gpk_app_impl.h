@@ -63,7 +63,7 @@
 			{																																					\
 				const uint32_t																argc							= __argc;							\
 				const char																	** argv							= (const char**)__argv;				\
-				ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																						\
+				ree_if(65535 < argc, "Invalid parameter count: %" GPK_FMT_U32 ".", argc);																						\
 				::gpk::SRuntimeValues														runtimeValues					= {};								\
 				runtimeValues.PlatformDetail.EntryPointArgsWin.hInstance				= hInstance		;														\
 				runtimeValues.PlatformDetail.EntryPointArgsWin.hPrevInstance			= hPrevInstance	;														\
@@ -76,7 +76,7 @@
 #	else
 #		define GPK_SYSTEM_OS_ENTRY_POINT()																													\
 				int																main							(int argc, char *argv[], char *envp[])	{	\
-			ree_if(65535 < argc, "Invalid parameter count: %u.", argc);																						\
+			ree_if(65535 < argc, "Invalid parameter count: %" GPK_FMT_U32 ".", argc);																						\
 			::gpk::SRuntimeValues														runtimeValues					= {};								\
 			runtimeValues.PlatformDetail.EntryPointArgsStd.ArgsCommandLine			= ::gpk::view<const char*>{(const char**)argv, (uint32_t)argc};			\
 			(void)envp;																																		\

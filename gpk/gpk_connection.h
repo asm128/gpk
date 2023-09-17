@@ -31,7 +31,7 @@ namespace gpk
 		uint8_t								Encrypted					: 1;
 		uint8_t								Compressed					: 1;
 		uint8_t								Multipart					: 1;
-		//uint8_t								Retry						: 1;
+		uint8_t								Resend						: 1;
 	};
 
 	struct SUDPPayloadHeader {

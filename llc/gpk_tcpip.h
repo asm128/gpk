@@ -1,4 +1,3 @@
-#include "gpk_array.h"
 #include "gpk_array_static.h"
 
 #ifndef GPK_TCPIP_H_23627
@@ -28,8 +27,11 @@ namespace gpk
 
 		GPK_DEFAULT_OPERATOR(SIPv4, IP == other.IP);
 
-		inlcxpr	operator	uint32_t			()						const	noexcept	{ return IP; }
-		cnstxpr	operator	gpk::astu8<4>		()						const	noexcept	{
+		inlcxpr	uint8_t		operator[]			(uint8_t index)		const	noexcept	{ return ::gpk::byte_at(IP, index); }
+		uint8_t&			operator[]			(uint8_t index)				noexcept	{ return *(((uint8_t*)&IP) + index); }
+
+		inlcxpr	operator	uint32_t			()					const	noexcept	{ return IP; }
+		cnstxpr	operator	gpk::astu8<4>		()					const	noexcept	{
 			return 
 				{ ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1) 
@@ -61,8 +63,9 @@ namespace gpk
 				, ::gpk::byte_at(IP, 3)
 				);
 		}
-	};	
+	};
 
+	stainli	::gpk::astchar<16>	str			(const gpk::SIPv4 ip)	{ return ip; }
 
 	typedef struct SIPv4End : SIPv4 {
 		uint16_t			Port				= {};
@@ -70,7 +73,7 @@ namespace gpk
 		GPK_DEFAULT_OPERATOR(SIPv4End, IP == other.IP && Port == other.Port);
 
 		template<size_t buflen>
-		operator			gpk::astchar<buflen>	()		const	noexcept	{
+		operator			gpk::astchar<min((size_t)22, buflen)>	()		const	noexcept	{
 			if(0 == Port)
 				return *(const SIPv4*)this;
 
@@ -86,6 +89,30 @@ namespace gpk
 		}
 	} SIPv4Endpoint;
 
+	struct SIPv4Node {
+		::gpk::SIPv4	IPv4		= {};
+		::gpk::SIPv4	Gateway		= {};
+		::gpk::SIPv4	NetMask		= {};
+
+		cnstxpr	::gpk::SIPv4	NetworkID	()	const	noexcept	{
+			return ::gpk::SIPv4
+				( NetMask[0] & IPv4[0]
+				, NetMask[1] & IPv4[1]
+				, NetMask[2] & IPv4[2]
+				, NetMask[3] & IPv4[3]
+				);
+		}
+
+		cnstxpr	::gpk::SIPv4	BroadcastIP	()	const	noexcept	{
+			return ::gpk::SIPv4
+				( ~NetMask[0] & IPv4[0]
+				, ~NetMask[1] & IPv4[1]
+				, ~NetMask[2] & IPv4[2]
+				, ~NetMask[3] & IPv4[3]
+				);
+		}
+	};
+	
 	tplt<size_t count> using	astipv4		= ::gpk::astatic<::gpk::SIPv4, count>;
 	tplt<size_t count> using	astipv4end	= ::gpk::astatic<::gpk::SIPv4End, count>;
 #pragma pack(pop)
@@ -116,9 +143,7 @@ namespace gpk
 			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
 			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
 
-	stainli	::gpk::error_t	tcpipAddress		(::gpk::vcs hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0) { 
-		return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); 
-	}
+			::gpk::error_t	tcpipAddress		(::gpk::vcs hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
 	stainli	::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)				{
 		uint16_t port = 0;
 		return gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, address, port);
@@ -132,18 +157,14 @@ namespace gpk
 		return 0;
 	}
 	stainli	::gpk::error_t	tcpipAddress		(const char * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
-		address.Port			= portRequested;
-		gpk_necs(::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, address.IP, address.Port));
-		return 0;
+		return ::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, address.IP, (address.Port = portRequested));
 	}
-
 	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
-		address.Port													= portRequested;
-		gpk_necs(::gpk::tcpipAddress(hostName.begin(), portRequested, adapterIndex, mode, address.IP, address.Port));
-		return 0;
+		return ::gpk::tcpipAddress(hostName.begin(), portRequested, adapterIndex, mode, address.IP, (address.Port = portRequested));
 	}
 
 	::gpk::error_t			tcpipAddress		(::gpk::vcs strAddress, ::gpk::vcs strPort, ::gpk::SIPv4End & ipv4end);
+	
 } // namespace
 
 #endif // GPK_TCPIP_H_23627

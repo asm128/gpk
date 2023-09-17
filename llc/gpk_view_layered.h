@@ -10,29 +10,29 @@ namespace gpk
 	class view_layered {
 	protected:
 		// Properties / Member Variables
-							_tElement								* Data			= 0;
-							::gpk::n3<uint32_t>				Size			= {0, 0, 0};
-							uint32_t								LayerSize		= 0;
+		_tElement			* Data			= 0;
+		::gpk::n3<uint32_t>	Size			= {0, 0, 0};
+		uint32_t			LayerSize		= 0;
 	public:
 		// Constructors
-		inlcxpr											view_layered	()			noexcept	= default;
-		inline														view_layered	(_tElement* dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LayerSize(layerWidth * layerHeight) {
-			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters. Address: %p. Metrics: {%u, %u, %u}", dataElements, Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
+		inlcxpr				view_layered	()			noexcept	= default;
+		inline				view_layered	(_tElement * dataElements, uint32_t layerWidth, uint32_t layerHeight, uint32_t layerCount)	: Data{dataElements}, Size{layerWidth, layerHeight, layerCount}, LayerSize(layerWidth * layerHeight) {
+			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
-		inline														view_layered	(_tElement* dataElements, const ::gpk::n3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
-			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "Invalid parameters. Address: %p. Metrics: {%u, %u, %u}", dataElements, Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
+		inline				view_layered	(_tElement * dataElements, const ::gpk::n3<uint32_t> viewSize)							: Data{dataElements}, Size{viewSize}, LayerSize(viewSize.x * viewSize.y) {
+			gthrow_if(0 == dataElements && 0 != Size.x && 0 != Size.y && 0 != Size.z, "{%" GPK_FMT_U32 ", %" GPK_FMT_U32 ", %" GPK_FMT_U32 "}", Size.x, Size.y, Size.z);	// Throw if we received invalid parameters in order to prevent further malfunctioning.
 		}
 
 		// Operators
-							::gpk::grid<_tElement>				operator[]		(uint32_t layer)																			{
-			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
-			gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer);
+		::gpk::grid<_tElement>	operator[]		(uint32_t layer)																			{
+			gsthrow_if(0 == Data);
+			gthrow_if(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
 			return ::gpk::grid<_tElement		>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
-							::gpk::grid<const _tElement>		operator[]		(uint32_t layer)														const				{
-			gthrow_if(0 == Data, "%s", "Uninitialized array pointer.");
-			gthrow_if(layer >= Size.z, "Invalid layer: %i.", layer);
+		::gpk::grid<const _tElement>		operator[]		(uint32_t layer)														const				{
+			gsthrow_if(0 == Data);
+			gthrow_if(layer >= Size.z, "%" GPK_FMT_U32 " > %" GPK_FMT_U32 ".", layer, Size.z);
 			return ::gpk::grid<const _tElement>(&Data[layer * LayerSize], Size.x, Size.y);
 		}
 

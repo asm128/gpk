@@ -73,11 +73,11 @@ namespace gpk
 		TArray&					operator =				(const TArray &	 other)					= delete;
 		TArray&					operator =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	::gpk::error_t	alloc_with_reserve		(const uint32_t newCount, T*& reserved)	noexcept	{ 
+		static	::gpk::error_t	alloc_with_reserve		(const uint32_t newCount, T* & reserved)	noexcept	{ 
 			uint32_t					newSize;
-			gpk_necall(calc_reserve_count(newCount, newSize), "Allocation too large. newCount: %i", newCount);
+			gpk_necall(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_I32 ".", newCount);
 			const uint32_t				bytesToAllocate			= ::gpk::size<T>(newSize) + 2;
-			ree_if(0 == (reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)), "Failed to allocate buffer with size: %u.", bytesToAllocate); 
+			ree_if(0 == (reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)), "Failed to allocate buffer with size: %" GPK_FMT_U32 ".", bytesToAllocate); 
 			return (::gpk::error_t)newSize;
 		}
 	}; // array_base

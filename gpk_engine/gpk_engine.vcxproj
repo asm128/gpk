@@ -199,9 +199,8 @@
     <ClInclude Include="gpk_engine_explorer.h" />
     <ClInclude Include="gpk_engine_explorer_app_menu.h" />
     <ClInclude Include="gpk_engine_gui.h" />
-    <ClInclude Include="gpk_linear_map_pod.h" />
     <ClInclude Include="gpk_engine_soundbuffer.h" />
-    <ClInclude Include="gpk_engine_container.h" />
+    <ClInclude Include="gpk_linear_keymap.h" />
     <ClInclude Include="gpk_engine_d3d.h" />
     <ClInclude Include="gpk_engine_entity.h" />
     <ClInclude Include="gpk_engine_renderbuffer.h" />

@@ -3,24 +3,17 @@
 #include "gpk_parse.h"
 #include "gpk_apod_serialize.h"
 
-::gpk::error_t			gpk::append_quoted		(::gpk::apod<char> & output, ::gpk::vcc text)		{
-	gpk_necs(output.push_back('"'));
-	gpk_necs(output.append(text));
-	gpk_necs(output.push_back('"'));
-	return 0;
-}
-
-::gpk::error_t			gpk::join				(::gpk::apod<char> & query, char separator, ::gpk::vcvcc fields)	{
+::gpk::error_t			gpk::join				(::gpk::achar & output, char separator, ::gpk::vcvcc fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
-		gpk_necall(query.append(fields[iField]), "%i", iField);
+		gpk_necall(output.append(fields[iField]), "%i", iField);
 		if(++iField < fields.size())
-			gpk_necall(query.push_back(separator), "%i", iField);
+			gpk_necall(output.push_back(separator), "%i", iField);
 	}
 	return 0;
 }
 
-::gpk::apod<char>		gpk::toString			(const ::gpk::vcc & strToLog)	{
-	::gpk::apod<char>			sprintfable				= strToLog;
+::gpk::achar		gpk::toString			(const ::gpk::vcc & strToLog)	{
+	::gpk::achar			sprintfable				= strToLog;
 	if(sprintfable.size() && sprintfable[sprintfable.size() - 1] == 0) { // it already contains a null, so resize it to avoid counting it as part of the array.
 		sprintfable.resize(sprintfable.size() - 1);
 		return sprintfable;
@@ -34,12 +27,12 @@
 }
 
 ::gpk::error_t			gpk::token_split		(char token, const ::gpk::vcs & input_string, TKeyValConstChar & output_views)	{
-	int32_t						indexToken				= ::gpk::find(token, input_string);
-	rvi_if(-1, errored(indexToken), "'%c' Token not found.", token);
+	uint32_t					indexToken;
+	gpk_necall(indexToken = ::gpk::find(token, input_string), "'%c' not found.", token);
 	output_views.Key		= {input_string.begin(), (uint32_t)indexToken};
 	output_views.Val		= (indexToken + 1 < (int32_t)input_string.size())
-		? ::gpk::vcc{&input_string[indexToken + 1], input_string.size() - (indexToken + 1)}
-		: ::gpk::vcc{}	// empty view if there's no data after the separator.
+		? ::gpk::vcs{&input_string[indexToken + 1], input_string.size() - (indexToken + 1)}
+		: ::gpk::vcs{}	// empty view if there's no data after the separator.
 		;
 	::gpk::trim(output_views.Key, output_views.Key);
 	::gpk::trim(output_views.Val, output_views.Val);

@@ -103,6 +103,57 @@
 #define	GPK_STRINGIFY(x) #x
 #define	GPK_TOSTRING(x)  GPK_STRINGIFY(x)
 
+#ifndef GPK_ATMEL
+#	define GPK_FMT_F32 "f"
+#	define GPK_FMT_F64 "f"
+#	define GPK_FMT_I32 "i"
+#	define GPK_FMT_U32 "u"
+#	define GPK_FMT_I64 "lli"
+#	define GPK_FMT_U64 "llu"
+#else
+#	define GPK_FMT_F32 "f"
+#	define GPK_FMT_F64 "f"
+#	define GPK_FMT_I32 "li"
+#	define GPK_FMT_U32 "lu"
+#	define GPK_FMT_I64 "lli"
+#	define GPK_FMT_U64 "llu"
+#endif
+
+#define GPK_FMT_F32_GT_F32 "%" GPK_FMT_F32 " > %" GPK_FMT_F32
+#define GPK_FMT_F64_GT_F64 "%" GPK_FMT_F64 " > %" GPK_FMT_F64
+#define GPK_FMT_I32_GT_I32 "%" GPK_FMT_I32 " > %" GPK_FMT_I32
+#define GPK_FMT_U32_GT_U32 "%" GPK_FMT_U32 " > %" GPK_FMT_U32
+#define GPK_FMT_I64_GT_I64 "%" GPK_FMT_I64 " > %" GPK_FMT_I64
+#define GPK_FMT_U64_GT_U64 "%" GPK_FMT_U64 " > %" GPK_FMT_U64
+
+#define GPK_FMT_F32_LT_F32 "%" GPK_FMT_F32 " < %" GPK_FMT_F32
+#define GPK_FMT_F64_LT_F64 "%" GPK_FMT_F64 " < %" GPK_FMT_F64
+#define GPK_FMT_I32_LT_I32 "%" GPK_FMT_I32 " < %" GPK_FMT_I32
+#define GPK_FMT_U32_LT_U32 "%" GPK_FMT_U32 " < %" GPK_FMT_U32
+#define GPK_FMT_I64_LT_I64 "%" GPK_FMT_I64 " < %" GPK_FMT_I64
+#define GPK_FMT_U64_LT_U64 "%" GPK_FMT_U64 " < %" GPK_FMT_U64
+
+#define GPK_FMT_F32_EQ_F32 "%" GPK_FMT_F32 " == %" GPK_FMT_F32
+#define GPK_FMT_F64_EQ_F64 "%" GPK_FMT_F64 " == %" GPK_FMT_F64
+#define GPK_FMT_I32_EQ_I32 "%" GPK_FMT_I32 " == %" GPK_FMT_I32
+#define GPK_FMT_U32_EQ_U32 "%" GPK_FMT_U32 " == %" GPK_FMT_U32
+#define GPK_FMT_I64_EQ_I64 "%" GPK_FMT_I64 " == %" GPK_FMT_I64
+#define GPK_FMT_U64_EQ_U64 "%" GPK_FMT_U64 " == %" GPK_FMT_U64
+
+#define GPK_FMT_F32_GE_F32 "%" GPK_FMT_F32 " >= %" GPK_FMT_F32
+#define GPK_FMT_F64_GE_F64 "%" GPK_FMT_F64 " >= %" GPK_FMT_F64
+#define GPK_FMT_I32_GE_I32 "%" GPK_FMT_I32 " >= %" GPK_FMT_I32
+#define GPK_FMT_U32_GE_U32 "%" GPK_FMT_U32 " >= %" GPK_FMT_U32
+#define GPK_FMT_I64_GE_I64 "%" GPK_FMT_I64 " >= %" GPK_FMT_I64
+#define GPK_FMT_U64_GE_U64 "%" GPK_FMT_U64 " >= %" GPK_FMT_U64
+
+#define GPK_FMT_F32_LE_F32 "%" GPK_FMT_F32 " <= %" GPK_FMT_F32
+#define GPK_FMT_F64_LE_F64 "%" GPK_FMT_F64 " <= %" GPK_FMT_F64
+#define GPK_FMT_I32_LE_I32 "%" GPK_FMT_I32 " <= %" GPK_FMT_I32
+#define GPK_FMT_U32_LE_U32 "%" GPK_FMT_U32 " <= %" GPK_FMT_U32
+#define GPK_FMT_I64_LE_I64 "%" GPK_FMT_I64 " <= %" GPK_FMT_I64
+#define GPK_FMT_U64_LE_U64 "%" GPK_FMT_U64 " <= %" GPK_FMT_U64
+
 namespace gpk
 {
 #if defined(GPK_ANDROID) || defined(GPK_CLANG)

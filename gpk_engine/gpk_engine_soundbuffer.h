@@ -1,6 +1,6 @@
 #include "gpk_datatype.h"
 #include "gpk_enum.h"
-#include "gpk_engine_container.h"
+#include "gpk_linear_map_pobj.h"
 
 #ifndef GPK_ENGINE_SOUNDBUFFER_H_23_05_08
 #define GPK_ENGINE_SOUNDBUFFER_H_23_05_08
@@ -36,7 +36,7 @@ namespace gpk
 		}
 	};
 
-	typedef	::gpk::SLinearNamedMap<::gpk::SSoundBuffer>	SSoundBufferManager;
+	typedef	::gpk::gpk_linear_map_pobj<::gpk::SSoundBuffer>	SSoundBufferManager;
 
 } // namespace
 

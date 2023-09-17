@@ -40,15 +40,30 @@ namespace gpk
 	//GDEFINE_ENUM_VALUE(EVENT_RUNTIME, Process_event	, 3);
 
 #pragma pack(push, 1)
-	struct SDeviceEvent {
-		const ::gpk::SYSTEM_EVENT	SystemEvent 	= ::gpk::SYSTEM_EVENT_Device;
+	struct SDeviceResult {
+		const ::gpk::SYSTEM_EVENT	SystemEvent 	= {};
 		const uint8_t				TailWidth		: 2;
 		const uint8_t				Multiplier		: 6;
-		::gpk::RESULT				DeviceEvent		= ::gpk::RESULT_Error;
-									SDeviceEvent	()
+		::gpk::RESULT				DeviceEvent		= {};
+
+		cnstxpr						SDeviceResult	(::gpk::RESULT deviceEvent = ::gpk::RESULT_Error)
 			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
-			, TailWidth   {::gpk::tail_width(sizeof(::gpk::RESULT))}
-			, Multiplier  {::gpk::tail_multiplier(sizeof(::gpk::RESULT))}
+			, TailWidth   {::gpk::tail_width<uint32_t>((uint32_t)sizeof(::gpk::RESULT))}
+			, Multiplier  {::gpk::tail_multiplier<uint32_t>((uint32_t)sizeof(::gpk::RESULT))}
+			, DeviceEvent {deviceEvent}
+			{}
+	};
+	struct SDeviceCommand {
+		const ::gpk::SYSTEM_EVENT	SystemEvent 	= {};
+		const uint8_t				TailWidth		: 2;
+		const uint8_t				Multiplier		: 6;
+		::gpk::COMMAND				DeviceEvent		= {};
+
+		cnstxpr						SDeviceCommand	(::gpk::COMMAND deviceEvent = ::gpk::COMMAND_Ok)
+			: SystemEvent {::gpk::SYSTEM_EVENT_Device}
+			, TailWidth   {::gpk::tail_width<uint32_t>((uint32_t)sizeof(::gpk::COMMAND))}
+			, Multiplier  {::gpk::tail_multiplier<uint32_t>((uint32_t)sizeof(::gpk::COMMAND))}
+			, DeviceEvent {deviceEvent}
 			{}
 	};
 #pragma pack(pop)

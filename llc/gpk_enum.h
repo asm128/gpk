@@ -363,25 +363,25 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(RESULT, No_Memory         , int8_t(::gpk::OS_NO_MEMORY         ));
 
 	GDEFINE_ENUM_TYPE (COMMAND, int8_t);
-	GDEFINE_ENUM_VALUE(COMMAND, Ok                , int8_t(::gpk::OS_OK                * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Error             , int8_t(::gpk::OS_ERROR             * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Busy              , int8_t(::gpk::OS_BUSY              * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Timeout           , int8_t(::gpk::OS_TIMEOUT           * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Full              , int8_t(::gpk::OS_FULL              * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Empty             , int8_t(::gpk::OS_EMPTY             * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Overrun           , int8_t(::gpk::OS_OVERRUN           * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Not_available     , int8_t(::gpk::OS_NOT_AVAILABLE     * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Not_found         , int8_t(::gpk::OS_NOT_FOUND         * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Invalid_parameter , int8_t(::gpk::OS_INVALID_PARAMETER * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Forbidden         , int8_t(::gpk::OS_FORBIDDEN         * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Restart           , int8_t(::gpk::OS_RESTART           * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Wake_up           , int8_t(::gpk::OS_WAKE_UP           * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Sleep             , int8_t(::gpk::OS_SLEEP             * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Offline           , int8_t(::gpk::OS_OFFLINE           * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Connecting        , int8_t(::gpk::OS_CONNECTING        * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Connected         , int8_t(::gpk::OS_CONNECTED         * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, Missing_data      , int8_t(::gpk::OS_MISSING_DATA      * -1));
-	GDEFINE_ENUM_VALUE(COMMAND, No_Memory         , int8_t(::gpk::OS_NO_MEMORY         * -1));
+	GDEFINE_ENUM_VALUE(COMMAND, Ok                , int8_t(RESULT_No_Memory * -1));
+	GDEFINE_ENUM_VALUE(COMMAND, Error             , int8_t(RESULT_Ok +  1));
+	GDEFINE_ENUM_VALUE(COMMAND, Busy              , int8_t(RESULT_Ok +  2));
+	GDEFINE_ENUM_VALUE(COMMAND, Timeout           , int8_t(RESULT_Ok +  3));
+	GDEFINE_ENUM_VALUE(COMMAND, Full              , int8_t(RESULT_Ok +  4));
+	GDEFINE_ENUM_VALUE(COMMAND, Empty             , int8_t(RESULT_Ok +  5));
+	GDEFINE_ENUM_VALUE(COMMAND, Overrun           , int8_t(RESULT_Ok +  6));
+	GDEFINE_ENUM_VALUE(COMMAND, Not_available     , int8_t(RESULT_Ok +  7));
+	GDEFINE_ENUM_VALUE(COMMAND, Not_found         , int8_t(RESULT_Ok +  8));
+	GDEFINE_ENUM_VALUE(COMMAND, Invalid_parameter , int8_t(RESULT_Ok +  9));
+	GDEFINE_ENUM_VALUE(COMMAND, Forbidden         , int8_t(RESULT_Ok + 10));
+	GDEFINE_ENUM_VALUE(COMMAND, Restart           , int8_t(RESULT_Ok + 11));
+	GDEFINE_ENUM_VALUE(COMMAND, Wake_up           , int8_t(RESULT_Ok + 12));
+	GDEFINE_ENUM_VALUE(COMMAND, Sleep             , int8_t(RESULT_Ok + 13));
+	GDEFINE_ENUM_VALUE(COMMAND, Offline           , int8_t(RESULT_Ok + 14));
+	GDEFINE_ENUM_VALUE(COMMAND, Connecting        , int8_t(RESULT_Ok + 15));
+	GDEFINE_ENUM_VALUE(COMMAND, Connected         , int8_t(RESULT_Ok + 16));
+	GDEFINE_ENUM_VALUE(COMMAND, Missing_data      , int8_t(RESULT_Ok + 17));
+	GDEFINE_ENUM_VALUE(COMMAND, No_Memory         , int8_t(RESULT_Ok + 18));
 }
 
 #endif // GPK_ENUM_H_23627

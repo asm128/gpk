@@ -690,7 +690,43 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_string_compose.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_apod_tcpip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_i2c.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_serial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_spi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyed_bit_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_circular.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_arduino_string.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gpio.h">
+      <Filter>container</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_packed_int.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_platform_error.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_linear_map_pobj.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_cpow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -883,6 +919,18 @@
     </ClCompile>
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_apod_tcpip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_compose.cpp">
+      <Filter>script</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_i2c.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_spi.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

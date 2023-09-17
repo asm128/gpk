@@ -1,4 +1,4 @@
-#include "gpk_engine_container.h"
+#include "gpk_linear_map_pobj.h"
 
 #include "gpk_enum.h"
 
@@ -61,7 +61,7 @@ namespace gpk
 		}
 	};	
 
-	typedef	::gpk::SLinearNamedMap<::gpk::SGeometryMesh>	SMeshManager;
+	typedef	::gpk::gpk_linear_map_pobj<::gpk::SGeometryMesh>	SMeshManager;
 } // namespace
 
 #endif // GPK_ENGINE_RENDERMESH_H_23627

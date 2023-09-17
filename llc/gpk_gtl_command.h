@@ -36,7 +36,7 @@ namespace gpk
 		::gpk::SGTLCommand					Command			;
 		uint64_t							IdSender		;
 		uint32_t							IdMessage		;
-		::gpk::SSerializedViewHeader		CounterHeader	;
+		::gpk::packedu16					CounterHeader	;
 	};
 #pragma pack(pop)
 

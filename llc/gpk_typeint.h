@@ -16,6 +16,9 @@ namespace gpk
 	typedef	char			char_t  ;
 	typedef	unsigned char	uchar_t , uchar;
 
+	typedef	unsigned int	uint_t, uint;
+	typedef	unsigned short	ushort_t , ushort;
+
 	typedef	const int8_t	cint8_t 	;
 	typedef	const int16_t	cint16_t	;
 	typedef	const int32_t	cint32_t	;
@@ -77,14 +80,14 @@ namespace gpk
 #if defined GPK_WINDOWS
 #	if defined(_WIN64) || defined(WIN64)
 #		define	GPK_REFCOUNT_T		long long
-		typedef volatile GPK_REFCOUNT_T	refcount_t			;
+		typedef vltl	GPK_REFCOUNT_T	refcount_t			;
 #	else
 #		define	GPK_REFCOUNT_T		long
-		typedef volatile GPK_REFCOUNT_T	refcount_t			;
+		typedef vltl	GPK_REFCOUNT_T	refcount_t			;
 #	endif
 #else
 #	define	GPK_REFCOUNT_T	intptr_t
-	typedef GPK_REFCOUNT_T	refcount_t			;
+	typedef vltl	GPK_REFCOUNT_T	refcount_t			;
 #endif
 
 	tplt<class _tBase>	struct remove_cv																			{ using type = _tBase; };
@@ -114,12 +117,17 @@ namespace gpk
 }
 
 #if !defined(GPK_ANDROID) && !defined(GPK_ESP32) && !defined(GPK_ARDUINO)
-#	define GPK_DEFAULT_OPERATOR(_otherType, ...)	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; }
+#	define GPK_DEFAULT_OPERATOR_I(_otherType, statement)	inline	bool	operator==(const _otherType & other) const noexcept { return statement; }
+#	define GPK_DEFAULT_OPERATOR_C(_otherType, statement)	cnstxpr	bool	operator==(const _otherType & other) const noexcept { return statement; }
+#	define GPK_DEFAULT_OPERATOR_IC(_otherType, statement)	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return statement; }
+#	define GPK_DEFAULT_OPERATOR_D(_otherType, statement)	bool			operator==(const _otherType & other) const noexcept { return statement; }
 #else
-#	define GPK_DEFAULT_OPERATOR(_otherType, ...)	\
-		inlcxpr	bool	operator==(const _otherType & other) const noexcept { return __VA_ARGS__; } \
-		inlcxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_I(_otherType, statement)	inline	bool	operator==(const _otherType & other) const noexcept { return statement; } inline	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_C(_otherType, statement)	cnstxpr	bool	operator==(const _otherType & other) const noexcept { return statement; } cnstxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_IC(_otherType, statement)	inlcxpr	bool	operator==(const _otherType & other) const noexcept { return statement; } inlcxpr	bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
+#	define GPK_DEFAULT_OPERATOR_D(_otherType, statement)	bool	bool	operator==(const _otherType & other) const noexcept { return statement; } bool		bool	operator!=(const _otherType & other) const noexcept { return !operator==(other); }	// I had to add this because Clang coming with vs doesn't support C++20
 #endif // GPK_ANDROID
 
+#define GPK_DEFAULT_OPERATOR GPK_DEFAULT_OPERATOR_IC
 
 #endif // GPK_TYPEINT_H_23627

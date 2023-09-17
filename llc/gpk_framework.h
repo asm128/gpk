@@ -45,14 +45,12 @@ namespace gpk
 		bool						GUIZoom					: 1;
 	};
 
-	struct SFramework {
+	struct SFramework : gpk::SFrameTimer {
 		::gpk::SRuntimeValues		& RuntimeValues			;
 		::gpk::vcs					FileNameJSONConfig		= "gpk_config.json";
 		::gpk::pobj<::gpk::SGUI>	GUI						= {};
 		::gpk::SFrameworkDetail		PlatformDetail			= {};
 		::gpk::SWindow				RootWindow				= {};
-		::gpk::STimer				Timer					= {};
-		::gpk::SFrameInfo			FrameInfo				= {};
 		::gpk::SFrameworkSettings	Settings				= {};
 		::gpk::SJSONFile			JSONConfig				= {};
 
