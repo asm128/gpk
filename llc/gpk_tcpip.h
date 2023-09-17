@@ -65,7 +65,7 @@ namespace gpk
 		}
 	};
 
-	stainli	::gpk::astchar<16>	str			(const gpk::SIPv4 ip)	{ return ip; }
+	stainli	::gpk::astchar<16>	str			(const gpk::SIPv4 ip)	{ return ip.toString<16>(); }
 
 	typedef struct SIPv4End : SIPv4 {
 		uint16_t			Port				= {};

@@ -20,10 +20,10 @@ uint32_t		gpk::getStringFromDataType		( ::gpk::DATA_TYPE dataType, char* string 
 	char				typeElements	[16]			= {0};
 	uint32_t			elementCount					= GTYPEID_ELEMENTCOUNT(dataType);
 	if( elementCount > 1 )
-		snprintf(typeElements, ::gpk::size(typeElements) - 2, "_%u", elementCount);
+		snprintf(typeElements, ::gpk::size(typeElements) - 2, "_%" GPK_FMT_U32, elementCount);
 
 	char				outString		[64]			= {0};
-	snprintf(outString, ::gpk::size(outString) - 2, "GDATA_TYPE_%s%u%s%s%s", typeString, GTYPEID_ELEMENTSIZE(dataType), GTYPEID_ISNORMALIZED(dataType) ? typeNORM : typeUNORM, typeElements, GTYPEID_ELEMENTPAD(dataType) ? typePAD : typeNOPAD );
+	snprintf(outString, ::gpk::size(outString) - 2, "GDATA_TYPE_%s%" GPK_FMT_U32 "%s%s%s", typeString, GTYPEID_ELEMENTSIZE(dataType), GTYPEID_ISNORMALIZED(dataType) ? typeNORM : typeUNORM, typeElements, GTYPEID_ELEMENTPAD(dataType) ? typePAD : typeNOPAD );
 	uint32_t			resultLen						= (uint32_t)strlen(outString);
 	if(string)
 		strcpy_s(string, (uint64_t)resultLen+1, outString);
