@@ -39,16 +39,10 @@ namespace gpk
 				, ::gpk::byte_at(IP, 3) 
 				};
 		}
-		template<size_t buflen>
-		operator			gpk::astchar<buflen>	()						const	noexcept	{
-			gpk::astchar<buflen>	result	= {};
-			print(result.Storage);
-			return result;
-		}
 
 		template<size_t buflen>
-		gpk::astchar<min((size_t)16, buflen)>	toString			(char separator = '.')						const	noexcept	{
-			gpk::astchar<min((size_t)16, buflen)>	result	= {};
+		gpk::astchar<(buflen > 16) ? buflen : 16>	toString			(char separator = '.')						const	noexcept	{
+			gpk::astchar<(buflen > 16) ? buflen : 16>	result	= {};
 			print(result.Storage, separator);
 			return result; 
 		}
@@ -168,3 +162,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_TCPIP_H_23627
+
+// 50y-5p4C3.41
