@@ -100,6 +100,9 @@
     <Filter Include="models">
       <UniqueIdentifier>{c4a3d5db-612d-4dd8-997a-c250f35e04df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="string">
+      <UniqueIdentifier>{f8fc180c-c5d2-4bba-ba41-864cb8042745}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gpk_adam7.h">
@@ -489,9 +492,6 @@
     <ClInclude Include="gpk_string.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_string_helper.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_sync.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -690,9 +690,6 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_string_compose.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_apod_tcpip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -711,12 +708,6 @@
     <ClInclude Include="gpk_array_circular.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_arduino_string.h">
-      <Filter>container</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_gpio.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_packed_int.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -727,7 +718,19 @@
       <Filter>container</Filter>
     </ClInclude>
     <ClInclude Include="gpk_cpow.h">
-      <Filter>Header Files</Filter>
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_gpio.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_arduino_string.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_compose.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string_helper.h">
+      <Filter>string</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -881,9 +884,6 @@
     <ClCompile Include="gpk_stdstring.cpp">
       <Filter>view</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_string_helper.cpp">
-      <Filter>container</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_tcpip.cpp">
       <Filter>file</Filter>
     </ClCompile>
@@ -923,14 +923,17 @@
     <ClCompile Include="gpk_apod_tcpip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_string_compose.cpp">
-      <Filter>script</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_i2c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_spi.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_compose.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_string_helper.cpp">
+      <Filter>string</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

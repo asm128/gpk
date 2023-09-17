@@ -31,11 +31,11 @@ namespace gpk
 	stacxpr	uint8_t	ASCII_LETTER_COUNT		= ASCII_ALPHABET_LENGTH * 2;
 	stacxpr	uint8_t	ASCII_DIGIT_COUNT		= ASCII_LETTER_COUNT + 10;
 
-	stincxp char	digit_ascii	(uint8_t value, const uint8_t base=10) { return char(value % base + ((value % base < 10) ? '0' : 'A' - 10)); }
+	stincxp char	digit_ascii	(uint64_t value, const uint8_t base=10) { return char(value % base + ((value % base < 10) ? '0' : 'A' - 10)); }
 
-	tplt<size_t exp, tpnm TValue=int32_t>
-	stincxp	char	digit		(const TValue value, const uint8_t base=10) { 
-		return ::gpk::digit_ascii(uint8_t(value / ::gpk::cpow<exp>(base)) % base, base);
+	tplt<uint8_t exp, tpnm TValue>
+	stincxp	char	digit		(const TValue value, const TValue base=10) { 
+		return ::gpk::digit_ascii(value / ::gpk::cpow<exp>(base), (uint8_t)base);
 	}
 } // namespace
 

@@ -9,8 +9,6 @@
 
 namespace gpk
 {
-	::gpk::error_t				keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::vcvcc & keysToSave, ::gpk::au8 & output);
-
 	tplt<tpnm T>
 	::gpk::error_t				saveView			(::gpk::au8 & output, const ::gpk::view<T> & headerToWrite)	{
 		::gpk::packedu32				viewHeader			= headerToWrite.size();
@@ -36,6 +34,7 @@ namespace gpk
 	tplt<tpnm T> ::gpk::error_t	loadView			(::gpk::vci8 & input, ::gpk::apod<T> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 	tplt<tpnm T> ::gpk::error_t	loadView			(::gpk::vcc  & input, ::gpk::apod<T> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
 
+	::gpk::error_t				keyValConstStringSerialize		(const ::gpk::view<const ::gpk::TKeyValConstChar> & keyVals, const ::gpk::vcvcc & keysToSave, ::gpk::au8 & output);
 } // namespace
 
 #endif // GPK_APOD_SERIALIZE_H_23627

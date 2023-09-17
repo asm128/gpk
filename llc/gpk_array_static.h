@@ -139,97 +139,52 @@ namespace gpk
 	}
 
 
-	stainli gpk::astchar<11>	str			(float32_t	arg) { gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
-	stainli gpk::astchar<21>	str			(float64_t	arg) { gpk::astchar<21> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
-	stincxp	gpk::astchar<5 >	str			(uint8_t	arg) { return {{char(((arg / 1) % 10) + '0'), char(((arg / 10) % 10) + '0'), char(((arg / 100) % 10) + '0'), 0}}; }
-	stincxp	gpk::astchar<7 >	str			(uint16_t	arg) { return {{char(((arg / 1) % 10) + '0'), char(((arg / 10) % 10) + '0'), char(((arg / 100) % 10) + '0'), char(((arg / 1000) % 10) + '0'), char(((arg / 10000) % 10) + '0'), 0}}; }
-	stincxp gpk::astchar<11>	str			(uint32_t	arg) { //gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
-		return { 
-			{ digit<9>(arg, 10)
-			, digit<8>(arg, 10)
-			, digit<7>(arg, 10)
-			, digit<6>(arg, 10)
-			, digit<5>(arg, 10)
-			, digit<4>(arg, 10)
-			, digit<3>(arg, 10)
-			, digit<2>(arg, 10)
-			, digit<1>(arg, 10)
-			, digit<0>(arg, 10)
-			, 0
-			}
-		}; 
-	}
-	stincxp gpk::astchar<21>	str			(uint64_t	arg) { //gpk::astchar<21> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U64, arg); return dest; } 
-		return { 
-			{ char(((arg / cpow<19>(10)) % 10) + '0')
-			, char(((arg / cpow<18>(10)) % 10) + '0')
-			, char(((arg / cpow<17>(10)) % 10) + '0')
-			, char(((arg / cpow<16>(10)) % 10) + '0')
-			, char(((arg / cpow<15>(10)) % 10) + '0')
-			, char(((arg / cpow<14>(10)) % 10) + '0')
-			, char(((arg / cpow<13>(10)) % 10) + '0')
-			, char(((arg / cpow<12>(10)) % 10) + '0')
-			, char(((arg / cpow<11>(10)) % 10) + '0')
-			, char(((arg / cpow<10>(10)) % 10) + '0')
-			, char(((arg / cpow<9>(10)) % 10) + '0')
-			, char(((arg / cpow<8>(10)) % 10) + '0')
-			, char(((arg / cpow<7>(10)) % 10) + '0')
-			, char(((arg / cpow<6>(10)) % 10) + '0')
-			, char(((arg / cpow<5>(10)) % 10) + '0')
-			, char(((arg / cpow<4>(10)) % 10) + '0')
-			, char(((arg / cpow<3>(10)) % 10) + '0')
-			, char(((arg / cpow<2>(10)) % 10) + '0')
-			, char(((arg / cpow<1>(10)) % 10) + '0')
-			, char(((arg / cpow<0>(10)) % 10) + '0')
-			, 0
-			}
-		}; 
-	}
-	stincxp	gpk::astchar<5 >	str			(int8_t		arg) { return (arg >= 0) ? str(uint8_t	(arg)) : gpk::astchar<5 >{{'-', char(((arg / 2) % 10) + '0'), char((((arg / 2) / 10) % 10) + '0'), char((((arg / 2) / 100) % 10) + '0'), 0}}; }
-	stincxp	gpk::astchar<7 >	str			(int16_t	arg) { return (arg >= 0) ? str(uint16_t	(arg)) : gpk::astchar<7 >{{'-', char(((arg / 2) % 10) + '0'), char((((arg / 2) / 10) % 10) + '0'), char((((arg / 2) / 100) % 10) + '0'), char((((arg / 2) / 1000) % 10) + '0'), char((((arg / 2) / 10000) % 10) + '0'), 0}}; }
-	stincxp gpk::astchar<11>	str			(int32_t	arg) { //gpk::astchar<11> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
-		return (arg >= 0) ? str((uint32_t)arg) 
-			: gpk::astchar<11>{ 
-				{ '-'
-				, char(((arg / cpow<8>(10)) % 10) + '0')
-				, char(((arg / cpow<7>(10)) % 10) + '0')
-				, char(((arg / cpow<6>(10)) % 10) + '0')
-				, char(((arg / cpow<5>(10)) % 10) + '0')
-				, char(((arg / cpow<4>(10)) % 10) + '0')
-				, char(((arg / cpow<3>(10)) % 10) + '0')
-				, char(((arg / cpow<2>(10)) % 10) + '0')
-				, char(((arg / cpow<1>(10)) % 10) + '0')
-				, char(((arg / cpow<0>(10)) % 10) + '0')
+	stainli gpk::astchar<12>	str			(float32_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
+	stainli gpk::astchar<22>	str			(float64_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
+	stainli gpk::astchar<7>		str			(int16_t	arg) { gpk::astchar< 7> dest = {}; sprintf_s(dest.Storage, "%i", arg); return dest; } 
+	stainli gpk::astchar<7>		str			(uint16_t	arg) { gpk::astchar< 7> dest = {}; sprintf_s(dest.Storage, "%u", arg); return dest; } 
+	stainli gpk::astchar<12>	str			(int32_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_I32, arg); return dest; } 
+	stainli gpk::astchar<22>	str			(int64_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_I64, arg); return dest; } 
+	stainli gpk::astchar<12>	str			(uint32_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
+	stainli gpk::astchar<22>	str			(uint64_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U64, arg); return dest; } 
+
+	stacxpr	gpk::astchar<5 >	str			(uint8_t	arg) { 
+		return (arg >= 100) ? gpk::astchar<5>
+				{ digit<2>(arg)
+				, digit<1>(arg)
+				, digit<0>(arg)
 				, 0
 				}
-			};
-	}	
-	stincxp gpk::astchar<21>	str			(int64_t	arg) { 
-		return (arg >= 0) ? str((uint64_t)arg) 
-			: gpk::astchar<21>{
-				{ '-'
-				, char(((arg / cpow<18>(10)) % 10) + '0')
-				, char(((arg / cpow<17>(10)) % 10) + '0')
-				, char(((arg / cpow<16>(10)) % 10) + '0')
-				, char(((arg / cpow<15>(10)) % 10) + '0')
-				, char(((arg / cpow<14>(10)) % 10) + '0')
-				, char(((arg / cpow<13>(10)) % 10) + '0')
-				, char(((arg / cpow<12>(10)) % 10) + '0')
-				, char(((arg / cpow<11>(10)) % 10) + '0')
-				, char(((arg / cpow<10>(10)) % 10) + '0')
-				, char(((arg / cpow<9>(10)) % 10) + '0')
-				, char(((arg / cpow<8>(10)) % 10) + '0')
-				, char(((arg / cpow<7>(10)) % 10) + '0')
-				, char(((arg / cpow<6>(10)) % 10) + '0')
-				, char(((arg / cpow<5>(10)) % 10) + '0')
-				, char(((arg / cpow<4>(10)) % 10) + '0')
-				, char(((arg / cpow<3>(10)) % 10) + '0')
-				, char(((arg / cpow<2>(10)) % 10) + '0')
-				, char(((arg / cpow<1>(10)) % 10) + '0')
-				, char(((arg / cpow<0>(10)) % 10) + '0')
+			: (arg >= 10) ? gpk::astchar<5>
+				{ digit<1>(arg)
+				, digit<0>(arg)
 				, 0
 				}
-			};
+			: gpk::astchar<5>
+				{ digit<0>(arg)
+				, 0
+				}
+			;
+	}
+	stacxpr	gpk::astchar<5 >	str			(int8_t		arg) { 
+	return (arg >= 0) ? str(uint8_t(arg))
+		: (arg <= -100) ? gpk::astchar<5>
+			{ '-'
+			, ::gpk::digit<2>(-arg)
+			, ::gpk::digit<1>(-arg)
+			, ::gpk::digit<0>(-arg)
+			, 0
+			}
+		: (arg <= -10) ? gpk::astchar<5>
+			{ ::gpk::digit<1>(-arg)
+			, ::gpk::digit<0>(-arg)
+			, 0
+			}
+		: gpk::astchar<5>
+			{ ::gpk::digit<0>(-arg)
+			, 0
+			}
+		;
 	}
 } // namespace
 
