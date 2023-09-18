@@ -58,3 +58,32 @@
 	gpk_necs(gpk::appendNclosd(output, listItems));
 	return key.size() + listItems.size() + 5;
 }
+::gpk::error_t gpk::appendHtmlTagOpening	(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes) { 
+	if(0 == tagAttributes.size()) 
+		return ::gpk::appendNclosd(output, tagName, '<', '>'); 
+
+	gpk_necs(output.push_back('<'));
+	gpk_necs(output.append(tagName));
+	gpk_necs(output.push_back(' '));
+	gpk_necs(output.append(tagAttributes));
+	gpk_necs(output.push_back('>'));
+	return tagName.size() + tagAttributes.size() + 3;
+}
+::gpk::error_t gpk::appendHtmlTagVoid		(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes) { 
+	if(0 == tagAttributes.size()) 
+		return ::gpk::appendNclosd(output, tagName, "<", " />"); 
+
+	gpk_necs(output.push_back('<'));
+	gpk_necs(output.append(tagName));
+	gpk_necs(output.push_back(' '));
+	gpk_necs(output.append(tagAttributes));
+	gpk_necs(output.append_string(" />"));
+	return tagName.size() + tagAttributes.size() + 5;
+}
+::gpk::error_t	gpk::appendHtmlTag			(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml) {
+	int32_t result = 0;
+	{ int32_t _result; gpk_necs(_result = gpk::appendHtmlTagOpening(output, tagName, tagAttributes)); result += _result; }
+	{ int32_t _result; gpk_necs(_result = output.append(innerHtml)); result += _result; }
+	{ int32_t _result; gpk_necs(_result = gpk::appendHtmlTagClosing(output, tagName)); result += _result; }
+	return result;
+}

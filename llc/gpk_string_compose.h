@@ -26,6 +26,12 @@ namespace gpk
 	::gpk::error_t			appendKeyObject			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs itemsNotEnclosed);
 	::gpk::error_t			appendKeyList			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs itemsNotEnclosed);
 	::gpk::error_t			appendOpenKey			(::gpk::achar & output, ::gpk::vcs key);
+
+	::gpk::error_t			appendHtmlTagVoid		(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes = {});
+	::gpk::error_t			appendHtmlTagOpening	(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes = {});
+	stainli	::gpk::error_t	appendHtmlTagClosing	(::gpk::achar & output, ::gpk::vcs tagName) { return ::gpk::appendNclosd(output, tagName, "</", ">"); }
+	::gpk::error_t			appendHtmlTag			(::gpk::achar & output, ::gpk::vcs tagName, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {});
+
 } // namespace
 
 #endif // GPK_STRING_COMPOSE
