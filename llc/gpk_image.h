@@ -69,7 +69,7 @@ namespace gpk
 		inline	::gpk::error_t		resize		(const ::gpk::n2u32 & newSize, const T & newValue)	noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View						= {Texels.begin(), newSize.x, newSize.y};
-			gpk_necall(::gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().i32()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
+			gpk_necall(gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().i32()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
 			return Texels.size();
 		}
 	}; // struct

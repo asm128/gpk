@@ -48,8 +48,8 @@ namespace gpk
 		::gpk::error_t			left			()	const	noexcept	{ return min(Count, size() - Offset); } // left side, first part
 		::gpk::error_t			right			()	const	noexcept	{ return max((::gpk::error_t)0, (::gpk::error_t)Count - left()); } // right side, second part
 
-		inline	::gpk::error_t	left			(::gpk::view<const T> & _left)	const	noexcept	{ slice(_left , Offset, left()); }
-		inline	::gpk::error_t	right			(::gpk::view<const T> & _right)	const	noexcept	{ slice(_right, 0, right()); }
+		inline	::gpk::error_t	left			(::gpk::view<const T> & _left)	const	noexcept	{ return slice(_left , Offset, left()); }
+		inline	::gpk::error_t	right			(::gpk::view<const T> & _right)	const	noexcept	{ return slice(_right, 0, right()); }
 
 		::gpk::error_t			pair			(::gpk::view<const T> & _left, ::gpk::view<const T> & _right)	const	noexcept	{
 			gpk_necs(left(_left));

@@ -17,7 +17,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 	::gpk::SControlPlacement	controlItem		= {};
 	controlItem.Margin		= {4, 2, 4, 2};
 	controlItem.Border		= {1, 1, 1, 1};
-	gpk_necs(::gpk::guiCreateControlList<::gpk::EDITOR_APP_MENU>(gui, ::gpk::DIRECTION_RIGHT, idMenu, controlItem, ::gpk::ALIGN_CENTER_LEFT, idButtons));
+	gpk_necs(gpk::guiCreateControlList<::gpk::EDITOR_APP_MENU>(gui, ::gpk::DIRECTION_RIGHT, idMenu, controlItem, ::gpk::ALIGN_CENTER_LEFT, idButtons));
 	return idMenu;
 }
 
@@ -26,7 +26,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 		editor.UI.GUI.create();
 
 	::gpk::SGUI					& gui				= *editor.UI.GUI;
-	gpk_necs(::gpk::inputBoxCreate(editor.UI.InputBox, gui));
+	gpk_necs(gpk::inputBoxCreate(editor.UI.InputBox, gui));
 
 	gui.Controls.Placement[editor.UI.InputBox.IdRoot].Align			= ::gpk::ALIGN_CENTER_BOTTOM;
 
@@ -46,7 +46,7 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 		if(result == INT_MAX) { // enter key pressed
 			::gpk::vcc					trimmed				= {};
 			gpk_necs(editor.UI.InputBox.Text.slice(trimmed, 0, ::gpk::min(editor.UI.InputBox.Text.size(), 128U)));
-			gpk_necs(::gpk::trim(trimmed));
+			gpk_necs(gpk::trim(trimmed));
 			if(trimmed.size()) {
 				::gpk::pobj<::gpk::ac>	textInput;
 				textInput.create();

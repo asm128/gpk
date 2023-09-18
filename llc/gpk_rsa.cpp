@@ -172,20 +172,20 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 
 	::gpk::au8								filtered;
 	if(false == salt) {
-		gpk_necs(::gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered));
+		gpk_necs(gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered));
 	}
 	else { //
 		::gpk::au8								salted;
-		gpk_necs(::gpk::saltDataSalt(decrypted, salted));
-		gpk_necs(::gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered));
+		gpk_necs(gpk::saltDataSalt(decrypted, salted));
+		gpk_necs(gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered));
 	}
 
 	::gpk::vu8								filter_view							= filtered;
 	::gpcFilter0Apply(filter_view);
-	gpk_necs(::gpk::rsaEncode(filter_view, n, key, testkey, encrypted));
+	gpk_necs(gpk::rsaEncode(filter_view, n, key, testkey, encrypted));
 	if(testkey) {
 		::gpk::au8								decryptTest							= {};
-		gpk_necs(::gpk::rsaDecode(encrypted, n, testkey, decryptTest));
+		gpk_necs(gpk::rsaDecode(encrypted, n, testkey, decryptTest));
 		ef_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest =0; iTest < decryptTest.size(); ++iTest) {
 			ef_if(decryptTest[iTest] != (int8_t)filter_view[iTest], "%s", "Error!");
@@ -203,11 +203,11 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	::gpk::au64								defiltered							(encrypted);
 	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Remove(defilter_view);
-	gpk_necs(::gpk::rsaDecode(defiltered, n, key, decrypted));
+	gpk_necs(gpk::rsaDecode(defiltered, n, key, decrypted));
 	::gpk::vu8								filter_view							({(uint8_t*)&decrypted[offset], decrypted.size() - offset});
 	::gpcFilter0Remove(filter_view);
 	::gpk::au8								defiltered2							= {};
-	gpk_necall(::gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
+	gpk_necall(gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
 	if(false == salt) {
 		gpk_necs(decrypted.resize(offset + defiltered2.size() + 1));
 		for(uint32_t j=0; j < defiltered2.size(); ++j)
@@ -215,7 +215,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	}
 	else {
 		::gpk::au8								unsalted;
-		gpk_necs(::gpk::saltDataUnsalt(defiltered2, unsalted));
+		gpk_necs(gpk::saltDataUnsalt(defiltered2, unsalted));
 		gpk_necs(decrypted.resize(offset + unsalted.size() + 1));
 		for(uint32_t j=0; j < unsalted.size(); ++j)
 			decrypted[offset + j]						= unsalted[j];
@@ -234,7 +234,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	ree_if(posthash != checkposthash, "%s", "Failed to check post hash. posthash: %llx == checkposthash: %llx", posthash, checkposthash);
 
 	const uint32_t							decryptedStart						= decrypted.size();
-	gpk_necs(::gpk::gpcDecode({encrypted.begin(), actualSize}, n, key, salt, decrypted));
+	gpk_necs(gpk::gpcDecode({encrypted.begin(), actualSize}, n, key, salt, decrypted));
 
 	const uint64_t							hash								= *(uint64_t*)&decrypted[decrypted.size() - sizeof(uint64_t)];
 	verbose_printf("prehash found: %llx. Size of decrypted data: %u. Size of data without hash appended: %u.", hash, decrypted.size(), decrypted.size() - sizeof(uint64_t));
@@ -267,10 +267,10 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *((uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)]), *((uint64_t*)&prehashed[decrypted.size()]), decrypted.size(), prehashed.size());
 
 	const uint32_t									encryptedStart						= encrypted.size();
-	gpk_necs(::gpk::gpcEncode(prehashed, n, key, testkey, salt, encrypted));
+	gpk_necs(gpk::gpcEncode(prehashed, n, key, testkey, salt, encrypted));
 	if(testkey) {
 		::gpk::au8								decryptTest							= {};
-		gpk_necs(::gpk::gpcDecode(encrypted, n, testkey, salt, decryptTest));
+		gpk_necs(gpk::gpcDecode(encrypted, n, testkey, salt, decryptTest));
 		e_if(decryptTest.size() != prehashed.size());
 		for(uint32_t i =0; i < decryptTest.size(); ++i) {
 			ef_if(decryptTest[i] != prehashed[i], "%i != %i", decryptTest[i], prehashed[i]);

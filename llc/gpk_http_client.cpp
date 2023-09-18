@@ -24,7 +24,7 @@
 			continue;
 		}
 		uint64_t					decodedByte						= 0;
-		gpk_necs(::gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
+		gpk_necs(gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
 		gpk_necs(decoded.push_back((char)(uint8_t)decodedByte));
 		++iChar;
 		++decodedCharacters;
@@ -263,7 +263,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	,	::gpk::apod<char>	& out_received
 	) {
 	::gpk::SHTTPResponse						response;
-	gpk_necall(::gpk::httpClientRequest
+	gpk_necall(gpk::httpClientRequest
 		( clientToConnect
 		, method
 		, hostName

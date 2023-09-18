@@ -53,7 +53,7 @@ namespace gpk
 
 		::gpk::error_t			CreateSizeDependentResources(ID3D11Device3 * d3dDevice, ::gpk::n2u16 windowSize)	{
 			gpk_necs(RenderTarget.resize(windowSize.u32(), {0, 0, 0, 0}));
-			gpk_necs(::gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
+			gpk_necs(gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
 			return 0;
 		}
 
@@ -86,7 +86,7 @@ namespace gpk
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 
 				::gpk::ai8					fileVS;
-				gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, fileVS));
+				gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, fileVS));
 				// After the vertex shader file is loaded, create the shader and input layout.
 				gpk_hrcall(d3dDevice->CreateVertexShader(&fileVS[0], fileVS.size(), nullptr, &vertexShader));
 				gpk_hrcall(d3dDevice->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileVS[0], fileVS.size(), &inputLayout)); 
@@ -99,7 +99,7 @@ namespace gpk
 				::gpk::pcom<ID3D11PixelShader>	pixelShader;
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 				::gpk::ai8					filePS;
-				gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
+				gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 				gpk_hrcall(d3dDevice->CreatePixelShader(&filePS[0], filePS.size(), nullptr, &pixelShader));
 				PixelShader				= pixelShader;
@@ -245,9 +245,9 @@ namespace gpk
 		// Notifies renderers that device resources may now be recreated.
 
 		::gpk::error_t			CreateDeviceDependentEngineResources(ID3D11Device3 * d3dDevice,  const ::gpk::SEngineGraphics & engineGraphics)	{
-			gpk_necs(::gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
-			gpk_necs(::gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
-			gpk_necs(::gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
+			gpk_necs(gpk::d3dCreateBuffersFromEngineMeshes		(d3dDevice, engineGraphics.Meshes	, engineGraphics.Buffers, Scene.IndexBuffer, Scene.VertexBuffer));
+			gpk_necs(gpk::d3dCreateTexturesFromEngineSurfaces		(d3dDevice, engineGraphics.Surfaces	, Scene.ShaderResourceView));
+			gpk_necs(gpk::d3dCreatePixelShadersFromEngineShaders	(d3dDevice, engineGraphics.Shaders	, Scene.PixelShader));
 			return 0;
 		}
 		::gpk::error_t			CreateDeviceResources	(const ::gpk::SEngineGraphics & engineGraphics)	{

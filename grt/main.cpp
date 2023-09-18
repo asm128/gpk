@@ -89,7 +89,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		char							mainModuleName	[512]			= {};
 		snprintf(mainModuleName, ::gpk::size(mainModuleName) - 2, "%s.%s", fileName.begin(), GPK_MODULE_EXTENSION);
 		::gpk::SRuntimeModule			mainModule						= {};
-		gpk_necall(::gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
+		gpk_necall(gpk::loadRuntimeModule(mainModule, mainModuleName), "Failed to create main module. %s.", mainModuleName);
 		info_printf("Created main module: '%s'.", mainModuleName);
 		void							* app;
 		gpk_necall(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);

@@ -2,14 +2,14 @@
 
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
-	gpk_necs(::gpk::jsonFileRead(jsonFile, jsonFilePath));
+	gpk_necs(gpk::jsonFileRead(jsonFile, jsonFilePath));
 	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
 	::gpk::avcc					stellarBodyNames			= {};
 	::gpk::ai32					stellarBodyIndices;
-	gpk_necs(::gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
+	gpk_necs(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
 	const ::gpk::vcvcc			jsonView					= jsonData.View;
 	::gpk::avcc					bodyParentNames;
 

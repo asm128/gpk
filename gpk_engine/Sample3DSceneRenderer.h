@@ -151,7 +151,7 @@ namespace gpk
 				::gpk::pcom<ID3D11VertexShader>				vertexShader;
 
 				::gpk::apod<int8_t>							fileVS;
-				gpk_necs(::gpk::fileToMemory("SampleVertexShader.cso", fileVS));
+				gpk_necs(gpk::fileToMemory("SampleVertexShader.cso", fileVS));
 				stacxpr	D3D11_INPUT_ELEMENT_DESC			vertexDesc []			=
 					{	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					,	{ "NORMAL"	, 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }

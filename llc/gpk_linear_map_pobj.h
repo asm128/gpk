@@ -51,7 +51,7 @@ namespace gpk
 			gpk_necs(output.append(::gpk::vcu8{(const uint8_t*)&Elements.size(), 4}));
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Save(output), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			info_printf("Saved %s, %i", "Elements", Elements.size());
 			return 0;
@@ -63,7 +63,7 @@ namespace gpk
 			gpk_necall(Names.resize(Elements.size()), "size: %i", Elements.size());
 			for(uint32_t iEntity = 0; iEntity < Elements.size(); ++iEntity) {
 				gpk_necall(Elements[iEntity]->Load(input), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::loadLabel(input, Names[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(gpk::loadLabel(input, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			return 0; 
 		}

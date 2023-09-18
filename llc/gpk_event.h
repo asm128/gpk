@@ -19,14 +19,14 @@ namespace gpk
 		::gpk::vcu8		Data		= {};
 
 		::gpk::error_t	Save		(::gpk::au8 & output)	const	{
-			gpk_necs(::gpk::savePOD (output, Type));
-			gpk_necs(::gpk::saveView(output, Data));
+			gpk_necs(gpk::savePOD (output, Type));
+			gpk_necs(gpk::saveView(output, Data));
 			return 0;
 		}
 
 		::gpk::error_t	Load		(::gpk::vcu8 & input)			{
-			gpk_necs(::gpk::loadPOD (input, Type));
-			gpk_necs(::gpk::loadView(input, Data));
+			gpk_necs(gpk::loadPOD (input, Type));
+			gpk_necs(gpk::loadView(input, Data));
 			return 0;
 		}
 	};
@@ -58,14 +58,14 @@ namespace gpk
 		operator		TEView		()						const	{ return {Type, Data.cu8()}; }
 
 		::gpk::error_t	Save		(::gpk::au8 & output)	const	{
-			gpk_necs(::gpk::savePOD(output, Type));
-			gpk_necs(::gpk::saveView(output, Data));
+			gpk_necs(gpk::savePOD(output, Type));
+			gpk_necs(gpk::saveView(output, Data));
 			return 0;
 		}
 
 		::gpk::error_t	Load		(::gpk::vcu8 & input)			{
-			gpk_necs(::gpk::loadPOD(input, Type));
-			gpk_necs(::gpk::loadView(input, Data));
+			gpk_necs(gpk::loadPOD(input, Type));
+			gpk_necs(gpk::loadView(input, Data));
 			return 0;
 		}
 
@@ -102,7 +102,7 @@ namespace gpk
 	static	::gpk::error_t	eventEnqueueChild	(::gpk::TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, ::gpk::vcu8 eventData) {
 		::gpk::PEvent<_tEvntParent>	parentEvent			= {};
 		parentEvent->Type = parentEventType;
-		gpk_necs(::gpk::eventWrapChild(*parentEvent, childEventType, eventData));
+		gpk_necs(gpk::eventWrapChild(*parentEvent, childEventType, eventData));
 		return eventQueue.push_back(parentEvent);
 	}
 

@@ -45,7 +45,7 @@ static	::gpk::error_t	initClient						(::gpk::SUDPClient & bestClient)										
 static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::gpk::apod<char> & output)										{
 	::gpk::apod<char>				environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		gpk_necs(::gpk::environmentBlockFromEnviron(environmentBlock));
+		gpk_necs(gpk::environmentBlockFromEnviron(environmentBlock));
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
@@ -54,14 +54,14 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 		{	// setup and connect
 			bestClient.AddressConnect	= {};
 			gpk_necs(::initClient(bestClient));
-			gpk_necs(::gpk::clientConnect(bestClient));
+			gpk_necs(gpk::clientConnect(bestClient));
 		}
 		::gpk::au8						responseRemote;
 		{	// Send the request data to the connected service.
 			ree_if(bestClient.State != ::gpk::UDP_CONNECTION_STATE_IDLE, "%s", "Failed to connect to server.");
-			gpk_necs(::gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
+			gpk_necs(gpk::connectionPushData(bestClient, bestClient.Queue, {(const uint8_t*)environmentBlock.begin(), environmentBlock.size()}, true, true));	// Enqueue the packet
 			while(bestClient.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED) {	// Loop until we ge the response or the client disconnects
-				gpk_necs(::gpk::clientUpdate(bestClient));
+				gpk_necs(gpk::clientUpdate(bestClient));
 				::gpk::apobj<::gpk::SUDPMessage>	received;
 				{	// pick up messages for later processing
 					::std::lock_guard				lockRecv					(bestClient.Queue.MutexReceive);
@@ -75,7 +75,7 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 			}
 		}
 		//info_printf("Remote CGI answer: %s.", responseRemote.begin());
-		gpk_necs(::gpk::clientDisconnect(bestClient));
+		gpk_necs(gpk::clientDisconnect(bestClient));
 		output					= {(char*)responseRemote.begin(), responseRemote.size()};
 	}
 	return 0;
@@ -83,9 +83,9 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 
 static	int				cgiMain				(int argc, char** argv, char**envv)	{
 	(void)(envv);
-	gpk_necall(::gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
+	gpk_necall(gpk::tcpipInitialize(), "%s", "Failed to initialize network subsystem.");
 	::gpk::SCGIRuntimeValues	runtimeValues;
-	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::gpk::apod<char>			html;
 	if errored(::cgiBootstrap(runtimeValues, html)) {
 		printf("%s\r\n", "Content-Type: text/html"
@@ -106,7 +106,7 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 		OutputDebugStringA(html.begin());
 #endif
 	}
-	gpk_necall(::gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why!?");
+	gpk_necall(gpk::tcpipShutdown(), "Failed to shut down network subsystem. %s", "Why!?");
 	return 0;
 }
 

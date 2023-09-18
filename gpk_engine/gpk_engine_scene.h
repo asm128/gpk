@@ -79,13 +79,13 @@ namespace gpk
 		::gpk::au32				Textures;
 
 		::gpk::error_t			Save			(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::savePOD(output, Material));
-			gpk_necs(::gpk::saveView(output, Textures));
+			gpk_necs(gpk::savePOD(output, Material));
+			gpk_necs(gpk::saveView(output, Textures));
 			return 0;
 		}
 		::gpk::error_t			Load			(::gpk::vcu8 & input) {
-			gpk_necs(::gpk::loadPOD(input, Material));
-			gpk_necs(::gpk::loadView(input, Textures));
+			gpk_necs(gpk::loadPOD(input, Material));
+			gpk_necs(gpk::loadView(input, Textures));
 			return 0;
 		}
 	};

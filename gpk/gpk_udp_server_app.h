@@ -62,7 +62,7 @@ namespace gpk
 										funcProcessRequest		= [iServer, funcProcessServerRequest](uint32_t iClient, _tState & customState, const _tEvent & customEvent) {
 				return funcProcessServerRequest(iServer, iClient, customState, customEvent);
 			};
-			gpk_necs(::gpk::processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
+			gpk_necs(gpk::processUDPEvents(servers[iServer]->QueueReceived, state, funcProcessRequest));
 		}
 		return 0;
 	}

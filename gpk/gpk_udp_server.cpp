@@ -203,9 +203,9 @@ static	::gpk::error_t	serverListenTick		(::gpk::SUDPServer& serverInstance, cons
 static	void			threadUpdateClients		(void* serverInstance)					{ ::updateClients(*(::gpk::SUDPServer*)serverInstance); }
 static	::gpk::error_t	server					(::gpk::SUDPServer& serverInstance)		{
 	serverInstance.Listen	= true;
-	gpk_necs(::gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
+	gpk_necs(gpk::tcpipAddress(serverInstance.Address.Port, serverInstance.AdapterIndex, gpk::TRANSPORT_PROTOCOL_UDP, serverInstance.Address));
 	sockaddr_in					server					= {};
-	gpk_necs(::gpk::tcpipAddressToSockaddr(serverInstance.Address, server));
+	gpk_necs(gpk::tcpipAddressToSockaddr(serverInstance.Address, server));
 #if defined(GPK_WINDOWS)
 	_beginthread(::threadUpdateClients, 0, &serverInstance);
 #else
@@ -265,7 +265,7 @@ static	void			threadServer			(void* pServerInstance)				{
 		if(!client)
 			continue;
 
-		gpk_necs(::gpk::connectionPayloadCollect(*client, receivedMessages[iClient]));
+		gpk_necs(gpk::connectionPayloadCollect(*client, receivedMessages[iClient]));
 	}
 	return 0;
 }

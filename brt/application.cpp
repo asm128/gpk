@@ -71,7 +71,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	szCmdlineFinal.push_back(0);
 	szCmdlineApp.push_back(0);
 
-	gpk_necall(::gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
+	gpk_necall(gpk::serverStart(app.Server, (uint16_t)port, (int16_t)adapter), "Failed to start server on port %u. Port busy?", (uint32_t)port);
 	return 0;
 }
 

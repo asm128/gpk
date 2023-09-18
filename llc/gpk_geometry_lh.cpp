@@ -228,7 +228,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 
 ::gpk::error_t			gpk::geometryBuildCube	(SGeometryQuads & geometry, const ::gpk::n3f32 & scale, const ::gpk::n3f32 & translation)	{
 	const uint32_t											firstTriangle					= geometry.Triangles.size(); 
-	gpk_necs(::gpk::geometryBuildCube(geometry, scale));
+	gpk_necs(gpk::geometryBuildCube(geometry, scale));
 	for(uint32_t iTri = firstTriangle; iTri < geometry.Triangles.size(); ++iTri) 
 		geometry.Triangles[iTri].Translate(translation);
 	return 0;

@@ -13,7 +13,7 @@
 	}
 	keys.push_back('!');
 	keys.push_back('?');
-	gpk_necs(::gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
+	gpk_necs(gpk::virtualKeyboardSetup(gui, vk, 32, ::gpk::vcu16{keys}));
 	gui.Controls.SetHidden(vk.IdRoot, true);
 	return vk.IdRoot;
 }
@@ -45,11 +45,11 @@
 		//controlKey.ColorTheme			= ::gpk::ASCII_COLOR_DARKGREY * 16 + 8;
 		gui.Controls.Text[idKey].Align	= ::gpk::ALIGN_CENTER;
 
-		gpk_necs(::gpk::controlSetParent(gui, idKey, vk.IdRoot));
-		gpk_necs(::gpk::controlTextSet(gui, idKey, ::gpk::label(text)));
+		gpk_necs(gpk::controlSetParent(gui, idKey, vk.IdRoot));
+		gpk_necs(gpk::controlTextSet(gui, idKey, ::gpk::label(text)));
 	}
 
-	gpk_necs(::gpk::guiCreateControlList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_CENTER, vk.IdKeys));
+	gpk_necs(gpk::guiCreateControlList<::gpk::VK_SCANCODE>(gui, vk.IdRoot, SIZE_BUTTON, 0, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_CENTER, vk.IdKeys));
 	return 0;
 }
 
@@ -67,7 +67,7 @@
 	gui.Controls.Placement	[inputBox.IdText].Area.Size	= {0, 22};
 	gui.Controls.Text		[inputBox.IdText].Align		= ::gpk::ALIGN_CENTER;
 
-	gpk_necs(::gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
+	gpk_necs(gpk::virtualKeyboardSetup437(gui, inputBox.VirtualKeyboard));
 	gui.Controls.SetHidden(inputBox.VirtualKeyboard.IdRoot, false);
 	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Align	= gui.Controls.Placement[inputBox.IdText].Align;
 	gui.Controls.Placement	[inputBox.VirtualKeyboard.IdRoot].Area.Offset.y
@@ -79,10 +79,10 @@
 	gui.Controls.Placement[inputBox.IdRoot].Area.Size.x	= ::gpk::max(gui.Controls.Placement[inputBox.IdText].Area.Size.x, gui.Controls.Placement[inputBox.VirtualKeyboard.IdRoot].Area.Size.x);
 	gui.Controls.Placement[inputBox.IdRoot].Area.Size.y	+= gui.Controls.Placement[inputBox.VirtualKeyboard.IdRoot].Area.Size.y;
 
-	gpk_necs(::gpk::controlSetParent(gui, inputBox.IdText					, inputBox.IdRoot));
-	gpk_necs(::gpk::controlSetParent(gui, inputBox.VirtualKeyboard.IdRoot	, inputBox.IdRoot));
+	gpk_necs(gpk::controlSetParent(gui, inputBox.IdText					, inputBox.IdRoot));
+	gpk_necs(gpk::controlSetParent(gui, inputBox.VirtualKeyboard.IdRoot	, inputBox.IdRoot));
 	if(iParent >= 0)
-		gpk_necall(::gpk::controlSetParent(gui, inputBox.IdRoot, iParent), "iParent: %i", iParent);
+		gpk_necall(gpk::controlSetParent(gui, inputBox.IdRoot, iParent), "iParent: %i", iParent);
 
 	return inputBox.IdRoot;
 }

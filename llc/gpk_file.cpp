@@ -48,7 +48,7 @@ int64_t								gpk::fileSize				(::gpk::vcs fileName)								{
 static	::gpk::error_t	fileSplitSmall				(::gpk::vcs fileNameSrc, const uint32_t sizePartMax) {
 	ree_if(0 == sizePartMax, "Invalid part size: %u.", fileNameSrc.begin(), sizePartMax);
 	::gpk::apod<int8_t>						fileInMemory;
-	gpk_necall(::gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
+	gpk_necall(gpk::fileToMemory(fileNameSrc, fileInMemory), "Failed to load file: \"%s\".", fileNameSrc);
 
 	// -- Write parts to disk.
 	uint32_t								countParts					= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
@@ -223,16 +223,16 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 
 ::gpk::error_t			gpk::fileToMemory	(::gpk::vcs folderPath, ::gpk::vcs fileName, ::gpk::au8 & fileBytes) {
 	::gpk::achar			filePath			= {};
-	gpk_necall(::gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
-	gpk_necall(::gpk::fileToMemory({filePath}, fileBytes), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	gpk_necall(gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	gpk_necall(gpk::fileToMemory({filePath}, fileBytes), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
 	return 0;
 }
 
 
 ::gpk::error_t			gpk::fileFromMemory	(::gpk::vcs folderPath, ::gpk::vcs fileName, const ::gpk::vcu8 & fileInMemory, bool append) {
 	::gpk::achar			filePath			= {}; 
-	gpk_necall(::gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
-	gpk_necall(::gpk::fileFromMemory({filePath}, fileInMemory, append), "folderPath: '%s', fileName: '%s', append: %s.", folderPath.begin(), fileName.begin(), ::gpk::bool2char(append));
+	gpk_necall(gpk::pathNameCompose(folderPath, fileName, filePath), "folderPath: '%s', fileName: '%s'.", folderPath.begin(), fileName.begin());
+	gpk_necall(gpk::fileFromMemory({filePath}, fileInMemory, append), "folderPath: '%s', fileName: '%s', append: %s.", folderPath.begin(), fileName.begin(), ::gpk::bool2char(append));
 	return 0;
 }
 

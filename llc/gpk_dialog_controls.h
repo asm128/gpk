@@ -139,8 +139,8 @@ namespace gpk
 			::gpk::vcc					valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
-			gpk_necs(::gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));
-			gpk_necs(::gpk::controlMetricsInvalidate(*Dialog->GUI, IdGUIControl));
+			gpk_necs(gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));
+			gpk_necs(gpk::controlMetricsInvalidate(*Dialog->GUI, IdGUIControl));
 			return 0;
 		}
 	};

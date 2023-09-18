@@ -108,7 +108,7 @@ namespace gpk
 			const uint32_t			idGUIControl		= Controls[index]->IdGUIControl = ::gpk::controlCreate(*GUI);
 			gui.Controls.Draw[idGUIControl].UseNewPalettes	= true;
 			::gpk::memcpy_s(gui.Controls.Draw[idGUIControl].Palettes.Storage, Colors->Control.Storage);
-			//gpk_necall(::gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
+			//gpk_necall(gpk::controlSetParent(gui, idGUIControl, Root), "%s", "Invalid root id!");
 			Controls[index].as(createdControl);
 			return index;
 		}
@@ -137,7 +137,7 @@ namespace gpk
 				LastSize				= gui.LastSize;
 			}
 			//if(0 != Input)
-			//	gpk_necall(::gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
+			//	gpk_necall(gpk::guiProcessInput(gui, *Input), "%s", "Unknown reason.");
 			for(uint32_t iControl = 0; iControl < Controls.size(); ++iControl)
 				if(-1 == Controls[iControl]->IdParent)
 					Controls[iControl]->Update(gui.Controls.EventQueue);

@@ -14,15 +14,15 @@
 	gpk_necs(serverUI.Root = ::gpk::createScreenLayout(gui));
 
 	stacxpr	::gpk::n2u16		CONTROL_SIZE		= {192, 20};
-	gpk_necs(::gpk::setupControlListWithRoot<::gpk::UI_SERVER_INPUT>(gui, serverUI.Input, serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
-	gpk_necs(::gpk::setupControlListWithRoot<::gpk::UI_SERVER_INFO> (gui, serverUI.Info , serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
+	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_SERVER_INPUT>(gui, serverUI.Input, serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
+	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_SERVER_INFO> (gui, serverUI.Info , serverUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
 	return 0;
 }
 
 ::gpk::error_t			gpk::serverStart	(::gpk::SServer & server, ::gpk::SGUI & gui) {
-	gpk_necs(::gpk::tcpipAddress({}, server.Port, server.UDP.Address));
-	gpk_necs(::gpk::parseIntegerDecimal(server.Adapter, server.UDP.AdapterIndex));
-	gpk_necs(::gpk::serverStart(server.UDP, server.UDP.Address.Port, server.UDP.AdapterIndex)); 
+	gpk_necs(gpk::tcpipAddress({}, server.Port, server.UDP.Address));
+	gpk_necs(gpk::parseIntegerDecimal(server.Adapter, server.UDP.AdapterIndex));
+	gpk_necs(gpk::serverStart(server.UDP, server.UDP.Address.Port, server.UDP.AdapterIndex)); 
 	server.ListeningSince	= ::gpk::timeCurrentInMs() / 1000.0;
 	time_t						timeInt				= time(NULL);
 	tm							timeptr				= {};
@@ -36,8 +36,8 @@
 
 static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	::gpk::SUDPServer			& udpServer		= server.UDP;
-	gpk_necs(::gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcs{"Stop"} : ::gpk::vcs{"Start"})); 
-	gpk_necs(::gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcs{"Listening"} : ::gpk::vcs{"Stopped"})); 
+	gpk_necs(gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcs{"Stop"} : ::gpk::vcs{"Start"})); 
+	gpk_necs(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcs{"Listening"} : ::gpk::vcs{"Stopped"})); 
 	char						buf [128]		= {};
 	{	
 		uint32_t					clientCount		= 0;
@@ -47,7 +47,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 
 		sprintf_s(buf, "Clients: %i", clientCount);	
 		server.UI.TextClientCount	= ::gpk::vcs(buf);
-		gpk_necs(::gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_ClientCount], {server.UI.TextClientCount}));
+		gpk_necs(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_ClientCount], {server.UI.TextClientCount}));
 	}
 	{ // update datetime field
 		time_t						timeInt			= time(0);
@@ -55,7 +55,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 		localtime_s(&timeptr, &timeInt);
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		server.UI.TextDateTime	= ::gpk::vcs(buf);
-		gpk_necs(::gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_DateTime], {server.UI.TextDateTime})); 
+		gpk_necs(gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_DateTime], {server.UI.TextDateTime})); 
 	}
 
 	return 0;
@@ -71,7 +71,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 		else {
 			server.QueueToSend[iClient]->for_each([&client](::gpk::pau8 & payload) {
 				if(payload && payload->size())
-					gpk_necs(::gpk::connectionPushData(*client, client->Queue, *payload));
+					gpk_necs(gpk::connectionPushData(*client, client->Queue, *payload));
 
 				payload.clear();
  				return 0;
@@ -101,15 +101,15 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 			case ::gpk::UI_SERVER_INPUT_Disconnect	: return 0;
 			case ::gpk::UI_SERVER_INPUT_Restart		: 
 				if(udpServer.Listen)
-					gpk_necs(::gpk::serverStop(udpServer)); 
+					gpk_necs(gpk::serverStop(udpServer)); 
 
-				gpk_necs(::gpk::serverStart(server, gui));
+				gpk_necs(gpk::serverStart(server, gui));
 				return 0;
 			case ::gpk::UI_SERVER_INPUT_Stop			: 
 				if(udpServer.Listen)
-					gpk_necs(::gpk::serverStop(udpServer)); 
+					gpk_necs(gpk::serverStop(udpServer)); 
 				else 
-					gpk_necs(::gpk::serverStart(server, gui));
+					gpk_necs(gpk::serverStart(server, gui));
 
 				return 0;
 			}

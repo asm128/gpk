@@ -112,7 +112,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 					ree_if(-1 == indexOfResolvedSubExpression, "Failed to solve expression: %s.", ::gpk::toString(currentExpressionView).begin());
 					ree_if(indexOfResolvedSubExpression >= 0 && inputJSON.Token[indexOfResolvedSubExpression].Type != ::gpk::JSON_TYPE_INTEGER, "Arrays can only be accessed by index with a json integer. Type found: %s.",::gpk::get_value_label(inputJSON.Token[indexOfResolvedSubExpression].Type).begin());
 					uint64_t				numberRead						= 0;
-					gpk_necs(::gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
+					gpk_necs(gpk::parseIntegerDecimal(viewOfExpressionResult, numberRead));
 					if(currentType == ::gpk::JSON_TYPE_STRING)
 						lastResult.Output	= output = {&inputJSON.View[lastResult.IndexJSONResult][(uint32_t)numberRead], 1};
 					else {
@@ -126,7 +126,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 					int32_t						indexOfResolvedSubExpression			= ::evaluateExpression(results, readerExpression, childToSolve.ObjectIndex, inputJSON, (0 >= lastResult.IndexJSONResult)? lastResult.IndexJSONResult : lastResult.IndexRootJSONNode, viewOfExpressionResult);
 					ree_if(-1 == (lastResult.IndexJSONResult = indexOfResolvedSubExpression), "Failed to solve expression: %s.", ::gpk::toString(currentExpressionView).begin());
 					::gpk::SExpressionReader	reader;
-					gpk_necall(::gpk::expressionReaderParse(reader, viewOfExpressionResult), "Failed to read JSONeN expression: '%s'.", ::gpk::toString(viewOfExpressionResult).begin());
+					gpk_necall(gpk::expressionReaderParse(reader, viewOfExpressionResult), "Failed to read JSONeN expression: '%s'.", ::gpk::toString(viewOfExpressionResult).begin());
 					indexOfResolvedSubExpression	= ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, results, output);
 					lastResult.Output		= output;
 					ree_if(-1 == (lastResult.IndexJSONResult = indexOfResolvedSubExpression), "Failed to evaluate child expression: %s.", ::gpk::toString(viewOfExpressionResult).size());
@@ -285,7 +285,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 
 ::gpk::error_t			gpk::jsonExpressionResolve				(const ::gpk::vcs & expression, const ::gpk::SJSONReader & inputJSON, uint32_t indexNodeJSON, ::gpk::vcc & output)								{
 	::gpk::SExpressionReader	reader;
-	gpk_necall(::gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", ::gpk::toString(expression).begin());
+	gpk_necall(gpk::expressionReaderParse(reader, expression), "Failed to read JSONeN expression: '%s'.", ::gpk::toString(expression).begin());
 	return ::gpk::jsonExpressionResolve(reader, inputJSON, indexNodeJSON, output);
 }
 
@@ -302,17 +302,17 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 	::gpk::apod<::gpk::SStripLiteralType>	typesLiteral				= {};
 	{
 		::gpk::SStripLiteralState	stateLiteralStripper					= {};
-		gpk_necs(::gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format));	// strip root literals
+		gpk_necs(gpk::stripLiteralParse(stateLiteralStripper, typesLiteral, format));	// strip root literals
 	}
 
 	::gpk::aobj<::gpk::vcc>		views									= {};
-	gpk_necs(::gpk::stripLiteralGetViews(views, typesLiteral, format));
+	gpk_necs(gpk::stripLiteralGetViews(views, typesLiteral, format));
 
 	gpk_jexpr_info_printf("-**- %s -**-", "Results of token search");
 	for(uint32_t iView = 0; iView < views.size(); ++iView) {
 		::gpk::vcc					& toResolve								= views[iView];
 		if(::gpk::STRIP_LITERAL_TYPE_TOKEN == typesLiteral[iView].Type)	 // we only have to solve tokens
-			gpk_necall(::gpk::jsonExpressionResolve(toResolve, inputJSON, indexNodeJSON, toResolve), "%%u|Failed to resolve expression: %%.%us.", ::gpk::toString(toResolve).begin());
+			gpk_necall(gpk::jsonExpressionResolve(toResolve, inputJSON, indexNodeJSON, toResolve), "%%u|Failed to resolve expression: %%.%us.", ::gpk::toString(toResolve).begin());
 	}
 
 	for(uint32_t iView = 0; iView < views.size(); ++iView)

@@ -1136,7 +1136,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
 	}
 	::gpk::SPNGIHDR				& imageHeader				= pngData.Header;
 	pngData.Inflated.clear();
-	gpk_necs(::gpk::arrayInflate(pngData.Deflated.cu8(), pngData.Inflated, ::INFLATE_CHUNK_SIZE));
+	gpk_necs(gpk::arrayInflate(pngData.Deflated.cu8(), pngData.Inflated, ::INFLATE_CHUNK_SIZE));
 	::pngFilePrintInfo(pngData);
 
 	uint32_t					bytesPerPixel				= ::pngBytesPerPixel(imageHeader.ColorType, imageHeader.BitDepth);
@@ -1150,40 +1150,40 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= DEFLATE_CHUNK_SIZE;
 
 ::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcs & filename	)	{
 	::gpk::au8					fileInMemory				= {};
-	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	gpk_necs(gpk::fileToMemory(filename, fileInMemory));
 	return ::gpk::pngFileLoad(pngData, fileInMemory);
 }
 
 ::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcu8 &   source, ::gpk::au8 & out_Data) { 
-	gpk_necs(::gpk::pngFileLoad(pngData, source)); 
+	gpk_necs(gpk::pngFileLoad(pngData, source)); 
 	return ::gpk::pngDecode(pngData, out_Data); 
 }
 
 ::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcs  & filename, ::gpk::au8 & out_Data) { 
 	::gpk::au8					fileInMemory				= {};
-	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	gpk_necs(gpk::fileToMemory(filename, fileInMemory));
 	return ::gpk::pngFileLoad(pngData, fileInMemory.cu8(), out_Data);
 }
 
 ::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcu8 &   source, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { 
-	gpk_necs(::gpk::pngFileLoad(pngData, source)); 
+	gpk_necs(gpk::pngFileLoad(pngData, source)); 
 	return ::gpk::pngDecode(pngData, out_Data, out_View); 
 }
 
 ::gpk::error_t	gpk::pngFileLoad(::gpk::SPNGData & pngData, const ::gpk::vcs  & filename, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { 
 	::gpk::au8					fileInMemory				= {};
-	gpk_necs(::gpk::fileToMemory(filename, fileInMemory));
+	gpk_necs(gpk::fileToMemory(filename, fileInMemory));
 	return ::gpk::pngFileLoad(pngData, fileInMemory.cu8(), out_Data, out_View);
 }
 
 ::gpk::error_t			gpk::pngFileLoad			(::gpk::SPNGData & pngData, const ::gpk::vcu8 & source, ::gpk::img8bgra & out_Texture) {
-	gpk_necs(::gpk::pngFileLoad(pngData, source));
+	gpk_necs(gpk::pngFileLoad(pngData, source));
 	gpk_necs(out_Texture.resize(pngData.Header.Size));
 	return ::gpk::pngDecode(pngData, out_Texture.View);
 }
 
 ::gpk::error_t			gpk::pngFileLoad	(::gpk::SPNGData & pngData, const ::gpk::vcs & filename, ::gpk::img8bgra & out_Texture)	{
-	gpk_necall(::gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
+	gpk_necall(gpk::pngFileLoad(pngData, filename), "%s", ::gpk::toString(filename).begin());
 	gpk_necs(out_Texture.resize(pngData.Header.Size));
 	return ::gpk::pngDecode(pngData, out_Texture.View);
 }

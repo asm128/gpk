@@ -82,12 +82,12 @@ namespace gpk
 							case ::gpk::SYSTEM_KEY_Backspace	: 
 								if(Text.size()) {
 									gpk_necs(Text.pop_back());
-									gpk_necs(::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+									gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
 								}
 								break;
 							case ::gpk::SYSTEM_KEY_Clear		: 
 								Text.clear();				
-								gpk_necs(::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
+								gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
 								break;
 							}
 						}

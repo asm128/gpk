@@ -34,7 +34,7 @@ namespace gpk
 	tplt<tpnm _sizeChunk>
 	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u8 & charSize, const ::gpk::vcu8 & base64String)			{
 		::gpk::au8			decoded;
-		gpk_necs(::gpk::base64Decode(base64String, decoded));
+		gpk_necs(gpk::base64Decode(base64String, decoded));
 		return rasterFontLoad(image, charSize, decoded);
 	}
 

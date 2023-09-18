@@ -23,7 +23,7 @@
 			gpk_necs(viewport.IdControls[iElement] = ::gpk::controlCreate(gui));
 			::gpk::SControlConstraints	& controlConstraints	= gui.Controls.Constraints	[viewport.IdControls[iElement]];
 			controlConstraints.AttachSizeToControl.x	= viewport.IdControls[iElement];
-			gpk_necall(::gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), "iElement: %i, viewport.IdControl: %i", iElement, viewport.IdControl);
+			gpk_necall(gpk::controlSetParent(gui, viewport.IdControls[iElement], viewport.IdControl), "iElement: %i, viewport.IdControl: %i", iElement, viewport.IdControl);
 		}
 		for(uint32_t iElement = 0; iElement < VIEWPORT_CONTROL_TITLE; ++iElement) {
 			gui.Controls.Placement  [viewport.IdControls[iElement]].Area.Size			= {16, 16};

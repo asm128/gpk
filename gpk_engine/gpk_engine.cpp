@@ -107,7 +107,7 @@
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Height * .5f, radius}, true, params, ParamsCylinder
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildCylinder(geometry, params));
+			gpk_necs(gpk::geometryBuildCylinder(geometry, params));
 			return 0;
 		});
 }
@@ -122,7 +122,7 @@
 ::gpk::error_t			gpk::SEngine::CreateGrid		(const ::gpk::SParamsGrid & params, ::gpk::vcs entityName)	{ 
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{params.Size.x * .5f, 0, params.Size.y * .5f}, true, params, ParamsGrid
 		, [params](::gpk::SGeometryBuffers & geometry) {
-			gpk_necs(::gpk::geometryBuildGrid(geometry, params));
+			gpk_necs(gpk::geometryBuildGrid(geometry, params));
 			return 0;
 		});
 }
@@ -131,7 +131,7 @@
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
-			gpk_necs(::gpk::geometryBuildHelixHalf(geometry, params));
+			gpk_necs(gpk::geometryBuildHelixHalf(geometry, params));
 			return 0;
 		});
 }
@@ -140,7 +140,7 @@
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
-			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
+			gpk_necs(gpk::geometryBuildHelix(geometry, params));
 			return 0;
 		});
 }
@@ -149,7 +149,7 @@
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
-			gpk_necs(::gpk::geometryBuildHelix(geometry, params));
+			gpk_necs(gpk::geometryBuildHelix(geometry, params));
 			return 0;
 		});
 }
@@ -158,7 +158,7 @@
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Height * .5f, radius}, true, params, ParamsCylinderWall
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildCylinderWall(geometry, params));
+			gpk_necs(gpk::geometryBuildCylinderWall(geometry, params));
 			return 0;
 		});
 }
@@ -167,7 +167,7 @@
 	const float					radius							= params.Radius;
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, 0, radius}, true, params, ParamsCircleSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildCircleSide(geometry, params));
+			gpk_necs(gpk::geometryBuildCircleSide(geometry, params));
 			return 0;
 		});
 }
@@ -176,7 +176,7 @@
 	const float					radius							= params.Radius;
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, 0, radius}, true, params, ParamsDisc
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildDisc(geometry, params));
+			gpk_necs(gpk::geometryBuildDisc(geometry, params));
 			return 0;
 		});
 }
@@ -185,7 +185,7 @@
 	const float					radius							= params.Radius.Max;
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildRingSide(geometry, params));
+			gpk_necs(gpk::geometryBuildRingSide(geometry, params));
 			return 0;
 		});
 }
@@ -193,7 +193,7 @@
 	const float					radius							= params.Radius.Max;
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingFlat
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildRingFlat(geometry, params));
+			gpk_necs(gpk::geometryBuildRingFlat(geometry, params));
 			return 0;
 		});
 }
@@ -202,7 +202,7 @@
 	const float					radius							= ::gpk::max(params.RadiusYMax.Max, params.RadiusYMin.Max);
 	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsTube
 		, [params](::gpk::SGeometryBuffers & geometry) { 
-			gpk_necs(::gpk::geometryBuildRing(geometry, params));
+			gpk_necs(gpk::geometryBuildRing(geometry, params));
 			return 0;
 		});
 }
@@ -216,7 +216,7 @@
 
 	index					= Scene->Graphics->Surfaces.Create(::gpk::label(filePath));
 	::gpk::pobj<::gpk::SSurface>	& surface					= Scene->Graphics->Surfaces[index];
-	gpk_necs(::gpk::pngFileLoad(PNGCache, filePath, surface->Data));
+	gpk_necs(gpk::pngFileLoad(PNGCache, filePath, surface->Data));
 	surface->Desc.Dimensions	= PNGCache.Header.Size.u16();
 	surface->Desc.BitDepth		= PNGCache.Header.BitDepth;
 	surface->Desc.ColorType		= PNGCache.Header.ColorType;

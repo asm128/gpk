@@ -216,7 +216,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 	for(uint32_t iFont = 0; iFont < g_managedFonts.Fonts.size(); ++iFont)
 		gui.Fonts[iFont] = g_managedFonts.Fonts[iFont];
 
-	gpk_necs(::gpk::guiUpdateMetrics(gui, gui.LastSize, true));
+	gpk_necs(gpk::guiUpdateMetrics(gui, gui.LastSize, true));
 	return 0;
 }
 
@@ -239,7 +239,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 }
 
 ::gpk::error_t			gpk::controlDelete		(::gpk::SGUI & gui, cid_t iControl, bool recursive)			{
-	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	gpk_necall(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	info_printf("Deleting control id: %i.", iControl);
 	if(recursive) { // Delete children first.
 		::gpk::acid					children				= gui.Controls.Children[iControl];
@@ -272,7 +272,7 @@ static	::gpk::error_t	setupDefaultFontTexture	(::gpk::SGUI & gui)			{
 }
 
 ::gpk::error_t			gpk::controlSetParent	(::gpk::SGUI & gui, cid_t iControl, cid_t iParent)	{
-	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	gpk_necall(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	const ::gpk::cid_t			oldParent				= gui.Controls.States[iControl].Parent;
 	::gpk::SControlState		& control				= gui.Controls.States[iControl];
 	if(control.Parent == iParent)	// Exit early if there is nothing to do here.
@@ -349,7 +349,7 @@ static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControlPlacement & con
 }
 
 static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iControl, const ::gpk::n2<uint16_t> & _targetSize)					{
-	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	gpk_necall(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 
 	::gpk::SControlState		& controlState			= gui.Controls.States[iControl];
 	const ::gpk::SControlPlacement	& controlPlacement	= gui.Controls.Placement[iControl];
@@ -400,7 +400,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 
 	const ::gpk::rectcid		& dockToControl			= controlConstraints.DockToControl;
 	if(dockToControl.Right != -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
+		gpk_necall(gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u16(), true);
 		const ::gpk::SControlPlacement	& other				= gui.Controls.Placement[dockToControl.Right];
 		const ::gpk::SControlArea		& otherMetrics		= gui.Controls.Area	[dockToControl.Right];
@@ -421,7 +421,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		}
 	}
 	if(dockToControl.Bottom != -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Bottom), "Invalid control id: %i.", dockToControl.Bottom);
+		gpk_necall(gpk::controlInvalid(gui, dockToControl.Bottom), "Invalid control id: %i.", dockToControl.Bottom);
 		const ::gpk::SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Bottom];
 		const ::gpk::SControlArea		& otherMetrics			= gui.Controls.Area[dockToControl.Bottom	];
 		if(::gpk::bit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && ::gpk::bit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
@@ -433,7 +433,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		}
 	}
 	if(dockToControl.Left != -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Left), "Invalid control id: %i.", dockToControl.Left);
+		gpk_necall(gpk::controlInvalid(gui, dockToControl.Left), "Invalid control id: %i.", dockToControl.Left);
 		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Left, targetSize, true);
 		const ::gpk::SControlPlacement	& other			= gui.Controls.Placement[dockToControl.Left];
 		const ::gpk::SControlArea		& otherMetrics	= gui.Controls.Area	[dockToControl.Left];
@@ -447,7 +447,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		}
 	}
 	if(dockToControl.Top	!= -1) {
-		gpk_necall(::gpk::controlInvalid(gui, dockToControl.Top), "Invalid control id: %i.", dockToControl.Top);
+		gpk_necall(gpk::controlInvalid(gui, dockToControl.Top), "Invalid control id: %i.", dockToControl.Top);
 		const ::gpk::SControlPlacement	& other					= gui.Controls.Placement[dockToControl.Top ];
 		const ::gpk::SControlArea		& otherMetrics			= gui.Controls.Area	[dockToControl.Top ];
 		if(::gpk::bit_true(other.Align, ::gpk::ALIGN_BOTTOM	) && ::gpk::bit_false(other.Align, ::gpk::ALIGN_VCENTER)) {
@@ -478,14 +478,14 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 
 	::gpk::vcid					& children												= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0; iChild < children.size(); ++iChild)
-		gpk_necall(::gpk::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize, forceUpdate), "Failed to update metrics for control %i", children[iChild]);
+		gpk_necall(gpk::controlUpdateMetricsTopToDown(gui, children[iChild], targetSize, forceUpdate), "Failed to update metrics for control %i", children[iChild]);
 	return 0;
 }
 
 ::gpk::error_t			gpk::guiUpdateMetrics									(::gpk::SGUI & gui, const ::gpk::n2<uint16_t> & targetSize, bool forceUpdate)								{
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 		if(::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent) && false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl))
-			gpk_necall(::gpk::controlUpdateMetricsTopToDown(gui, (::gpk::cid_t)iControl, targetSize, forceUpdate), "Failed to update metrics for control %i", iControl);
+			gpk_necall(gpk::controlUpdateMetricsTopToDown(gui, (::gpk::cid_t)iControl, targetSize, forceUpdate), "Failed to update metrics for control %i", iControl);
 	return 0;
 }
 
@@ -609,7 +609,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 	gui.Controls.SetUpdated(iControl, false);
 	const ::gpk::vcid			& controlChildren		= gui.Controls.Children[iControl];
 	for(uint32_t iChild = 0, countChild = controlChildren.size(); iChild < countChild; ++iChild)
-		gpk_necall(::gpk::controlMetricsInvalidate(gui, controlChildren[iChild]), "%s", "Invalid child?");
+		gpk_necall(gpk::controlMetricsInvalidate(gui, controlChildren[iChild]), "%s", "Invalid child?");
 
 	return 0;
 }
@@ -626,7 +626,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 
 ::gpk::error_t			gpk::guiProcessControls		(const ::gpk::SGUI & gui, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute) {
 	::gpk::acid					controlsToProcess			= {};
-	gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
+	gpk_necs(gpk::guiGetProcessableControls(gui, controlsToProcess));
 	return guiProcessControls(gui, controlsToProcess, funcOnExecute);
 }
 

@@ -50,7 +50,7 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	::gpk::apod<::gpk::n2u16>	dstCoords;
 	const uint32_t				iFont				= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
-	gpk_necs(::gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
+	gpk_necs(gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
 		const ::gpk::n2u16			dstCoord			= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]	= colorFace;
@@ -181,7 +181,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	return 0;
 }
 ::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
-	gpk_necall(::gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
+	gpk_necall(gpk::controlInvalid(gui, iControl), "Invalid control id: %u.", iControl);
 	if(gui.LastSize != target.metrics16()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
@@ -191,7 +191,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		gpk_necs(::actualControlDraw(gui, iControl, target));
 		::gpk::vccid				children						= gui.Controls.Children[iControl];
 		for(uint32_t iChild = 0, countChild = children.size(); iChild < countChild; ++iChild)
-			gpk_necs(::gpk::controlDrawHierarchy(gui, children[iChild], target));
+			gpk_necs(gpk::controlDrawHierarchy(gui, children[iChild], target));
 	}
 	return 0;
 }
@@ -202,7 +202,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		gui.LastSize			= target.metrics().u16();
 		gui.LastZoom			= gui.Zoom;
 	}
-	gpk_necs(::gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
+	gpk_necs(gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 		if(false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
 			es_if(errored(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));

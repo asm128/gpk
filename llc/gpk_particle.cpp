@@ -24,9 +24,9 @@
 }
 
 ::gpk::error_t			gpk::SParticles3::Save(::gpk::au8 & output) const { 
-	gpk_necs(::gpk::saveView(output, Position	)); 
-	gpk_necs(::gpk::saveView(output, Direction	)); 
-	gpk_necs(::gpk::saveView(output, Speed		)); 
+	gpk_necs(gpk::saveView(output, Position	)); 
+	gpk_necs(gpk::saveView(output, Direction	)); 
+	gpk_necs(gpk::saveView(output, Speed		)); 
 	info_printf("Saved %s, %i", "Position	", Position		.size()); 
 	info_printf("Saved %s, %i", "Direction	", Direction	.size()); 
 	info_printf("Saved %s, %i", "Speed		", Speed		.size()); 
@@ -34,8 +34,8 @@
 }
 
 ::gpk::error_t			gpk::SParticles3::Load(::gpk::vcu8 & input) { 
-	gpk_necs(::gpk::loadView(input, Position	));
-	gpk_necs(::gpk::loadView(input, Direction	));
-	gpk_necs(::gpk::loadView(input, Speed		));
+	gpk_necs(gpk::loadView(input, Position	));
+	gpk_necs(gpk::loadView(input, Direction	));
+	gpk_necs(gpk::loadView(input, Speed		));
 	return 0;
 }

@@ -12,7 +12,7 @@
 	gui.Controls.States		[controlId].Mask				&= ~::gpk::GUI_CONTROL_FLAG_Hovered;
 
 	if(parent != ::gpk::CID_INVALID)
-		gpk_necs(::gpk::controlSetParent(gui, controlId, parent));
+		gpk_necs(gpk::controlSetParent(gui, controlId, parent));
 
 	return controlId;
 }
@@ -80,7 +80,7 @@
 
 ::gpk::error_t			gpk::controlListPush	(::gpk::SGUI & gui, ::gpk::SControlList& menu, const ::gpk::vcs& text, int64_t eventCode)				{
 	if(menu.IdControl == -1)
-		gpk_necs(::gpk::controlListInitialize(gui, menu));
+		gpk_necs(gpk::controlListInitialize(gui, menu));
 
 	const cid_t					idControl				= ::gpk::controlCreate(gui);
 	gpk_necall(idControl, "%s", "Failed to create control! Out of memory?");
@@ -162,7 +162,7 @@
 		controlDraw.ColorTheme	= int8_t(themeIndex + 1);
 		control.Area.Offset		= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
 		control.Area.Size		= controlSize.i16();
-		gpk_necs(::gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
+		gpk_necs(gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
 	}
 	return 0;
 }
@@ -207,7 +207,7 @@
 				itemConstraints.DockToControl.Bottom	= out_ids[iButton - 1];
 
 		}
-		gpk_necall(::gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a tplt and macro for this pattern
+		gpk_necall(gpk::controlSetParent(gui, idControl, iParent), "idControl: %i, buttonText[iButton]: %s", idControl, ::gpk::toString(buttonText[iButton]).begin()); // Make a tplt and macro for this pattern
 	}
 	return result;
 }

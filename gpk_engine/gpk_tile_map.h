@@ -23,14 +23,14 @@ namespace gpk
 		::gpk::tilegrid			Tiles;
 
 		::gpk::error_t			Save				(::gpk::au8 & output)	const	{ 
-			gpk_necs(::gpk::saveView (output, Flags)); 
-			gpk_necs(::gpk::saveImage(output, Tiles.View)); 
+			gpk_necs(gpk::saveView (output, Flags)); 
+			gpk_necs(gpk::saveImage(output, Tiles.View)); 
 			return 0;
 		}
 
 		::gpk::error_t			Load				(::gpk::vcu8 & input)	{ 
-			gpk_necs(::gpk::loadView (input, Flags )); 
-			gpk_necs(::gpk::loadImage(input, Tiles)); 
+			gpk_necs(gpk::loadView (input, Flags )); 
+			gpk_necs(gpk::loadImage(input, Tiles)); 
 			return 0;
 		}
 	};
@@ -50,21 +50,21 @@ namespace gpk
 		::gpk::apobj<STileBlock>	Blocks;	// 
 	
 		::gpk::error_t			Save				(::gpk::au8 & output)	const	{ 
-			gpk_necs(::gpk::savePOD (output, Config)); 
-			gpk_necs(::gpk::saveView(output, Coords)); 
-			gpk_necs(::gpk::saveView(output, Stamps)); 
-			gpk_necs(::gpk::savePOD (output, Blocks.size())); 
+			gpk_necs(gpk::savePOD (output, Config)); 
+			gpk_necs(gpk::saveView(output, Coords)); 
+			gpk_necs(gpk::saveView(output, Stamps)); 
+			gpk_necs(gpk::savePOD (output, Blocks.size())); 
 			for(uint32_t iMap = 0; iMap < Blocks.size(); ++iMap) {
 				gpk_necs(Blocks[iMap] ? Blocks[iMap]->Save(output) : STileBlock{}.Save(output));
 			}
 			return 0; 
 		}
 		::gpk::error_t			Load				(::gpk::vcu8 & input) { 
-			gpk_necs(::gpk::loadPOD (input, Config)); 
-			gpk_necs(::gpk::loadView(input, Coords)); 
-			gpk_necs(::gpk::loadView(input, Stamps)); 
+			gpk_necs(gpk::loadPOD (input, Config)); 
+			gpk_necs(gpk::loadView(input, Coords)); 
+			gpk_necs(gpk::loadView(input, Stamps)); 
 			uint32_t					blockCount			= {};
-			gpk_necs(::gpk::loadPOD (input, blockCount)); 
+			gpk_necs(gpk::loadPOD (input, blockCount)); 
 			gpk_necs(Blocks.reserve(blockCount));
 			for(uint32_t iMap = 0; iMap < blockCount; ++iMap) {
 				::gpk::pobj<STileBlock>		block;

@@ -15,18 +15,18 @@ namespace gpk
 	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		::gpk::error_t						clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
 		::gpk::error_t						Save						(::gpk::au8 & output)	const	{
-			gpk_necs(::gpk::saveView(output, RemainingSpace));
+			gpk_necs(gpk::saveView(output, RemainingSpace));
 			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
-				gpk_necs(::gpk::saveView(output, *Blocks[iArray]));
+				gpk_necs(gpk::saveView(output, *Blocks[iArray]));
 			return 0;
 		}
 
 		::gpk::error_t						Load						(::gpk::vcu8 & input)			{
 			clear();
-			gpk_necs(::gpk::loadView(input, RemainingSpace));
+			gpk_necs(gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
 			for(uint32_t iArray = 0; iArray < Blocks.size(); ++iArray)
-				gpk_necs(::gpk::loadView(input, Blocks[iArray]->Storage));
+				gpk_necs(gpk::loadView(input, Blocks[iArray]->Storage));
 			return 0;
 		}
 

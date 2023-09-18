@@ -147,7 +147,7 @@ namespace gpk
 			::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4);
 	stainli	::gpk::error_t	tcpipAddress		(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)							{
 		address.Port			= portRequested;
-		gpk_necs(::gpk::tcpipAddress(portRequested, adapterIndex, mode, address.IP));
+		gpk_necs(gpk::tcpipAddress(portRequested, adapterIndex, mode, address.IP));
 		return 0;
 	}
 	stainli	::gpk::error_t	tcpipAddress		(const char * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{

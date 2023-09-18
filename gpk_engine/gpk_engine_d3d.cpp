@@ -101,7 +101,7 @@
 		char											shaderFileName	[1024]	= {};
 		sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 		::gpk::apod<int8_t>						filePS;
-		gpk_necs(::gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
+		gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));
 
 		::gpk::ptr_com<ID3D11PixelShader>				pixelShader;
 		gpk_hrcall(pDevice->CreatePixelShader(&filePS[0], filePS.size(), nullptr, &pixelShader));

@@ -42,13 +42,13 @@ static	::gpk::error_t	hexFromByte		(uint8_t i, char * hexed)																{
 
 static	::gpk::error_t	hexToByte		(const char* s, uint8_t & byte)															{
 	char						temp [3]						= {s[0], s[1]};
-	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
+	gpk_necs(gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
 	return 0;
 }
 
 static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	char						temp [3]						= {s[0], s[1]};
-	gpk_necs(::gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
+	gpk_necs(gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
 	return 0;
 }
 

@@ -75,25 +75,25 @@ namespace gpk
 
 		::gpk::error_t				Save				(::gpk::au8 & output)	const	{ 
 			gpk_necs(Particles.Save(output));
-			gpk_necs(::gpk::saveView(output, PositionDraw	));
-			gpk_necs(::gpk::saveView(output, PositionPrev	));
-			gpk_necs(::gpk::saveView(output, Brightness		));
-			gpk_necs(::gpk::saveView(output, Lifetime		));
+			gpk_necs(gpk::saveView(output, PositionDraw	));
+			gpk_necs(gpk::saveView(output, PositionPrev	));
+			gpk_necs(gpk::saveView(output, Brightness		));
+			gpk_necs(gpk::saveView(output, Lifetime		));
 			for(uint32_t iParticle = 0; iParticle < Particles.Position.size(); ++iParticle) 
-				gpk_necs(::gpk::saveView(output, DistanceToTargets[iParticle]));
+				gpk_necs(gpk::saveView(output, DistanceToTargets[iParticle]));
 			
 			return 0; 
 		}
 
 		::gpk::error_t				Load				(::gpk::vcu8 & input)			{ 
 			gpk_necs(Particles.Load(input));
-			gpk_necs(::gpk::loadView(input, PositionPrev	));
-			gpk_necs(::gpk::loadView(input, PositionDraw	));
-			gpk_necs(::gpk::loadView(input, Brightness		));
-			gpk_necs(::gpk::loadView(input, Lifetime		));
+			gpk_necs(gpk::loadView(input, PositionPrev	));
+			gpk_necs(gpk::loadView(input, PositionDraw	));
+			gpk_necs(gpk::loadView(input, Brightness		));
+			gpk_necs(gpk::loadView(input, Lifetime		));
 			gpk_necs(DistanceToTargets.resize(Particles.Position.size()));
 			for(uint32_t iParticle = 0; iParticle < DistanceToTargets.size(); ++iParticle)
-				gpk_necs(::gpk::loadView(input, DistanceToTargets[iParticle]));
+				gpk_necs(gpk::loadView(input, DistanceToTargets[iParticle]));
 
 			return 0;
 		}
@@ -253,24 +253,24 @@ namespace gpk
 
 		int32_t						Clear					()		{ ::gpk::clear(Weapons, Shots, WeaponTargets); return 0; }
 		::gpk::error_t				Save					(::gpk::au8 & output)	const	{ 
-			gpk_necs(::gpk::saveView(output, Weapons));
+			gpk_necs(gpk::saveView(output, Weapons));
 			info_printf("Saved %s, %i", "Weapons", Weapons.size());
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
 				if(WeaponTargets[iWeapon] && WeaponTargets[iWeapon]->size())
-					gpk_necall(::gpk::saveView(output, *WeaponTargets[iWeapon]), "iWeapon: %i", iWeapon);
+					gpk_necall(gpk::saveView(output, *WeaponTargets[iWeapon]), "iWeapon: %i", iWeapon);
 				else
-					gpk_necall(::gpk::saveView(output, ::gpk::vc3f32{}), "iWeapon: %i", iWeapon);
+					gpk_necall(gpk::saveView(output, ::gpk::vc3f32{}), "iWeapon: %i", iWeapon);
 				gpk_necall(Shots[iWeapon].Save(output), "iWeapon: %i", iWeapon);
 			}
 			return 0;
 		}
 		::gpk::error_t				Load				(::gpk::vcu8 & input) { 
 			Weapons.clear();
-			gpk_necs(::gpk::loadView(input, Weapons));
+			gpk_necs(gpk::loadView(input, Weapons));
 			Shots.resize(Weapons.size());
 			gpk_necs(WeaponTargets.reserve(Weapons.size()));
 			for(uint32_t iWeapon = 0; iWeapon < Weapons.size(); ++iWeapon) {
-				gpk_necs(::gpk::loadView(input, WeaponTargets, iWeapon));
+				gpk_necs(gpk::loadView(input, WeaponTargets, iWeapon));
 				gpk_necall(Shots[iWeapon].Load(input), "iWeapon: %i", iWeapon);
 			}
 			return 0;

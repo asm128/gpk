@@ -144,7 +144,7 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc
 			iEnd		= iOffset;
 		}
 		if(0 == strRemotePort.size() && iOffset < strRemoteIP.size()) {
-			gpk_necs(::gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
+			gpk_necs(gpk::parseIntegerDecimal({&strRemoteIP[iOffset], strRemoteIP.size() - iOffset}, remoteIP.Port));
 		}
 	}
 	return 0;

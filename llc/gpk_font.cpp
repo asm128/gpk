@@ -20,7 +20,7 @@
 	for(uint32_t iFont = 0; iFont < ::gpk::size(fontsDefault); ++iFont) {
 		gpk::po<::gpk::SRasterFont>	& loadedFont			= manager.Fonts[manager.Fonts.push_back({})];
 		loadedFont->CharSize	= fontsDefault[iFont].CharSize;
-		gpk_necs(::gpk::rasterFontLoadB64(loadedFont->Texture, loadedFont->CharSize, fontsDefault[iFont].Base64String));
+		gpk_necs(gpk::rasterFontLoadB64(loadedFont->Texture, loadedFont->CharSize, fontsDefault[iFont].Base64String));
 	}
 	return 0;
 }

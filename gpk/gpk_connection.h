@@ -141,7 +141,7 @@ namespace gpk
 		_tEvent									eventReceived				= {};
 		for(uint32_t iClient = 0; iClient < queueReceived.size(); ++iClient) {
 			 const ::gpk::apobj<::gpk::SUDPMessage>	& clientQueue				= queueReceived[iClient];
-			 gpk_necs(::gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
+			 gpk_necs(gpk::processUDPClientQueueEvents(eventReceived, iClient, clientQueue, state, funcProcessRequest));
 		}
 		return 0;
 	}

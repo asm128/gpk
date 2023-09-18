@@ -101,7 +101,7 @@ namespace gpk
 	tplt<tpnm _tPOD> 
 	::gpk::error_t			loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
-		gpk_necall(::gpk::loadView(input, viewToLoad), "index: %i", index);
+		gpk_necall(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
 			if(index >= output.size()) 
 				gpk_necall(output.resize(index + 1), "index: %i", index);
@@ -164,12 +164,12 @@ namespace gpk
 
 
 		::gpk::error_t				Save				(::gpk::au8 & output)	const	{ 
-			gpk_necs(::gpk::saveView(output, ShipScores	));
-			gpk_necs(::gpk::saveView(output, ShipCores	));
+			gpk_necs(gpk::saveView(output, ShipScores	));
+			gpk_necs(gpk::saveView(output, ShipCores	));
 			uint32_t						totalEntityChildren	= 0;
 			for(uint32_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
 				::gpk::vcu16					v		{ShipParts[iShipCore]};
-				gpk_necall(::gpk::saveView(output, v), "iPart: %i", iShipCore);
+				gpk_necall(gpk::saveView(output, v), "iPart: %i", iShipCore);
 				totalEntityChildren += v.size();
 			}
 
@@ -177,30 +177,30 @@ namespace gpk
 			info_printf("Saved %s, %i", "ShipCores	", ShipCores	.size());
 	
 			// Orbiters
-			gpk_necs(::gpk::saveView(output, Orbiters));
+			gpk_necs(gpk::saveView(output, Orbiters));
 			info_printf("Saved %s, %i", "Orbiters", Orbiters.size());
 			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
 				if(ShipOrbiterActionQueue[iShipOrbiter] && ShipOrbiterActionQueue[iShipOrbiter]->size())
-					gpk_necall(::gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
+					gpk_necall(gpk::saveView(output, *ShipOrbiterActionQueue[iShipOrbiter]), "iShipOrbiter: %i", iShipOrbiter);
 				else
-					gpk_necall(::gpk::saveView(output, ::gpk::vc3f32{}), "iShipOrbiter: %i", iShipOrbiter);
+					gpk_necall(gpk::saveView(output, ::gpk::vc3f32{}), "iShipOrbiter: %i", iShipOrbiter);
 			}
 			return 0; 
 		}
 		::gpk::error_t				Load				(::gpk::vcu8 & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
-			gpk_necs(::gpk::loadView(input, ShipScores	));
-			gpk_necs(::gpk::loadView(input, ShipCores	));
+			gpk_necs(gpk::loadView(input, ShipScores	));
+			gpk_necs(gpk::loadView(input, ShipCores	));
 			gpk_necs(ShipParts.resize(ShipCores.size()));
 			for(uint32_t iPart = 0; iPart < ShipParts.size(); ++iPart) 
-				gpk_necall(::gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
+				gpk_necall(gpk::loadView(input, ShipParts[iPart]), "iPart: %i", iPart);
 
 			Orbiters.clear();
-			gpk_necs(::gpk::loadView(input, Orbiters));
+			gpk_necs(gpk::loadView(input, Orbiters));
 			gpk_necs(ShipOrbiterActionQueue.reserve(Orbiters.size()));
 			for(uint32_t iShipOrbiter = 0; iShipOrbiter < Orbiters.size(); ++iShipOrbiter) {
-				gpk_necs(::gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
+				gpk_necs(gpk::loadView(input, ShipOrbiterActionQueue, iShipOrbiter));
 			}
 			return 0; 
 		}

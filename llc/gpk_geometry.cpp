@@ -220,7 +220,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 
 ::gpk::error_t			gpk::geometryBuildHelix		(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsHelix & params)	{
 	const uint32_t				vertexOffset				= geometry.Positions.size();
-	gpk_necs(::gpk::geometryBuildHelixHalf(geometry, params));
+	gpk_necs(gpk::geometryBuildHelixHalf(geometry, params));
 	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
 	gpk_necs(geometry.TextureCoords	.append({&geometry.TextureCoords[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Positions		.append({&geometry.Positions	[vertexOffset], vertexCount}));
@@ -233,7 +233,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 ::gpk::error_t			gpk::geometryBuildRingSide	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
 	const uint32_t				vertexOffset				= geometry.Positions.size();
 	::gpk::SParamsGrid			paramsGrid					= {{}, {params.Slices, 1}, params.Reverse};
-	gpk_necall(::gpk::geometryBuildGrid(geometry, paramsGrid), "params.Slices: %i", params.Slices);
+	gpk_necall(gpk::geometryBuildGrid(geometry, paramsGrid), "params.Slices: %i", params.Slices);
 	const uint32_t				vertexCount					= geometry.Positions.size() - vertexOffset;
 	const double				sliceScale					= ::gpk::math_2pi * params.Circumference;
 	geometry.Positions.enumerate([sliceScale, params, &geometry](const uint32_t & index, const ::gpk::n3f32 & position) {
@@ -251,18 +251,18 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 }
 
 ::gpk::error_t			gpk::geometryBuildRingFlat	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
-	gpk_necs(::gpk::geometryBuildRingSide(geometry, params));
+	gpk_necs(gpk::geometryBuildRingSide(geometry, params));
 	::gpk::SParamsRingSide		paramsSide					= params;
 	paramsSide.Reverse		= true;
-	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
+	gpk_necs(gpk::geometryBuildRingSide(geometry, paramsSide));
 	return 0;
 }
 
 ::gpk::error_t			gpk::geometryBuildDisc(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsDisc & params) {
 	::gpk::SParamsCircle		paramsSide					= params;
-	gpk_necs(::gpk::geometryBuildCircleSide(geometry, params));
+	gpk_necs(gpk::geometryBuildCircleSide(geometry, params));
 	paramsSide.Reverse		= true;
-	gpk_necs(::gpk::geometryBuildCircleSide(geometry, paramsSide));
+	gpk_necs(gpk::geometryBuildCircleSide(geometry, paramsSide));
 	return 0;
 }
 
@@ -274,7 +274,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	paramsSide.Reverse		= !params.Reverse;	// looking down
 	paramsSide.Circumference= params.Circumference;
 	paramsSide.Orientation	= params.Orientation;
-	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
+	gpk_necs(gpk::geometryBuildRingSide(geometry, paramsSide));
 	{
 		::gpk::SParamsCylinderWall	paramsWall					= {};
 		paramsWall.Origin		= params.Origin;
@@ -284,17 +284,17 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 		paramsWall.Height		= params.Height;
 		paramsWall.Orientation	= params.Orientation;
 		paramsWall.Reverse		= params.Reverse;
-		gpk_necs(::gpk::geometryBuildCylinderWall(geometry, paramsWall));
+		gpk_necs(gpk::geometryBuildCylinderWall(geometry, paramsWall));
 		////
 		paramsWall.Radius		= {params.RadiusYMin.Min, params.RadiusYMax.Min};
 		paramsWall.Reverse		= !paramsWall.Reverse;
-		gpk_necs(::gpk::geometryBuildCylinderWall(geometry, paramsWall));
+		gpk_necs(gpk::geometryBuildCylinderWall(geometry, paramsWall));
 	}
 	//
 	paramsSide.Origin.y		-= params.Height;
 	paramsSide.Radius		= params.RadiusYMax;
 	paramsSide.Reverse		= !paramsSide.Reverse;	// looking up
-	gpk_necs(::gpk::geometryBuildRingSide(geometry, paramsSide));
+	gpk_necs(gpk::geometryBuildRingSide(geometry, paramsSide));
 	return 0;
 }
 
@@ -304,14 +304,14 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	cap.Radius				= params.Radius.Min;
 	cap.Reverse				= !params.Reverse;
 	cap.Orientation			= params.Orientation;
-	gpk_necs(::gpk::geometryBuildCircleSide(geometry, cap));
+	gpk_necs(gpk::geometryBuildCircleSide(geometry, cap));
 
-	gpk_necs(::gpk::geometryBuildCylinderWall(geometry, params));
+	gpk_necs(gpk::geometryBuildCylinderWall(geometry, params));
 
 	cap.Reverse				= !cap.Reverse;
 	cap.Radius				= params.Radius.Max;
 	cap.Origin.y			-= params.Height;
-	gpk_necs(::gpk::geometryBuildCircleSide(geometry, cap));
+	gpk_necs(gpk::geometryBuildCircleSide(geometry, cap));
 	return 0;
 }
 

@@ -73,23 +73,23 @@ namespace gpk
 		newBlock.create();
 		::gpk::error_t					indexBlock					= mapTable.Block.push_back(newBlock);
 		gpk_necs(mapTable.Id.push_back(indexMap.IdBlock));
-		gpk_necall(::gpk::fileToMemorySecure(loadedBytes, fileName, mapTable.BlockConfig.Key, mapTable.BlockConfig.Deflate), "Failed to load block file: %s.", ::gpk::toString(fileName).begin());
+		gpk_necall(gpk::fileToMemorySecure(loadedBytes, fileName, mapTable.BlockConfig.Key, mapTable.BlockConfig.Deflate), "Failed to load block file: %s.", ::gpk::toString(fileName).begin());
 		return indexBlock;
 	}
 
 	tplt<tpnm _tElement>
 	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath, uint64_t idRecord)								{
 		::gpk::apod<char>				fileName					= {};
-		gpk_necs(::gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
+		gpk_necs(gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	tplt<tpnm _tElement>
 	::gpk::error_t				blockMapSave				(const ::gpk::vcu8 & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)								{
 		::gpk::ac						finalPath					= {};
-		gpk_necs(::gpk::blockFilePath(finalPath, dbName, dbPath));
+		gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
 		::gpk::ac						fileName					= {};
-		gpk_necs(::gpk::blockFileName(fileName, indexMap.IdBlock, dbName, finalPath));
+		gpk_necs(gpk::blockFileName(fileName, indexMap.IdBlock, dbName, finalPath));
 		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
 
@@ -198,7 +198,7 @@ namespace gpk
 			::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 			::gpk::apod<char>				bytesToWrite;
 			gpk_necs(newBlock->Save(bytesToWrite));
-			gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
+			gpk_necall(gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
 			return newIdRecord;
 		}
 		for(uint32_t iBlock = 0, countBlocks = mapTable.Block.size(); iBlock < countBlocks; ++iBlock) {
@@ -212,7 +212,7 @@ namespace gpk
 				::gpk::blockRecordId(newIndices, mapTable.BlockConfig.BlockSize, newIdRecord);
 				::gpk::apod<char>				bytesToWrite;
 				gpk_necs(blockInMemory.Save(bytesToWrite));
-				gpk_necall(::gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
+				gpk_necall(gpk::blockMapSave(bytesToWrite, newIndices, mapTable, mapTable.DBName, dbPath), "Failed to add record! Disk full? %s. %s.", ::gpk::toString(mapTable.DBName).begin(), ::gpk::toString(dbPath).begin());
 				return newIdRecord;
 			}
 		}

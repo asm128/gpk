@@ -46,17 +46,17 @@ namespace gpk
 		::gpk::apod<::gpk::SGeometrySlice>	GeometrySlices;
 
 		::gpk::error_t						Save			(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::savePOD(output, Desc));
-			gpk_necs(::gpk::saveView(output, GeometryBuffers));
-			gpk_necs(::gpk::saveView(output, ConstantBuffers));
-			gpk_necs(::gpk::saveView(output, GeometrySlices));
+			gpk_necs(gpk::savePOD(output, Desc));
+			gpk_necs(gpk::saveView(output, GeometryBuffers));
+			gpk_necs(gpk::saveView(output, ConstantBuffers));
+			gpk_necs(gpk::saveView(output, GeometrySlices));
 			return 0;
 		}
 		::gpk::error_t						Load			(::gpk::vcu8 & input) {
-			gpk_necs(::gpk::loadPOD(input, Desc));
-			gpk_necs(::gpk::loadView(input, GeometryBuffers));
-			gpk_necs(::gpk::loadView(input, ConstantBuffers));
-			gpk_necs(::gpk::loadView(input, GeometrySlices));
+			gpk_necs(gpk::loadPOD(input, Desc));
+			gpk_necs(gpk::loadView(input, GeometryBuffers));
+			gpk_necs(gpk::loadView(input, ConstantBuffers));
+			gpk_necs(gpk::loadView(input, GeometrySlices));
 			return 0;
 		}
 	};	

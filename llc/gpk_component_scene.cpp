@@ -7,7 +7,7 @@
 tplt<tpnm _tNumber>
 static	::gpk::error_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, _tNumber & out_value){
 	readerCache								= {};
-	gpk_necs(::gpk::jsonParse(readerCache, in_string));
+	gpk_necs(gpk::jsonParse(readerCache, in_string));
 	const ::gpk::SJSONToken						& jsonValue				= *readerCache[1]->Token;
 	if(readerCache[1]->Token->Type == ::gpk::JSON_TYPE_INTEGER) {
 		out_value								= (_tNumber)jsonValue.Value; }
@@ -148,7 +148,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 
 static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcc filename)  {
 	::gpk::apod<char>							rawObj					= {};
-	gpk_necall(::gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
+	gpk_necall(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
 
@@ -295,7 +295,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 	stacxpr	::gpk::vcc						str_obj					= {4, ".obj"};
 	if(ext_lwr == str_stl) {
 		::gpk::SSTLFile							stlFile					= {};
-		gpk_necall(::gpk::stlFileLoad(filename, stlFile), "Failed to load file '%s'.", ::gpk::toString(filename).begin());
+		gpk_necall(gpk::stlFileLoad(filename, stlFile), "Failed to load file '%s'.", ::gpk::toString(filename).begin());
 		return ::createFromSTL(*this, stlFile, filename);
 	}
 	else if(ext_lwr == str_obj) {

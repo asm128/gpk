@@ -122,8 +122,8 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 
 ::gpk::error_t			gpk::folderUnpack			(::gpk::SFolderInMemory & out_loaded, const ::gpk::vcs nameFileSrc)					{
 	::gpk::au8					rawFileInMemory				= {};
-	gpk_necall(::gpk::fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %s.", nameFileSrc);
-	gpk_necall(::gpk::folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %s.", nameFileSrc);
+	gpk_necall(gpk::fileToMemory(nameFileSrc, rawFileInMemory), "Failed to load pak file: %s.", nameFileSrc);
+	gpk_necall(gpk::folderUnpack(out_loaded, rawFileInMemory), "Failed to unpack pak file: %s.", nameFileSrc);
 	return 0;
 }
 
@@ -152,15 +152,15 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	::gpk::au8					tableFiles				;
 	::gpk::au8					contentsPacked			;
 
-	gpk_necs(::gpk::folderLoad(nameFolderSrc, tableFiles, contentsPacked));
+	gpk_necs(gpk::folderLoad(nameFolderSrc, tableFiles, contentsPacked));
 
 	fileHeader.SizeUncompressedTableFiles		= tableFiles		.size();
 	fileHeader.SizeUncompressedContentsPacked	= contentsPacked	.size();
 	::gpk::au8					& compressedTableFiles		= output.CompressedTableFiles		;
 	::gpk::au8					& compressedContentsPacked	= output.CompressedContentsPacked	;
 	{	// compress
-		gpk_necall(::gpk::arrayDeflate(tableFiles		, compressedTableFiles		, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
-		gpk_necall(::gpk::arrayDeflate(contentsPacked	, compressedContentsPacked	, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
+		gpk_necall(gpk::arrayDeflate(tableFiles		, compressedTableFiles		, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
+		gpk_necall(gpk::arrayDeflate(contentsPacked	, compressedContentsPacked	, ::DEFLATE_CHUNK_SIZE), "%s", "Unknown error.");
 		fileHeader.SizeCompressedTableFiles		= compressedTableFiles		.size();
 		fileHeader.SizeCompressedContentsPacked	= compressedContentsPacked	.size();
 	}
@@ -174,8 +174,8 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	output.Contents	.resize(header.TotalFileCount);
 	output.DataInfo		.clear();
 	output.DataContents	.clear();
-	gpk_necs(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo		, ::INFLATE_CHUNK_SIZE));
-	gpk_necs(::gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles, header.SizeCompressedContentsPacked	}, output.DataContents	, ::INFLATE_CHUNK_SIZE));
+	gpk_necs(gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader)									, header.SizeCompressedTableFiles		}, output.DataInfo		, ::INFLATE_CHUNK_SIZE));
+	gpk_necs(gpk::arrayInflate({&rawFileInMemory[0] + sizeof(::gpk::SPackHeader) + header.SizeCompressedTableFiles, header.SizeCompressedContentsPacked	}, output.DataContents	, ::INFLATE_CHUNK_SIZE));
 	{ // Build access tables.
 		uint32_t					offsetInfo					= 0;
 		for(uint32_t iFile = 0; iFile < output.Names.size(); ++iFile) {
@@ -200,7 +200,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 	uint32_t					totalFileCount			= 0;
 	{
 		::gpk::aobj<::gpk::ac>		listFiles				= {};
-		gpk_necall(::gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
+		gpk_necall(gpk::pathList(nameFolderSrc, listFiles), "Failed to list folder: %s.", nameFolderSrc.begin());
 
 		::gpk::au8					contentsTemp			= {};
 		::gpk::rangeu32				fileLocation			= {0, 0};
@@ -211,11 +211,11 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 				continue;
 
 			info_printf("pathToLoad (%u): '%s'.", iFile, ::gpk::toString(pathToLoad).begin());
-			gpk_necall(::gpk::fileToMemory(pathToLoad, contentsTemp), "Failed to load file: %s.", ::gpk::toString(pathToLoad).begin());
+			gpk_necall(gpk::fileToMemory(pathToLoad, contentsTemp), "Failed to load file: %s.", ::gpk::toString(pathToLoad).begin());
 
 			fileLocation.Count		= contentsTemp.size();
-			gpk_necs(::gpk::savePOD(tableFiles, fileLocation));
-			gpk_necs(::gpk::saveView(tableFiles, pathToLoad));
+			gpk_necs(gpk::savePOD(tableFiles, fileLocation));
+			gpk_necs(gpk::saveView(tableFiles, pathToLoad));
 			gpk_necall(contentsPacked.append(contentsTemp.begin(), contentsTemp.size())	, "Failed to append data bytes. Buffer sizes:\ntableFiles     : %u.\ncontentsPacked : %u.", tableFiles.size(), contentsPacked.size());
 			contentsTemp.clear();
 
@@ -258,30 +258,30 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 
 ::gpk::error_t			gpk::folderPackToDisk		(const ::gpk::vcs nameFileDst,	const ::gpk::vcs nameFolderSrc)		{
 	::gpk::SFolderPackage		folderPackage;
-	gpk_necall(::gpk::folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %s.", nameFolderSrc.begin());
-	gpk_necall(::gpk::folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %s.", nameFolderSrc.begin());
+	gpk_necall(gpk::folderPack(folderPackage, nameFolderSrc), "Failed to pack folder: %s.", nameFolderSrc.begin());
+	gpk_necall(gpk::folderToDisk(folderPackage, nameFileDst), "Failed to pack folder: %s.", nameFolderSrc.begin());
 	return 0;
 }
 
 ::gpk::error_t			gpk::folderUnpackToDisk		(const ::gpk::vcs namePathDst, const ::gpk::vcs nameFileSrc)		{
 	::gpk::SFolderInMemory		virtualFolder				= {};
-	gpk_necall(::gpk::folderUnpack(virtualFolder, nameFileSrc), "Failed to unpack file: %s.", nameFileSrc);
-	gpk_necall(::gpk::folderToDisk(virtualFolder, namePathDst), "Failed to write folder to disk. Disk full or insufficient permissions. File name: %s. Destionation Path: %s.", nameFileSrc, namePathDst);
+	gpk_necall(gpk::folderUnpack(virtualFolder, nameFileSrc), "Failed to unpack file: %s.", nameFileSrc);
+	gpk_necall(gpk::folderToDisk(virtualFolder, namePathDst), "Failed to write folder to disk. Disk full or insufficient permissions. File name: %s. Destionation Path: %s.", nameFileSrc, namePathDst);
 	return 0;
 }
 
 ::gpk::error_t			gpk::inflateToMemory  		(::gpk::au8 & tempCache, const ::gpk::vcc & fileName, ::gpk::au8 & output) {
-	gpk_necs(::gpk::fileToMemory(fileName, tempCache));
+	gpk_necs(gpk::fileToMemory(fileName, tempCache));
 	info_printf("File size: %u.", tempCache.size());
 
-	gpk_necs(::gpk::arrayInflate(tempCache, output));
+	gpk_necs(gpk::arrayInflate(tempCache, output));
 	info_printf("Inflated size: %u.", output.size());
 	return 0; 
 }
 
 ::gpk::error_t			gpk::deflateFromMemory		(::gpk::au8 & tempCache, const ::gpk::vcc & fileName, const ::gpk::vcu8 & input) {
 	info_printf("Input size: %u.", input.size());
-	gpk_necs(::gpk::arrayDeflate(input, tempCache));
+	gpk_necs(gpk::arrayDeflate(input, tempCache));
 
 	info_printf("Deflated size: %u.", tempCache.size());
 	return ::gpk::fileFromMemory(fileName, tempCache);
@@ -292,35 +292,35 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 		recycle.Encrypted		= blockBytes;
 	else {
 		if(false == deflate)
-			gpk_necall(::gpk::aesEncode(blockBytes, key, ::gpk::AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::aesEncode(blockBytes, key, ::gpk::AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %s.", ::gpk::toString(fileName).begin());
 		else if(0 == key.size())
-			gpk_necall(::gpk::arrayDeflate(blockBytes, recycle.Encrypted), "Failed to deflate file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::arrayDeflate(blockBytes, recycle.Encrypted), "Failed to deflate file: %s.", ::gpk::toString(fileName).begin());
 		else {
-			gpk_necall(::gpk::arrayDeflate(blockBytes, recycle.Deflated), "Failed to deflate file: %s.", ::gpk::toString(fileName).begin());
-			gpk_necall(::gpk::aesEncode(recycle.Deflated, key, ::gpk::AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::arrayDeflate(blockBytes, recycle.Deflated), "Failed to deflate file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::aesEncode(recycle.Deflated, key, ::gpk::AES_LEVEL_256, recycle.Encrypted), "Failed to encrypt file: %s.", ::gpk::toString(fileName).begin());
 		}
 	}
-	gpk_necall(::gpk::crcGenerateAndAppend(recycle.Encrypted), "%s", "CRC Check failed!");
-	gpk_necall(::gpk::fileFromMemory(fileName, recycle.Encrypted), "Failed to save file: %s.", ::gpk::toString(fileName).begin());
+	gpk_necall(gpk::crcGenerateAndAppend(recycle.Encrypted), "%s", "CRC Check failed!");
+	gpk_necall(gpk::fileFromMemory(fileName, recycle.Encrypted), "Failed to save file: %s.", ::gpk::toString(fileName).begin());
 	return 0;
 }
 
 ::gpk::error_t			gpk::fileToMemorySecure		(::gpk::SLoadCache & recycle, const ::gpk::vcc & fileName, const ::gpk::vcu8 & key, const bool deflate, ::gpk::au8 & loadedBytes)								{
 	::gpk::vcs					strFilename					= {fileName.begin(), fileName.size()};
 	if(false == deflate && 0 == key.size()) {
-		gpk_necall(::gpk::fileToMemory(strFilename, loadedBytes), "Failed to read file: %s.", ::gpk::toString(fileName).begin());
-		gpk_necs(::gpk::crcVerifyAndRemove(loadedBytes));
+		gpk_necall(gpk::fileToMemory(strFilename, loadedBytes), "Failed to read file: %s.", ::gpk::toString(fileName).begin());
+		gpk_necs(gpk::crcVerifyAndRemove(loadedBytes));
 	}
 	else {
-		gpk_necall(::gpk::fileToMemory(strFilename, recycle.Encrypted), "Failed to read file: %s.", ::gpk::toString(fileName).begin());
-		gpk_necall(::gpk::crcVerifyAndRemove(recycle.Encrypted), "%s", "CRC Check failed!");
+		gpk_necall(gpk::fileToMemory(strFilename, recycle.Encrypted), "Failed to read file: %s.", ::gpk::toString(fileName).begin());
+		gpk_necall(gpk::crcVerifyAndRemove(recycle.Encrypted), "%s", "CRC Check failed!");
 		if(false == deflate)
-			gpk_necall(::gpk::aesDecode(recycle.Encrypted, key, ::gpk::AES_LEVEL_256, loadedBytes), "Failed to decrypt file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::aesDecode(recycle.Encrypted, key, ::gpk::AES_LEVEL_256, loadedBytes), "Failed to decrypt file: %s.", ::gpk::toString(fileName).begin());
 		else if(0 == key.size())
-			gpk_necall(::gpk::arrayInflate(recycle.Encrypted, loadedBytes), "Failed to inflate file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::arrayInflate(recycle.Encrypted, loadedBytes), "Failed to inflate file: %s.", ::gpk::toString(fileName).begin());
 		else {
-			gpk_necall(::gpk::aesDecode(recycle.Encrypted, key, ::gpk::AES_LEVEL_256, recycle.Deflated), "Failed to decrypt file: %s.", ::gpk::toString(fileName).begin());
-			gpk_necall(::gpk::arrayInflate(recycle.Deflated, loadedBytes), "Failed to inflate file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::aesDecode(recycle.Encrypted, key, ::gpk::AES_LEVEL_256, recycle.Deflated), "Failed to decrypt file: %s.", ::gpk::toString(fileName).begin());
+			gpk_necall(gpk::arrayInflate(recycle.Deflated, loadedBytes), "Failed to inflate file: %s.", ::gpk::toString(fileName).begin());
 		}
 	}
 	return 0;

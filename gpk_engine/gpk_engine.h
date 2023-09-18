@@ -73,7 +73,7 @@ namespace gpk
 			if(Scene)
 				gpk_necs(Scene->Save(output));
 			else 
-				gpk_necs(::gpk::SEngineScene{}.Save(output));
+				gpk_necs(gpk::SEngineScene{}.Save(output));
 
 			gpk_necs(Entities	.Save(output));
 			gpk_necs(Integrator	.Save(output));

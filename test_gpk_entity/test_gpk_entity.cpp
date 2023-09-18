@@ -24,7 +24,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "GPK Entity Test v0.1");
 	app.D3DApp.Shutdown();
 #endif
 
-	gpk_necs(::gpk::mainWindowDestroy(mainWindow));
+	gpk_necs(gpk::mainWindowDestroy(mainWindow));
 	return 0;
 }
 
@@ -83,7 +83,7 @@ static	::gpk::error_t	processSystemEvent		(::SApplication & app, const ::gpk::SE
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::SWindow				& mainWindow			= framework.RootWindow;
 	mainWindow.Size			= {1280, 720};
-	gpk_necs(::gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
+	gpk_necs(gpk::mainWindowCreate(mainWindow, framework.RuntimeValues.PlatformDetail, mainWindow.Input));
 
 	return 0;
 }
@@ -193,15 +193,15 @@ static	::gpk::error_t	sceneDraw
 #if !defined(DISABLE_D3D11) 
 	memset(app.D3DApp.GUIStuff.RenderTarget.begin(), 0, app.D3DApp.GUIStuff.RenderTarget.byte_count());
 	
-	gpk_necs(::gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget));
+	gpk_necs(gpk::guiDraw(*app.Framework.GUI, app.D3DApp.GUIStuff.RenderTarget));
 
-	gpk_necs(::gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, {.01f, 1000.0f}));
+	gpk_necs(gpk::d3dAppDraw(app.D3DApp, engineScene, clearColor, sunlightPos, cameraSelected.Position, cameraSelected.Target, {.01f, 1000.0f}));
 #else 
 	::gpk::SFramework			& framework				= app.Framework;
 	::gpk::prtbgra8d32			backBuffer				= framework.RootWindow.BackBuffer;
 	backBuffer->resize(framework.RootWindow.BackBuffer->Color.metrics(), clearColor, (uint32_t)-1);
 	::sceneDraw(engineScene, app.Engine.Scene->RenderCache, *backBuffer, cameraSelected.Position, cameraSelected.Target, {0, 1}, 0);
-	gpk_necs(::gpk::guiDraw(*app.Framework.GUI, backBuffer->Color));
+	gpk_necs(gpk::guiDraw(*app.Framework.GUI, backBuffer->Color));
 	memcpy(framework.RootWindow.BackBuffer->Color.View.begin(), backBuffer->Color.View.begin(), backBuffer->Color.View.byte_count());
 	//::gpk::grid_mirror_y(framework.RootWindow.BackBuffer->Color.View, backBuffer->Color.View);
 	//framework.RootWindow.BackBuffer		= backBuffer;

@@ -62,7 +62,7 @@
 int						main					() {
 	::gpk::aobj<::gpk::ac>		fontFiles				= {};
 	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
-	gpk_necall(::gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
+	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
 	::gpk::SPNGData				pngCache				= {};
 	::gpk::img8bgra				imageCache				= {};
 	::gpk::img8bgra				imageFixed				= {};

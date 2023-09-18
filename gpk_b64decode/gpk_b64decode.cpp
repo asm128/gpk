@@ -11,11 +11,11 @@ int main(int argc, char** argv) {
 
 	::gpk::au8				in_b64			= {};
 	::gpk::au8				out_data		= {};
-	gpk_necall(::gpk::fileToMemory(in_filename, in_b64), "Failed to load file: %s", in_filename.begin());
-	gpk_necall(::gpk::base64Decode(in_b64, out_data), "Failed to encode file contents! %s.", "Out of memory?");
+	gpk_necall(gpk::fileToMemory(in_filename, in_b64), "Failed to load file: %s", in_filename.begin());
+	gpk_necall(gpk::base64Decode(in_b64, out_data), "Failed to encode file contents! %s.", "Out of memory?");
 
 	::gpk::apod<char>		out_filename	= in_filename;
 	out_filename.append(".b64.decoded");
-	gpk_necall(::gpk::fileFromMemory({out_filename.begin(), out_filename.size()}, out_data), "Failed to save file: %s", out_filename.begin());
+	gpk_necall(gpk::fileFromMemory({out_filename.begin(), out_filename.size()}, out_data), "Failed to save file: %s", out_filename.begin());
 	return 0;
 }

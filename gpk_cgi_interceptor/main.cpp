@@ -231,7 +231,7 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 static int											cgiMain					(int argc, char** argv, char**envv)		{
 	(void)(envv);
 	::gpk::SCGIRuntimeValues								runtimeValues;
-	gpk_necall(::gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::SThreadStateRead										appState;
 	if errored(::cgiBootstrap(runtimeValues, appState)) {
 		printf("%s\r\n", "Content-Type: text/html"

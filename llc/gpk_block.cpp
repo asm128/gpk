@@ -16,8 +16,8 @@
 
 ::gpk::error_t			gpk::blockRecordPath		(::gpk::apod<char> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)	{
 	::gpk::apod<char>					finalPath					= dbPath;
-	gpk_necs(::gpk::blockFilePath(finalPath, dbName, dbPath));
-	gpk_necs(::gpk::blockFileName(fileName, indices.IdBlock, dbName, finalPath));
+	gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
+	gpk_necs(gpk::blockFileName(fileName, indices.IdBlock, dbName, finalPath));
 	return 0;
 }
 

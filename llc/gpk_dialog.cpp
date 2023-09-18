@@ -171,9 +171,9 @@ stacxpr	const uint32_t	heightOfField			= 18;
 	::gpk::vcc					valueString;
 	gpk_necs(slider.FuncValueFormat(valueString, slider.ValueCurrent, slider.ValueLimits));
 	gpk_necs(slider.FuncGetString(valueString, slider.ValueCurrent, slider.ValueLimits));
-	gpk_necs(::gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, valueString));
+	gpk_necs(gpk::controlTextSet(*dialog.GUI, slider.IdGUIControl, valueString));
 	if(updateMetrics)
-		gpk_necs(::gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl));
+		gpk_necs(gpk::controlMetricsInvalidate(*dialog.GUI, slider.IdGUIControl));
 	return 0;
 }
 
@@ -200,7 +200,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 			currentValue.x			*= valueUnit.x;
 			currentValue.y			*= valueUnit.y;
 
-			gpk_necs(::gpk::sliderSetValue(slider, (int64_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min)));
+			gpk_necs(gpk::sliderSetValue(slider, (int64_t)((slider.Vertical ? currentValue.y : currentValue.x) * valueRange + slider.ValueLimits.Min)));
 		}
 	}
 	else
@@ -210,11 +210,11 @@ stacxpr	const uint32_t	heightOfField			= 18;
 			const ::gpk::n2<int16_t>	& controlButtonPosition		= controlTable.Area[slider.IdButton].Total.Global.Offset;
 			if(slider.Vertical) {
 				const int64_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.y > controlButtonPosition.y) ? valuePage : -valuePage);
-				gpk_necs(::gpk::sliderSetValue(slider, finalValue));
+				gpk_necs(gpk::sliderSetValue(slider, finalValue));
 			}
 			else {
 				const int64_t				finalValue					= slider.ValueCurrent + ((input.MouseCurrent.Position.x > controlButtonPosition.x) ? valuePage : -valuePage);
-				gpk_necs(::gpk::sliderSetValue(slider, finalValue));
+				gpk_necs(gpk::sliderSetValue(slider, finalValue));
 			}
 		}
 	return 0;
@@ -299,9 +299,9 @@ stacxpr	const uint32_t	heightOfField			= 18;
 
 		::gpk::SControlState			& controlMain	= controlTable.States[control.IdGUIControl];
 		if(-1 != controlMain.Parent)
-			gpk_necs(::gpk::controlMetricsInvalidate(gui, controlMain.Parent));
+			gpk_necs(gpk::controlMetricsInvalidate(gui, controlMain.Parent));
 		else
-			gpk_necs(::gpk::controlMetricsInvalidate(gui, control.IdGUIControl));
+			gpk_necs(gpk::controlMetricsInvalidate(gui, control.IdGUIControl));
 
 		::gpk::SControlState		& stateClient			= controlTable.States[control.IdClient];
 		stateClient.SetHidden(control.IdClient, controlTable.EventQueue, fold);
@@ -337,7 +337,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	}
 	else {
 		if(controlTitleState.IsAction() && false == control.Settings.Dragging)
-			gpk_necs(::gpk::viewportFold(control, control.Settings.Unfolded));
+			gpk_necs(gpk::viewportFold(control, control.Settings.Unfolded));
 
 		control.Settings.Dragging	= false;
 	}

@@ -113,7 +113,7 @@ namespace gpk
 			if(Client.State == ::gpk::UDP_CONNECTION_STATE_IDLE)
 				return 0;
 			NetworkThread								= ::std::thread([this] { 
-				gpk_necs(::gpk::clientConnect(Client)); 
+				gpk_necs(gpk::clientConnect(Client)); 
 				return ::gpk::controlTextSet(*Dialog.GUI, Dialog.Root + 1, "Connected");
 			});
 			return 0;
@@ -128,18 +128,18 @@ namespace gpk
 			switch(Client.State) {
 			case ::gpk::UDP_CONNECTION_STATE_IDLE			: break;
 			case ::gpk::UDP_CONNECTION_STATE_DISCONNECTED	: 
-				gpk_necs(::gpk::controlTextSet(gui, Dialog.Root + 1, "Disconnected"));
+				gpk_necs(gpk::controlTextSet(gui, Dialog.Root + 1, "Disconnected"));
 				Connect(); 
 				break;
 			case ::gpk::UDP_CONNECTION_STATE_HANDSHAKE		: 
-				gpk_necs(::gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((uint32_t)::gpk::timeCurrent() % 4)}));
+				gpk_necs(gpk::controlTextSet(gui, Dialog.Root + 1, {connectingString.begin(), connectingString.size() - 3 + ((uint32_t)::gpk::timeCurrent() % 4)}));
 				break;
 			}
 
-			gpk_necs(::gpk::guiProcessInput(gui, *inputState, frameEvents));
+			gpk_necs(gpk::guiProcessInput(gui, *inputState, frameEvents));
 
 			::gpk::acid				controlsToProcess			= {};
-			gpk_necs(::gpk::guiGetProcessableControls(gui, controlsToProcess));
+			gpk_necs(gpk::guiGetProcessableControls(gui, controlsToProcess));
 			if(const int32_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
 					::gpk::vcc						trimmed			= ::gpk::vcc{InputBox.Text};
@@ -150,7 +150,7 @@ namespace gpk
 				}
 			}
 			else {
-				gpk_necs(::gpk::guiProcessControls(gui, controlsToProcess, [&](int32_t iControl) {
+				gpk_necs(gpk::guiProcessControls(gui, controlsToProcess, [&](int32_t iControl) {
 					const ::gpk::SControlPlacement			& control		= gui.Controls.Placement[iControl];
 					::gpk::SControlPlacement				& inputBox		= gui.Controls.Placement[InputBox.IdRoot];
 					bool							edit			= false;

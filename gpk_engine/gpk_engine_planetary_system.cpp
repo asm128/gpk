@@ -9,11 +9,11 @@
 stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 
 ::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ 
-	gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%s", ::gpk::toString(jsonData.View[0]).begin());	
+	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%s", ::gpk::toString(jsonData.View[0]).begin());	
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
 ::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ 
-	gpk_necall(::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
+	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
 
@@ -37,8 +37,8 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 		, ::gpk::GREEN
 		, ::gpk::YELLOW
 		};
-	gpk_necs(::gpk::planetarySystemCreateEntities(solarSystem, entityMap, engine));
-	gpk_necs(::gpk::planetarySystemReset(solarSystem, entityMap, engine, PLANET_COLORS));
+	gpk_necs(gpk::planetarySystemCreateEntities(solarSystem, entityMap, engine));
+	gpk_necs(gpk::planetarySystemReset(solarSystem, entityMap, engine, PLANET_COLORS));
 	return 0;
 }
 
@@ -220,7 +220,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		stacxpr	float				moonScale				= 25.f;
 		{
 			const uint32_t				iEntity					= entityMap.Orbits[iOrbiter];
-			gpk_necs(::gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
+			gpk_necs(gpk::initOrbiterOrbit(body, engine.Integrator, engine.GetRigidBody(iEntity), 1));
 
 			double						orbitRadius				= body.Orbit.Radius;// + body.Diameter * .0005;
 			if(isMoon)
@@ -229,12 +229,12 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 		}
 		{
 			const uint32_t				iEntity					= entityMap.GravityCenters[iOrbiter];
-			gpk_necs(::gpk::initOrbiterCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? moonScale : 1)));
+			gpk_necs(gpk::initOrbiterCenter(body, engine.Integrator, engine.GetRigidBody(iEntity), distanceScale * (isMoon ? moonScale : 1)));
 			gpk_necs(::initGravityCenter(engine, iEntity, isStar, body.Diameter, distanceScale * .0001, body.Detail.Planet.RingSystem));
 		}
 		{
 			const uint32_t				iEntity					= entityMap.Bodies[iOrbiter];
-			gpk_necs(::gpk::initOrbiterBody(body, engine.Integrator, engine.GetRigidBody(iEntity), rotationUnit));
+			gpk_necs(gpk::initOrbiterBody(body, engine.Integrator, engine.GetRigidBody(iEntity), rotationUnit));
 			gpk_necs(::initBody(engine, iEntity, isStar, body.Diameter, distanceScale * .0001 * (isMoon ? moonScale * .05 : 1), body.Detail.Planet.RingSystem));
 		}
 		::gpk::rgbaf				color					= colors[iOrbiter];

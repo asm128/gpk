@@ -233,7 +233,7 @@ static	::gpk::error_t	drawBuffers
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pNormals
 	, ::gpk::pobj<::gpk::SRenderBuffer>	& pUV
 	) {
-	gpk_necs(::gpk::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
+	gpk_necs(gpk::createBuffers(geometry.Positions.size(), pIndicesVertex, pVertices, pNormals, pUV));
 
 	pVertices	->Data.resize(geometry.Positions	.byte_count());
 	pNormals	->Data.resize(geometry.Normals		.byte_count());
@@ -268,7 +268,7 @@ static	::gpk::error_t	drawBuffers
 	, uint32_t						& iUV
 	) {
 	::gpk::pobj<::gpk::SRenderBuffer>	pIndicesVertex, pVertices, pNormals, pUV;
-	gpk_necs(::gpk::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
+	gpk_necs(gpk::createBuffers(geometry, pIndicesVertex, pVertices, pNormals, pUV));
 	gpk_necs(iIndicesVertex			= (uint32_t)bufferManager.push_back(pIndicesVertex));
 	gpk_necs(iVertices				= (uint32_t)bufferManager.push_back(pVertices));
 	gpk_necs(iNormals				= (uint32_t)bufferManager.push_back(pNormals));

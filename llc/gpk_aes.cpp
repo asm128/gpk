@@ -412,7 +412,7 @@ void											gpk::aesCTRXCryptBuffer				(::gpk::SAESContext* ctx, uint8_t* buf
 	for(uint32_t iVal = 0; iVal < ::gpk::AES_SIZEIV; ++iVal)
 		iv[iVal]											= (uint8_t)(::gpk::noise1DBase(::gpk::timeCurrentInUs()) * fraction);
 
-	gpk_necs(::gpk::aesEncode(messageToEncrypt, iv, encryptionKey, level, outputEncrypted));
+	gpk_necs(gpk::aesEncode(messageToEncrypt, iv, encryptionKey, level, outputEncrypted));
 	gpk_necs(outputEncrypted.resize(outputEncrypted.size() + ::gpk::AES_SIZEIV));
 	memcpy(&outputEncrypted[outputEncrypted.size() - ::gpk::AES_SIZEIV], iv, ::gpk::AES_SIZEIV);
 	return 0;

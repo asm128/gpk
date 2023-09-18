@@ -52,7 +52,7 @@
 
 ::gpk::error_t			gpk::jsonFileRead			(::gpk::SJSONFile & file, const ::gpk::vcc & filename) {
 	json_info_printf("Loading json file: %s.", filename.begin());
-	gpk_necall(::gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
+	gpk_necall(gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
 	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
@@ -67,7 +67,7 @@
 		for(uint32_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
 			; iPartRecord < countPartRecords
 			; ++iPartRecord) {
-			gpk_necs(::gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson));;
+			gpk_necs(gpk::jsonWrite(jsonArrayToSplit.Children[iSourceRecord++], jsonViews, outputJson));;
 			if(iPartRecord < countPartRecords - 1)
 				gpk_necs(outputJson.push_back(','));
 		}
@@ -116,9 +116,9 @@
 	case ::gpk::JSON_TYPE_OBJECT		:
 		gpk_necs(output.push_back('{'));
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); iChildren += 2) {
-			gpk_necs(::gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output));;
+			gpk_necs(gpk::jsonWrite(node->Children[iChildren + 0], jsonViews, output));;
 			gpk_necs(output.push_back(':'));
-			gpk_necs(::gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output));;
+			gpk_necs(gpk::jsonWrite(node->Children[iChildren + 1], jsonViews, output));;
 			if(iChildren < node->Children.size() - 2)
 				gpk_necs(output.push_back(','));
 		}
@@ -127,7 +127,7 @@
 	case ::gpk::JSON_TYPE_ARRAY			:
 		gpk_necs(output.push_back('['));
 		for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren) {
-			gpk_necs(::gpk::jsonWrite(node->Children[iChildren], jsonViews, output));;
+			gpk_necs(gpk::jsonWrite(node->Children[iChildren], jsonViews, output));;
 			if(iChildren < node->Children.size() - 1)
 				gpk_necs(output.push_back(','));
 		}
@@ -555,7 +555,7 @@ static	::gpk::error_t	jsonParseDocumentCharacter	(::gpk::SJSONReaderState & stat
 ::gpk::error_t			gpk::jsonParse				(::gpk::SJSONReader & reader, const ::gpk::vcc & jsonAsString)	{
 	::gpk::SJSONReaderState		& stateReader				= reader.StateRead;
 	for(stateReader.IndexCurrentChar = 0; stateReader.IndexCurrentChar < jsonAsString.size(); ++stateReader.IndexCurrentChar) {
-		gpk_necs(::gpk::jsonParseStep(reader, jsonAsString));
+		gpk_necs(gpk::jsonParseStep(reader, jsonAsString));
 		json_bi_if(reader.StateRead.DoneReading, "%i json characters read.", stateReader.IndexCurrentChar + 1);
 	}
 	ree_if(stateReader.NestLevel, "Nest level: %i (Needs to be zero).", stateReader.NestLevel);

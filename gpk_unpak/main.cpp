@@ -20,7 +20,7 @@ int								main							(int argc, char ** argv)						{
 			namePathDst[indexSequence + 1]	= 0;
 		}
 	}
-	gpk_necall(::gpk::folderUnpackToDisk({namePathDst.begin(), namePathDst.size()}, nameFileSrc), "Failed to unpack file '%s' to folder '%s'.", ::gpk::toString(nameFileSrc).begin(), namePathDst.begin());
+	gpk_necall(gpk::folderUnpackToDisk({namePathDst.begin(), namePathDst.size()}, nameFileSrc), "Failed to unpack file '%s' to folder '%s'.", ::gpk::toString(nameFileSrc).begin(), namePathDst.begin());
 	for(int32_t iArg = 3; iArg < argc; ++iArg)
 		info_printf("Unknown parameter: %s.", argv[iArg]);
 

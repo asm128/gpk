@@ -94,7 +94,7 @@
 	}
 
 	for(uint32_t iFolder = 0; iFolder < input.Folders.size(); ++iFolder)
-		gpk_necall(::gpk::pathList(input.Folders[iFolder], output, extension), "%s", "Unknown error!");
+		gpk_necall(gpk::pathList(input.Folders[iFolder], output, extension), "%s", "Unknown error!");
 	return 0;
 }
 
@@ -105,7 +105,7 @@
 			gpk_necall(output.push_back(fileName), "output.size(): %i. fileName: '%s'.", output.size(), ::gpk::toString(fileName).begin());
 	}
 	for(uint32_t iFolder = 0; iFolder < input.Folders.size(); ++iFolder	)
-		gpk_necall(::gpk::pathList(input.Folders[iFolder], output, extension), "%s", "Unknown error!");
+		gpk_necall(gpk::pathList(input.Folders[iFolder], output, extension), "%s", "Unknown error!");
 	return 0;
 }
 
@@ -187,7 +187,7 @@
 		if(fdFile.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 			::gpk::error_t				newFolderIndex				= pathContents.Folders.push_back({});
 			gpk_necs(newFolderIndex);
-			gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unknown error!");
+			gpk_necall(gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unknown error!");
 			verbose_printf("Directory: %s.", sPath);
 		}
 		else {
@@ -212,7 +212,7 @@
 			if(drnt->d_type == DT_DIR) {
 				::gpk::error_t				newFolderIndex				= pathContents.Folders.push_back({});
 				gpk_necs(newFolderIndex);
-				gpk_necall(::gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unkown error!");
+				gpk_necall(gpk::pathList(sPath, pathContents.Folders[newFolderIndex], extension), "%s", "Unkown error!");
 				info_printf("Directory: %s.", sPath);
 			}
 			else {

@@ -23,7 +23,7 @@ namespace gpk
 												~CViewManager				()				{}
 
 		::gpk::error_t							Save						(::gpk::apod<uint8_t> & output)	const	{
-			gpk_necs(::gpk::saveView(output, Counts));
+			gpk_necs(gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Views[iArray], Counts[iArray] * sizeof(T)));
 
@@ -31,7 +31,7 @@ namespace gpk
 		}
 
 		::gpk::error_t							Load						(::gpk::vcu8 & input) {
-			gpk_necs(::gpk::loadView(input, Counts));
+			gpk_necs(gpk::loadView(input, Counts));
 			::gpk::view<const T>						out_view; 
 			uint32_t									offsetByte					= 0;
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {

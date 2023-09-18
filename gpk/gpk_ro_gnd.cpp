@@ -80,7 +80,7 @@ namespace gpk
 
 ::gpk::error_t			gpk::gndFileLoad											(::gpk::SGNDFileContents& loaded, const ::gpk::vcs	& input)							{
 	::gpk::apod<int8_t>									fileInMemory												= {};
-	gpk_necall(::gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
+	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .gnd file: %s", input.begin());
 	return ::gpk::gndFileLoad(loaded, ::gpk::vu8((uint8_t*)fileInMemory.begin(), fileInMemory.size()));
 }
 

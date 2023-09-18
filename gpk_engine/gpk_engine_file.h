@@ -30,7 +30,7 @@ namespace gpk
 
 		::gpk::error_t					AddFile			(::gpk::vcc filePath) {
 			LoadCache.clear();
-			gpk_necs(::gpk::fileToMemory(filePath, LoadCache));
+			gpk_necs(gpk::fileToMemory(filePath, LoadCache));
 			return AddFile(filePath, LoadCache);
 		}
 

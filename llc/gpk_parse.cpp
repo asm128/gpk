@@ -42,7 +42,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 		if(!bSymbolProcessed)
 			break;	// number ends with any character that is not a symbol
 	}
-	gpk_necs(::gpk::reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
+	gpk_necs(gpk::reverse(stringToParse));		// we assigned the digits backwards so we need to reverse the string.
 	uint64_t										number										= 0;
 	totalCharsProcessed							= 0;
 	for(uint32_t iChar = 0; iChar < stringToParse.size() && 0 != stringToParse[iChar];) {
@@ -142,7 +142,7 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 ::gpk::error_t			gpk::stripLiteralParse			(::gpk::SStripLiteralState & stateReading, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format)		{
 	for(stateReading.IndexCurrentChar = 0; stateReading.IndexCurrentChar < in_format.size(); ++stateReading.IndexCurrentChar) {
 		stateReading.CharCurrent					= in_format[stateReading.IndexCurrentChar];
-		gpk_necs(::gpk::stripLiteralParseStep(stateReading, out_types, in_format));
+		gpk_necs(gpk::stripLiteralParseStep(stateReading, out_types, in_format));
 	}
 	return 0;
 }

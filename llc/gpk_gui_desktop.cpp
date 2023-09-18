@@ -12,8 +12,8 @@
 		gpk_necs(i##ctoken = desktop.Items.ctoken##s.push_back({}));						\
 	desktop.Items.ctoken##s.Unused[i##ctoken]	= false;									\
 	::gpk::S##ctoken	& elementToSetUp	= desktop.Items.ctoken##s[i##ctoken]	= {};	\
-	gpk_necs(::gpk::utoken##Initialize(gui, elementToSetUp));								\
-	gpk_necall(::gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "%I - %I", elementToSetUp.IdControl, desktop.IdControl);
+	gpk_necs(gpk::utoken##Initialize(gui, elementToSetUp));								\
+	gpk_necall(gpk::controlSetParent(gui, elementToSetUp.IdControl, desktop.IdControl), "%I - %I", elementToSetUp.IdControl, desktop.IdControl);
 
 ::gpk::error_t			gpk::desktopDeletePaletteGrid	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iElement) { 
 	desktop.Items.PaletteGrids.Unused[iElement] = true; 
@@ -39,7 +39,7 @@
 	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
 		::gpk::cid_t				childControlListIndex			= childLists[iOption];
 		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
-			gpk_necall(::gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
+			gpk_necall(gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
 		else
 			ef_if(childControlListIndex != -1, "%s", "");
 	}
@@ -48,7 +48,7 @@
 			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]	= -1;
 	}
 	desktop.Items.ControlLists.Unused[iElement]	= true;
-	gpk_necall(::gpk::controlDelete(gui, controlListToDelete.IdControl, true), "%s", "Failed to delete control! Deleted already?");
+	gpk_necall(gpk::controlDelete(gui, controlListToDelete.IdControl, true), "%s", "Failed to delete control! Deleted already?");
 	controlListToDelete		= {};
 	return 0;
 }

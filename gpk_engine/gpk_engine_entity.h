@@ -72,26 +72,26 @@ namespace gpk
 		}
 
 		::gpk::error_t					Save			(::gpk::au8 & output) const { 
-			gpk_necs(::gpk::saveView(output, Entities));
+			gpk_necs(gpk::saveView(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
-				gpk_necall(::gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
-				gpk_necall(::gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
+				gpk_necall(gpk::saveView(output, Names[iEntity]), "iEntity: %i", iEntity);
 			}
 			info_printf("Saved %s, %i", "Entities", Children.size());
 			return 0;
 		}
 
 		::gpk::error_t					Load			(::gpk::vcu8 & input) {
-			gpk_necs(::gpk::loadView(input, Entities));
+			gpk_necs(gpk::loadView(input, Entities));
 			gpk_necs(Children	.resize(Entities.size()));
 			gpk_necs(Names		.resize(Entities.size()));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				if(!Children[iEntity])
 					Children[iEntity].create();
 
-				gpk_necall(::gpk::loadView(input, *Children[iEntity]), "iEntity: %i", iEntity);
+				gpk_necall(gpk::loadView(input, *Children[iEntity]), "iEntity: %i", iEntity);
 				::gpk::apod<char>					name;
-				gpk_necall(::gpk::loadView(input, name), "iEntity: %i", iEntity);
+				gpk_necall(gpk::loadView(input, name), "iEntity: %i", iEntity);
 				Names[iEntity]					= ::gpk::label(::gpk::vcc{name});
 			}
 
