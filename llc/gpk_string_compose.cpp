@@ -6,6 +6,13 @@
 	return key.size() + 3;
 }
 
+::gpk::error_t	gpk::appendNclosd			(::gpk::achar & output, ::gpk::vcs textToQuote, ::gpk::vcs openChars, ::gpk::vcs closeChars) {
+	gpk_necs(output.append(openChars));
+	gpk_necs(output.append(textToQuote));
+	gpk_necs(output.append(closeChars));
+	return textToQuote.size() + openChars.size() + closeChars.size();
+}
+
 ::gpk::error_t	gpk::appendNclosd			(::gpk::achar & output, ::gpk::vcs textToQuote, char openChar, char closeChar) {
 	gpk_necs(output.push_back(openChar));
 	gpk_necs(output.append(textToQuote));

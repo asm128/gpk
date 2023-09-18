@@ -7,6 +7,7 @@ namespace gpk
 {
 	::gpk::error_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToQuote, char encloserChar);
 	::gpk::error_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToQuote, char openChar, char closeChar);
+	::gpk::error_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToQuote, ::gpk::vcs openChars, ::gpk::vcs closeChars);
 	::gpk::error_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToQuote, char prefix, char encloserChar);
 	::gpk::error_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToQuote, char prefix, char openChar, char closeChar);
 
