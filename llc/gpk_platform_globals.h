@@ -118,7 +118,10 @@
 #	define GPK_FMT_I64 "lli"
 #	define GPK_FMT_U64 "llu"
 #endif
-
+#define GPK_FMT_I8  "i"
+#define GPK_FMT_U8  "u"
+#define GPK_FMT_I16 "i"
+#define GPK_FMT_U16 "u"
 #define GPK_FMT_F32_GT_F32 "%" GPK_FMT_F32 " > %" GPK_FMT_F32
 #define GPK_FMT_F64_GT_F64 "%" GPK_FMT_F64 " > %" GPK_FMT_F64
 #define GPK_FMT_I32_GT_I32 "%" GPK_FMT_I32 " > %" GPK_FMT_I32

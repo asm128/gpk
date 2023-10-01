@@ -172,6 +172,9 @@ namespace gpk
 	typedef	::gpk::view<const int32_t		>	vci32;
 	typedef	::gpk::view<const int64_t		>	vci64;
 
+// Use this to initialize a constexpr vcs from a string literal
+#define GPK_CXS(constexpr_string_literal) ::gpk::vcc{uint32_t(sizeof(constexpr_string_literal) - 1), constexpr_string_literal}
+
 	typedef	::gpk::view<vuc		>	vvuc;
 	typedef	::gpk::view<vc		>	vvc;
 	typedef	::gpk::view<vu8		>	vvu8;
@@ -451,6 +454,13 @@ namespace gpk
 		return *result;
 	}
 
+	tplt<tpnm TNumber>	
+	TNumber					sum						(::gpk::view<const TNumber> input)			{
+		TNumber 				result 					= 0;
+		input.for_each([&result](TNumber number) { result += number; });
+		return result;
+	}
+	
 
 #define be2le_16(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 2})
 #define be2le_32(number) ::gpk::reverse<uint8_t>({(uint8_t*)&number, 4})

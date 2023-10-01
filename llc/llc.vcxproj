@@ -28,6 +28,12 @@
     <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_apod_slice.h" />
     <ClInclude Include="gpk_apod_tcpip.h" />
+    <ClInclude Include="gpk_append_css.h" />
+    <ClInclude Include="gpk_append_frontend.h" />
+    <ClInclude Include="gpk_append_html.h" />
+    <ClInclude Include="gpk_append_js.h" />
+    <ClInclude Include="gpk_append_json.h" />
+    <ClInclude Include="gpk_append_xml.h" />
     <ClInclude Include="gpk_app_impl.h" />
     <ClInclude Include="gpk_arduino_string.h" />
     <ClInclude Include="gpk_array.h" />
@@ -233,6 +239,11 @@
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
     <ClCompile Include="gpk_apod_tcpip.cpp" />
+    <ClCompile Include="gpk_append_css.cpp" />
+    <ClCompile Include="gpk_append_html.cpp" />
+    <ClCompile Include="gpk_append_js.cpp" />
+    <ClCompile Include="gpk_append_json.cpp" />
+    <ClCompile Include="gpk_append_xml.cpp" />
     <ClCompile Include="gpk_array.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_base64.cpp" />

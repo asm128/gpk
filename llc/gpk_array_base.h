@@ -10,8 +10,8 @@
 
 namespace gpk
 {
-	tplt<tpnm... _Args>	
-	void						clear					(_Args&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
+	tplt<tpnm... _tArgs>	
+	void						clear					(_tArgs&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
 
 	tplt<tpnm... _tArgs>
 	::gpk::error_t				resize					(uint32_t newSize, _tArgs&&... args)		{

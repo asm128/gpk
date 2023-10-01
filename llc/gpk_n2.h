@@ -189,12 +189,16 @@ namespace gpk
 #pragma pack(pop)
 } // namespace
 
-#define N2_F32 "{%f, %f}"
-#define N2_F64 "{%g, %g}"
-#define N2_I32 "{%i, %i}"
-#define N2_U32 "{%u, %u}"
-#define N2_I64 "{%lli, %lli}"
-#define N2_U64 "{%llu, %llu}"
+#define N2_F32	"%f, %f"
+#define N2_F64	"%f, %f"
+#define N2_I8	"%" GPK_FMT_I8 ", %" GPK_FMT_I8
+#define N2_U8	"%" GPK_FMT_U8 ", %" GPK_FMT_U8
+#define N2_I16	"%" GPK_FMT_I16 ", %" GPK_FMT_I16
+#define N2_U16	"%" GPK_FMT_U16 ", %" GPK_FMT_U16
+#define N2_I32	"%" GPK_FMT_I32 ", %" GPK_FMT_I32
+#define N2_U32	"%" GPK_FMT_U32 ", %" GPK_FMT_U32
+#define N2_I64	"%ll" GPK_FMT_I64 ", %ll" GPK_FMT_I64
+#define N2_U64	"%ll" GPK_FMT_U64 ", %ll" GPK_FMT_U64
 
 #define gpk_xy(n2var) n2var.x, n2var.y
 
