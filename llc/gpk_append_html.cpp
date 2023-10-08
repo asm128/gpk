@@ -21,9 +21,9 @@ gpk::err_t	gpk::appendHtmlPage	(::gpk::achar & output, const ::gpk::FAppend & fu
 	});
 }
 
-gpk::err_t	gpk::appendHtmlHead		(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "head", tagAttributes, innerHtml); }
-gpk::err_t	gpk::appendHtmlBody		(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "body", tagAttributes, innerHtml); }
-gpk::err_t	gpk::appendHtmlScript	(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "script", tagAttributes, innerHtml); }
-gpk::err_t	gpk::appendHtmlTable	(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "table", tagAttributes, innerHtml); }
-gpk::err_t	gpk::appendHtmlTableRow	(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "tr", tagAttributes, innerHtml); }
-gpk::err_t	gpk::appendHtmlTableCol	(::gpk::achar & output, ::gpk::vcs tagAttributes = {}, ::gpk::vcs innerHtml = {})	{ return ::gpk::appendXmlTag(output, "td", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlHead		(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "head", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlBody		(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "body", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlScript	(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "script", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlTable	(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "table", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlTableRow	(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "tr", tagAttributes, innerHtml); }
+gpk::err_t	gpk::appendHtmlTableCol	(::gpk::achar & output, ::gpk::vcs tagAttributes, ::gpk::vcs innerHtml)	{ return ::gpk::appendXmlTag(output, "td", tagAttributes, innerHtml); }

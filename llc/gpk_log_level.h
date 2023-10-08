@@ -81,21 +81,21 @@ namespace gpk
 }
 
 #ifdef GPK_WINDOWS
-#	define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
+#	define gpk_debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
 #else
 #	ifdef GPK_ATMEL
-#		define debug_printf(severity, severityStr, format, ...)	do{ /*base_log_print_F(__FILE__ "(" GPK_TOSTRING(__LINE__) ")");*/ ::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__); } while(0) //::gpk::_gpk_debug_printf("(" GPK_TOSTRING(__LINE__) ")", "")
+#		define gpk_debug_printf(severity, severityStr, format, ...)	do{ /*base_log_print_F(__FILE__ "(" GPK_TOSTRING(__LINE__) ")");*/ ::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__); } while(0) //::gpk::_gpk_debug_printf("(" GPK_TOSTRING(__LINE__) ")", "")
 #	else
-#		define debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
+#		define gpk_debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
 #	endif
 #endif
 
 #ifndef always_printf
 #ifndef logf_always
 #if !defined(GPK_WINDOWS)
-#	define always_printf(format, ...)					debug_printf(3, "info", format, ##__VA_ARGS__)
+#	define always_printf(format, ...)					gpk_debug_printf(3, "info", format, ##__VA_ARGS__)
 #else
-#	define always_printf(format, ...)					debug_printf(3, "info", format, __VA_ARGS__)
+#	define always_printf(format, ...)					gpk_debug_printf(3, "info", format, __VA_ARGS__)
 #endif
 #endif
 #endif
@@ -104,9 +104,9 @@ namespace gpk
 #ifndef logf_error
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define error_printf(format, ...)					do { debug_printf(1, "error", format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, "error", format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else
-#		define error_printf(format, ...)					do { debug_printf(1, "error", format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, "error", format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #endif
 #	else
 #		define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
@@ -118,9 +118,9 @@ namespace gpk
 #ifndef logf_warning
 #	if defined (GPK_WARNING_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define warning_printf(format, ...)					debug_printf(2, "warning"	, format, ##__VA_ARGS__)
+#		define warning_printf(format, ...)					gpk_debug_printf(2, "warning"	, format, ##__VA_ARGS__)
 #else
-#		define warning_printf(format, ...)					debug_printf(2, "warning"	, format, __VA_ARGS__)
+#		define warning_printf(format, ...)					gpk_debug_printf(2, "warning"	, format, __VA_ARGS__)
 #endif
 #	else
 #		define warning_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -132,9 +132,9 @@ namespace gpk
 #ifndef logf_info
 #	if defined (GPK_INFO_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define info_printf(format, ...)						debug_printf(3, "info"		, format, ##__VA_ARGS__)
+#		define info_printf(format, ...)						gpk_debug_printf(3, "info"		, format, ##__VA_ARGS__)
 #else
-#		define info_printf(format, ...)						debug_printf(3, "info"		, format, __VA_ARGS__)
+#		define info_printf(format, ...)						gpk_debug_printf(3, "info"		, format, __VA_ARGS__)
 #endif
 #	else
 #		define info_printf(format, ...)						do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -146,9 +146,9 @@ namespace gpk
 #ifndef logf_success
 #	if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define success_printf(format, ...)					debug_printf(4, "info"		, format, ##__VA_ARGS__)
+#		define success_printf(format, ...)					gpk_debug_printf(4, "info"		, format, ##__VA_ARGS__)
 #else
-#		define success_printf(format, ...)					debug_printf(4, "info"		, format, __VA_ARGS__)
+#		define success_printf(format, ...)					gpk_debug_printf(4, "info"		, format, __VA_ARGS__)
 #endif
 #	else
 #		define success_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -160,9 +160,9 @@ namespace gpk
 #ifndef logf_verbose
 #	if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define verbose_printf(format, ...)					debug_printf(4, "info"		, format, ##__VA_ARGS__)
+#		define verbose_printf(format, ...)					gpk_debug_printf(4, "info"		, format, ##__VA_ARGS__)
 #else
-#		define verbose_printf(format, ...)					debug_printf(4, "info"		, format, __VA_ARGS__)
+#		define verbose_printf(format, ...)					gpk_debug_printf(4, "info"		, format, __VA_ARGS__)
 #endif
 #	else
 #		define verbose_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -171,8 +171,8 @@ namespace gpk
 #endif
 
 //
-#define gpk_rv_hrcall(retVal, hr_call)					do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { debug_printf(0, "error", "%s -> %i (0x%X): '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin()); return retVal; } } while(0)
-#define gpk_rve_hrcall(retVal, hr_call, format, ...)	do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { debug_printf(0, "error", "%s -> %i (0x%X): '%s' " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__); return retVal; } } while(0)
+#define gpk_rv_hrcall(retVal, hr_call)					do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "error", "%s -> %i (0x%X): '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin()); return retVal; } } while(0)
+#define gpk_rve_hrcall(retVal, hr_call, format, ...)	do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "error", "%s -> %i (0x%X): '%s' " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__); return retVal; } } while(0)
 
 #define gpk_hrcall(hr_call)				do { gpk_rv_hrcall (-1, hr_call)				; } while(0)		// HRESULT call.
 #define gpk_hrecall(hr_call, ...)		do { gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	; } while(0)		// HRESULT call.

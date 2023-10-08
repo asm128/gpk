@@ -7,7 +7,7 @@
 #define stincxp
 #define cnstxpr	
 
-#define debug_printf
+#define gpk_debug_printf
 #define always_printf
 #define error_printf
 #define warning_printf

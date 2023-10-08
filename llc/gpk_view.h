@@ -75,8 +75,8 @@ namespace gpk
 		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(Count * sizeof(T));	}
 		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
-		inlcxpr	view<uint8_t>	u8				()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
-		inline	view<cuint8_t>	u8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inline	view<uint8_t>	u8				()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
+		inlcxpr	view<cuint8_t>	u8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
 		inlcxpr	view<cuint8_t>	cu8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
 		inline	view<char>		c				()									noexcept	{ return {(char*)Data, byte_count()};			}
 		inlcxpr	view<cchar_t>	cc				()							const	noexcept	{ return {(const char*)Data, byte_count()};		}
