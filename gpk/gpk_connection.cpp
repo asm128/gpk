@@ -142,7 +142,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 			::gpk::au8					ardellEncoded;
 			payloadHeader.MessageId				= ::hashFromTime(messageToSend.Time);
 			messageToSend.Hashes.push_back(payloadHeader.MessageId);
-			info_printf("Sending message with id: %llx: %s.", payloadHeader.MessageId, ::gpk::toString(messageToSend.Payload).begin());
+			info_printf("Sending message with id: %llx.", payloadHeader.MessageId);
 			::gpk::au8					compressed;
 			if(0 == payloadHeader.Command.Compressed) {
 				if(0 == payloadHeader.Command.Encrypted)
@@ -209,7 +209,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 			if(messageSent->RetryCount) {
 				--messageSent->RetryCount;
 				timeCurr	+= ::UDP_PAYLOAD_SENT_LIFETIME;
-				info_printf("A message sent didn't receive a confirmation on time: %llx (%llx). Setting current time: %llx, Retries left: %u. '%s.'", messageSent->Time, ::hashFromTime(messageSent->Time), timeCurr, (uint32_t)messageSent->RetryCount, ::gpk::toString(messageSent->Payload).begin());
+				info_printf("A message sent didn't receive a confirmation on time: %llx (%llx). Setting current time: %llx, Retries left: %u.", messageSent->Time, ::hashFromTime(messageSent->Time), timeCurr, (uint32_t)messageSent->RetryCount);
 				if(messageSent->Time == client.KeyPing)
 					messageSent->Time	= client.KeyPing	= timeCurr;
 				else
@@ -217,7 +217,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 				queueToSend.push_back(messageSent);
 			}
 			else {
-				info_printf("A message sent didn't receive a confirmation on time: %llx. '%s'.", messageSent->Time, ::gpk::toString(messageSent->Payload).begin());
+				info_printf("A message sent didn't receive a confirmation on time: %llx.", messageSent->Time);
 			}
 		}
 	}
@@ -304,9 +304,9 @@ static	::gpk::error_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader &
 	for(uint32_t iSent = 0; iSent < client.Queue.Sent.size(); ++iSent) {
 		::gpk::SUDPMessage					& messageSent						= *client.Queue.Sent[iSent];
 		for(uint32_t iHash = 0; iHash < messageSent.Hashes.size(); ++iHash) {
-			info_printf("Checking hash for message: %s : %llx.", ::gpk::toString(messageSent.Payload).begin(), messageSent.Hashes[iHash]);
+			info_printf("Checking hash for message: %llx.", messageSent.Hashes[iHash]);
 			if(::hashFromTime(messageSent.Time) == header.MessageId) {
-				info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+				info_printf("Removing message from confirmation queue: %llx. ", header.MessageId);
 				client.Queue.Sent.remove_unordered(iSent);
 				client.LastPing					= ::gpk::timeCurrentInUs();
 				bFound							= true;
@@ -314,7 +314,7 @@ static	::gpk::error_t	handlePAYLOADResponse				(const ::gpk::SUDPPayloadHeader &
 			}
 			uint64_t							hashLocal							= messageSent.Hashes[iHash]; //::hashFromTime(messageSent.Time);
 			if(hashLocal == header.MessageId) {
-				info_printf("Removing message from confirmation queue: %llx. Message: %s.", header.MessageId, ::gpk::toString(messageSent.Payload).begin());
+				info_printf("Removing message from confirmation queue: %llx. ", header.MessageId);
 				client.Queue.Sent.remove_unordered(iSent);
 				client.LastPing					= ::gpk::timeCurrentInUs();
 				bFound							= true;

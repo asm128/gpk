@@ -180,7 +180,7 @@ struct SHeaderInfoBMP {
 				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
-				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
+				, uint8_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
 				};
 		}
 		break;
@@ -237,7 +237,7 @@ struct SHeaderInfoBMP {
 				::gpk::bgra{ srcBytes[linearIndexSrc + 0]
 				, srcBytes[linearIndexSrc + 1]
 				, srcBytes[linearIndexSrc + 2]
-				, b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU
+				, uint8_t(b32Bit ? srcBytes[linearIndexSrc + 3] : 0xFFU)
 				};
 		}
 		break;

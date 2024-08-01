@@ -1,6 +1,6 @@
 #include "gpk_error.h"
 
-#ifdef GPK_ARDUINO //GPK_ATMEL
+#ifdef GPK_ATMEL
 #	define GPK_LOG_ARDUINO_FLASHSTRINGHELPER
 #endif
 

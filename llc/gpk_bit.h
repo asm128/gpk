@@ -23,7 +23,7 @@ namespace gpk
 	tplt<tpnm _tBit> 			_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
 		rve_if((_tBit)-1LL, bitIndex >= (sizeof(_tBit) * PLATFORM_BYTE_BIT_COUNT), "Invalid bit index: %i", bitIndex);
 #else
-	tplt<tpnm _tBit> cnstxpr	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
+	tplt<tpnm _tBit> nodcxpr	_tBit	bit_make		(uint8_t bitIndex)	noexcept	{
 #endif
 		return (_tBit)(((_tBit)1) << bitIndex);
 	}
