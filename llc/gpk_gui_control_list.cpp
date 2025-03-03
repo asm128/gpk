@@ -118,7 +118,7 @@
 	palette.IdControls.resize(colors.size());
 	palette.Colors			= colors;
 
-	const ::gpk::n2f64			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f64(); //{256.0, 256.0};
+	const ::gpk::n2f64			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f3_t(); //{256.0, 256.0};
 	::gpk::n2f64				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(uint32_t y = 0; y < gridMetrics.y; ++y)
@@ -161,7 +161,7 @@
 		::gpk::SControlDraw			& controlDraw		= gui.Controls.Draw[palette.IdControls[paletteElemIndex]];
 		controlDraw.ColorTheme	= int8_t(themeIndex + 1);
 		control.Area.Offset		= {(int16_t)(controlSize.x * x), (int16_t)(controlSize.y * y)};
-		control.Area.Size		= controlSize.i16();
+		control.Area.Size		= controlSize.s1_t();
 		gpk_necs(gpk::controlSetParent(gui, palette.IdControls[paletteElemIndex], palette.IdControl));
 	}
 	return 0;
@@ -215,7 +215,7 @@
 ::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 	::gpk::SControlPlacement	controlArgs					= {};
 	controlArgs.Align		= controlAlign;
-	controlArgs.Area		= {offset, buttonSize.i16()};
+	controlArgs.Area		= {offset, buttonSize.s1_t()};
 	controlArgs.Border		= {1, 1, 1, 1};
 	controlArgs.Margin		= {1, 1, 1, 1};
 	return ::gpk::guiCreateControlList(gui, {}, buttonText, iParent, controlArgs, textAlign, out_ids);

@@ -53,7 +53,7 @@ namespace gpk
 	// -------------------------------------------------------------------------------
 	// # Bytes  | Type       | Value
 	// -------------------------------------------------------------------------------
-	// 1x4      | char       | chunk id
+	// 1x4      | sc_t       | chunk id
 	// 4        | int        | num bytes of chunk content (N)
 	// 4        | int        | num bytes of children chunks (M)
 	// N        |            | chunk content
@@ -61,12 +61,12 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SVOXFileHeader {
-		::gpk::astatic<char, 4>						MagicNumber				= {};
+		::gpk::astatic<sc_t, 4>						MagicNumber				= {};
 		uint32_t											Version					= {};
 	};
 
 	struct SVOXChunkHeader {
-		::gpk::astatic<char, 4>	Type					= {};
+		::gpk::astatic<sc_t, 4>	Type					= {};
 		uint32_t				ChunkSize				= 0;	// | num bytes of chunk content (N)
 		uint32_t				ChildChunks				= 0;	// | num bytes of children chunks (M)
 
@@ -100,7 +100,7 @@ namespace gpk
 		::gpk::apod<SVOXVoxel>	Data					= {};
 	};
 
-	typedef ::gpk::aobj<::gpk::SKeyVal<::gpk::apod<char>, ::gpk::apod<char>>>	SVOXDict;
+	typedef ::gpk::aobj<::gpk::SKeyVal<::gpk::apod<sc_t>, ::gpk::apod<sc_t>>>	SVOXDict;
 
 	struct SVOXChunkTransform {
 		SVOXChunkHeader			Header					= {};
@@ -192,7 +192,7 @@ namespace gpk
 			for(uint32_t iChunk = 0; iChunk < Chunks.size(); ++iChunk)
 				if(0 == memcmp(Chunks[iChunk].Header.Type.Storage, "SIZE", 4)) {
 					const ::gpk::n3<uint32_t>							coord					= *(::gpk::n3<uint32_t>*)Chunks[iChunk].Data.begin();
-					return ::gpk::n3<uint32_t>{coord.y, coord.z, coord.x}.u8();
+					return ::gpk::n3<uint32_t>{coord.y, coord.z, coord.x}.u0_t();
 				}
 			return {};
 		}
@@ -292,7 +292,7 @@ namespace gpk
 		 				newChunk.Header								= readChunkHeader;
 						bytesRead = sizeof(uint32_t	); const uint32_t countFrames = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 						for(uint32_t iFrame = 0; iFrame < countFrames; ++iFrame) {
-							::gpk::view<const char>					readVal		= {};
+							::gpk::view<const sc_t>					readVal		= {};
 							bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							newChunk.ColorNames.push_back(readVal);
 						}

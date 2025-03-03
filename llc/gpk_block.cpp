@@ -14,14 +14,14 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::blockRecordPath		(::gpk::apod<char> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)	{
-	::gpk::apod<char>					finalPath					= dbPath;
+::gpk::error_t			gpk::blockRecordPath		(::gpk::apod<sc_t> & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)	{
+	::gpk::apod<sc_t>					finalPath					= dbPath;
 	gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
 	gpk_necs(gpk::blockFileName(fileName, indices.IdBlock, dbName, finalPath));
 	return 0;
 }
 
-::gpk::error_t			gpk::blockFilePath			(::gpk::apod<char> & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath) {
+::gpk::error_t			gpk::blockFilePath			(::gpk::apod<sc_t> & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath) {
 	finalPath						= dbPath;
 	if(finalPath.size())
 		gpk_necs(finalPath.push_back('/'));
@@ -29,7 +29,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::blockFileName			(::gpk::apod<char> & fileName, const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName)	{
+::gpk::error_t			gpk::blockFileName			(::gpk::apod<sc_t> & fileName, const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName)	{
 	if(folderName.size()) {
 		gpk_necs(fileName.append(folderName));
 		gpk_necs(fileName.push_back('/'));
@@ -37,7 +37,7 @@
 	gpk_necs(fileName.append_string("db."));
 	gpk_necs(fileName.append(dbName));
 
-	char								temp	[32]				= {};
+	sc_t								temp	[32]				= {};
 	snprintf(temp, ::gpk::size(temp) - 2, ".%u%s", idBlock, EXTENSION_BLOCK_FILE.begin());
 	gpk_necs(fileName.append_string(temp));
 	return 0;

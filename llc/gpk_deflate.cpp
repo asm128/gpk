@@ -183,7 +183,7 @@ stacxpr	uint32_t		INFLATE_CHUNK_SIZE			= uint32_t(1024) * 1024 * 4;
 			offsetInfo				+= sizeof(::gpk::rangeu32);
 			const uint32_t				lenName						= *(uint32_t*)&output.DataInfo[offsetInfo];
 			offsetInfo				+= sizeof(uint32_t);
-			output.Names[iFile]	= {(const char*)&output.DataInfo[offsetInfo], lenName};
+			output.Names[iFile]	= {(const sc_t*)&output.DataInfo[offsetInfo], lenName};
 			offsetInfo				+= lenName;
 			output.Contents[iFile]	= {&output.DataContents	[fileLocation.Offset], fileLocation.Count};
 		}

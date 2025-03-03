@@ -6,8 +6,8 @@
 namespace gpk
 {
 #ifdef GPK_WINDOWS
-	::gpk::apod<char>	getWindowsErrorAsString	(const int32_t lastError); // Get the error message, if any.
-	::gpk::error_t		wcstombs				(::gpk::apod<char> & output, const ::gpk::view<wchar_t> input);
+	::gpk::apod<sc_t>	getWindowsErrorAsString	(const int32_t lastError); // Get the error message, if any.
+	::gpk::error_t		wcstombs				(::gpk::apod<sc_t> & output, const ::gpk::view<wchar_t> input);
 	::gpk::error_t		mbstowcs				(::gpk::apod<wchar_t> & output, const ::gpk::vcc input);
 #endif
 } // namespace

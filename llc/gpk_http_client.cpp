@@ -15,24 +15,26 @@
 #	include <ctype.h>
 #endif
 
-::gpk::error_t			gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded)		{
+using gpk::sc_t;
+
+::gpk::error_t			gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<sc_t> & decoded)		{
 	uint32_t					decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
-		const char					currentChar						= urlToDecode[iChar];
+		const sc_t					currentChar						= urlToDecode[iChar];
 		if('%' != currentChar) {
-			gpk_necs(decoded.push_back((char)(uint8_t)currentChar));
+			gpk_necs(decoded.push_back((sc_t)(uint8_t)currentChar));
 			continue;
 		}
 		uint64_t					decodedByte						= 0;
 		gpk_necs(gpk::parseIntegerHexadecimal({&urlToDecode[++iChar], 2}, decodedByte));
-		gpk_necs(decoded.push_back((char)(uint8_t)decodedByte));
+		gpk_necs(decoded.push_back((sc_t)(uint8_t)decodedByte));
 		++iChar;
 		++decodedCharacters;
 	}
 	return decodedCharacters;
 }
 
-static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<char> & joined)		{
+static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<sc_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -61,7 +63,7 @@ static	::gpk::error_t	httpClientRequestConstruct
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
 	,	const ::gpk::vcc		& body
-	,	::gpk::apod<char>		& out_request
+	,	::gpk::apod<sc_t>		& out_request
 	) {
 	::gpk::vcc						strMethod						= ::gpk::get_value_label(method);
 	out_request					= strMethod;
@@ -106,8 +108,8 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	addrinfo									hints							= {};
     hints.ai_family							= AF_UNSPEC;
     hints.ai_socktype						= SOCK_STREAM;
-	char										addr[32]						= {};
-	char										port[32]						= {};
+	sc_t										addr[32]						= {};
+	sc_t										port[32]						= {};
 	snprintf(addr, ::gpk::size(addr) - 2, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
 	snprintf(port, ::gpk::size(port) - 2, "%u", (0 == address.Port) ? 80 : address.Port);
 	addrinfo									* servinfo						= 0;
@@ -134,7 +136,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	else
 		info_printf("Connected to server: %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(address));
 
-	char										strAddress	[INET6_ADDRSTRLEN]	= {};
+	sc_t										strAddress	[INET6_ADDRSTRLEN]	= {};
     inet_ntop(currentServinfo->ai_family, get_in_addr((struct sockaddr *)currentServinfo->ai_addr), strAddress, ::gpk::size(strAddress));
     freeaddrinfo(servinfo); // all done with this structure
 
@@ -142,7 +144,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	info_printf("Sending request: \n%s", ::gpk::toString(bytesRequest).begin());
     gpk_necall(numbytes = send(sockfd, bytesRequest.begin(), bytesRequest.size(), 0), "%s", "Failed to send request.");
 
-	::gpk::apod<char>						buf								= {};
+	::gpk::apod<sc_t>						buf								= {};
 	gpk_necall(buf.resize(1024*1024*16, 0), "%s", "Failed to resize buffer. Out of memory?");
 	uint32_t									totalBytes						= 0;
 	uint32_t									stopOfHeader					= 0;
@@ -224,11 +226,11 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 		::gpk::TKeyValConstString					& header						= out_received.Headers[iLine];
 		if(-1 == ::gpk::token_split(':', headerLines[iLine], header)) {
 			header.Key								= {headerLines[iLine].begin(), headerLines[iLine].size()};
-			//::gpk::view_char							strLine							= {(char*)header.Key.begin(), header.Key.size()};
+			//::gpk::view_char							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
 			//::gpk::tolower(strLine);
 		}
 		else {
-			::gpk::view<char>							strLine							= {(char*)header.Key.begin(), header.Key.size()};
+			::gpk::view<sc_t>							strLine							= {(sc_t*)header.Key.begin(), header.Key.size()};
 			::gpk::tolower(strLine);
 			info_printf("\n%s", ::gpk::toString(strLine).begin());
 			if(::gpk::vcs{"transfer-encoding"} == header.Key) {
@@ -241,7 +243,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	if(stopOfHeader < buf.size())
 		contentReceived							= {&buf[stopOfHeader], totalBytes - stopOfHeader};
 
-	::gpk::apod<char>					joined;
+	::gpk::apod<sc_t>					joined;
 	if(bChunked) {
 		info_printf("\nChunked: %s", bChunked ? "true" : "false");
 		::httpRequestChunkedJoin({&contentReceived[4], contentReceived.size()-4}, joined);
@@ -260,7 +262,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	,	const ::gpk::vcs	& path
 	,	const ::gpk::vcs	& contentType
 	,	const ::gpk::vcc	& body
-	,	::gpk::apod<char>	& out_received
+	,	::gpk::apod<sc_t>	& out_received
 	) {
 	::gpk::SHTTPResponse						response;
 	gpk_necall(gpk::httpClientRequest

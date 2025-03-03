@@ -3,6 +3,8 @@
 #include "gpk_process.h"
 #include "gpk_parse.h"
 
+using ::gpk::sc_c;
+
 ::gpk::error_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
 	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
 	::gpk::vcc								remoteAddr;
@@ -13,7 +15,7 @@
 
 	{	// Try to load query from querystring and request body
 		const int32_t										offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
-		::gpk::apod<char>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
+		::gpk::apod<sc_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
 			requestReceived.Method							= ::gpk::HTTP_METHOD_GET;
@@ -53,7 +55,7 @@
 	return isCGIEnviron ? 1 : 0;
 }
 
-static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<const char> & strContentType)	{
+static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
 	static	const ::gpk::vcc					content_types []			=
 		{ ::gpk::vcs{"application/javascript"													}
@@ -116,7 +118,7 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<const char>& strRemotePort)	{
+static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort)	{
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
@@ -126,7 +128,7 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc
 		remoteIP.IP				= 0;
 		for(uint8_t iVal = 0; iVal < 4; ++iVal) {
 			while(iEnd < strRemoteIP.size()) {
-				const char curChar = strRemoteIP[iEnd];
+				::gpk::sc_c curChar = strRemoteIP[iEnd];
 				if( curChar == '.'
 				 ||	curChar == ':'
 				 ||	curChar == '\0'
@@ -150,12 +152,12 @@ static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<const char> & strContent)	{
+static	::gpk::error_t	cgiLoadFormData	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	(void)runtimeValues, (void)strContent;
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<const char> & strContent)	{
+static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, const ::gpk::CGI_MEDIA_TYPE contentType, const ::gpk::view<::gpk::sc_c> & strContent)	{
 	switch(contentType) {
 	default: break;
 	case ::gpk::CGI_MEDIA_TYPE_MULTIPART_FORM_DATA:
@@ -165,7 +167,7 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	return 0;
 }
 
-::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<const char *> & argv)	{
+::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c *> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
 	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);
@@ -207,7 +209,7 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	uint32_t												iChar							= 0;
 	int														iArg							= 0;
 	while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
-		cgiRuntimeValues.Content.Body[iChar++]				= (char)iArg;
+		cgiRuntimeValues.Content.Body[iChar++]				= (sc_t)iArg;
 
 	::cgiLoadContent(cgiRuntimeValues, cgiRuntimeValues.Content.Type, cgiRuntimeValues.Content.Body);
 	return 0;

@@ -10,7 +10,7 @@
 	if(mappedTexture.pData) {
 		for(uint32_t y = 0; y < guiStuff.RenderTarget.metrics().y; ++y) {
 			::gpk::vcbgra			scanLineSrc					= guiStuff.RenderTarget[y];
-			::gpk::vbgra			scanLineDst					= {(::gpk::bgra*)(&((char*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
+			::gpk::vbgra			scanLineDst					= {(::gpk::bgra*)(&((sc_t*)mappedTexture.pData)[y * mappedTexture.RowPitch]), scanLineSrc.size()};
 			memcpy(scanLineDst.begin(), scanLineSrc.begin(), scanLineSrc.byte_count());
 			//for(uint32_t x = 0; x < scanLineDst.size(); ++x)
 			//	 scanLineDst.begin()[x].a	= scanLineDst.begin()[x].a;
@@ -148,7 +148,7 @@ static	::gpk::error_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeM
 	}
 	{ // Render 3d scene
 		//(void)engineScene; (void)lightPos; (void)cameraPosition; (void)cameraTarget; (void)nearFar;
-		gpk_necs(gpk::d3dDrawEngineScene(d3dApp.Scene, engineScene, d3dApp.DeviceResources->GetLogicalSize().u16(), lightPos, cameraPosition, cameraTarget, nearFar));
+		gpk_necs(gpk::d3dDrawEngineScene(d3dApp.Scene, engineScene, d3dApp.DeviceResources->GetLogicalSize().u1_t(), lightPos, cameraPosition, cameraTarget, nearFar));
 	}
 	{ // Render GUI
 		gpk_necs(gpk::d3dGUIDraw(*d3dApp.DeviceResources, d3dApp.GUIStuff)); 

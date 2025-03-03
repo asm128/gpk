@@ -39,7 +39,7 @@ namespace gpk
 		inlcxpr	T*					end				()				noexcept	{ return Data + size(); }
 
 		inlcxpr	const ::gpk::n2u32&	metrics			()		const	noexcept	{ return Size; }
-		inlcxpr	::gpk::n2u16		metrics16		()		const	noexcept	{ return Size.u16(); }
+		inlcxpr	::gpk::n2u16		metrics16		()		const	noexcept	{ return Size.u1_t(); }
 		inlcxpr	uint32_t			size			()		const	noexcept	{ return area(); }
 		inlcxpr	uint32_t 			byte_count		()		const	noexcept	{ return area() * sizeof(T); }
 		inlcxpr	uint32_t			area			()		const	noexcept	{ return Size.x * Size.y; }
@@ -79,8 +79,8 @@ namespace gpk
 	}
 
 	// view common typedefs
-	typedef	::gpk::grid<char	>				gc		, gchar;
-	typedef	::gpk::grid<uchar_t	>				guc		, guchar;
+	typedef	::gpk::grid<sc_t	>				gc		, gchar;
+	typedef	::gpk::grid<uc_t	>				guc		, guchar;
 	typedef	::gpk::grid<uint8_t	>				gub		;
 	typedef	::gpk::grid<int8_t	>				gb		;
 	typedef	::gpk::grid<float	>				gf32	;
@@ -93,7 +93,7 @@ namespace gpk
 	typedef	::gpk::grid<int16_t	>				gi16	;
 	typedef	::gpk::grid<int32_t	>				gi32	;
 	typedef	::gpk::grid<int64_t	>				gi64	;
-	typedef	::gpk::grid<const ::gpk::n2<char>>	g2c		;
+	typedef	::gpk::grid<const ::gpk::n2<sc_t>>	g2c		;
 	typedef	::gpk::grid<const ::gpk::n2u8>		g2ub	;
 	typedef	::gpk::grid<const ::gpk::n2i8>		g2b		;
 	typedef	::gpk::grid<const ::gpk::n2f32>		g2f32	;
@@ -108,7 +108,7 @@ namespace gpk
 	typedef	::gpk::grid<const ::gpk::n2i64>		g2i64	;
 
 
-	typedef	::gpk::grid<::gpk::n2<char>>		gn2c	;
+	typedef	::gpk::grid<::gpk::n2<sc_t>>		gn2c	;
 	typedef	::gpk::grid<::gpk::n2u8>			gn2ub	;
 	typedef	::gpk::grid<::gpk::n2i8>			gn2b	;
 	typedef	::gpk::grid<::gpk::n2f32>			gn2f32	;
@@ -121,7 +121,7 @@ namespace gpk
 	typedef	::gpk::grid<::gpk::n2i16>			gn2i16	;
 	typedef	::gpk::grid<::gpk::n2i32>			gn2i32	;
 	typedef	::gpk::grid<::gpk::n2i64>			gn2i64	;
-	typedef	::gpk::grid<const ::gpk::n2<char>>	gc2c	;
+	typedef	::gpk::grid<const ::gpk::n2<sc_t>>	gc2c	;
 	typedef	::gpk::grid<const ::gpk::n2u8>		gc2ub	;
 	typedef	::gpk::grid<const ::gpk::n2i8>		gc2b	;
 	typedef	::gpk::grid<const ::gpk::n2f32>		gc2f32	;
@@ -136,7 +136,7 @@ namespace gpk
 	typedef	::gpk::grid<const ::gpk::n2i64>		gc2i64	;
 
 
-	typedef	::gpk::grid<::gpk::n3<char>>		gn3c	;
+	typedef	::gpk::grid<::gpk::n3<sc_t>>		gn3c	;
 	typedef	::gpk::grid<::gpk::n3u8>			gn3ub	;
 	typedef	::gpk::grid<::gpk::n3i8>			gn3b	;
 	typedef	::gpk::grid<::gpk::n3f32>			gn3f32	;
@@ -149,7 +149,7 @@ namespace gpk
 	typedef	::gpk::grid<::gpk::n3i16>			gn3i16	;
 	typedef	::gpk::grid<::gpk::n3i32>			gn3i32	;
 	typedef	::gpk::grid<::gpk::n3i64>			gn3i64	;
-	typedef	::gpk::grid<const ::gpk::n3<char>>	gc3c	;
+	typedef	::gpk::grid<const ::gpk::n3<sc_t>>	gc3c	;
 	typedef	::gpk::grid<const ::gpk::n3u8>		gc3ub	;
 	typedef	::gpk::grid<const ::gpk::n3i8>		gc3b	;
 	typedef	::gpk::grid<const ::gpk::n3f32>		gc3f32	;

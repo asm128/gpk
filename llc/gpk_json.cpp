@@ -6,6 +6,8 @@
 #include "gpk_parse.h"
 #include "gpk_math.h"
 
+using gpk::sc_t;
+
 #define json_info_printf(...) // info_printf
 #define json_error_printf error_printf
 
@@ -56,13 +58,13 @@
 	return ::gpk::jsonParse(file.Reader, file.Bytes);
 }
 
-::gpk::error_t			gpk::jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char>> & outputJsons)		{
+::gpk::error_t			gpk::jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<sc_t>> & outputJsons)		{
 	const uint32_t				remainder					= jsonArrayToSplit.Children.size() % blockSize;
 	const uint32_t				countParts					= jsonArrayToSplit.Children.size() / blockSize + one_if(remainder);
 	gpk_necs(outputJsons.resize(countParts));
 	uint32_t					iSourceRecord						= 0;
 	for(uint32_t iPart = 0; iPart < outputJsons.size(); ++iPart) {
-		::gpk::apod<char>			& outputJson				= outputJsons[iPart];
+		::gpk::apod<sc_t>			& outputJson				= outputJsons[iPart];
 		gpk_necs(outputJson.push_back('['));
 		for(uint32_t iPartRecord = 0, countPartRecords = (remainder && iPart == countParts - 1) ? remainder : blockSize
 			; iPartRecord < countPartRecords
@@ -76,12 +78,12 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char> & output)			{
+::gpk::error_t			gpk::jsonWrite				(const ::gpk::SJSONNode* node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<sc_t> & output)			{
 	if(node->Token->Type == ::gpk::JSON_TYPE_VALUE && node->Children.size())
 		node					= node->Children[0];
 	switch(node->Token->Type) {
 	case ::gpk::JSON_TYPE_INTEGER		: {
-		char						temp[64];
+		sc_t						temp[64];
 #if defined(GPK_WINDOWS)
 		snprintf(temp, ::gpk::size(temp) - 2, "%lli", (uint64_t)node->Token->Value);
 #else
@@ -93,7 +95,7 @@
 	case ::gpk::JSON_TYPE_DECIMAL		: {
 		double						f							= 0;
 		memcpy(&f, &node->Token->Value, sizeof(double));
-		char						temp[64]					= {};
+		sc_t						temp[64]					= {};
 		uint32_t					lenNum						= snprintf(temp, ::gpk::size(temp) - 2, "%.16f", f);
 		while(lenNum > 0 && (temp[lenNum] == 0 || temp[lenNum] == '0')) {
 			temp[lenNum] = 0;
@@ -142,7 +144,7 @@ static	::gpk::error_t	jsonCloseElement			(::gpk::SJSONReaderState & stateReader,
 	closing					= stateReader.CurrentElement; //&object[stateReader.IndexCurrentElement];
 	closing->Span.End		= (uint32_t)indexChar + 1;
 	const ::gpk::vcc			labelType				= ::gpk::get_value_label(closing->Type);
-	const char					* labelText				= labelType.begin();
+	const sc_t					* labelText				= labelType.begin();
 	(void)labelText;
 	json_info_printf("%s closed. Index %.2i. Level: %i. Parent index: %i. Node type: %i. Begin: %i. End: %i.", labelText, stateReader.IndexCurrentElement, stateReader.NestLevel, closing->ParentIndex, closing->Type, closing->Span.Begin, closing->Span.End);
 	stateReader.IndexCurrentElement					= closing->ParentIndex;
@@ -185,8 +187,8 @@ static	::gpk::error_t	jsonParseStringCharacter	(::gpk::SJSONReaderState & stateR
 	::gpk::error_t				errVal						= 0;
 	switch(stateReader.CharCurrent) {
 	default:
-		seterr_break_if(((::gpk::uchar_t)stateReader.CharCurrent) < 0x20 || ((::gpk::uchar_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
-		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(((::gpk::uc_t)stateReader.CharCurrent) < 0x20 || ((::gpk::uc_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uc_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uc_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case ' '	: case '\t'	: case '\r'	: case '\n'	: case '\f'	: case '\b'	: // Skip these characters without error.
 		::gpk::skipToNextCharacter(stateReader.IndexCurrentChar, jsonAsString);
@@ -237,7 +239,7 @@ static	::gpk::error_t	jsonParseKeyword			(const ::gpk::vcc & token, ::gpk::JSON_
 
 static	::gpk::error_t	lengthJsonNumber			(uint32_t indexCurrentChar, const ::gpk::vcc & jsonAsString)	{
 	const uint32_t				offset						= indexCurrentChar;
-	char						charCurrent					= jsonAsString[indexCurrentChar];
+	sc_t						charCurrent					= jsonAsString[indexCurrentChar];
 	while(indexCurrentChar < jsonAsString.size() &&
 		( ( charCurrent >= '1' && charCurrent <= '9')
 		 || charCurrent == '0'
@@ -299,7 +301,7 @@ static	::gpk::error_t	parseSign					(const ::gpk::vcc & strNumber, bool & isNega
 
 static	::gpk::error_t	parseJsonNumber				(::gpk::SJSONReaderState & stateReader, ::gpk::apod<::gpk::SJSONToken> & tokens, const ::gpk::vcc & jsonAsString)	{
 	const uint32_t				offset						= stateReader.IndexCurrentChar;
-	char						charCurrent					= jsonAsString[offset];
+	sc_t						charCurrent					= jsonAsString[offset];
 
 	bool						isNegative					= false;
 	bool						isFloat						= false;
@@ -679,41 +681,41 @@ static	::gpk::error_t	decodeUnicodeEscapeSequence	(::gpk::vcc input, uint32_t& r
 
 ::gpk::error_t	gpk::jsonObjectGetString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value)	{ value = reader.View[iNode]; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value)	{ value = (bool )reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value)	{ value = (i64_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i32_t	& value)	{ value = (i32_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i16_t	& value)	{ value = (i16_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i8_t	& value)	{ value = (i8_t )reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u64_t	& value)	{ value = (u64_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u32_t	& value)	{ value = (u32_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u16_t	& value)	{ value = (u16_t)reader.Token[iNode].Value; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u8_t	& value)	{ value = (u8_t )reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value)	{ value = (s3_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s2_t	& value)	{ value = (s2_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s1_t	& value)	{ value = (s1_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s0_t	& value)	{ value = (s0_t )reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u3_t	& value)	{ value = (u3_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u2_t	& value)	{ value = (u2_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u1_t	& value)	{ value = (u1_t)reader.Token[iNode].Value; return iNode; }
+::gpk::error_t	gpk::jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u0_t	& value)	{ value = (u0_t )reader.Token[iNode].Value; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value)	{ double dealiased; memcpy(&dealiased, &reader[iNode]->Token->Value, sizeof(double)); value = dealiased; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, float	& value)	{ double dealiased; memcpy(&dealiased, &reader[iNode]->Token->Value, sizeof(double)); value = (float)dealiased; return iNode; }
 
 // TODO: Finish
-//::gpk::error_t	gpk::jsonObjectGetIntegerAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	 & value)	{ int64_t	integer; jsonObjectGetInteger(reader, iNode, integer); char tmp[64]; sprintf_s(tmp, "%lli", integer); value = ::gpk::label(tmp); return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetIntegerAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	 & value)	{ int64_t	integer; jsonObjectGetInteger(reader, iNode, integer); sc_t tmp[64]; sprintf_s(tmp, "%lli", integer); value = ::gpk::label(tmp); return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetIntegerAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	 & value)	{ int64_t	integer; jsonObjectGetInteger(reader, iNode, integer); value = 0 != integer; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetIntegerAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double & value)	{ int64_t	integer; jsonObjectGetInteger(reader, iNode, integer); value = double(integer); return iNode; }
-::gpk::error_t	gpk::jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	 & value)	{ double	decimal; jsonObjectGetDecimal(reader, iNode, decimal); value = i64_t (decimal); return iNode; }
+::gpk::error_t	gpk::jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	 & value)	{ double	decimal; jsonObjectGetDecimal(reader, iNode, decimal); value = s3_t (decimal); return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetDecimalAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	 & value)	{ double	decimal; jsonObjectGetDecimal(reader, iNode, decimal); value = decimal; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetDecimalAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	 & value)	{ double	decimal; jsonObjectGetDecimal(reader, iNode, decimal); value = 0 != decimal; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetStringAsInteger (const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	 & value)	{ gpk::vcc	string ; jsonObjectGetString (reader, iNode, string ); ::parseJsonNumber(string, value); return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetStringAsInteger (const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	 & value)	{ gpk::vcc	string ; jsonObjectGetString (reader, iNode, string ); ::parseJsonNumber(string, value); return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetStringAsBoolean (const ::gpk::SJSONReader & reader, uint32_t iNode, bool	 & value)	{ gpk::vcc	string ; jsonObjectGetString (reader, iNode, string ); value = string.size() ? vcc2bool(string) : false; return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetStringAsDecimal (const ::gpk::SJSONReader & reader, uint32_t iNode, double & value)	{ gpk::vcc	string ; jsonObjectGetString (reader, iNode, string ); ::parseJsonNumber(value = string ; return iNode; }
-::gpk::error_t	gpk::jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	 & value)	{ bool		boolean; jsonObjectGetBoolean(reader, iNode, boolean); value = one_if(boolean); return iNode; }
+::gpk::error_t	gpk::jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	 & value)	{ bool		boolean; jsonObjectGetBoolean(reader, iNode, boolean); value = one_if(boolean); return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetBooleanAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	 & value)	{ bool		boolean; jsonObjectGetBoolean(reader, iNode, boolean); value = boolean; return iNode; }
 ::gpk::error_t	gpk::jsonObjectGetBooleanAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double & value)	{ bool		boolean; jsonObjectGetBoolean(reader, iNode, boolean); value = one_if(boolean); return iNode; }
 // 
 //::gpk::error_t	gpk::jsonObjectGetAsString	(const ::gpk::SJSONReader & reader, uint32_t iNode, vcc		& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_STRING ) return jsonObjectGetString (reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_BOOLEAN) { bool boolean = false; gpk_necs(jsonObjectGetBoolean(reader, iNode, boolean)); ::gpk::bool2char(boolean, value); } return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetAsBoolean	(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_BOOLEAN) return jsonObjectGetBoolean(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_STRING ) { ::gpk::vcc boolean = {}; gpk_necs(jsonObjectGetString(reader, iNode, boolean)); value = ::gpk::vcc2bool(boolean); }; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i32_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i16_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i8_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u64_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u32_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u16_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
-//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u8_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s2_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s1_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s0_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u3_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u2_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u1_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
+//::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u0_t	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) return jsonObjectGetInteger(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) {}; return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) return jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) {}; return iNode; }
 //::gpk::error_t	gpk::jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, float	& value)	{ if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_DECIMAL) return jsonObjectGetDecimal(reader, iNode, value); else if(reader.Token[iNode].Type == ::gpk::JSON_TYPE_INTEGER) {}; return iNode; }
 
@@ -721,13 +723,13 @@ static	::gpk::error_t	decodeUnicodeEscapeSequence	(::gpk::vcc input, uint32_t& r
 
 ::gpk::error_t	gpk::jsonObjectGetAsString	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, vcc		& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetString (reader, index, value); } 
 ::gpk::error_t	gpk::jsonObjectGetAsBoolean	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, bool	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetBoolean(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i64_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i32_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i16_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i8_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u64_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u32_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u16_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
-::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u8_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s3_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s2_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s1_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s0_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u3_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u2_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u1_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
+::gpk::error_t	gpk::jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u0_t	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetInteger(reader, index, value); } 
 ::gpk::error_t	gpk::jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, double	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetDecimal(reader, index, value); } 
 ::gpk::error_t	gpk::jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, float	& value)	{ int32_t index; json_rew_if_failed(index = jsonObjectValueGet(reader, iNode, key), "iNode: %i, key: '%s', node: '%s'.", iNode, ::gpk::toString(key).begin(), ::gpk::toString(reader.View[iNode]).begin()); return jsonObjectGetDecimal(reader, index, value); } 

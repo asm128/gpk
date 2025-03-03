@@ -52,7 +52,7 @@ namespace gpk
 		}
 
 		::gpk::error_t			CreateSizeDependentResources(ID3D11Device3 * d3dDevice, ::gpk::n2u16 windowSize)	{
-			gpk_necs(RenderTarget.resize(windowSize.u32(), {0, 0, 0, 0}));
+			gpk_necs(RenderTarget.resize(windowSize.u2_t(), {0, 0, 0, 0}));
 			gpk_necs(gpk::d3dCreateTextureDynamic(d3dDevice, Texture2D, ShaderResourceView, RenderTarget));
 			return 0;
 		}
@@ -78,7 +78,7 @@ namespace gpk
 				::gpk::pcom<ID3D11VertexShader>	vertexShader;
 
 				::gpk::vcs					shaderName					= "vsGUI";
-				char						shaderFileName	[1024]		= {};
+				sc_t						shaderFileName	[1024]		= {};
 				cnstxpr	D3D11_INPUT_ELEMENT_DESC	vertexDesc []		=
 					{ { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 00, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 					, { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
@@ -95,7 +95,7 @@ namespace gpk
 			}
 			{
 				::gpk::vcs					shaderName							= "psGUI";
-				char						shaderFileName	[1024]				= {};
+				sc_t						shaderFileName	[1024]				= {};
 				::gpk::pcom<ID3D11PixelShader>	pixelShader;
 				sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 				::gpk::ai8					filePS;
@@ -266,7 +266,7 @@ namespace gpk
 		}
 
 		::gpk::error_t			SetWindowSize			(::gpk::n2u16 windowSize)	{
-			gpk_necs(DeviceResources->SetLogicalSize(windowSize.f32()));
+			gpk_necs(DeviceResources->SetLogicalSize(windowSize.f2_t()));
 			gpk_necs(CreateSizeDependentResources(windowSize));
 			return 0;
 		}

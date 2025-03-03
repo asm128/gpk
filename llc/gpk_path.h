@@ -10,7 +10,7 @@ namespace gpk
 		::gpk::aobj<::gpk::SPathContents>	Folders					= {};
 	};
 
-	::gpk::error_t						pathCreate				(const ::gpk::vcc & folderName, const char separator = '/');	// Recursive
+	::gpk::error_t						pathCreate				(const ::gpk::vcc & folderName, const sc_t separator = '/');	// Recursive
 	::gpk::error_t						pathList				(const ::gpk::vcc & pathToList, ::gpk::aachar & output, bool listFolders, const ::gpk::vcc extension = {});		// Not recursive
 	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::aachar & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
 	::gpk::error_t						pathList				(const ::gpk::SPathContents & input, ::gpk::avcc & output, const ::gpk::vcc extension = {});	// recursively walk over a pathcontents hierarchy and store all the file names into "output"
@@ -23,8 +23,8 @@ namespace gpk
 	}	// Recursive
 
 	// this function was ceated in order to work around the problem of the JSON system returning pointers to the original string, without having the opportunity of processing escaped path slashes.
-	//::gpk::error_t						pathNameCompose			(::gpk::apod<char> & out_composed, ::gpk::vcs fileName, ::gpk::vcs path = {}, ::gpk::vcs extension = {});
-	::gpk::error_t						pathNameCompose			(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed);
+	//::gpk::error_t						pathNameCompose			(::gpk::apod<sc_t> & out_composed, ::gpk::vcs fileName, ::gpk::vcs path = {}, ::gpk::vcs extension = {});
+	::gpk::error_t						pathNameCompose			(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<sc_t> & out_composed);
 	::gpk::error_t						findLastSlash			(const ::gpk::vcc & path);
 
 } // namespace

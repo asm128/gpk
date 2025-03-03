@@ -90,7 +90,7 @@ namespace gpk
 					Children[iEntity].create();
 
 				gpk_necall(gpk::loadView(input, *Children[iEntity]), "iEntity: %i", iEntity);
-				::gpk::apod<char>					name;
+				::gpk::apod<sc_t>					name;
 				gpk_necall(gpk::loadView(input, name), "iEntity: %i", iEntity);
 				Names[iEntity]					= ::gpk::label(::gpk::vcc{name});
 			}

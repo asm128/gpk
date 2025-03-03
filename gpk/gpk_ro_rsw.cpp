@@ -3,9 +3,11 @@
 #include "gpk_io.h"
 #include "gpk_file.h"
 
+GPK_USING_TYPEINT();
+
 #pragma pack(push, 1)
 	struct SRSWHeader {
-		char										Filecode[4];
+		sc_t										Filecode[4];
 		uint8_t										VersionMajor;
 		uint8_t										VersionMinor;
 	};
@@ -17,8 +19,8 @@
 		int32_t										Left			;
 		int32_t										Right			;
 		uint32_t									ObjectCount;
-		//unsigned char								Unknown2	[8];
-		//unsigned char								UnknownStr	[40];
+		//uc_t								Unknown2	[8];
+		//uc_t								UnknownStr	[40];
 		//uint32_t									UnknownInts	[2];
 	};
 #pragma pack(pop)

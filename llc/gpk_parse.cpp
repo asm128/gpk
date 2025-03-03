@@ -4,7 +4,7 @@
 #include "gpk_math.h"
 #include <ctype.h>
 
-bool										gpk::isSpaceCharacter		(const char characterToTest)		{
+bool										gpk::isSpaceCharacter		(const sc_t characterToTest)		{
 	switch(characterToTest) {
 	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
 		return true;
@@ -25,9 +25,9 @@ bool										gpk::isSpaceCharacter		(const char characterToTest)		{
 
 ::gpk::error_t			gpk::parseArbitraryBaseInteger				(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t* number_)	{
 	uint32_t										totalCharsProcessed							= 0;
-	::gpk::apod<char>								stringToParse								= {};
+	::gpk::apod<sc_t>								stringToParse								= {};
 	for(uint32_t iChar = 0; iChar < sourceChars.size() && 0 != sourceChars[iChar];) {
-		const char										sourceChar									= (char)tolower(sourceChars[iChar]);
+		const sc_t										sourceChar									= (sc_t)tolower(sourceChars[iChar]);
 		bool											bSymbolProcessed							= false;
 		for(uint32_t iSymbol = 0; iSymbol < base; ++iSymbol) {
 			if(symbolList[iSymbol] == sourceChar) {

@@ -9,8 +9,8 @@ namespace gpk
 	tplt<tpnm _tKey>
 	struct keyed_bit_array {
 		typedef	_tKey			K;
-		typedef	gpk::vbit<u64>	TView;
-		typedef	gpk::vbit<cu64>	TViewConst;
+		typedef	gpk::vbit<u3_t>	TView;
+		typedef	gpk::vbit<u3_c>	TViewConst;
 
 		::gpk::aau64			Bits;		// One data array per client.
 		::gpk::avcc				FieldNames;	// One for all.

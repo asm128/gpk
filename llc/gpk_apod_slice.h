@@ -9,8 +9,8 @@ namespace gpk
 	tplt<tpnm _tDimension>	
 	using	aslice	= ::gpk::apod<::gpk::slice<_tDimension>>;
 
-	typedef	::gpk::aslice<char		>	aslicec		, aslicechar;
-	typedef	::gpk::aslice<uchar_t	>	asliceuc	, asliceuchar;
+	typedef	::gpk::aslice<sc_t		>	aslicec		, aslicechar;
+	typedef	::gpk::aslice<uc_t	>	asliceuc	, asliceuchar;
 	typedef	::gpk::aslice<float		>	aslicef32	;
 	typedef	::gpk::aslice<double	>	aslicef64	;
 	typedef	::gpk::aslice<uint8_t	>	asliceu8	;

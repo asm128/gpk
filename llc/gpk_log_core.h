@@ -13,10 +13,10 @@
 
 namespace gpk
 {
-	typedef	void	(*log_print_t)		(const char * text);
-	void			_base_log_print		(const char * text);
-	typedef	void	(*log_write_t)		(const char * text, uint32_t textLen);
-	void			_base_log_write		(const char * text, uint32_t textLen);
+	typedef	void	(*log_print_t)		(const sc_t * text);
+	void			_base_log_print		(const sc_t * text);
+	typedef	void	(*log_write_t)		(const sc_t * text, uint32_t textLen);
+	void			_base_log_write		(const sc_t * text, uint32_t textLen);
 #define base_log_write(text, textLen)	::gpk::_base_log_write(text, textLen)
 #define base_log_print(text)			::gpk::_base_log_print(text)
 
@@ -37,7 +37,7 @@ namespace gpk
 #ifdef GPK_WINDOWS
 #	define gpk_throw(...)								throw(__VA_ARGS__)
 #else
-#	define gpk_throw(...)								do { char * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (char)i; ::gpk::dummy(__VA_ARGS__); } while(0)
+#	define gpk_throw(...)								do { sc_t * nulp = 0; unsigned int i = 0; while(++i) nulp[i] = (sc_t)i; ::gpk::dummy(__VA_ARGS__); } while(0)
 #endif
 
 #ifndef block_log

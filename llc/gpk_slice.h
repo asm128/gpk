@@ -15,21 +15,21 @@ namespace gpk
 		tplt<tpnm _tOther> 
 		inlcxpr	slice<_tOther>		Cast		()		const	noexcept	{ return{(_tOther)Begin , (_tOther)End  }; } 
 
-		inlcxpr	slice<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	slice<uint16_t>		u16			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	slice<uint32_t>		u32			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	slice<uint64_t>		u64			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	slice<int8_t>		i8			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	slice<int16_t>		i16			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	slice<int32_t>		i32			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	slice<int64_t>		i64			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	slice<float>		f32			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	slice<double>		f64			()		const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	slice<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	slice<uint16_t>		u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	slice<uint32_t>		u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	slice<uint64_t>		u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	slice<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	slice<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	slice<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	slice<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	slice<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	slice<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
 	};
 #pragma pack(pop)
 
-	typedef	slice<char		>	slicechar;
-	typedef	slice<uchar_t	>	sliceuchar;
+	typedef	slice<sc_t		>	slicechar;
+	typedef	slice<uc_t	>	sliceuchar;
 	typedef slice<float		>	slicef32;
 	typedef slice<double	>	slicef64;
 	typedef slice<uint8_t	>	sliceu8;

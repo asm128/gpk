@@ -40,8 +40,8 @@ namespace gpk
 		};
 
 	struct SStandardEntryPointArgs {
-		::gpk::view<const char*>		ArgsCommandLine		;
-		::gpk::apod<char>				EnvironmentBlock	;
+		::gpk::view<const sc_t*>		ArgsCommandLine		;
+		::gpk::apod<sc_t>				EnvironmentBlock	;
 	};
 
 	struct SRuntimeValuesDetail {

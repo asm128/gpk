@@ -3,6 +3,8 @@
 #include "gpk_png.h"
 #include "gpk_file.h"
 
+using ::gpk::sc_t;
+
 #if defined(GPK_WINDOWS)
 
 #include <Windows.h>
@@ -63,7 +65,7 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC	(hMemDC);
 
-	::gpk::apod<char>			filename					= szFileName;
+	::gpk::apod<sc_t>			filename					= szFileName;
 	filename.resize(filename.size() - 3);
 	filename.append_string("png");
 

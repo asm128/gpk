@@ -19,27 +19,27 @@
 namespace gpk
 {
 #ifndef GPK_ARDUINO
-	void				_gpk_print_system_errors		(const char * prefix, uint32_t prefixLen);
+	void				_gpk_print_system_errors		(const sc_t * prefix, uint32_t prefixLen);
 #endif
 
 #ifdef GPK_WINDOWS
 	tplt<size_t prefixLength, size_t fmtLen, tpnm... TArgs>
-	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char (&format)[fmtLen], const TArgs... args)			{
-		char					timeString	[64]				= {};
+	static	void		_gpk_debug_printf				(int severity, const sc_t (&prefix)[prefixLength], const sc_t (&format)[fmtLen], const TArgs... args)			{
+		sc_t					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
 		base_log_write(timeString, (int)stringLength);
 		base_log_write(prefix, prefixLength);
 #else
 #	ifdef GPK_ATMEL
 	tplt<tpnm... TArgs>
-	static	void		_gpk_debug_printf				(const char* function, const __FlashStringHelper* format, const TArgs... args)			{
+	static	void		_gpk_debug_printf				(const sc_t* function, const __FlashStringHelper* format, const TArgs... args)			{
 		base_log_print_F("{");
 		base_log_print(function);
 		base_log_print_F("}:");
 #	else
 	tplt<size_t prefixLength, size_t fmtLen, tpnm... TArgs>
-	static	void		_gpk_debug_printf				(int severity, const char (&prefix)[prefixLength], const char * function, const char (&format)[fmtLen], const TArgs... args)			{
-		char					timeString	[64]				= {};
+	static	void		_gpk_debug_printf				(int severity, const sc_t (&prefix)[prefixLength], const sc_t * function, const sc_t (&format)[fmtLen], const TArgs... args)			{
+		sc_t					timeString	[64]				= {};
 		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
 		base_log_write(timeString, (int)stringLength);
 		base_log_write(prefix, strlen(prefix));
@@ -52,7 +52,7 @@ namespace gpk
 #ifdef GPK_ESP32 // Use dynamic string buffer to save flash space.
 		if(format) {
 			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
-			if(char * customDynamicString = (char*)malloc(bufferSize)) {
+			if(sc_t * customDynamicString = (sc_t*)malloc(bufferSize)) {
 				stringLength	= snprintf(customDynamicString, bufferSize - 2, format, args...);
 				customDynamicString[::gpk::min(stringLength, bufferSize - 2)] = '\n';
 				customDynamicString[::gpk::min(stringLength + 1, bufferSize - 1)] = 0;
@@ -62,11 +62,11 @@ namespace gpk
 		}
 #else
 #	ifdef GPK_ATMEL
-		char					customDynamicString	[128]		= {};
-		size_t 					stringLength					= snprintf_P(customDynamicString, sizeof(customDynamicString) - 1, (const char*)format, args...);
+		sc_t					customDynamicString	[128]		= {};
+		size_t 					stringLength					= snprintf_P(customDynamicString, sizeof(customDynamicString) - 1, (const sc_t*)format, args...);
 		customDynamicString[min(stringLength, (size_t)sizeof(customDynamicString)-1)] = '\n';
 	#else
-		char					customDynamicString	[fmtLen + 1024 * 32]	= {};
+		sc_t					customDynamicString	[fmtLen + 1024 * 32]	= {};
 		stringLength		= ::gpk::sprintf_s(customDynamicString, format, args...);
 		customDynamicString[min(stringLength, sizeof(customDynamicString)-2)] = '\n';
 		if(2 >= severity)

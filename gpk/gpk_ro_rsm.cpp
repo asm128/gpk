@@ -4,9 +4,11 @@
 #include "gpk_io.h"
 #include "gpk_file.h"
 
+GPK_USING_TYPEINT();
+
 #pragma pack(push, 1)
-struct SRSMHeader {	// RSM Header
-	char										filecode[4];
+struct SRSMHeader {	// Represents the byte layout fou
+	sc_t										filecode[4];
 	uint8_t										versionMajor;
 	uint8_t										versionMinor;
 };

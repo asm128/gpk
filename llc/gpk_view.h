@@ -75,11 +75,11 @@ namespace gpk
 		inlcxpr	uint32_t		byte_count		()							const	noexcept	{ return uint32_t(Count * sizeof(T));	}
 		inlcxpr	uint32_t		bit_count		()							const	noexcept	{ return byte_count() * 8U;	}
 
-		inline	view<uint8_t>	u8				()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
-		inlcxpr	view<cuint8_t>	u8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
-		inlcxpr	view<cuint8_t>	cu8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
-		inline	view<char>		c				()									noexcept	{ return {(char*)Data, byte_count()};			}
-		inlcxpr	view<cchar_t>	cc				()							const	noexcept	{ return {(const char*)Data, byte_count()};		}
+		inline	view<uint8_t>	u0_t				()									noexcept	{ return {(uint8_t*)Data, byte_count()};		}
+		inlcxpr	view<u0_c>		u0_t				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inlcxpr	view<u0_c>		cu8				()							const	noexcept	{ return {(const uint8_t*)Data, byte_count()};	}
+		inline	view<sc_t>		c				()									noexcept	{ return {(sc_t*)Data, byte_count()};			}
+		inlcxpr	view<sc_c>		cc				()							const	noexcept	{ return {(const sc_t*)Data, byte_count()};		}
 
 		inlcxpr	const T*		begin			()							const	noexcept	{ return Data;			}
 		inlcxpr	const T*		end				()							const	noexcept	{ return Data + Count;	}
@@ -146,31 +146,31 @@ namespace gpk
 
 #pragma pack(pop)
 
-	typedef	::gpk::view<::gpk::uchar_t		>	vuc, vuchar;
-	typedef	::gpk::view<char				>	vc, vchar;
-	typedef	::gpk::view<float				>	vf32;
-	typedef	::gpk::view<double				>	vf64;
-	typedef	::gpk::view<uint8_t				>	vu8;
-	typedef	::gpk::view<uint16_t			>	vu16;
-	typedef	::gpk::view<uint32_t			>	vu32;
-	typedef	::gpk::view<uint64_t			>	vu64;
-	typedef	::gpk::view<int8_t				>	vi8;
-	typedef	::gpk::view<int16_t				>	vi16;
-	typedef	::gpk::view<int32_t				>	vi32;
-	typedef	::gpk::view<int64_t				>	vi64;
+	typedef	::gpk::view<uc_t>	vuc, vuchar;
+	typedef	::gpk::view<sc_t>	vc, vchar;
+	typedef	::gpk::view<f2_t>	vf32;
+	typedef	::gpk::view<f3_t>	vf64;
+	typedef	::gpk::view<u0_t>	vu8;
+	typedef	::gpk::view<u1_t>	vu16;
+	typedef	::gpk::view<u2_t>	vu32;
+	typedef	::gpk::view<u3_t>	vu64;
+	typedef	::gpk::view<s0_t>	vi8;
+	typedef	::gpk::view<s1_t>	vi16;
+	typedef	::gpk::view<s2_t>	vi32;
+	typedef	::gpk::view<s3_t>	vi64;
 
-	typedef	::gpk::view<const ::gpk::uchar_t>	vcuc, vcuchar;
-	typedef	::gpk::view<const char			>	vcc, vcchar;
-	typedef	::gpk::view<const float			>	vcf32;
-	typedef	::gpk::view<const double		>	vcf64;
-	typedef	::gpk::view<const uint8_t		>	vcu8;
-	typedef	::gpk::view<const uint16_t		>	vcu16;
-	typedef	::gpk::view<const uint32_t		>	vcu32;
-	typedef	::gpk::view<const uint64_t		>	vcu64;
-	typedef	::gpk::view<const int8_t		>	vci8;
-	typedef	::gpk::view<const int16_t		>	vci16;
-	typedef	::gpk::view<const int32_t		>	vci32;
-	typedef	::gpk::view<const int64_t		>	vci64;
+	typedef	::gpk::view<uc_c>	vcuc, vcuchar;
+	typedef	::gpk::view<sc_c>	vcc, vcchar;
+	typedef	::gpk::view<f2_c>	vcf32;
+	typedef	::gpk::view<f3_c>	vcf64;
+	typedef	::gpk::view<u0_c>	vcu8;
+	typedef	::gpk::view<u1_c>	vcu16;
+	typedef	::gpk::view<u2_c>	vcu32;
+	typedef	::gpk::view<u3_c>	vcu64;
+	typedef	::gpk::view<s0_c>	vci8;
+	typedef	::gpk::view<s1_c>	vci16;
+	typedef	::gpk::view<s2_c>	vci32;
+	typedef	::gpk::view<s3_c>	vci64;
 
 // Use this to initialize a constexpr vcs from a string literal
 #define GPK_CXS(constexpr_string_literal) ::gpk::vcc{uint32_t(sizeof(constexpr_string_literal) - 1), constexpr_string_literal}
@@ -219,34 +219,34 @@ namespace gpk
 	stacxpr	::gpk::vcc	VCC_FALSE		= {5, "false"};
 
 	ndstinx	::gpk::vcc	bool2vcc		(bool b)		{ return b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE; }
-	ndstinx	const char*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); }
+	ndstinx	const sc_t*	bool2char		(bool b)		{ return b ? ::gpk::VCC_TRUE.begin() : ::gpk::VCC_FALSE.begin(); }
 	ndstinx	uint8_t		bool2u8			(bool b)		{ return b ? 1 : 0; }
 	ndstinx	uint8_t		bool2i8			(bool b)		{ return b ? 1 : 0; }
-	stainli	const char*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); }
+	stainli	const sc_t*	bool2char		(bool b, ::gpk::vcc & output)	{ return (output = b ? ::gpk::VCC_TRUE : ::gpk::VCC_FALSE).begin(); }
 	stainli	bool		vcc2bool		(::gpk::vcc b)	{ return b.size() && b != VCC_FALSE; }
 
 
-	struct view_string : public view<char> {
+	struct view_string : public view<sc_t> {
 		inlcxpr			view_string				()													= default;
-		inlcxpr			view_string				(const view<char> & other)				noexcept	: view(other)				{}
-						view_string				(char * inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
-		tplt<u32 Len>	view_string				(char (&inputString)[Len])				noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		tplt<u32 Len>	view_string				(char (&inputString)[Len], uint32_t length)			: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+		inlcxpr			view_string				(const view<sc_t> & other)				noexcept	: view(other)				{}
+						view_string				(sc_t * inputString, uint32_t length)				: view(inputString, length)	{ Count = (length == (uint32_t)-1) ? (uint32_t)strlen(inputString) : length;					}
+		tplt<u2_t Len>	view_string				(sc_t (&inputString)[Len])				noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		tplt<u2_t Len>	view_string				(sc_t (&inputString)[Len], uint32_t length)			: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
 	};
 
-	struct view_const_string : public view<const char> {
+	struct view_const_string : public view<const sc_t> {
 		using vcc			::begin;
 
 		inlcxpr				view_const_string		()													: view(0, "") 				{}
-		inlcxpr				view_const_string		(const view<const char> & other)		noexcept	: view(other)				{}
-		tplt<u32 Len>		view_const_string		(const char (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
-		tplt<u32 Len>		view_const_string		(const char (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
-							view_const_string		(const char* inputString, uint32_t length)			: view(inputString ? inputString : "", length)	{
+		inlcxpr				view_const_string		(const view<const sc_t> & other)		noexcept	: view(other)				{}
+		tplt<u2_t Len>		view_const_string		(const sc_t (&inputString)[Len])		noexcept	: view(inputString)			{ Count = (uint32_t)strnlen(inputString, (uint32_t)Len);								}
+		tplt<u2_t Len>		view_const_string		(const sc_t (&inputString)[Len], uint32_t length)	: view(inputString, length)	{ if(length == (uint32_t)-1) Count = (uint32_t)strnlen(inputString, (uint32_t)Len);	}
+							view_const_string		(const sc_t* inputString, uint32_t length)			: view(inputString ? inputString : "", length)	{
 			if(length == (uint32_t)-1) 
 				Count 				= (uint32_t)strlen(begin());
 		}
 
-		inlcxpr	operator	const char*				()	const	{ return begin(); }
+		inlcxpr	operator	const sc_t*				()	const	{ return begin(); }
 	};
 
 	typedef	::gpk::view_string					vs;
@@ -279,7 +279,6 @@ namespace gpk
 		}
 		return 0;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t			find					(const T & valueToFind, const ::gpk::view<const T> & target, uint32_t offset = 0)		{
 		for(uint32_t iOffset = offset, offsetStop = target.size(); iOffset < offsetStop; ++iOffset)
@@ -287,7 +286,6 @@ namespace gpk
 				return (int32_t)iOffset;
 		return -1;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t					rfind					(const T & valueToFind, const ::gpk::view<const T> & target, int32_t offset = 0)		{
 		for(uint32_t iOffset = target.size() - 1 - offset; iOffset < target.size(); --iOffset)
@@ -295,7 +293,6 @@ namespace gpk
 				return iOffset;
 		return -1;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t					find_sequence_obj		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
@@ -311,7 +308,6 @@ namespace gpk
 		}
 		return -1;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t					rfind_sequence_obj		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset) {
@@ -327,7 +323,6 @@ namespace gpk
 		}
 		return -1;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t					find_sequence_pod		(const ::gpk::view<T> & sequence, const ::gpk::view<T> & target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)offset, offsetStop = ((int32_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset)
@@ -335,7 +330,6 @@ namespace gpk
 				return iOffset;
 		return -1;
 	}
-
 	tplt<tpnm T>
 	::gpk::error_t					rfind_sequence_pod		(const ::gpk::view<T> & sequence, const ::gpk::view<T>& target, uint32_t offset = 0)	{
 		for(int32_t iOffset = (int32_t)(target.size() - sequence.size() - offset); iOffset >= 0; --iOffset)

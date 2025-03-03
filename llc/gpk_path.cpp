@@ -19,10 +19,10 @@
 //#	include <unistd.h>
 #endif
 
-::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const char separator) {
+::gpk::error_t			gpk::pathCreate				(const ::gpk::vcc & pathName, const sc_t separator) {
 	rww_if(0 == pathName.begin(), "%s.", "pathName is null.");
 #ifndef GPK_ATMEL
-	char						folder[1024]				= {};
+	sc_t						folder[1024]				= {};
 	int32_t						offsetBar					= -1;
 	do {
 		++offsetBar;
@@ -62,10 +62,10 @@
 		;
 }
 
-::gpk::error_t			gpk::pathNameCompose		(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<char> & out_composed)		{
+::gpk::error_t			gpk::pathNameCompose		(const ::gpk::vcc & path, const ::gpk::vcc & fileName, ::gpk::apod<sc_t> & out_composed)		{
 	if(path.size()) {
 		for(uint32_t iChar = 0; iChar < path.size(); ++iChar) {
-			const char					curChar						= path[iChar];
+			const sc_t					curChar						= path[iChar];
 			if(curChar == '\\' && iChar < (path.size() - 1) && '\\' == path[iChar + 1])
 				++iChar;
 			out_composed.push_back(curChar);
@@ -76,7 +76,7 @@
 
 	if(fileName.size()) {
 		for(uint32_t iChar = ('\\' == fileName[0]) ? 1 : 0; iChar < fileName.size(); ++iChar) {
-			const char					curChar						= fileName[iChar];
+			const sc_t					curChar						= fileName[iChar];
 			if(curChar == '\\' && iChar < (fileName.size() - 1) && '\\' == fileName[iChar + 1])
 				++iChar;
 			out_composed.push_back(curChar);
@@ -98,7 +98,7 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<::gpk::apod<char>> & output, const ::gpk::vcc extension)					{
+::gpk::error_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aobj<::gpk::apod<sc_t>> & output, const ::gpk::vcc extension)					{
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		const ::gpk::vcc			& fileName					= input.Files[iFile];
 		if(0 == extension.size() || (extension.size() < fileName.size() && 0 == strncmp(fileName.end() - extension.size(), extension.begin(), ::gpk::min(extension.size(), fileName.size()))))
@@ -109,16 +109,16 @@
 	return 0;
 }
 
-::gpk::error_t			gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<char>> & output, bool listFolders, const ::gpk::vcc extension)	{
-	stacxpr	char				curDir	[]					= ".";
-	stacxpr	char				parDir	[]					= "..";
+::gpk::error_t			gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::aobj<::gpk::apod<sc_t>> & output, bool listFolders, const ::gpk::vcc extension)	{
+	stacxpr	sc_t				curDir	[]					= ".";
+	stacxpr	sc_t				parDir	[]					= "..";
 
 	::gpk::achar				withoutTrailingSlash		= ::gpk::toString((pathToList.size() - 1 > (uint32_t)::gpk::findLastSlash(pathToList)) ? pathToList : ::gpk::vcc{pathToList.begin(), pathToList.size() - 1});
 
-	char						bufferFormat[16]			=  {};
+	sc_t						bufferFormat[16]			=  {};
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", withoutTrailingSlash.size());
 
-	char						sPath	[4096]				= {};
+	sc_t						sPath	[4096]				= {};
 	gpk_necall(snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, withoutTrailingSlash.begin()), "bufferFormat: '%s'. withoutTrailingSlash: '%s'", bufferFormat, withoutTrailingSlash.begin());
 
 #if defined(GPK_WINDOWS)
@@ -162,8 +162,8 @@
 }
 
 ::gpk::error_t			gpk::pathList				(const ::gpk::vcc & pathToList, ::gpk::SPathContents & pathContents, const gpk::vcc extension)						{
-	char						sPath[4096]					= {};
-	char						bufferFormat[36]			= {};
+	sc_t						sPath[4096]					= {};
+	sc_t						bufferFormat[36]			= {};
 
 	::gpk::achar				withoutTrailingSlash		= ::gpk::toString(pathToList);
 	if(withoutTrailingSlash.size() && withoutTrailingSlash.size() - 1 == (uint32_t)::gpk::findLastSlash(withoutTrailingSlash))
@@ -171,8 +171,8 @@
 
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%us/*.*", withoutTrailingSlash.size());
 	gpk_necall(snprintf(sPath, ::gpk::size(sPath) - 2, bufferFormat, withoutTrailingSlash.begin()), "%s", "Path too long?");
-	stacxpr	const char			curDir []					= ".";
-	stacxpr	const char			parDir []					= "..";
+	stacxpr	const sc_t			curDir []					= ".";
+	stacxpr	const sc_t			parDir []					= "..";
 #if defined(GPK_WINDOWS)
 	WIN32_FIND_DATAA			fdFile						= {};
 	HANDLE						hFind						= NULL;
@@ -192,7 +192,7 @@
 		}
 		else {
 			int32_t						indexFile;
-			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view<const char>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
+			gpk_necall(indexFile = pathContents.Files.push_back(::gpk::view<const sc_t>{sPath, (uint32_t)lenPath}), "%s", "Failed to push path to output list");
 			//pathContents.Files[indexFile].push_back(0);
 			verbose_printf("File %u: %s.", indexFile, sPath);
 		}
@@ -206,7 +206,7 @@
 	struct dirent				* drnt						= nullptr;
 	dir						= opendir(withoutTrailingSlash.begin());
 	while ((drnt = readdir(dir)) != NULL) {
-		::gpk::apod<char>			name						= ::gpk::vcs{drnt->d_name, (uint32_t)-1};
+		::gpk::apod<sc_t>			name						= ::gpk::vcs{drnt->d_name, (uint32_t)-1};
 		if (name != curDir && name != parDir) {
 			int32_t						lenPath						= snprintf(sPath, ::gpk::size(sPath) - 2, "%s/%s", withoutTrailingSlash.begin(), drnt->d_name);
 			if(drnt->d_type == DT_DIR) {

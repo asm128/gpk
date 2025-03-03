@@ -23,7 +23,7 @@
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);
 	const ::gpk::n2u8			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::n2i16			sizeKey						= (charSize + ::gpk::n2u8{6, 6}).i16();
+	const ::gpk::n2i16			sizeKey						= (charSize + ::gpk::n2u8{6, 6}).s1_t();
 	stacxpr	uint16_t			SIZE_BUTTON					= 88;
 	const ::gpk::n2i16			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
@@ -33,7 +33,7 @@
 		controlRoot.Align		= ::gpk::ALIGN_CENTER_BOTTOM;
 	}
 	for(uint32_t iKey = 0; iKey < vk.Keys.size(); ++iKey) {
-		char						text[8]		= {};
+		sc_t						text[8]		= {};
 		sprintf_s(text, "%c", vk.Keys[iKey]);
 
 		::gpk::cid_t				idKey			= ::gpk::controlCreate(gui);

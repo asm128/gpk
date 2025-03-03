@@ -8,34 +8,34 @@ namespace gpk
 {
 #pragma pack(push, 1)
 	struct SRSWWorldObject {
-					char								part0			[40];
-					char								part1			[40];
-					char								part2			[40];
+					sc_t								part0			[40];
+					sc_t								part1			[40];
+					sc_t								part2			[40];
 					::gpk::n3f32				Position		;
 					::gpk::n3f32				Rotation		;
 					::gpk::n3f32				Scale			;
-					char								u0				;
-					char								uf0				[4];
-					char								somePath		[16];
-					char								unkstr			[12];
+					sc_t								u0				;
+					sc_t								uf0				[4];
+					sc_t								somePath		[16];
+					sc_t								unkstr			[12];
 					::gpk::n3<int8_t>				unkchars		;
 					uint32_t							minusone		;
-					char								somevals		[8];
+					sc_t								somevals		[8];
 					float								part3			;
 					uint8_t								part4			[4];
 	};
 
 	struct SLightInfoRSW {
-					char								Name			[40];
-					char								ToDo			[40];
+					sc_t								Name			[40];
+					sc_t								ToDo			[40];
 					::gpk::n3f32				Position 		;
 					::gpk::n3f32				Color			;
 					float								ToDo2			;
 	};
 
 	struct SEffectInfoRSW {
-					char								name			[40];
-					char								nameUnk			[40];
+					sc_t								name			[40];
+					sc_t								nameUnk			[40];
 					::gpk::n3f32				position		;
 					int									id				;
 					float								loop			;
@@ -46,10 +46,10 @@ namespace gpk
 	};
 
 	struct SSoundInfoRSW {
-					char								name			[40];
-					char								strUnk0			[40];
-					char								fileName		[40];
-					char								strUnk1			[40];
+					sc_t								name			[40];
+					sc_t								strUnk0			[40];
+					sc_t								fileName		[40];
+					sc_t								strUnk1			[40];
 					::gpk::n3f32				position		;
 					float								vol				;
 					int32_t								width			;
@@ -59,11 +59,11 @@ namespace gpk
 	};
 
 	struct SModelInfoRSW {
-					char								Name			[40];
-					char								Filename		[40];
-					char								Str2			[40];
-					char								RootRSMNode		[40];
-					char								Str4			[40];
+					sc_t								Name			[40];
+					sc_t								Filename		[40];
+					sc_t								Str2			[40];
+					sc_t								RootRSMNode		[40];
+					sc_t								Str4			[40];
 					int32_t								AnimType		;
 					float								AnimSpeed		;
 					int32_t								BlockType		;
@@ -95,10 +95,10 @@ namespace gpk
 					::gpk::apod<SEffectInfoRSW	>	RSWEffects		;
 					::gpk::apod<SSoundInfoRSW	>	RSWSounds		;
 
-					char								INIFilename		[40];
-					char								GNDFilename		[40];
-					char								GATFilename		[40];
-					char								SOMFilename		[40];
+					sc_t								INIFilename		[40];
+					sc_t								GNDFilename		[40];
+					sc_t								GATFilename		[40];
+					sc_t								SOMFilename		[40];
 
 					::gpk::SRSWWorldWater				Water			;
 					::gpk::SRSWWorldLight				Light			;

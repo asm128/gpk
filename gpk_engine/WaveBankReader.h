@@ -20,6 +20,8 @@
 
 namespace DirectX
 {
+	GPK_USING_TYPEINT();
+
 	class WaveBankReader {
 		class WaveBankReaderImpl;	// Private implementation.
 		std::unique_ptr<WaveBankReaderImpl>	pImpl;
@@ -32,14 +34,14 @@ namespace DirectX
 		WaveBankReader&			operator=			(WaveBankReader const&)	= delete;
 
 		HRESULT					Open				(_In_z_ const wchar_t * szFileName)	noexcept;
-		uint32_t				Find				(_In_z_ const char * name)			const;
+		uint32_t				Find				(_In_z_ const sc_t * name)			const;
 
 		bool					IsPrepared			()	noexcept;
 		void					WaitOnPrepare		()	noexcept;
 
 		bool					HasNames			()	const noexcept;
 		bool					IsStreamingBank		()	const noexcept;
-		const char*				BankName			()	const noexcept;
+		const sc_t*				BankName			()	const noexcept;
 		uint32_t				Count				()	const noexcept;
 		uint32_t				BankAudioSize		()	const noexcept;
 		HANDLE					GetAsyncHandle		()	const noexcept;

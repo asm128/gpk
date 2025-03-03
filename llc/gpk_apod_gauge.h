@@ -9,8 +9,8 @@ namespace gpk
 	tplt<tpnm _tDimension>	
 	using	agauge	= ::gpk::apod<::gpk::gauge<_tDimension>>;
 
-	typedef	::gpk::agauge<char		>	agaugec		, agaugechar;
-	typedef	::gpk::agauge<uchar_t	>	agaugeuc	, agaugeuchar;
+	typedef	::gpk::agauge<sc_t		>	agaugec		, agaugechar;
+	typedef	::gpk::agauge<uc_t	>	agaugeuc	, agaugeuchar;
 	typedef	::gpk::agauge<float		>	agaugef32	;
 	typedef	::gpk::agauge<double	>	agaugef64	;
 	typedef	::gpk::agauge<uint8_t	>	agaugeu8	;

@@ -9,8 +9,8 @@ namespace gpk
 	tplt<tpnm _tDimension>	
 	using	aminmax	= ::gpk::apod<::gpk::minmax<_tDimension>>;
 
-	typedef	::gpk::aminmax<char		>	aminmaxc	, aminmaxchar;
-	typedef	::gpk::aminmax<uchar_t	>	aminmaxuc	, aminmaxuchar;
+	typedef	::gpk::aminmax<sc_t		>	aminmaxc	, aminmaxchar;
+	typedef	::gpk::aminmax<uc_t	>	aminmaxuc	, aminmaxuchar;
 	typedef	::gpk::aminmax<float	>	aminmaxf32	;
 	typedef	::gpk::aminmax<double	>	aminmaxf64	;
 	typedef	::gpk::aminmax<uint8_t	>	aminmaxu8	;

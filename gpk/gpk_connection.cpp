@@ -5,6 +5,8 @@
 #include "gpk_encoding.h"
 #include "gpk_deflate.h"
 
+using ::gpk::sc_t, ::gpk::sc_c;
+
 ::gpk::error_t			gpk::connectionPushData				(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu8 & data, bool bEncrypt, bool bCompress, uint8_t retryCount) {
 	ree_if(data.size() > ::gpk::UDP_PAYLOAD_SIZE_LIMIT, "%s", "Invalid payload size.");
 
@@ -132,7 +134,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		payloadHeader.Size					= messageToSend.Payload.size();
 		if(messageToSend.Command.Type == ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE) {
 			payloadHeader.MessageId				= messageToSend.Time;
-			cef_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (const char*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sizeof(::gpk::SUDPPayloadHeader) != ::sendto(client.Socket, (sc_c*)&payloadHeader, (int)sizeof(::gpk::SUDPPayloadHeader), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			gpk_necs(messageCacheSent.push_back(pMessageToSend));
 			info_printf("Sent response to message id: %llx", payloadHeader.MessageId);
 		}
@@ -179,7 +181,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 				}
 			}
 
-			cef_if((int)sendStream.CursorPosition != ::sendto(client.Socket, (const char*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sendStream.CursorPosition != ::sendto(client.Socket, (const sc_t*)sendStream.begin(), (int)sendStream.CursorPosition, 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			verbose_printf("%u bytes sent.", sendStream.CursorPosition);
 			{
 				gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
@@ -235,7 +237,7 @@ stacxpr	uint32_t		UDP_PAYLOAD_SENT_LIFETIME			= 1000000; // microseconds
 		if(messageToSend.Command.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD)
 			payloadsToSend.push_back(pMessageToSend);
 		else {
-			cef_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const char*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
+			cef_if((int)sizeof(::gpk::SUDPCommand) != ::sendto(client.Socket, (const sc_t*)&messageToSend.Command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_remote, sizeof(sockaddr_in)), "%s", "Error sending datagram.");	// Send data back
 			//pMessageToSend->Time										= currentTime;
 			gpk_necs(client.Queue.Sent.push_back(pMessageToSend));
 			gpk_necs(messageCacheSent.push_back(pMessageToSend));
@@ -338,7 +340,7 @@ static	::gpk::error_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & 
 	int							bytes_received						= {};
 	gpk_necs(receiveBuffer.resize(sizeof(::gpk::SUDPPayloadHeader) + header.Size));
 	memset(receiveBuffer.begin(), 0, receiveBuffer.size());
-	if(errored(bytes_received = ::recvfrom(client.Socket, (char*)receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
+	if(errored(bytes_received = ::recvfrom(client.Socket, (sc_t*)receiveBuffer.begin(), (int)receiveBuffer.size(), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 #if defined(GPK_WINDOWS)
 		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload data.")
 		else
@@ -460,7 +462,7 @@ static	::gpk::error_t	handlePAYLOAD						(::gpk::SUDPCommand & command, ::gpk::S
 	sockaddr_in							sa_client							= {};						// Information about the client
 	socklen_t							sa_length							= (socklen_t)sizeof(sockaddr_in);	// Length of client struct
 	int									bytes_received						= {};
-	if(errored(bytes_received = ::recvfrom(client.Socket.Handle, (char*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
+	if(errored(bytes_received = ::recvfrom(client.Socket.Handle, (sc_t*)&header, (int)sizeof(::gpk::SUDPPayloadHeader), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 #if defined(GPK_WINDOWS)
 		rew_if(WSAGetLastError() != WSAEMSGSIZE, "%s", "Could not receive payload header.");
 #else

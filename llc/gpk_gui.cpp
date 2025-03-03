@@ -329,22 +329,22 @@ static	::gpk::error_t	buildControlGeometry	(const ::gpk::SControlPlacement & con
 
 	// --- Draw control corners
 	::gpk::n2i16				startOffset				= controlMetrics.Total.Global.Offset;
-	triangles[0]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.i16()	};
-	triangles[1]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.i16()	};
+	triangles[0]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.s1_t()	};
+	triangles[1]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Left, control.Border.Top}.s1_t()	};
 
 	int16_t						startOffsetX			= startOffset.x + controlMetrics.Total.Global.Size.x - control.Border.Right;
 	startOffset				= {startOffsetX, controlMetrics.Total.Global.Offset.y};
-	triangles[2]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16()	};
-	triangles[3]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.i16()	};
+	triangles[2]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Top}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.s1_t()	};
+	triangles[3]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.s1_t(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.s1_t()	};
 
 	int16_t						startOffsetY			= startOffset.y + controlMetrics.Total.Global.Size.y - control.Border.Bottom;
 	startOffset				= {controlMetrics.Total.Global.Offset.x, startOffsetY};
-	triangles[4]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.i16()	};
-	triangles[5]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.i16()	};
+	triangles[4]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Left, 0U}.s1_t()	};
+	triangles[5]			= {startOffset + ::gpk::n2u16{control.Border.Right, 0U}.s1_t(), startOffset + ::gpk::n2u16{0U, control.Border.Top}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Top}.s1_t()	};
 
-	startOffset				= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16();
-	triangles[6]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.i16()	};
-	triangles[7]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.i16(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.i16()	};
+	startOffset				= controlMetrics.Total.Global.Offset + controlMetrics.Total.Global.Size - ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.s1_t();
+	triangles[6]			= {startOffset, startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Right, 0U}.s1_t()	};
+	triangles[7]			= {startOffset, startOffset + ::gpk::n2u16{0U, control.Border.Bottom}.s1_t(), startOffset + ::gpk::n2u16{control.Border.Right, control.Border.Bottom}.s1_t()	};
 	return 0;
 }
 
@@ -378,17 +378,17 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	if(controlConstraints.AttachSizeToText.x) scaledSize.x	= rectText.Size.x + ncTotalSizeScaled.x;
 	if(controlConstraints.AttachSizeToText.y) scaledSize.y	= rectText.Size.y + ncTotalSizeScaled.y;
 	const bool					isValidParent			= 0 == ::gpk::controlInvalid(gui, controlState.Parent);
-	const ::gpk::n2u16			targetSize				= isValidParent ? gui.Controls.Area[controlState.Parent].Client.Global.Size.u16() : _targetSize.u16();
+	const ::gpk::n2u16			targetSize				= isValidParent ? gui.Controls.Area[controlState.Parent].Client.Global.Size.u1_t() : _targetSize.u1_t();
 
 	if(controlConstraints.AttachSizeToControl.x == iControl) { if(controlConstraints.DockToControl.Left	!= -1) {} else { scaledPosition.x = 0; } scaledSize.x = targetSize.x; } else if(false == ::gpk::controlInvalid(gui, controlConstraints.AttachSizeToControl.x)) { if(controlConstraints.DockToControl.Left != -1) {} else { scaledPosition.x = 0;} scaledSize.x = gui.Controls.Area[controlConstraints.AttachSizeToControl.x].Total.Global.Size.x; }
 	if(controlConstraints.AttachSizeToControl.y == iControl) { if(controlConstraints.DockToControl.Top	!= -1) {} else { scaledPosition.y = 0; } scaledSize.y = targetSize.y; } else if(false == ::gpk::controlInvalid(gui, controlConstraints.AttachSizeToControl.y)) { if(controlConstraints.DockToControl.Top  != -1) {} else { scaledPosition.y = 0;} scaledSize.y = gui.Controls.Area[controlConstraints.AttachSizeToControl.y].Total.Global.Size.y; }
 
-	controlMetrics.Client.Local	= {{(int16_t)ncSizesScaled.Left, (int16_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).i16()};
-	::gpk::n2f64				minSizeScaled			= (controlConstraints.SizeMinMax.Min.f64().InPlaceScale(scale.x, scale.y));
-	::gpk::n2f64				maxSizeScaled			= (controlConstraints.SizeMinMax.Max.f64().InPlaceScale(scale.x, scale.y));
+	controlMetrics.Client.Local	= {{(int16_t)ncSizesScaled.Left, (int16_t)ncSizesScaled.Top}, (scaledSize - ncTotalSizeScaled).s1_t()};
+	::gpk::n2f64				minSizeScaled			= (controlConstraints.SizeMinMax.Min.f3_t().InPlaceScale(scale.x, scale.y));
+	::gpk::n2f64				maxSizeScaled			= (controlConstraints.SizeMinMax.Max.f3_t().InPlaceScale(scale.x, scale.y));
 	scaledSize.x			= ::gpk::max(minSizeScaled.x, ::gpk::min(maxSizeScaled.x, scaledSize.x));
 	scaledSize.y			= ::gpk::max(minSizeScaled.y, ::gpk::min(maxSizeScaled.y, scaledSize.y));
-	::gpk::realignRectangle(targetSize.u32(), ::gpk::rect2<int16_t>{scaledPosition.i16(), scaledSize.i16()}, controlMetrics.Total.Local, controlPlacement.Align);
+	::gpk::realignRectangle(targetSize.u2_t(), ::gpk::rect2<int16_t>{scaledPosition.s1_t(), scaledSize.s1_t()}, controlMetrics.Total.Local, controlPlacement.Align);
 	controlMetrics.Total .Global	= controlMetrics.Total	.Local;
 	controlMetrics.Client.Global	= controlMetrics.Client	.Local;
 	controlMetrics.Client.Global.Offset	+= controlMetrics.Total	.Local.Offset;
@@ -401,7 +401,7 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	const ::gpk::rectcid		& dockToControl			= controlConstraints.DockToControl;
 	if(dockToControl.Right != -1) {
 		gpk_necall(gpk::controlInvalid(gui, dockToControl.Right), "Invalid control id: %i.", dockToControl.Right);
-		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u16(), true);
+		::gpk::controlUpdateMetricsTopToDown(gui, dockToControl.Right, targetSize.u1_t(), true);
 		const ::gpk::SControlPlacement	& other				= gui.Controls.Placement[dockToControl.Right];
 		const ::gpk::SControlArea		& otherMetrics		= gui.Controls.Area	[dockToControl.Right];
 		if(::gpk::bit_true(other.Align, ::gpk::ALIGN_RIGHT) && ::gpk::bit_false(other.Align, ::gpk::ALIGN_HCENTER)) {
@@ -462,9 +462,9 @@ static	::gpk::error_t	controlUpdateMetrics	(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	{ // calculate text rectangle
 		const ::gpk::rect2i16		& targetRect			= controlMetrics.Client.Global;
 		controlMetrics.Text.Offset	= {};
-		controlMetrics.Text.Size	= rectText.Size.i16();
-		::gpk::realignRectangle(targetRect.Size.u32(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
-		controlMetrics.Text.Offset	+= controlMetrics.Client.Global.Offset.i16();
+		controlMetrics.Text.Size	= rectText.Size.s1_t();
+		::gpk::realignRectangle(targetRect.Size.u2_t(), controlMetrics.Text, controlMetrics.Text, controlText.Align);
+		controlMetrics.Text.Offset	+= controlMetrics.Client.Global.Offset.s1_t();
 	}
 	::buildControlGeometry(controlPlacement, controlMetrics, gui.Zoom, controlMetrics.Rectangles, controlMetrics.Triangles);
 	gui.Controls.SetUpdated(iControl, true);
@@ -521,7 +521,7 @@ static	::gpk::cid_t	controlProcessInput		(::gpk::SGUI & gui, const ::gpk::SInput
 			}
 		}
 	}
-	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.i16(), gui.Controls.Area[iControl].Total.Global))
+	if(controlHovered == -1 && ::gpk::in_range(gui.CursorPos.s1_t(), gui.Controls.Area[iControl].Total.Global))
 		controlHovered			= ::updateGUIControlHovered(gui, iControl, controlState, input, ::gpk::controlDisabled(gui, iControl) || ::gpk::controlHidden(gui, iControl));
 	else {
 		gui.Controls.SetHovered(iControl, false);

@@ -26,25 +26,25 @@ namespace gpk
 		tplt<tpnm _tOther>
 		inlcxpr	minmax<_tOther>	Cast		()				const	noexcept	{ return{(_tOther)Min, (_tOther)Max}; }
 
-		inlcxpr	minmax<char		>	c		()				const	noexcept	{ return Cast<char		>(); }
-		inlcxpr	minmax<uchar_t	>	uc		()				const	noexcept	{ return Cast<uchar_t	>(); }
-		inlcxpr	minmax<uint8_t	>	u8		()				const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t	>	u16		()				const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t	>	u32		()				const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t	>	u64		()				const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t	>	i8		()				const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t	>	i16		()				const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t	>	i32		()				const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t	>	i64		()				const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float	>	f32		()				const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double	>	f64		()				const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	minmax<sc_t		>	c		()				const	noexcept	{ return Cast<sc_t		>(); }
+		inlcxpr	minmax<uc_t	>	uc		()				const	noexcept	{ return Cast<uc_t	>(); }
+		inlcxpr	minmax<uint8_t	>	u0_t		()				const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	minmax<uint16_t	>	u1_t		()				const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	minmax<uint32_t	>	u2_t		()				const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	minmax<uint64_t	>	u3_t		()				const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	minmax<int8_t	>	s0_t		()				const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	minmax<int16_t	>	s1_t		()				const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	minmax<int32_t	>	s2_t		()				const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	minmax<int64_t	>	s3_t		()				const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	minmax<float	>	f2_t		()				const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	minmax<double	>	f3_t		()				const	noexcept	{ return Cast<double	>(); }
 
 		inline	TMinMax&		Set			(T value)				noexcept	{ Min = Max = value; return *this; }
 		inline	TMinMax&		From		(T value)				noexcept	{ Min = Max = value; return *this; }
 	};
 #pragma pack(pop)
-	typedef	minmax<char		>	minmaxchar, minmaxc;
-	typedef	minmax<uchar_t	>	minmaxuchar, minmaxuc;
+	typedef	minmax<sc_t		>	minmaxchar, minmaxc;
+	typedef	minmax<uc_t		>	minmaxuchar, minmaxuc;
 	typedef minmax<float	>	minmaxf32;
 	typedef minmax<double	>	minmaxf64;
 	typedef minmax<uint8_t	>	minmaxu8;

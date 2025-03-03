@@ -9,8 +9,8 @@ namespace gpk
 	tplt<tpnm _tDimension>	
 	using	arange	= ::gpk::apod<::gpk::range<_tDimension>>;
 
-	typedef	::gpk::arange<char		>	arangec		, arangechar;
-	typedef	::gpk::arange<uchar_t	>	arangeuc	, arangeuchar;
+	typedef	::gpk::arange<sc_t		>	arangec		, arangechar;
+	typedef	::gpk::arange<uc_t	>	arangeuc	, arangeuchar;
 	typedef	::gpk::arange<float		>	arangef32	;
 	typedef	::gpk::arange<double	>	arangef64	;
 	typedef	::gpk::arange<uint8_t	>	arangeu8	;

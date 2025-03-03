@@ -9,8 +9,8 @@ namespace gpk
 	tplt <tpnm T>	using aaobj		= ::gpk::aobj<::gpk::aobj<T>>; 
 	tplt <tpnm T>	using aapod		= ::gpk::aobj<::gpk::apod<T>>; 
 
-	typedef	::gpk::aapod<uchar_t	>	aauchar		;
-	typedef	::gpk::aapod<char		>	aachar		;
+	typedef	::gpk::aapod<uc_t	>	aauchar		;
+	typedef	::gpk::aapod<sc_t		>	aachar		;
 	typedef	::gpk::aapod<float		>	aafloat		, aaf32;
 	typedef	::gpk::aapod<double		>	aadouble	, aaf64;
 	typedef	::gpk::aapod<uint8_t	>	aauint8		, aau8;

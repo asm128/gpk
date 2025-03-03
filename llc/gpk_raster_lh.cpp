@@ -284,7 +284,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 			continue;
 
 		currentDepth			= intZ;
-		pixelCoords.push_back(p.i16());
+		pixelCoords.push_back(p.s1_t());
 		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
 
 	}
@@ -328,7 +328,7 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		double						proportionB				= w1 / proportionABC;
 		double						proportionC				= 1.0 - (proportionA + proportionB);
 
-		pixelCoords.push_back(p.i16());
+		pixelCoords.push_back(p.s1_t());
 		proportions.push_back({(float)proportionA, (float)proportionB, (float)proportionC});
 
 	}

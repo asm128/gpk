@@ -54,7 +54,7 @@ namespace gpk
 			value						= INVALID_VALUE;
 			return -1;
 		}
-		::gpk::error_t				get_value				(const char* name, T & value)				const			{
+		::gpk::error_t				get_value				(const sc_t* name, T & value)				const			{
 			for(uint32_t i=0, count = Names.size(); i<count; ++i)
 				if(0 == ::strcmp(name, Names[i].begin())) {
 					value						= Values[i];
@@ -245,7 +245,7 @@ namespace gpk
 	};
 
 	tplt <tpnm TEnum, size_t nameLen>
-	TEnum						get_value			(const char (&valueLabel)[nameLen])		{ return ::gpk::get_enum<TEnum>().get_value(::gpk::vcs{valueLabel}); }
+	TEnum						get_value			(const sc_t (&valueLabel)[nameLen])		{ return ::gpk::get_enum<TEnum>().get_value(::gpk::vcs{valueLabel}); }
 	tplt <tpnm TEnum>	TEnum	get_value			(const ::gpk::vcc & valueLabel)			{ return ::gpk::get_enum<TEnum>().get_value(valueLabel); }
 
 	tplt <tpnm TEnum>	TEnum	get_value_camelcased(const ::gpk::vcc & uncased)			{
@@ -256,7 +256,7 @@ namespace gpk
 	tplt <tpnm TEnum>	uint32_t						get_value_count		()										{ return ::gpk::get_enum<TEnum>().Values.size(); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_label		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_namev		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit); }
-	tplt <tpnm TEnum>	const char*						get_value_namep		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit).begin(); }
+	tplt <tpnm TEnum>	const sc_t*						get_value_namep		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_label(statusBit).begin(); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_descv		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_desc (statusBit); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_value_descp		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_desc (statusBit); }
 	tplt <tpnm TEnum>	const ::gpk::vvcc&				get_value_labels	()										{ return ::gpk::get_enum<TEnum>().Names; }
@@ -265,8 +265,8 @@ namespace gpk
 	tplt <tpnm TEnum>	int32_t							get_value_index		(const TEnum & statusBit)				{ return ::gpk::get_enum<TEnum>().get_value_index(statusBit); }
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_enum_namev		()							noexcept	{ return ::gpk::get_enum<TEnum>().Name;			}
 	tplt <tpnm TEnum>	const ::gpk::vcc&				get_enum_namev		(const TEnum & )			noexcept	{ return ::gpk::get_enum<TEnum>().Name;			}
-	tplt <tpnm TEnum>	const char*						get_enum_namep		()							noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
-	tplt <tpnm TEnum>	const char*						get_enum_namep		(const TEnum & )			noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
+	tplt <tpnm TEnum>	const sc_t*						get_enum_namep		()							noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
+	tplt <tpnm TEnum>	const sc_t*						get_enum_namep		(const TEnum & )			noexcept	{ return ::gpk::get_enum<TEnum>().Name.begin();	}
 
 	tplt <tpnm T>
 	struct genum_value_auto {
@@ -297,7 +297,7 @@ namespace gpk
 	stainli	EnumName&			operator &=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) &= (IntType)b); }	\
 	stainli	EnumName&			operator ^=					(EnumName &a, EnumName b)	noexcept	{ return (EnumName&)	( ((IntType&)a) ^= (IntType)b); }	\
 	stincxp	EnumName			operator |					(EnumName  a, EnumName b)	noexcept	{ return (EnumName)		(a | (IntType)b);				}	\
-	tplt<EnumName> const char*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
+	tplt<EnumName> ::gpk::sc_c*	get_enum_namep				(const EnumName &)			noexcept	{ return #EnumName;	} \
 
 #ifdef GPK_ATMEL
 #	define GDEFINE_ENUM_VALUE(EnumName, ValueName, EnumValue)					\
@@ -335,8 +335,8 @@ namespace gpk
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4
 #endif
 
-#define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: (0x%X)(%X)(%c) %s", ::gpk::get_enum_namep(valueUnhandled), valueUnhandled, valueUnhandled, (char)valueUnhandled, ::gpk::get_value_namep(valueUnhandled))
-#define gpk_enum_value_info(_enumValue)					info_printf("'%s' value: (0x%X)(%X)(%c) '%s'", ::gpk::get_enum_namep(_enumValue), _enumValue, _enumValue, (char)_enumValue, ::gpk::get_value_namep(_enumValue))
+#define gpk_warning_unhandled_value(valueUnhandled)		warning_printf("Unhandled %s value: (0x%X)(%X)(%c) %s", ::gpk::get_enum_namep(valueUnhandled), valueUnhandled, valueUnhandled, (sc_t)valueUnhandled, ::gpk::get_value_namep(valueUnhandled))
+#define gpk_enum_value_info(_enumValue)					info_printf("'%s' value: (0x%X)(%X)(%c) '%s'", ::gpk::get_enum_namep(_enumValue), _enumValue, _enumValue, (sc_t)_enumValue, ::gpk::get_value_namep(_enumValue))
 
 
 namespace gpk

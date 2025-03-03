@@ -6,7 +6,7 @@
 namespace gpk 
 {
 	tplt<tpnm _tInt>
-	nodstxp	uint8_t		tail_width		(_tInt value) 	{
+	ndstcxp	uint8_t		tail_width		(_tInt value) 	{
 		//return 
 		return uint8_t
 			( (1 == sizeof(_tInt)) ? ((uint8_t (value) > 0x7FU) ? 1 : 0)
@@ -34,7 +34,7 @@ namespace gpk
 	ndstinx	uint8_t		value_width		(_tInt count)	{ return tail_width(count) + 1; }
 
 	tplt<tpnm _tInt>
-	nodstxp	uint8_t		tail_multiplier	(_tInt count)	{
+	ndstcxp	uint8_t		tail_multiplier	(_tInt count)	{
 		return uint8_t
 			( (1 == sizeof(_tInt)) ? ((uint8_t (count) > 0x7F) ? byte_at(count, 0) : count)
 			: (2 == sizeof(_tInt)) ? ((uint16_t(count) > 0x7F) ? byte_at(count, 1) : count)
@@ -59,7 +59,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tInt>
-	nodstxp	_tInt		tail_base		(_tInt count)	{
+	ndstcxp	_tInt		tail_base		(_tInt count)	{
 		return _tInt
 			( (1 == sizeof(_tInt)) ? ((uint8_t (count) > 0x7FU) ? count & 0xFFU : count)
 			: (2 == sizeof(_tInt)) ? ((uint16_t(count) > 0x7FU) ? count & 0xFFU : count)
@@ -84,7 +84,7 @@ namespace gpk
 	}
 
 	tplt<tpnm _tInt>
-	nodstxp	uint8_t			width_field_size	()		{ 
+	ndstcxp	uint8_t			width_field_size	()		{ 
 		return (sizeof(_tInt) > 4) ? 3
 			: (sizeof(_tInt) > 2) ? 2
 			: (sizeof(_tInt) > 1) ? 1 
@@ -109,7 +109,7 @@ namespace gpk
 				return Multiplier;
 
 			uint64_t tail = 0; 
-			memcpy(&tail, ((const char*)this) + 1, TailWidth); 
+			memcpy(&tail, ((const sc_t*)this) + 1, TailWidth); 
 			return T((uint64_t(Multiplier) << (TailWidth * 8)) + tail); 
 		}
 	};
@@ -122,12 +122,12 @@ namespace gpk
 	typedef packed_int<int32_t>		packedi32;
 	typedef packed_int<int64_t>		packedi64;
 
-	nodstin uint16_t			int_unpack	(const ::gpk::packedu16 value) { return value.Value(); } 
-	nodstin uint32_t			int_unpack	(const ::gpk::packedu32 value) { return value.Value(); } 
-	nodstin uint64_t			int_unpack	(const ::gpk::packedu64 value) { return value.Value(); } 
-	nodstin int16_t				int_unpack	(const ::gpk::packedi16 value) { return value.Value(); } 
-	nodstin int32_t				int_unpack	(const ::gpk::packedi32 value) { return value.Value(); } 
-	nodstin int64_t				int_unpack	(const ::gpk::packedi64 value) { return value.Value(); } 
+	ndstain uint16_t			int_unpack	(const ::gpk::packedu16 value) { return value.Value(); } 
+	ndstain uint32_t			int_unpack	(const ::gpk::packedu32 value) { return value.Value(); } 
+	ndstain uint64_t			int_unpack	(const ::gpk::packedu64 value) { return value.Value(); } 
+	ndstain int16_t				int_unpack	(const ::gpk::packedi16 value) { return value.Value(); } 
+	ndstain int32_t				int_unpack	(const ::gpk::packedi32 value) { return value.Value(); } 
+	ndstain int64_t				int_unpack	(const ::gpk::packedi64 value) { return value.Value(); } 
 
 	ndstinx ::gpk::packedu16	int_pack	(const uint16_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; } 
 	ndstinx ::gpk::packedu32	int_pack	(const uint32_t value) { return {tail_width(value), tail_multiplier(value), tail_base(value)}; } 

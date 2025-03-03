@@ -21,16 +21,16 @@ namespace gpk
 		tplt<tpnm _tOther>
 		gaugemax<_tOther>			Cast		()		const	noexcept	{ return {(_tOther)Limit, (_tOther)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u16			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u32			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u64			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		i8			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		i16			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		i32			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		i64			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f32			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f64			()		const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
 	};
 
 	tplt<tpnm T> 
@@ -49,20 +49,20 @@ namespace gpk
 		tplt<tpnm _tOther>
 		gaugeminmax<_tOther>		Cast		()		const	noexcept	{ return {Limits.Cast<_tOther>(), (_tOther)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u8			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u16			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u32			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u64			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		i8			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		i16			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		i32			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		i64			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f32			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f64			()		const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
 	};
 #pragma pack(pop)
-	typedef	gaugemax<char		>	gaugemaxchar;
-	typedef	gaugemax<uchar_t	>	gaugemaxuchar;
+	typedef	gaugemax<sc_t		>	gaugemaxchar;
+	typedef	gaugemax<uc_t	>	gaugemaxuchar;
 	typedef gaugemax<float		>	gaugemaxf32;
 	typedef gaugemax<double		>	gaugemaxf64;
 	typedef gaugemax<uint8_t	>	gaugemaxu8;
@@ -74,8 +74,8 @@ namespace gpk
 	typedef gaugemax<int32_t	>	gaugemaxi32;
 	typedef gaugemax<int64_t	>	gaugemaxi64;
 
-	typedef	gaugeminmax<char	>	gaugeminmaxchar;
-	typedef	gaugeminmax<uchar_t	>	gaugeminmaxuchar;
+	typedef	gaugeminmax<sc_t	>	gaugeminmaxchar;
+	typedef	gaugeminmax<uc_t	>	gaugeminmaxuchar;
 	typedef gaugeminmax<float	>	gaugeminmaxf32;
 	typedef gaugeminmax<double	>	gaugeminmaxf64;
 	typedef gaugeminmax<uint8_t	>	gaugeminmaxu8;

@@ -34,11 +34,11 @@ namespace gpk
 		int32_t							IndexCurrentElement				= -1;
 		::gpk::SExpressionToken			* CurrentElement				= 0;
 		int32_t							NestLevel						= 0;
-		char							CharCurrent						= 0;
+		sc_t							CharCurrent						= 0;
 		bool							Escaping						= false;
 		bool							ExpectsSeparator				= false;
 		bool							InsideString					= false;
-		char							ClosingQuotes					= '0';
+		sc_t							ClosingQuotes					= '0';
 	};
 #pragma pack(pop)
 

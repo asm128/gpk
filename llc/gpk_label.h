@@ -14,12 +14,12 @@ namespace gpk
 	public:
 		inlcxpr				label			()								noexcept	= default;
 							label			(const label & other)			noexcept	= default;
-							label			(const char* str, uint32_t len)	noexcept;
+							label			(const sc_t* str, uint32_t len)	noexcept;
 
 		label&				operator=		(const label & other)			noexcept	= default;
 
 		tplt<size_t _stringLength>
-		inline 				label			(const char (&str)[_stringLength], uint32_t count = (uint32_t)-1)	noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
+		inline 				label			(const sc_t (&str)[_stringLength], uint32_t count = (uint32_t)-1)	noexcept	: label(&str[0], ::gpk::min((uint32_t)_stringLength, count))	{}
 		inline 				label			(const ::gpk::vcs & other)											noexcept	: label(other.begin(), other.size())							{}
 
 		inline	operator	::gpk::vcs		()								const				{ return {Data, Count}; }

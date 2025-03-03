@@ -265,8 +265,8 @@ namespace gpk
 	tplt <tpnm T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
 	tplt <tpnm T>	using av		= ::gpk::aview	<T>; 
 
-	typedef	::gpk::aview<uchar_t	>	avuc;
-	typedef	::gpk::aview<char		>	avc;
+	typedef	::gpk::aview<uc_t	>	avuc;
+	typedef	::gpk::aview<sc_t		>	avc;
 	typedef	::gpk::aview<float		>	avf32, avf;
 	typedef	::gpk::aview<double		>	avf64, avd;
 	typedef	::gpk::aview<uint8_t	>	avu8;
@@ -279,8 +279,8 @@ namespace gpk
 	typedef	::gpk::aview<int64_t	>	avi64;
 
 	// view<const> common typedefs
-	typedef	::gpk::aview<const uchar_t	>	avcuc;
-	typedef	::gpk::aview<const char		>	avcc;
+	typedef	::gpk::aview<const uc_t	>	avcuc;
+	typedef	::gpk::aview<const sc_t		>	avcc;
 	typedef	::gpk::aview<const float	>	avcf32, avcf;
 	typedef	::gpk::aview<const double	>	avcf64, avcd;
 	typedef	::gpk::aview<const uint8_t	>	avcu8;

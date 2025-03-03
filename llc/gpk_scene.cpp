@@ -123,13 +123,13 @@ stacxpr	const ::gpk::tri2<float>					geometryCubeUV					[12]						=
 }
 ::gpk::error_t			gpk::generateGridUV					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2	<float>>& out_UV		) {
 	const ::gpk::n2f64				gridUnit							= {1.0 / gridMetrics.x, 1.0 / gridMetrics.y};
-	const ::gpk::n2f64				gridMetricsF						= gridMetrics.f64();
+	const ::gpk::n2f64				gridMetricsF						= gridMetrics.f3_t();
 	for(uint32_t z = 0; z < gridMetrics.y; ++z)
 	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
 		const ::gpk::n2f64				gridCell							= {x / gridMetricsF.x, z / gridMetricsF.y};
 		const ::gpk::n2f64				gridCellFar							= gridCell + gridUnit;
-		out_UV.push_back({{(float)gridCell.x, (float)gridCell.y}, {(float)gridCell.x, (float)gridCellFar.y}, gridCellFar.f32()});
-		out_UV.push_back({{(float)gridCell.x, (float)gridCell.y}, gridCellFar.f32()	, {(float)gridCellFar.x, (float)gridCell.y}});
+		out_UV.push_back({{(float)gridCell.x, (float)gridCell.y}, {(float)gridCell.x, (float)gridCellFar.y}, gridCellFar.f2_t()});
+		out_UV.push_back({{(float)gridCell.x, (float)gridCell.y}, gridCellFar.f2_t()	, {(float)gridCellFar.x, (float)gridCell.y}});
 	}
 	return 0;
 }

@@ -41,15 +41,15 @@ namespace gpk
 		}
 
 		template<size_t buflen>
-		gpk::astchar<(buflen > 16) ? buflen : 16>	toString			(char separator = '.')						const	noexcept	{
+		gpk::astchar<(buflen > 16) ? buflen : 16>	toString			(sc_t separator = '.')						const	noexcept	{
 			gpk::astchar<(buflen > 16) ? buflen : 16>	result	= {};
 			print(result.Storage, separator);
 			return result; 
 		}
 
 		tplt<size_t bufferSize>
-		::gpk::error_t 		print				(char (&target)[bufferSize], char separator = '.')	const	noexcept	{
-			const char format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
+		::gpk::error_t 		print				(sc_t (&target)[bufferSize], sc_t separator = '.')	const	noexcept	{
+			const sc_t format[] = {'%', 'u', separator, '%', 'u', separator, '%', 'u', separator, '%', 'u', 0};
 			return sprintf_s(target, format
 				, ::gpk::byte_at(IP, 0)
 				, ::gpk::byte_at(IP, 1)
@@ -134,11 +134,11 @@ namespace gpk
 	stainli	::gpk::error_t	tcpipAddress		(::gpk::vcs strIP, ::gpk::SIPv4 & ipv4) { return ::gpk::tcpipAddress(strIP, ipv4.IP); }
 
 
-			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
-			::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
+			::gpk::error_t	tcpipAddress		(const sc_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port);
+			::gpk::error_t	tcpipAddress		(const sc_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
 
 			::gpk::error_t	tcpipAddress		(::gpk::vcs hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t * a1, uint8_t * a2, uint8_t * a3, uint8_t * a4, uint16_t* port = 0);
-	stainli	::gpk::error_t	tcpipAddress		(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)				{
+	stainli	::gpk::error_t	tcpipAddress		(const sc_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)				{
 		uint16_t port = 0;
 		return gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, address, port);
 	}
@@ -150,7 +150,7 @@ namespace gpk
 		gpk_necs(gpk::tcpipAddress(portRequested, adapterIndex, mode, address.IP));
 		return 0;
 	}
-	stainli	::gpk::error_t	tcpipAddress		(const char * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
+	stainli	::gpk::error_t	tcpipAddress		(const sc_t * hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{
 		return ::gpk::tcpipAddress(hostName, portRequested, adapterIndex, mode, address.IP, (address.Port = portRequested));
 	}
 	stainli	::gpk::error_t	tcpipAddress		(const ::gpk::vcs & hostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, SIPv4End & address)	{

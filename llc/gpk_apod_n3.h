@@ -11,18 +11,18 @@ namespace gpk
 	tplt<tpnm _tDimension>	
 	using		an3	= ::gpk::apod<::gpk::n3<_tDimension>>;
 
-	typedef	::gpk::an3<char	>	an3c	, an3char		;
-	typedef	::gpk::an3<uchar>	an3uc	, an3uchar		;
-	typedef	::gpk::an3<f32	>	an3f32	;
-	typedef	::gpk::an3<f64	>	an3f64	;
-	typedef	::gpk::an3<u8	>	an3u8	;
-	typedef	::gpk::an3<u16	>	an3u16	;
-	typedef	::gpk::an3<u32	>	an3u32	;
-	typedef	::gpk::an3<u64	>	an3u64	;
-	typedef	::gpk::an3<i8	>	an3i8	;
-	typedef	::gpk::an3<i16	>	an3i16	;
-	typedef	::gpk::an3<i32	>	an3i32	;
-	typedef	::gpk::an3<i64	>	an3i64	;
+	typedef	::gpk::an3<sc_t	>	an3c	, an3char		;
+	typedef	::gpk::an3<uc_t>	an3uc	, an3uchar		;
+	typedef	::gpk::an3<f2_t	>	an3f32	;
+	typedef	::gpk::an3<f3_t	>	an3f64	;
+	typedef	::gpk::an3<u0_t	>	an3u8	;
+	typedef	::gpk::an3<u1_t	>	an3u16	;
+	typedef	::gpk::an3<u2_t	>	an3u32	;
+	typedef	::gpk::an3<u3_t	>	an3u64	;
+	typedef	::gpk::an3<s0_t	>	an3i8	;
+	typedef	::gpk::an3<s1_t	>	an3i16	;
+	typedef	::gpk::an3<s2_t	>	an3i32	;
+	typedef	::gpk::an3<s3_t	>	an3i64	;
 
 #pragma pack(pop)
 } // namespace

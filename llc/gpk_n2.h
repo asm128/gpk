@@ -58,16 +58,16 @@ namespace gpk
 		tplt<tpnm _t>
 		inlcxpr	n2<_t>		Cast				()									const	noexcept	{ return {(_t)x, (_t)y}; }
 
-		inlcxpr	n2<uint8_t>	u8					()									const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	n2<uint16_t>u16					()									const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	n2<uint32_t>u32					()									const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	n2<uint64_t>u64					()									const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	n2<int8_t>	i8					()									const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	n2<int16_t>	i16					()									const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	n2<int32_t>	i32					()									const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	n2<int64_t>	i64					()									const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	n2<float>	f32					()									const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	n2<double>	f64					()									const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	n2<uint8_t>	u0_t					()									const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	n2<uint16_t>u1_t					()									const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	n2<uint32_t>u2_t					()									const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	n2<uint64_t>u3_t					()									const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	n2<int8_t>	s0_t					()									const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	n2<int16_t>	s1_t					()									const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	n2<int32_t>	s2_t					()									const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	n2<int64_t>	s3_t					()									const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	n2<float>	f2_t					()									const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	n2<double>	f3_t					()									const	noexcept	{ return Cast<double	>(); }
 
 		inline	Tn2&		Set					(T value)							noexcept	{ x = y = value; return *this; }
 		inline	Tn2&		From				(T value)							noexcept	{ x = y = value; return *this; }
@@ -154,8 +154,8 @@ namespace gpk
 		}
 
 	};	// struct n2
-	typedef	n2<char>		n2char;
-	typedef	n2<uchar_t>		n2uchar;
+	typedef	n2<sc_t>		n2char;
+	typedef	n2<uc_t>		n2uchar;
 	typedef	n2<float>		n2f32;
 	typedef	n2<double>		n2f64;
 	typedef	n2<uint8_t>		n2u8;

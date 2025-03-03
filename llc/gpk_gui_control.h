@@ -9,6 +9,8 @@
 #include "gpk_grid_color.h"
 #include "gpk_minmax_n2.h"
 
+#include "gpk_axis.h"
+
 #ifndef GPK_GUI_CONTROL_H_23627
 #define GPK_GUI_CONTROL_H_23627
 
@@ -60,7 +62,7 @@ namespace gpk
 	}; 
 
 	stincxp	::gpk::rectu16	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
-	stacxpr	::gpk::n2u16	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2i32{rc.Left + rc.Right, rc.Top + rc.Bottom}.u16(); }
+	stacxpr	::gpk::n2u16	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2i32{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1_t(); }
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u16   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
 

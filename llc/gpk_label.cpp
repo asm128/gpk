@@ -6,7 +6,7 @@ static	::gpk::CLabelManager*	labelManagerSingleton		()			noexcept	{
 	return &instanceLabelManager; 
 }
 
-		::gpk::label::label			(const char * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
+		::gpk::label::label			(const sc_t * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
 	e_if_failed(LabelManager->View(text, stringLen, *this), "text: %s.", text); 
 }
 

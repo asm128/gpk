@@ -4,6 +4,7 @@
 #include "gpk_chrono.h"
 #include "gpk_parse.h"
 
+using ::gpk::sc_t;
 
 #ifdef GPK_ATMEL
 #	include <time.h>
@@ -32,22 +33,22 @@
 	return 0;
 }
 
-static	::gpk::error_t	hexFromByte		(uint8_t i, char * hexed)																{
-	char						converted [0x20]				= {};
+static	::gpk::error_t	hexFromByte		(uint8_t i, sc_t * hexed)																{
+	sc_t						converted [0x20]				= {};
 	snprintf(converted, ::gpk::size(converted) - 1, "%*.2X", 2, i);
 	hexed[0]				= converted[0];
 	hexed[1]				= converted[1];
 	return 0;
 }
 
-static	::gpk::error_t	hexToByte		(const char* s, uint8_t & byte)															{
-	char						temp [3]						= {s[0], s[1]};
+static	::gpk::error_t	hexToByte		(const sc_t* s, uint8_t & byte)															{
+	sc_t						temp [3]						= {s[0], s[1]};
 	gpk_necs(gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
 	return 0;
 }
 
-static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
-	char						temp [3]						= {s[0], s[1]};
+static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
+	sc_t						temp [3]						= {s[0], s[1]};
 	gpk_necs(gpk::parseIntegerHexadecimal(::gpk::vcs{temp}, byte));
 	return 0;
 }
@@ -55,7 +56,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 ::gpk::error_t			gpk::hexEncode					(const ::gpk::vcu8 & in_binary, ::gpk::ac & out_hexed	)	{
 	uint32_t					offset							= out_hexed.size();
 	gpk_necs(out_hexed.resize(offset + in_binary.size() * 2));
-	char						* pHexed						= out_hexed.begin();
+	sc_t						* pHexed						= out_hexed.begin();
 	const uint8_t				* pBinary						= in_binary.begin();
 	for(uint32_t iByte = 0; iByte < in_binary.size(); ++iByte)
 		hexFromByte(pBinary[iByte], &pHexed[offset + iByte * 2]);
@@ -66,7 +67,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	uint32_t					offset							= out_binary.size();
 	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
-	const char					* pHexed						= in_hexed.begin();
+	const sc_t					* pHexed						= in_hexed.begin();
 	uint8_t						* pBinary						= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
@@ -77,7 +78,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	uint32_t					offset							= out_binary.size();
 	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
-	const char					* pHexed						= in_hexed.begin();
+	const sc_t					* pHexed						= in_hexed.begin();
 	int8_t						* pBinary						= out_binary.begin();
 	for(uint32_t iByte = 0; iByte < binarySize; ++iByte)
 		hexToByte(&pHexed[iByte * 2], pBinary[offset + iByte]);
@@ -86,7 +87,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 
 ::gpk::error_t			gpk::ardellEncode				(ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
-	char						saltValue		[4]				= {};
+	sc_t						saltValue		[4]				= {};
 	if (salt)
 		for (int32_t i = 0; i < 4; i++) {
 			int32_t					t								= 100 * (1 + saltValue[i]) * rand() * (((int32_t)time(0)) + 1);
@@ -122,7 +123,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	gpk_necs(output.resize(outputOffset + n));
 	uint8_t					* outputFast					= output.begin();
 	for( i = 0; i < n; ++i)
-		outputFast[outputOffset + i]	= (char)sn[i];
+		outputFast[outputOffset + i]	= (sc_t)sn[i];
 	return 0;
 }
 
@@ -152,7 +153,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	uint8_t						* outputFast					= output.begin();
 	const int32_t				* finalValuesFast				= finalValues.begin();
 	for( i = 0; i < (int32_t)finalStringSize; ++i)
-		outputFast[outputOffset + i]	= (char)finalValuesFast[i];
+		outputFast[outputOffset + i]	= (sc_t)finalValuesFast[i];
 	return 0;
 }
 
@@ -160,23 +161,23 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 	const uint32_t				offset							= hexDigits.size();
 	if (codePoint <= 0x7f) {
 		hexDigits.resize(offset + 1);
-		hexDigits[offset + 0]	= static_cast<char>(codePoint);
+		hexDigits[offset + 0]	= static_cast<sc_t>(codePoint);
 	} else {
 		if (codePoint <= 0x7FF) {
 			hexDigits.resize(offset + 2);
-			hexDigits[offset + 1]	= static_cast<char>(0x80 | (0x3f & codePoint));
-			hexDigits[offset + 0]	= static_cast<char>(0xC0 | (0x1f & (codePoint >> 6)));
+			hexDigits[offset + 1]	= static_cast<sc_t>(0x80 | (0x3f & codePoint));
+			hexDigits[offset + 0]	= static_cast<sc_t>(0xC0 | (0x1f & (codePoint >> 6)));
 		} else if (codePoint <= 0xFFFF) {
 			hexDigits.resize(offset + 3);
-			hexDigits[offset + 2]	= static_cast<char>(0x80 | (0x3f &  codePoint));
-			hexDigits[offset + 1]	= static_cast<char>(0x80 | (0x3f & (codePoint >> 6)));
-			hexDigits[offset + 0]	= static_cast<char>(0xE0 | (0x0f & (codePoint >> 12)));
+			hexDigits[offset + 2]	= static_cast<sc_t>(0x80 | (0x3f &  codePoint));
+			hexDigits[offset + 1]	= static_cast<sc_t>(0x80 | (0x3f & (codePoint >> 6)));
+			hexDigits[offset + 0]	= static_cast<sc_t>(0xE0 | (0x0f & (codePoint >> 12)));
 		} else if (codePoint <= 0x10FFFF) {
 			hexDigits.resize(offset + 4);
-			hexDigits[offset + 3]	= static_cast<char>(0x80 | (0x3f &  codePoint));
-			hexDigits[offset + 2]	= static_cast<char>(0x80 | (0x3f & (codePoint >> 6)));
-			hexDigits[offset + 1]	= static_cast<char>(0x80 | (0x3f & (codePoint >> 12)));
-			hexDigits[offset + 0]	= static_cast<char>(0xF0 | (0x07 & (codePoint >> 18)));
+			hexDigits[offset + 3]	= static_cast<sc_t>(0x80 | (0x3f &  codePoint));
+			hexDigits[offset + 2]	= static_cast<sc_t>(0x80 | (0x3f & (codePoint >> 6)));
+			hexDigits[offset + 1]	= static_cast<sc_t>(0x80 | (0x3f & (codePoint >> 12)));
+			hexDigits[offset + 0]	= static_cast<sc_t>(0xF0 | (0x07 & (codePoint >> 18)));
 		}
 	}
 	return 0;
@@ -248,7 +249,7 @@ static	::gpk::error_t	hexToByte		(const char* s, int8_t & byte)															{
 		for(uint32_t j = 0; j < 8; j++)
 			filtered[j]				+= filtered[i + j];
 	}
-	char						temp		[32]				= {};
+	sc_t						temp		[32]				= {};
 	for(uint32_t i = 0; i < ::gpk::min(filtered.size(), (uint32_t)8U); ++i) {
 		snprintf(temp, ::gpk::size(temp) - 2, "%i", filtered[i]);
 		gpk_necs(digest.append_string(temp));

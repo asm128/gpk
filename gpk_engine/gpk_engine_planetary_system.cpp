@@ -6,6 +6,8 @@
 #include "gpk_engine_shader.h"
 #include "gpk_gui_text.h"
 
+GPK_USING_TYPEINT();
+
 stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 
 ::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData)	{ 
@@ -71,8 +73,8 @@ static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::
 
 ::gpk::error_t			gpk::planetarySystemCreateEntities(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
 	::gpk::SPNGData				pngCache				= {};
-	stacxpr char				fileFolder	[]			= "../gpk_data/images";
-	char						fileName	[1024]		= {};
+	stacxpr sc_t				fileFolder	[]			= "../gpk_data/images";
+	sc_t						fileName	[1024]		= {};
 	int32_t						iBackground				= 0;
 
 	{	// Background sphere map
@@ -138,7 +140,7 @@ static	::gpk::error_t	initOrbit				(::gpk::SEngine & engine, int32_t iOrbiter, i
 		scale					*= distanceScale * 2;
 	else
 		scale					= {.01f, .01f, .01f};
-	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f64{scale.x * 1.001, scale.y, scale.z * 1.001}.f32(), true));
+	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f64{scale.x * 1.001, scale.y, scale.z * 1.001}.f2_t(), true));
 	gpk_necs(engine.SetHidden	(iEntity, false));
 	return 0;
 }
@@ -152,7 +154,7 @@ static	::gpk::error_t	initGravityCenter		(::gpk::SEngine & engine, int32_t iEnti
 	::gpk::n3f64				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
 	scale					*= 2;
-	gpk_necs(engine.SetMeshScale(iEntity, scale.f32(), true));
+	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
 	gpk_necs(engine.SetHidden	(iEntity, false));
 	return 0;
 }
@@ -163,7 +165,7 @@ static	::gpk::error_t	initBody				(::gpk::SEngine & engine, int32_t iEntity, boo
 
 	::gpk::n3f64				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
-	gpk_necs(engine.SetMeshScale(iEntity, scale.f32(), true));
+	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
 	::gpk::TFuncPixelShader		& ps					= isStar ? ::gpk::psSphereAxis	: ringSystem ? ::gpk::psSphereMeridian	: ::gpk::psSphereSolid		;
 	const ::gpk::vcc			psName					= isStar ? ::gpk::vcs{"psSun"}	: ringSystem ? ::gpk::vcs{"psGasGiant"}	: ::gpk::vcs{"psTerrestrial"};
 	gpk_necs(engine.SetShader	(iEntity, ps, psName));
@@ -172,11 +174,11 @@ static	::gpk::error_t	initBody				(::gpk::SEngine & engine, int32_t iEntity, boo
 }
 
 static	::gpk::error_t	textureNumber			(::gpk::g8bgra view, uint32_t number, const ::gpk::SRasterFont & font) { 
-	char						strNumber[4]			= {};
+	sc_t						strNumber[4]			= {};
 	sprintf_s(strNumber, "%i", number);
 	const ::gpk::rect2i16		targetRect				= 
 		{ {int16_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), int16_t(view.metrics().y / 2 - font.CharSize.y / 2)}
-		, font.CharSize.i16()
+		, font.CharSize.s1_t()
 		};
 	::gpk::apod<::gpk::n2u16>	coords;
 	::gpk::textLineRaster(view.metrics(), font.CharSize, targetRect, font.Texture, strNumber, coords);
@@ -196,7 +198,7 @@ static	::gpk::error_t	initSkin				(::gpk::SEngine & engine, ::gpk::rgbaf color, 
 	material.Color.Specular	= ::gpk::GRAY;
 	material.Color.Diffuse	= color;
   	material.Color.Ambient	= color * .1f;
-	::gpk::g8bgra				view					= {(::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u32()};
+	::gpk::g8bgra				view					= {(::gpk::bgra*)surface.Data.begin(), surface.Desc.Dimensions.u2_t()};
 	const ::gpk::SRasterFont	& font					= *engine.Scene->Graphics->Fonts.Fonts[8];
 	textureNumber(view, iOrbiter, font);
 	return 0;

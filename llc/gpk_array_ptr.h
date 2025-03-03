@@ -10,8 +10,8 @@ namespace gpk
 	tplt<tpnm T> using papod	= ::gpk::pobj<::gpk::apod<T>>;
 	tplt<tpnm T> using apapod	= ::gpk::aobj<::gpk::papod<T>>;
 
-	typedef	::gpk::papod<uchar_t	>	pauchar;
-	typedef	::gpk::papod<char		>	pachar;
+	typedef	::gpk::papod<uc_t	>	pauchar;
+	typedef	::gpk::papod<sc_t		>	pachar;
 	typedef	::gpk::papod<float		>	paf32;
 	typedef	::gpk::papod<double		>	paf64;
 	typedef	::gpk::papod<uint8_t	>	pau8;

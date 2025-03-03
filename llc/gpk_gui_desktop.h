@@ -20,7 +20,7 @@ namespace gpk
 		::gpk::error_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
 			ree_if(errored(elemIndex), "%s", "Failed to add element to container! Out of memory?");
-			stacxpr	uint32_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::PLATFORM_BYTE_BIT_COUNT;
+			stacxpr	uint32_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::BYTE_SIZE;
 			gpk_necs(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
 			Unused						= {UnusedData.begin(), (uint32_t)(elemIndex + 1)};
 			Unused[elemIndex]			= false;

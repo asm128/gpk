@@ -1,5 +1,7 @@
 #include "gpk_expression.h"
 
+using ::gpk::sc_t;
+
 #define gpk_expression_info_printf(...) //info_printf
 
 static	::gpk::error_t	expressionReaderViews					(::gpk::apod<::gpk::SExpressionToken> & tokens, ::gpk::aobj<::gpk::vcc>& views, const ::gpk::vcc & expression) {
@@ -96,7 +98,7 @@ static	::gpk::error_t	expressionReaderCloseTerm							(::gpk::SExpressionReaderS
 	::gpk::error_t							errVal												= 0;
 	switch(stateReader.CharCurrent) {
 	default:
-		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uint8_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uchar_t)stateReader.CharCurrent, stateReader.CharCurrent);
+		seterr_break_if(stateReader.CharCurrent < 0x20 || ((uint8_t)stateReader.CharCurrent) > 0xFE, "Invalid character: %i (%u) '%c'.", stateReader.CharCurrent, (::gpk::uc_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		seterr_break_if(stateReader.Escaping, "Cannot escape character: %i (%u) '%c'.", stateReader.CharCurrent, (uint8_t)stateReader.CharCurrent, stateReader.CharCurrent);
 		break;
 	case 'b': case 'f': case 'n': case 'r': case 't':
@@ -140,7 +142,7 @@ static	::gpk::error_t	expressionReaderCloseTerm							(::gpk::SExpressionReaderS
 	return errVal;
 }
 
-static	bool												isSpaceCharacter		(const char characterToTest)		{
+static	bool												isSpaceCharacter		(const sc_t characterToTest)		{
 	switch(characterToTest) {
 	case ' ': case '\t': case '\r': case '\n'	: case '\f'	: case '\b'	:
 		return true;
@@ -149,7 +151,7 @@ static	bool												isSpaceCharacter		(const char characterToTest)		{
 	}
 }
 
-//static	bool												isAnyOfCharacters		(const ::gpk::vcc & charactersToFind, const char characterToTest)		{
+//static	bool												isAnyOfCharacters		(const ::gpk::vcc & charactersToFind, const sc_t characterToTest)		{
 //	for(uint32_t iCharacter = 0; iCharacter < charactersToFind.size(); ++iCharacter)
 //		if(characterToTest == charactersToFind[iCharacter])
 //			return true;

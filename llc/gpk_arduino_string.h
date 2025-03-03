@@ -9,14 +9,14 @@
 
 namespace gpk
 {
-	nodstin	::gpk::vcc		tovcc   (const String & srcstr)						    	{ return srcstr.length() ? ::gpk::vcc{srcstr.begin(), srcstr.length()} : vcs{}; }
+	ndstain	::gpk::vcc		tovcc   (const String & srcstr)						    	{ return srcstr.length() ? ::gpk::vcc{srcstr.begin(), srcstr.length()} : vcs{}; }
 	stainli	::gpk::error_t	tovcc   (::gpk::vcc		& output, const String	& srcstr)	{ return (output = ::gpk::tovcc(srcstr)).size(); }
 	stainli	::gpk::error_t	tolabel (::gpk::vcc		& output, const String	& srcstr)	{ return (output = ::gpk::label(::gpk::tovcc(srcstr))).size(); }
 	stainli	::gpk::error_t	toachar (::gpk::achar	& output, const String	& srcstr)	{ gpk_necs(output.reserve(srcstr.length())); return (output = ::gpk::tovcc(srcstr)).size(); }
 	stainli	::gpk::error_t	append 	(::gpk::achar	& output, const String	& srcstr)	{ return output.append(::gpk::tovcc(srcstr)); }
 
-	nodstin	::gpk::vcc		tolabel (const String & srcstr) 		{ return ::gpk::label(::gpk::tovcc(srcstr)); }
-	nodstin	::gpk::achar	toachar (const String & srcstr) 		{ return ::gpk::tovcc(srcstr); }
+	ndstain	::gpk::vcc		tolabel (const String & srcstr) 		{ return ::gpk::label(::gpk::tovcc(srcstr)); }
+	ndstain	::gpk::achar	toachar (const String & srcstr) 		{ return ::gpk::tovcc(srcstr); }
 } // namespace
 #endif // GPK_ARDUINO
 

@@ -92,8 +92,8 @@ namespace gpk
 	tplt<tpnm T, uint32_t _maxCount> using acir			= ::gpk::array_circular<T, _maxCount>;
 	tplt<tpnm T, uint32_t _maxCount> using acircular	= ::gpk::acir<T, _maxCount>;
 	
-	tplt<uint32_t _maxCount>	using acirc		= ::gpk::acir<char     , _maxCount>; tplt<uint32_t _maxCount>	using acirchar	= ::gpk::acir<char    , _maxCount>;
-	tplt<uint32_t _maxCount>	using aciruc 	= ::gpk::acir<uchar_t  , _maxCount>; tplt<uint32_t _maxCount>	using aciruchar	= ::gpk::acir<uchar_t , _maxCount>;
+	tplt<uint32_t _maxCount>	using acirc		= ::gpk::acir<sc_t     , _maxCount>; tplt<uint32_t _maxCount>	using acirchar	= ::gpk::acir<sc_t    , _maxCount>;
+	tplt<uint32_t _maxCount>	using aciruc 	= ::gpk::acir<uc_t  , _maxCount>; tplt<uint32_t _maxCount>	using aciruchar	= ::gpk::acir<uc_t , _maxCount>;
 	tplt<uint32_t _maxCount>	using aciru8 	= ::gpk::acir<uint8_t  , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciru16	= ::gpk::acir<uint16_t , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciru32	= ::gpk::acir<uint32_t , _maxCount>; 
@@ -102,8 +102,8 @@ namespace gpk
 	tplt<uint32_t _maxCount>	using aciri16	= ::gpk::acir<int16_t  , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciri32	= ::gpk::acir<int32_t  , _maxCount>; 
 	tplt<uint32_t _maxCount>	using aciri64	= ::gpk::acir<int64_t  , _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf32	= ::gpk::acir<float32_t, _maxCount>; 
-	tplt<uint32_t _maxCount>	using acirf64	= ::gpk::acir<float64_t, _maxCount>; 
+	tplt<uint32_t _maxCount>	using acirf32	= ::gpk::acir<f2_t, _maxCount>; 
+	tplt<uint32_t _maxCount>	using acirf64	= ::gpk::acir<f3_t, _maxCount>; 
 } // namespace 
 
 #endif // GPK_ARRAY_CIRCULAR_H

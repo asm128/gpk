@@ -22,7 +22,7 @@
 ::gpk::error_t			gpk::camelCase		(::gpk::vcc input, ::gpk::achar & camelCased) {
 	bool						capsNext			= true;
 	for(uint32_t i = 0; i < input.size(); ++i) {
-		char						current				= input[i];
+		sc_t						current				= input[i];
 		if(current == '_' || current == '-')
 			capsNext	= true;
 		else {

@@ -14,6 +14,8 @@
 #	error	"Not implemented."
 #endif
 
+GPK_USING_TYPEINT();
+
 static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 	::gpk::apobj<::gpk::SUDPConnection>				clientsToProcess;
 	::gpk::au8										receiveBuffer;
@@ -80,11 +82,11 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						int											sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
 						::gpk::SUDPCommand							command								= {};						// Where to store received data
 						int											bytes_received						= 0;
-						if (errored(bytes_received = ::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
+						if (errored(bytes_received = ::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 							uint32_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
 								warning_printf("%s", "'lastError != WSAEMSGSIZE' - Could not receive datagram.");
-								::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+								::recvfrom(client.Socket, (sc_t*)&command, (int)szof(::gpk::SUDPCommand), 0, 0, 0);
 								if(lastError == WSAENETRESET || lastError == WSAENOTSOCK)
 									client.State = ::gpk::UDP_CONNECTION_STATE_DISCONNECTED;
 								break;
@@ -94,12 +96,12 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						::gpk::tcpipAddressFromSockaddr(sa_client, address);
 						if(client.Address != address) {
 							warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
-							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+							::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 							continue;
 						}
 						ef_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 						if(INVALID_SOCKET != client.Socket)
-							::recvfrom(client.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+							::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 						::select(0, &sockets, 0, 0, &wait_time);
 					}
 				}
@@ -167,7 +169,7 @@ static	::gpk::error_t	serverListenTick		(::gpk::SUDPServer& serverInstance, cons
 	::gpk::SUDPCommand			command					= {};	// Where to store received data
 	int							bytes_received			= 0;
 	sockaddr_in					sa_client				= {};	// Information about the client
-	reis_if_failed(bytes_received = recvfrom(serverInstance.Socket, (char*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length));
+	reis_if_failed(bytes_received = recvfrom(serverInstance.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &client_length));
 	rni_if(0 == bytes_received, "%s", "Offline?");
 
 	ree_if(command.Type		!= ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST, "Invalid message type: 0x%x '%s'", command.Type, ::gpk::get_value_label(command.Type).begin()); 
@@ -249,7 +251,7 @@ static	void			threadServer			(void* pServerInstance)				{
 	::gpk::tcpipAddressToSockaddr(serverInstance.Address, sa_srv);
 	uint32_t					attempt					= 0;
 	do{
-		::sendto(serverInstance.Socket, (const char*)&command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_srv, sa_length);
+		::sendto(serverInstance.Socket, (const sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr*)&sa_srv, sa_length);
 		::gpk::sleep(100);
 	} while(10 > ++attempt && serverInstance.Clients.size());
 

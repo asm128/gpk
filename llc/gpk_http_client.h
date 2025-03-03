@@ -7,8 +7,8 @@
 namespace gpk
 {
 	struct SHTTPResponse {
-		::gpk::apod<char>						Body;
-		::gpk::apod<char>						HeaderData;
+		::gpk::apod<sc_t>						Body;
+		::gpk::apod<sc_t>						HeaderData;
 		::gpk::aobj<::gpk::TKeyValConstString>	Headers;
 	};
 
@@ -19,7 +19,7 @@ namespace gpk
 		,	const ::gpk::vcs			& path
 		,	const ::gpk::vcs			& contentType
 		,	const ::gpk::vcc			& body
-		,	::gpk::apod<char>			& out_received
+		,	::gpk::apod<sc_t>			& out_received
 		);
 
 	::gpk::error_t					httpClientRequest
@@ -39,10 +39,10 @@ namespace gpk
 	//	,	const ::gpk::vcs			& path
 	//	,	const ::gpk::vcs			& contentType
 	//	,	const ::gpk::vcc			& body
-	//	,	::gpk::apod<char>			& out_received
+	//	,	::gpk::apod<sc_t>			& out_received
 	//	);
 
-	::gpk::error_t					urlDecode	(::gpk::vcc urlToDecode, ::gpk::apod<char> & decoded);
+	::gpk::error_t					urlDecode	(::gpk::vcc urlToDecode, ::gpk::apod<sc_t> & decoded);
 
 }
 

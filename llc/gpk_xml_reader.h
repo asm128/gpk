@@ -36,7 +36,7 @@ namespace gpk
 		int32_t					IndexCurrentElement	= -1;
 		SXMLToken				* CurrentElement	= 0;
 		uint32_t				NestLevel			= 0;
-		char					CharCurrent			= 0;
+		sc_t					CharCurrent			= 0;
 		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
@@ -49,7 +49,7 @@ namespace gpk
 	::gpk::error_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
 
 	struct SXMLFile {
-		::gpk::apod<char>		Bytes				= {};
+		::gpk::apod<sc_t>		Bytes				= {};
 		::gpk::SXMLReader		Reader				= {};
 	};
 

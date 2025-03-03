@@ -160,7 +160,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		//			, ::gpk::min(0, ::gpk::min(controlMetrics.Client.Global.Offset.y, controlMetrics.Client.Local.Offset.y))
 		//			}
 		//	};
-		::gpk::rect2i16				rectImage				= {{}, controlImage.Image.metrics().i16()};
+		::gpk::rect2i16				rectImage				= {{}, controlImage.Image.metrics().s1_t()};
 		::gpk::realignRectangle(controlMetrics.Client.Global.Size, rectImage, rectImage, (::gpk::ALIGN)controlImage.ImageAlign);
 		rectImage.Offset		+= controlMetrics.Client.Global.Offset;
 		rectImage.Size.x		= ::gpk::min(rectImage.Limit().x, controlMetrics.Client.Global.Limit().x) - rectImage.Offset.x;
@@ -185,7 +185,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	if(gui.LastSize != target.metrics16()) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
-		gui.LastSize			= target.metrics().u16();
+		gui.LastSize			= target.metrics().u1_t();
 	}
 	if(false == ::gpk::controlHidden(gui, iControl)) {
 		gpk_necs(::actualControlDraw(gui, iControl, target));
@@ -196,10 +196,10 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	return 0;
 }
 ::gpk::error_t			gpk::guiDraw					(::gpk::SGUI & gui, ::gpk::g8bgra target)													{
-	if(gui.LastSize != target.metrics().u16() || gui.LastZoom != gui.Zoom) {
+	if(gui.LastSize != target.metrics().u1_t() || gui.LastZoom != gui.Zoom) {
 		for(uint32_t iOutdated = 0; iOutdated < gui.Controls.States.size(); ++iOutdated)
 			gui.Controls.SetUpdated((::gpk::cid_t)iOutdated, false);
-		gui.LastSize			= target.metrics().u16();
+		gui.LastSize			= target.metrics().u1_t();
 		gui.LastZoom			= gui.Zoom;
 	}
 	gpk_necs(gpk::guiUpdateMetrics(gui, gui.LastSize, false));;

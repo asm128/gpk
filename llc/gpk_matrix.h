@@ -718,8 +718,8 @@ namespace gpk
 				);
 		}
 	};
-	typedef m3<char>		m3char;
-	typedef m3<uchar_t>		m3uchar;
+	typedef m3<sc_t>		m3char;
+	typedef m3<uc_t>		m3uchar;
 	typedef m3<float>		m3f32;
 	typedef m3<double>		m3f64;
 	typedef m3<uint8_t>		m3u8;
@@ -731,8 +731,8 @@ namespace gpk
 	typedef m3<int32_t>		m3i32;
 	typedef m3<int64_t>		m3i64;
 
-	typedef m4<char>		m4char;
-	typedef m4<uchar_t>		m4uchar;
+	typedef m4<sc_t>		m4char;
+	typedef m4<uc_t>		m4uchar;
 	typedef m4<float>		m4f32;
 	typedef m4<double>		m4f64;
 	typedef m4<uint8_t>		m4u8;

@@ -33,7 +33,7 @@
 	uint32_t					iEnd					= 0;
 	for(uint8_t iVal = 0; iVal < 4 && iOffset < strIP.size(); ++iVal) {
 		while(iEnd < strIP.size()) {
-			char curChar = strIP[iEnd];
+			sc_t curChar = strIP[iEnd];
 			if(0 == iVal && curChar == '[') 
 				return jsonTcpipAddress(strIP, ipv4);
 
@@ -159,18 +159,18 @@
 }
 
 ::gpk::error_t			gpk::tcpipAddress	(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t* a4)										{
-	char						host_name[257]								= {};
+	sc_t						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, a1, a2, a3, a4);
 }
 
 ::gpk::error_t			gpk::tcpipAddress	(uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address)										{
-	char						host_name[257]								= {};
+	sc_t						host_name[257]								= {};
 	gethostname(host_name, 256);
 	return ::gpk::tcpipAddress(host_name, portRequested, adapterIndex, mode, address);
 }
 
-::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t * a4, uint16_t * port)				{
+::gpk::error_t			gpk::tcpipAddress	(const sc_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint8_t* a1, uint8_t* a2, uint8_t* a3, uint8_t * a4, uint16_t * port)				{
 	::gpk::SIPv4End 		addr; 
 	gpk_necs(gpk::tcpipAddress(szHostName, portRequested, adapterIndex, mode, addr.IP, addr.Port));
 	gpk_safe_assign(a1, addr[0]);
@@ -185,8 +185,8 @@
 	return ::gpk::tcpipAddress(::gpk::toString(hostName).begin(), portRequested, adapterIndex, mode, a1, a2, a3, a4, port); 
 }
 
-::gpk::error_t			gpk::tcpipAddress	(const char* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port) {
-	char						portString			[6]					= {};
+::gpk::error_t			gpk::tcpipAddress	(const sc_t* szHostName, uint16_t portRequested, uint32_t adapterIndex, TRANSPORT_PROTOCOL mode, uint32_t & address, uint16_t & port) {
+	sc_t						portString			[6]					= {};
 	snprintf(portString, ::gpk::size(portString), "%u", portRequested);
 
 	// Setup the hints address info structure which is passed to the getaddrinfo() function
@@ -205,7 +205,7 @@
 		verbose_printf("getaddrinfo response at index %u.", iAddress);
 		verbose_printf("Flags: 0x%x.", ptr->ai_flags);
 		verbose_printf("%s", "Family: ");
-		char						ipstringbuffer	[46]							= {};
+		sc_t						ipstringbuffer	[46]							= {};
 #if defined(GPK_WINDOWS)
 		wchar_t						ipwstringbuffer	[46]							= {};
 #endif

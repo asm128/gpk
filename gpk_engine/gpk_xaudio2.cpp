@@ -540,7 +540,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(const ::gpk::vcc & wavname, IXAudio2
 	safe_destroySourceVoice(SourceVoice);
 
 	// Search for media
-	char						strFilePath[4096]	= {};
+	sc_t						strFilePath[4096]	= {};
 	sprintf_s(strFilePath, "./%s", ::gpk::toString(wavname).begin());
 	wchar_t						wstrFilePath[4096]	= {};
 	size_t						count				= 0;

@@ -91,16 +91,16 @@ namespace gpk
 		tplt<tpnm _t2>
 		inlcxpr	n3<_t2>		Cast				()									const	noexcept	{ return {(_t2)x, (_t2)y, (_t2)z}; }
 
-		inlcxpr	n3<uint8_t>	u8					()									const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	n3<uint16_t>u16					()									const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	n3<uint32_t>u32					()									const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	n3<uint64_t>u64					()									const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	n3<int8_t>	i8					()									const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	n3<int16_t>	i16					()									const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	n3<int32_t>	i32					()									const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	n3<int64_t>	i64					()									const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	n3<float>	f32					()									const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	n3<double>	f64					()									const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	n3<uint8_t>	u0_t					()									const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	n3<uint16_t>u1_t					()									const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	n3<uint32_t>u2_t					()									const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	n3<uint64_t>u3_t					()									const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	n3<int8_t>	s0_t					()									const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	n3<int16_t>	s1_t					()									const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	n3<int32_t>	s2_t					()									const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	n3<int64_t>	s3_t					()									const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	n3<float>	f2_t					()									const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	n3<double>	f3_t					()									const	noexcept	{ return Cast<double	>(); }
 
 		//
 		inlcxpr	Tn3&		Area				()									const	noexcept	{ return x * y * z; }
@@ -183,8 +183,8 @@ namespace gpk
 			return *this;
 		}
 	};	// struct n3
-	typedef	n3<char>		n3char;
-	typedef	n3<uchar_t>		n3uchar;
+	typedef	n3<sc_t>		n3char;
+	typedef	n3<uc_t>		n3uchar;
 	typedef	n3<float>		n3f32;
 	typedef	n3<double>		n3f64;
 	typedef	n3<uint8_t>		n3u8;

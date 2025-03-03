@@ -3,7 +3,7 @@
 #include "gpk_parse.h"
 #include "gpk_apod_serialize.h"
 
-::gpk::error_t			gpk::join				(::gpk::achar & output, char separator, ::gpk::vcvcc fields)	{
+::gpk::error_t			gpk::join				(::gpk::achar & output, sc_t separator, ::gpk::vcvcc fields)	{
 	for(uint32_t iField = 0; iField < fields.size();) {
 		gpk_necall(output.append(fields[iField]), "%i", iField);
 		if(++iField < fields.size())
@@ -26,7 +26,7 @@
 	return sprintfable;
 }
 
-::gpk::error_t			gpk::token_split		(char token, const ::gpk::vcs & input_string, TKeyValConstChar & output_views)	{
+::gpk::error_t			gpk::token_split		(sc_t token, const ::gpk::vcs & input_string, TKeyValConstChar & output_views)	{
 	uint32_t					indexToken;
 	gpk_necall(indexToken = ::gpk::find(token, input_string), "'%c' not found.", token);
 	output_views.Key		= {input_string.begin(), (uint32_t)indexToken};

@@ -73,8 +73,8 @@
 				triangleB.Translate({-gridCenter.x, 0, -gridCenter.y});
 				geometry.Triangles	.push_back(triangleA);
 				geometry.Triangles	.push_back(triangleB);
-				geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f32());
-				//geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
+				geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f2_t());
+				//geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
 			}
 		}
 		if(0 <= currentTile.Front || (x == (tiles.metrics().x - 1) && (0 != currentTile.Height[1] || 0 != currentTile.Height[3]))) {
@@ -100,8 +100,8 @@
 			triangleB.Translate({-gridCenter.x, 0, -gridCenter.y});
 			geometry.Triangles	.push_back(triangleA);
 			geometry.Triangles	.push_back(triangleB);
-			//geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
-			geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f32());
+			//geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
+			geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f2_t());
 			geometry.TextureCoords.push_back(
 				{ texcoords[0]
 				, texcoords[2]
@@ -136,8 +136,8 @@
 			triangleB.Translate({-gridCenter.x, 0, -gridCenter.y});
 			geometry.Triangles	.push_back(triangleA);
 			geometry.Triangles	.push_back(triangleB);
-			geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
-			//geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f32());
+			geometry.Normals.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
+			//geometry.Normals.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f2_t());
 			geometry.TextureCoords.push_back(
 				{ texcoords[0]
 				, texcoords[2]
@@ -242,19 +242,19 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 
 	for(uint32_t iTriangle = 0, countTriangles = (uint32_t)::gpk::size(geometryCube); iTriangle < countTriangles; ++iTriangle) {
 		::gpk::tri3f32				& newTriangle		= geometry.Triangles[triangleOffset + iTriangle];
-		newTriangle				= geometryCube[iTriangle].f32();
+		newTriangle				= geometryCube[iTriangle].f2_t();
 		newTriangle.A			-= {.5, .5, .5};
 		newTriangle.B			-= {.5, .5, .5};
 		newTriangle.C			-= {.5, .5, .5};
 		newTriangle.Scale(scale);
 
 		::gpk::tri2f32				& newTriangleTex	= geometry.TextureCoords[triangleOffset + iTriangle];
-		newTriangleTex			= ::texCoordCubeYUp[iTriangle].f32();
+		newTriangleTex			= ::texCoordCubeYUp[iTriangle].f2_t();
 
 		::gpk::n3f32				& newNormal			= geometry.Normals[(triangleOffset + iTriangle) / 2];
 		::gpk::n3f32				normal				= (newTriangle.A - newTriangle.B).Normalize().Cross((newTriangle.A - newTriangle.C).Normalize());
 		normal.Normalize();
-		newNormal				= normal; //geometryNormals[iTriangle / 2].f32();
+		newNormal				= normal; //geometryNormals[iTriangle / 2].f2_t();
 	}
 	return 0;
 }
@@ -319,16 +319,16 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1)	/slices)}
 			};
-		::gpk::tri3f32				triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
-		::gpk::tri3f32				triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
+		::gpk::tri3f32				triangleA				= {coords[0].f2_t() * radius, coords[1].f2_t() * radius, coords[2].f2_t() * radius};
+		::gpk::tri3f32				triangleB				= {coords[1].f2_t() * radius, coords[3].f2_t() * radius, coords[2].f2_t() * radius};
 		::gpk::tri2f32				triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
 		::gpk::tri2f32				triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
 		triangleA.Translate(gridCenter * -1);
 		triangleB.Translate(gridCenter * -1);
 		geometry.Triangles		.push_back(triangleA);
 		geometry.Triangles		.push_back(triangleB);
-		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
-		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f32());
+		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
+		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f2_t());
 		geometry.TextureCoords	.push_back(triangleATex);
 		geometry.TextureCoords	.push_back(triangleBTex);
 	}
@@ -351,16 +351,16 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 //			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
 //			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1)	/slices)}
 //			};
-//		::gpk::tri3f32								triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
-//		::gpk::tri3f32								triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
+//		::gpk::tri3f32								triangleA				= {coords[0].f2_t() * radius, coords[1].f2_t() * radius, coords[2].f2_t() * radius};
+//		::gpk::tri3f32								triangleB				= {coords[1].f2_t() * radius, coords[3].f2_t() * radius, coords[2].f2_t() * radius};
 //		::gpk::tri2f32								triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
 //		::gpk::tri2f32								triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
 //		triangleA.Translate(gridCenter * -1);
 //		triangleB.Translate(gridCenter * -1);
 //		geometry.Triangles		.push_back(triangleA);
 //		geometry.Triangles		.push_back(triangleB);
-//		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
-//		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f32());
+//		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
+//		//geometry.Normals		.push_back((coords[0] - coords[1]).Normalize().Cross((coords[1] - coords[3]).Normalize()).Normalize().f2_t());
 //		geometry.TextureCoords	.push_back(triangleATex);
 //		geometry.TextureCoords	.push_back(triangleBTex);
 //	}
@@ -383,8 +383,8 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_pi * x			/slices), cos(::gpk::math_2pi * x		/ slices)}
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_pi * (x + 1)	/slices), cos(::gpk::math_2pi * (x + 1)	/ slices)}
 			};
-		::gpk::tri3f32								triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
-		::gpk::tri3f32								triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
+		::gpk::tri3f32								triangleA				= {coords[0].f2_t() * radius, coords[1].f2_t() * radius, coords[2].f2_t() * radius};
+		::gpk::tri3f32								triangleB				= {coords[1].f2_t() * radius, coords[3].f2_t() * radius, coords[2].f2_t() * radius};
 		::gpk::tri2f32								triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
 		::gpk::tri2f32								triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
 		triangleA.Scale(scale);
@@ -393,7 +393,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 		triangleB.Translate(gridCenter * -1);
 		geometry.Triangles		.push_back(triangleA);
 		geometry.Triangles		.push_back(triangleB);
-		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
+		geometry.Normals		.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
 		geometry.TextureCoords	.push_back(triangleATex);
 		geometry.TextureCoords	.push_back(triangleBTex);
 	}
@@ -416,8 +416,8 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_pi * x			/slices), cos(::gpk::math_2pi * x		/ slices)}
 			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_pi * (x + 1)	/slices), cos(::gpk::math_2pi * (x + 1)	/ slices)}
 			};
-		::gpk::tri3f32								triangleA				= {coords[0].f32() * radius, coords[1].f32() * radius, coords[2].f32() * radius};
-		::gpk::tri3f32								triangleB				= {coords[1].f32() * radius, coords[3].f32() * radius, coords[2].f32() * radius};
+		::gpk::tri3f32								triangleA				= {coords[0].f2_t() * radius, coords[1].f2_t() * radius, coords[2].f2_t() * radius};
+		::gpk::tri3f32								triangleB				= {coords[1].f2_t() * radius, coords[3].f2_t() * radius, coords[2].f2_t() * radius};
 		::gpk::tri2f32								triangleATex			= {texcoords[0], texcoords[1], texcoords[2]};
 		::gpk::tri2f32								triangleBTex			= {texcoords[1], texcoords[3], texcoords[2]};
 		::gpk::tri3f32								triangleC				= triangleA;
@@ -438,7 +438,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 		triangleB.Translate(gridCenter * -1);
 		triangleC.Translate(gridCenter * -1);
 		triangleD.Translate(gridCenter * -1);
-		::gpk::n3f32									normal					= (triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32();
+		::gpk::n3f32									normal					= (triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t();
 		geometry.Triangles		.push_back(triangleA);
 		geometry.Triangles		.push_back(triangleB);
 		geometry.Triangles		.push_back(triangleC);
@@ -484,18 +484,18 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			, {sin(::gpk::math_pi * (x + 1)	/slices) * cos(::gpk::math_2pi * (z + 1)	/ stacks), cos(::gpk::math_pi * (x + 1)	/slices), sin(::gpk::math_pi * (x + 1)	/ slices) * sin(::gpk::math_2pi * (z + 1)	/ stacks)}
 			};
 		{
-			::gpk::tri3f32								triangleA			= {coords[0].f32() * radius, coords[2].f32() * radius, coords[1].f32() * radius};
-			::gpk::tri3f32								triangleB			= {coords[1].f32() * radius, coords[2].f32() * radius, coords[3].f32() * radius};
+			::gpk::tri3f32								triangleA			= {coords[0].f2_t() * radius, coords[2].f2_t() * radius, coords[1].f2_t() * radius};
+			::gpk::tri3f32								triangleB			= {coords[1].f2_t() * radius, coords[2].f2_t() * radius, coords[3].f2_t() * radius};
 			triangleA.Translate(gridCenter * -1);
 			triangleB.Translate(gridCenter * -1);
 			geometry.Triangles	.push_back(triangleA);
 			geometry.Triangles	.push_back(triangleB);
 		}
 		{
-			::gpk::n3f32									normal				= coords[0].f32();
-			normal												+= coords[1].f32();
-			normal												+= coords[2].f32();
-			normal												+= coords[3].f32();
+			::gpk::n3f32									normal				= coords[0].f2_t();
+			normal												+= coords[1].f2_t();
+			normal												+= coords[2].f2_t();
+			normal												+= coords[3].f2_t();
 			normal												/= 4;
 			normal.Normalize();
 			geometry.Normals.push_back(normal);
@@ -542,8 +542,8 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 			coords[3].RotateY(::gpk::math_2pi / slices * (z + 1));
 
 			{
-				::gpk::tri3f32				triangleA					= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
-				::gpk::tri3f32				triangleB					= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
+				::gpk::tri3f32				triangleA					= {coords[0].f2_t(), coords[2].f2_t(), coords[1].f2_t()};
+				::gpk::tri3f32				triangleB					= {coords[1].f2_t(), coords[2].f2_t(), coords[3].f2_t()};
 				triangleA.Scale(scale);
 				triangleB.Scale(scale);
 				triangleA.Translate(gridCenter * -1);
@@ -551,7 +551,7 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 
 				geometry.Triangles	.push_back(triangleA);
 				geometry.Triangles	.push_back(triangleB);
-				geometry.Normals	.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f32());
+				geometry.Normals	.push_back((triangleB.A - triangleB.B).Normalize().Cross((triangleA.A - triangleA.B).Normalize()).Normalize().f2_t());
 			}
 		}
 	}
@@ -602,15 +602,15 @@ stacxpr	::gpk::n3i8		geometryNormals	[6]		=
 		coords[3].Normalize();
 
 		{
-			::gpk::tri3f32				triangleA					= {coords[0].f32(), coords[2].f32(), coords[1].f32()};
-			::gpk::tri3f32				triangleB					= {coords[1].f32(), coords[2].f32(), coords[3].f32()};
+			::gpk::tri3f32				triangleA					= {coords[0].f2_t(), coords[2].f2_t(), coords[1].f2_t()};
+			::gpk::tri3f32				triangleB					= {coords[1].f2_t(), coords[2].f2_t(), coords[3].f2_t()};
 			triangleA.Scale(scale);
 			triangleB.Scale(scale);
 			triangleA.Translate(gridCenter * -1);
 			triangleB.Translate(gridCenter * -1);
 			geometry.Triangles	.push_back(triangleA);
 			geometry.Triangles	.push_back(triangleB);
-			geometry.Normals	.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f32());
+			geometry.Normals	.push_back((triangleA.A - triangleA.B).Normalize().Cross((triangleB.A - triangleB.B).Normalize()).Normalize().f2_t());
 		}
 	}
 	return 0;

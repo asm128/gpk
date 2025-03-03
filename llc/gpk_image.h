@@ -50,26 +50,26 @@ namespace gpk
 		inlcxpr	uint32_t			area		()						const	noexcept	{ return View.area		();	}
 		inlcxpr	uint32_t 			byte_count	()						const	noexcept	{ return Texels.byte_count();	}
 
-		inline	::gpk::error_t		resize		(const ::gpk::n2i8  & newSize)	noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2i16 & newSize)	noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2i32 & newSize)	noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2u8  & newSize)	noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2u16 & newSize)	noexcept	{ return resize(newSize.u32()); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i8  & newSize)	noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i16 & newSize)	noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i32 & newSize)	noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2u8  & newSize)	noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2u16 & newSize)	noexcept	{ return resize(newSize.u2_t()); }
 		inline	::gpk::error_t		resize		(const ::gpk::n2u32 & newSize)	noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View						= {Texels.begin(), newSize.x, newSize.y};
 			return 0;
 		}
 
-		inline	::gpk::error_t		resize		(const ::gpk::n2i8  & newSize, const T & newValue)	noexcept	{ return resize(newSize.u32(), newValue); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2i16 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u32(), newValue); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2i32 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u32(), newValue); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2u8  & newSize, const T & newValue)	noexcept	{ return resize(newSize.u32(), newValue); }
-		inline	::gpk::error_t		resize		(const ::gpk::n2u16 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u32(), newValue); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i8  & newSize, const T & newValue)	noexcept	{ return resize(newSize.u2_t(), newValue); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i16 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u2_t(), newValue); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2i32 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u2_t(), newValue); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2u8  & newSize, const T & newValue)	noexcept	{ return resize(newSize.u2_t(), newValue); }
+		inline	::gpk::error_t		resize		(const ::gpk::n2u16 & newSize, const T & newValue)	noexcept	{ return resize(newSize.u2_t(), newValue); }
 		inline	::gpk::error_t		resize		(const ::gpk::n2u32 & newSize, const T & newValue)	noexcept	{ 
 			gpk_necall(Texels.resize(newSize.x * newSize.y), "cannot resize? Requested size: %u.", newSize.x * newSize.y);
 			View						= {Texels.begin(), newSize.x, newSize.y};
-			gpk_necall(gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().i32()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
+			gpk_necall(gpk::drawRectangle(View, newValue, ::gpk::rect2<int32_t>{{}, View.metrics().s2_t()}), "Unknown error setting value to rectangle of size: %u x %u.", newSize.x, newSize.y);
 			return Texels.size();
 		}
 	}; // struct
@@ -164,10 +164,10 @@ namespace gpk
 			return 0;
 		}
 
-		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize)												noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize)												noexcept	{ return resize(newSize.u32()); }
-		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize, const TColor & color, const TDepth & depth)	noexcept	{ return resize(newSize.u32(), color, depth); }
-		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize, const TColor & color, const TDepth & depth)	noexcept	{ return resize(newSize.u32(), color, depth); }
+		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize)												noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize)												noexcept	{ return resize(newSize.u2_t()); }
+		inline	::gpk::error_t		resize				(const ::gpk::n2u8  & newSize, const TColor & color, const TDepth & depth)	noexcept	{ return resize(newSize.u2_t(), color, depth); }
+		inline	::gpk::error_t		resize				(const ::gpk::n2u16 & newSize, const TColor & color, const TDepth & depth)	noexcept	{ return resize(newSize.u2_t(), color, depth); }
 	};
 
 	tplt<tpnm TColor, tpnm TDepth>
@@ -186,15 +186,15 @@ namespace gpk
 	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_colors.resize(newSize.x * newSize.y));		// Update size-dependent resources.
-		if( out_view.metrics().u16() != newSize)
-			out_view					= {out_colors.begin(), newSize.u32() };
+		if( out_view.metrics().u1_t() != newSize)
+			out_view					= {out_colors.begin(), newSize.u2_t() };
 		return 0;
 	}
 
 	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentTarget	(::gpk::apod<TColor> & out_colors, ::gpk::grid<TColor> & out_view, const ::gpk::n2u16 & newSize, const TColor & newValue) {
 		gpk_necs(out_colors.resize(newSize.x * newSize.y, newValue));		// Update size-dependent resources.
-		if( out_view.metrics().u16() != newSize)
+		if( out_view.metrics().u1_t() != newSize)
 			out_view					= {out_colors.begin(), newSize};
 
 		return 0;
@@ -203,7 +203,7 @@ namespace gpk
 	tplt<tpnm TColor>
 	::gpk::error_t				updateSizeDependentImage	(::gpk::apod<TColor> & out_scaled, ::gpk::grid<TColor> & out_view, const ::gpk::grid<TColor> & in_view, const ::gpk::n2u16 & newSize)											{
 		gpk_necs(out_scaled.resize(newSize.x * newSize.y));		// Update size-dependent resources.
-		if( out_view.metrics().u16() != newSize ) {
+		if( out_view.metrics().u1_t() != newSize ) {
 			out_view					= {out_scaled.begin(), newSize.x, newSize.y};
 			if(in_view.size())
 				es_if(errored(::gpk::grid_scale(out_view, in_view)));

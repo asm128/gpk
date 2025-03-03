@@ -30,12 +30,12 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						push_sequence				(const char* sequence, uint32_t length, ::gpk::vcc & out_view)	{
+		::gpk::error_t						push_sequence				(const sc_t* sequence, uint32_t length, ::gpk::vcc & out_view)	{
 			const uint32_t							lengthPlusOne				= length + 1;
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t								& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= lengthPlusOne) {
-					char									* sequenceStart				= &Blocks[iBlock]->operator[](_size - blkRemainingSpace);
+					sc_t									* sequenceStart				= &Blocks[iBlock]->operator[](_size - blkRemainingSpace);
 					out_view							= {sequenceStart, length};
 					memcpy(sequenceStart, sequence, length);
 					sequenceStart[lengthPlusOne]		= 0;

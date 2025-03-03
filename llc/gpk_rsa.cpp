@@ -101,7 +101,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 			k					= k * ct;
 			k					= k % n;
 		}
-		pDecrypted[offset + i]	= (char)k;
+		pDecrypted[offset + i]	= (sc_t)k;
 		++i;
 	}
 	pDecrypted[decrypted.size() - 1]	= 0;
@@ -244,7 +244,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	for(uint32_t i = decryptedStart; i < decrypted.size() - 1; ++i) {
 		const uint64_t							hashedChar							= ::gpk::noise1DBase((i - (uint64_t)decryptedStart) * decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		checkhash							+= hashedChar;
-		//info_printf("Check Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
+		//info_printf("Check Hashing sc_t #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
 	ree_if(hash != checkhash, "Failed to check pre hash: prehash: %llx == checkprehash: %llx", hash, checkhash);
 	return 0;
@@ -262,7 +262,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	for(uint32_t i = 0; i < decrypted.size() - 1; ++i) {
 		const uint64_t									hashedChar							= ::gpk::noise1DBase(i * (uint64_t)decrypted[i] + ::gpk::noise1DBase(decrypted[i + 1]), ::gpk::NOISE_SEED);
 		hash										+= hashedChar;
-		//info_printf("Hashing char #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
+		//info_printf("Hashing sc_t #%u: 0x%X '%c' (+1: 0x%X '%c') (0x%llx).", i, decrypted[i], decrypted[i], decrypted[i+1], decrypted[i+1], hashedChar);
 	}
 	verbose_printf("prehash: %llx (%llx). Size of original data: %u.Size of data with hash appended: %u.", *((uint64_t*)&prehashed[prehashed.size() - sizeof(uint64_t)]), *((uint64_t*)&prehashed[decrypted.size()]), decrypted.size(), prehashed.size());
 

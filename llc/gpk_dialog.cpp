@@ -153,7 +153,7 @@ stacxpr	const uint32_t	heightOfField			= 18;
 
 	::gpk::SControlPlacement	& controlButton			= controlTable.Placement[slider.IdButton];
 	::gpk::SControlPlacement	& controlSlider			= controlTable.Placement[slider.IdGUIControl];
-	::gpk::n2<double>			ncSpacing				= ::gpk::controlNCSpacing(controlSlider).f64();
+	::gpk::n2<double>			ncSpacing				= ::gpk::controlNCSpacing(controlSlider).f3_t();
 	if(slider.Vertical)	
 		controlButton.Area.Offset.y	= int16_t((controlSlider.Area.Size.y - controlButton.Area.Size.y - ncSpacing.y) * proportion);
 	else				
@@ -189,14 +189,14 @@ stacxpr	const uint32_t	heightOfField			= 18;
 			//	{ 1.0 / (zoom.ZoomLevel * zoom.DPI.x)
 			//	, 1.0 / (zoom.ZoomLevel * zoom.DPI.y)
 			//	};
-			const ::gpk::n2f64			controlSliderPos			= controlTable.Area[slider.IdGUIControl].Client.Global.Offset.f64();
-			const ::gpk::n2f64			controlSliderSize			= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f64();
-			::gpk::n2f64				effectiveSize				= controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f64();;
+			const ::gpk::n2f64			controlSliderPos			= controlTable.Area[slider.IdGUIControl].Client.Global.Offset.f3_t();
+			const ::gpk::n2f64			controlSliderSize			= controlTable.Area[slider.IdGUIControl].Client.Global.Size.f3_t();
+			::gpk::n2f64				effectiveSize				= controlSliderSize - (controlTable.Placement[slider.IdButton].Area.Size).f3_t();;
 			//
 
-			::gpk::n2f64				currentValue				= input.MouseCurrent.Position.f64();
+			::gpk::n2f64				currentValue				= input.MouseCurrent.Position.f3_t();
 			const ::gpk::n2f64			valueUnit					= {1.0 / effectiveSize.x, 1.0 / effectiveSize.y};
-			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f64() / 2.0;
+			currentValue			-= controlSliderPos + controlTable.Placement[slider.IdButton].Area.Size.f3_t() / 2.0;
 			currentValue.x			*= valueUnit.x;
 			currentValue.y			*= valueUnit.y;
 
@@ -330,7 +330,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	if(controlTitleState.IsPressed()) {
 		const ::gpk::n2<bool>		locked					= {control.Settings.DisplacementLockX, control.Settings.DisplacementLockY};
 		if(false == locked.x || false == locked.y) {
-			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position).i16(); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
+			::gpk::n2i16				mouseDeltas				= (dialog.Input->MouseCurrent.Position - dialog.Input->MousePrevious.Position).s1_t(); //{dialog.Input->MouseCurrent.Deltas.x, dialog.Input->MouseCurrent.Deltas.y};
 			if(mouseDeltas.x || mouseDeltas.y)
 				gpk_necs(::viewportDrag(control, controlMain, dialog, locked, mouseDeltas));
 		}
@@ -344,7 +344,7 @@ static	::gpk::error_t	viewportDrag			(::gpk::SDialogViewport	& control, ::gpk::S
 	if(control.Settings.Unfolded != control.SettingsOld.Unfolded)
 		if(true == control.Settings.Unfolded) {
 			::gpk::n2i16				clientFinalSize			= {controlMain.Area.Size};
-			clientFinalSize			-= ::gpk::controlNCSpacing(controlMain).i16();
+			clientFinalSize			-= ::gpk::controlNCSpacing(controlMain).s1_t();
 			clientFinalSize.y		-=  heightOfField + 1;
 			::gpk::SControlPlacement	& controlClient			= controlTable.Placement[control.IdClient];
 			controlClient.Area.Size	= clientFinalSize;

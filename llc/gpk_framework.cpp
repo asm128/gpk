@@ -17,6 +17,8 @@
 #	include <xcb/xcb_image.h>
 #endif
 
+using ::gpk::sc_t;
+
 static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)													{
 #if defined(GPK_WINDOWS)
 	if(0 != framework.RootWindow.PlatformDetail.WindowHandle) {
@@ -26,15 +28,15 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 		::gpk::n2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
-		if((framework.GUI->Zoom.DPI * 96).u32() != dpi) {
+		if((framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::SWindow::TOffscreen>												offscreen									= framework.RootWindow.BackBuffer;
-			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().u16(), true);
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().u1_t(), true);
 		}
 #else
 		HMONITOR				hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u32() != dpi) {
+		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
@@ -271,16 +273,16 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 			break;
 		}
 		if(lParam) {
-			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u16();
+			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u1_t();
 			RECT								windowrect					= {};
 			GetClientRect(hWnd, &windowrect);
 			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
-			if(newMetrics != mainDisplay.Size.u16()) {
+			if(newMetrics != mainDisplay.Size.u1_t()) {
 				mainDisplay.PreviousSize		= mainDisplay.Size;
 				mainDisplay.Size				= newMetrics;
 				mainDisplay.Resized				= true;
 				mainDisplay.Repaint				= true;
-				char								buffer		[256]							= {};
+				sc_t								buffer		[256]							= {};
 				//snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u]. Last frame seconds: %g. ", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y, app.Framework.Timer.LastTimeSeconds);
 				snprintf(buffer, ::gpk::size(buffer) - 2, "[%u x %u].", (uint32_t)newMetrics.x, (uint32_t)newMetrics.y);
 #if defined(UNICODE)
@@ -303,7 +305,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	//case MM_JOY2ZMOVE			: e_if(errored(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID2 changed position in the x- or y-direction
 	//case MM_JOY1MOVE		: 
 	//case MM_JOY2MOVE		: { 
-	//	const char							iJoystick					= (MM_JOY2MOVE == uMsg) ? 1 : 0;
+	//	const sc_t							iJoystick					= (MM_JOY2MOVE == uMsg) ? 1 : 0;
 	//	newEvent.Type					= ::gpk::SYSEVENT_JOY_MOVE; 
 	//	newEvent.Data.resize(1 + sizeof(LPARAM)); 
 	//	newEvent.Data[0]				= iJoystick;

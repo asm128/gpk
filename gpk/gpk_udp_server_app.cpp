@@ -3,6 +3,8 @@
 #include "gpk_gui_control_list.h"
 #include "gpk_json_expression.h"
 
+GPK_USING_TYPEINT();
+
 ::gpk::error_t			gpk::loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcc & port, ::gpk::vcc & adapter) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"listen_port"}, jsonConfig, parentNode, port));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"adapter"}, jsonConfig, parentNode, adapter));
@@ -27,7 +29,7 @@
 	time_t						timeInt				= time(NULL);
 	tm							timeptr				= {};
 	localtime_s(&timeptr, &timeInt);
-	char						buf [64]			= {};
+	sc_t						buf [64]			= {};
 	strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 	server.UI.TextTimeStarted	= ::gpk::vcs(buf);
 	return ::gpk::controlTextSet(gui, server.UI.Info[::gpk::UI_SERVER_INFO_TimeStarted], {server.UI.TextTimeStarted});
@@ -38,7 +40,7 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 	::gpk::SUDPServer			& udpServer		= server.UDP;
 	gpk_necs(gpk::controlTextSet(gui, server.UI.Input[::gpk::UI_SERVER_INPUT_Stop		], udpServer.Listen ? ::gpk::vcs{"Stop"} : ::gpk::vcs{"Start"})); 
 	gpk_necs(gpk::controlTextSet(gui, server.UI.Info [::gpk::UI_SERVER_INFO_Listening	], udpServer.Listen ? ::gpk::vcs{"Listening"} : ::gpk::vcs{"Stopped"})); 
-	char						buf [128]		= {};
+	sc_t						buf [128]		= {};
 	{	
 		uint32_t					clientCount		= 0;
 		for(uint32_t iClient = 0; iClient < udpServer.Clients.size(); ++iClient) 

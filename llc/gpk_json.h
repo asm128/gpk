@@ -41,7 +41,7 @@ namespace gpk
 		int32_t					IndexCurrentElement		= -1;
 		::gpk::SJSONToken		* CurrentElement		= 0;
 		int32_t					NestLevel				= 0;
-		char					CharCurrent				= 0;
+		sc_t					CharCurrent				= 0;
 		bool					Escaping				: 1;
 		bool					InsideString			: 1;
 		bool					ExpectingSeparator		: 1;
@@ -90,27 +90,27 @@ namespace gpk
 
 
 	// Access functions: Iterate over children looking for keys or values.
-	nodstin	::gpk::error_t	jsonObjectKeyCount	(const ::gpk::SJSONReader & reader, uint32_t iNode)												{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyCount(*reader.Tree[iNode]); }
-	nodstin	::gpk::error_t	jsonArraySize		(const ::gpk::SJSONReader & reader, uint32_t iNode)												{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonArraySize(*reader.Tree[iNode]); }
-	nodstin	::gpk::error_t	jsonArrayValueGet	(const ::gpk::SJSONReader & reader, uint32_t iNode, uint32_t indexOfValueToGet)					{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
-	nodstin	::gpk::error_t	jsonObjectValueGet	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key)						{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
+	ndstain	::gpk::error_t	jsonObjectKeyCount	(const ::gpk::SJSONReader & reader, uint32_t iNode)												{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyCount(*reader.Tree[iNode]); }
+	ndstain	::gpk::error_t	jsonArraySize		(const ::gpk::SJSONReader & reader, uint32_t iNode)												{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonArraySize(*reader.Tree[iNode]); }
+	ndstain	::gpk::error_t	jsonArrayValueGet	(const ::gpk::SJSONReader & reader, uint32_t iNode, uint32_t indexOfValueToGet)					{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonArrayValueGet(*reader.Tree[iNode], indexOfValueToGet); }
+	ndstain	::gpk::error_t	jsonObjectValueGet	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key)						{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectValueGet(*reader.Tree[iNode], reader.View, {key.begin(), key.size()}); }
 	stainli	::gpk::error_t	jsonObjectKeyList	(const ::gpk::SJSONReader & reader, uint32_t iNode, ::gpk::ai32 & indices)						{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], indices); }
 	stainli	::gpk::error_t	jsonObjectKeyList	(const ::gpk::SJSONReader & reader, uint32_t iNode, ::gpk::avcc & keys)							{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], reader.View, keys); }
 	stainli	::gpk::error_t	jsonObjectKeyList	(const ::gpk::SJSONReader & reader, uint32_t iNode, ::gpk::ai32 & indices, ::gpk::avcc & keys)	{ rew_if(iNode >= reader.Tree.size(), "Invalid node index: %i. Total nodes: %u", iNode, reader.Tree.size()); return jsonObjectKeyList(*reader.Tree[iNode], reader.View, indices, keys); }
-	nodstin	::gpk::error_t	jsonCompareArray	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareArray	(node, views, other, views); }
-	nodstin	::gpk::error_t	jsonCompareObject	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareObject	(node, views, other, views); }
-	nodstin	::gpk::error_t	jsonCompareNumber	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareNumber	(node, views, other, views); }
+	ndstain	::gpk::error_t	jsonCompareArray	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareArray	(node, views, other, views); }
+	ndstain	::gpk::error_t	jsonCompareObject	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareObject	(node, views, other, views); }
+	ndstain	::gpk::error_t	jsonCompareNumber	(const ::gpk::SJSONNode & node, const ::gpk::SJSONNode & other, const ::gpk::view<::gpk::vcc> & views)	{ return ::gpk::jsonCompareNumber	(node, views, other, views); }
 
 	::gpk::error_t	jsonObjectGetString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc		& value);
 	::gpk::error_t	jsonObjectGetBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i32_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i16_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i8_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u64_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u32_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u16_t	& value);
-	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u8_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s2_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s1_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s0_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u3_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u2_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u1_t	& value);
+	::gpk::error_t	jsonObjectGetInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, u0_t	& value);
 	::gpk::error_t	jsonObjectGetDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
 	::gpk::error_t	jsonObjectGetDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, float	& value);
 
@@ -118,39 +118,39 @@ namespace gpk
 	//::gpk::error_t	jsonObjectGetIntegerAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
 	::gpk::error_t	jsonObjectGetIntegerAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
 	::gpk::error_t	jsonObjectGetIntegerAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
-	::gpk::error_t	jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
+	::gpk::error_t	jsonObjectGetDecimalAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value);
 	//::gpk::error_t	jsonObjectGetDecimalAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
 	::gpk::error_t	jsonObjectGetDecimalAsBoolean(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
-	//::gpk::error_t	jsonObjectGetStringAsInteger (const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
+	//::gpk::error_t	jsonObjectGetStringAsInteger (const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value);
 	//::gpk::error_t	jsonObjectGetStringAsBoolean (const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
 	//::gpk::error_t	jsonObjectGetStringAsDecimal (const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
-	::gpk::error_t	jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
+	::gpk::error_t	jsonObjectGetBooleanAsInteger(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value);
 	//::gpk::error_t	jsonObjectGetBooleanAsString (const ::gpk::SJSONReader & reader, uint32_t iNode, vcc	& value);
 	::gpk::error_t	jsonObjectGetBooleanAsDecimal(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
 	// 
 	//::gpk::error_t	jsonObjectGetAsString	(const ::gpk::SJSONReader & reader, uint32_t iNode, vcc		& value);
 	//::gpk::error_t	jsonObjectGetAsBoolean	(const ::gpk::SJSONReader & reader, uint32_t iNode, bool	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i64_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i32_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i16_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, i8_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u64_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u32_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u16_t	& value);
-	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u8_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s3_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s2_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s1_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, s0_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u3_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u2_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u1_t	& value);
+	//::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, u0_t	& value);
 	//::gpk::error_t	jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, double	& value);
 	//::gpk::error_t	jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, float	& value);
 
 	::gpk::error_t	jsonObjectGetAsString	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, vcc		& value);
 	::gpk::error_t	jsonObjectGetAsBoolean	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, bool	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i64_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i32_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i16_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, i8_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u64_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u32_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u16_t	& value);
-	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u8_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s3_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s2_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s1_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, s0_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u3_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u2_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u1_t	& value);
+	::gpk::error_t	jsonObjectGetAsInteger	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, u0_t	& value);
 	::gpk::error_t	jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, double	& value);
 	::gpk::error_t	jsonObjectGetAsDecimal	(const ::gpk::SJSONReader & reader, uint32_t iNode, const ::gpk::vcs & key, float	& value);
 
@@ -162,8 +162,8 @@ namespace gpk
 	typedef ::gpk::SKeyVal<::gpk::vcc, ::gpk::SJSONFile>	TKeyValJSONFile;
 
 	::gpk::error_t			jsonFileRead			(::gpk::SJSONFile & file, const ::gpk::vcc & filename);
-	::gpk::error_t			jsonWrite				(const ::gpk::SJSONNode * node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<char> & output);
-	::gpk::error_t			jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<char>> & outputJsons);
+	::gpk::error_t			jsonWrite				(const ::gpk::SJSONNode * node, const ::gpk::view<::gpk::vcc> & jsonViews, ::gpk::apod<sc_t> & output);
+	::gpk::error_t			jsonArraySplit			(const ::gpk::SJSONNode & jsonArrayToSplit, const ::gpk::view<::gpk::vcc> & jsonViews, const uint32_t blockSize, ::gpk::aobj<::gpk::apod<sc_t>> & outputJsons);
 
 	struct SJSONFieldBinding {
 		::gpk::vcc				Field					= {};

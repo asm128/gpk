@@ -49,8 +49,8 @@ namespace gpk
 		::gpk::apod<::gpk::n3f32>				Vertices;
 		::gpk::apod<::gpk::SRSMTexCoord>		UVs;
 		::gpk::apod<::gpk::SRSMFace>			Faces;
-		char									Name		[40];
-		char									ParentName	[40];
+		sc_t									Name		[40];
+		sc_t									ParentName	[40];
 		::gpk::SRSMNodeTransform				Transform;
 		::gpk::apod<SRSMFrameRotation>			RotationKeyframes;
 		::gpk::apod<SRSMFramePosition>			PositionKeyframes;
@@ -60,9 +60,9 @@ namespace gpk
 		uint32_t								AnimLength;
 		uint32_t								ShadeType;
 		uint8_t									Alpha;
-		char									Unknown[16];
-		::gpk::aobj<::gpk::astatic<char, 40>>	TextureNames;
-		char									RootNodeName[40];
+		sc_t									Unknown[16];
+		::gpk::aobj<::gpk::astatic<sc_t, 40>>	TextureNames;
+		sc_t									RootNodeName[40];
 		::gpk::aobj<::gpk::SRSMNode>			Nodes;
 	};
 	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vu8	& input);

@@ -58,7 +58,7 @@
 			TArray&					operator =			(const T (&init)[sizeStatic])						{
 				gsthrow_if(resize(sizeStatic) != sizeStatic);
 				memcpy(Data, init, Count * sizeof(T));
-				*(u16*)&Data[Count]		= 0;
+				*(u1_t*)&Data[Count]		= 0;
 				return *this;
 			}
 
@@ -67,14 +67,14 @@
 			// Returns the new size of the array
 			::gpk::error_t			pop_back			()										noexcept	{
 				rees_if(0 == Count);
-				*(u16*)&Data[--Count]		= 0;
+				*(u1_t*)&Data[--Count]		= 0;
 				return Count;
 			}
 			// Returns the new size of the array
 			::gpk::error_t			pop_back			(T & oldValue)							noexcept	{
 				rees_if(0 == Count);
 				oldValue				= Data[--Count];
-				*(u16*)&Data[Count]		= 0;
+				*(u1_t*)&Data[Count]		= 0;
 				return Count;
 			}
 			// Returns the index of the pushed value or -1 on failure
@@ -113,7 +113,7 @@
 				const uint32_t				iFirst				= Count;
 				memcpy(&Data[iFirst], chainToAppend, sizeof(T) * chainLength);
 				Count					+= chainLength;
-				*(u16*)&Data[Count]		= 0;
+				*(u1_t*)&Data[Count]		= 0;
 				return iFirst;
 			}
 			::gpk::error_t			reserve				(uint32_t newCount)								{
@@ -124,7 +124,7 @@
 					if(Data)
 						memcpy(newData, Data, this->byte_count());
 						
-					*(u16*)&newData[Count]	= 0;
+					*(u1_t*)&newData[Count]	= 0;
 					T							* oldData			= Data;
 					Data					= newData;
 					Size					= newSize;
@@ -143,7 +143,7 @@
 				gpk_necs(reserve(newCount));
 				Count					= newCount;
 				if(Data)
-					*(u16*)&Data[Count]		= 0;
+					*(u1_t*)&Data[Count]		= 0;
 				return Count;
 			}
 			// Returns the new size of the array.
@@ -152,7 +152,7 @@
 				if(Data) {
 					for(; Count < newCount; ++Count)
 						Data[Count] = newValue;
-					*(u16*)&Data[Count = newCount]	= 0;
+					*(u1_t*)&Data[Count = newCount]	= 0;
 				}
 				return Count;
 			}
@@ -179,7 +179,7 @@
 						Data[i + 1]				= Data[i];
 					Data[index]				= newValue;
 				}
-				*(u16*)&Data[newCount]	= 0;
+				*(u1_t*)&Data[newCount]	= 0;
 				return Count = newCount;
 			}
 			// returns the new size of the list or -1 on failure.
@@ -206,7 +206,7 @@
 						Data[i + chainLength]	= Data[i];
 					memcpy(&Data[index], chainToInsert, chainLength * sizeof(T));
 				}
-				*(u16*)&Data[newCount]	= 0;
+				*(u1_t*)&Data[newCount]	= 0;
 				return Count = newCount;
 			}
 			tplt<size_t _chainLength>
@@ -216,7 +216,7 @@
 			::gpk::error_t			remove_unordered	(uint32_t index)												noexcept	{
 				ree_if(index >= Count, "%u >= %u.", index, Count);
 				Data[index]				= Data[--Count];
-				*(u16*)&Data[Count]		= 0;
+				*(u1_t*)&Data[Count]		= 0;
 				return Count;
 			}
 			// returns the new array size or -1 if failed.
@@ -234,7 +234,7 @@
 					Data[index]				= Data[index + 1];
 					++index;
 				}
-				*(u16*)&Data[Count]		= 0;
+				*(u1_t*)&Data[Count]		= 0;
 				return Count;
 			}
 		}; // array_pod
@@ -242,8 +242,8 @@
 		tplt <tpnm T>	using apod		= ::gpk::array_pod<T>;
 		tplt <tpnm T>	using ap		= ::gpk::apod	<T>;
 
-		typedef apod<uchar_t	>	auchar, auc;
-		typedef apod<char		>	achar , ac ;
+		typedef apod<uc_t	>	auchar, auc;
+		typedef apod<sc_t		>	achar , ac ;
 		typedef apod<float		>	af32;
 		typedef apod<double		>	af64;
 		typedef apod<uint8_t	>	au8	;
@@ -260,7 +260,7 @@
 
 		::gpk::error_t			camelCase		(::gpk::vcc input, ::gpk::achar & camelCased);
 
-		::gpk::error_t			join			(::gpk::achar & query, char separator, ::gpk::vcvcc fields);
+		::gpk::error_t			join			(::gpk::achar & query, sc_t separator, ::gpk::vcvcc fields);
 	} // namespace
 
 	#endif // GPK_ARRAY_POD_H_23627

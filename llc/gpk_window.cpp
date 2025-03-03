@@ -91,7 +91,7 @@
 #if defined(GPK_WINDOWS)
 ::gpk::error_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
 	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
-	const ::gpk::n2u16			metricsSource			= colorArray.metrics().u16();
+	const ::gpk::n2u16			metricsSource			= colorArray.metrics().u1_t();
 	const ::gpk::n2u16			prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight

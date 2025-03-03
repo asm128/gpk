@@ -17,16 +17,16 @@ namespace gpk
 		using	tri<TVertex>	::C;
 		using	tri<TVertex>	::tri;
 
-		inlcxpr	tri2<float>		f32			()		const	noexcept	{ return {A.f32(), B.f32(), C.f32()}; }
-		inlcxpr	tri2<double>	f64			()		const	noexcept	{ return {A.f64(), B.f64(), C.f64()}; }
-		inlcxpr	tri2<uint8_t>	i8			()		const	noexcept	{ return {A.i8 (), B.i8 (), C.i8 ()}; }
-		inlcxpr	tri2<uint16_t>	i16			()		const	noexcept	{ return {A.i16(), B.i16(), C.i16()}; }
-		inlcxpr	tri2<uint32_t>	i32			()		const	noexcept	{ return {A.i32(), B.i32(), C.i32()}; }
-		inlcxpr	tri2<uint64_t>	i64			()		const	noexcept	{ return {A.i64(), B.i64(), C.i64()}; }
-		inlcxpr	tri2<int8_t>	u8			()		const	noexcept	{ return {A.u8 (), B.u8 (), C.u8 ()}; }
-		inlcxpr	tri2<int16_t>	u16			()		const	noexcept	{ return {A.u16(), B.u16(), C.u16()}; }
-		inlcxpr	tri2<int32_t>	u32			()		const	noexcept	{ return {A.u32(), B.u32(), C.u32()}; }
-		inlcxpr	tri2<int64_t>	u64			()		const	noexcept	{ return {A.u64(), B.u64(), C.u64()}; }
+		inlcxpr	tri2<float>		f2_t			()		const	noexcept	{ return {A.f2_t(), B.f2_t(), C.f2_t()}; }
+		inlcxpr	tri2<double>	f3_t			()		const	noexcept	{ return {A.f3_t(), B.f3_t(), C.f3_t()}; }
+		inlcxpr	tri2<uint8_t>	s0_t			()		const	noexcept	{ return {A.s0_t (), B.s0_t (), C.s0_t ()}; }
+		inlcxpr	tri2<uint16_t>	s1_t			()		const	noexcept	{ return {A.s1_t(), B.s1_t(), C.s1_t()}; }
+		inlcxpr	tri2<uint32_t>	s2_t			()		const	noexcept	{ return {A.s2_t(), B.s2_t(), C.s2_t()}; }
+		inlcxpr	tri2<uint64_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
+		inlcxpr	tri2<int8_t>	u0_t			()		const	noexcept	{ return {A.u0_t (), B.u0_t (), C.u0_t ()}; }
+		inlcxpr	tri2<int16_t>	u1_t			()		const	noexcept	{ return {A.u1_t(), B.u1_t(), C.u1_t()}; }
+		inlcxpr	tri2<int32_t>	u2_t			()		const	noexcept	{ return {A.u2_t(), B.u2_t(), C.u2_t()}; }
+		inlcxpr	tri2<int64_t>	u3_t			()		const	noexcept	{ return {A.u3_t(), B.u3_t(), C.u3_t()}; }
 
 		tplt<tpnm _tOther>
 		tri2<_tOther>			Cast		()		const	noexcept		{
@@ -47,8 +47,8 @@ namespace gpk
 				;
 		}
 	};
-	typedef	tri2<char>		tri2char;
-	typedef	tri2<uchar_t>	tri2uchar;
+	typedef	tri2<sc_t>		tri2char;
+	typedef	tri2<uc_t>	tri2uchar;
 	typedef	tri2<float>		tri2f32;
 	typedef	tri2<double>	tri2f64;
 	typedef	tri2<uint8_t>	tri2u8;

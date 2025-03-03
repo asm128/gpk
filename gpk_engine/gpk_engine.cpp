@@ -208,7 +208,7 @@
 }
 
 ::gpk::error_t			gpk::SEngine::CreateImageFromFile(const ::gpk::vcs & fileFolder, const ::gpk::vcs & fileName) {
-	char						filePath	[2048]				= {};
+	sc_t						filePath	[2048]				= {};
 	sprintf_s(filePath, "%s/%s", ::gpk::toString(fileFolder).begin(), ::gpk::toString(fileName).begin());
 	int32_t						index							= Images.Keys.find(filePath);
 	if(index != -1)
@@ -217,7 +217,7 @@
 	index					= Scene->Graphics->Surfaces.Create(::gpk::label(filePath));
 	::gpk::pobj<::gpk::SSurface>	& surface					= Scene->Graphics->Surfaces[index];
 	gpk_necs(gpk::pngFileLoad(PNGCache, filePath, surface->Data));
-	surface->Desc.Dimensions	= PNGCache.Header.Size.u16();
+	surface->Desc.Dimensions	= PNGCache.Header.Size.u1_t();
 	surface->Desc.BitDepth		= PNGCache.Header.BitDepth;
 	surface->Desc.ColorType		= PNGCache.Header.ColorType;
 	return index; 

@@ -10,7 +10,7 @@
 
 #if defined(GPK_JSON_EXPRESSION_DEBUG)
 static	::gpk::error_t	printNode		(const ::gpk::SExpressionNode* node, const ::gpk::vcc & expression)			{
-	const ::gpk::apod<char>						viewPrintable					= ::gpk::toString({&expression[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
+	const ::gpk::apod<sc_t>						viewPrintable					= ::gpk::toString({&expression[node->Token->Span.Begin], node->Token->Span.End - node->Token->Span.Begin});
 	const ::gpk::vcc						viewTokenType					= ::gpk::get_value_label(node->Token->Type);
 	info_printf("Entering expression node type: %u (%s). Node Span: {%u, %u}. Parent index: %u. Object index: %u. Text: %s", node->Token->Type, viewTokenType.begin(), node->Token->Span.Begin, node->Token->Span.End, node->Token->ParentIndex, node->ObjectIndex, viewPrintable.begin());
 	for(uint32_t iChildren = 0; iChildren < node->Children.size(); ++iChildren)
@@ -298,7 +298,7 @@ static	::gpk::error_t	evaluateExpression						(::gpk::SJSONExpressionSolver& res
 	return jsonNodeResultOfEvaluation;
 }
 
-::gpk::error_t			gpk::jsonStringFormat					(const ::gpk::vcs& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::apod<char>& output)					{
+::gpk::error_t			gpk::jsonStringFormat					(const ::gpk::vcs& format, const ::gpk::SJSONReader& inputJSON, uint32_t indexNodeJSON, ::gpk::apod<sc_t>& output)					{
 	::gpk::apod<::gpk::SStripLiteralType>	typesLiteral				= {};
 	{
 		::gpk::SStripLiteralState	stateLiteralStripper					= {};

@@ -98,7 +98,7 @@
 		const ::gpk::vcc								shaderName				= engineShaders.Names[iShader];
 
 		// After the pixel shader file is loaded, create the shader.
-		char											shaderFileName	[1024]	= {};
+		sc_t											shaderFileName	[1024]	= {};
 		sprintf_s(shaderFileName, "%s.cso", shaderName.begin());
 		::gpk::apod<int8_t>						filePS;
 		gpk_necs(gpk::fileToMemory(::gpk::vcs{shaderFileName}, filePS));

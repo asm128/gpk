@@ -51,7 +51,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(PNG_TAG, COUNT, 20);
 	
 	struct SPNGData {
-		char							Signature	[8]	= {};
+		sc_t							Signature	[8]	= {};
 		::gpk::aobj<SPNGChunk>			Chunks			;
 		::gpk::au8						Deflated		;
 		::gpk::au8						Inflated		;

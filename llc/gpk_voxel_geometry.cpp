@@ -30,7 +30,7 @@ static	::gpk::error_t	geometryVoxelFace
 	::gpk::SAABBGeometry		& aabbModel				= output.AABBModel;
 	for(uint32_t i = 0; i < 8; ++i) {
 		aabbModel.Vertices[i]								= ::gpk::VOXEL_VERTICES[i];
-		aabbModel.Vertices[i].Scale(dimensions.f32());
+		aabbModel.Vertices[i].Scale(dimensions.f2_t());
 	}
 
 	::gpk::view<const ::gpk::bgra>	rgba					= voxelMap.Palette;
@@ -73,12 +73,12 @@ static	::gpk::error_t	geometryVoxelFace
 
 				::gpk::bgra							color						= rgba[iValue ? iValue - 1 : 0];
 				uint8_t								adjacentValue				= {};
-				voxelMap.GetValue((voxel.Position.i32() + faceDelta.i32()).u8(), adjacentValue);
+				voxelMap.GetValue((voxel.Position.s2_t() + faceDelta.s2_t()).u0_t(), adjacentValue);
 				bool								renderFace					= 0 == adjacentValue || color.a < 0xFF;
 				if(false == renderFace)
 					continue;
 
-				::geometryVoxelFace(geometry, voxel.Position.f32(), rawVertices, rawIndices);
+				::geometryVoxelFace(geometry, voxel.Position.f2_t(), rawVertices, rawIndices);
 				gpk_necs(output.FaceIndices.push_back(iFace));
 				gpk_necs(output.VoxelIndices.push_back(iVoxel));
 			}

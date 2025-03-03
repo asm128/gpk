@@ -48,7 +48,7 @@ namespace gpk
 				switch(vkEvents[iEvent].Type) {
 				case ::gpk::VK_EVENT_RELEASE:
 					if(Text.size() < MaxLength) {
-						Text.push_back((char)vkEvents[iEvent].ScanCode);
+						Text.push_back((sc_t)vkEvents[iEvent].ScanCode);
 						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
 					}
 					break;

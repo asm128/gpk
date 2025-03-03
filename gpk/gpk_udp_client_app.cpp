@@ -27,7 +27,7 @@
 		time_t					timeInt					= time(0);
 		tm						timeptr					= {};
 		localtime_s(&timeptr, &timeInt);
-		char					buf[64]					= {};
+		sc_t					buf[64]					= {};
 		strftime(buf, 32, "%Y-%m-%d %H:%M:%S", &timeptr);	
 		client.UI.TextConnectedSince	= ::gpk::vcs(buf);
 	}
@@ -65,7 +65,7 @@
 }
 
 ::gpk::error_t			gpk::updateGUI		(::gpk::SClient & client, ::gpk::SGUI & gui) {
-	char						buf [128]			= {};
+	sc_t						buf [128]			= {};
 	uint32_t					dots				= ::gpk::timeCurrent() % 4;
 	::gpk::achar				textConnecting		= ::gpk::vcs{"Connecting"};
 	textConnecting.append(gpk::vcs{"...", dots});

@@ -47,7 +47,7 @@
 //	BIO_get_ssl(web, &ssl);
 //	ree_if(0 == ssl, "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //
-//	const char * const			PREFERRED_CIPHERS			= "HIGH:!aNULL:!kRSA:!PSK:!SRP:!MD5:!RC4";
+//	const sc_t * const			PREFERRED_CIPHERS			= "HIGH:!aNULL:!kRSA:!PSK:!SRP:!MD5:!RC4";
 //	ree_if(1 != (res = SSL_set_cipher_list(ssl, PREFERRED_CIPHERS)), "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //	ree_if(1 != (res = SSL_set_tlsext_host_name(ssl, HOST_NAME)), "When I grabbed this code from %s, i didn't expect to find fucked up expressions like !(1 == res) or !(method != NULL) in the example code.", "https://wiki.openssl.org/index.php/SSL/TLS_Client#SSL_BIO");
 //
@@ -76,7 +76,7 @@
 //	int							len							= 0;
 //	::gpk::apod<int8_t>	response;
 //	do {
-//		char						buff	[1536]				= {};
+//		sc_t						buff	[1536]				= {};
 //		len						= BIO_read(web, buff, ::gpk::size(buff));
 //		if(len > 0) {
 //			//BIO_write(out, buff, len);

@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	GDEFINE_ENUM_TYPE(COLOR_TYPE, u8);
+	GDEFINE_ENUM_TYPE(COLOR_TYPE, u0_t);
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, GRAYSCALE		, 0); // Grayscale
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, RGB				, 2); // Red Green Blue 
 	GDEFINE_ENUM_VALUE(COLOR_TYPE, PALETTE			, 3); // Palette

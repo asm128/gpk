@@ -153,9 +153,9 @@ namespace gpk
 		for(int32_t x = ::gpk::max(areaMin.x, (int32_t)0); x < xStop; ++x) {
 			const ::gpk::n2i16			cellCurrent			= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
-			int							w0					= ::gpk::orient2d({triangle.B.i16(), triangle.A.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
-			int							w1					= ::gpk::orient2d({triangle.C.i16(), triangle.B.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
-			int							w2					= ::gpk::orient2d({triangle.A.i16(), triangle.C.i16()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
+			int							w0					= ::gpk::orient2d({triangle.B.s1_t(), triangle.A.s1_t()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
+			int							w1					= ::gpk::orient2d({triangle.C.s1_t(), triangle.B.s1_t()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
+			int							w2					= ::gpk::orient2d({triangle.A.s1_t(), triangle.C.s1_t()}, cellCurrent);	// ::gpk::orient2d({triangle.C, triangle.A}, cellCurrent);
 			if(w0 < 0)
 				continue;
 			if(w1 < 0)
@@ -203,8 +203,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	rasterLine			(::gpk::grid<_tColor> & bitmapTarget, const _tColor & value, const ::gpk::line2<_tCoord> & line, gpk_raster_callback callback)				{
-		::gpk::n2f32				A					= line.A.f32();
-		::gpk::n2f32				B					= line.B.f32();
+		::gpk::n2f32				A					= line.A.f2_t();
+		::gpk::n2f32				B					= line.B.f2_t();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::gpk::swap(A.x, A.y);
@@ -251,8 +251,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	drawLine			(::gpk::grid<_tColor> & target, const _tColor & value, const ::gpk::line2<_tCoord> & line)				{
-		::gpk::n2f32				A					= line.A.f32();
-		::gpk::n2f32				B					= line.B.f32();
+		::gpk::n2f32				A					= line.A.f2_t();
+		::gpk::n2f32				B					= line.B.f2_t();
 		if(line.A.x == line.B.x)
 			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
 		else if(line.A.y == line.B.y)
@@ -304,8 +304,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
 	static	::gpk::error_t	drawLine			(const ::gpk::n2u16 & targetMetrics, const ::gpk::line2<_tCoord> & line, ::gpk::apod<::gpk::n2i16> & out_Points)				{
-		::gpk::n2f32				A					= line.A.f32();
-		::gpk::n2f32				B					= line.B.f32();
+		::gpk::n2f32				A					= line.A.f2_t();
+		::gpk::n2f32				B					= line.B.f2_t();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::gpk::swap(A.x, A.y);

@@ -12,7 +12,7 @@
 
 namespace gpk
 {
-	stainli ::gpk::error_t	fopen_s		(FILE** out_fp, const char* pFilename, const char* mode) {
+	stainli ::gpk::error_t	fopen_s		(FILE** out_fp, const sc_t* pFilename, const sc_t* mode) {
 		ree_if(0 == out_fp, "File pointer cannot be a null pointer. File name: %s.", pFilename);
 #if defined(GPK_WINDOWS)
 		return ::fopen_s(out_fp, pFilename, mode);

@@ -24,16 +24,16 @@ namespace gpk
 		tplt <tpnm _t>
 		inlcxpr	rect<_t>		Cast		()	const	noexcept	{ return {(_t)Left, (_t)Top, (_t)Right, (_t)Bottom}; }
 
-		inlcxpr	rect<uint8_t>	u8			()	const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	rect<uint16_t>	u16			()	const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	rect<uint32_t>	u32			()	const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	rect<uint64_t>	u64			()	const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	rect<int8_t>	i8			()	const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	rect<int16_t>	i16			()	const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	rect<int32_t>	i32			()	const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	rect<int64_t>	i64			()	const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	rect<float>		f32			()	const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	rect<double>	f64			()	const	noexcept	{ return Cast<double	>(); }
+		inlcxpr	rect<uint8_t>	u0_t			()	const	noexcept	{ return Cast<uint8_t	>(); }
+		inlcxpr	rect<uint16_t>	u1_t			()	const	noexcept	{ return Cast<uint16_t	>(); }
+		inlcxpr	rect<uint32_t>	u2_t			()	const	noexcept	{ return Cast<uint32_t	>(); }
+		inlcxpr	rect<uint64_t>	u3_t			()	const	noexcept	{ return Cast<uint64_t	>(); }
+		inlcxpr	rect<int8_t>	s0_t			()	const	noexcept	{ return Cast<int8_t	>(); }
+		inlcxpr	rect<int16_t>	s1_t			()	const	noexcept	{ return Cast<int16_t	>(); }
+		inlcxpr	rect<int32_t>	s2_t			()	const	noexcept	{ return Cast<int32_t	>(); }
+		inlcxpr	rect<int64_t>	s3_t			()	const	noexcept	{ return Cast<int64_t	>(); }
+		inlcxpr	rect<float>		f2_t			()	const	noexcept	{ return Cast<float		>(); }
+		inlcxpr	rect<double>	f3_t			()	const	noexcept	{ return Cast<double	>(); }
 	};
 	typedef rect<float>		rectf32;
 	typedef rect<double>	rectf64;

@@ -18,7 +18,7 @@ namespace gpk
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		::gpk::au32							Counts;
-		::gpk::apod<const char*>			Texts;
+		::gpk::apod<const sc_t*>			Texts;
 
 											~CLabelManager				()																{
 			for(uint32_t iText = 0; iText < Texts.size(); ++iText)
@@ -44,7 +44,7 @@ namespace gpk
 			uint32_t					offsetByte					= 0;
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {
 				uint32_t					elementCount				= Counts[iArray];
-				gpk_necs(Characters.push_sequence((const char*)&input[offsetByte], elementCount, out_view));
+				gpk_necs(Characters.push_sequence((const sc_t*)&input[offsetByte], elementCount, out_view));
 				offsetByte				+= elementCount;
 				gpk_necs(Texts.push_back(out_view.begin()));
 			}
@@ -54,7 +54,7 @@ namespace gpk
 
 		inline	::gpk::error_t				Size		()					const	noexcept	{ return Texts.size(); }
 		inline	::gpk::vcc					View		(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
-		inline	::gpk::error_t				View		(const char* elements, uint16_t count)	{ ::gpk::vcc out_view; return View(elements, count, out_view); }
+		inline	::gpk::error_t				View		(const sc_t* elements, uint16_t count)	{ ::gpk::vcc out_view; return View(elements, count, out_view); }
 
 		::gpk::error_t						Index		(const ::gpk::vcc & elements) {
 			ree_if(elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
@@ -63,14 +63,14 @@ namespace gpk
 				if(elements.size() != Counts[iView])
 					continue;
 
-				const char								* pStored					= Texts[iView];
+				const sc_t								* pStored					= Texts[iView];
 				if(0 == memcmp(pStored, elements.begin(), elements.byte_count()))
 					return iView;
 			}
 			return -1;
 		}
 
-		::gpk::error_t						View		(const char* text, uint32_t textLen, ::gpk::vcc & out_view)		{
+		::gpk::error_t						View		(const sc_t* text, uint32_t textLen, ::gpk::vcc & out_view)		{
 			if(0 == textLen || 0 == text || 0 == text[0]) {
 				out_view							= Empty;
 				return 0;

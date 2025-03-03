@@ -535,7 +535,7 @@ namespace gpk
 	stacxpr	DATA_TYPE	DATA_TYPE_BOOL				= DATA_TYPE_UINT8;
 
 #pragma pack(pop)
-	uint32_t			getStringFromDataType			(DATA_TYPE dataType, char* string);
+	uint32_t			getStringFromDataType			(DATA_TYPE dataType, sc_t* string);
 
 #if defined(__WINDOWS__)
 #	pragma warning(disable : 4063)	// On Windows, using enum types like we do cause the compiler to throw a warning when the warning level is set to 4

@@ -10,6 +10,8 @@
 typedef	int			socklen_t;
 #endif
 
+GPK_USING_TYPEINT();
+
 static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	client.FirstPing = client.KeyPing							= 0;
 	::gpk::SUDPCommand												commandToSend								= {::gpk::ENDPOINT_COMMAND_CONNECT, ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST,};	/* Data to send */
@@ -28,11 +30,11 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	if(-1 == ::bind(client.Socket, (sockaddr*)&sa_client, sizeof(sockaddr_in)))
 		sa_client.sin_port	= 0;
 
-	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
+	gpk_necall(::sendto(client.Socket.Handle, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	sa_length													= sizeof(struct sockaddr_in);
 	sa_server													= {};
 	::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
-	int																received_bytes								= recvfrom(client.Socket.Handle, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, &sa_length);
+	int																received_bytes								= recvfrom(client.Socket.Handle, (sc_t *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, &sa_length);
 	rew_if(-1 == received_bytes, "Failed to receive connect response from '%u.%u.%u.%u:%u'.", GPK_IPV4_EXPAND(client.AddressConnect));
 	::gpk::SIPv4End													temp										= {};
 	::gpk::tcpipAddressFromSockaddr(sa_server, temp);
@@ -42,7 +44,7 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 	ree_if(received_bytes == -1 && wsae != WSAEMSGSIZE, "Failed to receive connect response from address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	ree_if(commandReceived.Type != ::gpk::ENDPOINT_COMMAND_TYPE_RESPONSE, "Invalid server command received! Command received: %s.", ::gpk::get_value_label(commandReceived.Type).begin());
 	commandToSend.Packed										= 1;
-	gpk_necall(::sendto(client.Socket.Handle, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
+	gpk_necall(::sendto(client.Socket.Handle, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sizeof(struct sockaddr_in)), "Failed to send to address %u.%u.%u.%u:%u", GPK_IPV4_EXPAND(client.AddressConnect));
 	client.LastPing = client.FirstPing							= ::gpk::timeCurrentInUs();
 	client.State												= ::gpk::UDP_CONNECTION_STATE_IDLE;
 	return 0;
@@ -54,7 +56,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 		sockaddr_in														sa_server									= {};				/* Information about the server */
 		int																sa_length									= sizeof(struct sockaddr_in);
 		::gpk::SUDPCommand												commandReceived								= {};	/* Data to send */
-		int																received_bytes								= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr *)&sa_server, &sa_length);
+		int																received_bytes								= recvfrom(client.Socket, (sc_t *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr *)&sa_server, &sa_length);
 		int																wsae										= WSAGetLastError();
 		if(received_bytes == -1 && wsae != WSAEMSGSIZE) {
 			if(wsae == WSAEINTR)
@@ -66,7 +68,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 				return 0;
 			}
 			warning_printf("Failed to receive message! Error: 0x%x.", wsae);
-			received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+			received_bytes												= recvfrom(client.Socket, (sc_t *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 			continue;
 		}	/* Receive time */
 		::gpk::SIPv4End													temp										= {};
@@ -78,7 +80,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 		else {
 			info_printf("Data received fro invalid ip. Local: %u, %u, %u, %u, %u. Remote: %u, %u, %u, %u, %u", GPK_IPV4_EXPAND(temp), GPK_IPV4_EXPAND(client.Address));
 		}
-		received_bytes												= recvfrom(client.Socket, (char *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+		received_bytes												= recvfrom(client.Socket, (sc_t *)&commandReceived, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
 	}
 	return 0;
 }
@@ -104,7 +106,7 @@ static	void												threadUpdateClient							(void* pClient)						{
 	{
 		::std::lock_guard												lock										(client.Queue.MutexSend);
 		for(uint32_t i = 0; i < 2; ++i)
-			sendto(client.Socket, (const char*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
+			sendto(client.Socket, (const sc_t*)&commandToSend, (int)sizeof(::gpk::SUDPCommand), 0, (sockaddr *)&sa_server, sa_length);	// Tranmsit data to get time
 		client.Socket.close();
 	}
 	client.KeyPing												= 0;

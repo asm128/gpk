@@ -4,6 +4,9 @@
 #include "gpk_json.h"
 #include "gpk_label.h"
 
+
+usng ::gpk::sc_t;
+
 tplt<tpnm _tNumber>
 static	::gpk::error_t	jsonNumberLoad			(::gpk::SJSONReader & readerCache, ::gpk::vcc in_string, _tNumber & out_value){
 	readerCache								= {};
@@ -74,7 +77,7 @@ static	::gpk::error_t	createFromSTL			(::gpk::SComponentScene & scene, ::gpk::SS
 }
 
 static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vcc filename, ::gpk::SKeyedArrayPOD<int16_t> & indices)  {
-	::gpk::apod<char>							rawMat					= {};
+	::gpk::apod<sc_t>							rawMat					= {};
 	::gpk::fileToMemory(filename, rawMat);
 
 	::gpk::SJSONReader							numberReader			= {};
@@ -82,7 +85,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 	::gpk::split(::gpk::vcc{rawMat}, '\n', matFileLines);
 
 	int32_t										countMaterials			= 0;
-	::gpk::apod<char>							materialPath			= {};
+	::gpk::apod<sc_t>							materialPath			= {};
 	::gpk::label								materialName			= {};
 	::gpk::SMaterial							newMaterial				= {};
 	for(uint32_t iLine = 0; iLine < matFileLines.size(); ++iLine) {
@@ -147,7 +150,7 @@ static	::gpk::error_t	createFromMTL			(::gpk::SComponentScene & scene, ::gpk::vc
 }
 
 static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vcc filename)  {
-	::gpk::apod<char>							rawObj					= {};
+	::gpk::apod<sc_t>							rawObj					= {};
 	gpk_necall(gpk::fileToMemory(filename, rawObj), "Failed to load OBJ file: %s.", ::gpk::toString(filename).begin());
 
 	::gpk::SKeyedArrayPOD<int16_t>				materialIndices			= {};
@@ -157,10 +160,10 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 	uint32_t									countObjects			= 0;
 	uint32_t									countGroups				= 0;
 	::gpk::apod<int16_t>						objectIndices			= {};
-	::gpk::apod<char>							objectPath				= {};
+	::gpk::apod<sc_t>							objectPath				= {};
 	::gpk::label								objectName				= {};
 	::gpk::label								groupName				= {};
-	::gpk::apod<char>							groupPath				= {};
+	::gpk::apod<sc_t>							groupPath				= {};
 
 
 	::gpk::aobj<::gpk::vcc>						objFileLines			= {};
@@ -185,7 +188,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 		}
 		const ::gpk::vcc							command					= lineValues[0];
 		if(command == ::gpk::vcs{"mtllib"}) {
-			::gpk::apod<char>					matFilename				= {};
+			::gpk::apod<sc_t>					matFilename				= {};
 			int32_t										pathStop				= ::gpk::rfind('/', filename);
 			if(pathStop == -1) {
 				matFilename.append_string("./");
@@ -287,7 +290,7 @@ static	::gpk::error_t	createFromOBJ			(::gpk::SComponentScene & scene, ::gpk::vc
 
 ::gpk::error_t			gpk::SComponentScene::CreateFromFile		(::gpk::vcs filename)		{
 	::gpk::vcc								extension				= {};
-	::gpk::apod<char>						ext_lwr					= {};
+	::gpk::apod<sc_t>						ext_lwr					= {};
 	gpk_necall(filename.slice(extension, filename.size() - 4, 4), "File extension not supported for file '%s'", filename.begin());
 	gpk_necs(ext_lwr.append(extension));
 	::gpk::tolower(ext_lwr);

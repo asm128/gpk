@@ -8,6 +8,8 @@
 
 #include "gpk_view_color.h"
 
+using gpk::sc_t, gpk::sc_c;
+
 #ifdef abs
 #	undef abs
 #endif
@@ -815,9 +817,9 @@ static	::gpk::error_t	pngActualFileLoad		(const ::gpk::vcu8 & source, ::gpk::SPN
 		}
 		else if(0 == memcmp(newChunk.Type, "tEXt", 4)) { 	// Can store text that can be represented in ISO/IEC 8859-1, with one key-value pair for each chunk. The "key" must be between 1 and 79 characters long. Separator is a null character. The "value" can be any length, including zero up to the maximum permissible chunk size minus the length of the keyword and separator. Neither "key" nor "value" can contain null character. Leading or trailing spaces are also disallowed.
 			verbose_printf("Text Key: %s.", newChunk.Data.begin());
-			uint32_t							keyLength										= (uint32_t)strlen((const char*)newChunk.Data.begin());
+			uint32_t							keyLength										= (uint32_t)strlen((const sc_t*)newChunk.Data.begin());
 			uint32_t							valueLength										= newChunk.Data.size() - (keyLength + 1);
-			::gpk::apod<char>					value;
+			::gpk::apod<sc_t>					value;
 			gpk_necs(value.resize(valueLength + 1));
 			value[valueLength]				= 0;
 			memcpy(&value[0], &newChunk.Data[keyLength + 1], valueLength);
@@ -1110,8 +1112,8 @@ static	::gpk::error_t	defilterNonInterlaced		(::gpk::SPNGData & pngData, uint32_
 }
 
 ::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::g8bgra & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
-::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu16   & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u16 ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u16 *)out_Data.begin(), pngData.Header.Size}); }
-::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu8    & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u8  ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u8  *)out_Data.begin(), pngData.Header.Size}); }
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu16   & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u1_t ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u1_t *)out_Data.begin(), pngData.Header.Size}); }
+::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data, ::gpk::gu8    & out_View) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::u0_t  ))); return ::gpk::pngDecode(pngData, out_View = {(::gpk::u0_t  *)out_Data.begin(), pngData.Header.Size}); }
 ::gpk::error_t	gpk::pngDecode	(::gpk::SPNGData & pngData, ::gpk::au8 & out_Data) { gpk_necs(out_Data.resize(pngData.Header.Size.Area() * sizeof(::gpk::bgra))); return ::gpk::pngDecode(pngData, {(::gpk::bgra*)out_Data.begin(), pngData.Header.Size}); }
 
 

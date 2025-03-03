@@ -58,7 +58,7 @@
 		control.Area.Size.y		= heightTitleBar;
 		static	int32_t				counterVPs				= 0;
 		++counterVPs;
-		char						buffer [256];
+		sc_t						buffer [256];
 		const int32_t				titleLen				= snprintf(buffer, ::gpk::size(buffer) - 2, "Viewport #%i", counterVPs);
 		controlText.Text		= {::gpk::label(buffer).begin(), (uint32_t)titleLen};
 		controlText.Align		= ::gpk::ALIGN_CENTER;
@@ -74,7 +74,7 @@
 		controlText.Align			= ::gpk::ALIGN_CENTER_TOP;
 		control.Border				= {};
 		control.Margin				= {};
-		control.Area.Size			= targetSize.i16();
+		control.Area.Size			= targetSize.s1_t();
 		//control.Area.Offset.y		= heightTitleBar;
 		controlDraw.ColorTheme			= 60;
 		::gpk::SControlConstraints		& controlConstraints	= gui.Controls.Constraints[viewport.IdControls[VIEWPORT_CONTROL_TARGET]];

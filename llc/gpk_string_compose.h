@@ -25,16 +25,16 @@ namespace gpk
 	gpk::err_t			appendQuoted			(::gpk::achar & output, ::gpk::vcs textToEnclose);
 	gpk::err_t			appendGtlted			(::gpk::achar & output, ::gpk::vcs textToEnclose);
 
-	gpk::err_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToEnclose, char encloserChar);
-	gpk::err_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToEnclose, char openChar, char closeChar);
+	gpk::err_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToEnclose, sc_t encloserChar);
+	gpk::err_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToEnclose, sc_t openChar, sc_t closeChar);
 	gpk::err_t			appendNclosd			(::gpk::achar & output, ::gpk::vcs textToEnclose, ::gpk::vcs openChars, ::gpk::vcs closeChars);
-	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, char prefix, char encloserChar);
-	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, char prefix, char openChar, char closeChar);
+	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, sc_t prefix, sc_t encloserChar);
+	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, sc_t prefix, sc_t openChar, sc_t closeChar);
 
-	gpk::err_t			appendBracedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, char separator = ',');
-	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, char separator = ',');
-	gpk::err_t			appendQuotedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, char separator = ',');
-	gpk::err_t			appendGtltedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, char separator = ',');
+	gpk::err_t			appendBracedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, sc_t separator = ',');
+	gpk::err_t			appendNclosdPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, sc_t separator = ',');
+	gpk::err_t			appendQuotedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, sc_t separator = ',');
+	gpk::err_t			appendGtltedPrefixed	(::gpk::achar & output, ::gpk::vcs textToEnclose, bool prependSeparator = false, sc_t separator = ',');
 } // namespace
 
 #endif // GPK_STRING_COMPOSE

@@ -44,7 +44,7 @@ namespace gpk
 		int32_t						IndexCurrentElement				= -1;
 		::gpk::SStripLiteralType	* CurrentElement				= 0;
 		int32_t						NestLevel						= 0;
-		char						CharCurrent						= 0;
+		sc_t						CharCurrent						= 0;
 		bool						Escaping						= false;
 		bool						InsideToken						= false;
 		int32_t						BracketsToSkip					= 0;
@@ -54,7 +54,7 @@ namespace gpk
 	::gpk::error_t				stripLiteralParseStep			(::gpk::SStripLiteralState	& work_state	, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format);
 	::gpk::error_t				stripLiteralGetViews			(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format);
 
-	bool						isSpaceCharacter				(const char characterToTest);
+	bool						isSpaceCharacter				(const sc_t characterToTest);
 	::gpk::error_t				skipToNextCharacter				(uint32_t & indexCurrentChar, const ::gpk::vcc & expression);
 
 } // namespace

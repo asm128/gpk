@@ -8,8 +8,8 @@ namespace gpk
 	stacxpr	::gpk::vcc		b64Symbols		= {64, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"};
 	stacxpr	::gpk::vcc		b64SymbolsFS	= {64, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"};
 
-	::gpk::error_t			base64Encode	(const ::gpk::vcc & base64Symbols, char base64PadSymbol, const ::gpk::vcu8 & inputBinary	, ::gpk::au8 & out_base64	);
-	::gpk::error_t			base64Decode	(const ::gpk::vcc & base64Symbols, char base64PadSymbol, const ::gpk::vcu8 & in_base64	, ::gpk::au8 & outputBinary	);
+	::gpk::error_t			base64Encode	(const ::gpk::vcc & base64Symbols, sc_t base64PadSymbol, const ::gpk::vcu8 & inputBinary	, ::gpk::au8 & out_base64	);
+	::gpk::error_t			base64Decode	(const ::gpk::vcc & base64Symbols, sc_t base64PadSymbol, const ::gpk::vcu8 & in_base64	, ::gpk::au8 & outputBinary	);
 
 	stainli	::gpk::error_t	base64Encode	(const ::gpk::vcu8 & inputBinary, ::gpk::au8 & out_base64	) { return ::gpk::base64Encode(b64Symbols	, '=', inputBinary	, out_base64	); }
 	stainli	::gpk::error_t	base64Decode	(const ::gpk::vcu8 & in_base64  , ::gpk::au8 & outputBinary	) { return ::gpk::base64Decode(b64Symbols	, '=', in_base64	, outputBinary	); }

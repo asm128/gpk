@@ -22,6 +22,8 @@
 #include <string>
 #include <tuple>
 
+GPK_USING_TYPEINT();
+
 #ifndef MAKEFOURCC
 #define MAKEFOURCC(ch0, ch1, ch2, ch3) \
 				(static_cast<uint32_t>(static_cast<uint8_t>(ch0)) \
@@ -29,6 +31,7 @@
 				| (static_cast<uint32_t>(static_cast<uint8_t>(ch2)) << 16) \
 				| (static_cast<uint32_t>(static_cast<uint8_t>(ch3)) << 24))
 #endif /* defined(MAKEFOURCC) */
+
 
 namespace
 {
@@ -210,7 +213,7 @@ namespace
 
 		uint32_t		dwFlags							= {}; // Bank flags
 		uint32_t		dwEntryCount					= {}; // Number of entries in the bank
-		char			szBankName[BANKNAME_LENGTH]		= {}; // Bank friendly name
+		sc_t			szBankName[BANKNAME_LENGTH]		= {}; // Bank friendly name
 		uint32_t		dwEntryMetaDataElementSize		= {}; // Size of each entry meta-data element, in bytes
 		uint32_t		dwEntryNameElementSize			= {}; // Size of each entry name element, in bytes
 		uint32_t		dwAlignment						= {}; // Entry alignment, in bytes
@@ -492,7 +495,7 @@ HRESULT WaveBankReader::WaveBankReaderImpl::Open(const wchar_t* szFileName) noex
 	if (namesBytes > 0) {
 		if (namesBytes >= (m_data.dwEntryNameElementSize * m_data.dwEntryCount))
 		{
-			std::unique_ptr<char[]> temp(new (std::nothrow) char[namesBytes]);
+			std::unique_ptr<sc_t[]> temp(new (std::nothrow) sc_t[namesBytes]);
 			if (!temp)
 				return E_OUTOFMEMORY;
 
@@ -525,7 +528,7 @@ HRESULT WaveBankReader::WaveBankReaderImpl::Open(const wchar_t* szFileName) noex
 			for (uint32_t j = 0; j < m_data.dwEntryCount; ++j) {
 				const DWORD n = m_data.dwEntryNameElementSize * j;
 
-				char name[64] = {};
+				sc_t name[64] = {};
 				strncpy_s(name, &temp[n], sizeof(name));
 
 				m_names[name] = j;
@@ -961,7 +964,7 @@ bool WaveBankReader::WaveBankReaderImpl::UpdatePrepared() noexcept
 WaveBankReader::WaveBankReader() noexcept(false) : pImpl(std::make_unique<WaveBankReaderImpl>()) { }
 bool WaveBankReader::HasNames() const noexcept { return !pImpl->m_names.empty(); }
 bool WaveBankReader::IsStreamingBank() const noexcept { return (pImpl->m_data.dwFlags  & BANKDATA::TYPE_STREAMING) != 0; }
-const char* WaveBankReader::BankName() const noexcept { return pImpl->m_data.szBankName; }
+const sc_t* WaveBankReader::BankName() const noexcept { return pImpl->m_data.szBankName; }
 uint32_t WaveBankReader::Count() const noexcept { return pImpl->m_data.dwEntryCount; }
 uint32_t WaveBankReader::BankAudioSize() const noexcept { return pImpl->m_header.Segments[HEADER::SEGIDX_ENTRYWAVEDATA].dwLength; }
 _Use_decl_annotations_
@@ -979,7 +982,7 @@ _Use_decl_annotations_
 HRESULT WaveBankReader::Open(const wchar_t* szFileName) noexcept { return pImpl->Open(szFileName); }
 
 _Use_decl_annotations_
-uint32_t WaveBankReader::Find(const char* name) const {
+uint32_t WaveBankReader::Find(const sc_t* name) const {
 	auto it = pImpl->m_names.find(name);
 	if (it != pImpl->m_names.cend())
 		return it->second;

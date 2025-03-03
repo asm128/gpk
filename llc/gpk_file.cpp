@@ -16,6 +16,7 @@
 #	include <SPIFFS.h>
 #endif
 
+using ::gpk::sc_t;
 
 #define gpk_file_info_printf info_printf
 
@@ -52,7 +53,7 @@ static	::gpk::error_t	fileSplitSmall				(::gpk::vcs fileNameSrc, const uint32_t 
 
 	// -- Write parts to disk.
 	uint32_t								countParts					= fileInMemory.size() / sizePartMax + one_if(fileInMemory.size() % sizePartMax);
-	char									fileNameDst	[1024]			= {};
+	sc_t									fileNameDst	[1024]			= {};
 	uint32_t								iPart						= 0;
 	for(; iPart < countParts; ++iPart) {
 		const uint32_t							offsetPart					= sizePartMax * iPart;
@@ -83,7 +84,7 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 
 	// -- Write parts to disk.
 	uint32_t								countParts					= (uint32_t)(sizeFile / sizePartMax + one_if(sizeFile % sizePartMax));
-	char									fileNameDst	[1024]			= {};
+	sc_t									fileNameDst	[1024]			= {};
 	uint32_t								iPart						= 0;
 	for(; iPart < countParts; ++iPart) { //
 		const uint32_t							offsetPart					= sizePartMax * iPart;
@@ -113,11 +114,11 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 
 // Joins a file split into file.## parts.
 ::gpk::error_t			gpk::fileJoin				(::gpk::vcs fileNameDst)	{
-	char						fileNameSrc	[1024]			= {};
+	sc_t						fileNameSrc	[1024]			= {};
 	uint32_t					iFile						= 0;
 	gpk_necall(snprintf(fileNameSrc, ::gpk::size(fileNameSrc) - 2, "%s.%.2u", fileNameDst.begin(), iFile++), "File name too large: %s.", fileNameDst.begin());
 	FILE						* fpDest					= 0;
-	::gpk::apod<char>			finalPathName				= ::gpk::toString(fileNameDst);
+	::gpk::apod<sc_t>			finalPathName				= ::gpk::toString(fileNameDst);
 	::gpk::fopen_s(&fpDest, finalPathName.begin(), "wb");
 	ree_if(0 == fpDest, "Failed to create file: %s.", finalPathName.begin());
 	::gpk::apod<int8_t>			fileInMemory				= {};
@@ -145,7 +146,7 @@ static	::gpk::error_t	fileSplitLarge				(::gpk::vcs fileNameSrc, const uint32_t 
 	const int32_t				fileSize					= (int32_t)fp.size();
 	fileInMemory.clear();
 	gpk_necall(fileInMemory.resize(fileSize), "Too large to load in memory? File size: %i. Available memory: %i.", fp.size(), heap_caps_get_free_size(MALLOC_CAP_8BIT));
-	rees_if(fileSize != fp.readBytes((char*)fileInMemory.begin(), fileSize));
+	rees_if(fileSize != fp.readBytes((sc_t*)fileInMemory.begin(), fileSize));
 	fp.close();
 #else
 	FILE						* fp						= 0;

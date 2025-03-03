@@ -2,6 +2,10 @@
 #include "gpk_string.h"
 #include "gpk_size.h"
 
+
+using gpk::sc_t, gpk::sc_c;
+
+
 #ifdef GPK_ATMEL
 #	include <stdio.h>
 #else
@@ -25,7 +29,7 @@
 #endif
 
 #if (defined(GPK_WINDOWS) || defined(GPK_ANDROID))
-static void default_base_log_write(const char * text, uint32_t textLen) {
+static void default_base_log_write(const sc_t * text, uint32_t textLen) {
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text); (void)textLen;
 #elif defined(GPK_ANDROID)
@@ -35,7 +39,7 @@ static void default_base_log_write(const char * text, uint32_t textLen) {
 #endif
 }
 
-static void default_base_log_print(const char * text) {
+static void default_base_log_print(const sc_t * text) {
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text);
 #elif defined(GPK_ANDROID)
@@ -51,8 +55,8 @@ static void default_base_log_print(const char * text) {
 ::gpk::log_print_t		gpk_log_print					= {};
 #endif
 
-void					gpk::_base_log_print			(const char* text)						{ if(gpk_log_print && text) ::gpk_log_print(text); }
-void					gpk::_base_log_write			(const char* text, uint32_t textLen)	{ if(gpk_log_write && text && textLen) ::gpk_log_write(text, textLen); }
+void					gpk::_base_log_print			(const sc_t* text)						{ if(gpk_log_print && text) ::gpk_log_print(text); }
+void					gpk::_base_log_write			(const sc_t* text, uint32_t textLen)	{ if(gpk_log_write && text && textLen) ::gpk_log_write(text, textLen); }
 #ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
 ::gpk::log_print_P_t	gpk_log_print_P					= {};
 void					gpk::_base_log_print_P			(const __FlashStringHelper* text)		{ if(gpk_log_print_P && text) ::gpk_log_print_P(text); }
@@ -60,7 +64,7 @@ void					gpk::_base_log_print_P			(const __FlashStringHelper* text)		{ if(gpk_lo
 
 #ifndef GPK_ARDUINO
 
-static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
+static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, sc_t* buffer, uint32_t bufferSize)			{	// Get the error message, if any.
 #ifdef GPK_WINDOWS
 	rees_if(0 == buffer);
 	return lastError 
@@ -74,8 +78,8 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 #endif
 }
 
-		void					gpk::_gpk_print_system_errors	(const char* prefix, uint32_t prefixLen)								{
-	char								bufferError[256]				= {};
+		void					gpk::_gpk_print_system_errors	(const sc_t* prefix, uint32_t prefixLen)								{
+	sc_t								bufferError[256]				= {};
 #if defined(GPK_WINDOWS)
 	int64_t								lastSystemError					= ::GetLastError() & 0xFFFFFFFFFFFFFFFFLL;
 #else
@@ -95,11 +99,11 @@ static	::gpk::error_t	getSystemErrorAsString			(const uint64_t lastError, char* 
 		::strerror_s(bufferError, (int)lastSystemError);
 		{
 #else
-		const char * serr = ::strerror((int)lastSystemError);
+		const sc_t * serr = ::strerror((int)lastSystemError);
 		if(serr) {
 			strcpy_s(bufferError, serr);
 #endif
-			char		bufferError2[256]	= {};
+			sc_t		bufferError2[256]	= {};
 #ifdef GPK_WINDOWS
 			size_t		stringLength		= ::snprintf(bufferError2, ::gpk::size(bufferError2) - 2, "Last system error: 0x%llX '%s'.", lastSystemError, bufferError);
 #else
