@@ -1,4 +1,3 @@
-/// Copyright 2010-2023 - asm128
 #ifndef GPK_PLATFORM_GLOBALS_H_23627
 #define GPK_PLATFORM_GLOBALS_H_23627
 
@@ -33,9 +32,9 @@
 
 #if (defined(DEBUG) || defined(_DEBUG)) && (!defined(GPK_DISABLE_DEBUG)) && !defined(GPK_DEBUG_ENABLED)
 #	define GPK_DEBUG_ENABLED
-#	if !defined(USE_DEBUG_BREAK_ON_ERROR_LOG)
+#	ifndef USE_DEBUG_BREAK_ON_ERROR_LOG
 #		define USE_DEBUG_BREAK_ON_ERROR_LOG
-#	endif
+#	endif // USE_DEBUG_BREAK_ON_ERROR_LOG
 #endif	// _DEBUG
 
 #if (!defined(GPK_MTSUPPORT)) && !defined(GPK_DISABLE_MTSUPPORT)
@@ -61,16 +60,16 @@
 #	pragma warning(disable : 4706)		// Enable assignment within conditional expression. We do this constantly inside our macros in a completely valid way.
 #endif
 
-#if defined(GPK_WINDOWS)
+#ifndef GPK_WINDOWS
+#	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
+#else
+#	define GPK_DYNAMIC_LIBRARY_EXTENSION "dll"
 #	if !defined(NOMINMAX)
 #		define NOMINMAX
 #	endif
 #	if !defined(WIN32_LEAN_AND_MEAN)
 #		define WIN32_LEAN_AND_MEAN
 #	endif
-#	define GPK_DYNAMIC_LIBRARY_EXTENSION "dll"
-#else
-#	define GPK_DYNAMIC_LIBRARY_EXTENSION "os"
 #endif
 
 #if defined GPK_ANDROID
@@ -303,6 +302,5 @@
 #define tplTstincxp	tplTsinx
 #define tplTstacxpr	tplTstxp
 #define tplTndstinx	tplTnsix
-
 
 #endif // GPK_PLATFORM_GLOBALS_H_23627
