@@ -24,31 +24,31 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm T>	ndstinx	T&			min			(T & a, T & b)							noexcept	{ return (a < b) ? a : b; }
-	tplt<tpnm T>	ndstinx	T&			max			(T & a, T & b)							noexcept	{ return (a > b) ? a : b; }
-	tplt<tpnm T>	ndstinx	const T&	min			(const T & a, const T & b)				noexcept	{ return (a < b) ? a : b; }
-	tplt<tpnm T>	ndstinx	const T&	max			(const T & a, const T & b)				noexcept	{ return (a > b) ? a : b; }
-	tplt<tpnm T>	ndstinx	T			clamped		(T _value, const T _min, const T _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value)); }
+	tplt<tpnm T>	nsix	T&			min			(T & a, T & b)							noexcept	{ return (a < b) ? a : b; }
+	tplt<tpnm T>	nsix	T&			max			(T & a, T & b)							noexcept	{ return (a > b) ? a : b; }
+	tplt<tpnm T>	nsix	const T&	min			(const T & a, const T & b)				noexcept	{ return (a < b) ? a : b; }
+	tplt<tpnm T>	nsix	const T&	max			(const T & a, const T & b)				noexcept	{ return (a > b) ? a : b; }
+	tplt<tpnm T>	nsix	T			clamped		(T _value, const T _min, const T _max)	noexcept	{ return ::gpk::min(_max, ::gpk::max(_min, _value)); }
 
 	// excluding the stop value
-	tplt<tpnm T>	ndstcxp	bool		in_range	(const T & valueToTest, const T & rangeStart, const T & rangeStop)	noexcept	{ 
+	tplt<tpnm T>	ndsx	bool		in_range	(const T & valueToTest, const T & rangeStart, const T & rangeStop)	noexcept	{ 
 		return (valueToTest >= rangeStart) && (valueToTest < rangeStop);
 	}
-	tplt<tpnm T>	bool				equal		(const T * other, const T * local, uint32_t count) {
+	tplt<tpnm T>	ndsc	bool		equal		(const T * other, const T * local, uint32_t count) {
 		for(uint32_t iElement = 0; iElement < count; ++iElement)
 			if(other[iElement] != local[iElement])
 				return false;
 		return true;
 	}
 //#if !defined(GPK_ATMEL)
-	tplt<>	ndinlne	bool	equal	(const double	* other, const double	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(double	)*count); }
-	tplt<>	ndinlne	bool	equal	(const float	* other, const float	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(float		)*count); }
-	tplt<>	ndinlne	bool	equal	(const int32_t	* other, const int32_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int32_t	)*count); }
-	tplt<>	ndinlne	bool	equal	(const uint32_t	* other, const uint32_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint32_t	)*count); }
-	tplt<>	ndinlne	bool	equal	(const int16_t	* other, const int16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int16_t	)*count); }
-	tplt<>	ndinlne	bool	equal	(const uint16_t	* other, const uint16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint16_t	)*count); }
-	tplt<>	ndinlne	bool	equal	(const int8_t	* other, const int8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(int8_t	)*count); }
-	tplt<>	ndinlne	bool	equal	(const uint8_t	* other, const uint8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, sizeof(uint8_t	)*count); }
+	tplt<>	ndin	bool	equal	(const double	* other, const double	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(double	)*count); }
+	tplt<>	ndin	bool	equal	(const float	* other, const float	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(float		)*count); }
+	tplt<>	ndin	bool	equal	(const int32_t	* other, const int32_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int32_t	)*count); }
+	tplt<>	ndin	bool	equal	(u2_c	* other, u2_c	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(uint32_t	)*count); }
+	tplt<>	ndin	bool	equal	(const int16_t	* other, const int16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int16_t	)*count); }
+	tplt<>	ndin	bool	equal	(const uint16_t	* other, const uint16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(uint16_t	)*count); }
+	tplt<>	ndin	bool	equal	(const int8_t	* other, const int8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int8_t	)*count); }
+	tplt<>	ndin	bool	equal	(const uint8_t	* other, const uint8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(uint8_t	)*count); }
 //#endif
 
 #pragma pack(pop)
@@ -67,6 +67,3 @@ namespace gpk
 } // namespace
 
 #endif // GPK_EVAL_H_23627
-
-
-

@@ -32,6 +32,12 @@ using gpk::sc_t, gpk::sc_c;
 static void default_base_log_write(const sc_t * text, uint32_t textLen) {
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text); (void)textLen;
+	FILE * fp = {};
+	fopen_s(&fp, "last_log.txt", "a");
+	if(fp) {
+		fwrite(text, 1, textLen, fp);
+		fclose(fp);
+	}
 #elif defined(GPK_ANDROID)
 	LOGI("%s", text); (void)textLen;
 #else
@@ -42,6 +48,12 @@ static void default_base_log_write(const sc_t * text, uint32_t textLen) {
 static void default_base_log_print(const sc_t * text) {
 #if defined(GPK_WINDOWS)
 	OutputDebugStringA(text);
+	FILE * fp = {};
+	fopen_s(&fp, "last_log.txt", "a");
+	if(fp) {
+		fwrite(text, 1, strlen(text), fp);
+		fclose(fp);
+	}
 #elif defined(GPK_ANDROID)
 	LOGI("%s", text);
 #else

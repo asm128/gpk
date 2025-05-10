@@ -205,11 +205,12 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 		::gpk::parseIntegerDecimal(contentLength, cgiRuntimeValues.Content.Length);
 	}
 	cgiRuntimeValues.Content.Body.resize(cgiRuntimeValues.Content.Length);
-	memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
-	uint32_t												iChar							= 0;
-	int														iArg							= 0;
-	while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
-		cgiRuntimeValues.Content.Body[iChar++]				= (sc_t)iArg;
+	fread(cgiRuntimeValues.Content.Body.begin(), 1, cgiRuntimeValues.Content.Length, stdin);
+	//memset(cgiRuntimeValues.Content.Body.begin(), 0, cgiRuntimeValues.Content.Body.size());
+	//uint32_t												iChar							= 0;
+	//int														iArg							= 0;
+	//while(iChar < cgiRuntimeValues.Content.Length && (iArg = getc(stdin)) != -1)
+	//	cgiRuntimeValues.Content.Body[iChar++]				= (sc_t)iArg;
 
 	::cgiLoadContent(cgiRuntimeValues, cgiRuntimeValues.Content.Type, cgiRuntimeValues.Content.Body);
 	return 0;
