@@ -290,7 +290,21 @@ namespace gpk
 #define if_zero_log_and_return_value_warning(value, condition)		if_zero_log_and_return_value	(warning_printf, (value), (condition))
 #define if_zero_log_and_return_value_info(value, condition)			if_zero_log_and_return_value	(info_printf   , (value), (condition))
 #define if_zero_log_and_return_value_verbose(value, condition)		if_zero_log_and_return_value	(verbose_printf, (value), (condition))
-
+#define if_true_log_and_fail_always(condition)						if_true_log_and_fail(always_printf , (condition))
+#define if_true_log_and_fail_error(condition)						if_true_log_and_fail(error_printf  , (condition))
+#define if_true_log_and_fail_warning(condition)						if_true_log_and_fail(warning_printf, (condition))
+#define if_true_log_and_fail_info(condition)						if_true_log_and_fail(info_printf   , (condition))
+#define if_true_log_and_fail_verbose(condition)						if_true_log_and_fail(verbose_printf, (condition))
+#define if_fail_log_and_fail_always(condition)						if_fail_log_and_fail(always_printf , (condition))
+#define if_fail_log_and_fail_error(condition)						if_fail_log_and_fail(error_printf  , (condition))
+#define if_fail_log_and_fail_warning(condition)						if_fail_log_and_fail(warning_printf, (condition))
+#define if_fail_log_and_fail_info(condition)						if_fail_log_and_fail(info_printf   , (condition))
+#define if_fail_log_and_fail_verbose(condition)						if_fail_log_and_fail(verbose_printf, (condition))
+#define if_zero_log_and_fail_always(condition)						if_zero_log_and_fail(always_printf , (condition))
+#define if_zero_log_and_fail_error(condition)						if_zero_log_and_fail(error_printf  , (condition))
+#define if_zero_log_and_fail_warning(condition)						if_zero_log_and_fail(warning_printf, (condition))
+#define if_zero_log_and_fail_info(condition)						if_zero_log_and_fail(info_printf   , (condition))
+#define if_zero_log_and_fail_verbose(condition)						if_zero_log_and_fail(verbose_printf, (condition))
 
 #define if_true_logf_always(condition, format, ...)								if_true_logf					(always_printf  , (condition), format, __VA_ARGS__)
 #define if_true_logf_error(condition, format, ...)								if_true_logf					(error_printf   , (condition), format, __VA_ARGS__)
@@ -382,6 +396,21 @@ namespace gpk
 #define if_zero_logf_and_return_value_warning(value, condition, format, ...)	if_zero_logf_and_return_value	(warning_printf , (value), (condition), format, __VA_ARGS__)
 #define if_zero_logf_and_return_value_info(value, condition, format, ...)		if_zero_logf_and_return_value	(info_printf    , (value), (condition), format, __VA_ARGS__)
 #define if_zero_logf_and_return_value_verbose(value, condition, format, ...)	if_zero_logf_and_return_value	(verbose_printf , (value), (condition), format, __VA_ARGS__)
+#define if_true_logf_and_fail_always(condition, format, ...)	if_true_logf_and_fail(always_printf  , (condition), format, __VA_ARGS__)
+#define if_true_logf_and_fail_error(condition, format, ...)		if_true_logf_and_fail(error_printf   , (condition), format, __VA_ARGS__)
+#define if_true_logf_and_fail_warning(condition, format, ...)	if_true_logf_and_fail(warning_printf , (condition), format, __VA_ARGS__)
+#define if_true_logf_and_fail_info(condition, format, ...)		if_true_logf_and_fail(info_printf    , (condition), format, __VA_ARGS__)
+#define if_true_logf_and_fail_verbose(condition, format, ...)	if_true_logf_and_fail(verbose_printf , (condition), format, __VA_ARGS__)
+#define if_fail_logf_and_fail_always(condition, format, ...)	if_fail_logf_and_fail(always_printf  , (condition), format, __VA_ARGS__)
+#define if_fail_logf_and_fail_error(condition, format, ...)		if_fail_logf_and_fail(error_printf   , (condition), format, __VA_ARGS__)
+#define if_fail_logf_and_fail_warning(condition, format, ...)	if_fail_logf_and_fail(warning_printf , (condition), format, __VA_ARGS__)
+#define if_fail_logf_and_fail_info(condition, format, ...)		if_fail_logf_and_fail(info_printf    , (condition), format, __VA_ARGS__)
+#define if_fail_logf_and_fail_verbose(condition, format, ...)	if_fail_logf_and_fail(verbose_printf , (condition), format, __VA_ARGS__)
+#define if_zero_logf_and_fail_always(condition, format, ...)	if_zero_logf_and_fail(always_printf  , (condition), format, __VA_ARGS__)
+#define if_zero_logf_and_fail_error(condition, format, ...)		if_zero_logf_and_fail(error_printf   , (condition), format, __VA_ARGS__)
+#define if_zero_logf_and_fail_warning(condition, format, ...)	if_zero_logf_and_fail(warning_printf , (condition), format, __VA_ARGS__)
+#define if_zero_logf_and_fail_info(condition, format, ...)		if_zero_logf_and_fail(info_printf    , (condition), format, __VA_ARGS__)
+#define if_zero_logf_and_fail_verbose(condition, format, ...)	if_zero_logf_and_fail(verbose_printf , (condition), format, __VA_ARGS__)
 
 #define if_null_log_always							if_zero_log_always
 #define if_null_log_error							if_zero_log_error
@@ -413,6 +442,11 @@ namespace gpk
 #define if_null_log_and_return_value_warning		if_zero_log_and_return_value_warning
 #define if_null_log_and_return_value_info			if_zero_log_and_return_value_info
 #define if_null_log_and_return_value_verbose		if_zero_log_and_return_value_verbose
+#define if_null_log_and_fail_always					if_zero_log_and_fail_always
+#define if_null_log_and_fail_error					if_zero_log_and_fail_error
+#define if_null_log_and_fail_warning				if_zero_log_and_fail_warning
+#define if_null_log_and_fail_info					if_zero_log_and_fail_info
+#define if_null_log_and_fail_verbose				if_zero_log_and_fail_verbose
 
 #define if_null_logf_always						if_zero_logf_always
 #define if_null_logf_error						if_zero_logf_error
@@ -443,7 +477,11 @@ namespace gpk
 #define if_null_logf_and_return_value_warning	if_zero_logf_and_return_value_warning
 #define if_null_logf_and_return_value_info		if_zero_logf_and_return_value_info
 #define if_null_logf_and_return_value_verbose	if_zero_logf_and_return_value_verbose
-
+#define if_null_logf_and_fail_always			if_zero_logf_and_fail_always
+#define if_null_logf_and_fail_error				if_zero_logf_and_fail_error
+#define if_null_logf_and_fail_warning			if_zero_logf_and_fail_warning
+#define if_null_logf_and_fail_info				if_zero_logf_and_fail_info
+#define if_null_logf_and_fail_verbose			if_zero_logf_and_fail_verbose
 //
 #define if_true_a  if_true_log_always
 #define if_true_e  if_true_log_error
@@ -608,170 +646,335 @@ namespace gpk
 #define if_null_vef if_null_logf_and_return_value_error
 #define if_null_vwf if_null_logf_and_return_value_warning
 #define if_null_vif if_null_logf_and_return_value_info
-#define if_null_vvf if_null_logf_and_return_value_verbose //
-#define a_if       if_true_a 
-#define e_if       if_true_e 
-#define w_if       if_true_w 
-#define i_if       if_true_i 
-#define v_if       if_true_v 
-#define a_if_fail  if_fail_a 
-#define e_if_fail  if_fail_e 
-#define w_if_fail  if_fail_w 
-#define i_if_fail  if_fail_i 
-#define v_if_fail  if_fail_v 
-#define a_if_zero  if_zero_a 
-#define e_if_zero  if_zero_e 
-#define w_if_zero  if_zero_w 
-#define i_if_zero  if_zero_i 
-#define v_if_zero  if_zero_v 
-#define a_if_null  if_null_a 
-#define e_if_null  if_null_e 
-#define w_if_null  if_null_w 
-#define i_if_null  if_null_i 
-#define v_if_null  if_null_v 
-#define af_if      if_true_af 
-#define ef_if      if_true_ef 
-#define wf_if      if_true_wf 
-#define if_if      if_true_if 
-#define vf_if      if_true_vf 
-#define af_if_fail if_fail_af 
-#define ef_if_fail if_fail_ef 
-#define wf_if_fail if_fail_wf 
-#define if_if_fail if_fail_if 
-#define vf_if_fail if_fail_vf 
-#define af_if_zero if_zero_af 
-#define ef_if_zero if_zero_ef 
-#define wf_if_zero if_zero_wf 
-#define if_if_zero if_zero_if 
-#define vf_if_zero if_zero_vf 
-#define af_if_null if_null_af 
-#define ef_if_null if_null_ef 
-#define wf_if_null if_null_wf 
-#define if_if_null if_null_if 
-#define vf_if_null if_null_vf 
+#define if_null_vvf if_null_logf_and_return_value_verbose
+////
+#define if_true_ra  if_true_log_and_return_always
+#define if_true_re  if_true_log_and_return_error
+#define if_true_rw  if_true_log_and_return_warning
+#define if_true_ri  if_true_log_and_return_info
+#define if_true_rv  if_true_log_and_return_verbose
+#define if_fail_ra  if_fail_log_and_return_always
+#define if_fail_re  if_fail_log_and_return_error
+#define if_fail_rw  if_fail_log_and_return_warning
+#define if_fail_ri  if_fail_log_and_return_info
+#define if_fail_rv  if_fail_log_and_return_verbose
+#define if_zero_ra  if_zero_log_and_return_always
+#define if_zero_re  if_zero_log_and_return_error
+#define if_zero_rw  if_zero_log_and_return_warning
+#define if_zero_ri  if_zero_log_and_return_info
+#define if_zero_rv  if_zero_log_and_return_verbose
+#define if_null_ra  if_null_log_and_return_always
+#define if_null_re  if_null_log_and_return_error
+#define if_null_rw  if_null_log_and_return_warning
+#define if_null_ri  if_null_log_and_return_info
+#define if_null_rv  if_null_log_and_return_verbose
+#define if_true_raf if_true_logf_and_return_always
+#define if_true_ref if_true_logf_and_return_error
+#define if_true_rwf if_true_logf_and_return_warning
+#define if_true_rif if_true_logf_and_return_info
+#define if_true_rvf if_true_logf_and_return_verbose
+#define if_fail_raf if_fail_logf_and_return_always
+#define if_fail_ref if_fail_logf_and_return_error
+#define if_fail_rwf if_fail_logf_and_return_warning
+#define if_fail_rif if_fail_logf_and_return_info
+#define if_fail_rvf if_fail_logf_and_return_verbose
+#define if_zero_raf if_zero_logf_and_return_always
+#define if_zero_ref if_zero_logf_and_return_error
+#define if_zero_rwf if_zero_logf_and_return_warning
+#define if_zero_rif if_zero_logf_and_return_info
+#define if_zero_rvf if_zero_logf_and_return_verbose
+#define if_null_raf if_null_logf_and_return_always
+#define if_null_ref if_null_logf_and_return_error
+#define if_null_rwf if_null_logf_and_return_warning
+#define if_null_rif if_null_logf_and_return_info
+#define if_null_rvf if_null_logf_and_return_verbose
 //
-#define va_if       if_true_va 
-#define ve_if       if_true_ve 
-#define vw_if       if_true_vw 
-#define vi_if       if_true_vi 
-#define vv_if       if_true_vv 
-#define va_if_fail  if_fail_va 
-#define ve_if_fail  if_fail_ve 
-#define vw_if_fail  if_fail_vw 
-#define vi_if_fail  if_fail_vi 
-#define vv_if_fail  if_fail_vv 
-#define va_if_zero  if_zero_va 
-#define ve_if_zero  if_zero_ve 
-#define vw_if_zero  if_zero_vw 
-#define vi_if_zero  if_zero_vi 
-#define vv_if_zero  if_zero_vv 
-#define va_if_null  if_null_va 
-#define ve_if_null  if_null_ve 
-#define vw_if_null  if_null_vw 
-#define vi_if_null  if_null_vi 
-#define vv_if_null  if_null_vv 
-#define vaf_if      if_true_vaf 
-#define vef_if      if_true_vef 
-#define vwf_if      if_true_vwf 
-#define vif_if      if_true_vif 
-#define vvf_if      if_true_vvf 
-#define vaf_if_fail if_fail_vaf 
-#define vef_if_fail if_fail_vef 
-#define vwf_if_fail if_fail_vwf 
-#define vif_if_fail if_fail_vif 
-#define vvf_if_fail if_fail_vvf 
-#define vaf_if_zero if_zero_vaf 
-#define vef_if_zero if_zero_vef 
-#define vwf_if_zero if_zero_vwf 
-#define vif_if_zero if_zero_vif 
-#define vvf_if_zero if_zero_vvf 
-#define vaf_if_null if_null_vaf 
-#define vef_if_null if_null_vef 
-#define vwf_if_null if_null_vwf 
-#define vif_if_null if_null_vif 
-#define vvf_if_null if_null_vvf 
+#define if_true_fa  if_true_log_and_fail_always
+#define if_true_fe  if_true_log_and_fail_error
+#define if_true_fw  if_true_log_and_fail_warning
+#define if_true_fi  if_true_log_and_fail_info
+#define if_true_fv  if_true_log_and_fail_verbose
+#define if_fail_fa  if_fail_log_and_fail_always
+#define if_fail_fe  if_fail_log_and_fail_error
+#define if_fail_fw  if_fail_log_and_fail_warning
+#define if_fail_fi  if_fail_log_and_fail_info
+#define if_fail_fv  if_fail_log_and_fail_verbose
+#define if_zero_fa  if_zero_log_and_fail_always
+#define if_zero_fe  if_zero_log_and_fail_error
+#define if_zero_fw  if_zero_log_and_fail_warning
+#define if_zero_fi  if_zero_log_and_fail_info
+#define if_zero_fv  if_zero_log_and_fail_verbose
+#define if_null_fa  if_null_log_and_fail_always
+#define if_null_fe  if_null_log_and_fail_error
+#define if_null_fw  if_null_log_and_fail_warning
+#define if_null_fi  if_null_log_and_fail_info
+#define if_null_fv  if_null_log_and_fail_verbose
+#define if_true_faf if_true_logf_and_fail_always
+#define if_true_fef if_true_logf_and_fail_error
+#define if_true_fwf if_true_logf_and_fail_warning
+#define if_true_fif if_true_logf_and_fail_info
+#define if_true_fvf if_true_logf_and_fail_verbose
+#define if_fail_faf if_fail_logf_and_fail_always
+#define if_fail_fef if_fail_logf_and_fail_error
+#define if_fail_fwf if_fail_logf_and_fail_warning
+#define if_fail_fif if_fail_logf_and_fail_info
+#define if_fail_fvf if_fail_logf_and_fail_verbose
+#define if_zero_faf if_zero_logf_and_fail_always
+#define if_zero_fef if_zero_logf_and_fail_error
+#define if_zero_fwf if_zero_logf_and_fail_warning
+#define if_zero_fif if_zero_logf_and_fail_info
+#define if_zero_fvf if_zero_logf_and_fail_verbose
+#define if_null_faf if_null_logf_and_fail_always
+#define if_null_fef if_null_logf_and_fail_error
+#define if_null_fwf if_null_logf_and_fail_warning
+#define if_null_fif if_null_logf_and_fail_info
+#define if_null_fvf if_null_logf_and_fail_verbose
 //
-#define ba_if       if_true_ba 
-#define be_if       if_true_be 
-#define bw_if       if_true_bw 
-#define bi_if       if_true_bi 
-#define bv_if       if_true_bv 
-#define ba_if_fail  if_fail_ba 
-#define be_if_fail  if_fail_be 
-#define bw_if_fail  if_fail_bw 
-#define bi_if_fail  if_fail_bi 
-#define bv_if_fail  if_fail_bv 
-#define ba_if_zero  if_zero_ba 
-#define be_if_zero  if_zero_be 
-#define bw_if_zero  if_zero_bw 
-#define bi_if_zero  if_zero_bi 
-#define bv_if_zero  if_zero_bv 
-#define ba_if_null  if_null_ba 
-#define be_if_null  if_null_be 
-#define bw_if_null  if_null_bw 
-#define bi_if_null  if_null_bi 
-#define bv_if_null  if_null_bv 
-#define baf_if      if_true_baf 
-#define bef_if      if_true_bef 
-#define bwf_if      if_true_bwf 
-#define bif_if      if_true_bif 
-#define bvf_if      if_true_bvf 
-#define baf_if_fail if_fail_baf 
-#define bef_if_fail if_fail_bef 
-#define bwf_if_fail if_fail_bwf 
-#define bif_if_fail if_fail_bif 
-#define bvf_if_fail if_fail_bvf 
-#define baf_if_zero if_zero_baf 
-#define bef_if_zero if_zero_bef 
-#define bwf_if_zero if_zero_bwf 
-#define bif_if_zero if_zero_bif 
-#define bvf_if_zero if_zero_bvf 
-#define baf_if_null if_null_baf 
-#define bef_if_null if_null_bef 
-#define bwf_if_null if_null_bwf 
-#define bif_if_null if_null_bif 
-#define bvf_if_null if_null_bvf 
+#define if_true_ta	if_true_log_and_throw_always
+#define if_true_te	if_true_log_and_throw_error
+#define if_true_tw	if_true_log_and_throw_warning
+#define if_true_ti	if_true_log_and_throw_info
+#define if_true_tv	if_true_log_and_throw_verbose
+#define if_fail_ta	if_fail_log_and_throw_always
+#define if_fail_te	if_fail_log_and_throw_error
+#define if_fail_tw	if_fail_log_and_throw_warning
+#define if_fail_ti	if_fail_log_and_throw_info
+#define if_fail_tv	if_fail_log_and_throw_verbose
+#define if_zero_ta	if_zero_log_and_throw_always
+#define if_zero_te	if_zero_log_and_throw_error
+#define if_zero_tw	if_zero_log_and_throw_warning
+#define if_zero_ti	if_zero_log_and_throw_info
+#define if_zero_tv	if_zero_log_and_throw_verbose
+#define if_null_ta	if_null_log_and_throw_always
+#define if_null_te	if_null_log_and_throw_error
+#define if_null_tw	if_null_log_and_throw_warning
+#define if_null_ti	if_null_log_and_throw_info
+#define if_null_tv	if_null_log_and_throw_verbose
+#define if_true_taf	if_true_logf_and_throw_always
+#define if_true_tef	if_true_logf_and_throw_error
+#define if_true_twf	if_true_logf_and_throw_warning
+#define if_true_tif	if_true_logf_and_throw_info
+#define if_true_tvf	if_true_logf_and_throw_verbose
+#define if_fail_taf	if_fail_logf_and_throw_always
+#define if_fail_tef	if_fail_logf_and_throw_error
+#define if_fail_twf	if_fail_logf_and_throw_warning
+#define if_fail_tif	if_fail_logf_and_throw_info
+#define if_fail_tvf	if_fail_logf_and_throw_verbose
+#define if_zero_taf	if_zero_logf_and_throw_always
+#define if_zero_tef	if_zero_logf_and_throw_error
+#define if_zero_twf	if_zero_logf_and_throw_warning
+#define if_zero_tif	if_zero_logf_and_throw_info
+#define if_zero_tvf	if_zero_logf_and_throw_verbose
+#define if_null_taf	if_null_logf_and_throw_always
+#define if_null_tef	if_null_logf_and_throw_error
+#define if_null_twf	if_null_logf_and_throw_warning
+#define if_null_tif	if_null_logf_and_throw_info
+#define if_null_tvf	if_null_logf_and_throw_verbose
 //
-#define ca_if       if_true_ca 
-#define ce_if       if_true_ce 
-#define cw_if       if_true_cw 
-#define ci_if       if_true_ci 
-#define cv_if       if_true_cv 
-#define ca_if_fail  if_fail_ca 
-#define ce_if_fail  if_fail_ce 
-#define cw_if_fail  if_fail_cw 
-#define ci_if_fail  if_fail_ci 
-#define cv_if_fail  if_fail_cv 
-#define ca_if_zero  if_zero_ca 
-#define ce_if_zero  if_zero_ce 
-#define cw_if_zero  if_zero_cw 
-#define ci_if_zero  if_zero_ci 
-#define cv_if_zero  if_zero_cv 
-#define ca_if_null  if_null_ca 
-#define ce_if_null  if_null_ce 
-#define cw_if_null  if_null_cw 
-#define ci_if_null  if_null_ci 
-#define cv_if_null  if_null_cv 
-#define caf_if      if_true_caf 
-#define cef_if      if_true_cef 
-#define cwf_if      if_true_cwf 
-#define cif_if      if_true_cif 
-#define cvf_if      if_true_cvf 
-#define caf_if_fail if_fail_caf 
-#define cef_if_fail if_fail_cef 
-#define cwf_if_fail if_fail_cwf 
-#define cif_if_fail if_fail_cif 
-#define cvf_if_fail if_fail_cvf 
-#define caf_if_zero if_zero_caf 
-#define cef_if_zero if_zero_cef 
-#define cwf_if_zero if_zero_cwf 
-#define cif_if_zero if_zero_cif 
-#define cvf_if_zero if_zero_cvf 
-#define caf_if_null if_null_caf 
-#define cef_if_null if_null_cef 
-#define cwf_if_null if_null_cwf 
-#define cif_if_null if_null_cif 
-#define cvf_if_null if_null_cvf 
+#define a_if       if_true_a
+#define e_if       if_true_e
+#define w_if       if_true_w
+#define i_if       if_true_i
+#define v_if       if_true_v
+#define a_if_fail  if_fail_a
+#define e_if_fail  if_fail_e
+#define w_if_fail  if_fail_w
+#define i_if_fail  if_fail_i
+#define v_if_fail  if_fail_v
+#define a_if_zero  if_zero_a
+#define e_if_zero  if_zero_e
+#define w_if_zero  if_zero_w
+#define i_if_zero  if_zero_i
+#define v_if_zero  if_zero_v
+#define a_if_null  if_null_a
+#define e_if_null  if_null_e
+#define w_if_null  if_null_w
+#define i_if_null  if_null_i
+#define v_if_null  if_null_v
+#define af_if      if_true_af
+#define ef_if      if_true_ef
+#define wf_if      if_true_wf
+#define if_if      if_true_if
+#define vf_if      if_true_vf
+#define af_if_fail if_fail_af
+#define ef_if_fail if_fail_ef
+#define wf_if_fail if_fail_wf
+#define if_if_fail if_fail_if
+#define vf_if_fail if_fail_vf
+#define af_if_zero if_zero_af
+#define ef_if_zero if_zero_ef
+#define wf_if_zero if_zero_wf
+#define if_if_zero if_zero_if
+#define vf_if_zero if_zero_vf
+#define af_if_null if_null_af
+#define ef_if_null if_null_ef
+#define wf_if_null if_null_wf
+#define if_if_null if_null_if
+#define vf_if_null if_null_vf
+//
+#define va_if       if_true_va
+#define ve_if       if_true_ve
+#define vw_if       if_true_vw
+#define vi_if       if_true_vi
+#define vv_if       if_true_vv
+#define va_if_fail  if_fail_va
+#define ve_if_fail  if_fail_ve
+#define vw_if_fail  if_fail_vw
+#define vi_if_fail  if_fail_vi
+#define vv_if_fail  if_fail_vv
+#define va_if_zero  if_zero_va
+#define ve_if_zero  if_zero_ve
+#define vw_if_zero  if_zero_vw
+#define vi_if_zero  if_zero_vi
+#define vv_if_zero  if_zero_vv
+#define va_if_null  if_null_va
+#define ve_if_null  if_null_ve
+#define vw_if_null  if_null_vw
+#define vi_if_null  if_null_vi
+#define vv_if_null  if_null_vv
+#define vaf_if      if_true_vaf
+#define vef_if      if_true_vef
+#define vwf_if      if_true_vwf
+#define vif_if      if_true_vif
+#define vvf_if      if_true_vvf
+#define vaf_if_fail if_fail_vaf
+#define vef_if_fail if_fail_vef
+#define vwf_if_fail if_fail_vwf
+#define vif_if_fail if_fail_vif
+#define vvf_if_fail if_fail_vvf
+#define vaf_if_zero if_zero_vaf
+#define vef_if_zero if_zero_vef
+#define vwf_if_zero if_zero_vwf
+#define vif_if_zero if_zero_vif
+#define vvf_if_zero if_zero_vvf
+#define vaf_if_null if_null_vaf
+#define vef_if_null if_null_vef
+#define vwf_if_null if_null_vwf
+#define vif_if_null if_null_vif
+#define vvf_if_null if_null_vvf
+//
+#define fa_if       if_true_fa
+#define fe_if       if_true_fe
+#define fw_if       if_true_fw
+#define fi_if       if_true_fi
+#define fv_if       if_true_fv
+#define fa_if_fail  if_fail_fa
+#define fe_if_fail  if_fail_fe
+#define fw_if_fail  if_fail_fw
+#define fi_if_fail  if_fail_fi
+#define fv_if_fail  if_fail_fv
+#define fa_if_zero  if_zero_fa
+#define fe_if_zero  if_zero_fe
+#define fw_if_zero  if_zero_fw
+#define fi_if_zero  if_zero_fi
+#define fv_if_zero  if_zero_fv
+#define fa_if_null  if_null_fa
+#define fe_if_null  if_null_fe
+#define fw_if_null  if_null_fw
+#define fi_if_null  if_null_fi
+#define fv_if_null  if_null_fv
+#define faf_if      if_true_faf
+#define fef_if      if_true_fef
+#define fwf_if      if_true_fwf
+#define fif_if      if_true_fif
+#define fvf_if      if_true_fvf
+#define faf_if_fail if_fail_faf
+#define fef_if_fail if_fail_fef
+#define fwf_if_fail if_fail_fwf
+#define fif_if_fail if_fail_fif
+#define fvf_if_fail if_fail_fvf
+#define faf_if_zero if_zero_faf
+#define fef_if_zero if_zero_fef
+#define fwf_if_zero if_zero_fwf
+#define fif_if_zero if_zero_fif
+#define fvf_if_zero if_zero_fvf
+#define faf_if_null if_null_faf
+#define fef_if_null if_null_fef
+#define fwf_if_null if_null_fwf
+#define fif_if_null if_null_fif
+#define fvf_if_null if_null_fvf
+//
+#define ba_if       if_true_ba
+#define be_if       if_true_be
+#define bw_if       if_true_bw
+#define bi_if       if_true_bi
+#define bv_if       if_true_bv
+#define ba_if_fail  if_fail_ba
+#define be_if_fail  if_fail_be
+#define bw_if_fail  if_fail_bw
+#define bi_if_fail  if_fail_bi
+#define bv_if_fail  if_fail_bv
+#define ba_if_zero  if_zero_ba
+#define be_if_zero  if_zero_be
+#define bw_if_zero  if_zero_bw
+#define bi_if_zero  if_zero_bi
+#define bv_if_zero  if_zero_bv
+#define ba_if_null  if_null_ba
+#define be_if_null  if_null_be
+#define bw_if_null  if_null_bw
+#define bi_if_null  if_null_bi
+#define bv_if_null  if_null_bv
+#define baf_if      if_true_baf
+#define bef_if      if_true_bef
+#define bwf_if      if_true_bwf
+#define bif_if      if_true_bif
+#define bvf_if      if_true_bvf
+#define baf_if_fail if_fail_baf
+#define bef_if_fail if_fail_bef
+#define bwf_if_fail if_fail_bwf
+#define bif_if_fail if_fail_bif
+#define bvf_if_fail if_fail_bvf
+#define baf_if_zero if_zero_baf
+#define bef_if_zero if_zero_bef
+#define bwf_if_zero if_zero_bwf
+#define bif_if_zero if_zero_bif
+#define bvf_if_zero if_zero_bvf
+#define baf_if_null if_null_baf
+#define bef_if_null if_null_bef
+#define bwf_if_null if_null_bwf
+#define bif_if_null if_null_bif
+#define bvf_if_null if_null_bvf
+//
+#define ca_if       if_true_ca
+#define ce_if       if_true_ce
+#define cw_if       if_true_cw
+#define ci_if       if_true_ci
+#define cv_if       if_true_cv
+#define ca_if_fail  if_fail_ca
+#define ce_if_fail  if_fail_ce
+#define cw_if_fail  if_fail_cw
+#define ci_if_fail  if_fail_ci
+#define cv_if_fail  if_fail_cv
+#define ca_if_zero  if_zero_ca
+#define ce_if_zero  if_zero_ce
+#define cw_if_zero  if_zero_cw
+#define ci_if_zero  if_zero_ci
+#define cv_if_zero  if_zero_cv
+#define ca_if_null  if_null_ca
+#define ce_if_null  if_null_ce
+#define cw_if_null  if_null_cw
+#define ci_if_null  if_null_ci
+#define cv_if_null  if_null_cv
+#define caf_if      if_true_caf
+#define cef_if      if_true_cef
+#define cwf_if      if_true_cwf
+#define cif_if      if_true_cif
+#define cvf_if      if_true_cvf
+#define caf_if_fail if_fail_caf
+#define cef_if_fail if_fail_cef
+#define cwf_if_fail if_fail_cwf
+#define cif_if_fail if_fail_cif
+#define cvf_if_fail if_fail_cvf
+#define caf_if_zero if_zero_caf
+#define cef_if_zero if_zero_cef
+#define cwf_if_zero if_zero_cwf
+#define cif_if_zero if_zero_cif
+#define cvf_if_zero if_zero_cvf
+#define caf_if_null if_null_caf
+#define cef_if_null if_null_cef
+#define cwf_if_null if_null_cwf
+#define cif_if_null if_null_cif
+#define cvf_if_null if_null_cvf
 //
 #define a_ecall  if_fail_a
 #define e_ecall  if_fail_e
@@ -814,5 +1017,50 @@ namespace gpk
 #define cw_ecallf if_fail_cwf
 #define ci_ecallf if_fail_cif
 #define cv_ecallf if_fail_cvf
+
+#define gpk_fail_if_eq(str_format, i2x_left, i2x_right) if_true_fef((i2x_left) == (i2x_right), str_format, (i2x_left), (i2x_right))
+#define gpk_fail_if_ne(str_format, i2x_left, i2x_right) if_true_fef((i2x_left) != (i2x_right), str_format, (i2x_left), (i2x_right))
+#define gpk_fail_if_lt(str_format, i2x_left, i2x_right) if_true_fef((i2x_left)  < (i2x_right), str_format, (i2x_left), (i2x_right))
+#define gpk_fail_if_le(str_format, i2x_left, i2x_right) if_true_fef((i2x_left) <= (i2x_right), str_format, (i2x_left), (i2x_right))
+#define gpk_fail_if_ge(str_format, i2x_left, i2x_right) if_true_fef((i2x_left) >= (i2x_right), str_format, (i2x_left), (i2x_right))
+#define gpk_fail_if_gt(str_format, i2x_left, i2x_right) if_true_fef((i2x_left)  > (i2x_right), str_format, (i2x_left), (i2x_right))
+
+#define fail_if_eq2u(i2u_left, i2u_right) gpk_fail_if_eq(GPK_FMT_EQ_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_ne2u(i2u_left, i2u_right) gpk_fail_if_ne(GPK_FMT_NE_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_lt2u(i2u_left, i2u_right) gpk_fail_if_lt(GPK_FMT_LT_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_le2u(i2u_left, i2u_right) gpk_fail_if_le(GPK_FMT_LE_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_ge2u(i2u_left, i2u_right) gpk_fail_if_ge(GPK_FMT_GE_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_gt2u(i2u_left, i2u_right) gpk_fail_if_gt(GPK_FMT_GT_U2, i2u_t(i2u_left), i2u_t(i2u_right))
+#define fail_if_eq2s(i2s_left, i2s_right) gpk_fail_if_eq(GPK_FMT_EQ_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_ne2s(i2s_left, i2s_right) gpk_fail_if_ne(GPK_FMT_NE_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_lt2s(i2s_left, i2s_right) gpk_fail_if_lt(GPK_FMT_LT_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_le2s(i2s_left, i2s_right) gpk_fail_if_le(GPK_FMT_LE_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_ge2s(i2s_left, i2s_right) gpk_fail_if_ge(GPK_FMT_GE_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_gt2s(i2s_left, i2s_right) gpk_fail_if_gt(GPK_FMT_GT_S2, i2s_t(i2s_left), i2s_t(i2s_right))
+#define fail_if_eq3u(i3u_left, i3u_right) gpk_fail_if_eq(GPK_FMT_EQ_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_ne3u(i3u_left, i3u_right) gpk_fail_if_ne(GPK_FMT_NE_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_lt3u(i3u_left, i3u_right) gpk_fail_if_lt(GPK_FMT_LT_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_le3u(i3u_left, i3u_right) gpk_fail_if_le(GPK_FMT_LE_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_ge3u(i3u_left, i3u_right) gpk_fail_if_ge(GPK_FMT_GE_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_gt3u(i3u_left, i3u_right) gpk_fail_if_gt(GPK_FMT_GT_U3, i3u_t(i3u_left), i3u_t(i3u_right))
+#define fail_if_eq3s(i3s_left, i3s_right) gpk_fail_if_eq(GPK_FMT_EQ_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+#define fail_if_ne3s(i3s_left, i3s_right) gpk_fail_if_ne(GPK_FMT_NE_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+#define fail_if_lt3s(i3s_left, i3s_right) gpk_fail_if_lt(GPK_FMT_LT_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+#define fail_if_le3s(i3s_left, i3s_right) gpk_fail_if_le(GPK_FMT_LE_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+#define fail_if_ge3s(i3s_left, i3s_right) gpk_fail_if_ge(GPK_FMT_GE_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+#define fail_if_gt3s(i3s_left, i3s_right) gpk_fail_if_gt(GPK_FMT_GT_S3, i3s_t(i3s_left), i3s_t(i3s_right))
+
+#define fail_if_equ fail_if_eq2u
+#define fail_if_neu fail_if_ne2u
+#define fail_if_ltu fail_if_lt2u
+#define fail_if_leu fail_if_le2u
+#define fail_if_geu fail_if_ge2u
+#define fail_if_gtu fail_if_gt2u
+#define fail_if_eqs fail_if_eq2s
+#define fail_if_nes fail_if_ne2s
+#define fail_if_lts fail_if_lt2s
+#define fail_if_les fail_if_le2s
+#define fail_if_ges fail_if_ge2s
+#define fail_if_gts fail_if_gt2s
 
 #endif // GPK_LOG_LEVEL_H
