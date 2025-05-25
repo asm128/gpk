@@ -1,130 +1,53 @@
-/// Copyright 2016-2017 - asm128
-#include "gpk_eval.h"
+#include "gpk_array_pod.h"
+#include "gpk_std_cstring.h"
+#ifdef GPK_ARDUINO
+#   include <IPAddress.h>
+#endif // GPK_ARDUINO
 
-#if defined GPK_ATMEL
-#	include <string.h>
-#	include <stdarg.h>
-#	include <stdio.h>
-#else
-#	include <cstring>
-#	include <cstdarg>
-#	include <cstdio>
-#endif
-
-#ifndef GPK_STRING_H_23627
-#define GPK_STRING_H_23627
-
+#ifndef GPK_STRING_H
+#define GPK_STRING_H
 
 namespace gpk
 {
-#if defined(GPK_WINDOWS)
-#	pragma warning(disable : 4996)
+
+    struct string : asc_t {
+        using   asc_t  ::Data;
+        using   asc_t  ::Count;
+        using   asc_t  ::Size;
+        using   asc_t  ::operator=;
+        using   asc_t  ::asc_t;
+
+        tplt<size_t buflen>
+        inline  string      (sc_c (&other)[buflen])         : asc_t(vcst_t{other})                                  { initialize(); }
+        inline  string      (vsc_c & other)                 : asc_t(other)                                          { initialize(); }
+        inline  string      (asc_c & other)                 : asc_t(other)                                          { initialize(); }
+        inline  string      (vcst_t other)                  : asc_t(other)                                          { initialize(); }
+        inline  string      (sc_c * unsafe)                 : asc_t(tovcc(unsafe))                                  { initialize(); }
+#ifdef GPK_ARDUINO
+        inline  string      (const String & other)          : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    { initialize(); }
+        inline  string      (const IPAddress & other)       : string(other.toString())                              { initialize(); }
+
+#   ifdef GPK_ESP8266
+        ndin operator   String      ()  const   { return String(Data); }
+#   else
+        ndin operator   String      ()  const   { return String(Data, Count); }
+#   endif
 #endif
-	stainli	int	strcat_s		(sc_t *dst, size_t bufferSize, const sc_t *src)										{
-		if((uint32_t)strlen(dst)+(uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
-			return -1;
-		strcat(dst, src);
-		return 0;
-	}
+        ndin operator   vcst_t      ()  const   { return {Data, Count}; }
+        ndin operator   const char* ()  const   { return vcst_t{Data, Count}; }
 
-	stainli	int	strcpy_s		(sc_t *dst, size_t bufferSize, const sc_t *src)										{
-		if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
-			return -1;
-		strcpy(dst, src);
-		return 0;
-	}
+        const char*     begin       ()  const   { return vcst_t{Data, Count}.begin(); }
+        const char*     end         ()  const   { return vcst_t{Data, Count}.end  (); }
 
-	stainli	int	strncpy_s		(sc_t *dst, const sc_t *src, size_t bufferSize)										{
-		//if((uint32_t)strlen(src)+1U > (uint32_t)bufferSize)
-		//	return -1;
-		strncpy(dst, src, bufferSize);
-		return 0;
-	}
+        int32_t         initialize  ()          {
+            if_true_block_logf(error_printf, (0 == Data) && (Count || Size), Count = Size = 0, "error|Count:%i, Size:%i.", Count, Size);
+            return Count;
+        }
+    }; // struct
 
-	stainli	int	_snprintf_s		(sc_t* buffer, size_t bufferSize, size_t count, const sc_t* format, ...)			{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= vsnprintf( buffer, max(count, bufferSize - 1), format, args );
-		va_end(args);
-		return result;
-	}
-
-	tplt<size_t _bufferSize>
-	stainli	int	_snprintf_s		(sc_t (&buffer)[_bufferSize], size_t count, const sc_t* format, ...)				{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= _snprintf_s( buffer, _bufferSize, count, format, args );
-		va_end(args);
-		return result;
-	}
-
-	//stainli	int	sprintf_s		(sc_t *buffer, size_t bufferSize, const sc_t *format, ...)							{
-	//	va_list			args			= {};
-	//	va_start(args, format);
-	//	const int		result			= vsprintf(buffer, format, args);
-	//	va_end(args);
-	//	return result;
-	//}
-
-#ifdef GPK_ATMEL
-	stainli	int	vsprintf_s		(sc_t *buffer, size_t bufferSize, const sc_t *format, ...)							{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-
-	tplt<size_t _bufferSize>
-	stainli	int	sprintf_s		(sc_t (&buffer)[_bufferSize], const sc_t* format, ...)								{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, _bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-
-	stainli	int	sprintf_s		(sc_t *buffer , uint32_t bufferSize, const sc_t* format, ...)								{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= ::vsnprintf(buffer, bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-#else
-	stainli	int	vsprintf_s		(sc_t *buffer, size_t bufferSize, const sc_t *format, ...)							{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-
-	tplt<size_t _bufferSize>
-	stainli	int	sprintf_s		(sc_t (&buffer)[_bufferSize], const sc_t* format, ...)								{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, _bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-
-	stainli	int	sprintf_s		(sc_t *buffer , uint32_t bufferSize, const sc_t* format, ...)								{
-		va_list			args			= {};
-		va_start(args, format);
-		const int		result			= std::vsnprintf(buffer, bufferSize - 1, format, args);
-		va_end(args);
-		return result;
-	}
-#endif
-	tplt<size_t _Size> stainli	int	strcat_s		( sc_t (&dst)[_Size], const sc_t *src )						{ return strcat_s	(dst, _Size, src);				}
-	tplt<size_t _Size> stainli	int	strcpy_s		( sc_t (&dst)[_Size], const sc_t *src )						{ return strcpy_s	(dst, _Size, src);				}
-	tplt<size_t _Size> stainli	int	strncpy_s		( sc_t (&dst)[_Size], const sc_t *src )						{ return strncpy_s	(dst, src, _Size);				}
-	stainli	int	_vsnprintf_s	( sc_t* buffer, size_t bufferSize, size_t count, const sc_t* format, va_list args )	{ return vsnprintf	(buffer, max(count, bufferSize - 1), format, args);	}
-	stainli	int	vsprintf_s		( sc_t *buffer, size_t bufferSize, const sc_t *format, va_list args )				{ return vsnprintf	(buffer, bufferSize - 1, format, args);			}
-#if defined(GPK_WINDOWS)
-#	pragma warning(default: 4996)
+#ifdef GPK_ARDUINO
+    ndsi string  str (const IPAddress & s)   { return s.toString(); }
 #endif
 } // namespace
 
-#endif // GPK_STRING_H_23627
+#endif // GPK_STRING_H

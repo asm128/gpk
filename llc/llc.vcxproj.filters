@@ -489,7 +489,7 @@
     <ClInclude Include="gpk_stdstring.h">
       <Filter>view</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_string.h">
+    <ClInclude Include="gpk_cstring.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="gpk_sync.h">
@@ -675,12 +675,6 @@
     <ClInclude Include="gpk_gauge_n2.h">
       <Filter>aliases</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_queue_async.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_queue_event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_gtl_command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -690,9 +684,6 @@
     <ClInclude Include="gpk_log_core.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_apod_tcpip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_i2c.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -700,12 +691,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_spi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_keyed_bit_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_array_circular.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gpk_packed_int.h">
@@ -732,26 +717,47 @@
     <ClInclude Include="gpk_string_helper.h">
       <Filter>string</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_append_xml.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_append_html.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_append_json.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_append_js.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_append_css.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gpk_append_frontend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_broker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_string.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_std_cstring.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_css.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_frontend.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_html.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_js.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_json.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_xml.h">
+      <Filter>string</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_queue_event.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_queue_async.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_array_circular.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_keyed_bit_array.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_append_tcpip.h">
+      <Filter>string</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -956,23 +962,26 @@
     <ClCompile Include="gpk_string_helper.cpp">
       <Filter>string</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_append_css.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_append_html.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_append_js.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_append_xml.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gpk_append_json.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_broker.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_typeint.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_css.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_html.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_js.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_json.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_xml.cpp">
+      <Filter>string</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

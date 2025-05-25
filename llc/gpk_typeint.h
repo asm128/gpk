@@ -125,8 +125,8 @@ namespace gpk
 #define tydfTCnst(type)		tdcs		gpk_rmcnst(type)	TCnst
 #define tdfTTCnst(type)		tdfT(type);	tydfTCnst(type)
 
-	tplTOutTIn	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
-	tplTOutTIn	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
+	tplTInTOut	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
+	tplTInTOut	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
 	tplT		nsix	u0_t	byte_at		(T value, u0_t index)	nxpt	{ rtrn u0_t((value & (T(0xFFU) << (8 * index))) >> (8 * index)); }
 	tplT		nsix	T		byte_to		(u0_t byte, u0_t index)	nxpt	{ rtrn T(byte) << (u2_t(8U) * index); }
 	tplT		ndsc	T&		global		()						nxpt	{ sttc T instance = {}; rtrn instance; }
@@ -165,7 +165,14 @@ namespace gpk
 
 #define GPK_DEFAULT_OPERATOR GPK_DEFAULT_OPERATOR_IC
 
-#if (defined(GPK_ESP32) && !defined(GPK_ARDUINO)) && !defined(GPK_ATMEL)
+#ifdef GPK_ATMEL
+#	define GPK_FMT_F2		"f"
+#	define GPK_FMT_F3		"f"
+#	define GPK_FMT_S2		"li"
+#	define GPK_FMT_U2		"lu"
+#	define GPK_FMT_S3		"lli"
+#	define GPK_FMT_U3		"llu"
+#elif defined(GPK_WINDOWS) || (defined(GPK_ARDUINO) && (defined(GPK_ESP8266) || defined(GPK_ESP32)))
 #	define GPK_FMT_F2		"f"
 #	define GPK_FMT_F3		"f"
 #	define GPK_FMT_S2		"i"
@@ -231,5 +238,66 @@ namespace gpk
 #define GPK_FMT_NE_U2	"%" GPK_FMT_U2 " != %" GPK_FMT_U2
 #define GPK_FMT_NE_S3	"%" GPK_FMT_S3 " != %" GPK_FMT_S3
 #define GPK_FMT_NE_U3	"%" GPK_FMT_U3 " != %" GPK_FMT_U3
+
+namespace gpk
+{
+		enum OPCODE_SET : u0_t
+		{ OPCODE_SET_UNKNOWN
+		, OPCODE_SET_ARM32
+		, OPCODE_SET_ARM64
+		, OPCODE_SET_AVR
+		, OPCODE_SET_PIC16F
+		, OPCODE_SET_PIC18F
+		, OPCODE_SET_STM32
+		, OPCODE_SET_X86
+		, OPCODE_SET_X86_64
+		, OPCODE_SET_XTENSA_LX6_SINGLE
+		, OPCODE_SET_XTENSA_LX6_DUAL
+		, OPCODE_SET_XTENSA_LX7
+		, OPCODE_SET_CUSTOM		 = 0x40U
+		};
+	enum OPCODE_EXT : u0_t
+		{ OPCODE_EXT_NONE
+		, OPCODE_EXT_AVX
+		, OPCODE_EXT_MMX
+		, OPCODE_EXT_SSE
+		, OPCODE_EXT_SSE2
+		, OPCODE_EXT_SSE3
+		, OPCODE_EXT_SSE4
+		, OPCODE_EXT_CUSTOM		 = 0x40U
+		};
+	enum DEVICE_TYPE : u0_t
+		{ DEVICE_TYPE_UNKNOWN
+		, DEVICE_TYPE_ANDROID
+		, DEVICE_TYPE_IPHONE
+		, DEVICE_TYPE_PC
+		, DEVICE_TYPE_RASPBERRY_PI_3
+		, DEVICE_TYPE_RASPBERRY_PI_4
+		, DEVICE_TYPE_MAC
+		, DEVICE_TYPE_CUSTOM		= 0x40U
+		};
+	enum OS_FAMILY : u0_t
+		{ OS_FAMILY_UNKNOWN
+		, OS_FAMILY_ANDROID
+		, OS_FAMILY_ARDUINO
+		, OS_FAMILY_FREERTOS
+		, OS_FAMILY_IOS
+		, OS_FAMILY_LINUX
+		, OS_FAMILY_MACOS
+		, OS_FAMILY_NO_OS
+		, OS_FAMILY_PI
+		, OS_FAMILY_RTOS
+		, OS_FAMILY_WINDOWS
+		, OS_FAMILY_CUSTOM		  = 0x40U
+		};
+#define GDEFINE_ENUM_NAMEP(TEnum)	\
+	nsix	sc_c*		get_enum_namep	(cnst TEnum&)	nxpt	{ rtrn #TEnum; } \
+	ndsc	sc_c*		get_value_namep (TEnum value)	nxpt;
+	GDEFINE_ENUM_NAMEP(DEVICE_TYPE  );
+	GDEFINE_ENUM_NAMEP(OPCODE_SET   );
+	GDEFINE_ENUM_NAMEP(OPCODE_EXT   );
+	GDEFINE_ENUM_NAMEP(OS_FAMILY	);
+#define gpk_enum_value_log(printf_fn, enumVal)	printf_fn("'%s':(0x%X)(%" GPK_FMT_S2 ")(%c)'%s'", get_enum_namep GPKREP3(enumVal) ? char(enumVal) : '?', get_value_namep(enumVal))
+} // namespace
 
 #endif // GPK_TYPEINT_H_23627

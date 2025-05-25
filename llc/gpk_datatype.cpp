@@ -2,7 +2,7 @@
 #include "gpk_datatype.h"
 
 #include "gpk_io.h"
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 #include "gpk_size.h"
 
 //

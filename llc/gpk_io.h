@@ -1,5 +1,5 @@
 #include "gpk_log.h"
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 
 #ifdef GPK_ARDUINO
 #	include <stdio.h>

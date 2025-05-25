@@ -3,7 +3,7 @@
 #include "gpk_chrono.h" 
 #include "gpk_size.h"
 
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 
 #ifdef GPK_ATMEL
 #	include <stdio.h>

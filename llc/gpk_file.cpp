@@ -1,6 +1,6 @@
 #include "gpk_file.h"
 #include "gpk_io.h"
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 #include "gpk_path.h"
 
 #include <new>

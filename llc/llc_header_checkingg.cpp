@@ -95,7 +95,7 @@
 #include "gpk_framework.h"
 //#include "gpk_deflate.h"
 #include "gpk_typeint.h"
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 #include "gpk_string_helper.h"
 #include "gpk_raster_lh.h"
 #include "gpk_base64.h"

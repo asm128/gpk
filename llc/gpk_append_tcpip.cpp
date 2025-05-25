@@ -1,4 +1,4 @@
-#include "gpk_apod_tcpip.h"
+#include "gpk_append_tcpip.h"
 #include "gpk_string_compose.h"
 
 ::gpk::error_t	gpk::appendString			(::gpk::achar & output, gpk::SIPv4 ip, sc_t separator) { 

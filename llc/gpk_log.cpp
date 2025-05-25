@@ -1,5 +1,5 @@
 #include "gpk_log.h"
-#include "gpk_string.h"
+#include "gpk_cstring.h"
 #include "gpk_size.h"
 
 

@@ -1,3 +1,4 @@
+/// Copyright 2010-2025 - ogarnd
 #ifndef GPK_PLATFORM_GLOBALS_H_23627
 #define GPK_PLATFORM_GLOBALS_H_23627
 
@@ -74,18 +75,6 @@
 
 #if defined GPK_ANDROID
 #	define GPK_DISABLE_CPP_EXCEPTIONS
-#endif
-
-#ifdef GPK_WINDOWS
-#	include <cstdint>
-#else
-#	if defined(GPK_ATMEL)
-#		include <stddef.h>
-#		include <stdint.h>
-#	else
-#		include <cstddef>
-#		include <cstdint>
-#	endif
 #endif
 
 // These aliases make keyword width to be consistent and makes the code less verbose.
@@ -303,4 +292,4 @@
 #define tplTstacxpr	tplTstxp
 #define tplTndstinx	tplTnsix
 
-#endif // GPK_PLATFORM_GLOBALS_H_23627
+#endif	//	GPK_PLATFORM_GLOBALS_H_23627

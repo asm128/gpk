@@ -27,7 +27,7 @@
     <ClInclude Include="gpk_apod_range.h" />
     <ClInclude Include="gpk_apod_serialize.h" />
     <ClInclude Include="gpk_apod_slice.h" />
-    <ClInclude Include="gpk_apod_tcpip.h" />
+    <ClInclude Include="gpk_append_tcpip.h" />
     <ClInclude Include="gpk_append_css.h" />
     <ClInclude Include="gpk_append_frontend.h" />
     <ClInclude Include="gpk_append_html.h" />
@@ -126,6 +126,8 @@
     <ClInclude Include="gpk_slice_n2.h" />
     <ClInclude Include="gpk_slice_n3.h" />
     <ClInclude Include="gpk_spi.h" />
+    <ClInclude Include="gpk_std_cstring.h" />
+    <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_compose.h" />
     <ClInclude Include="gpk_system_event.h" />
     <ClInclude Include="gpk_system_key.h" />
@@ -206,7 +208,7 @@
     <ClInclude Include="gpk_stdstring.h" />
     <ClInclude Include="gpk_stl.h" />
     <ClInclude Include="gpk_file.h" />
-    <ClInclude Include="gpk_string.h" />
+    <ClInclude Include="gpk_cstring.h" />
     <ClInclude Include="gpk_string_helper.h" />
     <ClInclude Include="gpk_sync.h" />
     <ClInclude Include="gpk_tcpip.h" />
@@ -271,6 +273,7 @@
     <ClCompile Include="gpk_path.cpp" />
     <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_string_compose.cpp" />
+    <ClCompile Include="gpk_typeint.cpp" />
     <ClCompile Include="gpk_virtual_keyboard.cpp" />
     <ClCompile Include="gpk_voxel_geometry.cpp" />
     <ClCompile Include="gpk_window.cpp" />
