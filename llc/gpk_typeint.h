@@ -125,8 +125,8 @@ namespace gpk
 #define tydfTCnst(type)		tdcs		gpk_rmcnst(type)	TCnst
 #define tdfTTCnst(type)		tdfT(type);	tydfTCnst(type)
 
-	tplTInTOut	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
-	tplTInTOut	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
+	tplTOutTIn	sinx	TOut	dim2		(TIn value)				nxpt	{ rtrn {value, value}; }
+	tplTOutTIn	sinx	TOut	dim3		(TIn value)				nxpt	{ rtrn {value, value, value}; }
 	tplT		nsix	u0_t	byte_at		(T value, u0_t index)	nxpt	{ rtrn u0_t((value & (T(0xFFU) << (8 * index))) >> (8 * index)); }
 	tplT		nsix	T		byte_to		(u0_t byte, u0_t index)	nxpt	{ rtrn T(byte) << (u2_t(8U) * index); }
 	tplT		ndsc	T&		global		()						nxpt	{ sttc T instance = {}; rtrn instance; }
