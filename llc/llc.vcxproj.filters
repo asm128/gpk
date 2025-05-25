@@ -947,9 +947,6 @@
     <ClCompile Include="gpk_scene.cpp">
       <Filter>scene</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_apod_tcpip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_i2c.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -981,6 +978,9 @@
       <Filter>string</Filter>
     </ClCompile>
     <ClCompile Include="gpk_append_xml.cpp">
+      <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_append_tcpip.cpp">
       <Filter>string</Filter>
     </ClCompile>
   </ItemGroup>

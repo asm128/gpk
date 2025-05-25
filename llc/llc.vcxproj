@@ -241,7 +241,7 @@
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp" />
     <ClCompile Include="gpk_aes.cpp" />
-    <ClCompile Include="gpk_apod_tcpip.cpp" />
+    <ClCompile Include="gpk_append_tcpip.cpp" />
     <ClCompile Include="gpk_append_css.cpp" />
     <ClCompile Include="gpk_append_html.cpp" />
     <ClCompile Include="gpk_append_js.cpp" />
