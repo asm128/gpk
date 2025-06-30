@@ -127,6 +127,7 @@
     <ClInclude Include="gpk_slice_n3.h" />
     <ClInclude Include="gpk_spi.h" />
     <ClInclude Include="gpk_std_cstring.h" />
+    <ClInclude Include="gpk_std_initializer_list.h" />
     <ClInclude Include="gpk_string.h" />
     <ClInclude Include="gpk_string_compose.h" />
     <ClInclude Include="gpk_system_event.h" />

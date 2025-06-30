@@ -759,6 +759,9 @@
     <ClInclude Include="gpk_append_tcpip.h">
       <Filter>string</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_std_initializer_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
