@@ -105,7 +105,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateCylinder		(const ::gpk::SParamsCylinderWall & params, ::gpk::vcs entityName)	{
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Height * .5f, radius}, true, params, ParamsCylinder
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, params.Height * .5f, radius}, true, params, ParamsCylinder
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildCylinder(geometry, params));
 			return 0;
@@ -113,14 +113,14 @@
 }
 
 ::gpk::error_t			gpk::SEngine::CreateSphere		(const ::gpk::SParamsSphere & params, ::gpk::vcs entityName)	{ 
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{params.Radius, params.Radius, params.Radius}, true, params, ParamsSphere
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			return ::gpk::geometryBuildSphere(geometry, params); 
 		});
 }
 
 ::gpk::error_t			gpk::SEngine::CreateGrid		(const ::gpk::SParamsGrid & params, ::gpk::vcs entityName)	{ 
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{params.Size.x * .5f, 0, params.Size.y * .5f}, true, params, ParamsGrid
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{params.Size.x * .5f, 0, params.Size.y * .5f}, true, params, ParamsGrid
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(gpk::geometryBuildGrid(geometry, params));
 			return 0;
@@ -129,7 +129,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateHelixHalf	(const ::gpk::SParamsHelix & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(gpk::geometryBuildHelixHalf(geometry, params));
 			return 0;
@@ -138,7 +138,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateHelix		(const ::gpk::SParamsHelix & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(gpk::geometryBuildHelix(geometry, params));
 			return 0;
@@ -147,7 +147,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateFigure0		(const ::gpk::SParamsHelix & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Length * .5f, radius}, true, params, ParamsHelix
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, params.Length * .5f, radius}, true, params, ParamsHelix
 		, [params](::gpk::SGeometryBuffers & geometry) {
 			gpk_necs(gpk::geometryBuildHelix(geometry, params));
 			return 0;
@@ -156,7 +156,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateCylinderWall(const ::gpk::SParamsCylinderWall & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.Radius.Min, params.Radius.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, params.Height * .5f, radius}, true, params, ParamsCylinderWall
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, params.Height * .5f, radius}, true, params, ParamsCylinderWall
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildCylinderWall(geometry, params));
 			return 0;
@@ -165,7 +165,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateCircleSide		(const ::gpk::SParamsCircle & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= params.Radius;
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, 0, radius}, true, params, ParamsCircleSide
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, 0, radius}, true, params, ParamsCircleSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildCircleSide(geometry, params));
 			return 0;
@@ -174,7 +174,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateDisc		(const ::gpk::SParamsDisc & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= params.Radius;
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, 0, radius}, true, params, ParamsDisc
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, 0, radius}, true, params, ParamsDisc
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildDisc(geometry, params));
 			return 0;
@@ -183,7 +183,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateRingSide	(const ::gpk::SParamsRingSide & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= params.Radius.Max;
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingSide
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, radius, radius}, true, params, ParamsRingSide
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildRingSide(geometry, params));
 			return 0;
@@ -191,7 +191,7 @@
 }
 ::gpk::error_t			gpk::SEngine::CreateRingFlat	(const ::gpk::SParamsRingSide & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= params.Radius.Max;
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsRingFlat
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, radius, radius}, true, params, ParamsRingFlat
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildRingFlat(geometry, params));
 			return 0;
@@ -200,7 +200,7 @@
 
 ::gpk::error_t			gpk::SEngine::CreateTube		(const ::gpk::SParamsTube & params, ::gpk::vcs entityName)	{ 
 	const float					radius							= ::gpk::max(params.RadiusYMax.Max, params.RadiusYMin.Max);
-	return CreateEntityFromGeometry(entityName, ::gpk::n3f32{radius, radius, radius}, true, params, ParamsTube
+	return CreateEntityFromGeometry(entityName, ::gpk::n3f2_t{radius, radius, radius}, true, params, ParamsTube
 		, [params](::gpk::SGeometryBuffers & geometry) { 
 			gpk_necs(gpk::geometryBuildRing(geometry, params));
 			return 0;

@@ -55,7 +55,7 @@ namespace gpk
 		// Renders a frame to the screen.
 		::gpk::error_t									Render							() {
 			ID2D1DeviceContext									* context						= DeviceResources->GetD2DDeviceContext();
-			const ::gpk::n2f32								logicalSize						= DeviceResources->GetLogicalSize();
+			const ::gpk::n2f2_t								logicalSize						= DeviceResources->GetLogicalSize();
 
 			context->SaveDrawingState(StateBlock);
 			context->BeginDraw();

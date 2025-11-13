@@ -7,14 +7,14 @@ using ::gpk::sc_c;
 
 ::gpk::error_t			gpk::httpRequestInit			(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron)	{
 	const ::gpk::aobj<::gpk::TKeyValConstString>	& environViews					= runtimeValues.EnvironViews;
-	::gpk::vcc								remoteAddr;
-	const bool											isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
-	requestReceived.IsCGIEnviron					= isCGIEnviron;
+	::gpk::vcsc_t									remoteAddr;
+	const bool										isCGIEnviron					= -1 != ::gpk::find(::gpk::vcs{"REMOTE_ADDR"}, environViews, remoteAddr);	// Find out if the program is being called as a CGI script.
+	requestReceived.IsCGIEnviron				= isCGIEnviron;
 	if(bLogCGIEnviron && isCGIEnviron)
 		::gpk::writeCGIEnvironToFile(environViews);
 
 	{	// Try to load query from querystring and request body
-		const int32_t										offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
+		const int32_t								offset							= ::gpk::find(::gpk::vcs{"REQUEST_METHOD"}, ::gpk::view<const ::gpk::TKeyValConstString>{environViews.begin(), environViews.size()});
 		::gpk::apod<sc_t>							enumValue						= (-1 == offset) ? ::gpk::vcs{"GET"} : environViews[offset].Val;
 		requestReceived.Method							= ::gpk::get_value<::gpk::HTTP_METHOD>(enumValue);//::gpk::VALUE -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "POST") && -1 == ::gpk::keyValVerify(environViews, "REQUEST_METHOD", "post") ? ::gpk::HTTP_METHOD_GET : ::gpk::HTTP_METHOD_POST;
 		if(-1 == (int8_t)requestReceived.Method)
@@ -57,7 +57,7 @@ using ::gpk::sc_c;
 
 static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType, const ::gpk::view<::gpk::sc_c> & strContentType)	{
 	ree_if(0 == strContentType.size(), "%s", "No input string");
-	static	const ::gpk::vcc					content_types []			=
+	static	::gpk::vcsc_c					content_types []			=
 		{ ::gpk::vcs{"application/javascript"													}
 		, ::gpk::vcs{"application/json"															}
 		, ::gpk::vcs{"application/x-www-form-urlencoded"										}
@@ -118,7 +118,7 @@ static	::gpk::error_t	cgiLoadContentType			(::gpk::CGI_MEDIA_TYPE & contentType,
 	return 0;
 }
 
-static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, const ::gpk::vcc & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort)	{
+static	::gpk::error_t	cgiLoadAddr		(::gpk::SIPv4End & remoteIP, ::gpk::vcsc_c & strRemoteIP, const ::gpk::view<::gpk::sc_c>& strRemotePort) {
 	remoteIP.Port			= 0;
 	::gpk::parseIntegerDecimal(strRemotePort, remoteIP.Port);
 
@@ -167,7 +167,7 @@ static	::gpk::error_t	cgiLoadContent	(::gpk::SCGIRuntimeValues & runtimeValues, 
 	return 0;
 }
 
-::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c *> & argv)	{
+::gpk::error_t			gpk::cgiRuntimeValuesLoad	(::gpk::SCGIRuntimeValues & cgiRuntimeValues, const ::gpk::view<::gpk::sc_c*> & argv)	{
 	cgiRuntimeValues.EntryPointArgs.ArgsCommandLine	= argv;
 	::gpk::aobj<::gpk::TKeyValConstString>	& environViews	= cgiRuntimeValues.EnvironViews;
 	::gpk::environmentBlockFromEnviron(cgiRuntimeValues.EntryPointArgs.EnvironmentBlock);

@@ -63,6 +63,7 @@
     <ClInclude Include="gpk_broker.h" />
     <ClInclude Include="gpk_camera.h" />
     <ClInclude Include="gpk_cdn.h" />
+    <ClInclude Include="gpk_cerrno.h" />
     <ClInclude Include="gpk_cgi.h" />
     <ClInclude Include="gpk_cgi_app_impl.h" />
     <ClInclude Include="gpk_cgi_app_impl_v2.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="gpk_component_scene.h" />
     <ClInclude Include="gpk_coord.h" />
     <ClInclude Include="gpk_cpow.h" />
+    <ClInclude Include="gpk_cstdio.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
     <ClInclude Include="gpk_debug.h" />
@@ -230,7 +232,6 @@
     <ClInclude Include="gpk_n2.h" />
     <ClInclude Include="gpk_functional.h" />
     <ClInclude Include="gpk_astatic_serialize.h" />
-    <ClInclude Include="gpk_block_container.h" />
     <ClInclude Include="gpk_quad2.h" />
     <ClInclude Include="gpk_sphere.h" />
     <ClInclude Include="gpk_view_n2.h" />

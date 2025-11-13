@@ -1,19 +1,19 @@
 #include "gpk_string_compose.h"
+#include "gpk_n2.h"
 
 #ifndef GPK_APPEND_CSS_H
 #define GPK_APPEND_CSS_H
 
 namespace gpk
 {
-	tplt<tpnm... _tArgs>
-	gpk::err_t			appendCSSTag							(::gpk::achar & output, gpk::vcs tagName, _tArgs&&... cssAttributes)					{ return gpk::append_strings(output, tagName, '{', cssAttributes..., '}', '\n'); }	
-	gpk::err_t			appendCSSBorderWidth					(::gpk::achar & output, uint8_t borderWidth, bool absoluteSize = true);
-	gpk::err_t			appendCSSControlWidth					(::gpk::achar & output, uint16_t outerLimit, bool absoluteSize = false);
-	gpk::err_t			appendCSSControlHeight					(::gpk::achar & output, uint16_t outerLimit, bool absoluteSize = false);
-	gpk::err_t			appendCSSControlSize					(::gpk::achar & output, ::gpk::n2u16 outerLimit, bool absoluteSize = false);
-	gpk::err_t			appendCSSSizeWithBorderWidthAbsolute	(::gpk::achar & output, ::gpk::n2u16 outerLimit, uint8_t borderWidth);
-	gpk::err_t			appendCSSSizeWithBorderWidthRelative	(::gpk::achar & output, ::gpk::n2u16 outerLimit, uint8_t borderWidth);
-	gpk::err_t			appendCSSSizeWithBorderWidth			(::gpk::achar & output, ::gpk::n2u16 outerLimit, uint8_t borderWidth, bool absoluteSize = false);
+	tpl_vtArgs	err_t	appendCSSTag							(::gpk::asc_t & output, gpk::vcst_t tagName, _tArgs&&... cssAttributes)					{ return gpk::append_strings(output, tagName, '{', cssAttributes..., '}', '\n'); }	
+				err_t	appendCSSBorderWidth					(::gpk::asc_t & output, uint8_t borderWidth, bool absoluteSize = true);
+				err_t	appendCSSControlWidth					(::gpk::asc_t & output, uint16_t outerLimit, bool absoluteSize = false);
+				err_t	appendCSSControlHeight					(::gpk::asc_t & output, uint16_t outerLimit, bool absoluteSize = false);
+				err_t	appendCSSControlSize					(::gpk::asc_t & output, ::gpk::n2u1_t outerLimit, bool absoluteSize = false);
+				err_t	appendCSSSizeWithBorderWidthAbsolute	(::gpk::asc_t & output, ::gpk::n2u1_t outerLimit, uint8_t borderWidth);
+				err_t	appendCSSSizeWithBorderWidthRelative	(::gpk::asc_t & output, ::gpk::n2u1_t outerLimit, uint8_t borderWidth);
+				err_t	appendCSSSizeWithBorderWidth			(::gpk::asc_t & output, ::gpk::n2u1_t outerLimit, uint8_t borderWidth, bool absoluteSize = false);
 } // namespace 
 
 #endif // GPK_APPEND_CSS_H

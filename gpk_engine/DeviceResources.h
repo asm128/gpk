@@ -66,9 +66,9 @@ namespace DX
 
 		// Cached device properties.
 		D3D_FEATURE_LEVEL						m_d3dFeatureLevel			= D3D_FEATURE_LEVEL_9_1;
-		::gpk::n2f32							m_d3dRenderTargetSize		= {};
-		::gpk::n2f32							m_outputSize				= {};
-		::gpk::n2f32							m_logicalSize				= {};
+		::gpk::n2f2_t							m_d3dRenderTargetSize		= {};
+		::gpk::n2f2_t							m_outputSize				= {};
+		::gpk::n2f2_t							m_logicalSize				= {};
 		::gpk::GRID_ROTATION					m_nativeOrientation			= ::gpk::GRID_ROTATION_0;
 		::gpk::GRID_ROTATION					m_currentOrientation		= ::gpk::GRID_ROTATION_0;
 		float									m_dpi						= 96.0f;
@@ -257,8 +257,8 @@ namespace DX
 			m_outputSize.y									= std::max(1.0f, DX::ConvertDipsToPixels(m_logicalSize.y, m_effectiveDpi));
 		}
 
-		::gpk::n2f32							GetOutputSize				()	const									{ return m_outputSize; }	// The size of the render target, in pixels.
-		::gpk::n2f32							GetLogicalSize				()	const									{ return m_logicalSize; }	// The size of the render target, in dips.
+		::gpk::n2f2_t							GetOutputSize				()	const									{ return m_outputSize; }	// The size of the render target, in pixels.
+		::gpk::n2f2_t							GetLogicalSize				()	const									{ return m_logicalSize; }	// The size of the render target, in dips.
 		float									GetDpi						()	const									{ return m_effectiveDpi; }
 
 		// D3D Accessors.
@@ -281,7 +281,7 @@ namespace DX
 		D2D1::Matrix3x2F						GetOrientationTransform2D	()	const									{ return m_orientationTransform2D; }
 
 		void									RegisterDeviceNotify		(DX::IDeviceNotify * deviceNotify)			{ m_deviceNotify = deviceNotify; }
-		::gpk::error_t							SetLogicalSize				(const ::gpk::n2f32 & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			gpk_necs(CreateSizeDependentResources()); } return 0; } 
+		::gpk::error_t							SetLogicalSize				(const ::gpk::n2f2_t & logicalSize)			{ if (m_logicalSize			!= logicalSize			) { m_logicalSize			= logicalSize;			gpk_necs(CreateSizeDependentResources()); } return 0; } 
 		::gpk::error_t							SetCurrentOrientation		(::gpk::GRID_ROTATION currentOrientation)	{ if (m_currentOrientation	!= currentOrientation	) { m_currentOrientation	= currentOrientation;	gpk_necs(CreateSizeDependentResources()); } return 0; } 
 		::gpk::error_t							SetDpi						(float dpi)									{
 			if (dpi != m_dpi) {

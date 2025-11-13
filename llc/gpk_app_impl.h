@@ -100,7 +100,7 @@
 				while(true) {																				\
 					::gpk::error_t			updateResult		= ::update(*app, false);					\
 					bi_if(1 == updateResult);																\
-					be_if(errored(updateResult));															\
+					be_if(failed(updateResult));															\
 					e_if(::draw(*app));																	\
 				}																							\
 				info_printf("%s", "Cleaning up application instance...");									\
@@ -143,9 +143,9 @@
 																													\
 		static	::gpk::error_t	grt_Loop		(::SRuntimeState & runtimeState)	{								\
 			::gpk::error_t				updateResult	= ::update(*runtimeState.Application, false);				\
-			if(1 == updateResult || errored(updateResult)) {														\
+			if(1 == updateResult || failed(updateResult)) {														\
 				is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);												\
-				es_if(errored(updateResult));																		\
+				es_if(failed(updateResult));																		\
 			}																										\
 			else {																									\
 				gpk_sync_increment(runtimeState.RenderThreadUsers);	/* Report we're alive	*/						\
@@ -154,7 +154,7 @@
 				while(true) {																						\
 					updateResult	= ::update(*runtimeState.Application, false);									\
 					bis_if(::gpk::APPLICATION_STATE_EXIT == updateResult);											\
-					bes_if(errored(updateResult));																	\
+					bes_if(failed(updateResult));																	\
 					/*ef_if(mainModule.Render(app), "Why would this ever happen?");	*/							\
 					/*Sleep(1);		*/																				\
 				}																									\
@@ -180,7 +180,7 @@
 			{																	\
 				rees_if(0 == runtimeState.Application.create(runtimeValues));	\
 				info_printf("%s", "Initializing application instance.");		\
-				if errored(::setup(*runtimeState.Application)) {				\
+				if(failed(::setup(*runtimeState.Application))) {				\
 					error_printf("%s", "Setup() Failed!");						\
 					gpk_necs(::cleanup(*runtimeState.Application));				\
 					return -1;													\

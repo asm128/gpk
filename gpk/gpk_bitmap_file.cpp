@@ -69,8 +69,8 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 	filename.resize(filename.size() - 3);
 	filename.append_string("png");
 
-	::gpk::vcs					pngfn						= {filename};
-	::gpk::au8					filebytes;
+	::gpk::vcst_t					pngfn						= {filename};
+	::gpk::au0_t					filebytes;
 	::gpk::pngFileWrite(out_ImageView, filebytes);
 	::gpk::fileFromMemory(pngfn, filebytes);
 	//if((bm.bmBitsPixel * bm.bmPlanes) <= 8) { // If the DIBSection is 256 color or less, it has a color table
@@ -121,7 +121,7 @@ static	::gpk::error_t	LoadBitmapFromBMPFile		(const ::gpk::vcs & szFileName, ::g
 		error_printf("Failed to open file: %s. File not found?", filename.begin());
 		return -1;
 	}
-	if errored(::gpk::bmpFileLoad(source, out_Colors, out_ImageView)) {
+	if(failed(::gpk::bmpFileLoad(source, out_Colors, out_ImageView))) {
 		error_printf("Failed to load file: '%s'. File corrupt?", filename.begin());
 		fclose(source);
 		return -1;
@@ -142,11 +142,11 @@ struct SHeaderFileBMP {
 // BMP Information Header
 struct SHeaderInfoBMP {
 	uint32_t		Size		;	// Number of bytes in structure
-	::gpk::n2i32	Metrics		;	// Width and Height of Image
+	::gpk::n2s2_t	Metrics		;	// Width and Height of Image
 	uint16_t		Planes		;	// Always 1
 	uint16_t		Bpp			;	// Bits Per Pixel (must be 24 for now)
 	uint32_t		Compression	;	// Must be 0 (uncompressed)
-	::gpk::n2i32	PPM			;	// Pixels Per Meter
+	::gpk::n2s2_t	PPM			;	// Pixels Per Meter
 	uint32_t		ClrUsed		;	// 0 for 24 bpp bmps
 	uint32_t		ClrImp		;	// 0
 	uint32_t		Dunno		;	// 0
@@ -218,7 +218,7 @@ struct SHeaderInfoBMP {
 		&& infoHeader.Bpp != 1
 		, "Unsupported bitmap format! Only 8, 24 and 32-bit bitmaps are supported.");
 	uint32_t					pixelSize			= infoHeader.Bpp == 1 ? 1 : infoHeader.Bpp / 8;
-	::gpk::au8					srcBytes			= {};
+	::gpk::au0_t				srcBytes			= {};
 	gpk_necall(srcBytes.resize(nPixelCount * pixelSize), "Out of memory?");
 	size_t						readResult			= fread(&srcBytes[0], pixelSize, nPixelCount, source);
 	ree_if(readResult != (size_t)nPixelCount, "Failed to read file! File corrupt?");

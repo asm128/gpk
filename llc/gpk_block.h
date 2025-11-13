@@ -11,7 +11,7 @@
 
 namespace gpk
 {
-	stacxpr	::gpk::vcc		EXTENSION_BLOCK_FILE		= {4, ".ubk"};
+	stxp	::gpk::vcsc_t		EXTENSION_BLOCK_FILE		= {4, ".ubk"};
 #pragma pack(push, 1)
 	//struct SInt24 {
 	//	uint16_t					Low;
@@ -25,7 +25,7 @@ namespace gpk
 	//	constexpr	operator		int32_t						()					const	noexcept	{ return (((uint32_t)Low) | ((High & 0x7F) << 16)) | ((High & 0x80) ? 0xFF800000 : 0); }
 	//};
 	struct SBlockConfig {
-		::gpk::vcc					Key							= {};
+		::gpk::vcsc_t					Key							= {};
 		uint32_t					BlockSize					= 0;
 		bool						Deflate						= 0;
 	};
@@ -35,11 +35,11 @@ namespace gpk
 
 	tplt<tpnm _tBlock>
 	struct SMapTable {
-		::gpk::au32		Id;
+		::gpk::au2_t				Id;
 		::gpk::apobj<_tBlock>		Block;
 
-		::gpk::SBlockConfig			BlockConfig					= {::gpk::vcc{32, "01234567890123456789012345678901"}, 65535, true};
-		::gpk::vcc					DBName						= {};
+		::gpk::SBlockConfig			BlockConfig					= {GPK_CXS("01234567890123456789012345678901"), 65535, true};
+		::gpk::vcsc_t				DBName						= {};
 		int32_t						MaxBlockOnDisk				= -1;
 	};
 
@@ -52,18 +52,18 @@ namespace gpk
 
 	::gpk::error_t				blockRecordIndices			(const uint64_t idRecord, uint32_t blockSize, ::gpk::SRecordMap & indices);
 	::gpk::error_t				blockRecordId				(const ::gpk::SRecordMap & indices, uint32_t blockSize, uint64_t & idRecord);
-	::gpk::error_t				blockRecordPath				(::gpk::ac & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath);
+	::gpk::error_t				blockRecordPath				(::gpk::asc_t & fileName, const ::gpk::SRecordMap & indices, const ::gpk::vcsc_t & dbName, const ::gpk::vcsc_t & dbPath);
 
-	stainli	::gpk::error_t		blockRecordPath				(::gpk::ac & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath) {
+	stainli	::gpk::error_t		blockRecordPath				(::gpk::asc_t & fileName, ::gpk::SRecordMap & indices, const uint64_t idRecord, uint32_t blockSize, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
 		::gpk::blockRecordIndices(idRecord, blockSize, indices);
 		return ::gpk::blockRecordPath(fileName, indices, dbName, dbPath);
 	}
 
-	::gpk::error_t				blockFileName				(::gpk::ac & fileName, const uint32_t idBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & folderName);
-	::gpk::error_t				blockFilePath				(::gpk::ac & finalPath, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath);
+	::gpk::error_t				blockFileName				(::gpk::asc_t & fileName, const uint32_t idBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & folderName);
+	::gpk::error_t				blockFilePath				(::gpk::asc_t & finalPath, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath);
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, const ::gpk::vcc & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
+	::gpk::error_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SMapTable<_tElement> & mapTable, ::gpk::vcsc_c & fileName, const ::gpk::SRecordMap & indexMap, uint8_t maxBlocksInMemory = 16)								{
 		(void)maxBlocksInMemory;
 		loadedBytes.clear();
 		for(uint32_t iBlock = 0; iBlock < mapTable.Id.size(); ++iBlock)
@@ -78,23 +78,23 @@ namespace gpk
 	}
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapLoad				(::gpk::ac & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath, uint64_t idRecord)								{
+	::gpk::error_t				blockMapLoad				(::gpk::asc_t & loadedBytes, ::gpk::SRecordMap & indexMap, ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath, uint64_t idRecord) {
 		::gpk::apod<sc_t>				fileName					= {};
 		gpk_necs(gpk::blockRecordPath(fileName, indexMap, idRecord, mapBlock.BlockConfig.BlockSize, dbName, dbPath));
 		return ::gpk::blockMapLoad(loadedBytes, mapBlock, fileName, indexMap);
 	}
 
 	tplt<tpnm _tElement>
-	::gpk::error_t				blockMapSave				(const ::gpk::vcu8 & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, const ::gpk::vcc & dbName, const ::gpk::vcc & dbPath)								{
-		::gpk::ac						finalPath					= {};
+	::gpk::error_t				blockMapSave				(::gpk::vcu0_c & blockBytes, const ::gpk::SRecordMap & indexMap, const ::gpk::SMapTable<_tElement> & mapBlock, ::gpk::vcsc_c & dbName, ::gpk::vcsc_c & dbPath) {
+		::gpk::asc_t					finalPath					= {};
 		gpk_necs(gpk::blockFilePath(finalPath, dbName, dbPath));
-		::gpk::ac						fileName					= {};
+		::gpk::asc_t					fileName					= {};
 		gpk_necs(gpk::blockFileName(fileName, indexMap.IdBlock, dbName, finalPath));
 		return ::gpk::fileFromMemorySecure(blockBytes, fileName, mapBlock.BlockConfig.Key, mapBlock.BlockConfig.Deflate);
 	}
 
 	tplt<tpnm _tMapBlock>
-	::gpk::error_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, const ::gpk::vcc & dbPath, ::gpk::ac & outputData) {
+	::gpk::error_t				mapTableMapGet				(::gpk::SMapTable<_tMapBlock> & mapTable, const uint64_t idRecord, ::gpk::vcsc_c & dbPath, ::gpk::asc_t & outputData) {
 		::gpk::SRecordMap				recordMap;
 		::gpk::apod<sc_t>				fileBytes;
 		::gpk::error_t					indexBlock					= ::gpk::blockMapLoad(fileBytes, recordMap, mapTable, mapTable.DBName, dbPath, idRecord);
@@ -106,7 +106,7 @@ namespace gpk
 		return loadedBlock.MapGet(recordMap.IndexRecord, outputData);
 	}
 
-	//stainli	int16_t	mapTableContainerFromData	(const ::gpk::vcc & sequenceToFind, const uint32_t countContainers)	{
+	//stainli	int16_t	mapTableContainerFromData	(const ::gpk::vcsc_t & sequenceToFind, const uint32_t countContainers)	{
 	//	uint64_t					container					= 0;
 	//	::gpk::crcGenerate(sequenceToFind, container);
 	//	return (int16_t)(container % countContainers);
@@ -115,9 +115,9 @@ namespace gpk
 	//stainli	uint32_t				mapTableContainerFromId		(const uint32_t blockId, const uint32_t countContainers)	{ return blockId % countContainers; }
 
 	tplt<tpnm _tMapBlock>
-	int64_t						mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToFind)	{
-		::gpk::au32			idBlocks					= mapTable.Id;
-		::gpk::au32			blocksToSkip;
+	int64_t						mapTableMapId				(::gpk::SMapTable<_tMapBlock> & mapTable, ::gpk::vcsc_c & dbPath, ::gpk::vcsc_c & sequenceToFind)	{
+		::gpk::au2_t				idBlocks					= mapTable.Id;
+		::gpk::au2_t				blocksToSkip;
 		for(uint32_t iBlock = 0; iBlock < mapTable.Block.size(); ++iBlock) {
 			const _tMapBlock				& block						= *mapTable.Block[iBlock];
 			const int32_t					idEmail						= block.MapId(sequenceToFind);
@@ -138,14 +138,14 @@ namespace gpk
 		::gpk::aapod<sc_t>				paths;
 		::gpk::pathCreate(containerPath);
 		::gpk::pathList(containerPath, paths, false, {});
-		constexpr ::gpk::vcs				extension					= ::gpk::EXTENSION_BLOCK_FILE;
+		cxpr ::gpk::vcst_t				extension					= ::gpk::EXTENSION_BLOCK_FILE;
 		::gpk::apod<sc_t>					loadedBytes;
 		for(uint32_t iFile = 0; iFile < paths.size(); ++iFile) {
-			const ::gpk::vcc				fileNameCurrent				= paths[iFile];
+			const ::gpk::vcsc_t				fileNameCurrent				= paths[iFile];
 			if(extension.size() + mapTable.DBName.size() >= fileNameCurrent.size())
 				continue;
 
-			::gpk::vcc					filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
+			::gpk::vcsc_t					filePart;//					= {&fileNameCurrent[fileNameCurrent.size() - extension.size()], extension.size()};
 			gpk_necs(fileNameCurrent.slice(filePart, fileNameCurrent.size() - extension.size(), extension.size()));
 			if(filePart != extension)
 				continue;
@@ -182,8 +182,8 @@ namespace gpk
 	}
 
 	tplt<tpnm _tMapBlock>
-	int64_t						mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcc & dbPath, const ::gpk::vcc & sequenceToAdd)	{
-		int64_t							idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
+	int64_t						mapTableMapAdd				(::gpk::SMapTable<_tMapBlock> & mapTable, const ::gpk::vcsc_t & dbPath, const ::gpk::vcsc_t & sequenceToAdd)	{
+		s3_c							idRecord					= ::gpk::mapTableMapId(mapTable, dbPath, sequenceToAdd);
 		ree_if(0 <= idRecord, "Sequence already registered: %s.", ::gpk::toString(sequenceToAdd).begin());
 		if(-1 == mapTable.MaxBlockOnDisk) {
 			::gpk::pobj<_tMapBlock>			newBlock;
@@ -202,8 +202,8 @@ namespace gpk
 			return newIdRecord;
 		}
 		for(uint32_t iBlock = 0, countBlocks = mapTable.Block.size(); iBlock < countBlocks; ++iBlock) {
-			const uint32_t					idBlockInMemory				= mapTable.Id[iBlock];
-			_tMapBlock						& blockInMemory				= *mapTable.Block[iBlock];
+			u2_c						idBlockInMemory				= mapTable.Id[iBlock];
+			_tMapBlock					& blockInMemory				= *mapTable.Block[iBlock];
 			if(idBlockInMemory == ((uint32_t)mapTable.MaxBlockOnDisk) && blockInMemory.Size() < (int32_t)mapTable.BlockConfig.BlockSize) {
 				::gpk::SRecordMap				newIndices;
 				gpk_necs(newIndices.IndexRecord = blockInMemory.MapAdd(sequenceToAdd));
@@ -238,15 +238,15 @@ namespace gpk
 	struct SMapBlock {
 		::gpk::CViewManager<uint8_t>			Allocator;
 
-		inline	::gpk::error_t					Size						()										const	{ return Allocator.Counts.size(); }
-		inline	::gpk::error_t					Save						(::gpk::apod<uint8_t> & output)			const	{ return Allocator.Save(output); }
-		inline	::gpk::error_t					Load						(::gpk::vcu8 & input)							{ return Allocator.Load(input); }
-		inline	::gpk::error_t					MapAdd		(const ::gpk::vcu8 & dataToAdd)					{
+		inln	::gpk::error_t					Size		()										const	{ return Allocator.Counts.size(); }
+		inln	::gpk::error_t					Save		(::gpk::apod<uint8_t> & output)			const	{ return Allocator.Save(output); }
+		inln	::gpk::error_t					Load		(::gpk::vcu0_t & input)							{ return Allocator.Load(input); }
+		inln	::gpk::error_t					MapAdd		(::gpk::vcu0_c & dataToAdd)						{
 			return Allocator.View(dataToAdd.begin(), (uint16_t)dataToAdd.size());
 		}
 
-		::gpk::error_t							MapId		(const ::gpk::vcu8 & dataToFind)		const;
-		::gpk::error_t							MapGet						(uint32_t index, ::gpk::vcu8 & data)	const;
+		::gpk::error_t							MapId		(::gpk::vcu0_c & dataToFind)			const;
+		::gpk::error_t							MapGet		(uint32_t index, ::gpk::vcu0_t & data)	const;
 	};
 } // namespace
 

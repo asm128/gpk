@@ -63,7 +63,7 @@ namespace gpk
 			RootWindow.Input.create();
 			GUI.create();
 			if(fileNameJSONConfig.size())	// Attempt to load config file.
-				if_if(errored(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "File name: '%s'.", fileNameJSONConfig.begin());
+				if_if(failed(::gpk::jsonFileRead(JSONConfig, fileNameJSONConfig)), "File name: '%s'.", fileNameJSONConfig.begin());
 		}
 	}; // struct
 

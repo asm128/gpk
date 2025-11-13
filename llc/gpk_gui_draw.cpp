@@ -39,20 +39,20 @@ static	::gpk::error_t	controlTextDraw		(::gpk::SGUI & gui, int32_t iControl, ::g
 	::gpk::SControlArea		& controlMetrics	= gui.Controls.Area[iControl];
 	::gpk::rect2i16				rectText			= controlMetrics.Text;
 	if(controlState.IsPressed() || controlState.IsHovered()) { // shift text offset by one pixel to give the effect of being pushed.
-		rectText.Offset			+= ::gpk::n2i16{1, 1};
-		rectText.Size			-= ::gpk::n2i16{1, 1};
+		rectText.Offset			+= ::gpk::n2s1_t{1, 1};
+		rectText.Size			-= ::gpk::n2s1_t{1, 1};
 		if(rectText.Size.x < 0) rectText.Size.x = 0;
 		if(rectText.Size.y < 0) rectText.Size.y = 0;
 	} // This isn't done in updateMetrics() because the function is only executed for outdated metrics.
 	// Changhing the state from idle to hover however doesn't cause the control metrics to become outdated (and in general it's pointless for other than the effect we're applying here).
 
 	::gpk::SControlText			& controlText		= gui.Controls.Text		[iControl];
-	::gpk::apod<::gpk::n2u16>	dstCoords;
+	::gpk::apod<::gpk::n2u1_t>	dstCoords;
 	const uint32_t				iFont				= ::gpk::in_range(controlText.FontSelected, (int16_t)0, (int16_t)gui.Fonts.size()) ? controlText.FontSelected : gui.SelectedFont;
 	const ::gpk::SRasterFont	& selectedFont		= *gui.Fonts[iFont];
 	gpk_necs(gpk::textLineRaster(target.metrics(), selectedFont.CharSize, rectText, selectedFont.Texture, controlText.Text, dstCoords));
 	for(uint32_t iCoord = 0; iCoord < dstCoords.size(); ++iCoord) {
-		const ::gpk::n2u16			dstCoord			= dstCoords[iCoord];
+		const ::gpk::n2u1_t			dstCoord			= dstCoords[iCoord];
 		target[dstCoord.y][dstCoord.x]	= colorFace;
 		//::gpk::drawPixelLight(target, dstCoords[iCoord], colorFace, controlState.Pressed ? 0.75f : 0.5f, controlState.Pressed ? 1.0f : 0.95);
 	}
@@ -177,7 +177,7 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 		}
 	}
 
-	es_if(errored(::controlTextDraw(gui, iControl, target, disabled)));
+	es_if(::gpk::failed(::controlTextDraw(gui, iControl, target, disabled)));
 	return 0;
 }
 ::gpk::error_t			gpk::controlDrawHierarchy		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::g8bgra target)								{
@@ -205,6 +205,6 @@ static	::gpk::error_t	actualControlDraw				(::gpk::SGUI & gui, ::gpk::cid_t iCon
 	gpk_necs(gpk::guiUpdateMetrics(gui, gui.LastSize, false));;
 	for(uint32_t iControl = 0; iControl < gui.Controls.States.size(); ++iControl)
 		if(false == ::gpk::controlInvalid(gui, (::gpk::cid_t)iControl) && ::gpk::controlInvalid(gui, gui.Controls.States[iControl].Parent))
-			es_if(errored(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));
+			es_if(::gpk::failed(::gpk::controlDrawHierarchy(gui, (::gpk::cid_t)iControl, target)));
 	return 0;
 }

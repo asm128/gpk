@@ -77,7 +77,7 @@ namespace gpk
 
 	struct SVOXTransformFrame { // DICT	: frame attributes
 		uint8_t					Rotation				= {};
-		::gpk::n3i32			Translation				= {};
+		::gpk::n3s2_t			Translation				= {};
 		uint32_t				IndexFrame				= {};
 	}; 
 
@@ -92,7 +92,7 @@ namespace gpk
 
 	struct SVOXChunk {
 		SVOXChunkHeader			Header					= {};
-		::gpk::au8				Data					= {};
+		::gpk::au0_t			Data					= {};
 	};
 
 	struct SVOXChunkXYZI {
@@ -116,7 +116,7 @@ namespace gpk
 		SVOXChunkHeader			Header					= {};
 		int32_t					Id						= 0;
 		SVOXDict				Attributes				= {};
-		::gpk::ai32				IdChildren				= {};
+		::gpk::as2_t				IdChildren				= {};
 	};
 
 	struct SVOXChunkMaterial {
@@ -156,17 +156,17 @@ namespace gpk
 	};
 
 	struct SVOXChunkNote {
-		SVOXChunkHeader			Header					= {};
-		::gpk::aobj<::gpk::ac>	ColorNames				= {};
+		SVOXChunkHeader				Header					= {};
+		::gpk::aobj<::gpk::asc_t>	ColorNames				= {};
 	};
 
-	::gpk::error_t			voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::vcu8 & input) 						{
+	::gpk::error_t			voxDictLoad				(::gpk::SVOXDict & attributes, ::gpk::vcu0_t & input) 						{
 		uint32_t					bytesRead				= sizeof(uint32_t); 
 		const uint32_t				dictLength				= *(uint32_t*)input.begin(); 
 		input					= {input.begin() + bytesRead, input.size() - bytesRead}; 
 		for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
-			::gpk::vcc					readKey					= {};
-			::gpk::vcc					readVal					= {};
+			::gpk::vcsc_t					readKey					= {};
+			::gpk::vcsc_t					readVal					= {};
 			bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 			attributes.push_back({readKey, readVal});
@@ -213,7 +213,7 @@ namespace gpk
 			return {};
 		}
 		
-		::gpk::error_t				Load					(::gpk::vcu8 & input) { 
+		::gpk::error_t				Load					(::gpk::vcu0_t & input) { 
 			uint32_t												bytesRead				= sizeof(SVOXFileHeader); 
 			Header												= *(const SVOXFileHeader*)input.begin(); 
 			input												= {input.begin() + bytesRead, input.size() - bytesRead}; 
@@ -340,14 +340,14 @@ namespace gpk
 							::gpk::SVOXTransformFrame							newFrame	= {};
 							bytesRead = sizeof(uint32_t	); const uint32_t dictLength = *(uint32_t*)input.begin(); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 							for(uint32_t iLength = 0; iLength < dictLength; ++iLength) {
-								::gpk::vcc							readKey		= {};
-								::gpk::vcc							readVal		= {};
+								::gpk::vcsc_t							readKey		= {};
+								::gpk::vcsc_t							readVal		= {};
 								bytesRead = ::gpk::viewReadLegacy(readKey, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 								bytesRead = ::gpk::viewReadLegacy(readVal, input); input = {input.begin() + bytesRead, input.size() - bytesRead}; 
 
 								// Welcome to the amazing fucked up way to store a transform in a binary file
-									 if(readKey == ::gpk::vcs{"_r"}) { newFrame.Rotation = readVal[0]; }
-								else if(readKey == ::gpk::vcs{"_t"}) {
+									 if(readKey == ::gpk::vcst_t{"_r"}) { newFrame.Rotation = readVal[0]; }
+								else if(readKey == ::gpk::vcst_t{"_t"}) {
 									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.x = value; }
 									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.z = value; }
 									{ int32_t value = 0; uint32_t charsProcessed = ::gpk::parseIntegerDecimal(readVal, value) + 1; readVal = {readVal.begin() + charsProcessed, readVal.size() - charsProcessed}; newFrame.Translation.y = value; }

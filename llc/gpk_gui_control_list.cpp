@@ -36,7 +36,7 @@
 		::gpk::SControlPlacement	& control				= gui.Controls.Placement	[idControl];
 		::gpk::SControlText			& controlText			= gui.Controls.Text			[idControl];
 		const uint32_t				iPrevItem				= iItem - 1;
-		const ::gpk::n2u8			fontCharSize			= selectedFont.CharSize;
+		const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
 		control.Area.Size.y		= fontCharSize.y + ::gpk::controlNCSpacing(control).y;
 		switch(menu.Orientation) {
 		default:
@@ -55,7 +55,7 @@
 
 	::gpk::SControlPlacement	& controlMenu			= gui.Controls.Placement[menu.IdControl];
 	controlMenu.Area.Size	= {};
-	const ::gpk::n2u8			fontCharSize			= selectedFont.CharSize;
+	const ::gpk::n2u0_t			fontCharSize			= selectedFont.CharSize;
 	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem) {
 		const uint32_t				idControl			= menu.IdControls		[iItem];
 		::gpk::SControlPlacement	& control			= gui.Controls.Placement[idControl];
@@ -97,7 +97,7 @@
 }
 
 ::gpk::error_t			gpk::paletteGridInitialize	(::gpk::SGUI & gui, ::gpk::SPaletteGrid& palette)				{
-	const ::gpk::n2f64			targetSize					= {256.0, 256.0};
+	const ::gpk::n2f3_t			targetSize					= {256.0, 256.0};
 	palette.IdControl		= ::gpk::controlCreate(gui);
 
 	::gpk::SControlPlacement	& control					= gui.Controls.Placement[palette.IdControl];
@@ -114,12 +114,12 @@
 
 	//gui.Controls.Area[palette.IdControl];
 
-	const ::gpk::n2u32			& gridMetrics				= colors.metrics();
+	const ::gpk::n2u2_t			& gridMetrics				= colors.metrics();
 	palette.IdControls.resize(colors.size());
 	palette.Colors			= colors;
 
-	const ::gpk::n2f64			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f3_t(); //{256.0, 256.0};
-	::gpk::n2f64				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
+	const ::gpk::n2f3_t			targetSize					= gui.Controls.Area[palette.IdControl].Client.Global.Size.f3_t(); //{256.0, 256.0};
+	::gpk::n2f3_t				controlSize					= {targetSize.x / colors.metrics().x, targetSize.y / colors.metrics().y};
 
 	for(uint32_t y = 0; y < gridMetrics.y; ++y)
 	for(uint32_t x = 0; x < gridMetrics.x; ++x) {
@@ -167,7 +167,7 @@
 	return 0;
 }
 
-::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<const ::gpk::vcc> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
+::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 	::gpk::cid_t				result						= -1;
 	for(uint16_t iButton = 0; iButton < buttonText.size(); ++iButton) {
 		::gpk::cid_t				idControl					= ::gpk::controlCreate(gui);
@@ -212,7 +212,7 @@
 	return result;
 }
 
-::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<const ::gpk::vcc> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u16 & buttonSize, const ::gpk::n2i16 & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
+::gpk::cid_t			gpk::guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, ::gpk::n2u1_c & buttonSize, ::gpk::n2s1_c & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 	::gpk::SControlPlacement	controlArgs					= {};
 	controlArgs.Align		= controlAlign;
 	controlArgs.Area		= {offset, buttonSize.s1_t()};

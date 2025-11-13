@@ -62,9 +62,9 @@ namespace gpk
 	}; 
 
 	stincxp	::gpk::rectu16	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
-	stacxpr	::gpk::n2u16	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2i32{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1_t(); }
+	stacxpr	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1_t(); }
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
-	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u16   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
+	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
 
 	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, uint8_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
@@ -176,13 +176,13 @@ namespace gpk
 		::gpk::n2cid				AttachSizeToControl	= {-1, -1};
 		::gpk::n2<bool>				AttachSizeToText	= {};
 		::gpk::rectcid				DockToControl		= {-1, -1, -1, -1};
-		::gpk::minmax2i16			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
+		::gpk::minmax2s1_t			SizeMinMax			= {{}, {0x7FFF, 0x7FFF}};
 	};
 
 	struct SControlText {
 		::gpk::vcs					Text				= {};
 		::gpk::ALIGN				Align				= ::gpk::ALIGN_CENTER;
-		::gpk::minmaxu16			Selection			= {0, 1};
+		::gpk::minmaxu1_t			Selection			= {0, 1};
 		int16_t						FontSelected		= -1;
 	};
 
@@ -195,7 +195,7 @@ namespace gpk
 	struct SControlImage {
 		::gpk::rtbgra8d32			Temp				= {};
 		::gpk::g8bgra				Image				= {};
-		::gpk::n2i16				ImageOffset			= {};
+		::gpk::n2s1_t				ImageOffset			= {};
 		uint8_t						ImageAlign			= ::gpk::ALIGN_CENTER;
 		uint8_t						ImageInvertX		: 1;
 		uint8_t						ImageInvertY		: 1;

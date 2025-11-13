@@ -22,9 +22,9 @@ namespace gpk
 		::gpk::cid_t		Root				= ::gpk::CID_INVALID;
 		::gpk::acid			Info				= {};
 		::gpk::acid			Input				= {};
-		::gpk::achar		TextDateTime		= {};
-		::gpk::achar		TextConnected		= {};
-		::gpk::achar		TextConnectedSince	= {};
+		::gpk::asc_t		TextDateTime		= {};
+		::gpk::asc_t		TextConnected		= {};
+		::gpk::asc_t		TextConnectedSince	= {};
 		::gpk::SInputBox	InputBox;
 	};
 
@@ -34,8 +34,8 @@ namespace gpk
 		::gpk::TUDPQueue	QueueReceived		= {};
 		::gpk::TQueueSend	QueueToSend			= {};
 
-		::gpk::vcs			RemoteIp			= "192.168.0.188";
-		::gpk::vcs			RemotePort			= "9865";
+		::gpk::vcst_t		RemoteIp			= "192.168.100.59";
+		::gpk::vcst_t		RemotePort			= "9865";
 
 		::gpk::SClientUI	UI					= {};
 
@@ -47,7 +47,7 @@ namespace gpk
 		}
 	};
 
-	::gpk::error_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcc & remote_ip, ::gpk::vcc & remote_port);
+	::gpk::error_t		loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port);
 	::gpk::error_t		clientConnect		(::gpk::SClient & client, ::gpk::SGUI & gui);
 	::gpk::error_t		clientUpdate		(::gpk::SClient & client, ::gpk::SGUI & gui);
 	::gpk::error_t		setupGUI			(::gpk::SClientUI & client, ::gpk::SGUI & gui);

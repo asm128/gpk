@@ -13,9 +13,9 @@ namespace gpk
 	};
 
 	struct SModel3 {
-		::gpk::n3f32	Scale		;
-		::gpk::n3f32	Rotation	;
-		::gpk::n3f32	Position	;
+		::gpk::n3f2_t	Scale		;
+		::gpk::n3f2_t	Rotation	;
+		::gpk::n3f2_t	Position	;
 	};
 #pragma pack(pop)
 } // namespace

@@ -8,8 +8,7 @@
 	,	"jsondb"		: { "path" : "../gpk_data/jsondb"	}
 	},
 	"application": 
-	{	
-		"brt": 
+	{	"brt": 
 		{	"listen_port"	: "9797"
 		,	"adapter"		: "0"
 		,	"process"		: 
@@ -27,10 +26,10 @@
 		},
 		"gpk_cgi_rest": 
 		{	"remote_port"	: "9797"
-		,	"remote_ip"		: "192.168.0.2"
+		,	"remote_ip"		: "192.168.100.59"
 		},
 		"test_udp_client": 
-		{	"remote_ip"		: "192.168.0.188"
+		{	"remote_ip"		: "192.168.100.59"
 		,	"remote_port"	: "9898"
 		},
 		"gpk_lobby": 

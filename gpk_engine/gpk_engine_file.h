@@ -20,7 +20,7 @@ namespace gpk
 			::gpk::resize(::gpk::min<const uint32_t>(ssizes), Ranges, Contents, Names);
 			gpk_necall(Ranges.push_back({Contents.size(), fileContents.size()})	, "Failed to store file: %s", toString(fileName).begin());
 			gpk_necall(Contents.append(fileContents)							, "Failed to store file: %s", toString(fileName).begin());
-			if(errored(itemIndex = Names.push_back(fileName))) {
+			if(failed(itemIndex = Names.push_back(fileName))) {
 				error_printf("Failed to store file: %s", toString(fileName).begin());
 				gpk_necs(Contents.resize(Ranges[Ranges.size() - 1].Offset));
 				gpk_necs(Ranges.resize(Ranges.size() - 1));

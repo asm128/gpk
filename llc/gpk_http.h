@@ -151,14 +151,14 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SHTTPAPIRequest {
-		::gpk::aobj<::gpk::vcc>					QueryStringElements			= {};
+		::gpk::aobj<::gpk::vcsc_t>				QueryStringElements			= {};
 		::gpk::aobj<::gpk::TKeyValConstString>	QueryStringKeyVals			= {};
-		::gpk::vcc								Ip							= {};
-		::gpk::vcc								Port						= {};
-		::gpk::vcc								Script						= {};
-		::gpk::vcc								Path						= {};
-		::gpk::vcc								QueryString					= {};
-		::gpk::vcc								ContentBody					= {};
+		::gpk::vcsc_t							Ip							= {};
+		::gpk::vcsc_t							Port						= {};
+		::gpk::vcsc_t							Script						= {};
+		::gpk::vcsc_t							Path						= {};
+		::gpk::vcsc_t							QueryString					= {};
+		::gpk::vcsc_t							ContentBody					= {};
 		::gpk::HTTP_METHOD						Method						= {};
 		bool									IsCGIEnviron				= false;
 	};

@@ -8,21 +8,21 @@
 
 namespace gpk
 {
-	typedef	::gpk::lmpod<::gpk::vcc, ::gpk::SCelestialBody>	SCelestialBodyMap;
+	typedef	::gpk::lmpod<::gpk::vcsc_t, ::gpk::SCelestialBody>	SCelestialBodyMap;
 
 	struct SPlanetarySystem {
 		::gpk::SCelestialBodyMap			Body;
 		::gpk::apod<::gpk::CELESTIAL_BODY>	Type;
-		::gpk::ai32							Parent;
+		::gpk::as2_t						Parent;
 
-		::gpk::error_t				Save			(::gpk::au8 & output)	const	{ 
+		::gpk::error_t				Save			(::gpk::au0_t & output)	const	{ 
 			gpk_necs(Body.Save(output));
 			gpk_necs(gpk::saveView(output, Type));
 			gpk_necs(gpk::saveView(output, Parent));
 			return 0;
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu8 & input)	{ 
+		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
 			gpk_necs(Body.Load(input));
 			gpk_necs(gpk::loadView(input, Type));
 			gpk_necs(gpk::loadView(input, Parent));
@@ -31,7 +31,7 @@ namespace gpk
 	};
 
 	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, const ::gpk::SJSONReader & jsonData);
-	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath);
+	::gpk::error_t			planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath);
 } // namespace
 
 #endif // GPK_PLANETARY_SYSTEM_H_23701

@@ -7,185 +7,155 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tVal, uint32_t _elementCount>
-	struct array_static	{
-		stacxpr	const uint32_t	SIZE	= _elementCount;
+	tpl_t_nu2 stct array_static	{
+		stxp		u2_c				N 	= 	_nu2;
+		tdfTTCnst(_t);
+		tydf		array_static<T, N>	TAStatic;
+		tydf		view<TCnst>			VCnst;
+		tydf		view<T>				V;
+		T			Storage	[N]			;
 
-		typedef	_tVal					T;
-		typedef array_static<T, SIZE>	TAStatic;
-		typedef	view<const T>			TConstView;
-		typedef	view<T>					TView;
+		inln	oper		view<T>			()								{ rtrn {Storage, N}; }
+		inxp	oper		view<TCnst>		()						csnx	{ rtrn {Storage, N}; }
 
-		T						Storage	[SIZE]	;
-
-		operator				view<T>			()															{ return {Storage, SIZE}; }
-		operator				view<const T>	()										const	noexcept	{ return {Storage, SIZE}; }
-
-		inline	const T&		operator[]		(uint32_t index)						const				{ gthrow_if(index >= SIZE, GPK_FMT_U32_GE_U32, (int32_t)index, (int32_t)SIZE); return Storage[index]; }
-		inline	T&				operator[]		(uint32_t index)											{ gthrow_if(index >= SIZE, GPK_FMT_U32_GE_U32, (int32_t)index, (int32_t)SIZE); return Storage[index]; }
+		inln	TCnst&		oper[]			(u2_t index)			cnst	{ gthrow_if(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
+		inln	T&			oper[]			(u2_t index)					{ gthrow_if(index >= N, GPK_FMT_GE_U2, index, N); rtrn Storage[index]; }
 		GPK_DEFAULT_OPERATOR(TAStatic
 			, (this->size() != other.size()) ? false
 			: (this->begin() == other.begin()) ? true
 			: ::gpk::equal(other.begin(), this->begin(), this->size())
 			);
-		//bool					operator!=		(const ::gpk::view<const T>& other)		const				{ return !operator==(other); }
-		//bool					operator==		(const ::gpk::view<const T>& other)		const				{
-		//	return (this->size() != other.size()) ? false
-		//		: (this->begin() == other.begin()) ? true
-		//		: ::gpk::equal(other.begin(), this->begin(), this->size())
-		//		;
-		//}
-		// Methods
-		inlcxpr	uint32_t		byte_count		()										const	noexcept	{ return uint32_t(SIZE * sizeof(T));	}
-		inlcxpr	uint32_t		bit_count		()										const	noexcept	{ return byte_count() * 8U;	}
+		inxp	u2_t		byte_count		()						csnx	{ rtrn N * szof(T);	}
+		inxp	u2_t		bit_count		()						csnx	{ rtrn byte_count() * 8U;	}
+		inln	view<u0_t>	u8				()						nxpt	{ rtrn view<T		>(Storage, byte_count()).u8		(); }	
+		inxp	view<u0_c>	u8				()						csnx	{ rtrn view<T		>(Storage, byte_count()).u8		(); }	
+		inxp	view<u0_c>	cu8				()						csnx	{ rtrn view<TCnst	>(Storage, byte_count()).cu8	(); }	
+		inln	view<sc_t>	c				()						nxpt	{ rtrn view<T		>(Storage, byte_count()).c		(); }
+		inxp	view<sc_c>	cc				()						csnx	{ rtrn view<TCnst	>(Storage, byte_count()).cc		(); }	
+		inxp	u2_c&		size			()						csnx	{ rtrn N; }
+		inln	T*			begin			()						nxpt	{ rtrn Storage;			}
+		inln	T*			end				()						nxpt	{ rtrn Storage + N;	}
+		inxp	TCnst*		begin			()						csnx	{ rtrn Storage;			}
+		inxp	TCnst*		end				()						csnx	{ rtrn Storage + N;	}
 
-		inlcxpr	view<uint8_t>	u0_t				()												noexcept	{ return {(uint8_t*)Storage, byte_count()};		}
-		inline	view<u0_c>		u0_t				()										const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
-		inlcxpr	view<u0_c>		cu8				()										const	noexcept	{ return {(const uint8_t*)Storage, byte_count()};	}
-		inline	view<sc_t>		c				()												noexcept	{ return {(sc_t*)Storage, byte_count()};			}
-		inlcxpr	view<sc_c>		cc				()										const	noexcept	{ return {(const sc_t*)Storage, byte_count()};		}
-
-		inlcxpr	const uint32_t&	size			()										const	noexcept	{ return SIZE; }
-
-		inline	T*				begin			()												noexcept	{ return Storage;			}
-		inline	T*				end				()												noexcept	{ return Storage + SIZE;	}
-		inlcxpr	const T*		begin			()										const	noexcept	{ return Storage;			}
-		inlcxpr	const T*		end				()										const	noexcept	{ return Storage + SIZE;	}
-
-		::gpk::error_t			slice			(TView & out, uint32_t offset, uint32_t count = (uint32_t)-1)				{
-			ree_if(offset > SIZE, GPK_FMT_U32_GT_U32, offset, (uint32_t)SIZE);
-			const uint32_t				newSize			= SIZE - offset;
-			if(count != (uint32_t)-1)
-				ree_if(count > newSize, GPK_FMT_U32_GT_U32, count, (uint32_t)newSize);
+		err_t				slice			(V & out, u2_t offset, u2_t count = (u2_t)-1)				{
+			ree_if(offset > N, GPK_FMT_GT_U2, offset, N);
+			u2_c					newSize			= N - offset;
+			if(count != (u2_t)-1)
+				ree_if(count > newSize, GPK_FMT_GT_U2, count, newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
-			return out.size();
+			rtrn out.size();
 		}
-		::gpk::error_t			slice			(TConstView & out, uint32_t offset, uint32_t count = (uint32_t)-1)	const	{
-			ree_if(offset > SIZE, GPK_FMT_U32_GT_U32, offset, (uint32_t)SIZE);
-			const uint32_t				newSize			= SIZE - offset;
-			if(count != (uint32_t)-1)
-				ree_if(count > newSize, GPK_FMT_U32_GT_U32, count, (uint32_t)newSize);
+		err_t				slice			(VCnst & out, u2_t offset, u2_t count = (u2_t)-1)	cnst	{
+			ree_if(offset > N, GPK_FMT_GT_U2, offset, N);
+			u2_c					newSize			= N - offset;
+			if(count != (u2_t)-1)
+				ree_if(count > newSize, GPK_FMT_GT_U2, count, newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
-			return out.size();
+			rtrn out.size();
 		}
 	};
 #pragma pack(pop)
+	tplTN2usng	asttc		= ::gpk::array_static<T, N>;
+	tplTN2usng	astatic		= ::gpk::array_static<T, N>;
 
-	tplt<tpnm T, uint32_t _elementCount>
-	using astatic	= ::gpk::array_static<T, _elementCount>;
+	tplN2uusng	astvcs		= ::gpk::astatic<::gpk::vcst_t	, N>;	tplN2uusng astaticvcs	= ::gpk::astvcs	<N>;
+	tplN2uusng	astvs		= ::gpk::astatic<::gpk::vs		, N>;	tplN2uusng astaticvs	= ::gpk::astvs	<N>;
 
-	tplt<uint32_t _count>	using astvcs	= ::gpk::astatic<::gpk::vcs	, _count>; tplt<uint32_t _count>	using astaticvcs	= ::gpk::astvcs	<_count>;
-	tplt<uint32_t _count>	using astvs		= ::gpk::astatic<::gpk::vs	, _count>; tplt<uint32_t _count>	using astaticvs		= ::gpk::astvs	<_count>;
+	tplN2uusng	astb8_t		= ::gpk::astatic<b8_t, N>; tplN2uusng	astb8_c	= const ::gpk::astb8_t<N>; 
+	tplN2uusng	astuc_t		= ::gpk::astatic<uc_t, N>; tplN2uusng	astuc_c	= const ::gpk::astuc_t<N>; tplN2uusng astuc 	= ::gpk::astatic<uc_t, N>; tplN2uusng astaticuc 	= ::gpk::astuc 	<N>; tplN2uusng astuchar	= ::gpk::astatic<uc_t, N>;
+	tplN2uusng	astsc_t		= ::gpk::astatic<sc_t, N>; tplN2uusng	astsc_c	= const ::gpk::astsc_t<N>; tplN2uusng astc		= ::gpk::astatic<sc_t, N>; tplN2uusng astaticc		= ::gpk::astc	<N>; tplN2uusng astchar		= ::gpk::astatic<sc_t, N>;
+	tplN2uusng	astu0_t		= ::gpk::astatic<u0_t, N>; tplN2uusng	astu0_c	= const ::gpk::astu0_t<N>; tplN2uusng astu8 	= ::gpk::astatic<u0_t, N>; tplN2uusng astaticu8 	= ::gpk::astu8 	<N>;
+	tplN2uusng	astu1_t		= ::gpk::astatic<u1_t, N>; tplN2uusng	astu1_c	= const ::gpk::astu1_t<N>; tplN2uusng astu16	= ::gpk::astatic<u1_t, N>; tplN2uusng astaticu16	= ::gpk::astu16	<N>;
+	tplN2uusng	astu2_t		= ::gpk::astatic<u2_t, N>; tplN2uusng	astu2_c	= const ::gpk::astu2_t<N>; tplN2uusng astu32	= ::gpk::astatic<u2_t, N>; tplN2uusng astaticu32	= ::gpk::astu32	<N>;
+	tplN2uusng	astu3_t		= ::gpk::astatic<u3_t, N>; tplN2uusng	astu3_c	= const ::gpk::astu3_t<N>; tplN2uusng astu64	= ::gpk::astatic<u3_t, N>; tplN2uusng astaticu64	= ::gpk::astu64	<N>;
+	tplN2uusng	asts0_t		= ::gpk::astatic<s0_t, N>; tplN2uusng	asts0_c	= const ::gpk::asts0_t<N>; tplN2uusng asti8 	= ::gpk::astatic<s0_t, N>; tplN2uusng astatici8 	= ::gpk::asti8 	<N>;
+	tplN2uusng	asts1_t		= ::gpk::astatic<s1_t, N>; tplN2uusng	asts1_c	= const ::gpk::asts1_t<N>; tplN2uusng asti16	= ::gpk::astatic<s1_t, N>; tplN2uusng astatici16	= ::gpk::asti16	<N>;
+	tplN2uusng	asts2_t		= ::gpk::astatic<s2_t, N>; tplN2uusng	asts2_c	= const ::gpk::asts2_t<N>; tplN2uusng asti32	= ::gpk::astatic<s2_t, N>; tplN2uusng astatici32	= ::gpk::asti32	<N>;
+	tplN2uusng	asts3_t		= ::gpk::astatic<s3_t, N>; tplN2uusng	asts3_c	= const ::gpk::asts3_t<N>; tplN2uusng asti64	= ::gpk::astatic<s3_t, N>; tplN2uusng astatici64	= ::gpk::asti64	<N>;
+	tplN2uusng	astf2_t		= ::gpk::astatic<f2_t, N>; tplN2uusng	astf2_c	= const ::gpk::astf2_t<N>; tplN2uusng astf32	= ::gpk::astatic<f2_t, N>; tplN2uusng astaticf32	= ::gpk::astf32	<N>;
+	tplN2uusng	astf3_t		= ::gpk::astatic<f3_t, N>; tplN2uusng	astf3_c	= const ::gpk::astf3_t<N>; tplN2uusng astf64	= ::gpk::astatic<f3_t, N>; tplN2uusng astaticf64	= ::gpk::astf64	<N>;
 
-	tplt<uint32_t _count>	using astc		= ::gpk::astatic<sc_t     , _count>; tplt<uint32_t _count>	using astaticc		= ::gpk::astc	<_count>; tplt<uint32_t _count>	using astchar	= ::gpk::astatic<sc_t    , _count>;
-	tplt<uint32_t _count>	using astuc 	= ::gpk::astatic<uc_t  , _count>; tplt<uint32_t _count>	using astaticuc 	= ::gpk::astuc 	<_count>; tplt<uint32_t _count>	using astuchar	= ::gpk::astatic<uc_t , _count>;
-	tplt<uint32_t _count>	using astu8 	= ::gpk::astatic<uint8_t  , _count>; tplt<uint32_t _count>	using astaticu8 	= ::gpk::astu8 	<_count>;
-	tplt<uint32_t _count>	using astu16	= ::gpk::astatic<uint16_t , _count>; tplt<uint32_t _count>	using astaticu16	= ::gpk::astu16	<_count>;
-	tplt<uint32_t _count>	using astu32	= ::gpk::astatic<uint32_t , _count>; tplt<uint32_t _count>	using astaticu32	= ::gpk::astu32	<_count>;
-	tplt<uint32_t _count>	using astu64	= ::gpk::astatic<uint64_t , _count>; tplt<uint32_t _count>	using astaticu64	= ::gpk::astu64	<_count>;
-	tplt<uint32_t _count>	using asti8 	= ::gpk::astatic<int8_t   , _count>; tplt<uint32_t _count>	using astatici8 	= ::gpk::asti8 	<_count>;
-	tplt<uint32_t _count>	using asti16	= ::gpk::astatic<int16_t  , _count>; tplt<uint32_t _count>	using astatici16	= ::gpk::asti16	<_count>;
-	tplt<uint32_t _count>	using asti32	= ::gpk::astatic<int32_t  , _count>; tplt<uint32_t _count>	using astatici32	= ::gpk::asti32	<_count>;
-	tplt<uint32_t _count>	using asti64	= ::gpk::astatic<int64_t  , _count>; tplt<uint32_t _count>	using astatici64	= ::gpk::asti64	<_count>;
-	tplt<uint32_t _count>	using astf32	= ::gpk::astatic<f2_t, _count>; tplt<uint32_t _count>	using astaticf32	= ::gpk::astf32	<_count>;
-	tplt<uint32_t _count>	using astf64	= ::gpk::astatic<f3_t, _count>; tplt<uint32_t _count>	using astaticf64	= ::gpk::astf64	<_count>;
-
-	tplt<uint32_t _count>	using astvcc	= ::gpk::astatic<::gpk::vcc		, _count>; tplt<uint32_t _count>	using astaticvcc	= ::gpk::astvcc  <_count>;
-	tplt<uint32_t _count>	using astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, _count>; tplt<uint32_t _count>	using astaticvcuc 	= ::gpk::astvcuc <_count>;
-	tplt<uint32_t _count>	using astvcu8 	= ::gpk::astatic<::gpk::vcu8 	, _count>; tplt<uint32_t _count>	using astaticvcu8 	= ::gpk::astvcu8 <_count>;
-	tplt<uint32_t _count>	using astvcu16	= ::gpk::astatic<::gpk::vcu16	, _count>; tplt<uint32_t _count>	using astaticvcu16	= ::gpk::astvcu16<_count>;
-	tplt<uint32_t _count>	using astvcu32	= ::gpk::astatic<::gpk::vcu32	, _count>; tplt<uint32_t _count>	using astaticvcu32	= ::gpk::astvcu32<_count>;
-	tplt<uint32_t _count>	using astvcu64	= ::gpk::astatic<::gpk::vcu64	, _count>; tplt<uint32_t _count>	using astaticvcu64	= ::gpk::astvcu64<_count>;
-	tplt<uint32_t _count>	using astvci8 	= ::gpk::astatic<::gpk::vci8 	, _count>; tplt<uint32_t _count>	using astaticvci8 	= ::gpk::astvci8 <_count>;
-	tplt<uint32_t _count>	using astvci16	= ::gpk::astatic<::gpk::vci16	, _count>; tplt<uint32_t _count>	using astaticvci16	= ::gpk::astvci16<_count>;
-	tplt<uint32_t _count>	using astvci32	= ::gpk::astatic<::gpk::vci32	, _count>; tplt<uint32_t _count>	using astaticvci32	= ::gpk::astvci32<_count>;
-	tplt<uint32_t _count>	using astvci64	= ::gpk::astatic<::gpk::vci64	, _count>; tplt<uint32_t _count>	using astaticvci64	= ::gpk::astvci64<_count>;
-	tplt<uint32_t _count>	using astvcf32	= ::gpk::astatic<::gpk::vcf32	, _count>; tplt<uint32_t _count>	using astaticvcf32	= ::gpk::astvcf32<_count>;
-	tplt<uint32_t _count>	using astvcf64	= ::gpk::astatic<::gpk::vcf64	, _count>; tplt<uint32_t _count>	using astaticvcf64	= ::gpk::astvcf64<_count>;
-
-	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	size		(::gpk::astatic<T, nSize> /*viewToTest*/)	noexcept	{ return uint32_t(nSize);				}
-	tplt <tpnm T, size_t nSize>	stincxp	uint32_t	byte_count	(::gpk::astatic<T, nSize> viewToTest)		noexcept	{ return uint32_t(sizeof(T) * nSize);	}
+	tplN2uusng	astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, N>; tplN2uusng astaticvcuc 	= ::gpk::astvcuc <N>;
+	tplN2uusng	astvcc		= ::gpk::astatic<::gpk::vcsc_t	, N>; tplN2uusng astaticvcc		= ::gpk::astvcc  <N>;
+	tplN2uusng	astvcu8 	= ::gpk::astatic<::gpk::vcu0_t 	, N>; tplN2uusng astaticvcu8 	= ::gpk::astvcu8 <N>;
+	tplN2uusng	astvcu16	= ::gpk::astatic<::gpk::vcu16	, N>; tplN2uusng astaticvcu16	= ::gpk::astvcu16<N>;
+	tplN2uusng	astvcu32	= ::gpk::astatic<::gpk::vcu32	, N>; tplN2uusng astaticvcu32	= ::gpk::astvcu32<N>;
+	tplN2uusng	astvcu64	= ::gpk::astatic<::gpk::vcu64	, N>; tplN2uusng astaticvcu64	= ::gpk::astvcu64<N>;
+	tplN2uusng	astvci8 	= ::gpk::astatic<::gpk::vcs0_t 	, N>; tplN2uusng astaticvci8 	= ::gpk::astvci8 <N>;
+	tplN2uusng	astvci16	= ::gpk::astatic<::gpk::vci16	, N>; tplN2uusng astaticvci16	= ::gpk::astvci16<N>;
+	tplN2uusng	astvci32	= ::gpk::astatic<::gpk::vci32	, N>; tplN2uusng astaticvci32	= ::gpk::astvci32<N>;
+	tplN2uusng	astvci64	= ::gpk::astatic<::gpk::vci64	, N>; tplN2uusng astaticvci64	= ::gpk::astvci64<N>;
+	tplN2uusng	astvcf32	= ::gpk::astatic<::gpk::vcf32	, N>; tplN2uusng astaticvcf32	= ::gpk::astvcf32<N>;
+	tplN2uusng	astvcf64	= ::gpk::astatic<::gpk::vcf64	, N>; tplN2uusng astaticvcf64	= ::gpk::astvcf64<N>;
+	
+	tplTN2sinx	u2_t	size		(::gpk::astatic<T, N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N);				}
+	tplTN2sinx	u2_t	byte_count	(::gpk::astatic<T, N> viewToTest)		nxpt	{ rtrn u2_t(sizeof(T) * N);	}
 
 	// Is this really worth it?
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astc	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	//tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astuc 	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astu8 	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astu16	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astu32	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astu64	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(asti8 	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(asti16	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(asti32	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(asti64	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astf32	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astf64	<_elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
+	tplN2usinx	u2_t	size(astc	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	//tplN2usinx	u2_t	size(astuc 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu8 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu16	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu32	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu64	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(asti8 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(asti16	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(asti32	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(asti64	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astf32	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astf64	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcc	 < _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	//tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcuc < _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcu8 < _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcu16< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcu32< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcu64< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvci8 < _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvci16< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvci32< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvci64< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcf32< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
-	tplt<uint32_t _elementCount>	stincxp	uint32_t	size(astvcf64< _elementCount> /*viewToTest*/)	noexcept	{ return uint32_t(_elementCount); }
+	tplN2usinx	u2_t	size(astvcc	 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	//tplN2usinx	u2_t	size(astvcuc <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcu8 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcu16<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcu32<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcu64<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvci8 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvci16<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvci32<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvci64<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcf32<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcf64<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 
-	tplt<tpnm T, size_t _nSize>
-	::gpk::error_t			find		(const T & element, const ::gpk::astatic<const T, _nSize>& target, uint32_t offset = 0)	{
-		return ::gpk::find(element, ::gpk::view<const T>{target}, offset);
-	}
-
-
-	stainli gpk::astchar<12>	str			(f2_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
-	stainli gpk::astchar<22>	str			(f3_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%f", arg); return dest; } 
-	stainli gpk::astchar<7>		str			(int16_t	arg) { gpk::astchar< 7> dest = {}; sprintf_s(dest.Storage, "%i", arg); return dest; } 
-	stainli gpk::astchar<7>		str			(uint16_t	arg) { gpk::astchar< 7> dest = {}; sprintf_s(dest.Storage, "%u", arg); return dest; } 
-	stainli gpk::astchar<12>	str			(int32_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_I32, arg); return dest; } 
-	stainli gpk::astchar<22>	str			(int64_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_I64, arg); return dest; } 
-	stainli gpk::astchar<12>	str			(uint32_t	arg) { gpk::astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U32, arg); return dest; } 
-	stainli gpk::astchar<22>	str			(uint64_t	arg) { gpk::astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U64, arg); return dest; } 
-
-	stacxpr	gpk::astchar<5 >	str			(uint8_t	arg) { 
-		return (arg >= 100) ? gpk::astchar<5>
-				{ digit<2>(arg)
-				, digit<1>(arg)
-				, digit<0>(arg)
-				, 0
-				}
-			: (arg >= 10) ? gpk::astchar<5>
-				{ digit<1>(arg)
-				, digit<0>(arg)
-				, 0
-				}
-			: gpk::astchar<5>
-				{ digit<0>(arg)
-				, 0
-				}
+	tplTN2sinx	err_t	find		(cnst T & element, cnst astatic<cnst T, N> & target, u2_t offset = 0)	{ rtrn ::gpk::find(element, ::gpk::view<cnst T>{target}, offset); }
+	stin astchar< 7>	str			(u1_t arg)	{ astchar< 7> dest = {}; sprintf_s(dest.Storage, "%u" , arg); rtrn dest; }
+	stin astchar<12>	str			(u2_t arg)	{ astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U2, arg); rtrn dest; }
+	stin astchar<22>	str			(u3_t arg)	{ astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }
+	stin astchar< 7>	str			(s1_t arg)	{ astchar< 7> dest = {}; sprintf_s(dest.Storage, "%i", arg); rtrn dest; }
+	stin astchar<12>	str			(s2_t arg)	{ astchar<12> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_S2, arg); rtrn dest; }
+	stin astchar<22>	str			(s3_t arg)	{ astchar<22> dest = {}; sprintf_s(dest.Storage, "%" GPK_FMT_U3, arg); rtrn dest; }
+	stin astchar<12>	str			(f2_t arg)	{ astchar<12> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
+	stin astchar<22>	str			(f3_t arg)	{ astchar<22> dest = {}; sprintf_s(dest.Storage, "%f", arg); rtrn dest; }
+	stxp astchar<5 >	str			(u0_t arg) {
+		rtrn	(arg >= 100) ?	astchar<5>{digit<2>(arg), digit<1>(arg), digit<0>(arg), 0}
+			:	(arg >=  10) ?	astchar<5>{digit<1>(arg), digit<0>(arg), 0}
+			:					astchar<5>{digit<0>(arg), 0}
 			;
 	}
-	stacxpr	gpk::astchar<5 >	str			(int8_t		arg) { 
-	return (arg >= 0) ? str(uint8_t(arg))
-		: (arg <= -100) ? gpk::astchar<5>
-			{ '-'
-			, ::gpk::digit<2>(-arg)
-			, ::gpk::digit<1>(-arg)
-			, ::gpk::digit<0>(-arg)
-			, 0
-			}
-		: (arg <= -10) ? gpk::astchar<5>
-			{ ::gpk::digit<1>(-arg)
-			, ::gpk::digit<0>(-arg)
-			, 0
-			}
-		: gpk::astchar<5>
-			{ ::gpk::digit<0>(-arg)
-			, 0
-			}
-		;
+	stxp astchar<5 >	str			(s0_t arg) {
+		rtrn	(arg >=    0) ?	str(u0_t(arg))
+			:	(arg <= -100) ?	astchar<5>{'-', digit<2>((int16_t)-arg), digit<1>((int16_t)-arg), digit<0>((int16_t)-arg)}
+			:	(arg <=  -10) ?	astchar<5>{'-', digit<1>((int16_t)-arg), digit<0>((int16_t)-arg)}
+			:					astchar<5>{'-', digit<0>((int16_t)-arg)}
+			;
 	}
 } // namespace
+
+#define GPK_USING_ASTATIC()					\
+	usng	::gpk::astb8_t, ::gpk::astb8_c	\
+		,	::gpk::astuc_t, ::gpk::astuc_c	\
+		,	::gpk::astsc_t, ::gpk::astsc_c	\
+		,	::gpk::astu0_t, ::gpk::astu0_c	\
+		,	::gpk::astu1_t, ::gpk::astu1_c	\
+		,	::gpk::astu2_t, ::gpk::astu2_c	\
+		,	::gpk::astu3_t, ::gpk::astu3_c	\
+		,	::gpk::asts0_t, ::gpk::asts0_c	\
+		,	::gpk::asts1_t, ::gpk::asts1_c	\
+		,	::gpk::asts2_t, ::gpk::asts2_c	\
+		,	::gpk::asts3_t, ::gpk::asts3_c	\
+		,	::gpk::astf2_t, ::gpk::astf2_c	\
+		,	::gpk::astf3_t, ::gpk::astf3_c
 
 #endif // GPK_ARRAY_STATIC_H_23627

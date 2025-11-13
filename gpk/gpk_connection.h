@@ -42,11 +42,11 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SUDPMessage {
-		::gpk::au8							Payload		;
+		::gpk::au0_t						Payload		;
 		uint64_t							Time		;
 		::gpk::SUDPCommand					Command		;
 		uint8_t								RetryCount	;
-		::gpk::au64							Hashes		;
+		::gpk::au3_t						Hashes		;
 	};
 
 	struct SUDPClientQueue {
@@ -65,7 +65,7 @@ namespace gpk
 	struct SUDPConnection {
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
-		::gpk::SIPv4End				Address						= {};	// Local for servers, remote for clients
+		::gpk::SIPv4End						Address						= {};	// Local for servers, remote for clients
 		uint64_t							LastPing					= 0;
 		uint64_t							FirstPing					= 0;
 		uint64_t							KeyPing						= 0;
@@ -75,7 +75,7 @@ namespace gpk
 	struct STCPConnection {
 		::gpk::auto_socket_close			Socket						;
 		::gpk::SUDPClientQueue				Queue						= {};
-		::gpk::SIPv4End				Address						= {};
+		::gpk::SIPv4End						Address						= {};
 		uint64_t							LastPing					= 0;
 		uint64_t							FirstPing					= 0;
 		uint64_t							KeyPing						= 0;
@@ -86,13 +86,13 @@ namespace gpk
 
 	::gpk::error_t						connectionPayloadCollect	(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage> & receivedMessages);
 	::gpk::error_t						connectionSendQueue			(::gpk::SUDPConnection & client, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSent, ::gpk::apobj<::gpk::SUDPMessage>& messageCacheSend);
-	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au8 & receiveBuffer);
-	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
-	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vci8 & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
-		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
+	::gpk::error_t						connectionHandleCommand		(::gpk::SUDPConnection & client, ::gpk::SUDPCommand & command, ::gpk::au0_t & receiveBuffer);
+	::gpk::error_t						connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcu0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0);
+	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcs0_t & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
-	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, const ::gpk::vcc & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
-		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu8*)&data, bEncrypted, bCompress, retryCount);
+	stainli	::gpk::error_t				connectionPushData			(::gpk::SUDPConnection & client, ::gpk::SUDPClientQueue & queue, ::gpk::vcsc_c & data, bool bEncrypted = true, bool bCompress = true, uint8_t retryCount = 0) {
+		return ::gpk::connectionPushData(client, queue, *(const ::gpk::vcu0_t*)&data, bEncrypted, bCompress, retryCount);
 	}
 
 	tplt<tpnm _tWithLoad, tpnm _tState> 
@@ -107,7 +107,7 @@ namespace gpk
 			const ::gpk::SUDPMessage				& message					= *clientQueue[iMessage];
 			switch(message.Command.Command) {
 			case ::gpk::ENDPOINT_COMMAND_PAYLOAD: {
-				::gpk::vcu8								payloadInput				= {(const uint8_t*)message.Payload.begin(), message.Payload.size()};
+				::gpk::vcu0_t							payloadInput				= {(const uint8_t*)message.Payload.begin(), message.Payload.size()};
 				gpk_necs(eventCache.Load(payloadInput));
 				switch(message.Command.Type) {
 				case ::gpk::ENDPOINT_COMMAND_TYPE_REQUEST	: 
@@ -147,7 +147,7 @@ namespace gpk
 	}
 
 	typedef	::gpk::apobj<::gpk::SUDPMessage>	TUDPQueue;
-	typedef	::gpk::apobj<::gpk::au8>			TQueueSend;
+	typedef	::gpk::apobj<::gpk::au0_t>			TQueueSend;
 }
 
 #endif // GPK_CONNECTION_H_23627

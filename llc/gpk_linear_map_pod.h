@@ -45,13 +45,13 @@ namespace gpk
 			return Keys.push_back(key); 
 		}
 
-		::gpk::error_t		Save			(::gpk::au8 & output) const { 
+		::gpk::error_t		Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::saveView(output, Keys));
 			gpk_necs(gpk::saveView(output, Values));
 			return 0;
 		}
 
-		::gpk::error_t		Load			(::gpk::vcu8 & input) {
+		::gpk::error_t		Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, Keys));
 			gpk_necs(gpk::loadView(input, Values));
 			return 0; 

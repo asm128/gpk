@@ -25,7 +25,7 @@ namespace gpk
 	typedef ::gpk::FEventHandlerConst<EVENT_SCREEN>	FScreenEventConst;
 
 	struct SEventArgsScreenCreate {
-		::gpk::n2u16		Size;
+		::gpk::n2u1_t		Size;
 #ifdef GPK_WINDOWS
 		CREATESTRUCT		PlatformDetail;
 #endif
@@ -40,8 +40,8 @@ namespace gpk
 	stainli	::gpk::error_t	eventEnqueueScreenShow			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Show		, key); }
 	stainli	::gpk::error_t	eventEnqueueScreenHide			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Hide		, key); }
 	stainli	::gpk::error_t	eventEnqueueScreenConstraints	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Constraints, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenMove			(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Move		, coord); }
-	stainli	::gpk::error_t	eventEnqueueScreenResize		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 size)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Resize		, size); }
+	stainli	::gpk::error_t	eventEnqueueScreenMove			(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Move		, coord); }
+	stainli	::gpk::error_t	eventEnqueueScreenResize		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t size)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Resize		, size); }
 } // namespace 
 
 #endif // GPK_EVENT_SCREEN_H_23627

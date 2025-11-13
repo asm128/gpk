@@ -11,8 +11,8 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint2 { ::gpk::n2f32 Position; _tColor Color; };
-	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint3 { ::gpk::n3f32 Position; _tColor Color; };
+	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint2 { ::gpk::n2f2_t Position; _tColor Color; };
+	tplt<tpnm _tAxis, tpnm _tColor> struct SLightPoint3 { ::gpk::n3f2_t Position; _tColor Color; };
 
 	struct SImageTag {
 		 COLOR_TYPE	ColorType;
@@ -23,7 +23,7 @@ namespace gpk
 
 	struct SGeometryQuads {
 		::gpk::apod<::gpk::tri3f32>	Triangles;
-		::gpk::apod<::gpk::n3f32>	Normals;
+		::gpk::apod<::gpk::n3f2_t>	Normals;
 		::gpk::apod<::gpk::tri2f32>	TextureCoords;
 	};
 
@@ -78,22 +78,22 @@ namespace gpk
 		uint32_t							Image			= (uint32_t)-1;
 		uint32_t							Material		= (uint32_t)-1;
 		::gpk::SGeometryGroupModes			Modes			= {};
-		::gpk::rangeu32						Slice			= {};
+		::gpk::rangeu2_t					Slice			= {};
 	};
 #pragma pack(pop)
 
 	struct SModelNode {
-		::gpk::ai32							VertexBuffers	= {};
-		::gpk::ai32							Images			= {};
+		::gpk::as2_t						VertexBuffers	= {};
+		::gpk::as2_t						Images			= {};
 		int32_t								IndexBuffer		= -1;
 		::gpk::SGeometryGroupModes			Modes			= {};
-		::gpk::rangeu16						RangeIndex		= {};
-		::gpk::rangeu16						RangeVertex		= {};
+		::gpk::rangeu1_t					RangeIndex		= {};
+		::gpk::rangeu1_t					RangeVertex		= {};
 	};
 
 	struct SModelQuads {
 		::gpk::apod<::gpk::tri3f32>			Triangles;
-		::gpk::apod<::gpk::n3f32>			Normals;
+		::gpk::apod<::gpk::n3f2_t>			Normals;
 		::gpk::apod<::gpk::tri2f32>			TextureCoords;
 		::gpk::apod<::gpk::SGeometryGroup>	GeometryGroups;
 	};
@@ -125,22 +125,22 @@ namespace gpk
 
 #ifndef GPK_ATMEL
 
-	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryQuads & geometry, ::gpk::n2u16 gridSize, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
+	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, ::gpk::n3f2_c & scale);
+	::gpk::error_t	geometryBuildGrid		(::gpk::SGeometryQuads & geometry, ::gpk::n2u1_t gridSize, ::gpk::n2f2_t gridCenter, ::gpk::n3f2_c & scale);
 
-	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
-	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildHelixHalf	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildTender		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter, const ::gpk::n3f32 & scale);
-	::gpk::error_t	geometryBuildFigure0	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
-	::gpk::error_t	geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
+	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter);
+	::gpk::error_t	geometryBuildCylinder	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radiusYMin, float radiusYMax, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	::gpk::error_t	geometryBuildHelixHalf	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	::gpk::error_t	geometryBuildHelix		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	::gpk::error_t	geometryBuildTender		(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter, ::gpk::n3f2_c & scale);
+	::gpk::error_t	geometryBuildFigure0	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter);
+	::gpk::error_t	geometryBuildFigure1	(::gpk::SGeometryQuads & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter);
 
-	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, const ::gpk::n3f32 & gridCenter);
-	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f32 & scale, const ::gpk::n3f32 & translation);
+	::gpk::error_t	geometryBuildSphere		(::gpk::SGeometryTriangles & geometry, uint32_t stacks, uint32_t slices, float radius, ::gpk::n3f2_c & gridCenter);
+	::gpk::error_t	geometryBuildCube		(::gpk::SGeometryQuads & geometry, const ::gpk::n3f2_t & scale, const ::gpk::n3f2_t & translation);
 
 	::gpk::error_t	geometryBuildTileListFromImage	(::gpk::gc8bgra image, ::gpk::apod<STile> & out_tiles, uint32_t imagePitch = 0);
-	::gpk::error_t	geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f32 gridCenter, const ::gpk::n3f32 & scale);
+	::gpk::error_t	geometryBuildGridFromTileList	(::gpk::SGeometryQuads & geometry, ::gpk::grid<const ::gpk::STile> image, ::gpk::n2f2_t gridCenter, const ::gpk::n3f2_t & scale);
 
 #endif
 
@@ -152,7 +152,7 @@ namespace gpk
 	};
 
 	struct SAABBGeometry {
-		::gpk::n3f32	Vertices	[8]			= {};
+		::gpk::n3f2_t	Vertices	[8]			= {};
 	};
 #pragma pack(pop)
 

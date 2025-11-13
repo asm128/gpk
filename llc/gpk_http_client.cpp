@@ -17,7 +17,7 @@
 
 using gpk::sc_t;
 
-::gpk::error_t			gpk::urlDecode					(::gpk::vcc urlToDecode, ::gpk::apod<sc_t> & decoded)		{
+::gpk::error_t			gpk::urlDecode					(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded)		{
 	uint32_t					decodedCharacters				= 0;
 	for(uint32_t iChar = 0; iChar < urlToDecode.size() - 2; ++iChar) {
 		const sc_t					currentChar						= urlToDecode[iChar];
@@ -34,7 +34,7 @@ using gpk::sc_t;
 	return decodedCharacters;
 }
 
-static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcc & body, ::gpk::apod<sc_t> & joined)		{
+static	::gpk::error_t	httpRequestChunkedJoin			(const ::gpk::vcsc_t & body, ::gpk::apod<sc_t> & joined)		{
 	uint32_t									iBegin							= 0;
 	uint32_t									iStop							= 0;
 	while(iBegin < body.size()) {
@@ -62,10 +62,10 @@ static	::gpk::error_t	httpClientRequestConstruct
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcc		& body
+	,	const ::gpk::vcsc_t		& body
 	,	::gpk::apod<sc_t>		& out_request
 	) {
-	::gpk::vcc						strMethod						= ::gpk::get_value_label(method);
+	::gpk::vcsc_t						strMethod						= ::gpk::get_value_label(method);
 	out_request					= strMethod;
 	out_request.push_back(' ');
 	out_request.append(path);
@@ -98,28 +98,28 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	,	const ::gpk::vcs		& hostName
 	,	const ::gpk::vcs		& path
 	,	const ::gpk::vcs		& contentType
-	,	const ::gpk::vcc		& body
+	,	const ::gpk::vcsc_t		& body
 	,	::gpk::SHTTPResponse	& out_received
 	) {
-	::gpk::achar				bytesRequest;
+	::gpk::asc_t				bytesRequest;
 	gpk_necall(::httpClientRequestConstruct(method, hostName, path, contentType, body, bytesRequest), "%s", "unknown error");
-	const ::gpk::SIPv4End							& address						= clientToConnect;
+	const ::gpk::SIPv4End		& address						= clientToConnect;
 
-	addrinfo									hints							= {};
-    hints.ai_family							= AF_UNSPEC;
-    hints.ai_socktype						= SOCK_STREAM;
-	sc_t										addr[32]						= {};
-	sc_t										port[32]						= {};
+	addrinfo					hints							= {};
+    hints.ai_family			= AF_UNSPEC;
+    hints.ai_socktype		= SOCK_STREAM;
+	sc_t						addr[32]						= {};
+	sc_t						port[32]						= {};
 	snprintf(addr, ::gpk::size(addr) - 2, "%u.%u.%u.%u", GPK_IPV4_EXPAND_IP(address));
 	snprintf(port, ::gpk::size(port) - 2, "%u", (0 == address.Port) ? 80 : address.Port);
-	addrinfo									* servinfo						= 0;
-    int32_t										rv								= getaddrinfo(addr, port, &hints, &servinfo);
+	addrinfo					* servinfo						= 0;
+    int32_t						rv								= getaddrinfo(addr, port, &hints, &servinfo);
 #if defined(GPK_ESP32) || defined(GPK_ARDUINO)
 	ree_if(0 != rv, "getaddrinfo: %i.", rv);
 #else
 	ree_if(0 != rv, "getaddrinfo: %i-%s.", rv, gai_strerror(rv));
 #endif
-	::gpk::auto_socket_close					sockfd;
+	::gpk::auto_socket_close	sockfd;
 
     // loop through all the results and connect to the first we can
 	addrinfo									* currentServinfo				= 0;
@@ -207,7 +207,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 #endif
 	}
 
-	::gpk::vcc						contentReceived					= {};
+	::gpk::vcsc_t						contentReceived					= {};
 	if(stopOfHeader >= buf.size() - 4) {
 		info_printf("Fixed header %u stop to position %u.", (uint32_t)stopOfHeader, buf.size());
 		stopOfHeader							= buf.size();
@@ -216,10 +216,10 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	for(uint32_t iByte = 0, sizeHeader = stopOfHeader; iByte < sizeHeader; ++iByte)
 		buf[iByte]								= (int8_t)::tolower(buf[iByte]);
 
-	::gpk::aobj<::gpk::vcc>			headerLines;
+	::gpk::aobj<::gpk::vcsc_t>			headerLines;
 	out_received.HeaderData					= {buf.begin(), (uint32_t)stopOfHeader};
 
-	::gpk::split(::gpk::vcc{out_received.HeaderData}, '\n', headerLines);
+	::gpk::split(::gpk::vcsc_t{out_received.HeaderData}, '\n', headerLines);
 	bChunked						= false;
 	out_received.Headers.resize(headerLines.size());
 	for(uint32_t iLine = 0; iLine < headerLines.size(); ++iLine) {
@@ -251,7 +251,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	}
 
 	::gpk::error_t							offsetStopOfHeader				= ::gpk::find_sequence_pod(::gpk::vcs{"\r\n\r\n"}, {contentReceived.begin(), contentReceived.size()});
-	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcc{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
+	out_received.Body					= (0 == offsetStopOfHeader) ? ::gpk::vcsc_t{contentReceived.begin() + 4, contentReceived.size() - 4} : contentReceived;
 	return 0;
 }
 
@@ -261,7 +261,7 @@ void *					get_in_addr						(sockaddr *sa)			{ return (sa->sa_family == AF_INET)
 	,	const ::gpk::vcs	& hostName
 	,	const ::gpk::vcs	& path
 	,	const ::gpk::vcs	& contentType
-	,	const ::gpk::vcc	& body
+	,	const ::gpk::vcsc_t	& body
 	,	::gpk::apod<sc_t>	& out_received
 	) {
 	::gpk::SHTTPResponse						response;

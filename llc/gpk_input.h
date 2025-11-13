@@ -10,13 +10,13 @@ namespace gpk
 // TODO: REDO (this is heavily outdated and I think it should be heavily improved)
 #pragma pack(push, 1)
 	struct SInputJoystick {
-		::gpk::n2i16				Position			= {};
-		::gpk::n3i16				Deltas				= {};
+		::gpk::n2s1_t				Position			= {};
+		::gpk::n3s1_t				Deltas				= {};
 		uint32_t					ButtonState			= 0;
 	};
 	struct SInputMouse {
-		::gpk::n2i16				Position			= {};
-		::gpk::n3i16				Deltas				= {};
+		::gpk::n2s1_t				Position			= {};
+		::gpk::n3s1_t				Deltas				= {};
 		::gpk::astu8 <32>			ButtonState			= {};
 		::gpk::astf64<32>			ButtonTime			= {};
 		::gpk::asti64<32>			ButtonStrength		= {};
@@ -31,8 +31,8 @@ namespace gpk
 	struct SInput {
 		::gpk::apod<SInputKeyboard>	StateKeyboard		= {};
 		::gpk::apod<SInputMouse>	StateMouse			= {};
-		::gpk::af32					TimeStampKeyboard	= {};
-		::gpk::af32					TimeStampMouse		= {};
+		::gpk::af2_t				TimeStampKeyboard	= {};
+		::gpk::af2_t				TimeStampMouse		= {};
 
 		::gpk::apod<SInputJoystick>	JoystickPrevious	= {};
 		::gpk::apod<SInputJoystick>	JoystickCurrent		= {};

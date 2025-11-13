@@ -18,7 +18,7 @@ namespace gpk
 		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize)..., 0};
 		for(uint32_t i = 0; i < ::gpk::size(results); ++i)
-			if(errored(results[i])) {
+			if(failed(results[i])) {
 				error_printf("Failed to set container %i to size: %i. Out of memory?", i, (int32_t)newSize);
 				int32_t							j						= 0;
 				const int32_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
@@ -33,7 +33,7 @@ namespace gpk
 		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize,{})..., 0};
 		for(uint32_t i = 0; i < ::gpk::size(results); ++i)
-			if(errored(results[i])) {
+			if(failed(results[i])) {
 				error_printf("Failed to set container %i to size: %i. Out of memory?", i, (int32_t)newSize);
 				int32_t							j						= 0;
 				const int32_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};

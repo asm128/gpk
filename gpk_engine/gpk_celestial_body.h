@@ -81,8 +81,8 @@ namespace gpk
 	::gpk::error_t	printPlanet				(const ::gpk::SDetailPlanet  & body);
 	::gpk::error_t	printCelestialBody		(const ::gpk::SCelestialBody & body, ::gpk::CELESTIAL_BODY type);
 
-	CELESTIAL_BODY	bodyTypeFromString		(::gpk::vcc bodyType);
-	PLANET_TYPE		bodySubtypeFromString	(::gpk::vcc bodyType);
+	CELESTIAL_BODY	bodyTypeFromString		(::gpk::vcsc_t bodyType);
+	PLANET_TYPE		bodySubtypeFromString	(::gpk::vcsc_t bodyType);
 } // namespace
 
 #endif // GPK_CELESTIAL_BODY

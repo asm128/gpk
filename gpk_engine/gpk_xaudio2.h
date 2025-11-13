@@ -43,12 +43,12 @@ namespace gpk
 	};
 
 	struct SSoundState {
-		::gpk::pobj<::gpk::au8>	WaveData;
+		::gpk::pobj<::gpk::au0_t>	WaveData;
 		IXAudio2SourceVoice		* SourceVoice			= 0;
 
 		X3DAUDIO_EMITTER		Emitter					= {};
 		X3DAUDIO_CONE			EmitterCone				= {};
-		::gpk::n3f32			EmitterPos				= {};
+		::gpk::n3f2_t			EmitterPos				= {};
 		float					EmitterAzimuths			[INPUTCHANNELS]                     = {};
 		float					MatrixCoefficients		[INPUTCHANNELS * OUTPUTCHANNELS]    = {};
 
@@ -57,7 +57,7 @@ namespace gpk
 		X3DAUDIO_DSP_SETTINGS	dspSettings				= {};
 		bool					Playing					= false;
 
-		HRESULT					PrepareAudio			(const ::gpk::vcc & wavname, IXAudio2*	pXAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice);
+		HRESULT					PrepareAudio			(::gpk::vcsc_c & wavname, IXAudio2*	pXAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice);
 	};
 
 	// Struct to hold audio game state
@@ -91,8 +91,8 @@ namespace gpk
 		X3DAUDIO_EMITTER		emitter					= {};
 		X3DAUDIO_CONE			emitterCone				= {};
 
-		::gpk::n3f32			vListenerPos			= {};
-		::gpk::n3f32			vEmitterPos				= {};
+		::gpk::n3f2_t			vListenerPos			= {};
+		::gpk::n3f2_t			vEmitterPos				= {};
 		float					fListenerAngle			= (float)(::gpk::math_pi_2 * .5);
 		bool					fUseListenerCone		= true;
 		bool					fUseInnerRadius			= true;
@@ -109,13 +109,13 @@ namespace gpk
 
 
 		::gpk::error_t			InitAudio				();
-		::gpk::error_t			PrepareAudio			(const ::gpk::vcc & wavname);
+		::gpk::error_t			PrepareAudio			(::gpk::vcsc_c & wavname);
 		::gpk::error_t			UpdateAudio				(double fElapsedTime);
 		::gpk::error_t			SetReverb				(int nReverb);
 		::gpk::error_t			PauseAudio				(bool resume);
 		::gpk::error_t			CleanupAudio			();
 
-		::gpk::error_t			PlayWave				(const ::gpk::vcc & wavname);
+		::gpk::error_t			PlayWave				(::gpk::vcsc_c & wavname);
 	};
 } // namespace
 #endif // GPK_XAUDIO2_H_23627

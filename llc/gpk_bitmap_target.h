@@ -17,7 +17,7 @@ namespace gpk
 {
 	tplt<tpnm _tCoord, tpnm T>
 	::gpk::error_t		drawPixelBrightness		(::gpk::grid<T> & viewOffscreen, const ::gpk::n2<_tCoord> & sourcePosition, const T & colorLight, float factor, double range)								{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-		::gpk::n2f64			maxRange				= {range, range};
+		::gpk::n2f3_t			maxRange				= {range, range};
 		double					rangeUnit				= 1.0 / maxRange.Length();
 		for(int32_t y = -(int32_t)range - 1, blendCount = 1 + (int32_t)range + 1; y < blendCount; ++y)	// the + 1 - 1 is because we actually process more surrounding pixels in order to compensate for the flooring of the coordinates
 		for(int32_t x = -(int32_t)range - 1; x < blendCount; ++x) {										// as it causes a visual effect of the light being cut to a rectangle and having sharp borders.
@@ -101,7 +101,7 @@ namespace gpk
 		const int32_t				startX				= ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius));
 		for(int32_t y = startY, yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius + 2), (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = startX; x < xStop; ++x) {
-			::gpk::n2i32				cellCurrent			= {x, y};
+			::gpk::n2s2_t				cellCurrent			= {x, y};
 			double						distanceSquared		= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
 				if(circle.Center.x - circle.Radius < 0)
@@ -119,13 +119,13 @@ namespace gpk
 	}
 
 	tplt<tpnm _tCoord, tpnm _tColor>
-	static	::gpk::error_t	drawCircle			(const ::gpk::n2u32 & targetMetrics, const ::gpk::circle<_tCoord> & circle, ::gpk::apod<::gpk::n2i32> & out_Points)			{
+	static	::gpk::error_t	drawCircle			(const ::gpk::n2u2_t & targetMetrics, const ::gpk::circle<_tCoord> & circle, ::gpk::apod<::gpk::n2s2_t> & out_Points)			{
 		int32_t						xStop				= ::gpk::min((int32_t)(circle.Center.x + circle.Radius), (int32_t)targetMetrics.x);
 		double						radiusSquared		= circle.Radius * circle.Radius;
 		int32_t						pixelsDrawn			= 0;
 		for(int32_t y = ::gpk::max((int32_t)0, (int32_t)(circle.Center.y - circle.Radius)), yStop = ::gpk::min((int32_t)(circle.Center.y + circle.Radius), (int32_t)targetMetrics.y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max((int32_t)0, (int32_t)(circle.Center.x - circle.Radius)); x < xStop; ++x) {
-			::gpk::n2i32				cellCurrent			= {x, y};
+			::gpk::n2s2_t				cellCurrent			= {x, y};
 			double						distanceSquared		= (cellCurrent - circle.Center).LengthSquared();
 			if(distanceSquared < radiusSquared) {
 				if(circle.Center.x - circle.Radius < 0)
@@ -145,13 +145,13 @@ namespace gpk
 	// A good article on this kind of triangle rasterization: https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	drawTriangle		(::gpk::grid<_tColor>& bitmapTarget, const _tColor& value, const ::gpk::tri2<_tCoord>& triangle)										{
-		::gpk::n2i32				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2s2_t				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2s2_t				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t				xStop				= ::gpk::min(areaMax.x, (int32_t)bitmapTarget.metrics().x);
 		int32_t						pixelsDrawn			= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, (int32_t)0), yStop = ::gpk::min(areaMax.y, (int32_t)bitmapTarget.metrics().y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, (int32_t)0); x < xStop; ++x) {
-			const ::gpk::n2i16			cellCurrent			= {(int16_t)x, (int16_t)y};
+			const ::gpk::n2s1_t			cellCurrent			= {(int16_t)x, (int16_t)y};
 			// Determine barycentric coordinates
 			int							w0					= ::gpk::orient2d({triangle.B.s1_t(), triangle.A.s1_t()}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
 			int							w1					= ::gpk::orient2d({triangle.C.s1_t(), triangle.B.s1_t()}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
@@ -171,14 +171,14 @@ namespace gpk
 	}
 
 	tplt<tpnm _tCoord>
-	static	::gpk::error_t	drawTriangle		(const ::gpk::n2u32 & targetMetrics, const ::gpk::tri2<_tCoord> & triangle, ::gpk::apod<::gpk::n2i16> & out_Points)		{
-		::gpk::n2i32				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
-		::gpk::n2i32				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
+	static	::gpk::error_t	drawTriangle		(const ::gpk::n2u2_t & targetMetrics, const ::gpk::tri2<_tCoord> & triangle, ::gpk::apod<::gpk::n2s1_t> & out_Points)		{
+		::gpk::n2s2_t				areaMin				= {(int32_t)::gpk::min(::gpk::min(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::min(::gpk::min(triangle.A.y, triangle.B.y), triangle.C.y)};
+		::gpk::n2s2_t				areaMax				= {(int32_t)::gpk::max(::gpk::max(triangle.A.x, triangle.B.x), triangle.C.x), (int32_t)::gpk::max(::gpk::max(triangle.A.y, triangle.B.y), triangle.C.y)};
 		const int32_t				xStop				= ::gpk::min(areaMax.x, (int32_t)targetMetrics.x);
 		int32_t						pixelsDrawn			= 0;
 		for(int32_t y = ::gpk::max(areaMin.y, (int32_t)0), yStop = ::gpk::min(areaMax.y, (int32_t)targetMetrics.y); y < yStop; ++y)
 		for(int32_t x = ::gpk::max(areaMin.x, (int32_t)0); x < xStop; ++x) {
-			const ::gpk::n2i32			cellCurrent			= {x, y};
+			const ::gpk::n2s2_t			cellCurrent			= {x, y};
 			// Determine barycentric coordinates
 			int32_t						w0					= ::gpk::orient2d({triangle.B, triangle.A}, cellCurrent);	// ::gpk::orient2d({triangle.A, triangle.B}, cellCurrent);
 			int32_t						w1					= ::gpk::orient2d({triangle.C, triangle.B}, cellCurrent);	// ::gpk::orient2d({triangle.B, triangle.C}, cellCurrent);
@@ -197,14 +197,14 @@ namespace gpk
 		return pixelsDrawn;
 	}
 
-	typedef	::gpk::error_t	(*gpk_raster_callback)	(void* bitmapTarget, const ::gpk::n2u32 & bitmapMetrics, const ::gpk::n2u32 & cellPos, const void* value);
+	typedef	::gpk::error_t	(*gpk_raster_callback)	(void* bitmapTarget, const ::gpk::n2u2_t & bitmapMetrics, const ::gpk::n2u2_t & cellPos, const void* value);
 
 
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	rasterLine			(::gpk::grid<_tColor> & bitmapTarget, const _tColor & value, const ::gpk::line2<_tCoord> & line, gpk_raster_callback callback)				{
-		::gpk::n2f32				A					= line.A.f2_t();
-		::gpk::n2f32				B					= line.B.f2_t();
+		::gpk::n2f2_t				A					= line.A.f2_t();
+		::gpk::n2f2_t				B					= line.B.f2_t();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::gpk::swap(A.x, A.y);
@@ -214,7 +214,7 @@ namespace gpk
 			::gpk::swap(A.x, B.x);
 			::gpk::swap(A.y, B.y);
 		}
-		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f2_t			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
 		const int32_t				ystep				= (A.y < B.y) ? 1 : -1;
 		int32_t						y					= (int32_t)A.y;
@@ -251,8 +251,8 @@ namespace gpk
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord, tpnm _tColor>
 	static	::gpk::error_t	drawLine			(::gpk::grid<_tColor> & target, const _tColor & value, const ::gpk::line2<_tCoord> & line)				{
-		::gpk::n2f32				A					= line.A.f2_t();
-		::gpk::n2f32				B					= line.B.f2_t();
+		::gpk::n2f2_t				A					= line.A.f2_t();
+		::gpk::n2f2_t				B					= line.B.f2_t();
 		if(line.A.x == line.B.x)
 			return ::gpk::drawLineVertical(target, value, line.A.x, line.A.y, line.B.y);
 		else if(line.A.y == line.B.y)
@@ -267,7 +267,7 @@ namespace gpk
 			::gpk::swap(A.x, B.x);
 			::gpk::swap(A.y, B.y);
 		}
-		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f2_t			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
 		const int32_t				ystep				= (A.y < B.y) ? 1 : -1;
 		int32_t						y					= (int32_t)A.y;
@@ -303,9 +303,9 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
-	static	::gpk::error_t	drawLine			(const ::gpk::n2u16 & targetMetrics, const ::gpk::line2<_tCoord> & line, ::gpk::apod<::gpk::n2i16> & out_Points)				{
-		::gpk::n2f32				A					= line.A.f2_t();
-		::gpk::n2f32				B					= line.B.f2_t();
+	static	::gpk::error_t	drawLine			(const ::gpk::n2u1_t & targetMetrics, const ::gpk::line2<_tCoord> & line, ::gpk::apod<::gpk::n2s1_t> & out_Points)				{
+		::gpk::n2f2_t				A					= line.A.f2_t();
+		::gpk::n2f2_t				B					= line.B.f2_t();
 		const bool					steep				= (fabs(B.y - A.y) > fabs(B.x - A.x));
 		if(steep){
 			::gpk::swap(A.x, A.y);
@@ -315,7 +315,7 @@ namespace gpk
 			::gpk::swap(A.x, B.x);
 			::gpk::swap(A.y, B.y);
 		}
-		const ::gpk::n2f32			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
+		const ::gpk::n2f2_t			d					= {B.x - A.x, (float)fabs(B.y - A.y)};
 		float						error				= d.x / 2.0f;
 		const int16_t				ystep				= (A.y < B.y) ? 1 : -1;
 		int16_t						y					= (int16_t)A.y;
@@ -351,7 +351,7 @@ namespace gpk
 
 	// Bresenham's line algorithm
 	tplt<tpnm _tCoord>
-	static	::gpk::error_t	drawLine			(const ::gpk::n2u16 & targetMetrics, const ::gpk::line3<_tCoord> & line, ::gpk::apod<::gpk::n2i16> & out_Points)				{
+	static	::gpk::error_t	drawLine			(const ::gpk::n2u1_t & targetMetrics, const ::gpk::line3<_tCoord> & line, ::gpk::apod<::gpk::n2s1_t> & out_Points)				{
 		return drawLine(targetMetrics, ::gpk::line2<_tCoord>{{line.A.x, line.A.y}, {line.B.x, line.B.y}}, out_Points);
 	}
 } // namespace

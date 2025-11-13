@@ -32,7 +32,7 @@ namespace gpk
 	struct SVirtualKeyboard {
 		::gpk::cid_t	IdRoot;
 		::gpk::acid		IdKeys;
-		::gpk::au16		Keys;
+		::gpk::au1_t	Keys;
 
 		::gpk::apod<::gpk::SVirtualKeyboardEvent>	Events;
 	};

@@ -123,7 +123,7 @@ namespace
 	static_assert(36 == sizeof(RIFFMIDISample)	, "structure size mismatch");
 
 	//---------------------------------------------------------------------------------
-	const RIFFChunk* FindChunk(::gpk::vcu8 data, _In_ uint32_t tag) noexcept {
+	const RIFFChunk* FindChunk(::gpk::vcu0_t data, _In_ uint32_t tag) noexcept {
 		const uint8_t* ptr = data.begin();
 		const uint8_t* end = data.end();
 		while (end > (ptr + sizeof(RIFFChunk))) {
@@ -140,7 +140,7 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindFormatAndData(::gpk::vcu8 wavData, _Outptr_ const WAVEFORMATEX* * pwfx, ::gpk::vcu8 & data, _Out_ bool & dpds, _Out_ bool & seek) noexcept {
+	HRESULT WaveFindFormatAndData(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * pwfx, ::gpk::vcu0_t & data, _Out_ bool & dpds, _Out_ bool & seek) noexcept {
 		dpds = seek = false;
 		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(uint32_t) + sizeof(WAVEFORMAT)));
 
@@ -248,7 +248,7 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindLoopInfo(::gpk::vcu8 wavData, _Out_ uint32_t* pLoopStart, _Out_ uint32_t* pLoopLength) noexcept {
+	HRESULT WaveFindLoopInfo(::gpk::vcu0_t wavData, _Out_ uint32_t* pLoopStart, _Out_ uint32_t* pLoopLength) noexcept {
 		if (wavData.size() < (sizeof(RIFFChunk) + sizeof(uint32_t)))
 			return E_FAIL;
 
@@ -325,7 +325,7 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT WaveFindTable(::gpk::vcu8 wavData, _In_ uint32_t tag, _Outptr_result_maybenull_ const uint32_t* * pData, _Out_ uint32_t * dataCount) noexcept {
+	HRESULT WaveFindTable(::gpk::vcu0_t wavData, _In_ uint32_t tag, _Outptr_result_maybenull_ const uint32_t* * pData, _Out_ uint32_t * dataCount) noexcept {
 		rves_if(E_FAIL, wavData.size() < (sizeof(RIFFChunk) + sizeof(uint32_t)));
 
 		*pData				= nullptr;
@@ -365,7 +365,7 @@ namespace
 
 
 	//---------------------------------------------------------------------------------
-	HRESULT LoadAudioFromFile(::gpk::vcc szFileName, _Inout_ ::gpk::au8 & wavData) noexcept { 
+	HRESULT LoadAudioFromFile(::gpk::vcsc_t szFileName, _Inout_ ::gpk::au0_t & wavData) noexcept { 
 		DWORD								bytesRead		   = 0;
 		::gpk::apod<wchar_t>				wszFileName		 = {};
 		::gpk::mbstowcs(wszFileName, szFileName);
@@ -394,7 +394,7 @@ namespace
 
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
-HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu8 wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu8 & audioBytes) noexcept {
+HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu0_t wavData, _Outptr_ const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) noexcept {
 	rve_if(E_FAIL, (wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT))), "Need at least enough data to have a valid minimal WAV file. Size: %i", wavData.size());
 
 	bool dpds = true, seek = true;
@@ -405,7 +405,7 @@ HRESULT DirectX::LoadWAVAudioInMemory(::gpk::vcu8 wavData, _Outptr_ const WAVEFO
 
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcc szFileName, ::gpk::au8 & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu8 & audioBytes) noexcept {
+HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcsc_t szFileName, ::gpk::au0_t & wavData, const WAVEFORMATEX* * wfx, ::gpk::vcu0_t & audioBytes) noexcept {
 	gpk_hrcall(LoadAudioFromFile(szFileName, wavData));
 
 	bool dpds = true, seek = true;
@@ -415,7 +415,7 @@ HRESULT DirectX::LoadWAVAudioFromFile(::gpk::vcc szFileName, ::gpk::au8 & wavDat
 }
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu8 wavData, DirectX::WAVData & result) noexcept {
+HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu0_t wavData, DirectX::WAVData & result) noexcept {
 	// Need at least enough data to have a valid minimal WAV file
 	if (wavData.size() < (sizeof(RIFFChunk) * 2 + sizeof(DWORD) + sizeof(WAVEFORMAT))) {
 		return E_FAIL;
@@ -434,7 +434,7 @@ HRESULT DirectX::LoadWAVAudioInMemoryEx(::gpk::vcu8 wavData, DirectX::WAVData & 
 }
 
 //-------------------------------------------------------------------------------------
-HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::vcc szFileName, ::gpk::au8 & wavData, DirectX::WAVData & result) noexcept {
+HRESULT DirectX::LoadWAVAudioFromFileEx(::gpk::vcsc_t szFileName, ::gpk::au0_t & wavData, DirectX::WAVData & result) noexcept {
 	DWORD bytesRead = LoadAudioFromFile(szFileName, wavData);
 	if (FAILED(bytesRead))
 		return bytesRead;

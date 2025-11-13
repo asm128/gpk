@@ -8,13 +8,13 @@
 namespace gpk
 {
 	struct SRasterFont {
-		::gpk::n2u8			CharSize;
+		::gpk::n2u0_t		CharSize;
 		::gpk::imgmonou64	Texture;
 	};
 
 	struct SRasterFontBase64 {
-		::gpk::n2u8			CharSize;
-		::gpk::vcc			Base64String;
+		::gpk::n2u0_t		CharSize;
+		::gpk::vcsc_t		Base64String;
 	};
 
 	struct SRasterFontManager {
@@ -24,23 +24,21 @@ namespace gpk
 	::gpk::error_t	rasterFontDefaults	(::gpk::SRasterFontManager & manager);
 
 	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoad		(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u8 & charSize, const ::gpk::vcu8 decoded)			{
+	::gpk::error_t	rasterFontLoad		(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcu0_c decoded) {
 		const uint32_t		imageHeight			= charSize.y * 256;
 		gpk_necall(image.resize(charSize.x, imageHeight), "charSize: {%i, %i}", charSize.x, charSize.y);
 		memcpy(image.Texels.begin(), decoded.begin(), ::gpk::min(image.Texels.byte_count(), decoded.byte_count()));
 		return 0;
 	}
-
 	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u8 & charSize, const ::gpk::vcu8 & base64String)			{
-		::gpk::au8			decoded;
+	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcu0_c & base64String) {
+		::gpk::au0_t		decoded;
 		gpk_necs(gpk::base64Decode(base64String, decoded));
 		return rasterFontLoad(image, charSize, decoded);
 	}
-
 	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u8 & charSize, const ::gpk::vcc & base64String)			{
-		return ::gpk::rasterFontLoadB64(image, charSize, *(const ::gpk::vcu8*)&base64String);
+	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcsc_c & base64String) {
+		return ::gpk::rasterFontLoadB64(image, charSize, *(::gpk::vcu0_c*)&base64String);
 	}
 };
 

@@ -10,8 +10,8 @@
 namespace gpk
 {
 	struct SGUIZoom {
-		::gpk::n2f64		DPI					= {1.0, 1.0};
-		::gpk::minmaxf64	ZoomLimits			= {0.1, 10.0};
+		::gpk::n2f3_t		DPI					= {1.0, 1.0};
+		::gpk::minmaxf3_t	ZoomLimits			= {0.1, 10.0};
 		double				ZoomLevel			= 1.0;
 
 		bool				operator==			(const ::gpk::SGUIZoom & other)		const	noexcept	{
@@ -34,8 +34,8 @@ namespace gpk
 	};
 
 	struct SGUI {
-		::gpk::n2u16						LastSize			= {};
-		::gpk::n2f32						CursorPos			= {};
+		::gpk::n2u1_t						LastSize			= {};
+		::gpk::n2f2_t						CursorPos			= {};
 		::gpk::SControlTable				Controls			= {};
 		::gpk::pobj<::gpk::SGUIColors>		Colors;
 		// Font
@@ -50,7 +50,7 @@ namespace gpk
 	};
 
 	::gpk::error_t			guiProcessInput					(::gpk::SGUI & gui, const ::gpk::SInput & input, ::gpk::vpobj<::gpk::SEventSystem> in_Events = {});
-	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2u16 & targetSize, bool forceUpdate);
+	::gpk::error_t			guiUpdateMetrics				(::gpk::SGUI & gui, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
 	::gpk::error_t			guiDraw							(::gpk::SGUI & gui, ::gpk::g8bgra target);
 	::gpk::error_t			guiGetProcessableControls		(const ::gpk::SGUI & gui, ::gpk::acid & controlIndices);
 	::gpk::error_t			guiDeselect						(::gpk::SGUI & gui);
@@ -64,7 +64,7 @@ namespace gpk
 	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs & text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, int16_t iFont);
 	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);
-	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u16 & targetSize, bool forceUpdate);
+	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
 	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI & gui, cid_t iControl);
 	::gpk::error_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);
 	::gpk::error_t			controlDisabled					(const ::gpk::SGUI & gui, cid_t iControl);
@@ -73,8 +73,6 @@ namespace gpk
 
 	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
 	::gpk::error_t			guiProcessControls				(const ::gpk::SGUI & gui, ::gpk::vcid controlsToProcess, const ::gpk::function<::gpk::error_t(::gpk::cid_t iControl)> & funcOnExecute);
-
-
 } // namespace
 
 #endif // GPK_GUI_H_23627

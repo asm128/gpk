@@ -7,7 +7,7 @@
 #endif
 
 ::gpk::error_t			gpk::virtualKeyboardSetup437(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk)	{
-	::gpk::au16					keys;
+	::gpk::au1_t					keys;
 	for(uint16_t i = 1; i < 255; ++i) {
 		keys.push_back(i);
 	}
@@ -18,14 +18,14 @@
 	return vk.IdRoot;
 }
 
-::gpk::error_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu16 & keys) {
+::gpk::error_t			gpk::virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, ::gpk::vcu1_c & keys) {
 	vk.Keys					= keys;
 
 	vk.IdRoot				= ::gpk::controlCreate(gui);
-	const ::gpk::n2u8			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
-	const ::gpk::n2i16			sizeKey						= (charSize + ::gpk::n2u8{6, 6}).s1_t();
+	const ::gpk::n2u0_t			charSize					= gui.Fonts[gui.SelectedFont]->CharSize;
+	const ::gpk::n2s1_t			sizeKey						= (charSize + ::gpk::n2u0_t{6, 6}).s1_t();
 	stacxpr	uint16_t			SIZE_BUTTON					= 88;
-	const ::gpk::n2i16			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
+	const ::gpk::n2s1_t			sizeKeypad					= {int16_t(sizeKey.x * rowWidth + 4 + SIZE_BUTTON), int16_t(sizeKey.y * (keys.size() / rowWidth) + 4)};
 
 	{
 		::gpk::SControlPlacement	& controlRoot				= gui.Controls.Placement[vk.IdRoot];

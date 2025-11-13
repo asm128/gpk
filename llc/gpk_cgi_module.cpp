@@ -5,9 +5,8 @@
 #	include <Windows.h>
 #endif
 
-::gpk::error_t			gpk::loadCGIModule					(::gpk::SCGIModule& loadedModule, const ::gpk::vcc & moduleName)				{
-	loadedModule.Handle								= GPK_LOAD_MODULE(moduleName.begin());
-	ree_if(0 == loadedModule.Handle, "Cannot load module: %s.", moduleName.begin());
+::gpk::error_t			gpk::loadCGIModule					(::gpk::SCGIModule& loadedModule, ::gpk::vcsc_c & moduleName)				{
+	if_null_fef(loadedModule.Handle = GPK_LOAD_MODULE(moduleName.begin()), "Cannot load module: %s.", moduleName.begin());
 	typedef	::gpk::SCGIModule::TRegistry				TRegistry;
 	const ::gpk::view<const ::gpk::STypeIdentifier>		& funcnames						= TRegistry::get_types();
 	const ::gpk::view<const ::gpk::DATA_TYPE>			& members						= TRegistry::get_data_type_ids();

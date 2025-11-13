@@ -13,7 +13,7 @@ using ::gpk::sc_t;
 #	include <random>
 #endif
 
-::gpk::error_t			gpk::saltDataSalt				(const ::gpk::vcu8 & binary, ::gpk::au8 & salted)				{
+::gpk::error_t			gpk::saltDataSalt				(const ::gpk::vcu0_t & binary, ::gpk::au0_t & salted)				{
 	gpk_necs(salted.resize(binary.size() * 2));
 	uint8_t						* pSalted						= salted.begin();
 	const uint8_t				* pBinary						= binary.begin();
@@ -24,7 +24,7 @@ using ::gpk::sc_t;
 	return 0;
 }
 
-::gpk::error_t			gpk::saltDataUnsalt				(const ::gpk::vcu8 & salted, ::gpk::au8 & binary)				{
+::gpk::error_t			gpk::saltDataUnsalt				(const ::gpk::vcu0_t & salted, ::gpk::au0_t & binary)				{
 	gpk_necs(binary.resize(salted.size() / 2));
 	const uint8_t				* pSalted						= salted.begin();
 	uint8_t						* pBinary						= binary.begin();
@@ -53,7 +53,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::hexEncode					(const ::gpk::vcu8 & in_binary, ::gpk::ac & out_hexed	)	{
+::gpk::error_t			gpk::hexEncode					(const ::gpk::vcu0_t & in_binary, ::gpk::asc_t & out_hexed	)	{
 	uint32_t					offset							= out_hexed.size();
 	gpk_necs(out_hexed.resize(offset + in_binary.size() * 2));
 	sc_t						* pHexed						= out_hexed.begin();
@@ -63,7 +63,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::au8 & out_binary)	{
+::gpk::error_t			gpk::hexDecode					(const ::gpk::vcsc_t & in_hexed	, ::gpk::au0_t & out_binary)	{
 	uint32_t					offset							= out_binary.size();
 	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
@@ -74,7 +74,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::hexDecode					(const ::gpk::vcc & in_hexed	, ::gpk::ai8 & out_binary)	{
+::gpk::error_t			gpk::hexDecode					(const ::gpk::vcsc_t & in_hexed	, ::gpk::as0_t & out_binary)	{
 	uint32_t					offset							= out_binary.size();
 	uint32_t					binarySize						= in_hexed.size() >> 1;
 	gpk_necs(out_binary.resize(offset + binarySize));
@@ -85,7 +85,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::ardellEncode				(ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)						{
+::gpk::error_t			gpk::ardellEncode				(as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)						{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	sc_t						saltValue		[4]				= {};
 	if (salt)
@@ -127,7 +127,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::ardellDecode				(::gpk::ai32 & cache, const ::gpk::vcu8 & input, uint64_t key, bool salt, ::gpk::au8 & output)		{
+::gpk::error_t			gpk::ardellDecode				(::gpk::as2_t & cache, const ::gpk::vcu0_t & input, uint64_t key, bool salt, ::gpk::au0_t & output)		{
 	// Originally written by Gary Ardell as Visual Basic code. free from all copyright restrictions.
 	const int32_t				keyFinal[8]						=
 		{ (int32_t)(11 + (key % 233))
@@ -157,7 +157,7 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::ac & hexDigits) {
+::gpk::error_t			gpk::utf8FromCodePoint			(uint32_t codePoint, ::gpk::asc_t & hexDigits) {
 	const uint32_t				offset							= hexDigits.size();
 	if (codePoint <= 0x7f) {
 		hexDigits.resize(offset + 1);
@@ -183,9 +183,9 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::digest				(const ::gpk::vcu8 & input, ::gpk::au32 & digest)		{
+::gpk::error_t			gpk::digest				(const ::gpk::vcu0_t & input, ::gpk::au2_t & digest)		{
 	uint32_t					x								= 0;
-	::gpk::au32					filtered						= {};
+	::gpk::au2_t					filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])
@@ -218,9 +218,9 @@ static	::gpk::error_t	hexToByte		(const sc_t* s, int8_t & byte)															{
 	return 0;
 }
 
-::gpk::error_t			gpk::digest									(const ::gpk::vcu8 & input, ::gpk::ac & digest)		{
+::gpk::error_t			gpk::digest									(const ::gpk::vcu0_t & input, ::gpk::asc_t & digest)		{
 	uint32_t					x								= 0;
-	::gpk::au32					filtered						= {};
+	::gpk::au2_t					filtered						= {};
 	for(uint32_t i = 0; i < input.size() - 8; ++i) {
 		x	+= ::gpk::noise1DBase32(input[i])
 			+  ::gpk::noise1DBase32(input[i + 1])

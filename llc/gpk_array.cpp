@@ -1,28 +1,28 @@
 #include "gpk_array.h"
 #include "gpk_stdstring.h"
 
-::gpk::error_t			gpk::filterPostfix	(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc postfix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded) { 
+::gpk::error_t			gpk::filterPostfix	(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c postfix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded) { 
 	for(uint32_t iInput = 0; iInput < input.size(); ++iInput) { 
-		const ::gpk::vcc & currentInput = input[iInput]; 
+		::gpk::vcsc_c & currentInput = input[iInput]; 
 		if((postfix.size() < currentInput.size() || (nullIncluded && postfix.size() == currentInput.size())) && 0 == strncmp(currentInput.end() - postfix.size(), postfix.begin(), postfix.size())) 
 			filtered.push_back(currentInput); 
 	} 
 	return 0; 
 }
 
-::gpk::error_t			gpk::filterPrefix	(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded) { 
+::gpk::error_t			gpk::filterPrefix	(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded) { 
 	for(uint32_t iInput = 0; iInput < input.size(); ++iInput) { 
-		const ::gpk::vcc & currentInput = input[iInput]; 
+		::gpk::vcsc_c & currentInput = input[iInput]; 
 		if((prefix .size() < currentInput.size() || (nullIncluded && prefix .size() == currentInput.size())) && 0 == strncmp(currentInput.begin(), prefix .begin(), prefix .size())) 
 			filtered.push_back(currentInput); 
 	}
 	return 0; 
 }
 
-::gpk::error_t			gpk::camelCase		(::gpk::vcc input, ::gpk::achar & camelCased) {
+::gpk::error_t			gpk::camelCase		(::gpk::vcsc_t input, ::gpk::asc_t & camelCased) {
 	bool						capsNext			= true;
 	for(uint32_t i = 0; i < input.size(); ++i) {
-		sc_t						current				= input[i];
+		char						current				= input[i];
 		if(current == '_' || current == '-')
 			capsNext	= true;
 		else {

@@ -17,12 +17,12 @@ namespace gpk
 		cid_t					IdRoot				= {};
 		cid_t					IdText				= {};
 		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
-		::gpk::achar			Text				= {};
+		::gpk::asc_t			Text				= {};
 		uint32_t				MaxLength			= 16;
 		bool					Editing				= false;
 
 
-		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcs text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
+		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
 		::gpk::error_t			Edit				(::gpk::SGUI & gui, bool editing) {
 			Editing					= editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
@@ -53,10 +53,10 @@ namespace gpk
 					}
 					break;
 				case ::gpk::VK_EVENT_EDIT:
-						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace))); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	))); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	))); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { es_if(errored(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Clear	))); } 
+						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace)); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	)); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	)); } 
+					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Clear	)); } 
 				}
 			}
 			;

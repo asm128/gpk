@@ -16,7 +16,7 @@ namespace gpk
 		::gpk::eid_t			Camera			= ::gpk::EID_INVALID;
 		::gpk::eid_t			Background		= ::gpk::EID_INVALID;
 
-		::gpk::error_t			Save			(::gpk::au8 & output)	const	{ 
+		::gpk::error_t			Save			(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, GravityCenters	));
 			gpk_necs(gpk::saveView(output, Orbits			));
 			gpk_necs(gpk::saveView(output, Bodies			));
@@ -26,7 +26,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t			Load				(::gpk::vcu8 & input)	{ 
+		::gpk::error_t			Load				(::gpk::vcu0_t & input)	{ 
 			gpk_necs(gpk::loadView(input, GravityCenters	));
 			gpk_necs(gpk::loadView(input, Orbits			));
 			gpk_necs(gpk::loadView(input, Bodies			));
@@ -41,13 +41,13 @@ namespace gpk
 		SPlanetarySystem			PlanetarySystem;
 		SPlanetarySystemEntityMap	EntityMap;
 
-		::gpk::error_t				Save			(::gpk::au8 & output)	const	{ 
+		::gpk::error_t				Save			(::gpk::au0_t & output)	const	{ 
 			gpk_necs(PlanetarySystem.Save(output));
 			gpk_necs(EntityMap.Save(output));
 			return 0;
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu8 & input)	{ 
+		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
 			gpk_necs(PlanetarySystem.Load(input));
 			gpk_necs(EntityMap.Load(input));
 			return 0;
@@ -58,7 +58,7 @@ namespace gpk
 	::gpk::error_t			planetarySystemCreateEntities	(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine);
 	::gpk::error_t			planetarySystemSetup			(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine); 
 	::gpk::error_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, const ::gpk::SJSONReader & jsonData);
-	::gpk::error_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath);
+	::gpk::error_t			planetarySystemSetup			(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath);
 } // namespace
 
 #endif // GPK_ENGINE_PLANETARY_SYSTEM_H_23701

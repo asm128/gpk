@@ -5,7 +5,7 @@
 
 namespace gpk
 {
-	stct SPacketQueue { apobj<ac> Items;};
+	stct SPacketQueue { apobj<asc_t> Items;};
 	stct SPacketBroker {
 		::gpk::apobj<SPacketQueue>	Readers;
 		::gpk::apobj<SPacketQueue>	Senders;

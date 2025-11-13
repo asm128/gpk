@@ -30,7 +30,7 @@ namespace gpk
 		0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 	};
 
-	stacxpr	::gpk::n3f32				VOXEL_VERTICES		[8]		= 
+	stacxpr	::gpk::n3f2_t				VOXEL_VERTICES		[8]		= 
 			{ {0, 1, 0}, {1, 1, 0}, {0, 1, 1}, {1, 1, 1} // Top
 			, {0, 0, 0}, {1, 0, 0}, {0, 0, 1}, {1, 0, 1} // Bottom
 			}; 
@@ -79,7 +79,7 @@ namespace gpk
 		, {{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1}}	// Left		
 		}};
 
-	stacxpr	::gpk::n3f32				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
+	stacxpr	::gpk::n3f2_t				VOXEL_NORMALS				[6]		= {{0, 1, 0}, {1, 0, 0}, {0, 0, 1}, {0, -1, 0}, {-1, 0, 0}, {0, 0, -1}};	// top, front, right, bottom, back, left
 	stacxpr	::gpk::quadu8				VOXEL_FACE_NORMAL_INDICES	[6]		= 
 		{ {0, 0, 0, 0}	// Top		
 		, {1, 1, 1, 1}	// Front	
@@ -89,7 +89,7 @@ namespace gpk
 		, {5, 5, 5, 5}	// Left		
 		};
 
-	stacxpr	::gpk::n3i8					VOXEL_DELTAS				[6]		= 
+	stacxpr	::gpk::n3s0_t				VOXEL_DELTAS				[6]		= 
 		{ { 0, 1, 0} // Top		(y = 1)
 		, { 1, 0, 0} // Front	(x = 1)
 		, { 0, 0, 1} // Right	(z = 1)
@@ -155,23 +155,23 @@ namespace gpk
 
 	tplt<tpnm T>
 	struct SVoxelMap {
-		::gpk::n3u8							Dimensions;
+		::gpk::n3u0_t							Dimensions;
 		::gpk::a8bgra			Palette;
 		::gpk::apod<::gpk::SVoxel<uint8_t>>	Voxels;
 		::gpk::aobj<::gpk::SVoxelChunk<T>>	Chunks;
-		::gpk::apod<::gpk::n2u8>			ChunkPositions;
+		::gpk::apod<::gpk::n2u0_t>			ChunkPositions;
 
-		int32_t										GetChunk					(const ::gpk::n2u8 & chunkCoords) const	{ 
-			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::n2u8>{ChunkPositions}); 
+		int32_t										GetChunk					(const ::gpk::n2u0_t & chunkCoords) const	{ 
+			return ::gpk::find(chunkCoords, ::gpk::view<const ::gpk::n2u0_t>{ChunkPositions}); 
 		}
 
-		int32_t											GetChunkForVoxel			(const ::gpk::n3u8 & voxelPosition) const	{ 
-			const ::gpk::n3u8						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		int32_t											GetChunkForVoxel			(const ::gpk::n3u0_t & voxelPosition) const	{ 
+			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			return GetChunk({floor.x, floor.z}); 
 		}
 
-		int32_t											SetValue					(const ::gpk::n3u8 & voxelPosition, const T & cellValue) 	{ 
-			const ::gpk::n3u8						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		int32_t											SetValue					(const ::gpk::n3u0_t & voxelPosition, const T & cellValue) 	{ 
+			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) {
 				indexChunk										= Chunks.push_back({});
@@ -212,8 +212,8 @@ namespace gpk
 			return indexChunk;
 		}
 
-		int32_t											GetValue					(const ::gpk::n3u8 & voxelPosition, T & cellValue) const	{ 
-			const ::gpk::n3u8						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
+		int32_t											GetValue					(const ::gpk::n3u0_t & voxelPosition, T & cellValue) const	{ 
+			const ::gpk::n3u0_t						floor						= voxelPosition / SVoxelLayer<T>::WIDTH; 
 			int32_t												indexChunk					= GetChunk({floor.x, floor.z});
 			if(0 > indexChunk) 
 				return -1;

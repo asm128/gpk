@@ -42,10 +42,9 @@ namespace gpk
 		uint16_t					Frequency		: 1;
 	};
 #pragma pack(pop)
-
 	struct SRenderBuffer {
 		SRenderBufferDescription	Desc			= {};
-		::gpk::au8					Data			= {};
+		::gpk::au0_t				Data			= {};
 
 		::gpk::error_t				Save			(::gpk::apod<uint8_t> & output)	const	{ 			
 			gpk_necs(gpk::savePOD	(output, Desc));
@@ -53,7 +52,7 @@ namespace gpk
 			return 0; 
 		}
 
-		::gpk::error_t				Load			(::gpk::vcu8 & input)	{ 
+		::gpk::error_t				Load			(::gpk::vcu0_t & input)	{ 
 			gpk_necs(gpk::loadPOD (input, Desc));
 			gpk_necs(gpk::loadView(input, Data));
 			return 0;

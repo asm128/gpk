@@ -16,35 +16,35 @@
 
 GPK_USING_TYPEINT();
 
-static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
-	::gpk::apobj<::gpk::SUDPConnection>				clientsToProcess;
-	::gpk::au8										receiveBuffer;
-	::gpk::apobj<::gpk::SUDPMessage>				cacheSent						= {};
-	::gpk::apobj<::gpk::SUDPMessage>				cacheSend						= {};
+sttc	::gpk::error_t	updateClients			(gpk::SUDPServer & serverInstance)		{
+	::gpk::apobj<::gpk::SUDPConnection>	clientsToProcess;
+	::gpk::au0_t						receiveBuffer;
+	::gpk::apobj<::gpk::SUDPMessage>	cacheSent						= {};
+	::gpk::apobj<::gpk::SUDPMessage>	cacheSend						= {};
 	while(serverInstance.Listen) {
 		::gpk::sleep(1);
-		uint32_t										totalClientCount				= serverInstance.Clients.size();
+		uint32_t							totalClientCount				= serverInstance.Clients.size();
 		{
-			::std::lock_guard								lock								(serverInstance.Mutex);
-			totalClientCount							= serverInstance.Clients.size();
+			::std::lock_guard					lock								(serverInstance.Mutex);
+			totalClientCount				= serverInstance.Clients.size();
 		}
-		timeval											wait_time							= {0, 1};
-		uint32_t										remainder							= totalClientCount % 64;
-		uint32_t										stageCount							= round_up(totalClientCount, 64);
-		fd_set											sockets								= {};
+		timeval								wait_time							= {0, 1};
+		uint32_t							remainder							= totalClientCount % 64;
+		uint32_t							stageCount							= round_up(totalClientCount, 64);
+		fd_set								sockets								= {};
 		for(uint32_t iStage = 0; iStage < stageCount; ++iStage) {
-			const uint32_t									offsetClient						= iStage * 64;
-			memset(&sockets, -1, sizeof(fd_set));
-			sockets.fd_count							= 0;
-			uint32_t										stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
+			const uint32_t						offsetClient						= iStage * 64;
+			memset(&sockets, -1, szof(fd_set));
+			sockets.fd_count				= 0;
+			uint32_t							stageClientCount					= (iStage == (stageCount - 1) && remainder) ? remainder : 64;
 			{
-				::std::lock_guard							lock								(serverInstance.Mutex);
+				::std::lock_guard					lock								(serverInstance.Mutex);
 				for(uint32_t iClient = 0, actualCount = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < actualCount; ++iClient) {
-					::gpk::pobj<::gpk::SUDPConnection>			pclient								= serverInstance.Clients[offsetClient + iClient];
+					::gpk::pobj<::gpk::SUDPConnection>	pclient								= serverInstance.Clients[offsetClient + iClient];
 					if(0 == pclient.get_ref() || pclient->Socket == INVALID_SOCKET || pclient->State == ::gpk::UDP_CONNECTION_STATE_DISCONNECTED)
 						continue;
 					if(pclient->Queue.Send.size())
-						e_if(errored(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)));
+						e_if(::gpk::failed(::gpk::connectionSendQueue(*pclient, cacheSent, cacheSend)));
 					sockets.fd_array[sockets.fd_count]		= pclient->Socket;
 					if(sockets.fd_array[sockets.fd_count] != INVALID_SOCKET)
 						++sockets.fd_count;
@@ -55,7 +55,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 			{
 				clientsToProcess.clear();
 				{
-					::std::lock_guard							lock								(serverInstance.Mutex);
+					::std::lock_guard				lock								(serverInstance.Mutex);
 					bi_if(0 == serverInstance.Clients.size());
 					for(uint32_t sd = 0; sd < sockets.fd_count; ++sd) {
 						for(uint32_t iClient = 0, countCli = ::gpk::min(serverInstance.Clients.size(), stageClientCount); iClient < countCli; ++iClient) {
@@ -82,7 +82,7 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						int											sa_length							= (int)sizeof(sockaddr_in);	// Length of client struct
 						::gpk::SUDPCommand							command								= {};						// Where to store received data
 						int											bytes_received						= 0;
-						if (errored(bytes_received = ::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
+						if (::gpk::failed(bytes_received = ::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), MSG_PEEK, (sockaddr*)&sa_client, &sa_length))) {
 							uint32_t									lastError							= ::WSAGetLastError();
 							if(lastError != WSAEMSGSIZE) {
 								warning_printf("%s", "'lastError != WSAEMSGSIZE' - Could not receive datagram.");
@@ -96,12 +96,12 @@ static	::gpk::error_t	updateClients					(gpk::SUDPServer& serverInstance)		{
 						::gpk::tcpipAddressFromSockaddr(sa_client, address);
 						if(client.Address != address) {
 							warning_printf("Command received from an invalid address: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
-							::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+							::recvfrom(client.Socket, (sc_t*)&command, (int)szof(::gpk::SUDPCommand), 0, 0, 0);
 							continue;
 						}
-						ef_if(errored(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
+						ef_if(::gpk::failed(::gpk::connectionHandleCommand(client, command, receiveBuffer)), "Error processing command from: %u.%u.%u.%u:%u.", GPK_IPV4_EXPAND(address));
 						if(INVALID_SOCKET != client.Socket)
-							::recvfrom(client.Socket, (sc_t*)&command, (int)sizeof(::gpk::SUDPCommand), 0, 0, 0);
+							::recvfrom(client.Socket, (sc_t*)&command, (int)szof(::gpk::SUDPCommand), 0, 0, 0);
 						::select(0, &sockets, 0, 0, &wait_time);
 					}
 				}
@@ -223,7 +223,7 @@ static	::gpk::error_t	server					(::gpk::SUDPServer& serverInstance)		{
 
 static	void			threadServer			(void* pServerInstance)				{
 	::gpk::SUDPServer			& serverInstance		= *(::gpk::SUDPServer*)pServerInstance;
-	e_if(errored(server(serverInstance)))
+	e_if(::gpk::failed(server(serverInstance)))
 	else
 		info_printf("Server gracefully closed.");
 

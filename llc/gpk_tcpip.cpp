@@ -196,7 +196,7 @@
 	hints.ai_protocol		= (TRANSPORT_PROTOCOL_TCP == mode) ? IPPROTO_TCP	: IPPROTO_UDP	;
 
 	const ::addrinfo			* createdAddrInfo								= 0;
-	ree_if(errored(::getaddrinfo(szHostName, portString, &hints, (::addrinfo**)&createdAddrInfo)), "gettaddrinfo failed for host_name: %s, port: %s", szHostName, portString);
+	ree_if(failed(::getaddrinfo(szHostName, portString, &hints, (::addrinfo**)&createdAddrInfo)), "gettaddrinfo failed for host_name: %s, port: %s", szHostName, portString);
 	//sockaddr_in6									* sockaddr_ipv6									= 0;
 
 	uint32_t					iAddress										= 0;

@@ -37,7 +37,7 @@ using gpk::sc_t, gpk::sc_c;
 	return sizeNeededForMultiByte;
 }
 
-::gpk::error_t			gpk::mbstowcs					(::gpk::apod<wchar_t> & output, const ::gpk::vcc input)	{
+::gpk::error_t			gpk::mbstowcs					(::gpk::apod<wchar_t> & output, ::gpk::vcsc_c input)	{
 	if(0 == input.size())
 		return 0;
 

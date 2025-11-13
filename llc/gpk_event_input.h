@@ -28,7 +28,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Down		, 2);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, DoubleClick	, 3);
 	GDEFINE_ENUM_VALUE(EVENT_MOUSE, Wheel		, 4);
-	stainli	::gpk::error_t	eventEnqueueMousePosition	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Position		, coord ); }
+	stainli	::gpk::error_t	eventEnqueueMousePosition	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2s1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Position		, coord ); }
 	stainli	::gpk::error_t	eventEnqueueMouseUp			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Up			, button); }
 	stainli	::gpk::error_t	eventEnqueueMouseDown		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_Down			, button); }
 	stainli	::gpk::error_t	eventEnqueueMouseDoubleClick(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Mouse, ::gpk::EVENT_MOUSE_DoubleClick	, button); }
@@ -39,17 +39,17 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, End			, 1);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Update		, 2);
 	GDEFINE_ENUM_VALUE(EVENT_TOUCH, Ownership	, 3);
-	stainli	::gpk::error_t	eventEnqueueTouchBegin		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Begin	, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchEnd		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_End		, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchUpdate		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Update	, coord); }
-	stainli	::gpk::error_t	eventEnqueueTouchOwnership	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Ownership, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchBegin		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Begin	, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchEnd		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_End		, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchUpdate		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Update	, coord); }
+	stainli	::gpk::error_t	eventEnqueueTouchOwnership	(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Touch, ::gpk::EVENT_TOUCH_Ownership, coord); }
 
 	GDEFINE_ENUM_TYPE(EVENT_JOYPAD, uint8_t);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Move		, 0);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Button_up	, 1);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, Button_down, 2);
 	GDEFINE_ENUM_VALUE(EVENT_JOYPAD, ZMove		, 3);
-	stainli	::gpk::error_t	eventEnqueueJoyPadMove		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2i16 coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Move		, coord ); }
+	stainli	::gpk::error_t	eventEnqueueJoyPadMove		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2s1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Move		, coord ); }
 	stainli	::gpk::error_t	eventEnqueueJoyPadZMove		(::gpk::apobj<::gpk::SEventSystem> & queue, uint16_t value)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_ZMove		, value ); }
 	stainli	::gpk::error_t	eventEnqueueJoyPadUp		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Button_up	, button); }
 	stainli	::gpk::error_t	eventEnqueueJoyPadDown		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t button)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Joypad, ::gpk::EVENT_JOYPAD_Button_down, button); }

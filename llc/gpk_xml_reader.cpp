@@ -11,10 +11,10 @@ using gpk::sc_t, gpk::sc_c;
 
 //stacxpr	::gpk::astatic<const sc_t, 5> RESERVED_XML_CHARACTERS = {'#', '&', '"', '<', '>'};
 
-::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, const ::gpk::vcc & filename) {
+::gpk::error_t			gpk::xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename) {
 	xml_info_printf("Loading xml file: %s.", filename.begin());
 	gpk_necall(gpk::fileToMemory({filename.begin(), filename.size()}, file.Bytes), "Failed to load file: '%s'", filename.begin());
-	return ::gpk::xmlParse(file.Reader, file.Bytes);
+	return ::gpk::xmlParse(file.Reader, {file.Bytes});
 }
 
 static	::gpk::error_t	xmlOpenElement				(::gpk::SXMLReader & reader, ::gpk::XML_TOKEN token, int32_t iStartCharacter = -1) {
@@ -59,7 +59,7 @@ static	::gpk::error_t	xmlCloseElement				(::gpk::SXMLReader & reader, int32_t iS
 	return --reader.StateRead.NestLevel;
 }
 
-static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -84,7 +84,7 @@ static	::gpk::error_t	xmlParseStringCharacter	(::gpk::SXMLReader& reader, ::gpk:
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -157,7 +157,7 @@ static	::gpk::error_t	xmlParseTagCharacter		(::gpk::SXMLReader& reader, ::gpk::v
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::vcsc_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	if(::gpk::isSpaceCharacter(currentChar)) {
@@ -225,7 +225,7 @@ static	::gpk::error_t	xmlParseNameCharacter		(::gpk::SXMLReader& reader, ::gpk::
 	return 0;
 }
 
-static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc) {
+static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc) {
 	const sc_t				& currentChar				= xmlDoc[reader.StateRead.IndexCurrentChar];
 	xml_info_printf("Parsing character %i '%c' at index %i for token '%s'.", currentChar, currentChar, reader.StateRead.IndexCurrentChar, ::gpk::get_value_label(reader.StateRead.CurrentElement->Type).begin());
 	switch(currentChar) {
@@ -318,7 +318,7 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	return 0;
 }
 
-::gpk::error_t			gpk::xmlParseCharacter	(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc)	{
+::gpk::error_t			gpk::xmlParseCharacter	(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
 	stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 4> TOKENS_CHARACTER_TAG	= {::gpk::XML_TOKEN_TAG_OPEN, ::gpk::XML_TOKEN_TAG_CLOSE, ::gpk::XML_TOKEN_PI, ::gpk::XML_TOKEN_ATTR};
 	stacxpr	::gpk::array_static<const ::gpk::XML_TOKEN, 3> TOKENS_CHARACTER_NAME	= {::gpk::XML_TOKEN_ATTR_NAME, ::gpk::XML_TOKEN_TAG_NAME, ::gpk::XML_TOKEN_PI_NAME};
 	if(0 == reader.StateRead.CurrentElement) {
@@ -343,9 +343,9 @@ static	::gpk::error_t	xmlParseDocumentCharacter	(::gpk::SXMLReader& reader, ::gp
 	return 0;
 }
 
-::gpk::error_t			gpk::xmlParse			(::gpk::SXMLReader& reader, ::gpk::vcc xmlDoc)	{
+::gpk::error_t			gpk::xmlParse			(::gpk::SXMLReader& reader, ::gpk::vcst_t xmlDoc)	{
 	for(reader.StateRead.IndexCurrentChar = 0; reader.StateRead.IndexCurrentChar < xmlDoc.size(); ++reader.StateRead.IndexCurrentChar) {
-		if (errored(::gpk::xmlParseCharacter(reader, xmlDoc))) {
+		if (gpk::failed(::gpk::xmlParseCharacter(reader, xmlDoc))) {
 			error_printf("Failed to parse XML:"
 				"\niCharacter		: %i ('%c')"
 				"\niNestLevel		: %i"

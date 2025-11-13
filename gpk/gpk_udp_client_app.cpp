@@ -1,8 +1,9 @@
 #include "gpk_udp_client_app.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_json_expression.h"
+#include "gpk_chrono.h"
 
-::gpk::error_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcc & remote_ip, ::gpk::vcc & remote_port) {
+::gpk::error_t	gpk::loadClientConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & remote_ip, ::gpk::vcsc_t & remote_port) {
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_ip"  }, jsonConfig, parentNode, remote_ip));
 	ws_if_failed(::gpk::jsonExpressionResolve(::gpk::vcs{"remote_port"}, jsonConfig, parentNode, remote_port));
 	info_printf("Remote server address '%s:%s'", ::gpk::toString(remote_ip).begin(), ::gpk::toString(remote_port).begin());
@@ -12,7 +13,7 @@
 ::gpk::error_t		gpk::setupGUI			(::gpk::SClientUI & clientUI, ::gpk::SGUI & gui)		{
 	gpk_necs(clientUI.Root = ::gpk::createScreenLayout(gui));
 
-	stacxpr	::gpk::n2u16	CONTROL_SIZE			= {192, 20};
+	stacxpr	::gpk::n2u1_t	CONTROL_SIZE			= {192, 20};
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INPUT>(gui, clientUI.Input, clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_BOTTOM_RIGHT));
 	gpk_necs(gpk::setupControlListWithRoot<::gpk::UI_CLIENT_INFO> (gui, clientUI.Info , clientUI.Root, CONTROL_SIZE, ::gpk::ALIGN_TOP_LEFT));
 	return 0;
@@ -67,11 +68,11 @@
 ::gpk::error_t			gpk::updateGUI		(::gpk::SClient & client, ::gpk::SGUI & gui) {
 	sc_t						buf [128]			= {};
 	uint32_t					dots				= ::gpk::timeCurrent() % 4;
-	::gpk::achar				textConnecting		= ::gpk::vcs{"Connecting"};
+	::gpk::asc_t				textConnecting		= ::gpk::vcs{"Connecting"};
 	textConnecting.append(gpk::vcs{"...", dots});
 	gpk_necs(gpk::controlTextSet(gui, client.UI.Input[::gpk::UI_CLIENT_INPUT_Connect]
-		, (client.UDP.State == ::gpk::UDP_CONNECTION_STATE_IDLE		) ? ::gpk::vcs{"Disconnect"} 
-		: (client.UDP.State == ::gpk::UDP_CONNECTION_STATE_HANDSHAKE) ? ::gpk::vcc{textConnecting}
+		, (client.UDP.State == ::gpk::UDP_CONNECTION_STATE_IDLE		) ? ::gpk::vcst_t{"Disconnect"} 
+		: (client.UDP.State == ::gpk::UDP_CONNECTION_STATE_HANDSHAKE) ? ::gpk::vcsc_t{textConnecting}
 		: ::gpk::vcs{"Connect"}
 		)); 
 	if(client.UDP.State == ::gpk::UDP_CONNECTION_STATE_IDLE) {

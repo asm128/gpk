@@ -7,13 +7,13 @@
 namespace gpk
 {
 	struct STypeIdentifier {
-		::gpk::vcc				NameSpace				= {};
-		::gpk::vcc				Name					= {};
+		::gpk::vcsc_t			NameSpace				= {};
+		::gpk::vcsc_t			Name					= {};
 
 		inlcxpr					STypeIdentifier			()			= default;
-		inlcxpr					STypeIdentifier			(const ::gpk::vcc & nameSpace, const ::gpk::vcc & name)	: NameSpace(nameSpace), Name(name)	{}
+		inlcxpr					STypeIdentifier			(::gpk::vcsc_c & nameSpace, ::gpk::vcsc_c & name)	: NameSpace(nameSpace), Name(name)	{}
 
-		inline	bool			operator==				(const STypeIdentifier & right)		const	noexcept	{ return NameSpace == right.NameSpace && Name == right.Name;	}
+		inline	bool			operator==				(const STypeIdentifier & right)		const	noexcept	{ return NameSpace == right.NameSpace && Name == right.Name; }
 	};	// struct
 } // namespace
 

@@ -51,7 +51,7 @@ static	::gpk::error_t	clientConnectAttempt						(::gpk::SUDPClient & client)		{
 }
 
 static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
-	::gpk::au8														receiveBuffer;
+	::gpk::au0_t														receiveBuffer;
 	while(client.State != ::gpk::UDP_CONNECTION_STATE_DISCONNECTED && client.Socket != INVALID_SOCKET) {
 		sockaddr_in														sa_server									= {};				/* Information about the server */
 		int																sa_length									= sizeof(struct sockaddr_in);
@@ -75,7 +75,7 @@ static	::gpk::error_t	clientQueueReceive								(::gpk::SUDPClient & client)		{
 		::gpk::tcpipAddressFromSockaddr(sa_server, temp);
 		if(temp.IP == client.Address.IP && commandReceived.Command == ::gpk::ENDPOINT_COMMAND_PAYLOAD) {
 			if(temp.Port == client.Address.Port)
-				es_if(errored(::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer)));
+				es_if(::gpk::failed(::gpk::connectionHandleCommand(client, commandReceived, receiveBuffer)));
 		}
 		else {
 			info_printf("Data received fro invalid ip. Local: %u, %u, %u, %u, %u. Remote: %u, %u, %u, %u, %u", GPK_IPV4_EXPAND(temp), GPK_IPV4_EXPAND(client.Address));

@@ -6,8 +6,8 @@
 namespace gpk
 {
 	struct STypeRegistry {
-		::gpk::avcc				Names;
-		::gpk::au32				MemberCount;
+		::gpk::avcsc_t				Names;
+		::gpk::au2_t				MemberCount;
 
 		static	STypeRegistry&	GetGlobalInstance	()	noexcept	{
 			static STypeRegistry		instance;
@@ -30,8 +30,8 @@ namespace gpk
 
 #define GPK_END_POD(_structName)																									\
 	public:																															\
-		stincxp	::gpk::vcc	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
-		stincxp	uint32_t	gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
+		stincxp	::gpk::vcsc_t	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
+		stincxp	uint32_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
 	};																																\
 	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 
@@ -39,8 +39,8 @@ namespace gpk
 
 #define GPK_STRUCT_MEMBER(_type, _name, ...)																			\
 	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																			\
-		stincxp	::gpk::vcc	gpk_member_type_name	()		noexcept	{ return {::gpk::size(#_type) - 1, #_type}; }	\
-		stincxp	::gpk::vcc	gpk_member_name			()		noexcept	{ return {::gpk::size(#_name) - 1, #_name}; }	\
+		stincxp	::gpk::vcsc_t	gpk_member_type_name	()		noexcept	{ return {::gpk::size(#_type) - 1, #_type}; }	\
+		stincxp	::gpk::vcsc_t	gpk_member_name			()		noexcept	{ return {::gpk::size(#_name) - 1, #_name}; }	\
 	};																													\
 	_type				_name
 }

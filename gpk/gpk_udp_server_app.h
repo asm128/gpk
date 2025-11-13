@@ -22,29 +22,29 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(UI_SERVER_INFO, TimeStarted		, 4);
 
 	struct SServerUI {
-		::gpk::cid_t			Root				= -1;
-		::gpk::acid				Info				= {};
-		::gpk::acid				Input				= {};
-		::gpk::achar			TextDateTime		= ::gpk::vcc{1, "-"};
-		::gpk::achar			TextTimeStarted		= ::gpk::vcc{1, "-"};
-		::gpk::achar			TextClientCount		= ::gpk::vcc{1, "-"};
-	};	
+		::gpk::cid_t				Root				= -1;
+		::gpk::acid					Info				= {};
+		::gpk::acid					Input				= {};
+		::gpk::asc_t				TextDateTime		= ::gpk::vcsc_t{1, "-"};
+		::gpk::asc_t				TextTimeStarted		= ::gpk::vcsc_t{1, "-"};
+		::gpk::asc_t				TextClientCount		= ::gpk::vcsc_t{1, "-"};
+	};
 
 	struct SServer {
-		gpk::SUDPServer			UDP;
+		gpk::SUDPServer				UDP;
 
 		gpk::ao<gpk::TUDPQueue>		QueueReceived;
 		gpk::apobj<gpk::TQueueSend>	QueueToSend;	// A queue for each client
 
-		::gpk::vcs				Adapter				= "0";	// default
-		::gpk::vcs				Port				= "9865";
+		::gpk::vcst_t				Adapter				= "0";	// default
+		::gpk::vcst_t				Port				= "9865";
 
-		SServerUI				UI;
+		SServerUI					UI;
 
-		double					ListeningSince		= {};
+		double						ListeningSince		= {};
 	};
 
-	::gpk::error_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcc & port, ::gpk::vcc & adapter);
+	::gpk::error_t			loadServerConfig	(const ::gpk::SJSONReader & jsonConfig, int32_t parentNode, ::gpk::vcsc_t & port, ::gpk::vcsc_t & adapter);
 	::gpk::error_t			serverStart			(::gpk::SServer & server, ::gpk::SGUI & gui);
 	::gpk::error_t			serverUpdate		(::gpk::SServer & server, ::gpk::SGUI & gui);
 	::gpk::error_t			setupGUI			(::gpk::SServerUI & serverUI, ::gpk::SGUI & gui);

@@ -6,18 +6,18 @@ static	::gpk::CLabelManager*	labelManagerSingleton		()			noexcept	{
 	return &instanceLabelManager; 
 }
 
-		::gpk::label::label			(const sc_t * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
+		::gpk::label::label			(const char * text, uint32_t stringLen)	noexcept	: LabelManager(::labelManagerSingleton())	{ 
 	e_if_failed(LabelManager->View(text, stringLen, *this), "text: %s.", text); 
 }
 
-bool	::gpk::label::operator==	(const ::gpk::vcs & other)		const	noexcept	{
+bool	::gpk::label::oper==	(const ::gpk::vcst_t & other)		const	noexcept	{
 	return (Data == other.begin()) 	? true
 		: (Count != other.size()) 	? false 
 		: 0 == memcmp(Data, other.begin(), Count)
 		;
 }
 
-bool	::gpk::label::operator==	(const label & other)			const	noexcept	{
+bool	::gpk::label::oper==	(const label & other)			const	noexcept	{
 	return (Data == other.Data) 	? true
 		: (Count != other.Count) 	? false
 		: (LabelManager == other.LabelManager) ? false 

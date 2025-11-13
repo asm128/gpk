@@ -44,11 +44,11 @@ static	::gpk::cid_t	menuInit		(::gpk::SGUI & gui, ::gpk::acid & idButtons) {
 	::gpk::guiGetProcessableControls(gui, controlsToProcess);
 	if(int32_t result = editor.UI.InputBox.Update(gui, editor.UI.InputBox.VirtualKeyboard, queuedEvents, controlsToProcess)) {
 		if(result == INT_MAX) { // enter key pressed
-			::gpk::vcc					trimmed				= {};
+			::gpk::vcsc_t					trimmed				= {};
 			gpk_necs(editor.UI.InputBox.Text.slice(trimmed, 0, ::gpk::min(editor.UI.InputBox.Text.size(), 128U)));
 			gpk_necs(gpk::trim(trimmed));
 			if(trimmed.size()) {
-				::gpk::pobj<::gpk::ac>	textInput;
+				::gpk::pobj<::gpk::asc_t>	textInput;
 				textInput.create();
 				*textInput	= ::gpk::label(trimmed);
 				editor.UI.InputHistory.push_back(textInput);

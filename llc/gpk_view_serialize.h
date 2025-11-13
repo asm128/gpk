@@ -7,64 +7,67 @@
 
 namespace gpk
 {
+	tplT		err_t	loadPOD			(vcu0_t & input, T & output) { 
+		rees_if(input.byte_count() < szof(T));
+		memcpy(&output, input.begin(), szof(T));
+		gpk_necs(input.slice(input, szof(T)));
+		rtrn szof(T);
+	}
+	tplTstin	err_t	loadPOD			(vcs0_t & input, T & output)	{ rtrn loadPOD (*(vcu0_t*)& input, output); }
+	tplTstin	err_t	loadPOD			(vcsc_t & input, T & output)	{ rtrn loadPOD (*(vcu0_t*)& input, output); }
+	//
+	tplT		err_t	loadUInt		(vcu0_t & input, T & output)	{
+		cnst packed_uint<T>		& packedInput	= *(cnst packed_uint<T>*)input.begin(); 
+		if_true_ve(-1, packedInput.ValueWidth() > input.size()); 
+		output					= packedInput.Value(); 
+		gpk_necs(input.slice(input, packedInput.ValueWidth())); 
+		rtrn packedInput.ValueWidth();
+	}
+	tplTstin	err_t	loadUInt		(vcs0_t & input, T & output)	{ rtrn loadUInt (*(vcu0_t*)& input, output); }
+	tplTstin	err_t	loadUInt		(vcsc_t  & input, T & output)	{ rtrn loadUInt (*(vcu0_t*)& input, output); }
+	//
 	tplt<tpnm T, tpnm TByte>
-	::gpk::error_t				viewRead			(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
-		const packedu32					& header			= *(const packedu32*)input.begin();
-		const uint32_t					counterWidth		= header.ValueWidth();
-		ree_if(input.size() < counterWidth, GPK_FMT_U32_LT_U32, input.size(), counterWidth);
-
-		const uint32_t					elementCount		= header.Value();
-		const uint32_t					dataSize			= sizeof(T) * elementCount;
-		ree_if(dataSize > (input.size() - counterWidth), "%" GPK_FMT_U32 " > (%" GPK_FMT_U32 "-%" GPK_FMT_U32 ").", dataSize, input.size(), counterWidth);
-
-		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
-		return counterWidth + dataSize;
+	err_t					viewRead		(view<T> & headerToRead, view<TByte> input)	{
+		pku2_c					& header		= *(pku2_c*)input.begin();
+		u2_c					counterWidth	= header.ValueWidth();
+		ree_if(input.size() < counterWidth, GPK_FMT_LT_U2, input.size(), counterWidth);
+		u2_c					elementCount	= header.Value();
+		u2_c					dataSize		= szof(T) * elementCount;
+		ree_if(dataSize > (input.size() - counterWidth), "%" GPK_FMT_U2 " > (%" GPK_FMT_U2 "-%" GPK_FMT_U2 ").", dataSize, input.size(), counterWidth);
+		headerToRead			= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
+		rtrn counterWidth + dataSize;
 	}
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{ return viewRead<const T, const uint8_t>(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewRead<const T, const int8_t >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewRead<const T, const sc_t   >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<T> & headerToRead, ::gpk::vu8 input)					{ return viewRead<T, uint8_t>(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<T> & headerToRead, ::gpk::vi8 input)					{ return viewRead<T, int8_t >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewRead		(::gpk::view<T> & headerToRead, ::gpk::vc  input)					{ return viewRead<T, sc_t   >(headerToRead, input); }
-
-	tplt<tpnm T, tpnm TByte>
-	::gpk::error_t				viewReadLegacy		(::gpk::view<T> & headerToRead, ::gpk::view<TByte> input)	{
-		const uint32_t					counterWidth		= sizeof(uint32_t);
-		ree_if(input.size() < counterWidth, "Invalid input size: %u", input.size());
-
-		const uint32_t					elementCount		= *(const uint32_t*)input.begin();
-		const uint32_t					dataSize			= elementCount * sizeof(T);
-		ree_if(dataSize > (input.size() - counterWidth), "Invalid input size: %u. Expected: %u", input.size(), dataSize);
-
-		headerToRead				= {(input.size() > counterWidth) ? (T*)&input[counterWidth] : 0, elementCount};
-		return counterWidth + dataSize;
-	}
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<const T> & headerToRead, const ::gpk::vcu8 & input)	{ return viewReadLegacy<const T, const uint8_t>(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<const T> & headerToRead, const ::gpk::vci8 & input)	{ return viewReadLegacy<const T, const int8_t >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<const T> & headerToRead, const ::gpk::vcc  & input)	{ return viewReadLegacy<const T, const sc_t   >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<T> & headerToRead, ::gpk::vu8 input)					{ return viewReadLegacy<T, uint8_t>(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<T> & headerToRead, ::gpk::vi8 input)					{ return viewReadLegacy<T, int8_t >(headerToRead, input); }
-	tplt<tpnm T>	stainli	::gpk::error_t	viewReadLegacy	(::gpk::view<T> & headerToRead, ::gpk::vc  input)					{ return viewReadLegacy<T, sc_t   >(headerToRead, input); }
-
-	tplt<tpnm _tPOD> 
-	::gpk::error_t				loadPOD				(::gpk::vcu8 & input, _tPOD & output) { 
-		rees_if(input.byte_count() < sizeof(_tPOD));
-		memcpy(&output, input.begin(), sizeof(_tPOD));
-		gpk_necs(input.slice(input, sizeof(_tPOD)));
-		return sizeof(_tPOD);
-	}
-	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vci8 & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadPOD		(::gpk::vcc  & input, _tPOD & output) { return loadPOD (*(::gpk::vcu8*)& input, output); }
-
-	tplt<tpnm _tPOD> 
-	::gpk::error_t				loadView			(::gpk::vcu8 & input, ::gpk::view<const _tPOD> & output) { 
-		uint32_t						bytesRead				= 0;
-		gpk_necs(bytesRead = ::gpk::viewRead(output, input)); 
+	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, cnst vcu0_t & input)	{ rtrn viewRead<cnst T, u0_c>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, cnst vcs0_t & input)	{ rtrn viewRead<cnst T, s0_c>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<cnst T> & headerToRead, cnst vcsc_t  & input)	{ rtrn viewRead<cnst T, sc_c>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<T> & headerToRead, vu8 input)					{ rtrn viewRead<T, u0_t>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<T> & headerToRead, vi8 input)					{ rtrn viewRead<T, s0_t>(headerToRead, input); }
+	tplTstin	err_t	viewRead		(view<T> & headerToRead, vc  input)					{ rtrn viewRead<T, sc_t>(headerToRead, input); }
+	//
+	tplT		err_t	loadView		(vcu0_t & input, view<cnst T> & output) { 
+		u2_t					bytesRead		= 0;
+		gpk_necs(bytesRead = viewRead(output, input)); 
 		gpk_necs(input.slice(input, bytesRead));
-		return 0;
+		rtrn 0;
 	}
-	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vci8 & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
-	tplt<tpnm _tPOD>	stainli	::gpk::error_t	loadView	(::gpk::vcc  & input, ::gpk::view<_tPOD> & output) { return loadView(*(::gpk::vcu8*)& input, output); }
+	tplTstin	err_t	loadView	(vcs0_t & input, view<T> & output) { rtrn loadView(*(vcu0_t*)& input, output); }
+	tplTstin	err_t	loadView	(vcsc_t & input, view<T> & output) { rtrn loadView(*(vcu0_t*)& input, output); }
+	//
+	tplTOutTIn	err_t	viewReadLegacy	(view<TOut> & headerToRead, view<TIn> input)	{
+		stxp		u2_c		counterWidth	= szof(u2_t);
+		ree_if(input.size() < counterWidth, "Invalid input size: %" GPK_FMT_U2 "", input.size());
+		u2_c					elementCount	= *(u2_c*)input.begin();
+		u2_c					dataSize		= elementCount * szof(TOut);
+		ree_if(dataSize > (input.size() - counterWidth), "Invalid input size: %" GPK_FMT_U2 ". Expected: %" GPK_FMT_U2 "", input.size(), dataSize);
+		headerToRead	= {(input.size() > counterWidth) ? (TOut*)&input[counterWidth] : 0, elementCount};
+		rtrn counterWidth + dataSize;
+	}
+	tplTstin	err_t	viewReadLegacy	(view<cnst T> & headerToRead, vcu0_c & input)	{ rtrn viewReadLegacy<cnst T, u0_c>(headerToRead, input); }
+	tplTstin	err_t	viewReadLegacy	(view<cnst T> & headerToRead, vcs0_c & input)	{ rtrn viewReadLegacy<cnst T, s0_c>(headerToRead, input); }
+	tplTstin	err_t	viewReadLegacy	(view<cnst T> & headerToRead, vcsc_c & input)	{ rtrn viewReadLegacy<cnst T, sc_c>(headerToRead, input); }
+	tplTstin	err_t	viewReadLegacy	(view<T> & headerToRead, vu0_t input)			{ rtrn viewReadLegacy<T, u0_t>(headerToRead, input); }
+	tplTstin	err_t	viewReadLegacy	(view<T> & headerToRead, vs0_t input)			{ rtrn viewReadLegacy<T, s0_t>(headerToRead, input); }
+	tplTstin	err_t	viewReadLegacy	(view<T> & headerToRead, vsc_t input)			{ rtrn viewReadLegacy<T, sc_t>(headerToRead, input); }
 } // namespace
 
 #endif // GPK_VIEW_SERIALIZE_H_23627

@@ -8,18 +8,18 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	typedef	range<n2char>	range2char;
-	typedef	range<n2uchar>	range2uchar;
-	typedef	range<n2f32>	range2f32;
-	typedef	range<n2f64>	range2f64;
-	typedef	range<n2u8 >	range2u8;
-	typedef	range<n2u16>	range2u16;
-	typedef	range<n2u32>	range2u32;
-	typedef	range<n2u64>	range2u64;
-	typedef	range<n2i8 >	range2i8;
-	typedef	range<n2i16>	range2i16;
-	typedef	range<n2i32>	range2i32;
-	typedef	range<n2i64>	range2i64;
+	typedef	range<n2sc_t>	range2char;
+	typedef	range<n2uc_t>	range2uchar;
+	typedef	range<n2f2_t>	range2f32;
+	typedef	range<n2f3_t>	range2f64;
+	typedef	range<n2u0_t>	range2u8;
+	typedef	range<n2u1_t>	range2u16;
+	typedef	range<n2u2_t>	range2u32;
+	typedef	range<n2u3_t>	range2u64;
+	typedef	range<n2s0_t>	range2i8;
+	typedef	range<n2s1_t>	range2i16;
+	typedef	range<n2s2_t>	range2i32;
+	typedef	range<n2s3_t>	range2i64;
 #pragma pack(pop)
 } // namespace
 

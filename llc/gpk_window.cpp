@@ -14,8 +14,8 @@
 		, window.WindowedWindowRect.Bottom - window.WindowedWindowRect.Top
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
-#endif
-	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+#endif // GPK_WINDOWS
+	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= false;
 	return 0;
 }
@@ -47,8 +47,8 @@
 		{ uint16_t(monitor_info.rcMonitor.right - monitor_info.rcMonitor.left)
 		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
-#endif
-	es_if(errored(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+#endif // GPK_WINDOWS
+	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= true;
 	return 0;
 }
@@ -68,7 +68,7 @@
 	(void)displayInstance;
 #else
 	(void)displayInstance;
-#endif
+#endif // GPK_WINDOWS
 	return quit ? 1 : 0;
 }
 
@@ -83,16 +83,16 @@
 		if(1 == windowUpdateTick(displayInstance))
 			quit					= true;
 #elif defined(GPK_XCB)
-
-#endif
+	 
+#endif // GPK_WINDOWS
 	return quit ? 1 : 0;
 }
 
 #if defined(GPK_WINDOWS)
 ::gpk::error_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
 	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
-	const ::gpk::n2u16			metricsSource			= colorArray.metrics().u1_t();
-	const ::gpk::n2u16			prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
+	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1_t();
+	::gpk::n2u1_c				prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight
 	 || width  != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
@@ -140,7 +140,7 @@
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
 	return 0;
 }
-#endif
+#endif // GPK_WINDOWS
 
 ::gpk::error_t			gpk::windowPresentTarget					(::gpk::SWindow& displayInstance, const ::gpk::g8bgra& targetToPresent)		{
 	(void)displayInstance; (void)targetToPresent;
@@ -149,12 +149,12 @@
 	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
 	::HDC					dc											= ::GetDC(windowHandle);
 	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
-	ef_if(errored(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
+	ef_if(failed(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
 #elif defined(GPK_XCB)
 	(void)displayInstance; (void)targetToPresent;
-#else
+#else // ??
 	(void)displayInstance; (void)targetToPresent;
-#endif
+#endif // GPK_WINDOWS
 	return 0;
 }

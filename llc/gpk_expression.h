@@ -25,7 +25,7 @@ namespace gpk
 	struct SExpressionToken {
 		int32_t							ParentIndex;
 		EXPRESSION_READER_TYPE			Type;
-		::gpk::sliceu32					Span;
+		::gpk::sliceu2_t				Span;
 		bool							ClosingCondition				= false;
 	};
 
@@ -51,14 +51,14 @@ namespace gpk
 
 	struct SExpressionReader {
 		::gpk::apod<::gpk::SExpressionToken>	Token;
-		::gpk::aobj<::gpk::vcc>					View;
+		::gpk::aobj<::gpk::vcsc_t>				View;
 		::gpk::apobj<::gpk::SExpressionNode>	Tree;
 		::gpk::SExpressionReaderState			StateRead;
 		::gpk::pobj<::gpk::SExpressionReader>	SubExpressionCache;
 	};
 
-	::gpk::error_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcc & expression);
-	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcc & expression);
+	::gpk::error_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
 } // namespace
 
 #endif // GPK_EXPRESSION_H_23627

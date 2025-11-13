@@ -1,8 +1,6 @@
 #include "gpk_log_core.h"
 
-#include "gpk_chrono.h" 
 #include "gpk_size.h"
-
 #include "gpk_cstring.h"
 
 #ifdef GPK_ATMEL
@@ -15,87 +13,72 @@
 #ifndef GPK_LOG_LEVEL_H
 #define GPK_LOG_LEVEL_H
 
-
 namespace gpk
 {
+	err_t			debug_print_prefix				(s0_t severity, sc_c * path, u2_t line, sc_c * function);
 #ifndef GPK_ARDUINO
-	void				_gpk_print_system_errors		(const sc_t * prefix, uint32_t prefixLen);
+	void			_gpk_print_system_errors		(sc_c * prefix, u2_t prefixLen);
 #endif
-
-#ifdef GPK_WINDOWS
-	tplt<size_t prefixLength, size_t fmtLen, tpnm... TArgs>
-	static	void		_gpk_debug_printf				(int severity, const sc_t (&prefix)[prefixLength], const sc_t (&format)[fmtLen], const TArgs... args)			{
-		sc_t					timeString	[64]				= {};
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
-		base_log_write(timeString, (int)stringLength);
-		base_log_write(prefix, prefixLength);
+#ifndef GPK_ATMEL
+	tplt<u2_t fmtLen, tpnm... TArgs>
+	sttc	void	_gpk_debug_printf				(s0_t severity, sc_c * path, u2_t line, sc_c * function, sc_c (&format)[fmtLen], cnst TArgs... args)	{
+		debug_print_prefix((int8_t)severity, path, line, function);
 #else
-#	ifdef GPK_ATMEL
 	tplt<tpnm... TArgs>
-	static	void		_gpk_debug_printf				(const sc_t* function, const __FlashStringHelper* format, const TArgs... args)			{
+	sttc	void	_gpk_debug_printf				(sc_c * function, cnst __FlashStringHelper * format, cnst TArgs... args)			{
 		base_log_print_F("{");
 		base_log_print(function);
 		base_log_print_F("}:");
-#	else
-	tplt<size_t prefixLength, size_t fmtLen, tpnm... TArgs>
-	static	void		_gpk_debug_printf				(int severity, const sc_t (&prefix)[prefixLength], const sc_t * function, const sc_t (&format)[fmtLen], const TArgs... args)			{
-		sc_t					timeString	[64]				= {};
-		size_t					stringLength					= snprintf(timeString, sizeof(timeString) - 2, "%llu|", ::gpk::timeCurrentInMs());
-		base_log_write(timeString, (int)stringLength);
-		base_log_write(prefix, strlen(prefix));
-		base_log_write("{", 1);
-		base_log_write(function, strlen(function));
-		base_log_write("}:", 2);
-#	endif
 #endif
 
 #ifdef GPK_ESP32 // Use dynamic string buffer to save flash space.
-		if(format) {
-			const uint32_t bufferSize = uint32_t(strlen(format) + 1024 * 16);
-			if(sc_t * customDynamicString = (sc_t*)malloc(bufferSize)) {
-				stringLength	= snprintf(customDynamicString, bufferSize - 2, format, args...);
-				customDynamicString[::gpk::min(stringLength, bufferSize - 2)] = '\n';
-				customDynamicString[::gpk::min(stringLength + 1, bufferSize - 1)] = 0;
-				base_log_write(customDynamicString, (int)::gpk::min(stringLength + 1, bufferSize - 1));
+		/*if(format) */{
+			u2_c bufferSize = u2_t(strlen(format) + 1024 * 8);
+			if(char * customDynamicString = (char*)malloc(bufferSize)) {
+				u2_c 				stringLength		= (u2_t)snprintf(customDynamicString, bufferSize - 2U, format, args...);
+				customDynamicString[min(stringLength, bufferSize - 2U)] = '\n';
+				customDynamicString[min(stringLength + 1, bufferSize - 1U)] = 0;
+				base_log_write(customDynamicString, (int)min(stringLength + 1U, bufferSize - 1U));
 				free(customDynamicString);
 			}
 		}
 #else
-#	ifdef GPK_ATMEL
+#	if defined(GPK_ATMEL) || defined(ESP8266)
 		sc_t					customDynamicString	[128]		= {};
-		size_t 					stringLength					= snprintf_P(customDynamicString, sizeof(customDynamicString) - 1, (const sc_t*)format, args...);
-		customDynamicString[min(stringLength, (size_t)sizeof(customDynamicString)-1)] = '\n';
+		u2_c 					stringLength					= (u2_t)snprintf_P(customDynamicString, szof(customDynamicString) - 1U, (sc_c*)format, args...);
+		customDynamicString[min(stringLength, szof(customDynamicString) - 1U)] = '\n';
 	#else
 		sc_t					customDynamicString	[fmtLen + 1024 * 32]	= {};
-		stringLength		= ::gpk::sprintf_s(customDynamicString, format, args...);
-		customDynamicString[min(stringLength, sizeof(customDynamicString)-2)] = '\n';
+		u2_c 					stringLength					= (u2_t)::gpk::sprintf_s(customDynamicString, format, args...);
+		customDynamicString[min(stringLength, szof(customDynamicString) - 2U)] = '\n';
 		if(2 >= severity)
-			::gpk::_gpk_print_system_errors(prefix, prefixLength);
+			::gpk::_gpk_print_system_errors("", 0);
 #	endif
-		base_log_write(customDynamicString, (uint32_t)min(sizeof(customDynamicString), stringLength + 1));
+		base_log_write(customDynamicString, min(szof(customDynamicString), stringLength + 1U));
 #endif
 	}
 
-	tplt<tpnm... _tArgs>
-	stincxp	void*		nully		(_tArgs&&...)		{ return 0; }
+	tpl_vtArgs
+	sinx	void*		nully				(_tArgs&&...)		{ return 0; }
+
 }
 
 #ifdef GPK_WINDOWS
-#	define gpk_debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) "){" __FUNCTION__ "}:", format, __VA_ARGS__)
+#	define gpk_debug_printf(severity, format, ...)	::gpk::_gpk_debug_printf(severity, __FILE__, __LINE__, __FUNCTION__, format, __VA_ARGS__)
 #else
 #	ifdef GPK_ATMEL
-#		define gpk_debug_printf(severity, severityStr, format, ...)	do{ /*base_log_print_F(__FILE__ "(" GPK_TOSTRING(__LINE__) ")");*/ ::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__); } while(0) //::gpk::_gpk_debug_printf("(" GPK_TOSTRING(__LINE__) ")", "")
+#		define gpk_debug_printf(severity, format, ...)	do{ /*base_log_print_F(__FILE__ "(" GPK_TOSTRING(__LINE__) ")");*/ ::gpk::_gpk_debug_printf(__func__, F(format), ##__VA_ARGS__); } while(0) //::gpk::_gpk_debug_printf("(" GPK_TOSTRING(__LINE__) ")", "")
 #	else
-#		define gpk_debug_printf(severity, severityStr, format, ...)	::gpk::_gpk_debug_printf(severity, #severity "|" severityStr "|" __FILE__ "(" GPK_TOSTRING(__LINE__) ")", __func__, format, ##__VA_ARGS__)
+#		define gpk_debug_printf(severity, format, ...)	::gpk::_gpk_debug_printf(severity, __FILE__, __LINE__, __func__, format, ##__VA_ARGS__)
 #	endif
 #endif
 
 #ifndef always_printf
 #ifndef logf_always
 #if !defined(GPK_WINDOWS)
-#	define always_printf(format, ...)					gpk_debug_printf(3, "info", format, ##__VA_ARGS__)
+#	define always_printf(format, ...)					gpk_debug_printf(3, format, ##__VA_ARGS__)
 #else
-#	define always_printf(format, ...)					gpk_debug_printf(3, "info", format, __VA_ARGS__)
+#	define always_printf(format, ...)					gpk_debug_printf(3, format, __VA_ARGS__)
 #endif
 #endif
 #endif
@@ -104,9 +87,9 @@ namespace gpk
 #ifndef logf_error
 #	if defined (GPK_ERROR_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define error_printf(format, ...)					do { gpk_debug_printf(1, "error", format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, ##__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #else
-#		define error_printf(format, ...)					do { gpk_debug_printf(1, "error", format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
+#		define error_printf(format, ...)					do { gpk_debug_printf(1, format, __VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
 #endif
 #	else
 #		define error_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); GPK_PLATFORM_CRT_BREAKPOINT(); } while(0)
@@ -118,9 +101,9 @@ namespace gpk
 #ifndef logf_warning
 #	if defined (GPK_WARNING_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define warning_printf(format, ...)					gpk_debug_printf(2, "warning"	, format, ##__VA_ARGS__)
+#		define warning_printf(format, ...)					gpk_debug_printf(2, format, ##__VA_ARGS__)
 #else
-#		define warning_printf(format, ...)					gpk_debug_printf(2, "warning"	, format, __VA_ARGS__)
+#		define warning_printf(format, ...)					gpk_debug_printf(2, format, __VA_ARGS__)
 #endif
 #	else
 #		define warning_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -132,9 +115,9 @@ namespace gpk
 #ifndef logf_info
 #	if defined (GPK_INFO_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define info_printf(format, ...)						gpk_debug_printf(3, "info"		, format, ##__VA_ARGS__)
+#		define info_printf(format, ...)						gpk_debug_printf(3, format, ##__VA_ARGS__)
 #else
-#		define info_printf(format, ...)						gpk_debug_printf(3, "info"		, format, __VA_ARGS__)
+#		define info_printf(format, ...)						gpk_debug_printf(3, format, __VA_ARGS__)
 #endif
 #	else
 #		define info_printf(format, ...)						do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -146,9 +129,9 @@ namespace gpk
 #ifndef logf_success
 #	if defined (GPK_SUCCESS_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define success_printf(format, ...)					gpk_debug_printf(4, "info"		, format, ##__VA_ARGS__)
+#		define success_printf(format, ...)					gpk_debug_printf(4, format, ##__VA_ARGS__)
 #else
-#		define success_printf(format, ...)					gpk_debug_printf(4, "info"		, format, __VA_ARGS__)
+#		define success_printf(format, ...)					gpk_debug_printf(4, format, __VA_ARGS__)
 #endif
 #	else
 #		define success_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -160,9 +143,9 @@ namespace gpk
 #ifndef logf_verbose
 #	if defined (GPK_VERBOSE_PRINTF_ENABLED)
 #ifndef GPK_WINDOWS
-#		define verbose_printf(format, ...)					gpk_debug_printf(4, "info"		, format, ##__VA_ARGS__)
+#		define verbose_printf(format, ...)					gpk_debug_printf(4, format, ##__VA_ARGS__)
 #else
-#		define verbose_printf(format, ...)					gpk_debug_printf(4, "info"		, format, __VA_ARGS__)
+#		define verbose_printf(format, ...)					gpk_debug_printf(4, format, __VA_ARGS__)
 #endif
 #	else
 #		define verbose_printf(format, ...)					do { ::gpk::dummy(__VA_ARGS__); } while(0)
@@ -171,17 +154,17 @@ namespace gpk
 #endif
 
 //
-#define gpk_rv_hrcall(retVal, hr_call)					do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "error", "%s -> %i (0x%X): '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin()); return retVal; } } while(0)
-#define gpk_rve_hrcall(retVal, hr_call, format, ...)	do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "error", "%s -> %i (0x%X): '%s' " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__); return retVal; } } while(0)
+#define gpk_rv_hrcall(retVal, hr_call)					do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "%s -> %" GPK_FMT_S2 " (0x%X): '%s'.", #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin()); return retVal; } } while(0)
+#define gpk_rve_hrcall(retVal, hr_call, format, ...)	do { ::HRESULT errCall_ = (hr_call); if FAILED(errCall_) { gpk_debug_printf(0, "%s -> %" GPK_FMT_S2 " (0x%X): '%s' " format, #hr_call, errCall_, ::gpk::getWindowsErrorAsString(errCall_).begin(), __VA_ARGS__); return retVal; } } while(0)
 
 #define gpk_hrcall(hr_call)				do { gpk_rv_hrcall (-1, hr_call)				; } while(0)		// HRESULT call.
 #define gpk_hrecall(hr_call, ...)		do { gpk_rve_hrcall(-1, hr_call, __VA_ARGS__)	; } while(0)		// HRESULT call.
 
-#define gpk_necs(gpkl_call)					do { const auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::error_t(_grr_rslt_val)) { error_printf("%s -> %i", #gpkl_call, _grr_rslt_val); return -1; } } while(0) // Non-		propagable error call string.
+#define gpk_necs(gpkl_call)					do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 "", #gpkl_call, _grr_rslt_val); return -1; } } while(0) // Non-		propagable error call string.
 #ifdef GPK_WINDOWS
-#	define gpk_necall(gpkl_call, format, ...)	do { const auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::error_t(_grr_rslt_val)) { error_printf("%s -> %i: " format, #gpkl_call, _grr_rslt_val, __VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
+#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, __VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
 #else
-#	define gpk_necall(gpkl_call, format, ...)	do { const auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::error_t(_grr_rslt_val)) { error_printf("%s -> %i: " format, #gpkl_call, _grr_rslt_val, ##__VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
+#	define gpk_necall(gpkl_call, format, ...)	do { cnst auto _grr_rslt_val = gpkl_call; if(0 > ::gpk::err_t(_grr_rslt_val)) { error_printf("%s -> %" GPK_FMT_S2 ": " format, #gpkl_call, _grr_rslt_val, ##__VA_ARGS__); return -1; } } while(0)		// Non-propagable error call.
 #endif
 
 #ifndef gthrow_if

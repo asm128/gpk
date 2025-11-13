@@ -1,17 +1,17 @@
 #include "gpk_planetary_system.h"
 
-::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcc jsonFilePath) { 
+::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & planetarySystem, ::gpk::vcsc_t jsonFilePath) { 
 	::gpk::SJSONFile			jsonFile					= {};
 	gpk_necs(gpk::jsonFileRead(jsonFile, jsonFilePath));
 	return ::gpk::planetarySystemSetup(planetarySystem, jsonFile.Reader);
 }
 
 ::gpk::error_t			gpk::planetarySystemSetup	(::gpk::SPlanetarySystem & solarSystem, const ::gpk::SJSONReader & jsonData) {
-	::gpk::avcc					stellarBodyNames			= {};
-	::gpk::ai32					stellarBodyIndices;
+	::gpk::avcsc_t				stellarBodyNames			= {};
+	::gpk::as2_t					stellarBodyIndices;
 	gpk_necs(gpk::jsonObjectKeyList(jsonData, 0, stellarBodyIndices, stellarBodyNames));
-	const ::gpk::vcvcc			jsonView					= jsonData.View;
-	::gpk::avcc					bodyParentNames;
+	const ::gpk::view<vcsc_c>	jsonView					= jsonData.View;
+	::gpk::avcsc_t					bodyParentNames;
 
 	int32_t						iFurthest					= 0;
 	float						fFurthest					= 0;
@@ -28,7 +28,7 @@
 		// Load planet properties.
 		cws_if_failed(indexProperty = ::gpk::jsonObjectValueGet(jsonData, jsonIndexStellarBody + 2, "type")); // ?? no type? shouldn't happen
 
-		const ::gpk::vcc			strType						= jsonData.View[indexProperty]; 
+		const ::gpk::vcsc_t			strType						= jsonData.View[indexProperty]; 
 		const ::gpk::CELESTIAL_BODY	bodyType					= ::gpk::bodyTypeFromString(strType);
 		::gpk::SCelestialBody		bodyProperties				= {};
 		cws_if_failed(::gpk::loadCelestialBody(bodyProperties, bodyType, jsonData, jsonIndexStellarBody + 2));

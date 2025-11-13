@@ -237,12 +237,12 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 //-----------------------------------------------------------------------------
 // Prepare a looping wave
 //-----------------------------------------------------------------------------
-::gpk::error_t			gpk::AUDIO_STATE::PrepareAudio(const ::gpk::vcc & wavname) {
+::gpk::error_t			gpk::AUDIO_STATE::PrepareAudio(::gpk::vcsc_c & wavname) {
 	safe_destroySourceVoice(SourceVoice);
 
 	// Read in the wave file
 	const WAVEFORMATEX			* pwfx				= 0;
-	::gpk::vcu8					audioView			= {};
+	::gpk::vcu0_t					audioView			= {};
 	gpk_necs(DirectX::LoadWAVAudioFromFile(wavname, WaveData, &pwfx, audioView));
 
 	ree_if(pwfx->nChannels != INPUTCHANNELS, "%i == %i", pwfx->nChannels, INPUTCHANNELS);
@@ -280,7 +280,7 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 		if (vListenerPos.x != listener.Position.x
 		 || vListenerPos.z != listener.Position.z
 		) {
-			::gpk::n3f32				vDelta				= vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z};
+			::gpk::n3f2_t				vDelta				= vListenerPos - ::gpk::n3f2_t{listener.Position.x, listener.Position.y, listener.Position.z};
 
 			fListenerAngle			= float( atan2( vDelta.x, vDelta.z ) );
 
@@ -303,11 +303,11 @@ stacxpr	XAUDIO2FX_REVERB_I3DL2_PARAMETERS	g_PRESET_PARAMS[::gpk::NUM_PRESETS]	=
 		}
 
 		if( fElapsedTime > 0 ) {
-			::gpk::n3f32				lVelocity			= ( vListenerPos - ::gpk::n3f32{listener.Position.x, listener.Position.y, listener.Position.z} ) / fElapsedTime;
+			::gpk::n3f2_t				lVelocity			= ( vListenerPos - ::gpk::n3f2_t{listener.Position.x, listener.Position.y, listener.Position.z} ) / fElapsedTime;
 			listener.Position		= {vListenerPos.x, vListenerPos.y, vListenerPos.z};
 			listener.Velocity		= {lVelocity.x, lVelocity.y, lVelocity.z};
 
-			::gpk::n3f32				eVelocity			= ( vEmitterPos - ::gpk::n3f32{emitter.Position.x, emitter.Position.y, emitter.Position.z} ) / fElapsedTime;
+			::gpk::n3f2_t				eVelocity			= ( vEmitterPos - ::gpk::n3f2_t{emitter.Position.x, emitter.Position.y, emitter.Position.z} ) / fElapsedTime;
 			emitter.Position		= {vEmitterPos.x, vEmitterPos.y, vEmitterPos.z};
 			emitter.Velocity		= {eVelocity.x, eVelocity.y, eVelocity.z};
 		}
@@ -536,7 +536,7 @@ static	::gpk::error_t	enumerateAudio		(_In_ IXAudio2* pXaudio2, _Inout_ ::gpk::a
 	return S_OK;
 }
 
-HRESULT					gpk::SSoundState::PrepareAudio	(const ::gpk::vcc & wavname, IXAudio2*	XAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice) {
+HRESULT					gpk::SSoundState::PrepareAudio	(::gpk::vcsc_c & wavname, IXAudio2*	XAudio2, IXAudio2MasteringVoice * pMasterVoice, IXAudio2SubmixVoice * pSubmixVoice) {
 	safe_destroySourceVoice(SourceVoice);
 
 	// Search for media
@@ -548,7 +548,7 @@ HRESULT					gpk::SSoundState::PrepareAudio	(const ::gpk::vcc & wavname, IXAudio2
 
 	// Read in the wave file
 	const WAVEFORMATEX			* pwfx				= 0;
-	::gpk::vcu8					audioView			= {};
+	::gpk::vcu0_t				audioView			= {};
 	WaveData.create();
 	gpk_hrcall(DirectX::LoadWAVAudioFromFile(::gpk::vcs{strFilePath}, *WaveData, &pwfx, audioView));
 

@@ -100,8 +100,8 @@ namespace gpk
 			::gpk::SGUI								 & gui				= *Dialog.GUI;
 			gui.Controls.Draw[Dialog.Root].NoBorder = gui.Controls.Draw[Dialog.Root].NoClient = true;
 			::gpk::acid	controls;
-			e_if(errored(::gpk::guiCreateControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
-			e_if(errored(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
+			e_if(failed(::gpk::guiCreateControlList<::gpk::UI_LOBBY_USER>(gui, Dialog.Root, {240U, 22U}, {}, ::gpk::ALIGN_TOP_RIGHT, ::gpk::ALIGN_TOP_RIGHT, controls)));
+			e_if(failed(::gpk::inputBoxCreate(InputBox, gui, Dialog.Root)));
 		}
 
 		::gpk::error_t						Connect				() { 

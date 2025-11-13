@@ -9,7 +9,7 @@ namespace gpk
 	stacxpr	double	SCALE_DAY_SECONDS_TO_RADIANS	= ::gpk::math_2pi * SCALE_DAY_SECONDS;
 	stacxpr	double	SCALE_DAY_MINUTES_TO_RADIANS	= SCALE_DAY_SECONDS_TO_RADIANS * 60;
 
-	::gpk::n3f32	calcSunPosition					();
+	::gpk::n3f2_t	calcSunPosition					();
 	double			calcSunlightFactor				(double daylightRatioExtra = .5, uint32_t daylightOffsetMinutes = 90);
 } // namespace
 

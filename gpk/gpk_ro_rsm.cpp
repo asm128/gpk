@@ -127,7 +127,7 @@ static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const
 			rsm_stream.read_pod(vertexCount);
 			info_printf("Vertex count: %u.", vertexCount);
 			if(vertexCount) {
-				::gpk::apod<::gpk::n3f32>						& modelVertices												= newNode.Vertices;
+				::gpk::apod<::gpk::n3f2_t>						& modelVertices												= newNode.Vertices;
 				modelVertices.resize(vertexCount);
 				rsm_stream.read_pod(modelVertices.begin(), vertexCount);
 			}
@@ -197,7 +197,7 @@ static	::gpk::error_t	rsmReadPositionKeyframes									(::gpk::view_stream<const
 }
 
 ::gpk::error_t			gpk::rsmFileLoad											(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input)							{
-	::gpk::au8									fileInMemory												= {};
+	::gpk::au0_t				fileInMemory												= {};
 	gpk_necall(gpk::fileToMemory(input, fileInMemory), "Failed to load .rsw file: %s", input.begin());
 	uint64_t													unk															= *(uint64_t*)&fileInMemory[fileInMemory.size() - 8];
 	(void)unk;

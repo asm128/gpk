@@ -155,9 +155,9 @@ static	int64_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
 			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.s2_t()})) {
-				::gpk::n2i32			mouseDeltas			= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-				const ::gpk::n2f64		currentScale		= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-				::gpk::n2i16			deltasScaled		= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).s1_t();
+				::gpk::n2s2_t			mouseDeltas			= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+				const ::gpk::n2f3_t		currentScale		= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
+				::gpk::n2s1_t			deltasScaled		= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).s1_t();
 				gui.Controls.Placement[vp.IdControl].Area.Size									+= deltasScaled;
 				gui.Controls.Placement[vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled;
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);

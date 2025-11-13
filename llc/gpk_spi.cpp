@@ -5,8 +5,7 @@
 	(void)device;
 	return 0;
 }
-
-::gpk::error_t gpk::spiRead(SSPIDevice & device, uint16_t address, uint16_t count, ::gpk::au8 & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
+::gpk::error_t gpk::spiRead(SSPIDevice & device, uint16_t address, uint16_t count, ::gpk::au0_t & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {
@@ -22,8 +21,7 @@
 	return -1;
 #endif
 }
-
-::gpk::error_t gpk::spiWrite(SSPIDevice & device, uint16_t address, uint16_t count, const ::gpk::vcu8 & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
+::gpk::error_t gpk::spiWrite(SSPIDevice & device, uint16_t address, uint16_t count, ::gpk::vcu0_c & data, ::gpk::SPI_MODE mode, uint32_t timeout) {
 #if defined(GPK_ST)
 	HAL_StatusTypeDef result = HAL_ERROR;
 	switch(mode) {

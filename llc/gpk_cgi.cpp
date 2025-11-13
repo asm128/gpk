@@ -9,11 +9,11 @@
 #	include <ctime>
 #endif
 
-::gpk::error_t			gpk::querystring_split	(const ::gpk::vcc & input_string, ::gpk::aobj<::gpk::vcc>& output_views)		{
+::gpk::error_t			gpk::querystring_split	(::gpk::vcsc_c & input_string, ::gpk::aobj<::gpk::vcsc_t>& output_views) {
 	if(0 == input_string.size())
 		return 0;
 	uint32_t						start				= 0;
-	::gpk::apod<::gpk::sliceu32>	slices;
+	::gpk::apod<::gpk::sliceu2_t>	slices;
 	for(uint32_t iChar = 0; iChar < input_string.size(); ++iChar) {
 		if('&' == input_string[iChar]) {
 			if(start != iChar)
@@ -23,10 +23,10 @@
 	}
 	slices.push_back({start, input_string.size()});
 	for(uint32_t iSlice = 0; iSlice < slices.size(); ++iSlice) {
-		const ::gpk::sliceu32			& slice				= slices[iSlice];
-		const uint32_t					slicelen			= slice.End - slice.Begin;
+		::gpk::sliceu2_c		& slice				= slices[iSlice];
+		const uint32_t			slicelen			= slice.End - slice.Begin;
 		if(slicelen) {
-			const ::gpk::vcc				keyval				= {&input_string[slice.Begin], slicelen};
+			::gpk::vcsc_c			keyval				= {&input_string[slice.Begin], slicelen};
 			output_views.push_back(keyval);
 		}
 	}
@@ -34,10 +34,10 @@
 }
 
 ::gpk::error_t			gpk::writeCGIEnvironToFile		(::gpk::view<const ::gpk::TKeyValConstString> environViews)	{
-	::gpk::au8						environmentBlockToSave			= {};
+	::gpk::au0_t				environmentBlockToSave			= {};
 	::gpk::keyValConstStringSerialize(environViews, ::gpk::cgi_environ, environmentBlockToSave);
 	if(environmentBlockToSave.size()) {
-		::gpk::au8						temp;
+		::gpk::au0_t					temp;
 		::gpk::apod<sc_t>				tempName						= {};
 		uint64_t						curTime							= time(0);
 		for(uint32_t iKey = 0; iKey < environViews.size(); ++iKey)

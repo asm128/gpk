@@ -14,7 +14,7 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonData), "%s", ::gpk::toString(jsonData.View[0]).begin());	
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
-::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcc jsonFilePath)				{ 
+::gpk::error_t			gpk::planetarySystemSetup(::gpk::SEnginePlanetarySystem & planetarySystem, ::gpk::SEngine & engine, ::gpk::vcsc_t jsonFilePath)				{ 
 	gpk_necall(gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, jsonFilePath), "%s", jsonFilePath.begin());						
 	return ::gpk::planetarySystemSetup(planetarySystem.PlanetarySystem, planetarySystem.EntityMap, engine); 
 }
@@ -44,7 +44,7 @@ stacxpr	double			ASTRONOMICAL_UNIT_SCALE		= 1.0 / 149597870700;
 	return 0;
 }
 
-static	::gpk::error_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(5, "psOrbit")) {	// Gravity cemters
+static	::gpk::error_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(5, "psOrbit")) {	// Gravity cemters
 	::gpk::SParamsRingSide		params					= {{}, 32};
 	int32_t						iEntity;
 	gpk_necs(iEntity = engine.CreateRingFlat(params));
@@ -53,7 +53,7 @@ static	::gpk::error_t	createOrbiterOrbit	(::gpk::SEngine & engine, const ::gpk::
 	return iEntity;
 }
 
-static	::gpk::error_t	createGravityCenter		(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(15, "psGravityCenter")) {	// Gravity cemters
+static	::gpk::error_t	createGravityCenter		(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(15, "psGravityCenter")) {	// Gravity cemters
 	::gpk::SParamsSphere		params					= {{}, {8, 8}};
 	int32_t						iEntity;
 	gpk_necs(iEntity = engine.CreateSphere(params));
@@ -62,7 +62,7 @@ static	::gpk::error_t	createGravityCenter		(::gpk::SEngine & engine, const ::gpk
 	return iEntity;
 }
 
-static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::vcs shaderName = ::gpk::vcc(5, "psSun")) {	// Gravity cemters
+static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::vcst_t shaderName = ::gpk::vcsc_t(5, "psSun")) {	// Gravity cemters
 	::gpk::SParamsSphere		params					= {{}, {32, 32}};
 	int32_t						iEntity;
 	gpk_necs(iEntity = engine.CreateSphere(params));
@@ -135,23 +135,23 @@ static	::gpk::error_t	initOrbit				(::gpk::SEngine & engine, int32_t iOrbiter, i
 	gpk_necs(engine.SetPhysicsActive(iEntity, iOrbiter));
 	gpk_necs(engine.SetCollides	(iEntity, false));
 
-	::gpk::n3f64				scale					= {radius, radius, radius};
+	::gpk::n3f3_t				scale					= {radius, radius, radius};
 	if(iOrbiter)
 		scale					*= distanceScale * 2;
 	else
 		scale					= {.01f, .01f, .01f};
-	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f64{scale.x * 1.001, scale.y, scale.z * 1.001}.f2_t(), true));
+	gpk_necs(engine.SetMeshScale(iEntity, ::gpk::n3f3_t{scale.x * 1.001, scale.y, scale.z * 1.001}.f2_t(), true));
 	gpk_necs(engine.SetHidden	(iEntity, false));
 	return 0;
 }
 
-stacxpr	::gpk::n3f64	SUN_SCALE				= {.00625f, .00625f, .00625f};
+stacxpr	::gpk::n3f3_t	SUN_SCALE				= {.00625f, .00625f, .00625f};
 
 static	::gpk::error_t	initGravityCenter		(::gpk::SEngine & engine, int32_t iEntity, bool isStar, double diameter, double distanceScale, bool ) {
 	gpk_necs(engine.SetPhysicsActive(iEntity, true));
 	gpk_necs(engine.SetCollides		(iEntity, false));
 
-	::gpk::n3f64				scale					= {diameter, diameter, diameter};
+	::gpk::n3f3_t				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
 	scale					*= 2;
 	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
@@ -163,11 +163,11 @@ static	::gpk::error_t	initBody				(::gpk::SEngine & engine, int32_t iEntity, boo
 	gpk_necs(engine.SetPhysicsActive(iEntity, false == isStar));
 	gpk_necs(engine.SetCollides		(iEntity, false));
 
-	::gpk::n3f64				scale					= {diameter, diameter, diameter};
+	::gpk::n3f3_t				scale					= {diameter, diameter, diameter};
 	scale					= isStar ? SUN_SCALE : scale * distanceScale;
 	gpk_necs(engine.SetMeshScale(iEntity, scale.f2_t(), true));
 	::gpk::TFuncPixelShader		& ps					= isStar ? ::gpk::psSphereAxis	: ringSystem ? ::gpk::psSphereMeridian	: ::gpk::psSphereSolid		;
-	const ::gpk::vcc			psName					= isStar ? ::gpk::vcs{"psSun"}	: ringSystem ? ::gpk::vcs{"psGasGiant"}	: ::gpk::vcs{"psTerrestrial"};
+	const ::gpk::vcsc_t			psName					= isStar ? ::gpk::vcs{"psSun"}	: ringSystem ? ::gpk::vcs{"psGasGiant"}	: ::gpk::vcs{"psTerrestrial"};
 	gpk_necs(engine.SetShader	(iEntity, ps, psName));
 	gpk_necs(engine.SetHidden	(iEntity, false));
 	return 0;
@@ -180,10 +180,10 @@ static	::gpk::error_t	textureNumber			(::gpk::g8bgra view, uint32_t number, cons
 		{ {int16_t(view.metrics().x / 2 - (font.CharSize.x * strlen(strNumber)) / 2), int16_t(view.metrics().y / 2 - font.CharSize.y / 2)}
 		, font.CharSize.s1_t()
 		};
-	::gpk::apod<::gpk::n2u16>	coords;
+	::gpk::apod<::gpk::n2u1_t>	coords;
 	::gpk::textLineRaster(view.metrics(), font.CharSize, targetRect, font.Texture, strNumber, coords);
 	for(uint32_t iCoord = 0; iCoord < coords.size(); ++iCoord) {
-		const ::gpk::n2u16			coord						= coords[iCoord];
+		const ::gpk::n2u1_t			coord						= coords[iCoord];
 		view[coord.y][coord.x]	= ::gpk::BLACK;
 	}
 	return 0; 

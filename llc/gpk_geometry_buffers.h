@@ -10,8 +10,8 @@ namespace gpk
 		::gpk::an3f32	Positions;
 		::gpk::an3f32	Normals;
 		::gpk::an2f32	TextureCoords;
-		::gpk::au32		Colors;
-		::gpk::au32		PositionIndices;
+		::gpk::au2_t	Colors;
+		::gpk::au2_t	PositionIndices;
 	};
 } // gpk
 

@@ -11,9 +11,8 @@
 #	include <cstdio>
 #endif
 
-#ifndef GPK_STRING_H_23627
-#define GPK_STRING_H_23627
-
+#ifndef GPK_CSTRING_H
+#define GPK_CSTRING_H
 
 namespace gpk
 {
@@ -127,4 +126,4 @@ namespace gpk
 #endif
 } // namespace
 
-#endif // GPK_STRING_H_23627
+#endif // GPK_CSTRING_H

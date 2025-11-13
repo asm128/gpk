@@ -27,7 +27,7 @@ namespace gpk
 
 	struct SXMLToken {
 		XML_TOKEN				Type;
-		::gpk::rangeu32			Range;
+		::gpk::rangeu2_t		Range;
 		int32_t					Parent;	// -1 for root element
 	};
 
@@ -45,15 +45,15 @@ namespace gpk
 		::gpk::apod<SXMLToken>	Token				= {};
 	};
 
-	::gpk::error_t			xmlParse			(SXMLReader& reader, ::gpk::vcc xmlDoc);
-	::gpk::error_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcc xmlDoc);
+	::gpk::error_t			xmlParse			(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
+	::gpk::error_t			xmlParseCharacter	(SXMLReader& reader, ::gpk::vcst_t xmlDoc);
 
 	struct SXMLFile {
 		::gpk::apod<sc_t>		Bytes				= {};
 		::gpk::SXMLReader		Reader				= {};
 	};
 
-	::gpk::error_t			xmlFileRead		(::gpk::SXMLFile & file, const ::gpk::vcc & filename);
+	::gpk::error_t			xmlFileRead			(::gpk::SXMLFile & file, ::gpk::vcst_c & filename);
 
 }
 

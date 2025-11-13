@@ -51,7 +51,7 @@ namespace gpk
 				info_printf("%s.", "Window graphics context freed");
 			}
 		}
-#endif
+#endif // GPK_WINDOWS
 	};
 
 	struct SWindow {
@@ -62,8 +62,8 @@ namespace gpk
 		::gpk::apobj<::gpk::SEventSystem>	EventQueue				= {};
 		::gpk::pobj<TOffscreen>				BackBuffer				= {};
 		::gpk::pobj<::gpk::SInput>			Input					= {};
-		::gpk::n2u16						PreviousSize			= {};
-		::gpk::n2u16						Size					= {320, 200};
+		::gpk::n2u1_t						PreviousSize			= {};
+		::gpk::n2u1_t						Size					= {320, 200};
 		::gpk::rectu16						WindowedWindowRect		= {0, 0, 320, 200};
 
 		bool								Resized					: 1;

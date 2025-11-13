@@ -59,7 +59,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 }
 
 //function to encrypt the message
-::gpk::error_t			gpk::rsaEncode	(const ::gpk::vcu8 & decrypted, uint64_t n, uint64_t key, uint64_t testkey, ::gpk::au64 & encrypted) {
+::gpk::error_t			gpk::rsaEncode	(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, ::gpk::au3_t & encrypted) {
 	uint32_t				offset			= encrypted.size();
 	uint32_t				i				= 0;
 	gpk_necs(encrypted.resize(offset + decrypted.size()));
@@ -76,9 +76,9 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 		++i;
 	}
 	if(testkey) {
-		::gpk::au8				decryptTest		= {};
+		::gpk::au0_t				decryptTest		= {};
 		::gpk::rsaDecode({&pEnc[offset], encrypted.size() - offset}, n, testkey, decryptTest);
-		::gpk::vcu8				filter_view		= {&pDec[offset], decrypted.size() - offset};
+		::gpk::vcu0_t				filter_view		= {&pDec[offset], decrypted.size() - offset};
 		ef_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest = 0; iTest < decryptTest.size(); ++iTest) {
 			ef_if(decryptTest[iTest] != filter_view[iTest], "%s", "Error!");
@@ -88,7 +88,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 }
 
 // function to decrypt the message
-::gpk::error_t			gpk::rsaDecode	(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, ::gpk::au8 & decrypted) {
+::gpk::error_t			gpk::rsaDecode	(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, ::gpk::au0_t & decrypted) {
 	uint32_t				offset			= decrypted.size();
 	uint32_t				i				= 0;
 	gpk_necs(decrypted.resize(offset + encrypted.size() + 1));
@@ -124,7 +124,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 }
 
 ::gpk::error_t		gpcFilterSub			(::gpk::vu8 & scanline, uint32_t bpp) {
-	::gpk::au8				filtered;
+	::gpk::au0_t				filtered;
 	const uint32_t			countBytes				= scanline.size();
 	gpk_necs(filtered.resize(countBytes));
 	uint8_t					* pScanline				= scanline.begin();
@@ -142,7 +142,7 @@ static	uint64_t	commonDivisor	(const uint64_t t, const uint64_t a)				{
 }
 
 ::gpk::error_t		gpcFilterSub2	(::gpk::vu8 & scanline, uint32_t bpp) {
-	::gpk::au8				filtered;
+	::gpk::au0_t				filtered;
 	gpk_necs(filtered.resize(scanline.size()));;
 	uint8_t					* pScanline				= scanline.begin();
 	{ // generate filtered bytes
@@ -166,16 +166,16 @@ static	::gpk::error_t	gpcFilter1Apply						(::gpk::vu8 & scanline) { gpk_necs(::
 static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::gpcDefilterSub		(scanline, 4)); return ::gpcDefilterSub2	(scanline, 2);		}
 
 //function to encrypt the message
-::gpk::error_t			gpk::gpcEncode		(const ::gpk::vcu8 & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au64 & encrypted) {
+::gpk::error_t			gpk::gpcEncode		(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au3_t & encrypted) {
 	uint32_t								offset								= encrypted.size();
 	uint32_t								i									= 0;
 
-	::gpk::au8								filtered;
+	::gpk::au0_t								filtered;
 	if(false == salt) {
 		gpk_necs(gpk::ardellEncode(decrypted, RSA_ARDELL_KEY, salt, filtered));
 	}
 	else { //
-		::gpk::au8								salted;
+		::gpk::au0_t								salted;
 		gpk_necs(gpk::saltDataSalt(decrypted, salted));
 		gpk_necs(gpk::ardellEncode(salted, RSA_ARDELL_KEY, salt, filtered));
 	}
@@ -184,7 +184,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	::gpcFilter0Apply(filter_view);
 	gpk_necs(gpk::rsaEncode(filter_view, n, key, testkey, encrypted));
 	if(testkey) {
-		::gpk::au8								decryptTest							= {};
+		::gpk::au0_t								decryptTest							= {};
 		gpk_necs(gpk::rsaDecode(encrypted, n, testkey, decryptTest));
 		ef_if(decryptTest.size() != filter_view.size(), "%s", "Error!");
 		for(uint32_t iTest =0; iTest < decryptTest.size(); ++iTest) {
@@ -197,16 +197,16 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 }
 
 // function to decrypt the message
-::gpk::error_t			gpk::gpcDecode		(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au8 & decrypted) {
+::gpk::error_t			gpk::gpcDecode		(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au0_t & decrypted) {
 	uint32_t								offset								= decrypted.size();
 	uint32_t								i									= 0;
-	::gpk::au64								defiltered							(encrypted);
+	::gpk::au3_t								defiltered							(encrypted);
 	::gpk::vu8								defilter_view						= {(uint8_t*)defiltered.begin(), defiltered.size() * (uint32_t)sizeof(uint64_t)};
 	::gpcFilter1Remove(defilter_view);
 	gpk_necs(gpk::rsaDecode(defiltered, n, key, decrypted));
 	::gpk::vu8								filter_view							({(uint8_t*)&decrypted[offset], decrypted.size() - offset});
 	::gpcFilter0Remove(filter_view);
-	::gpk::au8								defiltered2							= {};
+	::gpk::au0_t								defiltered2							= {};
 	gpk_necall(gpk::ardellDecode({&decrypted[offset], decrypted.size() - offset}, RSA_ARDELL_KEY, salt, defiltered2), "Failed to decode Ardell. %s", "Out of memory?");
 	if(false == salt) {
 		gpk_necs(decrypted.resize(offset + defiltered2.size() + 1));
@@ -214,7 +214,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 			decrypted[offset + j]				= defiltered2[j];
 	}
 	else {
-		::gpk::au8								unsalted;
+		::gpk::au0_t								unsalted;
 		gpk_necs(gpk::saltDataUnsalt(defiltered2, unsalted));
 		gpk_necs(decrypted.resize(offset + unsalted.size() + 1));
 		for(uint32_t j=0; j < unsalted.size(); ++j)
@@ -225,7 +225,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	return (::gpk::error_t)i;
 }
 
-::gpk::error_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au8 & decrypted)	{
+::gpk::error_t			gpk::gpcDecodeWithHash				(const ::gpk::vcu64 & encrypted, uint64_t n, uint64_t key, bool salt, ::gpk::au0_t & decrypted)	{
 	const uint32_t							actualSize							= encrypted.size() - 1;
 	const uint64_t							posthash							= encrypted[actualSize];
 	uint64_t								checkposthash						= 0;
@@ -250,8 +250,8 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	return 0;
 }
 
-::gpk::error_t			gpk::gpcEncodeWithHash				(const ::gpk::vcu8 & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au64 & encrypted)	{
-	::gpk::au8								prehashed, posthashed;
+::gpk::error_t			gpk::gpcEncodeWithHash				(const ::gpk::vcu0_t & decrypted, uint64_t n, uint64_t key, uint64_t testkey, bool salt, ::gpk::au3_t & encrypted)	{
+	::gpk::au0_t								prehashed, posthashed;
 	prehashed.resize(decrypted.size() + sizeof(uint64_t));
 	// -- Calculate the hash
 	uint64_t								& hash								= *(uint64_t*)&prehashed[decrypted.size()];
@@ -269,7 +269,7 @@ static	::gpk::error_t	gpcFilter1Remove					(::gpk::vu8 & scanline) { gpk_necs(::
 	const uint32_t									encryptedStart						= encrypted.size();
 	gpk_necs(gpk::gpcEncode(prehashed, n, key, testkey, salt, encrypted));
 	if(testkey) {
-		::gpk::au8								decryptTest							= {};
+		::gpk::au0_t								decryptTest							= {};
 		gpk_necs(gpk::gpcDecode(encrypted, n, testkey, salt, decryptTest));
 		e_if(decryptTest.size() != prehashed.size());
 		for(uint32_t i =0; i < decryptTest.size(); ++i) {

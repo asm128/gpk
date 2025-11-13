@@ -61,7 +61,7 @@ namespace gpk
 			const Tq					r						= t * v * (~t);
 			return {r.x, r.y, r.z};
 		}
-		Tq&						CreateFromAxisAngle		(const ::gpk::n3f32 & axis, double angle)				{
+		Tq&						CreateFromAxisAngle		(::gpk::n3f2_c & axis, double angle)				{
 			const double				halfAngle				= angle * .5;
 			const double				s						= ::gpk::sin(halfAngle);
 			x						= (_tBase)(axis.x * s);
@@ -71,8 +71,8 @@ namespace gpk
 			return *this;
 		}
 		/// Evaluates a rotation needed to be applied to an object positioned at sourcePoint to face destPoint
-		Tq&						LookAt					(const ::gpk::n3f32 & sourcePoint, const ::gpk::n3f32 & destPoint, const ::gpk::n3f32 & up = {0, 1, 0}, const ::gpk::n3f32 & front = {1, 0, 0})	{
-			::gpk::n3f32				forwardVector			= (destPoint - sourcePoint).Normalize();
+		Tq&						LookAt					(::gpk::n3f2_c & sourcePoint, ::gpk::n3f2_c & destPoint, ::gpk::n3f2_c & up = {0, 1, 0}, ::gpk::n3f2_c & front = {1, 0, 0})	{
+			::gpk::n3f2_t				forwardVector			= (destPoint - sourcePoint).Normalize();
 			const double				dot						= front.Dot(forwardVector);
 			if (::gpk::abs(dot - (-1.0)) < 0.000001)
 				return *this = Tq{up.x, up.y, up.z, -(_tBase)::gpk::math_pi}.Normalize();
@@ -80,7 +80,7 @@ namespace gpk
 				return *this = {0, 0, 0, 1};
 
 			const double				rotAngle				= ::gpk::acos(dot);
-			::gpk::n3f32				rotAxis					= front.Cross(forwardVector);
+			::gpk::n3f2_t				rotAxis					= front.Cross(forwardVector);
 			rotAxis.Normalize();
 			return CreateFromAxisAngle(rotAxis, rotAngle);
 		}
@@ -110,7 +110,7 @@ namespace gpk
 			fRoll					*= 0.5f;//
 
 			const SSinCos				pairSinCosX				= ::gpk::getSinCos(fPitch	);
-			const SSinCos				pairSinCosY				= ::gpk::getSinCos(fYaw	);
+			const SSinCos				pairSinCosY				= ::gpk::getSinCos(fYaw		);
 			const SSinCos				pairSinCosZ				= ::gpk::getSinCos(fRoll	);
 
 			const double				cYcZ					= pairSinCosY.Cos * pairSinCosZ.Cos;

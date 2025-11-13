@@ -6,23 +6,23 @@
 
 namespace gpk
 {
-	stacxpr	::gpk::vcc		DIGITS_HEX						= ::gpk::vcc{16, "0123456789abcdef"};
-	stacxpr	::gpk::vcc		DIGITS_DECIMAL					= ::gpk::vcc{10, "0123456789"};
-	::gpk::error_t			parseArbitraryBaseInteger		(uint32_t base, const ::gpk::vcc & symbolList, const ::gpk::vcc & sourceChars, uint64_t * number_);
+	stxp	vcsc_t	DIGITS_HEX						= vcsc_t{16, "0123456789abcdef"};
+	stxp	vcsc_t	DIGITS_DECIMAL					= vcsc_t{10, "0123456789"};
+	err_t			parseArbitraryBaseInteger		(u2_t base, vcsc_c & symbolList, vcsc_c & sourceChars, u3_t * number_);
 	tplt<tpnm _tInt>	
-	inline	::gpk::error_t	parseIntegerDecimal				(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
-		uint64_t					number							= 0; 
-		::gpk::error_t				countDigits; 
-		gpk_necs(countDigits = ::gpk::parseArbitraryBaseInteger(10, ::gpk::vcs{"0123456789"}, sourceChars, &number)); 
+	inline	err_t	parseIntegerDecimal				(vcsc_c & sourceChars, _tInt & number_)	{ 
+		u3_t					number							= 0; 
+		err_t				countDigits; 
+		gpk_necs(countDigits = parseArbitraryBaseInteger(10, vcs{"0123456789"}, sourceChars, &number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}
 
 	tplt<tpnm _tInt>	
-	inline	::gpk::error_t	parseIntegerHexadecimal			(const ::gpk::vcc & sourceChars, _tInt & number_)	{ 
-		uint64_t					number							= 0; 
-		::gpk::error_t countDigits;
-		gpk_necs(countDigits = ::gpk::parseArbitraryBaseInteger(16, ::gpk::vcs{"0123456789abcdef"}, sourceChars, &number)); 
+	inline	err_t	parseIntegerHexadecimal			(vcsc_c & sourceChars, _tInt & number_)	{ 
+		u3_t					number							= 0; 
+		err_t countDigits;
+		gpk_necs(countDigits = parseArbitraryBaseInteger(16, vcs{"0123456789abcdef"}, sourceChars, &number)); 
 		number_ = (_tInt)number; 
 		return countDigits; 
 	}
@@ -33,29 +33,29 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, COUNT	, 2);
 	GDEFINE_ENUM_VALUE(STRIP_LITERAL_TYPE, UNKNOWN	, -1);
 #pragma pack(push, 1)
-	struct SStripLiteralType {
-		int32_t						ParentIndex;
+	stct SStripLiteralType {
+		s2_t						ParentIndex;
 		STRIP_LITERAL_TYPE			Type;
-		::gpk::sliceu32				Span;
+		sliceu2_t			Span;
 	};
 
-	struct SStripLiteralState {
-		uint32_t					IndexCurrentChar				= 0;
-		int32_t						IndexCurrentElement				= -1;
-		::gpk::SStripLiteralType	* CurrentElement				= 0;
-		int32_t						NestLevel						= 0;
-		sc_t						CharCurrent						= 0;
+	stct SStripLiteralState {
+		u2_t						IndexCurrentChar				= 0;
+		s2_t						IndexCurrentElement				= -1;
+		SStripLiteralType	* CurrentElement				= 0;
+		s2_t						NestLevel						= 0;
+		char						CharCurrent						= 0;
 		bool						Escaping						= false;
 		bool						InsideToken						= false;
-		int32_t						BracketsToSkip					= 0;
+		s2_t						BracketsToSkip					= 0;
 	};
 #pragma pack(pop)
-	::gpk::error_t				stripLiteralParse				(::gpk::SStripLiteralState	& stateReading	, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format);
-	::gpk::error_t				stripLiteralParseStep			(::gpk::SStripLiteralState	& work_state	, ::gpk::apod<::gpk::SStripLiteralType> & out_types, const ::gpk::vcc & in_format);
-	::gpk::error_t				stripLiteralGetViews			(::gpk::aobj<::gpk::vcc>	& out_views, const ::gpk::view<const ::gpk::SStripLiteralType> & in_resultOfParser, const ::gpk::vcc & in_format);
+	err_t				stripLiteralParse				(SStripLiteralState	& stateReading	, apod<SStripLiteralType> & out_types, vcsc_c & in_format);
+	err_t				stripLiteralParseStep			(SStripLiteralState	& work_state	, apod<SStripLiteralType> & out_types, vcsc_c & in_format);
+	err_t				stripLiteralGetViews			(aobj<vcsc_t>	& out_views, const view<const SStripLiteralType> & in_resultOfParser, vcsc_c & in_format);
 
-	bool						isSpaceCharacter				(const sc_t characterToTest);
-	::gpk::error_t				skipToNextCharacter				(uint32_t & indexCurrentChar, const ::gpk::vcc & expression);
+	bool						isSpaceCharacter				(const char characterToTest);
+	err_t				skipToNextCharacter				(u2_t & indexCurrentChar, vcsc_c & expression);
 
 } // namespace
 

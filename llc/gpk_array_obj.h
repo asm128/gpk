@@ -1,3 +1,4 @@
+/// Copyright 2010-2024 - ogarnd
 #include "gpk_array_base.h"
 
 #include "gpk_keyval.h"
@@ -7,21 +8,39 @@
 
 namespace gpk
 {
-	tplt<tpnm _tObj>
-	struct array_obj : public array_base<_tObj> {
-		typedef	_tObj			T						;
-		typedef	view<T>			TView					;
-		typedef	array_obj<T>	TArray					;
+	tpl_tstct array_obj : public array_base<_t> {
+		tdfTTCnst(_t);
+		tydf	view<T>			TView					;
+		tydf	array_obj<T>	TArray					;
 
-		using array_base<T>		::Count					;
-		using array_base<T>		::Data					;
-		using array_base<T>		::Size					;
-		using array_base<T>		::alloc_with_reserve	;
+		usng	array_base<T>		::Count					;
+		usng	array_base<T>		::Data					;
+		usng	array_base<T>		::Size					;
+		usng	array_base<T>		::alloc_with_reserve	;
 
-		inline					~array_obj			()			{ for(uint32_t i = 0; i < Count; ++i) Data[i].~T(); }	// dtor
+		inln					~array_obj			()			{ for(u2_t i = 0; i < Count; ++i) Data[i].~T(); }	// dtor
 
-		inlcxpr					array_obj			()			= default;
-		inline					array_obj			(TArray&& other)											noexcept	{
+		inxp					array_obj			()			= default;
+								array_obj			(::std::initializer_list<T> init)	{ if_fail_te(append(init.begin(), (u2_t)init.size())); }
+		tpl_nu2					array_obj			(TCnst (&other)[_nu2])				{ if_fail_te(append(other, _nu2)); }
+								array_obj			(cnst TArray & other)				: array_obj((cnst view<TCnst>&) other)	{}
+								array_obj			(cnst view<TCnst> & other)			{
+			u2_t					newCount			= other.size();
+			if(newCount) {
+				if_fail_tef(reserve(newCount), "Requested size: %" GPK_FMT_U2 ". ", (u2_t)newCount);
+				for(; Count < newCount; ++Count)
+					new (&Data[Count]) T(other.begin()[Count]);
+			}
+		}
+								array_obj			(cnst view<T> & other)												{
+			u2_t					newCount			= other.size();
+			if(newCount) {
+				if_fail_tef(reserve(newCount), "Requested size: %" GPK_FMT_U2 ". ", (u2_t)newCount);
+				for(; Count < newCount; ++Count)
+					new (&Data[Count]) T(other.begin()[Count]);
+			}
+		}
+		inln					array_obj			(TArray&& other)											nxpt	{
 			Size					= other.Size;
 			Count					= other.Count;
 			Data					= other.Data;
@@ -29,46 +48,21 @@ namespace gpk
 			other.Size = other.Count	= 0;
 			other.Data				= 0;
 		}	// move ctor
-								array_obj			(const TArray & other)			: array_obj((const view<const T>&) other)	{}
-								array_obj			(const view<const T> & other)										{
-			uint32_t					newCount			= other.size();
-			if(newCount) {
-				gthrow_if(errored(reserve(newCount)), "Requested size: %u. ", (uint32_t)newCount);
-				for(; Count < newCount; ++Count)
-					new (&Data[Count]) T(other.begin()[Count]);
-			}
-		}
-								array_obj			(const view<T> & other)												{
-			uint32_t					newCount			= other.size();
-			if(newCount) {
-				gthrow_if(errored(reserve(newCount)), "Requested size: %u. ", (uint32_t)newCount);
-				for(; Count < newCount; ++Count)
-					new (&Data[Count]) T(other.begin()[Count]);
-			}
-		}
-								array_obj			(::std::initializer_list<T> init)				{
-			gthrow_if(errored(append(init.begin(), (uint32_t)init.size())), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)init.size());
-		}
-		tplt<size_t _count>
-								array_obj			(const T (&other)[_count])							{
-			gthrow_if(errored(append(other, (uint32_t)_count)), "Failed to resize array! Why? Initializer list size: %u.", (uint32_t)_count);
-		}
-		inlcxpr	operator		view<const T>		()									const	noexcept	{ return {Data, Count}; }
-		inline	TArray&			operator=			(const TArray & other)									{
-			gsthrow_if(resize(other.size()) != (int32_t)other.size());
-			for(uint32_t iElement = 0; iElement < Count; ++iElement)
+		inxp	oper			view<TCnst>			()								csnx	{ rtrn {Data, Count}; }
+		inln	TArray&			oper=				(cnst TArray & other)					{
+			if_true_te(resize(other.size()) != (s2_t)other.size());
+			for(u2_t iElement = 0; iElement < Count; ++iElement)
 				Data[iElement]			= other[iElement];
-			return *this;
+			rtrn *this;
 		}
-		::gpk::error_t			clear				()														{ for(uint32_t i = 0; i < Count; ++i) Data[i].~T(); return Count = 0; }
-		::gpk::error_t			clear_pointer		()											noexcept	{ clear(); safe_gpk_free(Data); return Size = 0; }
-
-		::gpk::error_t			reserve				(uint32_t newCount)										{
+		err_t			clear				()												{ for(u2_t i = 0; i < Count; ++i) Data[i].~T(); rtrn Count = 0; }
+		err_t			clear_pointer		()										nxpt	{ clear(); safe_gpk_free(Data); rtrn Size = 0; }
+		err_t			reserve				(u2_t newCount)									{
 			if(newCount > Size) {
 				T							* newData			= 0;
-				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
-				ree_if(0 == newData, "newCount: %i, newSize: %i", newCount, newSize);
-				for(uint32_t iElement = 0; iElement < Count; ++iElement) {
+				u2_c				newSize				= alloc_with_reserve(newCount, newData);
+				ree_if(0 == newData, "newCount: %" GPK_FMT_S2 ", newSize: %" GPK_FMT_S2 "", newCount, newSize);
+				for(u2_t iElement = 0; iElement < Count; ++iElement) {
 					new (&newData[iElement]) T(Data[iElement]);
 					Data[iElement].~T();
 				}
@@ -77,74 +71,65 @@ namespace gpk
 				Size					= newSize;
 				::gpk::gpk_free(oldData);
 			}
-			return Size;
+			rtrn Size;
 		}
-
 		// Returns the new size of the array.
-		::gpk::error_t			resize				(uint32_t newCount)															noexcept	{
+		err_t			resize				(u2_t newCount)															nxpt	{
 			gpk_necs(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{};
 			for(; Count > newCount; --Count)
 				Data[Count - 1].~T();
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the new size of the array.
-		::gpk::error_t			resize				(uint32_t newCount, const T & newValue)									noexcept	{
+		err_t			resize				(u2_t newCount, TCnst & newValue)									nxpt	{
 			gpk_necs(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{newValue};
 			for(; Count > newCount; --Count)
 				Data[Count - 1].~T();
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the new size of the array.
-		tplt <tpnm... _tArgs>
-		::gpk::error_t			resize				(uint32_t newCount, _tArgs&&... constructorArgs)											{
+		tpl_vtArgs	err_t	resize				(u2_t newCount, _tArgs&&... constructorArgs)											{
 			gpk_necs(reserve(newCount));
 			for(; Count < newCount; ++Count)
 				new (&Data[Count]) T{constructorArgs...};
 			for(; Count > newCount; --Count)
 				Data[Count - 1].~T();
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the new size of the array
-		inline	::gpk::error_t	pop_back			()											noexcept	{
+		inln	err_t	pop_back			()											nxpt	{
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			Data[--Count].~T();
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the new size of the array
-		inline	::gpk::error_t	pop_back			(T & oldValue)								noexcept	{
+		inln	err_t	pop_back			(T & oldValue)								nxpt	{
 			ree_if(0 == Count, "%s", "Cannot pop elements of an empty array.");
 			oldValue				= Data[--Count];
 			Data[Count].~T();
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the index of the pushed value or -1 on failure
-		::gpk::error_t			push_back			(const T & newValue)														noexcept	{
-			const int32_t				oldSize				= Count;
+		err_t			push_back			(TCnst & newValue)														nxpt	{
+			cnst s2_t				oldSize				= Count;
 			gpk_necs(resize(oldSize + 1, newValue));
-			return oldSize;
+			rtrn oldSize;
 		}
-
 		// returns the new array size or -1 if failed.
-		inline	::gpk::error_t	erase				(const T * address)																	{
+		inln	err_t	erase				(TCnst * address)																	{
 			ree_if(0 == Data, "Uninitialized array pointer! Invalid address to erase: %p.", address);
-			const ptrdiff_t				ptrDiff				= ptrdiff_t(address) - (ptrdiff_t)Data;
-			const uint32_t				index				= (uint32_t)(ptrDiff / (ptrdiff_t)sizeof(T));
-			ree_if(index >= Count, "Invalid index: %u.", index);
-			return remove(index);
+			cnst ptrdiff_t		ptrDiff				= ptrdiff_t(address) - (ptrdiff_t)Data;
+			u2_c				index				= (u2_t)(ptrDiff / (ptrdiff_t)szof(T));
+			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			rtrn remove(index);
 		}
-
-		::gpk::error_t			remove				(uint32_t index)																		{
-			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
-			ree_if(index >= Count, "Invalid index: %u.", index);
+		err_t			remove				(u2_t index)																		{
+			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
+			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
 			--Count;
 			while(index < Count) {
 				Data[index].~T();							// Destroy old
@@ -152,13 +137,12 @@ namespace gpk
 				++index;
 			}
 			Data[index].~T();							// Destroy last
-			return Count;
+			rtrn Count;
 		}
-
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
-		::gpk::error_t			remove_unordered	(uint32_t index)																		{
-			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %u.", index);
-			ree_if(index >= Count, "Invalid index: %u.", index);
+		err_t			remove_unordered	(u2_t index)																		{
+			ree_if(0 == Data, "Uninitialized array pointer! Invalid index to erase: %" GPK_FMT_U2 ".", index);
+			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
 			Data[index].~T();							// Destroy old
 			if(1 == Count || index == (Count - 1))
 				--Count;
@@ -167,138 +151,155 @@ namespace gpk
 				Data[Count].~T();						// Destroy reordered
 			}
 
-			return Count;
+			rtrn Count;
 		}
-		tplt<size_t _len>
-		inline	::gpk::error_t	append				(const T (&newChain)[_len])							noexcept	{ return append(newChain, (uint32_t)_len); }
-		inline	::gpk::error_t	append				(const ::gpk::view<const T> & newChain)				noexcept	{ return append(newChain.begin(), newChain.size());	}
-		::gpk::error_t			append				(const T * chainToAppend, uint32_t chainLength)		noexcept	{
+		tpl_nu2	inln	err_t	append				(TCnst (&newChain)[_nu2])						nxpt	{ rtrn append(newChain, _nu2); }
+				inln	err_t	append				(cnst view<TCnst> & newChain)					nxpt	{ rtrn append(newChain.begin(), newChain.size());	}
+						err_t	append				(TCnst * chainToAppend, u2_t chainLength)		nxpt	{
 			if(0 == chainLength)
-				return Count;
+				rtrn Count;
 
 			gpk_necs(reserve(Count + chainLength));
-			const uint32_t				iFirst				= Count;
-			for(uint32_t i = 0; i < chainLength; ++i)
+			u2_c				iFirst				= Count;
+			for(u2_t i = 0; i < chainLength; ++i)
 				new (&Data[Count++]) T{chainToAppend[i]};
-			return iFirst;
+			rtrn iFirst;
 		}
-
 		// returns the new size of the list or -1 on failure.
-		::gpk::error_t			insert				(uint32_t index, const T & newValue)										noexcept	{
-			ree_if(index > Count, "Invalid index: %u.", index);
-			const uint32_t				newCount			= Count + 1;
+		tpl_nu2	inln	err_t	insert				(u2_t index, TCnst* (&chainToInsert)[_nu2])	nxpt	{ rtrn insert(index, chainToInsert, (u2_t)_nu2); }
+		inln			err_t	insert				(u2_t index, view<TCnst> chainToInsert)		nxpt	{ rtrn insert(index, chainToInsert.begin(), chainToInsert.size()); }
+						err_t	insert				(u2_t index, TCnst & newValue)										nxpt	{
+			ree_if(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
+			u2_c			newCount			= Count + 1;
 			if(Size < newCount) {
-				T							* newData			= 0;
-				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
+				T				* newData			= 0;
+				u2_c			newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
-				for(uint32_t i = 0; i < index; ++i) {
+				for(u2_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
 					Data[i].~T();
 				}
 				new (&newData[index]) T(newValue);
-				for(uint32_t i = index; i < Count; ++i) {
+				for(u2_t i = index; i < Count; ++i) {
 					new (&newData[i + 1]) T(Data[i]);
 					Data[i].~T();
 				}
-				T							* oldData			= Data;
-				Data					= newData;
-				Size					= newSize;
+				T				* oldData			= Data;
+				Data		= newData;
+				Size		= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {
-				for(int32_t i = (int)Count - 1; i >= (int)index; --i) {
+				for(s2_t i = (int)Count - 1; i >= (int)index; --i) {
 					new (&Data[i + 1]) T(Data[i]);
 					Data[i].~T();
 				}
 				new (&Data[index]) T(newValue);
 			}
-			return Count = newCount;
+			rtrn Count = newCount;
 		}
-
 		// returns the new size of the list or -1 on failure.
-		::gpk::error_t			insert				(uint32_t index, const T * chainToInsert, uint32_t chainLength)			noexcept	{
-			ree_if(index > Count, "Invalid index: %u.", index);
+		err_t			insert				(u2_t index, TCnst * chainToInsert, u2_t chainLength)			nxpt	{
+			ree_if(index > Count, "Invalid index: %" GPK_FMT_U2 ".", index);
 
-			const uint32_t				newCount			= Count + chainLength;
+			u2_c				newCount			= Count + chainLength;
 			if(Size < newCount) {
-				T							* newData			= 0;
-				const uint32_t				newSize				= alloc_with_reserve(newCount, newData);
+				T					* newData			= 0;
+				u2_c				newSize				= alloc_with_reserve(newCount, newData);
 				rees_if(0 == newData);
-				for(uint32_t i = 0; i < index; ++i) {
+				for(u2_t i = 0; i < index; ++i) {
 					new (&newData[i]) T(Data[i]);
 					Data[i].~T();
 				}
 
-				for(uint32_t i = 0; i < chainLength; ++i) 
+				for(u2_t i = 0; i < chainLength; ++i) 
 					new (&newData[index + i]) T(chainToInsert[i]);
 
-				for(uint32_t i = index; i < Count; ++i) {
+				for(u2_t i = index; i < Count; ++i) {
 					new (&newData[i + chainLength]) T(Data[i]);
 					Data[i].~T();
 				}
-				T							* oldData			= Data;
-				Data					= newData;
-				Size					= newSize;
+				T					* oldData			= Data;
+				Data			= newData;
+				Size			= newSize;
 				::gpk::gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
-				for(int32_t i = (int)Count - 1; i >= (int)index; --i) {
+				for(s2_t i = (int)Count - 1; i >= (int)index; --i) {
 					new (&Data[i + chainLength]) T(Data[i]);
 					Data[i].~T();
 				}
 
-				for(uint32_t i = 0; i < chainLength; ++i) 
+				for(u2_t i = 0; i < chainLength; ++i) 
 					new (&Data[index + i]) T(chainToInsert[i]);
 			}
-			return Count = newCount;
+			rtrn Count = newCount;
 		}
-
-		tplt<size_t _chainLength>
-		inline	::gpk::error_t	insert				(uint32_t index, const T* (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (uint32_t)_chainLength); }
-		inline	::gpk::error_t	insert				(uint32_t index, ::gpk::view<const T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 
 	}; // array_obj
 
-	tplt <tpnm T>	using aobj		= ::gpk::array_obj<T>; 
-	tplt <tpnm T>	using ao		= ::gpk::aobj<T>; 
+	tplT	using aobj		= ::gpk::array_obj<T>; 
+	tplT	using ao		= ::gpk::aobj<T>; 
 
-	tplt <tpnm T>	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
-	tplt <tpnm T>	using av		= ::gpk::aview	<T>; 
+	tplT	using aview		= ::gpk::aobj	<::gpk::view<T>>; 
+	tplT	using av		= ::gpk::aview	<T>; 
 
-	typedef	::gpk::aview<uc_t	>	avuc;
-	typedef	::gpk::aview<sc_t		>	avc;
-	typedef	::gpk::aview<float		>	avf32, avf;
-	typedef	::gpk::aview<double		>	avf64, avd;
-	typedef	::gpk::aview<uint8_t	>	avu8;
-	typedef	::gpk::aview<uint16_t	>	avu16;
-	typedef	::gpk::aview<uint32_t	>	avu32;
-	typedef	::gpk::aview<uint64_t	>	avu64;
-	typedef	::gpk::aview<int8_t		>	avi8;
-	typedef	::gpk::aview<int16_t	>	avi16;
-	typedef	::gpk::aview<int32_t	>	avi32;
-	typedef	::gpk::aview<int64_t	>	avi64;
+	tydf	aview<uc_t>	avuc_t;
+	tydf	aview<sc_t>	avsc_t;
+	tydf	aview<f2_t>	avf2_t;
+	tydf	aview<f3_t>	avf3_t;
+	tydf	aview<u0_t>	avu0_t;
+	tydf	aview<u1_t>	avu1_t;
+	tydf	aview<u2_t>	avu2_t;
+	tydf	aview<u3_t>	avu3_t;
+	tydf	aview<s0_t>	avs0_t;
+	tydf	aview<s1_t>	avs1_t;
+	tydf	aview<s2_t>	avs2_t;
+	tydf	aview<s3_t>	avs3_t;
+	tdcs	avuc_t	avuc_c;
+	tdcs	avsc_t	avsc_c;
+	tdcs	avf2_t	avf2_c;
+	tdcs	avf3_t	avf3_c;
+	tdcs	avu0_t	avu0_c;
+	tdcs	avu1_t	avu1_c;
+	tdcs	avu2_t	avu2_c;
+	tdcs	avu3_t	avu3_c;
+	tdcs	avs0_t	avs0_c;
+	tdcs	avs1_t	avs1_c;
+	tdcs	avs2_t	avs2_c;
+	tdcs	avs3_t	avs3_c;
+	
+	tydf	aview<uc_c>	avcuc_t;
+	tydf	aview<sc_c>	avcsc_t;
+	tydf	aview<f2_c>	avcf2_t;
+	tydf	aview<f3_c>	avcf3_t;
+	tydf	aview<u0_c>	avcu0_t;
+	tydf	aview<u1_c>	avcu1_t;
+	tydf	aview<u2_c>	avcu2_t;
+	tydf	aview<u3_c>	avcu3_t;
+	tydf	aview<s0_c>	avcs0_t;
+	tydf	aview<s1_c>	avcs1_t;
+	tydf	aview<s2_c>	avcs2_t;
+	tydf	aview<s3_c>	avcs3_t;
+	tdcs	avcuc_t	avcuc_c;
+	tdcs	avcsc_t	avcsc_c;
+	tdcs	avcf2_t	avcf2_c;
+	tdcs	avcf3_t	avcf3_c;
+	tdcs	avcu0_t	avcu0_c;
+	tdcs	avcu1_t	avcu1_c;
+	tdcs	avcu2_t	avcu2_c;
+	tdcs	avcu3_t	avcu3_c;
+	tdcs	avcs0_t	avcs0_c;
+	tdcs	avcs1_t	avcs1_c;
+	tdcs	avcs2_t	avcs2_c;
+	tdcs	avcs3_t	avcs3_c;
 
-	// view<const> common typedefs
-	typedef	::gpk::aview<const uc_t	>	avcuc;
-	typedef	::gpk::aview<const sc_t		>	avcc;
-	typedef	::gpk::aview<const float	>	avcf32, avcf;
-	typedef	::gpk::aview<const double	>	avcf64, avcd;
-	typedef	::gpk::aview<const uint8_t	>	avcu8;
-	typedef	::gpk::aview<const uint16_t	>	avcu16;
-	typedef	::gpk::aview<const uint32_t	>	avcu32;
-	typedef	::gpk::aview<const uint64_t	>	avcu64;
-	typedef	::gpk::aview<const int8_t	>	avci8;
-	typedef	::gpk::aview<const int16_t	>	avci16;
-	typedef	::gpk::aview<const int32_t	>	avci32;
-	typedef	::gpk::aview<const int64_t	>	avci64;
 
-
-	tplt<tpnm T>
-	::gpk::error_t							split					(const ::gpk::view<const T> & target, const T & separator, ::gpk::aobj<::gpk::view<const T>> & split)	{
-		uint32_t									lastOffset				= 0;
-		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
+	tplT	err_t							split					(cnst ::gpk::view<cnst T> & target, cnst T & separator, ::gpk::aobj<::gpk::view<cnst T>> & split)	{
+		u2_t									lastOffset				= 0;
+		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::view<const T>			newView					= {&target[lastOffset], iChar - lastOffset};
+				cnst ::gpk::view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;
@@ -306,16 +307,15 @@ namespace gpk
 		}
 		if(lastOffset < target.size())
 			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
-		return (int32_t)split.size();
+		rtrn (s2_t)split.size();
 	}
 
-	tplt<tpnm T>
-	::gpk::error_t							split					(const ::gpk::view<const T> & target, const ::gpk::view<const T>& separators, ::gpk::aobj<::gpk::view<const T>> & split)	{
-		uint32_t									lastOffset				= 0;
-		for(uint32_t iChar = 0; iChar < target.size(); ++iChar) {
-			for(uint32_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
+	tplT	err_t							split					(cnst ::gpk::view<cnst T> & target, cnst ::gpk::view<cnst T>& separators, ::gpk::aobj<::gpk::view<cnst T>> & split)	{
+		u2_t									lastOffset				= 0;
+		for(u2_t iChar = 0; iChar < target.size(); ++iChar) {
+			for(u2_t iSeparator = 0; iSeparator < separators.size(); ++iSeparator) {
 				if(target[iChar] == separators[iSeparator]) {
-					const ::gpk::view<const T>			newView					= {&target[lastOffset], iChar - lastOffset};
+					cnst ::gpk::view<cnst T>			newView					= {&target[lastOffset], iChar - lastOffset};
 					++iChar;
 					gpk_necs(split.push_back(newView));
 					lastOffset								= iChar;
@@ -324,34 +324,33 @@ namespace gpk
 		}
 		if(lastOffset < target.size())
 			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
-		return (int32_t)split.size();
+		rtrn (s2_t)split.size();
 	}
 
-	tplt<tpnm T>
-	::gpk::error_t							split					(const ::gpk::vcs & target, const T & separator, ::gpk::aobj<::gpk::vcs> & split)	{
-		int32_t										lastOffset				= 0;
-		for(int32_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
+	tplT	err_t							split					(cnst ::gpk::vcst_t & target, cnst T & separator, ::gpk::aobj<::gpk::vcst_t> & split)	{
+		s2_t										lastOffset				= 0;
+		for(s2_t iChar = 0, countChars = target.size(); iChar < countChars; ++iChar) {
 			if(target[iChar] == separator) {
-				const ::gpk::vcs							newView					= {&target[lastOffset], (uint32_t)::gpk::max((int32_t)0, int32_t(iChar - lastOffset))};
+				cnst ::gpk::vcst_t							newView					= {&target[lastOffset], (u2_t)::gpk::max((s2_t)0, s2_t(iChar - lastOffset))};
 				++iChar;
 				gpk_necs(split.push_back(newView));
 				lastOffset								= iChar;
 			}
 		}
-		if(lastOffset < (int32_t)target.size()) {
+		if(lastOffset < (s2_t)target.size()) {
 			gpk_necs(split.push_back({&target[lastOffset], target.size() - lastOffset}));
 			//if(split[split.size()-1][] == separator)
 		}
-		return (int32_t)split.size();
+		rtrn (s2_t)split.size();
 	}
 
 
 
-	typedef ::gpk::SKeyVal<::gpk::vcs, ::gpk::aobj<::gpk::vcs>>	TKeyValConstStringArray;
+	tydf ::gpk::SKeyVal<::gpk::vcst_t, ::gpk::aobj<::gpk::vcst_t>>	TKeyValConstStringArray;
 	//------------------------------------------------------------------------------------------------------------
-	::gpk::error_t							keyValConstStringDeserialize	(const ::gpk::vcu8 & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
+	err_t							keyValConstStringDeserialize	(vcu0_c & input, ::gpk::aobj<::gpk::TKeyValConstChar> & output);
 
-	::gpk::error_t							filterPrefix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
-	::gpk::error_t							filterPostfix					(::gpk::view<const ::gpk::vcc> input, const ::gpk::vcc prefix, ::gpk::aobj<::gpk::vcc> & filtered, bool nullIncluded = false);
+	err_t							filterPrefix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);
+	err_t							filterPostfix					(::gpk::view<::gpk::vcsc_c> input, ::gpk::vcsc_c prefix, ::gpk::aobj<::gpk::vcsc_t> & filtered, bool nullIncluded = false);
 }
 #endif // GPK_ARRAY_OBJ_H_23627

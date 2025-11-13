@@ -14,10 +14,10 @@ namespace gpk
 		stacxpr	const uint32_t	BLOCK_SIZE	= 1024 * 64;
 #endif
 		::gpk::block_container_nts<BLOCK_SIZE>	Characters;
-		::gpk::vcc							Empty;
+		::gpk::vcsc_t						Empty;
 
 	public:	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::au32							Counts;
+		::gpk::au2_t						Counts;
 		::gpk::apod<const sc_t*>			Texts;
 
 											~CLabelManager				()																{
@@ -30,7 +30,7 @@ namespace gpk
 			Texts		.push_back(Empty.begin()); 
 		}
 
-		::gpk::error_t						Save		(::gpk::au8 & output)						const	{
+		::gpk::error_t						Save		(::gpk::au0_t & output)						const	{
 			gpk_necs(gpk::saveView(output, Counts));
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray)
 				gpk_necs(output.append((const uint8_t*)Texts[iArray], Counts[iArray]));
@@ -38,9 +38,9 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load		(::gpk::vcu8 & input) {
+		::gpk::error_t						Load		(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, Counts));
-			::gpk::vcc					out_view; 
+			::gpk::vcsc_t				out_view; 
 			uint32_t					offsetByte					= 0;
 			for(uint32_t iArray = 0; iArray < Counts.size(); ++iArray) {
 				uint32_t					elementCount				= Counts[iArray];
@@ -53,10 +53,10 @@ namespace gpk
 		}
 
 		inline	::gpk::error_t				Size		()					const	noexcept	{ return Texts.size(); }
-		inline	::gpk::vcc					View		(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
-		inline	::gpk::error_t				View		(const sc_t* elements, uint16_t count)	{ ::gpk::vcc out_view; return View(elements, count, out_view); }
+		inline	::gpk::vcsc_t				View		(uint32_t index)	const				{ return {Texts[index], Counts[index]}; }
+		inline	::gpk::error_t				View		(const sc_t* elements, uint16_t count)	{ ::gpk::vcsc_t out_view; return View(elements, count, out_view); }
 
-		::gpk::error_t						Index		(const ::gpk::vcc & elements) {
+		::gpk::error_t						Index		(const ::gpk::vcsc_t & elements) {
 			ree_if(elements.size() >= CLabelManager::BLOCK_SIZE, "Data too large: %u.", elements.size());
 
 			for(uint32_t iView = 0, countLabels = Texts.size(); iView < countLabels; ++iView) {
@@ -70,7 +70,7 @@ namespace gpk
 			return -1;
 		}
 
-		::gpk::error_t						View		(const sc_t* text, uint32_t textLen, ::gpk::vcc & out_view)		{
+		::gpk::error_t						View		(const sc_t* text, uint32_t textLen, ::gpk::vcsc_t & out_view)		{
 			if(0 == textLen || 0 == text || 0 == text[0]) {
 				out_view							= Empty;
 				return 0;

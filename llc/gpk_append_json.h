@@ -5,14 +5,13 @@
 
 namespace gpk
 {
-	gpk::err_t			appendKeyValue			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs value);
-	gpk::err_t			appendKeyString			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs value);
-	template<size_t nSize>
-	stainli	gpk::err_t	appendKeyString			(::gpk::achar & output, ::gpk::vcs key, const sc_t(&value)[nSize])	{ return appendKeyString(output, key, ::gpk::vcs{value}); }
-	stainli	gpk::err_t	appendKeyString			(::gpk::achar & output, ::gpk::vcs key, const ::gpk::vcc & value)	{ return appendKeyString(output, key, ::gpk::vcs{value}); }
-	gpk::err_t			appendKeyObject			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs itemsNotEnclosed);
-	gpk::err_t			appendKeyList			(::gpk::achar & output, ::gpk::vcs key, ::gpk::vcs itemsNotEnclosed);
-	gpk::err_t			appendOpenKey			(::gpk::achar & output, ::gpk::vcs key);
+				err_t	appendOpenKey	(asc_t & output, vcst_t key								, b8_t prependComma = false);
+				err_t	appendKeyValue	(asc_t & output, vcst_t key, vcst_t value				, b8_t prependComma = false);
+				err_t	appendKeyObject	(asc_t & output, vcst_t key, vcst_t valuesNotEnclosed	, b8_t prependComma = false);
+				err_t	appendKeyList	(asc_t & output, vcst_t key, vcst_t valuesNotEnclosed	, b8_t prependComma = false);
+				err_t	appendKeyString	(asc_t & output, vcst_t key, vcst_t value				, b8_t prependComma = false);
+	tplN2ustin	err_t	appendKeyString	(asc_t & output, vcst_t key, sc_c (&value)[N]			, b8_t prependComma = false)	{ rtrn appendKeyString(output, key, vcst_t{value}, prependComma); }
+	stin		err_t	appendKeyString	(asc_t & output, vcst_t key, vcsc_c & value				, b8_t prependComma = false)	{ rtrn appendKeyString(output, key, vcst_t{value}, prependComma); }
 
 } // namespace 
 

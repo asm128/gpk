@@ -19,14 +19,14 @@ namespace gpk
 	};
 
 	struct SRSMNodeTransform {
-		::gpk::n3f32							Row0;
-		::gpk::n3f32							Row1;
-		::gpk::n3f32							Row2;
-		::gpk::n3f32							Offset;
-		::gpk::n3f32							Translation;
+		::gpk::n3f2_t							Row0;
+		::gpk::n3f2_t							Row1;
+		::gpk::n3f2_t							Row2;
+		::gpk::n3f2_t							Offset;
+		::gpk::n3f2_t							Translation;
 		float									Rotation;
-		::gpk::n3f32							RotAxis;
-		::gpk::n3f32							Scale;
+		::gpk::n3f2_t							RotAxis;
+		::gpk::n3f2_t							Scale;
 	}; //
 
 	struct SRSMFrameRotation {
@@ -36,17 +36,17 @@ namespace gpk
 
 	struct SRSMFramePosition {
 		int										Time;
-		::gpk::n3f32							Position;
+		::gpk::n3f2_t							Position;
 	};
 
 	struct SRSMTexCoord {
 		uint32_t								Unknown;
-		::gpk::n2f32							UV;
+		::gpk::n2f2_t							UV;
 	};
 #pragma pack(pop)
 	struct SRSMNode {
-		::gpk::ai32								TextureIndices;
-		::gpk::apod<::gpk::n3f32>				Vertices;
+		::gpk::as2_t								TextureIndices;
+		::gpk::apod<::gpk::n3f2_t>				Vertices;
 		::gpk::apod<::gpk::SRSMTexCoord>		UVs;
 		::gpk::apod<::gpk::SRSMFace>			Faces;
 		sc_t									Name		[40];
@@ -70,9 +70,9 @@ namespace gpk
 	::gpk::error_t							rsmFileLoad			(::gpk::SRSMFileContents & loaded, const ::gpk::vcs	& input);
 
 	struct SModelNodeRSM {
-		::gpk::apod<::gpk::n3f32>				Normals			;
-		::gpk::apod<::gpk::n3f32>				Vertices		;
-		::gpk::apod<::gpk::n2f32>				UVs				;
+		::gpk::apod<::gpk::n3f2_t>				Normals			;
+		::gpk::apod<::gpk::n3f2_t>				Vertices		;
+		::gpk::apod<::gpk::n2f2_t>				UVs				;
 		::gpk::apod<::gpk::triu32>				VertexIndices	;
 		int32_t									TextureIndex	;
 		int32_t									RSMNodeIndex	;
@@ -81,7 +81,7 @@ namespace gpk
 
 	struct SModelHierarchyNodeRSM {
 		int32_t									IdParent		;
-		::gpk::ai32								IdChildren		;
+		::gpk::as2_t								IdChildren		;
 	};
 
 	::gpk::error_t							rsmGeometryGenerate	(const ::gpk::SRSMFileContents& input, ::gpk::view<::gpk::SModelNodeRSM>& out_generated);

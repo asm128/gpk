@@ -10,11 +10,11 @@ namespace gpk
 	tplt<tpnm T, size_t _size>
 	class block_container {
 		::gpk::appod<::gpk::astatic<T, _size>>	Blocks;
-		::gpk::au32								RemainingSpace;
+		::gpk::au2_t							RemainingSpace;
 	public:
 		::gpk::error_t							clear						()										{ return ::gpk::clear(Blocks, RemainingSpace); }
 
-		::gpk::error_t							Save						(::gpk::apod<uint8_t> & output)	const	{
+		::gpk::error_t							Save						(::gpk::apod<u0_t> & output)	const	{
 			gpk_necs(gpk::saveView(output, RemainingSpace));
 			for(uint32_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
 				gpk_necs(gpk::saveView(output, *Blocks[iArray]));
@@ -22,7 +22,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t							Load						(::gpk::vcu8 & input) {
+		::gpk::error_t							Load						(::gpk::vcu0_t & input) {
 			clear();
 			gpk_necs(gpk::loadView(input, RemainingSpace));
 			gpk_necs(Blocks.resize(RemainingSpace.size()));
@@ -32,7 +32,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t							push_sequence				(const T* sequence, uint32_t length, ::gpk::view<const T>& out_view)	{
+		::gpk::error_t							push_sequence				(const T * sequence, u2_t length, ::gpk::view<const T> & out_view)	{
 			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
 				uint32_t										& blkRemainingSpace			= RemainingSpace[iBlock];
 				if(blkRemainingSpace >= length) {

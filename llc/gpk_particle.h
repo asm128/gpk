@@ -163,15 +163,15 @@ namespace gpk
 		::gpk::an3f32					OldPosition			= {};
 		::gpk::an3f32					Position			= {};
 		::gpk::an3f32					Direction			= {};
-		::gpk::af32						Speed				= {};
+		::gpk::af2_t					Speed				= {};
 
 		::gpk::error_t					IntegrateSpeed		(double secondsLastFrame);
 
-		::gpk::error_t					Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed);
+		::gpk::error_t					Create				(n3f2_c & position, n3f2_c & direction, float speed);
 		::gpk::error_t					Remove				(int32_t iParticle);
 
-		::gpk::error_t					Load				(::gpk::vcu8 & input);
-		::gpk::error_t					Save				(::gpk::au8 & output)	const;
+		::gpk::error_t					Load				(::gpk::vcu0_t & input);
+		::gpk::error_t					Save				(::gpk::au0_t & output)	const;
 	};
 } // namespace
 

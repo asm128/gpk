@@ -100,14 +100,14 @@
 	return 0;
 }
 
-::gpk::CELESTIAL_BODY	gpk::bodyTypeFromString		(::gpk::vcc bodyType) { 
+::gpk::CELESTIAL_BODY	gpk::bodyTypeFromString		(::gpk::vcsc_t bodyType) { 
 	if(2 > bodyType.size())
 		return (::gpk::CELESTIAL_BODY)-1;
 
 	return ::gpk::get_value_camelcased<::gpk::CELESTIAL_BODY>(bodyType);
 }
 
-::gpk::PLANET_TYPE		gpk::bodySubtypeFromString	(::gpk::vcc bodyType) {
+::gpk::PLANET_TYPE		gpk::bodySubtypeFromString	(::gpk::vcsc_t bodyType) {
 	if(2 > bodyType.size())
 		return (::gpk::PLANET_TYPE)-1;
 
@@ -115,7 +115,7 @@
 }
 
 ::gpk::error_t			gpk::loadPlanet		(::gpk::SDetailPlanet & body, const ::gpk::SJSONReader & jsonData, int32_t jsonIndexStellarBody) { 
-	::gpk::vcc					subtype;
+	::gpk::vcsc_t					subtype;
 	ws_if_failed(::gpk::jsonObjectGetAsString (jsonData, jsonIndexStellarBody, "subtype"				, subtype					));
 	body.Subtype			= ::gpk::bodySubtypeFromString(subtype);
 	ws_if_failed(::gpk::jsonObjectGetAsInteger(jsonData, jsonIndexStellarBody, "density"				, body.Density				));
@@ -171,6 +171,5 @@
 	case ::gpk::CELESTIAL_BODY_Planet: ::gpk::loadPlanet(body.Detail.Planet, jsonData, jsonIndexStellarBody); break;
 	case ::gpk::CELESTIAL_BODY_Star  : ::gpk::loadStar  (body.Detail.Star  , jsonData, jsonIndexStellarBody); break;
 	}
-
 	return 0; 
 }

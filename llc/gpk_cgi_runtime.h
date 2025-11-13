@@ -10,26 +10,26 @@
 
 namespace gpk
 {
-	static	const ::gpk::vcc							cgi_environ	[]		=
-		{	::gpk::vcs{"AUTH_PASSWORD"		}
-		,	::gpk::vcs{"AUTH_TYPE"			}
-		,	::gpk::vcs{"AUTH_USER"			}
+	sttc	::gpk::vcsc_c			cgi_environ	[]		=
+		{	::gpk::vcs{"AUTH_PASSWORD"			}
+		,	::gpk::vcs{"AUTH_TYPE"				}
+		,	::gpk::vcs{"AUTH_USER"				}
 		,	::gpk::vcs{"CERT_COOKIE"			}
-		,	::gpk::vcs{"CERT_FLAGS"			}
+		,	::gpk::vcs{"CERT_FLAGS"				}
 		,	::gpk::vcs{"CERT_ISSUER"			}
 		,	::gpk::vcs{"CERT_KEYSIZE"			}
-		,	::gpk::vcs{"CERT_SECRETKEYSIZE"	}
-		,	::gpk::vcs{"CERT_SERIALNUMBER"	}
-		,	::gpk::vcs{"CERT_SERVER_ISSUER"	}
+		,	::gpk::vcs{"CERT_SECRETKEYSIZE"		}
+		,	::gpk::vcs{"CERT_SERIALNUMBER"		}
+		,	::gpk::vcs{"CERT_SERVER_ISSUER"		}
 		,	::gpk::vcs{"CERT_SERVER_SUBJECT"	}
 		,	::gpk::vcs{"CERT_SUBJECT"			}
 		,	::gpk::vcs{"CF_TEMPLATE_PATH"		}
-		,	::gpk::vcs{"CONTENT_LENGTH"		}
+		,	::gpk::vcs{"CONTENT_LENGTH"			}
 		,	::gpk::vcs{"CONTENT_TYPE"			}
 		,	::gpk::vcs{"CONTEXT_PATH"			}
-		,	::gpk::vcs{"GATEWAY_INTERFACE"	}
-		,	::gpk::vcs{"HTTPS"				}
-		,	::gpk::vcs{"HTTPS_KEYSIZE"		}
+		,	::gpk::vcs{"GATEWAY_INTERFACE"		}
+		,	::gpk::vcs{"HTTPS"					}
+		,	::gpk::vcs{"HTTPS_KEYSIZE"			}
 		,	::gpk::vcs{"HTTPS_SECRETKEYSIZE"	}
 		,	::gpk::vcs{"HTTPS_SERVER_ISSUER"	}
 		,	::gpk::vcs{"HTTPS_SERVER_SUBJECT"	}
@@ -38,22 +38,22 @@ namespace gpk
 		,	::gpk::vcs{"HTTP_ACCEPT_LANGUAGE"	}
 		,	::gpk::vcs{"HTTP_CONNECTION"		}
 		,	::gpk::vcs{"HTTP_COOKIE"			}
-		,	::gpk::vcs{"HTTP_HOST"			}
+		,	::gpk::vcs{"HTTP_HOST"				}
 		,	::gpk::vcs{"HTTP_REFERER"			}
 		,	::gpk::vcs{"HTTP_USER_AGENT"		}
-		,	::gpk::vcs{"PATH_INFO"			}
+		,	::gpk::vcs{"PATH_INFO"				}
 		,	::gpk::vcs{"QUERY_STRING"			}
 		,	::gpk::vcs{"REMOTE_ADDR"			}
 		,	::gpk::vcs{"REMOTE_HOST"			}
 		,	::gpk::vcs{"REMOTE_USER"			}
-		,	::gpk::vcs{"REQUEST_METHOD"		}
+		,	::gpk::vcs{"REQUEST_METHOD"			}
 		,	::gpk::vcs{"SCRIPT_NAME"			}
 		,	::gpk::vcs{"SERVER_NAME"			}
 		,	::gpk::vcs{"SERVER_PORT"			}
-		,	::gpk::vcs{"SERVER_PORT_SECURE"	}
+		,	::gpk::vcs{"SERVER_PORT_SECURE"		}
 		,	::gpk::vcs{"SERVER_PROTOCOL"		}
 		,	::gpk::vcs{"SERVER_SOFTWARE"		}
-		,	::gpk::vcs{"WEB_SERVER_API"		}
+		,	::gpk::vcs{"WEB_SERVER_API"			}
 		};
 
 	enum CGI_MEDIA_TYPE
@@ -87,19 +87,19 @@ namespace gpk
 		};
 
 	struct SCGIRequestContent {
-		uint32_t												Length						= {};
-		::gpk::CGI_MEDIA_TYPE																	Type						= {};
-		::gpk::apod<sc_t>																	Body						= {};
+		uint32_t								Length						= {};
+		::gpk::CGI_MEDIA_TYPE					Type						= {};
+		::gpk::apod<sc_t>						Body						= {};
 	};
 
 	struct SCGIRuntimeValues {
-		::gpk::aobj<::gpk::vcc>												QueryStringElements			= {};
-		::gpk::aobj<::gpk::TKeyValConstString>												QueryStringKeyVals			= {};
-		::gpk::aobj<::gpk::TKeyValConstString>												FormKeyVals					= {};
-		::gpk::aobj<::gpk::TKeyValConstString>												EnvironViews				= {};
-		::gpk::SIPv4End																			RemoteIP					= {};
-		::gpk::SCGIRequestContent																Content						= {};
-		::gpk::SStandardEntryPointArgs															EntryPointArgs				= {};
+		::gpk::aobj<::gpk::vcsc_t>				QueryStringElements			= {};
+		::gpk::aobj<::gpk::TKeyValConstString>	QueryStringKeyVals			= {};
+		::gpk::aobj<::gpk::TKeyValConstString>	FormKeyVals					= {};
+		::gpk::aobj<::gpk::TKeyValConstString>	EnvironViews				= {};
+		::gpk::SIPv4End							RemoteIP					= {};
+		::gpk::SCGIRequestContent				Content						= {};
+		::gpk::SStandardEntryPointArgs			EntryPointArgs				= {};
 	};
 
 	::gpk::error_t							httpRequestInit				(::gpk::SHTTPAPIRequest & requestReceived, const ::gpk::SCGIRuntimeValues & runtimeValues, const bool bLogCGIEnviron);
@@ -107,30 +107,30 @@ namespace gpk
 	::gpk::error_t							cgiMain						(int argc, sc_t** argv, sc_t**envv);
 
 	struct SCGIFramework {
-		::gpk::vcc																	ModuleName					= {};
-		::gpk::SCGIRuntimeValues																RuntimeValues				= {};
-		::gpk::n2<int32_t>																	TargetSize					= {};
-		bool				Bootstrapped				= false;
+		::gpk::vcsc_t				ModuleName					= {};
+		::gpk::SCGIRuntimeValues	RuntimeValues				= {};
+		::gpk::n2<int32_t>			TargetSize					= {};
+		bool						Bootstrapped				= false;
 	};
 } // namespace
 
-#define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)									\
-::gpk::error_t			setup		(_mainClass& app);							\
-::gpk::error_t			cleanup		(_mainClass& app);							\
-::gpk::error_t			update		(_mainClass& app, bool systemRequestedExit);																	\
-::gpk::error_t			draw		(_mainClass& app, ::gpk::apod<sc_t>& output);															\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleVersion		()														{ return 1; }															\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleCreate		(void**	instanceApp, ::gpk::SCGIFramework* framework)	{ try { *instanceApp = new _mainClass{*framework};													return 0;		} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleDelete		(void**	instanceApp)									{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleSetup			(void*	instanceApp)									{ try { const ::gpk::error_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleCleanup		(void*	instanceApp)									{ try { const ::gpk::error_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleUpdate		(void*	instanceApp, bool systemRequestedExit)			{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleRender		(void*	instanceApp, ::gpk::apod<sc_t>& output)	{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp, output);				return result;	} catch(...) {} return -1; }	\
-		::gpk::error_t	GPK_STDCALL																gpk_moduleTitle			(sc_t* out_title, uint32_t *maxCount)					{																		\
-	stacxpr	const sc_t																			mylmoduleTitle[]		= _moduleTitle;	\
-	if(0 == out_title) 												\
-		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);												\
-	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));														\
-	return 0;														\
+#define GPK_DEFINE_CGI_MODULE_EXPORTS(_mainClass, _moduleTitle)										\
+::gpk::error_t				setup					(_mainClass& app);								\
+::gpk::error_t				cleanup					(_mainClass& app);								\
+::gpk::error_t				update					(_mainClass& app, bool systemRequestedExit);	\
+::gpk::error_t				draw					(_mainClass& app, ::gpk::apod<sc_t>& output);	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleVersion		()														{ return 1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleCreate		(void**	instanceApp, ::gpk::SCGIFramework* framework)	{ try { *instanceApp = new _mainClass{*framework};													return 0;		} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleDelete		(void**	instanceApp)									{ try { delete ((_mainClass*)*instanceApp);	*instanceApp = 0;										return 0;		} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleSetup			(void*	instanceApp)									{ try { const ::gpk::error_t result = setup		(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleCleanup		(void*	instanceApp)									{ try { const ::gpk::error_t result = cleanup	(*(_mainClass*)instanceApp);						return result;	} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleUpdate		(void*	instanceApp, bool systemRequestedExit)			{ try { const ::gpk::error_t result = update	(*(_mainClass*)instanceApp, systemRequestedExit);	return result;	} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleRender		(void*	instanceApp, ::gpk::apod<sc_t>& output)			{ try { const ::gpk::error_t result = draw		(*(_mainClass*)instanceApp, output);				return result;	} catch(...) {} return -1; }	\
+::gpk::error_t	GPK_STDCALL	gpk_moduleTitle			(sc_t* out_title, uint32_t *maxCount)					{	\
+	stacxpr	sc_c					mylmoduleTitle[]		= _moduleTitle;							\
+	if(0 == out_title) 																				\
+		return maxCount ? (*maxCount = ::gpk::size(mylmoduleTitle)) : ::gpk::size(mylmoduleTitle);	\
+	memcpy(out_title, mylmoduleTitle, ::gpk::min(::gpk::size(mylmoduleTitle), *maxCount));			\
+	return 0;																						\
 }
 #endif // GPK_CGI_RUNTIME_H_23627

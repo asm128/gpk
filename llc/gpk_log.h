@@ -31,14 +31,12 @@
 #	define retval_gwarn_if		vwf_if	
 #	define retval_ginfo_if		vif_if	
 #	define retval_gverbose_if	vvf_if		
-#	define ret_gserror_if(condition)					if_true_log_and_return(error_printf, condition)
-#	define ret_gswarn_if(condition)						if_true_log_and_return(warning_printf, condition)
-#	define ret_gsinfo_if(condition)						if_true_log_and_return(info_printf, condition)
-#	define ret_gerror_if(condition, format, ...)		if_true_logf_and_return(error_printf, condition, format, __VA_ARGS__)
-#	define ret_gwarn_if(condition, format, ...)			if_true_logf_and_return(warning_printf, condition, format, __VA_ARGS__)
-#	define ret_ginfo_if(condition, format, ...)			if_true_logf_and_return(info_printf, condition, format, __VA_ARGS__)
-
-
+#	define ret_gserror_if(condition)				if_true_log_and_return(error_printf, condition)
+#	define ret_gswarn_if(condition)					if_true_log_and_return(warning_printf, condition)
+#	define ret_gsinfo_if(condition)					if_true_log_and_return(info_printf, condition)
+#	define ret_gerror_if(condition, format, ...)	if_true_logf_and_return(error_printf, condition, format, __VA_ARGS__)
+#	define ret_gwarn_if(condition, format, ...)		if_true_logf_and_return(warning_printf, condition, format, __VA_ARGS__)
+#	define ret_ginfo_if(condition, format, ...)		if_true_logf_and_return(info_printf, condition, format, __VA_ARGS__)
 #	define retnul_gserror_if(condition)				ve_if(0, condition)
 #	define retnul_gswarn_if(condition)				vw_if(0, condition)
 #	define retnul_gsinfo_if(condition)				vi_if(0, condition)
@@ -58,24 +56,21 @@
 #	define retwarn_gwarn_if(condition, format, ...)	vwf_if(1, condition, format, __VA_ARGS__)
 #	define retwarn_ginfo_if(condition, format, ...)	vif_if(1, condition, format, __VA_ARGS__)
 #endif
-
 #ifndef re_if
-#	define re_if							ret_gerror_if
-#	define rw_if							ret_gwarn_if
-#	define ri_if							ret_ginfo_if
-#	define res_if							ret_gserror_if
-#	define rws_if							ret_gswarn_if
-#	define ris_if							ret_gsinfo_if
+#	define re_if			ret_gerror_if
+#	define rw_if			ret_gwarn_if
+#	define ri_if			ret_ginfo_if
+#	define res_if			ret_gserror_if
+#	define rws_if			ret_gswarn_if
+#	define ris_if			ret_gsinfo_if
 #endif
-
-
 #ifndef bes_if
-#	define bes_if							break_gserror_if
-#	define bws_if							break_gswarn_if
-#	define bis_if							break_gsinfo_if
-#	define ces_if							continue_gserror_if
-#	define cws_if							continue_gswarn_if
-#	define cis_if							continue_gsinfo_if
+#	define bes_if			break_gserror_if
+#	define bws_if			break_gswarn_if
+#	define bis_if			break_gsinfo_if
+#	define ces_if			continue_gserror_if
+#	define cws_if			continue_gswarn_if
+#	define cis_if			continue_gsinfo_if
 #	define rva_if			vaf_if		
 #	define rve_if			vef_if		
 #	define rvw_if			vwf_if		
@@ -94,26 +89,26 @@
 #	define rves_if_failed	if_fail_ve
 #	define rvws_if_failed	if_fail_vw
 #	define rvis_if_failed	if_fail_vi
-#	define rne_if							retnul_gerror_if
-#	define rnw_if							retnul_gwarn_if
-#	define rni_if							retnul_ginfo_if
-#	define rnes_if							retnul_gserror_if
-#	define rnws_if							retnul_gswarn_if
-#	define rnis_if							retnul_gsinfo_if
-#	define ree_if							reterr_gerror_if
-#	define rew_if							reterr_gwarn_if
-#	define rei_if							reterr_ginfo_if
-#	define rees_if							reterr_gserror_if
-#	define rews_if							reterr_gswarn_if
-#	define reis_if							reterr_gsinfo_if
-#	define ree_if_failed(gpkl_call, ...)			if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
-#	define rew_if_failed(gpkl_call, ...)			if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
-#	define rei_if_failed(gpkl_call, ...)			if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
-#	define rea_if_failed(gpkl_call, ...)			if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
-#	define rees_if_failed(gpkl_call)				if_fail_ve(-1, (gpkl_call))
-#	define rews_if_failed(gpkl_call)				if_fail_ve(-1, (gpkl_call))
-#	define reis_if_failed(gpkl_call)				if_fail_ve(-1, (gpkl_call))
-#	define reas_if_failed(gpkl_call)				if_fail_ve(-1, (gpkl_call))
+#	define rne_if			retnul_gerror_if
+#	define rnw_if			retnul_gwarn_if
+#	define rni_if			retnul_ginfo_if
+#	define rnes_if			retnul_gserror_if
+#	define rnws_if			retnul_gswarn_if
+#	define rnis_if			retnul_gsinfo_if
+#	define ree_if			reterr_gerror_if
+#	define rew_if			reterr_gwarn_if
+#	define rei_if			reterr_ginfo_if
+#	define rees_if			reterr_gserror_if
+#	define rews_if			reterr_gswarn_if
+#	define reis_if			reterr_gsinfo_if
+#	define ree_if_failed(gpkl_call, ...)		if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
+#	define rew_if_failed(gpkl_call, ...)		if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
+#	define rei_if_failed(gpkl_call, ...)		if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
+#	define rea_if_failed(gpkl_call, ...)		if_fail_vef(-1, (gpkl_call), __VA_ARGS__)	
+#	define rees_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
+#	define rews_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
+#	define reis_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
+#	define reas_if_failed(gpkl_call)			if_fail_ve(-1, (gpkl_call))
 #	define re_if_failed(condition, format, ...)	re_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
 #	define rw_if_failed(condition, format, ...)	rw_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
 #	define ri_if_failed(condition, format, ...)	ri_if (0 > gpk::error_t(condition), format, __VA_ARGS__)
@@ -122,32 +117,32 @@
 #	define rws_if_failed(condition)				rws_if(0 > gpk::error_t(condition))
 #	define ris_if_failed(condition)				ris_if(0 > gpk::error_t(condition))
 #	define ras_if_failed(condition)				ras_if(0 > gpk::error_t(condition))
-#	define e_if_failed   if_fail_ef
-#	define w_if_failed   if_fail_wf
-#	define i_if_failed   if_fail_if
-#	define a_if_failed   if_fail_af
-#	define es_if_failed  if_fail_e
-#	define ws_if_failed  if_fail_w
-#	define is_if_failed  if_fail_i
-#	define as_if_failed  if_fail_a
-#	define ce_if_failed  if_fail_cef
-#	define cw_if_failed  if_fail_cwf
-#	define ci_if_failed  if_fail_cif
-#	define ces_if_failed if_fail_ce
-#	define cws_if_failed if_fail_cw
-#	define cis_if_failed if_fail_ci
-#	define be_if_failed  if_fail_bef
-#	define bw_if_failed  if_fail_bwf
-#	define bi_if_failed  if_fail_bif
-#	define bes_if_failed if_fail_be
-#	define bws_if_failed if_fail_bw
-#	define bis_if_failed if_fail_bi
-#	define rwe_if							retwarn_gerror_if
-#	define rww_if							retwarn_gwarn_if
-#	define rwi_if							retwarn_ginfo_if
-#	define rwes_if							retwarn_gserror_if
-#	define rwws_if							retwarn_gswarn_if
-#	define rwis_if							retwarn_gsinfo_if
+#	define e_if_failed		if_fail_ef
+#	define w_if_failed		if_fail_wf
+#	define i_if_failed		if_fail_if
+#	define a_if_failed		if_fail_af
+#	define es_if_failed		if_fail_e
+#	define ws_if_failed		if_fail_w
+#	define is_if_failed		if_fail_i
+#	define as_if_failed		if_fail_a
+#	define ce_if_failed		if_fail_cef
+#	define cw_if_failed		if_fail_cwf
+#	define ci_if_failed		if_fail_cif
+#	define ces_if_failed	if_fail_ce
+#	define cws_if_failed	if_fail_cw
+#	define cis_if_failed	if_fail_ci
+#	define be_if_failed		if_fail_bef
+#	define bw_if_failed		if_fail_bwf
+#	define bi_if_failed		if_fail_bif
+#	define bes_if_failed	if_fail_be
+#	define bws_if_failed	if_fail_bw
+#	define bis_if_failed	if_fail_bi
+#	define rwe_if			retwarn_gerror_if
+#	define rww_if			retwarn_gwarn_if
+#	define rwi_if			retwarn_ginfo_if
+#	define rwes_if			retwarn_gserror_if
+#	define rwws_if			retwarn_gswarn_if
+#	define rwis_if			retwarn_gsinfo_if
 #endif
 
 #endif // GPK_LOG_H_23627

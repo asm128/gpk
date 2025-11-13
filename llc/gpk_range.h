@@ -6,39 +6,40 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm T> 
-	struct range {	
+	tpl_t struct range {	
+		tydf		_t	T;
 		T							Offset, Count;	
-		
 		GPK_DEFAULT_OPERATOR(range <T>, Offset == other.Offset && Count == other.Count); 
-		tplt<tpnm _tOther> 
-		inlcxpr	range<_tOther>		Cast		()		const	noexcept	{ return{(_tOther)Offset, (_tOther)Count}; } 
 
-		inlcxpr	range<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	range<uint16_t>		u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	range<uint32_t>		u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	range<uint64_t>		u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	range<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	range<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	range<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	range<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	range<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	range<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		tpl_t2
+		inxp	range<_t2>			Cast		()		const	noexcept	{ return{(_t2)Offset, (_t2)Count}; } 
+		inxp	range<uc_t>			uc			()		const	noexcept	{ return Cast<uc_t>(); }
+		inxp	range<sc_t>			sc			()		const	noexcept	{ return Cast<sc_t>(); }
+		inxp	range<u0_t>			u0			()		const	noexcept	{ return Cast<u0_t>(); }
+		inxp	range<u1_t>			u1			()		const	noexcept	{ return Cast<u1_t>(); }
+		inxp	range<u2_t>			u2			()		const	noexcept	{ return Cast<u2_t>(); }
+		inxp	range<u3_t>			u3			()		const	noexcept	{ return Cast<u3_t>(); }
+		inxp	range<s0_t>			s0			()		const	noexcept	{ return Cast<s0_t>(); }
+		inxp	range<s1_t>			s1			()		const	noexcept	{ return Cast<s1_t>(); }
+		inxp	range<s2_t>			s2			()		const	noexcept	{ return Cast<s2_t>(); }
+		inxp	range<s3_t>			s3			()		const	noexcept	{ return Cast<s3_t>(); }
+		inxp	range<f2_t>			f2			()		const	noexcept	{ return Cast<f2_t>(); }
+		inxp	range<f3_t>			f3			()		const	noexcept	{ return Cast<f3_t>(); }
 	};
 #pragma pack(pop)
 
-	typedef	range<sc_t		>	rangechar;
-	typedef	range<uc_t	>	rangeuchar;
-	typedef range<float		>	rangef32;
-	typedef range<double	>	rangef64;
-	typedef range<uint8_t	>	rangeu8;
-	typedef range<uint16_t	>	rangeu16;
-	typedef range<uint32_t	>	rangeu32;
-	typedef range<uint64_t	>	rangeu64;
-	typedef range<int8_t	>	rangei8;
-	typedef range<int16_t	>	rangei16;
-	typedef range<int32_t	>	rangei32;
-	typedef range<int64_t	>	rangei64;
+	tydf	range<uc_t>	rangeuc_t;	tydf	const rangeuc_t	rangeuc_c;
+	tydf	range<sc_t>	rangesc_t;	tydf	const rangesc_t	rangesc_c;
+	tydf	range<u0_t>	rangeu0_t;	tydf	const rangeu0_t	rangeu0_c;
+	tydf	range<u1_t>	rangeu1_t;	tydf	const rangeu1_t	rangeu1_c;
+	tydf	range<u2_t>	rangeu2_t;	tydf	const rangeu2_t	rangeu2_c;
+	tydf	range<u3_t>	rangeu3_t;	tydf	const rangeu3_t	rangeu3_c;
+	tydf	range<s0_t>	ranges0_t;	tydf	const ranges0_t	ranges0_c;
+	tydf	range<s1_t>	ranges1_t;	tydf	const ranges1_t	ranges1_c;
+	tydf	range<s2_t>	ranges2_t;	tydf	const ranges2_t	ranges2_c;
+	tydf	range<s3_t>	ranges3_t;	tydf	const ranges3_t	ranges3_c;
+	tydf	range<f2_t>	rangef2_t;	tydf	const rangef2_t	rangef2_c;
+	tydf	range<f3_t>	rangef3_t;	tydf	const rangef3_t	rangef3_c;
 }
 
 #endif // GPK_RANGE_H

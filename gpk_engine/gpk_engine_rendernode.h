@@ -11,25 +11,23 @@ namespace gpk
 #pragma pack(push, 1)
 	// ------------------ Render Node
 	struct SRenderNodeFlags {
-		bool						NoAmbient			: 1;
-		bool						NoDiffuse			: 1;
-		bool						NoSpecular			: 1;
-		bool						NoAlphaTest			: 1;
-		bool						NoAlphaBlend		: 1;
-		bool						NoDraw				: 1;
-		//bool						NoTransformInherit	: 1;
+		bool					NoAmbient			: 1;
+		bool					NoDiffuse			: 1;
+		bool					NoSpecular			: 1;
+		bool					NoAlphaTest			: 1;
+		bool					NoAlphaBlend		: 1;
+		bool					NoDraw				: 1;
+		//bool					NoTransformInherit	: 1;
 	};
-
 	struct SRenderNode {
-		uint32_t					Mesh			= (uint32_t)-1;
-		uint32_t					Slice			= (uint32_t)-1;
-		uint32_t					Shader			= (uint32_t)-1;
-		uint32_t					Skin			= (uint32_t)-1;
+		uint32_t				Mesh			= (u2_t)-1;
+		uint32_t				Slice			= (u2_t)-1;
+		uint32_t				Shader			= (u2_t)-1;
+		uint32_t				Skin			= (u2_t)-1;
 	};
-
 	struct SRenderMaterial {
 		::gpk::SRenderColor		Color			= {};
-		::gpk::n3f32			Emission		= {};
+		::gpk::n3f2_t			Emission		= {};
 		float					SpecularPower	= {};
 	};
 	stacxpr size_t		SRENDERMATERIALSIZE = sizeof(SRenderMaterial);
@@ -40,7 +38,7 @@ namespace gpk
 		::gpk::m4f32			Model					= ::gpk::m4f32::GetIdentity();
 		::gpk::m4f32			ModelInverse			= ::gpk::m4f32::GetIdentity();
 		::gpk::m4f32			ModelInverseTranspose	= ::gpk::m4f32::GetIdentity();
-		::gpk::n3f32			NodeSize				= {}; 
+		::gpk::n3f2_t			NodeSize				= {}; 
 		float					PaddingC				= 0;
 	};
 	stacxpr size_t		SRENDERNODECONSTANTSSIZE = sizeof(SRenderNodeConstants);
@@ -52,27 +50,23 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(LIGHT_TYPE, Spot			, 2);
 
 	struct SLightSpot {
-		::gpk::n3f32			Direction;
+		::gpk::n3f2_t			Direction;
 		::gpk::SRenderColor		Color;
 		float					SpotPower;
 		float					Range;
 	};
-
 	struct SLightPoint {
 		::gpk::SRenderColor		Color;
 		float					Range;
 	};
-
 	struct SLightDirectional {
-		::gpk::n3f32			Direction;
+		::gpk::n3f2_t			Direction;
 		::gpk::SRenderColor		Color;
 	};
-
 	struct SLight {
 		::gpk::LIGHT_TYPE		Type;
 		uint16_t				Index;
 	};
-
 	struct SCamera : SCameraPoints, SCameraRange, SCameraVectors {};
 #pragma pack(pop)
 
@@ -119,7 +113,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t						Load			(::gpk::vcu8 & input) {
+		::gpk::error_t						Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, RenderNodes		));
 			gpk_necs(gpk::loadView(input, Flags			));
 			gpk_necs(gpk::loadView(input, Transforms		));

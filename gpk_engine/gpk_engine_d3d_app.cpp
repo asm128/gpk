@@ -19,7 +19,7 @@
 
 	d3dResources.GetD3DDeviceContext()->Unmap(guiStuff.Texture2D.get(), 0);
 	// Each vertex is one instance of the VertexPositionColor struct.
-	UINT									stride						= sizeof(::gpk::n3f32) + sizeof(::gpk::n2f32);
+	UINT									stride						= sizeof(::gpk::n3f2_t) + sizeof(::gpk::n2f2_t);
 	UINT									offset						= 0;
 
 	ID3D11DeviceContext						* context					= d3dResources.GetD3DDeviceContext();
@@ -57,8 +57,8 @@ static	::gpk::error_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeM
 	return 0;
 }
 
-::gpk::error_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u16 & targetMetrics, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar)	{
-	::gpk::n3f32				cameraFront				= (cameraTarget - cameraPosition).Normalize();
+::gpk::error_t			gpk::d3dDrawEngineScene	(::gpk::Sample3DSceneRenderer & d3dScene, const ::gpk::SEngineScene & engineScene, const ::gpk::n2u1_t & targetMetrics, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar)	{
+	::gpk::n3f2_t				cameraFront				= (cameraTarget - cameraPosition).Normalize();
 
 	::gpk::SEngineSceneConstants& constants				= d3dScene.ConstantBufferScene;
 	constants.CameraPosition= cameraPosition;
@@ -72,8 +72,8 @@ static	::gpk::error_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeM
 	constants.VP			= constants.View * constants.Perspective;
 	constants.VPS			= constants.VP * constants.Screen;
 
-	::gpk::au32								solid;
-	::gpk::au32								alpha;
+	::gpk::au2_t								solid;
+	::gpk::au2_t								alpha;
 	for(uint32_t iNode = 0; iNode < engineScene.RenderNodes.RenderNodes.size(); ++iNode) {
 		const ::gpk::SRenderNodeFlags			& flags							= engineScene.RenderNodes.Flags[iNode];
 		if(flags.NoDraw)
@@ -130,11 +130,9 @@ static	::gpk::error_t	getNodeTransform		(const ::gpk::SRenderNodeManager & nodeM
 		verbose_printf("Drawing node %i, mesh %i, slice %i, mesh name: %s", iNode, node.Mesh, node.Slice, engineScene.Graphics->Meshes.Names[node.Mesh].begin());
 		d3dScene.Render(node.Mesh, slice.Slice, skin.Textures[0], node.Shader, skin.Material.Color.Diffuse.a != 1.0f, nodeConstants);
 	}
-
 	return 0;
 }
-
-::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f32 & lightPos, const ::gpk::n3f32 & cameraPosition, const gpk::n3f32 & cameraTarget, const gpk::minmaxf32 & nearFar) {
+::gpk::error_t							gpk::d3dAppDraw				(::gpk::SD3DApplication & d3dApp, const ::gpk::SEngineScene & engineScene, const ::gpk::rgbaf & clearColor, const ::gpk::n3f2_t & lightPos, const ::gpk::n3f2_t & cameraPosition, const gpk::n3f2_t & cameraTarget, const gpk::minmaxf2_t & nearFar) {
 	{ // Set up render target for this frame
 		ID3D11DeviceContext3						* context							= d3dApp.DeviceResources->GetD3DDeviceContext();
 		const D3D11_VIEWPORT						viewport							= d3dApp.DeviceResources->GetScreenViewport();	// Reset the viewport to target the whole screen.

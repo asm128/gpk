@@ -17,7 +17,7 @@ static	int32_t			make_crc_table			() {
 }
 
 // Update a running CRC with the bytes buf[0..len-1]--the CRC should be initialized to all 1's, and the transmitted value is the 1's complement of the final running CRC (see the crc() routine below)).
-uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
+uint32_t				gpk::update_crc			(const ::gpk::vcu0_t & buf, uint32_t crc)										{
     uint32_t					c						= crc;
     if(0 == g_crc_table_computed) {
 		static const int32_t		initedTable				= make_crc_table();
@@ -31,9 +31,9 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 	return c;
 }
 
-::gpk::error_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au8 & out_Bytes)		{
+::gpk::error_t			gpk::pngFileWrite		(const ::gpk::gc8bgra & in_imageView, ::gpk::au0_t & out_Bytes)		{
 	stacxpr	const uint8_t		signature	[8]			= {0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a};
-	::gpk::au8					safe_Bytes				= {};
+	::gpk::au0_t				safe_Bytes				= {};
 	safe_Bytes.append(signature);
 
 	uint32_t					chunkSize				= sizeof(::gpk::SPNGIHDR);
@@ -47,15 +47,15 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 	imageHeader.MethodFilter		= 0;
 	imageHeader.MethodInterlace		= 0;
 
-	be2le_32(imageHeader.Size.x);
-	be2le_32(imageHeader.Size.y);
-	be2le_32(chunkSize);
+	be2le(imageHeader.Size.x);
+	be2le(imageHeader.Size.y);
+	be2le(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	uint32_t					crcDataStart			= safe_Bytes.size();
 	safe_Bytes.append(typeIHDR);
 	safe_Bytes.append((const uint8_t*)&imageHeader, sizeof(::gpk::SPNGIHDR));
 	crc						= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
-	be2le_32(crc);
+	be2le(crc);
 	safe_Bytes.append((const uint8_t*)&crc, 4);
 
 	// Reverse RGB byte order
@@ -71,18 +71,18 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 		colorDst.a				= colorSrc.a;
 	}
 	::gpk::imgu8					filtered				= {};
-	filtered.resize(::gpk::n2u32{convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
+	filtered.resize(::gpk::n2u2_t{convertedScanlines.View.metrics().x * 4 + 1, convertedScanlines.View.metrics().y});
 	const uint32_t					scanlineWidthUnfiltered	= convertedScanlines.View.metrics().x * 4;
 	for(uint32_t y = 0; y < in_imageView.metrics().y; ++y) {
 		filtered[y][0]				= 0;
 		memcpy(&filtered[y][1], &convertedScanlines[y][0], scanlineWidthUnfiltered);
 	}
 
-	::gpk::au8						deflated;
+	::gpk::au0_t					deflated;
 	gpk_necall(gpk::arrayDeflate(filtered.Texels.cu8(), deflated), "%s", "Failed to compress! Out of memory?");
 
 	chunkSize					= deflated.size();
-	be2le_32(chunkSize);
+	be2le(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
 
@@ -90,18 +90,18 @@ uint32_t				gpk::update_crc			(const ::gpk::vcu8 & buf, uint32_t crc)										{
 	safe_Bytes.append(typeIDAT);
 	safe_Bytes.append(deflated);
 	crc							= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
-	be2le_32(crc);
+	be2le(crc);
 	safe_Bytes.append((const uint8_t*)&crc, 4);
 
 	chunkSize					= 0;
 	crc							= 0;
 	stacxpr	const uint8_t			typeIEND	[4]			= {'I', 'E', 'N', 'D'};
-	be2le_32(chunkSize);
+	be2le(chunkSize);
 	safe_Bytes.append((const uint8_t*)&chunkSize, 4);
 	crcDataStart				= safe_Bytes.size();
 	safe_Bytes.append(typeIEND);
 	crc							= ::gpk::get_crc({&safe_Bytes[crcDataStart], safe_Bytes.size() - crcDataStart});
-	be2le_32(crc);
+	be2le(crc);
 	safe_Bytes.append((const uint8_t*)&crc, 4);
 
 	int32_t							oldSize					= out_Bytes.size();

@@ -1,7 +1,7 @@
 #include "gpk_base64.h"
 #include "gpk_view_bit.h"
 
-static	::gpk::error_t	base64EncodeTriplet								(const ::gpk::vcc & base64Symbols, ::gpk::vu8 inputTriplet, ::gpk::vu8 out_base64) {
+static	::gpk::error_t	base64EncodeTriplet								(::gpk::vcsc_c & base64Symbols, ::gpk::vu8 inputTriplet, ::gpk::vu8 out_base64) {
 	for (uint32_t iSingleIn = 0; iSingleIn < 3; ++iSingleIn) { // reverse bits of each input byte
 		::gpk::view_bit<uint8_t>									inputBits														= {&inputTriplet[iSingleIn], 8};
 		::gpk::reverse_bits(inputBits);
@@ -25,11 +25,11 @@ static	::gpk::error_t	base64EncodeTriplet								(const ::gpk::vcc & base64Symbo
 	}
 	return 0;
 }
-::gpk::error_t			gpk::base64Encode								(const ::gpk::vcc & base64Symbols, sc_t base64PadSymbol, const ::gpk::vcu8 & inputBytes, ::gpk::au8 & out_base64)	{
+::gpk::error_t			gpk::base64Encode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & inputBytes, ::gpk::au0_t & out_base64)	{
 	rni_if(0 == inputBytes.size(), "%s", "Empty input stream.");
-	const uint32_t				packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
+	u2_c				packsNeeded														= inputBytes.size() / 3 + one_if(inputBytes.size() % 3);
 	uint32_t					iOutput64														= out_base64.size(); //
-	gpk_necall(out_base64.resize(out_base64.size() + packsNeeded * 4), "Out of memory? out_base64.size() : %u. packsNeeded : %u.", iOutput64, packsNeeded);
+	gpk_necall(out_base64.resize(out_base64.size() + packsNeeded * 4), "Out of memory? out_base64.size() : %" GPK_FMT_U2 ". packsNeeded : %" GPK_FMT_U2 ".", iOutput64, packsNeeded);
 	for(uint32_t iInputByte = 0, inputByteCount = inputBytes.size(); iInputByte < inputByteCount; iInputByte += 3) { // process each byte triplet and turn it into 4 bytes padded with 2 bit
 		const bool													use1															= ((int32_t)iInputByte) < (((int32_t)inputByteCount) - 1);
 		const bool													use2															= ((int32_t)iInputByte) < (((int32_t)inputByteCount) - 2);
@@ -41,7 +41,7 @@ static	::gpk::error_t	base64EncodeTriplet								(const ::gpk::vcc & base64Symbo
 		::base64EncodeTriplet(base64Symbols, inputTriplet, {&out_base64[iOutput64], 4});
 		iOutput64												+= 4;
 	}
-	const uint32_t				modTriplet														= inputBytes.size() % 3;
+	u2_c				modTriplet														= inputBytes.size() % 3;
 	if(0 != modTriplet) { // pad with '='
 		out_base64[out_base64.size() - 1]						= base64PadSymbol;
 		if(1 == modTriplet) // pad with another '='
@@ -72,7 +72,7 @@ static	::gpk::error_t	base64DecodeQuad												(::gpk::vu8 inputQuad, ::gpk::
 	return 0;
 }
 
-::gpk::error_t			gpk::base64Decode								(const ::gpk::vcc & base64Symbols, sc_t base64PadSymbol, const ::gpk::vcu8 & in_base64, ::gpk::au8 & outputBytes)	{
+::gpk::error_t			gpk::base64Decode								(::gpk::vcsc_c & base64Symbols, char base64PadSymbol, vcu0_c & in_base64, ::gpk::au0_t & outputBytes)	{
 	rni_if(0 == in_base64.size(), "%s", "Empty base64 string.");
 	int32_t														lengthInput														= in_base64.size();
 	if(uint32_t mymod = in_base64.size() % 4) {
@@ -86,9 +86,9 @@ static	::gpk::error_t	base64DecodeQuad												(::gpk::vu8 inputQuad, ::gpk::
 		base64SymbolRemap[(uint32_t)base64Symbols[iSymbol]]		= (uint8_t)iSymbol;
 
 	// --- Decode input symbols
-	const uint32_t				packsNeeded														= lengthInput / 4;
+	u2_c				packsNeeded														= lengthInput / 4;
 	uint32_t					iOutputByte														= outputBytes.size();
-	gpk_necall(outputBytes.resize(outputBytes.size() + packsNeeded * 3), "Out of memory? outputBinary.size() : %u. packsNeeded : %u.", iOutputByte, packsNeeded); // Append result
+	gpk_necall(outputBytes.resize(outputBytes.size() + packsNeeded * 3), "Out of memory? outputBinary.size() : %" GPK_FMT_U2 ". packsNeeded : %" GPK_FMT_U2 ".", iOutputByte, packsNeeded); // Append result
 	for(uint32_t iInput64 = 0, symbolCount = lengthInput; iInput64 < symbolCount; iInput64 += 4) {
 		uint8_t														inputQuad	[4]													=
 			{ base64SymbolRemap[((uint8_t)in_base64[iInput64 + 0]) % ::gpk::size(base64SymbolRemap)]

@@ -25,13 +25,13 @@ namespace gpk
 		::gpk::m4f32			Screen					= {}; 
 		::gpk::m4f32			VP						= {}; 
 		::gpk::m4f32			VPS						= {}; 
-		::gpk::n3f32			CameraPosition			= {};
+		::gpk::n3f2_t			CameraPosition			= {};
 		float					CameraAngle				= 0;
-		::gpk::n3f32			CameraFront				= {}; 
+		::gpk::n3f2_t			CameraFront				= {}; 
 		float					Time					= 0;
-		::gpk::n3f32			LightDirection			= {}; 
+		::gpk::n3f2_t			LightDirection			= {}; 
 		float					LightSpotPower			= 0;
-		::gpk::n3f32			LightPosition			= {}; 
+		::gpk::n3f2_t			LightPosition			= {}; 
 		float					PaddingB				= 0;
 	};
 	stacxpr size_t		SENGINESCENECONSTANTSSIZE = sizeof(SEngineSceneConstants);
@@ -39,9 +39,9 @@ namespace gpk
 
 	struct SPSIn {
 		const ::gpk::SRenderNodeConstants & NodeConstants;
-		::gpk::n3f32			WeightedPosition	;
-		::gpk::n3f32			WeightedNormal		;
-		::gpk::n2f32			WeightedUV			;
+		::gpk::n3f2_t			WeightedPosition	;
+		::gpk::n3f2_t			WeightedNormal		;
+		::gpk::n2f2_t			WeightedUV			;
 		::gpk::SRenderMaterial	Material			;
 		::gpk::gc8bgra			Surface				; 
 	};
@@ -76,14 +76,14 @@ namespace gpk
 
 	struct SSkin {
 		::gpk::SRenderMaterial	Material;
-		::gpk::au32				Textures;
+		::gpk::au2_t				Textures;
 
-		::gpk::error_t			Save			(::gpk::au8 & output) const { 
+		::gpk::error_t			Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::savePOD(output, Material));
 			gpk_necs(gpk::saveView(output, Textures));
 			return 0;
 		}
-		::gpk::error_t			Load			(::gpk::vcu8 & input) {
+		::gpk::error_t			Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadPOD(input, Material));
 			gpk_necs(gpk::loadView(input, Textures));
 			return 0;
@@ -102,7 +102,7 @@ namespace gpk
 		::gpk::SShaderManager		Shaders		= {};
 		::gpk::SRasterFontManager	Fonts		= {};
 
-		::gpk::error_t				Save		(::gpk::au8 & output)		const	{
+		::gpk::error_t				Save		(::gpk::au0_t & output)		const	{
 			gpk_necs(Buffers	.Save(output));
 			gpk_necs(Surfaces	.Save(output));
 			gpk_necs(Meshes		.Save(output));
@@ -111,7 +111,7 @@ namespace gpk
 			//gpk_necs(Fonts	.Save(output));
 			return 0;
 		}
-		::gpk::error_t				Load		(::gpk::vcu8 & input) {
+		::gpk::error_t				Load		(::gpk::vcu0_t & input) {
 			gpk_necs(Buffers	.Load(input));
 			gpk_necs(Surfaces	.Load(input));
 			gpk_necs(Meshes		.Load(input));
@@ -127,16 +127,16 @@ namespace gpk
 		::gpk::SRenderNodeManager		RenderNodes				= {};
 		::gpk::SEngineRenderCache		RenderCache				= {};
 
-		::gpk::error_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, const ::gpk::vcc name, bool createSkin);
+		::gpk::error_t					CreateRenderNode		(const ::gpk::SGeometryBuffers & geometry, ::gpk::vcsc_c name, bool createSkin);
 
-		::gpk::error_t					Load					(::gpk::vcu8 & input) {
+		::gpk::error_t					Load					(::gpk::vcu0_t & input) {
 			gpk_necs(Graphics		->Load(input));
 			gpk_necs(RenderNodes	 .Load(input));
 			//gpk_necs(RenderCache	 .Load(input));
 			return 0;
 		}
 
-		::gpk::error_t					Save					(::gpk::au8 & output)	const	{
+		::gpk::error_t					Save					(::gpk::au0_t & output)	const	{
 			if(Graphics) 
 				gpk_necs(Graphics->Save(output));
 			else {
@@ -177,10 +177,10 @@ namespace gpk
 		, ::gpk::gu32				backBufferDepth
 		, ::gpk::SEngineRenderCache	& renderCache
 		, const ::gpk::SEngineScene	& scene
-		, const ::gpk::n3f32		& cameraPosition
-		, const ::gpk::n3f32		& cameraTarget
-		, const ::gpk::n3f32		& cameraUp
-		, const ::gpk::minmaxf32	& nearFar
+		, const ::gpk::n3f2_t		& cameraPosition
+		, const ::gpk::n3f2_t		& cameraTarget
+		, const ::gpk::n3f2_t		& cameraUp
+		, const ::gpk::minmaxf2_t	& nearFar
 		);
 
 } // namespace

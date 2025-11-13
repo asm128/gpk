@@ -8,9 +8,9 @@
 namespace gpk
 {
 	struct SVoxelGeometry {
-		::gpk::SGeometryBuffers					Geometry			= {};
-		::gpk::au32									VoxelIndices		= {};
-		::gpk::au32									FaceIndices			= {};
+		::gpk::SGeometryBuffers						Geometry			= {};
+		::gpk::au2_t								VoxelIndices		= {};
+		::gpk::au2_t								FaceIndices			= {};
 		::gpk::apod<::gpk::SRenderMaterialPaletted>	Materials			= {};
 		::gpk::apod<::gpk::SGeometryGroup>			GeometrySlices	[6]	= {};
 		::gpk::SAABBGeometry						AABBModel			= {};

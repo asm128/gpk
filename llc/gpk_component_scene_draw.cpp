@@ -17,8 +17,8 @@ static	::gpk::error_t	drawOrderedVertices
 			::gpk::drawTriangle(target_image, triangleFinal, nodeColor);
 		}
 		else if(nodeToDraw.PerFaceColor) {
-			::gpk::apod<::gpk::n3f32>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
-			::gpk::apod<::gpk::n3f32>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
+			::gpk::apod<::gpk::n3f2_t>		& nodeVertices			= renderer.Vertices[nodeToDraw.Vertices];
+			::gpk::apod<::gpk::n3f2_t>		& nodeNormals			= renderer.Normals [nodeToDraw.Normals];
 			for(uint32_t iTriangle = 0; iTriangle < nodeVertices.size() / 3; ++iTriangle) {
 				::gpk::bgra							triangleColor			= (nodeToDraw.VertexColor >= 0) ? renderer.VertexColors[nodeToDraw.VertexColor][iTriangle] : nodeColor;
 				;
@@ -36,7 +36,7 @@ static	::gpk::error_t	drawOrderedVertices
 				ree_if(::gpk::drawTriangle(target_image.metrics(), triangleTransformed, renderer.RenderCache.PixelCoordBuffer, renderer.RenderCache.TriangleWeightBuffer, target_depth), "%s", "Maybe the pixel caches weren't cleared properly");
 				triangleColor							= triangleColor * nodeNormals[iTriangle].Dot(renderer.Lights[0].Direction);
 				for(uint32_t iPixelCoord = 0; iPixelCoord < renderer.RenderCache.PixelCoordBuffer.size(); ++iPixelCoord) {
-					const ::gpk::n2<int16_t>				pixelCoord				= renderer.RenderCache.PixelCoordBuffer[iPixelCoord];
+					::gpk::n2s1_c				pixelCoord				= renderer.RenderCache.PixelCoordBuffer[iPixelCoord];
 					target_image[pixelCoord.y][pixelCoord.x]	= triangleColor;
 				}
 			}
@@ -108,8 +108,8 @@ static	::gpk::error_t	drawOrderedVertices
 		const ::gpk::SRenderNode					& nodeToRender			= renderer.Nodes[iNode];
 		if(drawHidden || false == nodeToRender.Hidden) {
 			renderer.RenderCache.NodesToRender.push_back(iNode);
-			::gpk::au32					& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
-			::gpk::n3f32						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::n3f32{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
+			::gpk::au2_t						& nodeLights			= renderer.RenderCache.NodeLights[renderer.RenderCache.NodeLights.push_back({})];
+			::gpk::n3f2_t						nodePosition			= (-1 == nodeToRender.Transform) ? ::gpk::n3f2_t{} : renderer.Transforms[nodeToRender.Transform].Matrix.GetTranslation();
 			for(uint32_t iLight = 0; iLight < renderer.Lights.size(); ++iLight) {
 				const ::gpk::SLight							& light					= renderer.Lights[iLight];
 				if(light.Type & ::gpk::GLIGHT_STATE_ENABLED) {
@@ -122,7 +122,7 @@ static	::gpk::error_t	drawOrderedVertices
 	}
 	for(uint32_t iNode = 0; iNode < renderer.RenderCache.NodesToRender.size(); ++iNode) {
 		const uint32_t												indexNode				= renderer.RenderCache.NodesToRender[iNode];
-		ef_if(errored(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth)), "Failed to render node %i", indexNode);
+		if_fail_ef(::gpk::nodeRendererDrawNode(renderer, indexNode, matrixView, matrixProjection, matrixVP, target_image, target_depth), "Failed to render node %i", indexNode);
 	}
 	return 0;
 }

@@ -43,12 +43,12 @@ namespace gpk
 
 	// --- Geometry generation: Cube.
 	::gpk::error_t			generateCubePositions			(::gpk::apod<::gpk::tri3f32> & out_Positions);
-	::gpk::error_t			generateCubeNormalsTriangle		(::gpk::apod<::gpk::n3f32  > & out_Normals	);
+	::gpk::error_t			generateCubeNormalsTriangle		(::gpk::apod<::gpk::n3f2_t  > & out_Normals	);
 	::gpk::error_t			generateCubeNormalsVertex		(::gpk::apod<::gpk::tri3f32> & out_Normals	);
 	::gpk::error_t			generateCubeUV					(::gpk::apod<::gpk::tri2f32> & out_UV		);
 	::gpk::error_t			generateCubeGeometry
 		( ::gpk::apod<::gpk::tri3f32> & out_Positions
-		, ::gpk::apod<::gpk::n3f32  > & out_Normals
+		, ::gpk::apod<::gpk::n3f2_t  > & out_Normals
 		, ::gpk::apod<::gpk::tri3f32> & out_NormalsVertex
 		, ::gpk::apod<::gpk::tri2f32> & out_UV
 		);
@@ -61,18 +61,18 @@ namespace gpk
 			);
 	}
 
-	::gpk::error_t			generateGridPositions			(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
-	::gpk::error_t			generateGridNormalsTriangle		(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::n3f32  > & out_Normals	);
-	::gpk::error_t			generateGridNormalsVertex		(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
-	::gpk::error_t			generateGridUV					(const ::gpk::n2u16 & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
+	::gpk::error_t			generateGridPositions			(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Positions	);
+	::gpk::error_t			generateGridNormalsTriangle		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::n3f2_t  > & out_Normals	);
+	::gpk::error_t			generateGridNormalsVertex		(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri3f32> & out_Normals	);
+	::gpk::error_t			generateGridUV					(const ::gpk::n2u1_t & gridMetrics, ::gpk::apod<::gpk::tri2f32> & out_UV		);
 	::gpk::error_t			generateGridGeometry
-		( const ::gpk::n2u16			& gridMetrics
+		( const ::gpk::n2u1_t			& gridMetrics
 		, ::gpk::apod<::gpk::tri3f32>	& out_Positions
-		, ::gpk::apod<::gpk::n3f32  >	& out_Normals
+		, ::gpk::apod<::gpk::n3f2_t  >	& out_Normals
 		, ::gpk::apod<::gpk::tri3f32>	& out_NormalsVertex
 		, ::gpk::apod<::gpk::tri2f32>	& out_UV
 		);
-	stainli	::gpk::error_t	generateGridGeometry			(const ::gpk::n2u16	& gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
+	stainli	::gpk::error_t	generateGridGeometry			(const ::gpk::n2u1_t & gridMetrics, ::gpk::SModelGeometry<float>& out_Geometry)	{
 		return ::gpk::generateGridGeometry
 			( gridMetrics
 			, out_Geometry.Positions
@@ -84,13 +84,13 @@ namespace gpk
 
 
 	struct SRenderCache {
-		::gpk::apod<::gpk::n2i16>	TrianglePixelCoords			= {};
+		::gpk::apod<::gpk::n2s1_t>	TrianglePixelCoords			= {};
 		::gpk::apod<::gpk::trif32>	TrianglePixelWeights		= {};
-		::gpk::apod<::gpk::n2i16>	WireframePixelCoords		= {};
+		::gpk::apod<::gpk::n2s1_t>	WireframePixelCoords		= {};
 
 		::gpk::apod<::gpk::tri3f32>	TransformedNormalsVertex	= {};
 
-		::gpk::ai32					Triangle3dIndices			= {};
+		::gpk::as2_t					Triangle3dIndices			= {};
 		::gpk::apod<::gpk::tri3f32>	Triangle3dToDraw			= {};
 		::gpk::apod<::gpk::tri3f32>	Triangle3dWorld				= {};
 
@@ -106,22 +106,22 @@ namespace gpk
 	};
 
 	struct SLightsDirectional {
-		::gpk::apod<::gpk::n3f32>	Directions			= {};
+		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
 		::gpk::SColorsMaterial		Colors				= {};
 	};
 
 	struct SLightsPoint {
-		::gpk::apod<::gpk::n3f32>	Directions			= {};
-		::gpk::apod<::gpk::n3f32>	Positions			= {};
-		::gpk::apod<::gpk::n3f32>	Attenuation			= {};
+		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
+		::gpk::apod<::gpk::n3f2_t>	Positions			= {};
+		::gpk::apod<::gpk::n3f2_t>	Attenuation			= {};
 		::gpk::SColorsMaterial		Colors				= {};
 	};
 
 	struct SLightsSpot {
-		::gpk::apod<::gpk::n3f32>	Directions			= {};
-		::gpk::apod<::gpk::n3f32>	Positions			= {};
-		::gpk::apod<::gpk::n3f32>	Attenuation			= {};
-		::gpk::af32					SpotPower			= {};
+		::gpk::apod<::gpk::n3f2_t>	Directions			= {};
+		::gpk::apod<::gpk::n3f2_t>	Positions			= {};
+		::gpk::apod<::gpk::n3f2_t>	Attenuation			= {};
+		::gpk::af2_t				SpotPower			= {};
 		::gpk::SColorsMaterial		Colors				= {};
 	};
 
@@ -196,7 +196,7 @@ namespace gpk
 
 	stainli	::gpk::error_t		sceneBoxAdd			(SScene& scene)	{
 		const uint32_t					newIndex			= scene.ObjectPivots.size();
-		if(errored(::gpk::resize
+		if(failed(::gpk::resize
 			( newIndex + 1
 			, scene.ObjectPivots
 			, scene.ObjectTransform

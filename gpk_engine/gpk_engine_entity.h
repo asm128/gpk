@@ -26,7 +26,7 @@ namespace gpk
 
 	struct SVirtualEntityManager {
 		::gpk::apod<SEntity>			Entities		= {};
-		::gpk::avcc						Names			= {};
+		::gpk::avcsc_t					Names			= {};
 
 		::gpk::aobj<::gpk::paeid>		Children		= {};
 
@@ -71,7 +71,7 @@ namespace gpk
 			return (0 > (int32_t)idParent) ? 0 : Children[idParent]->push_back(id);
 		}
 
-		::gpk::error_t					Save			(::gpk::au8 & output) const { 
+		::gpk::error_t					Save			(::gpk::au0_t & output) const { 
 			gpk_necs(gpk::saveView(output, Entities));
 			for(uint32_t iEntity = 0; iEntity < Entities.size(); ++iEntity) {
 				gpk_necall(gpk::saveView(output, Children[iEntity] ? ::gpk::vcu32{*Children[iEntity]} : ::gpk::vcu32{}), "iEntity: %i", iEntity);
@@ -81,7 +81,7 @@ namespace gpk
 			return 0;
 		}
 
-		::gpk::error_t					Load			(::gpk::vcu8 & input) {
+		::gpk::error_t					Load			(::gpk::vcu0_t & input) {
 			gpk_necs(gpk::loadView(input, Entities));
 			gpk_necs(Children	.resize(Entities.size()));
 			gpk_necs(Names		.resize(Entities.size()));
@@ -92,7 +92,7 @@ namespace gpk
 				gpk_necall(gpk::loadView(input, *Children[iEntity]), "iEntity: %i", iEntity);
 				::gpk::apod<sc_t>					name;
 				gpk_necall(gpk::loadView(input, name), "iEntity: %i", iEntity);
-				Names[iEntity]					= ::gpk::label(::gpk::vcc{name});
+				Names[iEntity]					= ::gpk::label(::gpk::vcsc_t{name});
 			}
 
 			return 0; 

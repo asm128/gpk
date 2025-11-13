@@ -2,7 +2,7 @@
 #include "gpk_apod_serialize.h"
 #include "gpk_axis.h"
 
-::gpk::error_t			gpk::SRigidBodyIntegrator::Load	(::gpk::vcu8 & input) { 
+::gpk::error_t			gpk::SRigidBodyIntegrator::Load	(::gpk::vcu0_t & input) { 
 	gpk_necs(gpk::loadView(input, Frames			));
 	gpk_necs(gpk::loadView(input, Flags			));
 	gpk_necs(gpk::loadView(input, Forces			));
@@ -12,7 +12,7 @@
 	return 0;											
 }
 
-::gpk::error_t			gpk::SRigidBodyIntegrator::Save	(::gpk::au8 & output) const { 
+::gpk::error_t			gpk::SRigidBodyIntegrator::Save	(::gpk::au0_t & output) const { 
 	gpk_necs(gpk::saveView(output, Frames			));
 	gpk_necs(gpk::saveView(output, Flags			));
 	gpk_necs(gpk::saveView(output, Forces			));
@@ -66,7 +66,7 @@ void					gpk::updateTransform	(::gpk::SBodyCenter & bodyTransform, ::gpk::m4f32 
 	bodyForce.Velocity.AddScaled(bodyFrame.LastFrameAcceleration, (float)duration);	// Update linear velocity from both acceleration and impulse.
 
 	// -- Calculate angular acceleration from torque inputs.
-	const ::gpk::n3f32			angularAcceleration		= bodyFrame.InverseInertiaTensorWorld.Transform(bodyFrame.AccumulatedTorque);
+	const ::gpk::n3f2_t			angularAcceleration		= bodyFrame.InverseInertiaTensorWorld.Transform(bodyFrame.AccumulatedTorque);
 	bodyForce.Rotation.AddScaled(angularAcceleration, duration);	// Update angular velocity from both acceleration and impulse.
 
 	// Impose drag.

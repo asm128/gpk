@@ -68,7 +68,7 @@ namespace gpk
 	};
 
 	struct SDialogSlider : public ::gpk::IDialogControl {
-		typedef	::gpk::function<::gpk::error_t(::gpk::vcc & format, int64_t value, const ::gpk::minmax<int64_t> & limits)>	
+		typedef	::gpk::function<::gpk::error_t(::gpk::vcsc_t & format, int64_t value, const ::gpk::minmax<int64_t> & limits)>	
 								TCallback;
 
 		cid_t					IdButton			= (cid_t)-1;
@@ -77,8 +77,8 @@ namespace gpk
 		int64_t					ValueCurrent		= -1;
 		sc_t					ValueString	[64]	= {};
 
-		TCallback				FuncValueFormat		= []	(::gpk::vcc & format, int64_t, const ::gpk::minmax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
-		TCallback				FuncGetString		= [this](::gpk::vcc & inouts, int64_t value, const ::gpk::minmax<int64_t> &)			{ 
+		TCallback				FuncValueFormat		= []	(::gpk::vcsc_t & format, int64_t, const ::gpk::minmax<int64_t> &)			mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+		TCallback				FuncGetString		= [this](::gpk::vcsc_t & inouts, int64_t value, const ::gpk::minmax<int64_t> &)			{ 
 			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};
@@ -88,7 +88,7 @@ namespace gpk
 
 	tplt<tpnm _tValue>
 	struct SDialogTuner : public ::gpk::IDialogControl {
-		typedef	::gpk::function<::gpk::error_t(::gpk::vcc & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
+		typedef	::gpk::function<::gpk::error_t(::gpk::vcsc_t & format, _tValue value, const ::gpk::minmax<_tValue> & limits)>	
 								TCallback;
 
 		cid_t					IdDecrease			= -1;
@@ -98,8 +98,8 @@ namespace gpk
 		_tValue					ValueCurrent		= 0;
 		sc_t					ValueString	[64]	= {};
 
-		TCallback				FuncValueFormat	= [this](::gpk::vcc & format, _tValue/*value*/, const ::gpk::minmax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
-		TCallback				FuncGetString	= [this](::gpk::vcc & inouts, _tValue value, const ::gpk::minmax<_tValue> &)			{ 
+		TCallback				FuncValueFormat	= [this](::gpk::vcsc_t & format, _tValue/*value*/, const ::gpk::minmax<_tValue> &)	mutable	{ format = ::gpk::vcs("%lli"); return 0; };
+		TCallback				FuncGetString	= [this](::gpk::vcsc_t & inouts, _tValue value, const ::gpk::minmax<_tValue> &)			{ 
 			inouts	= {ValueString, (uint32_t)snprintf(ValueString, ::gpk::size(ValueString) - 2, ::gpk::toString(inouts).begin(), value)}; 
 			return 0; 
 		};
@@ -136,7 +136,7 @@ namespace gpk
 				value					= ValueLimits.Max;
 			ValueCurrent			= value;
 
-			::gpk::vcc					valueString;
+			::gpk::vcsc_t				valueString;
 			FuncValueFormat	(valueString, value, ValueLimits);
 			FuncGetString	(valueString, ValueCurrent, ValueLimits);
 			gpk_necs(gpk::controlTextSet(*Dialog->GUI, IdGUIControl, valueString));

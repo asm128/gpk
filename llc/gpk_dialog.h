@@ -58,9 +58,9 @@ namespace gpk
 		cid_t					FocusedPrevious		= (cid_t)-1;
 		cid_t					SelectedCurrent		= (cid_t)-1;
 		cid_t					SelectedPrevious	= (cid_t)-1;
-		::gpk::n2u16			LastSize			= {};
+		::gpk::n2u1_t			LastSize			= {};
 		cid_t					Root				= (cid_t)-1;
-		::gpk::ai32				Buttons				= {};
+		::gpk::as2_t			Buttons				= {};
 
 		::gpk::GUI_CONTROL_FLAG	DefaultControlMask	= (::gpk::GUI_CONTROL_FLAG)-1;
 		::gpk::SControlDraw		DefaultControlDraw	= {};

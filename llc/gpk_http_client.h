@@ -15,20 +15,20 @@ namespace gpk
 	::gpk::error_t					httpClientRequest
 		(	const ::gpk::SIPv4End			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
-		,	const ::gpk::vcs			& hostName
-		,	const ::gpk::vcs			& path
-		,	const ::gpk::vcs			& contentType
-		,	const ::gpk::vcc			& body
+		,	const ::gpk::vcst_t			& hostName
+		,	const ::gpk::vcst_t			& path
+		,	const ::gpk::vcst_t			& contentType
+		,	const ::gpk::vcsc_t			& body
 		,	::gpk::apod<sc_t>			& out_received
 		);
 
 	::gpk::error_t					httpClientRequest
 		(	const ::gpk::SIPv4End			& remoteAddress
 		,	::gpk::HTTP_METHOD			method
-		,	const ::gpk::vcs			& hostName
-		,	const ::gpk::vcs			& path
-		,	const ::gpk::vcs			& contentType
-		,	const ::gpk::vcc			& body
+		,	const ::gpk::vcst_t			& hostName
+		,	const ::gpk::vcst_t			& path
+		,	const ::gpk::vcst_t			& contentType
+		,	const ::gpk::vcsc_t			& body
 		,	::gpk::SHTTPResponse		& out_received
 		);
 
@@ -42,7 +42,7 @@ namespace gpk
 	//	,	::gpk::apod<sc_t>			& out_received
 	//	);
 
-	::gpk::error_t					urlDecode	(::gpk::vcc urlToDecode, ::gpk::apod<sc_t> & decoded);
+	::gpk::error_t					urlDecode	(::gpk::vcsc_t urlToDecode, ::gpk::apod<sc_t> & decoded);
 
 }
 

@@ -3,8 +3,8 @@
 
 ::gpk::error_t			gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
 	for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
-		::gpk::n3f32							& direction			= Direction	[iShot];
-		::gpk::n3f32							& position			= Position	[iShot];
+		::gpk::n3f2_t							& direction			= Direction	[iShot];
+		::gpk::n3f2_t							& position			= Position	[iShot];
 		float											& speed				= Speed		[iShot];
 		position									+= direction * speed * secondsLastFrame;
 	}
@@ -17,13 +17,13 @@
 	return Speed.remove_unordered(iParticle);
 }
 
-::gpk::error_t			gpk::SParticles3::Create				(const ::gpk::n3f32 & position, const ::gpk::n3f32 & direction, float speed)	{
+::gpk::error_t			gpk::SParticles3::Create				(n3f2_c & position, n3f2_c & direction, float speed)	{
 	Position	.push_back(position);
 	Direction	.push_back(direction);
 	return Speed.push_back(speed);
 }
 
-::gpk::error_t			gpk::SParticles3::Save(::gpk::au8 & output) const { 
+::gpk::error_t			gpk::SParticles3::Save(::gpk::au0_t & output) const { 
 	gpk_necs(gpk::saveView(output, Position	)); 
 	gpk_necs(gpk::saveView(output, Direction	)); 
 	gpk_necs(gpk::saveView(output, Speed		)); 
@@ -33,7 +33,7 @@
 	return 0; 
 }
 
-::gpk::error_t			gpk::SParticles3::Load(::gpk::vcu8 & input) { 
+::gpk::error_t			gpk::SParticles3::Load(::gpk::vcu0_t & input) { 
 	gpk_necs(gpk::loadView(input, Position	));
 	gpk_necs(gpk::loadView(input, Direction	));
 	gpk_necs(gpk::loadView(input, Speed		));
