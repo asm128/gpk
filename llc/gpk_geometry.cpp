@@ -19,7 +19,7 @@
 		geometry.Normals[iVertex]	= params.Orientation.RotateVector(geometry.Normals[iVertex]);
 	memcpy(&geometry.Normals		[offsetNormals		], ::gpk::VOXEL_FACE_NORMALS.begin(), ::gpk::VOXEL_FACE_NORMALS	.byte_count());
 	memcpy(&geometry.TextureCoords	[offsetTextureCoords], ::gpk::VOXEL_FACE_UV.begin()		, ::gpk::VOXEL_FACE_UV		.byte_count());
-	const ::gpk::vcu16			indices						= {::gpk::VOXEL_FACE_INDICES_16[0], 36};
+	const ::gpk::vcu1_t			indices						= {::gpk::VOXEL_FACE_INDICES_16[0], 36};
 	for(uint32_t iIndex = offsetPositionIndices; iIndex < geometry.PositionIndices.size(); ++iIndex) 
 		geometry.PositionIndices[iIndex] = indices[iIndex];
 

@@ -79,7 +79,7 @@ namespace gpk
 	tplN2uusng	astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, N>; tplN2uusng astaticvcuc 	= ::gpk::astvcuc <N>;
 	tplN2uusng	astvcc		= ::gpk::astatic<::gpk::vcsc_t	, N>; tplN2uusng astaticvcc		= ::gpk::astvcc  <N>;
 	tplN2uusng	astvcu8 	= ::gpk::astatic<::gpk::vcu0_t 	, N>; tplN2uusng astaticvcu8 	= ::gpk::astvcu8 <N>;
-	tplN2uusng	astvcu16	= ::gpk::astatic<::gpk::vcu16	, N>; tplN2uusng astaticvcu16	= ::gpk::astvcu16<N>;
+	tplN2uusng	astvcu16	= ::gpk::astatic<::gpk::vcu1_t	, N>; tplN2uusng astaticvcu16	= ::gpk::astvcu16<N>;
 	tplN2uusng	astvcu32	= ::gpk::astatic<::gpk::vcu32	, N>; tplN2uusng astaticvcu32	= ::gpk::astvcu32<N>;
 	tplN2uusng	astvcu64	= ::gpk::astatic<::gpk::vcu64	, N>; tplN2uusng astaticvcu64	= ::gpk::astvcu64<N>;
 	tplN2uusng	astvci8 	= ::gpk::astatic<::gpk::vcs0_t 	, N>; tplN2uusng astaticvci8 	= ::gpk::astvci8 <N>;

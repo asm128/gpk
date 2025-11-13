@@ -15,7 +15,7 @@ namespace gpk
 	};
 
 	struct SPlayer {
-		::gpk::vcc			Name				= "Player 1";
+		::gpk::vcsc_t			Name				= "Player 1";
 		uint32_t			Color				= 0xFFFF0000;
 		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
@@ -46,14 +46,14 @@ namespace gpk
 		SGameState			State				= {};
 		astagestate			Stages				= {};
 
-		::gpk::error_t		Save				(::gpk::au8 & output)	const	{ 
+		::gpk::error_t		Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::savePOD(output, Setup)); 
 			gpk_necs(gpk::savePOD(output, State)); 
 			gpk_necs(gpk::saveView(output, Stages));
 			return 0;
 		}
 
-		::gpk::error_t		Load				(::gpk::vcu8 & input)	{ 
+		::gpk::error_t		Load				(::gpk::vcu0_t & input)	{ 
 			gpk_necs(gpk::loadPOD(input, Setup));
 			gpk_necs(gpk::loadPOD(input, State)); 
 			gpk_necs(gpk::loadView(input, Stages));

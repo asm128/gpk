@@ -22,13 +22,13 @@ namespace gpk
 		::gpk::apod<TILE_FLAG>	Flags;
 		::gpk::tilegrid			Tiles;
 
-		::gpk::error_t			Save				(::gpk::au8 & output)	const	{ 
+		::gpk::error_t			Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView (output, Flags)); 
 			gpk_necs(gpk::saveImage(output, Tiles.View)); 
 			return 0;
 		}
 
-		::gpk::error_t			Load				(::gpk::vcu8 & input)	{ 
+		::gpk::error_t			Load				(::gpk::vcu0_t & input)	{ 
 			gpk_necs(gpk::loadView (input, Flags )); 
 			gpk_necs(gpk::loadImage(input, Tiles)); 
 			return 0;
@@ -38,8 +38,8 @@ namespace gpk
 #pragma pack(push, 1)
 	struct STileMapSetup {
 		uint64_t				Seed				= ::gpk::noise1DBase(::gpk::timeCurrentInUs());
-		::gpk::n2u8				BlockSize			= {255, 255};
-		::gpk::n2u16			WorldSize			= {255, 255};	// in blocks
+		::gpk::n2u0_t				BlockSize			= {255, 255};
+		::gpk::n2u1_t			WorldSize			= {255, 255};	// in blocks
 	};
 #pragma pack(pop)
 
@@ -49,7 +49,7 @@ namespace gpk
 		::gpk::apod<STimestamps>	Stamps;	// 
 		::gpk::apobj<STileBlock>	Blocks;	// 
 	
-		::gpk::error_t			Save				(::gpk::au8 & output)	const	{ 
+		::gpk::error_t			Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::savePOD (output, Config)); 
 			gpk_necs(gpk::saveView(output, Coords)); 
 			gpk_necs(gpk::saveView(output, Stamps)); 
@@ -59,7 +59,7 @@ namespace gpk
 			}
 			return 0; 
 		}
-		::gpk::error_t			Load				(::gpk::vcu8 & input) { 
+		::gpk::error_t			Load				(::gpk::vcu0_t & input) { 
 			gpk_necs(gpk::loadPOD (input, Config)); 
 			gpk_necs(gpk::loadView(input, Coords)); 
 			gpk_necs(gpk::loadView(input, Stamps)); 

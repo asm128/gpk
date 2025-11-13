@@ -100,8 +100,8 @@
 				while(true) {																				\
 					::gpk::error_t			updateResult		= ::update(*app, false);					\
 					bi_if(1 == updateResult);																\
-					be_if(failed(updateResult));															\
-					e_if(::draw(*app));																	\
+					be_if(::gpk::failed(updateResult));														\
+					e_if(::draw(*app));																		\
 				}																							\
 				info_printf("%s", "Cleaning up application instance...");									\
 				::cleanup(*app);																			\

@@ -20,18 +20,18 @@ namespace gpk
 	};
 
 	struct SLobbyRoom {
-		::gpk::vcc			Name;
+		::gpk::vcsc_t			Name;
 		::gpk::ai64			Moderators;
 		::gpk::ai64			Users;
 	};
 
 	struct SLobbyUser {
-		::gpk::vcc			Mail;
-		::gpk::vcc			Pass;
+		::gpk::vcsc_t			Mail;
+		::gpk::vcsc_t			Pass;
 	};
 
 	struct SLobbyUserInfo {
-		::gpk::vcc			Name;
+		::gpk::vcsc_t			Name;
 	};
 
 	struct SLobbyServer {
@@ -142,7 +142,7 @@ namespace gpk
 			gpk_necs(gpk::guiGetProcessableControls(gui, controlsToProcess));
 			if(const int32_t result = InputBox.Update(gui, InputBox.VirtualKeyboard, frameEvents, controlsToProcess)) {
 				if(result == INT_MAX) { 
-					::gpk::vcc						trimmed			= ::gpk::vcc{InputBox.Text};
+					::gpk::vcsc_t						trimmed			= ::gpk::vcsc_t{InputBox.Text};
 					::gpk::trim(trimmed);
 					::gpk::controlTextSet(gui, Dialog.Root + 1 + Field, ::gpk::label{trimmed});
 					InputBox.Edit(gui, false);
@@ -185,7 +185,7 @@ namespace gpk
 				Client.Queue.Received.clear();
 			}
 			for(uint32_t iMessage = 0; iMessage < MessagesToProcess.size(); ++iMessage) {
-				::gpk::vcu8							viewPayload					= MessagesToProcess[iMessage]->Payload;
+				::gpk::vcu0_t							viewPayload					= MessagesToProcess[iMessage]->Payload;
 				info_printf("Client received: %s.", viewPayload.begin());
 			}
 			return 0;

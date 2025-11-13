@@ -99,7 +99,7 @@ namespace gpk
 	};
 #pragma pack(pop)
 	tplt<tpnm _tPOD> 
-	::gpk::error_t			loadView			(::gpk::vcu8 & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
+	::gpk::error_t			loadView			(::gpk::vcu0_t & input, ::gpk::apapod<_tPOD> & output, const uint32_t index) { 
 		::gpk::view<const _tPOD>	viewToLoad;
 		gpk_necall(gpk::loadView(input, viewToLoad), "index: %i", index);
 		if(0 == viewToLoad.size()) {
@@ -130,7 +130,7 @@ namespace gpk
 	struct SSpaceshipManager {
 		::gpk::apod<::gpk::SSpaceshipScore	>	ShipScores					= {}; // One per core
 		::gpk::apod<::gpk::SSpaceshipCore	>	ShipCores					= {}; // One per core
-		::gpk::aobj<::gpk::au16				>	ShipParts					= {}; // One per core, each one mapping to a list of orbiters.
+		::gpk::aobj<::gpk::au1_t				>	ShipParts					= {}; // One per core, each one mapping to a list of orbiters.
 
 		::gpk::apod<::gpk::SSpaceshipOrbiter>	Orbiters					= {};	// One per orbiter	
 		::gpk::apapod<::gpk::SHIP_ACTION	>	ShipOrbiterActionQueue		= {};
@@ -142,7 +142,7 @@ namespace gpk
 
 		int32_t						GetShipHealth		(uint32_t iShipCore)				{ 
 			int32_t							totalHealth			= 0;
-			::gpk::vcu16					shipCoreParts		= ShipParts[iShipCore];
+			::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
 			for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart)
 				totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 
@@ -155,7 +155,7 @@ namespace gpk
 				if(ShipCores[iShipCore].Team != teamId) 
 					continue;
 
-				::gpk::vcu16					shipCoreParts		= ShipParts[iShipCore];
+				::gpk::vcu1_t					shipCoreParts		= ShipParts[iShipCore];
 				for(uint32_t iShipCorePart = 0, countParts = shipCoreParts.size(); iShipCorePart < countParts; ++iShipCorePart) 
 					totalHealth += Orbiters[shipCoreParts[iShipCorePart]].Health.Value;
 			}
@@ -163,12 +163,12 @@ namespace gpk
 		}
 
 
-		::gpk::error_t				Save				(::gpk::au8 & output)	const	{ 
+		::gpk::error_t				Save				(::gpk::au0_t & output)	const	{ 
 			gpk_necs(gpk::saveView(output, ShipScores	));
 			gpk_necs(gpk::saveView(output, ShipCores	));
 			uint32_t						totalEntityChildren	= 0;
 			for(uint32_t iShipCore = 0; iShipCore < ShipCores.size(); ++iShipCore) {
-				::gpk::vcu16					v		{ShipParts[iShipCore]};
+				::gpk::vcu1_t					v		{ShipParts[iShipCore]};
 				gpk_necall(gpk::saveView(output, v), "iPart: %i", iShipCore);
 				totalEntityChildren += v.size();
 			}
@@ -187,7 +187,7 @@ namespace gpk
 			}
 			return 0; 
 		}
-		::gpk::error_t				Load				(::gpk::vcu8 & input) { 
+		::gpk::error_t				Load				(::gpk::vcu0_t & input) { 
 			ShipScores	.clear();
 			ShipCores	.clear();
 			gpk_necs(gpk::loadView(input, ShipScores	));

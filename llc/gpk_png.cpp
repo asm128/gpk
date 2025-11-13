@@ -206,7 +206,7 @@ static	::gpk::error_t	pngScanlineDecode_0_16	(::gpk::g8bgra & out_View, const ::
 		const ::gpk::au0_t										& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::vcu16										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t										viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::view<::gpk::bgra>								scanlineOut										= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			uint16_t												toReverse										= viewPixels[iPixel];
@@ -224,7 +224,7 @@ static	::gpk::error_t	pngScanlineDecode_0_16	(::gpk::gu16 & out_View, const ::gp
 		const ::gpk::au0_t			& scanline				= scanlines[iScanline];
 		if(0 == scanline.size())	
 			continue;
-		const ::gpk::vcu16			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::vu16					scanlineOut				= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			uint16_t					toReverse				= viewPixels[iPixel];
@@ -241,7 +241,7 @@ static	::gpk::error_t	pngScanlineDecode_0_16	(::gpk::gu8 & out_View, const ::gpk
 		const ::gpk::au0_t			& scanline										= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::vcu16			viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t			viewPixels										= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::vu8					scanlineOut										= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			uint16_t					toReverse										= viewPixels[iPixel];
@@ -379,7 +379,7 @@ static	::gpk::error_t	pngScanlineDecode_4_8	(::gpk::g8bgra & out_View, const ::g
 		const ::gpk::au0_t			& scanline				= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::vcu16			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::view<::gpk::bgra>	scanlineOut				= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			const uint16_t				valueInput				= viewPixels[iPixel];
@@ -397,7 +397,7 @@ static	::gpk::error_t	pngScanlineDecode_4_8	(::gpk::gu16 & out_View, const ::gpk
 		if(0 == scanline.size())
 			continue;
 
-		const ::gpk::vcu16			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::vu16					scanlineOut				= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel)
 			scanlineOut[iPixel]		= viewPixels[iPixel];
@@ -410,7 +410,7 @@ static	::gpk::error_t	pngScanlineDecode_4_8	(::gpk::gu8 & out_View, const ::gpk:
 		const ::gpk::au0_t			& scanline				= scanlines[iScanline];
 		if(0 == scanline.size())
 			continue;
-		const ::gpk::vcu16			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
+		const ::gpk::vcu1_t			viewPixels				= {(const uint16_t*)scanline.begin(), scanline.size() / 2};
 		::gpk::vu8					scanlineOut				= out_View[iScanline];
 		for(uint32_t iPixel = 0; iPixel < viewPixels.size(); ++iPixel) {
 			const uint16_t				valueInput				= viewPixels[iPixel];

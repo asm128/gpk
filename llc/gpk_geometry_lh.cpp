@@ -345,7 +345,7 @@ stacxpr	::gpk::n3s0_t		geometryNormals	[6]		=
 //			, {1, 0}
 //			, {1, 1}
 //			};
-//		::gpk::n3f64									coords	[4]				=
+//		::gpk::n3f3_t									coords	[4]				=
 //			{ {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}
 //			, {sin(::gpk::math_pi * z		/ stacks) * sin(::gpk::math_2pi * (x + 1)	/ slices), sin(::gpk::math_pi * z		/ stacks	) * cos(::gpk::math_2pi * (x + 1)	/ slices), cos(::gpk::math_pi * (x + 1) /slices)}
 //			, {sin(::gpk::math_pi * (z + 1)	/ stacks) * sin(::gpk::math_2pi * x			/ slices), sin(::gpk::math_pi * (z + 1)	/ stacks	) * cos(::gpk::math_2pi * x			/ slices), cos(::gpk::math_pi * x		/slices)}

@@ -38,12 +38,12 @@ namespace gpk
 	stincxp	C_TYPE	toCType	(uc_t	)	{ return ::gpk::C_TYPE_uchar; } 
 
 	struct SPODDefinition { 
-		::gpk::au8					DefaultData;
+		::gpk::au0_t					DefaultData;
 		::gpk::avcc					Labels;
-		::gpk::au16					Offsets;
+		::gpk::au1_t					Offsets;
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
-		::gpk::error_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::vcc label, const vcu8 & defaultValue) { 
+		::gpk::error_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::vcsc_t label, const vcu8 & defaultValue) { 
 			rve_if(Labels.size() > (uint32_t)Labels.find(label), "'%s' already exists.", ::gpk::toString(label).begin()); 
 			gpk_necs(Types.push_back(type));
 			gpk_necs(Offsets.push_back((uint16_t)DefaultData.size()));
@@ -52,23 +52,23 @@ namespace gpk
 		}
 
 		tplt<tpnm _tValue>
-		::gpk::error_t				push_any		(const ::gpk::vcc label, const _tValue defaultValue) { 
+		::gpk::error_t				push_any		(const ::gpk::vcsc_t label, const _tValue defaultValue) { 
 			const ::gpk::C_TYPE				type			= ::gpk::toCType(defaultValue); 
-			return push_any(type, label, ::gpk::vcu8{(const u0_t*)&defaultValue, type & 0xF}); 
+			return push_any(type, label, ::gpk::vcu0_t{(const u0_t*)&defaultValue, type & 0xF}); 
 		}
 
-		::gpk::error_t				push_u8			(::gpk::vcc label, u0_t    defaultValue = (u0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u16		(::gpk::vcc label, u1_t   defaultValue = (u1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u32		(::gpk::vcc label, u2_t   defaultValue = (u2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_u64		(::gpk::vcc label, u3_t   defaultValue = (u3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i8			(::gpk::vcc label, s0_t    defaultValue = (s0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i16		(::gpk::vcc label, s1_t   defaultValue = (s1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i32		(::gpk::vcc label, s2_t   defaultValue = (s2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_i64		(::gpk::vcc label, s3_t   defaultValue = (s3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_f32		(::gpk::vcc label, f2_t   defaultValue = (f2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_f64		(::gpk::vcc label, f3_t   defaultValue = (f3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_uchar		(::gpk::vcc label, uc_t defaultValue = (uc_t)::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
-		::gpk::error_t				push_char		(::gpk::vcc label, sc_t  defaultValue = (sc_t )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u8			(::gpk::vcsc_t label, u0_t    defaultValue = (u0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u16		(::gpk::vcsc_t label, u1_t   defaultValue = (u1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u32		(::gpk::vcsc_t label, u2_t   defaultValue = (u2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_u64		(::gpk::vcsc_t label, u3_t   defaultValue = (u3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i8			(::gpk::vcsc_t label, s0_t    defaultValue = (s0_t   )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i16		(::gpk::vcsc_t label, s1_t   defaultValue = (s1_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i32		(::gpk::vcsc_t label, s2_t   defaultValue = (s2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_i64		(::gpk::vcsc_t label, s3_t   defaultValue = (s3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_f32		(::gpk::vcsc_t label, f2_t   defaultValue = (f2_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_f64		(::gpk::vcsc_t label, f3_t   defaultValue = (f3_t  )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_uchar		(::gpk::vcsc_t label, uc_t defaultValue = (uc_t)::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
+		::gpk::error_t				push_char		(::gpk::vcsc_t label, sc_t  defaultValue = (sc_t )::gpk::DEBUG_BUILD) { return push_any(label, defaultValue); }
 	};
 } // namespace 
 

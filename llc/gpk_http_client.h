@@ -38,7 +38,7 @@ namespace gpk
 	//	,	const ::gpk::vcs			& hostName
 	//	,	const ::gpk::vcs			& path
 	//	,	const ::gpk::vcs			& contentType
-	//	,	const ::gpk::vcc			& body
+	//	,	const ::gpk::vcsc_t			& body
 	//	,	::gpk::apod<sc_t>			& out_received
 	//	);
 

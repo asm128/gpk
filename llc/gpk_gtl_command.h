@@ -41,7 +41,7 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SGTLMessage {
-		::gpk::au8							Payload		;
+		::gpk::au0_t							Payload		;
 		uint64_t							Time		;
 		::gpk::SGTLCommand					Command		;
 		uint8_t								RetryCount	;

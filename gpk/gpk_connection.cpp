@@ -431,7 +431,7 @@ static	::gpk::error_t	handlePAYLOADRequest				(const ::gpk::SUDPPayloadHeader & 
 		if(0 == packetCount)
 			return 0;
 		ree_if((packetCount * sizeof(uint16_t)) > (payload.size() - payload.CursorPosition), "%s", "Invalid packet data.");
-		::gpk::vcu16						sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
+		::gpk::vcu1_t						sizes								= {(uint16_t*)&payload[payload.CursorPosition], packetCount};
 		payload.CursorPosition			+= packetCount * sizeof(uint16_t);
 		::gpk::apobj<::gpk::SUDPMessage>	tempQueue;
 		for(uint32_t iSizes = 0; iSizes < sizes.size(); ++iSizes) {
