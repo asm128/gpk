@@ -183,7 +183,7 @@ stxp	const char		parDir	[]					= "..";
 
 
 ::gpk::err_t			gpk::pathList				(::gpk::vcst_c & pathToList, ::gpk::SPathContents & pathContents, ::gpk::vcst_c extension)						{
-	::gpk::asc_t				withoutTrailingSlash		= (pathToList.size() - 1 > (uint32_t)::gpk::findLastSlash(pathToList)) ? pathToList : ::gpk::vcst_t{pathToList.begin(), pathToList.size() - 1};
+	::gpk::asc_t				withoutTrailingSlash		= (int32_t(pathToList.size()) - 1 > ::gpk::findLastSlash(pathToList)) ? pathToList : ::gpk::vcst_t{pathToList.begin(), pathToList.size() - 1};
 	char						bufferFormat[36]			= {};
 	snprintf(bufferFormat, ::gpk::size(bufferFormat) - 2, "%%.%" GPK_FMT_U2 "s/*.*", withoutTrailingSlash.size());
 	char						sPath[GPK_MAX_PATH]			= {};
