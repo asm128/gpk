@@ -8,10 +8,10 @@
 
 namespace gpk
 {
-	tplt<tpnm _tColor>
+	tplt<tpnm _tCell>
 	struct img {
-		tydf	_tColor				T;
-		tydf	cnst _tColor		TConst;
+		tydf	_tCell				T;
+		tydf	cnst _tCell		TConst;
 		tydf	::gpk::view<T>		TView	;
 		tydf	::gpk::grid<T>		TGrid	;
 		tydf	::gpk::view<TConst>	TViewConst	;
@@ -82,8 +82,8 @@ namespace gpk
 	tydf	img<u1_t>	imgu16;
 	tydf	img<u2_t>	imgu32;
 	tydf	img<u3_t>	imgu64;
-	tydf	img<float>		imgf32;
-	tydf	img<double>		imgf64;
+	tydf	img<f2_t>	imgf32;
+	tydf	img<f3_t>	imgf64;
 
 	tplt<tpnm _tType>
 	struct imgmono {

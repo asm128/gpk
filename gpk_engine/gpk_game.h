@@ -15,7 +15,7 @@ namespace gpk
 	};
 
 	struct SPlayer {
-		::gpk::vcsc_t			Name				= "Player 1";
+		::gpk::vcsc_t		Name				= "Player 1";
 		uint32_t			Color				= 0xFFFF0000;
 		::gpk::PLAYER_MODE	Mode				= (::gpk::PLAYER_MODE)::gpk::PLAYER_MODE_AI;
 	};
