@@ -15,20 +15,20 @@ namespace gpk
 		gpk_necs(output.append(viewToSerialize.cu8()));
 		return counterValue.ValueWidth() + viewToSerialize.byte_count();
 	}
-	tplT	err_t			saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
-		u2_c						offset				= output.size();
-		cnst packedu32				counterValue		= viewToSerialize.size();
-		gpk_necs(output.append(counterValue.tplt cu8<vcu0_t>()));
-		for(cnst packed_uint<T> valpkd : viewToSerialize)
-			gpk_necs(output.append(valpkd.tplt cu8<vcu0_t>()));
-		return output.size() - offset;
-	}
-	tplt<>	inln	err_t	saveView	<u1_t>	(au0_t & output, vu1_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
-	tplt<>	inln	err_t	saveView	<u2_t>	(au0_t & output, vu2_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
-	tplt<>	inln	err_t	saveView	<u3_t>	(au0_t & output, vu3_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
-	tplt<>	inln	err_t	saveView	<u1_c>	(au0_t & output, vcu1_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
-	tplt<>	inln	err_t	saveView	<u2_c>	(au0_t & output, vcu2_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
-	tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplT	err_t			saveUIntView		(au0_t & output, cnst view<T> & viewToSerialize)	{
+	//	u2_c						offset				= output.size();
+	//	cnst packedu32				counterValue		= viewToSerialize.size();
+	//	gpk_necs(output.append(counterValue.tplt cu8<vcu0_t>()));
+	//	for(cnst packed_uint<T> valpkd : viewToSerialize)
+	//		gpk_necs(output.append(valpkd.tplt cu8<vcu0_t>()));
+	//	return output.size() - offset;
+	//}
+	//tplt<>	inln	err_t	saveView	<u1_t>	(au0_t & output, vu1_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplt<>	inln	err_t	saveView	<u2_t>	(au0_t & output, vu2_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplt<>	inln	err_t	saveView	<u3_t>	(au0_t & output, vu3_c  & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplt<>	inln	err_t	saveView	<u1_c>	(au0_t & output, vcu1_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplt<>	inln	err_t	saveView	<u2_c>	(au0_t & output, vcu2_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
+	//tplt<>	inln	err_t	saveView	<u3_c>	(au0_t & output, vcu3_c & viewToSerialize)		{ return saveUIntView(output, viewToSerialize); }
 
 	tplTstin		err_t	saveView			(as0_t & output, cnst view<T> & headerToWrite)	{ return saveView(*(au0_t*)&output, headerToWrite); }
 	tplT			err_t	savePOD				(au0_t & output, cnst T & input)	{ gpk_necs(output.append((cnst uint8_t*)&input, szof(T))); return szof(T); }

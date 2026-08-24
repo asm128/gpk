@@ -23,7 +23,7 @@ namespace gpk
 
 		inxp					array_pod			()										noexcept	= default;
 								array_pod			(::std::initializer_list<T> init)				{
-			if_true_te(resize((u2_t)init.size()));
+			if_fail_te(resize((u2_t)init.size()));
 			memcpy(Data, init.begin(), Count * szof(T));
 		}
 								array_pod			(array_pod<T> && other)					noexcept	{
