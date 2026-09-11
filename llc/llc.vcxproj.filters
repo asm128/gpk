@@ -690,9 +690,6 @@
     <ClInclude Include="gpk_spi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gpk_packed_int.h">
-      <Filter>container</Filter>
-    </ClInclude>
     <ClInclude Include="gpk_platform_error.h">
       <Filter>container</Filter>
     </ClInclude>
@@ -763,6 +760,9 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="gpk_cerrno.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_packed_int.h">
       <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
