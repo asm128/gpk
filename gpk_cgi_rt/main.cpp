@@ -93,7 +93,7 @@ int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<ch
 		::gpk::find(::gpk::vcs{"QUERY_STRING"}, framework.RuntimeValues.QueryStringKeyVals, querystring);
 		if(querystring.size())
 			output.append(buffer, sprintf_s(buffer, "\n<h4>QueryString (%u): %s</h4>", querystring.size(), querystring.begin()));
-		const ::gpk::view<::gpk::vcc>		keyvalviews			= runtimeValues.QueryStringElements;
+		const ::gpk::view<::gpk::vcsc_t>		keyvalviews			= runtimeValues.QueryStringElements;
 		for(uint32_t iChar = 0; iChar < keyvalviews.size(); ++iChar) {
 			output.append(buffer, ::gpk::formatForSize(keyvalviews[iChar], buffer, "\n<h3>KeyVal: ", "</h3>"));
 
@@ -163,7 +163,7 @@ int WINAPI											WinMain				(HINSTANCE hInstance, HINSTANCE hPrevInstance, L
 	hInstance, hPrevInstance, szCmdLine, nCmdShow;
 	::gpk::SCGIFramework									framework;
 	::gpk::cgiRuntimeValuesLoad(framework.RuntimeValues, {(const char**)__argv, (uint32_t)(__argc)});
-	const ::gpk::array_obj<::gpk::vcc>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
+	const ::gpk::array_obj<::gpk::vcsc_t>			& keyvalviews			= framework.RuntimeValues.QueryStringElements;
 	for(uint32_t iKeyVal = 0; iKeyVal < keyvalviews.size(); ++iKeyVal)
 		::processKeyVal(framework, framework.RuntimeValues.QueryStringKeyVals[iKeyVal]);
 

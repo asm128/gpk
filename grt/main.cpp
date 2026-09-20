@@ -42,9 +42,9 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 #else
 	::gpk::error_t				updateResult		= mainModule.Update(mainModule.Application, false);
 #endif
-	if(1 == updateResult || errored(updateResult)) {
+	if(1 == updateResult || ::gpk::failed(updateResult)) {
 		is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);
-		es_if(errored(updateResult));
+		es_if(::gpk::failed(updateResult));
 	}
 	else {
 		gpk_sync_increment(runtimeState.RenderThreadUsers);	// Report we're alive
@@ -57,7 +57,7 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 			updateResult			= mainModule.Update(mainModule.Application, false);
 #endif
 			break_ginfo_if(1 == updateResult, "Application requested termination.");
-			break_gerror_if(errored(updateResult), "update() returned error.");
+			break_gerror_if(::gpk::failed(updateResult), "update() returned error.");
 			//ef_if(mainModule.Render(app), "Why would this ever happen?");
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done
@@ -95,7 +95,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		gpk_necall(mainModule.Create(&app, &globalRuntimeValues), "Failed to instantiate main module class. %s.", mainModuleName);
 		mainModule.Application		= app;
 		info_printf("%s", "Initializing application instance.");
-		if errored(mainModule.Setup(app)) {
+		if(::gpk::failed(mainModule.Setup(app))) {
 			error_printf("%s", "Setup() Failed!");
 			gpk_necall(mainModule.Delete(&app), "Failed to create main module. %s.");
 			return -1;
@@ -103,7 +103,7 @@ static	int					grt_Main						(::gpk::SRuntimeValues& globalRuntimeValues)						{
 		runtimeState.MainModule		= &mainModule;
 		::grt_Loop(runtimeState, mainModule);
 		info_printf("%s", "Cleaning up application instance...");
-		es_if(errored(mainModule.Cleanup(app)));
+		es_if(::gpk::failed(mainModule.Cleanup(app)));
 		info_printf("%s", "Application instance destroyed.");
 		gpk_necall(mainModule.Delete(&app), "");
 	}

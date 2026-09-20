@@ -1,7 +1,7 @@
 /// Copyright 2010-2024 - ogarnd
 #include "gpk_array_base.h"
 
-#include "gpk_keyval.h"
+#include "gpk_keyval_old.h"
 
 #ifndef GPK_ARRAY_OBJ_H_23627
 #define GPK_ARRAY_OBJ_H_23627

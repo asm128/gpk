@@ -18,19 +18,19 @@ namespace gpk
 {
 	tydf	error_t	(*log_print_t)		(const char * text);
 	error_t			_base_log_print		(const char * text);
-	tydf	error_t	(*log_write_t)		(const char * text, uint32_t textLen);
-	error_t			_base_log_write		(const char * text, uint32_t textLen);
-#define base_log_write(text, textLen)	::gpk::_base_log_write(text, textLen)
-#define base_log_print(text)			::gpk::_base_log_print(text)
+	tydf	error_t	(*log_write_t)		(const char * text, u2_t textLen);
+	error_t			_base_log_write		(const char * text, u2_t textLen);
+	stin	error_t	base_log_write		(const char* text, u2_t textLen)	{ rtrn ::gpk::_base_log_write(text, textLen); }
+	stin	error_t	base_log_print		(const char* text)					{ rtrn ::gpk::_base_log_print(text); }
 
-#ifdef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-	tydf	error_t	(*log_print_P_t)	(const __FlashStringHelper * text);
-	error_t			_base_log_print_P	(const __FlashStringHelper * text);
-#	define base_log_print_P(text)	::gpk::_base_log_print_P(text)
-#	define base_log_print_F(text)	base_log_print_P(F(text))
+#ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
+	stin	error_t	base_log_print_P	(const char* text)	{ rtrn base_log_print(text); }
+	stin	error_t	base_log_print_F	(const char* text)	{ rtrn base_log_print(text); }
 #else
-#	define base_log_print_P(text)	base_log_print(text)
-#	define base_log_print_F(text)	base_log_print(text)
+	tydf	error_t	(*log_print_P_t)	(const __FlashStringHelper * text);
+			error_t	_base_log_print_P	(const __FlashStringHelper * text);
+	stin	error_t	base_log_print_P	(const __FlashStringHelper * text)	{ rtrn ::gpk::_base_log_print_P(text); }
+	stin	error_t	base_log_print_F	(const __FlashStringHelper * text)	{ rtrn ::gpk::base_log_print_P(F(text)); }
 #endif
 	error_t			setupDefaultLogCallbacks();
 	error_t			setupLogCallbacks

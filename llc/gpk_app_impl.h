@@ -143,9 +143,9 @@
 																													\
 		static	::gpk::error_t	grt_Loop		(::SRuntimeState & runtimeState)	{								\
 			::gpk::error_t				updateResult	= ::update(*runtimeState.Application, false);				\
-			if(1 == updateResult || failed(updateResult)) {														\
+			if(1 == updateResult || ::gpk::failed(updateResult)) {														\
 				is_if(::gpk::APPLICATION_STATE_EXIT == updateResult);												\
-				es_if(failed(updateResult));																		\
+				es_if(::gpk::failed(updateResult));																		\
 			}																										\
 			else {																									\
 				gpk_sync_increment(runtimeState.RenderThreadUsers);	/* Report we're alive	*/						\
@@ -154,8 +154,8 @@
 				while(true) {																						\
 					updateResult	= ::update(*runtimeState.Application, false);									\
 					bis_if(::gpk::APPLICATION_STATE_EXIT == updateResult);											\
-					bes_if(failed(updateResult));																	\
-					/*ef_if(mainModule.Render(app), "Why would this ever happen?");	*/							\
+					bes_if(::gpk::failed(updateResult));															\
+					/*ef_if(mainModule.Render(app), "Why would this ever happen?");	*/								\
 					/*Sleep(1);		*/																				\
 				}																									\
 				gpk_sync_decrement(runtimeState.RenderThreadUsers);	/* Report we're done	*/						\
@@ -180,7 +180,7 @@
 			{																	\
 				rees_if(0 == runtimeState.Application.create(runtimeValues));	\
 				info_printf("%s", "Initializing application instance.");		\
-				if(failed(::setup(*runtimeState.Application))) {				\
+				if(::gpk::failed(::setup(*runtimeState.Application))) {			\
 					error_printf("%s", "Setup() Failed!");						\
 					gpk_necs(::cleanup(*runtimeState.Application));				\
 					return -1;													\

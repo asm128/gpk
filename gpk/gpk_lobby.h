@@ -5,6 +5,7 @@
 #include "gpk_dialog.h"
 #include "gpk_gui_control_list.h"
 #include "gpk_label.h"
+#include "gpk_chrono.h"
 
 #include <mutex>
 
@@ -21,8 +22,8 @@ namespace gpk
 
 	struct SLobbyRoom {
 		::gpk::vcsc_t			Name;
-		::gpk::ai64			Moderators;
-		::gpk::ai64			Users;
+		::gpk::as3_t			Moderators;
+		::gpk::as3_t			Users;
 	};
 
 	struct SLobbyUser {
@@ -37,8 +38,8 @@ namespace gpk
 	struct SLobbyServer {
 		typedef	::gpk::apobj<::gpk::SUDPMessage> TMessageQueue;
 
-		::gpk::au64								IdListRoom			= {};
-		::gpk::au64								IdListUsers			= {};
+		::gpk::au3_t								IdListRoom			= {};
+		::gpk::au3_t								IdListUsers			= {};
 
 		::gpk::SUDPServer						Server				= {};
 

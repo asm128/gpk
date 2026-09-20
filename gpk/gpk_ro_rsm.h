@@ -76,7 +76,7 @@ namespace gpk
 		::gpk::apod<::gpk::triu32>				VertexIndices	;
 		int32_t									TextureIndex	;
 		int32_t									RSMNodeIndex	;
-		//::gpk::ai32					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
+		//::gpk::as2_t					SkinIndices		; // one per triangle (VertexIndices.size() / 3)
 	};
 
 	struct SModelHierarchyNodeRSM {

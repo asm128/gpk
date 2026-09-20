@@ -39,11 +39,11 @@ namespace gpk
 
 	struct SPODDefinition { 
 		::gpk::au0_t					DefaultData;
-		::gpk::avcc					Labels;
+		::gpk::avcsc_t					Labels;
 		::gpk::au1_t					Offsets;
 		::gpk::apod<::gpk::C_TYPE>	Types;
 
-		::gpk::error_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::vcsc_t label, const vcu8 & defaultValue) { 
+		::gpk::error_t				push_any		(const ::gpk::C_TYPE type, const ::gpk::vcsc_t label, const vcu0_t & defaultValue) { 
 			rve_if(Labels.size() > (uint32_t)Labels.find(label), "'%s' already exists.", ::gpk::toString(label).begin()); 
 			gpk_necs(Types.push_back(type));
 			gpk_necs(Offsets.push_back((uint16_t)DefaultData.size()));
