@@ -6,37 +6,44 @@
 namespace gpk
 {
 
-	stacxpr	const uint64_t	NOISE_SEED			= 16381; // 525253
+	stxp	u3_c		NOISE_SEED			= 16381; // 525253
 
-	stacxpr	uint32_t		noise1DBase32		(uint32_t x, uint32_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883UL)  + 1500450271UL); }	// 1073741824.0
-	stacxpr	uint64_t		noise1DBase			(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x = (x << 13) ^ x; return ( x * (x * x * noiseSeed + 715827883ULL)  + 10657331232548839ULL); }
-	stacxpr	double			noise1D				(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ return ( 1.0 - (::gpk::noise1DBase(x, noiseSeed)  & 0x7fFFffFFffFFffFFULL) / 4611686018427387904.0); }
-	stacxpr	double			noiseNormal1D		(uint64_t x, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ return ::gpk::noise1D(x, noiseSeed) *.5 + .5f; }
+	nsix	u2_t		noise1DBu2			(u2_t x, u2_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return x * (x * x * noiseSeed + 715827883UL  ) + 1500450271UL; }	// 1073741824.0
+	nsix	u3_t		noise1DBu3			(u3_t x, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return x * (x * x * noiseSeed + 715827883ULL ) + 10657331232548839ULL; }
+	nsix	u2_t		noise1DBase32		(u2_t x, u2_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return noise1DBu2((x << 13) ^ x, noiseSeed); }	// 1073741824.0
+	nsix	u3_t		noise1DBase			(u3_t x, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return noise1DBu3((x << 13) ^ x, noiseSeed); }
+	nsix	f3_t		noise1D				(u3_t x, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ( 1.0 - (::gpk::noise1DBase(x, noiseSeed)  & 0x7fFFffFFffFFffFFULL) / 4611686018427387904.0); }
+	nsix	f3_t		noiseNormal1D		(u3_t x, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ::gpk::noise1D(x, noiseSeed) *.5 + .5f; }
 		   
-	stacxpr	double			noise2D				(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth);							return ::gpk::noise1D(x, noiseSeed);		}
-	stacxpr	double			noise3D				(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth + (z * nHeight * nWidth));	return ::gpk::noise1D(x, noiseSeed);		}
-	stacxpr	double			noiseNormal2D		(uint32_t x, uint32_t y				, uint32_t nWidth					, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth);							return ::gpk::noiseNormal1D(x, noiseSeed);	}
-	stacxpr	double			noiseNormal3D		(uint32_t x, uint32_t y, uint32_t z	, uint32_t nWidth, uint32_t nHeight	, uint64_t noiseSeed = ::gpk::NOISE_SEED)	noexcept	{ x += (y * nWidth + (z * nHeight * nWidth));	return ::gpk::noiseNormal1D(x, noiseSeed);	}
+	nsix	f3_t		noise2D				(u2_t x, u2_t y			, u2_t nWidth				, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ::gpk::noise1D			(x + y * nWidth, noiseSeed);	}
+	nsix	f3_t		noiseNormal2D		(u2_t x, u2_t y			, u2_t nWidth				, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ::gpk::noiseNormal1D	(x + y * nWidth, noiseSeed);	}
+	nsix	f3_t		noise3D				(u2_t x, u2_t y, u2_t z	, u2_t nWidth, u2_t nHeight	, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ::gpk::noise1D			(x + y * nWidth + z * nHeight * nWidth, noiseSeed);	}
+	nsix	f3_t		noiseNormal3D		(u2_t x, u2_t y, u2_t z	, u2_t nWidth, u2_t nHeight	, u3_t noiseSeed = ::gpk::NOISE_SEED)	nxpt	{ return ::gpk::noiseNormal1D	(x + y * nWidth + z * nHeight * nWidth, noiseSeed);	}
 
 #pragma pack(push, 1)
-	struct SPRNG {
-		uint64_t				Seed				= NOISE_SEED;
-		uint64_t				Position			= 0;
-		uint64_t				Value				= 0;
+	stct SPRNG {
+		u3_t				Seed				= NOISE_SEED;
+		u3_t				Position			= 0;
+		u3_t				Value				= 0;
 
-		inline	uint64_t		Next				()				noexcept	{ return Value = ::gpk::noise1DBase(++Position, Seed); }
+		inline	u3_t		Next				()			nxpt	{
+			u3_t next = Seed + ++Position * 0x9E3779B97F4A7C15ULL;
+			next = (next ^ (next >> 30)) * 0xBF58476D1CE4E5B9ULL;
+			next = (next ^ (next >> 27)) * 0x94D049BB133111EBULL;
+			return Value = next ^ (next >> 31);
+		}
 
-		inline	void			Reset				()				noexcept	{ Reset(Seed); }
-		void					Reset				(uint64_t seed)	noexcept	{
-			Seed					= seed;
-			Position				= 0;
-			Value					= 0;
+		inline	void		Reset				()			nxpt	{ Reset(Seed); }
+		void				Reset				(u3_t seed)	nxpt	{
+			Seed				= seed;
+			Position			= 0;
+			Value				= 0;
 		}
 	};
 #pragma pack(pop)
 
 // --- Some primes that may come in handy
-	stacxpr	uint16_t		primes16bit []		=
+	stxp	u1_t		primes16bit []		=
 	{ 14951,  14957,  14969,  14983,  15013,  15017,  15031,  15053,  15061, 15073
 	, 15077,  15083,  15091,  15101,  15107,  15121,  15131,  15137,  15139, 15149
 	, 15161,  15173,  15187,  15193,  15199,  15217,  15227,  15233,  15241, 15259

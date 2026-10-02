@@ -10,16 +10,13 @@
 
 namespace gpk
 {
-	tplt<tpnm... _tArgs>	
-	void						clear					(_tArgs&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
-
-	tplt<tpnm... _tArgs>
-	::gpk::error_t				resize					(uint32_t newSize, _tArgs&&... args)		{
-		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
+	tpl_vtArgs	void			clear					(_tArgs&&... args)							{ const int32_t results[] = {args.clear()..., 0}; (void)results; }
+	tpl_vtArgs	err_t			resize					(u2_t newSize, _tArgs&&... args)		{
+		u2_c					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize)..., 0};
-		for(uint32_t i = 0; i < ::gpk::size(results); ++i)
-			if(failed(results[i])) {
-				error_printf("Failed to set container %i to size: %i. Out of memory?", i, (int32_t)newSize);
+		for(u2_t i = 0; i < ::gpk::size(results); ++i)
+			if_failed(results[i]) {
+				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (int32_t)newSize);
 				int32_t							j						= 0;
 				const int32_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
 				(void)dummy;
@@ -27,14 +24,12 @@ namespace gpk
 			}
 		return newSize;
 	}
-
-	tplt<tpnm... _tArgs>
-	::gpk::error_t				resize_obj				(uint32_t newSize, _tArgs&&... args)		{
-		const uint32_t					oldSizes	[]			= {args.size	()..., 0};
+	tpl_vtArgs	err_t			resize_obj				(u2_t newSize, _tArgs&&... args)		{
+		u2_c					oldSizes	[]			= {args.size	()..., 0};
 		const ::gpk::error_t			results		[]			= {args.resize	(newSize,{})..., 0};
-		for(uint32_t i = 0; i < ::gpk::size(results); ++i)
-			if(failed(results[i])) {
-				error_printf("Failed to set container %i to size: %i. Out of memory?", i, (int32_t)newSize);
+		for(u2_t i = 0; i < ::gpk::size(results); ++i)
+			if_failed(results[i]) {
+				error_printf("Failed to set container %" GPK_FMT_S2 " to size: %" GPK_FMT_S2 ". Out of memory?", i, (int32_t)newSize);
 				int32_t							j						= 0;
 				const int32_t					dummy	[]				= {args.resize(oldSizes[j++])..., 0};
 				(void)dummy;
@@ -42,43 +37,47 @@ namespace gpk
 			}
 		return newSize;
 	}
-
 	// Base for arrays that keeps track of its actual size.
 #pragma pack(push, 1)
-	tplt<tpnm T>
-	class array_base : public view<T> {
-		static	uint32_t		calc_reserve_count		(const uint32_t newCountRequested, uint32_t & outCount)	noexcept	{ 
-			stacxpr	uint32_t			MAX_COUNT				= 0x7FFFFFFFU;
+	tplT class array_base : public view<T> {
+		static	u2_t		calc_reserve_count		(u2_c newCountRequested, u2_t & outCount)	noexcept	{ 
+			stxp	u2_t			MAX_COUNT				= 0x3FFFFFFFU;
 			if(MAX_COUNT < newCountRequested)
-				return (uint32_t)-1;
-
-			const uint32_t				desiredCount			= newCountRequested + (newCountRequested >> 2);
+				return (u2_t)-1;
+#if defined (GPK_ARDUINO) || defined(GPK_ESP32) || defined(GPK_ESP8266) || defined(ESP32)
+			u2_c				desiredCount			= 2 + newCountRequested;//: + (newCountRequested >> 8);
+#else
+			u2_c				desiredCount			= 2 + newCountRequested + (newCountRequested >> 2);
+#endif
 			return outCount = (desiredCount > MAX_COUNT || desiredCount < newCountRequested) ? MAX_COUNT : desiredCount; 
 		}
 
 	protected:
 		using					view<T>::Data;
+		tydf					array_base<T>			TArray;
 
-		typedef					array_base<T>			TArray;
-		uint32_t				Size					: 31;
-		uint32_t				NoAlloc					: 1;
-//		uint32_t				Offset					= 0;
+		u2_t				Size					: 30;
+		u2_t				NoAlloc					: 2;
+//		u2_t				Offset					= 0;
 
 		inline					~array_base				()							noexcept	{ if(0 == NoAlloc) ::gpk::safe_gpk_free(Data); }
 
-		inlcxpr					array_base				()							noexcept	: Size(0), NoAlloc(0) {}
-		inlcxpr					array_base				(const TArray &	 other)		noexcept	= delete;
-		inlcxpr					array_base				(const TArray && other)		noexcept	= delete;
+		inxp					array_base				()							noexcept	: Size(0), NoAlloc(0) {}
+		inxp					array_base				(const TArray &	 other)		noexcept	= delete;
+		inxp					array_base				(const TArray && other)		noexcept	= delete;
 
-		TArray&					operator =				(const TArray &	 other)					= delete;
-		TArray&					operator =				(const TArray && other)					= delete;
+		TArray&					oper =				(const TArray &	 other)					= delete;
+		TArray&					oper =				(const TArray && other)					= delete;
 		// This helper method is used to prevent redundancies. It returns a safe integer of the same or a higher value than the one passed as argument.
-		static	::gpk::error_t	alloc_with_reserve		(const uint32_t newCount, T* & reserved)	noexcept	{ 
-			uint32_t					newSize;
-			gpk_necall(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_I32 ".", newCount);
-			const uint32_t				bytesToAllocate			= ::gpk::size<T>(newSize) + 2;
-			ree_if(0 == (reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)), "Failed to allocate buffer with size: %" GPK_FMT_U32 ".", bytesToAllocate); 
-			return (::gpk::error_t)newSize;
+		static	::gpk::error_t	alloc_with_reserve		(u2_c newCount, T* & reserved)	noexcept	{ 
+			u2_t					newSize					= 0;
+			gpk_necall(calc_reserve_count(newCount, newSize), "Too large. newCount: %" GPK_FMT_S2 ".", newCount);
+			u2_c				bytesToAllocate			= szof(T) * (newSize + 1);
+			if(bool(reserved = (T*)::gpk::gpk_malloc(bytesToAllocate)))
+				return (::gpk::error_t)newSize;
+			error_printf("failed to reserve %" GPK_FMT_U2 " bytes.", bytesToAllocate);
+			GPK_PLATFORM_CRT_CHECK_MEMORY();
+			return -1;
 		}
 	}; // array_base
 #pragma pack(pop)

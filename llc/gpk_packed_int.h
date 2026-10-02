@@ -81,13 +81,13 @@ namespace gpk
 				: count
 				)
 			: (8 == szof(_tInt)) ? 
-				( (u3_t(count) > (uint_tail_mask<_tInt>() >> (1 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (1 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (2 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (2 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (3 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (3 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (4 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (4 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (5 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (5 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (6 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (6 * 8))
-				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (7 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (7 * 8))
+				( (u3_t(count) > (uint_tail_mask<_tInt>() >> (0 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (1 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (1 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (2 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (2 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (3 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (3 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (4 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (4 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (5 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (5 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (6 * 8))
+				: (u3_t(count) > (uint_tail_mask<_tInt>() >> (6 * 8))) ? count & (0xFFFFFFFFFFFFFFFFULL >> (7 * 8))
 				: count
 				)
 			: count
@@ -97,15 +97,17 @@ namespace gpk
 #pragma pack(push, 1)
 	tplt<tpnm _tInt = u2_t, u0_t widthField = uint_width_field_size<_tInt>()>
 	struct packed_uint { 
-		tydf _tInt	T;
-		tydf cnst T	TConst;
+		static_assert(_tInt(-1) > _tInt(0), "packed_uint<> requires an unsigned integer type.");
 
-		TConst		TailWidth		: widthField;
-		TConst		Multiplier		: 8 - widthField;
-		TConst		Tail			: max((u0_t)1U, u0_t((szof(T) - 1) * 8));
+		tydf _tInt		T;
+		tydf cnst T		TConst;
 
-		inxp			packed_uint		()												: TailWidth{}, Multiplier{}, Tail{} {}
-		inxp			packed_uint		(TConst & value)								: TailWidth{(T)uint_tail_width(value)}, Multiplier{(T)uint_tail_multiplier(value)}, Tail{(T)uint_tail_base(value)} {}
+		TConst			TailWidth		: widthField;
+		TConst			Multiplier		: 8 - widthField;
+		TConst			Tail			: max((u0_t)1U, u0_t((szof(T) - 1) * 8));
+
+		inxp			packed_uint		()											: TailWidth{}, Multiplier{}, Tail{} {}
+		inxp			packed_uint		(TConst & value)							: TailWidth{(T)uint_tail_width(value)}, Multiplier{(T)uint_tail_multiplier(value)}, Tail{(T)uint_tail_base(value)} { if(value > (T(-1) >> widthField)) throw "packed_uint<> value exceeds its representable range."; }
 		inxp			packed_uint		(u0_t tailWidth, u0_t multiplier, T tail)	: TailWidth(tailWidth), Multiplier(multiplier), Tail(tail) {}
 
 		tplt<tpnm TView>

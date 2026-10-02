@@ -95,6 +95,7 @@ namespace gpk
 					});
 					break; 
 				}
+				return 0;
 			});
 			return enterKeyPressed ? INT_MAX : handledControl ? handledControl : 0;
 		}

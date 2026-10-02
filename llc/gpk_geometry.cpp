@@ -215,8 +215,8 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 	gpk_necs(geometry.TextureCoords	.append({&geometry.TextureCoords[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Positions		.append({&geometry.Positions	[vertexOffset], vertexCount}));
 	gpk_necs(geometry.Normals		.append({&geometry.Normals		[vertexOffset], vertexCount}));
-	geometry.Positions	.for_each([](::gpk::n3f2_t & coord){ coord.z *= -1; coord.y *= -1; }, vertexOffset);
-	geometry.Normals	.for_each([](::gpk::n3f2_t & coord){ coord.z *= -1; coord.y *= -1; }, vertexOffset);
+	geometry.Positions	.for_each([](::gpk::n3f2_t & coord){ coord.z *= -1; coord.y *= -1; return 0; }, vertexOffset);
+	geometry.Normals	.for_each([](::gpk::n3f2_t & coord){ coord.z *= -1; coord.y *= -1; return 0; }, vertexOffset);
 	return 0;
 }
 ::gpk::error_t			gpk::geometryBuildRingSide	(::gpk::SGeometryBuffers & geometry, const ::gpk::SParamsRingSide & params) {
@@ -234,6 +234,7 @@ static	::gpk::error_t	geometryBuildGridIndices	(::gpk::apod<_tIndex> & positionI
 			::gpk::n3f2_t				& posInner					= geometry.Positions[index + params.Slices + 1];
 			posInner				= params.Orientation.RotateVector((relativePosInner.f2_t() * -1.f) - params.Origin);
 			posOuter				= params.Orientation.RotateVector((relativePosOuter.f2_t() * -1.f) - params.Origin);
+			return 0; 
 		}, vertexOffset, vertexOffset + (vertexCount >> 1)
 	);
 	return 0;

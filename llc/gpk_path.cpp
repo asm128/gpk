@@ -67,7 +67,7 @@ stxp	uint32_t GPK_MAX_PATH = 256;
 		;
 }
 sttc	::gpk::err_t 	stripSlashes				(::gpk::vcsc_c & path, ::gpk::asc_t & out_composed) {
-	gpk_path_debug("path=\"%s\", out_composed=\"%s\"", ::gpk::toString(path).begin(), out_composed.begin());
+	gpk_path_debug("path=\"%.*s\", out_composed=\"%.*s\"", (int32_t)path.size(), path.begin(), (int32_t)out_composed.size(), out_composed.begin());
 	for(uint32_t iChar = 0; iChar < path.size(); ++iChar) {
 		const char				curChar						= path[iChar];
 		if(iChar < (path.size() - 1)) {
@@ -116,7 +116,7 @@ sttc	::gpk::err_t 	stripSlashes				(::gpk::vcsc_c & path, ::gpk::asc_t & out_com
 }
 
 ::gpk::err_t			gpk::pathList				(const ::gpk::SPathContents & input, ::gpk::aasc_t & output, ::gpk::vcst_c extension)					{
-	gpk_path_debug("extension=\"%s\"", toString(extension).begin());
+	gpk_path_debug("extension=\"%.*s\"", (int32_t)extension.size(), extension.begin());
 	for(uint32_t iFile = 0; iFile < input.Files.size(); ++iFile) {
 		::gpk::vcsc_c			& fileName					= input.Files[iFile];
 		gpk_path_debug("fileName=\"%s\"", fileName.begin());

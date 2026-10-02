@@ -13,9 +13,9 @@ int									main							(int , char ** )		{
 	const ::gpk::vcs words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
 	info_printf("%u:%s.", text.size(), text.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::vcc word = words[iWord];
+		const ::gpk::vcsc_t word = words[iWord];
 
-		::gpk::vcc left, right;
+		::gpk::vcsc_t left, right;
 		const int32_t iPos = ::gpk::split(word, text, left, right);
 		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
 		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
@@ -23,15 +23,15 @@ int									main							(int , char ** )		{
 
 	info_printf("%u:%s.", text1.size(), text1.begin());
 	for(uint32_t iWord = 0; iWord < ::gpk::size(words); ++iWord) {
-		const ::gpk::vcc word = words[iWord];
+		const ::gpk::vcsc_t word = words[iWord];
 
-		::gpk::vcc left, right;
+		::gpk::vcsc_t left, right;
 		const int32_t iPos = ::gpk::split(word, text1, left, right);
 		info_printf("Word (%u): '%s'. Position: %i.", iWord, ::gpk::toString(word).begin(), iPos);
 		info_printf("Left (%u): '%s'. Right(%u): '%s'", left.size(), ::gpk::toString(left).begin(), right.size(), ::gpk::toString(right).begin());
 	}
 
-	::gpk::vcc trimmed;
+	::gpk::vcsc_t trimmed;
 	::gpk::rtrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
 	::gpk::ltrim(trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());
 	::gpk::trim (trimmed, text); info_printf("trimmed (%u): %s.", trimmed.size(), ::gpk::toString(trimmed).begin());

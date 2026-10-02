@@ -4,23 +4,25 @@
 #define GPK_INFO_PRINTF_ENABLED
 
 #include "gpk_png.h"
-#include "gpk_file.h"
 #include "gpk_base64.h"
 #include "gpk_parse.h"
-#include "gpk_stdstring.h"
 #include "gpk_path.h"
 #include "gpk_img_color.h"
+
+#include "gpk_stdstring.h"
+#include "gpk_file.h"
+#include "gpk_string.h"
 
 ::gpk::error_t				pngToFont
 	( ::gpk::img8bgra			& imageCache
 	, ::gpk::img8bgra			& verticalAtlas
 	, ::gpk::imgmonou64			& fontTexture
-	, ::gpk::vcc				filenameOutput
-	, const ::gpk::n2u32		fontCharSize
+	, ::gpk::vcsc_t				filenameOutput
+	, const ::gpk::n2u2_t		fontCharSize
 	, bool						negateBit
 	) {
 	const uint32_t					ROW_WIDTH					= (imageCache.View.metrics().x == imageCache.View.metrics().y) ? 16 : 32;
-	verticalAtlas.resize(::gpk::n2u32{fontCharSize.x, fontCharSize.y * 256});
+	verticalAtlas.resize(::gpk::n2u2_t{fontCharSize.x, fontCharSize.y * 256});
 	for(uint32_t iChar = 0; iChar < 256; ++iChar) {
 		const uint32_t												srcOffsetY				= iChar / ROW_WIDTH * fontCharSize.y;
 		const uint32_t												dstOffsetY				= iChar * fontCharSize.y;
@@ -48,7 +50,7 @@
 			fontTexture.View[linearIndex] = !fontTexture.View[linearIndex];
 	}
 
-	::gpk::au8	encoded;
+	::gpk::au0_t	encoded;
 	::gpk::base64Encode({(const uint8_t*)fontTexture.Texels.begin(), fontTexture.Texels.size() * 4}, encoded);
 	FILE						* fp = 0;
 	const int nul = 0;
@@ -60,7 +62,7 @@
 }
 
 int						main					() {
-	::gpk::aobj<::gpk::ac>		fontFiles				= {};
+	::gpk::aobj<::gpk::asc_t>	fontFiles				= {};
 	::gpk::vcs					pathToSearch			= {"../gpk_data/fonts/cp437"};
 	gpk_necall(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%s'", ::gpk::toString(pathToSearch).begin());
 	::gpk::SPNGData				pngCache				= {};
@@ -68,23 +70,23 @@ int						main					() {
 	::gpk::img8bgra				imageFixed				= {};
 	::gpk::img8bgra				verticalAtlas			= {};
 	::gpk::imgmonou64			fontTexture				= {};
-	::gpk::apod<char>			filenameOutput			= {};
-	::gpk::vcc					extension				= {};
+	::gpk::string				filenameOutput			= {};
+	::gpk::vcsc_t				extension				= {};
 	for(uint32_t iFile = 0; iFile < fontFiles.size(); ++iFile) {
-		::gpk::vcc					filenameInput			= fontFiles[iFile];
-		cif_if(errored(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
+		::gpk::vcsc_t				filenameInput			= fontFiles[iFile];
+		cif_if(::gpk::failed(filenameInput.slice(extension, filenameInput.size() - 4, 4)), "Skipping '%s'", ::gpk::toString(filenameInput).begin());
 		::gpk::apod<char>			lowercaseExtension		= ::gpk::toString(extension);
 		::gpk::tolower(lowercaseExtension);
 		if(lowercaseExtension != ::gpk::vcs{".png"})
 			continue;
-		cef_if(errored(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
+		cef_if(::gpk::failed(::gpk::pngFileLoad(pngCache, filenameInput, imageCache)), "%s", "");
 		filenameOutput			= filenameInput;
 		filenameOutput.append_string("fix.png");
-		::gpk::aobj<::gpk::vcc>		splitFileName;
+		::gpk::aobj<::gpk::vcsc_t>		splitFileName;
 		::gpk::split(filenameInput, '_', splitFileName);
-		::gpk::aobj<::gpk::vcc>		splitFontMetrics;
+		::gpk::aobj<::gpk::vcsc_t>		splitFontMetrics;
 		::gpk::split(splitFileName[3], 'x', splitFontMetrics);
-		::gpk::n2u32				fontCharSize			= {};
+		::gpk::n2u2_t				fontCharSize			= {};
 		::gpk::parseIntegerDecimal(splitFontMetrics[0], fontCharSize.x);
 		::gpk::parseIntegerDecimal(splitFontMetrics[1], fontCharSize.y);
 		imageFixed.resize(imageCache.metrics());
@@ -95,9 +97,9 @@ int						main					() {
 			::gpk::bgra					& dstPixel				= imageFixed[y][x];
 			dstPixel				= imageCache[y][dstX].r ? ::gpk::BLACK : ::gpk::WHITE;
 		}
-		::gpk::au8					pngBytes;
+		::gpk::au0_t					pngBytes;
 		::gpk::pngFileWrite(imageFixed, pngBytes);
-		::gpk::fileFromMemory({filenameOutput}, pngBytes);
+		::gpk::fileFromMemory(filenameOutput, pngBytes);
 
 		filenameOutput[filenameOutput.size() - 3]		= 'b';
 		filenameOutput[filenameOutput.size() - 2]		= '6';

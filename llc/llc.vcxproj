@@ -249,6 +249,7 @@
     <ClCompile Include="gpk_append_js.cpp" />
     <ClCompile Include="gpk_append_json.cpp" />
     <ClCompile Include="gpk_append_xml.cpp" />
+    <ClCompile Include="gpk_args.cpp" />
     <ClCompile Include="gpk_array.cpp" />
     <ClCompile Include="gpk_ascii_target.cpp" />
     <ClCompile Include="gpk_base64.cpp" />
@@ -271,6 +272,7 @@
     <ClCompile Include="gpk_gui_inputbox.cpp" />
     <ClCompile Include="gpk_gui_viewport.cpp" />
     <ClCompile Include="gpk_i2c.cpp" />
+    <ClCompile Include="gpk_keyval_old.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
     <ClCompile Include="gpk_spi.cpp" />
@@ -293,7 +295,6 @@
     <ClCompile Include="gpk_http_client.cpp" />
     <ClCompile Include="gpk_json.cpp" />
     <ClCompile Include="gpk_json_expression.cpp" />
-    <ClCompile Include="gpk_keyval.cpp" />
     <ClCompile Include="gpk_label.cpp" />
     <ClCompile Include="gpk_log.cpp" />
     <ClCompile Include="gpk_mapblock.cpp" />

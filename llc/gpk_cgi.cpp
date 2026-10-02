@@ -2,6 +2,7 @@
 #include "gpk_file.h"
 #include "gpk_apod_serialize.h"
 #include "gpk_slice.h"
+#include "gpk_keyval_old.h"
 
 #ifdef GPK_ATMEL
 #	include <time.h>

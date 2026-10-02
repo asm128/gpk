@@ -872,9 +872,6 @@
     <ClCompile Include="gpk_json_expression.cpp">
       <Filter>json</Filter>
     </ClCompile>
-    <ClCompile Include="gpk_keyval.cpp">
-      <Filter>container</Filter>
-    </ClCompile>
     <ClCompile Include="gpk_label.cpp">
       <Filter>container</Filter>
     </ClCompile>
@@ -988,6 +985,12 @@
     </ClCompile>
     <ClCompile Include="gpk_append_tcpip.cpp">
       <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_args.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_keyval_old.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

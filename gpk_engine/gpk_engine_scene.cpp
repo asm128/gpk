@@ -248,12 +248,12 @@ static	::gpk::error_t	drawBuffers
 	else if(geometry.Positions.size() > 0xFF) {
 		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 1);
 		::gpk::vu16					viewIndices					= ::gpk::vu16{(uint16_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-		viewIndices.enumerate([&geometry](uint32_t index, uint16_t & value){ value = (uint16_t)geometry.PositionIndices[index]; }, 0);
+		viewIndices.enumerate([&geometry](uint32_t index, uint16_t & value){ value = (uint16_t)geometry.PositionIndices[index]; return 0; }, 0);
 	}
 	else {
 		pIndicesVertex->Data.resize(geometry.PositionIndices.byte_count() >> 2);
 		::gpk::vu8					viewIndices					= ::gpk::vu8{(uint8_t*)pIndicesVertex->Data.begin(), geometry.PositionIndices.size()};
-		viewIndices.enumerate([&geometry](uint32_t index, uint8_t & value){ value = (uint8_t)geometry.PositionIndices[index]; }, 0);
+		viewIndices.enumerate([&geometry](uint32_t index, uint8_t & value){ value = (uint8_t)geometry.PositionIndices[index]; return 0; }, 0);
 	}
 
 	return 0;

@@ -9,8 +9,8 @@ int main(int argc, char** argv) {
 	ree_if(2 > argc, "usage: %s [filename]", argv[0]);
 	::gpk::vcs				in_filename		= {argv[1], (uint32_t)-1};
 
-	::gpk::au8				in_data			= {};
-	::gpk::au8				out_b64			= {};
+	::gpk::au0_t				in_data			= {};
+	::gpk::au0_t				out_b64			= {};
 	gpk_necall(gpk::fileToMemory(in_filename, in_data), "Failed to load file: %s", in_filename.begin());
 	gpk_necall(gpk::base64Encode(in_data, out_b64), "Failed to encode file contents! %s.", "Out of memory?");
 

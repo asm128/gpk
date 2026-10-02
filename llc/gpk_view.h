@@ -23,15 +23,15 @@ namespace gpk
 	tpl_t clss view {
 	prtc:
 		// Properties / Member Variables
-		_t					* Data			= 0;
-		u2_t				Count			= 0;
+		_t						* Data			= 0;
+		u2_t					Count			= 0;
 	pblc:
 		tdfTTCnst(_t);
-		tydf	view<T>		TV;
-		tydf	view<TCnst>	TConstView;
-		tydf	view<TCnst>	TCstV;
-		tdcs	view<T>		TVCst;
-		tdcs	view<TCnst>	TCVCs;
+		tydf	view<T>			TV;
+		tydf	view<TCnst>		TConstView;
+		tydf	view<TCnst>		TCstV;
+		tdcs	view<T>			TVCst;
+		tdcs	view<TCnst>		TCVCs;
 
 		// Constructors
 		inxp					view			()									nxpt	= dflt;
@@ -40,23 +40,21 @@ namespace gpk
 		tplN2u	inxp			view			(T (&elements)[N])					nxpt	: Data(elements), Count(N)								{}
 		tplN2u	inxp			view			(u2_t elementCount, T (&elements)[N])		: Data(elements), Count(::gpk::min(N, elementCount))	{}
 		inln					view			(T * elements, u2_t elementCount)			: Data(elements), Count(elementCount)					{ gthrow_if(0 == elements && 0 != elementCount, "%" GPK_FMT_U2 " -> 0.", elementCount);	}
-		tplN2u	inln			view			(T (&elements)[N], u2_t elementCount)		: Data(elements), Count(::gpk::min(N, elementCount))	{ gthrow_if(elementCount > N, GPK_FMT_GT_U2, elementCount, (u2_t)N); }
 
 		// Operators
 		inxp	oper			view<TCnst>		()									csnx	{ rtrn {Data, Count}; }
 		T&						oper[]			(u2_t index)								{
-			static T dymmy = {};
-			rves_if(dymmy, 0 == Data);
-			gthrow_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_null_te(Data);
+			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		cnst T&					operator[]		(u2_t index)			cnst				{
-			gsthrow_if(0 == Data);
-			gthrow_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+		cnst T&					oper[]			(u2_t index)						cnst	{
+			if_null_te(Data);
+			if_true_tef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			rtrn Data[index];
 		}
-		bool					operator!=		(TCVCs & other)	cnst				{ rtrn  !operator==(other); } // I had to add this for the android build not supporting C++20.
-		bool					operator==		(TCVCs & other)	cnst				{
+		bool					oper!=			(TCVCs & other)	cnst						{ rtrn  !operator==(other); } // I had to add this for the android build not supporting C++20.
+		bool					oper==			(TCVCs & other)	cnst						{
 			if(this->size() != other.size())
 				rtrn false;
 			if(this->begin() == other.begin())
@@ -76,23 +74,23 @@ namespace gpk
 		inxp	TCnst*			end				()														csnx	{ rtrn begin() + Count;	}
 		inln	T*				begin			()														nxpt	{ rtrn Data;				}
 		inln	T*				end				()														nxpt	{ rtrn begin() + Count;	}
-		err_t					slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)				{
-			reterr_gerror_if(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
+		err_t					slice			(TV & out, u2_t offset, u2_t count = (u2_t)-1)					{
+			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
-				ree_if(count > newSize, GPK_FMT_GT_U2, count, (u2_t)newSize);
-			out						= {&Data[offset], ::gpk::min(newSize, count)};
+				if_true_fef(count > newSize, GPK_FMT_GT_U2, count, (u2_t)newSize);
+			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
-		err_t			slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)	cnst	{
-			ree_if(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
+		err_t					slice			(TCstV & out, u2_t offset, u2_t count = (u2_t)-1)		cnst	{
+			if_true_fef(offset > Count, GPK_FMT_GT_U2, offset, (u2_t)Count);
 			u2_c					newSize			= Count - offset;
 			if(count != (u2_t)-1)
-				ree_if(count > newSize, GPK_FMT_GT_U2, count, (u2_t)newSize);
-			out						= {&Data[offset], ::gpk::min(newSize, count)};
+				if_true_fef(count > newSize, GPK_FMT_GT_U2, count, (u2_t)newSize);
+			out						= {Data ? &Data[offset] : 0, ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
-		err_t			revert			()																			{
+		err_t					revert			()																{
 			u2_c					lastElement		= Count - 1;
 			for(u2_t i = 0, swapCount = Count / 2; i < swapCount; ++i) {
 				T							old				= Data[i];
@@ -102,35 +100,58 @@ namespace gpk
 			rtrn 0;
 		}
 
-		inln	err_t	fill			(cnst T & value, u2_t offset = 0, u2_t stop = 0xFFFFFFFFU)		{ for(; offset < ::gpk::min(Count, stop); ++offset) Data[offset] = value; rtrn Count; }
+		inln	err_t			fill			(cnst T & value, u2_t offset = 0, u2_t stop = 0xFFFFFFFFU)										{ u2_c offsetStart = offset; for(; offset < ::gpk::min(Count, stop); ++offset) Data[offset] = value; rtrn offset - offsetStart; }
 
-
-		err_t			for_each		(cnst ::gpk::TFuncForEach       <T> & funcForEach, u2_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(Data[offset]); rtrn offset; }
-		err_t			for_each		(cnst ::gpk::TFuncForEachConst  <T> & funcForEach, u2_t offset = 0)	cnst	{ for(; offset < Count; ++offset) funcForEach(Data[offset]); rtrn offset; }
-		err_t			enumerate		(cnst ::gpk::TFuncEnumerate     <T> & funcForEach, u2_t offset = 0)			{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); rtrn offset; }
-		err_t			enumerate		(cnst ::gpk::TFuncEnumerateConst<T> & funcForEach, u2_t offset = 0)	cnst	{ for(; offset < Count; ++offset) funcForEach(offset, Data[offset]); rtrn offset; }
+		err_t					for_each		(cnst ::gpk::TFuncForEach       <T> & funcForEach, u2_t offset = 0)								{ u2_c offsetStart = offset; for(; offset < Count; ++offset) if_fail_fef(funcForEach(Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					for_each		(cnst ::gpk::TFuncForEachConst  <T> & funcForEach, u2_t offset = 0)						cnst	{ u2_c offsetStart = offset; for(; offset < Count; ++offset) if_fail_fef(funcForEach(Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					enumerate		(cnst ::gpk::TFuncEnumerate     <T> & funcForEach, u2_t offset = 0)								{ u2_c offsetStart = offset; for(; offset < Count; ++offset) if_fail_fef(funcForEach(offset, Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					enumerate		(cnst ::gpk::TFuncEnumerateConst<T> & funcForEach, u2_t offset = 0)						cnst	{ u2_c offsetStart = offset; for(; offset < Count; ++offset) if_fail_fef(funcForEach(offset, Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
 		//
-		err_t			for_each		(cnst ::gpk::TFuncForEach       <T> & funcForEach, u2_t offset, u2_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); rtrn offset; }
-		err_t			for_each		(cnst ::gpk::TFuncForEachConst  <T> & funcForEach, u2_t offset, u2_t stop)	cnst	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(Data[offset]); rtrn offset; }
-		err_t			enumerate		(cnst ::gpk::TFuncEnumerate     <T> & funcForEach, u2_t offset, u2_t stop)			{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); rtrn offset; }
-		err_t			enumerate		(cnst ::gpk::TFuncEnumerateConst<T> & funcForEach, u2_t offset, u2_t stop)	cnst	{ for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) funcForEach(offset, Data[offset]); rtrn offset; }
+		err_t					for_each		(cnst ::gpk::TFuncForEach       <T> & funcForEach, u2_t offset, u2_t stop)						{ u2_c offsetStart = offset; for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) if_fail_fef(funcForEach(Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					for_each		(cnst ::gpk::TFuncForEachConst  <T> & funcForEach, u2_t offset, u2_t stop)				cnst	{ u2_c offsetStart = offset; for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) if_fail_fef(funcForEach(Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					enumerate		(cnst ::gpk::TFuncEnumerate     <T> & funcForEach, u2_t offset, u2_t stop)						{ u2_c offsetStart = offset; for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) if_fail_fef(funcForEach(offset, Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
+		err_t					enumerate		(cnst ::gpk::TFuncEnumerateConst<T> & funcForEach, u2_t offset, u2_t stop)				cnst	{ u2_c offsetStart = offset; for(stop = ::gpk::min(stop, Count); offset < stop; ++offset) if_fail_fef(funcForEach(offset, Data[offset]), "offset:%u.", offset); rtrn offset - offsetStart; }
 
-		err_t			find			(cnst FBool<T&>		& funcForEach, u2_t offset = 0)			{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
-		err_t			find			(cnst FBool<TCnst&>	& funcForEach, u2_t offset = 0)	cnst	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
-		err_t			find			(cnst T & value, u2_t offset = 0)					cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
+		err_t					find			(cnst FBool<T&>		& funcForEach	, u2_t offset = 0)											{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
+		err_t					find			(cnst FBool<TCnst&>	& funcForEach	, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(funcForEach(Data[offset])) rtrn (err_t)offset; rtrn -1; }
+		err_t					find			(cnst T				& value			, u2_t offset = 0)									cnst	{ for(; offset < Count; ++offset) if(Data[offset] == value) rtrn (err_t)offset; rtrn -1; }
 
-		tplt<tpnm _tMax> err_t	max	(_tMax & maxFound, cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)	cnst	{ s2_t iMax = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value > maxFound) { iMax = offset; maxFound = value; } } rtrn iMax; }
-		tplt<tpnm _tMax> err_t	min	(_tMax & minFound, cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)	cnst	{ s2_t iMin = 0; for(; offset < Count; ++offset) { _tMax value = funcComparand(Data[offset]); if(value < minFound) { iMin = offset; minFound = value; } } rtrn iMin; }
-		tplt<tpnm _tMax> err_t	max	(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)					cnst	{ _tMax maxFound; rtrn max(maxFound, funcComparand, offset); }
-		tplt<tpnm _tMax> err_t	min	(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)					cnst	{ _tMax minFound; rtrn min(minFound, funcComparand, offset); }
+		tplt<tpnm _tMax> err_t	max				(_tMax & maxFound, cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)	cnst	{
+			if_true_fef(offset >= Count, GPK_FMT_GE_U2, offset, Count);
+			err_t					iMax			= (err_t)offset;
+			maxFound								= funcComparand(Data[offset]);
+			for(++offset; offset < Count; ++offset) {
+				_tMax					value			= funcComparand(Data[offset]);
+				if(value > maxFound) {
+					iMax								= (err_t)offset;
+					maxFound							= value;
+				}
+			}
+			rtrn iMax;
+		}
+		tplt<tpnm _tMax> err_t	min				(_tMax & minFound, cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)	cnst	{
+			if_true_fef(offset >= Count, GPK_FMT_GE_U2, offset, Count);
+			err_t					iMin			= (err_t)offset;
+			minFound								= funcComparand(Data[offset]);
+			for(++offset; offset < Count; ++offset) {
+				_tMax					value			= funcComparand(Data[offset]);
+				if(value < minFound) {
+					iMin								= (err_t)offset;
+					minFound							= value;
+				}
+			}
+			rtrn iMin;
+		}
+		tplt<tpnm _tMax> err_t	max				(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)						cnst	{ _tMax maxFound = {}; rtrn max(maxFound, funcComparand, offset); }
+		tplt<tpnm _tMax> err_t	min				(cnst FTransform<_tMax, TCnst &> & funcComparand, u2_t offset = 0)						cnst	{ _tMax minFound = {}; rtrn min(minFound, funcComparand, offset); }
 	}; // view<>
 
 	tplTusng	view_array	= ::gpk::view<T>;
 	tplTusng	view1d		= ::gpk::view<T>;
 	tplTusng	v1			= ::gpk::view<T>;
 
-	tplTnsix	u2_t	size		(cnst ::gpk::view<T> & viewToTest)	nxpt	{ rtrn viewToTest.size();			}
-	tplTnsix	u2_t	byte_count	(cnst ::gpk::view<T> & viewToTest)	nxpt	{ rtrn viewToTest.byte_count();	}
+	tplTnsix	u2_t		size			(cnst ::gpk::view<T> & viewToTest)														nxpt	{ rtrn viewToTest.size();		}
+	tplTnsix	u2_t		byte_count		(cnst ::gpk::view<T> & viewToTest)														nxpt	{ rtrn viewToTest.byte_count();	}
 
 #pragma pack(pop)
 
@@ -261,6 +282,9 @@ namespace gpk
 		inxp	sc_c*	begin					()	csnx	{ rtrn (Data && Count) ? Data : ""; }
 		inxp	sc_c*	end						()	csnx	{ rtrn (Data && Count) ? Data + Count : begin(); }
 		ndin	oper	sc_c* 					()  csnx	{ rtrn begin(); }
+		inln	sc_t*	begin					()	nxpt	{ rtrn Data; }
+		inln	sc_t*	end						()	nxpt	{ rtrn begin() + Count; }
+		ndin	oper	sc_t* 					()  nxpt	{ rtrn begin(); }
 	};
 	struct view_const_string : view<sc_c> {
 		inxp			view_const_string		()											: view(0, "") 							{}
@@ -279,8 +303,13 @@ namespace gpk
 	tdcs	vstr_t				vstr_c;
 	tdcs	vcst_t				vcst_c;
 
-	stin			gpk::vcst_t	str				(cnst gpk::vcst_t & arg)	{ rtrn arg; }
+	stin			gpk::vs		str				(gpk::vs & arg)			{ rtrn arg; }
 	stin			gpk::vcst_t	str				(cnst gpk::vs & arg)		{ rtrn arg.cc(); }
+	stin			gpk::vcst_t	str				(cnst gpk::vcst_t & arg)	{ rtrn arg; }
+	stin			gpk::vs		str				(gpk::vsc_t arg)			{ rtrn arg; }
+	stin			gpk::vcst_t	str				(gpk::vcsc_t arg)			{ rtrn arg; }
+	tplN2usinx		gpk::vs		str				(gpk::sc_t (&arg)[N])		{ rtrn arg; }
+	tplN2usinx		gpk::vcst_t	str				(gpk::sc_c (&arg)[N])		{ rtrn arg; }
 	sinx			gpk::vcst_t	str				(cnst bool arg)				{ rtrn arg ? VCC_TRUE : VCC_FALSE; }
 	//
 	tplTnsix		::gpk::vcst_t	get_type_namev	()									nxpt	{ rtrn GPK_CXS("unknown"); }

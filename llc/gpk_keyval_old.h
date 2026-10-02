@@ -15,7 +15,7 @@ namespace gpk
 
 	//tydf		SKeyVal<vcs, vcs> TKeyValConstString;
 
-				error_t							token_split						(char token, const vcs& input_string, TKeyValConstChar& output_views);
+				error_t							token_split						(char valueSeparator, vcst_c & input_string, TKeyValConstChar& output_views);
 	inline		error_t							keyval_split					(const vcs& input_string, TKeyValConstString& out_keyval) { return token_split('=', input_string, out_keyval); }
 
 	tplt<tpnm _tVal>

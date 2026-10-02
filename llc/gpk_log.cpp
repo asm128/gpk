@@ -41,8 +41,8 @@ stxp		int		LOG_PREFIX_BUFFER_SIZE	= 256;
 }
 
 #if defined(GPK_WINDOWS)
-static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen) 	{ u2_t iChar = 0; for(; iChar < textLen; ++iChar) { sc_c buf[2] = {text[iChar], 0}; OutputDebugStringA(buf); } return iChar; }
-static	::gpk::error_t	default_base_log_print	(const char * text)						{ OutputDebugStringA(text); return (::gpk::error_t)strlen(text); }
+static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen) 	{  u2_t iChar = 0; for(; iChar < textLen; ++iChar) { sc_c buf[2] = {text[iChar], 0}; OutputDebugStringA(buf); } return (::gpk::error_t)fprintf(stderr, "%.*s", textLen, text); }
+static	::gpk::error_t	default_base_log_print	(const char * text)						{ OutputDebugStringA(text); return (::gpk::error_t)fprintf(stderr, "%s", text); }
 #elif defined(GPK_ANDROID)
 static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen)	{ LOGI("%s", text); return textLen; }
 static	::gpk::error_t	default_base_log_print	(const char * text)						{ LOGI("%s", text); return (::gpk::error_t)strlen(text); }
@@ -50,8 +50,8 @@ static	::gpk::error_t	default_base_log_print	(const char * text)						{ LOGI("%s
 static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen)	{ return Serial ? Serial.write(text, textLen) : textLen; }
 static	::gpk::error_t	default_base_log_print	(const char * text)						{ return Serial ? Serial.print(text) : (::gpk::error_t)strlen(text); }
 #else
-static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen)	{ u2_t iChar = 0; for(; iChar < textLen; ++iChar) printf("%c", text[iChar]); return iChar; }
-static	::gpk::error_t	default_base_log_print	(const char * text)						{ return (::gpk::error_t)printf("%s", text); }
+static	::gpk::error_t	default_base_log_write	(const char * text, uint32_t textLen)	{ return (::gpk::error_t)fprintf(stderr, "%.*s", textLen, text); }
+static	::gpk::error_t	default_base_log_print	(const char * text)						{ return (::gpk::error_t)fprintf(stderr, "%s", text); }
 #endif
 
 ::gpk::log_write_t		gpk_log_write					= default_base_log_write;

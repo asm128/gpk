@@ -72,15 +72,16 @@ static	::gpk::error_t	updateGUI		(::gpk::SServer & server, ::gpk::SGUI & gui)		{
 		if(server.QueueToSend.size() <= iClient)
 			iClient					= server.UDP.Clients.size();
 		else {
-			server.QueueToSend[iClient]->for_each([&client](::gpk::pau8 & payload) {
+			if_fail_fe(server.QueueToSend[iClient]->for_each([&client](::gpk::pau8 & payload) {
 				if(payload && payload->size())
 					gpk_necs(gpk::connectionPushData(*client, client->Queue, *payload));
 
 				payload.clear();
  				return 0;
-			});
+			}));
 			server.QueueToSend[iClient].clear();
 		}
+		return 0;
 	});
 	return ::updateGUI(server, gui);
 }

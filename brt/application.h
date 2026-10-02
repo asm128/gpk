@@ -2,6 +2,7 @@
 
 #include "gpk_framework.h"
 #include "gpk_gui.h"
+#include "gpk_string.h"
 
 #include <mutex>
 
@@ -29,17 +30,17 @@ namespace brt // I'm gonna use a different namespace in order to test a few thin
 		::gpk::pobj<::gpk::rtbgra8d32>	Offscreen							= {};
 		::gpk::SUDPServer				Server								= {};
 		::gpk::apobj<::gpk::apobj<::gpk::SUDPMessage>>	ReceivedPerClient;
-		::gpk::apobj<::gpk::apobj<::gpk::au8>>			ClientResponses;
+		::gpk::apobj<::gpk::apobj<::gpk::au0_t>>			ClientResponses;
 		::gpk::aobj<::brt::SProcess>					ClientProcesses;
 		::gpk::aobj<::brt::SProcessHandles>				ClientIOHandles;
 
-		::gpk::vcc			ProcessFileName						= "";
-		::gpk::vcc			ProcessMockPath						= "";
-		::gpk::vcc			ProcessParams						= "";
+		::gpk::vcsc_t			ProcessFileName						= "";
+		::gpk::vcsc_t			ProcessMockPath						= "";
+		::gpk::vcsc_t			ProcessParams						= "";
 		SECURITY_ATTRIBUTES	DefaultSecurityForPipeHandles		= {sizeof(SECURITY_ATTRIBUTES)};
 
-		::gpk::ac			szCmdlineApp						= "";
-		::gpk::ac			szCmdlineFinal						= "";
+		::gpk::string			szCmdlineApp						= "";
+		::gpk::string			szCmdlineFinal						= "";
 
 		::gpk::cid_t		IdExit								= -1;
 

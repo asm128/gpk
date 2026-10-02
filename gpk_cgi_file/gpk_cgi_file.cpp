@@ -5,6 +5,7 @@
 #include "gpk_json_expression.h"
 #include "gpk_parse.h"
 #include "gpk_file.h"
+#include "gpk_chrono.h"
 
 #include "gpk_udp_client.h"
 
@@ -25,7 +26,7 @@ static	int				cgiMain				(int argc, char** argv, char**envv)	{
 	::gpk::SCGIRuntimeValues	runtimeValues;
 	gpk_necall(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
 	::gpk::apod<char>			html;
-	if errored(::cgiBootstrap(runtimeValues, html)) {
+	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"
 			"\r\nCache-Control: no-store"
 			"\r\n\r\n"

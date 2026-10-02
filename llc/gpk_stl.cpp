@@ -6,10 +6,10 @@
 	return ::gpk::stlFileLoad(file.Raw, file.Header, file.Triangles);
 }
 
-::gpk::error_t			gpk::stlFileLoad		(::gpk::vcu0_t fileInMemory, ::gpk::vcu0_t & out_Header, ::gpk::view<::gpk::SSTLTriangle>	& out_Triangles) {
+::gpk::error_t			gpk::stlFileLoad		(::gpk::vcu0_t fileInMemory, ::gpk::vcu0_t & out_Header, ::gpk::view<::gpk::SSTLTriangle> & out_Triangles) {
 	gpk_necall(fileInMemory.slice(out_Header, 0, 80), "Invalid file size: %u bytes.", fileInMemory.size());
 	if(fileInMemory.size() > 80) {
-		::gpk::vu8				triangleBytes			= {(uint8_t*)&fileInMemory[80], fileInMemory.size() - 80};
+		::gpk::vu0_t			triangleBytes			= {(u0_t*)&fileInMemory[80], fileInMemory.size() - 80};
 		return ::gpk::viewReadLegacy(out_Triangles, triangleBytes);
 	}
 	return 0;

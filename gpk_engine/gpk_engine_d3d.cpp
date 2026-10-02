@@ -52,8 +52,8 @@
 			//if(engineBufferIndices->Desc.Format.TotalBytes() == 4) 
 			//else 
 			if(indexSize == 1) {
-				indices.resize(engineBufferIndices->Data.size());
-				indices.enumerate([engineBufferIndices](uint32_t & i, uint16_t & value){ value = engineBufferIndices->Data[i]; }, 0);
+				if_fail_fe(indices.resize(engineBufferIndices->Data.size()));
+				indices.enumerate([engineBufferIndices](uint32_t & i, uint16_t & value){ value = engineBufferIndices->Data[i]; return 0; }, 0);
 				indexBufferData.pSysMem	= indices.begin();
 				indexBufferDesc.ByteWidth = indices.byte_count();
 			}

@@ -5,38 +5,35 @@
 
 namespace gpk
 {
-	tplt<size_t exp>	stincxp	f3_t	cpow	(f3_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	f2_t	cpow	(f2_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	uint8_t		cpow	(uint8_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	uint16_t	cpow	(uint16_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	uint32_t	cpow	(uint32_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	uint64_t	cpow	(uint64_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	int8_t		cpow	(int8_t		base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	int16_t		cpow	(int16_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	int32_t		cpow	(int32_t	base)	{ return base * cpow<exp - 1>(base); }
-	tplt<size_t exp>	stincxp	int64_t		cpow	(int64_t	base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i0u_t			cpow	(i0u_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i1u_t			cpow	(i1u_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i2u_t			cpow	(i2u_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i3u_t			cpow	(i3u_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i0s_t			cpow	(i0s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i1s_t			cpow	(i1s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i2s_t			cpow	(i2s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	i3s_t			cpow	(i3s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	f2s_t			cpow	(f2s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<size_t exp>	nsix	f3s_t			cpow	(f3s_t base)	{ return base * cpow<exp - 1>(base); }
+	tplt<>				ndix	i0u_t			cpow<0>	(i0u_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i1u_t			cpow<0>	(i1u_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i2u_t			cpow<0>	(i2u_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i3u_t			cpow<0>	(i3u_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i0s_t			cpow<0>	(i0s_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i1s_t			cpow<0>	(i1s_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i2s_t			cpow<0>	(i2s_t/*base*/)	{ return 1; }
+	tplt<>				ndix	i3s_t			cpow<0>	(i3s_t/*base*/)	{ return 1; }
+	tplt<>				ndix	f2s_t			cpow<0>	(f2s_t/*base*/)	{ return 1; }
+	tplt<>				ndix	f3s_t			cpow<0>	(f3s_t/*base*/)	{ return 1; }
 
-	tplt<>	inlcxpr f3_t	cpow<0>	(f3_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr f2_t	cpow<0>	(f2_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr uint8_t		cpow<0>	(uint8_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr uint16_t	cpow<0>	(uint16_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr uint32_t	cpow<0>	(uint32_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr uint64_t	cpow<0>	(uint64_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr int8_t		cpow<0>	(int8_t		/*base*/)	{ return 1; }
-	tplt<>	inlcxpr int16_t		cpow<0>	(int16_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr int32_t		cpow<0>	(int32_t	/*base*/)	{ return 1; }
-	tplt<>	inlcxpr int64_t		cpow<0>	(int64_t	/*base*/)	{ return 1; }
+	stxp	u0_t		ASCII_ALPHABET_LENGTH	= 'Z' - 'A' + 1;
+	stxp	u0_t		ASCII_LETTER_COUNT		= ASCII_ALPHABET_LENGTH * 2;
+	stxp	u0_t		ASCII_DIGIT_COUNT		= ASCII_LETTER_COUNT + 10;
 
-	stacxpr	uint8_t	ASCII_ALPHABET_LENGTH	= ('Z' - 'A');
-	stacxpr	uint8_t	ASCII_LETTER_COUNT		= ASCII_ALPHABET_LENGTH * 2;
-	stacxpr	uint8_t	ASCII_DIGIT_COUNT		= ASCII_LETTER_COUNT + 10;
-
-	stincxp sc_t	digit_ascii	(uint64_t value, const uint8_t base=10) { return sc_t(value % base + ((value % base < 10) ? '0' : 'A' - 10)); }
-
+	nsix	char		digit_ascii				(char remainder)								nxpt	{ return remainder + ((remainder < 10) ? '0' : (remainder < 10 + ASCII_ALPHABET_LENGTH) ? 'A' - 10 : 'a' - 10 - ASCII_ALPHABET_LENGTH); }
+	nsix	char		digit_ascii				(uint64_t value, uint8_t base)					nxpt	{ return digit_ascii(char(value % base)); }
 	tplt<uint8_t exp, tpnm TValue>
-	stincxp	sc_t	digit		(const TValue value, const TValue base=10) { 
-		return ::gpk::digit_ascii(value / ::gpk::cpow<exp>(base), (uint8_t)base);
-	}
+	nsix	char		digit					(const TValue value, const TValue base = 10)	nxpt	{ return ::gpk::digit_ascii(value / ::gpk::cpow<exp>(base), (uint8_t)base); }
 } // namespace
 
 #endif // GPK_CPOW_H
