@@ -114,6 +114,8 @@
 #define sgnd			signed
 #define unsd			unsigned
 #define usng			using
+#define nmsp			namespace
+#define usns			usng nmsp
 #define stct			struct
 #define clss			class
 #define pblc			public

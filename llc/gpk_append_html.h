@@ -5,19 +5,19 @@
 
 namespace gpk
 {
-	stin	gpk::err_t	appendHtmlHead		(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "head", tagAttributes, innerHtml); }
-	stin	gpk::err_t	appendHtmlBody		(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "body", tagAttributes, innerHtml); }
-	stin	gpk::err_t	appendHtmlScript	(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "script", tagAttributes, innerHtml); }
-	stin	gpk::err_t	appendHtmlTable		(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "table", tagAttributes, innerHtml); }
-	stin	gpk::err_t	appendHtmlTableRow	(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "tr", tagAttributes, innerHtml); }
-	stin	gpk::err_t	appendHtmlTableCol	(::gpk::asc_t & output, ::gpk::vcst_t tagAttributes, ::gpk::vcst_t innerHtml)	{ return ::gpk::appendXmlTag(output, "td", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlHead		(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "head", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlBody		(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "body", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlScript	(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "script", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlTable		(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "table", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlTableRow	(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "tr", tagAttributes, innerHtml); }
+	stin	err_t	appendHtmlTableCol	(asc_t & output, vcst_t tagAttributes, vcst_t innerHtml)	{ return appendXmlTag(output, "td", tagAttributes, innerHtml); }
 	
-	gpk::err_t			appendHtmlStyles	(::gpk::asc_t & output, gpk::vcvcs filenames);
-	gpk::err_t			appendHtmlScripts	(::gpk::asc_t & output, gpk::vcvcs filenames);
-	gpk::err_t			appendHtmlHead		(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::vcvcs filesCSS, ::gpk::vcvcs filesJS);
-	gpk::err_t			appendHtmlPage		(::gpk::asc_t & output, const ::gpk::FAppend & funcAppendHead, const ::gpk::FAppend & funcAppendBody);
-	gpk::err_t			appendHtmlPage		(::gpk::asc_t & output, const ::gpk::FAppend & funcAppendCSS, const ::gpk::FAppend & funcAppendJS, const ::gpk::FAppend & funcAppendBody);
-	gpk::err_t			appendHtmlPage		(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::vcvcs filesCSS, ::gpk::vcvcs filesJS, const ::gpk::FAppend & funcAppendBody, ::gpk::vcst_t postScript = {});
+	err_t			appendHtmlStyles	(asc_t & output, view<vcst_c> filenames);
+	err_t			appendHtmlScripts	(asc_t & output, view<vcst_c> filenames);
+	err_t			appendHtmlHead		(asc_t & output, vcst_t title, view<vcst_t> filesCSS, view<vcst_t> filesJS);
+	err_t			appendHtmlPage		(asc_t & output, const FAppend & funcAppendHead, const FAppend & funcAppendBody);
+	err_t			appendHtmlPage		(asc_t & output, const FAppend & funcAppendCSS, const FAppend & funcAppendJS, const FAppend & funcAppendBody);
+	err_t			appendHtmlPage		(asc_t & output, vcst_t title, view<vcst_t> filesCSS, view<vcst_t> filesJS, const FAppend & funcAppendBody, vcst_t postScript = {});
 } // namespace 
 
 #endif // GPK_APPEND_HTML_H

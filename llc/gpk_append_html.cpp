@@ -1,7 +1,7 @@
 #include "gpk_append_html.h"
 
 #ifndef GPK_ATMEL
-gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::vcvcs filenames) { 
+gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
 	::gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_SRC_JS	[]	= "type=\"text/javascript\" src=\"/%s.js\"";
 	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
@@ -11,7 +11,7 @@ gpk::err_t	gpk::appendHtmlScripts	(::gpk::asc_t & output, gpk::vcvcs filenames) 
 	}
 	return result;
 }
-gpk::err_t	gpk::appendHtmlStyles	(::gpk::asc_t & output, gpk::vcvcs filenames) { 
+gpk::err_t	gpk::appendHtmlStyles	(::gpk::asc_t & output, gpk::view<vcst_c> filenames) { 
 	::gpk::err_t 		result 				= 0;
 	stxp	const char	FMT_ATTR_HREF_CSS	[]	= "rel=\"stylesheet\" href=\"/%s.css\"";
 	for(uint32_t iFile = 0; iFile < filenames.size(); ++iFile) {
@@ -21,7 +21,7 @@ gpk::err_t	gpk::appendHtmlStyles	(::gpk::asc_t & output, gpk::vcvcs filenames) {
 	}
 	return result;
 }
-gpk::err_t	gpk::appendHtmlHead	(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::vcvcs filesCSS, ::gpk::vcvcs filesJS) {
+gpk::err_t	gpk::appendHtmlHead	(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::view<vcst_t> filesCSS, ::gpk::view<vcst_t> filesJS) {
 	return ::gpk::appendXmlTag(output, "head", vcs{}, [&output, title, filesCSS, filesJS]() { 
 		return ::gpk::appendXmlTag		(output, "title", vcs{}, title)
 			+  ::gpk::appendHtmlStyles	(output, filesCSS)
@@ -36,7 +36,7 @@ gpk::err_t	gpk::appendHtmlPage	(::gpk::asc_t & output, const ::gpk::FAppend & fu
 			;
 	});
 }
-gpk::err_t	gpk::appendHtmlPage	(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::vcvcs filesCSS, ::gpk::vcvcs filesJS, const ::gpk::FAppend & funcAppendBody, ::gpk::vcst_t postScript) {
+gpk::err_t	gpk::appendHtmlPage	(::gpk::asc_t & output, ::gpk::vcst_t title, ::gpk::view<vcst_t> filesCSS, ::gpk::view<vcst_t> filesJS, const ::gpk::FAppend & funcAppendBody, ::gpk::vcst_t postScript) {
 	return ::gpk::appendXmlTag(output, "html", vcs{}, [&output, &title, &filesCSS, &filesJS, &funcAppendBody, &postScript]() {
 		return ::gpk::appendHtmlHead(output, title, filesCSS, filesJS)
 			+  ::gpk::appendXmlTag(output, "body", vcs{}, [&output, funcAppendBody]() { return funcAppendBody(output); })

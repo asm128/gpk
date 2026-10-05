@@ -1,4 +1,6 @@
-#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#	define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#endif
 #include "gpk_json_expression.h"
 
 #include "gpk_expression.h"

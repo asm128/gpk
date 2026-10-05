@@ -8,7 +8,9 @@
 #endif
 
 // Uncomment these to toggle behavior
-//#define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#ifndef GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#	define GPK_DISABLE_DEBUG_BREAK_ON_ERROR_LOG
+#endif
 //#define GPK_KEEP_SYSTEM_ERROR_ON_ERROR_LOG
 
 #ifndef GPK_DEBUG_H
@@ -46,17 +48,22 @@ namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #			define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		endif
 #		define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0) // (void)_CrtCheckMemory
-#	else
+#	else // GPK_WINDOWS
 #		define GPK_PLATFORM_CRT_BREAKPOINT()	do {} while(0)
 #		ifndef GPK_ESP32
-#			define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
-#		else
+#		    ifdef GPK_ESP8266
+#			    include <user_interface.h>
+#			    define GPK_PLATFORM_CRT_CHECK_MEMORY() do { info_printf("Available RAM - Heap: %" GPK_FMT_U2 " bytes.", system_get_free_heap_size()); } while(0)
+#		    else // !GPK_ESP8266
+#			    define GPK_PLATFORM_CRT_CHECK_MEMORY()	do {} while(0)
+#		    endif // GPK_ESP8266
+#		else // GPK_ESP32
 #			include <esp_heap_caps.h>
 #			include <freertos/FreeRTOS.h>
 #			include <freertos/task.h>
 #			define GPK_PLATFORM_CRT_CHECK_MEMORY() do { info_printf("Available RAM - Heap: %" GPK_FMT_U2 " bytes, Stack: %" GPK_FMT_U2 " bytes.", heap_caps_get_free_size(MALLOC_CAP_8BIT), uxTaskGetStackHighWaterMark(NULL)); } while(0)
-#		endif
-#	endif
+#		endif // GPK_ESP32
+#	endif // GPK_WINDOWS
 #endif // GPK_DEBUG_ENABLED
 
 #endif // GPK_DEBUG_H

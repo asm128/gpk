@@ -1,17 +1,15 @@
+#include "gpk_keyval.h"
+#include "gpk_functional.h"
 #include "gpk_log.h"
 
-#include "gpk_functional.h"
 
 #if defined(GPK_ATMEL)
-#	include <string.h>
 #	ifdef max
 #		undef max
 #	endif
 #	ifdef min
 #		undef min
 #	endif
-#else
-#	include <cstring>
 #endif
 
 #ifndef GPK_ARRAY_VIEW_H_23627
@@ -303,7 +301,8 @@ namespace gpk
 	tdcs	vstr_t				vstr_c;
 	tdcs	vcst_t				vcst_c;
 
-	stin			gpk::vs		str				(gpk::vs & arg)			{ rtrn arg; }
+
+	stin			gpk::vs		str				(gpk::vs & arg)				{ rtrn arg; }
 	stin			gpk::vcst_t	str				(cnst gpk::vs & arg)		{ rtrn arg.cc(); }
 	stin			gpk::vcst_t	str				(cnst gpk::vcst_t & arg)	{ rtrn arg; }
 	stin			gpk::vs		str				(gpk::vsc_t arg)			{ rtrn arg; }
@@ -345,10 +344,13 @@ namespace gpk
 	GDEFINE_TYPE_NAME_STR(f2_c);
 	GDEFINE_TYPE_NAME_STR(f3_c);
 	//
-	tydf	view<::gpk::vs		>	vvs;
-	tydf	view<::gpk::vcst_t		>	vvcs;
-	tydf	view<cnst ::gpk::vs	>	vcvs;
-	tydf	view<cnst ::gpk::vcst_t	>	vcvcs;
+
+	tydf	view_string			vstr_t, vs;
+	tydf	view_const_string	vcst_t, vcs;
+	tdcs	vstr_t				vstr_c;
+	tdcs	vcst_t				vcst_c;
+	tplt<tpnm _tVal>						using kvvcst_t	= kv<vcst_t, _tVal>;
+
 
 	stxp	::gpk::vcsc_t		TRIM_CHARACTERS		= " \t\b\n\r";
 
@@ -389,7 +391,19 @@ namespace gpk
 				rtrn iOffset;
 		rtrn -1;
 	}
-
+	tplt<tpnm _tKey, tpnm _tVal>
+	err_t	find	(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals) {
+		for(u2_t iKeyVal = 0; iKeyVal < keyvals.size(); ++iKeyVal)
+			if(keyToFind == keyvals[iKeyVal].Key)
+				rtrn iKeyVal;
+		rtrn -1;
+	}
+	tplt<tpnm _tKey, tpnm _tVal>
+	err_t	find	(cnst gpk_rmcnst(_tKey) & keyToFind, view<cnst keyval<_tKey, _tVal>> keyvals, gpk_rmcnst(_tVal) & out_val) {
+		cnst err_t	index	= ::gpk::find(keyToFind, keyvals);
+		out_val				= 0 > index ? gpk_rmcnst(_tVal){} : keyvals[index].Val;
+		rtrn index;
+	}
 	tplT	err_t	find_sequence_obj		(cnst ::gpk::view<T> & sequence, cnst ::gpk::view<T> & target, u2_t offset = 0)	{
 		for(s2_t iOffset = (s2_t)offset, offsetStop = ((s2_t)target.size() - sequence.size()) + 1; iOffset < offsetStop; ++iOffset) {
 			bool								equal					= true;
@@ -434,25 +448,33 @@ namespace gpk
 		rtrn -1;
 	}
 
-	stin	err_t			find_string				(cnst ::gpk::vcst_t & toFind, cnst ::gpk::vcsc_t & target, u2_t offset = 0) { rtrn ::gpk::find_sequence_pod (toFind, target, offset); }
-	stin	err_t			rfind_string			(cnst ::gpk::vcst_t & toFind, cnst ::gpk::vcsc_t & target, u2_t offset = 0) { rtrn ::gpk::rfind_sequence_pod(toFind, target, offset); }
+	stin	err_t					find_string				(cnst ::gpk::vcst_t & toFind, cnst ::gpk::vcsc_t & target, u2_t offset = 0) { rtrn ::gpk::find_sequence_pod (toFind, target, offset); }
+	stin	err_t					rfind_string			(cnst ::gpk::vcst_t & toFind, cnst ::gpk::vcsc_t & target, u2_t offset = 0) { rtrn ::gpk::rfind_sequence_pod(toFind, target, offset); }
 
-	tplT	err_t					split					(cnst T & valueToFind, cnst ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
-		cnst err_t				iValue					= ::gpk::find(valueToFind, original);
-		if(0 > iValue) {
-			left							= original;
-			right							= {};
-		}
-		else {
-			gpk_necs(original.slice(left, 0, iValue));
-			u2_c						offsetRight				= iValue + 1;
-			gpk_necs(original.slice(right, offsetRight, original.size() - offsetRight));
-		}
-		rtrn iValue;
+	tplT	err_t					split					(tpnm ::gpk::view<T>::TCnst & valueToFind, ::gpk::view<T> & input) {
+		cnst err_t							iValue					= ::gpk::find<gpk_rmcnst(T)>(valueToFind, input);
+		rtrn input.slice(input, 0, (::gpk::u2_t)iValue);
 	}
 
-	tplT	err_t					splitAt					(cnst T & valueToFind, cnst ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
-		cnst err_t				iValue					= ::gpk::find(valueToFind, original);
+	tplT	err_t					split					(tpnm ::gpk::view<T>::TCnst & valueToFind, ::gpk::view<T> original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
+		left							= original;
+		if_fail_fe(::gpk::split(valueToFind, left));
+		if(left.size() == original.size()) {
+			right							= {};
+			rtrn -1;
+		}
+		if_fail_fe(original.slice(right, left.size() + 1));
+		rtrn left.size();
+	}
+
+	tplT requires(false == ::gpk::is_cnst<T>::Value)
+	err_t						split					(tpnm ::gpk::view<T>::TCnst & valueToFind, ::gpk::view<T> original, tpnm ::gpk::view<T>::TConstView & left, tpnm ::gpk::view<T>::TConstView & right) {
+		tpnm ::gpk::view<T>::TConstView	constOriginal			= original;
+		rtrn ::gpk::split(valueToFind, constOriginal, left, right);
+	}
+
+	tplT	err_t					splitAt					(tpnm ::gpk::view<T>::TCnst & valueToFind, ::gpk::view<T> original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
+		cnst err_t				iValue					= original.find(valueToFind);
 		if(0 > iValue) { // Read until the end unless fragment is found.
 			left							= original;
 			right							= {};
@@ -464,8 +486,14 @@ namespace gpk
 		rtrn iValue;
 	}
 
+	tplT requires(false == ::gpk::is_cnst<T>::Value)
+	err_t						splitAt					(tpnm ::gpk::view<T>::TCnst & valueToFind, ::gpk::view<T> original, tpnm ::gpk::view<T>::TConstView & left, tpnm ::gpk::view<T>::TConstView & right) {
+		tpnm ::gpk::view<T>::TConstView	constOriginal			= original;
+		rtrn ::gpk::splitAt(valueToFind, constOriginal, left, right);
+	}
+
 	// Returns the index of the start of the sequence if the latter found.
-	tplT	err_t					split					(cnst ::gpk::view<T> & sequenceToFind, cnst ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
+	tplT	err_t					split					(cnst ::gpk::view<T> & sequenceToFind, ::gpk::view<T> original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		cnst err_t				iValue					= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) {
 			left							= original;
@@ -478,12 +506,19 @@ namespace gpk
 		rtrn iValue;
 	}
 
+	tplT requires(false == ::gpk::is_cnst<T>::Value)
+	err_t						split					(cnst ::gpk::view<T> & sequenceToFind, ::gpk::view<T> original, tpnm ::gpk::view<T>::TConstView & left, tpnm ::gpk::view<T>::TConstView & right) {
+		tpnm ::gpk::view<T>::TConstView	constSequence			= sequenceToFind;
+		tpnm ::gpk::view<T>::TConstView	constOriginal			= original;
+		rtrn ::gpk::split(constSequence, constOriginal, left, right);
+	}
+
 	tplt<tpnm T>
 	inln	err_t			split					(cnst ::gpk::view<T> & sequenceToFind, ::gpk::view<T> & inputOrLeft, ::gpk::view<T> & right) {
 		rtrn ::gpk::split(sequenceToFind, inputOrLeft, inputOrLeft, right);
 	}
 
-	tplT	err_t					splitAt					(cnst ::gpk::view<T> & sequenceToFind, cnst ::gpk::view<T> & original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
+	tplT	err_t					splitAt					(cnst ::gpk::view<T> & sequenceToFind, ::gpk::view<T> original, ::gpk::view<T> & left, ::gpk::view<T> & right) {
 		cnst err_t				iValue					= ::gpk::find_sequence_pod(sequenceToFind, original);
 		if(0 > iValue) { // Read until the end unless fragment is found.
 			left							= original;
@@ -494,6 +529,13 @@ namespace gpk
 			gpk_necall(original.slice(right, iValue, (u2_t)original.size() - iValue), "%s", "Invalid slice");
 		}
 		rtrn iValue;
+	}
+
+	tplT requires(false == ::gpk::is_cnst<T>::Value)
+	err_t						splitAt					(cnst ::gpk::view<T> & sequenceToFind, ::gpk::view<T> original, tpnm ::gpk::view<T>::TConstView & left, tpnm ::gpk::view<T>::TConstView & right) {
+		tpnm ::gpk::view<T>::TConstView	constSequence			= sequenceToFind;
+		tpnm ::gpk::view<T>::TConstView	constOriginal			= original;
+		rtrn ::gpk::splitAt(constSequence, constOriginal, left, right);
 	}
 
 	tplT	err_t		max						(view<T> input, T ** result) {

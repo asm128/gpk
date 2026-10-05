@@ -1,4 +1,4 @@
-#include "gpk_view.h"
+#include "gpk_typeint.h"
 
 #ifndef GPK_KEYVAL_H_26920
 #define GPK_KEYVAL_H_26920
@@ -18,7 +18,6 @@ namespace gpk
 	};
 
 	tplt<tpnm _tKey, tpnm _tVal = _tKey>	using kv		= keyval<_tKey, _tVal>;
-	tplt<tpnm _tVal>						using kvvcst_t	= kv<vcst_t, _tVal>;
 	tplt<tpnm _tVal>						using kvu0_t	= kv<u0_t  , _tVal>;
 	tplt<tpnm _tVal>						using kvu1_t	= kv<u1_t  , _tVal>;
 	tplt<tpnm _tVal>						using kvu2_t	= kv<u2_t  , _tVal>;
