@@ -44,7 +44,7 @@ namespace gpk
 	tplt<>	ndin	bool	equal	(const double	* other, const double	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(double	)*count); }
 	tplt<>	ndin	bool	equal	(const float	* other, const float	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(float		)*count); }
 	tplt<>	ndin	bool	equal	(const int32_t	* other, const int32_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int32_t	)*count); }
-	tplt<>	ndin	bool	equal	(u2_c	* other, u2_c	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(uint32_t	)*count); }
+	tplt<>	ndin	bool	equal	(u2_c	* other, u2_c	* local, uint32_t count)					{ return 0 == memcmp(other, local, szof(uint32_t	)*count); }
 	tplt<>	ndin	bool	equal	(const int16_t	* other, const int16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int16_t	)*count); }
 	tplt<>	ndin	bool	equal	(const uint16_t	* other, const uint16_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(uint16_t	)*count); }
 	tplt<>	ndin	bool	equal	(const int8_t	* other, const int8_t	* local, uint32_t count)	{ return 0 == memcmp(other, local, szof(int8_t	)*count); }
