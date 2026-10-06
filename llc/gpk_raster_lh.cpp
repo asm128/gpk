@@ -197,8 +197,9 @@
 //https://fgiesen.wordpress.com/2013/02/08/triangle-rasterization-in-practice/
 static	double		orient2d		(const ::gpk::line2i16 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 //static	double		orient2d		(const ::gpk::line3i16 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
-static	double		orient2d		(const ::gpk::line3f32 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+//static	double		orient2d		(const ::gpk::line3f32 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
 static	double		orient2d		(const ::gpk::line2f32 & segment, const ::gpk::n2s1_t & point)	{ return (segment.B.x - segment.A.x) * (point.y - (double)segment.A.y) - (segment.B.y - segment.A.y) * (point.x - (double)segment.A.x); }
+static	double		orient2d		(const ::gpk::n3f2_t & start, const ::gpk::n2f2_t & edge, const ::gpk::n2s1_t & point)	{ return edge.x * (point.y - (double)start.y) - edge.y * (point.x - (double)start.x); }
 
 tplt <tpnm _tValue>	_tValue	max3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::max(::std::max(a, b), c); }
 tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ return ::std::min(::std::min(a, b), c); }
@@ -253,13 +254,16 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 	maxY					= ::std::min(maxY, (int16_t)((int32_t)targetSize.y - 1));
 
 	// Rasterize
+	const ::gpk::n2f2_t			edgeBC					= {triangle.C.x - triangle.B.x, triangle.C.y - triangle.B.y};
+	const ::gpk::n2f2_t			edgeCA					= {triangle.A.x - triangle.C.x, triangle.A.y - triangle.C.y};
+	const ::gpk::n2f2_t			edgeAB					= {triangle.B.x - triangle.A.x, triangle.B.y - triangle.A.y};
 	::gpk::n2s1_t				p;
 	for (p.y = minY; p.y <= maxY; ++p.y)
 	for (p.x = minX; p.x <= maxX; ++p.x) {
 		// Determine barycentric coordinates
-		double						w0						= ::orient2d({triangle.B, triangle.C}, p);
-		double						w1						= ::orient2d({triangle.C, triangle.A}, p);
-		double						w2						= ::orient2d({triangle.A, triangle.B}, p);
+		double						w0						= ::orient2d(triangle.B, edgeBC, p);
+		double						w1						= ::orient2d(triangle.C, edgeCA, p);
+		double						w2						= ::orient2d(triangle.A, edgeAB, p);
 		// If p is on or inside all edges, render pixel.
 		if (w0 < 0 || w1 < 0 || w2 < 0)
 			continue;
@@ -358,18 +362,19 @@ tplt <tpnm _tValue>	_tValue	min3		(_tValue & a, _tValue & b, _tValue & c)			{ re
 		const ::gpk::n2f2_t			texCoord				= ::gpk::triangleWeight(vertexWeights, triangleTexCoords);
 		const ::gpk::n3f2_t			position				= ::gpk::triangleWeight(vertexWeights, triangleWorld);
 		const ::gpk::rgbaf			texelColor				= textureImage.size() ? textureImage[(uint32_t)(texCoord.y * imageUnit.y) % textureImage.metrics().y][(uint32_t)(texCoord.x * imageUnit.x) % textureImage.metrics().x] : ::gpk::bgra{::gpk::GRAY};
+		const uint32_t				countLights				= lightPoints.size();
+		const ::gpk::rgbaf			ambientPerLight			= countLights ? texelColor / (10.0 * countLights) : ::gpk::rgbaf{};
 		::gpk::rgbaf				fragmentColor			= {};
 		stacxpr	double				rangeLight				= 10.0;
 		stacxpr	double				rangeLightSquared		= rangeLight * rangeLight;
 		stacxpr	double				rangeUnit				= 1.0 / rangeLightSquared;
-		for(uint32_t iLight = 0; iLight < lightPoints.size(); ++iLight) {
+		for(uint32_t iLight = 0; iLight < countLights; ++iLight) {
 			const ::gpk::n3f2_t			lightToPoint			= lightPoints[iLight] - position;
-			const ::gpk::n3f2_t			vectorToLight			= lightToPoint;
-			const double				lightFactor				= vectorToLight.Dot(normal);
 			const double				distanceToLight			= lightToPoint.LengthSquared();
 			if(distanceToLight > rangeLightSquared)
 				continue;
-			fragmentColor			+= texelColor / (10.0 * lightPoints.size());
+			fragmentColor			+= ambientPerLight;
+			const double				lightFactor				= lightToPoint.Dot(normal);
 			if(lightFactor <= 0)
 				continue;
 			const double				invAttenuation			= ::std::max(0.0, 1.0 - (distanceToLight * rangeUnit));
