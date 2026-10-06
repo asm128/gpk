@@ -147,7 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="gpk_cgi_rt_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="boot.js" />
