@@ -5,6 +5,8 @@
 #include "gpk_json_expression.h"
 #include "gpk_engine_shader.h"
 #include "gpk_gui_text.h"
+#include "gpk_string.h"
+#include "gpk_string_compose.h"
 
 GPK_USING_TYPEINT();
 
@@ -73,8 +75,8 @@ static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::
 
 ::gpk::error_t			gpk::planetarySystemCreateEntities(const ::gpk::SPlanetarySystem & solarSystem, ::gpk::SPlanetarySystemEntityMap & entityMap, ::gpk::SEngine & engine) {
 	::gpk::SPNGData				pngCache				= {};
-	stacxpr sc_t				fileFolder	[]			= "../gpk_data/images";
-	sc_t						fileName	[1024]		= {};
+	stxp vcst_t					fileFolder				= GPK_CXS("../gpk_data/images");
+	::gpk::string				fileName				= {};
 	int32_t						iBackground				= 0;
 
 	{	// Background sphere map
@@ -82,7 +84,7 @@ static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::
 		gpk_necs(iBackground = engine.CreateSphere(params));
 		gpk_necs(engine.SetColorDiffuse(iBackground, {1.0f, 1.0f, 1.0f, 1.0f}));
 		gpk_necs(engine.SetShader(iBackground, ::gpk::psSphereAxis, "psBackgroundMilkyWay"));
-		sprintf_s(fileName, "%s.png", "STScI-H-Whale_galaxy-NASA.Hubble_Space_Telescope.ESA-h-4467x1217");
+		::gpk::append_strings(fileName, "black", ".png");
 		int32_t						iImage;
 		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
 		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(iBackground)];
@@ -100,9 +102,12 @@ static	::gpk::error_t	createOrbiterBody		(::gpk::SEngine & engine, const ::gpk::
 		gpk_necs(entityMap.Bodies.push_back(engine.Clone(entityMap.Bodies[0], true, true, true)));
 
 	for(uint32_t iOrbiter = 0; iOrbiter < solarSystem.Body.size(); ++iOrbiter) {
-		sprintf_s(fileName, "%s_color.png", ::gpk::toString(solarSystem.Body.Keys[iOrbiter]).begin());
+		fileName.clear();
+		::gpk::append_strings(fileName, solarSystem.Body.Keys[iOrbiter], "_color.png");
+
 		int32_t						iImage;
 		gpk_necs(iImage = engine.CreateImageFromFile(fileFolder, fileName));
+		
 		::gpk::SRenderNode			& renderNode			= engine.Scene->RenderNodes[engine.GetRenderNode(entityMap.Bodies[iOrbiter])];
 		gpk_necs(engine.Scene->Graphics->Skins[renderNode.Skin]->Textures.insert(0, iImage));
 	}
