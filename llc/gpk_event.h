@@ -45,17 +45,17 @@ namespace gpk
 		T				Type		= {};
 		au0_t			Data		= {};
 
-						SEvent		(const TEvent &)				= default;
-		constexpr		SEvent		(T type = {})					: Type(type) {}
-						SEvent		(T type, const vcu0_t data)		: Type(type), Data(data.cu8()) {}
-						SEvent		(const TEView & eventView)		: Type(eventView.Type), Data(eventView.Data) {}
+						SEvent		(const TEvent &)							= default;
+		constexpr		SEvent		(T type = {})						: Type(type) {}
+						SEvent		(T type, const vcu0_t data)	: Type(type), Data(data.cu8()) {}
+						SEvent		(const TEView & eventView)			: Type(eventView.Type), Data(eventView.Data) {}
 
 		TEvent&			oper= 		(const TEvent &)				= default;
 		TEvent&			oper= 		(const TEView & eventView)		{ Type = eventView.Type; Data = eventView.Data; rtrn *this; }
 
 		oper			TEView		()						const	{ rtrn {Type, Data.cu8()}; }
 
-		error_t			Save		(au0_t & output)		const	{
+		error_t			Save		(au0_t & output)	const	{
 			gpk_necs(savePOD(output, Type));
 			gpk_necs(saveView(output, Data));
 			rtrn 0;
@@ -68,7 +68,7 @@ namespace gpk
 		}
 
 		tplt<tpnm _tETypeOther>
-		error_t	ExtractChild(SEvent<_tETypeOther> & outputEvent)	const	{
+		error_t	ExtractChild(SEvent<_tETypeOther> & outputEvent)		const	{
 			vcu0_t			input				= Data;
 			gpk_necs(outputEvent.Load(input));
 			gpk_event_printf("%s", get_value_namep(outputEvent.Type)); 
@@ -106,12 +106,12 @@ namespace gpk
 
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	static	error_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, view<const _tPOD> eventData) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const uint8_t*)eventData.begin(), eventData.byte_count()});
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const u0_t*)eventData.begin(), eventData.byte_count()});
 	}
 
 	tplt <tpnm _tEvntParent, tpnm _tEvntChild, tpnm _tPOD>
 	static	error_t	eventEnqueueChild	(TEventQueue<_tEvntParent> & eventQueue, _tEvntParent parentEventType, _tEvntChild childEventType, const _tPOD & childEventDataType) {
-		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const uint8_t*)&childEventDataType, szof(_tPOD)});
+		rtrn eventEnqueueChild(eventQueue, parentEventType, childEventType, vcu0_t{(const u0_t*)&childEventDataType, szof(_tPOD)});
 	}
 
 	tplt<tpnm _tChildEvent, tpnm _tParentEvent>
@@ -135,3 +135,4 @@ namespace gpk
 #define gpk_warning_not_implemented(eventUnhandled) warning_printf("Implement for '%s'! '%s' (0x%llX)(%lli)(%c)"	, get_enum_namep((eventUnhandled).Type), get_value_namep((eventUnhandled).Type), (u3_t)(eventUnhandled).Type, (s3_t)(eventUnhandled).Type, char((eventUnhandled).Type ? (eventUnhandled).Type : ' '))
 
 #endif // GPK_EVENT_H_23627
+

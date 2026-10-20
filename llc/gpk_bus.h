@@ -1,0 +1,38 @@
+#include "gpk_enum.h"
+
+#ifndef GPK_BUS_H_23627
+#define GPK_BUS_H_23627
+
+namespace gpk
+{	
+	GDEFINE_ENUM_TYPE (WIRE_EVENT, u0_t);
+	GDEFINE_ENUM_VALUE(WIRE_EVENT, Mode		,  0);
+	GDEFINE_ENUM_VALUE(WIRE_EVENT, Value	,  1);
+	//
+	GDEFINE_ENUM_TYPE (WIRE_MODE, int8_t);
+	GDEFINE_ENUM_VALUE(WIRE_MODE, Get		,  0);
+	GDEFINE_ENUM_VALUE(WIRE_MODE, Set		,  1);
+	//
+	GDEFINE_ENUM_TYPE (BUS_TYPE, int8_t);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, IO		,  0);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, PWM	,  1);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, A2D	,  2);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, D2A	,  3);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, Serial	,  4);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, I2C	,  5);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, SPI	,  6);
+	GDEFINE_ENUM_VALUE(BUS_TYPE, IP		,  7);
+
+#pragma pack(push, 1)
+	stct SWireCommand {
+		WIRE_EVENT	Event		: 1;
+		WIRE_MODE	Mode		: 2;
+		BUS_TYPE	Type		: 5;
+	};
+#pragma pack(pop)
+
+} // namespace
+
+#endif // GPK_BUS_H_23627
+
+

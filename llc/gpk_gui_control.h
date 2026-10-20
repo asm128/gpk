@@ -2,6 +2,7 @@
 
 #include "gpk_tri2.h"
 #include "gpk_rect.h"
+#include "gpk_rect2.h"
 #include "gpk_align.h"
 #include "gpk_array_static.h"
 
@@ -20,15 +21,15 @@ namespace gpk
 	typedef	n2<cid_t>		n2cid;
 	typedef	rect<cid_t>		rectcid;
 
-	tplt<uint32_t _sizeArray>	
+	tplt<::gpk::u2_t _sizeArray>	
 	using	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
 
-	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, uint8_t)
+	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, 3D		, 1);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Flat		, 2);
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, uint8_t);
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, u0_t);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Left		, ::gpk::ALIGN_LEFT		);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Top		, ::gpk::ALIGN_TOP		);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Right		, ::gpk::ALIGN_RIGHT	);
@@ -37,7 +38,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Inner		, ::gpk::ALIGN_NEAR		);
 	
 
-	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, uint16_t);
+	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, ::gpk::u1_t);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSize		, 1 << 0);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YSize		, 1 << 1);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSizeMin	, 1 << 2);
@@ -52,21 +53,21 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMax	, 1 << 11);
 
 	struct SControlPlacement {
-		::gpk::rect2i16				Area				= {{}, {16, 16}};
-		::gpk::rectu16				Margin				= {1, 1, 1, 1};
-		::gpk::rectu16				Border				= {1, 1, 1, 1};
+		::gpk::rect2s1_t				Area				= {{}, {16, 16}};
+		::gpk::rectu1_t				Margin				= {1, 1, 1, 1};
+		::gpk::rectu1_t				Border				= {1, 1, 1, 1};
 		::gpk::ALIGN				Align				= ::gpk::ALIGN_TOP_LEFT;
 		GUI_CONTROL_LIMIT			RelativeBorderSize	: 4;
 		GUI_CONTROL_LIMIT			RelativeMarginSize	: 4;
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
 	}; 
 
-	stincxp	::gpk::rectu16	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
-	stacxpr	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu16 rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1_t(); }
-	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
+	stincxp	::gpk::rectu1_t	controlNCRect		(const ::gpk::SControlPlacement & ctl)	noexcept	{ return ctl.Border + ctl.Margin; }
+	stacxpr	::gpk::n2u1_t	controlNCSpacing	(const ::gpk::SControlPlacement & ctl)	noexcept	{ const rectu1_t rc = controlNCRect(ctl); return ::gpk::n2s2_t{rc.Left + rc.Right, rc.Top + rc.Bottom}.u1(); }
+	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu1_t & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, uint8_t)
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DISABLED			, 1);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HOVER				, 2);
@@ -81,10 +82,10 @@ namespace gpk
 	
 
 	struct SControlDraw {
-		uint8_t			ColorMode			: 2;
-		uint8_t			FrameOut			: 1;
-		uint8_t			NoBorder			: 1;	// skip drawing border area
-		uint8_t			NoClient			: 1;	// skip drawing client area
+		u0_t			ColorMode			: 2;
+		u0_t			FrameOut			: 1;
+		u0_t			NoBorder			: 1;	// skip drawing border area
+		u0_t			NoClient			: 1;	// skip drawing client area
 		
 		bool			UseNewPalettes		: 1;	// -- Legacy property (don't use in the new implementation!)
 
@@ -93,7 +94,7 @@ namespace gpk
 						Palettes			= {{0, 1, 2, 3, 4, 5, 6, 7, 8, 9,}};
 	};
 
-	enum CONTROL_AREA_BASE : uint8_t 
+	enum CONTROL_AREA_BASE : u0_t 
 		{ CONTROL_AREA_BASE_BACKGROUND		= 0
 		, CONTROL_AREA_BASE_CONTENT
 		, CONTROL_AREA_BASE_BORDER_LEFT
@@ -107,7 +108,7 @@ namespace gpk
 		, CONTROL_AREA_BASE_COUNT
 		};
 
-	enum GUI_CONTROL_AREA_OLD : uint8_t
+	enum GUI_CONTROL_AREA_OLD : u0_t
 		{ GUI_CONTROL_AREA_OLD_CLIENT		= 0
 		, GUI_CONTROL_AREA_OLD_BORDER_LEFT
 		, GUI_CONTROL_AREA_OLD_BORDER_TOP
@@ -117,7 +118,7 @@ namespace gpk
 		};
 
 
-	enum UI_CONTROL_AREA : uint8_t
+	enum UI_CONTROL_AREA : u0_t
 		{ UI_CONTROL_AREA_BACKGROUND		= 0
 		, UI_CONTROL_AREA_CLIENT
 		, UI_CONTROL_AREA_BORDER_LEFT
@@ -142,29 +143,29 @@ namespace gpk
 		};
 
 	struct SControlRectangle {
-		::gpk::rect2i16				Local				= {};
-		::gpk::rect2i16				Global				= {};
+		::gpk::rect2s1_t				Local				= {};
+		::gpk::rect2s1_t				Global				= {};
 	};
 
 	struct SControlArea {
 		::gpk::SControlRectangle	Total				= {};
 		::gpk::SControlRectangle	Client				= {};
-		::gpk::rect2i16				Text				= {};
-		::gpk::rect2i16				Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		::gpk::tri2i16				Triangles	[8]		= {};
+		::gpk::rect2s1_t				Text				= {};
+		::gpk::rect2s1_t				Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
+		::gpk::tri2s1_t				Triangles	[8]		= {};
 	};
 
 	struct SControlRectangleGPU {
-		::gpk::rect2f32				Local				= {};
-		::gpk::rect2f32				Global				= {};
+		::gpk::rect2f2_t				Local				= {};
+		::gpk::rect2f2_t				Global				= {};
 	};
 
 	struct SControlAreaGPU {
 		::gpk::SControlRectangleGPU	Total				= {};
 		::gpk::SControlRectangleGPU	Client				= {};
-		::gpk::rect2f32				Text				= {};
-		::gpk::rect2f32				Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
-		::gpk::tri2f32				Triangles	[8]		= {};
+		::gpk::rect2f2_t				Text				= {};
+		::gpk::rect2f2_t				Rectangles	[::gpk::GUI_CONTROL_AREA_OLD_COUNT]	= {};
+		::gpk::tri2f2_t				Triangles	[8]		= {};
 	};
 
 	struct SControlAttachId {
@@ -193,13 +194,13 @@ namespace gpk
 #pragma pack(pop)
 
 	struct SControlImage {
-		::gpk::rtbgra8d32			Temp				= {};
+		::gpk::rt<::gpk::bgra, ::gpk::u2_t>			Temp				= {};
 		::gpk::g8bgra				Image				= {};
 		::gpk::n2s1_t				ImageOffset			= {};
-		uint8_t						ImageAlign			= ::gpk::ALIGN_CENTER;
-		uint8_t						ImageInvertX		: 1;
-		uint8_t						ImageInvertY		: 1;
-		uint8_t						Rotation			: 2;
+		u0_t						ImageAlign			= ::gpk::ALIGN_CENTER;
+		u0_t						ImageInvertX		: 1;
+		u0_t						ImageInvertY		: 1;
+		u0_t						Rotation			: 2;
 	};
 
 	struct SControlTable {
@@ -239,3 +240,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_GUI_CONTROL_H_23627
+
+

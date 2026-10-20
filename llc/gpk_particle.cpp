@@ -2,7 +2,7 @@
 #include "gpk_apod_serialize.h"
 
 ::gpk::error_t			gpk::SParticles3::IntegrateSpeed		(double secondsLastFrame)	{
-	for(uint32_t iShot = 0; iShot < Position.size(); ++iShot) {
+	for(::gpk::u2_t iShot = 0; iShot < Position.size(); ++iShot) {
 		::gpk::n3f2_t							& direction			= Direction	[iShot];
 		::gpk::n3f2_t							& position			= Position	[iShot];
 		float											& speed				= Speed		[iShot];
@@ -39,3 +39,5 @@
 	gpk_necs(gpk::loadView(input, Speed		));
 	return 0;
 }
+
+

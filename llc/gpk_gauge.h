@@ -6,86 +6,91 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	tplt<tpnm T> 
-	struct gaugemax { 
-		T							Limit;	// Inclusive
-		T							Value;	
+	tplT struct gaugemax {
+		T	Limit;
+		T	Value;
 
-		GPK_DEFAULT_OPERATOR(minmax<T>, Limit == other.Limit && Value == other.Value); 
+		GPK_DEFAULT_OPERATOR(gaugemax<T>, Limit == other.Limit && Value == other.Value);
 
-		cnstxpr double				Weight			()		const	noexcept	{ return 1.0 / Limit * Value; }
-		inlcxpr	double				WeightClamp		()		const	noexcept	{ return 1.0 / Limit * ::gpk::clamped(Value, (T)0, Limit); }
-		T							SetClamp		(T value)		noexcept	{ return Value = ::gpk::clamped(value, 0, Limit); }
-		T							SetWeighted		(double weight)	noexcept	{ return SetClamp(T(Limit * weight)); }
+		cxpr	f3_t	Weight			()				csnx	{ return 1.0 / Limit * Value; }
+		inxp	f3_t	WeightClamp		()				csnx	{ return 1.0 / Limit * clamped(Value, T{}, Limit); }
+		T				SetClamp		(T value)		nxpt	{ return Value = clamped(value, T{}, Limit); }
+		T				SetWeighted		(f3_t weight)	nxpt	{ return SetClamp(T(Limit * weight)); }
 
-		tplt<tpnm _tOther>
-		gaugemax<_tOther>			Cast		()		const	noexcept	{ return {(_tOther)Limit, (_tOther)Value}; }
+		tpl_t2
+		inxp	gaugemax<_t2>	Cast	()	csnx	{ return {(_t2)Limit, (_t2)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	gaugemax<uc_t>	uc		()	csnx	{ return Cast<uc_t>(); }
+		inxp	gaugemax<sc_t>	sc		()	csnx	{ return Cast<sc_t>(); }
+		inxp	gaugemax<u0_t>	u0		()	csnx	{ return Cast<u0_t>(); }
+		inxp	gaugemax<u1_t>	u1		()	csnx	{ return Cast<u1_t>(); }
+		inxp	gaugemax<u2_t>	u2		()	csnx	{ return Cast<u2_t>(); }
+		inxp	gaugemax<u3_t>	u3		()	csnx	{ return Cast<u3_t>(); }
+		inxp	gaugemax<s0_t>	s0		()	csnx	{ return Cast<s0_t>(); }
+		inxp	gaugemax<s1_t>	s1		()	csnx	{ return Cast<s1_t>(); }
+		inxp	gaugemax<s2_t>	s2		()	csnx	{ return Cast<s2_t>(); }
+		inxp	gaugemax<s3_t>	s3		()	csnx	{ return Cast<s3_t>(); }
+		inxp	gaugemax<f2_t>	f2		()	csnx	{ return Cast<f2_t>(); }
+		inxp	gaugemax<f3_t>	f3		()	csnx	{ return Cast<f3_t>(); }
 	};
 
-	tplt<tpnm T> 
-	struct gaugeminmax { 
-		minmax<T>					Limits;	// Inclusive
-		T							Value;	
+	tplT struct gaugeminmax {
+		minmax<T>	Limits;
+		T			Value;
 
-		GPK_DEFAULT_OPERATOR(minmax<T>, Limits == other.Limits && Value == other.Value); 
+		GPK_DEFAULT_OPERATOR(gaugeminmax<T>, Limits == other.Limits && Value == other.Value);
 
-		inlcxpr	T					Middle		()		const	noexcept	{ return Limits.Min + Limits.Length() / 2; }
-		cnstxpr	double				Weight		()		const	noexcept	{ return Limits.Weight(Value); }
-		inlcxpr	double				WeightClamp	()		const	noexcept	{ return Limits.WeightClamp(Value); }
-		T							SetClamp	(T value)		noexcept	{ return Value = Limits.Clamp(value); }
-		T							SetWeighted	(double weight)	noexcept	{ return Set(Limits.Weighted(weight)); }
+		inxp	T		Middle			()				csnx	{ return Limits.Middle(); }
+		cxpr	f3_t	Weight			()				csnx	{ return Limits.Weight(Value); }
+		inxp	f3_t	WeightClamp		()				csnx	{ return Limits.WeightClamp(Value); }
+		T				SetClamp		(T value)		nxpt	{ return Value = Limits.Clamp(value); }
+		T				SetWeighted		(f3_t weight)	nxpt	{ return Value = Limits.Weighted(weight); }
 
-		tplt<tpnm _tOther>
-		gaugeminmax<_tOther>		Cast		()		const	noexcept	{ return {Limits.Cast<_tOther>(), (_tOther)Value}; }
+		tpl_t2
+		inxp	gaugeminmax<_t2>	Cast	()	csnx	{ return {Limits.tplt Cast<_t2>(), (_t2)Value}; }
 
-		inlcxpr	minmax<uint8_t>		u0_t			()		const	noexcept	{ return Cast<uint8_t	>(); }
-		inlcxpr	minmax<uint16_t>	u1_t			()		const	noexcept	{ return Cast<uint16_t	>(); }
-		inlcxpr	minmax<uint32_t>	u2_t			()		const	noexcept	{ return Cast<uint32_t	>(); }
-		inlcxpr	minmax<uint64_t>	u3_t			()		const	noexcept	{ return Cast<uint64_t	>(); }
-		inlcxpr	minmax<int8_t>		s0_t			()		const	noexcept	{ return Cast<int8_t	>(); }
-		inlcxpr	minmax<int16_t>		s1_t			()		const	noexcept	{ return Cast<int16_t	>(); }
-		inlcxpr	minmax<int32_t>		s2_t			()		const	noexcept	{ return Cast<int32_t	>(); }
-		inlcxpr	minmax<int64_t>		s3_t			()		const	noexcept	{ return Cast<int64_t	>(); }
-		inlcxpr	minmax<float>		f2_t			()		const	noexcept	{ return Cast<float		>(); }
-		inlcxpr	minmax<double>		f3_t			()		const	noexcept	{ return Cast<double	>(); }
+		inxp	gaugeminmax<uc_t>	uc		()	csnx	{ return Cast<uc_t>(); }
+		inxp	gaugeminmax<sc_t>	sc		()	csnx	{ return Cast<sc_t>(); }
+		inxp	gaugeminmax<u0_t>	u0		()	csnx	{ return Cast<u0_t>(); }
+		inxp	gaugeminmax<u1_t>	u1		()	csnx	{ return Cast<u1_t>(); }
+		inxp	gaugeminmax<u2_t>	u2		()	csnx	{ return Cast<u2_t>(); }
+		inxp	gaugeminmax<u3_t>	u3		()	csnx	{ return Cast<u3_t>(); }
+		inxp	gaugeminmax<s0_t>	s0		()	csnx	{ return Cast<s0_t>(); }
+		inxp	gaugeminmax<s1_t>	s1		()	csnx	{ return Cast<s1_t>(); }
+		inxp	gaugeminmax<s2_t>	s2		()	csnx	{ return Cast<s2_t>(); }
+		inxp	gaugeminmax<s3_t>	s3		()	csnx	{ return Cast<s3_t>(); }
+		inxp	gaugeminmax<f2_t>	f2		()	csnx	{ return Cast<f2_t>(); }
+		inxp	gaugeminmax<f3_t>	f3		()	csnx	{ return Cast<f3_t>(); }
 	};
 #pragma pack(pop)
-	typedef	gaugemax<sc_t		>	gaugemaxchar;
-	typedef	gaugemax<uc_t	>	gaugemaxuchar;
-	typedef gaugemax<float		>	gaugemaxf32;
-	typedef gaugemax<double		>	gaugemaxf64;
-	typedef gaugemax<uint8_t	>	gaugemaxu8;
-	typedef gaugemax<uint16_t	>	gaugemaxu16;
-	typedef gaugemax<uint32_t	>	gaugemaxu32;
-	typedef gaugemax<uint64_t	>	gaugemaxu64;
-	typedef gaugemax<int8_t		>	gaugemaxi8;
-	typedef gaugemax<int16_t	>	gaugemaxi16;
-	typedef gaugemax<int32_t	>	gaugemaxi32;
-	typedef gaugemax<int64_t	>	gaugemaxi64;
 
-	typedef	gaugeminmax<sc_t	>	gaugeminmaxchar;
-	typedef	gaugeminmax<uc_t	>	gaugeminmaxuchar;
-	typedef gaugeminmax<float	>	gaugeminmaxf32;
-	typedef gaugeminmax<double	>	gaugeminmaxf64;
-	typedef gaugeminmax<uint8_t	>	gaugeminmaxu8;
-	typedef gaugeminmax<uint16_t>	gaugeminmaxu16;
-	typedef gaugeminmax<uint32_t>	gaugeminmaxu32;
-	typedef gaugeminmax<uint64_t>	gaugeminmaxu64;
-	typedef gaugeminmax<int8_t	>	gaugeminmaxi8;
-	typedef gaugeminmax<int16_t	>	gaugeminmaxi16;
-	typedef gaugeminmax<int32_t	>	gaugeminmaxi32;
-	typedef gaugeminmax<int64_t	>	gaugeminmaxi64;
+	tydf	gaugemax<uc_t>	gaugemaxuc_t;	tdcs gaugemaxuc_t	gaugemaxuc_c;
+	tydf	gaugemax<sc_t>	gaugemaxsc_t;	tdcs gaugemaxsc_t	gaugemaxsc_c;
+	tydf	gaugemax<u0_t>	gaugemaxu0_t;	tdcs gaugemaxu0_t	gaugemaxu0_c;
+	tydf	gaugemax<u1_t>	gaugemaxu1_t;	tdcs gaugemaxu1_t	gaugemaxu1_c;
+	tydf	gaugemax<u2_t>	gaugemaxu2_t;	tdcs gaugemaxu2_t	gaugemaxu2_c;
+	tydf	gaugemax<u3_t>	gaugemaxu3_t;	tdcs gaugemaxu3_t	gaugemaxu3_c;
+	tydf	gaugemax<s0_t>	gaugemaxs0_t;	tdcs gaugemaxs0_t	gaugemaxs0_c;
+	tydf	gaugemax<s1_t>	gaugemaxs1_t;	tdcs gaugemaxs1_t	gaugemaxs1_c;
+	tydf	gaugemax<s2_t>	gaugemaxs2_t;	tdcs gaugemaxs2_t	gaugemaxs2_c;
+	tydf	gaugemax<s3_t>	gaugemaxs3_t;	tdcs gaugemaxs3_t	gaugemaxs3_c;
+	tydf	gaugemax<f2_t>	gaugemaxf2_t;	tdcs gaugemaxf2_t	gaugemaxf2_c;
+	tydf	gaugemax<f3_t>	gaugemaxf3_t;	tdcs gaugemaxf3_t	gaugemaxf3_c;
+
+	tydf	gaugeminmax<uc_t>	gaugeminmaxuc_t;	tdcs gaugeminmaxuc_t	gaugeminmaxuc_c;
+	tydf	gaugeminmax<sc_t>	gaugeminmaxsc_t;	tdcs gaugeminmaxsc_t	gaugeminmaxsc_c;
+	tydf	gaugeminmax<u0_t>	gaugeminmaxu0_t;	tdcs gaugeminmaxu0_t	gaugeminmaxu0_c;
+	tydf	gaugeminmax<u1_t>	gaugeminmaxu1_t;	tdcs gaugeminmaxu1_t	gaugeminmaxu1_c;
+	tydf	gaugeminmax<u2_t>	gaugeminmaxu2_t;	tdcs gaugeminmaxu2_t	gaugeminmaxu2_c;
+	tydf	gaugeminmax<u3_t>	gaugeminmaxu3_t;	tdcs gaugeminmaxu3_t	gaugeminmaxu3_c;
+	tydf	gaugeminmax<s0_t>	gaugeminmaxs0_t;	tdcs gaugeminmaxs0_t	gaugeminmaxs0_c;
+	tydf	gaugeminmax<s1_t>	gaugeminmaxs1_t;	tdcs gaugeminmaxs1_t	gaugeminmaxs1_c;
+	tydf	gaugeminmax<s2_t>	gaugeminmaxs2_t;	tdcs gaugeminmaxs2_t	gaugeminmaxs2_c;
+	tydf	gaugeminmax<s3_t>	gaugeminmaxs3_t;	tdcs gaugeminmaxs3_t	gaugeminmaxs3_c;
+	tydf	gaugeminmax<f2_t>	gaugeminmaxf2_t;	tdcs gaugeminmaxf2_t	gaugeminmaxf2_c;
+	tydf	gaugeminmax<f3_t>	gaugeminmaxf3_t;	tdcs gaugeminmaxf3_t	gaugeminmaxf3_c;
 }
 
 #endif // GPK_GAUGE_H
+
+

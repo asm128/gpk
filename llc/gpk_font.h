@@ -9,37 +9,41 @@ namespace gpk
 {
 	struct SRasterFont {
 		::gpk::n2u0_t		CharSize;
-		::gpk::imgmonou64	Texture;
+		::gpk::imgmonou3_t	Texture;
 	};
 
 	struct SRasterFontBase64 {
 		::gpk::n2u0_t		CharSize;
-		::gpk::vcsc_t		Base64String;
+		::gpk::vcst_t		Base64String;
 	};
 
 	struct SRasterFontManager {
 		::gpk::apobj<::gpk::SRasterFont>	Fonts						= {};
 	};
 
-	::gpk::error_t	rasterFontDefaults	(::gpk::SRasterFontManager & manager);
+	::gpk::err_t	rasterFontDefaults	(::gpk::SRasterFontManager & manager);
 
-	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoad		(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcu0_c decoded) {
-		const uint32_t		imageHeight			= charSize.y * 256;
-		gpk_necall(image.resize(charSize.x, imageHeight), "charSize: {%i, %i}", charSize.x, charSize.y);
+	tplt<tpnm TCell>
+	::gpk::err_t	rasterFontLoad		(::gpk::imgmono<TCell> & image, ::gpk::n2u0_c & charSize, ::gpk::vcu0_c decoded) {
+		cnst ::gpk::u2_t	imageHeight	= charSize.y * 256U;
+		if_fail_fef(image.resize(charSize.x, imageHeight), "Character size: {%u, %u}.", charSize.x, charSize.y);
 		memcpy(image.Texels.begin(), decoded.begin(), ::gpk::min(image.Texels.byte_count(), decoded.byte_count()));
-		return 0;
+		rtrn 0;
 	}
-	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcu0_c & base64String) {
+	tplt<tpnm TCell>
+	::gpk::err_t	rasterFontLoadB64	(::gpk::imgmono<TCell> & image, ::gpk::n2u0_c & charSize, ::gpk::vcu0_c & base64String) {
 		::gpk::au0_t		decoded;
-		gpk_necs(gpk::base64Decode(base64String, decoded));
-		return rasterFontLoad(image, charSize, decoded);
+		if_fail_fe(::gpk::base64Decode(base64String, decoded));
+		rtrn rasterFontLoad(image, charSize, decoded);
 	}
-	tplt<tpnm _sizeChunk>
-	::gpk::error_t	rasterFontLoadB64	(::gpk::imgmono<_sizeChunk> & image, const ::gpk::n2u0_t & charSize, ::gpk::vcsc_c & base64String) {
-		return ::gpk::rasterFontLoadB64(image, charSize, *(::gpk::vcu0_c*)&base64String);
+	tplt<tpnm TCell>
+	::gpk::err_t	rasterFontLoadB64	(::gpk::imgmono<TCell> & image, ::gpk::n2u0_c & charSize, ::gpk::vcst_t base64String) {
+		::gpk::au0_t		decoded;
+		if_fail_fe(::gpk::base64Decode(base64String, decoded));
+		rtrn rasterFontLoad(image, charSize, decoded);
 	}
 };
 
 #endif // GPK_FONT_H_2903874982374
+
+

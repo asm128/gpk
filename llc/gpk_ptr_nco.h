@@ -5,48 +5,45 @@
 
 namespace gpk
 {
-	tplt<tpnm _tNCO>
-	class pnco {
+	tpl_t class pnco {
 	protected:
-		::gpk::gref<_tNCO>		* Reference	= 0;
+		gref<_t>			* Reference	= 0;
 	public:
-		typedef	_tNCO			T;
-		typedef	pnco<T>			TNCOPtr;
-		typedef	::gpk::gref<T>	TRef;
+		tydf	_t			T;
+		tydf	pnco<T>		TNCOPtr;
+		tydf	gref<T>		TRef;
 
-		inline					~pnco		()									noexcept	{ clear(); }
-		inlcxpr					pnco		()									noexcept	= default;
-		inline					pnco		(const TNCOPtr & other)				noexcept	{ Reference = ::gpk::ref_acquire(other.Reference);	}
-		inlcxpr					pnco		(TNCOPtr && other)					noexcept	{ Reference = other.Reference; other.Reference = 0;	}
-		inline					pnco		(TRef * other)						noexcept	{ Reference = other; }
+		inln				~pnco		()						nxpt	{ clear(); }
+		inxp				pnco		()						nxpt	= default;
+		inln				pnco		(cnst TNCOPtr & other)	nxpt	{ Reference = ref_acquire(other.Reference);	}
+		inxp				pnco		(TNCOPtr && other)		nxpt	{ Reference = other.Reference; other.Reference = 0;	}
+		inln				pnco		(TRef * other)			nxpt	{ Reference = other; }
 
-		inlcxpr	operator		T*			()									noexcept	{ return Reference ? Reference->Instance : 0; }
-		inlcxpr	operator		const T*	()							const	noexcept	{ return Reference ? Reference->Instance : 0; }
+		ndix	oper		T*			()						nxpt	{ return Reference ? Reference->Instance : 0; }
+		ndix	oper		cnst T*		()						csnx	{ return Reference ? Reference->Instance : 0; }
 
-		inlcxpr	bool			operator==	(const TNCOPtr & other)		const	noexcept	{ return Reference == other.Reference; }
-		inlcxpr	bool			operator!=	(const TNCOPtr & other)		const	noexcept	{ return !operator==(other); }
+		ndix	bool		oper==		(cnst TNCOPtr & other)	csnx	{ return Reference == other.Reference; }
+		ndix	bool		oper!=		(cnst TNCOPtr & other)	csnx	{ return !oper==(other); }
 
-		inlcxpr	TNCOPtr			operator =	(const TNCOPtr & other)				noexcept	{ TRef * oldInstance = Reference; Reference = ::gpk::ref_acquire(other.Reference);	::gpk::ref_release(&oldInstance); return *this; }
-		inlcxpr	TNCOPtr			operator =	(TNCOPtr && other)					noexcept	{ TRef * oldInstance = Reference; Reference = other.Reference; other.Reference = 0;	::gpk::ref_release(&oldInstance); return *this; }
-		inlcxpr	TNCOPtr			operator =	(TRef * other)						noexcept	{ TRef * oldInstance = Reference; Reference = other; ::gpk::ref_release(&oldInstance); return *this; }
+		inxp	TNCOPtr		oper =		(cnst TNCOPtr & other)	nxpt	{ TRef * oldInstance = Reference; Reference = ref_acquire(other.Reference);	ref_release(&oldInstance); return *this; }
+		inxp	TNCOPtr		oper =		(TNCOPtr && other)		nxpt	{ TRef * oldInstance = Reference; Reference = other.Reference; other.Reference = 0;	ref_release(&oldInstance); return *this; }
+		inxp	TNCOPtr		oper =		(TRef * other)			nxpt	{ TRef * oldInstance = Reference; Reference = other; ref_release(&oldInstance); return *this; }
 
-		inline	T*				operator->	()									noexcept	{ return Reference->Instance; }
-		inline	const T*		operator->	()							const	noexcept	{ return Reference->Instance; }
+		inln	T*			oper->		()						nxpt	{ return Reference->Instance; }
+		inln	cnst T*		oper->		()						csnx	{ return Reference->Instance; }
 
-		inline	TRef **			operator &	()									noexcept	{ return &Reference; }
+		inln	TRef**		oper &		()						nxpt	{ return &Reference; }
 
-		inlcxpr	const TRef*		get_ref		()							const	noexcept	{ return Reference; }
-		inlcxpr	const TRef*		set_ref		(TRef * ref)						noexcept	{ TRef * oldInstance = Reference; Reference = ref; ::gpk::ref_release(&oldInstance); return Reference; }
-		inline	::gpk::error_t	clear		()									noexcept	{ return ::gpk::ref_release(&Reference); }
-
-		tplt<tpnm _tNCOOther>
-		inline	_tNCO*			as			(_tNCOOther* * other)				noexcept	{ return *other = (Reference ? dynamic_cast<_tNCOOther*>(Reference->Instance) : 0); }
-
-		tplt<tpnm _tNCOOther>
-		inline	_tNCO*			as			(::gpk::pnco<_tNCOOther> & other)	noexcept	{ other = {(::gpk::gref<_tNCOOther>*)::gpk::ref_acquire(Reference)}; return 0; }
+		ndix	cnst TRef*	get_ref		()						csnx	{ return Reference; }
+		inxp	cnst TRef*	set_ref		(TRef * ref)			nxpt	{ TRef * oldInstance = Reference; Reference = ref; ref_release(&oldInstance); return Reference; }
+		inln	err_t		clear		()						nxpt	{ return ref_release(&Reference); }
+		tpl_t2	inln	T*	as			(_t2* * other)			nxpt	{ return *other = Reference ? dynamic_cast<_t2*>(Reference->Instance) : 0; }
+		tpl_t2	inln	T*	as			(pnco<_t2> & other)		nxpt	{ return *(other = ref_acquire(Reference)); }
 	};
-	tplt <tpnm T> using pn		= ::gpk::pnco<T>; 
-	tplt <tpnm T> using pi		= ::gpk::pnco<T>; 
+	tplT	using	pn		= pnco<T>; 
+	tplT	using	pi		= pnco<T>; 
 } // namespace
 
 #endif // GPK_PTR_NCO_H_23627
+
+

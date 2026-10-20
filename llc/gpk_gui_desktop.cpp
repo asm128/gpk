@@ -2,7 +2,7 @@
 #include "gpk_label.h"
 
 #define NEW_OR_UNUSED(ctoken, utoken)							\
-	uint32_t					i##ctoken				= 0;	\
+	::gpk::u2_t					i##ctoken				= 0;	\
 	while(i##ctoken < desktop.Items.ctoken##s.size()) {			\
 		if(desktop.Items.ctoken##s.Unused[i##ctoken]) 			\
 			break;												\
@@ -33,18 +33,18 @@
 }
 
 ::gpk::error_t			gpk::desktopDeleteControlList	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iElement)	{
-	gpk_necall(desktop.Items.ControlLists.size() <= (uint32_t)iElement, "%s", "Invalid control list.");
+	gpk_necall(desktop.Items.ControlLists.size() <= (::gpk::u2_t)iElement, "%s", "Invalid control list.");
 	::gpk::SControlList			& controlListToDelete			= desktop.Items.ControlLists[iElement];
 	::gpk::acid					childLists						= desktop.Children[iElement];
-	for(uint32_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
+	for(::gpk::u2_t iOption = 0, countOptions = childLists.size(); iOption < countOptions; ++iOption) {
 		::gpk::cid_t				childControlListIndex			= childLists[iOption];
-		if(desktop.Items.ControlLists.size() > (uint32_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
+		if(desktop.Items.ControlLists.size() > (::gpk::u2_t)childControlListIndex && false == desktop.Items.ControlLists.Unused[childControlListIndex])
 			gpk_necall(gpk::desktopDeleteControlList(gui, desktop, childControlListIndex), "%s", "??");
 		else
-			ef_if(childControlListIndex != -1, "%s", "");
+			if_true_ef(childControlListIndex != -1, "%s", "");
 	}
-	if(desktop.Items.ControlLists.size() > (uint32_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
-		if (desktop.Children[controlListToDelete.IndexParentList].size() > (uint32_t)controlListToDelete.IndexParentItem)
+	if(desktop.Items.ControlLists.size() > (::gpk::u2_t)controlListToDelete.IndexParentList && false == desktop.Items.ControlLists.Unused[controlListToDelete.IndexParentList]) {
+		if (desktop.Children[controlListToDelete.IndexParentList].size() > (::gpk::u2_t)controlListToDelete.IndexParentItem)
 			desktop.Children[controlListToDelete.IndexParentList][controlListToDelete.IndexParentItem]	= -1;
 	}
 	desktop.Items.ControlLists.Unused[iElement]	= true;
@@ -72,14 +72,14 @@
 
 static	::gpk::error_t	displace					(::gpk::SGUI & gui, ::gpk::cid_t iControl, const ::gpk::n2<double> & mouseDeltas)	{
 	const ::gpk::n2<double>		currentScale									= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-	::gpk::n2<double>			deltasScaled									= mouseDeltas.f3_t().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
-	gui.Controls.Placement[iControl].Area.Offset								+= deltasScaled.s1_t();
+	::gpk::n2<double>			deltasScaled									= mouseDeltas.f3().GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y);
+	gui.Controls.Placement[iControl].Area.Offset								+= deltasScaled.s1();
 	return ::gpk::controlMetricsInvalidate(gui, iControl);
 }
 
 static	::gpk::error_t	pushToFrontAndDisplace		(::gpk::SGUI & gui, ::gpk::cid_t iControl, ::gpk::SInput & input)							{
 	const ::gpk::cid_t			parentControlId				= gui.Controls.States[iControl].Parent;
-	for(uint32_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
+	for(::gpk::u2_t iChild = 0, childCount = gui.Controls.Children[parentControlId].size(); iChild < childCount; ++iChild)
 		if(gui.Controls.Children[parentControlId][iChild] == iControl) {
 			gpk_necs(gui.Controls.Children[parentControlId].remove(iChild));
 			gpk_necs(gui.Controls.Children[parentControlId].push_back(iControl));
@@ -98,7 +98,7 @@ static	::gpk::error_t	unhideMenuHierarchy			(::gpk::SGUI & gui, ::gpk::SDesktop&
 	const ::gpk::cid_t			parentControlIndex			= gui.Controls.States[menu.IdControl].Parent;
 	if(-1 != parentControlIndex) {
 		::gpk::acid & parentChildren = gui.Controls.Children[parentControlIndex];
-		for(uint32_t iChild = 0, childCount = parentChildren.size(); iChild < childCount; ++iChild) {
+		for(::gpk::u2_t iChild = 0, childCount = parentChildren.size(); iChild < childCount; ++iChild) {
 			if(parentChildren[iChild] == menu.IdControl) {
 				parentChildren.remove(iChild);
 				parentChildren.push_back(menu.IdControl);
@@ -121,12 +121,12 @@ static	::gpk::error_t	selectMenuHierarchy				(::gpk::SGUI & gui, ::gpk::SDesktop
 }
 
 static	::gpk::error_t	unhoverMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SControlList & menu)	{
-	if(desktop.Items.ControlLists.size() > (uint32_t)menu.IndexParentList)
+	if(desktop.Items.ControlLists.size() > (::gpk::u2_t)menu.IndexParentList)
 		::unhoverMenuHierarchy(gui, desktop, desktop.Items.ControlLists[menu.IndexParentList]);
 	
 	gui.Controls.SetHovered(menu.IdControl, false);
 
-	for(uint32_t iItem = 0; iItem < menu.IdControls.size(); ++iItem)
+	for(::gpk::u2_t iItem = 0; iItem < menu.IdControls.size(); ++iItem)
 		gui.Controls.SetHovered(menu.IdControls[iItem], false);
 
 	return 0;
@@ -134,10 +134,10 @@ static	::gpk::error_t	unhoverMenuHierarchy						(::gpk::SGUI & gui, ::gpk::SDesk
 
 static	::gpk::error_t	clearMenuHierarchy	(::gpk::SGUI & gui, ::gpk::SDesktop & desktop)	{
 	::gpk::SRecyclableElementContainer<::gpk::SControlList>	& menus	= desktop.Items.ControlLists;
-	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+	for(::gpk::u2_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
 		::gpk::SControlList			& menu				= menus[iMenu];
 		menu.IdSelected			= -1;
-		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // skip root menus
+		if(desktop.Children.size() <= (::gpk::u2_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (::gpk::u2_t)menu.IndexParentItem) // skip root menus
 			continue;
 
 		gui.Controls.SetHidden(menu.IdControl, true);
@@ -153,11 +153,11 @@ static	int64_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 		::pushToFrontAndDisplace(gui, vp.IdControl, input);
 	else if(gui.Controls.IsPressed(vp.IdControls[::gpk::VIEWPORT_CONTROL_RESIZE_BOTTOM_RIGHT])) {
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y) {
-			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(uint32_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
-			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.s2_t()})) {
+			//::gpk::n2<int32_t> nextSize = gui.Controls.Controls[(::gpk::u2_t)vp.IdControl].Area.Size + ::gpk::n2<int32_t>{input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
+			//if(::gpk::in_range(nextSize, {{}, gui.LastSize.s2()})) {
 				::gpk::n2s2_t			mouseDeltas			= {input.MouseCurrent.Deltas.x, input.MouseCurrent.Deltas.y};
 				const ::gpk::n2f3_t		currentScale		= gui.Zoom.DPI * gui.Zoom.ZoomLevel;
-				::gpk::n2s1_t			deltasScaled		= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).s1_t();
+				::gpk::n2s1_t			deltasScaled		= mouseDeltas.GetScaled(1.0 / currentScale.x, 1.0 / currentScale.y).s1();
 				gui.Controls.Placement[vp.IdControl].Area.Size									+= deltasScaled;
 				gui.Controls.Placement[vp.IdControls[::gpk::VIEWPORT_CONTROL_TARGET]].Area.Size	+= deltasScaled;
 				::gpk::controlMetricsInvalidate(gui, vp.IdControl);
@@ -167,7 +167,7 @@ static	int64_t			viewportUpdate		(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, 
 	return 0;
 }
 int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::SInput & input)							{
-	for(uint32_t iViewport = 0; iViewport < desktop.Items.Viewports.size(); ++iViewport) {
+	for(::gpk::u2_t iViewport = 0; iViewport < desktop.Items.Viewports.size(); ++iViewport) {
 		if(desktop.Items.Viewports.Unused[iViewport])
 			continue;
 		::viewportUpdate(gui, desktop, input, (::gpk::cid_t)iViewport);
@@ -178,12 +178,12 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 
 	bool						inControlArea						= false;
 	//bool						anyControlPressed					= false;
-	for(uint32_t iControlToProcess = 0, countControls = controlsToProcess.size(); iControlToProcess < countControls; ++iControlToProcess) {
-		const uint32_t				iControl							= controlsToProcess[iControlToProcess];
+	for(::gpk::u2_t iControlToProcess = 0, countControls = controlsToProcess.size(); iControlToProcess < countControls; ++iControlToProcess) {
+		const ::gpk::u2_t				iControl							= controlsToProcess[iControlToProcess];
 		const ::gpk::SControlArea	& controlMetrics					= gui.Controls.Area[iControl];
 		const ::gpk::SControlState	& controlState						= gui.Controls.States[iControl];
-		if(iControl != (uint32_t)desktop.IdControl)
-			inControlArea			= inControlArea || ::gpk::in_range(gui.CursorPos.s1_t(), controlMetrics.Total.Global);
+		if(iControl != (::gpk::u2_t)desktop.IdControl)
+			inControlArea			= inControlArea || ::gpk::in_range(gui.CursorPos.s1(), controlMetrics.Total.Global);
 		//if(controlState.Pressed && (int32_t)iControl != app.Desktop.IdControl)
 		//	anyControlPressed															= true;
 
@@ -195,11 +195,11 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 
 	bool						selectedMenu					= false;
 	::gpk::SRecyclableElementContainer<::gpk::SControlList>	& menus			= desktop.Items.ControlLists;
-	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+	for(::gpk::u2_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
 		::gpk::SControlList			& menu				= menus[iMenu];
-		if(desktop.Children.size() <= (uint32_t)menu.IndexParentList)
+		if(desktop.Children.size() <= (::gpk::u2_t)menu.IndexParentList)
 			continue;
-		else if(desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent
+		else if(desktop.Children[menu.IndexParentList].size() <= (::gpk::u2_t)menu.IndexParentItem) // parent
 			continue;
 
 		::gpk::SControlList					& parentMenu		= menus[menu.IndexParentList];
@@ -214,7 +214,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		}
 		else {
 			const ::gpk::SControlArea		& controlListMetrics				= gui.Controls.Area[menu.IdControl];
-			if(::gpk::in_range(gui.CursorPos.s1_t(), controlListMetrics.Total.Global) && ::gpk::controlHidden(gui, menu.IdControl))
+			if(::gpk::in_range(gui.CursorPos.s1(), controlListMetrics.Total.Global) && ::gpk::controlHidden(gui, menu.IdControl))
 				::unhideMenuHierarchy(gui, desktop, menu);
 
 			else if(parentMenu.IdSelected != menu.IndexParentItem)
@@ -224,9 +224,9 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 
 	if(input.ButtonDown(1) || input.ButtonDown(2)) {
 		::clearMenuHierarchy(gui, desktop);
-		for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+		for(::gpk::u2_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
 			::gpk::SControlList																& menu								= menus[iMenu];
-			if(desktop.Children.size() <= (uint32_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (uint32_t)menu.IndexParentItem) // parent
+			if(desktop.Children.size() <= (::gpk::u2_t)menu.IndexParentList || desktop.Children[menu.IndexParentList].size() <= (::gpk::u2_t)menu.IndexParentItem) // parent
 				continue;
 			::unhoverMenuHierarchy(gui, desktop, menu);
 		}
@@ -235,10 +235,10 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 		::clearMenuHierarchy(gui, desktop);
 
 	int64_t																	resultEvent							= 0;
-	for(uint32_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
+	for(::gpk::u2_t iMenu = 0, countMenus = menus.size(); iMenu < countMenus; ++iMenu) {
 		::gpk::SControlList																& menu								= menus[iMenu];
 		bool																			eventFound							= false;
-		for(uint32_t iItem = 0, countItems = menu.IdControls.size(); iItem < countItems; ++iItem) {
+		for(::gpk::u2_t iItem = 0, countItems = menu.IdControls.size(); iItem < countItems; ++iItem) {
 			if(false == gui.Controls.States[menu.IdControls[iItem]].IsAction())
 				continue;
 			if(desktop.Children[iMenu].size() < menu.IdControls.size())
@@ -255,7 +255,7 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 }
 
 ::gpk::error_t			gpk::desktopControlListSetParent(::gpk::SGUI & gui, ::gpk::SDesktop & desktop, ::gpk::cid_t iControlList, ::gpk::cid_t iParentControlList, ::gpk::cid_t iParentListItem)			{
-	ree_if((desktop.Items.ControlLists.size() <= (uint32_t)iControlList) || desktop.Items.ControlLists.Unused[iControlList], "Invalid control list: %u.", iControlList);
+	if_true_fef((desktop.Items.ControlLists.size() <= (::gpk::u2_t)iControlList) || desktop.Items.ControlLists.Unused[iControlList], "Invalid control list: %u.", iControlList);
 	::gpk::SControlList			& controlList				= desktop.Items.ControlLists[iControlList];
 	const int32_t				oldParentList				= controlList.IndexParentList;
 	const int32_t				oldParentItem				= controlList.IndexParentItem;
@@ -264,20 +264,20 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 	controlList.IndexParentList = iParentControlList;
 	controlList.IndexParentItem	= iParentListItem;
 	
-	if((desktop.Items.ControlLists.size() <= (uint32_t)iParentControlList) || desktop.Items.ControlLists.Unused[iParentControlList]) {
-		ree_if(-1 != iParentControlList, "Invalid parent control list: %i. List item: %i.", iParentControlList, iParentListItem);
+	if((desktop.Items.ControlLists.size() <= (::gpk::u2_t)iParentControlList) || desktop.Items.ControlLists.Unused[iParentControlList]) {
+		if_true_fef(-1 != iParentControlList, "Invalid parent control list: %i. List item: %i.", iParentControlList, iParentListItem);
 		gui.Controls.SetHidden(controlList.IdControl, false);
 	}
 	else { // update tree
 		::gpk::SControlList			& parentControlList			= desktop.Items.ControlLists[iParentControlList];
-		if(desktop.Children.size() > (uint32_t)oldParentList && desktop.Children[oldParentList].size() > (uint32_t)oldParentItem)
+		if(desktop.Children.size() > (::gpk::u2_t)oldParentList && desktop.Children[oldParentList].size() > (::gpk::u2_t)oldParentItem)
 			desktop.Children[oldParentList][oldParentItem]							= -1;
 
 		::gpk::acid					& parentChildren			= desktop.Children[iParentControlList];
 		if(parentChildren.size() < parentControlList.IdControls.size())
 			parentChildren.resize(parentControlList.IdControls.size(), -1);
 
-		ree_if(parentChildren.size() <= ((uint32_t)iParentListItem) && iParentListItem != -1, "Invalid parent item: %i.", iParentListItem);
+		if_true_fef(parentChildren.size() <= ((::gpk::u2_t)iParentListItem) && iParentListItem != -1, "Invalid parent item: %i.", iParentListItem);
 		::gpk::SControlConstraints	& controlListConstraints	= gui.Controls.Constraints[controlList.IdControl];
 		if(iParentListItem == -1) 
 			gui.Controls.SetHidden(controlList.IdControl, false);
@@ -306,3 +306,5 @@ int64_t					gpk::desktopUpdate						(::gpk::SGUI & gui, ::gpk::SDesktop & deskto
 	}
 	return ::gpk::controlListArrange(gui, controlList);
 }
+
+

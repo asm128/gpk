@@ -7,7 +7,7 @@
 namespace gpk
 {
 #pragma pack(push, 1)
-	struct SFrameSeconds {
+	stct SFrameSeconds {
 		double					Total				;
 		double					LastFrame			;
 		double					LastFrameHalfSquared;
@@ -22,26 +22,26 @@ namespace gpk
 		}
 	};
 
-	struct SFrameMicroseconds {
+	stct SFrameMicroseconds {
 		uint64_t				Total				;
 		uint64_t				LastFrame			;
 		// Helper
 		inline	void			UpdateFromTime		(uint64_t microsecondsToAdd)	noexcept	{ Total += LastFrame = microsecondsToAdd; }
 	};
 
-	struct SFrameMeter {
+	stct SFrameMeter {
 		double					AverageFrameTime	= 0;
 		uint64_t				FrameNumber			= 0;
-		uint32_t				FramesPerSecond		= 0;
-		uint32_t				FramesThisSecond	= 0;
-		uint32_t				FrameStep			= 0;
+		::gpk::u2_t				FramesPerSecond		= 0;
+		::gpk::u2_t				FramesThisSecond	= 0;
+		::gpk::u2_t				FrameStep			= 0;
 		// Updates frame number and stats from delta time.
 		uint64_t				Frame				(uint64_t deltaMicroseconds)	{
 			++FrameNumber;
 			++FramesThisSecond;
-			FrameStep				+= (uint32_t)deltaMicroseconds;
+			FrameStep				+= (::gpk::u2_t)deltaMicroseconds;
 			if(FrameStep > 1000000 || FramesThisSecond > 30) {
-				FramesPerSecond			= uint32_t(FramesThisSecond / (FrameStep * .000001));
+				FramesPerSecond			= ::gpk::u2_t(FramesThisSecond / (FrameStep * .000001));
 				FramesThisSecond		= 0;
 				FrameStep				= 0;
 				AverageFrameTime		= 1.0f / FramesPerSecond;
@@ -50,7 +50,7 @@ namespace gpk
 		}
 	};
 
-	struct SFrameInfo {
+	stct SFrameInfo {
 		SFrameMicroseconds		Microseconds		= {};
 		SFrameSeconds			Seconds				= {};
 		SFrameMeter				FrameMeter			= {};
@@ -63,7 +63,7 @@ namespace gpk
 		}
 	};
 
-	struct SFrameTimer {
+	stct SFrameTimer {
 		::gpk::STimer			Timer				= {};
 		::gpk::SFrameInfo		FrameInfo			= {};
 
@@ -79,3 +79,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_FRAMEINFO_H_23627
+
+

@@ -6,17 +6,19 @@
 
 namespace gpk
 {
-	typedef	::gpk::grid<::gpk::rgbaf>	gfrgba	;
-	typedef	::gpk::grid<::gpk::bgra	>	g8bgra	;
-	typedef	::gpk::grid<::gpk::bgr	>	g8bgr	;
-	typedef	::gpk::grid<::gpk::rgba	>	g8rgba	;
-	typedef	::gpk::grid<::gpk::rgb	>	g8rgb	;
+	tydf grid<rgbaf>	gfrgba;
+	tydf grid<bgra>	g8bgra;
+	tydf grid<bgr>	g8bgr;
+	tydf grid<rgba>	g8rgba;
+	tydf grid<rgb>	g8rgb;
 
-	typedef	::gpk::grid<const ::gpk::rgbaf	>	gcfrgba	;
-	typedef	::gpk::grid<const ::gpk::bgra	>	gc8bgra	;
-	typedef	::gpk::grid<const ::gpk::bgr	>	gc8bgr	;
-	typedef	::gpk::grid<const ::gpk::rgba	>	gc8rgba	;
-	typedef	::gpk::grid<const ::gpk::rgb	>	gc8rgb	;
-} // namespace
+	tydf grid<cnst rgbaf>	gcfrgba;
+	tydf grid<cnst bgra>	gc8bgra;
+	tydf grid<cnst bgr>	gc8bgr;
+	tydf grid<cnst rgba>	gc8rgba;
+	tydf grid<cnst rgb>	gc8rgb;
+} // namespace gpk
 
 #endif // GPK_GRID_COLOR_H_23627
+
+

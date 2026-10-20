@@ -18,7 +18,7 @@ namespace gpk
 	typedef	view<cid_t>		vcid;
 	typedef	view<ccid_t>	vccid;
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG, uint8_t)
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hidden		, 0x01U);	// Prevents from drawing the control and its children
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Disabled	, 0x02U);	// Prevents the control from responding to user interaction
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG, Hovered	, 0x04U);	// Modifies behavior depending on whether the mouse pointer top is inside the control area.
@@ -57,7 +57,7 @@ namespace gpk
 	inlcxpr	GUI_CONTROL_FLAG	setUnused		(GUI_CONTROL_FLAG & state, bool value)								noexcept	{ return state = bit_set(state, GUI_CONTROL_FLAG_Unused, value); }
 
 
-	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, uint8_t)
+	GDEFINE_ENUM_TYPE (EVENT_GUI_CONTROL, u0_t)
 	GDEFINE_ENUM_VALUE(EVENT_GUI_CONTROL, StateChange, 2);
 
 	struct SChangeControlState { 
@@ -71,10 +71,10 @@ namespace gpk
 		stateChange.Clear		= ::gpk::bit_clear(oldState, newState);
 		stateChange.Set			= ::gpk::bit_clear(newState, oldState);
 		gpk_gui_printf("Control state change: %i", iControl);
-		for(uint32_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
-			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((uint8_t)i);
-			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
-			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (uint32_t)bit, ::gpk::get_value_namep(bit));
+		for(::gpk::u2_t i = 0; i < 8 * sizeof(GUI_CONTROL_FLAG); ++i) {
+			const GUI_CONTROL_FLAG bit = bit_make<GUI_CONTROL_FLAG>((u0_t)i);
+			if(bit & stateChange.Set  ) gpk_gui_printf("State set  : (0x%X) %s", (::gpk::u2_t)bit, ::gpk::get_value_namep(bit));
+			if(bit & stateChange.Clear) gpk_gui_printf("State clear: (0x%X) %s", (::gpk::u2_t)bit, ::gpk::get_value_namep(bit));
 		}
 		return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_GUI, ::gpk::EVENT_GUI_CONTROL_StateChange, stateChange); 
 	}
@@ -92,7 +92,7 @@ namespace gpk
 		const _tState			oldState		= state;
 		state				= funcSetValue();
 		if(oldState != state)
-			es_if_failed(::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
+			if_fail_e(::gpk::eventEnqueueGuiControlStateChange(eventQueue, iControl, oldState, state));
 		return state;
 	}
 
@@ -129,7 +129,7 @@ namespace gpk
 #endif // GPK_GUI_CONTROL_FLAG_H_23627
 
 
-	//GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG_EX, uint8_t)
+	//GDEFINE_ENUM_TYPE(GUI_CONTROL_FLAG_EX, u0_t)
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Open		, 0x01U);
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Locked		, 0x02U);
 	//GDEFINE_ENUM_VALUE(GUI_CONTROL_FLAG_EX, Expanded	, 0x04U);
@@ -152,3 +152,5 @@ namespace gpk
 	//inlcxpr	GUI_CONTROL_FLAG_EX	setMaximized		(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	noexcept	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Maximized		, value); }
 	//inlcxpr	GUI_CONTROL_FLAG_EX	setFullScreen		(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	noexcept	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_FullScreen	, value); }
 	//inlcxpr	GUI_CONTROL_FLAG_EX	setActive			(GUI_CONTROL_FLAG_EX & state, const GUI_CONTROL_FLAG_EX mask, bool value)	noexcept	{ return state = bit_set_masked(state, mask, GUI_CONTROL_FLAG_EX_Active		, value); }
+
+

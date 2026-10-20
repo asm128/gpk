@@ -13,16 +13,16 @@ namespace gpk
 		::gpk::aobj<_tElement>		Elements;
 		::gpk::au3_t				UnusedData;
 
-		inlcxpr	const _tElement&	operator[]					(uint32_t index)			const				{ return Elements[index]; }
-		inlcxpr	_tElement&			operator[]					(uint32_t index)								{ return Elements[index]; }
+		inlcxpr	const _tElement&	operator[]					(::gpk::u2_t index)			const				{ return Elements[index]; }
+		inlcxpr	_tElement&			operator[]					(::gpk::u2_t index)								{ return Elements[index]; }
 
-		inlcxpr	uint32_t			size						()							const	noexcept	{ return Elements.size(); }
+		inlcxpr	::gpk::u2_t			size						()							const	noexcept	{ return Elements.size(); }
 		::gpk::error_t				push_back					(const _tElement & toPush)						{
 			const ::gpk::cid_t				elemIndex					= (::gpk::cid_t)Elements.push_back(toPush);
-			ree_if(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
-			stacxpr	uint32_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::BYTE_SIZE;
+			if_true_fef(failed(elemIndex), "%s", "Failed to add element to container! Out of memory?");
+			stacxpr	::gpk::u2_t				boolContainerElementSize	= sizeof(uint64_t) * ::gpk::BYTE_SIZE;
 			gpk_necs(UnusedData.resize((elemIndex + 1) / boolContainerElementSize + 1));
-			Unused						= {UnusedData.begin(), (uint32_t)(elemIndex + 1)};
+			Unused						= {UnusedData.begin(), (::gpk::u2_t)(elemIndex + 1)};
 			Unused[elemIndex]			= false;
 			return elemIndex;
 		}
@@ -55,3 +55,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_GUI_DESKTOP_H_23627
+
+

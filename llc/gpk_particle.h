@@ -67,7 +67,7 @@ namespace gpk
 
 	tplt<tpnm _tElement>
 	::gpk::error_t			integrate					(const ::gpk::view<::gpk::SParticle2<_tElement>>& particles, ::gpk::apod<::gpk::SParticle2State>& particleStates, ::gpk::view<::gpk::SParticle2<_tElement>>& particlesNext, double timeElapsed, double timeElapsedHalfSquared)			{
-		for(uint32_t iParticle = 0, particleCount = (uint32_t)particleStates.size(); iParticle < particleCount; ++iParticle)
+		for(::gpk::u2_t iParticle = 0, particleCount = (::gpk::u2_t)particleStates.size(); iParticle < particleCount; ++iParticle)
 			if(particleStates[iParticle].RequiresProcessing()) {
 				::gpk::SParticle2<_tElement>												& particleNext								= particlesNext[iParticle] = particles[iParticle];	// Copy the current particle state to the next
 				::gpk::particleIntegratePosition(particleNext.Forces.Velocity, timeElapsed, timeElapsedHalfSquared, particleNext.Position);
@@ -91,10 +91,10 @@ namespace gpk
 		::gpk::error_t							Integrate									(::gpk::view<TParticle>& particleNext, double timeElapsed, double timeElapsedHalfSquared)			{ return ::gpk::integrate(Particle, ParticleState, particleNext, timeElapsed, timeElapsedHalfSquared);		}
 		// --------------------------------------------------------
 		::gpk::error_t							AddParticle					(const TParticle& particleData)																			{
-			const uint32_t								particleCount								= (uint32_t)ParticleState.size();
+			const ::gpk::u2_t								particleCount								= (::gpk::u2_t)ParticleState.size();
 			stacxpr	const ::gpk::SParticle2State		initialParticleState						= {false, true};
 
-			for(uint32_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
+			for(::gpk::u2_t iBody = 0; iBody < particleCount; ++iBody)	// Check if there is any unused particle that we can recycle.
 				if( ParticleState	[iBody].Unused ) {
 					ParticleState	[iBody]													= initialParticleState;
 					Particle		[iBody]													=
@@ -160,9 +160,9 @@ namespace gpk
 
 	// simple particle force integrator
 	struct SParticles3 {
-		::gpk::an3f32					OldPosition			= {};
-		::gpk::an3f32					Position			= {};
-		::gpk::an3f32					Direction			= {};
+		::gpk::an3f2_t					OldPosition			= {};
+		::gpk::an3f2_t					Position			= {};
+		::gpk::an3f2_t					Direction			= {};
 		::gpk::af2_t					Speed				= {};
 
 		::gpk::error_t					IntegrateSpeed		(double secondsLastFrame);
@@ -176,3 +176,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_PARTICLE_H_23627
+
+

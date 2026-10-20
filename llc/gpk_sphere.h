@@ -5,34 +5,36 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	tplt<tpnm T> 
-	struct sphere { 
-		double			Radius;
-		::gpk::n3<T>	Center;
+#pragma pack(push, 1)
+	tplT struct sphere {
+		f3_t	Radius;
+		n3<T>	Center;
 
-		GPK_DEFAULT_OPERATOR(sphere<T>, Center == other.Center && Radius == other.Radius); 
+		GPK_DEFAULT_OPERATOR(sphere<T>, Center == other.Center && Radius == other.Radius);
 	};
-	typedef sphere<float>		spheref32, spheref;
-	typedef sphere<double>		spheref64, sphered;
-	typedef sphere<uint8_t>		sphereu8;
-	typedef sphere<uint16_t>	sphereu16;
-	typedef sphere<uint32_t>	sphereu32;
-	typedef sphere<uint64_t>	sphereu64;
-	typedef sphere<int8_t>		spherei8;
-	typedef sphere<int16_t>		spherei16;
-	typedef sphere<int32_t>		spherei32;
-	typedef sphere<int64_t>		spherei64;
-
-	// ---- Collision
-	// Returns the volume of a sphere. This is used to calculate how to recurse into the bounding volume tree. For a bounding sphere it is a simple calculation.
-	tplt<tpnm T> stacxpr double	sphereSize		(const sphere<T> & sphere)								noexcept	{ return 1.3333333333333333 * ::gpk::math_pi * sphere.Radius * sphere.Radius * sphere.Radius; }
-	tplt<tpnm T> stacxpr bool	sphereOverlaps	(const sphere<T> & sphereA, const sphere<T> & sphereB)	noexcept	{
-		const double	distanceSquared	= (sphereA.Center - sphereB.Center).LengthSquared();
-		const double	radiiSum		= sphereA.Radius + sphereB.Radius;
-		return distanceSquared < (radiiSum * radiiSum);	// check squared distance against squared radius
-	}
 #pragma pack(pop)
-} // namespace
+
+	tydf sphere<uc_t>	sphereuc_t;	tdcs sphereuc_t	sphereuc_c;
+	tydf sphere<sc_t>	spheresc_t;	tdcs spheresc_t	spheresc_c;
+	tydf sphere<u0_t>	sphereu0_t;	tdcs sphereu0_t	sphereu0_c;
+	tydf sphere<u1_t>	sphereu1_t;	tdcs sphereu1_t	sphereu1_c;
+	tydf sphere<u2_t>	sphereu2_t;	tdcs sphereu2_t	sphereu2_c;
+	tydf sphere<u3_t>	sphereu3_t;	tdcs sphereu3_t	sphereu3_c;
+	tydf sphere<s0_t>	spheres0_t;	tdcs spheres0_t	spheres0_c;
+	tydf sphere<s1_t>	spheres1_t;	tdcs spheres1_t	spheres1_c;
+	tydf sphere<s2_t>	spheres2_t;	tdcs spheres2_t	spheres2_c;
+	tydf sphere<s3_t>	spheres3_t;	tdcs spheres3_t	spheres3_c;
+	tydf sphere<f2_t>	spheref2_t;	tdcs spheref2_t	spheref2_c;
+	tydf sphere<f3_t>	spheref3_t;	tdcs spheref3_t	spheref3_c;
+
+	tplT stxp f3_t	sphereSize		(cnst sphere<T> & value) nxpt	{ return 1.3333333333333333 * math_pi * value.Radius * value.Radius * value.Radius; }
+	tplT stxp bool	sphereOverlaps	(cnst sphere<T> & a, cnst sphere<T> & b) nxpt	{
+		cnst f3_t distanceSquared	= (a.Center - b.Center).LengthSquared();
+		cnst f3_t radiiSum			= a.Radius + b.Radius;
+		return distanceSquared < radiiSum * radiiSum;
+	}
+}
 
 #endif // GPK_SPHERE_H_23627
+
+

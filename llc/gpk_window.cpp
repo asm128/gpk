@@ -15,7 +15,7 @@
 		, SWP_NOOWNERZORDER | SWP_FRAMECHANGED
 	);
 #endif // GPK_WINDOWS
-	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= false;
 	return 0;
 }
@@ -28,12 +28,12 @@
 	HWND						windowHandle				= window.PlatformDetail.WindowHandle;
 	MONITORINFO					monitor_info				= {sizeof(monitor_info)};
 	RECT						windowsRect					= {};
-	ree_if(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
+	if_true_fef(FALSE == GetWindowRect(windowHandle, &windowsRect), "Cannot get window rect for hWnd(0x%x)", windowHandle);
 	window.WindowedWindowRect.Top		= (uint16_t)windowsRect.top		;
 	window.WindowedWindowRect.Left		= (uint16_t)windowsRect.left	;
 	window.WindowedWindowRect.Right		= (uint16_t)windowsRect.right	;
 	window.WindowedWindowRect.Bottom	= (uint16_t)windowsRect.bottom	;
-	ree_if(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
+	if_true_fef(FALSE == GetMonitorInfoA(MonitorFromWindow(windowHandle, MONITOR_DEFAULTTOPRIMARY), &monitor_info), "Cannot get MONITORINFO for hWnd(0x%x)", windowHandle);
 
 	const DWORD					style						= GetWindowLong(windowHandle, GWL_STYLE);
 	SetWindowLong(windowHandle, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
@@ -48,7 +48,7 @@
 		, uint16_t(monitor_info.rcMonitor.bottom - monitor_info.rcMonitor.top)
 		};
 #endif // GPK_WINDOWS
-	es_if(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
+	if_true_e(failed(::gpk::eventEnqueueScreenResize(window.EventQueue, window.Size)));
 	window.FullScreen		= true;
 	return 0;
 }
@@ -91,7 +91,7 @@
 #if defined(GPK_WINDOWS)
 ::gpk::error_t			drawBuffer				(::HDC hdc, ::gpk::SWindowPlatformDetail & offscreenDetail, int width, int height, const ::gpk::g8bgra& colorArray)				{
 	const uint32_t				bytesToCopy				= sizeof(::RGBQUAD) * colorArray.size();
-	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1_t();
+	::gpk::n2u1_c				metricsSource			= colorArray.metrics().u1();
 	::gpk::n2u1_c				prevSize				= {(uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight};
 	if( metricsSource.x != offscreenDetail.BitmapInfo.bmiHeader.biWidth 
 	 || metricsSource.y != offscreenDetail.BitmapInfo.bmiHeader.biHeight
@@ -119,7 +119,7 @@
 
 		::gpk::SWindowPlatformDetail::TOSWindowNativeTexel		* pixelBits						= 0;
 		offscreenDetail.IntermediateDeviceContext			= ::CreateCompatibleDC(hdc);    // <- note, we're creating, so it needs to be destroyed
-		ree_if(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
+		if_true_fef(0 == (offscreenDetail.IntermediateBitmap		= ::CreateDIBSection(offscreenDetail.IntermediateDeviceContext, &offscreenDetail.BitmapInfo, DIB_RGB_COLORS, (void**) &pixelBits, NULL, 0)), "%s", "Failed to create intermediate dib section.");
 		offscreenDetail.PixelBits							= {pixelBits, colorArray.area()};
 	}
 	const uint32_t lineWidth	= metricsSource.x * sizeof(::gpk::bgra);
@@ -129,14 +129,14 @@
 		memcpy(&offscreenDetail.PixelBits[y * metricsSource.x], &dest[(lastLine - y) * metricsSource.x], lineWidth);
 
 	::HBITMAP									hBmpOld										= (::HBITMAP)::SelectObject(offscreenDetail.IntermediateDeviceContext, offscreenDetail.IntermediateBitmap);    // <- altering state
-	ef_if(FALSE == ::BitBlt(hdc, 0, 0
+	if_true_ef(FALSE == ::BitBlt(hdc, 0, 0
 		, ::gpk::min(metricsSource.x, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biWidth)
 		, ::gpk::min(metricsSource.y, (uint16_t)offscreenDetail.BitmapInfo.bmiHeader.biHeight)
 		, offscreenDetail.IntermediateDeviceContext, 0, 0, SRCCOPY)
 		, "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it."
 	);
 	//::SetStretchBltMode(hdc, COLORONCOLOR);
-	//e_if(FALSE == ::StretchBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, colorArray.metrics().x, colorArray.metrics().y, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
+	//if_true_e(FALSE == ::StretchBlt(hdc, 0, 0, width, height, offscreenDetail.IntermediateDeviceContext, 0, 0, colorArray.metrics().x, colorArray.metrics().y, SRCCOPY), "%s", "Not sure why would this happen but probably due to mismanagement of the target size or the system resources. I've had it failing when I acquired the device too much and never released it.");
 	::SelectObject(hdc, hBmpOld);	// put the old bitmap back in the DC (restore state)
 	return 0;
 }
@@ -146,10 +146,10 @@
 	(void)displayInstance; (void)targetToPresent;
 #if defined(GPK_WINDOWS)
 	::HWND					windowHandle								= displayInstance.PlatformDetail.WindowHandle;
-	retwarn_gwarn_if(0 == windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
+	if_null_vwf(1, windowHandle, "%s", "presentTarget called without a valid window handle set for the main window.");
 	::HDC					dc											= ::GetDC(windowHandle);
-	ree_if(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
-	ef_if(failed(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
+	if_true_fef(0 == dc, "%s", "Failed to retrieve device context from the provided window handle.");
+	if_true_ef(failed(::drawBuffer(dc, displayInstance.PlatformDetail, displayInstance.Size.x, displayInstance.Size.y, targetToPresent)), "%s", "Not sure why this would happen.");
 	::ReleaseDC(windowHandle, dc);
 #elif defined(GPK_XCB)
 	(void)displayInstance; (void)targetToPresent;
@@ -158,3 +158,5 @@
 #endif // GPK_WINDOWS
 	return 0;
 }
+
+

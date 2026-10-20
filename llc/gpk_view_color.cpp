@@ -1,21 +1,21 @@
 #include "gpk_view_color.h"
 
-::gpk::error_t gpk::vcu82bgr8(const ::gpk::vcu8 & bytes, ::gpk::bgr8 & colorToSet) {
-	rees_if(sizeof(::gpk::bgr8) > bytes.size());
+::gpk::error_t gpk::vcu82bgr8(vcu0_t bytes, ::gpk::bgr8 & colorToSet) {
+	if_true_fe(szof(::gpk::bgr8) > bytes.size());
 	colorToSet.r = bytes[2]; 
 	colorToSet.g = bytes[1]; 
 	colorToSet.b = bytes[0]; 
 	return 3;
 }
 
-::gpk::error_t gpk::vcu82bgra8(const ::gpk::vcu8 & bytes, ::gpk::bgra8 & colorToSet) {
-	rees_if(sizeof(::gpk::bgra8) > bytes.size());
+::gpk::error_t gpk::vcu82bgra8(vcu0_t bytes, ::gpk::bgra8 & colorToSet) {
+	if_true_fe(szof(::gpk::bgra8) > bytes.size());
 	colorToSet.a = bytes[3];
 	colorToSet.r = bytes[2]; 
 	colorToSet.g = bytes[1]; 
 	colorToSet.b = bytes[0]; 
 	return 4;
-	//uint8_t readBytes = 0;
+	//u0_t readBytes = 0;
 	//switch(bytes.size()) {
 	//case 4: ++readBytes; colorToSet.a = bytes[3];
 	//case 3: ++readBytes; colorToSet.r = bytes[2]; if(bytes.size() == 3) colorToSet.a	= 0xFF;
@@ -26,3 +26,5 @@
 	//}
 	//return readBytes;
 }
+
+

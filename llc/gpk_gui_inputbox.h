@@ -1,108 +1,37 @@
 #include "gpk_gui.h"
 #include "gpk_virtual_keyboard.h"
-#include "gpk_system_key.h"
-#include "gpk_event_input.h"
-
-#include <limits.h>
 
 #ifndef GPK_GUI_INPUTBOX_H_23627
 #define GPK_GUI_INPUTBOX_H_23627
 
 namespace gpk
 {
-	::gpk::error_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk, uint8_t rowWidth, const ::gpk::vcu1_t & keys);
-	::gpk::error_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & vk);
+	::gpk::err_t			virtualKeyboardSetup	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & keyboard, ::gpk::u0_t rowWidth, ::gpk::n2u1_c & keySize, ::gpk::vcu1_c & keys);
+	::gpk::err_t			virtualKeyboardSetup437	(::gpk::SGUI & gui, ::gpk::SVirtualKeyboard & keyboard);
 
-	struct SInputBox {
-		cid_t					IdRoot				= {};
-		cid_t					IdText				= {};
-		::gpk::SVirtualKeyboard	VirtualKeyboard		= {};
-		::gpk::asc_t			Text				= {};
-		uint32_t				MaxLength			= 16;
-		bool					Editing				= false;
+	stct SInputBox {
+		::gpk::cid_t			IdRoot			= ::gpk::CID_INVALID;
+		::gpk::cid_t			IdText			= ::gpk::CID_INVALID;
+		::gpk::SVirtualKeyboard	VirtualKeyboard	= {};
+		::gpk::string			Text			= {};
+		::gpk::u2_t				MaxLength		= 16;
+		bool					Editing			= false;
 
-
-		inline	::gpk::error_t	SetText				(::gpk::SGUI & gui, ::gpk::vcst_t text) { return ::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text = text}); }
-		::gpk::error_t			Edit				(::gpk::SGUI & gui, bool editing) {
-			Editing					= editing;
+		inline	::gpk::err_t	SetText			(::gpk::SGUI & gui, ::gpk::vcst_t text)		{ rtrn ::gpk::controlTextSet(gui, IdText, (Text = text).cc()); }
+		::gpk::err_t			Edit			(::gpk::SGUI & gui, bool editing) {
+			Editing = editing;
 			gui.Controls.SetHidden(IdRoot, false == Editing);
-			return one_if(Editing);
+			rtrn one_if(Editing);
 		}
-#ifndef GPK_ATMEL		
+#ifndef GPK_ATMEL
 		// Returns INT_MAX if the (real or virtual) enter key was pressed.
-		::gpk::error_t			Update				(::gpk::SGUI & gui, const ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<const ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls) { 
-			if(false == Editing)
-				return 0;
-
-			cid_t						handledControl;
-			::gpk::apod<::gpk::SVirtualKeyboardEvent>	vkEvents;
-			gpk_necs(handledControl = (cid_t)::gpk::guiProcessControls(gui, processableControls, [&](::gpk::cid_t iControl) {
-				if(::gpk::virtualKeyboardHandleEvent(virtualKeyboard, iControl, vkEvents))
-					return ::gpk::error_t(handledControl = iControl);
-
-				return 0;
-			}));
-
-			::gpk::apobj<::gpk::SEventSystem>	sysEvents			= frameEvents;
-			for(uint32_t iEvent = 0; iEvent < vkEvents.size(); ++iEvent) {
-				switch(vkEvents[iEvent].Type) {
-				case ::gpk::VK_EVENT_RELEASE:
-					if(Text.size() < MaxLength) {
-						Text.push_back((sc_t)vkEvents[iEvent].ScanCode);
-						::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
-					}
-					break;
-				case ::gpk::VK_EVENT_EDIT:
-						 if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Backspace	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Backspace)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Enter		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Enter	)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Escape	) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Escape	)); } 
-					else if(vkEvents[iEvent].ScanCode == gpk::VK_SCANCODE_Clear		) { if_fail_e(::gpk::eventEnqueueKeyboardDown(sysEvents, gpk::SYSTEM_KEY_Clear	)); } 
-				}
-			}
-			;
-			bool						enterKeyPressed		= false;
-			sysEvents.for_each([this, &gui, &enterKeyPressed](auto ev) mutable { 
-				switch(ev->Type) { 
-				case ::gpk::SYSTEM_EVENT_Text: 
-					::gpk::eventExtractAndHandle<::gpk::EVENT_TEXT>(*ev, [this, &gui](auto cev) {
-						if(Text.size() < MaxLength)
-							if(cev.Data[0] >= 0x20 && cev.Data[0] <= 0x7F) {
-								Text.push_back(cev.Data[0]);
-								::gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text});
-							}
-						return 0;
-					});
-					break; 
-				case ::gpk::SYSTEM_EVENT_Keyboard: 
-					::gpk::eventExtractAndHandle<::gpk::EVENT_KEYBOARD>(*ev, [this, &gui, &enterKeyPressed](auto kev) mutable {
-						if(kev.Type == ::gpk::EVENT_KEYBOARD_Down) {
-							switch(kev.Data[0]) {
-							case ::gpk::SYSTEM_KEY_Escape		: Edit(gui, false);			break;
-							case ::gpk::SYSTEM_KEY_Enter		: enterKeyPressed = true;	break; 
-							case ::gpk::SYSTEM_KEY_Backspace	: 
-								if(Text.size()) {
-									gpk_necs(Text.pop_back());
-									gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
-								}
-								break;
-							case ::gpk::SYSTEM_KEY_Clear		: 
-								Text.clear();				
-								gpk_necs(gpk::controlTextSet(gui, IdText, ::gpk::vcs{Text})); 
-								break;
-							}
-						}
-						return 0; 
-					});
-					break; 
-				}
-				return 0;
-			});
-			return enterKeyPressed ? INT_MAX : handledControl ? handledControl : 0;
-		}
-#endif // GPK_ATMEL
+		::gpk::err_t			Update			(::gpk::SGUI & gui, cnst ::gpk::SVirtualKeyboard & virtualKeyboard, ::gpk::view<cnst ::gpk::pobj<::gpk::SEventSystem>> frameEvents, ::gpk::vcid processableControls);
+#endif
 	};
 
-	::gpk::error_t			inputBoxCreate		(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = -1);
-} // namespace
+	::gpk::err_t			inputBoxCreate	(::gpk::SInputBox & inputBox, ::gpk::SGUI & gui, ::gpk::cid_t iParent = ::gpk::CID_INVALID);
+} // namespace gpk
 
 #endif // GPK_GUI_INPUTBOX_H_23627
+
+

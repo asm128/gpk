@@ -295,3 +295,5 @@
 #define tplTndstinx	tplTnsix
 
 #endif	//	GPK_PLATFORM_GLOBALS_H_23627
+
+

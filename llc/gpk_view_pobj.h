@@ -6,8 +6,10 @@
 
 namespace gpk
 {
-	tplt <tpnm T>	using vpobj		= ::gpk::view<::gpk::pobj<T>>;
-	tplt <tpnm T>	using vcpobj	= ::gpk::view<const ::gpk::pobj<T>>;
+	tplT using	vpobj	= ::gpk::view<::gpk::pobj<T>>;
+	tplT using	vcpobj	= ::gpk::view<cnst ::gpk::pobj<T>>;
 } // namespace
 
 #endif // GPK_VIEW_POBJ_H_23627
+
+

@@ -8,82 +8,81 @@
 namespace gpk 
 {
 #pragma pack(push, 1)
-	tplt<tpnm _tDimension>	struct tri2 : public tri<::gpk::n2<_tDimension>>		{
-		typedef	_tDimension		T;
-		typedef	::gpk::n2<T>	TVertex;
+	tpl_t struct tri2 : public tri<::gpk::n2<_t>>		{
+		tydf	_t				T;
+		tydf	::gpk::n2<T>	TVertex;
 
 		using	tri<TVertex>	::A;
 		using	tri<TVertex>	::B;
 		using	tri<TVertex>	::C;
 		using	tri<TVertex>	::tri;
 
-		inlcxpr	tri2<float>		f2_t			()		const	noexcept	{ return {A.f2_t(), B.f2_t(), C.f2_t()}; }
-		inlcxpr	tri2<double>	f3_t			()		const	noexcept	{ return {A.f3_t(), B.f3_t(), C.f3_t()}; }
-		inlcxpr	tri2<uint8_t>	s0_t			()		const	noexcept	{ return {A.s0_t (), B.s0_t (), C.s0_t ()}; }
-		inlcxpr	tri2<uint16_t>	s1_t			()		const	noexcept	{ return {A.s1_t(), B.s1_t(), C.s1_t()}; }
-		inlcxpr	tri2<uint32_t>	s2_t			()		const	noexcept	{ return {A.s2_t(), B.s2_t(), C.s2_t()}; }
-		inlcxpr	tri2<uint64_t>	s3_t			()		const	noexcept	{ return {A.s3_t(), B.s3_t(), C.s3_t()}; }
-		inlcxpr	tri2<int8_t>	u0_t			()		const	noexcept	{ return {A.u0_t (), B.u0_t (), C.u0_t ()}; }
-		inlcxpr	tri2<int16_t>	u1_t			()		const	noexcept	{ return {A.u1_t(), B.u1_t(), C.u1_t()}; }
-		inlcxpr	tri2<int32_t>	u2_t			()		const	noexcept	{ return {A.u2_t(), B.u2_t(), C.u2_t()}; }
-		inlcxpr	tri2<int64_t>	u3_t			()		const	noexcept	{ return {A.u3_t(), B.u3_t(), C.u3_t()}; }
+		inxp	tri2<uc_t>		uc		()	csnx	{ return {A.uc(), B.uc(), C.uc()}; }
+		inxp	tri2<sc_t>		sc		()	csnx	{ return {A.sc(), B.sc(), C.sc()}; }
+		inxp	tri2<u0_t>		u0		()	csnx	{ return {A.u0(), B.u0(), C.u0()}; }
+		inxp	tri2<u1_t>		u1		()	csnx	{ return {A.u1(), B.u1(), C.u1()}; }
+		inxp	tri2<u2_t>		u2		()	csnx	{ return {A.u2(), B.u2(), C.u2()}; }
+		inxp	tri2<u3_t>		u3		()	csnx	{ return {A.u3(), B.u3(), C.u3()}; }
+		inxp	tri2<s0_t>		s0		()	csnx	{ return {A.s0(), B.s0(), C.s0()}; }
+		inxp	tri2<s1_t>		s1		()	csnx	{ return {A.s1(), B.s1(), C.s1()}; }
+		inxp	tri2<s2_t>		s2		()	csnx	{ return {A.s2(), B.s2(), C.s2()}; }
+		inxp	tri2<s3_t>		s3		()	csnx	{ return {A.s3(), B.s3(), C.s3()}; }
+		inxp	tri2<f2_t>		f2		()	csnx	{ return {A.f2(), B.f2(), C.f2()}; }
+		inxp	tri2<f3_t>		f3		()	csnx	{ return {A.f3(), B.f3(), C.f3()}; }
 
-		tplt<tpnm _tOther>
-		tri2<_tOther>			Cast		()		const	noexcept		{
+		tpl_t2	tri2<_t2>		Cast	()	csnx	{
 			return
-				{ A.tplt Cast<_tOther>()
-				, B.tplt Cast<_tOther>()
-				, C.tplt Cast<_tOther>()
+				{ A.tplt Cast<_t2>()
+				, B.tplt Cast<_t2>()
+				, C.tplt Cast<_t2>()
 				};
 		}
-		bool					CulledX		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
+		cxpr	bool			CulledX		(cnst ::gpk::minmax<T>& minMax)	csnx	{
 			return ((A.x  < minMax.Min) && (B.x  < minMax.Min) && (C.x  < minMax.Min))
 				|| ((A.x >= minMax.Max) && (B.x >= minMax.Max) && (C.x >= minMax.Max))
 				;
 		}
-		bool					CulledY		(const ::gpk::minmax<T>& minMax)	const	noexcept		{
+		cxpr	bool			CulledY		(cnst ::gpk::minmax<T>& minMax)	csnx	{
 			return ((A.y  < minMax.Min) && (B.y  < minMax.Min) && (C.y  < minMax.Min))
 				|| ((A.y >= minMax.Max) && (B.y >= minMax.Max) && (C.y >= minMax.Max))
 				;
 		}
 	};
-	typedef	tri2<sc_t>		tri2char;
-	typedef	tri2<uc_t>	tri2uchar;
-	typedef	tri2<float>		tri2f32;
-	typedef	tri2<double>	tri2f64;
-	typedef	tri2<uint8_t>	tri2u8;
-	typedef	tri2<uint16_t>	tri2u16;
-	typedef	tri2<uint32_t>	tri2u32;
-	typedef	tri2<uint64_t>	tri2u64;
-	typedef	tri2<int8_t>	tri2i8;
-	typedef	tri2<int16_t>	tri2i16;
-	typedef	tri2<int32_t>	tri2i32;
-	typedef	tri2<int64_t>	tri2i64;
+	tydf	tri2<uc_t>	tri2uc_t;	tdcs tri2uc_t	tri2uc_c;
+	tydf	tri2<sc_t>	tri2sc_t;	tdcs tri2sc_t	tri2sc_c;
+	tydf	tri2<u0_t>	tri2u0_t;	tdcs tri2u0_t	tri2u0_c;
+	tydf	tri2<u1_t>	tri2u1_t;	tdcs tri2u1_t	tri2u1_c;
+	tydf	tri2<u2_t>	tri2u2_t;	tdcs tri2u2_t	tri2u2_c;
+	tydf	tri2<u3_t>	tri2u3_t;	tdcs tri2u3_t	tri2u3_c;
+	tydf	tri2<s0_t>	tri2s0_t;	tdcs tri2s0_t	tri2s0_c;
+	tydf	tri2<s1_t>	tri2s1_t;	tdcs tri2s1_t	tri2s1_c;
+	tydf	tri2<s2_t>	tri2s2_t;	tdcs tri2s2_t	tri2s2_c;
+	tydf	tri2<s3_t>	tri2s3_t;	tdcs tri2s3_t	tri2s3_c;
+	tydf	tri2<f2_t>	tri2f2_t;	tdcs tri2f2_t	tri2f2_c;
+	tydf	tri2<f3_t>	tri2f3_t;	tdcs tri2f3_t	tri2f3_c;
 
-	typedef	minmax<tri2char>	minmaxtri2char;
-	typedef	minmax<tri2uchar>	minmaxtri2uchar;
-	typedef	minmax<tri2f32>		minmaxtri2f32;
-	typedef	minmax<tri2f64>		minmaxtri2f64;
-	typedef	minmax<tri2u8 >		minmaxtri2u8;
-	typedef	minmax<tri2u16>		minmaxtri2u16;
-	typedef	minmax<tri2u32>		minmaxtri2u32;
-	typedef	minmax<tri2u64>		minmaxtri2u64;
-	typedef	minmax<tri2i8 >		minmaxtri2i8;
-	typedef	minmax<tri2i16>		minmaxtri2i16;
-	typedef	minmax<tri2i32>		minmaxtri2i32;
-	typedef	minmax<tri2i64>		minmaxtri2i64;
+	tydf	minmax<tri2uc_t>	minmaxtri2uc_t;	tdcs minmaxtri2uc_t	minmaxtri2uc_c;
+	tydf	minmax<tri2sc_t>	minmaxtri2sc_t;	tdcs minmaxtri2sc_t	minmaxtri2sc_c;
+	tydf	minmax<tri2u0_t>	minmaxtri2u0_t;	tdcs minmaxtri2u0_t	minmaxtri2u0_c;
+	tydf	minmax<tri2u1_t>	minmaxtri2u1_t;	tdcs minmaxtri2u1_t	minmaxtri2u1_c;
+	tydf	minmax<tri2u2_t>	minmaxtri2u2_t;	tdcs minmaxtri2u2_t	minmaxtri2u2_c;
+	tydf	minmax<tri2u3_t>	minmaxtri2u3_t;	tdcs minmaxtri2u3_t	minmaxtri2u3_c;
+	tydf	minmax<tri2s0_t>	minmaxtri2s0_t;	tdcs minmaxtri2s0_t	minmaxtri2s0_c;
+	tydf	minmax<tri2s1_t>	minmaxtri2s1_t;	tdcs minmaxtri2s1_t	minmaxtri2s1_c;
+	tydf	minmax<tri2s2_t>	minmaxtri2s2_t;	tdcs minmaxtri2s2_t	minmaxtri2s2_c;
+	tydf	minmax<tri2s3_t>	minmaxtri2s3_t;	tdcs minmaxtri2s3_t	minmaxtri2s3_c;
+	tydf	minmax<tri2f2_t>	minmaxtri2f2_t;	tdcs minmaxtri2f2_t	minmaxtri2f2_c;
+	tydf	minmax<tri2f3_t>	minmaxtri2f3_t;	tdcs minmaxtri2f3_t	minmaxtri2f3_c;
 #pragma pack(pop)
 
-	tplt<tpnm T>
-	::gpk::tri2<T>&		translate		(::gpk::tri2<T> & triangle, const ::gpk::n2<T> & translation)	{
+	tplT	::gpk::n2<T>	triangleWeight	(cnst ::gpk::tri<T> & weights, cnst ::gpk::tri2<T> & values)	nxpt	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
+	tplT	::gpk::tri2<T>&	translate		(::gpk::tri2<T> & triangle, cnst ::gpk::n2<T> & translation)	nxpt	{
 		triangle.A			+= translation;
 		triangle.B			+= translation;
 		triangle.C			+= translation;
 		return triangle;
 	}
-
-	tplt<tpnm T>
-	::gpk::n2<T>		triangleWeight	(const ::gpk::tri<T> & weights, const ::gpk::tri2<T> & values)	{ return values.A * weights.A + values.B * weights.B + values.C * weights.C; }
 } // namespace 
 
 #endif // GPK_TRI2_H_23627
+

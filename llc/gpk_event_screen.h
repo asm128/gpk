@@ -6,7 +6,7 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (EVENT_SCREEN, uint8_t);
+	GDEFINE_ENUM_TYPE (EVENT_SCREEN, u0_t);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Create			,  0);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Destroy		,  1);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Close			,  2);
@@ -19,29 +19,31 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Hide			,  9);
 	GDEFINE_ENUM_VALUE(EVENT_SCREEN, Constraints	, 10);
 
-	typedef ::gpk::SEvent            <EVENT_SCREEN>	SScreenEvent;
-	typedef ::gpk::SEventView        <EVENT_SCREEN>	SScreenEventView;
-	typedef ::gpk::FEventHandler     <EVENT_SCREEN>	FScreenEvent;
-	typedef ::gpk::FEventHandlerConst<EVENT_SCREEN>	FScreenEventConst;
+	tydf ::gpk::SEvent            <EVENT_SCREEN>	SScreenEvent;
+	tydf ::gpk::SEventView        <EVENT_SCREEN>	SScreenEventView;
+	tydf ::gpk::FEventHandler     <EVENT_SCREEN>	FScreenEvent;
+	tydf ::gpk::FEventHandlerConst<EVENT_SCREEN>	FScreenEventConst;
 
-	struct SEventArgsScreenCreate {
+	stct SEventArgsScreenCreate {
 		::gpk::n2u1_t		Size;
 #ifdef GPK_WINDOWS
 		CREATESTRUCT		PlatformDetail;
 #endif
 	};
 
-	stainli	::gpk::error_t	eventEnqueueScreenDestroy		(::gpk::apobj<::gpk::SEventSystem> & queue)						{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Destroy, {}); }
-	stainli	::gpk::error_t	eventEnqueueScreenClose			(::gpk::apobj<::gpk::SEventSystem> & queue)						{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Close  , {}); }
-	stainli	::gpk::error_t	eventEnqueueScreenCreate		(::gpk::apobj<::gpk::SEventSystem> & queue, const SEventArgsScreenCreate & key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Create, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenActivate		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Activate	, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenDeactivate	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Deactivate	, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenRedraw		(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Redraw		, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenShow			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Show		, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenHide			(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Hide		, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenConstraints	(::gpk::apobj<::gpk::SEventSystem> & queue, uint8_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Constraints, key); }
-	stainli	::gpk::error_t	eventEnqueueScreenMove			(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Move		, coord); }
-	stainli	::gpk::error_t	eventEnqueueScreenResize		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t size)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Resize		, size); }
+	stin	::gpk::error_t	eventEnqueueScreenDestroy		(::gpk::apobj<::gpk::SEventSystem> & queue)						{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Destroy, {}); }
+	stin	::gpk::error_t	eventEnqueueScreenClose			(::gpk::apobj<::gpk::SEventSystem> & queue)						{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Close  , {}); }
+	stin	::gpk::error_t	eventEnqueueScreenCreate		(::gpk::apobj<::gpk::SEventSystem> & queue, const SEventArgsScreenCreate & key)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Create, key); }
+	stin	::gpk::error_t	eventEnqueueScreenActivate		(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Activate	, key); }
+	stin	::gpk::error_t	eventEnqueueScreenDeactivate	(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Deactivate	, key); }
+	stin	::gpk::error_t	eventEnqueueScreenRedraw		(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Redraw		, key); }
+	stin	::gpk::error_t	eventEnqueueScreenShow			(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Show		, key); }
+	stin	::gpk::error_t	eventEnqueueScreenHide			(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Hide		, key); }
+	stin	::gpk::error_t	eventEnqueueScreenConstraints	(::gpk::apobj<::gpk::SEventSystem> & queue, u0_t key)		{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Constraints, key); }
+	stin	::gpk::error_t	eventEnqueueScreenMove			(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t coord)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Move		, coord); }
+	stin	::gpk::error_t	eventEnqueueScreenResize		(::gpk::apobj<::gpk::SEventSystem> & queue, ::gpk::n2u1_t size)	{ return ::gpk::eventEnqueueChild(queue, ::gpk::SYSTEM_EVENT_Screen, ::gpk::EVENT_SCREEN_Resize		, size); }
 } // namespace 
 
 #endif // GPK_EVENT_SCREEN_H_23627
+
+

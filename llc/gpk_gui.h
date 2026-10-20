@@ -43,8 +43,8 @@ namespace gpk
 
 		::gpk::SGUIZoom						LastZoom			= {};
 		::gpk::SGUIZoom						Zoom				= {};
-		uint16_t							SelectedFont		= 7;
-		uint16_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
+		::gpk::u1_t							SelectedFont		= 7;
+		::gpk::u1_t							ThemeDefault		= ::gpk::ASCII_COLOR_CYAN * 16 + 8;
 		::gpk::GUI_COLOR_MODE				ColorModeDefault	= ::gpk::GUI_COLOR_MODE_3D;//::gpk::GUI_COLOR_MODE_DEFAULT;
 		bool								InputModeTouch		= true;
 	};
@@ -61,9 +61,9 @@ namespace gpk
 	::gpk::cid_t			controlCreateChild				(::gpk::SGUI & gui, cid_t iParent);
 	::gpk::error_t			controlSetParent				(::gpk::SGUI & gui, cid_t iControl, cid_t iParent);
 	::gpk::error_t			controlDrawHierarchy			(::gpk::SGUI & gui, cid_t iControl, ::gpk::g8bgra target);
-	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, const ::gpk::vcs & text);
+	::gpk::error_t			controlTextSet					(::gpk::SGUI & gui, cid_t iControl, vcst_t text);
 	::gpk::error_t			controlFontSet					(::gpk::SGUI & gui, cid_t iControl, int16_t iFont);
-	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<uint32_t> & targetSize);
+	//::gpk::error_t			controlUpdateMetrics			(::gpk::SGUI & gui, int32_t iControl, const ::gpk::n2<::gpk::u2_t> & targetSize);
 	::gpk::error_t			controlUpdateMetricsTopToDown	(::gpk::SGUI & gui, cid_t iControl, const ::gpk::n2u1_t & targetSize, bool forceUpdate);
 	::gpk::error_t			controlMetricsInvalidate		(::gpk::SGUI & gui, cid_t iControl);
 	::gpk::error_t			controlHidden					(const ::gpk::SGUI & gui, cid_t iControl);
@@ -76,3 +76,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_GUI_H_23627
+
+

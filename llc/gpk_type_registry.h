@@ -6,21 +6,21 @@
 namespace gpk
 {
 	struct STypeRegistry {
-		::gpk::avcsc_t				Names;
-		::gpk::au2_t				MemberCount;
+		aobj<vcst_t>			Names;
+		au2_t					MemberCount;
 
-		static	STypeRegistry&	GetGlobalInstance	()	noexcept	{
-			static STypeRegistry		instance;
-			return instance;
+		sttc	STypeRegistry&	GetGlobalInstance	()	nxpt	{
+			sttc STypeRegistry			instance;
+			rtrn instance;
 		}
 	};
 
 	tplt<tpnm _t>
 	struct STypeRegistrator {
-		operator				int					()	{ return 0; }
+		oper					s2_t				()	{ return 0; }
 
 								STypeRegistrator	()	{
-			::gpk::STypeRegistry		& typeRegistry		= ::gpk::STypeRegistry::GetGlobalInstance();
+			STypeRegistry				& typeRegistry		= ::gpk::STypeRegistry::GetGlobalInstance();
 			typeRegistry.Names		.push_back({_t::gpk_type_name(), _t::gpk_type_name_len()});
 			typeRegistry.MemberCount.push_back(0);
 		}
@@ -28,21 +28,23 @@ namespace gpk
 
 #define GPK_BEGIN_POD(_structName)	struct _structName {
 
-#define GPK_END_POD(_structName)																									\
-	public:																															\
-		stincxp	::gpk::vcsc_t	gpk_type_name			()		noexcept	{ return {::gpk::size(#_structName) - 1, #_structName}; }	\
-		stincxp	uint32_t		gpk_type_name_len		()		noexcept	{ return ::gpk::size(#_structName) - 1; }					\
-	};																																\
+#define GPK_END_POD(_structName)																							\
+	public:																													\
+		sinx	::gpk::vcsc_t	gpk_type_name			()	nxpt	{ rtrn {::gpk::size(#_structName) - 1, #_structName}; }	\
+		sinx	uint32_t		gpk_type_name_len		()	nxpt	{ rtrn ::gpk::size(#_structName) - 1; }					\
+	};																														\
 	static	const int	gpk_tr_##_structName	= ::gpk::STypeRegistrator<_structName>();
 
 #define GPK_STRUCT_MEMBER_DESC_NAME(_name)	_gpk_dsc_##_name
 
-#define GPK_STRUCT_MEMBER(_type, _name, ...)																			\
-	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																			\
-		stincxp	::gpk::vcsc_t	gpk_member_type_name	()		noexcept	{ return {::gpk::size(#_type) - 1, #_type}; }	\
-		stincxp	::gpk::vcsc_t	gpk_member_name			()		noexcept	{ return {::gpk::size(#_name) - 1, #_name}; }	\
-	};																													\
+#define GPK_STRUCT_MEMBER(_type, _name, ...)																	\
+	struct GPK_STRUCT_MEMBER_DESC_NAME(_name) {																	\
+		sinx	::gpk::vcsc_t	gpk_member_type_name	()	nxpt	{ rtrn {::gpk::size(#_type) - 1, #_type}; }	\
+		sinx	::gpk::vcsc_t	gpk_member_name			()	nxpt	{ rtrn {::gpk::size(#_name) - 1, #_name}; }	\
+	};																											\
 	_type				_name
 }
 
 #endif // GPK_TYPE_REGISTRY_H_23627
+
+

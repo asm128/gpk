@@ -23,42 +23,44 @@ namespace gpk
 
 #pragma pack(push, 1)
 	struct SExpressionToken {
-		int32_t							ParentIndex;
-		EXPRESSION_READER_TYPE			Type;
-		::gpk::sliceu2_t				Span;
-		bool							ClosingCondition				= false;
+		int32_t					ParentIndex;
+		EXPRESSION_READER_TYPE	Type;
+		sliceu2_t				Span;
+		bool					ClosingCondition				= false;
 	};
 
 	struct SExpressionReaderState {
-		uint32_t						IndexCurrentChar				= 0;
-		int32_t							IndexCurrentElement				= -1;
-		::gpk::SExpressionToken			* CurrentElement				= 0;
-		int32_t							NestLevel						= 0;
-		sc_t							CharCurrent						= 0;
-		bool							Escaping						= false;
-		bool							ExpectsSeparator				= false;
-		bool							InsideString					= false;
-		sc_t							ClosingQuotes					= '0';
+		u2_t					IndexCurrentChar				= 0;
+		s2_t					IndexCurrentElement				= -1;
+		SExpressionToken		* CurrentElement				= 0;
+		s2_t					NestLevel						= 0;
+		sc_t					CharCurrent						= 0;
+		bool					Escaping						= false;
+		bool					ExpectsSeparator				= false;
+		bool					InsideString					= false;
+		sc_t					ClosingQuotes					= '0';
 	};
 #pragma pack(pop)
 
 	struct SExpressionNode {
-		SExpressionToken				* Token							= 0;
-		SExpressionNode					* Parent						= 0;
-		::gpk::apobj<SExpressionNode>	Children						= {};
-		int32_t							ObjectIndex						= -1;
+		SExpressionToken		* Token							= 0;
+		SExpressionNode			* Parent						= 0;
+		apobj<SExpressionNode>	Children						= {};
+		int32_t					ObjectIndex						= -1;
 	};
 
 	struct SExpressionReader {
-		::gpk::apod<::gpk::SExpressionToken>	Token;
-		::gpk::aobj<::gpk::vcsc_t>				View;
-		::gpk::apobj<::gpk::SExpressionNode>	Tree;
-		::gpk::SExpressionReaderState			StateRead;
-		::gpk::pobj<::gpk::SExpressionReader>	SubExpressionCache;
+		apod<SExpressionToken>	Token;
+		aobj<vcst_t>			View;
+		apobj<SExpressionNode>	Tree;
+		SExpressionReaderState	StateRead;
+		pobj<SExpressionReader>	SubExpressionCache;
 	};
 
-	::gpk::error_t					expressionReaderParse			(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
-	::gpk::error_t					expressionReaderParseStep		(::gpk::SExpressionReader & reader, const ::gpk::vcsc_t & expression);
+	error_t					expressionReaderParse			(SExpressionReader & reader, vcst_t expression);
+	error_t					expressionReaderParseStep		(SExpressionReader & reader, vcst_t expression);
 } // namespace
 
 #endif // GPK_EXPRESSION_H_23627
+
+

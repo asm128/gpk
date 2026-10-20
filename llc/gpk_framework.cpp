@@ -28,15 +28,15 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 		::gpk::n2<uint32_t>																	dpi											= {96, 96};
 #define GPK_WINDOWS7_COMPAT
 #if defined(GPK_WINDOWS7_COMPAT)
-		if((framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
+		if((framework.GUI->Zoom.DPI * 96).u2() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::SWindow::TOffscreen>												offscreen									= framework.RootWindow.BackBuffer;
-			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().u1_t(), true);
+			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics().u1(), true);
 		}
 #else
 		HMONITOR				hMonitor									= ::MonitorFromPoint(point, MONITOR_DEFAULTTONEAREST);
 		HRESULT			hr											= ::GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpi.x, &dpi.y);
-		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u2_t() != dpi) {
+		if(0 == hr && (framework.GUI->Zoom.DPI * 96).u2() != dpi) {
 			framework.GUI->Zoom.DPI																	= {dpi.x / 96.0, dpi.y / 96.0};
 			::gpk::pobj<::gpk::rt<::gpk::SFramework::TTexel, uint32_t>>					offscreen									= framework.RootWindow.BackBuffer;
 			::gpk::guiUpdateMetrics(*framework.GUI, offscreen->Color.View.metrics(), true);
@@ -127,14 +127,14 @@ static	::gpk::error_t	updateDPI									(::gpk::SFramework & framework)									
 #else
 	::gpk::error_t				updateResult		= ::gpk::windowUpdate(mainWindow);
 #endif
-	rees_if(gpk::failed(updateResult));
-	rvis_if(1, mainWindow.Closed);
-	rvis_if(1, 1 == updateResult);
+	if_true_fe(gpk::failed(updateResult));
+	if_true_vi(1, mainWindow.Closed);
+	if_true_vi(1, 1 == updateResult);
 	::gpk::pobj<::gpk::SWindow::TOffscreen>	offscreen	= framework.RootWindow.BackBuffer;
 #if defined(GPK_WINDOWS)
 	if(mainWindow.PlatformDetail.WindowHandle) {
 		if(offscreen && offscreen->Color.Texels.size())
-			e_if(gpk::failed(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
+			if_true_e(gpk::failed(::gpk::windowPresentTarget(mainWindow, offscreen->Color.View)));
 	}
 #endif
 	::gpk::SGUI						& gui				= *framework.GUI;
@@ -202,8 +202,8 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 	::gpk::pobj<::gpk::SEventSystem>	newSystemEvent;
 	switch(uMsg) {
 	default: break;
-	case WM_CLOSE			: e_if(gpk::failed(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueue))); ::DestroyWindow(hWnd); return 0;
-	case WM_DESTROY			: e_if(gpk::failed(::gpk::eventEnqueueScreenDestroy(mainDisplay.EventQueue))); 
+	case WM_CLOSE			: if_true_e(gpk::failed(::gpk::eventEnqueueScreenClose  (mainDisplay.EventQueue))); ::DestroyWindow(hWnd); return 0;
+	case WM_DESTROY			: if_true_e(gpk::failed(::gpk::eventEnqueueScreenDestroy(mainDisplay.EventQueue))); 
 		displayDetail.WindowHandle									= 0;
 		mainDisplay.Closed											= true;
 		::PostQuitMessage(0);
@@ -212,15 +212,15 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		RECT								rect					= {};
 		GetClientRect(hWnd, &rect);
 		::gpk::n2u1_t						newMetrics				= {(uint16_t)(rect.right - rect.left), (uint16_t)(rect.bottom - rect.top)};
-		e_if(gpk::failed(::gpk::eventEnqueueScreenCreate(mainDisplay.EventQueue, {newMetrics, *(const CREATESTRUCTA*)lParam})));
+		if_true_e(gpk::failed(::gpk::eventEnqueueScreenCreate(mainDisplay.EventQueue, {newMetrics, *(const CREATESTRUCTA*)lParam})));
 		break;
 	}
 	case WM_SHOWWINDOW		: { 
 		if(0 == wParam) {
-			e_if(gpk::failed(::gpk::eventEnqueueScreenHide(mainDisplay.EventQueue, (uint8_t)lParam))); 
+			if_true_e(gpk::failed(::gpk::eventEnqueueScreenHide(mainDisplay.EventQueue, (uint8_t)lParam))); 
 		} 
 		else {
-			e_if(gpk::failed(::gpk::eventEnqueueScreenShow(mainDisplay.EventQueue, (uint8_t)lParam)));
+			if_true_e(gpk::failed(::gpk::eventEnqueueScreenShow(mainDisplay.EventQueue, (uint8_t)lParam)));
 			mainDisplay.Repaint = true; 
 		}
 		break;
@@ -249,15 +249,15 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		if(input.MouseCurrent.Deltas.x || input.MouseCurrent.Deltas.y)
 			mainDisplay.Repaint				= true;
 
-		e_if(gpk::failed(::gpk::eventEnqueueMousePosition(mainDisplay.EventQueue, input.MouseCurrent.Position))); 
+		if_true_e(gpk::failed(::gpk::eventEnqueueMousePosition(mainDisplay.EventQueue, input.MouseCurrent.Position))); 
 
 		break;
 		}
 	case WM_ACTIVATE: {
 		switch(wParam) {
-		case WA_ACTIVE		: e_if(gpk::failed(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 0))); /*XInputEnable(1); */break; // Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
-		case WA_CLICKACTIVE	: e_if(gpk::failed(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 1))); /*XInputEnable(1); */break; // Activated by a mouse click.
-		case WA_INACTIVE	: e_if(gpk::failed(::gpk::eventEnqueueScreenDeactivate(mainDisplay.EventQueue, 0))); /*XInputEnable(0); */break; 
+		case WA_ACTIVE		: if_true_e(gpk::failed(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 0))); /*XInputEnable(1); */break; // Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+		case WA_CLICKACTIVE	: if_true_e(gpk::failed(::gpk::eventEnqueueScreenActivate  (mainDisplay.EventQueue, 1))); /*XInputEnable(1); */break; // Activated by a mouse click.
+		case WA_INACTIVE	: if_true_e(gpk::failed(::gpk::eventEnqueueScreenDeactivate(mainDisplay.EventQueue, 0))); /*XInputEnable(0); */break; 
 		}
 		break;
 	}
@@ -273,11 +273,11 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 			break;
 		}
 		if(lParam) {
-			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u1_t();
+			::gpk::n2<uint16_t>					newMetrics					= ::gpk::n2<WORD>{LOWORD(lParam), HIWORD(lParam)}.u1();
 			RECT								windowrect					= {};
 			GetClientRect(hWnd, &windowrect);
 			newMetrics = {uint16_t(windowrect.right - windowrect.left), uint16_t(windowrect.bottom - windowrect.top)};
-			if(newMetrics != mainDisplay.Size.u1_t()) {
+			if(newMetrics != mainDisplay.Size.u1()) {
 				mainDisplay.PreviousSize		= mainDisplay.Size;
 				mainDisplay.Size				= newMetrics;
 				mainDisplay.Resized				= true;
@@ -289,7 +289,7 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 #else
 				SetWindowText(mainDisplay.PlatformDetail.WindowHandle, buffer);
 #endif
-				e_if(gpk::failed(::gpk::eventEnqueueScreenResize(mainDisplay.EventQueue, newMetrics)));
+				if_true_e(gpk::failed(::gpk::eventEnqueueScreenResize(mainDisplay.EventQueue, newMetrics)));
 			}
 		}
 		break;
@@ -297,12 +297,12 @@ static	LRESULT WINAPI	mainWndProc				(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 		info_printf("%s", "WM_PAINT");
 		mainDisplay.Repaint		= true;
 		break;
-	//case MM_JOY1BUTTONDOWN	: e_if(failed(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
-	//case MM_JOY1BUTTONUP		: e_if(failed(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been released.
-	//case MM_JOY1ZMOVE			: e_if(failed(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID1 changed position in the z-direction.
-	//case MM_JOY2BUTTONDOWN	: e_if(failed(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been pressed.
-	//case MM_JOY2BUTTONUP		: e_if(failed(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been released.
-	//case MM_JOY2ZMOVE			: e_if(failed(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID2 changed position in the x- or y-direction
+	//case MM_JOY1BUTTONDOWN	: if_true_e(failed(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been pressed.
+	//case MM_JOY1BUTTONUP		: if_true_e(failed(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID1 has been released.
+	//case MM_JOY1ZMOVE			: if_true_e(failed(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID1 changed position in the z-direction.
+	//case MM_JOY2BUTTONDOWN	: if_true_e(failed(::gpk::eventEnqueueJoyPadDown		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been pressed.
+	//case MM_JOY2BUTTONUP		: if_true_e(failed(::gpk::eventEnqueueJoyPadUp			(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// A button on joystick JOYSTICKID2 has been released.
+	//case MM_JOY2ZMOVE			: if_true_e(failed(::gpk::eventEnqueueJoyPadZMove		(mainDisplay.EventQueue, 0))); input.MouseCurrent.ButtonState[0] = 1; *(LPARAM*)&newEvent.Data[1] = lParam; mainDisplay.EventQueueOld.push_back(newEvent); mainDisplay.Repaint = true; break;// Joystick JOYSTICKID2 changed position in the x- or y-direction
 	//case MM_JOY1MOVE		: 
 	//case MM_JOY2MOVE		: { 
 	//	const sc_t							iJoystick					= (MM_JOY2MOVE == uMsg) ? 1 : 0;
@@ -393,13 +393,13 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 	return 0;
 }
 
-::gpk::error_t			gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail& runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
+::gpk::error_t			gpk::mainWindowCreate	(::gpk::SWindow& mainWindow, ::gpk::SRuntimeValuesDetail & runtimeValues, ::gpk::pobj<SInput>& displayInput)	{
 	if(0 == displayInput.get_ref())
 		displayInput.create();
 
 #if defined(GPK_WINDOWS)
 	::gpk::SWindowPlatformDetail	& displayDetail			= mainWindow.PlatformDetail;
-	HINSTANCE						hInstance				= runtimeValues.EntryPointArgsWin.hInstance;
+	HINSTANCE						hInstance				= runtimeValues.hInstance;
 	::initWndClass(hInstance, ::gpk::SWindowPlatformDetail::DefaultRootWindowClassName.begin(), ::mainWndProc, displayDetail.WindowClass);
 	::RegisterClassEx(&displayDetail.WindowClass);
 	::RECT							finalClientRect			= {100, 100, 100 + (LONG)mainWindow.Size.x, 100 + (LONG)mainWindow.Size.y};
@@ -413,7 +413,7 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 		, 0, 0, displayDetail.WindowClass.hInstance, &mainWindow
 		);
 
-	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.EntryPointArgsStd.ArgsCommandLine[0]);
+	::SetWindowTextA(displayDetail.WindowHandle, runtimeValues.lpCmdLine);
 	::ShowWindow	(displayDetail.WindowHandle, SW_SHOW);
 	//::UpdateWindow	(displayDetail.WindowHandle);
 #elif defined(GPK_XCB)
@@ -438,3 +438,4 @@ static	::gpk::error_t	xcbWindowCreate								(::gpk::SWindow & window) {
 }
 
 #endif
+

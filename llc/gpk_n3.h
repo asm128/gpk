@@ -21,28 +21,28 @@ namespace gpk
 		//
 		cxpr	Tn3			oper+			(cnst Tn3 & other)					csnx	{ return {x + other.x, y + other.y, z + other.z}; }
 		cxpr	Tn3			oper-			(cnst Tn3 & other)					csnx	{ return {x - other.x, y - other.y, z - other.z}; }
-		cxpr	Tn3			oper*			(double scalar)						csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(double scalar)						cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(int64_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(int64_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(uint64_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(uint64_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(int32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(int32_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
-		cxpr	Tn3			oper*			(uint32_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
-		cxpr	Tn3			oper/			(uint32_t scalar)					cnst	{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(f3_t scalar)						csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(f3_t scalar)						cnst		{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(s3_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(s3_t scalar)					cnst		{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(u3_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(u3_t scalar)					cnst		{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(s2_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(s2_t scalar)					cnst		{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
+		cxpr	Tn3			oper*			(u2_t scalar)					csnx	{ return {T(x * scalar), T(y * scalar), T(z * scalar)}; }
+		cxpr	Tn3			oper/			(u2_t scalar)					cnst		{ return {T(x / scalar), T(y / scalar), T(z / scalar)}; }
 		//
-		Tn3&				oper+=			(cnst Tn3 & other)					nxpt	{ x += other.x; y += other.y; z += other.z;	return *this; }
-		Tn3&				oper-=			(cnst Tn3 & other)					nxpt	{ x -= other.x; y -= other.y; z -= other.z;	return *this; }
-		Tn3&				oper*=			(double scalar)						nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
-		Tn3&				oper/=			(double scalar)								{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
-		Tn3&				oper*=			(s3_t scalar)						nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
-		Tn3&				oper/=			(s3_t scalar)								{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
-		Tn3&				oper*=			(s2_t scalar)						nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
-		Tn3&				oper/=			(s2_t scalar)								{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
-		Tn3&				oper*=			(u2_t scalar)						nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
-		Tn3&				oper/=			(u2_t scalar)								{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
-		Tn3&				oper*=			(u3_t scalar)						nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				oper+=			(cnst Tn3 & other)						nxpt	{ x += other.x; y += other.y; z += other.z;	return *this; }
+		Tn3&				oper-=			(cnst Tn3 & other)						nxpt	{ x -= other.x; y -= other.y; z -= other.z;	return *this; }
+		Tn3&				oper*=			(f3_t scalar)							nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				oper/=			(f3_t scalar)									{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				oper*=			(s3_t scalar)							nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				oper/=			(s3_t scalar)									{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				oper*=			(s2_t scalar)							nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				oper/=			(s2_t scalar)									{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				oper*=			(u2_t scalar)							nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
+		Tn3&				oper/=			(u2_t scalar)									{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
+		Tn3&				oper*=			(u3_t scalar)							nxpt	{ x = T(x * scalar); y = T(y * scalar); z = T(z * scalar); return *this; }
 		Tn3&				oper/=			(u3_t scalar)									{ x = T(x / scalar); y = T(y / scalar); z = T(z / scalar); return *this; }
 		//
 		cxpr	Tn3			oper-			()									csnx	{ return {T(x*-1), T(y*-1), T(z*-1)}; }
@@ -90,24 +90,26 @@ namespace gpk
 		tpl_t2
 		inxp	n3<_t2>		Cast				()									csnx	{ return {(_t2)x, (_t2)y, (_t2)z}; }
 
-		inxp	n3<u0_t>	u0_t				()									csnx	{ return Cast<::gpk::u0_t>(); }
-		inxp	n3<u1_t>	u1_t				()									csnx	{ return Cast<::gpk::u1_t>(); }
-		inxp	n3<u2_t>	u2_t				()									csnx	{ return Cast<::gpk::u2_t>(); }
-		inxp	n3<u3_t>	u3_t				()									csnx	{ return Cast<::gpk::u3_t>(); }
-		inxp	n3<s0_t>	s0_t				()									csnx	{ return Cast<::gpk::s0_t>(); }
-		inxp	n3<s1_t>	s1_t				()									csnx	{ return Cast<::gpk::s1_t>(); }
-		inxp	n3<s2_t>	s2_t				()									csnx	{ return Cast<::gpk::s2_t>(); }
-		inxp	n3<s3_t>	s3_t				()									csnx	{ return Cast<::gpk::s3_t>(); }
-		inxp	n3<f2_t>	f2_t				()									csnx	{ return Cast<::gpk::f2_t>(); }
-		inxp	n3<f3_t>	f3_t				()									csnx	{ return Cast<::gpk::f3_t>(); }
+		inxp	n3<uc_t>	uc					()									csnx	{ return Cast<uc_t>(); }
+		inxp	n3<sc_t>	sc					()									csnx	{ return Cast<sc_t>(); }
+		inxp	n3<u0_t>	u0					()									csnx	{ return Cast<u0_t>(); }
+		inxp	n3<u1_t>	u1					()									csnx	{ return Cast<u1_t>(); }
+		inxp	n3<u2_t>	u2					()									csnx	{ return Cast<u2_t>(); }
+		inxp	n3<u3_t>	u3					()									csnx	{ return Cast<u3_t>(); }
+		inxp	n3<s0_t>	s0					()									csnx	{ return Cast<s0_t>(); }
+		inxp	n3<s1_t>	s1					()									csnx	{ return Cast<s1_t>(); }
+		inxp	n3<s2_t>	s2					()									csnx	{ return Cast<s2_t>(); }
+		inxp	n3<s3_t>	s3					()									csnx	{ return Cast<s3_t>(); }
+		inxp	n3<f2_t>	f2					()									csnx	{ return Cast<f2_t>(); }
+		inxp	n3<f3_t>	f3					()									csnx	{ return Cast<f3_t>(); }
 
 		//
-		inxp	Tn3&		Area				()									csnx	{ return x * y * z; }
-		inxp	Tn3			Clamp				(cnst Tn3 & min, cnst Tn3 & max)	csnx	{ return {::gpk::clamped(x, min.x, max.x), ::gpk::clamped(y, min.y, max.y), ::gpk::clamped(z, min.z, max.z)}; }
-		inline	Tn3&		Set					(T value)							nxpt	{ x = y = z = value; return *this; }
-		inline	Tn3&		From				(T value)							nxpt	{ x = y = z = value; return *this; }
+		inxp	T			Volume				()									csnx	{ return x * y * z; }
+		inxp	Tn3			Clamp				(cnst Tn3 & min, cnst Tn3 & max)	csnx	{ return {clamped(x, min.x, max.x), clamped(y, min.y, max.y), clamped(z, min.z, max.z)}; }
+		inline	Tn3&		Set					(T value)								nxpt	{ x = y = z = value; return *this; }
+		inline	Tn3&		From				(T value)								nxpt	{ x = y = z = value; return *this; }
 
-		int					SetAxis				(uint32_t axisIndex, T value) {
+		int					SetAxis				(u2_t axisIndex, T value) {
 			switch(axisIndex) { 
 			case 0: x = value; return 0; 
 			case 1: y = value; return 1; 
@@ -115,7 +117,7 @@ namespace gpk
 			}
 			return -1;
 		}
-		int					SetOthers			(uint32_t axisExcluded, T value) {
+		int					SetOthers			(u2_t axisExcluded, T value) {
 			switch(axisExcluded) { 
 			case 0: y = z = value; break; 
 			case 1: x = z = value; break; 
@@ -124,19 +126,19 @@ namespace gpk
 			return -1;
 		}
 
-		inline	Tn3&		Scale				(double scalar)								nxpt	{ return *this *= scalar; }
+		inline	Tn3&		Scale				(f3_t scalar)								nxpt	{ return *this *= scalar; }
 		inline	Tn3&		Scale				(cnst Tn3 & other)							nxpt	{ x *= other.x; y *= other.y; z *= other.z; return *this; }
 		inxp	Tn3&		Normalize			()														{ cnst T sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
 
-		inline	Tn3			Scaled				(double scalar)						csnx	{ return Tn3{*this}.Scale(scalar); }
+		inline	Tn3			Scaled				(f3_t scalar)						csnx	{ return Tn3{*this}.Scale(scalar); }
 		inline	Tn3			Scaled				(cnst Tn3 & other)					csnx	{ return {x * other.x, y * other.y, z * other.z }; }
 		inxp	Tn3			Normalized			()									cnst				{ cnst T sqLen = LengthSquared(); return sqLen ? *this / ::sqrt(sqLen) : *this; }
 
-		cxpr	double		Dot					(cnst Tn3 & other)					csnx	{ return x * other.x + y * other.y + z * other.z; }
+		cxpr	f3_t		Dot					(cnst Tn3 & other)					csnx	{ return x * other.x + y * other.y + z * other.z; }
 		cxpr	T			LengthSquared		()									csnx	{ return x * x + y * y + z * z; }
-		cxpr	double		Length				()									cnst				{ cnst T sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0; }
-		cxpr	double		AngleWith			(cnst Tn3 & other)					cnst				{ cnst double lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0; }
-		void				AddScaled			(cnst Tn3 & toScaleAndAdd, double scale)	nxpt	{
+		cxpr	f3_t		Length				()									cnst				{ cnst T sqLen = LengthSquared(); return sqLen ? ::sqrt(sqLen) : 0; }
+		cxpr	f3_t		AngleWith			(cnst Tn3 & other)					cnst				{ cnst f3_t lengthsProduct = Length() * other.Length(); return lengthsProduct ? ::acos(Dot(other) / lengthsProduct) : 0; }
+		void				AddScaled			(cnst Tn3 & toScaleAndAdd, f3_t scale)	nxpt	{
 			x					+= (T)(toScaleAndAdd.x * scale);
 			y					+= (T)(toScaleAndAdd.y * scale);
 			z					+= (T)(toScaleAndAdd.z * scale);
@@ -158,25 +160,25 @@ namespace gpk
 		};
 
 		// TODO: Likely Y and Z are inverted. Please fix.
-		Tn3&				RotateX				(double theta)											{
-			cnst ::gpk::SSinCos	pairSinCos			= ::gpk::getSinCos(theta);
-			cnst double			pz					= y * pairSinCos.Cos - z * pairSinCos.Sin;
+		Tn3&				RotateX				(f3_t theta)											{
+			cnst SSinCos		pairSinCos			= getSinCos(theta);
+			cnst f3_t			pz					= y * pairSinCos.Cos - z * pairSinCos.Sin;
 			y					= (T)(y * pairSinCos.Sin + z * pairSinCos.Cos);
 			z					= (T)pz;
 			return *this;
 		}
 
-		Tn3&				RotateY				(double theta)											{
-			cnst ::gpk::SSinCos	pairSinCos			= ::gpk::getSinCos(theta);
-			cnst double			px					= x * pairSinCos.Cos - z * pairSinCos.Sin;
+		Tn3&				RotateY				(f3_t theta)											{
+			cnst SSinCos		pairSinCos			= getSinCos(theta);
+			cnst f3_t			px					= x * pairSinCos.Cos - z * pairSinCos.Sin;
 			z					= (T)(x * pairSinCos.Sin + z * pairSinCos.Cos);
 			x					= (T)px;
 			return *this;
 		}
 
-		Tn3&				RotateZ				(double theta)											{
-			cnst ::gpk::SSinCos	pairSinCos			= ::gpk::getSinCos(theta);
-			cnst double			px					= x * pairSinCos.Cos - y * pairSinCos.Sin;
+		Tn3&				RotateZ				(f3_t theta)											{
+			cnst SSinCos		pairSinCos			= getSinCos(theta);
+			cnst f3_t			px					= x * pairSinCos.Cos - y * pairSinCos.Sin;
 			y					= (T)(x * pairSinCos.Sin + y * pairSinCos.Cos);
 			x					= (T)px;
 			return *this;
@@ -222,3 +224,5 @@ namespace gpk
 #define gpk_xyz(n3var) n3var.x, n3var.y, n3var.z
 
 #endif // GPK_N3_H_23627
+
+

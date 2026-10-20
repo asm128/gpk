@@ -5,9 +5,9 @@
 
 namespace gpk
 {
-	::gpk::cid_t			guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids);
-	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)									{ 
-		const uint32_t offset = out_ids.size();
+	::gpk::cid_t			guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcst_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids);
+	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::DIRECTION direction, ::gpk::view<::gpk::vcst_c> buttonText, ::gpk::cid_t iParent, const ::gpk::SControlPlacement & args, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)									{ 
+		const ::gpk::u2_t offset = out_ids.size();
 		gpk_necs(out_ids.resize(offset + buttonText.size()));
 		return ::gpk::guiCreateControlList(gui, direction, buttonText, iParent, args, textAlign, vcid{out_ids.begin() + offset, buttonText.size()}); 
 	}
@@ -16,23 +16,23 @@ namespace gpk
 		return ::gpk::guiCreateControlList(gui, direction, ::gpk::get_value_labels<_tUIEnum>(), iParent, args, textAlign, out_ids);
 	}
 
-	::gpk::cid_t			guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids);
+	::gpk::cid_t			guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcst_c> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids);
 	tplt<tpnm _tUIEnum>
 	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::vcid out_ids) {
 		return ::gpk::guiCreateControlList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, buttonSize, offset, controlAlign, textAlign, out_ids);
 	}
-	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcsc_c> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)	{ 
-		const uint32_t offsetId = out_ids.size();
+	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::view<::gpk::vcst_c> buttonText, ::gpk::cid_t iParent, const ::gpk::n2u1_t & buttonSize, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids)	{ 
+		const ::gpk::u2_t offsetId = out_ids.size();
 		out_ids.resize(offsetId + buttonText.size()); 
 		return ::gpk::guiCreateControlList(gui, buttonText, iParent, buttonSize, offset, controlAlign, textAlign, vcid{out_ids.begin() + offsetId, buttonText.size()}); 
 	}
 
 	tplt<tpnm _tUIEnum>
-	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, uint16_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids) {
+	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, ::gpk::u1_t buttonWidth, int16_t yOffset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids) {
 		return ::gpk::guiCreateControlList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, {buttonWidth, 20}, {0, yOffset}, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
-	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, uint16_t buttonWidth, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids) {
+	stainli	::gpk::cid_t	guiCreateControlList		(::gpk::SGUI & gui, ::gpk::cid_t iParent, ::gpk::u1_t buttonWidth, const ::gpk::n2s1_t & offset, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign, ::gpk::acid & out_ids) {
 		return ::gpk::guiCreateControlList(gui, ::gpk::get_value_labels<_tUIEnum>(), iParent, {buttonWidth, 20}, offset, controlAlign, textAlign, out_ids);
 	}
 	tplt<tpnm _tUIEnum>
@@ -45,7 +45,7 @@ namespace gpk
 	tplt<tpnm _tEnum>
 	::gpk::error_t			setupControlListWithRoot	(::gpk::SGUI & gui, ::gpk::acid & outIds, ::gpk::cid_t parent, const ::gpk::n2u1_t & buttonSize, ::gpk::ALIGN controlAlign, ::gpk::ALIGN textAlign = ::gpk::ALIGN_CENTER)		{
 		::gpk::cid_t				root						= outIds[outIds.push_back(::gpk::createScreenLayout(gui, parent))];
-		::gpk::view<vcsc_c>			labels						= {::gpk::get_value_labels<_tEnum>()};
+		::gpk::view<vcst_c>			labels						= {::gpk::get_value_labels<_tEnum>()};
 		gpk_necs(labels.slice(labels, 1));
 
 		return ::gpk::guiCreateControlList(gui, labels, root, buttonSize, {}, controlAlign, textAlign, outIds);
@@ -84,3 +84,5 @@ namespace gpk
 }
 
 #endif // GPK_GUI_CONTROL_LIST_H_23627
+
+

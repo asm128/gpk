@@ -1,4 +1,3 @@
-/// Copyright 2009-2023 - asm128
 #include "gpk_n3.h"
 #include "gpk_minmax.h"
 
@@ -7,20 +6,20 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
-	typedef	minmax<n3sc_t>	minmax3char;
-	typedef	minmax<n3uc_t>	minmax3uchar;
-	typedef	minmax<n3f2_t>	minmax3f32;
-	typedef	minmax<n3f3_t>	minmax3f64;
-	typedef	minmax<n3u0_t>	minmax3u8;
-	typedef	minmax<n3u1_t>	minmax3u16;
-	typedef	minmax<n3u2_t>	minmax3u32;
-	typedef	minmax<n3u3_t>	minmax3u64;
-	typedef	minmax<n3s0_t>	minmax3i8;
-	typedef	minmax<n3s1_t>	minmax3i16;
-	typedef	minmax<n3s2_t>	minmax3i32;
-	typedef	minmax<n3s3_t>	minmax3i64;
-#pragma pack(pop)
-} // namespace
+	tydf	minmax<n3uc_t>	minmax3uc_t;	tdcs minmax3uc_t	minmax3uc_c;
+	tydf	minmax<n3sc_t>	minmax3sc_t;	tdcs minmax3sc_t	minmax3sc_c;
+	tydf	minmax<n3u0_t>	minmax3u0_t;	tdcs minmax3u0_t	minmax3u0_c;
+	tydf	minmax<n3u1_t>	minmax3u1_t;	tdcs minmax3u1_t	minmax3u1_c;
+	tydf	minmax<n3u2_t>	minmax3u2_t;	tdcs minmax3u2_t	minmax3u2_c;
+	tydf	minmax<n3u3_t>	minmax3u3_t;	tdcs minmax3u3_t	minmax3u3_c;
+	tydf	minmax<n3s0_t>	minmax3s0_t;	tdcs minmax3s0_t	minmax3s0_c;
+	tydf	minmax<n3s1_t>	minmax3s1_t;	tdcs minmax3s1_t	minmax3s1_c;
+	tydf	minmax<n3s2_t>	minmax3s2_t;	tdcs minmax3s2_t	minmax3s2_c;
+	tydf	minmax<n3s3_t>	minmax3s3_t;	tdcs minmax3s3_t	minmax3s3_c;
+	tydf	minmax<n3f2_t>	minmax3f2_t;	tdcs minmax3f2_t	minmax3f2_c;
+	tydf	minmax<n3f3_t>	minmax3f3_t;	tdcs minmax3f3_t	minmax3f3_c;
+}
 
 #endif // GPK_MINMAX_N3
+
+

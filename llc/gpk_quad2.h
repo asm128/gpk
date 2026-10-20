@@ -4,32 +4,35 @@
 #ifndef GPK_QUAD2_H_23627
 #define GPK_QUAD2_H_23627
 
-namespace gpk 
+namespace gpk
 {
-#pragma pack(push, 1)	// You can read about pragma pack() here: https://www.google.com/search?q=pragma+pack
-	tplt<tpnm _tDimension> 
-	struct quad2 : public ::gpk::quad<::gpk::n2<_tDimension>> {
-		typedef _tDimension		T;
-		typedef	n2<T>			TVertex;
-		typedef quad<TVertex>	TQuad;
-		typedef quad2<T>		TQuad2;
-		
-		using quad<TVertex>		::A;
-		using quad<TVertex>		::B;
-		using quad<TVertex>		::C;
-		using quad<TVertex>		::D;
-		using quad<TVertex>		::quad;
+#pragma pack(push, 1)
+	tpl_t struct quad2 : public quad<n2<_t>> {
+		tydf	_t			T;
+		tydf	n2<T>		TVertex;
+
+		using	quad<TVertex>	::A;
+		using	quad<TVertex>	::B;
+		using	quad<TVertex>	::C;
+		using	quad<TVertex>	::D;
+		using	quad<TVertex>	::quad;
 	};
-	typedef quad2<float>	quad2f32, quad2f;
-	typedef quad2<double>	quad2f64, quad2d;
-	typedef quad2<uint8_t>	quad2u8;
-	typedef quad2<uint16_t>	quad2u16;
-	typedef quad2<uint32_t>	quad2u32;
-	typedef quad2<uint64_t>	quad2u64;
-	typedef quad2<int8_t>	quad2i8;
-	typedef quad2<int16_t>	quad2i16;
-	typedef quad2<int32_t>	quad2i32;
-	typedef quad2<int64_t>	quad2i64;
 #pragma pack(pop)
+
+	tydf quad2<uc_t>	quad2uc_t;	tdcs quad2uc_t	quad2uc_c;
+	tydf quad2<sc_t>	quad2sc_t;	tdcs quad2sc_t	quad2sc_c;
+	tydf quad2<u0_t>	quad2u0_t;	tdcs quad2u0_t	quad2u0_c;
+	tydf quad2<u1_t>	quad2u1_t;	tdcs quad2u1_t	quad2u1_c;
+	tydf quad2<u2_t>	quad2u2_t;	tdcs quad2u2_t	quad2u2_c;
+	tydf quad2<u3_t>	quad2u3_t;	tdcs quad2u3_t	quad2u3_c;
+	tydf quad2<s0_t>	quad2s0_t;	tdcs quad2s0_t	quad2s0_c;
+	tydf quad2<s1_t>	quad2s1_t;	tdcs quad2s1_t	quad2s1_c;
+	tydf quad2<s2_t>	quad2s2_t;	tdcs quad2s2_t	quad2s2_c;
+	tydf quad2<s3_t>	quad2s3_t;	tdcs quad2s3_t	quad2s3_c;
+	tydf quad2<f2_t>	quad2f2_t;	tdcs quad2f2_t	quad2f2_c;
+	tydf quad2<f3_t>	quad2f3_t;	tdcs quad2f3_t	quad2f3_c;
 }
+
 #endif // GPK_QUAD2_H_23627
+
+

@@ -38,18 +38,18 @@ namespace gpk
 		inxp	TCnst*		end				()						csnx	{ rtrn Storage + N;	}
 
 		err_t				slice			(V & out, u2_t offset, u2_t count = (u2_t)-1)				{
-			ree_if(offset > N, GPK_FMT_GT_U2, offset, N);
+			if_true_fef(offset > N, GPK_FMT_GT_U2, offset, N);
 			u2_c					newSize			= N - offset;
 			if(count != (u2_t)-1)
-				ree_if(count > newSize, GPK_FMT_GT_U2, count, newSize);
+				if_true_fef(count > newSize, GPK_FMT_GT_U2, count, newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
 		err_t				slice			(VCnst & out, u2_t offset, u2_t count = (u2_t)-1)	cnst	{
-			ree_if(offset > N, GPK_FMT_GT_U2, offset, N);
+			if_true_fef(offset > N, GPK_FMT_GT_U2, offset, N);
 			u2_c					newSize			= N - offset;
 			if(count != (u2_t)-1)
-				ree_if(count > newSize, GPK_FMT_GT_U2, count, newSize);
+				if_true_fef(count > newSize, GPK_FMT_GT_U2, count, newSize);
 			out						= {&Storage[offset], ::gpk::min(newSize, count)};
 			rtrn out.size();
 		}
@@ -75,8 +75,8 @@ namespace gpk
 	tplN2uusng	astf3_t		= ::gpk::astatic<f3_t, N>; tplN2uusng	astf3_c	= const ::gpk::astf3_t<N>; tplN2uusng astf64	= ::gpk::astatic<f3_t, N>; tplN2uusng astaticf64	= ::gpk::astf64	<N>;
 
 	tplN2uusng	astvcuc 	= ::gpk::astatic<::gpk::vcuc 	, N>; tplN2uusng astaticvcuc 	= ::gpk::astvcuc <N>;
-	tplN2uusng	astvcc		= ::gpk::astatic<::gpk::vcsc_t	, N>; tplN2uusng astaticvcc		= ::gpk::astvcc  <N>;
-	tplN2uusng	astvcu8 	= ::gpk::astatic<::gpk::vcu0_t 	, N>; tplN2uusng astaticvcu8 	= ::gpk::astvcu8 <N>;
+	tplN2uusng	astvcc		= ::gpk::astvcs<N>; tplN2uusng astaticvcc		= ::gpk::astvcc<N>;
+	tplN2uusng	astvcu0_t 	= ::gpk::astatic<::gpk::vcu0_t 	, N>; tplN2uusng astaticvcu0_t 	= ::gpk::astvcu0_t <N>;
 	tplN2uusng	astvcu16	= ::gpk::astatic<::gpk::vcu16	, N>; tplN2uusng astaticvcu16	= ::gpk::astvcu16<N>;
 	tplN2uusng	astvcu32	= ::gpk::astatic<::gpk::vcu32	, N>; tplN2uusng astaticvcu32	= ::gpk::astvcu32<N>;
 	tplN2uusng	astvcu64	= ::gpk::astatic<::gpk::vcu64	, N>; tplN2uusng astaticvcu64	= ::gpk::astvcu64<N>;
@@ -93,11 +93,10 @@ namespace gpk
 	// Is this really worth it?
 	tplN2usinx	u2_t	size(astc	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	//tplN2usinx	u2_t	size(astuc 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astu8 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astu16	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astu32	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astu64	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(asti8 	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu0_t<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu1_t<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu2_t<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astu3_t<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(asti16	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(asti32	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(asti64	<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
@@ -106,11 +105,10 @@ namespace gpk
 
 	tplN2usinx	u2_t	size(astvcc	 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	//tplN2usinx	u2_t	size(astvcuc <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astvcu8 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
+	tplN2usinx	u2_t	size(astvcu0_t<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvcu16<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvcu32<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvcu64<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
-	tplN2usinx	u2_t	size(astvci8 <N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvci16<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvci32<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
 	tplN2usinx	u2_t	size(astvci64<N> /*viewToTest*/)	nxpt	{ rtrn u2_t(N); }
@@ -159,3 +157,5 @@ namespace gpk
 		,	::gpk::astf3_t, ::gpk::astf3_c
 
 #endif // GPK_ARRAY_STATIC_H_23627
+
+

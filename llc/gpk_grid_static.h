@@ -1,8 +1,8 @@
 #include "gpk_array.h"
 #include "gpk_grid.h"
 
-#ifndef GPK_GRID_H_23627
-#define GPK_GRID_H_23627
+#ifndef GPK_GRID_STATIC_H_23627
+#define GPK_GRID_STATIC_H_23627
 
 namespace gpk
 {
@@ -11,40 +11,34 @@ namespace gpk
 		typedef	T			TCell;
 		typedef	grid<T>		TGridView;
 
-		stacxpr	uint32_t	Width									= (uint32_t)_sizeWidth;
-		stacxpr	uint32_t	Depth									= (uint32_t)_sizeDepth;
+		stacxpr	::gpk::u2_t	Width									= (::gpk::u2_t)_sizeWidth;
+		stacxpr	::gpk::u2_t	Depth									= (::gpk::u2_t)_sizeDepth;
 
 				TCell		Cells	[_sizeDepth][_sizeWidth]		= {};
 
 		inlcxpr				grid_static								()																		: grid<T>(&Cells[0][0], _sizeWidth, _sizeDepth)	{}
 
-		::gpk::error_t		read					(const int8_t* input, uint32_t* inout_bytesRead)						{
-			ree_if(0 == input, "%s", "Invalid input pointer!");
-			TGridView															inputGrid								= {(T*)input, Width, Depth};
+		::gpk::error_t		read					(cnst s0_t* input, u2_t* inout_bytesRead)							{
+			if_true_fef(0 == input || 0 == inout_bytesRead, "%s", "Invalid input!");
 			*inout_bytesRead												+= sizeof(T) * Width * Depth;
-			for(uint32_t y = 0; y < Depth; ++y) {
-				for(uint32_t x = 0; x < Width; ++x)
-					::gpk::podcpy(&Cells[y][x], inputGrid[y][x]);
-			}
+			memcpy(Cells, input, sizeof(Cells));
 			return 0;
 		}
 
-		::gpk::error_t		write									(int8_t* output, uint32_t* inout_bytesWritten)		const				{
-			ree_if(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
+		::gpk::error_t		write									(s0_t* output, u2_t* inout_bytesWritten)			const				{
+			if_true_fef(0 == output && 0 == inout_bytesWritten, "%s", "Invalid input!");
 			if(0 != inout_bytesWritten)
 				*inout_bytesWritten												+= sizeof(T) * Width * Depth;	// Just return the size required to store this.
 
 			if(0 == output)
 				return 0;
 
-			TGridView															newStorage								= {(T*)output, Width, Depth};
-			for(uint32_t y = 0; y < Depth; ++y) {
-				for(uint32_t x = 0; x < Width; ++x)
-					::gpk::podcpy(output[y * Width + x], &Cells[y][x]);
-			}
+			memcpy(output, Cells, sizeof(Cells));
 			return 0;
 		}
 	};
 }
 
-#endif // GPK_GRID_H_23627
+#endif // GPK_GRID_STATIC_H_23627
+
+

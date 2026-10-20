@@ -15,16 +15,16 @@ namespace gpk
 	int64_t					timeCurrentInUs		();
 #endif
 #pragma pack(push, 1)
-	struct STimestamps {	
+	stct STimestamps {	
 		uint64_t				Created				= 0;
 		uint64_t				Loaded				= 0;
 		uint64_t				Modified			= 0;
 		uint64_t				Saved				= 0;
 	};
 
-	struct SDaylight {
+	stct SDaylight {
 		uint64_t				TimeOffset		= {};
-		uint32_t				OffsetMinutes	= 90;
+		::gpk::u2_t				OffsetMinutes	= 90;
 		float					ExtraRatio		= .5;
 	};
 #pragma pack(pop)
@@ -32,3 +32,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_CHRONO_H_23627
+
+

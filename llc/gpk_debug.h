@@ -67,3 +67,5 @@ namespace gpk { stxp size_t DEBUG_BUILD = (size_t)-1; }
 #endif // GPK_DEBUG_ENABLED
 
 #endif // GPK_DEBUG_H
+
+

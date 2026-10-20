@@ -25,7 +25,7 @@ namespace gpk
 {
 	tydf		bool		b8_t, b8u_t;
 	tydf		char		sc_t, c0s_t;
-	tydf		int8_t		s0_t, i0s_t;
+	tydf		sc_t		s0_t, i0s_t;
 	tydf		int16_t		s1_t, i1s_t;
 	tydf		int32_t		s2_t, i2s_t;
 	tydf		int64_t		s3_t, i3s_t;
@@ -118,7 +118,11 @@ namespace gpk
 #endif
 	stxp	b8_c	flse			= false;
 	stxp	u0_c	BYTE_SIZE		= 8;
+#if defined(GPK_WINDOWS) && !defined(_WIN64) && !defined(WIN64)
+	tydf	long		refcount_t;
+#else
 	tydf	intptr_t	refcount_t;
+#endif
 	tdcs	refcount_t	refcount_c;
 	tdvl	refcount_t	refcount_vl;
 
@@ -323,3 +327,5 @@ namespace gpk
 
 
 #endif // GPK_TYPEINT_H_23627
+
+

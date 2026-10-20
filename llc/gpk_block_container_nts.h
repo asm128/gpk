@@ -1,54 +1,34 @@
-#include "gpk_array_ptr.h"
-#include "gpk_array_static.h"
-#include "gpk_apod_serialize.h"
+#include "gpk_block_container.h"
 
-#ifndef GPK_BLOCK_CONTAINER_NTS_230522
-#define GPK_BLOCK_CONTAINER_NTS_230522
+#ifndef GPK_BLOCK_CONTAINER_NTS_261011
+#define GPK_BLOCK_CONTAINER_NTS_261011
 
 namespace gpk
 {
 	tplt<size_t _size>
 	class block_container_nts {
-		::gpk::apobj<::gpk::astaticc<_size>>	Blocks;
-		::gpk::au2_t							RemainingSpace;
+		block_container<sc_t, _size>	Characters = {};
 
-	public:	//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-		::gpk::error_t						clear						()								{ return ::gpk::clear(Blocks, RemainingSpace); }
-		::gpk::error_t						Save						(::gpk::au0_t & output)	const	{
-			gpk_necs(gpk::saveView(output, RemainingSpace));
-			for(u2_t iArray = 0; iArray < RemainingSpace.size(); ++iArray)
-				gpk_necs(gpk::saveView(output, *Blocks[iArray]));
-			return 0;
-		}
-		::gpk::error_t						Load						(::gpk::vcu0_t & input)			{
-			clear();
-			gpk_necs(gpk::loadView(input, RemainingSpace));
-			gpk_necs(Blocks.resize(RemainingSpace.size()));
-			for(u2_t iArray = 0; iArray < Blocks.size(); ++iArray)
-				gpk_necs(gpk::loadView(input, Blocks[iArray]->Storage));
-			return 0;
-		}
-		::gpk::error_t						push_sequence				(const sc_t * sequence, uint32_t length, ::gpk::vcsc_t & out_view)	{
-			const uint32_t							lengthPlusOne				= length + 1;
-			for(uint32_t iBlock = 0; iBlock < Blocks.size(); ++iBlock) {
-				uint32_t								& blkRemainingSpace			= RemainingSpace[iBlock];
-				if(blkRemainingSpace >= lengthPlusOne) {
-					sc_t									* sequenceStart				= &Blocks[iBlock]->operator[](_size - blkRemainingSpace);
-					out_view							= {sequenceStart, length};
-					memcpy(sequenceStart, sequence, length);
-					sequenceStart[lengthPlusOne]		= 0;
-					blkRemainingSpace					-= lengthPlusOne;
-					return iBlock;
-				}
-			}
-			int32_t									indexNewBlock				= Blocks.size();
-			gpk_necs(Blocks			.resize(Blocks.size() + 1));
-			gpk_necs(RemainingSpace	.resize(Blocks.size() + 1, _size - length - 1));
-			out_view							= {&Blocks[indexNewBlock]->operator[](0), length};
-			memcpy(Blocks[indexNewBlock]->Storage, sequence, length);
-			return indexNewBlock;
+	public:
+		err_t	clear			() { rtrn Characters.clear(); }
+		err_t	Save			(au0_t & output) const { rtrn Characters.Save(output); }
+		err_t	Load			(vcu0_t & input) { rtrn Characters.Load(input); }
+
+		err_t	push_sequence	(sc_c * sequence, u2_t length, vcst_t & out_view) {
+			if_true_fef(length >= _size, GPK_FMT_GE_U2, length, (u2_t)_size);
+			if_true_fe(length && 0 == sequence);
+			vs0_t	stored	= {};
+			err_t	iBlock	= {};
+			if_fail_fe(iBlock = Characters.reserve(length + 1, stored));
+			if(length)
+				memcpy(stored.begin(), sequence, length);
+			stored[length]	= 0;
+			out_view		= {stored.begin(), length};
+			rtrn iBlock;
 		}
 	};
 } // namespace
 
-#endif // GPK_BLOCK_CONTAINER_NTS_230522
+#endif // GPK_BLOCK_CONTAINER_NTS_261011
+
+

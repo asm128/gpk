@@ -3,178 +3,175 @@
 #ifndef GPK_QUAT_H_23627
 #define GPK_QUAT_H_23627
 
-namespace gpk 
+namespace gpk
 {
-	tplt<tpnm _tBase>
-	struct quat {
-		_tBase					x, y, z, w;
+#pragma pack(push, 1)
+	tpl_t struct quat {
+		_t	x, y, z, w;
 
-		typedef	quat<_tBase>	Tq;
-		typedef	n3  <_tBase>	Tn3;
+		tydf	quat<_t>	TQuat;
+		tydf	n3<_t>		Tn3;
 
-		cnstxpr	bool			operator ==				(const Tq & other)					const	noexcept	{ return x == other.x && y == other.y && z == other.z && w == other.w; }
-		inlcxpr	bool			operator !=				(const Tq & other)					const	noexcept	{ return !operator==(other); }
-		inlcxpr	Tq				operator-				()									const	noexcept	{ return {x*-1, y*-1, z*-1, w * -1};	}
-		inlcxpr	Tq				operator~				()									const	noexcept	{ return {-x, -y, -z, w};			}
-		cnstxpr	Tq				operator +				(const Tq & other)					const	noexcept	{ return { x + other.x, y + other.y, z + other.z, w + other.w }; }
-		cnstxpr	Tq				operator -				(const Tq & other)					const	noexcept	{ return { x - other.x, y - other.y, z - other.z, w - other.w }; }
-		cnstxpr	Tq				operator *				(double scalar)						const	noexcept	{ return { (_tBase)(x * scalar), (_tBase)(y * scalar), (_tBase)(z * scalar), (_tBase)(w * scalar) }; }
-		cnstxpr	Tq				operator /				(double scalar)						const				{ return { (_tBase)(x / scalar), (_tBase)(y / scalar), (_tBase)(z / scalar), (_tBase)(w / scalar) }; }
-		Tq						operator *				(const Tq & q)						const	noexcept	{
-			Tq							r;
-			r.x			= w * q.x + x*q.w + y*q.z - z*q.y;
-			r.y			= w * q.y + y*q.w + z*q.x - x*q.z;
-			r.z			= w * q.z + z*q.w + x*q.y - y*q.x;
-			r.w			= w * q.w - x*q.x - y*q.y - z*q.z;
+		GPK_DEFAULT_OPERATOR(TQuat, x == other.x && y == other.y && z == other.z && w == other.w);
 
-			return r;
-		}
-		Tq						operator *				(const Tn3 & v)						const	noexcept	{
+		inxp	TQuat	oper-	()						csnx	{ return {-x, -y, -z, -w}; }
+		inxp	TQuat	oper~	()						csnx	{ return {-x, -y, -z,  w}; }
+		cxpr	TQuat	oper+	(cnst TQuat & other)		csnx	{ return {x + other.x, y + other.y, z + other.z, w + other.w}; }
+		cxpr	TQuat	oper-	(cnst TQuat & other)		csnx	{ return {x - other.x, y - other.y, z - other.z, w - other.w}; }
+		cxpr	TQuat	oper*	(f3_t scalar)				csnx	{ return {_t(x * scalar), _t(y * scalar), _t(z * scalar), _t(w * scalar)}; }
+				TQuat	oper/	(f3_t scalar)				cnst		{ return {_t(x / scalar), _t(y / scalar), _t(z / scalar), _t(w / scalar)}; }
+				TQuat	oper*	(cnst TQuat & q)			csnx	{
 			return
-				{	  w * v.x + y*v.z - z*v.y
-				,	  w * v.y + z*v.x - x*v.z
-				,	  w * v.z + x*v.y - y*v.x
-				,	-(x*v.x + y*v.y + z*v.z)
+				{ _t(w * q.x + x * q.w + y * q.z - z * q.y)
+				, _t(w * q.y + y * q.w + z * q.x - x * q.z)
+				, _t(w * q.z + z * q.w + x * q.y - y * q.x)
+				, _t(w * q.w - x * q.x - y * q.y - z * q.z)
 				};
 		}
-		inline	Tq&				operator*=				(const Tq & other)							noexcept	{ return *this = operator*(other); }
-		Tq&						operator+=				(const Tq & other)							noexcept	{ x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
-		Tq&						operator-=				(const Tq & other)							noexcept	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
-		Tq&						operator*=				(double scalar)								noexcept	{ x = (_tBase)(x * scalar); y = (_tBase)(y * scalar); z = (_tBase)(z * scalar); w = (_tBase)(w * scalar); return *this;	}
-		Tq&						operator/=				(double scalar)											{ x = (_tBase)(x / scalar); y = (_tBase)(y / scalar); z = (_tBase)(z / scalar); w = (_tBase)(w / scalar); return *this;	}
-
-		tplt<tpnm _t>
-		inlcxpr	quat<_t>		Cast					()									const	noexcept	{ return {(_t)x, (_t)y, (_t)z, (_t)w};	}
-		cnstxpr	_tBase			LengthSquared			()									const	noexcept	{ return x * x + y * y + z * z + w * w;	}
-		inlcxpr	double			Length					()									const				{ const _tBase sqLen = LengthSquared(); return (sqLen) ? ::sqrt(sqLen) : 0;	}
-		cnstxpr	double			Dot		(const Tq & other)					const	noexcept	{ return x*other.x + y*other.y + z*other.z + w * other.w;	}
-		inline	Tq&				Identity				()											noexcept	{ return *this = {0, 0, 0, 1};			}
-		inline	Tq&				Normalize				()											noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /= ::sqrt(sqLen) : *this; }
-		inline	Tq				Normalized				()									const	noexcept	{ _tBase sqLen = LengthSquared(); return sqLen ? *this /  ::sqrt(sqLen) : *this; }
-		inline	Tq&				LinearInterpolate		(const Tq & p, const Tq & q, double fTime)	noexcept	{ return *this = ((q-p)*fTime)+p;						}
-		inline	Tq&				SetRotation				(const Tq & q, const Tq & p)				noexcept	{ return *this = q * p * ~q;				}
-		inline	Tq&				MakeFromEuler			(const Tn3 & v)											{ return MakeFromEuler(v.x, v.y, v.z);																			}
-		//void					AddScaled				(const TCoord4& vector, double scale)		noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); }
-		Tq&						AddScaled				(const Tn3 & vector, double scale)			noexcept	{ Tq q = {(_tBase)(vector.x * scale), (_tBase)(vector.y * scale), (_tBase)(vector.z * scale), (_tBase)0}; q *= *this; w += (_tBase)(q.w * 0.5); x += (_tBase)(q.x * 0.5); y += (_tBase)(q.y * 0.5); z += (_tBase)(q.z * 0.5); return *this; }
-		Tn3						RotateVector			(const Tn3 & v)						const	noexcept	{
-			const Tq					t						= {x, y, z, w};
-			const Tq					r						= t * v * (~t);
-			return {r.x, r.y, r.z};
+		TQuat			oper*	(cnst Tn3 & v)				csnx	{
+			return
+				{ _t(w * v.x + y * v.z - z * v.y)
+				, _t(w * v.y + z * v.x - x * v.z)
+				, _t(w * v.z + x * v.y - y * v.x)
+				, _t(-(x * v.x + y * v.y + z * v.z))
+				};
 		}
-		Tq&						CreateFromAxisAngle		(::gpk::n3f2_c & axis, double angle)				{
-			const double				halfAngle				= angle * .5;
-			const double				s						= ::gpk::sin(halfAngle);
-			x						= (_tBase)(axis.x * s);
-			y						= (_tBase)(axis.y * s);
-			z						= (_tBase)(axis.z * s);
-			w						= (_tBase)::gpk::cos(halfAngle);
+		TQuat &			oper*=	(cnst TQuat & other)		nxpt	{ return *this = *this * other; }
+		TQuat &			oper+=	(cnst TQuat & other)		nxpt	{ x += other.x; y += other.y; z += other.z; w += other.w; return *this; }
+		TQuat &			oper-=	(cnst TQuat & other)		nxpt	{ x -= other.x; y -= other.y; z -= other.z; w -= other.w; return *this; }
+		TQuat &			oper*=	(f3_t scalar)				nxpt	{ x = _t(x * scalar); y = _t(y * scalar); z = _t(z * scalar); w = _t(w * scalar); return *this; }
+		TQuat &			oper/=	(f3_t scalar)						{ x = _t(x / scalar); y = _t(y / scalar); z = _t(z / scalar); w = _t(w / scalar); return *this; }
+
+		tpl_t2
+		inxp	quat<_t2>	Cast	()	csnx	{ return {(_t2)x, (_t2)y, (_t2)z, (_t2)w}; }
+
+		cxpr	_t			LengthSquared		()							csnx	{ return x * x + y * y + z * z + w * w; }
+		inxp	f3_t		Length				()							cnst		{ cnst _t square = LengthSquared(); return square ? ::sqrt(square) : 0; }
+		cxpr	f3_t		Dot					(cnst TQuat & other)		csnx	{ return x * other.x + y * other.y + z * other.z + w * other.w; }
+		inline	TQuat &		Identity			()							nxpt	{ return *this = {0, 0, 0, 1}; }
+		inline	TQuat &		Normalize			()							nxpt	{ cnst _t square = LengthSquared(); return square ? *this /= ::sqrt(square) : *this; }
+		inline	TQuat		Normalized			()							csnx	{ cnst _t square = LengthSquared(); return square ? *this / ::sqrt(square) : *this; }
+		inline	TQuat &		LinearInterpolate	(cnst TQuat & p, cnst TQuat & q, f3_t time)	nxpt	{ return *this = (q - p) * time + p; }
+		inline	TQuat &		SetRotation			(cnst TQuat & q, cnst TQuat & p)			nxpt	{ return *this = q * p * ~q; }
+		inline	TQuat &		MakeFromEuler		(cnst Tn3 & value)								{ return MakeFromEuler(value.x, value.y, value.z); }
+		TQuat &				AddScaled			(cnst Tn3 & vector, f3_t scale)			nxpt	{
+			TQuat scaled = {_t(vector.x * scale), _t(vector.y * scale), _t(vector.z * scale), _t{}};
+			scaled *= *this;
+			w += _t(scaled.w * .5);
+			x += _t(scaled.x * .5);
+			y += _t(scaled.y * .5);
+			z += _t(scaled.z * .5);
 			return *this;
 		}
-		/// Evaluates a rotation needed to be applied to an object positioned at sourcePoint to face destPoint
-		Tq&						LookAt					(::gpk::n3f2_c & sourcePoint, ::gpk::n3f2_c & destPoint, ::gpk::n3f2_c & up = {0, 1, 0}, ::gpk::n3f2_c & front = {1, 0, 0})	{
-			::gpk::n3f2_t				forwardVector			= (destPoint - sourcePoint).Normalize();
-			const double				dot						= front.Dot(forwardVector);
-			if (::gpk::abs(dot - (-1.0)) < 0.000001)
-				return *this = Tq{up.x, up.y, up.z, -(_tBase)::gpk::math_pi}.Normalize();
-			if (::gpk::abs(dot - (1.0)) < 0.000001)
-				return *this = {0, 0, 0, 1};
-
-			const double				rotAngle				= ::gpk::acos(dot);
-			::gpk::n3f2_t				rotAxis					= front.Cross(forwardVector);
-			rotAxis.Normalize();
-			return CreateFromAxisAngle(rotAxis, rotAngle);
+		Tn3				RotateVector		(cnst Tn3 & value)	csnx	{
+			cnst TQuat result = *this * value * ~*this;
+			return {result.x, result.y, result.z};
 		}
+		TQuat &			CreateFromAxisAngle	(cnst n3f2_t & axis, f3_t angle) {
+			cnst f3_t halfAngle = angle * .5;
+			cnst f3_t sine = sin(halfAngle);
+			x = _t(axis.x * sine);
+			y = _t(axis.y * sine);
+			z = _t(axis.z * sine);
+			w = _t(cos(halfAngle));
+			return *this;
+		}
+		TQuat &			LookAt
+			( cnst n3f2_t & sourcePoint
+			, cnst n3f2_t & destinationPoint
+			, cnst n3f2_t & up = {0, 1, 0}
+			, cnst n3f2_t & front = {1, 0, 0}
+			) {
+			n3f2_t forward = (destinationPoint - sourcePoint).Normalize();
+			cnst f3_t dot = front.Dot(forward);
+			if(abs(dot + 1.0) < 0.000001)
+				return *this = TQuat{up.x, up.y, up.z, -_t(math_pi)}.Normalize();
+			if(abs(dot - 1.0) < 0.000001)
+				return Identity();
 
-		Tq&						SLERP					(const Tq & p, const Tq & q, double fTime)				{
-			//Calculate the dot product
-			double						fDot					= Dot(q);
-
-			Tq							q_;
-			if(fDot < 0.0f) {
-				q_						= -q;
-				fDot					= -fDot;
+			n3f2_t axis = front.Cross(forward);
+			axis.Normalize();
+			return CreateFromAxisAngle(axis, acos(dot));
+		}
+		TQuat &			SLERP	(cnst TQuat & p, cnst TQuat & q, f3_t time) {
+			f3_t dot = p.Dot(q);
+			TQuat target = q;
+			if(dot < 0) {
+				target = -q;
+				dot = -dot;
 			}
+			if(dot < 1.00001 && dot > 0.99999)
+				return LinearInterpolate(p, target, time);
 
-			if(fDot < 1.00001f && fDot > 0.99999f)
-				return ::gpk::interpolate_linear(p, q_, fTime);
-
-			// calculate the angle between the quaternions
-			const double				fTheta					= acos(fDot);
-			return *this = (p * sin(fTheta * (1 - fTime)) + q_ * sin(fTheta * fTime)) / sin(fTheta);
+			cnst f3_t theta = acos(dot);
+			return *this = (p * sin(theta * (1 - time)) + target * sin(theta * time)) / sin(theta);
 		}
-		// Convert from Euler Angles
-		Tq&						MakeFromEuler			(double fPitch, double fYaw, double fRoll)				{
-			 //Basically we create 3 Quaternions, one for pitch, one for yaw, one for roll and multiply those together. the calculation below does the same, just shorter.
-			fPitch					*= 0.5f;//
-			fYaw					*= 0.5f;//
-			fRoll					*= 0.5f;//
+		TQuat &			MakeFromEuler	(f3_t pitch, f3_t yaw, f3_t roll) {
+			cnst SSinCos xPair = getSinCos(pitch * .5);
+			cnst SSinCos yPair = getSinCos(yaw   * .5);
+			cnst SSinCos zPair = getSinCos(roll  * .5);
+			cnst f3_t yCosZCos = yPair.Cos * zPair.Cos;
+			cnst f3_t ySinZSin = yPair.Sin * zPair.Sin;
+			cnst f3_t yCosZSin = yPair.Cos * zPair.Sin;
+			cnst f3_t ySinZCos = yPair.Sin * zPair.Cos;
 
-			const SSinCos				pairSinCosX				= ::gpk::getSinCos(fPitch	);
-			const SSinCos				pairSinCosY				= ::gpk::getSinCos(fYaw		);
-			const SSinCos				pairSinCosZ				= ::gpk::getSinCos(fRoll	);
-
-			const double				cYcZ					= pairSinCosY.Cos * pairSinCosZ.Cos;
-			const double				sYsZ					= pairSinCosY.Sin * pairSinCosZ.Sin;
-			const double				cYsZ					= pairSinCosY.Cos * pairSinCosZ.Sin;
-			const double				sYcZ					= pairSinCosY.Sin * pairSinCosZ.Cos;
-
-			w						= (_tBase)(pairSinCosX.Cos * cYcZ + pairSinCosX.Sin * sYsZ);
-			x						= (_tBase)(pairSinCosX.Sin * cYcZ - pairSinCosX.Cos * sYsZ);
-			y						= (_tBase)(pairSinCosX.Cos * sYcZ + pairSinCosX.Sin * cYsZ);
-			z						= (_tBase)(pairSinCosX.Cos * cYsZ - pairSinCosX.Sin * sYcZ);
-
+			w = _t(xPair.Cos * yCosZCos + xPair.Sin * ySinZSin);
+			x = _t(xPair.Sin * yCosZCos - xPair.Cos * ySinZSin);
+			y = _t(xPair.Cos * ySinZCos + xPair.Sin * yCosZSin);
+			z = _t(xPair.Cos * yCosZSin - xPair.Sin * ySinZCos);
 			return Normalize();
 		}
-		void					GetEulersTaitBryan		(double* fPitch, double* fYaw, double* fRoll)			{
-			const double				q00						= w * w;
-			const double				q11						= x * x;
-			const double				q22						= y * y;
-			const double				q33						= z * z;
+		void			GetEulersTaitBryan	(f3_t & pitch, f3_t & yaw, f3_t & roll) csnx {
+			cnst f3_t q00 = w * w;
+			cnst f3_t q11 = x * x;
+			cnst f3_t q22 = y * y;
+			cnst f3_t q33 = z * z;
+			cnst f3_t r11 = q00 + q11 - q22 - q33;
+			cnst f3_t r21 = 2 * (x * y + w * z);
+			cnst f3_t r31 = 2 * (x * z - w * y);
+			cnst f3_t r32 = 2 * (y * z + w * x);
+			cnst f3_t r33 = q00 - q11 - q22 + q33;
+			cnst f3_t absoluteR31 = abs(r31);
 
-			const double				r11						= q00 + q11 - q22 - q33;
-			const double				r21						= 2 * (x * y + w * z);
-			const double				r31						= 2 * (x * z - w * y);
-			const double				r32						= 2 * (y*z + w * x);
-			const double				r33						= q00 - q11 - q22 + q33;
-
-			const double				tmp						= abs(r31);
-			if(tmp > 0.999999) {
-				const double				r12						= 2 * (x * y - w * z);
-				const double				r13						= 2 * (x * z + w * y);
-				*fPitch					= 0.0f;
-				*fYaw					= -((::gpk::math_pi_2) * r31 / tmp);
-				*fRoll					= atan2(-r12, -r31*r13);
+			if(absoluteR31 > 0.999999) {
+				cnst f3_t r12 = 2 * (x * y - w * z);
+				cnst f3_t r13 = 2 * (x * z + w * y);
+				pitch = {};
+				yaw = -(math_pi_2 * r31 / absoluteR31);
+				roll = atan2(-r12, -r31 * r13);
+				return;
 			}
-			else {
-				*fPitch					= atan2(r32, r33);
-				*fYaw					= asin(-r31);
-				*fRoll					= atan2(r21, r11);
-			}
-		} //
-		// just in case you need that function also
-	}; // struct quat
+			pitch = atan2(r32, r33);
+			yaw = asin(-r31);
+			roll = atan2(r21, r11);
+		}
+	};
+#pragma pack(pop)
 
-	typedef quat<float>		quatf32;
-	typedef quat<double>	quatf64;
-	typedef quat<uint8_t>	quatu8;
-	typedef quat<uint16_t>	quatu16;
-	typedef quat<uint32_t>	quatu32;
-	typedef quat<uint64_t>	quatu64;
-	typedef quat<int8_t>	quati8;
-	typedef quat<int16_t>	quati16;
-	typedef quat<int32_t>	quati32;
-	typedef quat<int64_t>	quati64;
+	tydf quat<uc_t>	quatuc_t;	tdcs quatuc_t	quatuc_c;
+	tydf quat<sc_t>	quatsc_t;	tdcs quatsc_t	quatsc_c;
+	tydf quat<u0_t>	quatu0_t;	tdcs quatu0_t	quatu0_c;
+	tydf quat<u1_t>	quatu1_t;	tdcs quatu1_t	quatu1_c;
+	tydf quat<u2_t>	quatu2_t;	tdcs quatu2_t	quatu2_c;
+	tydf quat<u3_t>	quatu3_t;	tdcs quatu3_t	quatu3_c;
+	tydf quat<s0_t>	quats0_t;	tdcs quats0_t	quats0_c;
+	tydf quat<s1_t>	quats1_t;	tdcs quats1_t	quats1_c;
+	tydf quat<s2_t>	quats2_t;	tdcs quats2_t	quats2_c;
+	tydf quat<s3_t>	quats3_t;	tdcs quats3_t	quats3_c;
+	tydf quat<f2_t>	quatf2_t;	tdcs quatf2_t	quatf2_c;
+	tydf quatf2_t	quatf32;
+	tydf quat<f3_t>	quatf3_t;	tdcs quatf3_t	quatf3_c;
+}
 
-
-#define QUAT_F32 "{%f, %f, %f, %f}"
-#define QUAT_F64 "{%g, %g, %g, %g}"
-#define QUAT_I32 "{%i, %i, %i, %i}"
-#define QUAT_U32 "{%u, %u, %u, %u}"
-#define QUAT_I64 "{%lli, %lli, %lli, %lli}"
-#define QUAT_U64 "{%llu, %llu, %llu, %llu}"
+#define QUAT_F2	"{%f, %f, %f, %f}"
+#define QUAT_F3	"{%g, %g, %g, %g}"
+#define QUAT_S2	"{%i, %i, %i, %i}"
+#define QUAT_U2	"{%u, %u, %u, %u}"
+#define QUAT_S3	"{%lli, %lli, %lli, %lli}"
+#define QUAT_U3	"{%llu, %llu, %llu, %llu}"
 
 #define gpk_xyzw(quatvar) quatvar.x, quatvar.y, quatvar.z, quatvar.w
 
-} // namespace
-
 #endif // GPK_QUAT_H_23627
+
+

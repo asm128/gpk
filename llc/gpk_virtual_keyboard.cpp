@@ -1,20 +1,19 @@
-#define GPK_INFO_PRINTF_ENABLED
-
 #include "gpk_virtual_keyboard.h"
 
-::gpk::error_t			gpk::virtualKeyboardHandleEvent	(const ::gpk::SVirtualKeyboard & vk, ::gpk::cid_t iControl, ::gpk::apod<::gpk::SVirtualKeyboardEvent> & events) {
-	const ::gpk::cid_t			idKeyFirst			= vk.IdRoot + 1;
-	const ::gpk::cid_t			idKeyStop			= ::gpk::cid_t(idKeyFirst + vk.Keys.size());
-	if(::gpk::in_range<::gpk::cid_t>(iControl, idKeyFirst, idKeyStop)) {
-		const int32_t				iKey				= iControl - idKeyFirst;
-		const uint16_t				key					= vk.Keys[iKey];
-		info_printf("Virtual key %i: %c (%i)", iKey, key, key);
-		return 1 + events.push_back({::gpk::VK_EVENT_RELEASE, ::gpk::VK_SCANCODE(key)});
+::gpk::err_t	gpk::virtualKeyboardHandleEvent	(cnst ::gpk::SVirtualKeyboard & keyboard, ::gpk::cid_t iControl, ::gpk::TQueueSystemEvent & events) {
+	for(::gpk::u2_t iCharacter = 0; iCharacter < keyboard.Characters.size(); ++iCharacter) {
+		if(iControl == keyboard.Characters[iCharacter].IdControl) {
+			if_fail_fe(::gpk::eventEnqueueTextChar(events, keyboard.Characters[iCharacter].Character));
+			rtrn 1;
+		}
 	}
-	else if(::gpk::in_range<int32_t>(iControl, idKeyStop, idKeyStop + ::gpk::get_value_count<::gpk::VK_SCANCODE>())) {
-		const ::gpk::VK_SCANCODE	key					= ::gpk::VK_SCANCODE(iControl - idKeyStop);
-		info_printf("Virtual scancode: %s (%i)", ::gpk::get_value_label(key).begin(), key);
-		return 1 + events.push_back({::gpk::VK_EVENT_EDIT, key});
+	for(::gpk::u2_t iCommand = 0; iCommand < keyboard.Commands.size(); ++iCommand) {
+		if(iControl == keyboard.Commands[iCommand].IdControl) {
+			if_fail_fe(::gpk::eventEnqueueKeyboardDown(events, (::gpk::u0_t)keyboard.Commands[iCommand].Key));
+			rtrn 1;
+		}
 	}
-	return 0;
+	rtrn 0;
 }
+
+

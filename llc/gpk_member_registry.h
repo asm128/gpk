@@ -19,7 +19,7 @@
 		stincxp	const sc_t*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
 		stincxp	const sc_t*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
-		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(_nameSpace::_memberType);	}	\
+		stincxp	::gpk::u2_t											get_member_size					()							noexcept	{ return sizeof(_nameSpace::_memberType);	}	\
 	};												\
 	_nameSpace::_memberType		_memberName
 
@@ -32,25 +32,25 @@
 		stincxp	const sc_t*										get_member_display_name			()							noexcept	{ return _displayName;						}	\
 		stincxp	const sc_t*										get_member_description			()							noexcept	{ return _memberDescription;				}	\
 		stincxp	::gpk::DATA_TYPE									get_member_data_type_id			()							noexcept	{ return _dataTypeId;						}	\
-		stincxp	uint32_t											get_member_size					()							noexcept	{ return sizeof(GPK_MODULE_FUNCTION_NAME(_memberType));	}	\
+		stincxp	::gpk::u2_t											get_member_size					()							noexcept	{ return sizeof(GPK_MODULE_FUNCTION_NAME(_memberType));	}	\
 	};												\
 	GPK_MODULE_FUNCTION_NAME(_memberType)		_memberName
 
 namespace gpk {
 #pragma pack(push, 1)
 	tplt <tpnm... _tArgs>	struct member_registry {
-		stincxp	const uint32_t										get_member_count				()							noexcept	{ return (uint32_t)sizeof...(_tArgs);							}
-		stainli	const ::gpk::view<const ::gpk::STypeIdentifier	>&	get_types						()										{ static const ::gpk::STypeIdentifier	results[] = {{{			_tArgs::get_member_namespace(), (uint32_t)-1}, {_tArgs::get_member_type_name(), (uint32_t)-1}}...,	{}	}; static const ::gpk::view<const ::gpk::STypeIdentifier	> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_names						()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_name			(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_display_names				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_display_name	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::label			>&	get_descriptions				()										{ static const ::gpk::label				results[] = {{			_tArgs::get_member_description	(), (uint32_t)-1}	...,											""	}; static const ::gpk::view<const ::gpk::label			> results_view = {results}; return results_view;	}
-		stainli	const ::gpk::view<const ::gpk::DATA_TYPE		>	get_data_type_ids				()							noexcept	{ static const ::gpk::DATA_TYPE			results[] = {			_tArgs::get_member_data_type_id	()					...,					::gpk::DATA_TYPE_UNKNOWN	}; return results; }
-		stainli	const ::gpk::view<const uint32_t				>&	get_member_sizes				()							noexcept	{ static const uint32_t					results[] = {(uint32_t)	_tArgs::get_member_size			()					...,											 0	}; static const ::gpk::view<const uint32_t				> results_view = {results}; return results_view;	}
+		stincxp	const ::gpk::u2_t						get_member_count				()							noexcept	{ return (::gpk::u2_t)sizeof...(_tArgs); }
+		stainli	const view<const STypeIdentifier	>&	get_types						()										{ static const STypeIdentifier	results[] = {{{_tArgs::get_member_namespace(), (::gpk::u2_t)-1}, {_tArgs::get_member_type_name(), (::gpk::u2_t)-1}}...,	{}}; static const view<const STypeIdentifier	> results_view = {get_member_count(), results}; return results_view; }
+		stainli	const view<const label			>&	get_names						()										{ static const label				results[] = {{_tArgs::get_member_name			(), (::gpk::u2_t)-1}...,	""}; static const view<const label			> results_view = {get_member_count(), results}; return results_view; }
+		stainli	const view<const label			>&	get_display_names				()										{ static const label				results[] = {{_tArgs::get_member_display_name	(), (::gpk::u2_t)-1}...,	""}; static const view<const label			> results_view = {get_member_count(), results}; return results_view; }
+		stainli	const view<const label			>&	get_descriptions				()										{ static const label				results[] = {{_tArgs::get_member_description	(), (::gpk::u2_t)-1}...,	""}; static const view<const label			> results_view = {get_member_count(), results}; return results_view; }
+		stainli	const view<const DATA_TYPE		>	get_data_type_ids				()							noexcept	{ static const DATA_TYPE			results[] = {_tArgs::get_member_data_type_id	()...,	DATA_TYPE_UNKNOWN}; return {get_member_count(), results}; }
+		stainli	const view<const ::gpk::u2_t		>&	get_member_sizes				()							noexcept	{ static const ::gpk::u2_t				results[] = {(::gpk::u2_t)_tArgs::get_member_size	()...,	0}; static const view<const ::gpk::u2_t				> results_view = {get_member_count(), results}; return results_view; }
 	}; // struct
 #	define GPKM_NAMED_REGISTRY(registryName, ...)	typedef ::gpk::member_registry<__VA_ARGS__> TRegistry;		static	const TRegistry&	get_member_registry	()	{ static const TRegistry registryName; return registryName;	}
 
 	tplt<tpnm _tStruct>
-	inline	::gpk::error_t					get_member_registry()	{ return _tStruct::get_member_registry(); }
+	inline	auto &						get_member_registry()	{ return _tStruct::get_member_registry(); }
 #pragma pack(pop)
 } // namespace
 
@@ -61,3 +61,5 @@ namespace gpk {
 #define GPKM_GET_MEMBER_REGISTRY(objectType)						objectType::get_member_registry()
 
 #endif // GPK_MEMBER_REGISTRY_H_23627
+
+

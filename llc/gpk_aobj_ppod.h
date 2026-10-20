@@ -1,3 +1,4 @@
+/// Copyright 2010-2024 - ogarnd
 //#include "gpk_ptr_obj.h"
 #include "gpk_ptr_pod.h"
 #include "gpk_array_obj.h"
@@ -11,3 +12,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_ARRAY_PPOD_H_23627
+
+

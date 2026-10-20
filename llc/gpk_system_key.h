@@ -5,10 +5,10 @@
 
 namespace gpk
 {
-	GDEFINE_ENUM_TYPE (SYSTEM_KEY, uint8_t);
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, LButton                         , 0x01); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, RButton                         , 0x02); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Cancel                          , 0x03); 
+	GDEFINE_ENUM_TYPE (SYSTEM_KEY, u0_t);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, LButton                         , 0x01);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, RButton                         , 0x02);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Cancel                          , 0x03);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, MButton                         , 0x04);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, XButton1                        , 0x05);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, XButton2                        , 0x06);
@@ -171,31 +171,31 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_102                         , 0xE2);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ico_help                        , 0xE3);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ico_00                          , 0xE4);
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Processkey                      , 0xE5); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ico_clear                       , 0xE6); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Packet                          , 0xE7); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_reset                       , 0xE9); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_jump                        , 0xEA); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa1                         , 0xEB); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa2                         , 0xEC); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa3                         , 0xED); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_wsctrl                      , 0xEE); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_cusel                       , 0xEF); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_attn                        , 0xF0); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_finish                      , 0xF1); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_copy                        , 0xF2); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_auto                        , 0xF3); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_enlw                        , 0xF4); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_backtab                     , 0xF5); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Attn                            , 0xF6); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Crsel                           , 0xF7); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Exsel                           , 0xF8); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ereof                           , 0xF9); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Play                            , 0xFA); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Zoom                            , 0xFB); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Noname                          , 0xFC); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Pa1                             , 0xFD); 
-	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_clear                       , 0xFE); 
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Processkey                      , 0xE5);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ico_clear                       , 0xE6);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Packet                          , 0xE7);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_reset                       , 0xE9);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_jump                        , 0xEA);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa1                         , 0xEB);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa2                         , 0xEC);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_pa3                         , 0xED);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_wsctrl                      , 0xEE);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_cusel                       , 0xEF);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_attn                        , 0xF0);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_finish                      , 0xF1);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_copy                        , 0xF2);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_auto                        , 0xF3);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_enlw                        , 0xF4);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_backtab                     , 0xF5);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Attn                            , 0xF6);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Crsel                           , 0xF7);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Exsel                           , 0xF8);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Ereof                           , 0xF9);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Play                            , 0xFA);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Zoom                            , 0xFB);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Noname                          , 0xFC);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Pa1                             , 0xFD);
+	GDEFINE_ENUM_VALUE(SYSTEM_KEY, OEM_clear                       , 0xFE);
 
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Hangul                          , 0x15);
 	GDEFINE_ENUM_VALUE(SYSTEM_KEY, Hanja                           , 0x19);
@@ -203,3 +203,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_SYSTEM_KEY_H_23627
+
+

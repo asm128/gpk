@@ -57,3 +57,5 @@ namespace gpk
 }
 
 #endif // GPK_MINMAX_H
+
+

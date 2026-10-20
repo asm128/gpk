@@ -1,150 +1,164 @@
-// Tip: Best viewed with zoom level at 81%.
-// Tip: Hold Left ALT + SHIFT while tapping or holding the arrow keys in order to select multiple columns and write on them at once.
-//		Also useful for copy & paste operations in which you need to copy a bunch of variable or function names and you can't afford the time of copying them one by one.
-#include "gpk_log.h"
 #include "gpk_line2.h"
+#include "gpk_rect2.h"
 #include "gpk_sphere.h"
+
+#include <limits>
 
 #ifndef GPK_COLLISION_H_23627
 #define GPK_COLLISION_H_23627
 
 namespace gpk
 {
-// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	tplt<tpnm TAxis>
-	::gpk::error_t		line_line_intersect
-		( const ::gpk::line2<TAxis>	& line1
-		, const ::gpk::line2<TAxis>	& line2
-		, ::gpk::n2<TAxis>		& out_intersect_point
-		)
-	{
-		double					detL1			= ::gpk::determinant(line1);
-		double					detL2			= ::gpk::determinant(line2);
-
-		double					x1mx2			= line1.A.x - line1.B.x;
-		double					y1my2			= line1.A.y - line1.B.y;
-
-		double					x3mx4			= line2.A.x - line2.B.x;
-		double					y3my4			= line2.A.y - line2.B.y;
-
-		double					xnom			= ::gpk::determinant(detL1, x1mx2, detL2, x3mx4);
-		double					ynom			= ::gpk::determinant(detL1, y1my2, detL2, y3my4);
-		double					denom			= ::gpk::determinant(x1mx2, y1my2, x3mx4, y3my4);
-		if(denom == 0.0) { // Lines don't seem to cross
-			out_intersect_point.x	= NAN;
-			out_intersect_point.y	= NAN;
-			return 0;
+	tplt<tpnm T>
+	bool	collisionCoordinateCast	(f3_t value, T& output) {
+		if(false == isfinite(value) || value < f3_t(::std::numeric_limits<T>::lowest()) || value > f3_t(::std::numeric_limits<T>::max()))
+			rtrn false;
+		if(::std::numeric_limits<T>::is_integer) {
+			f3_c nearest = value < 0 ? ceil(value - 0.5) : floor(value + 0.5);
+			if(abs(value - nearest) > math_epsilon)
+				rtrn false;
+			value = nearest;
 		}
-		out_intersect_point.x	= (TAxis)(xnom / denom);
-		out_intersect_point.y	= (TAxis)(ynom / denom);
-		ree_if(!isfinite(out_intersect_point.x)
-			|| !isfinite(out_intersect_point.y)
-			, "%s", "Probably a numerical issue.");
-		return 1; //All OK
+		output = T(value);
+		rtrn true;
 	}
 
-	// Intersects ray r = p + td, |d| = 1, with sphere s and, if intersecting,
-	// returns t value of intersection and intersection point q
+	// Returns one for a unique intersection, zero for parallel or coincident lines and -1 when the result cannot be represented by TAxis.
 	tplt<tpnm TAxis>
-	int32_t				intersectRaySphere
-		( const ::gpk::n3<TAxis>		& position
-		, const ::gpk::n3<TAxis>		& direction
-		, const ::gpk::sphere<TAxis>	& sphere
-		, float							& t
-		, ::gpk::n3<TAxis>				& q
-		) {
-		const ::gpk::n3<TAxis>	m			= position - sphere.Center;
-		double					b			= m.Dot(direction);
-		double					c			= m.Dot(m) - sphere.Radius * sphere.Radius;
-
-		if (c > 0.0f && b > 0.0f)	// Exit if r’s origin outside s (c > 0) and r pointing away from s (b > 0)
-			return 0;
-		double					discr		= b * b - c;
-
-		if (discr < 0.0f)	// A negative discriminant corresponds to ray missing sphere
-			return 0;
-
-		t					= (float)(-b - sqrt(discr));	// Ray now found to intersect sphere, compute smallest t value of intersection
-		if (t < 0.0f)	// If t is negative, ray started inside sphere so clamped t to zero
-			t					= 0.0f;
-
-		q					= position + direction * t;
-		return 1;
+	err_t	line_line_intersect	(cnst line2<TAxis>& line1, cnst line2<TAxis>& line2, n2<TAxis>& intersection) {
+		f3_c determinant1 = determinant(line1);
+		f3_c determinant2 = determinant(line2);
+		f3_c x1mx2 = f3_t(line1.A.x) - line1.B.x;
+		f3_c y1my2 = f3_t(line1.A.y) - line1.B.y;
+		f3_c x3mx4 = f3_t(line2.A.x) - line2.B.x;
+		f3_c y3my4 = f3_t(line2.A.y) - line2.B.y;
+		f3_c denominator = determinant(x1mx2, y1my2, x3mx4, y3my4);
+		if(0 == denominator)
+			rtrn 0;
+		n2<TAxis> result = {};
+		if(false == collisionCoordinateCast(determinant(determinant1, x1mx2, determinant2, x3mx4) / denominator, result.x))
+			rtrn -1;
+		if(false == collisionCoordinateCast(determinant(determinant1, y1my2, determinant2, y3my4) / denominator, result.y))
+			rtrn -1;
+		intersection = result;
+		rtrn 1;
 	}
 
+	// A ray starts inside its sphere at t == 0. Direction length changes the parameter scale but not the intersection point.
 	tplt<tpnm TAxis>
-	::gpk::error_t		point_in_segment
-		( const ::gpk::line2<TAxis>	& segment
-		, const ::gpk::n2<TAxis>	& point
-		)
-	{
-		return (	point.x >=	::gpk::min(segment.A.x, segment.B.x)
-				&&	point.y >=	::gpk::min(segment.A.y, segment.B.y)
-				&&	point.x <=	::gpk::max(segment.A.x, segment.B.x)
-				&&	point.y <=	::gpk::max(segment.A.y, segment.B.y)
-				) ? 1 :  0;
-	}
-	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	tplt<tpnm TAxis>
-	::gpk::error_t		line_segment_intersect
-		( const ::gpk::line2<TAxis>	& line
-		, const ::gpk::line2<TAxis>	& segment
-		, ::gpk::n2<TAxis>			& out_intersect_point
-		)
-	{
-		::gpk::error_t			collision			= line_line_intersect(line, segment, out_intersect_point);
-		return (1 == collision) ? point_in_segment(segment, out_intersect_point) : collision;
-	}
-
-	// Calculate intersection of two lines. return 1 if found, 0 if not found or -1 on error
-	tplt<tpnm TAxis>
-	::gpk::error_t		segment_segment_intersect
-		( const ::gpk::line2<TAxis>	& segment1
-		, const ::gpk::line2<TAxis>	& segment2
-		, ::gpk::n2<TAxis>		& out_intersect_point
-		)
-	{
-		::gpk::error_t			collision			= line_segment_intersect(segment1, segment2, out_intersect_point);
-		return (1 == collision) ? point_in_segment(segment1, out_intersect_point) : collision;
-	}
-
-
-	tplt<tpnm TAxis>
-	::gpk::error_t		buildAABBSegments
-		( const ::gpk::n2<TAxis>	& center
-		, const TAxis				halfSizeBox
-		, ::gpk::line2<TAxis>		& left
-		, ::gpk::line2<TAxis>		& top
-		, ::gpk::line2<TAxis>		& right
-		, ::gpk::line2<TAxis>		& bottom
-		)
-	{
-		typedef	::gpk::n2<TAxis>	TCoord2;
-		left				= {center + TCoord2{-halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox,-halfSizeBox}};
-		top					= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{-halfSizeBox, halfSizeBox}};
-		right				= {center + TCoord2{ halfSizeBox, halfSizeBox}, center + TCoord2{ halfSizeBox,-halfSizeBox}};
-		bottom				= {center + TCoord2{ halfSizeBox,-halfSizeBox}, center + TCoord2{-halfSizeBox,-halfSizeBox}};
-		return 0;
+	err_t	intersectRaySphere	(cnst n3<TAxis>& position, cnst n3<TAxis>& direction, cnst sphere<TAxis>& sphereToIntersect, f2_t& t, n3<TAxis>& intersection) {
+		if(sphereToIntersect.Radius < 0)
+			rtrn -1;
+		n3f3_c positionF3 = position.f3();
+		n3f3_c directionF3 = direction.f3();
+		n3f3_c distance = positionF3 - sphereToIntersect.Center.f3();
+		f3_c directionLengthSquared = directionF3.Dot(directionF3);
+		f3_c projection = distance.Dot(directionF3);
+		f3_c distanceFromSurface = distance.Dot(distance) - sphereToIntersect.Radius * sphereToIntersect.Radius;
+		if(distanceFromSurface > 0 && projection >= 0)
+			rtrn 0;
+		f3_t parameter = 0;
+		if(distanceFromSurface > 0) {
+			if(0 == directionLengthSquared)
+				rtrn 0;
+			f3_c discriminant = projection * projection - directionLengthSquared * distanceFromSurface;
+			if(discriminant < 0)
+				rtrn 0;
+			parameter = (-projection - sqrt(discriminant)) / directionLengthSquared;
+			if(parameter < 0)
+				rtrn 0;
+		}
+		if(false == isfinite(parameter) || parameter > ::std::numeric_limits<f2_t>::max())
+			rtrn -1;
+		n3f3_c point = positionF3 + directionF3 * parameter;
+		n3<TAxis> result = {};
+		if(false == collisionCoordinateCast(point.x, result.x) || false == collisionCoordinateCast(point.y, result.y) || false == collisionCoordinateCast(point.z, result.z))
+			rtrn -1;
+		t = f2_t(parameter);
+		intersection = result;
+		rtrn 1;
 	}
 
 	tplt<tpnm TAxis>
-	::gpk::error_t		buildAABBSegments
-		( const ::gpk::rect2<TAxis>	& rect
-		, ::gpk::line2<TAxis>		& left
-		, ::gpk::line2<TAxis>		& top
-		, ::gpk::line2<TAxis>		& right
-		, ::gpk::line2<TAxis>		& bottom
-		)
-	{
-		typedef	::gpk::n2<TAxis>	TCoord2;
-		left				= {rect.Offset										, rect.Offset + TCoord2{0			, rect.Size.y}};
-		top					= {rect.Offset + TCoord2{0, rect.Size.y}			, rect.Offset + TCoord2{rect.Size.x	, rect.Size.y}};
-		right				= {rect.Offset + TCoord2{rect.Size.x, rect.Size.y}	, rect.Offset + TCoord2{rect.Size.x, 0}};
-		bottom				= {rect.Offset										, rect.Offset + TCoord2{rect.Size.x, 0}};
-		return 0;
+	err_t	point_in_segment	(cnst line2<TAxis>& segment, cnst n2<TAxis>& point) {
+		f3_c segmentX = f3_t(segment.B.x) - segment.A.x;
+		f3_c segmentY = f3_t(segment.B.y) - segment.A.y;
+		f3_c pointX = f3_t(point.x) - segment.A.x;
+		f3_c pointY = f3_t(point.y) - segment.A.y;
+		f3_c crossProduct = segmentX * pointY - segmentY * pointX;
+		f3_c crossScale = abs(segmentX * pointY) + abs(segmentY * pointX) + 1;
+		if(abs(crossProduct) > math_epsilon * crossScale)
+			rtrn 0;
+		f3_c minimumX = min(f3_t(segment.A.x), f3_t(segment.B.x));
+		f3_c minimumY = min(f3_t(segment.A.y), f3_t(segment.B.y));
+		f3_c maximumX = max(f3_t(segment.A.x), f3_t(segment.B.x));
+		f3_c maximumY = max(f3_t(segment.A.y), f3_t(segment.B.y));
+		rtrn point.x >= minimumX - math_epsilon && point.y >= minimumY - math_epsilon && point.x <= maximumX + math_epsilon && point.y <= maximumY + math_epsilon;
 	}
 
+	tplt<tpnm TAxis>
+	err_t	line_segment_intersect	(cnst line2<TAxis>& line, cnst line2<TAxis>& segment, n2<TAxis>& intersection) {
+		n2<TAxis> result = {};
+		err_c collision = line_line_intersect(line, segment, result);
+		if(1 != collision)
+			rtrn collision;
+		if(0 == point_in_segment(segment, result))
+			rtrn 0;
+		intersection = result;
+		rtrn 1;
+	}
+
+	tplt<tpnm TAxis>
+	err_t	segment_segment_intersect	(cnst line2<TAxis>& segment1, cnst line2<TAxis>& segment2, n2<TAxis>& intersection) {
+		n2<TAxis> result = {};
+		err_c collision = line_segment_intersect(segment1, segment2, result);
+		if(1 != collision)
+			rtrn collision;
+		if(0 == point_in_segment(segment1, result))
+			rtrn 0;
+		intersection = result;
+		rtrn 1;
+	}
+
+	tplt<tpnm TAxis>
+	err_t	buildAABBSegments	(cnst n2<TAxis>& center, cnst TAxis halfSize, line2<TAxis>& left, line2<TAxis>& top, line2<TAxis>& right, line2<TAxis>& bottom) {
+		if(halfSize < 0)
+			rtrn -1;
+		n2<TAxis> bottomLeft = {}, topLeft = {}, topRight = {}, bottomRight = {};
+		if(false == collisionCoordinateCast(f3_t(center.x) - halfSize, bottomLeft.x) || false == collisionCoordinateCast(f3_t(center.y) - halfSize, bottomLeft.y))
+			rtrn -1;
+		if(false == collisionCoordinateCast(f3_t(center.x) - halfSize, topLeft.x) || false == collisionCoordinateCast(f3_t(center.y) + halfSize, topLeft.y))
+			rtrn -1;
+		if(false == collisionCoordinateCast(f3_t(center.x) + halfSize, topRight.x) || false == collisionCoordinateCast(f3_t(center.y) + halfSize, topRight.y))
+			rtrn -1;
+		if(false == collisionCoordinateCast(f3_t(center.x) + halfSize, bottomRight.x) || false == collisionCoordinateCast(f3_t(center.y) - halfSize, bottomRight.y))
+			rtrn -1;
+		left = {bottomLeft, topLeft};
+		top = {topLeft, topRight};
+		right = {topRight, bottomRight};
+		bottom = {bottomRight, bottomLeft};
+		rtrn 0;
+	}
+
+	tplt<tpnm TAxis>
+	err_t	buildAABBSegments	(cnst rect2<TAxis>& rectangle, line2<TAxis>& left, line2<TAxis>& top, line2<TAxis>& right, line2<TAxis>& bottom) {
+		if(rectangle.Size.x < 0 || rectangle.Size.y < 0)
+			rtrn -1;
+		n2<TAxis> bottomLeft = rectangle.Offset, topLeft = {}, topRight = {}, bottomRight = {};
+		if(false == collisionCoordinateCast(f3_t(rectangle.Offset.x), topLeft.x) || false == collisionCoordinateCast(f3_t(rectangle.Offset.y) + rectangle.Size.y, topLeft.y))
+			rtrn -1;
+		if(false == collisionCoordinateCast(f3_t(rectangle.Offset.x) + rectangle.Size.x, topRight.x) || false == collisionCoordinateCast(f3_t(rectangle.Offset.y) + rectangle.Size.y, topRight.y))
+			rtrn -1;
+		if(false == collisionCoordinateCast(f3_t(rectangle.Offset.x) + rectangle.Size.x, bottomRight.x) || false == collisionCoordinateCast(f3_t(rectangle.Offset.y), bottomRight.y))
+			rtrn -1;
+		left = {bottomLeft, topLeft};
+		top = {topLeft, topRight};
+		right = {topRight, bottomRight};
+		bottom = {bottomRight, bottomLeft};
+		rtrn 0;
+	}
 }
 
-
 #endif // GPK_COLLISION_H_23627
+
+

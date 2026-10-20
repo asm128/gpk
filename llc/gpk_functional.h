@@ -26,11 +26,13 @@ namespace gpk
 
 	tplt<tpnm T>							using	TFuncForEach		= FError<T&>;
 	tplt<tpnm T>							using	TFuncForEachConst	= FError<const T&>;
-	tplt<tpnm T, tpnm tCount = uint32_t>	using	TFuncEnumerate		= FError<tCount&, T&>;
-	tplt<tpnm T, tpnm tCount = uint32_t>	using	TFuncEnumerateConst	= FError<tCount&, const T&>;
+	tplt<tpnm T, tpnm tCount = ::gpk::u2_t>	using	TFuncEnumerate		= FError<tCount&, T&>;
+	tplt<tpnm T, tpnm tCount = ::gpk::u2_t>	using	TFuncEnumerateConst	= FError<tCount&, const T&>;
 
 	tplt<tpnm TSource, tpnm TTarget>		using	TFuncAppend 		= function<::gpk::error_t(TTarget 	& output, const TSource & origin)>;
 	tplt<tpnm TIO>							using	TFuncSize			= function<::gpk::error_t(const TIO & origin)>;
 } // namespace
 
 #endif // GPK_FUNCTIONAL_H_23627
+
+

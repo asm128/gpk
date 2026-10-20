@@ -1,5 +1,4 @@
 #include "gpk_array_pod.h"
-#include "gpk_std_cstring.h"
 #ifdef GPK_ARDUINO
 #   include <IPAddress.h>
 #endif // GPK_ARDUINO
@@ -19,10 +18,11 @@ namespace gpk
 
         tplt<size_t buflen>
         inline  string      (sc_c (&other)[buflen])         : asc_t(vcst_t{other})                                  { initialize(); }
-        inline  string      (vsc_c & other)                 : asc_t(other)                                          { initialize(); }
+        inline  string      (vs0_c & other)                 : asc_t(other)                                          { initialize(); }
         inline  string      (asc_c & other)                 : asc_t(other)                                          { initialize(); }
         inline  string      (vcst_t other)                  : asc_t(other)                                          { initialize(); }
-        inline  string      (sc_c * unsafe)                 : asc_t(tovcc(unsafe))                                  { initialize(); }
+        inline  string      (vcs0_t other)                  : asc_t(other)                                          { initialize(); }
+        inline  string      (sc_c * unsafe)                 : asc_t(vcst_t{unsafe, (u2_t)-1})                       { initialize(); }
 #ifdef GPK_ARDUINO
         inline  string      (const String & other)          : asc_t(vcst_t{other.begin(), (u2_t)other.length()})    { initialize(); }
         inline  string      (const IPAddress & other)       : string(other.toString())                              { initialize(); }
@@ -48,6 +48,11 @@ namespace gpk
 #ifdef GPK_ARDUINO
     ndsi string  str (const IPAddress & s)   { return s.toString(); }
 #endif
+
+	err_t		camelCase	(vcst_t input, string & camelCased);
+
 } // namespace
 
 #endif // GPK_STRING_H
+
+

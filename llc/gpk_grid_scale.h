@@ -7,9 +7,9 @@ namespace gpk
 {
 	tplt<tpnm T>
 	::gpk::error_t					grid_scale_fast				(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const float xFactor, const float yFactor) {
-		for(uint32_t y = 0; y < dst.metrics().y; ++y)
-		for(uint32_t x = 0; x < dst.metrics().x; ++x)
-			dst[y][x]						= src[(uint32_t)(y * yFactor)][(uint32_t)(x * xFactor)];
+		for(::gpk::u2_t y = 0; y < dst.metrics().y; ++y)
+		for(::gpk::u2_t x = 0; x < dst.metrics().x; ++x)
+			dst[y][x]						= src[(::gpk::u2_t)(y * yFactor)][(::gpk::u2_t)(x * xFactor)];
 		return 0;
 	}
 
@@ -22,12 +22,12 @@ namespace gpk
 
 	tplt<tpnm T>
 	::gpk::error_t					grid_scale					(::gpk::grid<T> & dst, const ::gpk::grid<T> & src, const float xFactor, const float yFactor) {
-		for(uint32_t y = 0; y < dst.metrics().y; ++y)
-		for(uint32_t x = 0; x < dst.metrics().x; ++x) {
-			const uint32_t						xSrc						= (uint32_t)(x * yFactor);
-			const uint32_t						ySrc						= (uint32_t)(y * xFactor);
-			if( ::gpk::in_range(ySrc, 0, src.metrics().y)
-			 && ::gpk::in_range(xSrc, 0, src.metrics().x)
+		for(::gpk::u2_t y = 0; y < dst.metrics().y; ++y)
+		for(::gpk::u2_t x = 0; x < dst.metrics().x; ++x) {
+			const u2_t						xSrc						= (::gpk::u2_t)(x * xFactor);
+			const u2_t						ySrc						= (::gpk::u2_t)(y * yFactor);
+			if( ::gpk::in_range(ySrc, 0U, src.metrics().y)
+			 && ::gpk::in_range(xSrc, 0U, src.metrics().x)
 			 )
 				dst[y][x]						= src[ySrc][xSrc];
 		}
@@ -64,3 +64,5 @@ namespace gpk
 } // namespace
 
 #endif // GPK_GRID_SCALE_20983429834
+
+

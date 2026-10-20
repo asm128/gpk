@@ -50,6 +50,7 @@
     <ClInclude Include="gpk_apod_tri.h" />
     <ClInclude Include="gpk_apod_tri2.h" />
     <ClInclude Include="gpk_apod_tri3.h" />
+    <ClInclude Include="gpk_arduino_stream.h" />
     <ClInclude Include="gpk_ascii_color.h" />
     <ClInclude Include="gpk_ascii_target.h" />
     <ClInclude Include="gpk_astatic_color.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="gpk_component_scene.h" />
     <ClInclude Include="gpk_coord.h" />
     <ClInclude Include="gpk_cpow.h" />
+    <ClInclude Include="gpk_ctti.h" />
     <ClInclude Include="gpk_cstdio.h" />
     <ClInclude Include="gpk_d3d.h" />
     <ClInclude Include="gpk_datatype.h" />
@@ -121,6 +123,7 @@
     <ClInclude Include="gpk_quad3.h" />
     <ClInclude Include="gpk_queue_event.h" />
     <ClInclude Include="gpk_range.h" />
+    <ClInclude Include="gpk_rxtx.h" />
     <ClInclude Include="gpk_range_n2.h" />
     <ClInclude Include="gpk_range_n3.h" />
     <ClInclude Include="gpk_serial.h" />
@@ -506,6 +509,34 @@
       <Command>copy_gpk_config.bat</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="gpk_arduino.h" />
+    <ClInclude Include="gpk_args.h" />
+    <ClInclude Include="gpk_astatic_n2.h" />
+    <ClInclude Include="gpk_block_container.h" />
+    <ClInclude Include="gpk_bus_manager.h" />
+    <ClInclude Include="gpk_bus.h" />
+    <ClInclude Include="gpk_ccsds.h" />
+    <ClInclude Include="gpk_circuit.h" />
+    <ClInclude Include="gpk_geometry2.h" />
+    <ClInclude Include="gpk_keyval_old.h" />
+    <ClInclude Include="gpk_matrix2.h" />
+    <ClInclude Include="gpk_matrix3.h" />
+    <ClInclude Include="gpk_micro.h" />
+    <ClInclude Include="gpk_mutex.h" />
+    <ClInclude Include="gpk_pack.h" />
+    <ClInclude Include="gpk_std_string.h" />
+    <ClInclude Include="gpk_swap.h" />
+    <ClInclude Include="gpk_test_core.h" />
+    <ClInclude Include="gpk_wifi.h" />
+    <ClCompile Include="gpk_ccsds.cpp" />
+    <ClCompile Include="gpk_circuit.cpp" />
+    <ClCompile Include="gpk_pack.cpp" />
+    <ClCompile Include="gpk_string.cpp" />
+    <ClCompile Include="gpk_view_color.cpp" />
+    <ClCompile Include="gpk_wifi.cpp" />
+    <None Include="gpk_module_exports.def" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

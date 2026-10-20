@@ -1,8 +1,8 @@
 #include "gpk_view_bit.h"
 #include "gpk_array.h"
 
-#ifndef ARRAY_BIT_ARRAY_H_23627
-#define ARRAY_BIT_ARRAY_H_23627
+#ifndef GPK_ARRAY_BIT_H_23627
+#define GPK_ARRAY_BIT_H_23627
 
 namespace gpk
 {
@@ -16,7 +16,7 @@ namespace gpk
 
 		cnstxpr					array_bit		()					noexcept	= default;
 								array_bit		(const ::gpk::view_bit<T> & other)
-			:	Data(other.begin(), round_up(other.size(), TView::ELEMENT_BITS))
+			:	Data(::gpk::view<cnst T>{other.begin().Begin, round_up(other.size(), TView::ELEMENT_BITS)})
 			,	View(Data.begin(), other.size())
 			{}
 								array_bit		(const ::gpk::array_bit<T> & other)
@@ -25,7 +25,7 @@ namespace gpk
 			{}
 
 		::gpk::array_bit<T>&	operator=			(const ::gpk::view_bit<T> & other) {
-			Data					= {other.begin(), round_up(other.size(), TView::ELEMENT_BITS)};
+			Data					= ::gpk::view<cnst T>{other.begin().Begin, round_up(other.size(), TView::ELEMENT_BITS)};
 			View					= {Data.begin(), other.size()};
 			return *this;
 		}
@@ -36,19 +36,24 @@ namespace gpk
 			return *this;
 		}
 
-		inlcxpr	const uint32_t&	size			()				const	noexcept	{ return View.size(); }
+		inlcxpr	const u2_t&		size			()				const	noexcept	{ return View.size(); }
 
-		::gpk::error_t			resize			(uint32_t newSize)		noexcept	{
-			gpk_necs(Data.resize(round_up(newSize, View.ELEMENT_BITS)));
+		::gpk::error_t			resize			(u2_t newSize)			noexcept	{
+			gpk_necs(Data.resize(round_up(newSize, TView::ELEMENT_BITS)));
 			View					= {Data.begin(), newSize};
 			return 0;
 		}
 	}; // struct
 
-	tplt<tpnm T>	
+	tplt<tpnm T>
 	using	abit	= ::gpk::array_bit<T>;
 
-	typedef	abit<uint64_t>	abitu64;
-} // 
+	tydf	abit<u0_t>	abitu0_t;
+	tydf	abit<u1_t>	abitu1_t;
+	tydf	abit<u2_t>	abitu2_t;
+	tydf	abit<u3_t>	abitu3_t;
+} // namespace gpk
 
-#endif // ARRAY_BIT_ARRAY_H_29037498023612
+#endif // GPK_ARRAY_BIT_H_23627
+
+

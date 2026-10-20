@@ -17,20 +17,16 @@
 namespace gpk
 {
 	tydf	error_t	(*log_print_t)		(const char * text);
-	error_t			_base_log_print		(const char * text);
+	error_t			log_print			(const char * text);
 	tydf	error_t	(*log_write_t)		(const char * text, u2_t textLen);
-	error_t			_base_log_write		(const char * text, u2_t textLen);
-	stin	error_t	base_log_write		(const char* text, u2_t textLen)	{ rtrn _base_log_write(text, textLen); }
-	stin	error_t	base_log_print		(const char* text)					{ rtrn _base_log_print(text); }
+	error_t			log_write			(const char * text, u2_t textLen);
 
 #ifndef GPK_LOG_ARDUINO_FLASHSTRINGHELPER
-	stin	error_t	base_log_print_P	(const char* text)	{ rtrn base_log_print(text); }
-	stin	error_t	base_log_print_F	(const char* text)	{ rtrn base_log_print(text); }
+	stin	error_t	log_print_P			(const char * text)	{ rtrn log_print(text); }
+	stin	error_t	log_print_F			(const char * text)	{ rtrn log_print(text); }
 #else
-	tydf	error_t	(*log_print_P_t)	(const __FlashStringHelper * text);
-			error_t	_base_log_print_P	(const __FlashStringHelper * text);
-	stin	error_t	base_log_print_P	(const __FlashStringHelper * text)	{ rtrn _base_log_print_P(text); }
-	stin	error_t	base_log_print_F	(const __FlashStringHelper * text)	{ rtrn base_log_print_P(F(text)); }
+	error_t			log_print_P			(const __FlashStringHelper * text);
+#	define log_print_F(text) ::gpk::log_print_P(F(text))
 #endif
 	error_t			setupDefaultLogCallbacks();
 	error_t			setupLogCallbacks
@@ -150,3 +146,5 @@ namespace gpk
 #endif // if_true_logf
 
 #endif // GPK_LOG_CORE_H
+
+

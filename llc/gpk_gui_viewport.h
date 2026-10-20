@@ -33,10 +33,17 @@ namespace gpk
 		::gpk::astcid<::gpk::VIEWPORT_CONTROL_COUNT>	IdControls		= {};
 		cid_t					IdDesktopElement	= (int32_t)-1;
 		GUI_CONTROL_TYPE		ControlType			= (GUI_CONTROL_TYPE)-1;
+		::gpk::n2s1_t			UnfoldedSize		= {};
+		bool					Folded				= false;
 	};
 
+	bool					viewportIsPressed		(cnst ::gpk::SGUI & gui, cnst ::gpk::SViewport & viewport)												nxpt;
+	::gpk::error_t			viewportActivate		(::gpk::SGUI & gui, ::gpk::cid_t idParent, ::gpk::view<cnst ::gpk::SViewport> viewports, ::gpk::u0_t iViewport);
+	::gpk::error_t			viewportFold			(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
 	::gpk::error_t			viewportInitialize		(::gpk::SGUI & gui, ::gpk::SViewport & viewport);
 #pragma pack(pop)
 }
 
 #endif // GPK_GUI_VIEWPORT_H_23627
+
+

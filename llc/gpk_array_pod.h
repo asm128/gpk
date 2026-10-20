@@ -18,6 +18,7 @@ namespace gpk
 		usng array_base<T>	::Size					;
 		usng array_base<T>	::alloc_with_reserve	;
 		usng array_base<T>	::find					;
+		usng array_base<T>	::rfind					;
 
 	private:
 		err_t				source_offset		(cnst T * source, u2_t count, u2_t & offset)cnst noexcept	{
@@ -30,13 +31,33 @@ namespace gpk
 			if(sourceAddress < dataAddress || sourceAddress > endAddress)
 				return 0;
 			u3_c				byteOffset			= sourceAddress - dataAddress;
-			ree_if(byteOffset % szof(T), "Misaligned source address: 0x%p.", source);
+			if_true_fef(byteOffset % szof(T), "Misaligned source address: 0x%p.", source);
 			offset					= (u2_t)(byteOffset / szof(T));
-			ree_if(count > Count - offset, GPK_FMT_GT_U2, count, Count - offset);
+			if_true_fef(count > Count - offset, GPK_FMT_GT_U2, count, Count - offset);
 			return 1;
 		}
 
 	public:
+		err_t				find				(cnst view<TCnst> sequence, u2_t offset = 0) cnst {
+			if(sequence.size() > Count || offset > Count - sequence.size())
+				rtrn -1;
+			if(0 == sequence.size())
+				rtrn offset;
+			for(u2_t iOffset = offset, offsetStop = Count - sequence.size() + 1; iOffset < offsetStop; ++iOffset)
+				if(0 == memcmp(sequence.begin(), &Data[iOffset], sequence.byte_count()))
+					rtrn iOffset;
+			rtrn -1;
+		}
+		err_t				rfind				(cnst view<TCnst> sequence, u2_t offset = 0) cnst {
+			if(sequence.size() > Count || offset > Count - sequence.size())
+				rtrn -1;
+			if(0 == sequence.size())
+				rtrn Count - offset;
+			for(u2_t iOffset = Count - sequence.size() - offset; iOffset < Count; --iOffset)
+				if(0 == memcmp(sequence.begin(), &Data[iOffset], sequence.byte_count()))
+					rtrn iOffset;
+			rtrn -1;
+		}
 
 		inxp				array_pod			()										noexcept	= default;
 							array_pod			(::std::initializer_list<T> init)					{
@@ -89,13 +110,13 @@ namespace gpk
 		err_t				clear_pointer		()										noexcept	{ safe_gpk_free(Data); Data = 0; return Size = Count = 0; }
 		// Returns the new size of the array
 		err_t				pop_back			()										noexcept	{
-			rees_if(0 == Count);
+			if_true_fe(0 == Count);
 			Data[--Count]				= {};
 			return Count;
 		}
 		// Returns the new size of the array
 		err_t				pop_back			(T & oldValue)							noexcept	{
-			rees_if(0 == Count);
+			if_true_fe(0 == Count);
 			oldValue				= Data[--Count];
 			Data[Count]				= {};
 			return Count;
@@ -108,30 +129,30 @@ namespace gpk
 		}
 		inln		err_t	append_string		(cnst gpk::function<err_t(TArray&)> & funcAppend)	noexcept	{ return funcAppend ? funcAppend(*this) : 0; }
 		
-		tplN2uinln	err_t	append_string		(cnst T (&newChain)[N])								noexcept	{ return append_string(::gpk::vcst_t{newChain}); }
-		inln		err_t	append_string		(cnst ::gpk::vcst_t & newChain)						noexcept	{ gpk_necs(append(newChain.begin(), newChain.size())); return newChain.size(); }
+		tplN2uinln	err_t	append_string		(cnst T (&newChain)[N])								noexcept	{ return append_string(vcst_t{newChain}); }
+		inln		err_t	append_string		(vcst_t newChain)									noexcept	{ gpk_necs(append(newChain.begin(), newChain.size())); return newChain.size(); }
 		inln		err_t	append_string		(cnst T & element)									noexcept	{ gpk_necs(push_back(element)); return 1; }
-		inln		err_t	append_strings		(cnst ::gpk::view<cnst ::gpk::vcst_t> & newChains)	noexcept	{ 
+		inln		err_t	append_strings		(cnst view<cnst vcst_t> & newChains)				noexcept	{ 
 			s2_t					appended				= 0;
 			for(u2_t i = 0, stop = newChains.size(); i < stop; ++i) {
-				cnst ::gpk::vcst_t & newChain = newChains[i];
+				cnst vcst_t & newChain = newChains[i];
 				gpk_necs(append(newChain));
 				appended += newChain.size();
 			}
 			return appended;
 		}
-		tplN2uinln	err_t	append				(cnst T (&newChain)[N])										noexcept	{ return append(newChain, (u2_t)N); }
-		inln		err_t	append				(cnst ::gpk::view<cnst T> & newChain)						noexcept	{ return append(newChain.begin(), newChain.size());	}
-		inln		err_t	append				(cnst ::gpk::view<cnst ::gpk::view<cnst T>> & newChains)	noexcept	{ 
+		tplN2uinln	err_t	append				(cnst T (&newChain)[N])								noexcept	{ return append(newChain, (u2_t)N); }
+		inln		err_t	append				(cnst view<cnst T> & newChain)						noexcept	{ return append(newChain.begin(), newChain.size());	}
+		inln		err_t	append				(cnst view<cnst view<cnst T>> & newChains)			noexcept	{ 
 			s2_t					count				= 0;
 			for(u2_t i = 0, stop = newChains.size(); i < stop; ++i) {
-				cnst ::gpk::view<cnst T> & newChain		= newChains[i];
+				cnst view<cnst T> & newChain		= newChains[i];
 				gpk_necs(append(newChain));
 				count					+= newChain.size();
 			}
 			return count;
 		}
-		err_t				append				(cnst T * chainToAppend, u2_t chainLength)					noexcept	{
+		err_t				append				(cnst T * chainToAppend, u2_t chainLength)			noexcept	{
 			if(0 == chainLength)
 				return Count;
 			if_null_fe(chainToAppend);
@@ -152,7 +173,7 @@ namespace gpk
 			if(newCount > Size) {
 				T							* newData			= 0;
 				u2_c				newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				if_true_fe(0 == newData);
 				if(Data)
 					memcpy(newData, Data, this->byte_count());
 					
@@ -160,7 +181,7 @@ namespace gpk
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			return Size;
 		}
@@ -189,13 +210,13 @@ namespace gpk
 		}
 		// returns the new size of the list or -1 on failure.
 		err_t				insert				(u2_t index, cnst T & newValue)	noexcept	{
-			ree_if(index > Count, GPK_FMT_GT_U2, index, Count);
+			if_true_fef(index > Count, GPK_FMT_GT_U2, index, Count);
 			cnst T				valueCopy			= newValue;
 			u2_c				newCount			= Count + 1;
 			if(Size < newCount) {
 				T							* newData			= 0;
 				u2_c				newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				if_true_fe(0 == newData);
 				if(Data)
 					memcpy(newData, Data, index * szof(T));
 				newData[index]			= valueCopy;
@@ -204,7 +225,7 @@ namespace gpk
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			else {
 				for(s2_t i = (int)Count - 1; i >= (int)index; --i)
@@ -216,7 +237,7 @@ namespace gpk
 		}
 		// returns the new size of the list or -1 on failure.
 		err_t				insert				(u2_t index, cnst T * chainToInsert, u2_t chainLength)	noexcept	{
-			ree_if(index > Count, GPK_FMT_GT_U2, index, Count);
+			if_true_fef(index > Count, GPK_FMT_GT_U2, index, Count);
 			if(0 == chainLength)
 				return Count;
 			if_null_fe(chainToInsert);
@@ -228,7 +249,7 @@ namespace gpk
 			if(Size < newCount) {
 				T							* newData			= 0;
 				u2_c				newSize				= alloc_with_reserve(newCount, newData);
-				rees_if(0 == newData);
+				if_true_fe(0 == newData);
 				if(Data)
 					memcpy(newData, Data, index * szof(T));
 				memcpy(&newData[index], chainToInsert, chainLength * szof(T));
@@ -237,7 +258,7 @@ namespace gpk
 				T							* oldData			= Data;
 				Data					= newData;
 				Size					= newSize;
-				::gpk::gpk_free(oldData);
+				gpk_free(oldData);
 			}
 			else {	// no need to reallocate and copy, just shift rightmost elements and insert in-place
 				memmove(&Data[index + chainLength], &Data[index], (Count - index) * szof(T));
@@ -259,10 +280,10 @@ namespace gpk
 		}
 		tplt<size_t _chainLength>
 		inln	err_t		insert				(u2_t index, cnst T (&chainToInsert)[_chainLength])		noexcept	{ return insert(index, chainToInsert, (u2_t)_chainLength); }
-		inln	err_t		insert				(u2_t index, ::gpk::view<cnst T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
+		inln	err_t		insert				(u2_t index, view<cnst T> chainToInsert)			noexcept	{ return insert(index, chainToInsert.begin(), chainToInsert.size()); }
 		// Returns the new size of the list or -1 if the array pointer is not initialized.
 		err_t				remove_unordered	(u2_t index)											noexcept	{
-			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			Data[index]				= Data[--Count];
 			Data[Count]				= {};
 			return Count;
@@ -270,12 +291,12 @@ namespace gpk
 		// returns the new array size or -1 if failed.
 		err_t				erase				(cnst T * address)										noexcept	{
 			u2_t					index				= 0;
-			ree_if(1 != source_offset(address, 1, index), "Address outside the array range: 0x%p.", address);
+			if_true_fef(1 != source_offset(address, 1, index), "Address outside the array range: 0x%p.", address);
 			return remove(index);
 		}
 		// returns the new array size or -1 if failed.
 		err_t				remove				(u2_t index)											noexcept	{
-			ree_if(index >= Count, GPK_FMT_GE_U2, index, Count);
+			if_true_fef(index >= Count, GPK_FMT_GE_U2, index, Count);
 			--Count;
 			while(index < Count) {
 				Data[index]				= Data[index + 1];
@@ -286,8 +307,8 @@ namespace gpk
 		}
 	}; // array_pod
 
-	tplTusng	apod		= ::gpk::array_pod<T>;
-	tplTusng	ap			= ::gpk::apod	<T>;
+	tplTusng	apod		= array_pod<T>;
+	tplTusng	ap			= apod	<T>;
 
 	tydf		apod<b8_t>	ab8_t;	tdcs	ab8_t	ab8_c;
 	tydf		apod<uc_t>	auc_t;	tdcs	auc_t	auc_c;
@@ -306,9 +327,20 @@ namespace gpk
 	stin	vs		str		(asc_t & arg)	{ rtrn {arg.begin(), arg.size()}; }
 	stin	vcst_t	str		(asc_c & arg)	{ rtrn {arg.begin(), arg.size()}; }
 
-	asc_t		toString	(::gpk::vcsc_c & strToLog);
-	err_t		camelCase	(::gpk::vcsc_t input, ::gpk::asc_t & camelCased);
-	err_t		join		(::gpk::asc_t & query, char separator, ::gpk::vcvsc_t fields);
+	tplt<tpnm T, tpnm TView>
+	err_t	join		(array_pod<T> & output, cnst T & separator, view<cnst TView> fields) {
+		err_t			appended		= 0;
+		for(u2_t iField = 0; iField < fields.size(); ++iField) {
+			if(iField) {
+				if_fail_fef(output.push_back(separator), "Failed to append separator before field:%" GPK_FMT_U2 ".", iField);
+				++appended;
+			}
+			cnst TView		& field			= fields[iField];
+			if_fail_fef(output.append({field.begin(), field.size()}), "Failed to append field:%" GPK_FMT_U2 ".", iField);
+			appended			+= field.size();
+		}
+		rtrn appended;
+	}
 } // namespace
 
 #define GPK_USING_APOD()				\
@@ -327,3 +359,5 @@ namespace gpk
 		,	::gpk::af3_t, ::gpk::af3_c
 
 #endif // GPK_ARRAY_POD_H_23627
+
+

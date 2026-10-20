@@ -168,6 +168,9 @@
     <ClInclude Include="gpk_ascii_color.h">
       <Filter>raster</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_arduino_stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_ascii_target.h">
       <Filter>raster</Filter>
     </ClInclude>
@@ -624,6 +627,9 @@
     <ClInclude Include="gpk_range.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_rxtx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gpk_apod_slice.h">
       <Filter>aliases</Filter>
     </ClInclude>
@@ -698,6 +704,9 @@
     </ClInclude>
     <ClInclude Include="gpk_cpow.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="gpk_ctti.h">
+      <Filter>type</Filter>
     </ClInclude>
     <ClInclude Include="gpk_gpio.h">
       <Filter>base</Filter>
