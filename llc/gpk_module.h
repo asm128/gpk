@@ -23,16 +23,15 @@
 
 #define GPK_MODULE_FUNCTION_NAME(functionName)	GPK_func_##functionName
 
-#define GPK_DECLARE_MODULE_FUNCTION(functionName, ...) 																	\
-	extern "C"	gpk::err_t 	 GPK_STDCALL			functionName									(__VA_ARGS__);	\
-	typedef		gpk::err_t 	(GPK_STDCALL			* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);	\
+#define GPK_DECLARE_MODULE_FUNCTION(functionName, ...) 																\
+	extern "C"	::gpk::err_t	 GPK_STDCALL			functionName								(__VA_ARGS__);	\
+	typedef		::gpk::err_t	(GPK_STDCALL			* GPK_MODULE_FUNCTION_NAME(functionName))	(__VA_ARGS__);	\
 
 #if defined(GPK_WINDOWS)
 #	define	GPK_LOAD_MODULE(moduleName)								LoadLibraryA	(moduleName)
-#	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		(moduleAddr)
-#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		GetProcAddress((HMODULE)moduleHandle, symbolName)
+#	define	GPK_FREE_MODULE(moduleAddr)								FreeLibrary		((HMODULE)moduleAddr)
+#	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		GetProcAddress	((HMODULE)moduleHandle, symbolName)
 #elif defined(GPK_LINUX) || defined(GPK_ANDROID)
-#	include <dlfcn.h>
 #	define	GPK_LOAD_MODULE(moduleName)								dlopen	(moduleName, RTLD_GLOBAL)
 #	define	GPK_FREE_MODULE(moduleAddr)								dlclose	(moduleAddr)
 #	define	GPK_LOAD_MODULE_FUNCTION(moduleHandle, symbolName)		dlsym	(moduleHandle, symbolName)
@@ -48,9 +47,9 @@
 #	define GPK_MODULE_EXTENSION "so"
 #endif
 
-/*#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 															\
-//	extern "C"	gpk::err_t 	 GPK_MODULE_API_EXPORT	functionName									(__VA_ARGS__);	\
-//	typedef		gpk::err_t 	(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))		(__VA_ARGS__);
+/*#define GPK_DECLARE_MODULE_EXPORT_FUNCTION(functionName, ...) 													\
+//	extern "C"	::gpk::err_t	 GPK_MODULE_API_EXPORT	functionName								(__VA_ARGS__);	\
+//	typedef		::gpk::err_t	(GPK_MODULE_API_EXPORT	* GPK_MODULE_FUNCTION_NAME(functionName))	(__VA_ARGS__);
 */
 namespace gpk
 {

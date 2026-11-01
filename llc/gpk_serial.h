@@ -38,7 +38,7 @@ namespace gpk
 		::gpk::vcst_t				Port			= "";
 
 #ifdef GPK_WINDOWS
-								~SSerial		() { gpk_safe_closehandle(PlatformDetail.Handle); }
+								~SSerial		() { safe_closehandle(PlatformDetail.Handle); }
 #endif
 
 		gpk::err_t 		Write			(::gpk::vcu0_t dataToSend)	const {

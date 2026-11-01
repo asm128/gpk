@@ -27,18 +27,18 @@ namespace brt
 
 static	::gpk::err_t								createChildProcess
 	(	::brt::SProcess						& process
-	,	::gpk::vcst_t						environmentBlock
+	,	::gpk::vstr_t						environmentBlock
 	,	::gpk::vcst_t						appPath
-	,	::gpk::vcst_t						commandLine
+	,	::gpk::vstr_t						commandLine
 	) {	// Create a child process that uses the previously created pipes for STDIN and STDOUT.
 	bool													bSuccess				= false;
 	stxp	bool								isUnicodeEnv			= false;
 	stxp	uint32_t							creationFlags			= CREATE_SUSPENDED | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
 
-	gpk::gpk_safe_closehandle(process.ProcessInfo.hProcess);
+	::gpk::safe_closehandle(process.ProcessInfo.hProcess);
 	bSuccess											= CreateProcessA
-		( GPK_VIEW_ARGS(appPath		).begin()	// Create the child process.
-		, GPK_VIEW_ARGS(commandLine	).begin()		// command line
+		( appPath.begin()			// Create the child process.
+		, commandLine.begin()		// command line
 		, nullptr					// process security attributes
 		, nullptr					// primary thread security attributes
 		, true						// handles are inherited
@@ -48,7 +48,7 @@ static	::gpk::err_t								createChildProcess
 		, &process.StartInfo		// STARTUPINFO pointer
 		, &process.ProcessInfo
 		) ? true : false;  // receives PROCESS_INFORMATION
-	if_true_vef(-1, false == bSuccess, "Failed to create process'%s'.", GPK_VIEW_ARGS(appPath).begin());
+	if_true_vef(-1, false == bSuccess, "Failed to create process '%.*s'.", GPK_VIEW_ARGS(appPath));
 
 	::gpk::au0_t						popupTitle						= {};
 	{
@@ -154,7 +154,7 @@ static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read 
 		uint32_t								dwRead					= 0;
 		if(handleReadable(handles.ChildStd_OUT_Read)) {
 			bSuccess							= ReadFile(handles.ChildStd_OUT_Read, chBuf.begin(), chBuf.size(), (DWORD*)&dwRead, NULL);
-			if_true_vef(-1, false == bSuccess, "Failed to read from child process' standard output.");
+			if_true_vef(-1, false == bSuccess, "%s", "Failed to read from child process' standard output.");
 			if(0 == dwRead) {
 				gpk_sync_increment(appState.DoneReading);
 				break;
@@ -192,7 +192,7 @@ static ::gpk::err_t						initHandles				(::brt::SProcessHandles & handles) {
 static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, ::SThreadStateRead & appState)										{
 	::gpk::apod<char>								environmentBlock		= {};
 	{	// Prepare CGI environment and request content packet to send to the service.
-		if_true_vef(-1, ::gpk::failed(::gpk::environmentBlockFromEnviron(environmentBlock)), "%s", "Failed");
+		if_true_vef(-1, ::gpk::failed(::gpk::environmentBlock(environmentBlock, runtimeValues.RuntimeValues.EntryPointArgs.Environment)), "%s", "Failed");
 		environmentBlock.append(runtimeValues.Content.Body.begin(), runtimeValues.Content.Body.size());
 		environmentBlock.push_back(0);
 	}
@@ -221,18 +221,17 @@ static	int									cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValue
 				break;
 			::gpk::sleep(5);
 		}
-		gpk_safe_closehandle(appState.Process.StartInfo.hStdError	);
-		gpk_safe_closehandle(appState.Process.StartInfo.hStdInput	);
-		gpk_safe_closehandle(appState.Process.StartInfo.hStdOutput	);
-		gpk_safe_closehandle(appState.Process.ProcessInfo.hProcess	);
+		::gpk::safe_closehandle(appState.Process.StartInfo.hStdError	);
+		::gpk::safe_closehandle(appState.Process.StartInfo.hStdInput	);
+		::gpk::safe_closehandle(appState.Process.StartInfo.hStdOutput	);
+		::gpk::safe_closehandle(appState.Process.ProcessInfo.hProcess	);
 	}
 	return 0;
 }
 
-static int											cgiMain					(int argc, char** argv, char**envv)		{
-	(void)(envv);
-	::gpk::SCGIRuntimeValues								runtimeValues;
-	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+static int											cgiMain					(::gpk::SRuntimeValues & coreRuntimeValues)	{
+	::gpk::SCGIRuntimeValues								runtimeValues			= {coreRuntimeValues};
+	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues), "%s", "Failed to load cgi runtime values.");
 	::SThreadStateRead										appState;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, appState))) {
 		printf("%s\r\n", "Content-Type: text/html"
@@ -254,17 +253,4 @@ static int											cgiMain					(int argc, char** argv, char**envv)		{
 	return 0;
 }
 
-int													main					(int argc, char** argv, char**envv)	{
-	(void)argc, (void)argv, (void)envv;
-	return ::cgiMain(argc, argv, envv);
-}
-
-int WINAPI											WinMain
-	(	_In_		HINSTANCE	hInstance
-	,	_In_opt_	HINSTANCE	hPrevInstance
-	,	_In_		LPSTR		lpCmdLine
-	,	_In_		int			nShowCmd
-	) {
-	(void)hInstance, (void)hPrevInstance, (void)lpCmdLine, (void)nShowCmd;
-	return ::cgiMain(__argc, __argv, environ);
-}
+GPK_OS_ENTRY_POINT(::cgiMain);

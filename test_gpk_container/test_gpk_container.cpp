@@ -1,4 +1,5 @@
 #include "gpk_array.h"
+#include "gpk_runtime.h"
 #include <windows.h>
 
 static	const char				test_chars[]		= {'F', 'r', 'i', 'e', 'n', 'd'};
@@ -183,8 +184,10 @@ int test_array_obj() {
 	return 0;
 }
 
-int main() {
+static ::gpk::err_t testContainerMain(::gpk::SRuntimeValues &) {
 	if_fail_fe(test_array_pod());
 	if_fail_fe(test_array_obj());
 	return EXIT_SUCCESS;
 }
+
+GPK_OS_ENTRY_POINT(::testContainerMain);

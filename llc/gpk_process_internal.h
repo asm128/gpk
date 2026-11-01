@@ -2,7 +2,6 @@
 
 #ifndef GPK_PROCESS_INTERNAL_H
 #define GPK_PROCESS_INTERNAL_H
-
 namespace gpk::process_detail {
 
 	err_t processClose(SProcessWin32 & process);

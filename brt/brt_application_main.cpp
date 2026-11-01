@@ -225,9 +225,9 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				//clientResponses[iClient][iMessage]		= "\r\n{ \"Respuesta\" : \"bleh\"}";
 				(*clientResponses)[iMessage]->clear();
 				if_fail_fef(::readFromPipe(process, iohandles, *(*clientResponses)[iMessage]), "iClient: %u, iMessage: %u.", iClient, iMessage);
-				gpk_safe_closehandle(process.StartInfo.hStdError	);
-				gpk_safe_closehandle(process.StartInfo.hStdInput	);
-				gpk_safe_closehandle(process.StartInfo.hStdOutput	);
+				safe_closehandle(process.StartInfo.hStdError	);
+				safe_closehandle(process.StartInfo.hStdInput	);
+				safe_closehandle(process.StartInfo.hStdOutput	);
 			}
 		}
 	}
@@ -240,8 +240,8 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 				if_fail_fe(::gpk::connectionPushData(*conn, conn->Queue, *((*clientResponses)[iMessage]), true, true));
 				receivedPerClient[iClient][iMessage]	= {};
 				::brt::SProcess						& process				= app.ClientProcesses[iClient];
-				gpk_safe_closehandle(process.ProcessInfo.hProcess	);
-				gpk_safe_closehandle(process.ProcessInfo.hThread	);
+				safe_closehandle(process.ProcessInfo.hProcess	);
+				safe_closehandle(process.ProcessInfo.hThread	);
 
 			}
 		}
@@ -271,83 +271,83 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	::gpk::sleep(15);
 	return 0;
 }
-
-// ---------------------------- Unused garbage follows
-// Example 1
-// By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
-static int					REM_tmain0							()		{
-	stxp	uint32_t	BUFSIZE					= 4096;
-	char							environmentBlock2Set	[BUFSIZE]	= {};
-	int32_t							charsWritten						= 0;
-	DWORD							dwFlags								= 0;
-	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
-	PROCESS_INFORMATION				pi									= {};
-	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
-	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
-	// Create the child process, specifying a new environment block.
-	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
-	stxp	bool		isUnicodeEnv						= false;
-	dwFlags						= dwFlags | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
-	if_true_vef(-1, FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
-	WaitForSingleObject(pi.hProcess, INFINITE);
-	return TRUE;
-}
-
-// Example 2
-// Altering the environment variables of a child process during process creation is the only way one process can directly change the environment variables of another process. A process can never directly change the environment variables of another process that is not a child of that process.
-// If you want the child process to inherit most of the parent's environment with only a few changes, retrieve the current values using GetEnvironmentVariable, save these values, create an updated block for the child process to inherit, create the child process, and then restore the saved values using SetEnvironmentVariable, as shown in the following example.
-#define VARNAME "MyVariable"
-
-static int					REM_tmain1			() {
-	stxp	const uint32_t			BUFSIZE					= 4096;
-	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
-	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
-	PROCESS_INFORMATION				pi					= {};
-	BOOL							fExist				= 0
-		;
-	// Retrieves the current value of the variable if it exists.
-	// Sets the variable to a new value, creates a child process, then uses SetEnvironmentVariable to restore the original value or delete it if it did not exist previously.
-	char							* pszOldVal			= (char*)malloc(BUFSIZE * 4);
-	if_true_vef(-1, nullptr == pszOldVal, "%s", "Out of memory\n");
-	DWORD							dwRet				= GetEnvironmentVariableA(VARNAME, pszOldVal, BUFSIZE * 4);
-	if(0 == dwRet) {
-		DWORD							dwErr				= GetLastError();
-		if(ERROR_ENVVAR_NOT_FOUND == dwErr) {
-			printf("Environment variable does not exist.\n");
-			fExist						= FALSE;
-		}
-	}
-	else if(BUFSIZE < dwRet) {
-		if_true_vef(-1, nullptr == (pszOldVal = (char*)realloc(pszOldVal, dwRet * 4)), "%s", "Out of memory\n");
-
-		dwRet						= GetEnvironmentVariableA(VARNAME, pszOldVal, dwRet);
-		if_true_vef(-1, FALSE == dwRet, "GetEnvironmentVariable failed (%d)\n", GetLastError());
-		fExist						= TRUE;
-	}
-	else
-		fExist						= TRUE;
-
-	if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit.
-	// ---- Create a child process.
-	si							= {sizeof(STARTUPINFOA)};
-	stxp	bool		isUnicodeEnv			= false;
-	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
-	::gpk::apod<char>				bufferAppName			= GPK_VIEW_ARGS(szAppName);
-	if_true_vef(-1, FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
-	WaitForSingleObject(pi.hProcess, INFINITE);
-	// - Restore the original environment variable.
-	if(fExist) {
-		if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, pszOldVal), "SetEnvironmentVariable failed (%d)\n", GetLastError());
-	}
-	else
-		SetEnvironmentVariableA(VARNAME, NULL);
-
-	free(pszOldVal);
-	return 0;
-}
-
-int							test					() {
-	::REM_tmain0();
-	::REM_tmain1();
-	return 0;
-}
+//
+//// ---------------------------- Unused garbage follows
+//// Example 1
+//// By default, a child process inherits a copy of the environment block of the parent process. The following example demonstrates how to create a new environment block to pass to a child process using CreateProcess.
+//static int					REM_tmain0							()		{
+//	stxp	uint32_t	BUFSIZE					= 4096;
+//	char							environmentBlock2Set	[BUFSIZE]	= {};
+//	int32_t							charsWritten						= 0;
+//	DWORD							dwFlags								= 0;
+//	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
+//	PROCESS_INFORMATION				pi									= {};
+//	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
+//	if_fail_fef(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");
+//	// Create the child process, specifying a new environment block.
+//	STARTUPINFOA						si									= {sizeof(STARTUPINFOA)};
+//	stxp	bool		isUnicodeEnv						= false;
+//	dwFlags						= dwFlags | (isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0);
+//	if_true_vef(-1, FALSE == CreateProcessA(szAppName, NULL, NULL, NULL, TRUE, dwFlags, (void*)environmentBlock2Set, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError());
+//	WaitForSingleObject(pi.hProcess, INFINITE);
+//	return TRUE;
+//}
+//
+//// Example 2
+//// Altering the environment variables of a child process during process creation is the only way one process can directly change the environment variables of another process. A process can never directly change the environment variables of another process that is not a child of that process.
+//// If you want the child process to inherit most of the parent's environment with only a few changes, retrieve the current values using GetEnvironmentVariable, save these values, create an updated block for the child process to inherit, create the child process, and then restore the saved values using SetEnvironmentVariable, as shown in the following example.
+//#define VARNAME "MyVariable"
+//
+//static int					REM_tmain1			() {
+//	stxp	const uint32_t			BUFSIZE					= 4096;
+//	stxp	::gpk::vcst_c			szAppName			= GPK_CXS("ex3.exe");
+//	STARTUPINFOA					si					= {sizeof(STARTUPINFOA)};
+//	PROCESS_INFORMATION				pi					= {};
+//	BOOL							fExist				= 0
+//		;
+//	// Retrieves the current value of the variable if it exists.
+//	// Sets the variable to a new value, creates a child process, then uses SetEnvironmentVariable to restore the original value or delete it if it did not exist previously.
+//	char							* pszOldVal			= (char*)malloc(BUFSIZE * 4);
+//	if_true_vef(-1, nullptr == pszOldVal, "%s", "Out of memory\n");
+//	DWORD							dwRet				= GetEnvironmentVariableA(VARNAME, pszOldVal, BUFSIZE * 4);
+//	if(0 == dwRet) {
+//		DWORD							dwErr				= GetLastError();
+//		if(ERROR_ENVVAR_NOT_FOUND == dwErr) {
+//			printf("Environment variable does not exist.\n");
+//			fExist						= FALSE;
+//		}
+//	}
+//	else if(BUFSIZE < dwRet) {
+//		if_true_vef(-1, nullptr == (pszOldVal = (char*)realloc(pszOldVal, dwRet * 4)), "%s", "Out of memory\n");
+//
+//		dwRet						= GetEnvironmentVariableA(VARNAME, pszOldVal, dwRet);
+//		if_true_vef(-1, FALSE == dwRet, "GetEnvironmentVariable failed (%d)\n", GetLastError());
+//		fExist						= TRUE;
+//	}
+//	else
+//		fExist						= TRUE;
+//
+//	if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, "Test"), "SetEnvironmentVariable failed (%d)\n", GetLastError());		// Set a value for the child process to inherit.
+//	// ---- Create a child process.
+//	si							= {sizeof(STARTUPINFOA)};
+//	stxp	bool		isUnicodeEnv			= false;
+//	const DWORD						dwFlags					= isUnicodeEnv ? CREATE_UNICODE_ENVIRONMENT : 0;
+//	::gpk::apod<char>				bufferAppName			= GPK_VIEW_ARGS(szAppName);
+//	if_true_vef(-1, FALSE == CreateProcessA(bufferAppName.begin(), NULL, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si, &pi), "CreateProcess failed (%d)\n", GetLastError()); // inherit parent's environment
+//	WaitForSingleObject(pi.hProcess, INFINITE);
+//	// - Restore the original environment variable.
+//	if(fExist) {
+//		if_true_vef(-1, FALSE == SetEnvironmentVariableA(VARNAME, pszOldVal), "SetEnvironmentVariable failed (%d)\n", GetLastError());
+//	}
+//	else
+//		SetEnvironmentVariableA(VARNAME, NULL);
+//
+//	free(pszOldVal);
+//	return 0;
+//}
+//
+//int							test					() {
+//	::REM_tmain0();
+//	::REM_tmain1();
+//	return 0;
+//}

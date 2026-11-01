@@ -1,10 +1,11 @@
 #define GPK_STDOUT_LOG_ENABLED
 #include "gpk_stdsocket.h"
 #include "gpk_sync.h"
+#include "gpk_runtime.h"
 
 using namespace gpk;
 
-int main() {
+static ::gpk::err_t udpServerMain(::gpk::SRuntimeValues &) {
 	tcpipInitialize();
 	sockaddr_in				sa_server				= {};
 	SIPv4Endpoint			addrLocal				= {{}, 9898};
@@ -51,3 +52,5 @@ int main() {
 	tcpipShutdown();
 	return 0;
 }
+
+GPK_OS_ENTRY_POINT(::udpServerMain);

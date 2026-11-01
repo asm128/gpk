@@ -5,11 +5,12 @@
 
 #include "gpk_log.h"
 #include "gpk_file.h"
+#include "gpk_runtime.h"
 
 using namespace gpk;
 
 // Splits a file into file.split.## parts.
-int									main							(int , char ** )		{
+static ::gpk::err_t					testStringsMain					(::gpk::SRuntimeValues &)	{
 	const ::gpk::vcst_t text = "habia una vez un bru un brujito en gulubu.\r\n";
 	const ::gpk::vcst_t text1 = "\n \r \n habia una vez un bru un brujito en gulubu.\r\n";
 	const ::gpk::vcst_t words[11] = {"habia", "una", "vez", "un", "bru", "un", "brujito", "en", "gulubu", ".", "\r\n"};
@@ -42,3 +43,5 @@ int									main							(int , char ** )		{
 	::gpk::trim (trimmed, text1); info_printf("trimmed (%u): %s.", trimmed.size(), GPK_VIEW_ARGS(trimmed).begin());
 	return 0;
 }
+
+GPK_OS_ENTRY_POINT(::testStringsMain);

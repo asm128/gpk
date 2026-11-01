@@ -1,9 +1,10 @@
 #include "gpk_stdsocket.h"
 #include "gpk_sync.h"
+#include "gpk_runtime.h"
 
 using namespace gpk;
 
-int main() {
+static ::gpk::err_t udpClientMain(::gpk::SRuntimeValues &) {
 	::gpk::tcpipInitialize();
 	sockaddr_in			sa_server			= {AF_INET};
 	while(true) {
@@ -70,3 +71,5 @@ int main() {
 	::gpk::tcpipShutdown();
 	return 0;
 }
+
+GPK_OS_ENTRY_POINT(::udpClientMain);

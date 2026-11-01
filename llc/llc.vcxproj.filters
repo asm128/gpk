@@ -789,6 +789,9 @@
     <ClInclude Include="gpk_matrix2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gpk_process_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gpk_adam7.cpp">
@@ -1020,6 +1023,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gpk_crc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process_linux.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_process_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gpk_platform_error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

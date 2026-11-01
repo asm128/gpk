@@ -12,6 +12,7 @@
 #include "gpk_stdstring.h"
 #include "gpk_file.h"
 #include "gpk_string.h"
+#include "gpk_runtime.h"
 
 using namespace gpk;
 
@@ -63,7 +64,7 @@ using namespace gpk;
 	return 0;
 }
 
-int						main					() {
+static ::gpk::err_t		fontConvertMain			(::gpk::SRuntimeValues &) {
 	::gpk::aobj<::gpk::string>	fontFiles				= {};
 	::gpk::vcst_t					pathToSearch			= {"../gpk_data/fonts/cp437"};
 	if_fail_fef(gpk::pathList(pathToSearch, fontFiles), "Path not found: '%.*s'", GPK_VIEW_ARGS(pathToSearch));
@@ -111,3 +112,4 @@ int						main					() {
 	return 0;
 }
 
+GPK_OS_ENTRY_POINT(::fontConvertMain);

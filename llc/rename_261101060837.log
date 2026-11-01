@@ -1,0 +1,9 @@
+Root: "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc"
+Source prefix: "llc_"
+Target prefix: "gpk_"
+
+RENAMED: "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc_error.h" -> "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_error.h"
+SKIPPED collision: "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc_runtime.h" -> "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_runtime.h"
+RENAMED: "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\llc_error.cpp" -> "D:\enterprise\programming_sciences\codebases\Callsite\bundle_galaxy_hell\gpk\llc\gpk_error.cpp"
+
+Renamed: 2 file(s). Skipped: 1 file(s). Errors: 1.

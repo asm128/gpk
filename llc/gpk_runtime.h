@@ -18,14 +18,14 @@ namespace gpk
 {
 	struct SRuntimeValuesDetail {
 #ifdef GPK_ANDROID
-		ANativeActivity						* Activity		= {};
-		void								* SavedState	= {};
-		u2_t								SavedStateSize	= {};
+		ANativeActivity			* Activity		= {};
+		void					* SavedState	= {};
+		u2_t					SavedStateSize	= {};
 #elif defined(GPK_WINDOWS)
-		HINSTANCE				hInstance		{};
-		HINSTANCE				hPrevInstance	{};
-		LPSTR					lpCmdLine		{};
-		int						nShowCmd		{};
+		HINSTANCE				hInstance		= {};
+		HINSTANCE				hPrevInstance	= {};
+		LPSTR					lpCmdLine		= {};
+		int						nShowCmd		= {};
 #endif
 	};
 	struct SRuntimeValues {

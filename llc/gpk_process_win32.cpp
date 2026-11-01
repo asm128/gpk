@@ -1,16 +1,16 @@
-#include "llc_process_internal.h"
+#include "gpk_process_internal.h"
 
-#ifdef LLC_WINDOWS
-// Windows declarations already arrive through LLC's synchronization headers.
-namespace llc::process_detail {
-sttc	llc::err_t		processHandleClose		(TWindowsHandle & handle) {
+#ifdef GPK_WINDOWS
+// Windows declarations already arrive through GPK's synchronization headers.
+namespace gpk::process_detail {
+sttc	gpk::err_t		processHandleClose		(TWindowsHandle & handle) {
 	if(0 == handle || INVALID_WINDOWS_HANDLE == handle) {
 		handle					= INVALID_WINDOWS_HANDLE;
 		rtrn 0;
 	}
 	TWindowsHandle				closing					= handle;
 	handle					= INVALID_WINDOWS_HANDLE;
-	rtrn CloseHandle((HANDLE)closing) ? 0 : ::llc::OS_ERROR;
+	rtrn CloseHandle((HANDLE)closing) ? 0 : ::gpk::OS_ERROR;
 }
 
 stct auto_process_handle : auto_handler<TWindowsHandle*, nullptr> {
@@ -24,7 +24,7 @@ stct auto_process_handle : auto_handler<TWindowsHandle*, nullptr> {
 	}
 };
 
-llc::err_t			processClose			(SProcessWin32 & process) {
+gpk::err_t			processClose			(SProcessWin32 & process) {
 	bool					failedToClose				= false;
 	TWindowsHandle					stdoutWrite				= process.Startup.HandleStdOutput;
 	if(failed(processHandleClose(process.Startup.HandleStdInput)))
@@ -48,7 +48,7 @@ llc::err_t			processClose			(SProcessWin32 & process) {
 	rtrn failedToClose ? OS_ERROR : 0;
 }
 
-llc::err_t processRedirect(SProcessWin32 & process) {
+gpk::err_t processRedirect(SProcessWin32 & process) {
 	if(process.Info.hProcess || process.Info.hThread)
 		rtrn OS_BUSY;
 	if_fail_fe(processClose(process));
@@ -71,7 +71,7 @@ llc::err_t processRedirect(SProcessWin32 & process) {
 
 tplT ndsi	T *	data_or_null		(view<T> yourView)	nxpt	{ return yourView.size() ? &yourView[0] : 0; }
 
-llc::err_t		processCreate
+gpk::err_t		processCreate
 	( SProcessWin32	& process
 	, vcst_t		application
 	, vcst_t		commandLine
@@ -85,12 +85,12 @@ llc::err_t		processCreate
 	as0_t					environmentStorage			= environment;
 	cnst BOOL				inheritHandles				= (process.Startup.Flags & STARTF_USESTDHANDLES) ? TRUE : FALSE;
 	STARTUPINFOA			startup						= {};
-	::llc::cpycst(startup, process.Startup);
+	::gpk::cpycst(startup, process.Startup);
 	PROCESS_INFORMATION		info						= {};
 	if_zero_vef(OS_ERROR, CreateProcessA(data_or_null(applicationStorage), data_or_null(commandLineStorage), 0, 0, inheritHandles, creationFlags, data_or_null(environmentStorage), 0, &startup, &info)
-		, "\"%.*s\", \"%.*s\"", LLC_VIEW_ARGS(applicationStorage), LLC_VIEW_ARGS(commandLineStorage)
+		, "\"%.*s\", \"%.*s\"", GPK_VIEW_ARGS(applicationStorage), GPK_VIEW_ARGS(commandLineStorage)
 	);
-	llc::cpycst(process.Info, info);
+	gpk::cpycst(process.Info, info);
 	TWindowsHandle			stdoutWrite					= process.Startup.HandleStdOutput;
 	bool					failedToClose				= false;
 	if(failed(processHandleClose(process.Startup.HandleStdInput)))
@@ -104,7 +104,7 @@ llc::err_t		processCreate
 	rtrn failedToClose ? OS_ERROR : 0;
 }
 
-llc::err_t			processWrite			(SProcessWin32 & process, vcu0_t input) {
+gpk::err_t			processWrite			(SProcessWin32 & process, vcu0_t input) {
 	if(0 == process.StdinWrite || INVALID_WINDOWS_HANDLE == process.StdinWrite)
 		rtrn input.size() ? OS_ERROR : 0;
 	auto_process_handle scope{process.StdinWrite};
@@ -117,7 +117,7 @@ llc::err_t			processWrite			(SProcessWin32 & process, vcu0_t input) {
 	rtrn scope.Close();
 }
 
-llc::err_t			processRead			(SProcessWin32 & process, au0_t & output) {
+gpk::err_t			processRead			(SProcessWin32 & process, au0_t & output) {
 	if(0 == process.StdoutRead || INVALID_WINDOWS_HANDLE == process.StdoutRead)
 		rtrn OS_ERROR;
 	auto_process_handle scope{process.StdoutRead};
@@ -135,7 +135,7 @@ llc::err_t			processRead			(SProcessWin32 & process, au0_t & output) {
 	rtrn scope.Close();
 }
 
-llc::err_t			processWait			(SProcessWin32 & process, u2_t & exitCode) {
+gpk::err_t			processWait			(SProcessWin32 & process, u2_t & exitCode) {
 	if(0 == process.Info.hProcess || INVALID_WINDOWS_HANDLE == process.Info.hProcess)
 		rtrn OS_ERROR;
 	if(WAIT_OBJECT_0 != WaitForSingleObject((HANDLE)process.Info.hProcess, INFINITE))
@@ -150,7 +150,7 @@ llc::err_t			processWait			(SProcessWin32 & process, u2_t & exitCode) {
 stct SProcessInput {
 	SProcessWin32	& Process;
 	vcu0_t			Input;
-	llc::err_t		Result		= OS_ERROR;
+	gpk::err_t		Result		= OS_ERROR;
 };
 
 // Native thread entry point; the operation's err_t stays in the shared context.
@@ -181,7 +181,7 @@ stct auto_process_writer : auto_handler<HANDLE, nullptr> {
 	}
 };
 
-llc::err_t processCommunicate(SProcessWin32 & process, vcu0_t input, au0_t & output) {
+gpk::err_t processCommunicate(SProcessWin32 & process, vcu0_t input, au0_t & output) {
 	if(0 == input.size()) {
 		if_fail_fe(processWrite(process, input));
 		rtrn processRead(process, output);

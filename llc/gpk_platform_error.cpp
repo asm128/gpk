@@ -1,8 +1,8 @@
 #include "gpk_platform_error.h"
 
 #if defined(GPK_ST)
-::gpk::error_t gpk::error_t_from_st_hal_status(HAL_StatusTypeDef status) {
-  ::gpk::error_t value = gpk::RESULT_HAL_ERROR;
+::gpk::err_t gpk::error_t_from_st_hal_status(HAL_StatusTypeDef status) {
+  ::gpk::err_t value = gpk::RESULT_HAL_ERROR;
   switch(status) {
   case HAL_OK     : value = ::gpk::OS_OK     ; break;
   case HAL_ERROR  : value = ::gpk::OS_ERROR  ; break;
@@ -12,6 +12,6 @@
   return value;
 }
 #else
-::gpk::error_t gpk::error_t_from_st_hal_status(int32_t status) { return status; }
+::gpk::err_t gpk::error_t_from_st_hal_status(s2_t status) { return status; }
 
 #endif

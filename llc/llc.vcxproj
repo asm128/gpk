@@ -125,6 +125,7 @@
     <ClInclude Include="gpk_path.h" />
     <ClInclude Include="gpk_platform_error.h" />
     <ClInclude Include="gpk_pod_definition.h" />
+    <ClInclude Include="gpk_process_internal.h" />
     <ClInclude Include="gpk_quad3.h" />
     <ClInclude Include="gpk_queue_event.h" />
     <ClInclude Include="gpk_range.h" />
@@ -286,6 +287,9 @@
     <ClCompile Include="gpk_keyval_view.cpp" />
     <ClCompile Include="gpk_particle.cpp" />
     <ClCompile Include="gpk_path.cpp" />
+    <ClCompile Include="gpk_platform_error.cpp" />
+    <ClCompile Include="gpk_process_linux.cpp" />
+    <ClCompile Include="gpk_process_win32.cpp" />
     <ClCompile Include="gpk_spi.cpp" />
     <ClCompile Include="gpk_string_compose.cpp" />
     <ClCompile Include="gpk_typeint.cpp" />

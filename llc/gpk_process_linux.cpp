@@ -1,9 +1,9 @@
 #if defined(__linux__) && !defined(_GNU_SOURCE)
 #	define _GNU_SOURCE // pipe2 and F_DUPFD_CLOEXEC.
 #endif
-#include "llc_process_internal.h"
+#include "gpk_process_internal.h"
 
-#ifdef LLC_LINUX
+#ifdef GPK_LINUX
 #include <errno.h>    // EINTR, EPIPE and errno.
 #include <fcntl.h>    // Atomic close-on-exec pipes and descriptor relocation.
 #include <pthread.h>  // Input worker, cancellation and per-thread signal mask.
@@ -12,8 +12,8 @@
 #include <sys/wait.h> // Child status and reaping.
 #include <unistd.h>   // Pipe I/O and standard descriptors.
 
-namespace llc::process_detail {
-sttc llc::err_t processDescriptorClose(int & descriptor) {
+namespace gpk::process_detail {
+sttc gpk::err_t processDescriptorClose(int & descriptor) {
 	if(0 > descriptor)
 		rtrn 0;
 	int cancellation = 0;
@@ -63,8 +63,8 @@ stct auto_process_actions : auto_handler<posix_spawn_file_actions_t*, nullptr> {
 	}
 };
 
-sttc llc::err_t processPipesClose(SProcessLinux & process) {
-	llc::err_t result = 0;
+sttc gpk::err_t processPipesClose(SProcessLinux & process) {
+	gpk::err_t result = 0;
 	if(failed(processDescriptorClose(process.StdinRead))) result = OS_ERROR;
 	if(failed(processDescriptorClose(process.StdinWrite))) result = OS_ERROR;
 	if(failed(processDescriptorClose(process.StdoutRead))) result = OS_ERROR;
@@ -78,8 +78,8 @@ sttc void * processReap(void * parameter) {
 	rtrn 0;
 }
 
-llc::err_t processClose(SProcessLinux & process) {
-	llc::err_t result = processPipesClose(process);
+gpk::err_t processClose(SProcessLinux & process) {
+	gpk::err_t result = processPipesClose(process);
 	if(0 >= process.PID)
 		rtrn result;
 	pid_t waited = -1;
@@ -106,7 +106,7 @@ llc::err_t processClose(SProcessLinux & process) {
 	rtrn result;
 }
 
-sttc llc::err_t processPipe(int & readEnd, int & writeEnd) {
+sttc gpk::err_t processPipe(int & readEnd, int & writeEnd) {
 	int descriptors[2] = {-1, -1};
 	if(0 != pipe2(descriptors, O_CLOEXEC))
 		rtrn OS_ERROR;
@@ -116,7 +116,7 @@ sttc llc::err_t processPipe(int & readEnd, int & writeEnd) {
 		if(descriptor > STDERR_FILENO)
 			continue;
 		cnst int moved = fcntl(descriptor, F_DUPFD_CLOEXEC, STDERR_FILENO + 1);
-		cnst llc::err_t closed = processDescriptorClose(descriptor);
+		cnst gpk::err_t closed = processDescriptorClose(descriptor);
 		descriptor = moved;
 		if_true_ve(OS_ERROR, 0 > moved || failed(closed));
 	}
@@ -126,7 +126,7 @@ sttc llc::err_t processPipe(int & readEnd, int & writeEnd) {
 	rtrn 0;
 }
 
-llc::err_t processRedirect(SProcessLinux & process) {
+gpk::err_t processRedirect(SProcessLinux & process) {
 	if(0 < process.PID)
 		rtrn OS_BUSY;
 	if_fail_fe(processPipesClose(process));
@@ -139,7 +139,7 @@ llc::err_t processRedirect(SProcessLinux & process) {
 
 // Compact one writable command line into argv storage; no per-argument strings or shell.
 // Match MS CRT f3_t quotes/backslashes, including argv[0]'s literal backslashes.
-sttc llc::err_t processArguments(as0_t & storage, apod<char*> & arguments) {
+sttc gpk::err_t processArguments(as0_t & storage, apod<char*> & arguments) {
 	u2_t read = 0, write = 0;
 	while(read + 1 < storage.size()) {
 		while(' ' == storage[read] || '\t' == storage[read]) ++read;
@@ -177,7 +177,7 @@ sttc llc::err_t processArguments(as0_t & storage, apod<char*> & arguments) {
 	rtrn 0;
 }
 
-llc::err_t processCreate(SProcessLinux & process, vcst_t application, vcst_t commandLine, vcs0_t environment, u2_t creationFlags) {
+gpk::err_t processCreate(SProcessLinux & process, vcst_t application, vcst_t commandLine, vcs0_t environment, u2_t creationFlags) {
 	if(0 < process.PID)
 		rtrn OS_BUSY;
 	if_true_fef(creationFlags, "%s", "Windows process creation flags are unsupported on Linux.");
@@ -219,8 +219,8 @@ llc::err_t processCreate(SProcessLinux & process, vcst_t application, vcst_t com
 		rtrn OS_ERROR;
 	}
 	cnst err_t destroyed = scope.Close();
-	cnst llc::err_t closedInput = processDescriptorClose(process.StdinRead);
-	cnst llc::err_t closedOutput = processDescriptorClose(process.StdoutWrite);
+	cnst gpk::err_t closedInput = processDescriptorClose(process.StdinRead);
+	cnst gpk::err_t closedOutput = processDescriptorClose(process.StdoutWrite);
 	rtrn destroyed || failed(closedInput) || failed(closedOutput) ? OS_ERROR : 0;
 }
 
@@ -244,7 +244,7 @@ stct SProcessWriteScope {
 	}
 };
 
-llc::err_t processWrite(SProcessLinux & process, vcu0_t input) {
+gpk::err_t processWrite(SProcessLinux & process, vcu0_t input) {
 	if(0 > process.StdinWrite)
 		rtrn input.size() ? OS_ERROR : 0;
 	// Block SIGPIPE only in this thread; never change the application's signal disposition.
@@ -269,7 +269,7 @@ llc::err_t processWrite(SProcessLinux & process, vcu0_t input) {
 	rtrn scope.Close();
 }
 
-llc::err_t processRead(SProcessLinux & process, au0_t & output) {
+gpk::err_t processRead(SProcessLinux & process, au0_t & output) {
 	if(0 > process.StdoutRead)
 		rtrn OS_ERROR;
 	auto_process_descriptor scope{process.StdoutRead};
@@ -285,7 +285,7 @@ llc::err_t processRead(SProcessLinux & process, au0_t & output) {
 	rtrn scope.Close();
 }
 
-llc::err_t processWait(SProcessLinux & process, u2_t & exitCode) {
+gpk::err_t processWait(SProcessLinux & process, u2_t & exitCode) {
 	if(0 >= process.PID)
 		rtrn OS_ERROR;
 	int status = 0;
@@ -303,7 +303,7 @@ llc::err_t processWait(SProcessLinux & process, u2_t & exitCode) {
 stct SProcessInput {
 	SProcessLinux & Process;
 	vcu0_t Input;
-	llc::err_t Result = OS_ERROR;
+	gpk::err_t Result = OS_ERROR;
 };
 
 sttc void * processInputWrite(void * parameter) {
@@ -325,7 +325,7 @@ stct auto_process_writer : auto_handler<pthread_t*, nullptr> {
 	}
 };
 
-llc::err_t processCommunicate(SProcessLinux & process, vcu0_t input, au0_t & output) {
+gpk::err_t processCommunicate(SProcessLinux & process, vcu0_t input, au0_t & output) {
 	if(!input.size()) {
 		if_fail_fe(processWrite(process, input));
 		rtrn processRead(process, output);
