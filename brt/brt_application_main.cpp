@@ -1,4 +1,4 @@
-#include "application.h"
+#include "brt_application_main.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_tcpip.h"
 #include "gpk_process.h"
@@ -278,7 +278,7 @@ static int					REM_tmain0							()		{
 	char							environmentBlock2Set	[BUFSIZE]	= {};
 	int32_t							charsWritten						= 0;
 	DWORD							dwFlags								= 0;
-	stxp	::gpk::vcst_c			szAppName	[]						= GPK_CXS("ex3.exe");
+	stxp	::gpk::vcst_c			szAppName							= GPK_CXS("ex3.exe");
 	PROCESS_INFORMATION				pi									= {};
 	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set, "MySetting=A"), "String copy failed: %s.", "MySetting=A");	// Copy environment strings into an environment block.
 	gpk_necall(charsWritten += 1 + (int32_t)sprintf_s(environmentBlock2Set + charsWritten, ::gpk::size(environmentBlock2Set) - charsWritten, "MyVersion=2"), "String copy failed: %s.", "MyVersion=2");

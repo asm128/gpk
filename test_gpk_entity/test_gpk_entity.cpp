@@ -30,7 +30,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::SApplication, "GPK Entity Test v0.1");
 
 static	::gpk::error_t	updateSizeDependentResources(::SApplication & app)											{
 	::gpk::SWindow				& mainWindow			= app.Framework.RootWindow;
-	const ::gpk::n2u16			newSize					= mainWindow.Size;
+	const ::gpk::n2u1_t			newSize					= mainWindow.Size;
 #if !defined(DISABLE_D3D11)
 	mainWindow.BackBuffer	= {};
 	gpk_necs(app.D3DApp.SetWindowSize(newSize));
@@ -180,7 +180,7 @@ static	::gpk::error_t	sceneDraw
 }
 #endif
 ::gpk::error_t			draw					(::SApplication& app)											{	// --- This function will draw some coloured symbols in each cell of the ASCII screen.
-	const ::gpk::n3f32			sunlightPos				= ::gpk::calcSunPosition();
+	const ::gpk::n3f2_t			sunlightPos				= ::gpk::calcSunPosition();
 	//const double				sunlightFactor			= ::gpk::calcSunlightFactor(app.SSiegeApp.World.WorldState.DaylightRatioExtra, app.SSiegeApp.World.WorldState.DaylightOffsetMinutes);
 	const ::gpk::rgbaf			clearColor				= ::gpk::interpolate_linear(::gpk::DARKBLUE * .25, ::gpk::LIGHTBLUE * 1.1, 1/*sunlightFactor*/);
 
