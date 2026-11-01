@@ -48,10 +48,10 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 		const int32_t				indexObjectApp				= ::gpk::jsonExpressionResolve("application.brt", jsonReader, 0, app.ProcessFileName);
 		if_true_wf(::gpk::failed(indexObjectApp), "Failed to find application node (%s) in json configuration file: '%s'", "application.brt", framework.FileNameJSONConfig.begin())
 		else {
-			if_fail_wf(gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, app.ProcessFileName	)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName	));
-			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, app.ProcessMockPath	)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessMockPath	));
-			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_params"		, jsonReader, indexObjectApp, app.ProcessParams		)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessParams		));
-			if_fail_wf(gpk::jsonExpressionResolve("listen_port"						, jsonReader, indexObjectApp, jsonPort				)), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(jsonPort));
+			if_fail_wf(gpk::jsonExpressionResolve("process.executable_path"			, jsonReader, indexObjectApp, app.ProcessFileName	), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessFileName	));
+			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_app_name"	, jsonReader, indexObjectApp, app.ProcessMockPath	), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessMockPath	));
+			if_fail_wf(gpk::jsonExpressionResolve("process.command_line_params"		, jsonReader, indexObjectApp, app.ProcessParams		), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(app.ProcessParams	));
+			if_fail_wf(gpk::jsonExpressionResolve("listen_port"						, jsonReader, indexObjectApp, jsonPort				), "Failed to load config from json! Last contents found: %.*s.", GPK_VIEW_ARGS(jsonPort))
 			else {
 				::gpk::parseIntegerDecimal(jsonPort, port);
 				info_printf("Port to listen on: %u.", (uint32_t)port);
@@ -158,13 +158,13 @@ static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 
 ::gpk::err_t			update						(::brt::SApplication & app, bool exitSignal)	{
 	::gpk::STimer				timer;
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, exitSignal);
 	{
 		::std::lock_guard			lock						(app.LockRender);
 		app.Framework.RootWindow.BackBuffer	= app.Offscreen;
 	}
 	::gpk::SFramework			& framework					= app.Framework;
-	if_true_vif(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework), "Exit requested by framework update.");
+	if_true_vi(::gpk::APPLICATION_STATE_EXIT, ::gpk::APPLICATION_STATE_EXIT == ::gpk::updateFramework(app.Framework));
 	::gpk::SGUI					& gui						= *framework.GUI;
 	::gpk::acid					controlsToProcess			= {};
 	::gpk::guiProcessControls(gui, [&app](::gpk::cid_t iControl) {
