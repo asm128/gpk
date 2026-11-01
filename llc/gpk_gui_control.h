@@ -21,14 +21,14 @@ namespace gpk
 	typedef	rect<cid_t>		rectcid;
 
 	tplt<uint32_t _sizeArray>	
-	using	astcid	= ::gpk::astatic<cid_t, _sizeArray>;
+	using	astcid	= astatic<cid_t, _sizeArray>;
 
-	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, uint8_t)
+	GDEFINE_ENUM_TYPE(GUI_COLOR_MODE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Default	, 0);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, 3D		, 1);
 	GDEFINE_ENUM_VALUE(GUI_COLOR_MODE, Flat		, 2);
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, uint8_t);
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_LIMIT, u0_t);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Left		, ::gpk::ALIGN_LEFT		);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Top		, ::gpk::ALIGN_TOP		);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Right		, ::gpk::ALIGN_RIGHT	);
@@ -36,8 +36,7 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Outer		, ::gpk::ALIGN_FAR		);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_LIMIT, Inner		, ::gpk::ALIGN_NEAR		);
 	
-
-	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, uint16_t);
+	GDEFINE_ENUM_TYPE (GUI_CONTROL_METRICS_FLAG, u1_t);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSize		, 1 << 0);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YSize		, 1 << 1);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, XSizeMin	, 1 << 2);
@@ -52,10 +51,10 @@ namespace gpk
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_METRICS_FLAG, YOffsetMax	, 1 << 11);
 
 	struct SControlPlacement {
-		::gpk::rect2i16				Area				= {{}, {16, 16}};
-		::gpk::rectu16				Margin				= {1, 1, 1, 1};
-		::gpk::rectu16				Border				= {1, 1, 1, 1};
-		::gpk::ALIGN				Align				= ::gpk::ALIGN_TOP_LEFT;
+		rect2i16					Area				= {{}, {16, 16}};
+		rectu16						Margin				= {1, 1, 1, 1};
+		rectu16						Border				= {1, 1, 1, 1};
+		ALIGN						Align				= ::gpk::ALIGN_TOP_LEFT;
 		GUI_CONTROL_LIMIT			RelativeBorderSize	: 4;
 		GUI_CONTROL_LIMIT			RelativeMarginSize	: 4;
 		GUI_CONTROL_METRICS_FLAG	RelativeMetrics		= {};
@@ -66,7 +65,7 @@ namespace gpk
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::rectu16 & ncSpacing)	noexcept	{ ncSpacing = controlNCRect(ctl); }
 	stincxp	void			controlNCSpacing	(const ::gpk::SControlPlacement & ctl, ::gpk::n2u1_t   & ncSpacing)	noexcept	{ ncSpacing = controlNCSpacing(ctl); }
 
-	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, uint8_t)
+	GDEFINE_ENUM_TYPE(GUI_CONTROL_PALETTE, u0_t)
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, NORMAL				, 0);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, DISABLED			, 1);
 	GDEFINE_ENUM_VALUE(GUI_CONTROL_PALETTE, HOVER				, 2);

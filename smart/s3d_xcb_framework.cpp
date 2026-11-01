@@ -63,11 +63,11 @@ static ::gpk::error_t		create_window	(xcb_connection_t * connection, xcb_screen_
 #ifndef GPK_WINDOWS
 	::gpk::ptr_obj<::gpk::SRenderTarget<::gpk::SColorBGRA, uint32_t>>
 										& guiRenderTarget			= framework.MainDisplayOffscreen;
-	const ::gpk::SCoord2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+	const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 	::gpk::SInput						& input						= *framework.Input;
 	if(framework.MainDisplay.Repaint) {
 		const xcb_image_format_t			format						= XCB_IMAGE_FORMAT_Z_PIXMAP;
-		const ::gpk::SCoord2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
+		const ::gpk::n2<uint32_t>		& guiRenderTargetMetrics	= guiRenderTarget->Color.View.metrics();
 		xcb_image_t							* image						= xcb_image_create_native
 			( framework.PlatformDetail.XCBConnection
 			, guiRenderTargetMetrics.x

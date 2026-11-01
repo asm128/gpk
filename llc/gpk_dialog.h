@@ -6,18 +6,17 @@
 
 namespace gpk
 {
-#pragma pack(push, 1)
-	enum DIALOG_CONTROL : int8_t
-		{ DIALOG_CONTROL_Label			= 0
-		, DIALOG_CONTROL_Button
-		, DIALOG_CONTROL_ListBox
-		, DIALOG_CONTROL_Slider
-		, DIALOG_CONTROL_ScrollBar
-		, DIALOG_CONTROL_EditBox
-		, DIALOG_CONTROL_VirtualKeyboard
-		, DIALOG_CONTROL_COUNT
-		};
+	GDEFINE_ENUM_TYPE(DIALOG_CONTROL, s0_t);
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, Label			, 0);			
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, Button			, 1);
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, ListBox			, 2);
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, Slider			, 3);
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, ScrollBar		, 4);	
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, EditBox			, 5);
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, VirtualKeyboard	, 6);		
+	GDEFINE_ENUM_VALUE(DIALOG_CONTROL, COUNT			, 7);
 
+#pragma pack(push, 1)
 	struct SDialog;
 	struct IDialogControl {
 		SDialog					* Dialog			= 0;
