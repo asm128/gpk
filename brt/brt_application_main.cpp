@@ -1,4 +1,4 @@
-#include "application.h"
+#include "brt_application_main.h"
 #include "gpk_bitmap_file.h"
 #include "gpk_tcpip.h"
 #include "gpk_process.h"
@@ -10,7 +10,7 @@
 
 GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 
-::gpk::error_t	cleanup	(::brt::SApplication & app)	{
+::gpk::err_t	cleanup	(::brt::SApplication & app)	{
 	::gpk::serverStop(app.Server);
 	::gpk::mainWindowDestroy(app.Framework.RootWindow);
 	::gpk::tcpipShutdown();
@@ -18,7 +18,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-::gpk::error_t			setup	(::brt::SApplication & app)	{
+::gpk::err_t			setup	(::brt::SApplication & app)	{
 	::gpk::SFramework			& framework					= app.Framework;
 	::gpk::SWindow				& mainWindow				= framework.RootWindow;
 	mainWindow.Size			= {320, 200};
@@ -75,7 +75,7 @@ GPK_DEFINE_APPLICATION_ENTRY_POINT(::brt::SApplication, "Module Explorer");
 	return 0;
 }
 
-static	::gpk::error_t	createChildProcess
+static	::gpk::err_t	createChildProcess
 	(	::brt::SProcess					& process
 	,	::gpk::vu0_t						environmentBlock
 	,	::gpk::vcst_t					appPath
@@ -112,7 +112,7 @@ static	::gpk::error_t	createChildProcess
 	return 0;
 }
 
-static	::gpk::error_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu0_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
+static	::gpk::err_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::vcu0_t chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD						dwWritten				= 0;
 	bool						bSuccess				= false;
 	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
@@ -121,7 +121,7 @@ static	::gpk::error_t	writeToPipe				(const ::brt::SProcessHandles & handles, ::
 }
 
 
-static	::gpk::error_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
+static	::gpk::err_t	readFromPipe			(const ::brt::SProcess & process, const ::brt::SProcessHandles & handles, ::gpk::au0_t & readBytes)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	static	::gpk::au0_t		chBuf;
 	stxp	uint32_t			BUFSIZE					= 1024 * 1024 * 50;
 	chBuf.resize(BUFSIZE);
@@ -141,7 +141,7 @@ static	::gpk::error_t	readFromPipe			(const ::brt::SProcess & process, const ::b
 	return 0;
 }
 
-static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
+static ::gpk::err_t	initHandles						(::brt::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES			saAttr;
 	saAttr.bInheritHandle	= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited.
 	saAttr.lpSecurityDescriptor = NULL;
@@ -154,7 +154,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	return 0;	// The remaining open handles are cleaned up when this process terminates. To avoid resource leaks in a larger application, close handles explicitly.
 }
 
-::gpk::error_t			update						(::brt::SApplication & app, bool exitSignal)	{
+::gpk::err_t			update						(::brt::SApplication & app, bool exitSignal)	{
 	::gpk::STimer				timer;
 	if_true_vif(::gpk::APPLICATION_STATE_EXIT, exitSignal, "Exit requested by runtime.");
 	{
@@ -200,7 +200,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 				process.ProcessInfo.hProcess	= INVALID_HANDLE_VALUE;
 				process.StartInfo.dwFlags		|= STARTF_USESTDHANDLES;
 				::gpk::vcu0_t					payload					= (*(receivedPerClient[iClient]))[iMessage]->Payload;
-				::gpk::error_t				contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 1}, payload);
+				::gpk::err_t				contentOffset			= ::gpk::find_sequence_pod(::gpk::vcu0_t{(const uint8_t*)"\0", 1}, payload);
 				if_fail_cef(contentOffset, "%s", "Failed to find environment block stop code.");
 				if(payload.size() && (payload.size() > (uint32_t)contentOffset + 2))
 					if_fail_ef(::writeToPipe(app.ClientIOHandles[iClient], {&payload[contentOffset + 2], payload.size() - contentOffset - 2}), "%s", "Failed to write request content to process' stdin.");
@@ -250,7 +250,7 @@ static ::gpk::error_t	initHandles						(::brt::SProcessHandles & handles) {
 	return 0;
 }
 
-::gpk::error_t				draw					(::brt::SApplication & app)						{
+::gpk::err_t				draw					(::brt::SApplication & app)						{
 	::gpk::STimer					timer;
 	app;
 	::gpk::pobj<::gpk::rtbgra8d32>	target;

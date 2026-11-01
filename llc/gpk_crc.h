@@ -1,13 +1,13 @@
-#include "llc_array_pod.h"
+#include "gpk_array_pod.h"
 
-#ifndef LLC_CRC_H_261024
-#define LLC_CRC_H_261024
+#ifndef GPK_CRC_H_261024
+#define GPK_CRC_H_261024
 
-namespace llc
+namespace gpk
 {
 	err_t			crcGenerate				(vcu0_t bytes, u3_t & crc);
 	err_t			crcVerifyAndRemove		(au0_t & bytes);
 	err_t			crcGenerateAndAppend	(au0_t & bytes);
 } // namespace
 
-#endif // LLC_DEFLATE_H_23627
+#endif // GPK_DEFLATE_H_23627

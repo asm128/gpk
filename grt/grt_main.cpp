@@ -2,7 +2,7 @@
 #include "gpk_type_registry.h"
 #include "gpk_sync.h"
 #include "gpk_timer.h"
-#include "gpk_process.h"
+#include "gpk_app_impl.h"
 
 #if defined(GPK_WINDOWS)
 #	include <Windows.h>
@@ -10,6 +10,9 @@
 #	include <process.h>
 #endif
 #include <cstdlib>		// for EXIT_SUCCESS
+
+using namespace gpk;
+
 
 struct SRuntimeState {
 	::gpk::refcount_t		RenderThreadUsers	= 0; 
@@ -22,7 +25,7 @@ struct SRuntimeState {
 static	void			threadRender		(void* pRuntimeState)												{
 	::SRuntimeState				& runtimeState		= *(::SRuntimeState*)pRuntimeState;
 	::gpk::SRuntimeModule		* runtimeModule		= runtimeState.MainModule;
-	if_true_ref(0 == runtimeModule, "Main module is null!");
+	if_null_re(runtimeModule);
 	gpk_sync_increment(runtimeState.RenderThreadUsers);
 	int32_t						result				= 0;
 	while(result = gpk_sync_compare_exchange(runtimeState.RenderThreadUsers, 0, 1) - 1 && result != -1) {
@@ -51,13 +54,8 @@ static	int				grt_Loop			(SRuntimeState & runtimeState, ::gpk::SRuntimeModule & 
 		if_fail_fef(::threadRenderStart(runtimeState), "%s", "Unknown error");
 		info_printf("%s", "Application instance initialized successfully. Executing main loop...");
 		while(true) {
-#if defined(GPK_WINDOWS)
-			updateResult			= mainModule.Update(mainModule.Application, ::GetAsyncKeyState(VK_ESCAPE) != 0);
-#else
-			updateResult			= mainModule.Update(mainModule.Application, false);
-#endif
-			if_true_bif(1 == updateResult, "Application requested termination.");
-			if_true_bef(::gpk::failed(updateResult), "update() returned error.");
+			if_fail_bef(updateResult = mainModule.Update(mainModule.Application, false), "updateResult:%i", updateResult);
+			if_true_bi(gpk::APPLICATION_STATE_EXIT == updateResult);
 			//if_true_ef(mainModule.Render(app), "Why would this ever happen?");
 		}
 		gpk_sync_decrement(runtimeState.RenderThreadUsers);	// Report we're done

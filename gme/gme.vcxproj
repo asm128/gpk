@@ -78,7 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir); </AdditionalLibraryDirectories>
-      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; zlibvc.lib; shcore.lib; </AdditionalDependencies>
+      <AdditionalDependencies>llc.lib; gpk.lib; user32.lib; gdi32.lib; shcore.lib; </AdditionalDependencies>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <ModuleDefinitionFile>..\..\gpk\llc\gpk_module_exports.def</ModuleDefinitionFile>
     </Link>
@@ -128,10 +128,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
+    <ClInclude Include="gme_application_main.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="application.cpp" />
+    <ClCompile Include="gme_application_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

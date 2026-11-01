@@ -1,25 +1,28 @@
-#include "llc_crc.h"
-#include "llc_noise.h"
+#include "gpk_crc.h"
+#include "gpk_noise.h"
+#include "gpk_string.h"
 
-LLC_USING_TYPEINT();
+GPK_USING_TYPEINT();
 
-stxp u2_c			LLC_CRC_CRC_SEED			= 18973;
-llc::err_t			llc::crcGenerate			(vcu0_t bytes, u3_t & crc)	{
+using namespace gpk;
+
+stxp u2_c			GPK_CRC_CRC_SEED			= 18973;
+gpk::err_t			gpk::crcGenerate			(vcu0_t bytes, u3_t & crc)	{
 	crc						= 0;
 	u2_c				lastPos						= bytes.size() - 1;
 	for(u2_t i=0; i < bytes.size(); ++i) {
-		crc						+= noise1DBase(bytes[i], ::LLC_CRC_CRC_SEED);
-		crc						+= noise1DBase(bytes[lastPos - i], ::LLC_CRC_CRC_SEED);
+		crc						+= noise1DBase(bytes[i], ::GPK_CRC_CRC_SEED);
+		crc						+= noise1DBase(bytes[lastPos - i], ::GPK_CRC_CRC_SEED);
 	}
 	return 0;
 }
-llc::err_t			llc::crcGenerateAndAppend	(au0_t & bytes)	{
+gpk::err_t			gpk::crcGenerateAndAppend	(au0_t & bytes)	{
 	u3_t					crcToStore					= 0;
 	crcGenerate(bytes, crcToStore);
 	if_fail_fe(bytes.append((const u0_t*)&crcToStore, szof(u3_t)));;
 	return 0;
 }
-llc::err_t			llc::crcVerifyAndRemove		(au0_t & bytes)	{
+gpk::err_t			gpk::crcVerifyAndRemove		(au0_t & bytes)	{
 	if_true_fef(bytes.size() < 8, "Invalid input. No CRC can be found in an array of %u bytes.", bytes.size());
 	u3_t					check						= 0;
 	u2_c				startOfCRC					= bytes.size() - 8;

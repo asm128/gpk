@@ -1019,6 +1019,9 @@
     <ClCompile Include="gpk_debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gpk_crc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="character_codes.json" />

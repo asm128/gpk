@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_b64decode.cpp">
+    <ClCompile Include="gpk_b64decode_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

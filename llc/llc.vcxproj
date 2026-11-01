@@ -270,6 +270,7 @@
     <ClCompile Include="gpk_chrono.cpp" />
     <ClCompile Include="gpk_component_scene.cpp" />
     <ClCompile Include="gpk_component_scene_draw.cpp" />
+    <ClCompile Include="gpk_crc.cpp" />
     <ClCompile Include="gpk_d3d.cpp" />
     <ClCompile Include="gpk_datatype.cpp" />
     <ClCompile Include="gpk_debug.cpp" />

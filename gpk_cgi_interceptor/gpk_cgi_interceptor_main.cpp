@@ -24,7 +24,7 @@ namespace brt
 	};
 } // namespace
 
-static	::gpk::error_t								createChildProcess
+static	::gpk::err_t								createChildProcess
 	(	::brt::SProcess						& process
 	,	::gpk::vc							environmentBlock
 	,	::gpk::view<sc_t>						appPath
@@ -74,7 +74,7 @@ static	::gpk::error_t								createChildProcess
 	return 0;
 }
 
-static	::gpk::error_t								writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::view<sc_t> chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
+static	::gpk::err_t								writeToPipe				(const ::brt::SProcessHandles & handles, ::gpk::view<sc_t> chBufToSend)	{	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
 	DWORD													dwWritten				= 0;
 	bool													bSuccess				= false;
 	ef_if(false == (bSuccess = WriteFile(handles.ChildStd_IN_Write, chBufToSend.begin(), chBufToSend.size(), &dwWritten, NULL) ? true : false), "%s", "Failed to write to child process' standard input.");
@@ -82,7 +82,7 @@ static	::gpk::error_t								writeToPipe				(const ::brt::SProcessHandles & hand
 	return bSuccess ? 0 : -1;
 }
 
-static	::gpk::error_t				loadConfig
+static	::gpk::err_t				loadConfig
 	(	::gpk::apod<char>	& szCmdlineApp
 	,	::gpk::apod<char>	& szCmdlineFinal
 	) {	// Read from a file and write its contents to the pipe for the child's STDIN. Stop when there is no more data.
@@ -118,7 +118,7 @@ static	::gpk::error_t				loadConfig
 //#include <unistd.h>
 #include "gpk_stdsocket.h"
 
-static	::gpk::error_t								handleReadable(HANDLE handle){
+static	::gpk::err_t								handleReadable(HANDLE handle){
 	fd_set															sockets								= {};
 	memset(&sockets, -1, sizeof(fd_set));
 	sockets.fd_count											= 0;
@@ -139,7 +139,7 @@ struct SThreadStateRead {
 	::gpk::refcount_t									DoneReading			= 0;
 };
 
-static	::gpk::error_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
+static	::gpk::err_t				readFromPipe			(::SThreadStateRead & appState)	{	// Read output from the child process's pipe for STDOUT and write to the parent process's pipe for STDOUT. Stop when there is no more data.
 	const ::brt::SProcess					& process				= appState.Process;
 	const ::brt::SProcessHandles			& handles				= appState.IOHandles;
 	::gpk::au0_t								& readBytes				= appState.ReadBytes;
@@ -175,7 +175,7 @@ static	void										threadReadFromPipe		(void* appStaet)	{	// Read output from 
 	::readFromPipe(*(::SThreadStateRead*)appStaet);
 }
 
-static ::gpk::error_t						initHandles				(::brt::SProcessHandles & handles) {
+static ::gpk::err_t						initHandles				(::brt::SProcessHandles & handles) {
 	SECURITY_ATTRIBUTES								saAttr					= {};
 	saAttr.bInheritHandle						= TRUE;		// Set the bInheritHandle flag so pipe handles are inherited.
 	saAttr.lpSecurityDescriptor					= NULL;

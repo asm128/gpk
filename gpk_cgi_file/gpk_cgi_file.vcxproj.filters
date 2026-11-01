@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gpk_cgi_file.cpp">
+    <ClCompile Include="gpk_cgi_file_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

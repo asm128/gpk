@@ -21,10 +21,9 @@ static	int					cgiBootstrap			(const ::gpk::SCGIRuntimeValues & runtimeValues, :
 	return 0;
 }
 
-static	int				cgiMain				(int argc, char** argv, char**envv)	{
-	(void)(envv);
-	::gpk::SCGIRuntimeValues	runtimeValues;
-	if_fail_fef(gpk::cgiRuntimeValuesLoad(runtimeValues, {(const char**)argv, (uint32_t)argc}), "%s", "Failed to load cgi runtime values.");
+static	int				cgiMain				(::gpk::SRuntimeValues runtimeValues)	{
+	::gpk::SCGIRuntimeValues	cgiRuntimeValues(runtimeValues);
+	if_fail_fe(gpk::cgiRuntimeValuesLoad(cgiRuntimeValues));
 	::gpk::apod<char>			html;
 	if(::gpk::failed(::cgiBootstrap(runtimeValues, html))) {
 		printf("%s\r\n", "Content-Type: text/html"

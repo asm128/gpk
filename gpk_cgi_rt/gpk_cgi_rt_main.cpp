@@ -5,7 +5,8 @@
 #include "gpk_parse.h"
 
 #include <Windows.h>
-//
+
+using namespace gpk;
 //static gpk::err_t 							metrics_split			(const ::gpk::view_const_string& input_string, ::gpk::n2<int32_t>& output_metrics)												{
 //	uint32_t												iChar					= 0;
 //	for(iChar = 0; iChar < input_string.size(); ++iChar) {
@@ -28,11 +29,11 @@
 //	return 0;
 //}
 
-gpk::err_t 									genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output){
-	const ::gpk::SCGIRuntimeValues							& runtimeValues					= framework.RuntimeValues;
-	//char													buffer[4096]					= {};
-	::gpk::SCGIModule										module;
-	::gpk::apod<char>								moduleName						= GPK_VIEW_ARGS({framework.ModuleName.begin(), ::gpk::min(framework.ModuleName.size(), 16U)});
+gpk::err_t 							genHTMLModuleOutput				(::gpk::SCGIFramework & framework, ::gpk::string & output){
+	const ::gpk::SCGIRuntimeValues			& runtimeValues					= framework.RuntimeValues;
+	//char									buffer[4096]					= {};
+	::gpk::SCGIModule						module;
+	::gpk::vcst_t							moduleName						= framework.ModuleName;
 	::gpk::loadCGIModule(module, moduleName);
 	module.Create	(&module.Application, &framework);
 	module.Setup	(module.Application);
@@ -54,7 +55,7 @@ stxp	const char						html_script	[]			=
 	"\n</script>"
 	;
 
-gpk::err_t 									processKeyVal					(::gpk::SCGIFramework& framework, const ::gpk::TKeyValConstChar& keyVal)	{
+gpk::err_t 									processKeyVal					(::gpk::SCGIFramework& framework, gpk::kv<gpk::vcst_t>  keyVal)	{
 	if(0 == keyVal.Key.size())
 		return -1;
 
@@ -71,7 +72,7 @@ gpk::err_t 									processKeyVal					(::gpk::SCGIFramework& framework, const ::
 	return 0;
 }
 
-int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::apod<char> & output)										{
+int													cgiBootstrap			(::gpk::SCGIFramework & framework, ::gpk::string & output)										{
 	const ::gpk::SCGIRuntimeValues							& runtimeValues			= framework.RuntimeValues;
 	if(framework.Bootstrapped) {
 		::genHTMLModuleOutput(framework, output);

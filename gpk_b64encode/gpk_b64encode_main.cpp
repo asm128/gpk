@@ -1,5 +1,3 @@
-#define GPK_STDOUT_LOG_ENABLED
-
 #include "gpk_base64.h"
 #include "gpk_file.h"
 
